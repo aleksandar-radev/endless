@@ -191,7 +191,7 @@ export class Options {
     section.className = 'option-row';
     section.innerHTML = `
       <a
-        href="https://discord.gg/DYEf8dk6Ab"
+        href="https://discord.gg/8rgwg2zzqc"
         target="_blank"
         rel="noopener noreferrer"
         class="discord-link"
