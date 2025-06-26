@@ -47,6 +47,9 @@ export class DataManager {
     let updated_at = null;
     let source = 'local';
 
+    // ensure session before loading game data
+    await this.checkSession();
+
     // get cloud save data
     try {
       if (cloud && this.session?.id) {
