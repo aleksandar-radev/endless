@@ -392,6 +392,11 @@ export const formatStatName = (stat) => {
   if (stat === 'reflectFireDamage') return 'Reflect Fire Damage';
   if (stat === 'skillPoints') return 'Bonus Skill Points';
   if (stat === 'extraMaterialDropPercent') return 'Bonus Material Drop %';
+  if (stat === 'evasion') return 'Evasion';
+  if (stat === 'fireResistance') return 'Fire Resistance';
+  if (stat === 'coldResistance') return 'Cold Resistance';
+  if (stat === 'airResistance') return 'Air Resistance';
+  if (stat === 'earthResistance') return 'Earth Resistance';
 
   // Fallback: convert camelCase to Title Case with spaces
   return stat
