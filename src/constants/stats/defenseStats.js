@@ -78,4 +78,42 @@ export const DEFENSE_STATS = {
     base: 0,
     decimalPlaces: 0,
   },
+  // EVASION
+  evasion: {
+    base: 0,
+    decimalPlaces: 1,
+    training: { available: true, cost: 300, bonus: 0.1 },
+    item: { min: 1, max: 8, scaling: 'capped' },
+    itemTags: ['defense', 'boots'],
+    showInUI: true,
+  },
+  // ELEMENTAL RESISTANCES
+  fireResistance: {
+    base: 0,
+    decimalPlaces: 1,
+    item: { min: 2, max: 15, scaling: 'capped' },
+    itemTags: ['defense', 'jewelry'],
+    showInUI: true,
+  },
+  coldResistance: {
+    base: 0,
+    decimalPlaces: 1,
+    item: { min: 2, max: 15, scaling: 'capped' },
+    itemTags: ['defense', 'jewelry'],
+    showInUI: true,
+  },
+  airResistance: {
+    base: 0,
+    decimalPlaces: 1,
+    item: { min: 2, max: 15, scaling: 'capped' },
+    itemTags: ['defense', 'jewelry'],
+    showInUI: true,
+  },
+  earthResistance: {
+    base: 0,
+    decimalPlaces: 1,
+    item: { min: 2, max: 15, scaling: 'capped' },
+    itemTags: ['defense', 'jewelry'],
+    showInUI: true,
+  },
 };
