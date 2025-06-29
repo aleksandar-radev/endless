@@ -5,6 +5,7 @@
   margin-bottom: 16px;
   margin-top: 8px;
 }
+
 .region-btn {
   background: linear-gradient(90deg, #232b38 60%, #1a202c 100%);
   color: #fff;
@@ -19,9 +20,11 @@
   outline: none;
   position: relative;
 }
+
 .region-btn:hover {
   background: linear-gradient(90deg, #2563eb 60%, #1e40af 100%);
 }
+
 .region-btn.selected {
   background: linear-gradient(90deg, #059669 60%, #047857 100%);
   color: #fff;
@@ -29,6 +32,7 @@
   box-shadow: 0 4px 16px 0 #05966944;
   z-index: 1;
 }
+
 .region-btn:disabled {
   background: #232b38;
   color: #888;

@@ -113,21 +113,21 @@ export default class Inventory {
           <div style="margin-bottom:10px;">Select an equipped item to upgrade:</div>
           <div id="upgrade-item-list">
             ${equipped.length === 0
-              ? '<div style="color:#f55;">No eligible equipped items.</div>'
-              : equipped
-                  .map(
-                    ({ slot, item }, idx) =>
-                      `<div class="upgrade-item-row" data-slot="${slot}" data-idx="${idx}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+    ? '<div style="color:#f55;">No eligible equipped items.</div>'
+    : equipped
+      .map(
+        ({ slot, item }, idx) =>
+          `<div class="upgrade-item-row" data-slot="${slot}" data-idx="${idx}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
                         <span style="font-size:1.5em;">${item.getIcon()}</span>
                         <span><b>${item.type}</b> (Lvl ${item.level})</span>
                         <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
                         <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${
-                        mat.qty
-                      }" value="1" aria-label="Upgrade quantity" />
+  mat.qty
+}" value="1" aria-label="Upgrade quantity" />
                         <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">Upgrade</button>
-                      </div>`
-                  )
-                  .join('')}
+                      </div>`,
+      )
+      .join('')}
           </div>
           <div class="modal-controls">
             <button id="material-use-cancel">Cancel</button>
@@ -272,8 +272,8 @@ export default class Inventory {
       this.equippedItems.ring1?.id === draggedRing.id
         ? 'ring1'
         : this.equippedItems.ring2?.id === draggedRing.id
-        ? 'ring2'
-        : null;
+          ? 'ring2'
+          : null;
 
     if (currentSlot) {
       // Ring is being moved between ring slots

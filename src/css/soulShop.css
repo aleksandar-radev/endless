@@ -5,17 +5,20 @@
   align-items: center;
   padding: 2rem 0;
 }
+
 .soulShop-upgrades-container {
   width: 100%;
   max-width: 700px;
   margin: 0 auto;
 }
+
 .soul-upgrades-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 12px;
   width: 100%;
 }
+
 .soul-upgrade-btn {
   background: #23272e;
   border: 2px solid #444;
@@ -30,24 +33,29 @@
   cursor: pointer;
   transition: background 0.2s, border 0.2s;
 }
+
 .soul-upgrade-btn.purchased {
   background: #222a;
   border-color: #888;
   color: #aaa;
   cursor: not-allowed;
 }
+
 .soul-upgrade-btn:hover:not(.purchased) {
   background: #2d3748;
   border-color: #fbbf24;
 }
+
 .soul-upgrade-btn .upgrade-name {
   font-weight: bold;
   font-size: 1.15rem;
 }
+
 .soul-upgrade-btn .upgrade-bonus {
   color: #10b981;
   font-size: 1rem;
 }
+
 .soul-upgrade-btn .upgrade-cost {
   color: #fbbf24;
   font-size: 1rem;

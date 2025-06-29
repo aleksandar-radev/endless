@@ -74,9 +74,9 @@ export default class Training {
     nav.innerHTML = SECTION_DEFS.map(
       (sec) => `
       <button class="training-section-btn${this.activeSection === sec.key ? ' active' : ''}" data-section="${
-        sec.key
-      }">${sec.label}</button>
-    `
+  sec.key
+}">${sec.label}</button>
+    `,
     ).join('');
     nav.querySelectorAll('button[data-section]').forEach((btn) => {
       btn.onclick = () => {
@@ -154,12 +154,12 @@ export default class Training {
     m.querySelector('.modal-bonus').textContent = this.getBonusText(
       stat,
       STATS[stat].training,
-      this.upgradeLevels[stat] || 0
+      this.upgradeLevels[stat] || 0,
     );
     m.querySelector('.modal-next-bonus').textContent = this.getBonusText(
       stat,
       STATS[stat].training,
-      (this.upgradeLevels[stat] || 0) + 1
+      (this.upgradeLevels[stat] || 0) + 1,
     );
     // Reset to default quantity
     this.selectedQty = 1;
@@ -230,7 +230,7 @@ export default class Training {
     this.modal.querySelector('.modal-qty').textContent = qty;
     this.modal.querySelector('.modal-total-cost').textContent = totalCost;
     this.modal.querySelector('.modal-total-bonus').textContent = `+${bonusValue.toFixed(decimals)} ${formatStatName(
-      stat
+      stat,
     )}`;
     this.modal.querySelector('.modal-level').textContent = baseLevel;
     this.modal.querySelector('.modal-max-level').textContent = maxLevel === Infinity ? '∞' : maxLevel;

@@ -247,18 +247,18 @@ export function updateStatsAndAttributesUI() {
       </div>
       <div class="attributes-body">
         ${Object.entries(hero.stats)
-          .map(([stat, value]) => {
-            if (!ATTRIBUTES[stat]) return '';
-            const displayName = stat.charAt(0).toUpperCase() + stat.slice(1);
-            return `
+    .map(([stat, value]) => {
+      if (!ATTRIBUTES[stat]) return '';
+      const displayName = stat.charAt(0).toUpperCase() + stat.slice(1);
+      return `
             <div class="attribute-row">
               <button class="allocate-btn" data-stat="${stat}">+</button>
               <strong>${displayName}:</strong>
               <span id="${stat}-value">${hero.stats[stat]}</span>
             </div>
           `;
-          })
-          .join('')}
+    })
+    .join('')}
       </div>
     `;
 
@@ -276,7 +276,7 @@ export function updateStatsAndAttributesUI() {
     attributesContainer.querySelectorAll('.attribute-row').forEach((row) => {
       const stat = row.querySelector('button').dataset.stat;
       row.addEventListener('mouseenter', (e) =>
-        showTooltip(ATTRIBUTE_TOOLTIPS[`get${stat.charAt(0).toUpperCase() + stat.slice(1)}Tooltip`](), e)
+        showTooltip(ATTRIBUTE_TOOLTIPS[`get${stat.charAt(0).toUpperCase() + stat.slice(1)}Tooltip`](), e),
       );
       row.addEventListener('mousemove', positionTooltip);
       row.addEventListener('mouseleave', hideTooltip);
@@ -326,7 +326,7 @@ export function updateStatsAndAttributesUI() {
     // Add attributes container to the grid
     statsGrid.appendChild(attributesContainer);
   } else {
-    document.getElementById(`attributes`).textContent = `Attributes (+${hero.statPoints})`;
+    document.getElementById('attributes').textContent = `Attributes (+${hero.statPoints})`;
     // Update dynamic attribute values
     document.getElementById('strength-value').textContent = hero.stats['strength'];
     document.getElementById('agility-value').textContent = hero.stats['agility'];

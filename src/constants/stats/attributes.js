@@ -91,10 +91,10 @@ export const ATTRIBUTE_TOOLTIPS = {
     Each point increases:<br />
     • Damage by ${ATTRIBUTES.strength.effects.damagePerPoint}<br />
     ${ATTRIBUTES.strength.effects.damagePercentPer.enabled
-      ? `• Every ${ATTRIBUTES.strength.effects.damagePercentPer.points} points adds ${
-          ATTRIBUTES.strength.effects.damagePercentPer.value * 100
-        }% to total damage`
-      : ''}
+    ? `• Every ${ATTRIBUTES.strength.effects.damagePercentPer.points} points adds ${
+      ATTRIBUTES.strength.effects.damagePercentPer.value * 100
+    }% to total damage`
+    : ''}
   `,
 
   getAgilityTooltip: () => html`
@@ -102,15 +102,15 @@ export const ATTRIBUTE_TOOLTIPS = {
     Each point increases:<br />
     • Attack Rating by ${ATTRIBUTES.agility.effects.attackRatingPerPoint}<br />
     ${ATTRIBUTES.agility.effects.attackRatingPercentPer.enabled
-      ? `• Every ${ATTRIBUTES.agility.effects.attackRatingPercentPer.points} points adds ${
-          ATTRIBUTES.agility.effects.attackRatingPercentPer.value * 100
-        }% to total attack rating`
-      : ''}
+    ? `• Every ${ATTRIBUTES.agility.effects.attackRatingPercentPer.points} points adds ${
+      ATTRIBUTES.agility.effects.attackRatingPercentPer.value * 100
+    }% to total attack rating`
+    : ''}
     ${ATTRIBUTES.agility.effects.attackSpeedPer.enabled
-      ? `• Every ${ATTRIBUTES.agility.effects.attackSpeedPer.points} points adds ${
-          ATTRIBUTES.agility.effects.attackSpeedPer.value * 100
-        }% attack speed`
-      : ''}
+    ? `• Every ${ATTRIBUTES.agility.effects.attackSpeedPer.points} points adds ${
+      ATTRIBUTES.agility.effects.attackSpeedPer.value * 100
+    }% attack speed`
+    : ''}
   `,
 
   getVitalityTooltip: () => html`
@@ -118,15 +118,15 @@ export const ATTRIBUTE_TOOLTIPS = {
     Each point increases:<br />
     • Life by ${ATTRIBUTES.vitality.effects.lifePerPoint}<br />
     ${ATTRIBUTES.vitality.effects.lifePercentPer.enabled
-      ? `• Every ${ATTRIBUTES.vitality.effects.lifePercentPer.points} points adds ${
-          ATTRIBUTES.vitality.effects.lifePercentPer.value * 100
-        }% to total life`
-      : ''}
+    ? `• Every ${ATTRIBUTES.vitality.effects.lifePercentPer.points} points adds ${
+      ATTRIBUTES.vitality.effects.lifePercentPer.value * 100
+    }% to total life`
+    : ''}
     ${ATTRIBUTES.vitality.effects.regenPercentPer.enabled
-      ? `• Every ${ATTRIBUTES.vitality.effects.regenPercentPer.points} points adds ${
-          ATTRIBUTES.vitality.effects.regenPercentPer.value * 100
-        }% life regeneration`
-      : ''}
+    ? `• Every ${ATTRIBUTES.vitality.effects.regenPercentPer.points} points adds ${
+      ATTRIBUTES.vitality.effects.regenPercentPer.value * 100
+    }% life regeneration`
+    : ''}
   `,
 
   getWisdomTooltip: () => html`
@@ -134,15 +134,15 @@ export const ATTRIBUTE_TOOLTIPS = {
     Each point increases:<br />
     • Mana by ${ATTRIBUTES.wisdom.effects.manaPerPoint}<br />
     ${ATTRIBUTES.wisdom.effects.manaPercentPer.enabled
-      ? `• Every ${ATTRIBUTES.wisdom.effects.manaPercentPer.points} points adds ${
-          ATTRIBUTES.wisdom.effects.manaPercentPer.value * 100
-        }% to total mana`
-      : ''}
+    ? `• Every ${ATTRIBUTES.wisdom.effects.manaPercentPer.points} points adds ${
+      ATTRIBUTES.wisdom.effects.manaPercentPer.value * 100
+    }% to total mana`
+    : ''}
     ${ATTRIBUTES.wisdom.effects.regenPercentPer.enabled
-      ? `• Every ${ATTRIBUTES.wisdom.effects.regenPercentPer.points} points adds ${
-          ATTRIBUTES.wisdom.effects.regenPercentPer.value * 100
-        }% mana regeneration`
-      : ''}
+    ? `• Every ${ATTRIBUTES.wisdom.effects.regenPercentPer.points} points adds ${
+      ATTRIBUTES.wisdom.effects.regenPercentPer.value * 100
+    }% mana regeneration`
+    : ''}
   `,
 
   getEnduranceTooltip: () => html`
@@ -150,10 +150,10 @@ export const ATTRIBUTE_TOOLTIPS = {
     Each point increases:<br />
     • Armor by ${ATTRIBUTES.endurance.effects.armorPerPoint}<br />
     ${ATTRIBUTES.endurance.effects.armorPercentPer.enabled
-      ? `• Every ${ATTRIBUTES.endurance.effects.armorPercentPer.points} points adds ${
-          ATTRIBUTES.endurance.effects.armorPercentPer.value * 100
-        }% to total armor`
-      : ''}
+    ? `• Every ${ATTRIBUTES.endurance.effects.armorPercentPer.points} points adds ${
+      ATTRIBUTES.endurance.effects.armorPercentPer.value * 100
+    }% to total armor`
+    : ''}
   `,
 
   getDexterityTooltip: () => html`
@@ -161,15 +161,15 @@ export const ATTRIBUTE_TOOLTIPS = {
     Each point increases:<br />
     • Critical Damage by ${ATTRIBUTES.dexterity.effects.critDamagePerPoint}<br />
     ${ATTRIBUTES.dexterity.effects.critChancePer.enabled
-      ? `• Every ${ATTRIBUTES.dexterity.effects.critChancePer.points} points adds ${
-          ATTRIBUTES.dexterity.effects.critChancePer.value * 100
-        }% critical strike chance`
-      : ''}
+    ? `• Every ${ATTRIBUTES.dexterity.effects.critChancePer.points} points adds ${
+      ATTRIBUTES.dexterity.effects.critChancePer.value * 100
+    }% critical strike chance`
+    : ''}
     ${ATTRIBUTES.dexterity.effects.critDamagePer.enabled
-      ? `• Every ${ATTRIBUTES.dexterity.effects.critDamagePer.points} points adds ${
-          ATTRIBUTES.dexterity.effects.critDamagePer.value * 100
-        }% critical strike damage`
-      : ''}
+    ? `• Every ${ATTRIBUTES.dexterity.effects.critDamagePer.points} points adds ${
+      ATTRIBUTES.dexterity.effects.critDamagePer.value * 100
+    }% critical strike damage`
+    : ''}
   `,
 
   getElementalDamageTooltip: () => html`

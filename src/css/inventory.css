@@ -2,6 +2,7 @@
   user-select: none;
   overflow-y: scroll;
 }
+
 .inventory-btn {
   margin: 5px;
   cursor: pointer;
@@ -61,7 +62,8 @@
 }
 
 .equipment-slot[data-slot='belt'] {
-  top: 120px; /* Adjust this value between chest (140px) and legs (260px) */
+  top: 120px;
+  /* Adjust this value between chest (140px) and legs (260px) */
   left: 50%;
   transform: translateX(-50%);
 }
@@ -124,6 +126,7 @@
 .equipment-slot .inventory-item {
   z-index: 1;
 }
+
 .equipment-slot.valid-target {
   background-color: rgba(76, 175, 80, 0.2);
 }
@@ -172,7 +175,8 @@
   display: grid;
   grid-template-columns: repeat(10, 40px);
   grid-template-rows: repeat(20, 40px);
-  gap: 0; /* Remove gap */
+  gap: 0;
+  /* Remove gap */
   padding: 8px;
   background: var(--bg-panel);
   border-radius: 0.5rem;
@@ -194,7 +198,8 @@
   background: var(--bg-panel);
   border: 2px solid var(--accent);
   border-radius: 0.25rem;
-  font-size: 0.8em; /* Smaller font for items */
+  font-size: 0.8em;
+  /* Smaller font for items */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -230,9 +235,11 @@
     transform: scale(0.8);
     opacity: 0.5;
   }
+
   50% {
     transform: scale(1.1);
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
@@ -246,18 +253,23 @@
 .rarity-normal {
   border-color: #ffffff;
 }
+
 .rarity-magic {
   border-color: #4287f5;
 }
+
 .rarity-rare {
   border-color: #ffd700;
 }
+
 .rarity-unique {
   border-color: #ff8c00;
 }
+
 .rarity-legendary {
   border-color: #e65a27;
 }
+
 .rarity-mythic {
   border-color: #ff0033;
 }
@@ -265,18 +277,23 @@
 .item-color-normal {
   color: #ffffff;
 }
+
 .item-color-magic {
   color: #4287f5;
 }
+
 .item-color-rare {
   color: #ffd700;
 }
+
 .item-color-unique {
   color: #ff8c00;
 }
+
 .item-color-legendary {
   color: #e65a27;
 }
+
 .item-color-mythic {
   color: #ff0033;
 }
@@ -414,6 +431,7 @@
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
 }
+
 .inventory-trash.drag-over {
   background: #a33;
   border-color: #f55;
@@ -478,30 +496,37 @@
   margin-bottom: 2px;
   transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
+
 .salvage-btn-modal[data-rarity='NORMAL'] {
   color: #fff;
   border-left: 4px solid #fff;
 }
+
 .salvage-btn-modal[data-rarity='MAGIC'] {
   color: #4287f5;
   border-left: 4px solid #4287f5;
 }
+
 .salvage-btn-modal[data-rarity='RARE'] {
   color: #ffd700;
   border-left: 4px solid #ffd700;
 }
+
 .salvage-btn-modal[data-rarity='UNIQUE'] {
   color: #ff8c00;
   border-left: 4px solid #ff8c00;
 }
+
 .salvage-btn-modal[data-rarity='LEGENDARY'] {
   color: #e65a27;
   border-left: 4px solid #e65a27;
 }
+
 .salvage-btn-modal[data-rarity='MYTHIC'] {
   color: #ff0033;
   border-left: 4px solid #ff0033;
 }
+
 .salvage-btn-modal:hover {
   background: #34495e;
   color: #fff;
@@ -530,6 +555,7 @@
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
 }
+
 .inventory-modal .inventory-trash.drag-over {
   background: #a33;
   border-color: #f55;
@@ -547,6 +573,7 @@
   cursor: pointer;
   transition: background 0.2s;
 }
+
 .inventory-modal .modal-close:hover {
   background: #b13c1e;
 }
@@ -559,6 +586,7 @@
     align-items: center;
     gap: 16px;
   }
+
   .salvage-modal-grid {
     max-width: 100vw;
     margin-bottom: 16px;

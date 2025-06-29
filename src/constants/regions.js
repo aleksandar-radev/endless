@@ -229,7 +229,7 @@ export const REGIONS = [
     allowedTags: ['volcano', 'fire'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('volcano') || e.tags.includes('fire'))).map(
-        (e) => e.name
+        (e) => e.name,
       );
     },
     multiplier: {
@@ -263,7 +263,7 @@ export const REGIONS = [
     allowedTags: ['ruins', 'water'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('ruins') || e.tags.includes('water'))).map(
-        (e) => e.name
+        (e) => e.name,
       );
     },
     multiplier: {
@@ -296,7 +296,7 @@ export const REGIONS = [
     allowedTags: ['haunted', 'spirit'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('haunted') || e.tags.includes('spirit'))).map(
-        (e) => e.name
+        (e) => e.name,
       );
     },
     multiplier: {
@@ -330,7 +330,7 @@ export const REGIONS = [
     allowedTags: ['steppe', 'gold'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('steppe') || e.tags.includes('gold'))).map(
-        (e) => e.name
+        (e) => e.name,
       );
     },
     multiplier: {
@@ -363,7 +363,7 @@ export const REGIONS = [
     allowedTags: ['obsidian', 'arcane'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('obsidian') || e.tags.includes('arcane'))).map(
-        (e) => e.name
+        (e) => e.name,
       );
     },
     multiplier: {

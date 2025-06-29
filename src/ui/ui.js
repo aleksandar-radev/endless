@@ -4,6 +4,7 @@ import { updateQuestsUI } from './questUi.js';
 import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
 import { TabIndicatorManager } from './tabIndicatorManager.js';
 import { selectBoss, updateBossUI } from './bossUi.js';
+import { ELEMENTS } from '../constants/common.js';
 export {
   initializeSkillTreeUI,
   initializeSkillTreeStructure,
@@ -78,7 +79,7 @@ export function initializeUI() {
       const region = btn.dataset.region;
       if (game.fightMode === region) return; // No change needed
       const confirmed = await showConfirmDialog(
-        `Are you sure you want to change to ${region}? That will reset your stage progress and will find you a new enemy`
+        `Are you sure you want to change to ${region}? That will reset your stage progress and will find you a new enemy`,
       );
       if (!confirmed) return;
       // Reset stage progress and enemy as if the hero died
@@ -164,13 +165,13 @@ export function updatePlayerLife() {
   const lifePercentage = (stats.currentLife / stats.life) * 100;
   document.getElementById('life-fill').style.width = `${lifePercentage}%`;
   document.getElementById('life-text').textContent = `${Math.max(0, Math.floor(stats.currentLife))}/${Math.floor(
-    stats.life
+    stats.life,
   )}`;
 
   const manaPercentage = (stats.currentMana / stats.mana) * 100;
   document.getElementById('mana-fill').style.width = `${manaPercentage}%`;
   document.getElementById('mana-text').textContent = `${Math.max(0, Math.floor(stats.currentMana))}/${Math.floor(
-    stats.mana
+    stats.mana,
   )}`;
 }
 
@@ -179,11 +180,37 @@ export function updateEnemyStats() {
   const lifePercentage = (enemy.currentLife / enemy.life) * 100;
   document.getElementById('enemy-life-fill').style.width = `${lifePercentage}%`;
   document.getElementById('enemy-life-text').textContent = `${Math.max(0, Math.floor(enemy.currentLife))}/${Math.floor(
-    enemy.life
+    enemy.life,
   )}`;
 
+  // Main stats
   const dmg = document.getElementById('enemy-damage-value');
   if (dmg) dmg.textContent = Math.floor(enemy.damage);
+  const fireDmg = document.getElementById('enemy-fire-damage-value');
+  if (fireDmg) fireDmg.textContent = Math.floor(enemy.fireDamage || 0);
+  const coldDmg = document.getElementById('enemy-cold-damage-value');
+  if (coldDmg) coldDmg.textContent = Math.floor(enemy.coldDamage || 0);
+  const airDmg = document.getElementById('enemy-air-damage-value');
+  if (airDmg) airDmg.textContent = Math.floor(enemy.airDamage || 0);
+  const earthDmg = document.getElementById('enemy-earth-damage-value');
+  if (earthDmg) earthDmg.textContent = Math.floor(enemy.earthDamage || 0);
+  const armor = document.getElementById('enemy-armor-value');
+  if (armor) armor.textContent = Math.floor(enemy.armor || 0);
+  const evasion = document.getElementById('enemy-evasion-value');
+  if (evasion) evasion.textContent = Math.floor(enemy.evasion || 0);
+  const atkRating = document.getElementById('enemy-attack-rating-value');
+  if (atkRating) atkRating.textContent = Math.floor(enemy.attackRating || 0);
+  const atkSpeed = document.getElementById('enemy-attack-speed-value');
+  if (atkSpeed) atkSpeed.textContent = (enemy.attackSpeed || 0).toFixed(2);
+  const fireRes = document.getElementById('enemy-fire-resistance-value');
+  if (fireRes) fireRes.textContent = Math.floor(enemy.fireResistance || 0);
+  const coldRes = document.getElementById('enemy-cold-resistance-value');
+  if (coldRes) coldRes.textContent = Math.floor(enemy.coldResistance || 0);
+  const airRes = document.getElementById('enemy-air-resistance-value');
+  if (airRes) airRes.textContent = Math.floor(enemy.airResistance || 0);
+  const earthRes = document.getElementById('enemy-earth-resistance-value');
+  if (earthRes) earthRes.textContent = Math.floor(enemy.earthResistance || 0);
+
   if (game.fightMode === 'arena') {
     // Update boss UI ?
   } else if (game.fightMode === 'explore') {
@@ -438,47 +465,62 @@ export function updateTabIndicators(previousTab = null) {
 function renderRegionPanel(region) {
   const container = document.getElementById('region-panel-container');
   if (!container) return;
+
+  const baseHtml = html`<div class="enemy-section">
+    <div class="enemy-main-row">
+      <div class="enemy-avatar"></div>
+      <div class="enemy-life-and-stats">
+        <div class="enemy-name"></div>
+        <div class="enemy-life-bar">
+          <div id="enemy-life-fill"></div>
+          <div id="enemy-life-text"></div>
+        </div>
+      </div>
+    </div>
+    <div class="enemy-stats">
+      <div class="enemy-damage">Damage: <span id="enemy-damage-value"></span></div>
+      <div class="enemy-armor">Armor: <span id="enemy-armor-value"></span></div>
+      <div class="enemy-evasion">Evasion: <span id="enemy-evasion-value"></span></div>
+      <div class="enemy-attack-rating">Attack Rating: <span id="enemy-attack-rating-value"></span></div>
+      <div class="enemy-attack-speed">Attack Speed: <span id="enemy-attack-speed-value"></span></div>
+      <div></div>
+      <!-- Empty div for layout -->
+      <div>
+        <div class="enemy-fire-damage">${ELEMENTS.fire.icon} Fire: <span id="enemy-fire-damage-value"></span></div>
+        <div class="enemy-cold-damage">${ELEMENTS.cold.icon} Cold: <span id="enemy-cold-damage-value"></span></div>
+        <div class="enemy-air-damage">${ELEMENTS.air.icon} Air: <span id="enemy-air-damage-value"></span></div>
+        <div class="enemy-earth-damage">${ELEMENTS.earth.icon} Earth: <span id="enemy-earth-damage-value"></span></div>
+      </div>
+      <div>
+        <div class="enemy-fire-resistance">
+          ${ELEMENTS.fire.icon} Fire Res: <span id="enemy-fire-resistance-value"></span>
+        </div>
+        <div class="enemy-cold-resistance">
+          ${ELEMENTS.cold.icon} Cold Res: <span id="enemy-cold-resistance-value"></span>
+        </div>
+        <div class="enemy-air-resistance">
+          ${ELEMENTS.air.icon} Air Res: <span id="enemy-air-resistance-value"></span>
+        </div>
+        <div class="enemy-earth-resistance">
+          ${ELEMENTS.earth.icon} Earth Res: <span id="enemy-earth-resistance-value"></span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
   container.innerHTML = '';
   if (region === 'arena') {
     const panel = document.createElement('div');
     panel.id = 'arena-panel';
     panel.classList.add('region-panel');
-    panel.innerHTML = html`<div class="enemy-section">
-      <div class="enemy-main-row">
-        <div class="enemy-avatar"></div>
-        <div class="enemy-life-and-stats">
-          <div class="enemy-name"></div>
-          <div class="enemy-life-bar">
-            <div id="enemy-life-fill"></div>
-            <div id="enemy-life-text"></div>
-          </div>
-          <div class="enemy-stats">
-            <div class="enemy-damage">Damage: <span id="enemy-damage-value"></span></div>
-          </div>
-        </div>
-      </div>
-    </div>`;
+    panel.innerHTML = baseHtml;
     container.appendChild(panel);
     updateBossUI(game.currentEnemy);
   } else {
     const panel = document.createElement('div');
     panel.id = 'explore-panel';
     panel.classList.add('region-panel');
-    panel.innerHTML = html`<div class="enemy-section">
-      <div class="enemy-main-row">
-        <div class="enemy-avatar"></div>
-        <div class="enemy-life-and-stats">
-          <div class="enemy-name"></div>
-          <div class="enemy-life-bar">
-            <div id="enemy-life-fill"></div>
-            <div id="enemy-life-text"></div>
-          </div>
-          <div class="enemy-stats">
-            <div class="enemy-damage">Damage: <span id="enemy-damage-value"></span></div>
-          </div>
-        </div>
-      </div>
-    </div>`;
+    panel.innerHTML = baseHtml;
 
     container.appendChild(panel);
 

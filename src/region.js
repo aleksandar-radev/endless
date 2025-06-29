@@ -14,7 +14,7 @@ export async function setCurrentRegion(regionId) {
   if (regionId === game.currentRegionId) return;
   // Show confirm dialog before changing region
   const confirmed = await showConfirmDialog(
-    'Are you sure you want to change region? That will reset your stage progress and will find you a new enemy'
+    'Are you sure you want to change region? That will reset your stage progress and will find you a new enemy',
   );
   if (!confirmed) return;
   game.currentRegionId = regionId;
@@ -55,17 +55,17 @@ function getRegionTooltip(region) {
     <div class="tooltip-content">${region.description}</div>
     <div><strong>Unlock Level:</strong> ${region.unlockLevel}</div>
     ${region.xpMultiplier != 1
-      ? `<div><strong>XP bonus:</strong> ${((region.xpMultiplier - 1) * 100).toFixed(0)}%</div>`
-      : ''}
+    ? `<div><strong>XP bonus:</strong> ${((region.xpMultiplier - 1) * 100).toFixed(0)}%</div>`
+    : ''}
     ${region.goldMultiplier != 1
-      ? `<div><strong>Gold bonus:</strong> ${((region.goldMultiplier - 1) * 100).toFixed(0)}%</div>`
-      : ''}
+    ? `<div><strong>Gold bonus:</strong> ${((region.goldMultiplier - 1) * 100).toFixed(0)}%</div>`
+    : ''}
     ${region.itemDropMultiplier != 1
-      ? `<div><strong>Item Drop bonus:</strong> ${((region.itemDropMultiplier - 1) * 100).toFixed(0)}%</div>`
-      : ''}
+    ? `<div><strong>Item Drop bonus:</strong> ${((region.itemDropMultiplier - 1) * 100).toFixed(0)}%</div>`
+    : ''}
     ${region.materialDropMultiplier && region.materialDropMultiplier != 1
-      ? `<div><strong>Material Drop bonus:</strong> ${((region.materialDropMultiplier - 1) * 100).toFixed(0)}%</div>`
-      : ''}
+    ? `<div><strong>Material Drop bonus:</strong> ${((region.materialDropMultiplier - 1) * 100).toFixed(0)}%</div>`
+    : ''}
   `;
 }
 

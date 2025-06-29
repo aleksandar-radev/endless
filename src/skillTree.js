@@ -294,7 +294,7 @@ export default class SkillTree {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.manaCost) return 0;
     return Math.floor(
-      skill.manaCost(effectiveLevel) - (skill.manaCost(effectiveLevel) * hero.stats.manaCostReductionPercent) / 100
+      skill.manaCost(effectiveLevel) - (skill.manaCost(effectiveLevel) * hero.stats.manaCostReductionPercent) / 100,
     );
   }
 
@@ -302,7 +302,7 @@ export default class SkillTree {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.cooldown) return 0;
     return Math.floor(
-      skill.cooldown(effectiveLevel) - (skill.cooldown(effectiveLevel) * hero.stats.cooldownReductionPercent) / 100
+      skill.cooldown(effectiveLevel) - (skill.cooldown(effectiveLevel) * hero.stats.cooldownReductionPercent) / 100,
     );
   }
 
@@ -310,7 +310,7 @@ export default class SkillTree {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.duration) return 0;
     return Math.floor(
-      skill.duration(effectiveLevel) + (skill.duration(effectiveLevel) * hero.stats.buffDurationPercent) / 100
+      skill.duration(effectiveLevel) + (skill.duration(effectiveLevel) * hero.stats.buffDurationPercent) / 100,
     );
   }
 

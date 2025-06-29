@@ -138,7 +138,7 @@ export function getSlotsByCategory(category) {
       // All slots that are not weapon, amulet, or ring
       return Object.entries(SLOT_REQUIREMENTS)
         .filter(([slot, types]) =>
-          types.some((type) => ['HELMET', 'ARMOR', 'BELT', 'PANTS', 'BOOTS', 'SHIELD', 'GLOVES'].includes(type))
+          types.some((type) => ['HELMET', 'ARMOR', 'BELT', 'PANTS', 'BOOTS', 'SHIELD', 'GLOVES'].includes(type)),
         )
         .map(([slot]) => slot);
     case 'jewelry':

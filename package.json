@@ -6,13 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint . --ext .js"
   },
   "devDependencies": {
     "dotenv": "^16.4.7",
     "vite": "^6.2.2"
   },
   "dependencies": {
+    "eslint": "^9.30.0",
     "marked": "^15.0.12",
     "simple-crypto-js": "^3.0.1"
   }

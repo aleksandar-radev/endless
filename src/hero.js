@@ -144,13 +144,13 @@ export default class Hero {
       /* attributeEffects */ {},
       skillTreeBonuses,
       equipmentBonuses,
-      trainingBonuses
+      trainingBonuses,
     );
     const basePercent = this.calculatePercentBonuses(
       /* attributeEffects */ {},
       skillTreeBonuses,
       equipmentBonuses,
-      trainingBonuses
+      trainingBonuses,
     );
 
     // 3) “Lock in” each attribute (STR, VIT, etc.) so that attributeEffects sees the %-increased value
@@ -170,7 +170,7 @@ export default class Hero {
       attributeEffects,
       skillTreeBonuses,
       equipmentBonuses,
-      trainingBonuses
+      trainingBonuses,
     );
     this.applyFinalCalculations(flatValues, percentBonuses);
 
@@ -369,16 +369,16 @@ export default class Hero {
     }
     // Special handling for elemental damages
     this.stats.fireDamage = Math.floor(
-      flatValues.fireDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.fireDamagePercent)
+      flatValues.fireDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.fireDamagePercent),
     );
     this.stats.coldDamage = Math.floor(
-      flatValues.coldDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.coldDamagePercent)
+      flatValues.coldDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.coldDamagePercent),
     );
     this.stats.airDamage = Math.floor(
-      flatValues.airDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.airDamagePercent)
+      flatValues.airDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.airDamagePercent),
     );
     this.stats.earthDamage = Math.floor(
-      flatValues.earthDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.earthDamagePercent)
+      flatValues.earthDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.earthDamagePercent),
     );
     this.stats.reflectFireDamage = (() => {
       const base = flatValues.fireDamage + flatValues.reflectFireDamage;
@@ -394,7 +394,7 @@ export default class Hero {
     if (game.currentRegion === 'arena') {
       scalingFactor = this.bossLevel * 15 || 15;
     } else {
-      scalingFactor = game.stage * getCurrentRegion().armorReductionMultiplier;
+      scalingFactor = game.stage * getCurrentRegion().multiplier.armor;
     }
 
     const scale = 1 + (scalingFactor - 1) * ARMOR_SCALING_MULTIPLIER;
@@ -410,7 +410,7 @@ export default class Hero {
     if (game.currentRegion === 'arena') {
       scalingFactor = this.bossLevel * 15 || 15;
     } else {
-      scalingFactor = game.stage * getCurrentRegion().evasionReductionMultiplier;
+      scalingFactor = game.stage * getCurrentRegion().multiplier.attackRating;
     }
 
     const scale = 1 + (scalingFactor - 1) * EVASION_SCALING_MULTIPLIER;
@@ -424,7 +424,7 @@ export default class Hero {
     if (game.fightMode === 'arena') {
       scalingFactor = this.bossLevel * 15 || 15;
     } else if (game.fightMode === 'explore') {
-      scalingFactor = game.stage * getCurrentRegion().hitChanceMultiplier;
+      scalingFactor = game.stage * getCurrentRegion().multiplier.evasion;
     }
 
     const scale = 1 + (scalingFactor - 1) * 0.25;
@@ -440,9 +440,7 @@ export default class Hero {
 
   // calculated when hit is successful
   calculateTotalDamage(damageBonus = 0) {
-    // Hit - existing damage calculation code
     const isCritical = Math.random() * 100 < this.stats.critChance;
-    // Calculate physical damage
     let physicalDamage = this.stats.damage * (1 + this.stats.damagePercent / 100);
 
     // Calculate elemental damage with type effectiveness
@@ -453,9 +451,6 @@ export default class Hero {
 
     // Add toggle skill effects
     const toggleEffects = skillTree.applyToggleEffects();
-    let elementalDamage = 0;
-
-    // Calculate each element type
     const elements = {
       fire: this.stats.fireDamage,
       cold: this.stats.coldDamage,
@@ -463,26 +458,21 @@ export default class Hero {
       earth: this.stats.earthDamage,
     };
 
-    // Add toggle elemental effects before the element calculations
     if (toggleEffects.fireDamage) elements.fire += toggleEffects.fireDamage;
     if (toggleEffects.coldDamage) elements.cold += toggleEffects.coldDamage;
     if (toggleEffects.airDamage) elements.air += toggleEffects.airDamage;
     if (toggleEffects.earthDamage) elements.earth += toggleEffects.earthDamage;
 
-    Object.entries(elements).forEach(([elementType, damage]) => {
-      if (damage > 0) {
-        if (ELEMENT_OPPOSITES[elementType] === enemyElement) {
-          // Double damage against opposite element
-          elementalDamage += damage * 2;
-        } else if (elementType === enemyElement) {
-          // No damage against same element
-          elementalDamage += 0;
-        } else {
-          // 25% damage against non-opposite elements
-          elementalDamage += damage * 0.25;
-        }
+    const elemResult = { fire: 0, cold: 0, air: 0, earth: 0 };
+    Object.entries(elements).forEach(([type, dmg]) => {
+      if (dmg > 0) {
+        if (ELEMENT_OPPOSITES[type] === enemyElement) elemResult[type] = dmg * 2;
+        else if (type === enemyElement) elemResult[type] = 0;
+        else elemResult[type] = dmg * 0.25;
       }
     });
+
+    let elementalDamage = elemResult.fire + elemResult.cold + elemResult.air + elemResult.earth;
 
     totalDamage += elementalDamage;
 
@@ -499,15 +489,53 @@ export default class Hero {
     if (toggleEffects.doubleDamageChance) {
       const doubleDamageChance = Math.random() * 100;
       if (doubleDamageChance < toggleEffects.doubleDamageChance) {
+        physicalDamage *= 2;
+        elemResult.fire *= 2;
+        elemResult.cold *= 2;
+        elemResult.air *= 2;
+        elemResult.earth *= 2;
         totalDamage *= 2;
       }
     }
 
-    // Apply crit at the end to total damage
-    return {
-      damage: Math.floor(isCritical ? totalDamage * this.stats.critDamage : totalDamage),
-      isCritical,
+    if (isCritical) {
+      physicalDamage *= this.stats.critDamage;
+      elemResult.fire *= this.stats.critDamage;
+      elemResult.cold *= this.stats.critDamage;
+      elemResult.air *= this.stats.critDamage;
+      elemResult.earth *= this.stats.critDamage;
+      totalDamage *= this.stats.critDamage;
+    }
+
+    const breakdown = {
+      physical: Math.floor(physicalDamage),
+      fire: Math.floor(elemResult.fire),
+      cold: Math.floor(elemResult.cold),
+      air: Math.floor(elemResult.air),
+      earth: Math.floor(elemResult.earth),
     };
+
+    return {
+      damage: Math.floor(totalDamage),
+      isCritical,
+      breakdown,
+    };
+  }
+
+  calculateDamageAgainst(enemy, damageBonus = 0) {
+    const result = this.calculateTotalDamage(damageBonus);
+
+    if (!enemy) return result;
+    const ar = enemy.calculateArmorReduction() / 100;
+    const breakdown = result.breakdown;
+    const finalDamage =
+      breakdown.physical * (1 - ar) +
+      breakdown.fire * (1 - enemy.baseData.fireResistance / 100) +
+      breakdown.cold * (1 - enemy.baseData.coldResistance / 100) +
+      breakdown.air * (1 - enemy.baseData.airResistance / 100) +
+      breakdown.earth * (1 - enemy.baseData.earthResistance / 100);
+
+    return { damage: Math.floor(finalDamage), isCritical: result.isCritical };
   }
 
   calculateTotalThornsDamage(enemyDamage) {

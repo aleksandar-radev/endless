@@ -93,8 +93,8 @@ export default class CrystalShop {
     upgradesContainer.innerHTML = `
       <div class="crystal-upgrades-grid">
         ${Object.entries(CRYSTAL_UPGRADE_CONFIG)
-          .map(([stat, config]) => this.createCrystalUpgradeButton(stat, config))
-          .join('')}
+    .map(([stat, config]) => this.createCrystalUpgradeButton(stat, config))
+    .join('')}
       </div>
     `;
     this.setupCrystalUpgradeHandlers();
@@ -108,8 +108,8 @@ export default class CrystalShop {
 
     return `
       <button class="crystal-upgrade-btn ${alreadyPurchased ? 'purchased' : ''}" data-stat="${stat}" ${
-      alreadyPurchased ? 'disabled' : ''
-    }>
+  alreadyPurchased ? 'disabled' : ''
+}>
         <span class="upgrade-name">${config.label} ${config.showLevel ? `(Lvl ${level})` : ''}</span>
         <span class="upgrade-bonus">${config.bonusLabel}</span>
         <span class="upgrade-cost">${alreadyPurchased ? 'Purchased' : `${cost} Crystals`}</span>
@@ -161,7 +161,7 @@ export default class CrystalShop {
     if (stat === 'resetSkillTree') {
       confirmed = await showConfirmDialog(
         'Are you sure you want to reset your class and refund all skill points?<br>' +
-          `This will cost <strong>${cost} crystals</strong> and cannot be undone.`
+          `This will cost <strong>${cost} crystals</strong> and cannot be undone.`,
       );
       if (!confirmed) return;
       hero.crystals -= cost;
@@ -173,7 +173,7 @@ export default class CrystalShop {
     } else if (stat === 'resetAttributes') {
       confirmed = await showConfirmDialog(
         'Are you sure you want to reset all allocated attribute points?<br>' +
-          `This will cost <strong>${cost} crystals</strong> and cannot be undone.`
+          `This will cost <strong>${cost} crystals</strong> and cannot be undone.`,
       );
       if (!confirmed) return;
       hero.crystals -= cost;
@@ -183,7 +183,7 @@ export default class CrystalShop {
     } else if (stat === 'resetArenaLevel') {
       confirmed = await showConfirmDialog(
         'Are you sure you want to reset your boss level to 1?<br>' +
-          `This will cost <strong>${cost} crystals</strong> and cannot be undone.`
+          `This will cost <strong>${cost} crystals</strong> and cannot be undone.`,
       );
       if (!confirmed) return;
       hero.crystals -= cost;
@@ -244,8 +244,8 @@ export default class CrystalShop {
         <p>${config.bonus && typeof config.bonus === 'string' ? config.bonus : ''}</p>
         <p>Cost: <span class="modal-total-cost">${config.baseCost}</span> Crystals</p>
         <div class="modal-status">${
-          purchased ? '<span style="color:#10b981;font-weight:bold;">Purchased</span>' : ''
-        }</div>
+  purchased ? '<span style="color:#10b981;font-weight:bold;">Purchased</span>' : ''
+}</div>
       `;
       buyBtn.style.display = purchased ? 'none' : '';
       buyBtn.disabled = purchased;
