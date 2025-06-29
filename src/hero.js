@@ -388,6 +388,8 @@ export default class Hero {
 
   calculateArmorReduction() {
     let scalingFactor;
+    const ARMOR_SCALING_MULTIPLIER = 0.18; // scaling on stage
+    const ARMOR_BASE_DIFFICULTY = 60; // base, first level
 
     if (game.currentRegion === 'arena') {
       scalingFactor = this.bossLevel * 15 || 15;
@@ -395,13 +397,15 @@ export default class Hero {
       scalingFactor = game.stage * getCurrentRegion().armorReductionMultiplier;
     }
 
-    const scale = 1 + (scalingFactor - 1) * 0.18;
-    const reduction = (this.stats.armor / (this.stats.armor + 25 * scale)) * 100;
+    const scale = 1 + (scalingFactor - 1) * ARMOR_SCALING_MULTIPLIER;
+    const reduction = (this.stats.armor / (this.stats.armor + ARMOR_BASE_DIFFICULTY * scale)) * 100;
     return Math.min(reduction, 75); // Keep the 75% cap
   }
 
   calculateEvasionChance() {
     let scalingFactor;
+    const EVASION_SCALING_MULTIPLIER = 0.22;
+    const EVASION_BASE_DIFFICULTY = 100;
 
     if (game.currentRegion === 'arena') {
       scalingFactor = this.bossLevel * 15 || 15;
@@ -409,8 +413,8 @@ export default class Hero {
       scalingFactor = game.stage * getCurrentRegion().evasionReductionMultiplier;
     }
 
-    const scale = 1 + (scalingFactor - 1) * 0.18;
-    const reduction = (this.stats.evasion / (this.stats.evasion + 25 * scale)) * 100;
+    const scale = 1 + (scalingFactor - 1) * EVASION_SCALING_MULTIPLIER;
+    const reduction = (this.stats.evasion / (this.stats.evasion + EVASION_BASE_DIFFICULTY * scale)) * 100;
     return Math.min(reduction, 75); // Keep the 75% cap
   }
 

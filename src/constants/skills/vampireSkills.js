@@ -74,10 +74,10 @@ export const VAMPIRE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'drain',
     description: () => 'Drains life from enemies, restoring your life.',
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    maxLevel: () => 100,
     effect: (level) => ({
       earthDamage: level * 10,
-      manaPerHit: level * 1,
+      manaPerHit: level * 0.2,
     }),
   },
   greaterBloodHunger: {

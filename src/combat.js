@@ -19,42 +19,52 @@ import { getCurrentRegion } from './region.js';
 export function enemyAttack(currentTime) {
   if (!game || !hero || !game.currentEnemy) return;
   if (game.currentEnemy.canAttack(currentTime)) {
-    // Check for block first
-    const isBlocked = Math.random() * 100 < hero.stats.blockChance;
+    // Check for evasion first
+    const evasionChance = hero.calculateEvasionChance() / 100;
+    const isEvaded = Math.random() * 100 < evasionChance;
 
-    if (isBlocked) {
-      // Calculate and apply block healing
-      const healAmount = hero.calculateBlockHealing();
-
-      // Show "BLOCKED" text instead of damage number
-      createDamageNumber({ text: 'BLOCKED', isPlayer: true, color: '#66bd02' });
-      if (healAmount > 0) {
-        createDamageNumber({ text: `+${Math.floor(healAmount)}`, isPlayer: true, color: '#4CAF50' });
-      }
+    if (isEvaded) {
+      // Show "EVADED" text
+      createDamageNumber({ text: 'EVADED', isPlayer: true, color: '#FFD700' });
     } else {
-      // Calculate armor reduction
-      const damageReduction = hero.calculateArmorReduction() / 100;
-      const effectiveDamage = Math.floor(game.currentEnemy.damage * (1 - damageReduction));
+      const isBlocked = Math.random() * 100 < hero.stats.blockChance;
 
-      const thornsDamage = hero.calculateTotalThornsDamage(game.currentEnemy.damage);
-      // only if there is some thorns damage to deal, only paladin
-      if (thornsDamage - game.currentEnemy.damage > 1) {
-        game.damageEnemy(thornsDamage);
-        createDamageNumber({ text: `${thornsDamage}` });
-      }
+      if (isBlocked) {
+        // Calculate and apply block healing
+        const healAmount = hero.calculateBlockHealing();
 
-      // check currently applied buffs and if fireShield is active, return its damage to the attacker.
-      if (skillTree.activeBuffs.has('fireShield')) {
-        const fireReflect = Math.floor(hero.stats.reflectFireDamage || 0);
-        if (fireReflect > 0) {
-          game.damageEnemy(fireReflect);
-          createDamageNumber({ text: `${fireReflect}` });
-          updateEnemyStats();
+        // Show "BLOCKED" text instead of damage number
+        createDamageNumber({ text: 'BLOCKED', isPlayer: true, color: '#66bd02' });
+        if (healAmount > 0) {
+          createDamageNumber({ text: `+${Math.floor(healAmount)}`, isPlayer: true, color: '#4CAF50' });
         }
-      }
+      } else {
+        // Calculate physical damage with armor reduction
+        const armorReduction = hero.calculateArmorReduction() / 100;
+        const physicalDamage = Math.floor(game.currentEnemy.damage * (1 - armorReduction));
 
-      game.damagePlayer(effectiveDamage);
-      createDamageNumber({ text: `-${Math.floor(effectiveDamage)}`, isPlayer: true });
+        const totalDamage = physicalDamage;
+
+        const thornsDamage = hero.calculateTotalThornsDamage(game.currentEnemy.damage);
+        // only if there is some thorns damage to deal, only paladin
+        if (thornsDamage - game.currentEnemy.damage > 1) {
+          game.damageEnemy(thornsDamage);
+          createDamageNumber({ text: `${thornsDamage}` });
+        }
+
+        // check currently applied buffs and if fireShield is active, return its damage to the attacker.
+        if (skillTree.activeBuffs.has('fireShield')) {
+          const fireReflect = Math.floor(hero.stats.reflectFireDamage || 0);
+          if (fireReflect > 0) {
+            game.damageEnemy(fireReflect);
+            createDamageNumber({ text: `${fireReflect}` });
+            updateEnemyStats();
+          }
+        }
+
+        game.damagePlayer(totalDamage);
+        createDamageNumber({ text: `-${Math.floor(totalDamage)}`, isPlayer: true });
+      }
     }
 
     // Record the enemy's last attack time

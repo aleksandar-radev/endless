@@ -386,7 +386,7 @@ export default class SkillTree {
 
     if (baseEffects.manaPerHit) {
       game.restoreMana(baseEffects.manaPerHit);
-      UiNumber((hero.stats.mana * baseEffects.manaPercent) / 100, 'blue');
+      UiNumber(baseEffects.manaPerHit, 'blue');
     }
 
     if (instantSkillDamage !== 0) {
