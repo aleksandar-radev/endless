@@ -8,6 +8,7 @@ import Enemy from './enemy.js';
 import { showTooltip, positionTooltip, hideTooltip } from './ui/ui.js';
 import { REGIONS } from './constants/regions.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
+import { ENEMY_LIST } from './constants/enemies.js';
 
 export async function setCurrentRegion(regionId) {
   if (regionId === game.currentRegionId) return;
@@ -36,6 +37,11 @@ export async function setCurrentRegion(regionId) {
 
 export function getCurrentRegion() {
   return REGIONS.find((r) => r.id === game.currentRegionId) || REGIONS[0];
+}
+
+export function getRegionEnemies(region) {
+  const allowedTags = region.allowedTags;
+  return ENEMY_LIST.filter((e) => e.tags && allowedTags.some((tag) => e.tags.includes(tag)) && e.tier === region.tier);
 }
 
 export function getUnlockedRegions(hero) {
