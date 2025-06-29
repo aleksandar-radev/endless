@@ -253,4 +253,34 @@ export const ATTRIBUTE_TOOLTIPS = {
     Chance to block incoming attacks.<br />
     Maximum: 75%
   `,
+
+  getEvasionTooltip: () => html`
+    <strong>Evasion</strong><br />
+    Chance to dodge enemy attacks completely.<br />
+    Higher evasion reduces enemy hit chance.
+  `,
+
+  getFireResistanceTooltip: () => html`
+    <strong>Fire Resistance</strong><br />
+    Reduces fire damage taken from enemies.<br />
+    ${ELEMENTS.fire.icon} Effective against fire enemies.
+  `,
+
+  getColdResistanceTooltip: () => html`
+    <strong>Cold Resistance</strong><br />
+    Reduces cold damage taken from enemies.<br />
+    ${ELEMENTS.cold.icon} Effective against cold enemies.
+  `,
+
+  getAirResistanceTooltip: () => html`
+    <strong>Air Resistance</strong><br />
+    Reduces air damage taken from enemies.<br />
+    ${ELEMENTS.air.icon} Effective against air enemies.
+  `,
+
+  getEarthResistanceTooltip: () => html`
+    <strong>Earth Resistance</strong><br />
+    Reduces earth damage taken from enemies.<br />
+    ${ELEMENTS.earth.icon} Effective against earth enemies.
+  `,
 };

@@ -397,7 +397,21 @@ export default class Hero {
 
     const scale = 1 + (scalingFactor - 1) * 0.18;
     const reduction = (this.stats.armor / (this.stats.armor + 25 * scale)) * 100;
-    return Math.min(reduction, 80); // Keep the 80% cap
+    return Math.min(reduction, 75); // Keep the 75% cap
+  }
+
+  calculateEvasionChance() {
+    let scalingFactor;
+
+    if (game.currentRegion === 'arena') {
+      scalingFactor = this.bossLevel * 15 || 15;
+    } else {
+      scalingFactor = game.stage * getCurrentRegion().evasionReductionMultiplier;
+    }
+
+    const scale = 1 + (scalingFactor - 1) * 0.18;
+    const reduction = (this.stats.evasion / (this.stats.evasion + 25 * scale)) * 100;
+    return Math.min(reduction, 75); // Keep the 75% cap
   }
 
   calculateHitChance() {

@@ -221,6 +221,14 @@ export function updateStatsAndAttributesUI() {
       const ar = hero.calculateArmorReduction().toFixed(2) + '%';
       armorEl.appendChild(document.createTextNode(` (${ar})`));
     }
+
+    // add evasion reduction percentage to evasion
+    const evasionEl = document.getElementById('evasion-value');
+    if (evasionEl) {
+      evasionEl.textContent = hero.stats.evasion || 0;
+      const er = hero.calculateEvasionChance().toFixed(2) + '%';
+      evasionEl.appendChild(document.createTextNode(` (${er})`));
+    }
   }
 
   if (!attributesContainer) {

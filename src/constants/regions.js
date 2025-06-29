@@ -23,6 +23,7 @@ export const REGIONS = [
     itemBaseBonus: 0.8,
     hitChanceMultiplier: 1.0,
     armorReductionMultiplier: 1.0,
+    evasionReductionMultiplier: 1.0,
   },
   {
     tier: 2,
@@ -46,6 +47,7 @@ export const REGIONS = [
     itemBaseBonus: 1.04,
     hitChanceMultiplier: 2.0,
     armorReductionMultiplier: 2.0,
+    evasionReductionMultiplier: 2.0,
   },
   {
     tier: 3,
@@ -71,6 +73,7 @@ export const REGIONS = [
     itemBaseBonus: 1.28,
     hitChanceMultiplier: 3.0,
     armorReductionMultiplier: 3.0,
+    evasionReductionMultiplier: 3.0,
   },
   {
     tier: 4,
@@ -95,6 +98,7 @@ export const REGIONS = [
     itemBaseBonus: 1.52,
     hitChanceMultiplier: 4.0,
     armorReductionMultiplier: 4.0,
+    evasionReductionMultiplier: 4.0,
   },
   {
     tier: 5,
@@ -119,6 +123,7 @@ export const REGIONS = [
     itemBaseBonus: 1.76,
     hitChanceMultiplier: 5.0,
     armorReductionMultiplier: 5.0,
+    evasionReductionMultiplier: 5.0,
   },
   {
     tier: 6,
@@ -147,6 +152,7 @@ export const REGIONS = [
     itemBaseBonus: 2.0,
     hitChanceMultiplier: 6.0,
     armorReductionMultiplier: 6.0,
+    evasionReductionMultiplier: 6.0,
   },
   {
     tier: 7,
@@ -170,6 +176,7 @@ export const REGIONS = [
     itemBaseBonus: 2.24,
     hitChanceMultiplier: 7.0,
     armorReductionMultiplier: 7.0,
+    evasionReductionMultiplier: 7.0,
   },
   {
     tier: 8,
@@ -197,6 +204,7 @@ export const REGIONS = [
     itemBaseBonus: 2.48,
     hitChanceMultiplier: 8.0,
     armorReductionMultiplier: 8.0,
+    evasionReductionMultiplier: 8.0,
   },
   {
     tier: 9,
@@ -223,6 +231,7 @@ export const REGIONS = [
     itemBaseBonus: 2.72,
     hitChanceMultiplier: 9.0,
     armorReductionMultiplier: 9.0,
+    evasionReductionMultiplier: 9.0,
   },
   {
     tier: 10,
@@ -250,6 +259,7 @@ export const REGIONS = [
     itemBaseBonus: 2.96,
     hitChanceMultiplier: 10.0,
     armorReductionMultiplier: 10.0,
+    evasionReductionMultiplier: 10.0,
   },
   {
     tier: 11,
@@ -276,6 +286,7 @@ export const REGIONS = [
     itemBaseBonus: 3.22,
     hitChanceMultiplier: 11.0,
     armorReductionMultiplier: 11.0,
+    evasionReductionMultiplier: 11.0,
   },
   {
     tier: 12,
@@ -303,6 +314,7 @@ export const REGIONS = [
     itemBaseBonus: 3.5,
     hitChanceMultiplier: 12.0,
     armorReductionMultiplier: 12.0,
+    evasionReductionMultiplier: 12.0,
   },
 ];
 

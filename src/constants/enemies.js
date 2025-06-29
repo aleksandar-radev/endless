@@ -71,7 +71,7 @@ export const ENEMY_LIST = [
   {
     name: 'Abyssal Wraith',
     element: 'cold',
-    image: 'enemies/abyssal-wraith.jpg',
+    image: '/enemies/abyssal-wraith.jpg',
     lifeMultiplier: 1.2,
     damageMultiplier: 1.1,
     xpMultiplier: 1.1,
@@ -84,7 +84,7 @@ export const ENEMY_LIST = [
   {
     name: 'Boglurker',
     element: 'earth',
-    image: 'enemies/boglurker.jpg',
+    image: '/enemies/boglurker.jpg',
     lifeMultiplier: 1.1,
     damageMultiplier: 1.0,
     xpMultiplier: 1.0,
@@ -97,7 +97,7 @@ export const ENEMY_LIST = [
   {
     name: 'Cloudstrider',
     element: 'air',
-    image: 'enemies/cloudstrider.jpg',
+    image: '/enemies/cloudstrider.jpg',
     lifeMultiplier: 1.0,
     damageMultiplier: 1.2,
     xpMultiplier: 1.0,
@@ -110,7 +110,7 @@ export const ENEMY_LIST = [
   {
     name: 'Crystal Golem',
     element: 'earth',
-    image: 'enemies/crystal-golem.jpg',
+    image: '/enemies/crystal-golem.jpg',
     lifeMultiplier: 1.4,
     damageMultiplier: 0.9,
     xpMultiplier: 1.0,
@@ -125,7 +125,7 @@ export const ENEMY_LIST = [
   {
     name: 'Dreadfang',
     element: 'air',
-    image: 'enemies/dreadfang.jpg',
+    image: '/enemies/dreadfang.jpg',
     lifeMultiplier: 1.0,
     damageMultiplier: 1.3,
     xpMultiplier: 1.0,
@@ -138,7 +138,7 @@ export const ENEMY_LIST = [
   {
     name: 'Dunewraith',
     element: 'earth',
-    image: 'enemies/dunewraith.jpg',
+    image: '/enemies/dunewraith.jpg',
     lifeMultiplier: 1.1,
     damageMultiplier: 1.1,
     xpMultiplier: 1.0,
@@ -151,7 +151,7 @@ export const ENEMY_LIST = [
   {
     name: 'Frostbite',
     element: 'cold',
-    image: 'enemies/frostbite.jpg',
+    image: '/enemies/frostbite.jpg',
     lifeMultiplier: 1.0,
     damageMultiplier: 1.2,
     xpMultiplier: 1.0,
@@ -164,7 +164,7 @@ export const ENEMY_LIST = [
   {
     name: 'Frostfury',
     element: 'cold',
-    image: 'enemies/frostfury.jpg',
+    image: '/enemies/frostfury.jpg',
     lifeMultiplier: 1.1,
     damageMultiplier: 1.1,
     xpMultiplier: 1.0,
@@ -177,7 +177,7 @@ export const ENEMY_LIST = [
   {
     name: 'Frostweaver',
     element: 'cold',
-    image: 'enemies/frostweaver.jpg',
+    image: '/enemies/frostweaver.jpg',
     lifeMultiplier: 1.2,
     damageMultiplier: 1.0,
     xpMultiplier: 1.0,
@@ -190,7 +190,7 @@ export const ENEMY_LIST = [
   {
     name: 'Gem Guardian',
     element: 'earth',
-    image: 'enemies/gem-guardian.jpg',
+    image: '/enemies/gem-guardian.jpg',
     lifeMultiplier: 1.3,
     damageMultiplier: 1.0,
     xpMultiplier: 1.0,
@@ -203,7 +203,7 @@ export const ENEMY_LIST = [
   {
     name: 'Grimspike',
     element: 'earth',
-    image: 'enemies/grimspike.jpg',
+    image: '/enemies/grimspike.jpg',
     lifeMultiplier: 1.2,
     damageMultiplier: 1.1,
     xpMultiplier: 1.0,
@@ -216,7 +216,7 @@ export const ENEMY_LIST = [
   {
     name: 'Sandstalker',
     element: 'earth',
-    image: 'enemies/sandstalker.jpg',
+    image: '/enemies/sandstalker.jpg',
     lifeMultiplier: 1.1,
     damageMultiplier: 1.2,
     xpMultiplier: 1.0,
@@ -229,7 +229,7 @@ export const ENEMY_LIST = [
   {
     name: 'Shadowclaw',
     element: 'air',
-    image: 'enemies/shadowclaw.jpg',
+    image: '/enemies/shadowclaw.jpg',
     lifeMultiplier: 1.0,
     damageMultiplier: 1.3,
     xpMultiplier: 1.0,
@@ -242,7 +242,7 @@ export const ENEMY_LIST = [
   {
     name: 'Shardling',
     element: 'earth',
-    image: 'enemies/shardling.jpg',
+    image: '/enemies/shardling.jpg',
     lifeMultiplier: 1.1,
     damageMultiplier: 1.1,
     xpMultiplier: 1.0,
@@ -255,7 +255,7 @@ export const ENEMY_LIST = [
   {
     name: 'Stormbringer',
     element: 'air',
-    image: 'enemies/stormbringer.jpg',
+    image: '/enemies/stormbringer.jpg',
     lifeMultiplier: 1.0,
     damageMultiplier: 1.3,
     xpMultiplier: 1.0,
@@ -268,7 +268,7 @@ export const ENEMY_LIST = [
   {
     name: 'Stormsoul',
     element: 'air',
-    image: 'enemies/stormsoul.jpg',
+    image: '/enemies/stormsoul.jpg',
     lifeMultiplier: 1.1,
     damageMultiplier: 1.2,
     xpMultiplier: 1.0,
@@ -281,7 +281,7 @@ export const ENEMY_LIST = [
   {
     name: 'Thunderwing',
     element: 'air',
-    image: 'enemies/thunderwing.jpg',
+    image: '/enemies/thunderwing.jpg',
     lifeMultiplier: 1.0,
     damageMultiplier: 1.3,
     xpMultiplier: 1.0,
@@ -294,7 +294,7 @@ export const ENEMY_LIST = [
   {
     name: 'Toxictoad',
     element: 'earth',
-    image: 'enemies/toxictoad.jpg',
+    image: '/enemies/toxictoad.jpg',
     lifeMultiplier: 1.2,
     damageMultiplier: 1.0,
     xpMultiplier: 1.0,
@@ -307,7 +307,7 @@ export const ENEMY_LIST = [
   {
     name: 'Venomspitter',
     element: 'earth',
-    image: 'enemies/venomspitter.jpg',
+    image: '/enemies/venomspitter.jpg',
     lifeMultiplier: 1.1,
     damageMultiplier: 1.1,
     xpMultiplier: 1.0,
@@ -320,7 +320,7 @@ export const ENEMY_LIST = [
   {
     name: 'Mossback',
     element: 'earth',
-    image: 'enemies/mossback.jpg',
+    image: '/enemies/mossback.jpg',
     lifeMultiplier: 1.2,
     damageMultiplier: 1.0,
     xpMultiplier: 1.1,
@@ -333,7 +333,7 @@ export const ENEMY_LIST = [
   {
     name: 'Thornling',
     element: 'earth',
-    image: 'enemies/thornling.jpg',
+    image: '/enemies/thornling.jpg',
     lifeMultiplier: 1.0,
     damageMultiplier: 1.2,
     xpMultiplier: 1.0,
@@ -346,7 +346,7 @@ export const ENEMY_LIST = [
   {
     name: 'Barkhide',
     element: 'earth',
-    image: 'enemies/barkhide.jpg',
+    image: '/enemies/barkhide.jpg',
     lifeMultiplier: 1.3,
     damageMultiplier: 1.0,
     xpMultiplier: 1.0,
@@ -359,7 +359,7 @@ export const ENEMY_LIST = [
   {
     name: 'Sylvan Wisp',
     element: 'air',
-    image: 'enemies/sylvan-wisp.jpg',
+    image: '/enemies/sylvan-wisp.jpg',
     lifeMultiplier: 0.9,
     damageMultiplier: 1.3,
     xpMultiplier: 1.2,
@@ -372,7 +372,7 @@ export const ENEMY_LIST = [
   {
     name: 'Magma Titan',
     element: 'fire',
-    image: 'enemies/magma-titan.jpg',
+    image: '/enemies/magma-titan.jpg',
     lifeMultiplier: 1.8,
     damageMultiplier: 1.5,
     xpMultiplier: 1.0,
@@ -385,7 +385,7 @@ export const ENEMY_LIST = [
   {
     name: 'Ember Drake',
     element: 'fire',
-    image: 'enemies/ember-drake.jpg',
+    image: '/enemies/ember-drake.jpg',
     lifeMultiplier: 1.3,
     damageMultiplier: 1.4,
     xpMultiplier: 1.1,
@@ -398,7 +398,7 @@ export const ENEMY_LIST = [
   {
     name: 'Lava Elemental',
     element: 'fire',
-    image: 'enemies/lava-elemental.jpg',
+    image: '/enemies/lava-elemental.jpg',
     lifeMultiplier: 1.4,
     damageMultiplier: 1.2,
     xpMultiplier: 1.0,
@@ -411,7 +411,7 @@ export const ENEMY_LIST = [
   {
     name: 'Tide Guardian',
     element: 'cold',
-    image: 'enemies/tide-guardian.jpg',
+    image: '/enemies/tide-guardian.jpg',
     lifeMultiplier: 1.5,
     damageMultiplier: 1.1,
     xpMultiplier: 1.0,
@@ -424,7 +424,7 @@ export const ENEMY_LIST = [
   {
     name: 'Coral Sentinel',
     element: 'earth',
-    image: 'enemies/coral-sentinel.jpg',
+    image: '/enemies/coral-sentinel.jpg',
     lifeMultiplier: 1.6,
     damageMultiplier: 1.0,
     xpMultiplier: 1.1,
@@ -437,7 +437,7 @@ export const ENEMY_LIST = [
   {
     name: 'Depths Leviathan',
     element: 'cold',
-    image: 'enemies/depths-leviathan.jpg',
+    image: '/enemies/depths-leviathan.jpg',
     lifeMultiplier: 1.7,
     damageMultiplier: 1.3,
     xpMultiplier: 1.2,
@@ -450,7 +450,7 @@ export const ENEMY_LIST = [
   {
     name: 'Banshee',
     element: 'air',
-    image: 'enemies/banshee.jpg',
+    image: '/enemies/banshee.jpg',
     lifeMultiplier: 1.0,
     damageMultiplier: 1.4,
     xpMultiplier: 1.3,
@@ -463,7 +463,7 @@ export const ENEMY_LIST = [
   {
     name: 'Phantom',
     element: 'cold',
-    image: 'enemies/phantom.jpg',
+    image: '/enemies/phantom.jpg',
     lifeMultiplier: 1.1,
     damageMultiplier: 1.3,
     xpMultiplier: 1.1,
@@ -476,7 +476,7 @@ export const ENEMY_LIST = [
   {
     name: 'Wraith Lord',
     element: 'earth',
-    image: 'enemies/wraith-lord.jpg',
+    image: '/enemies/wraith-lord.jpg',
     lifeMultiplier: 1.6,
     damageMultiplier: 1.2,
     xpMultiplier: 1.2,
@@ -489,7 +489,7 @@ export const ENEMY_LIST = [
   {
     name: 'Golden Sphinx',
     element: 'earth',
-    image: 'enemies/golden-sphinx.jpg',
+    image: '/enemies/golden-sphinx.jpg',
     lifeMultiplier: 1.4,
     damageMultiplier: 1.2,
     xpMultiplier: 1.0,
@@ -502,7 +502,7 @@ export const ENEMY_LIST = [
   {
     name: 'Aurelius',
     element: 'fire',
-    image: 'enemies/aurelius.jpg',
+    image: '/enemies/aurelius.jpg',
     lifeMultiplier: 1.2,
     damageMultiplier: 1.3,
     xpMultiplier: 1.1,
@@ -515,7 +515,7 @@ export const ENEMY_LIST = [
   {
     name: 'Midas Beast',
     element: 'air',
-    image: 'enemies/midas-beast.jpg',
+    image: '/enemies/midas-beast.jpg',
     lifeMultiplier: 1.3,
     damageMultiplier: 1.1,
     xpMultiplier: 1.0,
@@ -528,7 +528,7 @@ export const ENEMY_LIST = [
   {
     name: 'Void Sentinel',
     element: 'cold',
-    image: 'enemies/void-sentinel.jpg',
+    image: '/enemies/void-sentinel.jpg',
     lifeMultiplier: 1.8,
     damageMultiplier: 1.4,
     xpMultiplier: 1.3,
@@ -541,7 +541,7 @@ export const ENEMY_LIST = [
   {
     name: 'Arcane Construct',
     element: 'air',
-    image: 'enemies/arcane-construct.jpg',
+    image: '/enemies/arcane-construct.jpg',
     lifeMultiplier: 1.5,
     damageMultiplier: 1.5,
     xpMultiplier: 1.1,
@@ -554,7 +554,7 @@ export const ENEMY_LIST = [
   {
     name: 'Obsidian Golem',
     element: 'earth',
-    image: 'enemies/obsidian-golem.jpg',
+    image: '/enemies/obsidian-golem.jpg',
     lifeMultiplier: 2.0,
     damageMultiplier: 1.2,
     xpMultiplier: 1.2,
@@ -567,7 +567,7 @@ export const ENEMY_LIST = [
   {
     name: 'Frost Giant',
     element: 'cold',
-    image: 'enemies/frost-giant.jpg',
+    image: '/enemies/frost-giant.jpg',
     lifeMultiplier: 1.8,
     damageMultiplier: 1.3,
     xpMultiplier: 1.1,
@@ -580,7 +580,7 @@ export const ENEMY_LIST = [
   {
     name: 'Ice Wraith',
     element: 'cold',
-    image: 'enemies/ice-wraith.jpg',
+    image: '/enemies/ice-wraith.jpg',
     lifeMultiplier: 1.2,
     damageMultiplier: 1.4,
     xpMultiplier: 1.0,
@@ -593,7 +593,7 @@ export const ENEMY_LIST = [
   {
     name: 'Wildfire Spirit',
     element: 'fire',
-    image: 'enemies/wildfire-spirit.jpg',
+    image: '/enemies/wildfire-spirit.jpg',
     lifeMultiplier: 1.0,
     damageMultiplier: 1.3,
     xpMultiplier: 1.1,
@@ -607,7 +607,7 @@ export const ENEMY_LIST = [
   {
     name: 'Scorching Salamander',
     element: 'fire',
-    image: 'enemies/scorching-salamander.jpg',
+    image: '/enemies/scorching-salamander.jpg',
     lifeMultiplier: 1.2,
     damageMultiplier: 1.2,
     xpMultiplier: 1.0,
@@ -621,7 +621,7 @@ export const ENEMY_LIST = [
   {
     name: 'Dune Blazer',
     element: 'fire',
-    image: 'enemies/dune-blazer.jpg',
+    image: '/enemies/dune-blazer.jpg',
     lifeMultiplier: 1.1,
     damageMultiplier: 1.4,
     xpMultiplier: 1.0,
@@ -635,7 +635,7 @@ export const ENEMY_LIST = [
   {
     name: 'Hellhound',
     element: 'fire',
-    image: 'enemies/hellhound.jpg',
+    image: '/enemies/hellhound.jpg',
     lifeMultiplier: 1.3,
     damageMultiplier: 1.3,
     xpMultiplier: 1.2,
@@ -649,7 +649,7 @@ export const ENEMY_LIST = [
   {
     name: 'Infernal Knight',
     element: 'fire',
-    image: 'enemies/infernal-knight.jpg',
+    image: '/enemies/infernal-knight.jpg',
     lifeMultiplier: 1.6,
     damageMultiplier: 1.2,
     xpMultiplier: 1.1,
@@ -663,7 +663,7 @@ export const ENEMY_LIST = [
   {
     name: 'Molten Wyrm',
     element: 'fire',
-    image: 'enemies/molten-wyrm.jpg',
+    image: '/enemies/molten-wyrm.jpg',
     lifeMultiplier: 1.7,
     damageMultiplier: 1.4,
     xpMultiplier: 1.0,
@@ -677,7 +677,7 @@ export const ENEMY_LIST = [
   {
     name: 'Solar Phoenix',
     element: 'fire',
-    image: 'enemies/solar-phoenix.jpg',
+    image: '/enemies/solar-phoenix.jpg',
     lifeMultiplier: 1.4,
     damageMultiplier: 1.5,
     xpMultiplier: 1.3,
@@ -691,7 +691,7 @@ export const ENEMY_LIST = [
   {
     name: 'Radiant Lion',
     element: 'fire',
-    image: 'enemies/radiant-lion.jpg',
+    image: '/enemies/radiant-lion.jpg',
     lifeMultiplier: 1.5,
     damageMultiplier: 1.3,
     xpMultiplier: 1.1,
@@ -705,7 +705,7 @@ export const ENEMY_LIST = [
   {
     name: 'Crimson Wisp',
     element: 'fire',
-    image: 'enemies/crimson-wisp.jpg',
+    image: '/enemies/crimson-wisp.jpg',
     lifeMultiplier: 0.8,
     damageMultiplier: 1.6,
     xpMultiplier: 1.2,
@@ -719,7 +719,7 @@ export const ENEMY_LIST = [
   {
     name: 'Flame Djinn',
     element: 'fire',
-    image: 'enemies/flame-djinn.jpg',
+    image: '/enemies/flame-djinn.jpg',
     lifeMultiplier: 1.8,
     damageMultiplier: 1.4,
     xpMultiplier: 1.4,

@@ -350,7 +350,14 @@ export const formatStatName = (stat) => {
   if (stat === 'damagePercent') return 'Damage %';
   if (stat === 'lifePercent') return 'Life %';
   if (stat === 'manaPercent') return 'Mana %';
+  if (stat === 'armor') return 'Armor';
   if (stat === 'armorPercent') return 'Armor %';
+  if (stat === 'evasion') return 'Evasion';
+  if (stat === 'evasionPercent') return 'Evasion %';
+  if (stat === 'fireResistance') return 'Fire Resistance';
+  if (stat === 'coldResistance') return 'Cold Resistance';
+  if (stat === 'airResistance') return 'Air Resistance';
+  if (stat === 'earthResistance') return 'Earth Resistance';
   if (stat === 'elementalDamagePercent') return 'Elemental Damage %';
   if (stat === 'lifeRegen') return 'Life Regeneration';
   if (stat === 'manaRegen') return 'Mana Regeneration';

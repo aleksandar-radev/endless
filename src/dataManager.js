@@ -26,7 +26,7 @@ export class DataManager {
   async saveGame({ cloud = false } = {}) {
     const saveData = getGlobals();
 
-    localStorage.setItem('gameProgress', JSON.stringify(saveData));
+    localStorage.setItem('gameProgress', crypt.encrypt(JSON.stringify(saveData)));
 
     if (cloud) {
       try {
@@ -73,10 +73,16 @@ export class DataManager {
       }
 
       try {
-        data = JSON.parse(data);
+        data = crypt.decrypt(data);
       } catch (e) {
-        console.warn('Failed to parse game data:', data);
-        return null;
+        console.warn('Failed to decrypt game data:', e);
+
+        try {
+          data = JSON.parse(data);
+        } catch (e) {
+          console.warn('Failed to parse game data:', data);
+          return null;
+        }
       }
     }
 

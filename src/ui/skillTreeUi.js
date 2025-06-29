@@ -52,7 +52,7 @@ function showClassSelection() {
     pathElement.innerHTML = html`
       <div style="display: flex; align-items: flex-start; gap: 18px;">
         <img
-          src="${import.meta.env.BASE_URL}avatars/${pathData.avatar()}"
+          src="${import.meta.env.BASE_URL}/avatars/${pathData.avatar()}"
           alt="${pathData.name()} Avatar"
           style="width: 72px; height: 72px; border-radius: 8px; object-fit: cover; background: #222;"
         />
@@ -182,7 +182,7 @@ function renderAutoCastToggles() {
     icon.className = 'skill-icon';
     icon.style.width = '28px';
     icon.style.height = '28px';
-    icon.style.backgroundImage = `url('${import.meta.env.BASE_URL}skills/${skill.icon()}.jpg')`;
+    icon.style.backgroundImage = `url('${import.meta.env.BASE_URL}/skills/${skill.icon()}.jpg')`;
     icon.style.marginRight = '8px';
     wrapper.appendChild(icon);
 
@@ -237,7 +237,7 @@ function renderDisplayToggles() {
     icon.className = 'skill-icon';
     icon.style.width = '28px';
     icon.style.height = '28px';
-    icon.style.backgroundImage = `url('${import.meta.env.BASE_URL}skills/${skill.icon()}.jpg')`;
+    icon.style.backgroundImage = `url('${import.meta.env.BASE_URL}/skills/${skill.icon()}.jpg')`;
     icon.style.marginRight = '8px';
     wrapper.appendChild(icon);
     const label = document.createElement('label');
@@ -267,7 +267,7 @@ export function updateSkillTreeValues() {
     img.alt = 'Peasant Avatar';
     characterAvatarEl.innerHTML = '';
     characterAvatarEl.appendChild(img);
-    img.src = `${import.meta.env.BASE_URL}avatars/peasant-avatar.jpg`;
+    img.src = `${import.meta.env.BASE_URL}/avatars/peasant-avatar.jpg`;
 
     // reset name
     characterNameEl.textContent = ``;
@@ -284,7 +284,7 @@ export function updateSkillTreeValues() {
       characterAvatarEl.innerHTML = '';
       characterAvatarEl.appendChild(img);
     }
-    img.src = `${import.meta.env.BASE_URL}avatars/${selectedPath.avatar()}`;
+    img.src = `${import.meta.env.BASE_URL}/avatars/${selectedPath.avatar()}`;
   }
 
   const characterName =
@@ -390,7 +390,7 @@ function openSkillModal(skillId) {
 
   // Set skill icon in modal
   const iconEl = skillModal.querySelector('.modal-skill-icon');
-  iconEl.style.backgroundImage = `url('${import.meta.env.BASE_URL}skills/${skill.icon()}.jpg')`;
+  iconEl.style.backgroundImage = `url('${import.meta.env.BASE_URL}/skills/${skill.icon()}.jpg')`;
 
   const currentLevel = skillTree.skills[skillId]?.level || 0;
   const nextLevel = currentLevel + 1;
@@ -560,7 +560,7 @@ function createSkillElement(baseSkill) {
   skillElement.innerHTML = html`
     <div
       class="skill-icon"
-      style="background-image: url('${import.meta.env.BASE_URL}skills/${skill.icon()}.jpg')"
+      style="background-image: url('${import.meta.env.BASE_URL}/skills/${skill.icon()}.jpg')"
     ></div>
     <div class="skill-level">
       ${skillTree.skills[skill.id]?.level || 0}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
@@ -680,7 +680,7 @@ export function updateActionBar() {
     // Add skill icon
     const iconDiv = document.createElement('div');
     iconDiv.className = 'skill-icon';
-    iconDiv.style.backgroundImage = `url('${import.meta.env.BASE_URL}skills/${skill.icon()}.jpg')`;
+    iconDiv.style.backgroundImage = `url('${import.meta.env.BASE_URL}/skills/${skill.icon()}.jpg')`;
     skillSlot.appendChild(iconDiv);
 
     // Show active state

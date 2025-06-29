@@ -171,43 +171,57 @@ export default class Training {
     this.modal.classList.add('hidden');
   }
 
+  getMaxPurchasable(selectedQty, baseLevel, maxLevel, config) {
+    // Limit max upgrades per call to 100,000
+    const MAX_BULK = 100000;
+    let safeMaxLevel = maxLevel === Infinity || !isFinite(maxLevel) ? baseLevel + MAX_BULK : maxLevel;
+    let maxPossible = Math.min(safeMaxLevel - baseLevel, MAX_BULK);
+    let qty = selectedQty === 'max' ? 0 : selectedQty;
+    let totalCost = 0;
+
+    if (selectedQty === 'max') {
+      let gold = hero.gold;
+      let low = 0;
+      let high = maxPossible;
+      let best = 0;
+      while (low <= high) {
+        let mid = Math.floor((low + high) / 2);
+        let cost = (Number(config.cost) * (mid * (2 * baseLevel + mid + 1))) / 2;
+        if (!isFinite(cost)) {
+          high = mid - 1;
+          continue;
+        }
+        if (cost <= gold) {
+          best = mid;
+          low = mid + 1;
+        } else {
+          high = mid - 1;
+        }
+      }
+      qty = best;
+      totalCost = (Number(config.cost) * (qty * (2 * baseLevel + qty + 1))) / 2;
+    } else {
+      qty = Math.min(qty, maxPossible);
+      totalCost = (Number(config.cost) * (qty * (2 * baseLevel + qty + 1))) / 2;
+    }
+
+    return { qty, totalCost };
+  }
+
   updateModalDetails() {
     // Guard against missing currentStat
     if (!this.currentStat) return;
     const stat = this.currentStat;
-    const trainingConfig = STATS[stat].training;
-    if (!trainingConfig) {
+    const config = STATS[stat].training;
+    if (!config) {
       this.closeModal();
       return;
     }
-    const config = trainingConfig;
     const baseLevel = this.upgradeLevels[stat] || 0;
-    const goldAvailable = hero.gold;
     const maxLevel = config?.maxLevel ?? Infinity;
-    // Determine numeric qty
-    let qty = this.selectedQty === 'max' ? 0 : this.selectedQty;
-    let totalCost = 0;
-    let maxPossible = maxLevel - baseLevel;
 
-    // If max, compute max purchasable without mutating state
-    if (this.selectedQty === 'max') {
-      let lvl = baseLevel;
-      let gold = goldAvailable;
-      while (lvl < maxLevel) {
-        const cost = config.cost * (lvl + 1);
-        if (gold < cost) break;
-        gold -= cost;
-        totalCost += cost;
-        lvl++;
-        qty++;
-      }
-    } else {
-      qty = Math.min(qty, maxPossible);
-      for (let i = 0; i < qty; i++) {
-        const cost = config.cost * (baseLevel + i + 1);
-        totalCost += cost;
-      }
-    }
+    const { qty, totalCost } = this.getMaxPurchasable(this.selectedQty, baseLevel, maxLevel, config);
+
     // Compute total bonus gained
     const bonusValue = (config.bonus || 0) * qty;
     const decimals = STATS[stat].decimalPlaces || 0;
@@ -225,7 +239,7 @@ export default class Training {
 
     // Enable/disable Buy button based on quantity and affordability
     const buyBtn = this.modal.querySelector('.modal-buy');
-    buyBtn.disabled = qty <= 0 || totalCost > goldAvailable || baseLevel >= maxLevel;
+    buyBtn.disabled = qty <= 0 || totalCost > hero.gold || baseLevel >= maxLevel;
   }
 
   updateTrainingUI(subTab) {
@@ -297,20 +311,7 @@ export default class Training {
     const levelsLeft = maxLevel - currentLevel;
 
     if (qty === 'max') {
-      // Use arithmetic progression sum to find max affordable upgrades
-      let low = 0,
-        high = levelsLeft;
-      while (low < high) {
-        let mid = Math.ceil((low + high) / 2);
-        let cost = (baseCost * (mid * (2 * currentLevel + mid + 1))) / 2;
-        if (cost <= gold) {
-          low = mid;
-        } else {
-          high = mid - 1;
-        }
-      }
-      levelsToBuy = low;
-      totalCost = (baseCost * (levelsToBuy * (2 * currentLevel + levelsToBuy + 1))) / 2;
+      ({ qty: levelsToBuy, totalCost } = this.getMaxPurchasable(qty, currentLevel, maxLevel, config));
     } else {
       levelsToBuy = Math.min(qty, levelsLeft);
       // Calculate total cost for levelsToBuy upgrades
