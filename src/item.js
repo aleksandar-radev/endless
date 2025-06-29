@@ -23,9 +23,8 @@ export default class Item {
   }
 
   getLevelScale(stat, level) {
-    const scaleFactor = 0.035; // per level
-    const scaling = AVAILABLE_STATS[stat].scaling;
-    return scaling === 'capped' ? Math.min(1 + (level - 1) * scaleFactor, 2) : 1 + (level - 1) * scaleFactor;
+    const scaling = AVAILABLE_STATS[stat].scaling(level);
+    return scaling;
   }
 
   getTierBonus() {
@@ -39,6 +38,9 @@ export default class Item {
   calculateStatValue({ baseValue, tierBonus, multiplier, scale, stat }) {
     const decimals = STATS[stat].decimalPlaces || 0;
     let val = Number((baseValue * tierBonus * multiplier * scale).toFixed(decimals));
+
+    const limit = STATS[stat].item?.limit || Infinity;
+    val = Math.min(val, limit);
 
     this.metaData = this.metaData || {};
     this.metaData[stat] = { baseValue };

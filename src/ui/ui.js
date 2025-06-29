@@ -136,7 +136,7 @@ export function switchTab(game, tabName) {
     updateQuestsUI();
   }
   if (tabName === 'inventory') {
-    // Clear new items flag when visiting inventory
+    // Clear new items flag when visiting inventory.
     inventory?.clearNewItemsFlag();
   }
 

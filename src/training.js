@@ -23,7 +23,7 @@ export default class Training {
     this.upgradeLevels = {};
     this.trainingBonuses = {};
     Object.entries(STATS).forEach(([stat, config]) => {
-      if (config.training && config.training.available) {
+      if (config.training) {
         this.upgradeLevels[stat] = 0;
         this.trainingBonuses[stat] = 0;
       }
@@ -98,7 +98,7 @@ export default class Training {
         <div class="training-modal-content">
           <button class="modal-close">&times;</button>
           <h2 class="modal-title"></h2>
-          <p>Current Level: <span class="modal-level"></span></p>
+          <p>Current Level: <span class="modal-level"></span>/<span class="modal-max-level"></span></p>
           <p>Current Bonus: <span class="modal-bonus"></span></p>
           <p>Next Level Bonus: <span class="modal-next-bonus"></span></p>
           <p>Total Bonus: <span class="modal-total-bonus"></span></p>
@@ -143,12 +143,14 @@ export default class Training {
 
   openModal(stat) {
     const trainingConfig = STATS[stat].training;
-    if (!trainingConfig || !trainingConfig.available) return;
+    if (!trainingConfig) return;
     this.currentStat = stat;
     // Set title and base info
     const m = this.modal;
-    m.querySelector('.modal-title').textContent = stat.charAt(0).toUpperCase() + stat.slice(1);
+    m.querySelector('.modal-title').textContent = formatStatName(stat);
     m.querySelector('.modal-level').textContent = this.upgradeLevels[stat] || 0;
+    m.querySelector('.modal-max-level').textContent =
+      trainingConfig?.maxLevel === Infinity ? '∞' : trainingConfig.maxLevel;
     m.querySelector('.modal-bonus').textContent = this.getBonusText(
       stat,
       STATS[stat].training,
@@ -174,21 +176,24 @@ export default class Training {
     if (!this.currentStat) return;
     const stat = this.currentStat;
     const trainingConfig = STATS[stat].training;
-    if (!trainingConfig || !trainingConfig.available) {
+    if (!trainingConfig) {
       this.closeModal();
       return;
     }
     const config = trainingConfig;
     const baseLevel = this.upgradeLevels[stat] || 0;
     const goldAvailable = hero.gold;
+    const maxLevel = config?.maxLevel ?? Infinity;
     // Determine numeric qty
     let qty = this.selectedQty === 'max' ? 0 : this.selectedQty;
     let totalCost = 0;
+    let maxPossible = maxLevel - baseLevel;
+
     // If max, compute max purchasable without mutating state
     if (this.selectedQty === 'max') {
       let lvl = baseLevel;
       let gold = goldAvailable;
-      while (true) {
+      while (lvl < maxLevel) {
         const cost = config.cost * (lvl + 1);
         if (gold < cost) break;
         gold -= cost;
@@ -197,6 +202,7 @@ export default class Training {
         qty++;
       }
     } else {
+      qty = Math.min(qty, maxPossible);
       for (let i = 0; i < qty; i++) {
         const cost = config.cost * (baseLevel + i + 1);
         totalCost += cost;
@@ -213,12 +219,13 @@ export default class Training {
       stat
     )}`;
     this.modal.querySelector('.modal-level').textContent = baseLevel;
+    this.modal.querySelector('.modal-max-level').textContent = maxLevel === Infinity ? '∞' : maxLevel;
     this.modal.querySelector('.modal-bonus').textContent = this.getBonusText(stat, config, baseLevel);
     this.modal.querySelector('.modal-next-bonus').textContent = this.getBonusText(stat, config, baseLevel + 1);
 
     // Enable/disable Buy button based on quantity and affordability
     const buyBtn = this.modal.querySelector('.modal-buy');
-    buyBtn.disabled = qty <= 0 || totalCost > goldAvailable;
+    buyBtn.disabled = qty <= 0 || totalCost > goldAvailable || baseLevel >= maxLevel;
   }
 
   updateTrainingUI(subTab) {
@@ -226,7 +233,7 @@ export default class Training {
     if (!trainingGrid) return;
     const section = SECTION_DEFS.find((s) => s.key === this.activeSection);
     trainingGrid.innerHTML = Object.entries(STATS)
-      .filter(([stat, config]) => config.training && config.training.available && section.stats.includes(stat))
+      .filter(([stat, config]) => config.training && section.stats.includes(stat))
       .map(([stat, config]) => this.createUpgradeButton(stat, config))
       .join('');
   }
@@ -234,11 +241,13 @@ export default class Training {
   createUpgradeButton(stat, config) {
     const level = this.upgradeLevels[stat] || 0;
     const bonus = this.getBonusText(stat, config.training, level);
+    const maxLevel = config.training?.maxLevel ?? Infinity;
+    const isMaxed = level >= maxLevel;
 
     return html`
-      <button data-stat="${stat}">
-        <span class="upgrade-name">${formatStatName(stat)} (Lvl ${level})</span>
-        <span class="upgrade-bonus">${bonus}</span>
+      <button data-stat="${stat}" ${isMaxed ? ' disabled' : ''}>
+        <span class="upgrade-name">${formatStatName(stat)} (Lvl ${level}${isMaxed ? ' / Max' : ''})</span>
+        <span class="upgrade-bonus">${bonus}${isMaxed ? ' <strong>Max</strong>' : ''}</span>
       </button>
     `;
   }
@@ -253,33 +262,6 @@ export default class Training {
     const level = this.upgradeLevels[stat] || 0;
     const cost = STATS[stat].training ? STATS[stat].training.cost * (level + 1) : 0;
     return cost;
-  }
-
-  buyUpgrade(stat) {
-    const currency = 'gold';
-    const cost = this.getUpgradeCost(stat);
-
-    // Check if player has enough currency
-    if (hero[currency] < cost) {
-      showToast(`Not enough ${currency}!`, 'error');
-      return;
-    }
-
-    // Deduct cost and increase level
-    hero[currency] -= cost;
-    this.upgradeLevels[stat] = (this.upgradeLevels[stat] || 0) + 1;
-
-    // Update UI
-    this.updateTrainingUI('gold-upgrades');
-    hero.recalculateFromAttributes();
-    updateStatsAndAttributesUI();
-    updateResources();
-    dataManager.saveGame();
-
-    // Update modal details live
-    if (this.modal && !this.modal.classList.contains('hidden') && this.currentStat === stat) {
-      this.updateModalDetails();
-    }
   }
 
   getTrainingBonuses() {
@@ -305,24 +287,52 @@ export default class Training {
   buyBulk(stat, qty) {
     const currency = 'gold';
     let count = 0;
+    const config = STATS[stat].training;
+    const maxLevel = config?.maxLevel ?? Infinity;
+    let currentLevel = this.upgradeLevels[stat] || 0;
+    const baseCost = config.cost;
+    let gold = hero[currency];
+    let levelsToBuy = 0;
+    let totalCost = 0;
+    const levelsLeft = maxLevel - currentLevel;
+
     if (qty === 'max') {
-      while (true) {
-        const cost = this.getUpgradeCost(stat);
-        if (hero[currency] < cost) break;
-        hero[currency] -= cost;
-        this.upgradeLevels[stat]++;
-        count++;
+      // Use arithmetic progression sum to find max affordable upgrades
+      let low = 0,
+        high = levelsLeft;
+      while (low < high) {
+        let mid = Math.ceil((low + high) / 2);
+        let cost = (baseCost * (mid * (2 * currentLevel + mid + 1))) / 2;
+        if (cost <= gold) {
+          low = mid;
+        } else {
+          high = mid - 1;
+        }
       }
+      levelsToBuy = low;
+      totalCost = (baseCost * (levelsToBuy * (2 * currentLevel + levelsToBuy + 1))) / 2;
     } else {
-      for (let i = 0; i < qty; i++) {
-        const cost = this.getUpgradeCost(stat);
-        if (hero[currency] < cost) break;
-        hero[currency] -= cost;
-        this.upgradeLevels[stat]++;
-        count++;
+      levelsToBuy = Math.min(qty, levelsLeft);
+      // Calculate total cost for levelsToBuy upgrades
+      totalCost = (baseCost * (levelsToBuy * (2 * currentLevel + levelsToBuy + 1))) / 2;
+      if (totalCost > gold) {
+        // If not enough gold for all, reduce levelsToBuy
+        // Find max affordable
+        let affordable = 0;
+        for (let i = 1; i <= levelsToBuy; i++) {
+          let cost = (baseCost * (i * (2 * currentLevel + i + 1))) / 2;
+          if (cost > gold) break;
+          affordable = i;
+        }
+        levelsToBuy = affordable;
+        totalCost = (baseCost * (levelsToBuy * (2 * currentLevel + levelsToBuy + 1))) / 2;
       }
     }
-    if (count > 0) {
+
+    if (levelsToBuy > 0) {
+      hero[currency] -= totalCost;
+      this.upgradeLevels[stat] += levelsToBuy;
+      count = levelsToBuy;
       showToast(`Upgraded ${formatStatName(stat)} by ${count} levels!`);
     } else {
       showToast(`Not enough gold to upgrade ${formatStatName(stat)}!`, 'error');

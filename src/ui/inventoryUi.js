@@ -4,6 +4,8 @@ import { MATERIALS } from '../constants/materials.js';
 import { hideTooltip, positionTooltip, showToast, showTooltip } from '../ui/ui.js';
 import { ITEM_RARITY, RARITY_ORDER, SLOT_REQUIREMENTS } from '../constants/items.js';
 
+const html = String.raw;
+
 export function initializeInventoryUI(inv) {
   // Create all inventory UI structure dynamically
   const inventoryTab = document.getElementById('inventory');
@@ -13,7 +15,7 @@ export function initializeInventoryUI(inv) {
   // Equipment container
   const equipmentContainer = document.createElement('div');
   equipmentContainer.className = 'equipment-container';
-  equipmentContainer.innerHTML = `
+  equipmentContainer.innerHTML = html`
     <div class="equipment-layout">
       <div class="equipment-slots">
         <div class="equipment-slot" data-slot="head"><div class="slot-indicator">🪖</div></div>
@@ -36,18 +38,7 @@ export function initializeInventoryUI(inv) {
         <button id="materials-tab" class="inventory-btn">Materials</button>
       </div>
       <div id="sort-inventory" class="inventory-btn">Sort Items</div>
-      <div class="salvage-dropdown">
-        <button class="salvage-btn">Salvage <span class="dropdown-icon">▼</span></button>
-        <div class="salvage-options">
-          <div data-rarity="NORMAL">Normal Items</div>
-          <div data-rarity="MAGIC">Magic Items & Below</div>
-          <div data-rarity="RARE">Rare Items & Below</div>
-          <div data-rarity="UNIQUE">Unique Items & Below</div>
-          <div data-rarity="LEGENDARY">Legendary Items & Below</div>
-          <div data-rarity="MYTHIC">Mythic Items & Below</div>
-        </div>
-      </div>
-      <div class="inventory-trash">🗑️</div>
+      <button id="open-salvage-modal" class="inventory-btn">Salvage</button>
     </div>
   `;
   inventoryTab.appendChild(equipmentContainer);
@@ -55,7 +46,7 @@ export function initializeInventoryUI(inv) {
   // Inventory grid
   const inventoryGrid = document.createElement('div');
   inventoryGrid.className = 'inventory-grid';
-  inventoryGrid.innerHTML = `
+  inventoryGrid.innerHTML = html`
     <div class="materials-grid" style="display: none">
       <div class="materials-container"></div>
     </div>
@@ -80,6 +71,7 @@ export function initializeInventoryUI(inv) {
   const itemsTab = document.getElementById('items-tab');
   const materialsTab = document.getElementById('materials-tab');
   const materialsGrid = document.querySelector('.materials-grid');
+  const openSalvageModalBtn = document.getElementById('open-salvage-modal');
 
   // Update button text on tab switch
   function updateSortBtnText() {
@@ -120,25 +112,6 @@ export function initializeInventoryUI(inv) {
     }
   });
 
-  // Add event listeners for salvage options
-  document.querySelectorAll('.salvage-options div').forEach((option) => {
-    option.addEventListener('click', () => {
-      const rarity = option.dataset.rarity;
-      inventory.salvageItemsByRarity(rarity);
-      sortInventory();
-    });
-  });
-
-  const materialsContainer = document.querySelector('.materials-container');
-  if (materialsContainer) {
-    materialsContainer.innerHTML = '';
-    for (let i = 0; i < MATERIALS_SLOTS; i++) {
-      const cell = document.createElement('div');
-      cell.classList.add('materials-cell');
-      materialsContainer.appendChild(cell);
-    }
-  }
-
   // Add tooltip for sort button
   sortBtn.addEventListener('mouseenter', (e) => {
     const tooltipText = itemsTab.classList.contains('active') ? 'Sort items by rarity then level' : 'Sort materials';
@@ -147,6 +120,164 @@ export function initializeInventoryUI(inv) {
   });
   sortBtn.addEventListener('mousemove', positionTooltip);
   sortBtn.addEventListener('mouseleave', hideTooltip);
+
+  // Salvage modal logic
+  openSalvageModalBtn.addEventListener('click', () => {
+    showSalvageModal(inv);
+  });
+}
+
+// Salvage Modal Implementation
+export function showSalvageModal(inv) {
+  // Modal content: inventory grid (left), salvage buttons (right), trash area (bottom or right)
+  const modalContent = document.createElement('div');
+  modalContent.className = 'inventory-modal-content';
+  modalContent.style.display = 'flex';
+  modalContent.style.flexDirection = 'row';
+  modalContent.style.gap = '32px';
+  modalContent.style.alignItems = 'flex-start';
+
+  // Inventory grid (reuse grid rendering)
+  const salvageGrid = document.createElement('div');
+  salvageGrid.className = 'salvage-modal-grid';
+  salvageGrid.style.display = 'grid';
+  salvageGrid.style.gridTemplateColumns = 'repeat(10, 40px)';
+  salvageGrid.style.gridTemplateRows = 'repeat(20, 40px)';
+  salvageGrid.style.gap = '0';
+  salvageGrid.style.background = 'var(--bg-panel)';
+  salvageGrid.style.borderRadius = '0.5rem';
+  salvageGrid.style.overflowY = 'auto';
+  salvageGrid.style.maxHeight = '820px';
+  for (let i = 0; i < ITEM_SLOTS; i++) {
+    const cell = document.createElement('div');
+    cell.classList.add('grid-cell');
+    if (i < PERSISTENT_SLOTS) cell.classList.add('persistent');
+    const item = inv.inventoryItems[i];
+    if (item) {
+      cell.innerHTML = html`
+        <div class="inventory-item rarity-${item.rarity.toLowerCase()}" draggable="true" data-item-id="${item.id}">
+          <div class="item-icon">${item.getIcon()}</div>
+        </div>
+      `;
+    }
+    salvageGrid.appendChild(cell);
+  }
+
+  // Salvage controls (right side)
+  const salvageControls = document.createElement('div');
+  salvageControls.style.display = 'flex';
+  salvageControls.style.flexDirection = 'column';
+  salvageControls.style.gap = '16px';
+  salvageControls.style.alignItems = 'flex-start';
+  salvageControls.innerHTML = html`
+    <h3>Salvage Options</h3>
+    <div class="salvage-options-modal">
+      <button class="salvage-btn-modal" data-rarity="NORMAL">Normal Items</button>
+      <button class="salvage-btn-modal" data-rarity="MAGIC">Magic Items & Below</button>
+      <button class="salvage-btn-modal" data-rarity="RARE">Rare Items & Below</button>
+      <button class="salvage-btn-modal" data-rarity="UNIQUE">Unique Items & Below</button>
+      <button class="salvage-btn-modal" data-rarity="LEGENDARY">Legendary Items & Below</button>
+      <button class="salvage-btn-modal" data-rarity="MYTHIC">Mythic Items & Below</button>
+    </div>
+    <div class="inventory-trash" style="margin-top:32px;">
+      🗑️
+      <div style="font-size:0.9em;">Drag item here</div>
+    </div>
+    <button class="modal-close" style="margin-top:32px;">Close</button>
+  `;
+
+  // Compose modal
+  modalContent.appendChild(salvageGrid);
+  modalContent.appendChild(salvageControls);
+
+  // Show modal
+  const dialog = document.createElement('div');
+  dialog.className = 'inventory-modal';
+  dialog.style.display = 'flex';
+  dialog.style.alignItems = 'center';
+  dialog.style.justifyContent = 'center';
+  dialog.style.position = 'fixed';
+  dialog.style.top = '0';
+  dialog.style.left = '0';
+  dialog.style.width = '100vw';
+  dialog.style.height = '100vh';
+  dialog.style.background = 'rgba(0,0,0,0.7)';
+  dialog.style.zIndex = '9999';
+  dialog.appendChild(modalContent);
+  document.body.appendChild(dialog);
+
+  // Salvage button logic
+  dialog.querySelectorAll('.salvage-btn-modal').forEach((btn) => {
+    btn.onclick = () => {
+      const rarity = btn.dataset.rarity;
+      inventory.salvageItemsByRarity(rarity);
+      // Refresh modal grid after salvage
+      dialog.remove();
+      showSalvageModal(inv);
+    };
+  });
+
+  // Trash drag logic (same as before, but scoped to modal)
+  const trash = dialog.querySelector('.inventory-trash');
+  trash.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    trash.classList.add('drag-over');
+  });
+  trash.addEventListener('dragleave', () => {
+    trash.classList.remove('drag-over');
+  });
+  trash.addEventListener('drop', (e) => {
+    e.preventDefault();
+    trash.classList.remove('drag-over');
+    const itemId = e.dataTransfer.getData('text/plain');
+    const item = inventory.getItemById(itemId);
+    if (!item) return;
+    let removed = false;
+    const invIdx = inventory.inventoryItems.findIndex((i) => i && i.id === item.id);
+    if (invIdx !== -1) {
+      inventory.inventoryItems[invIdx] = null;
+      removed = true;
+    }
+    if (removed) {
+      let goldGained = 10 * (item.level + 1) * (RARITY_ORDER.indexOf(item.rarity) + 1);
+      let crystalsGained = item.rarity === 'MYTHIC' ? 1 : 0;
+      if (goldGained > 0) hero.gold = (hero.gold || 0) + goldGained;
+      if (crystalsGained > 0) hero.crystals = (hero.crystals || 0) + crystalsGained;
+      let msg = `Salvaged 1 ${item.rarity.toLowerCase()} item`;
+      if (goldGained > 0) msg += `, gained ${goldGained} gold`;
+      if (crystalsGained > 0) msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
+      showToast(msg, 'success');
+      updateInventoryGrid();
+      dataManager.saveGame();
+      dialog.remove();
+      showSalvageModal(inv);
+    }
+  });
+
+  // Drag logic for items in modal grid
+  salvageGrid.querySelectorAll('.inventory-item').forEach((item) => {
+    item.addEventListener('dragstart', (e) => {
+      e.target.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', item.dataset.itemId);
+    });
+    item.addEventListener('dragend', (e) => {
+      e.target.classList.remove('dragging');
+    });
+    // Tooltip events (reuse main logic if needed)
+    item.addEventListener('mouseenter', (e) => {
+      const itemData = inventory.getItemById(item.dataset.itemId);
+      if (!itemData) return;
+      let tooltipContent = `<div>${itemData.getTooltipHTML()}</div>`;
+      showTooltip(tooltipContent, e, 'flex-tooltip');
+    });
+    item.addEventListener('mousemove', positionTooltip);
+    item.addEventListener('mouseleave', hideTooltip);
+  });
+
+  // Close modal
+  dialog.querySelector('.modal-close').onclick = () => {
+    dialog.remove();
+  };
 }
 
 export function updateInventoryGrid(inv) {
@@ -258,15 +389,13 @@ export function setupDragAndDrop() {
 
     // --- ADVANCED TOOLTIP LOGIC ---
     trash.addEventListener('mouseenter', (e) => {
-      const tooltipContent = `
-      <div class="item-tooltip" style="text-align:center;">
-        <div style="font-size:2em;">🗑️</div>
-        <b>Salvage Item</b>
-        <div style="margin-top:4px;font-size:0.95em;">
-          Drag and drop an item here to salvage it.
+      const tooltipContent = html`
+        <div class="item-tooltip" style="text-align:center;">
+          <div style="font-size:2em;">🗑️</div>
+          <b>Salvage Item</b>
+          <div style="margin-top:4px;font-size:0.95em;">Drag and drop an item here to salvage it.</div>
         </div>
-      </div>
-    `;
+      `;
       showTooltip(tooltipContent, e, 'flex-tooltip');
     });
     trash.addEventListener('mousemove', positionTooltip);

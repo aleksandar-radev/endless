@@ -158,7 +158,13 @@ export const OFFENSE_STATS = {
   doubleDamageChance: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 0.2, max: 1.5, scaling: 'capped' },
+    training: { cost: 800, bonus: 0.1, maxLevel: 200 }, // max bonus: 20
+    item: {
+      min: 2,
+      max: 5,
+      limit: 25,
+      scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER),
+    },
     itemTags: ['offense', 'gloves'],
     showInUI: true,
   },
@@ -166,7 +172,7 @@ export const OFFENSE_STATS = {
   elementalDamagePercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 1, max: 8, scaling: 'capped' },
+    item: { min: 4, max: 16, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['offense', 'jewelry', 'gloves'],
   },
 };

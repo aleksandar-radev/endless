@@ -26,11 +26,27 @@ export const handleSavedData = (savedData, self) => {
 };
 
 // Debugging
+let debugUiInterval = null; // Track the interval ID for clearing later
+let saveGameInterval = null; // Track the interval ID for clearing later
+
+// Load saved expanded states
+const expandedState = new Map(JSON.parse(localStorage.getItem('debugUIState') || '[]'));
 
 export function initDebugging() {
   let dev = false; // Track if dev mode is active
   let keySequence = [];
   const toggleSequence = ['e', 'd', 'e', 'v'];
+  let debugUiRafId = null; // Track requestAnimationFrame id
+
+  // Helper: requestAnimationFrame update loop
+  function debugUiUpdateLoop() {
+    const debugDiv = document.querySelector('.debug-ui');
+    // Only update if debug UI is visible
+    if (debugDiv && debugDiv.style.display !== 'none') {
+      updateDebugUI();
+    }
+    debugUiRafId = requestAnimationFrame(debugUiUpdateLoop);
+  }
 
   document.addEventListener('keydown', (event) => {
     keySequence.push(event.key.toLowerCase());
@@ -43,8 +59,19 @@ export function initDebugging() {
       if (dev) {
         document.body.classList.add('dev-active');
         createDebugUI();
+        saveExpandedState(expandedState);
         createModifyUI();
+
+        // Initial update and monitor changes
+        updateDebugUI();
+        debugUiRafId = requestAnimationFrame(debugUiUpdateLoop); // Start RAF loop
+        saveGameInterval = setInterval(dataManager.saveGame, 1000);
       } else {
+        if (debugUiRafId) {
+          cancelAnimationFrame(debugUiRafId);
+          debugUiRafId = null;
+        }
+        clearInterval(saveGameInterval);
         document.body.classList.remove('dev-active');
         const debugDiv = document.querySelector('.debug-ui');
         const modifyUI = document.querySelector('.modify-ui');
@@ -59,8 +86,158 @@ export function initDebugging() {
   });
 }
 
-export function createDebugUI() {
+// Function to update the UI
+let lastDecryptedSave = null; // Cache for last decrypted save
+function updateDebugUI() {
+  const debugDiv = document.querySelector('.debug-ui');
+  if (!debugDiv) return;
+
+  let encrypted = localStorage.getItem('gameProgress');
+  let decrypted;
+  try {
+    decrypted = crypt.decrypt(encrypted);
+  } catch {
+    console.error('Failed to decrypt game progress');
+    return;
+  }
+
+  // Only update if the save has changed
+  if (JSON.stringify(decrypted) === JSON.stringify(lastDecryptedSave)) {
+    return;
+  }
+  lastDecryptedSave = decrypted;
+
+  debugDiv.innerHTML = '';
+
+  // Remove or comment out noisy log
+  // console.log('Debugging UI updated');
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    let value;
+
+    if (key === 'debugUIState') continue;
+    if (key !== 'gameProgress') continue;
+
+    value = decrypted;
+
+    const fullPath = key;
+    const details = document.createElement('details');
+
+    // Preserve expansion state
+    if (expandedState.has(fullPath)) {
+      details.open = expandedState.get(fullPath);
+    } else {
+      details.open = true; // Default: Expanded
+    }
+
+    // Track changes to the expansion state
+    details.addEventListener('toggle', () => {
+      expandedState.set(fullPath, details.open);
+    });
+
+    const summary = document.createElement('summary');
+    summary.textContent = key;
+    details.appendChild(summary);
+
+    // Render the nested object or value
+    renderObject(value, details, fullPath, 0);
+    debugDiv.appendChild(details);
+  }
+}
+
+// Save expanded state whenever it changes
+function saveExpandedState() {
+  localStorage.setItem('debugUIState', JSON.stringify([...expandedState]));
+}
+
+// Helper function to render nested objects and arrays with spacing
+function renderObject(obj, parent, path = '', level = 0) {
   const indentPx = 10;
+
+  if (typeof obj !== 'object' || obj === null) {
+    // Display primitive values
+    const span = document.createElement('span');
+    span.style.marginLeft = `${level * indentPx}px`; // Indentation for levels
+    span.textContent = JSON.stringify(obj);
+    parent.appendChild(span);
+    return;
+  }
+
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const value = obj[key];
+      const fullPath = `${path}.${key}`;
+
+      if (obj instanceof Map) {
+        // Convert Map to an object for display
+        const mapObject = {};
+        obj.forEach((value, key) => {
+          mapObject[key] = value;
+        });
+        renderObject(mapObject, parent, path, level);
+        return;
+      }
+
+      if (typeof obj !== 'object' || obj === null) {
+        const span = document.createElement('span');
+        span.style.marginLeft = `${level * indentPx}px`;
+        span.textContent = JSON.stringify(obj);
+        parent.appendChild(span);
+        return;
+      }
+
+      if (typeof value === 'object' && value !== null) {
+        // Create expandable details for objects and arrays
+        const details = document.createElement('details');
+        details.style.marginLeft = `${level * indentPx}px`; // Indentation for levels
+
+        // Preserve expansion state
+        if (expandedState.has(fullPath)) {
+          details.open = expandedState.get(fullPath);
+        } else {
+          details.open = true; // Default: Expanded
+        }
+
+        // Track changes to the expansion state
+        details.addEventListener('toggle', () => {
+          expandedState.set(fullPath, details.open);
+          saveExpandedState();
+        });
+
+        const summary = document.createElement('summary');
+        summary.textContent = key;
+        summary.style.cursor = 'pointer';
+        summary.style.fontWeight = 'bold';
+        summary.style.color = 'orange';
+        if (Array.isArray(value)) {
+          summary.textContent = key + '[]';
+          summary.style.color = 'yellow';
+        }
+
+        if (level === 0) {
+          summary.style.fontSize = '18px';
+          summary.style.color = '#00ff00';
+        }
+
+        details.appendChild(summary);
+
+        // Recursively render child objects
+        renderObject(value, details, fullPath, level + 1);
+        parent.appendChild(details);
+      } else {
+        // Display primitive properties as plain text
+        const span = document.createElement('span');
+        span.style.marginLeft = `${(level + 1) * indentPx}px`; // Indentation for properties
+        span.textContent = `${key}: ${JSON.stringify(value)}`;
+        parent.appendChild(span);
+        parent.appendChild(document.createElement('br'));
+      }
+    }
+  }
+}
+
+export function createDebugUI() {
   const debugDiv = document.createElement('div');
   debugDiv.style.position = 'fixed';
   debugDiv.style.top = '0';
@@ -77,145 +254,6 @@ export function createDebugUI() {
   debugDiv.style.fontSize = '12px';
   debugDiv.classList.add('debug-ui');
   document.body.appendChild(debugDiv);
-
-  // Load saved expanded states
-  const expandedState = new Map(JSON.parse(localStorage.getItem('debugUIState') || '[]'));
-
-  // Save expanded state whenever it changes
-  function saveExpandedState() {
-    localStorage.setItem('debugUIState', JSON.stringify([...expandedState]));
-  }
-
-  // Helper function to render nested objects and arrays with spacing
-  function renderObject(obj, parent, path = '', level = 0) {
-    if (typeof obj !== 'object' || obj === null) {
-      // Display primitive values
-      const span = document.createElement('span');
-      span.style.marginLeft = `${level * indentPx}px`; // Indentation for levels
-      span.textContent = JSON.stringify(obj);
-      parent.appendChild(span);
-      return;
-    }
-
-    for (const key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        const value = obj[key];
-        const fullPath = `${path}.${key}`;
-
-        if (obj instanceof Map) {
-          // Convert Map to an object for display
-          const mapObject = {};
-          obj.forEach((value, key) => {
-            mapObject[key] = value;
-          });
-          renderObject(mapObject, parent, path, level);
-          return;
-        }
-
-        if (typeof obj !== 'object' || obj === null) {
-          const span = document.createElement('span');
-          span.style.marginLeft = `${level * indentPx}px`;
-          span.textContent = JSON.stringify(obj);
-          parent.appendChild(span);
-          return;
-        }
-
-        if (typeof value === 'object' && value !== null) {
-          // Create expandable details for objects and arrays
-          const details = document.createElement('details');
-          details.style.marginLeft = `${level * indentPx}px`; // Indentation for levels
-
-          // Preserve expansion state
-          if (expandedState.has(fullPath)) {
-            details.open = expandedState.get(fullPath);
-          } else {
-            details.open = true; // Default: Expanded
-          }
-
-          // Track changes to the expansion state
-          details.addEventListener('toggle', () => {
-            expandedState.set(fullPath, details.open);
-            saveExpandedState();
-          });
-
-          const summary = document.createElement('summary');
-          summary.textContent = key;
-          summary.style.cursor = 'pointer';
-          summary.style.fontWeight = 'bold';
-          summary.style.color = 'orange';
-          if (Array.isArray(value)) {
-            summary.textContent = key + '[]';
-            summary.style.color = 'yellow';
-          }
-
-          if (level === 0) {
-            summary.style.fontSize = '18px';
-            summary.style.color = '#00ff00';
-          }
-
-          details.appendChild(summary);
-
-          // Recursively render child objects
-          renderObject(value, details, fullPath, level + 1);
-          parent.appendChild(details);
-        } else {
-          // Display primitive properties as plain text
-          const span = document.createElement('span');
-          span.style.marginLeft = `${(level + 1) * indentPx}px`; // Indentation for properties
-          span.textContent = `${key}: ${JSON.stringify(value)}`;
-          parent.appendChild(span);
-          parent.appendChild(document.createElement('br'));
-        }
-      }
-    }
-  }
-
-  // Function to update the UI
-  function updateDebugUI() {
-    debugDiv.innerHTML = ''; // Clear current UI
-
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      let value;
-
-      if (key === 'debugUIState') continue;
-      if (key !== 'gameProgress') continue;
-
-      try {
-        value = crypt.decrypt(localStorage.getItem('gameProgress'));
-      } catch {
-        console.error('Failed to decrypt game progress');
-      }
-
-      const fullPath = key;
-      const details = document.createElement('details');
-
-      // Preserve expansion state
-      if (expandedState.has(fullPath)) {
-        details.open = expandedState.get(fullPath);
-      } else {
-        details.open = true; // Default: Expanded
-      }
-
-      // Track changes to the expansion state
-      details.addEventListener('toggle', () => {
-        expandedState.set(fullPath, details.open);
-      });
-
-      const summary = document.createElement('summary');
-      summary.textContent = key;
-      details.appendChild(summary);
-
-      // Render the nested object or value
-      renderObject(value, details, fullPath, 0);
-      debugDiv.appendChild(details);
-    }
-  }
-
-  // Initial update and monitor changes
-  updateDebugUI();
-  setInterval(updateDebugUI, 1000);
-  setInterval(dataManager.saveGame, 1000);
 }
 
 export function createModifyUI() {
@@ -392,6 +430,25 @@ export function createModifyUI() {
     showToast(`Added ${itemType} (level ${itemLevel}, ${rarity}, tier ${tier}) to inventory`);
   });
   addItemControlsDiv.appendChild(addItemBtn);
+
+  // Add 10x Items button (levels increment by 500)
+  const add10ItemsBtn = document.createElement('button');
+  add10ItemsBtn.textContent = 'Add 10x Items (+500 Lvl each)';
+  add10ItemsBtn.addEventListener('click', () => {
+    const itemType = itemTypeSelect.value;
+    const baseLevel = parseInt(itemLevelInput.value, 10) || 1;
+    const rarity = raritySelect.value;
+    const tier = parseInt(tierInput.value, 10) || 1;
+    for (let i = 0; i < 10; i++) {
+      const itemLevel = baseLevel + i * 500;
+      const newItem = inventory.createItem(itemType, itemLevel, rarity, tier);
+      inventory.addItemToInventory(newItem);
+    }
+    showToast(
+      `Added 10x ${itemType} (levels ${baseLevel} to ${baseLevel + 4500}, ${rarity}, tier ${tier}) to inventory`
+    );
+  });
+  addItemControlsDiv.appendChild(add10ItemsBtn);
 
   // Generate full gear button
   const generateFullGearBtn = document.createElement('button');

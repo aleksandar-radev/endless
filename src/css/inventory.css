@@ -419,95 +419,148 @@
   border-color: #f55;
 }
 
-.inventory-modal.hidden {
-  display: none;
+.inventory-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
 }
 
 .inventory-modal-content {
   background: var(--bg-element, #1e2127);
-  padding: 1.5rem;
   border-radius: 0.75rem;
-  width: 500px;
-  text-align: center;
-  position: relative;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 32px;
+  padding: 2.5rem 2rem;
+  min-width: 900px;
+  min-height: 700px;
+  max-width: 1200px;
+}
+
+.salvage-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 40px);
+  grid-template-rows: repeat(20, 40px);
+  gap: 0;
+  background: var(--bg-panel);
+  border-radius: 0.5rem;
+  overflow-y: auto;
+  max-height: 820px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.salvage-options-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.salvage-btn-modal {
+  padding: 10px 18px;
+  background: #2c3e50;
+  border: 1px solid #34495e;
+  color: white;
+  border-radius: 0.5rem;
+  font-size: 1.05em;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 2px;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.salvage-btn-modal[data-rarity='NORMAL'] {
+  color: #fff;
+  border-left: 4px solid #fff;
+}
+.salvage-btn-modal[data-rarity='MAGIC'] {
+  color: #4287f5;
+  border-left: 4px solid #4287f5;
+}
+.salvage-btn-modal[data-rarity='RARE'] {
+  color: #ffd700;
+  border-left: 4px solid #ffd700;
+}
+.salvage-btn-modal[data-rarity='UNIQUE'] {
+  color: #ff8c00;
+  border-left: 4px solid #ff8c00;
+}
+.salvage-btn-modal[data-rarity='LEGENDARY'] {
+  color: #e65a27;
+  border-left: 4px solid #e65a27;
+}
+.salvage-btn-modal[data-rarity='MYTHIC'] {
+  color: #ff0033;
+  border-left: 4px solid #ff0033;
+}
+.salvage-btn-modal:hover {
+  background: #34495e;
+  color: #fff;
+}
+
+.inventory-modal-content h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  color: var(--accent, #3b82f6);
+  text-align: left;
+}
+
+.inventory-modal .inventory-trash {
+  margin: 24px 0 0 0;
+  width: 100%;
+  min-height: 60px;
+  background: #222;
+  border: 2px dashed #888;
+  border-radius: 8px;
+  color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-size: 2em;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.inventory-modal .inventory-trash.drag-over {
+  background: #a33;
+  border-color: #f55;
 }
 
-.inventory-modal-content h2 {
-  margin-bottom: 1rem;
-  font-size: 1.25rem;
-  color: var(--accent, #3b82f6);
-}
-
-.inventory-modal-content p {
-  margin: 0.5rem 0;
-  color: var(--text, #fff);
-}
-
-.inventory-modal-content .modal-controls {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  margin-top: 1rem;
-}
-
-.inventory-modal-content .modal-controls button {
-  background: var(--accent, #3b82f6);
+.inventory-modal .modal-close {
+  margin-top: 32px;
+  background: #e65a27;
   color: #fff;
   border: none;
-  padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
-  font-size: 0.95rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1em;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
 }
-
-.inventory-modal-content .modal-controls button:hover {
-  background: #2563eb;
+.inventory-modal .modal-close:hover {
+  background: #b13c1e;
 }
 
-.inventory-modal-content .modal-buy {
-  background: var(--accent, #3b82f6);
-  color: #fff;
-  border: none;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  width: 100%;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s, opacity 0.2s;
-}
-
-.inventory-modal-content .modal-buy:hover:not(:disabled) {
-  background: #2563eb;
-}
-
-.inventory-modal-content .modal-buy:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.upgrade-item-row .upgrade-btn {
-  background: var(--accent, #3b82f6);
-  padding: 7px;
-  color: #fff;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background 0.2s, opacity 0.2s;
-}
-
-.upgrade-item-row .upgrade-btn:hover {
-  background: rgb(16, 83, 190);
-}
-
-.upgrade-item-row .upgrade-qty-input {
-  width: 60px;
-  padding: 5px;
-  border-radius: 10px;
+@media (max-width: 1100px) {
+  .inventory-modal-content {
+    flex-direction: column;
+    min-width: 350px;
+    min-height: 400px;
+    align-items: center;
+    gap: 16px;
+  }
+  .salvage-modal-grid {
+    max-width: 100vw;
+    margin-bottom: 16px;
+  }
 }
