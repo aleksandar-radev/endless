@@ -19,7 +19,6 @@ let tabIndicatorManager = null;
 const html = String.raw;
 
 export function initializeUI() {
-  game.currentEnemy = new Enemy(game.stage);
   game.activeTab = 'stats'; // Match the default active tab in HTML
 
   // Initialize tab indicator manager

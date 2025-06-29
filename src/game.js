@@ -1,5 +1,5 @@
 import { updatePlayerLife, updateEnemyStats, updateStageUI, updateResources, updateBuffIndicators } from './ui/ui.js';
-import { playerAttack, enemyAttack, playerDeath, defeatEnemy } from './combat.js';
+import { playerAttack, enemyAttack, playerDeath, defeatEnemy, createDamageNumber } from './combat.js';
 import { game, hero, crystalShop, skillTree, statistics, dataManager, setGlobals, options } from './globals.js';
 import Enemy from './enemy.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
@@ -59,7 +59,16 @@ class Game {
     if (hero.stats.currentLife <= 0) {
       playerDeath();
     }
+
     updatePlayerLife();
+
+    let color;
+    if (heal > 0) {
+      color = 'green';
+    } else {
+      color = 'red';
+    }
+    createDamageNumber({ heal, isPlayer: true, isCritical: false, color });
   }
 
   restoreMana(mana) {
@@ -68,6 +77,13 @@ class Game {
       hero.stats.currentMana = hero.stats.mana;
     }
     updatePlayerLife();
+
+    let color;
+    if (mana > 0) {
+      color = 'blue';
+    }
+
+    createDamageNumber({ mana, isPlayer: true, isCritical: false, color });
   }
 
   damageEnemy(damage) {
