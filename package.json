@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node obfuscate-dist.js",
+    "build:noobf": "vite build --mode noobf",
     "preview": "vite preview",
     "lint": "eslint . --ext .js",
-    "test": "vitest"
+    "obfuscate": "node obfuscate-dist.js"
   },
   "dependencies": {
     "marked": "^16.0.0",
@@ -17,6 +18,7 @@
   "devDependencies": {
     "dotenv": "^17.0.0",
     "eslint": "^9.30.0",
+    "javascript-obfuscator": "^4.1.1",
     "terser": "^5.43.1",
     "vite": "^7.0.0"
   }
