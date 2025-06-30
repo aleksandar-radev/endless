@@ -166,8 +166,8 @@ export class Options {
     upcomingBtn.textContent = 'View Upcoming Changes';
     upcomingBtn.onclick = async () => {
       // Use Vite's import.meta.glob to dynamically import the upcoming file
-      const upcomingModules = import.meta.glob('./upcomming.md', { query: '?raw', import: 'default' });
-      const loader = upcomingModules['./upcomming.md'];
+      const upcomingModules = import.meta.glob('./upcoming.md', { query: '?raw', import: 'default' });
+      const loader = upcomingModules['./upcoming.md'];
       let text = '';
       try {
         text = loader ? await loader() : '(No upcoming changes found)';

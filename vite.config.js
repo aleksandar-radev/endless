@@ -8,6 +8,14 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    minify: 'terser',
+    terserOptions: {
+      compress: true,
+      mangle: true,
+      format: {
+        comments: false,
+      },
+    },
   },
   server: {
     open: true,
