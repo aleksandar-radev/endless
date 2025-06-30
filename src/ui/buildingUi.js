@@ -118,8 +118,8 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
             Upgrade
           </button>
           ${!placementOptions
-            ? `<button class="building-sell-btn">Sell / Refund (+${Building.formatCost(refundAmount)})</button>`
-            : ''}
+    ? `<button class="building-sell-btn">Sell / Refund (+${Building.formatCost(refundAmount)})</button>`
+    : ''}
         </div>
       </div>
     `;
@@ -280,7 +280,7 @@ function showBuildingsMapModal() {
       // Clamp scroll after zoom
       setTimeout(clampScroll, 0);
     },
-    { passive: false }
+    { passive: false },
   );
   mapContainer.addEventListener('mousedown', (e) => {
     isDragging = true;
@@ -367,7 +367,7 @@ function showChooseBuildingModal(placeholderIdx, onChoose) {
   const placedIds = new Set(
     Object.values(buildings.buildings)
       .filter((b) => b.placedAt !== null)
-      .map((b) => b.id)
+      .map((b) => b.id),
   );
   Object.values(buildings.buildings)
     .filter((building) => !placedIds.has(building.id))
@@ -429,15 +429,15 @@ export function showOfflineBonusesModal(bonuses, onCollect) {
     <div style="margin:12px 0 0 0;">
       <ul style="list-style:none;padding:0;">
         ${bonuses
-          .map(
-            (b) =>
-              `<li style='margin:10px 0;font-size:1.1em;'>${b.icon || ''} <b>${b.name}</b>: +${b.amount} ${
-                b.type
-              } <span style='color:#aaa;font-size:0.95em;'>(for ${b.times} ${b.interval}${
-                b.times > 1 ? 's' : ''
-              })</span></li>`
-          )
-          .join('')}
+    .map(
+      (b) =>
+        `<li style='margin:10px 0;font-size:1.1em;'>${b.icon || ''} <b>${b.name}</b>: +${b.amount} ${
+          b.type
+        } <span style='color:#aaa;font-size:0.95em;'>(for ${b.times} ${b.interval}${
+          b.times > 1 ? 's' : ''
+        })</span></li>`,
+    )
+    .join('')}
       </ul>
     </div>
     <div style="margin-top:18px;color:#aaa;font-size:0.98em;">Bonuses were earned while you were away!</div>

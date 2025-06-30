@@ -18,21 +18,14 @@ class Boss {
     this.id = def.id;
     this.name = def.name;
     this.image = def.image;
-    // Multipliers
-    this.lifeMultiplier = def.lifeMultiplier || 1;
-    this.damageMultiplier = def.damageMultiplier || 1;
-    this.xpMultiplier = def.xpMultiplier || 1;
-    this.goldMultiplier = def.goldMultiplier || 1;
-    this.itemDropMultiplier = def.itemDropMultiplier || 1;
-    this.materialDropMultiplier = def.materialDropMultiplier || 1;
-    this.materialDropWeights = def.materialDropWeights || {};
+
     // Base stats
     this.baseLife = 3000;
     this.baseDamage = 25;
     // Scaled stats
-    this.life = (this.baseLife + hero.bossLevel * 677) * this.lifeMultiplier;
+    this.life = (this.baseLife + hero.bossLevel * 677) * def.multiplier.life;
     this.currentLife = this.life;
-    this.damage = (this.baseDamage + hero.bossLevel * 14) * this.damageMultiplier;
+    this.damage = (this.baseDamage + hero.bossLevel * 14) * def.multiplier.damage;
     // Attack timing for boss combat
     this.attackSpeed = def.attackSpeed || 1; // attacks per second
     this.lastAttack = Date.now();

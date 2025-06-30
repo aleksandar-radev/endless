@@ -7,7 +7,7 @@ import { formatStatName } from './ui/ui.js';
 export const AVAILABLE_STATS = Object.fromEntries(
   Object.entries(STATS)
     .filter(([_, config]) => config.item)
-    .map(([stat, config]) => [stat, config.item])
+    .map(([stat, config]) => [stat, config.item]),
 );
 
 export default class Item {
@@ -104,12 +104,12 @@ export default class Item {
         <div class="item-level">Level ${this.level}, Tier ${this.tier}</div>
         <div class="item-stats">
           ${Object.entries(this.stats)
-            .map(([stat, value]) => {
-              const decimals = STATS[stat].decimalPlaces || 0;
-              const formattedValue = value.toFixed(decimals);
-              return `<div>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}</div>`;
-            })
-            .join('')}
+    .map(([stat, value]) => {
+      const decimals = STATS[stat].decimalPlaces || 0;
+      const formattedValue = value.toFixed(decimals);
+      return `<div>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}</div>`;
+    })
+    .join('')}
         </div>
       </div>
     `;

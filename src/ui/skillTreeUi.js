@@ -63,17 +63,17 @@ function showClassSelection() {
       </div>
       <div class="base-stats" style="margin-top: 15px;">
         ${Object.entries(pathData.baseStats())
-          .map(([stat, value]) => {
-            let readableStat = stat.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
-            let displayValue = value;
-            if (stat.endsWith('Percent')) {
-              readableStat = readableStat.replace(/ Percent$/, '');
-              displayValue = `${value}%`;
-            }
-            const prefix = value > 0 ? '+' : '';
-            return `<div>${readableStat}: ${prefix}${displayValue}</div>`;
-          })
-          .join('')}
+    .map(([stat, value]) => {
+      let readableStat = stat.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
+      let displayValue = value;
+      if (stat.endsWith('Percent')) {
+        readableStat = readableStat.replace(/ Percent$/, '');
+        displayValue = `${value}%`;
+      }
+      const prefix = value > 0 ? '+' : '';
+      return `<div>${readableStat}: ${prefix}${displayValue}</div>`;
+    })
+    .join('')}
       </div>
     `;
 
@@ -170,7 +170,7 @@ function renderAutoCastToggles() {
   autoCastSection = document.createElement('div');
   autoCastSection.id = 'auto-cast-section';
   autoCastSection.style.marginTop = '32px';
-  autoCastSection.innerHTML = `<h3 style="margin-bottom:8px;">Auto-Cast Settings</h3>`;
+  autoCastSection.innerHTML = '<h3 style="margin-bottom:8px;">Auto-Cast Settings</h3>';
 
   eligibleSkills.forEach((skill) => {
     const wrapper = document.createElement('div');
@@ -228,7 +228,7 @@ function renderDisplayToggles() {
 
   displaySection = document.createElement('div');
   displaySection.id = 'display-section';
-  displaySection.innerHTML = `<h3 style="margin-bottom:8px;">Slot Display Settings</h3>`;
+  displaySection.innerHTML = '<h3 style="margin-bottom:8px;">Slot Display Settings</h3>';
 
   eligibleSkills.forEach((skill) => {
     const wrapper = document.createElement('div');
@@ -270,7 +270,7 @@ export function updateSkillTreeValues() {
     img.src = `${import.meta.env.BASE_URL}/avatars/peasant-avatar.jpg`;
 
     // reset name
-    characterNameEl.textContent = ``;
+    characterNameEl.textContent = '';
     return;
   }
 
@@ -593,11 +593,11 @@ const updateTooltipContent = (skillId) => {
   let skillDescription = `
       <strong>${skill.name()} [${skill.type().toUpperCase()}]</strong><br>
       ${skill
-        .description()
-        .split('\n')
-        .map((line) => line.trim())
-        .filter((line) => line)
-        .join('<br>')}
+    .description()
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line)
+    .join('<br>')}
       <br>
       Level: ${currentLevel}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
     `;
@@ -644,7 +644,7 @@ const updateTooltipContent = (skillId) => {
       const valuePrefix = value >= 0 ? '+' : '';
       const diffPrefix = difference >= 0 ? '+' : '';
       skillDescription += `${formatStatName(stat)}: ${valuePrefix}${value.toFixed(
-        decimals
+        decimals,
       )} <span class="bonus">(${diffPrefix}${difference.toFixed(decimals)})</span><br />`;
     });
   }

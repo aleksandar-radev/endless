@@ -68,7 +68,7 @@ export const BERSERKER_SKILLS = {
   // Tier 25 Skills
   berserkersRage: {
     id: 'berserkersRage',
-    name: () => `Berserker's Rage`,
+    name: () => 'Berserker\'s Rage',
     type: () => 'toggle',
     manaCost: (level) => 4 + level * 0.1,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],

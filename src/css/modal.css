@@ -7,9 +7,11 @@
   background: rgba(0, 0, 0, 0.6);
   z-index: 1000;
 }
+
 .modal.hidden {
   display: none;
 }
+
 .modal-content {
   background: var(--bg-element);
   border-radius: 0.75rem;
@@ -18,6 +20,7 @@
   position: relative;
   width: 400px;
 }
+
 .modal-close {
   position: absolute;
   top: 0.5rem;

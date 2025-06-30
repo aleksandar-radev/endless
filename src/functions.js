@@ -263,7 +263,7 @@ export function createModifyUI() {
 
   // Example: Add buttons to modify hero stats
   const heroSection = document.createElement('div');
-  heroSection.innerHTML = `<h3>Hero</h3>`;
+  heroSection.innerHTML = '<h3>Hero</h3>';
   modifyDiv.appendChild(heroSection);
 
   // Button to give 100 attribute points
@@ -301,7 +301,7 @@ export function createModifyUI() {
   giveExp10Btn.textContent = 'Give Experience for 10 Level Ups';
   giveExp10Btn.addEventListener('click', () => {
     hero.levelUp(10);
-    showToast(`Gave experience for 10 level ups!`);
+    showToast('Gave experience for 10 level ups!');
   });
   heroSection.appendChild(giveExp10Btn);
 
@@ -310,7 +310,7 @@ export function createModifyUI() {
   giveExp100Btn.textContent = 'Give Experience for 100 Level Ups';
   giveExp100Btn.addEventListener('click', () => {
     hero.levelUp(100);
-    showToast(`Gave experience for 100 level ups!`);
+    showToast('Gave experience for 100 level ups!');
   });
   heroSection.appendChild(giveExp100Btn);
 
@@ -349,7 +349,7 @@ export function createModifyUI() {
 
   // Example: Add buttons to modify inventory
   const inventorySection = document.createElement('div');
-  inventorySection.innerHTML = `<h3>Inventory</h3>`;
+  inventorySection.innerHTML = '<h3>Inventory</h3>';
   modifyDiv.appendChild(inventorySection);
 
   // --- Add Random Item with controls ---
@@ -445,7 +445,7 @@ export function createModifyUI() {
       inventory.addItemToInventory(newItem);
     }
     showToast(
-      `Added 10x ${itemType} (levels ${baseLevel} to ${baseLevel + 4500}, ${rarity}, tier ${tier}) to inventory`
+      `Added 10x ${itemType} (levels ${baseLevel} to ${baseLevel + 4500}, ${rarity}, tier ${tier}) to inventory`,
     );
   });
   addItemControlsDiv.appendChild(add10ItemsBtn);
@@ -534,7 +534,7 @@ export function createModifyUI() {
 
   // Example: Add buttons to modify skill tree
   const skillTreeSection = document.createElement('div');
-  skillTreeSection.innerHTML = `<h3>Skill Tree</h3>`;
+  skillTreeSection.innerHTML = '<h3>Skill Tree</h3>';
   modifyDiv.appendChild(skillTreeSection);
 
   const addSkillPointBtn = document.createElement('button');
@@ -546,7 +546,7 @@ export function createModifyUI() {
 
   // Example: Add buttons to modify training
   const trainingSection = document.createElement('div');
-  trainingSection.innerHTML = `<h3>Training</h3>`;
+  trainingSection.innerHTML = '<h3>Training</h3>';
   modifyDiv.appendChild(trainingSection);
 
   const resetTrainingBtn = document.createElement('button');
@@ -570,7 +570,7 @@ export function createModifyUI() {
 
   // Example: Add buttons to modify training
   const dataManagementSection = document.createElement('div');
-  dataManagementSection.innerHTML = `<h3>Data Management</h3>`;
+  dataManagementSection.innerHTML = '<h3>Data Management</h3>';
   modifyDiv.appendChild(dataManagementSection);
 
   // Button: Copy Decrypted Save to Clipboard

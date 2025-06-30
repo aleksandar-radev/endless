@@ -105,10 +105,10 @@ export function initializeInventoryUI(inv) {
   sortBtn.addEventListener('click', () => {
     if (itemsTab.classList.contains('active')) {
       sortInventory();
-      showToast(`Sorted items by rarity, then level`, 'success');
+      showToast('Sorted items by rarity, then level', 'success');
     } else {
       sortMaterials();
-      showToast(`Sorted materials by quantity, then id`, 'success');
+      showToast('Sorted materials by quantity, then id', 'success');
     }
   });
 
@@ -444,7 +444,7 @@ export function handleDrop(e) {
   if (slot) {
     // Add inventory check to prevent dropping on current slot
     const currentSlot = Object.entries(inventory.equippedItems).find(
-      ([_, equippedItem]) => equippedItem?.id === item.id
+      ([_, equippedItem]) => equippedItem?.id === item.id,
     )?.[0];
 
     if (currentSlot === slot.dataset.slot) {
@@ -483,7 +483,7 @@ export function setupItemDragAndTooltip() {
 
       // Check if item is currently equipped
       const equippedSlot = Object.entries(inventory.equippedItems).find(
-        ([slot, equippedItem]) => equippedItem?.id === itemData.id
+        ([slot, equippedItem]) => equippedItem?.id === itemData.id,
       )?.[0];
 
       if (equippedSlot) {
@@ -610,7 +610,7 @@ export function updateMaterialsGrid(inv) {
           matDef.name || mat.name || ''
         } &times; ${mat.qty}</b>`;
         if (matDef.description) tooltipContent += `<div style="margin-top:4px;">${matDef.description}</div>`;
-        tooltipContent += `</div>`;
+        tooltipContent += '</div>';
         showTooltip(tooltipContent, e, 'flex-tooltip');
       });
       materialItem.addEventListener('mousemove', positionTooltip);

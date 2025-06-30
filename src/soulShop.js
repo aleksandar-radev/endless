@@ -117,8 +117,8 @@ export default class SoulShop {
     upgradesContainer.innerHTML = `
       <div class="soul-upgrades-grid">
         ${Object.entries(SOUL_UPGRADE_CONFIG)
-          .map(([stat, config]) => this.createSoulUpgradeButton(stat, config))
-          .join('')}
+    .map(([stat, config]) => this.createSoulUpgradeButton(stat, config))
+    .join('')}
       </div>
     `;
     this.setupSoulUpgradeHandlers();
@@ -154,8 +154,8 @@ export default class SoulShop {
         : config.baseCost + (config.costIncrement || 0) * (this.soulUpgrades[stat] || 0);
     return `
       <button class="soul-upgrade-btn ${alreadyPurchased ? 'purchased' : ''}" data-stat="${stat}" ${
-      alreadyPurchased ? 'disabled' : ''
-    }>
+  alreadyPurchased ? 'disabled' : ''
+}>
         <span class="upgrade-name">${config.label} ${isOneTime ? '' : isMultiple ? '' : `(Lvl ${level})`}</span>
         <span class="upgrade-bonus">${bonus}</span>
         <span class="upgrade-cost">${alreadyPurchased ? 'Purchased' : `${cost} Souls`}</span>
@@ -235,8 +235,8 @@ export default class SoulShop {
         <p>${config.bonus && typeof config.bonus === 'string' ? config.bonus : ''}</p>
         <p>Cost: <span class="modal-total-cost">${config.baseCost}</span> Souls</p>
         <div class="modal-status">${
-          purchased ? '<span style="color:#10b981;font-weight:bold;">Purchased</span>' : ''
-        }</div>
+  purchased ? '<span style="color:#10b981;font-weight:bold;">Purchased</span>' : ''
+}</div>
       `;
       buyBtn.style.display = purchased ? 'none' : '';
       buyBtn.disabled = purchased;

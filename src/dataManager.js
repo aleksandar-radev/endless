@@ -176,7 +176,7 @@ export class DataManager {
       onClose: () => {},
     });
     setTimeout(() => {
-      const okBtn = document.getElementById(`migration-modal-ok`);
+      const okBtn = document.getElementById('migration-modal-ok');
       if (okBtn) {
         okBtn.addEventListener('click', () => {
           const modal = document.getElementById(`migration-modal-${version}`);
@@ -188,7 +188,7 @@ export class DataManager {
 
   async checkSession() {
     try {
-      const res = await apiFetch(`/user/session`);
+      const res = await apiFetch('/user/session');
       if (!res.ok) throw new Error('Not logged in');
       const user = (await res.json()).user;
       this.setSession(user);

@@ -294,7 +294,7 @@ export default class SkillTree {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.manaCost) return 0;
     return Math.floor(
-      skill.manaCost(effectiveLevel) - (skill.manaCost(effectiveLevel) * hero.stats.manaCostReductionPercent) / 100
+      skill.manaCost(effectiveLevel) - (skill.manaCost(effectiveLevel) * hero.stats.manaCostReductionPercent) / 100,
     );
   }
 
@@ -302,7 +302,7 @@ export default class SkillTree {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.cooldown) return 0;
     return Math.floor(
-      skill.cooldown(effectiveLevel) - (skill.cooldown(effectiveLevel) * hero.stats.cooldownReductionPercent) / 100
+      skill.cooldown(effectiveLevel) - (skill.cooldown(effectiveLevel) * hero.stats.cooldownReductionPercent) / 100,
     );
   }
 
@@ -310,7 +310,7 @@ export default class SkillTree {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.duration) return 0;
     return Math.floor(
-      skill.duration(effectiveLevel) + (skill.duration(effectiveLevel) * hero.stats.buffDurationPercent) / 100
+      skill.duration(effectiveLevel) + (skill.duration(effectiveLevel) * hero.stats.buffDurationPercent) / 100,
     );
   }
 
@@ -338,55 +338,26 @@ export default class SkillTree {
       0 + baseEffects.earthDamage ||
       0;
 
-    const { damage, isCritical } = hero.calculateTotalDamage(instantSkillDamage);
-
-    let text = damage;
-    let isPlayer = false;
-    let color = 'red';
-
-    const UiNumber = (amount, c) => {
-      isPlayer = true;
-      if (typeof amount === 'number' && !isNaN(amount)) {
-        if (amount < 0) {
-          text = `-${Math.floor(Math.abs(amount))}`;
-        } else if (amount > 0) {
-          text = `+${Math.floor(amount)}`;
-        } else {
-          text = '0';
-        }
-      } else {
-        text = amount;
-      }
-      color = c;
-    };
+    const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy, instantSkillDamage);
 
     if (baseEffects.lifeSteal) {
       const lifeStealAmount = damage * (baseEffects.lifeSteal / 100);
       game.healPlayer(lifeStealAmount);
-      UiNumber(lifeStealAmount, 'green');
     }
     if (baseEffects.lifePerHit) {
       game.healPlayer(baseEffects.lifePerHit);
-      if (baseEffects.lifePerHit < 0) {
-        UiNumber(baseEffects.lifePerHit, 'red');
-      } else {
-        UiNumber(baseEffects.lifePerHit, 'green');
-      }
     }
 
     if (baseEffects.life) {
       game.healPlayer(baseEffects.life);
-      UiNumber(baseEffects.life, 'green');
     }
 
     if (baseEffects.lifePercent) {
       game.healPlayer((hero.stats.life * baseEffects.lifePercent) / 100);
-      UiNumber((hero.stats.life * baseEffects.lifePercent) / 100, 'green');
     }
 
     if (baseEffects.manaPerHit) {
       game.restoreMana(baseEffects.manaPerHit);
-      UiNumber(baseEffects.manaPerHit, 'blue');
     }
 
     if (instantSkillDamage !== 0) {
@@ -398,7 +369,6 @@ export default class SkillTree {
 
     // Update UI
     updatePlayerLife();
-    createDamageNumber({ text, isPlayer, isCritical, color }); // Add parameter for instant skill visual
 
     return true;
   }
