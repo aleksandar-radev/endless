@@ -30,9 +30,11 @@ let debugUiInterval = null; // Track the interval ID for clearing later
 let saveGameInterval = null; // Track the interval ID for clearing later
 
 // Load saved expanded states
-const expandedState = new Map(JSON.parse(localStorage.getItem('debugUIState') || '[]'));
+
+let expandedState;
 
 export function initDebugging() {
+  expandedState = new Map(JSON.parse(localStorage.getItem('debugUIState') || '[]'));
   let dev = false; // Track if dev mode is active
   let keySequence = [];
   const toggleSequence = ['e', 'd', 'e', 'v'];

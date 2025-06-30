@@ -34,7 +34,7 @@ export function initializeUI() {
   const resourceTooltips = [
     {
       selector: '.resource-gold',
-      tooltip: () => `
+      tooltip: () => html`
         <div class="tooltip-header">Gold <span class="icon">💰</span></div>
         <div class="tooltip-desc">Used to buy upgrades.</div>
         <div class="tooltip-note"></div>
@@ -42,7 +42,7 @@ export function initializeUI() {
     },
     {
       selector: '.resource-crystal',
-      tooltip: () => `
+      tooltip: () => html`
         <div class="tooltip-header">Crystals <span class="icon">💎</span></div>
         <div class="tooltip-desc">Rare currency for powerful upgrades and skill resets.</div>
         <div class="tooltip-note"></div>
@@ -50,7 +50,7 @@ export function initializeUI() {
     },
     {
       selector: '.resource-souls',
-      tooltip: () => `
+      tooltip: () => html`
         <div class="tooltip-header">Souls <span class="icon">👻</span></div>
         <div class="tooltip-desc">Earned from killing monsters.</div>
         <div class="tooltip-note"></div>
@@ -118,7 +118,11 @@ export function initializeUI() {
   const regionSelector = document.getElementById('region-selector');
   regionSelector.style.display = game.fightMode === 'arena' ? 'none' : '';
 
-  // ...existing code...
+  document.querySelectorAll('.tooltip-target').forEach((element) => {
+    element.addEventListener('mouseenter', (e) => showTooltip('Your tooltip content here', e));
+    element.addEventListener('mousemove', positionTooltip);
+    element.addEventListener('mouseleave', hideTooltip);
+  });
 }
 
 export function switchTab(game, tabName) {
@@ -305,13 +309,6 @@ export function positionTooltip(event) {
   tooltip.style.left = `${left}px`;
 }
 
-// Example usage: Attach event listeners to elements that need tooltips
-document.querySelectorAll('.tooltip-target').forEach((element) => {
-  element.addEventListener('mouseenter', (e) => showTooltip('Your tooltip content here', e));
-  element.addEventListener('mousemove', positionTooltip);
-  element.addEventListener('mouseleave', hideTooltip);
-});
-
 // ###########################
 // Custom Confirm Dialog
 // ###########################
@@ -322,7 +319,7 @@ export function showConfirmDialog(message, options = {}) {
     if (!dialog) {
       dialog = document.createElement('div');
       dialog.id = 'custom-confirm-dialog';
-      dialog.innerHTML = `
+      dialog.innerHTML = html`
         <div class="confirm-backdrop"></div>
         <div class="confirm-content">
           <div class="confirm-message"></div>

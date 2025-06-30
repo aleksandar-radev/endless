@@ -7,18 +7,17 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext .js"
+    "lint": "eslint . --ext .js",
     "test": "vitest"
   },
-  "devDependencies": {
-    "dotenv": "^16.4.7",
-    "vite": "^6.2.2",
-    "vitest": "^1.5.0",
-    "jsdom": "^24.0.0"
-  },
   "dependencies": {
-    "eslint": "^9.30.0",
-    "marked": "^15.0.12",
+    "marked": "^16.0.0",
     "simple-crypto-js": "^3.0.1"
+  },
+  "devDependencies": {
+    "dotenv": "^17.0.0",
+    "eslint": "^9.30.0",
+    "terser": "^5.43.1",
+    "vite": "^7.0.0"
   }
 }
