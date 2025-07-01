@@ -5,6 +5,7 @@ import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
 import { TabIndicatorManager } from './tabIndicatorManager.js';
 import { selectBoss, updateBossUI } from './bossUi.js';
 import { ELEMENTS } from '../constants/common.js';
+import { calculateArmorReduction, calculateEvasionChance, calculateHitChance } from '../combat.js';
 export {
   initializeSkillTreeUI,
   initializeSkillTreeStructure,
@@ -199,11 +200,22 @@ export function updateEnemyStats() {
   const earthDmg = document.getElementById('enemy-earth-damage-value');
   if (earthDmg) earthDmg.textContent = Math.floor(enemy.earthDamage || 0);
   const armor = document.getElementById('enemy-armor-value');
-  if (armor) armor.textContent = Math.floor(enemy.armor || 0);
+  if (armor) {
+  // Use PoE2 formula: reduction = armor / (armor + 10 * damage)
+    const reduction = calculateArmorReduction(enemy.armor, hero.stats.damage);
+    armor.textContent = Math.floor(enemy.armor || 0) + ` (${Math.floor(reduction)}%)`;
+  }
   const evasion = document.getElementById('enemy-evasion-value');
-  if (evasion) evasion.textContent = Math.floor(enemy.evasion || 0);
+  if (evasion) {
+    const reduction = calculateEvasionChance(enemy.evasion, hero.stats.attackRating);
+    evasion.textContent = Math.floor(enemy.evasion || 0) + ` (${Math.floor(reduction)}%)`;
+  }
   const atkRating = document.getElementById('enemy-attack-rating-value');
-  if (atkRating) atkRating.textContent = Math.floor(enemy.attackRating || 0);
+  if (atkRating) {
+    // Show enemy attack rating and their hit chance against the player
+    const hitChance = calculateHitChance(enemy.attackRating, hero.stats.evasion);
+    atkRating.textContent = Math.floor(enemy.attackRating || 0) + ` (${Math.floor(hitChance)}%)`;
+  }
   const atkSpeed = document.getElementById('enemy-attack-speed-value');
   if (atkSpeed) atkSpeed.textContent = (enemy.attackSpeed || 0).toFixed(2);
   const fireRes = document.getElementById('enemy-fire-resistance-value');
@@ -215,11 +227,31 @@ export function updateEnemyStats() {
   const earthRes = document.getElementById('enemy-earth-resistance-value');
   if (earthRes) earthRes.textContent = Math.floor(enemy.earthResistance || 0);
 
-  if (game.fightMode === 'arena') {
-    // Update boss UI ?
-  } else if (game.fightMode === 'explore') {
+  setEnemyName();
+  if (game.fightMode === 'explore') {
     game.currentEnemy.setEnemyColor();
-    game.currentEnemy.setEnemyName();
+  }
+
+  function setEnemyName() {
+    const enemyNameElement = document.querySelector('.enemy-name');
+    enemyNameElement.textContent = game.currentEnemy.name;
+    // Set the enemy image in .enemy-avatar (like hero)
+    const enemyAvatar = document.querySelector('.enemy-avatar');
+    if (enemyAvatar) {
+      let img = enemyAvatar.querySelector('img');
+      if (!img) {
+        img = document.createElement('img');
+        img.alt = game.currentEnemy.name + ' avatar';
+        enemyAvatar.innerHTML = '';
+        enemyAvatar.appendChild(img);
+      }
+      // Use Vite's BASE_URL if available, else fallback
+      let baseUrl = '';
+      try {
+        baseUrl = import.meta.env.BASE_URL || '';
+      } catch (e) {}
+      img.src = baseUrl + game.currentEnemy.image;
+    }
   }
 }
 

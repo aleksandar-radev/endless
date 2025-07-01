@@ -2,12 +2,25 @@
  * List of boss definitions for the Arena.
  * Each boss has a level, unique id, display name, image path, stats, and rewards.
  */
-export const BOSSES = [
-  {
-    id: 'goblin-king',
-    name: 'Goblin King',
-    image: 'enemies/goblin-king.jpg',
-    attackSpeed: 0.8, // attacks per second
+
+function applyDefaultBossStats(boss) {
+  const defaults = {
+    life: 3000,
+    damage: 25,
+    attackRating: 50,
+    attackSpeed: 1,
+    xp: 100,
+    gold: 100,
+    armor: 50,
+    evasion: 20,
+    fireDamage: 0,
+    coldDamage: 0,
+    airDamage: 0,
+    earthDamage: 0,
+    fireResistance: 0,
+    coldResistance: 0,
+    airResistance: 0,
+    earthResistance: 0,
     multiplier: {
       life: 1.0,
       damage: 1.0,
@@ -23,14 +36,30 @@ export const BOSSES = [
       airDamage: 1.0,
       earthDamage: 1.0,
     },
+  };
+  const merged = { ...defaults, ...boss };
+  if (boss.multiplier) {
+    merged.multiplier = { ...defaults.multiplier, ...boss.multiplier };
+  }
+  return merged;
+}
+
+const RAW_BOSSES = [
+  {
+    id: 'goblin-king',
+    name: 'Goblin King',
+    type: 'boss',
+    image: '/enemies/goblin-king.jpg',
+    attackSpeed: 0.8,
     materialDropWeights: {},
     reward: { souls: 1, gold: 500, materials: [{ id: 'experience_potion', qty: 1 }] },
   },
   {
     id: 'stone-golem',
     name: 'Stone Golem',
-    image: 'enemies/obsidian-golem.jpg',
-    attackSpeed: 1, // attacks per second
+    type: 'boss',
+    image: '/enemies/obsidian-golem.jpg',
+    attackSpeed: 1,
     multiplier: {
       life: 1.5,
       damage: 1.3,
@@ -38,13 +67,6 @@ export const BOSSES = [
       gold: 1.2,
       itemDrop: 1,
       materialDrop: 1,
-      attackRating: 1.0,
-      armor: 1.0,
-      evasion: 1.0,
-      fireDamage: 1.0,
-      coldDamage: 1.0,
-      airDamage: 1.0,
-      earthDamage: 1.0,
     },
     materialDropWeights: {},
     reward: { souls: 1, gold: 1000, materials: [{ id: 'potion_of_agility', qty: 1 }] },
@@ -52,8 +74,9 @@ export const BOSSES = [
   {
     id: 'fire-drake',
     name: 'Fire Drake',
-    image: 'enemies/ember-drake.jpg',
-    attackSpeed: 1.2, // attacks per second
+    type: 'boss',
+    image: '/enemies/ember-drake.jpg',
+    attackSpeed: 1.2,
     multiplier: {
       life: 2.0,
       damage: 1.5,
@@ -61,15 +84,11 @@ export const BOSSES = [
       gold: 1.5,
       itemDrop: 1.2,
       materialDrop: 1.2,
-      attackRating: 1.0,
-      armor: 1.0,
-      evasion: 1.0,
       fireDamage: 1.2,
-      coldDamage: 1.0,
-      airDamage: 1.0,
-      earthDamage: 1.0,
     },
     materialDropWeights: {},
     reward: { souls: 1, gold: 1500, materials: [{ id: 'crystalized_rock', qty: 1 }] },
   },
 ];
+
+export const BOSSES = RAW_BOSSES.map(applyDefaultBossStats);

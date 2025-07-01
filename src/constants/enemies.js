@@ -125,28 +125,19 @@ export const ENEMY_RARITY = {
   },
 };
 
-export const ELEMENT_OPPOSITES = {
-  [ELEMENTS.fire.id]: ELEMENTS.air.id,
-  [ELEMENTS.earth.id]: ELEMENTS.cold.id,
-  [ELEMENTS.cold.id]: ELEMENTS.fire.id,
-  [ELEMENTS.air.id]: ELEMENTS.earth.id,
-};
-
 export function applyDefaultEnemyStats(enemy) {
   const tier = enemy.tier ?? 1;
 
-  const tierMultiplier = (tier - 1) ** 1.5;
-
   const defaults = {
     tier: tier,
-    life: 30 + tierMultiplier * 44,
-    damage: 3 + tierMultiplier * 5,
-    attackRating: 20 + tierMultiplier * 6,
+    life: 20,
+    damage: 2,
+    attackRating: 20,
     attackSpeed: 1,
-    xp: 5 + tierMultiplier * 6,
-    gold: 5 + tierMultiplier * 6,
-    armor: 5 + tierMultiplier * 15,
-    evasion: 5 + tierMultiplier * 15,
+    xp: 5,
+    gold: 5,
+    armor: 15,
+    evasion: 15,
     fireDamage: 0,
     coldDamage: 0,
     airDamage: 0,
@@ -155,6 +146,21 @@ export function applyDefaultEnemyStats(enemy) {
     coldResistance: 0,
     airResistance: 0,
     earthResistance: 0,
+    multiplier: {
+      life: 1.0,
+      damage: 1.0,
+      xp: 1.0,
+      gold: 1.0,
+      itemDrop: 1.0,
+      materialDrop: 1.0,
+      attackRating: 1.0,
+      armor: 1.0,
+      evasion: 1.0,
+      fireDamage: 1.0,
+      coldDamage: 1.0,
+      airDamage: 1.0,
+      earthDamage: 1.0,
+    },
   };
 
   // | Tier |   life   | damage  |   xp   |  gold  | armor   | evasion |
@@ -172,7 +178,12 @@ export function applyDefaultEnemyStats(enemy) {
   // | 11   | 2832.60  | 270.81  | 382.43 | 382.43 | 1353.04 | 1353.04 |
   // | 12   | 3539.45  | 330.97  | 463.39 | 463.39 | 1764.35 | 1764.35 |
 
-  return { ...defaults, ...enemy };
+  const merged = { ...defaults, ...enemy };
+  if (enemy.multiplier) {
+    merged.multiplier = { ...defaults.multiplier, ...enemy.multiplier };
+  }
+
+  return merged;
 }
 
 const RAW_ENEMY_LIST = [

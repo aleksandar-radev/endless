@@ -1,15 +1,15 @@
 import { initializeSkillTreeStructure, updatePlayerLife, updateTabIndicators } from './ui/ui.js';
 import { game, inventory, training, skillTree, statistics, soulShop, dataManager } from './globals.js';
-import { createCombatText, createDamageNumber } from './combat.js';
+import { calculateArmorReduction, createCombatText, createDamageNumber } from './combat.js';
 import { handleSavedData } from './functions.js';
 import { getCurrentRegion, updateRegionUI } from './region.js';
 import { STATS } from './constants/stats/stats.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { ATTRIBUTES } from './constants/stats/attributes.js';
-import { ELEMENT_OPPOSITES } from './constants/enemies.js';
 import { SOUL_UPGRADE_CONFIG } from './soulShop.js';
 
 export const STATS_ON_LEVEL_UP = 3;
+
 export default class Hero {
   constructor(savedData = null) {
     this.setBaseStats(savedData);
@@ -386,52 +386,6 @@ export default class Hero {
     })();
   }
 
-  calculateArmorReduction() {
-    let scalingFactor;
-    const ARMOR_SCALING_MULTIPLIER = 0.18; // scaling on stage
-    const ARMOR_BASE_DIFFICULTY = 60; // base, first level
-
-    if (game.currentRegion === 'arena') {
-      scalingFactor = this.bossLevel * 15 || 15;
-    } else {
-      scalingFactor = game.stage * getCurrentRegion().multiplier.armor;
-    }
-
-    const scale = 1 + (scalingFactor - 1) * ARMOR_SCALING_MULTIPLIER;
-    const reduction = (this.stats.armor / (this.stats.armor + ARMOR_BASE_DIFFICULTY * scale)) * 100;
-    return Math.min(reduction, 75); // Keep the 75% cap
-  }
-
-  calculateEvasionChance() {
-    let scalingFactor;
-    const EVASION_SCALING_MULTIPLIER = 0.22;
-    const EVASION_BASE_DIFFICULTY = 100;
-
-    if (game.currentRegion === 'arena') {
-      scalingFactor = this.bossLevel * 15 || 15;
-    } else {
-      scalingFactor = game.stage * getCurrentRegion().multiplier.attackRating;
-    }
-
-    const scale = 1 + (scalingFactor - 1) * EVASION_SCALING_MULTIPLIER;
-    const reduction = (this.stats.evasion / (this.stats.evasion + EVASION_BASE_DIFFICULTY * scale)) * 100;
-    return Math.min(reduction, 75); // Keep the 75% cap
-  }
-
-  calculateHitChance() {
-    let scalingFactor;
-
-    if (game.fightMode === 'arena') {
-      scalingFactor = this.bossLevel * 15 || 15;
-    } else if (game.fightMode === 'explore') {
-      scalingFactor = game.stage * getCurrentRegion().multiplier.evasion;
-    }
-
-    const scale = 1 + (scalingFactor - 1) * 0.25;
-    const baseChance = (this.stats.attackRating / (this.stats.attackRating + 25 * scale)) * 100;
-    return Math.min(Math.max(baseChance, 10), 100);
-  }
-
   regenerate() {
     this.stats.currentLife = Math.min(this.stats.life, this.stats.currentLife + this.stats.lifeRegen / 10);
     this.stats.currentMana = Math.min(this.stats.mana, this.stats.currentMana + this.stats.manaRegen / 10);
@@ -442,9 +396,6 @@ export default class Hero {
   calculateTotalDamage(damageBonus = 0) {
     const isCritical = Math.random() * 100 < this.stats.critChance;
     let physicalDamage = this.stats.damage * (1 + this.stats.damagePercent / 100);
-
-    // Calculate elemental damage with type effectiveness
-    const enemyElement = game.currentEnemy.element;
 
     // Calculate total damage before crit
     let totalDamage = physicalDamage + damageBonus; // more dmg added later
@@ -463,16 +414,7 @@ export default class Hero {
     if (toggleEffects.airDamage) elements.air += toggleEffects.airDamage;
     if (toggleEffects.earthDamage) elements.earth += toggleEffects.earthDamage;
 
-    const elemResult = { fire: 0, cold: 0, air: 0, earth: 0 };
-    Object.entries(elements).forEach(([type, dmg]) => {
-      if (dmg > 0) {
-        if (ELEMENT_OPPOSITES[type] === enemyElement) elemResult[type] = dmg * 2;
-        else if (type === enemyElement) elemResult[type] = 0;
-        else elemResult[type] = dmg * 0.25;
-      }
-    });
-
-    let elementalDamage = elemResult.fire + elemResult.cold + elemResult.air + elemResult.earth;
+    let elementalDamage = elements.fire + elements.cold + elements.air + elements.earth;
 
     totalDamage += elementalDamage;
 
@@ -490,30 +432,32 @@ export default class Hero {
       const doubleDamageChance = Math.random() * 100;
       if (doubleDamageChance < toggleEffects.doubleDamageChance) {
         physicalDamage *= 2;
-        elemResult.fire *= 2;
-        elemResult.cold *= 2;
-        elemResult.air *= 2;
-        elemResult.earth *= 2;
+        elements.fire *= 2;
+        elements.cold *= 2;
+        elements.air *= 2;
+        elements.earth *= 2;
         totalDamage *= 2;
       }
     }
 
     if (isCritical) {
       physicalDamage *= this.stats.critDamage;
-      elemResult.fire *= this.stats.critDamage;
-      elemResult.cold *= this.stats.critDamage;
-      elemResult.air *= this.stats.critDamage;
-      elemResult.earth *= this.stats.critDamage;
+      elements.fire *= this.stats.critDamage;
+      elements.cold *= this.stats.critDamage;
+      elements.air *= this.stats.critDamage;
+      elements.earth *= this.stats.critDamage;
       totalDamage *= this.stats.critDamage;
     }
 
     const breakdown = {
       physical: Math.floor(physicalDamage),
-      fire: Math.floor(elemResult.fire),
-      cold: Math.floor(elemResult.cold),
-      air: Math.floor(elemResult.air),
-      earth: Math.floor(elemResult.earth),
+      fire: Math.floor(elements.fire),
+      cold: Math.floor(elements.cold),
+      air: Math.floor(elements.air),
+      earth: Math.floor(elements.earth),
     };
+
+    console.debug('Damage Breakdown:', breakdown);
 
     return {
       damage: Math.floor(totalDamage),
@@ -526,16 +470,30 @@ export default class Hero {
     const result = this.calculateTotalDamage(damageBonus);
 
     if (!enemy) return result;
-    const ar = enemy.calculateArmorReduction() / 100;
-    const breakdown = result.breakdown;
-    const finalDamage =
-      breakdown.physical * (1 - ar) +
-      breakdown.fire * (1 - enemy.baseData.fireResistance / 100) +
-      breakdown.cold * (1 - enemy.baseData.coldResistance / 100) +
-      breakdown.air * (1 - enemy.baseData.airResistance / 100) +
-      breakdown.earth * (1 - enemy.baseData.earthResistance / 100);
 
-    return { damage: Math.floor(finalDamage), isCritical: result.isCritical };
+    // Use PoE2 armor formula for physical reduction
+    const armorReduction = calculateArmorReduction(enemy.armor, result.breakdown.physical) / 100;
+    const breakdown = result.breakdown;
+
+    // Calculate reduced damages for each type
+    const reducedBreakdown = {
+      physical: breakdown.physical * (1 - armorReduction),
+      fire: breakdown.fire * (1 - enemy.baseData.fireResistance / 100),
+      cold: breakdown.cold * (1 - enemy.baseData.coldResistance / 100),
+      air: breakdown.air * (1 - enemy.baseData.airResistance / 100),
+      earth: breakdown.earth * (1 - enemy.baseData.earthResistance / 100),
+    };
+
+    const finalDamage = Object.values(reducedBreakdown).reduce((sum, val) => sum + val, 0);
+
+    console.debug('Final Damage Breakdown:', reducedBreakdown);
+    console.debug('Final Damage:', finalDamage);
+
+    return {
+      damage: Math.floor(finalDamage),
+      isCritical: result.isCritical,
+      breakdown: reducedBreakdown,
+    };
   }
 
   calculateTotalThornsDamage(enemyDamage) {

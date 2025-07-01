@@ -1,12 +1,11 @@
 import { ITEM_TYPES } from './constants/items.js';
 import { getCurrentRegion, getRegionEnemies } from './region.js';
-import { ENEMY_LIST, ENEMY_RARITY } from './constants/enemies.js';
+import { ENEMY_RARITY } from './constants/enemies.js';
 import { ELEMENTS } from './constants/common.js';
-import { game } from './globals.js';
 
 class Enemy {
-  constructor(stage) {
-    this.level = stage; // level of enemy is same as stage
+  constructor(level) {
+    this.level = level; // level of enemy is same as stage
 
     this.region = getCurrentRegion();
     let regionEnemies = getRegionEnemies(this.region);
@@ -34,38 +33,35 @@ class Enemy {
     this.armor = this.calculateArmor();
     this.evasion = this.calculateEvasion();
     this.attackRating = this.calculateAttackRating(); // Default attackRating if not defined
-    this.fireDamage = enemyData.fireDamage || 0;
-    this.coldDamage = enemyData.coldDamage || 0;
-    this.airDamage = enemyData.airDamage || 0;
-    this.earthDamage = enemyData.earthDamage || 0;
+    const rarityMult = this.rarityData.multiplier;
+    const regionMult = this.region.multiplier;
+    const baseMult = enemyData.multiplier || {};
+    this.fireDamage =
+      (enemyData.fireDamage || 0) *
+      (regionMult.fireDamage || 1) *
+      (rarityMult.fireDamage || 1) *
+      (baseMult.fireDamage || 1);
+    this.coldDamage =
+      (enemyData.coldDamage || 0) *
+      (regionMult.coldDamage || 1) *
+      (rarityMult.coldDamage || 1) *
+      (baseMult.coldDamage || 1);
+    this.airDamage =
+      (enemyData.airDamage || 0) *
+      (regionMult.airDamage || 1) *
+      (rarityMult.airDamage || 1) *
+      (baseMult.airDamage || 1);
+    this.earthDamage =
+      (enemyData.earthDamage || 0) *
+      (regionMult.earthDamage || 1) *
+      (rarityMult.earthDamage || 1) *
+      (baseMult.earthDamage || 1);
     this.fireResistance = enemyData.fireResistance || 0;
     this.coldResistance = enemyData.coldResistance || 0;
     this.airResistance = enemyData.airResistance || 0;
     this.earthResistance = enemyData.earthResistance || 0;
     this.currentLife = this.life;
     this.lastAttack = Date.now();
-  }
-
-  setEnemyName() {
-    const enemyNameElement = document.querySelector('.enemy-name');
-    enemyNameElement.textContent = this.name;
-    // Set the enemy image in .enemy-avatar (like hero)
-    const enemyAvatar = document.querySelector('.enemy-avatar');
-    if (enemyAvatar) {
-      let img = enemyAvatar.querySelector('img');
-      if (!img) {
-        img = document.createElement('img');
-        img.alt = this.name + ' avatar';
-        enemyAvatar.innerHTML = '';
-        enemyAvatar.appendChild(img);
-      }
-      // Use Vite's BASE_URL if available, else fallback
-      let baseUrl = '';
-      try {
-        baseUrl = import.meta.env.BASE_URL || '';
-      } catch (e) {}
-      img.src = baseUrl + this.image;
-    }
   }
 
   setEnemyColor() {
@@ -111,7 +107,8 @@ class Enemy {
     return (
       this.baseData.attackSpeed *
       (this.rarityData.multiplier.attackSpeed || 1) *
-      (this.region.multiplier.attackSpeed || 1)
+      (this.region.multiplier.attackSpeed || 1) *
+      (this.baseData.multiplier.attackSpeed || 1)
     );
   }
 
@@ -138,7 +135,7 @@ class Enemy {
   };
 
   calculateArmor() {
-    const baseArmor = this.baseData.armor || 0;
+    const baseArmor = this.baseData.armor * this.level || 0;
     const segLen = 10,
       initialInc = 0.5,
       incStep = 0.2;
@@ -150,7 +147,7 @@ class Enemy {
   }
 
   calculateEvasion() {
-    const baseEvasion = this.baseData.evasion || 0;
+    const baseEvasion = this.baseData.evasion * this.level || 0;
     const segLen = 10,
       initialInc = 0.5,
       incStep = 0.2;
@@ -164,7 +161,7 @@ class Enemy {
   }
 
   calculateAttackRating() {
-    const baseAttackRating = this.baseData.attackRating || 0;
+    const baseAttackRating = this.baseData.attackRating * this.level || 0;
     const segLen = 10,
       initialInc = 0.5,
       incStep = 0.2;
@@ -180,24 +177,6 @@ class Enemy {
     );
   }
 
-  calculateArmorReduction() {
-    const ARMOR_SCALING_MULTIPLIER = 0.18;
-    const ARMOR_BASE_DIFFICULTY = 60;
-
-    const scalingFactor = game.stage * this.region.multiplier.armor;
-    const scale = 1 + (scalingFactor - 1) * ARMOR_SCALING_MULTIPLIER;
-    const reduction = (this.armor / (this.armor + ARMOR_BASE_DIFFICULTY * scale)) * 100;
-    return Math.min(reduction, 75);
-  }
-
-  calculateEvasionChance() {
-    const EVASION_SCALING_MULTIPLIER = 0.22;
-    const EVASION_BASE_DIFFICULTY = 100;
-    const scalingFactor = game.stage * this.region.multiplier.evasion;
-    const scale = 1 + (scalingFactor - 1) * EVASION_SCALING_MULTIPLIER;
-    const chance = (this.evasion / (this.evasion + EVASION_BASE_DIFFICULTY * scale)) * 100;
-    return Math.min(chance, 75);
-  }
   canAttack(currentTime) {
     return currentTime - this.lastAttack >= this.attackSpeed * 1000; // Convert to ms
   }
