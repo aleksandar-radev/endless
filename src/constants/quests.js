@@ -8,7 +8,7 @@ export const QUEST_DEFINITIONS = [
     description: 'Defeat 10 enemies.',
     type: 'kill',
     target: 10,
-    reward: { gold: 500 },
+    reward: { gold: 500, item: { rarity: 'rare', type: 'random', tier: 1 } },
     icon: '⚔️',
   },
   {
@@ -28,7 +28,7 @@ export const QUEST_DEFINITIONS = [
     description: 'Defeat 250 enemies.',
     type: 'kill',
     target: 250,
-    reward: { gold: 4000 },
+    reward: { gold: 4000, item: { rarity: 'rare', type: 'random', tier: 1 } },
     icon: '💥',
   },
   {
@@ -567,7 +567,7 @@ export const QUEST_DEFINITIONS = [
     description: 'Reach level 5.',
     type: 'level',
     target: 5,
-    reward: { gold: 200, crystals: 1 },
+    reward: { gold: 200, crystals: 1, item: { rarity: 'rare', type: 'random', tier: 1 } },
     icon: '🧙',
   },
   {
@@ -577,7 +577,7 @@ export const QUEST_DEFINITIONS = [
     description: 'Reach level 10.',
     type: 'level',
     target: 10,
-    reward: { gold: 500, crystals: 1 },
+    reward: { gold: 500, crystals: 1, item: { rarity: 'rare', type: 'random', tier: 1 } },
     icon: '🧙',
   },
   {
