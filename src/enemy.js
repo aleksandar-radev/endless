@@ -178,7 +178,9 @@ class Enemy {
   }
 
   canAttack(currentTime) {
-    return currentTime - this.lastAttack >= this.attackSpeed * 1000; // Convert to ms
+    if (this.attackSpeed <= 0) return false;
+    const timeBetweenAttacks = 1000 / this.attackSpeed; // now attacks/sec
+    return currentTime - this.lastAttack >= timeBetweenAttacks;
   }
 
   resetLife() {

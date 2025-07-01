@@ -316,6 +316,8 @@ export default class SkillTree {
 
   useInstantSkill(skillId) {
     if (!game.gameStarted) return false;
+    // if there is no live enemy, don’t cast
+    if (!game.currentEnemy || game.currentEnemy.currentLife <= 0) return false;
 
     const skill = this.getSkill(skillId);
     const baseEffects = this.getSkillEffect(skillId);
@@ -374,6 +376,8 @@ export default class SkillTree {
   }
 
   applyToggleEffects() {
+    if (!game.currentEnemy || game.currentEnemy.currentLife <= 0) return {};
+
     let effects = {};
 
     Object.entries(this.skills).forEach(([skillId, skillData]) => {
@@ -464,9 +468,10 @@ export default class SkillTree {
   stopAllBuffs() {
     this.activeBuffs.clear();
     Object.values(this.skills).forEach((skill) => {
-      if (skill.cooldownEndTime) {
-        skill.cooldownEndTime = 0;
-      }
+      // Fix an abuse where player can start/stop game fast while casting skills.
+      // if (skill.cooldownEndTime) {
+      //   skill.cooldownEndTime = 0;
+      // }
       if (skill.type() !== 'toggle') skill.active = false; // Reset active state except for toggles
     });
     hero.recalculateFromAttributes();

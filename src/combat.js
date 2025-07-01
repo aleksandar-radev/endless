@@ -228,7 +228,10 @@ export async function defeatEnemy() {
       }
     }
 
-    game.incrementStage();
+    // fix a bug where stage gets incremented when game stopped.
+    if (game.gameStarted) {
+      game.incrementStage();
+    }
     game.currentEnemy = new Enemy(game.stage);
 
     statistics.increment('enemiesKilled', 'total');

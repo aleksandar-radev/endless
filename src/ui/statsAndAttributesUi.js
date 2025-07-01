@@ -1,6 +1,6 @@
 import { game, hero } from '../globals.js';
 import { STATS } from '../constants/stats/stats.js';
-import { hideTooltip, positionTooltip, showTooltip } from '../ui/ui.js';
+import { hideTooltip, positionTooltip, showTooltip, updateEnemyStats } from '../ui/ui.js';
 import { OFFENSE_STATS } from '../constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from '../constants/stats/defenseStats.js';
 import { MISC_STATS } from '../constants/stats/miscStats.js';
@@ -340,4 +340,6 @@ export function updateStatsAndAttributesUI() {
 
   const skillTreeTab = document.querySelector('[data-tab="skilltree"]');
   skillTreeTab.classList.remove('hidden');
+
+  updateEnemyStats();
 }
