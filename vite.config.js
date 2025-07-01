@@ -12,7 +12,10 @@ export default defineConfig(({ mode }) => {
       emptyOutDir: true,
       minify: isNoObf ? false : 'terser',
       terserOptions: isNoObf ? undefined : {
-        compress: true,
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+        },
         mangle: true,
         format: {
           comments: false,
