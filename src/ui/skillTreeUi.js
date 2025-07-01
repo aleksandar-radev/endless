@@ -1,8 +1,8 @@
 import { STATS } from '../constants/stats/stats.js';
 import { CLASS_PATHS, SKILL_TREES } from '../constants/skills.js';
-import { REQ_LEVEL_FOR_SKILL_TREE, SKILL_LEVEL_TIERS } from '../skillTree.js';
+import { SKILL_LEVEL_TIERS } from '../skillTree.js';
 import { skillTree, hero, crystalShop } from '../globals.js';
-import { formatStatName, hideTooltip, positionTooltip, showToast, showTooltip } from './ui.js';
+import { formatStatName, hideTooltip, positionTooltip, showToast, showTooltip, updateResources } from './ui.js';
 import { createModal } from './modal.js';
 
 const html = String.raw;
@@ -78,8 +78,21 @@ function showClassSelection() {
     `;
 
     const button = document.createElement('button');
-    button.textContent =
-      hero.level < REQ_LEVEL_FOR_SKILL_TREE ? `Requires Level ${REQ_LEVEL_FOR_SKILL_TREE}` : 'Choose Path';
+    const reqLevel = pathData.requiredLevel();
+    const cost = pathData.crystalCost();
+    const alreadyUnlocked = skillTree.unlockedPaths && skillTree.unlockedPaths.includes(pathId);
+    let btnText;
+    if (alreadyUnlocked) {
+      btnText = hero.level < reqLevel ? `Requires Level ${reqLevel}` : 'Select Class';
+    } else if (hero.level < reqLevel) {
+      btnText = `Requires Level ${reqLevel}` + (cost > 0 ? ` & ${cost} Crystal${cost !== 1 ? 's' : ''}` : '');
+    } else if (hero.crystals < cost) {
+      btnText = `Requires ${cost} Crystal${cost !== 1 ? 's' : ''}`;
+    } else {
+      btnText = cost > 0 ? `Select Class (Cost: ${cost} Crystal${cost !== 1 ? 's' : ''})` : 'Select Class';
+    }
+    button.textContent = btnText;
+    button.disabled = hero.level < reqLevel || (!alreadyUnlocked && hero.crystals < cost);
     button.addEventListener('click', () => selectClassPath(pathId));
     pathElement.appendChild(button);
 
@@ -89,6 +102,8 @@ function showClassSelection() {
 
 function selectClassPath(pathId) {
   if (skillTree.selectPath(pathId)) {
+    // Update crystals and other resources display
+    updateResources();
     document.getElementById('class-selection').classList.add('hidden');
     document.getElementById('skill-tree-container').classList.remove('hidden');
     showSkillTree();

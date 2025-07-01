@@ -1,4 +1,3 @@
-import { createDamageNumber } from './combat.js';
 import { handleSavedData } from './functions.js';
 import { dataManager, game, hero } from './globals.js';
 import { CLASS_PATHS, SKILL_TREES } from './constants/skills.js';
@@ -13,7 +12,6 @@ import {
 
 export const SKILL_LEVEL_TIERS = [10, 25, 60, 150, 400, 750, 1200, 2000, 3000, 5000, 10000];
 export const DEFAULT_MAX_SKILL_LEVEL = Infinity;
-export const REQ_LEVEL_FOR_SKILL_TREE = 10;
 
 export default class SkillTree {
   constructor(savedData = null) {
@@ -22,6 +20,7 @@ export default class SkillTree {
     this.skills = {};
     this.autoCastSettings = {};
     this.displaySettings = {};
+    this.unlockedPaths = [];
 
     handleSavedData(savedData, this);
     // add methods for all skills from SKILL_TREES
@@ -102,15 +101,25 @@ export default class SkillTree {
 
   selectPath(pathName) {
     if (this.selectedPath) return false;
-    if (!CLASS_PATHS[pathName] || !CLASS_PATHS[pathName].enabled) return false;
-    if (hero.level < REQ_LEVEL_FOR_SKILL_TREE) {
-      showToast(`Reach level ${REQ_LEVEL_FOR_SKILL_TREE} to select a class path!`, 'warning');
+    const pathData = CLASS_PATHS[pathName];
+    if (!pathData || !pathData.enabled()) return false;
+    const reqLevel = pathData.requiredLevel();
+    if (hero.level < reqLevel) {
+      showToast(`Requires Level ${reqLevel}`, 'warning');
       return false;
     }
-
-    this.selectedPath = {
-      name: pathName,
-    };
+    // Handle crystal cost and unlocking once
+    const cost = pathData.crystalCost();
+    const alreadyUnlocked = this.unlockedPaths.includes(pathName);
+    if (!alreadyUnlocked) {
+      if (hero.crystals < cost) {
+        showToast(`Requires ${cost} Crystal${cost !== 1 ? 's' : ''}`, 'warning');
+        return false;
+      }
+      hero.crystals -= cost;
+      this.unlockedPaths.push(pathName);
+    }
+    this.selectedPath = { name: pathName };
     hero.recalculateFromAttributes();
     dataManager.saveGame();
 
