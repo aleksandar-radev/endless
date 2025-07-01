@@ -14,7 +14,7 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Launches a fireball that deals fire damage.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamage: level * 20,
+      fireDamagePercent: level * 20,
     }),
   },
   frostArmor: {
@@ -29,8 +29,8 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Encases the caster in frost, increasing armor.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: level * 20,
-      coldDamage: level * 5,
+      armorPercent: level * 20,
+      coldDamagePercent: level * 5,
     }),
   },
 
@@ -43,9 +43,9 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Increases mana and mana regeneration',
     maxLevel: () => 1000,
     effect: (level) => ({
-      mana: level * 5,
-      manaRegen: level * 0.1,
-      wisdom: level * 1,
+      manaPercent: level * 5,
+      manaRegenPercent: level * 0.1,
+      wisdomPercent: level * 1,
     }),
   },
 
@@ -61,7 +61,7 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Strikes an enemy with a bolt of lightning.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      airDamage: level * 36,
+      airDamagePercent: level * 36,
     }),
   },
   elementalMastery: {
@@ -107,7 +107,7 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       reflectFireDamage: level * 38,
-      fireDamage: level * 3,
+      fireDamagePercent: level * 3,
     }),
   },
   arcaneWisdom: {
@@ -120,7 +120,7 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => 200,
     effect: (level) => ({
       manaPercent: level * 1,
-      manaRegen: level * 0.2,
+      manaRegenPercent: level * 0.2,
     }),
   },
 
@@ -136,9 +136,9 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Unleashes a storm of fire, ice, and lightning.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamage: level * 40,
-      coldDamage: level * 40,
-      airDamage: level * 40,
+      fireDamagePercent: level * 40,
+      coldDamagePercent: level * 40,
+      airDamagePercent: level * 40,
     }),
   },
   elementalAffinity: {
@@ -170,10 +170,10 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Increases attack rating and resource stealing.',
     maxLevel: () => 200,
     effect: (level) => ({
-      attackRating: level * 100,
-      lifePerHit: level * 5,
-      manaPerHit: level * 1,
-      attackSpeed: level * 0.01,
+      attackRatingPercent: level * 100,
+      lifePerHitPercent: level * 5,
+      manaPerHitPercent: level * 1,
+      attackSpeedPercent: level * 1,
     }),
   },
 
@@ -188,10 +188,10 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Boosts all elemental damage.',
     maxLevel: () => 600,
     effect: (level) => ({
-      fireDamage: level * 5,
-      coldDamage: level * 5,
-      airDamage: level * 5,
-      earthDamage: level * 5,
+      fireDamagePercent: level * 5,
+      coldDamagePercent: level * 5,
+      airDamagePercent: level * 5,
+      earthDamagePercent: level * 5,
     }),
   },
   primordialControl: {
@@ -203,10 +203,10 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Grants control over elemental forces, increasing all stats.',
     maxLevel: () => 5000,
     effect: (level) => ({
-      earthDamage: level * 5,
-      vitality: level * 15,
-      wisdom: level * 8,
-      dexterity: level * 6,
+      earthDamagePercent: level * 5,
+      vitalityPercent: level * 15,
+      wisdomPercent: level * 8,
+      dexterityPercent: level * 6,
     }),
   },
 
@@ -220,10 +220,10 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Transforms the caster into a being of pure elemental power.',
     maxLevel: () => 100,
     effect: (level) => ({
-      fireDamage: level * 10,
-      coldDamage: level * 10,
-      airDamage: level * 10,
-      earthDamage: level * 10,
+      fireDamagePercent: level * 10,
+      coldDamagePercent: level * 10,
+      airDamagePercent: level * 10,
+      earthDamagePercent: level * 10,
       elementalDamagePercent: level * 1,
     }),
   },
