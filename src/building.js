@@ -21,6 +21,7 @@ export class Building {
     this.effect = data.effect;
     this.maxLevel = data.maxLevel;
     this.cost = data.cost;
+    this.costIncrease = data.costIncrease || {};
     // Track last bonus time for this building
     this.lastBonusTime = lastBonusTime || Date.now();
   }
@@ -62,8 +63,12 @@ export class Building {
   // Returns the cost object for a given upgrade amount (default 1)
   getUpgradeCost(amount = 1) {
     const total = {};
+    const L = this.level;
     for (const [type, base] of Object.entries(this.cost)) {
-      total[type] = base * amount;
+      const inc = this.costIncrease[type] || 0;
+      // sum of incremental increases: inc * (amount*L + (amount*(amount-1))/2)
+      const incSum = inc * (amount * L + (amount * (amount - 1)) / 2);
+      total[type] = base * amount + incSum;
     }
     return total;
   }
@@ -95,9 +100,12 @@ export class Building {
   // Returns the refund object for the current level
   getRefund() {
     const refund = {};
+    const n = this.level;
     for (const [type, base] of Object.entries(this.cost)) {
-      // Static cost: total spent = base * level
-      refund[type] = Math.floor(refundPercent * (base * this.level));
+      const inc = this.costIncrease[type] || 0;
+      // total spent across levels: n*base + inc*(n*(n-1)/2)
+      const totalSpent = base * n + inc * (n * (n - 1) / 2);
+      refund[type] = Math.floor(refundPercent * totalSpent);
     }
     return refund;
   }
