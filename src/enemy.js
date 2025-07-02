@@ -10,21 +10,18 @@ class Enemy {
     this.region = getCurrentRegion();
     let regionEnemies = getRegionEnemies(this.region);
 
-    const enemyData = regionEnemies[Math.floor(Math.random() * regionEnemies.length)];
-    this.baseData = enemyData;
+    const baseData = regionEnemies[Math.floor(Math.random() * regionEnemies.length)];
+    this.baseData = baseData;
 
-    this.name = `${ELEMENTS[enemyData.element].icon} ${enemyData.name}`;
-    this.element = enemyData.element || null;
-    this.image = enemyData.image;
-
-    this.itemDropMultiplier = (this.region.multiplier.itemDrop || 1) * (enemyData.itemDropMultiplier || 1);
-    this.materialDropMultiplier = (this.region.multiplier.materialDrop || 1) * (enemyData.materialDropMultiplier || 1);
+    this.name = `${ELEMENTS[baseData.element].icon} ${baseData.name}`;
+    this.element = baseData.element || null;
+    this.image = baseData.image;
 
     this.rarity = this.generateRarity();
     this.color = this.getRarityColor(this.rarity);
     this.rarityData = ENEMY_RARITY[this.rarity] || {};
-    this.xp = enemyData.xp * this.region.multiplier.xp * (this.rarityData.multiplier.xp || 1);
-    this.gold = enemyData.gold * this.region.multiplier.gold * (this.rarityData.multiplier.gold || 1);
+    this.xp = baseData.xp * this.region.multiplier.xp * (this.rarityData.multiplier.xp || 1);
+    this.gold = baseData.gold * this.region.multiplier.gold * (this.rarityData.multiplier.gold || 1);
 
     // to add increases for stage
     this.damage = this.calculateDamage();
@@ -35,31 +32,31 @@ class Enemy {
     this.attackRating = this.calculateAttackRating(); // Default attackRating if not defined
     const rarityMult = this.rarityData.multiplier;
     const regionMult = this.region.multiplier;
-    const baseMult = enemyData.multiplier || {};
+    const baseMult = baseData.multiplier || {};
     this.fireDamage =
-      (enemyData.fireDamage || 0) *
+      (baseData.fireDamage || 0) *
       (regionMult.fireDamage || 1) *
       (rarityMult.fireDamage || 1) *
       (baseMult.fireDamage || 1);
     this.coldDamage =
-      (enemyData.coldDamage || 0) *
+      (baseData.coldDamage || 0) *
       (regionMult.coldDamage || 1) *
       (rarityMult.coldDamage || 1) *
       (baseMult.coldDamage || 1);
     this.airDamage =
-      (enemyData.airDamage || 0) *
+      (baseData.airDamage || 0) *
       (regionMult.airDamage || 1) *
       (rarityMult.airDamage || 1) *
       (baseMult.airDamage || 1);
     this.earthDamage =
-      (enemyData.earthDamage || 0) *
+      (baseData.earthDamage || 0) *
       (regionMult.earthDamage || 1) *
       (rarityMult.earthDamage || 1) *
       (baseMult.earthDamage || 1);
-    this.fireResistance = enemyData.fireResistance || 0;
-    this.coldResistance = enemyData.coldResistance || 0;
-    this.airResistance = enemyData.airResistance || 0;
-    this.earthResistance = enemyData.earthResistance || 0;
+    this.fireResistance = baseData.fireResistance || 0;
+    this.coldResistance = baseData.coldResistance || 0;
+    this.airResistance = baseData.airResistance || 0;
+    this.earthResistance = baseData.earthResistance || 0;
     this.currentLife = this.life;
     this.lastAttack = Date.now();
   }
@@ -190,7 +187,7 @@ class Enemy {
   calculateDropChance() {
     const enemyConst = ENEMY_RARITY[this.rarity];
     // Apply region item drop multiplier
-    return enemyConst.itemDropChance * this.itemDropMultiplier;
+    return enemyConst.itemDropChance * (this.region.multiplier.itemDrop || 1) * (this.baseData.multiplier.itemDrop || 1);
   }
 
   // Calculate item level based on stage (no effect at the moment)
@@ -210,7 +207,7 @@ class Enemy {
 
   rollForMaterialDrop() {
     const baseChance = 0.025; // Base chance of 2.5%
-    return Math.random() < baseChance * this.materialDropMultiplier;
+    return Math.random() < baseChance * (this.region.multiplier.materialDrop || 1) * (this.baseData.multiplier.materialDrop || 1);
   }
 }
 export default Enemy;

@@ -566,12 +566,12 @@ export default class Inventory {
       .filter((m) => m.dropChance > 0)
       .filter((m) => !m.exclusive || allowedExclusive.includes(m.id));
     // Combine region and enemy drop multipliers
-    const regionMultiplier = region.materialDropMultiplier || 1.0;
-    const enemyMultiplier = enemy?.enemyData?.materialDropMultiplier || 1.0;
+    const regionMultiplier = region.multiplier.materialDrop || 1.0;
+    const enemyMultiplier = enemy?.baseData?.multiplier.materialDrop || 1.0;
     const multiplier = regionMultiplier * enemyMultiplier;
     // Merge region and enemy weights (additive; default to 1 if none)
     const regionWeights = region.materialDropWeights || {};
-    const enemyWeights = enemy?.enemyData?.materialDropWeights || {};
+    const enemyWeights = enemy?.baseData?.materialDropWeights || {};
     const combinedWeights = {};
     materials.forEach((m) => {
       const w = (regionWeights[m.id] || 0) + (enemyWeights[m.id] || 0);

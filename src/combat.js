@@ -90,7 +90,7 @@ export function playerAttack(currentTime) {
 
       if (roll > hitChance) {
         // to take up mana even when missing. (for toggle skills)
-        skillTree.applyToggleEffects();
+        skillTree.applyToggleEffects(false);
         createDamageNumber({ text: 'MISS', color: '#888888' });
       } else {
         const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy);

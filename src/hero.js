@@ -395,66 +395,59 @@ export default class Hero {
   // calculated when hit is successful
   calculateTotalDamage(damageBonus = 0) {
     const isCritical = Math.random() * 100 < this.stats.critChance;
-    let physicalDamage = this.stats.damage * (1 + this.stats.damagePercent / 100);
 
-    // Calculate total damage before crit
-    let totalDamage = physicalDamage + damageBonus; // more dmg added later
+    let physicalDamage = this.stats.damage;
+    let fireDamage = this.stats.fireDamage;
+    let coldDamage = this.stats.coldDamage;
+    let airDamage = this.stats.airDamage;
+    let earthDamage = this.stats.earthDamage;
+
 
     // Add toggle skill effects
     const toggleEffects = skillTree.applyToggleEffects();
-    const elements = {
-      fire: this.stats.fireDamage,
-      cold: this.stats.coldDamage,
-      air: this.stats.airDamage,
-      earth: this.stats.earthDamage,
-    };
 
-    if (toggleEffects.fireDamage) elements.fire += toggleEffects.fireDamage;
-    if (toggleEffects.coldDamage) elements.cold += toggleEffects.coldDamage;
-    if (toggleEffects.airDamage) elements.air += toggleEffects.airDamage;
-    if (toggleEffects.earthDamage) elements.earth += toggleEffects.earthDamage;
+    // Add flat bonuses from toggles if present
+    if (toggleEffects.damage) physicalDamage += toggleEffects.damage;
+    if (toggleEffects.fireDamage) fireDamage += toggleEffects.fireDamage;
+    if (toggleEffects.coldDamage) coldDamage += toggleEffects.coldDamage;
+    if (toggleEffects.airDamage) airDamage += toggleEffects.airDamage;
+    if (toggleEffects.earthDamage) earthDamage += toggleEffects.earthDamage;
 
-    let elementalDamage = elements.fire + elements.cold + elements.air + elements.earth;
+    physicalDamage *= (1 + (toggleEffects.damagePercent || 0) / 100);
+    fireDamage *= (1 + (toggleEffects.fireDamagePercent || 0) / 100);
+    coldDamage *= (1 + (toggleEffects.coldDamagePercent || 0) / 100);
+    airDamage *= (1 + (toggleEffects.airDamagePercent || 0) / 100);
+    earthDamage *= (1 + (toggleEffects.earthDamagePercent || 0) / 100);
 
-    totalDamage += elementalDamage;
-
-    if (toggleEffects.damage) {
-      totalDamage += toggleEffects.damage;
-    }
-    if (toggleEffects.lifePerHit) {
-      game.healPlayer(toggleEffects.lifePerHit);
-    }
-    if (toggleEffects.manaPerHit) {
-      game.restoreMana(toggleEffects.manaPerHit);
-    }
+    let totalDamage = physicalDamage + fireDamage + coldDamage + airDamage + earthDamage + damageBonus;
 
     if (toggleEffects.doubleDamageChance) {
       const doubleDamageChance = Math.random() * 100;
       if (doubleDamageChance < toggleEffects.doubleDamageChance) {
         physicalDamage *= 2;
-        elements.fire *= 2;
-        elements.cold *= 2;
-        elements.air *= 2;
-        elements.earth *= 2;
+        fireDamage *= 2;
+        coldDamage *= 2;
+        airDamage *= 2;
+        earthDamage *= 2;
         totalDamage *= 2;
       }
     }
 
     if (isCritical) {
       physicalDamage *= this.stats.critDamage;
-      elements.fire *= this.stats.critDamage;
-      elements.cold *= this.stats.critDamage;
-      elements.air *= this.stats.critDamage;
-      elements.earth *= this.stats.critDamage;
+      fireDamage *= this.stats.critDamage;
+      coldDamage *= this.stats.critDamage;
+      airDamage *= this.stats.critDamage;
+      earthDamage *= this.stats.critDamage;
       totalDamage *= this.stats.critDamage;
     }
 
     const breakdown = {
       physical: Math.floor(physicalDamage),
-      fire: Math.floor(elements.fire),
-      cold: Math.floor(elements.cold),
-      air: Math.floor(elements.air),
-      earth: Math.floor(elements.earth),
+      fire: Math.floor(fireDamage),
+      cold: Math.floor(coldDamage),
+      air: Math.floor(airDamage),
+      earth: Math.floor(earthDamage),
     };
 
     console.debug('Damage Breakdown:', breakdown);

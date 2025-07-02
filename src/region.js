@@ -54,17 +54,17 @@ function getRegionTooltip(region) {
     <div class="tooltip-header">${region.name}</div>
     <div class="tooltip-content">${region.description}</div>
     <div><strong>Unlock Level:</strong> ${region.unlockLevel}</div>
-    ${region.xpMultiplier != 1
-    ? `<div><strong>XP bonus:</strong> ${((region.xpMultiplier - 1) * 100).toFixed(0)}%</div>`
+    ${region.multiplier.xp != 1
+    ? `<div><strong>XP bonus:</strong> ${((region.multiplier.xp - 1) * 100).toFixed(0)}%</div>`
     : ''}
-    ${region.goldMultiplier != 1
-    ? `<div><strong>Gold bonus:</strong> ${((region.goldMultiplier - 1) * 100).toFixed(0)}%</div>`
+    ${region.multiplier.gold != 1
+    ? `<div><strong>Gold bonus:</strong> ${((region.multiplier.gold - 1) * 100).toFixed(0)}%</div>`
     : ''}
-    ${region.itemDropMultiplier != 1
-    ? `<div><strong>Item Drop bonus:</strong> ${((region.itemDropMultiplier - 1) * 100).toFixed(0)}%</div>`
+    ${region.multiplier.itemDrop != 1
+    ? `<div><strong>Item Drop bonus:</strong> ${((region.multiplier.itemDrop - 1) * 100).toFixed(0)}%</div>`
     : ''}
-    ${region.materialDropMultiplier && region.materialDropMultiplier != 1
-    ? `<div><strong>Material Drop bonus:</strong> ${((region.materialDropMultiplier - 1) * 100).toFixed(0)}%</div>`
+    ${region.multiplier.materialDrop && region.multiplier.materialDrop != 1
+    ? `<div><strong>Material Drop bonus:</strong> ${((region.multiplier.materialDrop - 1) * 100).toFixed(0)}%</div>`
     : ''}
   `;
 }

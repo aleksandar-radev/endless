@@ -384,7 +384,7 @@ export default class SkillTree {
     return true;
   }
 
-  applyToggleEffects() {
+  applyToggleEffects(isHit = true) {
     if (!game.currentEnemy || game.currentEnemy.currentLife <= 0) return {};
 
     let effects = {};
@@ -395,6 +395,15 @@ export default class SkillTree {
         if (hero.stats.currentMana >= this.getSkillManaCost(skill)) {
           hero.stats.currentMana -= this.getSkillManaCost(skill);
           effects = { ...effects, ...this.getSkillEffect(skillId, skillData.level) };
+
+          if (isHit) {
+            if (effects.lifePerHit) {
+              game.healPlayer(effects.lifePerHit);
+            }
+            if (effects.manaPerHit) {
+              game.restoreMana(effects.manaPerHit);
+            }
+          }
         } else {
           // showManaWarning();
           // Deactivate if not enough mana

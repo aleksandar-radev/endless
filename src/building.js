@@ -215,6 +215,7 @@ export class BuildingManager {
     const now = Date.now();
     let offlineBonuses = [];
     const isFirstCollect = showOfflineModal;
+    let changed = false;
     for (const b of this.getPlacedBuildings()) {
       if (!b || b.level <= 0) continue;
       const intervalMs = intervalToMs(b.effect?.interval);
@@ -240,6 +241,7 @@ export class BuildingManager {
           else if (b.effect.type === 'crystal') hero.gainCrystals(totalBonus);
           else if (b.effect.type === 'soul') hero.gainSouls(totalBonus);
           b.lastBonusTime += times * intervalMs;
+          changed = true;
         }
       }
     }
@@ -257,11 +259,14 @@ export class BuildingManager {
         updateResources();
         dataManager.saveGame(); // Save after collecting bonuses
       });
-    } else if (!isFirstCollect) {
+      changed = true; // Modal will result in a change
+    } else if (!isFirstCollect && changed) {
       this.lastActive = now;
       updateResources();
     }
-    dataManager.saveGame(); // Save after collecting bonuses
+    if (changed) {
+      dataManager.saveGame(); // Save only if there was a change
+    }
   }
 
   // Serialize state for saving
