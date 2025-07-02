@@ -3,6 +3,7 @@ import { ITEM_SLOTS, MATERIALS_SLOTS, PERSISTENT_SLOTS } from '../inventory.js';
 import { MATERIALS } from '../constants/materials.js';
 import { hideTooltip, positionTooltip, showToast, showTooltip } from '../ui/ui.js';
 import { ITEM_RARITY, RARITY_ORDER, SLOT_REQUIREMENTS } from '../constants/items.js';
+import { closeModal, createModal } from './modal.js';
 
 const html = String.raw;
 
@@ -129,96 +130,72 @@ export function initializeInventoryUI(inv) {
 
 // Salvage Modal Implementation
 export function showSalvageModal(inv) {
-  // Modal content: inventory grid (left), salvage buttons (right), trash area (bottom or right)
-  const modalContent = document.createElement('div');
-  modalContent.className = 'inventory-modal-content';
-  modalContent.style.display = 'flex';
-  modalContent.style.flexDirection = 'row';
-  modalContent.style.gap = '32px';
-  modalContent.style.alignItems = 'flex-start';
+  // Get the inventory tab DOM node
+  const inventoryTab = document.getElementById('inventory');
+  if (!inventoryTab) return;
 
-  // Inventory grid (reuse grid rendering)
-  const salvageGrid = document.createElement('div');
-  salvageGrid.className = 'salvage-modal-grid';
-  salvageGrid.style.display = 'grid';
-  salvageGrid.style.gridTemplateColumns = 'repeat(10, 40px)';
-  salvageGrid.style.gridTemplateRows = 'repeat(20, 40px)';
-  salvageGrid.style.gap = '0';
-  salvageGrid.style.background = 'var(--bg-panel)';
-  salvageGrid.style.borderRadius = '0.5rem';
-  salvageGrid.style.overflowY = 'auto';
-  salvageGrid.style.maxHeight = '820px';
-  for (let i = 0; i < ITEM_SLOTS; i++) {
-    const cell = document.createElement('div');
-    cell.classList.add('grid-cell');
-    if (i < PERSISTENT_SLOTS) cell.classList.add('persistent');
-    const item = inv.inventoryItems[i];
-    if (item) {
-      cell.innerHTML = html`
-        <div class="inventory-item rarity-${item.rarity.toLowerCase()}" draggable="true" data-item-id="${item.id}">
-          <div class="item-icon">${item.getIcon()}</div>
+  // Create a placeholder to restore the tab later
+  const placeholder = document.createElement('div');
+  placeholder.id = 'inventory-tab-placeholder';
+  inventoryTab.parentNode.insertBefore(placeholder, inventoryTab);
+
+  // Modal content: inventory tab (left), salvage sidebar (right)
+  const html = String.raw;
+  const modalContent = html`
+    <div class="inventory-salvage-modal-content">
+      <button class="modal-close" aria-label="Close">&times;</button>
+      <div class="inventory-modal-full-content"></div>
+      <div class="salvage-modal-sidebar">
+        <h3>Salvage Options</h3>
+        <div class="salvage-options-modal">
+          <button class="salvage-btn-modal" data-rarity="NORMAL">Normal Items</button>
+          <button class="salvage-btn-modal" data-rarity="MAGIC">Magic Items & Below</button>
+          <button class="salvage-btn-modal" data-rarity="RARE">Rare Items & Below</button>
+          <button class="salvage-btn-modal" data-rarity="UNIQUE">Unique Items & Below</button>
+          <button class="salvage-btn-modal" data-rarity="LEGENDARY">Legendary Items & Below</button>
+          <button class="salvage-btn-modal" data-rarity="MYTHIC">Mythic Items & Below</button>
         </div>
-      `;
-    }
-    salvageGrid.appendChild(cell);
-  }
-
-  // Salvage controls (right side)
-  const salvageControls = document.createElement('div');
-  salvageControls.style.display = 'flex';
-  salvageControls.style.flexDirection = 'column';
-  salvageControls.style.gap = '16px';
-  salvageControls.style.alignItems = 'flex-start';
-  salvageControls.innerHTML = html`
-    <h3>Salvage Options</h3>
-    <div class="salvage-options-modal">
-      <button class="salvage-btn-modal" data-rarity="NORMAL">Normal Items</button>
-      <button class="salvage-btn-modal" data-rarity="MAGIC">Magic Items & Below</button>
-      <button class="salvage-btn-modal" data-rarity="RARE">Rare Items & Below</button>
-      <button class="salvage-btn-modal" data-rarity="UNIQUE">Unique Items & Below</button>
-      <button class="salvage-btn-modal" data-rarity="LEGENDARY">Legendary Items & Below</button>
-      <button class="salvage-btn-modal" data-rarity="MYTHIC">Mythic Items & Below</button>
+        <div class="inventory-trash">
+          <span class="inventory-trash-icon">🗑️</span>
+          <div class="inventory-trash-label">Drag item here</div>
+        </div>
+      </div>
     </div>
-    <div class="inventory-trash" style="margin-top:32px;">
-      🗑️
-      <div style="font-size:0.9em;">Drag item here</div>
-    </div>
-    <button class="modal-close" style="margin-top:32px;">Close</button>
   `;
 
-  // Compose modal
-  modalContent.appendChild(salvageGrid);
-  modalContent.appendChild(salvageControls);
+  // Use the modal helper
+  const overlay = createModal({
+    id: 'salvage-modal',
+    className: 'inventory-modal',
+    content: modalContent,
+    closeOnOutsideClick: true,
+    onClose: () => {
+      // Restore equipment container visibility and move inventory tab back
+      if (hiddenEquipment) hiddenEquipment.style.display = '';
+      placeholder.parentNode.insertBefore(inventoryTab, placeholder);
+      placeholder.remove();
+    },
+  });
 
-  // Show modal
-  const dialog = document.createElement('div');
-  dialog.className = 'inventory-modal';
-  dialog.style.display = 'flex';
-  dialog.style.alignItems = 'center';
-  dialog.style.justifyContent = 'center';
-  dialog.style.position = 'fixed';
-  dialog.style.top = '0';
-  dialog.style.left = '0';
-  dialog.style.width = '100vw';
-  dialog.style.height = '100vh';
-  dialog.style.background = 'rgba(0,0,0,0.7)';
-  dialog.style.zIndex = '9999';
-  dialog.appendChild(modalContent);
-  document.body.appendChild(dialog);
+  // Move the inventory tab DOM node into the modal
+  overlay.querySelector('.inventory-modal-full-content').appendChild(inventoryTab);
+
+  // Hide the equipment container inside the modal
+  const hiddenEquipment = inventoryTab.querySelector('.equipment-container');
+  if (hiddenEquipment) hiddenEquipment.style.display = 'none';
 
   // Salvage button logic
-  dialog.querySelectorAll('.salvage-btn-modal').forEach((btn) => {
+  overlay.querySelectorAll('.salvage-btn-modal').forEach((btn) => {
     btn.onclick = () => {
       const rarity = btn.dataset.rarity;
       inventory.salvageItemsByRarity(rarity);
-      // Refresh modal grid after salvage
-      dialog.remove();
+      closeModal(overlay);
       showSalvageModal(inv);
     };
   });
 
-  // Trash drag logic (same as before, but scoped to modal)
-  const trash = dialog.querySelector('.inventory-trash');
+  // Trash drag logic (scoped to modal)
+  const trash = overlay.querySelector('.inventory-trash');
   trash.addEventListener('dragover', (e) => {
     e.preventDefault();
     trash.classList.add('drag-over');
@@ -249,35 +226,24 @@ export function showSalvageModal(inv) {
       showToast(msg, 'success');
       updateInventoryGrid();
       dataManager.saveGame();
-      dialog.remove();
+      closeModal(overlay);
       showSalvageModal(inv);
     }
   });
 
-  // Drag logic for items in modal grid
-  salvageGrid.querySelectorAll('.inventory-item').forEach((item) => {
-    item.addEventListener('dragstart', (e) => {
-      e.target.classList.add('dragging');
-      e.dataTransfer.setData('text/plain', item.dataset.itemId);
-    });
-    item.addEventListener('dragend', (e) => {
-      e.target.classList.remove('dragging');
-    });
-    // Tooltip events (reuse main logic if needed)
-    item.addEventListener('mouseenter', (e) => {
-      const itemData = inventory.getItemById(item.dataset.itemId);
-      if (!itemData) return;
-      let tooltipContent = `<div>${itemData.getTooltipHTML()}</div>`;
-      showTooltip(tooltipContent, e, 'flex-tooltip');
-    });
-    item.addEventListener('mousemove', positionTooltip);
-    item.addEventListener('mouseleave', hideTooltip);
+  // Tooltip for trash
+  trash.addEventListener('mouseenter', (e) => {
+    const tooltipContent = html`
+      <div class="item-tooltip" style="text-align:center;">
+        <div style="font-size:2em;">🗑️</div>
+        <b>Salvage Item</b>
+        <div style="margin-top:4px;font-size:0.95em;">Drag and drop an item here to salvage it.</div>
+      </div>
+    `;
+    showTooltip(tooltipContent, e, 'flex-tooltip');
   });
-
-  // Close modal
-  dialog.querySelector('.modal-close').onclick = () => {
-    dialog.remove();
-  };
+  trash.addEventListener('mousemove', positionTooltip);
+  trash.addEventListener('mouseleave', hideTooltip);
 }
 
 export function updateInventoryGrid(inv) {

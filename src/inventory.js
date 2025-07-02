@@ -1,4 +1,4 @@
-import Item from './item.js';
+import Item, { AVAILABLE_STATS } from './item.js';
 import { game, hero, statistics, dataManager } from './globals.js';
 import { showToast, updateResources } from './ui/ui.js';
 import { createModal, closeModal } from './ui/modal.js';
@@ -90,141 +90,229 @@ export default class Inventory {
     dataManager.saveGame();
   }
 
+  showEquippedItemsModal({
+    id,
+    matDef,
+    mat,
+    equipped,
+    itemRowHtml,
+    buttonClass,
+    buttonHandler,
+    emptyMsg,
+    titleExtra = '',
+  }) {
+    const html = String.raw;
+    let content = html`
+    <div class="inventory-modal-content">
+      <button class="modal-close">&times;</button>
+      <h2>${matDef.name || mat.name || ''}</h2>
+      <p>${matDef.description || ''}</p>
+      <p>You have <b>${mat.qty}</b></p>
+      ${titleExtra}
+      <div>
+        ${equipped.length === 0
+    ? `<div style="color:#f55;">${emptyMsg}</div>`
+    : equipped.map(itemRowHtml).join('')}
+      </div>
+      <div class="modal-controls">
+        <button id="material-use-cancel">Cancel</button>
+      </div>
+    </div>
+  `;
+    const dialog = createModal({
+      id,
+      className: 'inventory-modal',
+      content,
+    });
+    dialog.querySelector('#material-use-cancel').onclick = () => closeModal(id);
+    dialog.querySelectorAll(`.${buttonClass}`).forEach((btn) => {
+      btn.onclick = (e) => buttonHandler(e, dialog);
+    });
+    return dialog;
+  }
+
+  handleMaterialUsed(inventory, mat, matDef, qty, dialogId, toastMsg) {
+    mat.qty -= qty;
+    if (mat.qty <= 0) {
+      const idx = inventory.materials.findIndex((m) => m && m.id === mat.id);
+      if (idx !== -1) inventory.materials[idx] = null;
+    }
+    hero.recalculateFromAttributes();
+    updateMaterialsGrid();
+    updateInventoryGrid();
+    dataManager.saveGame();
+    updateResources();
+    updateStatsAndAttributesUI();
+    closeModal(dialogId);
+    showToast(toastMsg, 'success');
+  }
+
   openMaterialDialog(mat) {
     // Always get the full definition from MATERIALS
     const matDef = Object.values(MATERIALS).find((m) => m.id === mat.id) || {};
 
     // Check for upgrade material
-    if (matDef.upgradeType) {
-      // Use dynamic helpers for eligible slots/types
+    if (matDef.isCustom && matDef.upgradeType) {
       const eligibleSlots = getSlotsByCategory(matDef.upgradeType);
       const eligibleTypes = getTypesByCategory(matDef.upgradeType);
-      // Find equipped items matching
       const equipped = Object.entries(this.equippedItems)
         .filter(([slot, item]) => eligibleSlots.includes(slot) && item && eligibleTypes.includes(item.type))
         .map(([slot, item]) => ({ slot, item }));
-      const html = String.raw;
-      let content = html`
-        <div class="inventory-modal-content">
-          <button class="modal-close">&times;</button>
-          <h2>${matDef.name || mat.name || ''}</h2>
-          <p>${matDef.description || ''}</p>
-          <p>You have <b>${mat.qty}</b></p>
-          <div style="margin-bottom:10px;">Select an equipped item to upgrade:</div>
-          <div id="upgrade-item-list">
-            ${equipped.length === 0
-    ? '<div style="color:#f55;">No eligible equipped items.</div>'
-    : equipped
-      .map(
-        ({ slot, item }, idx) =>
-          `<div class="upgrade-item-row" data-slot="${slot}" data-idx="${idx}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-                        <span style="font-size:1.5em;">${item.getIcon()}</span>
-                        <span><b>${item.type}</b> (Lvl ${item.level})</span>
-                        <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
-                        <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${
-  mat.qty
-}" value="1" aria-label="Upgrade quantity" />
-                        <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">Upgrade</button>
-                      </div>`,
-      )
-      .join('')}
-          </div>
-          <div class="modal-controls">
-            <button id="material-use-cancel">Cancel</button>
-          </div>
-        </div>
-      `;
-      const dialog = createModal({
+
+      this.showEquippedItemsModal({
         id: 'material-upgrade-dialog',
-        className: 'inventory-modal',
-        content,
-      });
-      dialog.querySelector('#material-use-cancel').onclick = () => closeModal('material-upgrade-dialog');
-      dialog.querySelectorAll('.upgrade-btn').forEach((btn) => {
-        btn.onclick = () => {
-          const idx = parseInt(btn.dataset.idx, 10);
+        matDef,
+        mat,
+        equipped,
+        itemRowHtml: ({ slot, item }, idx) => `
+        <div class="upgrade-item-row" data-slot="${slot}" data-idx="${idx}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="font-size:1.5em;">${item.getIcon()}</span>
+          <span><b>${item.type}</b> (Lvl ${item.level})</span>
+          <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
+          <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${mat.qty}" value="1" aria-label="Upgrade quantity" />
+          <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">Upgrade</button>
+        </div>`,
+        buttonClass: 'upgrade-btn',
+        buttonHandler: (e, dialog) => {
+          const idx = parseInt(e.currentTarget.dataset.idx, 10);
           const { slot, item } = equipped[idx];
           const qtyInput = dialog.querySelector(`.upgrade-qty-input[data-idx='${idx}']`);
           let useQty = parseInt(qtyInput.value, 10);
           if (isNaN(useQty) || useQty < 1) useQty = 1;
           if (useQty > mat.qty) useQty = mat.qty;
-          // Upgrade logic: increase level and update stats for new level
           const oldLevel = item.level;
-          const newLevel = oldLevel + useQty;
-          item.applyLevelToStats(newLevel);
-          mat.qty -= useQty;
-          if (mat.qty <= 0) {
-            const matIdx = this.materials.findIndex((m) => m && m.id === mat.id);
-            if (matIdx !== -1) this.materials[matIdx] = null;
+          item.applyLevelToStats(oldLevel + useQty);
+          this.handleMaterialUsed(this, mat, matDef, useQty, 'material-upgrade-dialog', `Upgraded ${item.type} (Lvl ${oldLevel} → ${item.level})`);
+        },
+        emptyMsg: 'No eligible equipped items.',
+        titleExtra: '<div style="margin-bottom:10px;">Select an equipped item to upgrade:</div>',
+      });
+      return;
+    }
+
+    // Enchantment Scroll
+    if (matDef.isCustom && matDef.id === 'enchantment_scroll') {
+      const equipped = Object.entries(this.equippedItems)
+        .filter(([slot, item]) => item && item.rarity !== 'MYTHIC')
+        .map(([slot, item]) => ({ slot, item }));
+
+      this.showEquippedItemsModal({
+        id: 'material-enchant-dialog',
+        matDef,
+        mat,
+        equipped,
+        itemRowHtml: ({ slot, item }, idx) => `
+        <div class="upgrade-item-row" data-slot="${slot}" data-idx="${idx}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="font-size:1.5em;">${item.getIcon()}</span>
+          <span><b>${item.type}</b> (Lvl ${item.level})</span>
+          <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
+          <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">Enchant</button>
+        </div>`,
+        buttonClass: 'upgrade-btn',
+        buttonHandler: (e) => {
+          const idx = parseInt(e.currentTarget.dataset.idx, 10);
+          const { item } = equipped[idx];
+          const rarities = Object.keys(ITEM_RARITY);
+          let currentIdx = rarities.indexOf(item.rarity);
+          if (currentIdx < rarities.length - 1) {
+            item.rarity = rarities[currentIdx + 1];
+            item.applyLevelToStats(item.level);
           }
-          hero.recalculateFromAttributes();
-          updateMaterialsGrid();
-          updateInventoryGrid();
-          dataManager.saveGame();
-          updateResources();
-          updateStatsAndAttributesUI();
-          closeModal('material-upgrade-dialog');
-          showToast(`Upgraded ${item.type} (Lvl ${oldLevel} → ${item.level})`, 'success');
-        };
+          this.handleMaterialUsed(this, mat, matDef, 1, 'material-enchant-dialog', `Enchanted ${item.type} to ${item.rarity}`);
+        },
+        emptyMsg: 'No eligible equipped items.',
+        titleExtra: '<div style="margin-bottom:10px;">Select an equipped item to enchant (increase rarity):</div>',
+      });
+      return;
+    }
+
+    // Alternation Orb
+    if (matDef.isCustom && matDef.id === 'alternation_orb') {
+      const equipped = Object.entries(this.equippedItems)
+        .filter(([slot, item]) => item)
+        .map(([slot, item]) => ({ slot, item }));
+
+      this.showEquippedItemsModal({
+        id: 'material-reroll-dialog',
+        matDef,
+        mat,
+        equipped,
+        itemRowHtml: ({ slot, item }, idx) => `
+        <div class="upgrade-item-row" data-slot="${slot}" data-idx="${idx}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="font-size:1.5em;">${item.getIcon()}</span>
+          <span><b>${item.type}</b> (Lvl ${item.level})</span>
+          <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
+          <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">Re-roll Stat</button>
+        </div>`,
+        buttonClass: 'upgrade-btn',
+        buttonHandler: (e) => {
+          const idx = parseInt(e.currentTarget.dataset.idx, 10);
+          const { item } = equipped[idx];
+          const statKeys = Object.keys(item.stats);
+          if (statKeys.length === 0) return;
+          const statToReroll = statKeys[Math.floor(Math.random() * statKeys.length)];
+          const range = AVAILABLE_STATS[statToReroll];
+          const baseValue = Math.random() * (range.max - range.min) + range.min;
+          const tierBonus = item.getTierBonus();
+          const multiplier = item.getMultiplier();
+          const scale = item.getLevelScale(statToReroll, item.level);
+          item.stats[statToReroll] = item.calculateStatValue({
+            baseValue,
+            tierBonus,
+            multiplier,
+            scale,
+            stat: statToReroll,
+          });
+          if (!item.metaData) item.metaData = {};
+          item.metaData[statToReroll] = { baseValue };
+          this.handleMaterialUsed(this, mat, matDef, 1, 'material-reroll-dialog', `Re-rolled 1 stat on ${item.type}`);
+        },
+        emptyMsg: 'No equipped items.',
+        titleExtra: '<div style="margin-bottom:10px;">Select an equipped item to re-roll one stat:</div>',
       });
       return;
     }
 
     // Default: show quantity modal
+    const html = String.raw;
     const content = html`
-      <div class="inventory-modal-content">
-        <button class="modal-close">&times;</button>
-        <h2>${matDef.name || mat.name || ''}</h2>
-        <p>${matDef.description || ''}</p>
-        <p>You have <b>${mat.qty}</b></p>
-        <label for="material-use-qty">Quantity:</label>
-        <input
-          id="material-use-qty"
-          style="padding: 5px; border-radius: 10px;"
-          type="number"
-          min="1"
-          max="${mat.qty}"
-          value="${mat.qty}"
-        />
-        <div class="modal-controls">
-          <button class="modal-buy" id="material-use-btn">Use</button>
-          <button id="material-use-cancel">Cancel</button>
-        </div>
+    <div class="inventory-modal-content">
+      <button class="modal-close">&times;</button>
+      <h2>${matDef.name || mat.name || ''}</h2>
+      <p>${matDef.description || ''}</p>
+      <p>You have <b>${mat.qty}</b></p>
+      <label for="material-use-qty">Quantity:</label>
+      <input
+        id="material-use-qty"
+        style="padding: 5px; border-radius: 10px;"
+        type="number"
+        min="1"
+        max="${mat.qty}"
+        value="${mat.qty}"
+      />
+      <div class="modal-controls">
+        <button class="modal-buy" id="material-use-btn">Use</button>
+        <button id="material-use-cancel">Cancel</button>
       </div>
-    `;
+    </div>
+  `;
     const dialog = createModal({
       id: 'material-use-dialog',
       className: 'inventory-modal',
       content,
     });
-    // Focus input
     const qtyInput = dialog.querySelector('#material-use-qty');
     qtyInput.focus();
     qtyInput.select();
-    // Use
     dialog.querySelector('#material-use-btn').onclick = () => {
       let useQty = parseInt(qtyInput.value, 10);
       if (isNaN(useQty) || useQty < 1) useQty = 1;
       if (useQty > mat.qty) useQty = mat.qty;
-
       if (matDef && typeof matDef.onUse === 'function') {
         matDef.onUse(hero, useQty);
       }
-      mat.qty -= useQty;
-      if (mat.qty <= 0) {
-        const idx = this.materials.findIndex((m) => m && m.id === mat.id);
-        if (idx !== -1) this.materials[idx] = null;
-      }
-      hero.recalculateFromAttributes();
-      updateMaterialsGrid();
-      dataManager.saveGame();
-      updateResources();
-      updateStatsAndAttributesUI();
-      closeModal('material-use-dialog');
-      showToast(`Used ${useQty} ${matDef.name || mat.name || ''}${useQty > 1 ? 's' : ''}`, 'success');
+      this.handleMaterialUsed(this, mat, matDef, useQty, 'material-use-dialog', `Used ${useQty} ${matDef.name || mat.name || ''}${useQty > 1 ? 's' : ''}`);
     };
-
-    // Cancel button handler
     dialog.querySelector('#material-use-cancel').onclick = () => closeModal('material-use-dialog');
   }
 

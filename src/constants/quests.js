@@ -139,7 +139,7 @@ export const QUEST_DEFINITIONS = [
     type: 'kill_rarity',
     rarity: 'rare',
     target: 10,
-    reward: { gold: 300, crystals: 1 },
+    reward: { gold: 300, crystals: 1, item: { rarity: 'rare', type: 'random', tier: 1 } },
     icon: '🔵',
   },
   {
@@ -194,7 +194,7 @@ export const QUEST_DEFINITIONS = [
     type: 'kill_rarity',
     rarity: 'epic',
     target: 5,
-    reward: { gold: 1000, crystals: 1 },
+    reward: { gold: 1000, crystals: 1, item: { rarity: 'unique', type: 'random', tier: 1 } },
     icon: '🟣',
   },
   {
@@ -260,7 +260,7 @@ export const QUEST_DEFINITIONS = [
     type: 'kill_rarity',
     rarity: 'legendary',
     target: 10,
-    reward: { gold: 25000, crystals: 5 },
+    reward: { gold: 25000, crystals: 5, item: { rarity: 'legendary', type: 'random', tier: 1 } },
     icon: '🟠',
   },
   {
@@ -337,20 +337,10 @@ export const QUEST_DEFINITIONS = [
     type: 'kill_rarity',
     rarity: 'mythic',
     target: 25,
-    reward: { gold: 125000, crystals: 25 },
+    reward: { gold: 125000, crystals: 25, item: { rarity: 'mythic', type: 'random', tier: 1 } },
     icon: '🔴',
   },
-  {
-    id: 'kill_mythic_50',
-    category: 'rarity',
-    title: 'Mythic Apocalypse',
-    description: 'Defeat 50 mythic enemies.',
-    type: 'kill_rarity',
-    rarity: 'mythic',
-    target: 50,
-    reward: { gold: 250000, crystals: 40 },
-    icon: '🔴',
-  }, // Resource quests
+  // Resource quests
   {
     id: 'gold_1000',
     category: 'resources',
