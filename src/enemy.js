@@ -20,39 +20,20 @@ class Enemy {
     this.rarity = this.generateRarity();
     this.color = this.getRarityColor(this.rarity);
     this.rarityData = ENEMY_RARITY[this.rarity] || {};
-    this.xp = baseData.xp * this.region.multiplier.xp * (this.rarityData.multiplier.xp || 1);
-    this.gold = baseData.gold * this.region.multiplier.gold * (this.rarityData.multiplier.gold || 1);
+    this.xp = this.calculateXP();
+    this.gold = this.calculateGold();
 
     // to add increases for stage
     this.damage = this.calculateDamage();
+    this.fireDamage = this.calculateElementalDamage('fire');
+    this.coldDamage = this.calculateElementalDamage('cold');
+    this.airDamage = this.calculateElementalDamage('air');
+    this.earthDamage = this.calculateElementalDamage('earth');
     this.life = this.calculateLife();
     this.attackSpeed = this.calculateAttackSpeed();
     this.armor = this.calculateArmor();
     this.evasion = this.calculateEvasion();
     this.attackRating = this.calculateAttackRating(); // Default attackRating if not defined
-    const rarityMult = this.rarityData.multiplier;
-    const regionMult = this.region.multiplier;
-    const baseMult = baseData.multiplier || {};
-    this.fireDamage =
-      (baseData.fireDamage || 0) *
-      (regionMult.fireDamage || 1) *
-      (rarityMult.fireDamage || 1) *
-      (baseMult.fireDamage || 1);
-    this.coldDamage =
-      (baseData.coldDamage || 0) *
-      (regionMult.coldDamage || 1) *
-      (rarityMult.coldDamage || 1) *
-      (baseMult.coldDamage || 1);
-    this.airDamage =
-      (baseData.airDamage || 0) *
-      (regionMult.airDamage || 1) *
-      (rarityMult.airDamage || 1) *
-      (baseMult.airDamage || 1);
-    this.earthDamage =
-      (baseData.earthDamage || 0) *
-      (regionMult.earthDamage || 1) *
-      (rarityMult.earthDamage || 1) *
-      (baseMult.earthDamage || 1);
     this.fireResistance = baseData.fireResistance || 0;
     this.coldResistance = baseData.coldResistance || 0;
     this.airResistance = baseData.airResistance || 0;
@@ -112,8 +93,8 @@ class Enemy {
   calculateLife() {
     let life = this.baseData.life - 10; // to account for level 1 enemy having +10 life
     const segLen = 10,
-      initialInc = 10,
-      incStep = 5;
+      initialInc = 12,
+      incStep = 8;
     for (let lvl = 1; lvl <= this.level; lvl++) {
       life += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
     }
@@ -123,7 +104,7 @@ class Enemy {
   calculateDamage = () => {
     let dmg = this.baseData.damage;
     const segLen = 10,
-      initialInc = 0.3,
+      initialInc = 0.4,
       incStep = 0.1;
     for (let lvl = 1; lvl <= this.level; lvl++) {
       dmg += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
@@ -208,6 +189,45 @@ class Enemy {
   rollForMaterialDrop() {
     const baseChance = 0.025; // Base chance of 2.5%
     return Math.random() < baseChance * (this.region.multiplier.materialDrop || 1) * (this.baseData.multiplier.materialDrop || 1);
+  }
+
+  calculateElementalDamage(type) {
+    // type: 'fire', 'cold', 'air', 'earth'
+    const base = this.baseData[`${type}Damage`] || 0;
+    if (base === 0) return 0;
+    const segLen = 10,
+      initialInc = 0.3,
+      incStep = 0.1;
+    let dmg = base;
+    for (let lvl = 1; lvl <= this.level; lvl++) {
+      dmg += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
+    }
+    const regionMult = this.region.multiplier[`${type}Damage`] || 1;
+    const rarityMult = this.rarityData.multiplier[`${type}Damage`] || 1;
+    const baseMult = this.baseData.multiplier ? this.baseData.multiplier[`${type}Damage`] || 1 : 1;
+    return dmg * regionMult * rarityMult * baseMult;
+  }
+
+  calculateXP() {
+    let xp = this.baseData.xp;
+    const segLen = 10,
+      initialInc = 2,
+      incStep = 1;
+    for (let lvl = 1; lvl <= this.level; lvl++) {
+      xp += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
+    }
+    return xp * this.region.multiplier.xp * (this.rarityData.multiplier.xp || 1);
+  }
+
+  calculateGold() {
+    let gold = this.baseData.gold;
+    const segLen = 10,
+      initialInc = 1.5,
+      incStep = 0.75;
+    for (let lvl = 1; lvl <= this.level; lvl++) {
+      gold += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
+    }
+    return gold * this.region.multiplier.gold * (this.rarityData.multiplier.gold || 1);
   }
 }
 export default Enemy;
