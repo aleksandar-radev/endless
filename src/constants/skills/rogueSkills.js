@@ -90,7 +90,7 @@ export const ROGUE_SKILLS = {
     description: () => 'Significantly increases agility.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      agilityPercent: level * 7,
+      agilityPercent: level * 3,
     }),
   },
 
@@ -108,7 +108,7 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       damagePercent: level * 3,
       lifePerHit: level * 2,
-      manaPerHit: level * 1,
+      manaPerHit: level * 0.33,
     }),
   },
 
@@ -174,7 +174,7 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       damagePercent: level * 0.3,
       dexterityPercent: level * 2,
-      strengthPercent: level * 3,
+      agilityPercent: level * 3,
       wisdomPercent: level * 1,
       bonusGoldPercent: level * 0.5,
     }),

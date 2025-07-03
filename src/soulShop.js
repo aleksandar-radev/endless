@@ -33,7 +33,7 @@ export const SOUL_UPGRADE_CONFIG = {
     bonus: 0.01,
     baseCost: 10,
     costIncrement: 1,
-    stat: 'damagePercent',
+    stat: 'totalDamagePercent',
   },
   lifeBoost: {
     label: 'Life Boost %',

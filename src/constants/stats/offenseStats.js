@@ -30,6 +30,10 @@ export const OFFENSE_STATS = {
     item: { min: 5, max: 20, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['mace'],
   },
+  totalDamagePercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
   // ATTACK SPEED
   attackSpeed: {
     base: 1,

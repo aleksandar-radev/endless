@@ -86,11 +86,14 @@ class Game {
     createDamageNumber({ mana, isPlayer: true, isCritical: false, color });
   }
 
-  damageEnemy(damage) {
+  damageEnemy(damage, isCritical = false) {
     damage = Math.floor(damage); // Ensure damage is an integer
     if (this.fightMode === 'arena' && this.currentEnemy) {
       // Boss damage flow
       const isDead = this.currentEnemy.takeDamage(damage);
+
+      // Always show damage number
+      createDamageNumber({ damage, isPlayer: false, isCritical: false, color: 'red' });
 
       if (isDead) {
         defeatEnemy();
@@ -108,6 +111,9 @@ class Game {
       }
       this.currentEnemy.currentLife -= damage;
       if (this.currentEnemy.currentLife < 0) this.currentEnemy.currentLife = 0;
+
+      createDamageNumber({ text: damage, isPlayer: false, isCritical: isCritical, color: 'red' });
+
       updateEnemyStats();
 
       if (this.currentEnemy.currentLife <= 0) {

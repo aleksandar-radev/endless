@@ -340,16 +340,7 @@ export default class SkillTree {
 
     hero.stats.currentMana -= this.getSkillManaCost(skill);
 
-    // all damages
-    const instantSkillDamage =
-      baseEffects.damage ||
-      0 + baseEffects.fireDamage ||
-      0 + baseEffects.coldDamage ||
-      0 + baseEffects.airDamage ||
-      0 + baseEffects.earthDamage ||
-      0;
-
-    const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy, instantSkillDamage);
+    const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy, baseEffects);
 
     if (baseEffects.lifeSteal) {
       const lifeStealAmount = damage * (baseEffects.lifeSteal / 100);
@@ -371,8 +362,8 @@ export default class SkillTree {
       game.restoreMana(baseEffects.manaPerHit);
     }
 
-    if (instantSkillDamage !== 0) {
-      game.damageEnemy(damage);
+    if (this.isDamageSkill(baseEffects)) {
+      game.damageEnemy(damage, isCritical);
     }
 
     // Set cooldown
@@ -384,6 +375,21 @@ export default class SkillTree {
     return true;
   }
 
+  isDamageSkill(effects) {
+    return (
+      effects.damage ||
+      effects.fireDamage ||
+      effects.coldDamage ||
+      effects.airDamage ||
+      effects.earthDamage ||
+      effects.physicalDamage ||
+      effects.damagePercent ||
+      effects.fireDamagePercent ||
+      effects.coldDamagePercent ||
+      effects.airDamagePercent ||
+      effects.earthDamagePercent
+    );
+  }
   applyToggleEffects(isHit = true) {
     if (!game.currentEnemy || game.currentEnemy.currentLife <= 0) return {};
 

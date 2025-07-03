@@ -55,7 +55,7 @@ export const PALADIN_SKILLS = {
     description: () => 'Greatly increases armor and block chance.',
     maxLevel: () => 200,
     effect: (level) => ({
-      armorPercent: level * 3,
+      armorPercent: level * 2,
       blockChance: level * 0.1,
       thornsDamage: level * 0.5,
       thornsDamagePercent: level * 1,
@@ -201,8 +201,8 @@ export const PALADIN_SKILLS = {
     maxLevel: () => 400,
     effect: (level) => ({
       resurrectionChance: level * 0.1,
-      lifeRegenPercent: level * 0.25,
-      manaRegenPercent: level * 0.05,
+      lifeRegenPercent: level * 0.5,
+      manaRegenPercent: level * 1,
     }),
   },
 

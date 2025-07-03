@@ -54,7 +54,6 @@ export function enemyAttack(currentTime) {
         // only if there is some thorns damage to deal, only paladin
         if (thornsDamage - game.currentEnemy.damage > 1) {
           game.damageEnemy(thornsDamage);
-          createDamageNumber({ text: `${thornsDamage}` });
         }
 
         // check currently applied buffs and if fireShield is active, return its damage to the attacker.
@@ -62,7 +61,6 @@ export function enemyAttack(currentTime) {
           const fireReflect = Math.floor(hero.stats.reflectFireDamage || 0);
           if (fireReflect > 0) {
             game.damageEnemy(fireReflect);
-            createDamageNumber({ text: `${fireReflect}` });
             updateEnemyStats();
           }
         }
@@ -98,9 +96,7 @@ export function playerAttack(currentTime) {
         const lifePerHitAmount = hero.stats.lifePerHit * (1 + (hero.stats.lifePerHitPercent || 0) / 100);
         game.healPlayer(lifeStealAmount + lifePerHitAmount);
         game.restoreMana(hero.stats.manaPerHit * (1 + (hero.stats.manaPerHitPercent || 0) / 100) || 0);
-        game.damageEnemy(damage);
-        createDamageNumber({ text: isCritical ? ` -${Math.floor(damage)}` : `-${Math.floor(damage)}`, isCritical });
-
+        game.damageEnemy(damage, isCritical);
       }
       if (game.fightMode === 'arena') {
         updateBossUI(game.currentEnemy);
