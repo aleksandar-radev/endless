@@ -1,6 +1,6 @@
 {
     "editor.tabSize": 2,
     "javascript.preferences.importModuleSpecifierEnding": "js",
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": true,
     "window.title": "Endless"
 }

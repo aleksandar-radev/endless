@@ -1,4 +1,4 @@
-import { hero, inventory, dataManager } from '../globals.js';
+import { hero, inventory, dataManager, crystalShop } from '../globals.js';
 import { ITEM_SLOTS, MATERIALS_SLOTS, PERSISTENT_SLOTS } from '../inventory.js';
 import { MATERIALS } from '../constants/materials.js';
 import { hideTooltip, positionTooltip, showToast, showTooltip } from '../ui/ui.js';
@@ -130,6 +130,18 @@ export function initializeInventoryUI(inv) {
 
 // Salvage Modal Implementation
 export function showSalvageModal(inv) {
+  // Always switch to Items tab before showing the modal
+  const itemsTab = document.getElementById('items-tab');
+  const materialsTab = document.getElementById('materials-tab');
+  const gridContainer = document.querySelector('.grid-container');
+  const materialsGrid = document.querySelector('.materials-grid');
+  if (itemsTab && materialsTab && gridContainer && materialsGrid) {
+    itemsTab.classList.add('active');
+    materialsTab.classList.remove('active');
+    gridContainer.style.display = '';
+    materialsGrid.style.display = 'none';
+  }
+
   // Get the inventory tab DOM node
   const inventoryTab = document.getElementById('inventory');
   if (!inventoryTab) return;
@@ -141,6 +153,8 @@ export function showSalvageModal(inv) {
 
   // Modal content: inventory tab (left), salvage sidebar (right)
   const html = String.raw;
+  const autoSalvageLevel = crystalShop.crystalUpgrades.autoSalvage || 0;
+  const selectedRarities = inv.autoSalvageRarities || [];
   const modalContent = html`
     <div class="inventory-salvage-modal-content">
       <button class="modal-close" aria-label="Close">&times;</button>
@@ -148,12 +162,21 @@ export function showSalvageModal(inv) {
       <div class="salvage-modal-sidebar">
         <h3>Salvage Options</h3>
         <div class="salvage-options-modal">
-          <button class="salvage-btn-modal" data-rarity="NORMAL">Normal Items</button>
-          <button class="salvage-btn-modal" data-rarity="MAGIC">Magic Items & Below</button>
-          <button class="salvage-btn-modal" data-rarity="RARE">Rare Items & Below</button>
-          <button class="salvage-btn-modal" data-rarity="UNIQUE">Unique Items & Below</button>
-          <button class="salvage-btn-modal" data-rarity="LEGENDARY">Legendary Items & Below</button>
-          <button class="salvage-btn-modal" data-rarity="MYTHIC">Mythic Items & Below</button>
+          ${RARITY_ORDER.map(rarity => {
+    const isChecked = selectedRarities.includes(rarity);
+    const atCap = selectedRarities.length >= autoSalvageLevel;
+    const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
+    return `
+      <div class="salvage-row" style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <button class="salvage-btn-modal" data-rarity="${rarity}">${rarity.charAt(0) + rarity.slice(1).toLowerCase()} Items</button>
+        <label class="toggle-label" style="margin-left:8px;display:flex;align-items:center;gap:4px;position:relative;cursor:pointer;">
+          <input type="checkbox" class="auto-salvage-toggle" data-rarity="${rarity}" ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} style="opacity:0;position:absolute;width:100%;height:100%;left:0;top:0;z-index:2;cursor:pointer;" />
+          <span class="toggle-btn${isChecked ? ' checked' : ''}${isDisabled ? ' disabled' : ''}"></span>
+          <span style="font-size:0.95em;z-index:1;">Auto</span>
+        </label>
+      </div>
+    `;
+  }).join('')}
         </div>
         <div class="inventory-trash">
           <span class="inventory-trash-icon">🗑️</span>
@@ -180,12 +203,6 @@ export function showSalvageModal(inv) {
   // Move the inventory tab DOM node into the modal
   overlay.querySelector('.inventory-modal-full-content').appendChild(inventoryTab);
 
-  // --- Force items grid to show, materials grid to hide, only inside modal ---
-  const gridContainer = inventoryTab.querySelector('.grid-container');
-  const materialsGrid = inventoryTab.querySelector('.materials-grid');
-  if (gridContainer) gridContainer.style.display = '';
-  if (materialsGrid) materialsGrid.style.display = 'none';
-
   // Hide the equipment container inside the modal
   const hiddenEquipment = inventoryTab.querySelector('.equipment-container');
   if (hiddenEquipment) hiddenEquipment.style.display = 'none';
@@ -198,6 +215,56 @@ export function showSalvageModal(inv) {
       closeModal(overlay);
       showSalvageModal(inv);
     };
+  });
+
+  // Auto-salvage toggle logic
+  overlay.querySelectorAll('.toggle-label').forEach((label) => {
+    const input = label.querySelector('.auto-salvage-toggle');
+    // Always sync visual state on open
+    syncToggleState();
+    // Input change handler
+    input.addEventListener('change', () => {
+      if (autoSalvageLevel === 0) return;
+      let selected = inv.autoSalvageRarities ? [...inv.autoSalvageRarities] : [];
+      const rarity = input.dataset.rarity;
+      if (input.checked) {
+        if (selected.length >= autoSalvageLevel && !selected.includes(rarity)) {
+          input.checked = false;
+          showToast(`You can only auto-salvage ${autoSalvageLevel} rarit${autoSalvageLevel === 1 ? 'y' : 'ies'}.`, 'info');
+          return;
+        }
+        if (!selected.includes(rarity)) selected.push(rarity);
+      } else {
+        selected = selected.filter(r => r !== rarity);
+      }
+      inv.setAutoSalvageRarities(selected);
+      syncToggleState();
+    });
+    // Make the whole label clickable
+    label.addEventListener('click', (e) => {
+      if (input.disabled) return;
+      // Only toggle if not clicking the input directly (to avoid double toggle)
+      if (e.target !== input) {
+        input.checked = !input.checked;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+    // Helper to sync all toggles' state
+    function syncToggleState() {
+      const selected = inv.autoSalvageRarities ? [...inv.autoSalvageRarities] : [];
+      overlay.querySelectorAll('.auto-salvage-toggle').forEach((otherInput) => {
+        const otherRarity = otherInput.dataset.rarity;
+        const otherLabel = otherInput.closest('.toggle-label');
+        const otherBtn = otherLabel.querySelector('.toggle-btn');
+        const isChecked = selected.includes(otherRarity);
+        const atCap = selected.length >= autoSalvageLevel;
+        const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
+        otherInput.checked = isChecked;
+        otherInput.disabled = isDisabled;
+        otherBtn.classList.toggle('checked', isChecked);
+        otherBtn.classList.toggle('disabled', isDisabled);
+      });
+    }
   });
 
   // Trash drag logic (scoped to modal)

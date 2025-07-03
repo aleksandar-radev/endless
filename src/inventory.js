@@ -34,6 +34,7 @@ export default class Inventory {
     this.equippedItems = savedData?.equippedItems || {};
     this.inventoryItems = savedData?.inventoryItems || new Array(ITEM_SLOTS).fill(null);
     this.materials = savedData?.materials || new Array(MATERIALS_SLOTS).fill(null);
+    this.autoSalvageRarities = savedData?.autoSalvageRarities || [];
 
     if (savedData) {
       // Restore equipped items
@@ -324,12 +325,14 @@ export default class Inventory {
     let salvagedItems = 0;
     let goldGained = 0;
     let crystalsGained = 0;
-    const salvageRarities = RARITY_ORDER.slice(0, RARITY_ORDER.indexOf(rarity) + 1);
 
     // Skip first PERSISTENT_SLOTS slots when salvaging
     this.inventoryItems = this.inventoryItems.map((item, index) => {
       if (index < PERSISTENT_SLOTS) return item; // Preserve persistent slots
-      if (item && salvageRarities.includes(item.rarity)) {
+      if (item && rarity == item.rarity) {
+        console.debug('Salvaging item:', item);
+        console.debug(rarity, '==', item.rarity);
+
         salvagedItems++;
         // Give gold based on rarity and level (customize as needed)
         goldGained += this.getItemSalvageValue(item);
@@ -345,7 +348,7 @@ export default class Inventory {
     if (salvagedItems > 0) {
       if (goldGained > 0) hero.gold = (hero.gold || 0) + goldGained;
       if (crystalsGained > 0) hero.crystals = (hero.crystals || 0) + crystalsGained;
-      let msg = `Salvaged ${salvagedItems} ${rarity.toLowerCase()} or lower items`;
+      let msg = `Salvaged ${salvagedItems} ${rarity.toLowerCase()} items`;
       if (goldGained > 0) msg += `, gained ${goldGained} gold`;
       if (crystalsGained > 0) msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
       showToast(msg, 'success');
@@ -354,7 +357,7 @@ export default class Inventory {
       updateResources(); // <-- update the UI after using a material
       dataManager.saveGame();
     } else {
-      showToast(`No ${rarity.toLowerCase()} or lower items to salvage`, 'info');
+      showToast(`No ${rarity.toLowerCase()} items to salvage`, 'info');
     }
   }
 
@@ -486,7 +489,19 @@ export default class Inventory {
         this.inventoryItems[emptySlot] = item;
       }
     }
+    // Auto-salvage logic
+    if (this.autoSalvageRarities && this.autoSalvageRarities.length > 0) {
+      if (this.autoSalvageRarities.includes(item.rarity)) {
+        this.salvageItemsByRarity(item.rarity);
+        return;
+      }
+    }
     updateInventoryGrid();
+    dataManager.saveGame();
+  }
+
+  setAutoSalvageRarities(rarities) {
+    this.autoSalvageRarities = rarities;
     dataManager.saveGame();
   }
 

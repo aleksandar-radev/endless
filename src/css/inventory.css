@@ -642,13 +642,68 @@
 
 .inventory-trash {
   display: flex;
-  padding: 5px;;
+  padding: 5px;
+  ;
   align-items: center;
   gap: 2px;
 }
+
 .inventory-trash-icon {
   font-size: 2em;
 }
+
 .inventory-trash-label {
   font-size: 0.9em;
+}
+
+
+/* Toggle switch for auto-salvage (reuses toggle-btn from options) */
+.toggle-label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.auto-salvage-toggle+.toggle-btn {
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+  background: #232b3a;
+  border-radius: 13px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: 2px solid #3b82f6;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.auto-salvage-toggle:checked+.toggle-btn,
+.toggle-btn.checked {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.toggle-btn::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 17px;
+  height: 17px;
+  background: #fff;
+  border-radius: 50%;
+  transition: left 0.2s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.auto-salvage-toggle:checked+.toggle-btn::before,
+.toggle-btn.checked::before {
+  left: 25px;
+}
+
+.toggle-btn.disabled {
+  background: #232b3a;
+  border-color: #a1a1aa;
+  cursor: not-allowed;
+  opacity: 0.6;
 }

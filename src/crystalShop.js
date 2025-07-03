@@ -58,6 +58,16 @@ const CRYSTAL_UPGRADE_CONFIG = {
     baseCost: 50,
     multiple: true,
   },
+  autoSalvage: {
+    label: 'Auto-Salvage',
+    bonus: 'Automatically salvage items of selected rarities',
+    bonusLabel: 'Automatically salvage selected rarities',
+    baseCost: 10,
+    costIncrement: 10,
+    showLevel: true,
+    multiple: true,
+    maxLevel: 6,
+  },
 };
 
 export default class CrystalShop {
@@ -105,14 +115,17 @@ export default class CrystalShop {
     let alreadyPurchased = config.oneTime && this.crystalUpgrades[stat];
     const level = this.crystalUpgrades[stat] || 0;
     const cost = config.baseCost + (config.costIncrement || 0) * (this.crystalUpgrades[stat] || 0);
-
+    let isMaxed = false;
+    if (stat === 'autoSalvage' && config.maxLevel) {
+      isMaxed = level >= config.maxLevel;
+    }
     return `
-      <button class="crystal-upgrade-btn ${alreadyPurchased ? 'purchased' : ''}" data-stat="${stat}" ${
-  alreadyPurchased ? 'disabled' : ''
+      <button class="crystal-upgrade-btn ${alreadyPurchased || isMaxed ? 'purchased' : ''}" data-stat="${stat}" ${
+  alreadyPurchased || isMaxed ? 'disabled' : ''
 }>
-        <span class="upgrade-name">${config.label} ${config.showLevel ? `(Lvl ${level})` : ''}</span>
-        <span class="upgrade-bonus">${config.bonusLabel}</span>
-        <span class="upgrade-cost">${alreadyPurchased ? 'Purchased' : `${cost} Crystals`}</span>
+        <span class="upgrade-name">${config.label} ${config.showLevel ? `(Lvl ${level}${isMaxed ? ' / Max' : ''})` : ''}</span>
+        <span class="upgrade-bonus">${config.bonusLabel}${isMaxed ? ' <strong>Max</strong>' : ''}</span>
+        <span class="upgrade-cost">${alreadyPurchased ? 'Purchased' : isMaxed ? 'Max' : `${cost} Crystals`}</span>
       </button>
     `;
   }
@@ -251,12 +264,27 @@ export default class CrystalShop {
       buyBtn.disabled = purchased;
     } else if (config.multiple) {
       controls.style.display = 'none';
-      fields.innerHTML = `
-        <p>${config.bonus && typeof config.bonus === 'string' ? config.bonus : ''}</p>
-        <p>Cost: <span class="modal-total-cost">${config.baseCost}</span> Crystals</p>
-      `;
-      buyBtn.style.display = '';
-      buyBtn.disabled = false;
+      // Show current level and next cost for autoSalvage
+      if (stat === 'autoSalvage') {
+        const level = this.crystalUpgrades[stat] || 0;
+        const cap = config.maxLevel || 6;
+        const nextCost = config.baseCost + (config.costIncrement || 0) * level;
+        const isMaxed = level >= cap;
+        fields.innerHTML = `
+          <p>${config.bonus && typeof config.bonus === 'string' ? config.bonus : ''}</p>
+          <p>Current Level: <span class="modal-level">${level}</span> / <span class="modal-max-level">${cap}</span></p>
+          ${isMaxed ? '<p style="color:#10b981;font-weight:bold;">Maxed</p>' : `<p>Next Level Cost: <span class="modal-total-cost">${nextCost}</span> Crystals</p>`}
+        `;
+        buyBtn.disabled = isMaxed;
+        buyBtn.style.display = isMaxed ? 'none' : '';
+      } else {
+        fields.innerHTML = `
+          <p>${config.bonus && typeof config.bonus === 'string' ? config.bonus : ''}</p>
+          <p>Cost: <span class="modal-total-cost">${config.baseCost}</span> Crystals</p>
+        `;
+        buyBtn.style.display = '';
+        buyBtn.disabled = false;
+      }
     }
 
     m.classList.remove('hidden');
@@ -304,6 +332,22 @@ export default class CrystalShop {
 
       const buyBtn = q('.modal-buy');
       if (buyBtn) buyBtn.disabled = qty <= 0 || totalCost > crystalsAvailable;
+    } else if (stat === 'autoSalvage') {
+      const level = this.crystalUpgrades[stat] || 0;
+      const cap = config.maxLevel || 6;
+      const nextCost = config.baseCost + (config.costIncrement || 0) * level;
+      const isMaxed = level >= cap;
+      if (q('.modal-level')) q('.modal-level').textContent = level;
+      if (q('.modal-max-level')) q('.modal-max-level').textContent = cap;
+      if (q('.modal-total-cost')) q('.modal-total-cost').textContent = nextCost;
+      const buyBtn = q('.modal-buy');
+      if (buyBtn) {
+        buyBtn.disabled = isMaxed || hero.crystals < nextCost;
+        buyBtn.style.display = isMaxed ? 'none' : '';
+      }
+      // Hide cost if maxed
+      const costP = q('.modal-total-cost')?.closest('p');
+      if (costP) costP.style.display = isMaxed ? 'none' : '';
     }
   }
 
@@ -449,9 +493,21 @@ export default class CrystalShop {
         } else {
           qty = Math.min(qty, cap - current);
         }
+      } else if (stat === 'autoSalvage') {
+        const current = this.crystalUpgrades.autoSalvage || 0;
+        const cap = CRYSTAL_UPGRADE_CONFIG.autoSalvage.maxLevel || 6;
+        if (current >= cap) {
+          showToast('Auto-Salvage is maxed out.', 'error');
+          return;
+        }
+        if (qty === 'max') {
+          qty = cap - current;
+        } else {
+          qty = Math.min(qty, cap - current);
+        }
       }
       await this._bulkPurchase(stat, config, qty);
-      options.updateStartingStageOption();
+      if (stat === 'startingStage') options.updateStartingStageOption();
       return;
     }
 
