@@ -180,6 +180,12 @@ export function showSalvageModal(inv) {
   // Move the inventory tab DOM node into the modal
   overlay.querySelector('.inventory-modal-full-content').appendChild(inventoryTab);
 
+  // --- Force items grid to show, materials grid to hide, only inside modal ---
+  const gridContainer = inventoryTab.querySelector('.grid-container');
+  const materialsGrid = inventoryTab.querySelector('.materials-grid');
+  if (gridContainer) gridContainer.style.display = '';
+  if (materialsGrid) materialsGrid.style.display = 'none';
+
   // Hide the equipment container inside the modal
   const hiddenEquipment = inventoryTab.querySelector('.equipment-container');
   if (hiddenEquipment) hiddenEquipment.style.display = 'none';
@@ -216,7 +222,7 @@ export function showSalvageModal(inv) {
       removed = true;
     }
     if (removed) {
-      let goldGained = 10 * (item.level + 1) * (RARITY_ORDER.indexOf(item.rarity) + 1);
+      let goldGained = inventory.getItemSalvageValue(item);
       let crystalsGained = item.rarity === 'MYTHIC' ? 1 : 0;
       if (goldGained > 0) hero.gold = (hero.gold || 0) + goldGained;
       if (crystalsGained > 0) hero.crystals = (hero.crystals || 0) + crystalsGained;
@@ -340,7 +346,7 @@ export function setupDragAndDrop() {
       }
       if (removed) {
         // Salvage logic (reuse your salvage reward logic)
-        let goldGained = 10 * (item.level + 1) * (RARITY_ORDER.indexOf(item.rarity) + 1);
+        let goldGained = inventory.getItemSalvageValue(item);
         let crystalsGained = item.rarity === 'MYTHIC' ? 1 : 0;
         if (goldGained > 0) hero.gold = (hero.gold || 0) + goldGained;
         if (crystalsGained > 0) hero.crystals = (hero.crystals || 0) + crystalsGained;
@@ -499,8 +505,25 @@ export function setupItemDragAndTooltip() {
       const itemData = inventory.getItemById(item.dataset.itemId);
       if (!itemData) return;
 
-      // Create tooltip content
-      let tooltipContent = `<div>${itemData.getTooltipHTML()}</div>`;
+      // Create tooltip content for hovered item
+      let tooltipContent = `<div>${itemData.getTooltipHTML()}`;
+
+      // --- Add salvage gold value if in salvage modal (for hovered item only) ---
+      const inSalvageModal = item.closest('.inventory-salvage-modal-content');
+      if (inSalvageModal) {
+        let goldGained = inventory.getItemSalvageValue(itemData);
+        tooltipContent += `<div style="margin-top:8px;
+          color:#fff;
+          background: rgba(224, 192, 96, 0.6);
+          border-top:1px solid #e0c060;
+          padding:6px 8px 4px 8px;
+          border-radius:0 0 8px 8px;
+          font-weight:bold;
+          text-shadow: 1px 1px 2px #7a5c1c;">
+          <b>Salvage Value:</b> ${goldGained} gold
+        </div>`;
+      }
+      tooltipContent += '</div>';
 
       // Check if the item is in the inventory
       const isInInventory = inventory.inventoryItems.some((inventoryItem) => inventoryItem?.id === itemData.id);
@@ -513,7 +536,7 @@ export function setupItemDragAndTooltip() {
         }
       }
 
-      // Add equipped items tooltips
+      // Add equipped items tooltips (no salvage value for these)
       if (equippedItems.length > 0) {
         equippedItems.forEach((equippedItem) => {
           if (equippedItem && equippedItem.id !== itemData.id) {

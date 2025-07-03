@@ -316,6 +316,10 @@ export default class Inventory {
     dialog.querySelector('#material-use-cancel').onclick = () => closeModal('material-use-dialog');
   }
 
+  getItemSalvageValue(item) {
+    return 25 * item.level * (RARITY_ORDER.indexOf(item.rarity) + 1) * item.tier;
+  }
+
   salvageItemsByRarity(rarity) {
     let salvagedItems = 0;
     let goldGained = 0;
@@ -328,7 +332,7 @@ export default class Inventory {
       if (item && salvageRarities.includes(item.rarity)) {
         salvagedItems++;
         // Give gold based on rarity and level (customize as needed)
-        goldGained += 10 * (item.level + 1) * (RARITY_ORDER.indexOf(item.rarity) + 1);
+        goldGained += this.getItemSalvageValue(item);
         // If mythic, give a crystal
         if (item.rarity === 'MYTHIC') {
           crystalsGained++;

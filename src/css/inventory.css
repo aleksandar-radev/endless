@@ -383,6 +383,7 @@
   align-items: center;
   justify-content: center;
   background: unset;
+  z-index: 1001;
 }
 
 .inventory-tabs {
