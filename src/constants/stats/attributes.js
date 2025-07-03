@@ -70,7 +70,7 @@ export const ATTRIBUTES = {
   },
   dexterity: {
     effects: {
-      critDamagePerPoint: 0.001,
+      evasionPerPoint: 4,
       critChancePer: {
         enabled: false,
         points: 25,
@@ -159,7 +159,7 @@ export const ATTRIBUTE_TOOLTIPS = {
   getDexterityTooltip: () => html`
     <strong>Dexterity</strong><br />
     Each point increases:<br />
-    • Critical Damage by ${ATTRIBUTES.dexterity.effects.critDamagePerPoint}<br />
+    • Evasion by ${ATTRIBUTES.dexterity.effects.evasionPerPoint}<br />
     ${ATTRIBUTES.dexterity.effects.critChancePer.enabled
     ? `• Every ${ATTRIBUTES.dexterity.effects.critChancePer.points} points adds ${
       ATTRIBUTES.dexterity.effects.critChancePer.value * 100

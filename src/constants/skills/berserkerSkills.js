@@ -13,8 +13,8 @@ export const BERSERKER_SKILLS = {
     description: () => 'Increases attack speed and damage while active.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 5,
-      lifePerHit: level * -1,
+      damagePercent: level * 2,
+      lifePerHit: level * -0.5,
     }),
   },
   toughSkin: {
@@ -26,8 +26,8 @@ export const BERSERKER_SKILLS = {
     description: () => 'Increases armor and reduces damage taken.',
     maxLevel: () => 200,
     effect: (level) => ({
-      armor: level * 8,
-      armorPercent: level * 0.5,
+      armor: level * 2,
+      armorPercent: level * 1,
     }),
   },
 
@@ -37,14 +37,15 @@ export const BERSERKER_SKILLS = {
     name: () => 'Reckless Swing',
     type: () => 'instant',
     manaCost: (level) => 5 + level * 0.2,
-    cooldown: (level) => 2000,
+    cooldown: (level) => 2500,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'swing',
     description: () => 'A powerful strike that sacrifices life for damage.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 30,
-      lifePerHit: level * -5,
+      damage: level * 3,
+      damagePercent: level * 5,
+      lifePerHit: level * -3,
     }),
   },
   battleCry: {
@@ -76,8 +77,8 @@ export const BERSERKER_SKILLS = {
     description: () => 'Greatly increases damage but lowers defense.',
     maxLevel: () => 200,
     effect: (level) => ({
-      fireDamage: level * 5,
-      airDamage: level * 5,
+      fireDamagePercent: level * 3,
+      airDamagePercent: level * 3,
       doubleDamageChance: level * 0.2,
     }),
   },
@@ -107,8 +108,8 @@ export const BERSERKER_SKILLS = {
     description: () => 'Smashes the ground, dealing earth damage.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 15,
-      earthDamage: level * 30,
+      damagePercent: level * 10,
+      earthDamagePercent: level * 20,
     }),
   },
   rageMastery: {
@@ -123,8 +124,8 @@ export const BERSERKER_SKILLS = {
       critChance: level * 0.05,
       critDamage: level * 0.01,
       doubleDamageChance: level * 0.1,
-      attackRating: level * 100,
-      life: level * -1,
+      attackRatingPercent: level * 50,
+      lifePercent: level * -0.5,
     }),
   },
 
@@ -141,7 +142,7 @@ export const BERSERKER_SKILLS = {
     description: () => 'Increases attack speed and life steal temporarily.',
     maxLevel: () => 250,
     effect: (level) => ({
-      attackSpeed: level * 0.005,
+      attackSpeedPercent: level * 0.005,
       lifeSteal: level * 0.01,
       lifePercent: level * 0.2,
     }),
@@ -158,7 +159,7 @@ export const BERSERKER_SKILLS = {
     description: () => 'Increases damage and restores resources.',
     maxLevel: () => 400,
     effect: (level) => ({
-      damage: level * 4,
+      damagePercent: level * 2,
       manaPerHit: level * 0.1,
       lifePerHit: level * 1,
     }),
@@ -173,8 +174,8 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => 500,
     effect: (level) => ({
       resurrectionChance: level * 0.1,
-      lifeRegen: level * 1,
-      armor: level * 5,
+      lifeRegenPercent: level * 0.5,
+      armorPercent: level * 3,
     }),
   },
 
@@ -188,11 +189,10 @@ export const BERSERKER_SKILLS = {
     description: () => 'Significantly increases all combat stats.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strength: level * 6,
-      strengthPercent: level * 0.5,
+      strengthPercent: level * 3,
       critChance: level * 0.05,
-      attackSpeed: level * 0.004,
-      damage: level * 2,
+      attackSpeed: level * 0.003,
+      damagePercent: level * 1,
     }),
   },
 };
