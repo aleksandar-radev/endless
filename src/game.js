@@ -68,7 +68,9 @@ class Game {
     } else {
       color = 'red';
     }
-    createDamageNumber({ heal, isPlayer: true, isCritical: false, color });
+    if (heal >= 1) {
+      createDamageNumber({ text: '+' + Math.floor(heal), isPlayer: true, isCritical: false, color });
+    }
   }
 
   restoreMana(mana) {
@@ -83,7 +85,9 @@ class Game {
       color = 'blue';
     }
 
-    createDamageNumber({ mana, isPlayer: true, isCritical: false, color });
+    if (mana >= 1) {
+      createDamageNumber({ text: mana, isPlayer: true, isCritical: false, color });
+    }
   }
 
   damageEnemy(damage, isCritical = false) {
@@ -93,7 +97,7 @@ class Game {
       const isDead = this.currentEnemy.takeDamage(damage);
 
       // Always show damage number
-      createDamageNumber({ damage, isPlayer: false, isCritical: false, color: 'red' });
+      createDamageNumber({ text: damage, isPlayer: false, isCritical: false, color: 'red' });
 
       if (isDead) {
         defeatEnemy();

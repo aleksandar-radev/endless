@@ -23,6 +23,7 @@ import { initializeRegionSystem, updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { initializeBuildingsUI } from './ui/buildingUi.js';
 import Enemy from './enemy.js';
+import { setupLeaderboardTabLazyLoad } from './ui/LeaderboardUI.js';
 
 window.qwe = console.log;
 window.qw = console.log;
@@ -58,6 +59,8 @@ window.log = console.log;
 
   initializeRegionSystem();
   updateRegionUI();
+
+  setupLeaderboardTabLazyLoad();
 
   initDebugging();
 

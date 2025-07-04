@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Endless</title>
@@ -18,98 +19,102 @@
     <link rel="stylesheet" href="/src/css/quests.css" />
     <link rel="stylesheet" href="/src/css/options.css" />
     <link rel="stylesheet" href="/src/css/building.css" />
+    <link rel="stylesheet" href="/src/css/leaderboard.css" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-L06KLWGC80"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-      gtag('config', 'G-L06KLWGC80');
+        window.dataLayer = window.dataLayer || [];
+        function gtag () {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'G-L06KLWGC80');
     </script>
-  </head>
+</head>
 
-  <body>
+<body>
     <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Open menu">☰</button>
     <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
     <div class="game-container">
-      <div class="sidebar">
-        <div class="resource-bar">
-          <div class="resource resource-gold"><span class="icon">💰</span><span id="gold"></span></div>
-          <div class="resource resource-crystal"><span class="icon">💎</span><span id="crystals"></span></div>
-          <div class="resource resource-souls"><span class="icon">👻</span><span id="souls"></span></div>
-        </div>
-
-        <div class="tab-buttons">
-          <button class="tab-btn active" data-tab="stats">Stats</button>
-          <button class="tab-btn" data-tab="training">Training</button>
-          <button class="tab-btn" data-tab="inventory">Inventory</button>
-          <button class="tab-btn" data-tab="skilltree">Skill Tree</button>
-          <button class="tab-btn" data-tab="crystalShop">Crystal Shop</button>
-          <button class="tab-btn" data-tab="soulShop">Soul Shop</button>
-          <button class="tab-btn" data-tab="quests">Quests</button>
-          <button class="tab-btn" data-tab="statistics">Statistics</button>
-          <button class="tab-btn" data-tab="options">Options</button>
-          <button class="tab-btn" data-tab="buildings">Buildings</button>
-        </div>
-      </div>
-
-      <div class="main-content">
-        <div class="game-panel">
-          <div id="stats" class="tab-panel active"></div>
-          <div id="training" class="tab-panel"></div>
-          <div id="crystalShop" class="tab-panel"></div>
-          <div id="inventory" class="tab-panel"></div>
-          <div id="skilltree" class="tab-panel"></div>
-          <div id="soulShop" class="tab-panel"></div>
-          <div id="statistics" class="tab-panel"></div>
-          <div id="options" class="tab-panel"></div>
-          <div id="quests" class="tab-panel"></div>
-          <div id="buildings" class="tab-panel"></div>
-        </div>
-
-        <div class="combat-panel">
-          <!-- Region Tabs -->
-          <div class="region-tabs">
-            <button data-region="explore" class="region-tab active">Explore</button>
-            <button data-region="arena" class="region-tab">Arena</button>
-          </div>
-          <div class="character-info">
-            <div id="character-avatar">🛡️</div>
-            <div class="character-resources">
-              <div id="character-name"></div>
-              <div class="character-hp-mana">
-                <div class="life-bar">
-                  <div id="life-fill"></div>
-                  <div id="life-text" class="life-text">100/100</div>
-                </div>
-                <div class="mana-bar">
-                  <div id="mana-fill" style="width: 100%"></div>
-                  <div id="mana-text" class="mana-text">50/50</div>
-                </div>
-              </div>
+        <div class="sidebar">
+            <div class="resource-bar">
+                <div class="resource resource-gold"><span class="icon">💰</span><span id="gold"></span></div>
+                <div class="resource resource-crystal"><span class="icon">💎</span><span id="crystals"></span></div>
+                <div class="resource resource-souls"><span class="icon">👻</span><span id="souls"></span></div>
             </div>
-          </div>
-          <div class="action-bar">
-            <div class="skill-slots">
-              <!-- Skills will be added dynamically -->
-            </div>
-          </div>
-          <div class="character-controls">
-            <button id="start-btn">Fight</button>
-            <div id="stage-display">Stage: 1</div>
-          </div>
 
-          <div id="region-selector"></div>
-          <div id="region-panel-container"></div>
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="stats">Stats</button>
+                <button class="tab-btn" data-tab="training">Training</button>
+                <button class="tab-btn" data-tab="inventory">Inventory</button>
+                <button class="tab-btn" data-tab="skilltree">Skill Tree</button>
+                <button class="tab-btn" data-tab="crystalShop">Crystal Shop</button>
+                <button class="tab-btn" data-tab="soulShop">Soul Shop</button>
+                <button class="tab-btn" data-tab="quests">Quests</button>
+                <button class="tab-btn" data-tab="statistics">Statistics</button>
+                <button class="tab-btn" data-tab="options">Options</button>
+                <button class="tab-btn" data-tab="buildings">Buildings</button>
+                <button class="tab-btn" data-tab="leaderboard">Leaderboard</button>
+            </div>
         </div>
-      </div>
+
+        <div class="main-content">
+            <div class="game-panel">
+                <div id="stats" class="tab-panel active"></div>
+                <div id="training" class="tab-panel"></div>
+                <div id="crystalShop" class="tab-panel"></div>
+                <div id="inventory" class="tab-panel"></div>
+                <div id="skilltree" class="tab-panel"></div>
+                <div id="soulShop" class="tab-panel"></div>
+                <div id="statistics" class="tab-panel"></div>
+                <div id="options" class="tab-panel"></div>
+                <div id="quests" class="tab-panel"></div>
+                <div id="buildings" class="tab-panel"></div>
+                <div id="leaderboard" class="tab-panel"></div>
+            </div>
+
+            <div class="combat-panel">
+                <!-- Region Tabs -->
+                <div class="region-tabs">
+                    <button data-region="explore" class="region-tab active">Explore</button>
+                    <button data-region="arena" class="region-tab">Arena</button>
+                </div>
+                <div class="character-info">
+                    <div id="character-avatar">🛡️</div>
+                    <div class="character-resources">
+                        <div id="character-name"></div>
+                        <div class="character-hp-mana">
+                            <div class="life-bar">
+                                <div id="life-fill"></div>
+                                <div id="life-text" class="life-text">100/100</div>
+                            </div>
+                            <div class="mana-bar">
+                                <div id="mana-fill" style="width: 100%"></div>
+                                <div id="mana-text" class="mana-text">50/50</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-bar">
+                    <div class="skill-slots">
+                        <!-- Skills will be added dynamically -->
+                    </div>
+                </div>
+                <div class="character-controls">
+                    <button id="start-btn">Fight</button>
+                    <div id="stage-display">Stage: 1</div>
+                </div>
+
+                <div id="region-selector"></div>
+                <div id="region-panel-container"></div>
+            </div>
+        </div>
     </div>
 
     <div id="tooltip" class="tooltip hidden"></div>
 
     <script type="module" src="/src/main.js"></script>
-  </body>
+</body>
+
 </html>

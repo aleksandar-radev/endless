@@ -53,3 +53,11 @@ export async function loadGameData(userId, premium = 'no') {
     updated_at: result.updated_at || 0,
   };
 }
+
+export async function getLeaderboard() {
+  const response = await apiFetch('/game-data/leaderboard?gameName=' + gameName);
+  if (!response.ok) {
+    throw new Error('Failed to fetch leaderboard');
+  }
+  return await response.json();
+}

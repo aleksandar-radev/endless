@@ -187,6 +187,10 @@ export class DataManager {
   }
 
   async checkSession() {
+    if (this.session !== null) {
+      // Session already set, no need to check
+      return;
+    }
     try {
       const res = await apiFetch('/user/session');
       if (!res.ok) throw new Error('Not logged in');

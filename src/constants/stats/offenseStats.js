@@ -98,7 +98,7 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 2,
     training: { cost: 800, bonus: 0.01, maxLevel: 500 }, // max bonus: 5
-    item: { min: 0.1, max: 0.8, limit: 10, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 1, max: 2.5, limit: 5, scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER) },
     itemTags: ['axe'],
     showInUI: true,
   },
