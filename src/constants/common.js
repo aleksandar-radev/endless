@@ -15,4 +15,12 @@ export const ELEMENTS = {
     id: 'earth',
     icon: '🌍',
   },
+  lightning: {
+    id: 'lightning',
+    icon: '⚡',
+  },
+  water: {
+    id: 'water',
+    icon: '💧',
+  },
 };

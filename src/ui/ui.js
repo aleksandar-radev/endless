@@ -199,6 +199,11 @@ export function updateEnemyStats() {
   if (airDmg) airDmg.textContent = Math.floor(enemy.airDamage || 0);
   const earthDmg = document.getElementById('enemy-earth-damage-value');
   if (earthDmg) earthDmg.textContent = Math.floor(enemy.earthDamage || 0);
+  const lightningDmg = document.getElementById('enemy-lightning-damage-value');
+  if (lightningDmg) lightningDmg.textContent = Math.floor(enemy.lightningDamage || 0);
+  const waterDmg = document.getElementById('enemy-water-damage-value');
+  if (waterDmg) waterDmg.textContent = Math.floor(enemy.waterDamage || 0);
+
   const armor = document.getElementById('enemy-armor-value');
   if (armor) {
   // Use PoE2 formula: reduction = armor / (armor + 10 * damage)
@@ -226,6 +231,10 @@ export function updateEnemyStats() {
   if (airRes) airRes.textContent = Math.floor(enemy.airResistance || 0);
   const earthRes = document.getElementById('enemy-earth-resistance-value');
   if (earthRes) earthRes.textContent = Math.floor(enemy.earthResistance || 0);
+  const lightningRes = document.getElementById('enemy-lightning-resistance-value');
+  if (lightningRes) lightningRes.textContent = Math.floor(enemy.lightningResistance || 0);
+  const waterRes = document.getElementById('enemy-water-resistance-value');
+  if (waterRes) waterRes.textContent = Math.floor(enemy.waterResistance || 0);
 
   setEnemyName();
   if (game.fightMode === 'explore') {
@@ -413,6 +422,8 @@ export const formatStatName = (stat) => {
   if (stat === 'coldResistance') return 'Cold Resistance';
   if (stat === 'airResistance') return 'Air Resistance';
   if (stat === 'earthResistance') return 'Earth Resistance';
+  if (stat === 'lightningResistance') return 'Lightning Resistance';
+  if (stat === 'waterResistance') return 'Water Resistance';
   if (stat === 'elementalDamagePercent') return 'Elemental Damage %';
   if (stat === 'lifeRegen') return 'Life Regeneration';
   if (stat === 'manaRegen') return 'Mana Regeneration';
@@ -423,10 +434,14 @@ export const formatStatName = (stat) => {
   if (stat === 'coldDamage') return 'Cold Damage';
   if (stat === 'airDamage') return 'Air Damage';
   if (stat === 'earthDamage') return 'Earth Damage';
+  if (stat === 'lightningDamage') return 'Lightning Damage';
+  if (stat === 'waterDamage') return 'Water Damage';
   if (stat === 'fireDamagePercent') return 'Fire Damage %';
   if (stat === 'coldDamagePercent') return 'Cold Damage %';
   if (stat === 'airDamagePercent') return 'Air Damage %';
   if (stat === 'earthDamagePercent') return 'Earth Damage %';
+  if (stat === 'lightningDamagePercent') return 'Lightning Damage %';
+  if (stat === 'waterDamagePercent') return 'Water Damage %';
   if (stat === 'strength') return 'Strength';
   if (stat === 'strengthPercent') return 'Strength %';
   if (stat === 'agility') return 'Agility';
@@ -519,6 +534,8 @@ function renderRegionPanel(region) {
         <div class="enemy-cold-damage">${ELEMENTS.cold.icon} Cold: <span id="enemy-cold-damage-value"></span></div>
         <div class="enemy-air-damage">${ELEMENTS.air.icon} Air: <span id="enemy-air-damage-value"></span></div>
         <div class="enemy-earth-damage">${ELEMENTS.earth.icon} Earth: <span id="enemy-earth-damage-value"></span></div>
+        <div class="enemy-lightning-damage">${ELEMENTS.lightning.icon} Lightning: <span id="enemy-lightning-damage-value"></span></div>
+        <div class="enemy-water-damage">${ELEMENTS.water.icon} Water: <span id="enemy-water-damage-value"></span></div>
       </div>
       <div>
         <div class="enemy-fire-resistance">
@@ -532,6 +549,12 @@ function renderRegionPanel(region) {
         </div>
         <div class="enemy-earth-resistance">
           ${ELEMENTS.earth.icon} Earth Res: <span id="enemy-earth-resistance-value"></span>
+        </div>
+        <div class="enemy-lightning-resistance">
+          ${ELEMENTS.lightning.icon} Lightning Res: <span id="enemy-lightning-resistance-value"></span>
+        </div>
+        <div class="enemy-water-resistance">
+          ${ELEMENTS.water.icon} Water Res: <span id="enemy-water-resistance-value"></span>
         </div>
       </div>
     </div>

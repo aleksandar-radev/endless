@@ -25,6 +25,8 @@ export const REGIONS = [
       coldDamage: 1.0,
       airDamage: 1.0,
       earthDamage: 1.0,
+      lightningDamage: 1.0,
+      waterDamage: 1.0,
     },
     materialDropWeights: {
       crystalized_rock: 1.1,
@@ -55,6 +57,8 @@ export const REGIONS = [
       coldDamage: 1.0,
       airDamage: 1.0,
       earthDamage: 1.0,
+      lightningDamage: 1.0,
+      waterDamage: 1.0,
     },
     materialDropWeights: {
       crystalized_rock: 5,
@@ -85,6 +89,8 @@ export const REGIONS = [
       coldDamage: 1.0,
       airDamage: 1.0,
       earthDamage: 1.0,
+      lightningDamage: 1.0,
+      waterDamage: 1.0,
     },
     materialDropWeights: {
       potion_of_strength: 3,
@@ -117,6 +123,8 @@ export const REGIONS = [
       coldDamage: 1.0,
       airDamage: 1.0,
       earthDamage: 1.0,
+      lightningDamage: 1.0,
+      waterDamage: 1.0,
     },
     materialDropWeights: {
       elixir: 5,
@@ -148,6 +156,8 @@ export const REGIONS = [
       coldDamage: 1.0,
       airDamage: 1.0,
       earthDamage: 1.0,
+      lightningDamage: 1.0,
+      waterDamage: 1.0,
     },
     materialDropWeights: {
       potion_of_endurance: 3,
@@ -179,6 +189,8 @@ export const REGIONS = [
       coldDamage: 1.0,
       airDamage: 1.0,
       earthDamage: 1.0,
+      lightningDamage: 1.0,
+      waterDamage: 1.0,
     },
     materialDropWeights: {
       potion_of_dexterity: 5,
@@ -214,6 +226,8 @@ export const REGIONS = [
       coldDamage: 1.0,
       airDamage: 1.0,
       earthDamage: 1.0,
+      lightningDamage: 1.0,
+      waterDamage: 1.0,
     },
     materialDropWeights: {
       freaky_gold_coins: 15,
@@ -246,6 +260,8 @@ export const REGIONS = [
       coldDamage: 1.0,
       airDamage: 1.0,
       earthDamage: 1.0,
+      lightningDamage: 1.0,
+      waterDamage: 1.0,
     },
     materialDropWeights: {
       potion_of_strength: 4,
@@ -280,6 +296,8 @@ export const REGIONS = [
       coldDamage: 1.0,
       airDamage: 1.0,
       earthDamage: 1.0,
+      lightningDamage: 1.0,
+      waterDamage: 1.0,
     },
     materialDropWeights: {
       potion_of_vitality: 3.1,
@@ -313,6 +331,8 @@ export const REGIONS = [
       coldDamage: 1.0,
       airDamage: 1.0,
       earthDamage: 1.0,
+      lightningDamage: 1.0,
+      waterDamage: 1.0,
     },
     materialDropWeights: {
       potion_of_wisdom: 3.2,
@@ -347,6 +367,8 @@ export const REGIONS = [
       coldDamage: 1.0,
       airDamage: 1.0,
       earthDamage: 1.0,
+      lightningDamage: 1.0,
+      waterDamage: 1.0,
     },
     materialDropWeights: {
       medium_gold_coins: 3.2,
@@ -380,6 +402,8 @@ export const REGIONS = [
       coldDamage: 1.0,
       airDamage: 1.0,
       earthDamage: 1.0,
+      lightningDamage: 1.0,
+      waterDamage: 1.0,
     },
     materialDropWeights: {
       jewelry_upgrade_gem: 2.2,

@@ -1,3 +1,12 @@
+:root {
+  --fire: rgb(228, 85, 85);
+  --cold: rgb(85, 170, 228);
+  --air: rgb(164, 196, 218);
+  --earth: rgb(165, 155, 68);
+  --lightning: rgb(255, 204, 0);
+  --water: rgb(0, 128, 255);
+}
+
 .game-container {
   display: flex;
   flex-direction: row;
@@ -146,22 +155,32 @@
 
 .enemy-fire-damage,
 .enemy-fire-resistance {
-  color: rgb(228, 85, 85);
+  color: var(--fire);
 }
 
 .enemy-cold-damage,
 .enemy-cold-resistance {
-  color: rgb(85, 170, 228);
+  color: var(--cold);
 }
 
 .enemy-air-damage,
 .enemy-air-resistance {
-  color: rgb(85, 170, 228);
+  color: var(--air);
 }
 
 .enemy-earth-damage,
 .enemy-earth-resistance {
-  color: rgb(165, 155, 68);
+  color: var(--earth);
+}
+
+.enemy-lightning-damage,
+.enemy-lightning-resistance {
+  color: var(--lightning);
+}
+
+.enemy-water-damage,
+.enemy-water-resistance {
+  color: var(--water);
 }
 
 .enemy-section {

@@ -69,13 +69,19 @@ export function updateStatsAndAttributesUI() {
     const miscPanel = createPanel('misc');
     // Populate panels based on showInUI flags
     const addStatsToPanel = (panel, statsDef) => {
-      const elementalKeys = ['fireDamage', 'coldDamage', 'airDamage', 'earthDamage'];
-      const collectedElementals = [];
+      const elementalDamageKeys = ['fireDamage', 'coldDamage', 'airDamage', 'earthDamage', 'lightningDamage', 'waterDamage'];
+      const elementalResistanceKeys = ['fireResistance', 'coldResistance', 'airResistance', 'earthResistance', 'lightningResistance', 'waterResistance'];
+      const damageElements = [];
+      const resistanceElements = [];
       Object.keys(statsDef).forEach((key) => {
         if (!statsDef[key].showInUI && key !== 'extraMaterialDropPercent') return;
         // Collect elementals separately for offense panel
-        if (panel === offensePanel && elementalKeys.includes(key)) {
-          collectedElementals.push(key);
+        if (panel === offensePanel && elementalDamageKeys.includes(key)) {
+          damageElements.push(key);
+          return;
+        }
+        if (panel === defensePanel && elementalResistanceKeys.includes(key)) {
+          resistanceElements.push(key);
           return;
         }
         const row = document.createElement('div');
@@ -101,7 +107,7 @@ export function updateStatsAndAttributesUI() {
         const baseKey = lbl.textContent.replace(/[^a-zA-Z]/g, '');
         let tooltipFn = ATTRIBUTE_TOOLTIPS[`get${baseKey}Tooltip`];
         // For offense elementals override tooltip
-        if (panel === offensePanel && ['fireDamage', 'coldDamage', 'airDamage', 'earthDamage'].includes(key)) {
+        if (panel === offensePanel && ['fireDamage', 'coldDamage', 'airDamage', 'earthDamage', 'lightningDamage', 'waterDamage'].includes(key)) {
           tooltipFn = ATTRIBUTE_TOOLTIPS.getElementalDamageTooltip;
         }
         if (tooltipFn) {
@@ -111,17 +117,19 @@ export function updateStatsAndAttributesUI() {
         }
       });
       // After other stats, render elemental grid in offense panel
-      if (panel === offensePanel && collectedElementals.length) {
+      if (panel === offensePanel && damageElements.length) {
         const iconMap = {
           fireDamage: ELEMENTS.fire.icon,
           coldDamage: ELEMENTS.cold.icon,
           airDamage: ELEMENTS.air.icon,
           earthDamage: ELEMENTS.earth.icon,
+          lightningDamage: ELEMENTS.lightning.icon,
+          waterDamage: ELEMENTS.water.icon,
         };
         const grid = document.createElement('div');
         grid.className = 'elemental-stats-grid';
-        ['fireDamage', 'coldDamage', 'airDamage', 'earthDamage'].forEach((key) => {
-          if (!collectedElementals.includes(key)) return;
+        ['fireDamage', 'coldDamage', 'airDamage', 'earthDamage', 'lightningDamage', 'waterDamage'].forEach((key) => {
+          if (!damageElements.includes(key)) return;
           const row = document.createElement('div');
           row.className = 'elemental-row';
           const icon = document.createElement('span');
@@ -130,6 +138,42 @@ export function updateStatsAndAttributesUI() {
           lbl.textContent = formatStatName(key);
           // Add tooltip for elemental damage
           lbl.addEventListener('mouseenter', (e) => showTooltip(ATTRIBUTE_TOOLTIPS.getElementalDamageTooltip(), e));
+          lbl.addEventListener('mousemove', positionTooltip);
+          lbl.addEventListener('mouseleave', hideTooltip);
+          const span = document.createElement('span');
+          span.id = `${key}-value`;
+          let val = hero.stats[key];
+          span.textContent = val;
+          row.appendChild(icon);
+          row.appendChild(lbl);
+          row.appendChild(document.createTextNode(' '));
+          row.appendChild(span);
+          grid.appendChild(row);
+        });
+        panel.appendChild(grid);
+      }
+
+      if (panel === defensePanel && resistanceElements.length) {
+        const iconMap = {
+          fireResistance: ELEMENTS.fire.icon,
+          coldResistance: ELEMENTS.cold.icon,
+          airResistance: ELEMENTS.air.icon,
+          earthResistance: ELEMENTS.earth.icon,
+          lightningResistance: ELEMENTS.lightning.icon,
+          waterResistance: ELEMENTS.water.icon,
+        };
+        const grid = document.createElement('div');
+        grid.className = 'elemental-stats-grid';
+        ['fireResistance', 'coldResistance', 'airResistance', 'earthResistance', 'lightningResistance', 'waterResistance'].forEach((key) => {
+          if (!resistanceElements.includes(key)) return;
+          const row = document.createElement('div');
+          row.className = 'elemental-row';
+          const icon = document.createElement('span');
+          icon.textContent = iconMap[key];
+          const lbl = document.createElement('strong');
+          lbl.textContent = formatStatName(key);
+          // Add tooltip for elemental Resistance
+          lbl.addEventListener('mouseenter', (e) => showTooltip(ATTRIBUTE_TOOLTIPS.getElementalResistanceTooltip(), e));
           lbl.addEventListener('mousemove', positionTooltip);
           lbl.addEventListener('mouseleave', hideTooltip);
           const span = document.createElement('span');

@@ -384,6 +384,13 @@ export default class Hero {
     this.stats.earthDamage = Math.floor(
       flatValues.earthDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.earthDamagePercent + this.stats.totalDamagePercent),
     );
+    this.stats.lightningDamage = Math.floor(
+      flatValues.lightningDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.lightningDamagePercent + this.stats.totalDamagePercent),
+    );
+    this.stats.waterDamage = Math.floor(
+      flatValues.waterDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.waterDamagePercent + this.stats.totalDamagePercent),
+    );
+
     this.stats.reflectFireDamage = (() => {
       const base = flatValues.fireDamage + flatValues.reflectFireDamage;
       return Math.floor(base * (1 + this.stats.elementalDamagePercent + percentBonuses.fireDamagePercent + this.stats.totalDamagePercent));
@@ -405,6 +412,8 @@ export default class Hero {
     let coldDamage = this.stats.coldDamage + (instantSkillBaseEffects.coldDamage || 0);
     let airDamage = this.stats.airDamage + (instantSkillBaseEffects.airDamage || 0);
     let earthDamage = this.stats.earthDamage + (instantSkillBaseEffects.earthDamage || 0);
+    let lightningDamage = this.stats.lightningDamage + (instantSkillBaseEffects.lightningDamage || 0);
+    let waterDamage = this.stats.waterDamage + (instantSkillBaseEffects.waterDamage || 0);
 
 
     // Add toggle skill effects
@@ -416,6 +425,8 @@ export default class Hero {
     if (toggleEffects.coldDamage) coldDamage += toggleEffects.coldDamage;
     if (toggleEffects.airDamage) airDamage += toggleEffects.airDamage;
     if (toggleEffects.earthDamage) earthDamage += toggleEffects.earthDamage;
+    if (toggleEffects.lightningDamage) lightningDamage += toggleEffects.lightningDamage;
+    if (toggleEffects.waterDamage) waterDamage += toggleEffects.waterDamage;
 
     // apply percent bonuses from toggles and instant skill effects
     physicalDamage *= (1 + (toggleEffects.damagePercent || 0 +
@@ -428,7 +439,10 @@ export default class Hero {
         instantSkillBaseEffects.airDamagePercent || 0) / 100);
     earthDamage *= (1 + (toggleEffects.earthDamagePercent || 0 +
         instantSkillBaseEffects.earthDamagePercent || 0) / 100);
-
+    lightningDamage *= (1 + (toggleEffects.lightningDamagePercent || 0 +
+        instantSkillBaseEffects.lightningDamagePercent || 0) / 100);
+    waterDamage *= (1 + (toggleEffects.waterDamagePercent || 0 +
+        instantSkillBaseEffects.waterDamagePercent || 0) / 100);
 
     if (toggleEffects.doubleDamageChance) {
       const doubleDamageChance = Math.random() * 100;
@@ -438,6 +452,8 @@ export default class Hero {
         coldDamage *= 2;
         airDamage *= 2;
         earthDamage *= 2;
+        lightningDamage *= 2;
+        waterDamage *= 2;
       }
     }
 
@@ -447,9 +463,11 @@ export default class Hero {
       coldDamage *= this.stats.critDamage;
       airDamage *= this.stats.critDamage;
       earthDamage *= this.stats.critDamage;
+      lightningDamage *= this.stats.critDamage;
+      waterDamage *= this.stats.critDamage;
     }
 
-    let totalDamage = physicalDamage + fireDamage + coldDamage + airDamage + earthDamage;
+    let totalDamage = physicalDamage + fireDamage + coldDamage + airDamage + earthDamage + lightningDamage + waterDamage;
 
     const breakdown = {
       physical: Math.floor(physicalDamage),
@@ -457,6 +475,8 @@ export default class Hero {
       cold: Math.floor(coldDamage),
       air: Math.floor(airDamage),
       earth: Math.floor(earthDamage),
+      lightning: Math.floor(lightningDamage),
+      water: Math.floor(waterDamage),
     };
 
     console.debug('Damage Breakdown:', breakdown);
@@ -485,6 +505,8 @@ export default class Hero {
       cold: breakdown.cold * (1 - enemy.baseData.coldResistance / 100),
       air: breakdown.air * (1 - enemy.baseData.airResistance / 100),
       earth: breakdown.earth * (1 - enemy.baseData.earthResistance / 100),
+      lightning: breakdown.lightning * (1 - enemy.baseData.lightningResistance / 100),
+      water: breakdown.water * (1 - enemy.baseData.waterResistance / 100),
     };
 
     const finalDamage = Object.values(reducedBreakdown).reduce((sum, val) => sum + val, 0);

@@ -29,15 +29,22 @@ class Enemy {
     this.coldDamage = this.calculateElementalDamage('cold');
     this.airDamage = this.calculateElementalDamage('air');
     this.earthDamage = this.calculateElementalDamage('earth');
+    this.lightningDamage = this.calculateElementalDamage('lightning');
+    this.waterDamage = this.calculateElementalDamage('water');
+
     this.life = this.calculateLife();
     this.attackSpeed = this.calculateAttackSpeed();
     this.armor = this.calculateArmor();
     this.evasion = this.calculateEvasion();
     this.attackRating = this.calculateAttackRating(); // Default attackRating if not defined
+
     this.fireResistance = baseData.fireResistance || 0;
     this.coldResistance = baseData.coldResistance || 0;
     this.airResistance = baseData.airResistance || 0;
     this.earthResistance = baseData.earthResistance || 0;
+    this.lightningResistance = baseData.lightningResistance || 0;
+    this.waterResistance = baseData.waterResistance || 0;
+
     this.currentLife = this.life;
     this.lastAttack = Date.now();
   }
@@ -192,7 +199,7 @@ class Enemy {
   }
 
   calculateElementalDamage(type) {
-    // type: 'fire', 'cold', 'air', 'earth'
+    // type: 'fire', 'cold', 'air', 'earth', 'lightning', 'water'
     const base = this.baseData[`${type}Damage`] || 0;
     if (base === 0) return 0;
     const segLen = 10,

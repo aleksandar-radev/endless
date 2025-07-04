@@ -33,6 +33,8 @@ export const ENEMY_RARITY = {
       coldDamage: 1,
       airDamage: 1,
       earthDamage: 1,
+      lightningDamage: 1,
+      waterDamage: 1,
     },
   },
   RARE: {
@@ -55,6 +57,8 @@ export const ENEMY_RARITY = {
       coldDamage: 1,
       airDamage: 1,
       earthDamage: 1,
+      lightningDamage: 1,
+      waterDamage: 1,
     },
   },
   EPIC: {
@@ -77,6 +81,8 @@ export const ENEMY_RARITY = {
       coldDamage: 1,
       airDamage: 1,
       earthDamage: 1,
+      lightningDamage: 1,
+      waterDamage: 1,
     },
   },
   LEGENDARY: {
@@ -99,6 +105,8 @@ export const ENEMY_RARITY = {
       coldDamage: 1,
       airDamage: 1,
       earthDamage: 1,
+      lightningDamage: 1,
+      waterDamage: 1,
     },
   },
   MYTHIC: {
@@ -121,6 +129,8 @@ export const ENEMY_RARITY = {
       coldDamage: 1,
       airDamage: 1,
       earthDamage: 1,
+      lightningDamage: 1,
+      waterDamage: 1,
     },
   },
 };
@@ -142,10 +152,14 @@ export function applyDefaultEnemyStats(enemy) {
     coldDamage: 0,
     airDamage: 0,
     earthDamage: 0,
+    lightningDamage: 0,
+    waterDamage: 0,
     fireResistance: 0,
     coldResistance: 0,
     airResistance: 0,
     earthResistance: 0,
+    lightningResistance: 0,
+    waterResistance: 0,
     multiplier: {
       life: 1.0,
       damage: 1.0,
@@ -160,6 +174,8 @@ export function applyDefaultEnemyStats(enemy) {
       coldDamage: 1.0,
       airDamage: 1.0,
       earthDamage: 1.0,
+      lightningDamage: 1.0,
+      waterDamage: 1.0,
     },
   };
 

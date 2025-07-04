@@ -218,6 +218,56 @@ export const OFFENSE_STATS = {
     },
     itemTags: ['sword', 'jewelry', 'gloves'],
   },
+  // LIGHTNING DAMAGE
+  lightningDamage: {
+    base: 0,
+    decimalPlaces: 0,
+    training: { cost: 80, bonus: 1, maxLevel: Infinity },
+    item: {
+      min: ELEMENTAL_DAMAGE_MIN,
+      max: ELEMENTAL_DAMAGE_MAX,
+      limit: Infinity,
+      scaling: (level) => offenseScaling(level),
+    },
+    itemTags: ['sword', 'gloves'],
+    showInUI: true,
+  },
+  lightningDamagePercent: {
+    base: 0,
+    decimalPlaces: 1,
+    item: {
+      min: ELEMENTAL_DAMAGE_PERCENT_MIN,
+      max: ELEMENTAL_DAMAGE_PERCENT_MAX,
+      limit: Infinity,
+      scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
+    },
+    itemTags: ['sword', 'jewelry', 'gloves'],
+  },
+  // WATER DAMAGE
+  waterDamage: {
+    base: 0,
+    decimalPlaces: 0,
+    training: { cost: 80, bonus: 1, maxLevel: Infinity },
+    item: {
+      min: ELEMENTAL_DAMAGE_MIN,
+      max: ELEMENTAL_DAMAGE_MAX,
+      limit: Infinity,
+      scaling: (level) => offenseScaling(level),
+    },
+    itemTags: ['sword', 'gloves'],
+    showInUI: true,
+  },
+  waterDamagePercent: {
+    base: 0,
+    decimalPlaces: 1,
+    item: {
+      min: ELEMENTAL_DAMAGE_PERCENT_MIN,
+      max: ELEMENTAL_DAMAGE_PERCENT_MAX,
+      limit: Infinity,
+      scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
+    },
+    itemTags: ['sword', 'jewelry', 'gloves'],
+  },
   // DOUBLE DAMAGE
   doubleDamageChance: {
     base: 0,

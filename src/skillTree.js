@@ -378,16 +378,19 @@ export default class SkillTree {
   isDamageSkill(effects) {
     return (
       effects.damage ||
+      effects.damagePercent ||
       effects.fireDamage ||
       effects.coldDamage ||
       effects.airDamage ||
       effects.earthDamage ||
-      effects.physicalDamage ||
-      effects.damagePercent ||
+      effects.lightningDamage ||
+      effects.waterDamage ||
       effects.fireDamagePercent ||
       effects.coldDamagePercent ||
       effects.airDamagePercent ||
-      effects.earthDamagePercent
+      effects.earthDamagePercent ||
+      effects.lightningDamagePercent ||
+      effects.waterDamagePercent
     );
   }
   applyToggleEffects(isHit = true) {

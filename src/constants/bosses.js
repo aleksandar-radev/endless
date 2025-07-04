@@ -17,10 +17,14 @@ function applyDefaultBossStats(boss) {
     coldDamage: 0,
     airDamage: 0,
     earthDamage: 0,
+    lightningDamage: 0,
+    waterDamage: 0,
     fireResistance: 0,
     coldResistance: 0,
     airResistance: 0,
     earthResistance: 0,
+    lightningResistance: 0,
+    waterResistance: 0,
     multiplier: {
       life: 1.0,
       damage: 1.0,
@@ -35,6 +39,8 @@ function applyDefaultBossStats(boss) {
       coldDamage: 1.0,
       airDamage: 1.0,
       earthDamage: 1.0,
+      lightningDamage: 1.0,
+      waterDamage: 1.0,
     },
   };
   const merged = { ...defaults, ...boss };
@@ -73,6 +79,8 @@ const RAW_BOSSES = [
     airResistance: 30,
     earthResistance: 40,
     coldResistance: 30,
+    lightningResistance: 30,
+    waterResistance: 30,
     multiplier: {
       life: 1.8,
       damage: 1.3,
@@ -95,6 +103,8 @@ const RAW_BOSSES = [
     fireResistance: 50,
     airResistance: 30,
     earthResistance: 20,
+    lightningResistance: 40,
+    waterResistance: 30,
     multiplier: {
       life: 1.6,
       damage: 1.5,

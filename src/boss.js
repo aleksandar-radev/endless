@@ -41,6 +41,8 @@ class Boss {
     this.coldDamage = (def.coldDamage || 0) * (def.multiplier?.coldDamage || 1);
     this.airDamage = (def.airDamage || 0) * (def.multiplier?.airDamage || 1);
     this.earthDamage = (def.earthDamage || 0) * (def.multiplier?.earthDamage || 1);
+    this.lightningDamage = (def.lightningDamage || 0) * (def.multiplier?.lightningDamage || 1);
+    this.waterDamage = (def.waterDamage || 0) * (def.multiplier?.waterDamage || 1);
 
     this.reward = def.reward;
     this.lastAttack = Date.now();

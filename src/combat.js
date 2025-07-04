@@ -47,8 +47,10 @@ export function enemyAttack(currentTime) {
         const cold = game.currentEnemy.coldDamage * (1 - hero.stats.coldResistance / 100);
         const air = game.currentEnemy.airDamage * (1 - hero.stats.airResistance / 100);
         const earth = game.currentEnemy.earthDamage * (1 - hero.stats.earthResistance / 100);
+        const lightning = game.currentEnemy.lightningDamage * (1 - hero.stats.lightningResistance / 100);
+        const water = game.currentEnemy.waterDamage * (1 - hero.stats.waterResistance / 100);
 
-        const totalDamage = physicalDamage + fire + cold + air + earth;
+        const totalDamage = physicalDamage + fire + cold + air + earth + lightning + water;
 
         const thornsDamage = hero.calculateTotalThornsDamage(game.currentEnemy.damage);
         // only if there is some thorns damage to deal, only paladin

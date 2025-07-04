@@ -174,15 +174,7 @@ export const ATTRIBUTE_TOOLTIPS = {
 
   getElementalDamageTooltip: () => html`
     <strong>Elemental Damage</strong><br />
-    Effectiveness against enemy elements:<br />
-    • 200% damage vs opposite element<br />
-    • 0% damage vs same element<br />
-    • 25% damage vs other elements<br /><br />
-    Element Strengths:<br />
-    ${ELEMENTS.fire.icon} Fire → ${ELEMENTS.air.icon} Air<br />
-    ${ELEMENTS.earth.icon} Earth → ${ELEMENTS.cold.icon} Cold<br />
-    ${ELEMENTS.cold.icon} Cold → ${ELEMENTS.fire.icon} Fire<br />
-    ${ELEMENTS.air.icon} Air → ${ELEMENTS.earth.icon} Earth
+    Included in base hit damage. Reduced by enemy resistances.
   `,
 
   getDamageTooltip: () => html`
@@ -282,5 +274,15 @@ export const ATTRIBUTE_TOOLTIPS = {
     <strong>Earth Resistance</strong><br />
     Reduces earth damage taken from enemies.<br />
     ${ELEMENTS.earth.icon} Effective against earth enemies.
+  `,
+  getLightningResistanceTooltip: () => html`
+    <strong>Lightning Resistance</strong><br />
+    Reduces lightning damage taken from enemies.<br />
+    ${ELEMENTS.lightning.icon} Effective against lightning enemies.
+  `,
+  getWaterResistanceTooltip: () => html`
+    <strong>Water Resistance</strong><br />
+    Reduces water damage taken from enemies.<br />
+    ${ELEMENTS.water.icon} Effective against water enemies.
   `,
 };
