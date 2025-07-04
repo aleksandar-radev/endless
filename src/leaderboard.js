@@ -1,4 +1,4 @@
-import { fetchLeaderboardData, renderLeaderboardTable } from './ui/LeaderboardUI.js';
+import { fetchLeaderboardData, renderLeaderboardTable } from './ui/leaderboardUi.js';
 
 export class Leaderboard {
   constructor(container) {
