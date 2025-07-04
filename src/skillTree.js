@@ -323,7 +323,7 @@ export default class SkillTree {
     );
   }
 
-  useInstantSkill(skillId) {
+  useInstantSkill(skillId, isAutoCast = false) {
     if (!game.gameStarted) return false;
     // if there is no live enemy, don’t cast
     if (!game.currentEnemy || game.currentEnemy.currentLife <= 0) return false;
@@ -331,7 +331,7 @@ export default class SkillTree {
     const skill = this.getSkill(skillId);
     const baseEffects = this.getSkillEffect(skillId);
 
-    if (hero.stats.currentMana < this.getSkillManaCost(skill)) {
+    if (!isAutoCast && hero.stats.currentMana < this.getSkillManaCost(skill)) {
       showManaWarning();
       return false;
     }
@@ -427,13 +427,13 @@ export default class SkillTree {
     return effects;
   }
 
-  activateSkill(skillId) {
+  activateSkill(skillId, isAutoCast = false) {
     if (!game.gameStarted) return false;
 
     const skill = this.getSkill(skillId);
 
     if (skill.type() !== 'buff') return false;
-    if (hero.stats.currentMana < this.getSkillManaCost(skill)) {
+    if (!isAutoCast && hero.stats.currentMana < this.getSkillManaCost(skill)) {
       showManaWarning();
       return false;
     }
@@ -562,14 +562,14 @@ export default class SkillTree {
         // Only cast if not on cooldown and enough mana
         if (!skillData.cooldownEndTime || skillData.cooldownEndTime <= Date.now()) {
           if (hero.stats.currentMana >= this.getSkillManaCost(skill)) {
-            this.useInstantSkill(skillId);
+            this.useInstantSkill(skillId, true);
           }
         }
       } else if (skill.type() === 'buff') {
         // Only cast if not active, not on cooldown, and enough mana
         if (!skillData.active && (!skillData.cooldownEndTime || skillData.cooldownEndTime <= Date.now())) {
           if (hero.stats.currentMana >= this.getSkillManaCost(skill)) {
-            this.activateSkill(skillId);
+            this.activateSkill(skillId, true);
           }
         }
       }
