@@ -113,11 +113,11 @@ export function openQuestModal(quest) {
     if (key === 'item' && typeof value === 'object') {
       // Show item reward details (rarity, tier)
       rewardParts.push(
-        `<span style="color:#fff;font-weight:bold;">Random Item (Rarity: <span class="item-color-${value.rarity}">${value.rarity}</span>, Tier: <span style='color:#38bdf8'>${value.tier}</span>)</span>`
+        `<span style="color:#fff;font-weight:bold;">Random Item (Rarity: <span class="item-color-${value.rarity}">${value.rarity}</span>, Tier: <span style='color:#38bdf8'>${value.tier}</span>)</span>`,
       );
     } else {
       rewardParts.push(
-        `<span style=\"color:${color};font-weight:bold;\">${value} ${key.charAt(0).toUpperCase() + key.slice(1)}</span>`
+        `<span style=\"color:${color};font-weight:bold;\">${value} ${key.charAt(0).toUpperCase() + key.slice(1)}</span>`,
       );
     }
   }
@@ -176,7 +176,7 @@ function openClaimableQuestsModal() {
   const listDiv = modal.querySelector('#claimable-quests-list');
   const claimable = quests.quests.filter((q) => q.isComplete() && !q.claimed);
   if (claimable.length === 0) {
-    listDiv.innerHTML = `<p style="color:#aaa;">No quests ready to claim.</p>`;
+    listDiv.innerHTML = '<p style="color:#aaa;">No quests ready to claim.</p>';
   } else {
     claimable.forEach((q) => {
       const item = document.createElement('div');

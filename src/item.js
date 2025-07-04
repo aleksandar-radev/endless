@@ -7,7 +7,7 @@ import { formatStatName } from './ui/ui.js';
 export const AVAILABLE_STATS = Object.fromEntries(
   Object.entries(STATS)
     .filter(([_, config]) => config.item)
-    .map(([stat, config]) => [stat, config.item])
+    .map(([stat, config]) => [stat, config.item]),
 );
 
 export default class Item {
@@ -23,9 +23,8 @@ export default class Item {
   }
 
   getLevelScale(stat, level) {
-    const scaleFactor = 0.035; // per level
-    const scaling = AVAILABLE_STATS[stat].scaling;
-    return scaling === 'capped' ? Math.min(1 + (level - 1) * scaleFactor, 2) : 1 + (level - 1) * scaleFactor;
+    const scaling = AVAILABLE_STATS[stat].scaling(level);
+    return scaling;
   }
 
   getTierBonus() {
@@ -39,6 +38,9 @@ export default class Item {
   calculateStatValue({ baseValue, tierBonus, multiplier, scale, stat }) {
     const decimals = STATS[stat].decimalPlaces || 0;
     let val = Number((baseValue * tierBonus * multiplier * scale).toFixed(decimals));
+
+    const limit = STATS[stat].item?.limit || Infinity;
+    val = Math.min(val, limit);
 
     this.metaData = this.metaData || {};
     this.metaData[stat] = { baseValue };
@@ -102,12 +104,12 @@ export default class Item {
         <div class="item-level">Level ${this.level}, Tier ${this.tier}</div>
         <div class="item-stats">
           ${Object.entries(this.stats)
-            .map(([stat, value]) => {
-              const decimals = STATS[stat].decimalPlaces || 0;
-              const formattedValue = value.toFixed(decimals);
-              return `<div>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}</div>`;
-            })
-            .join('')}
+    .map(([stat, value]) => {
+      const decimals = STATS[stat].decimalPlaces || 0;
+      const formattedValue = value.toFixed(decimals);
+      return `<div>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}</div>`;
+    })
+    .join('')}
         </div>
       </div>
     `;

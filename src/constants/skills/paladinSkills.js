@@ -14,7 +14,8 @@ export const PALADIN_SKILLS = {
     description: () => 'A burst of holy light that heals allies and damages enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      life: level * 10,
+      life: level * 5,
+      lifePercent: level * 2,
     }),
   },
   smite: {
@@ -27,8 +28,8 @@ export const PALADIN_SKILLS = {
     description: () => 'A powerful strike that deals holy damage to enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 2,
-      fireDamage: level * 4,
+      damagePercent: level * 1,
+      fireDamagePercent: level * 2,
     }),
   },
   shieldBash: {
@@ -42,7 +43,7 @@ export const PALADIN_SKILLS = {
     description: () => 'Bashes an enemy with your shield, stunning them.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 9,
+      damagePercent: level * 5,
     }),
   },
   divineProtection: {
@@ -54,7 +55,7 @@ export const PALADIN_SKILLS = {
     description: () => 'Greatly increases armor and block chance.',
     maxLevel: () => 200,
     effect: (level) => ({
-      armor: level * 7,
+      armorPercent: level * 2,
       blockChance: level * 0.1,
       thornsDamage: level * 0.5,
       thornsDamagePercent: level * 1,
@@ -74,8 +75,8 @@ export const PALADIN_SKILLS = {
     description: () => 'Blesses the ground, dealing holy damage to enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamage: level * 12,
-      coldDamage: level * 12,
+      fireDamagePercent: level * 6,
+      coldDamagePercent: level * 6,
     }),
   },
   greaterHealing: {
@@ -106,8 +107,8 @@ export const PALADIN_SKILLS = {
     description: () => 'Creates a shield that absorbs damage.',
     maxLevel: () => 200,
     effect: (level) => ({
-      armor: level * 15,
-      endurance: level * 2,
+      armorPercent: level * 6,
+      endurancePercent: level * 1,
       blockChance: level * 0.2,
     }),
   },
@@ -137,9 +138,9 @@ export const PALADIN_SKILLS = {
     description: () => 'Calls down holy energy to smite enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 10,
-      fireDamage: level * 20,
-      airDamage: level * 20,
+      damagePercent: level * 5,
+      fireDamagePercent: level * 10,
+      airDamagePercent: level * 10,
     }),
   },
   beaconOfFaith: {
@@ -151,7 +152,7 @@ export const PALADIN_SKILLS = {
     description: () => 'Increases healing done.',
     maxLevel: () => 500,
     effect: (level) => ({
-      lifeRegen: level * 1,
+      lifeRegen: level * 0.5,
       lifeRegenPercent: level * 0.2,
     }),
   },
@@ -169,7 +170,7 @@ export const PALADIN_SKILLS = {
     description: () => 'Creates a holy barrier that increases all healing effects.',
     maxLevel: () => 500,
     effect: (level) => ({
-      vitality: level * 5,
+      vitality: level * 3,
       vitalityPercent: level * 0.5,
       resurrectionChance: level * 0.1,
     }),
@@ -186,7 +187,7 @@ export const PALADIN_SKILLS = {
     description: () => 'Unleashes divine energy to increase damage and healing.',
     maxLevel: () => 400,
     effect: (level) => ({
-      damage: level * 6,
+      damagePercent: level * 3,
       lifePerHit: level * 2,
     }),
   },
@@ -200,8 +201,8 @@ export const PALADIN_SKILLS = {
     maxLevel: () => 400,
     effect: (level) => ({
       resurrectionChance: level * 0.1,
-      lifeRegen: level * 0.5,
-      manaRegen: level * 0.1,
+      lifeRegenPercent: level * 0.5,
+      manaRegenPercent: level * 1,
     }),
   },
 
@@ -215,12 +216,10 @@ export const PALADIN_SKILLS = {
     description: () => 'Grants significant bonuses to all attributes.',
     maxLevel: () => 400,
     effect: (level) => ({
-      damage: level * 1,
-      damagePercent: level * 0.2,
-      endurancePercent: level * 2,
-      vitalityPercent: level * 2,
-      attackRating: level * 50,
-      attackRatingPercent: level * 3,
+      damagePercent: level * 1,
+      endurancePercent: level * 1,
+      vitalityPercent: level * 1,
+      attackRatingPercent: level * 25,
     }),
   },
 };

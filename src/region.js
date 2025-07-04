@@ -8,12 +8,13 @@ import Enemy from './enemy.js';
 import { showTooltip, positionTooltip, hideTooltip } from './ui/ui.js';
 import { REGIONS } from './constants/regions.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
+import { ENEMY_LIST } from './constants/enemies.js';
 
 export async function setCurrentRegion(regionId) {
   if (regionId === game.currentRegionId) return;
   // Show confirm dialog before changing region
   const confirmed = await showConfirmDialog(
-    'Are you sure you want to change region? That will reset your stage progress and will find you a new enemy'
+    'Are you sure you want to change region? That will reset your stage progress and will find you a new enemy',
   );
   if (!confirmed) return;
   game.currentRegionId = regionId;
@@ -38,6 +39,11 @@ export function getCurrentRegion() {
   return REGIONS.find((r) => r.id === game.currentRegionId) || REGIONS[0];
 }
 
+export function getRegionEnemies(region) {
+  const allowedTags = region.allowedTags;
+  return ENEMY_LIST.filter((e) => e.tags && allowedTags.some((tag) => e.tags.includes(tag)) && e.tier === region.tier);
+}
+
 export function getUnlockedRegions(hero) {
   return REGIONS.filter((region) => hero.level >= region.unlockLevel);
 }
@@ -48,18 +54,18 @@ function getRegionTooltip(region) {
     <div class="tooltip-header">${region.name}</div>
     <div class="tooltip-content">${region.description}</div>
     <div><strong>Unlock Level:</strong> ${region.unlockLevel}</div>
-    ${region.xpMultiplier != 1
-      ? `<div><strong>XP bonus:</strong> ${((region.xpMultiplier - 1) * 100).toFixed(0)}%</div>`
-      : ''}
-    ${region.goldMultiplier != 1
-      ? `<div><strong>Gold bonus:</strong> ${((region.goldMultiplier - 1) * 100).toFixed(0)}%</div>`
-      : ''}
-    ${region.itemDropMultiplier != 1
-      ? `<div><strong>Item Drop bonus:</strong> ${((region.itemDropMultiplier - 1) * 100).toFixed(0)}%</div>`
-      : ''}
-    ${region.materialDropMultiplier && region.materialDropMultiplier != 1
-      ? `<div><strong>Material Drop bonus:</strong> ${((region.materialDropMultiplier - 1) * 100).toFixed(0)}%</div>`
-      : ''}
+    ${region.multiplier.xp != 1
+    ? `<div><strong>XP bonus:</strong> ${((region.multiplier.xp - 1) * 100).toFixed(0)}%</div>`
+    : ''}
+    ${region.multiplier.gold != 1
+    ? `<div><strong>Gold bonus:</strong> ${((region.multiplier.gold - 1) * 100).toFixed(0)}%</div>`
+    : ''}
+    ${region.multiplier.itemDrop != 1
+    ? `<div><strong>Item Drop bonus:</strong> ${((region.multiplier.itemDrop - 1) * 100).toFixed(0)}%</div>`
+    : ''}
+    ${region.multiplier.materialDrop && region.multiplier.materialDrop != 1
+    ? `<div><strong>Material Drop bonus:</strong> ${((region.multiplier.materialDrop - 1) * 100).toFixed(0)}%</div>`
+    : ''}
   `;
 }
 

@@ -29,11 +29,15 @@ li {
   margin: 0px 8px;
   padding: 0px 12px;
 }
+
 /* When dev/debug UI is active, limit the width of the main game area */
 body.dev-active .game-container {
-  max-width: calc(100vw - 720px); /* 2x debug/modify width + gap */
-  margin-left: 370px; /* width of debug panel + gap */
-  margin-right: 370px; /* width of modify panel + gap */
+  max-width: calc(100vw - 720px);
+  /* 2x debug/modify width + gap */
+  margin-left: 370px;
+  /* width of debug panel + gap */
+  margin-right: 370px;
+  /* width of modify panel + gap */
   transition: max-width 0.3s, margin 0.3s;
 }
 
@@ -63,9 +67,11 @@ body.dev-active .game-container {
   z-index: 9999;
   font-family: inherit;
 }
+
 #custom-confirm-dialog.show {
   display: flex;
 }
+
 #custom-confirm-dialog .confirm-backdrop {
   position: absolute;
   left: 0;
@@ -74,6 +80,7 @@ body.dev-active .game-container {
   bottom: 0;
   background: rgba(0, 0, 0, 0.4);
 }
+
 #custom-confirm-dialog .confirm-content {
   position: relative;
   background: #222;
@@ -86,16 +93,19 @@ body.dev-active .game-container {
   text-align: center;
   animation: popin 0.2s;
 }
+
 #custom-confirm-dialog .confirm-message {
   margin-bottom: 18px;
   font-size: 1.1em;
   line-height: 1.5;
 }
+
 #custom-confirm-dialog .confirm-actions {
   display: flex;
   gap: 16px;
   justify-content: center;
 }
+
 #custom-confirm-dialog .confirm-btn {
   padding: 8px 24px;
   border: none;
@@ -106,17 +116,21 @@ body.dev-active .game-container {
   color: #fff;
   transition: background 0.2s;
 }
+
 #custom-confirm-dialog .confirm-btn.confirm-no {
   background: #dc2626;
 }
+
 #custom-confirm-dialog .confirm-btn:hover {
   filter: brightness(1.1);
 }
+
 @keyframes popin {
   from {
     transform: scale(0.95);
     opacity: 0;
   }
+
   to {
     transform: scale(1);
     opacity: 1;
@@ -190,7 +204,7 @@ body.dev-active .game-container {
   border-radius: 4px;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
-  z-index: 1000;
+  z-index: 1002;
 }
 
 .toast.show {
@@ -209,6 +223,7 @@ body.dev-active .game-container {
   from {
     transform: translateX(100%);
   }
+
   to {
     transform: translateX(0);
   }
@@ -218,6 +233,7 @@ body.dev-active .game-container {
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
   }

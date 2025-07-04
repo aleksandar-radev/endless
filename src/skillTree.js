@@ -1,4 +1,3 @@
-import { createDamageNumber } from './combat.js';
 import { handleSavedData } from './functions.js';
 import { dataManager, game, hero } from './globals.js';
 import { CLASS_PATHS, SKILL_TREES } from './constants/skills.js';
@@ -11,9 +10,8 @@ import {
   updateTabIndicators,
 } from './ui/ui.js';
 
-export const SKILL_LEVEL_TIERS = [10, 25, 60, 150, 400, 750, 1200, 2000, 3000, 5000, 10000];
+export const SKILL_LEVEL_TIERS = [1, 10, 25, 60, 150, 400, 750, 1200, 2000, 3000, 5000, 10000];
 export const DEFAULT_MAX_SKILL_LEVEL = Infinity;
-export const REQ_LEVEL_FOR_SKILL_TREE = 10;
 
 export default class SkillTree {
   constructor(savedData = null) {
@@ -22,6 +20,7 @@ export default class SkillTree {
     this.skills = {};
     this.autoCastSettings = {};
     this.displaySettings = {};
+    this.unlockedPaths = [];
 
     handleSavedData(savedData, this);
     // add methods for all skills from SKILL_TREES
@@ -102,15 +101,25 @@ export default class SkillTree {
 
   selectPath(pathName) {
     if (this.selectedPath) return false;
-    if (!CLASS_PATHS[pathName] || !CLASS_PATHS[pathName].enabled) return false;
-    if (hero.level < REQ_LEVEL_FOR_SKILL_TREE) {
-      showToast(`Reach level ${REQ_LEVEL_FOR_SKILL_TREE} to select a class path!`, 'warning');
+    const pathData = CLASS_PATHS[pathName];
+    if (!pathData || !pathData.enabled()) return false;
+    const reqLevel = pathData.requiredLevel();
+    if (hero.level < reqLevel) {
+      showToast(`Requires Level ${reqLevel}`, 'warning');
       return false;
     }
-
-    this.selectedPath = {
-      name: pathName,
-    };
+    // Handle crystal cost and unlocking once
+    const cost = pathData.crystalCost();
+    const alreadyUnlocked = this.unlockedPaths.includes(pathName);
+    if (!alreadyUnlocked) {
+      if (hero.crystals < cost) {
+        showToast(`Requires ${cost} Crystal${cost !== 1 ? 's' : ''}`, 'warning');
+        return false;
+      }
+      hero.crystals -= cost;
+      this.unlockedPaths.push(pathName);
+    }
+    this.selectedPath = { name: pathName };
     hero.recalculateFromAttributes();
     dataManager.saveGame();
 
@@ -294,7 +303,7 @@ export default class SkillTree {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.manaCost) return 0;
     return Math.floor(
-      skill.manaCost(effectiveLevel) - (skill.manaCost(effectiveLevel) * hero.stats.manaCostReductionPercent) / 100
+      skill.manaCost(effectiveLevel) - (skill.manaCost(effectiveLevel) * hero.stats.manaCostReductionPercent) / 100,
     );
   }
 
@@ -302,7 +311,7 @@ export default class SkillTree {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.cooldown) return 0;
     return Math.floor(
-      skill.cooldown(effectiveLevel) - (skill.cooldown(effectiveLevel) * hero.stats.cooldownReductionPercent) / 100
+      skill.cooldown(effectiveLevel) - (skill.cooldown(effectiveLevel) * hero.stats.cooldownReductionPercent) / 100,
     );
   }
 
@@ -310,12 +319,14 @@ export default class SkillTree {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.duration) return 0;
     return Math.floor(
-      skill.duration(effectiveLevel) + (skill.duration(effectiveLevel) * hero.stats.buffDurationPercent) / 100
+      skill.duration(effectiveLevel) + (skill.duration(effectiveLevel) * hero.stats.buffDurationPercent) / 100,
     );
   }
 
   useInstantSkill(skillId) {
     if (!game.gameStarted) return false;
+    // if there is no live enemy, don’t cast
+    if (!game.currentEnemy || game.currentEnemy.currentLife <= 0) return false;
 
     const skill = this.getSkill(skillId);
     const baseEffects = this.getSkillEffect(skillId);
@@ -329,68 +340,30 @@ export default class SkillTree {
 
     hero.stats.currentMana -= this.getSkillManaCost(skill);
 
-    // all damages
-    const instantSkillDamage =
-      baseEffects.damage ||
-      0 + baseEffects.fireDamage ||
-      0 + baseEffects.coldDamage ||
-      0 + baseEffects.airDamage ||
-      0 + baseEffects.earthDamage ||
-      0;
-
-    const { damage, isCritical } = hero.calculateTotalDamage(instantSkillDamage);
-
-    let text = damage;
-    let isPlayer = false;
-    let color = 'red';
-
-    const UiNumber = (amount, c) => {
-      isPlayer = true;
-      if (typeof amount === 'number' && !isNaN(amount)) {
-        if (amount < 0) {
-          text = `-${Math.floor(Math.abs(amount))}`;
-        } else if (amount > 0) {
-          text = `+${Math.floor(amount)}`;
-        } else {
-          text = '0';
-        }
-      } else {
-        text = amount;
-      }
-      color = c;
-    };
+    const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy, baseEffects);
 
     if (baseEffects.lifeSteal) {
       const lifeStealAmount = damage * (baseEffects.lifeSteal / 100);
       game.healPlayer(lifeStealAmount);
-      UiNumber(lifeStealAmount, 'green');
     }
     if (baseEffects.lifePerHit) {
       game.healPlayer(baseEffects.lifePerHit);
-      if (baseEffects.lifePerHit < 0) {
-        UiNumber(baseEffects.lifePerHit, 'red');
-      } else {
-        UiNumber(baseEffects.lifePerHit, 'green');
-      }
     }
 
     if (baseEffects.life) {
       game.healPlayer(baseEffects.life);
-      UiNumber(baseEffects.life, 'green');
     }
 
     if (baseEffects.lifePercent) {
       game.healPlayer((hero.stats.life * baseEffects.lifePercent) / 100);
-      UiNumber((hero.stats.life * baseEffects.lifePercent) / 100, 'green');
     }
 
     if (baseEffects.manaPerHit) {
       game.restoreMana(baseEffects.manaPerHit);
-      UiNumber((hero.stats.mana * baseEffects.manaPercent) / 100, 'blue');
     }
 
-    if (instantSkillDamage !== 0) {
-      game.damageEnemy(damage);
+    if (this.isDamageSkill(baseEffects)) {
+      game.damageEnemy(damage, isCritical);
     }
 
     // Set cooldown
@@ -398,12 +371,28 @@ export default class SkillTree {
 
     // Update UI
     updatePlayerLife();
-    createDamageNumber({ text, isPlayer, isCritical, color }); // Add parameter for instant skill visual
 
     return true;
   }
 
-  applyToggleEffects() {
+  isDamageSkill(effects) {
+    return (
+      effects.damage ||
+      effects.fireDamage ||
+      effects.coldDamage ||
+      effects.airDamage ||
+      effects.earthDamage ||
+      effects.physicalDamage ||
+      effects.damagePercent ||
+      effects.fireDamagePercent ||
+      effects.coldDamagePercent ||
+      effects.airDamagePercent ||
+      effects.earthDamagePercent
+    );
+  }
+  applyToggleEffects(isHit = true) {
+    if (!game.currentEnemy || game.currentEnemy.currentLife <= 0) return {};
+
     let effects = {};
 
     Object.entries(this.skills).forEach(([skillId, skillData]) => {
@@ -412,6 +401,15 @@ export default class SkillTree {
         if (hero.stats.currentMana >= this.getSkillManaCost(skill)) {
           hero.stats.currentMana -= this.getSkillManaCost(skill);
           effects = { ...effects, ...this.getSkillEffect(skillId, skillData.level) };
+
+          if (isHit) {
+            if (effects.lifePerHit) {
+              game.healPlayer(effects.lifePerHit);
+            }
+            if (effects.manaPerHit) {
+              game.restoreMana(effects.manaPerHit);
+            }
+          }
         } else {
           // showManaWarning();
           // Deactivate if not enough mana
@@ -494,9 +492,10 @@ export default class SkillTree {
   stopAllBuffs() {
     this.activeBuffs.clear();
     Object.values(this.skills).forEach((skill) => {
-      if (skill.cooldownEndTime) {
-        skill.cooldownEndTime = 0;
-      }
+      // Fix an abuse where player can start/stop game fast while casting skills.
+      // if (skill.cooldownEndTime) {
+      //   skill.cooldownEndTime = 0;
+      // }
       if (skill.type() !== 'toggle') skill.active = false; // Reset active state except for toggles
     });
     hero.recalculateFromAttributes();

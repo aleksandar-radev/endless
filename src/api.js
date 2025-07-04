@@ -49,7 +49,7 @@ export async function loadGameData(userId, premium = 'no') {
   const result = await response.json();
 
   return {
-    data: result.data_json ? crypt.decrypt(result.data_json) : null,
+    data: result.data_json ?? null,
     updated_at: result.updated_at || 0,
   };
 }

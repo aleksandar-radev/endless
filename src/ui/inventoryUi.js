@@ -1,8 +1,11 @@
-import { hero, inventory, dataManager } from '../globals.js';
+import { hero, inventory, dataManager, crystalShop } from '../globals.js';
 import { ITEM_SLOTS, MATERIALS_SLOTS, PERSISTENT_SLOTS } from '../inventory.js';
 import { MATERIALS } from '../constants/materials.js';
 import { hideTooltip, positionTooltip, showToast, showTooltip } from '../ui/ui.js';
 import { ITEM_RARITY, RARITY_ORDER, SLOT_REQUIREMENTS } from '../constants/items.js';
+import { closeModal, createModal } from './modal.js';
+
+const html = String.raw;
 
 export function initializeInventoryUI(inv) {
   // Create all inventory UI structure dynamically
@@ -13,7 +16,7 @@ export function initializeInventoryUI(inv) {
   // Equipment container
   const equipmentContainer = document.createElement('div');
   equipmentContainer.className = 'equipment-container';
-  equipmentContainer.innerHTML = `
+  equipmentContainer.innerHTML = html`
     <div class="equipment-layout">
       <div class="equipment-slots">
         <div class="equipment-slot" data-slot="head"><div class="slot-indicator">🪖</div></div>
@@ -36,18 +39,7 @@ export function initializeInventoryUI(inv) {
         <button id="materials-tab" class="inventory-btn">Materials</button>
       </div>
       <div id="sort-inventory" class="inventory-btn">Sort Items</div>
-      <div class="salvage-dropdown">
-        <button class="salvage-btn">Salvage <span class="dropdown-icon">▼</span></button>
-        <div class="salvage-options">
-          <div data-rarity="NORMAL">Normal Items</div>
-          <div data-rarity="MAGIC">Magic Items & Below</div>
-          <div data-rarity="RARE">Rare Items & Below</div>
-          <div data-rarity="UNIQUE">Unique Items & Below</div>
-          <div data-rarity="LEGENDARY">Legendary Items & Below</div>
-          <div data-rarity="MYTHIC">Mythic Items & Below</div>
-        </div>
-      </div>
-      <div class="inventory-trash">🗑️</div>
+      <button id="open-salvage-modal" class="inventory-btn">Salvage</button>
     </div>
   `;
   inventoryTab.appendChild(equipmentContainer);
@@ -55,7 +47,7 @@ export function initializeInventoryUI(inv) {
   // Inventory grid
   const inventoryGrid = document.createElement('div');
   inventoryGrid.className = 'inventory-grid';
-  inventoryGrid.innerHTML = `
+  inventoryGrid.innerHTML = html`
     <div class="materials-grid" style="display: none">
       <div class="materials-container"></div>
     </div>
@@ -80,6 +72,7 @@ export function initializeInventoryUI(inv) {
   const itemsTab = document.getElementById('items-tab');
   const materialsTab = document.getElementById('materials-tab');
   const materialsGrid = document.querySelector('.materials-grid');
+  const openSalvageModalBtn = document.getElementById('open-salvage-modal');
 
   // Update button text on tab switch
   function updateSortBtnText() {
@@ -113,31 +106,12 @@ export function initializeInventoryUI(inv) {
   sortBtn.addEventListener('click', () => {
     if (itemsTab.classList.contains('active')) {
       sortInventory();
-      showToast(`Sorted items by rarity, then level`, 'success');
+      showToast('Sorted items by rarity, then level', 'success');
     } else {
       sortMaterials();
-      showToast(`Sorted materials by quantity, then id`, 'success');
+      showToast('Sorted materials by quantity, then id', 'success');
     }
   });
-
-  // Add event listeners for salvage options
-  document.querySelectorAll('.salvage-options div').forEach((option) => {
-    option.addEventListener('click', () => {
-      const rarity = option.dataset.rarity;
-      inventory.salvageItemsByRarity(rarity);
-      sortInventory();
-    });
-  });
-
-  const materialsContainer = document.querySelector('.materials-container');
-  if (materialsContainer) {
-    materialsContainer.innerHTML = '';
-    for (let i = 0; i < MATERIALS_SLOTS; i++) {
-      const cell = document.createElement('div');
-      cell.classList.add('materials-cell');
-      materialsContainer.appendChild(cell);
-    }
-  }
 
   // Add tooltip for sort button
   sortBtn.addEventListener('mouseenter', (e) => {
@@ -147,6 +121,202 @@ export function initializeInventoryUI(inv) {
   });
   sortBtn.addEventListener('mousemove', positionTooltip);
   sortBtn.addEventListener('mouseleave', hideTooltip);
+
+  // Salvage modal logic
+  openSalvageModalBtn.addEventListener('click', () => {
+    showSalvageModal(inv);
+  });
+}
+
+// Salvage Modal Implementation
+export function showSalvageModal(inv) {
+  // Always switch to Items tab before showing the modal
+  const itemsTab = document.getElementById('items-tab');
+  const materialsTab = document.getElementById('materials-tab');
+  const gridContainer = document.querySelector('.grid-container');
+  const materialsGrid = document.querySelector('.materials-grid');
+  if (itemsTab && materialsTab && gridContainer && materialsGrid) {
+    itemsTab.classList.add('active');
+    materialsTab.classList.remove('active');
+    gridContainer.style.display = '';
+    materialsGrid.style.display = 'none';
+  }
+
+  // Get the inventory tab DOM node
+  const inventoryTab = document.getElementById('inventory');
+  if (!inventoryTab) return;
+
+  // Create a placeholder to restore the tab later
+  const placeholder = document.createElement('div');
+  placeholder.id = 'inventory-tab-placeholder';
+  inventoryTab.parentNode.insertBefore(placeholder, inventoryTab);
+
+  // Modal content: inventory tab (left), salvage sidebar (right)
+  const html = String.raw;
+  const autoSalvageLevel = crystalShop.crystalUpgrades.autoSalvage || 0;
+  const selectedRarities = inv.autoSalvageRarities || [];
+  const modalContent = html`
+    <div class="inventory-salvage-modal-content">
+      <button class="modal-close" aria-label="Close">&times;</button>
+      <div class="inventory-modal-full-content"></div>
+      <div class="salvage-modal-sidebar">
+        <h3>Salvage Options</h3>
+        <div class="salvage-options-modal">
+          ${RARITY_ORDER.map(rarity => {
+    const isChecked = selectedRarities.includes(rarity);
+    const atCap = selectedRarities.length >= autoSalvageLevel;
+    const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
+    return `
+      <div class="salvage-row" style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <button class="salvage-btn-modal" data-rarity="${rarity}">${rarity.charAt(0) + rarity.slice(1).toLowerCase()} Items</button>
+        <label class="toggle-label" style="margin-left:8px;display:flex;align-items:center;gap:4px;position:relative;cursor:pointer;">
+          <input type="checkbox" class="auto-salvage-toggle" data-rarity="${rarity}" ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} style="opacity:0;position:absolute;width:100%;height:100%;left:0;top:0;z-index:2;cursor:pointer;" />
+          <span class="toggle-btn${isChecked ? ' checked' : ''}${isDisabled ? ' disabled' : ''}"></span>
+          <span style="font-size:0.95em;z-index:1;">Auto</span>
+        </label>
+      </div>
+    `;
+  }).join('')}
+        </div>
+        <div class="inventory-trash">
+          <span class="inventory-trash-icon">🗑️</span>
+          <div class="inventory-trash-label">Drag item here</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Use the modal helper
+  const overlay = createModal({
+    id: 'salvage-modal',
+    className: 'inventory-modal',
+    content: modalContent,
+    closeOnOutsideClick: true,
+    onClose: () => {
+      // Restore equipment container visibility and move inventory tab back
+      if (hiddenEquipment) hiddenEquipment.style.display = '';
+      placeholder.parentNode.insertBefore(inventoryTab, placeholder);
+      placeholder.remove();
+    },
+  });
+
+  // Move the inventory tab DOM node into the modal
+  overlay.querySelector('.inventory-modal-full-content').appendChild(inventoryTab);
+
+  // Hide the equipment container inside the modal
+  const hiddenEquipment = inventoryTab.querySelector('.equipment-container');
+  if (hiddenEquipment) hiddenEquipment.style.display = 'none';
+
+  // Salvage button logic
+  overlay.querySelectorAll('.salvage-btn-modal').forEach((btn) => {
+    btn.onclick = () => {
+      const rarity = btn.dataset.rarity;
+      inventory.salvageItemsByRarity(rarity);
+      closeModal(overlay);
+      showSalvageModal(inv);
+    };
+  });
+
+  // Auto-salvage toggle logic
+  overlay.querySelectorAll('.toggle-label').forEach((label) => {
+    const input = label.querySelector('.auto-salvage-toggle');
+    // Always sync visual state on open
+    syncToggleState();
+    // Input change handler
+    input.addEventListener('change', () => {
+      if (autoSalvageLevel === 0) return;
+      let selected = inv.autoSalvageRarities ? [...inv.autoSalvageRarities] : [];
+      const rarity = input.dataset.rarity;
+      if (input.checked) {
+        if (selected.length >= autoSalvageLevel && !selected.includes(rarity)) {
+          input.checked = false;
+          showToast(`You can only auto-salvage ${autoSalvageLevel} rarit${autoSalvageLevel === 1 ? 'y' : 'ies'}.`, 'info');
+          return;
+        }
+        if (!selected.includes(rarity)) selected.push(rarity);
+      } else {
+        selected = selected.filter(r => r !== rarity);
+      }
+      inv.setAutoSalvageRarities(selected);
+      syncToggleState();
+    });
+    // Make the whole label clickable
+    label.addEventListener('click', (e) => {
+      if (input.disabled) return;
+      // Only toggle if not clicking the input directly (to avoid double toggle)
+      if (e.target !== input) {
+        input.checked = !input.checked;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+    // Helper to sync all toggles' state
+    function syncToggleState() {
+      const selected = inv.autoSalvageRarities ? [...inv.autoSalvageRarities] : [];
+      overlay.querySelectorAll('.auto-salvage-toggle').forEach((otherInput) => {
+        const otherRarity = otherInput.dataset.rarity;
+        const otherLabel = otherInput.closest('.toggle-label');
+        const otherBtn = otherLabel.querySelector('.toggle-btn');
+        const isChecked = selected.includes(otherRarity);
+        const atCap = selected.length >= autoSalvageLevel;
+        const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
+        otherInput.checked = isChecked;
+        otherInput.disabled = isDisabled;
+        otherBtn.classList.toggle('checked', isChecked);
+        otherBtn.classList.toggle('disabled', isDisabled);
+      });
+    }
+  });
+
+  // Trash drag logic (scoped to modal)
+  const trash = overlay.querySelector('.inventory-trash');
+  trash.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    trash.classList.add('drag-over');
+  });
+  trash.addEventListener('dragleave', () => {
+    trash.classList.remove('drag-over');
+  });
+  trash.addEventListener('drop', (e) => {
+    e.preventDefault();
+    trash.classList.remove('drag-over');
+    const itemId = e.dataTransfer.getData('text/plain');
+    const item = inventory.getItemById(itemId);
+    if (!item) return;
+    let removed = false;
+    const invIdx = inventory.inventoryItems.findIndex((i) => i && i.id === item.id);
+    if (invIdx !== -1) {
+      inventory.inventoryItems[invIdx] = null;
+      removed = true;
+    }
+    if (removed) {
+      let goldGained = inventory.getItemSalvageValue(item);
+      let crystalsGained = item.rarity === 'MYTHIC' ? 1 : 0;
+      if (goldGained > 0) hero.gold = (hero.gold || 0) + goldGained;
+      if (crystalsGained > 0) hero.crystals = (hero.crystals || 0) + crystalsGained;
+      let msg = `Salvaged 1 ${item.rarity.toLowerCase()} item`;
+      if (goldGained > 0) msg += `, gained ${goldGained} gold`;
+      if (crystalsGained > 0) msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
+      showToast(msg, 'success');
+      updateInventoryGrid();
+      dataManager.saveGame();
+      closeModal(overlay);
+      showSalvageModal(inv);
+    }
+  });
+
+  // Tooltip for trash
+  trash.addEventListener('mouseenter', (e) => {
+    const tooltipContent = html`
+      <div class="item-tooltip" style="text-align:center;">
+        <div style="font-size:2em;">🗑️</div>
+        <b>Salvage Item</b>
+        <div style="margin-top:4px;font-size:0.95em;">Drag and drop an item here to salvage it.</div>
+      </div>
+    `;
+    showTooltip(tooltipContent, e, 'flex-tooltip');
+  });
+  trash.addEventListener('mousemove', positionTooltip);
+  trash.addEventListener('mouseleave', hideTooltip);
 }
 
 export function updateInventoryGrid(inv) {
@@ -243,7 +413,7 @@ export function setupDragAndDrop() {
       }
       if (removed) {
         // Salvage logic (reuse your salvage reward logic)
-        let goldGained = 10 * (item.level + 1) * (RARITY_ORDER.indexOf(item.rarity) + 1);
+        let goldGained = inventory.getItemSalvageValue(item);
         let crystalsGained = item.rarity === 'MYTHIC' ? 1 : 0;
         if (goldGained > 0) hero.gold = (hero.gold || 0) + goldGained;
         if (crystalsGained > 0) hero.crystals = (hero.crystals || 0) + crystalsGained;
@@ -258,15 +428,13 @@ export function setupDragAndDrop() {
 
     // --- ADVANCED TOOLTIP LOGIC ---
     trash.addEventListener('mouseenter', (e) => {
-      const tooltipContent = `
-      <div class="item-tooltip" style="text-align:center;">
-        <div style="font-size:2em;">🗑️</div>
-        <b>Salvage Item</b>
-        <div style="margin-top:4px;font-size:0.95em;">
-          Drag and drop an item here to salvage it.
+      const tooltipContent = html`
+        <div class="item-tooltip" style="text-align:center;">
+          <div style="font-size:2em;">🗑️</div>
+          <b>Salvage Item</b>
+          <div style="margin-top:4px;font-size:0.95em;">Drag and drop an item here to salvage it.</div>
         </div>
-      </div>
-    `;
+      `;
       showTooltip(tooltipContent, e, 'flex-tooltip');
     });
     trash.addEventListener('mousemove', positionTooltip);
@@ -315,7 +483,7 @@ export function handleDrop(e) {
   if (slot) {
     // Add inventory check to prevent dropping on current slot
     const currentSlot = Object.entries(inventory.equippedItems).find(
-      ([_, equippedItem]) => equippedItem?.id === item.id
+      ([_, equippedItem]) => equippedItem?.id === item.id,
     )?.[0];
 
     if (currentSlot === slot.dataset.slot) {
@@ -354,7 +522,7 @@ export function setupItemDragAndTooltip() {
 
       // Check if item is currently equipped
       const equippedSlot = Object.entries(inventory.equippedItems).find(
-        ([slot, equippedItem]) => equippedItem?.id === itemData.id
+        ([slot, equippedItem]) => equippedItem?.id === itemData.id,
       )?.[0];
 
       if (equippedSlot) {
@@ -404,8 +572,25 @@ export function setupItemDragAndTooltip() {
       const itemData = inventory.getItemById(item.dataset.itemId);
       if (!itemData) return;
 
-      // Create tooltip content
-      let tooltipContent = `<div>${itemData.getTooltipHTML()}</div>`;
+      // Create tooltip content for hovered item
+      let tooltipContent = `<div>${itemData.getTooltipHTML()}`;
+
+      // --- Add salvage gold value if in salvage modal (for hovered item only) ---
+      const inSalvageModal = item.closest('.inventory-salvage-modal-content');
+      if (inSalvageModal) {
+        let goldGained = inventory.getItemSalvageValue(itemData);
+        tooltipContent += `<div style="margin-top:8px;
+          color:#fff;
+          background: rgba(224, 192, 96, 0.6);
+          border-top:1px solid #e0c060;
+          padding:6px 8px 4px 8px;
+          border-radius:0 0 8px 8px;
+          font-weight:bold;
+          text-shadow: 1px 1px 2px #7a5c1c;">
+          <b>Salvage Value:</b> ${goldGained} gold
+        </div>`;
+      }
+      tooltipContent += '</div>';
 
       // Check if the item is in the inventory
       const isInInventory = inventory.inventoryItems.some((inventoryItem) => inventoryItem?.id === itemData.id);
@@ -418,7 +603,7 @@ export function setupItemDragAndTooltip() {
         }
       }
 
-      // Add equipped items tooltips
+      // Add equipped items tooltips (no salvage value for these)
       if (equippedItems.length > 0) {
         equippedItems.forEach((equippedItem) => {
           if (equippedItem && equippedItem.id !== itemData.id) {
@@ -481,7 +666,7 @@ export function updateMaterialsGrid(inv) {
           matDef.name || mat.name || ''
         } &times; ${mat.qty}</b>`;
         if (matDef.description) tooltipContent += `<div style="margin-top:4px;">${matDef.description}</div>`;
-        tooltipContent += `</div>`;
+        tooltipContent += '</div>';
         showTooltip(tooltipContent, e, 'flex-tooltip');
       });
       materialItem.addEventListener('mousemove', positionTooltip);

@@ -11,6 +11,8 @@ export class Options {
     this.version = data.version || '0.1.3';
     // Add startingStage, default to null (unset)
     this.startingStage = data.startingStage || null;
+    // Add showEnemyStats option, default to false
+    this.showEnemyStats = data.showEnemyStats ?? false;
   }
 
   /**
@@ -28,6 +30,9 @@ export class Options {
     const container = document.createElement('div');
     container.className = 'options-container';
     container.appendChild(this._createCloudSaveBar());
+
+    // --- Enemy Stats Toggle Option ---
+    container.appendChild(this._createEnemyStatsToggleOption());
 
     // --- Starting Stage Option ---
     container.appendChild(this._createStartingStageOption());
@@ -73,13 +78,13 @@ export class Options {
     resetButton.onclick = async () => {
       try {
         const confirmed = await showConfirmDialog(
-          'Are you sure you want to reset all progress? This cannot be undone!'
+          'Are you sure you want to reset all progress? This cannot be undone!',
         );
         if (confirmed) {
           game.resetAllProgress();
         }
       } catch (error) {
-        // eslint-disable-next-line no-console
+
         console.error('Error resetting progress:', error);
         alert('An error occurred while resetting progress.');
       }
@@ -108,11 +113,11 @@ export class Options {
         entries.map(async (entry) => {
           const html = await getChangelogHtml(entry.version);
           return { ...entry, html };
-        })
+        }),
       );
-      let content = `<div class="changelog-modal-content">`;
-      content += `<button class="modal-close">X</button>`;
-      content += `<h2>Changelog</h2>`;
+      let content = '<div class="changelog-modal-content">';
+      content += '<button class="modal-close">X</button>';
+      content += '<h2>Changelog</h2>';
       changelogs.forEach((entry, i) => {
         const expanded = i === 0 ? 'expanded' : '';
         const versionLabel =
@@ -127,7 +132,7 @@ export class Options {
           </div>
         `;
       });
-      content += `</div>`;
+      content += '</div>';
       const modal = createModal({
         id: 'changelog-modal',
         className: 'changelog-modal',
@@ -161,19 +166,19 @@ export class Options {
     upcomingBtn.textContent = 'View Upcoming Changes';
     upcomingBtn.onclick = async () => {
       // Use Vite's import.meta.glob to dynamically import the upcoming file
-      const upcomingModules = import.meta.glob('./upcomming.md', { query: '?raw', import: 'default' });
-      const loader = upcomingModules['./upcomming.md'];
+      const upcomingModules = import.meta.glob('./upcoming.md', { query: '?raw', import: 'default' });
+      const loader = upcomingModules['./upcoming.md'];
       let text = '';
       try {
         text = loader ? await loader() : '(No upcoming changes found)';
       } catch {
         text = '(Could not load upcoming changes)';
       }
-      let content = `<div class="changelog-modal-content">`;
-      content += `<button class="modal-close">X</button>`;
-      content += `<h2>Upcoming Changes</h2>`;
+      let content = '<div class="changelog-modal-content">';
+      content += '<button class="modal-close">X</button>';
+      content += '<h2>Upcoming Changes</h2>';
       content += `<div class="changelog-body">${text ? marked.parse(text) : ''}</div>`;
-      content += `</div>`;
+      content += '</div>';
       createModal({
         id: 'upcoming-modal',
         className: 'changelog-modal',
@@ -389,6 +394,45 @@ export class Options {
     if (isNaN(val) || val < 0) val = 0;
     if (val > max) val = max;
     this._startingStageInput.value = val;
+  }
+
+  /**
+   * Creates the enemy stats toggle option UI.
+   */
+  _createEnemyStatsToggleOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="enemy-stats-toggle" class="enemy-stats-toggle-label">Show Enemy Stats:</label>
+      <input
+        type="checkbox"
+        id="enemy-stats-toggle"
+        class="enemy-stats-toggle"
+        ${this.showEnemyStats ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    // Make the toggle button clickable and sync with checkbox
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.showEnemyStats = checkbox.checked;
+      // Save option
+      dataManager.saveGame();
+      // Show/hide enemy stats in UI
+      const stats = document.querySelector('.enemy-stats');
+      if (stats) stats.style.display = this.showEnemyStats ? '' : 'none';
+    });
+    // Initial hide/show
+    setTimeout(() => {
+      const stats = document.querySelector('.enemy-stats');
+      if (stats) stats.style.display = this.showEnemyStats ? '' : 'none';
+    }, 0);
+    return wrapper;
   }
 }
 

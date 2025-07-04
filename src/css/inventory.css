@@ -2,6 +2,7 @@
   user-select: none;
   overflow-y: scroll;
 }
+
 .inventory-btn {
   margin: 5px;
   cursor: pointer;
@@ -61,7 +62,8 @@
 }
 
 .equipment-slot[data-slot='belt'] {
-  top: 120px; /* Adjust this value between chest (140px) and legs (260px) */
+  top: 120px;
+  /* Adjust this value between chest (140px) and legs (260px) */
   left: 50%;
   transform: translateX(-50%);
 }
@@ -124,6 +126,7 @@
 .equipment-slot .inventory-item {
   z-index: 1;
 }
+
 .equipment-slot.valid-target {
   background-color: rgba(76, 175, 80, 0.2);
 }
@@ -172,7 +175,8 @@
   display: grid;
   grid-template-columns: repeat(10, 40px);
   grid-template-rows: repeat(20, 40px);
-  gap: 0; /* Remove gap */
+  gap: 0;
+  /* Remove gap */
   padding: 8px;
   background: var(--bg-panel);
   border-radius: 0.5rem;
@@ -194,7 +198,8 @@
   background: var(--bg-panel);
   border: 2px solid var(--accent);
   border-radius: 0.25rem;
-  font-size: 0.8em; /* Smaller font for items */
+  font-size: 0.8em;
+  /* Smaller font for items */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -230,9 +235,11 @@
     transform: scale(0.8);
     opacity: 0.5;
   }
+
   50% {
     transform: scale(1.1);
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
@@ -246,18 +253,23 @@
 .rarity-normal {
   border-color: #ffffff;
 }
+
 .rarity-magic {
   border-color: #4287f5;
 }
+
 .rarity-rare {
   border-color: #ffd700;
 }
+
 .rarity-unique {
   border-color: #ff8c00;
 }
+
 .rarity-legendary {
   border-color: #e65a27;
 }
+
 .rarity-mythic {
   border-color: #ff0033;
 }
@@ -265,18 +277,23 @@
 .item-color-normal {
   color: #ffffff;
 }
+
 .item-color-magic {
   color: #4287f5;
 }
+
 .item-color-rare {
   color: #ffd700;
 }
+
 .item-color-unique {
   color: #ff8c00;
 }
+
 .item-color-legendary {
   color: #e65a27;
 }
+
 .item-color-mythic {
   color: #ff0033;
 }
@@ -366,6 +383,7 @@
   align-items: center;
   justify-content: center;
   background: unset;
+  z-index: 1001;
 }
 
 .inventory-tabs {
@@ -414,6 +432,7 @@
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
 }
+
 .inventory-trash.drag-over {
   background: #a33;
   border-color: #f55;
@@ -510,4 +529,181 @@
   width: 60px;
   padding: 5px;
   border-radius: 10px;
+}
+
+.inventory-salvage-modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--bg-element, #1e2127);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.inventory-salvage-modal-content h2 {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  color: var(--accent, #3b82f6);
+}
+
+
+.salvage-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 40px);
+  grid-template-rows: repeat(20, 40px);
+  gap: 0;
+  background: var(--bg-panel);
+  border-radius: 0.5rem;
+  overflow-y: auto;
+  max-height: 820px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.salvage-options-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.salvage-btn-modal {
+  padding: 10px 18px;
+  background: #2c3e50;
+  border: 1px solid #34495e;
+  color: white;
+  border-radius: 0.5rem;
+  font-size: 1.05em;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 2px;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.salvage-btn-modal[data-rarity='NORMAL'] {
+  color: #fff;
+  border-left: 4px solid #fff;
+}
+
+.salvage-btn-modal[data-rarity='MAGIC'] {
+  color: #4287f5;
+  border-left: 4px solid #4287f5;
+}
+
+.salvage-btn-modal[data-rarity='RARE'] {
+  color: #ffd700;
+  border-left: 4px solid #ffd700;
+}
+
+.salvage-btn-modal[data-rarity='UNIQUE'] {
+  color: #ff8c00;
+  border-left: 4px solid #ff8c00;
+}
+
+.salvage-btn-modal[data-rarity='LEGENDARY'] {
+  color: #e65a27;
+  border-left: 4px solid #e65a27;
+}
+
+.salvage-btn-modal[data-rarity='MYTHIC'] {
+  color: #ff0033;
+  border-left: 4px solid #ff0033;
+}
+
+.salvage-btn-modal:hover {
+  background: #34495e;
+  color: #fff;
+}
+
+
+
+
+/* Close button for modals */
+.inventory-salvage-modal-content {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  align-items: flex-start;
+  position: relative;
+  background: var(--bg-panel);
+  border-radius: 0.5rem;
+  padding: 32px 32px 32px 32px;
+  min-width: 900px;
+}
+
+.salvage-modal-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+  min-width: 220px;
+}
+
+.inventory-trash {
+  display: flex;
+  padding: 5px;
+  ;
+  align-items: center;
+  gap: 2px;
+}
+
+.inventory-trash-icon {
+  font-size: 2em;
+}
+
+.inventory-trash-label {
+  font-size: 0.9em;
+}
+
+
+/* Toggle switch for auto-salvage (reuses toggle-btn from options) */
+.toggle-label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.auto-salvage-toggle+.toggle-btn {
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+  background: #232b3a;
+  border-radius: 13px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: 2px solid #3b82f6;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.auto-salvage-toggle:checked+.toggle-btn,
+.toggle-btn.checked {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.toggle-btn::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 17px;
+  height: 17px;
+  background: #fff;
+  border-radius: 50%;
+  transition: left 0.2s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.auto-salvage-toggle:checked+.toggle-btn::before,
+.toggle-btn.checked::before {
+  left: 25px;
+}
+
+.toggle-btn.disabled {
+  background: #232b3a;
+  border-color: #a1a1aa;
+  cursor: not-allowed;
+  opacity: 0.6;
 }

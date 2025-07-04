@@ -1,57 +1,45 @@
 import { ITEM_TYPES } from './constants/items.js';
-import { getCurrentRegion } from './region.js';
-import { ENEMY_LIST, ENEMY_RARITY } from './constants/enemies.js';
+import { getCurrentRegion, getRegionEnemies } from './region.js';
+import { ENEMY_RARITY } from './constants/enemies.js';
 import { ELEMENTS } from './constants/common.js';
 
 class Enemy {
-  constructor(stage) {
-    const region = getCurrentRegion();
-    // Select enemies by region tags
-    const allowedTags = region.allowedTags;
-    let regionEnemies = ENEMY_LIST.filter((e) => e.tags && allowedTags.some((tag) => e.tags.includes(tag)));
-    const enemyData = regionEnemies[Math.floor(Math.random() * regionEnemies.length)];
-    this.enemyData = enemyData;
-    this.name = `${ELEMENTS[enemyData.element].icon} ${enemyData.name}`;
-    this.element = enemyData.element;
-    this.image = enemyData.image;
+  constructor(level) {
+    this.level = level; // level of enemy is same as stage
 
-    // Combine multipliers (region * enemy)
-    this.lifeMultiplier = (region.lifeMultiplier || 1) * (enemyData.lifeMultiplier || 1);
-    this.damageMultiplier = (region.damageMultiplier || 1) * (enemyData.damageMultiplier || 1);
-    this.xpMultiplier = (region.xpMultiplier || 1) * (enemyData.xpMultiplier || 1);
-    this.goldMultiplier = (region.goldMultiplier || 1) * (enemyData.goldMultiplier || 1);
-    this.itemDropMultiplier = (region.itemDropMultiplier || 1) * (enemyData.itemDropMultiplier || 1);
-    this.materialDropMultiplier = (region.materialDropMultiplier || 1) * (enemyData.materialDropMultiplier || 1);
+    this.region = getCurrentRegion();
+    let regionEnemies = getRegionEnemies(this.region);
+
+    const baseData = regionEnemies[Math.floor(Math.random() * regionEnemies.length)];
+    this.baseData = baseData;
+
+    this.name = `${ELEMENTS[baseData.element].icon} ${baseData.name}`;
+    this.element = baseData.element || null;
+    this.image = baseData.image;
 
     this.rarity = this.generateRarity();
     this.color = this.getRarityColor(this.rarity);
-    this.life = this.calculateLife(stage, this.rarity);
-    this.currentLife = this.life;
-    this.damage = this.calculateDamage(stage, this.rarity);
-    this.attackSpeed = this.calculateAttackSpeed(this.rarity);
-    this.lastAttack = Date.now();
-  }
+    this.rarityData = ENEMY_RARITY[this.rarity] || {};
+    this.xp = this.calculateXP();
+    this.gold = this.calculateGold();
 
-  setEnemyName() {
-    const enemyNameElement = document.querySelector('.enemy-name');
-    enemyNameElement.textContent = this.name;
-    // Set the enemy image in .enemy-avatar (like hero)
-    const enemyAvatar = document.querySelector('.enemy-avatar');
-    if (enemyAvatar) {
-      let img = enemyAvatar.querySelector('img');
-      if (!img) {
-        img = document.createElement('img');
-        img.alt = this.name + ' avatar';
-        enemyAvatar.innerHTML = '';
-        enemyAvatar.appendChild(img);
-      }
-      // Use Vite's BASE_URL if available, else fallback
-      let baseUrl = '';
-      try {
-        baseUrl = import.meta.env.BASE_URL || '';
-      } catch (e) {}
-      img.src = baseUrl + this.image;
-    }
+    // to add increases for stage
+    this.damage = this.calculateDamage();
+    this.fireDamage = this.calculateElementalDamage('fire');
+    this.coldDamage = this.calculateElementalDamage('cold');
+    this.airDamage = this.calculateElementalDamage('air');
+    this.earthDamage = this.calculateElementalDamage('earth');
+    this.life = this.calculateLife();
+    this.attackSpeed = this.calculateAttackSpeed();
+    this.armor = this.calculateArmor();
+    this.evasion = this.calculateEvasion();
+    this.attackRating = this.calculateAttackRating(); // Default attackRating if not defined
+    this.fireResistance = baseData.fireResistance || 0;
+    this.coldResistance = baseData.coldResistance || 0;
+    this.airResistance = baseData.airResistance || 0;
+    this.earthResistance = baseData.earthResistance || 0;
+    this.currentLife = this.life;
+    this.lastAttack = Date.now();
   }
 
   setEnemyColor() {
@@ -67,7 +55,7 @@ class Enemy {
       ENEMY_RARITY.RARE.color,
       ENEMY_RARITY.EPIC.color,
       ENEMY_RARITY.LEGENDARY.color,
-      ENEMY_RARITY.MYTHIC.color
+      ENEMY_RARITY.MYTHIC.color,
     );
     // Add the new color class
     enemySection.classList.add(this.color);
@@ -93,62 +81,84 @@ class Enemy {
     return rarityMap[rarity] || 'white';
   }
 
-  calculateLife(stage, rarity) {
-    // Arithmetic progression scaling: initial 20, increment grows every 10 levels
-    let life = 20;
+  calculateAttackSpeed() {
+    return (
+      this.baseData.attackSpeed *
+      (this.rarityData.multiplier.attackSpeed || 1) *
+      (this.region.multiplier.attackSpeed || 1) *
+      (this.baseData.multiplier.attackSpeed || 1)
+    );
+  }
+
+  calculateLife() {
+    let life = this.baseData.life - 10; // to account for level 1 enemy having +10 life
     const segLen = 10,
-      initialInc = 10,
-      incStep = 5;
-    for (let lvl = 1; lvl <= stage; lvl++) {
+      initialInc = 12,
+      incStep = 8;
+    for (let lvl = 1; lvl <= this.level; lvl++) {
       life += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
     }
-    const baseLife = life;
-    const rarityMap = {
-      [ENEMY_RARITY.NORMAL.type]: ENEMY_RARITY.NORMAL.lifeBonus,
-      [ENEMY_RARITY.RARE.type]: ENEMY_RARITY.RARE.lifeBonus,
-      [ENEMY_RARITY.EPIC.type]: ENEMY_RARITY.EPIC.lifeBonus,
-      [ENEMY_RARITY.LEGENDARY.type]: ENEMY_RARITY.LEGENDARY.lifeBonus,
-      [ENEMY_RARITY.MYTHIC.type]: ENEMY_RARITY.MYTHIC.lifeBonus,
-    };
-
-    return baseLife * (rarityMap[rarity] || ENEMY_RARITY.NORMAL.lifeBonus) * this.lifeMultiplier;
+    return life * this.region.multiplier.life * this.rarityData.multiplier.life * this.baseData.multiplier.life;
   }
 
-  calculateDamage(stage, rarity) {
-    // Arithmetic progression scaling: initial 3, increment grows every 10 levels
-    let dmgVal = 3;
-    const segLenDmg = 10,
-      initialIncDmg = 0.3,
-      incStepDmg = 0.1;
-    for (let lvl = 1; lvl <= stage; lvl++) {
-      dmgVal += initialIncDmg + Math.floor((lvl - 1) / segLenDmg) * incStepDmg;
+  calculateDamage = () => {
+    let dmg = this.baseData.damage;
+    const segLen = 10,
+      initialInc = 0.4,
+      incStep = 0.1;
+    for (let lvl = 1; lvl <= this.level; lvl++) {
+      dmg += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
     }
-    const baseDamage = dmgVal;
-    const rarityMap = {
-      [ENEMY_RARITY.NORMAL.type]: ENEMY_RARITY.NORMAL.damageBonus,
-      [ENEMY_RARITY.RARE.type]: ENEMY_RARITY.RARE.damageBonus,
-      [ENEMY_RARITY.EPIC.type]: ENEMY_RARITY.EPIC.damageBonus,
-      [ENEMY_RARITY.LEGENDARY.type]: ENEMY_RARITY.LEGENDARY.damageBonus,
-      [ENEMY_RARITY.MYTHIC.type]: ENEMY_RARITY.MYTHIC.damageBonus,
-    };
+    return dmg * this.region.multiplier.damage * this.rarityData.multiplier.damage * this.baseData.multiplier.damage;
+  };
 
-    return baseDamage * (rarityMap[rarity] || ENEMY_RARITY.NORMAL.damageBonus) * this.damageMultiplier;
+  calculateArmor() {
+    const baseArmor = this.baseData.armor * this.level || 0;
+    const segLen = 10,
+      initialInc = 0.5,
+      incStep = 0.2;
+    let armor = baseArmor;
+    for (let lvl = 1; lvl <= this.level; lvl++) {
+      armor += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
+    }
+    return armor * this.region.multiplier.armor * this.rarityData.multiplier.armor * this.baseData.multiplier.armor;
   }
 
-  calculateAttackSpeed(rarity) {
-    const baseAttackSpeed = 1;
-    const rarityMap = {
-      [ENEMY_RARITY.NORMAL.type]: ENEMY_RARITY.NORMAL.bonusAttackSpeed,
-      [ENEMY_RARITY.RARE.type]: ENEMY_RARITY.RARE.bonusAttackSpeed,
-      [ENEMY_RARITY.EPIC.type]: ENEMY_RARITY.EPIC.bonusAttackSpeed,
-      [ENEMY_RARITY.LEGENDARY.type]: ENEMY_RARITY.LEGENDARY.bonusAttackSpeed,
-      [ENEMY_RARITY.MYTHIC.type]: ENEMY_RARITY.MYTHIC.bonusAttackSpeed,
-    };
-
-    return baseAttackSpeed * (rarityMap[rarity] || ENEMY_RARITY.NORMAL.bonusAttackSpeed);
+  calculateEvasion() {
+    const baseEvasion = this.baseData.evasion * this.level || 0;
+    const segLen = 10,
+      initialInc = 0.5,
+      incStep = 0.2;
+    let evasion = baseEvasion;
+    for (let lvl = 1; lvl <= this.level; lvl++) {
+      evasion += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
+    }
+    return (
+      evasion * this.region.multiplier.evasion * this.rarityData.multiplier.evasion * this.baseData.multiplier.evasion
+    );
   }
+
+  calculateAttackRating() {
+    const baseAttackRating = this.baseData.attackRating * this.level || 0;
+    const segLen = 10,
+      initialInc = 0.5,
+      incStep = 0.2;
+    let attackRating = baseAttackRating;
+    for (let lvl = 1; lvl <= this.level; lvl++) {
+      attackRating += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
+    }
+    return (
+      attackRating *
+      this.region.multiplier.attackRating *
+      this.rarityData.multiplier.attackRating *
+      this.baseData.multiplier.attackRating
+    );
+  }
+
   canAttack(currentTime) {
-    return currentTime - this.lastAttack >= this.attackSpeed * 1000; // Convert to ms
+    if (this.attackSpeed <= 0) return false;
+    const timeBetweenAttacks = 1000 / this.attackSpeed; // now attacks/sec
+    return currentTime - this.lastAttack >= timeBetweenAttacks;
   }
 
   resetLife() {
@@ -158,7 +168,7 @@ class Enemy {
   calculateDropChance() {
     const enemyConst = ENEMY_RARITY[this.rarity];
     // Apply region item drop multiplier
-    return enemyConst.itemDropChance * this.itemDropMultiplier;
+    return enemyConst.itemDropChance * (this.region.multiplier.itemDrop || 1) * (this.baseData.multiplier.itemDrop || 1);
   }
 
   // Calculate item level based on stage (no effect at the moment)
@@ -178,7 +188,46 @@ class Enemy {
 
   rollForMaterialDrop() {
     const baseChance = 0.025; // Base chance of 2.5%
-    return Math.random() < baseChance * this.materialDropMultiplier;
+    return Math.random() < baseChance * (this.region.multiplier.materialDrop || 1) * (this.baseData.multiplier.materialDrop || 1);
+  }
+
+  calculateElementalDamage(type) {
+    // type: 'fire', 'cold', 'air', 'earth'
+    const base = this.baseData[`${type}Damage`] || 0;
+    if (base === 0) return 0;
+    const segLen = 10,
+      initialInc = 0.3,
+      incStep = 0.1;
+    let dmg = base;
+    for (let lvl = 1; lvl <= this.level; lvl++) {
+      dmg += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
+    }
+    const regionMult = this.region.multiplier[`${type}Damage`] || 1;
+    const rarityMult = this.rarityData.multiplier[`${type}Damage`] || 1;
+    const baseMult = this.baseData.multiplier ? this.baseData.multiplier[`${type}Damage`] || 1 : 1;
+    return dmg * regionMult * rarityMult * baseMult;
+  }
+
+  calculateXP() {
+    let xp = this.baseData.xp;
+    const segLen = 10,
+      initialInc = 2,
+      incStep = 1;
+    for (let lvl = 1; lvl <= this.level; lvl++) {
+      xp += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
+    }
+    return xp * this.region.multiplier.xp * (this.rarityData.multiplier.xp || 1);
+  }
+
+  calculateGold() {
+    let gold = this.baseData.gold;
+    const segLen = 10,
+      initialInc = 1.5,
+      incStep = 0.75;
+    for (let lvl = 1; lvl <= this.level; lvl++) {
+      gold += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
+    }
+    return gold * this.region.multiplier.gold * (this.rarityData.multiplier.gold || 1);
   }
 }
 export default Enemy;

@@ -1,12 +1,13 @@
-import { hero } from '../globals.js';
+import { game, hero } from '../globals.js';
 import { STATS } from '../constants/stats/stats.js';
-import { hideTooltip, positionTooltip, showTooltip } from '../ui/ui.js';
+import { hideTooltip, positionTooltip, showTooltip, updateEnemyStats } from '../ui/ui.js';
 import { OFFENSE_STATS } from '../constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from '../constants/stats/defenseStats.js';
 import { MISC_STATS } from '../constants/stats/miscStats.js';
 import { formatStatName } from '../ui/ui.js';
 import { ATTRIBUTE_TOOLTIPS, ATTRIBUTES } from '../constants/stats/attributes.js';
 import { ELEMENTS } from '../constants/common.js';
+import { calculateArmorReduction, calculateEvasionChance, calculateHitChance } from '../combat.js';
 
 const html = String.raw;
 
@@ -210,7 +211,7 @@ export function updateStatsAndAttributesUI() {
     const attackRatingEl = document.getElementById('attackRating-value');
     if (attackRatingEl) {
       attackRatingEl.textContent = hero.stats.attackRating;
-      const hitPct = hero.calculateHitChance().toFixed(2) + '%';
+      const hitPct = calculateHitChance(hero.stats.attackRating, game.currentEnemy.evasion).toFixed(2) + '%';
       attackRatingEl.appendChild(document.createTextNode(` (${hitPct})`));
     }
 
@@ -218,8 +219,17 @@ export function updateStatsAndAttributesUI() {
     const armorEl = document.getElementById('armor-value');
     if (armorEl) {
       armorEl.textContent = hero.stats.armor || 0;
-      const ar = hero.calculateArmorReduction().toFixed(2) + '%';
-      armorEl.appendChild(document.createTextNode(` (${ar})`));
+      // Use PoE2 formula: reduction = armor / (armor + 10 * enemy damage)
+      const reduction = calculateArmorReduction(hero.stats.armor, game.currentEnemy.damage);
+      armorEl.appendChild(document.createTextNode(` (${reduction.toFixed(2)}%)`));
+    }
+
+    // add evasion reduction percentage to evasion
+    const evasionEl = document.getElementById('evasion-value');
+    if (evasionEl) {
+      evasionEl.textContent = hero.stats.evasion || 0;
+      const er = calculateEvasionChance(hero.stats.evasion, game.currentEnemy.attackRating).toFixed(2) + '%';
+      evasionEl.appendChild(document.createTextNode(` (${er})`));
     }
   }
 
@@ -239,18 +249,18 @@ export function updateStatsAndAttributesUI() {
       </div>
       <div class="attributes-body">
         ${Object.entries(hero.stats)
-          .map(([stat, value]) => {
-            if (!ATTRIBUTES[stat]) return '';
-            const displayName = stat.charAt(0).toUpperCase() + stat.slice(1);
-            return `
+    .map(([stat, value]) => {
+      if (!ATTRIBUTES[stat]) return '';
+      const displayName = stat.charAt(0).toUpperCase() + stat.slice(1);
+      return `
             <div class="attribute-row">
               <button class="allocate-btn" data-stat="${stat}">+</button>
               <strong>${displayName}:</strong>
               <span id="${stat}-value">${hero.stats[stat]}</span>
             </div>
           `;
-          })
-          .join('')}
+    })
+    .join('')}
       </div>
     `;
 
@@ -268,7 +278,7 @@ export function updateStatsAndAttributesUI() {
     attributesContainer.querySelectorAll('.attribute-row').forEach((row) => {
       const stat = row.querySelector('button').dataset.stat;
       row.addEventListener('mouseenter', (e) =>
-        showTooltip(ATTRIBUTE_TOOLTIPS[`get${stat.charAt(0).toUpperCase() + stat.slice(1)}Tooltip`](), e)
+        showTooltip(ATTRIBUTE_TOOLTIPS[`get${stat.charAt(0).toUpperCase() + stat.slice(1)}Tooltip`](), e),
       );
       row.addEventListener('mousemove', positionTooltip);
       row.addEventListener('mouseleave', hideTooltip);
@@ -318,7 +328,7 @@ export function updateStatsAndAttributesUI() {
     // Add attributes container to the grid
     statsGrid.appendChild(attributesContainer);
   } else {
-    document.getElementById(`attributes`).textContent = `Attributes (+${hero.statPoints})`;
+    document.getElementById('attributes').textContent = `Attributes (+${hero.statPoints})`;
     // Update dynamic attribute values
     document.getElementById('strength-value').textContent = hero.stats['strength'];
     document.getElementById('agility-value').textContent = hero.stats['agility'];
@@ -330,4 +340,6 @@ export function updateStatsAndAttributesUI() {
 
   const skillTreeTab = document.querySelector('[data-tab="skilltree"]');
   skillTreeTab.classList.remove('hidden');
+
+  updateEnemyStats();
 }

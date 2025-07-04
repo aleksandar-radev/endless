@@ -70,7 +70,7 @@ export const ATTRIBUTES = {
   },
   dexterity: {
     effects: {
-      critDamagePerPoint: 0.001,
+      evasionPerPoint: 4,
       critChancePer: {
         enabled: false,
         points: 25,
@@ -91,10 +91,10 @@ export const ATTRIBUTE_TOOLTIPS = {
     Each point increases:<br />
     • Damage by ${ATTRIBUTES.strength.effects.damagePerPoint}<br />
     ${ATTRIBUTES.strength.effects.damagePercentPer.enabled
-      ? `• Every ${ATTRIBUTES.strength.effects.damagePercentPer.points} points adds ${
-          ATTRIBUTES.strength.effects.damagePercentPer.value * 100
-        }% to total damage`
-      : ''}
+    ? `• Every ${ATTRIBUTES.strength.effects.damagePercentPer.points} points adds ${
+      ATTRIBUTES.strength.effects.damagePercentPer.value * 100
+    }% to total damage`
+    : ''}
   `,
 
   getAgilityTooltip: () => html`
@@ -102,15 +102,15 @@ export const ATTRIBUTE_TOOLTIPS = {
     Each point increases:<br />
     • Attack Rating by ${ATTRIBUTES.agility.effects.attackRatingPerPoint}<br />
     ${ATTRIBUTES.agility.effects.attackRatingPercentPer.enabled
-      ? `• Every ${ATTRIBUTES.agility.effects.attackRatingPercentPer.points} points adds ${
-          ATTRIBUTES.agility.effects.attackRatingPercentPer.value * 100
-        }% to total attack rating`
-      : ''}
+    ? `• Every ${ATTRIBUTES.agility.effects.attackRatingPercentPer.points} points adds ${
+      ATTRIBUTES.agility.effects.attackRatingPercentPer.value * 100
+    }% to total attack rating`
+    : ''}
     ${ATTRIBUTES.agility.effects.attackSpeedPer.enabled
-      ? `• Every ${ATTRIBUTES.agility.effects.attackSpeedPer.points} points adds ${
-          ATTRIBUTES.agility.effects.attackSpeedPer.value * 100
-        }% attack speed`
-      : ''}
+    ? `• Every ${ATTRIBUTES.agility.effects.attackSpeedPer.points} points adds ${
+      ATTRIBUTES.agility.effects.attackSpeedPer.value * 100
+    }% attack speed`
+    : ''}
   `,
 
   getVitalityTooltip: () => html`
@@ -118,15 +118,15 @@ export const ATTRIBUTE_TOOLTIPS = {
     Each point increases:<br />
     • Life by ${ATTRIBUTES.vitality.effects.lifePerPoint}<br />
     ${ATTRIBUTES.vitality.effects.lifePercentPer.enabled
-      ? `• Every ${ATTRIBUTES.vitality.effects.lifePercentPer.points} points adds ${
-          ATTRIBUTES.vitality.effects.lifePercentPer.value * 100
-        }% to total life`
-      : ''}
+    ? `• Every ${ATTRIBUTES.vitality.effects.lifePercentPer.points} points adds ${
+      ATTRIBUTES.vitality.effects.lifePercentPer.value * 100
+    }% to total life`
+    : ''}
     ${ATTRIBUTES.vitality.effects.regenPercentPer.enabled
-      ? `• Every ${ATTRIBUTES.vitality.effects.regenPercentPer.points} points adds ${
-          ATTRIBUTES.vitality.effects.regenPercentPer.value * 100
-        }% life regeneration`
-      : ''}
+    ? `• Every ${ATTRIBUTES.vitality.effects.regenPercentPer.points} points adds ${
+      ATTRIBUTES.vitality.effects.regenPercentPer.value * 100
+    }% life regeneration`
+    : ''}
   `,
 
   getWisdomTooltip: () => html`
@@ -134,15 +134,15 @@ export const ATTRIBUTE_TOOLTIPS = {
     Each point increases:<br />
     • Mana by ${ATTRIBUTES.wisdom.effects.manaPerPoint}<br />
     ${ATTRIBUTES.wisdom.effects.manaPercentPer.enabled
-      ? `• Every ${ATTRIBUTES.wisdom.effects.manaPercentPer.points} points adds ${
-          ATTRIBUTES.wisdom.effects.manaPercentPer.value * 100
-        }% to total mana`
-      : ''}
+    ? `• Every ${ATTRIBUTES.wisdom.effects.manaPercentPer.points} points adds ${
+      ATTRIBUTES.wisdom.effects.manaPercentPer.value * 100
+    }% to total mana`
+    : ''}
     ${ATTRIBUTES.wisdom.effects.regenPercentPer.enabled
-      ? `• Every ${ATTRIBUTES.wisdom.effects.regenPercentPer.points} points adds ${
-          ATTRIBUTES.wisdom.effects.regenPercentPer.value * 100
-        }% mana regeneration`
-      : ''}
+    ? `• Every ${ATTRIBUTES.wisdom.effects.regenPercentPer.points} points adds ${
+      ATTRIBUTES.wisdom.effects.regenPercentPer.value * 100
+    }% mana regeneration`
+    : ''}
   `,
 
   getEnduranceTooltip: () => html`
@@ -150,26 +150,26 @@ export const ATTRIBUTE_TOOLTIPS = {
     Each point increases:<br />
     • Armor by ${ATTRIBUTES.endurance.effects.armorPerPoint}<br />
     ${ATTRIBUTES.endurance.effects.armorPercentPer.enabled
-      ? `• Every ${ATTRIBUTES.endurance.effects.armorPercentPer.points} points adds ${
-          ATTRIBUTES.endurance.effects.armorPercentPer.value * 100
-        }% to total armor`
-      : ''}
+    ? `• Every ${ATTRIBUTES.endurance.effects.armorPercentPer.points} points adds ${
+      ATTRIBUTES.endurance.effects.armorPercentPer.value * 100
+    }% to total armor`
+    : ''}
   `,
 
   getDexterityTooltip: () => html`
     <strong>Dexterity</strong><br />
     Each point increases:<br />
-    • Critical Damage by ${ATTRIBUTES.dexterity.effects.critDamagePerPoint}<br />
+    • Evasion by ${ATTRIBUTES.dexterity.effects.evasionPerPoint}<br />
     ${ATTRIBUTES.dexterity.effects.critChancePer.enabled
-      ? `• Every ${ATTRIBUTES.dexterity.effects.critChancePer.points} points adds ${
-          ATTRIBUTES.dexterity.effects.critChancePer.value * 100
-        }% critical strike chance`
-      : ''}
+    ? `• Every ${ATTRIBUTES.dexterity.effects.critChancePer.points} points adds ${
+      ATTRIBUTES.dexterity.effects.critChancePer.value * 100
+    }% critical strike chance`
+    : ''}
     ${ATTRIBUTES.dexterity.effects.critDamagePer.enabled
-      ? `• Every ${ATTRIBUTES.dexterity.effects.critDamagePer.points} points adds ${
-          ATTRIBUTES.dexterity.effects.critDamagePer.value * 100
-        }% critical strike damage`
-      : ''}
+    ? `• Every ${ATTRIBUTES.dexterity.effects.critDamagePer.points} points adds ${
+      ATTRIBUTES.dexterity.effects.critDamagePer.value * 100
+    }% critical strike damage`
+    : ''}
   `,
 
   getElementalDamageTooltip: () => html`
@@ -252,5 +252,35 @@ export const ATTRIBUTE_TOOLTIPS = {
     <strong>Block Chance</strong><br />
     Chance to block incoming attacks.<br />
     Maximum: 75%
+  `,
+
+  getEvasionTooltip: () => html`
+    <strong>Evasion</strong><br />
+    Chance to dodge enemy attacks completely.<br />
+    Higher evasion reduces enemy hit chance.
+  `,
+
+  getFireResistanceTooltip: () => html`
+    <strong>Fire Resistance</strong><br />
+    Reduces fire damage taken from enemies.<br />
+    ${ELEMENTS.fire.icon} Effective against fire enemies.
+  `,
+
+  getColdResistanceTooltip: () => html`
+    <strong>Cold Resistance</strong><br />
+    Reduces cold damage taken from enemies.<br />
+    ${ELEMENTS.cold.icon} Effective against cold enemies.
+  `,
+
+  getAirResistanceTooltip: () => html`
+    <strong>Air Resistance</strong><br />
+    Reduces air damage taken from enemies.<br />
+    ${ELEMENTS.air.icon} Effective against air enemies.
+  `,
+
+  getEarthResistanceTooltip: () => html`
+    <strong>Earth Resistance</strong><br />
+    Reduces earth damage taken from enemies.<br />
+    ${ELEMENTS.earth.icon} Effective against earth enemies.
   `,
 };

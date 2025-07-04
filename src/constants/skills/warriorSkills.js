@@ -7,13 +7,14 @@ export const WARRIOR_SKILLS = {
     id: 'bash',
     name: () => 'Bash',
     type: () => 'toggle',
-    manaCost: (level) => 1 + level * 0.2,
+    manaCost: (level) => 1 + level * 0.05,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'war-axe',
     description: () => 'While active, increases damage but costs mana per attack',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 3,
+      damage: level * 1,
+      damagePercent: level * 1,
     }),
   },
   toughness: {
@@ -25,7 +26,8 @@ export const WARRIOR_SKILLS = {
     description: () => 'Permanently increases armor',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: level * 8,
+      armor: level * 1,
+      armorPercent: level * 3,
     }),
   },
 
@@ -41,7 +43,8 @@ export const WARRIOR_SKILLS = {
     description: () => 'A powerful strike that deals increased damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 8,
+      damage: level * 1,
+      damagePercent: level * 5,
     }),
   },
   ironWill: {
@@ -53,7 +56,8 @@ export const WARRIOR_SKILLS = {
     description: () => 'Increases resistance to damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      vitality: level * 3,
+      vitality: level * 1,
+      vitalityPercent: level * 1,
       lifeRegen: level * 0.33,
     }),
   },
@@ -71,7 +75,7 @@ export const WARRIOR_SKILLS = {
     description: () => 'Temporarily increases damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 5,
+      damagePercent: level * 2,
     }),
   },
   fortitude: {
@@ -83,7 +87,8 @@ export const WARRIOR_SKILLS = {
     description: () => 'Increases life regeneration',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegen: level * 2,
+      lifeRegen: level * 0.2,
+      lifeRegenPercent: level * 1,
     }),
   },
 
@@ -99,7 +104,7 @@ export const WARRIOR_SKILLS = {
     description: () => 'Deals instant damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 18,
+      damagePercent: level * 8,
     }),
   },
 
@@ -116,7 +121,7 @@ export const WARRIOR_SKILLS = {
     description: () => 'Increases armor and block chance temporarily',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: level * 50,
+      armorPercent: level * 6,
       blockChance: level * 0.1,
     }),
   },
@@ -132,8 +137,9 @@ export const WARRIOR_SKILLS = {
     description: () => 'Gives huge amounts of physical and fire damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 5,
-      fireDamage: level * 25,
+      damagePercent: level * 1,
+      fireDamage: level * 2,
+      fireDamagePercent: level * 3,
     }),
   },
 
@@ -146,10 +152,10 @@ export const WARRIOR_SKILLS = {
     description: () => 'Greatly increases offensive stats',
     maxLevel: () => 100,
     effect: (level) => ({
-      damage: level * 1,
-      lifeSteal: level * 0.01,
+      lifeSteal: level * 0.02,
       attackSpeed: level * 0.01,
-      attackRating: level * 50,
+      attackRating: level * 6,
+      attackRatingPercent: level * 4,
     }),
   },
 
@@ -165,11 +171,11 @@ export const WARRIOR_SKILLS = {
     effect: (level) => ({
       lifePercent: level * 0.3,
       damagePercent: level * 0.3,
-      strength: level * 5,
-      vitality: level * 5,
-      agility: level * 5,
-      wisdom: level * 2,
-      endurance: level * 5,
+      strengthPercent: level * 2,
+      vitalityPercent: level * 2,
+      agilityPercent: level * 2,
+      wisdomPercent: level * 1,
+      endurancePercent: level * 2,
     }),
   },
 };

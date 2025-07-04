@@ -11,13 +11,15 @@
   grid-gap: 5px;
 }
 
-.attributes-container > h3 {
-  grid-column: 1 / -1; /* Spans the title across both columns */
+.attributes-container>h3 {
+  grid-column: 1 / -1;
+  /* Spans the title across both columns */
 }
 
 .stats-container {
   margin-bottom: 1em;
-  min-height: 300px; /* reserve enough space to keep height stable when switching tabs */
+  min-height: 300px;
+  /* reserve enough space to keep height stable when switching tabs */
 }
 
 .stats-container h3,
@@ -52,6 +54,7 @@
   background-color: #4b5563;
   cursor: not-allowed;
 }
+
 .attributes-header {
   display: flex;
   justify-content: space-between;
@@ -97,6 +100,7 @@
 .stats-panel {
   display: none;
 }
+
 .stats-panel.active {
   display: block;
 }
@@ -107,6 +111,7 @@
   gap: 5px;
   margin-bottom: 10px;
 }
+
 .stats-tabs .subtab-btn {
   padding: 5px 10px;
   background-color: #4b5563;
@@ -116,9 +121,11 @@
   cursor: pointer;
   transition: background-color 0.2s;
 }
+
 .stats-tabs .subtab-btn.active {
   background-color: #059669;
 }
+
 .stats-tabs .subtab-btn:hover {
   background-color: #6b7280;
 }
@@ -130,6 +137,7 @@
   gap: 8px;
   margin-top: 8px;
 }
+
 .elemental-stats-grid .elemental-row {
   display: flex;
   align-items: center;

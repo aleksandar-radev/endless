@@ -15,28 +15,84 @@ class Boss {
       throw new Error('No bosses defined in BOSSES array.');
     }
     const def = BOSSES[Math.floor(Math.random() * BOSSES.length)];
+    this.baseData = def;
     this.id = def.id;
     this.name = def.name;
     this.image = def.image;
-    // Multipliers
-    this.lifeMultiplier = def.lifeMultiplier || 1;
-    this.damageMultiplier = def.damageMultiplier || 1;
-    this.xpMultiplier = def.xpMultiplier || 1;
-    this.goldMultiplier = def.goldMultiplier || 1;
-    this.itemDropMultiplier = def.itemDropMultiplier || 1;
-    this.materialDropMultiplier = def.materialDropMultiplier || 1;
-    this.materialDropWeights = def.materialDropWeights || {};
-    // Base stats
-    this.baseLife = 3000;
-    this.baseDamage = 25;
-    // Scaled stats
-    this.life = (this.baseLife + hero.bossLevel * 677) * this.lifeMultiplier;
+
+    // Use boss definition stats and scale by boss level
+    const lvl = hero.bossLevel || 1;
+
+    // Life scaling (similar to enemy scaling, but with higher base)
+    this.life = this.calculateLife(def, lvl);
     this.currentLife = this.life;
-    this.damage = (this.baseDamage + hero.bossLevel * 14) * this.damageMultiplier;
-    // Attack timing for boss combat
-    this.attackSpeed = def.attackSpeed || 1; // attacks per second
-    this.lastAttack = Date.now();
+
+    // Damage scaling
+    this.damage = this.calculateDamage(def, lvl);
+
+    // Other stats
+    this.attackSpeed = def.attackSpeed || 1;
+    this.armor = this.calculateArmor(def, lvl);
+    this.evasion = this.calculateEvasion(def, lvl);
+    this.attackRating = this.calculateAttackRating(def, lvl);
+
+    // Elemental damages
+    this.fireDamage = (def.fireDamage || 0) * (def.multiplier?.fireDamage || 1);
+    this.coldDamage = (def.coldDamage || 0) * (def.multiplier?.coldDamage || 1);
+    this.airDamage = (def.airDamage || 0) * (def.multiplier?.airDamage || 1);
+    this.earthDamage = (def.earthDamage || 0) * (def.multiplier?.earthDamage || 1);
+
     this.reward = def.reward;
+    this.lastAttack = Date.now();
+  }
+
+  calculateLife(def, lvl) {
+    // Example scaling: base + per level, then apply multiplier
+    let life = def.life - 10;
+    const segLen = 10, initialInc = 10, incStep = 5;
+    for (let i = 1; i <= lvl; i++) {
+      life += initialInc + Math.floor((i - 1) / segLen) * incStep;
+    }
+    return life * (def.multiplier?.life || 1);
+  }
+
+  calculateDamage(def, lvl) {
+    let dmg = def.damage;
+    const segLen = 10, initialInc = 0.3, incStep = 0.1;
+    for (let i = 1; i <= lvl; i++) {
+      dmg += initialInc + Math.floor((i - 1) / segLen) * incStep;
+    }
+    return dmg * (def.multiplier?.damage || 1);
+  }
+
+  calculateArmor(def, lvl) {
+    const baseArmor = def.armor * lvl || 0;
+    const segLen = 10, initialInc = 0.5, incStep = 0.2;
+    let armor = baseArmor;
+    for (let i = 1; i <= lvl; i++) {
+      armor += initialInc + Math.floor((i - 1) / segLen) * incStep;
+    }
+    return armor * (def.multiplier?.armor || 1);
+  }
+
+  calculateEvasion(def, lvl) {
+    const baseEvasion = def.evasion * lvl || 0;
+    const segLen = 10, initialInc = 0.5, incStep = 0.2;
+    let evasion = baseEvasion;
+    for (let i = 1; i <= lvl; i++) {
+      evasion += initialInc + Math.floor((i - 1) / segLen) * incStep;
+    }
+    return evasion * (def.multiplier?.evasion || 1);
+  }
+
+  calculateAttackRating(def, lvl) {
+    const baseAttackRating = def.attackRating * lvl || 0;
+    const segLen = 10, initialInc = 0.5, incStep = 0.2;
+    let attackRating = baseAttackRating;
+    for (let i = 1; i <= lvl; i++) {
+      attackRating += initialInc + Math.floor((i - 1) / segLen) * incStep;
+    }
+    return attackRating * (def.multiplier?.attackRating || 1);
   }
 
   /**
@@ -48,9 +104,7 @@ class Boss {
     this.currentLife = Math.max(this.currentLife - amount, 0);
     // On death
     if (this.currentLife === 0) {
-      // Track kill and bump boss level
       statistics.increment('bossesKilled', null, 1);
-      // Auto-select next boss
       selectBoss(game);
       return true;
     }
@@ -78,7 +132,9 @@ class Boss {
    * @returns {boolean}
    */
   canAttack(currentTime) {
-    return currentTime - this.lastAttack >= this.attackSpeed * 1000;
+    if (this.attackSpeed <= 0) return false;
+    const timeBetweenAttacks = 1000 / this.attackSpeed; // now attacks/sec
+    return currentTime - this.lastAttack >= timeBetweenAttacks;
   }
 }
 

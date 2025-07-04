@@ -24,9 +24,9 @@ export class DataManager {
   }
 
   async saveGame({ cloud = false } = {}) {
-    const saveData = crypt.encrypt(JSON.stringify(getGlobals()));
+    const saveData = getGlobals();
 
-    localStorage.setItem('gameProgress', saveData);
+    localStorage.setItem('gameProgress', crypt.encrypt(JSON.stringify(saveData)));
 
     if (cloud) {
       try {
@@ -48,11 +48,11 @@ export class DataManager {
     let source = 'local';
 
     // ensure session before loading game data
-    await this.checkSession();
 
     // get cloud save data
     try {
       if (cloud && this.session?.id) {
+        await this.checkSession();
         const result = await loadGameData(this.session.id, premium);
         if (result.data) {
           data = result.data;
@@ -71,11 +71,12 @@ export class DataManager {
         console.warn('No game data found in local storage');
         return null;
       }
-      // Decrypt data
+
       try {
         data = crypt.decrypt(data);
       } catch (e) {
-        console.error('Decryption failed:', e);
+        console.warn('Failed to decrypt game data:', e);
+
         try {
           data = JSON.parse(data);
         } catch (e) {
@@ -175,7 +176,7 @@ export class DataManager {
       onClose: () => {},
     });
     setTimeout(() => {
-      const okBtn = document.getElementById(`migration-modal-ok`);
+      const okBtn = document.getElementById('migration-modal-ok');
       if (okBtn) {
         okBtn.addEventListener('click', () => {
           const modal = document.getElementById(`migration-modal-${version}`);
@@ -187,7 +188,7 @@ export class DataManager {
 
   async checkSession() {
     try {
-      const res = await apiFetch(`/user/session`);
+      const res = await apiFetch('/user/session');
       if (!res.ok) throw new Error('Not logged in');
       const user = (await res.json()).user;
       this.setSession(user);

@@ -10,7 +10,6 @@ import {
 import Enemy from './enemy.js';
 import { hero, game, inventory, crystalShop, statistics, skillTree, dataManager } from './globals.js';
 import { ITEM_RARITY } from './constants/items.js';
-import { ENEMY_RARITY } from './constants/enemies.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateQuestsUI } from './ui/questUi.js';
 import { updateBossUI } from './ui/bossUi.js';
@@ -19,42 +18,56 @@ import { getCurrentRegion } from './region.js';
 export function enemyAttack(currentTime) {
   if (!game || !hero || !game.currentEnemy) return;
   if (game.currentEnemy.canAttack(currentTime)) {
-    // Check for block first
-    const isBlocked = Math.random() * 100 < hero.stats.blockChance;
+    // Check for evasion first
 
-    if (isBlocked) {
-      // Calculate and apply block healing
-      const healAmount = hero.calculateBlockHealing();
+    const hitChance = calculateHitChance(game.currentEnemy.attackRating, hero.stats.evasion);
+    const isEvaded = Math.random() * 100 > hitChance;
 
-      // Show "BLOCKED" text instead of damage number
-      createDamageNumber({ text: 'BLOCKED', isPlayer: true, color: '#66bd02' });
-      if (healAmount > 0) {
-        createDamageNumber({ text: `+${Math.floor(healAmount)}`, isPlayer: true, color: '#4CAF50' });
-      }
+    if (isEvaded) {
+      // Show "EVADED" text
+      createDamageNumber({ text: 'EVADED', isPlayer: true, color: '#FFD700' });
     } else {
-      // Calculate armor reduction
-      const damageReduction = hero.calculateArmorReduction() / 100;
-      const effectiveDamage = Math.floor(game.currentEnemy.damage * (1 - damageReduction));
+      const isBlocked = Math.random() * 100 < hero.stats.blockChance;
 
-      const thornsDamage = hero.calculateTotalThornsDamage(game.currentEnemy.damage);
-      // only if there is some thorns damage to deal, only paladin
-      if (thornsDamage - game.currentEnemy.damage > 1) {
-        game.damageEnemy(thornsDamage);
-        createDamageNumber({ text: `${thornsDamage}` });
-      }
+      if (isBlocked) {
+        // Calculate and apply block healing
+        const healAmount = hero.calculateBlockHealing();
 
-      // check currently applied buffs and if fireShield is active, return its damage to the attacker.
-      if (skillTree.activeBuffs.has('fireShield')) {
-        const fireReflect = Math.floor(hero.stats.reflectFireDamage || 0);
-        if (fireReflect > 0) {
-          game.damageEnemy(fireReflect);
-          createDamageNumber({ text: `${fireReflect}` });
-          updateEnemyStats();
+        // Show "BLOCKED" text instead of damage number
+        createDamageNumber({ text: 'BLOCKED', isPlayer: true, color: '#66bd02' });
+        if (healAmount > 0) {
+          createDamageNumber({ text: `+${Math.floor(healAmount)}`, isPlayer: true, color: '#4CAF50' });
         }
-      }
+      } else {
+        // Use PoE2 armor formula for physical damage reduction
+        const physicalDamageRaw = game.currentEnemy.damage;
+        const armorReduction = calculateArmorReduction(hero.stats.armor, physicalDamageRaw) / 100;
+        const physicalDamage = Math.floor(physicalDamageRaw * (1 - armorReduction));
+        const fire = game.currentEnemy.fireDamage * (1 - hero.stats.fireResistance / 100);
+        const cold = game.currentEnemy.coldDamage * (1 - hero.stats.coldResistance / 100);
+        const air = game.currentEnemy.airDamage * (1 - hero.stats.airResistance / 100);
+        const earth = game.currentEnemy.earthDamage * (1 - hero.stats.earthResistance / 100);
 
-      game.damagePlayer(effectiveDamage);
-      createDamageNumber({ text: `-${Math.floor(effectiveDamage)}`, isPlayer: true });
+        const totalDamage = physicalDamage + fire + cold + air + earth;
+
+        const thornsDamage = hero.calculateTotalThornsDamage(game.currentEnemy.damage);
+        // only if there is some thorns damage to deal, only paladin
+        if (thornsDamage - game.currentEnemy.damage > 1) {
+          game.damageEnemy(thornsDamage);
+        }
+
+        // check currently applied buffs and if fireShield is active, return its damage to the attacker.
+        if (skillTree.activeBuffs.has('fireShield')) {
+          const fireReflect = Math.floor(hero.stats.reflectFireDamage || 0);
+          if (fireReflect > 0) {
+            game.damageEnemy(fireReflect);
+            updateEnemyStats();
+          }
+        }
+
+        game.damagePlayer(totalDamage);
+        createDamageNumber({ text: `-${Math.floor(totalDamage)}`, isPlayer: true });
+      }
     }
 
     // Record the enemy's last attack time
@@ -69,21 +82,21 @@ export function playerAttack(currentTime) {
   if (currentTime - game.lastPlayerAttack >= timeBetweenAttacks) {
     if (game.currentEnemy.currentLife > 0) {
       // Calculate if attack hits
-      const hitChance = hero.calculateHitChance();
+      const hitChance = calculateHitChance(hero.stats.attackRating, game.currentEnemy.evasion);
+
       const roll = Math.random() * 100;
 
       if (roll > hitChance) {
         // to take up mana even when missing. (for toggle skills)
-        skillTree.applyToggleEffects();
+        skillTree.applyToggleEffects(false);
         createDamageNumber({ text: 'MISS', color: '#888888' });
       } else {
-        const { damage, isCritical } = hero.calculateTotalDamage();
+        const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy);
         const lifeStealAmount = damage * (hero.stats.lifeSteal / 100);
         const lifePerHitAmount = hero.stats.lifePerHit * (1 + (hero.stats.lifePerHitPercent || 0) / 100);
         game.healPlayer(lifeStealAmount + lifePerHitAmount);
         game.restoreMana(hero.stats.manaPerHit * (1 + (hero.stats.manaPerHitPercent || 0) / 100) || 0);
-        game.damageEnemy(damage);
-        createDamageNumber({ text: isCritical ? ` -${Math.floor(damage)}` : `-${Math.floor(damage)}`, isCritical });
+        game.damageEnemy(damage, isCritical);
       }
       if (game.fightMode === 'arena') {
         updateBossUI(game.currentEnemy);
@@ -147,8 +160,8 @@ export function playerDeath() {
 
 export async function defeatEnemy() {
   const enemy = game.currentEnemy;
-  let baseExpGained = 1; // overwritten
-  let baseGoldGained = 1; // overwritten
+  let baseExpGained = 1;
+  let baseGoldGained = 1;
 
   // Add 500ms delay between monster kills
   await new Promise((resolve) => setTimeout(resolve, 500));
@@ -158,7 +171,7 @@ export async function defeatEnemy() {
     baseGoldGained = 10 + hero.bossLevel * 4;
 
     const { crystals, gold, materials, souls } = game.currentEnemy.reward;
-    let text = `Boss defeated! `;
+    let text = 'Boss defeated! ';
     if (gold) {
       hero.gainGold(gold);
       text += `+${gold} gold, `;
@@ -178,8 +191,8 @@ export async function defeatEnemy() {
     hero.bossLevel++;
     updateResources();
   } else if (game.fightMode === 'explore') {
-    baseExpGained = Math.floor(6 + game.stage * 1.5);
-    baseGoldGained = 5 + game.stage * 4;
+    baseExpGained = enemy.xp;
+    baseGoldGained = enemy.gold;
 
     if (enemy.rollForDrop()) {
       const itemLevel = enemy.calculateItemLevel(game.stage);
@@ -211,7 +224,10 @@ export async function defeatEnemy() {
       }
     }
 
-    game.incrementStage();
+    // fix a bug where stage gets incremented when game stopped.
+    if (game.gameStarted) {
+      game.incrementStage();
+    }
     game.currentEnemy = new Enemy(game.stage);
 
     statistics.increment('enemiesKilled', 'total');
@@ -219,19 +235,8 @@ export async function defeatEnemy() {
   }
   // END EXPLORE REGION
 
-  // empty object when vs boss
-  const rarityData = ENEMY_RARITY[enemy.rarity] || {};
-
-  // Apply bonus experience and gold (include region multipliers)
-  const expGained = Math.floor(
-    baseExpGained *
-      (1 + hero.stats.bonusExperiencePercent / 100) *
-      (enemy.xpMultiplier || 1) *
-      (rarityData.xpBonus || 1)
-  );
-  const goldGained = Math.floor(
-    baseGoldGained * (1 + hero.stats.bonusGoldPercent / 100) * (enemy.goldMultiplier || 1) * (rarityData.goldBonus || 1)
-  );
+  const expGained = Math.floor(baseExpGained * (1 + hero.stats.bonusExperiencePercent / 100));
+  const goldGained = Math.floor(baseGoldGained * (1 + hero.stats.bonusGoldPercent / 100));
 
   hero.gainGold(goldGained);
   hero.gainExp(expGained);
@@ -247,6 +252,7 @@ export async function defeatEnemy() {
   updateResources();
   updateEnemyStats();
   updateStatsAndAttributesUI();
+  updateStageUI();
 
   dataManager.saveGame();
 }
@@ -269,6 +275,26 @@ function showLootNotification(item) {
   document.body.appendChild(notification);
 
   setTimeout(() => notification.remove(), 3000);
+}
+
+export function calculateHitChance(attackRating, evasion, cap = 0.8) {
+  let raw = 1.5 * attackRating / (attackRating + evasion);
+  raw = Math.max(0, raw);
+  const capped = Math.max(0.2, Math.min(raw, cap));
+
+  return Math.round(capped * 100);
+}
+
+export function calculateEvasionChance(evasion, attackRating, cap = 0.8) {
+  // Evasion chance is simply 1 - hit chance (after capping)
+  const hitChance = calculateHitChance(attackRating, evasion, cap);
+  return 100 - hitChance;
+}
+
+export function calculateArmorReduction(armor, damage, cap = 0.75) {
+  if (damage <= 0) return 0;
+  const reduction = armor / (armor + 10 * damage);
+  return Math.max(0, Math.min(reduction, cap)) * 100;
 }
 
 export function createDamageNumber({ text = '', isPlayer = false, isCritical = false, color = '' } = {}) {

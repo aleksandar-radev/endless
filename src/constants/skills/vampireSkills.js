@@ -11,10 +11,11 @@ export const VAMPIRE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'blood',
     description: () => 'Steal life from enemies with each attack.',
-    maxLevel: () => 100,
+    maxLevel: () => 300,
     effect: (level) => ({
-      lifePerHit: level * 0.5,
-      damage: level * 2,
+      lifePerHit: level * 0.33,
+      damage: level * 1,
+      damagePercent: level * 0.5,
     }),
   },
   nightStalker: {
@@ -26,7 +27,7 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Increases damage at night.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 1,
+      damagePercent: level * 0.5,
       agility: level * 2,
     }),
   },
@@ -43,8 +44,8 @@ export const VAMPIRE_SKILLS = {
     description: () => 'A powerful strike that restores life.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 2,
-      lifePerHit: level * 2,
+      damagePercent: level * 2,
+      lifePerHit: level * 1,
     }),
   },
   darkAura: {
@@ -60,7 +61,8 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeSteal: level * 0.02,
-      damagePercent: level * 0.1,
+      attackRating: level * 3,
+      attackRatingPercent: level * 2,
     }),
   },
 
@@ -74,10 +76,11 @@ export const VAMPIRE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'drain',
     description: () => 'Drains life from enemies, restoring your life.',
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    maxLevel: () => 100,
     effect: (level) => ({
-      earthDamage: level * 10,
-      manaPerHit: level * 1,
+      earthDamage: level * 4,
+      earthDamagePercent: level * 4,
+      manaPerHit: level * 0.2,
     }),
   },
   greaterBloodHunger: {
@@ -89,8 +92,8 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Increases strength and vitality.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strength: level * 3,
-      vitality: level * 2,
+      strengthPercent: level * 1.5,
+      vitalityPercent: level * 1,
     }),
   },
 
@@ -106,7 +109,7 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Unleashes a burst of crimson energy, greatly damaging the enemy at the cost of life.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 20,
+      damagePercent: level * 10,
       lifePerHit: level * -1,
     }),
   },
@@ -124,7 +127,7 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Increases life steal and life temporarily.',
     maxLevel: () => 400,
     effect: (level) => ({
-      lifePercent: level * 0.5,
+      lifePercent: level * 1,
     }),
   },
 
@@ -139,7 +142,7 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Increases life steal and damage.',
     maxLevel: () => 200,
     effect: (level) => ({
-      damage: level * 4,
+      damagePercent: level * 2,
       lifePerHit: level * 2,
     }),
   },
@@ -154,7 +157,7 @@ export const VAMPIRE_SKILLS = {
     effect: (level) => ({
       lifePercent: level * 0.5,
       strengthPercent: level * 0.5,
-      vitalityPercent: level * 0.5,
+      vitalityPercent: level * 2,
     }),
   },
 
@@ -168,11 +171,11 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Greatly increases all attributes and gives resurrection.',
     maxLevel: () => 500,
     effect: (level) => ({
-      strengthPercent: level * 0.5,
-      vitalityPercent: level * 0.5,
+      strengthPercent: level * 3,
+      vitalityPercent: level * 2,
       resurrectionChance: level * 0.1,
-      wisdom: level * 3,
-      wisdomPercent: level * 0.5,
+      wisdomPercent: level * 1,
+      wisdom: level * 2,
     }),
   },
 };

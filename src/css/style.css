@@ -70,7 +70,8 @@
   border-radius: 0.5rem;
   cursor: pointer;
   transition: background-color 0.3s;
-  position: relative; /* Add position relative for indicator dot */
+  position: relative;
+  /* Add position relative for indicator dot */
 }
 
 .tab-btn.active {
@@ -85,7 +86,8 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #ef4444; /* Red dot for notifications */
+  background: #ef4444;
+  /* Red dot for notifications */
   display: none;
   z-index: 10;
 }
@@ -132,6 +134,34 @@
 
 .enemy-avatar {
   margin: 0 auto;
+}
+
+.enemy-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.5rem;
+  color: white;
+  margin-top: 1rem;
+}
+
+.enemy-fire-damage,
+.enemy-fire-resistance {
+  color: rgb(228, 85, 85);
+}
+
+.enemy-cold-damage,
+.enemy-cold-resistance {
+  color: rgb(85, 170, 228);
+}
+
+.enemy-air-damage,
+.enemy-air-resistance {
+  color: rgb(85, 170, 228);
+}
+
+.enemy-earth-damage,
+.enemy-earth-resistance {
+  color: rgb(165, 155, 68);
 }
 
 .enemy-section {
@@ -221,10 +251,12 @@
     opacity: 1;
     transform: translateY(0);
   }
+
   80% {
     opacity: 1;
     transform: translateY(-40px);
   }
+
   100% {
     opacity: 0;
     transform: translateY(-70px);
@@ -235,9 +267,11 @@
   .main-content {
     grid-template-columns: 1fr;
   }
+
   .sidebar {
     display: none;
   }
+
   .sidebar-toggle {
     display: flex;
   }
@@ -317,6 +351,7 @@
 .tab-panel {
   scroll-behavior: smooth;
 }
+
 .enemy-section {
   border: 1px solid;
 }
@@ -403,13 +438,6 @@
 .life-bar,
 .mana-bar {
   overflow: hidden;
-}
-
-.enemy-damage {
-  position: absolute;
-  bottom: 0px;
-  right: 0;
-  padding: 15px;
 }
 
 .enemy-name {

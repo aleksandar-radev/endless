@@ -1,8 +1,8 @@
 import { STATS } from '../constants/stats/stats.js';
 import { CLASS_PATHS, SKILL_TREES } from '../constants/skills.js';
-import { REQ_LEVEL_FOR_SKILL_TREE, SKILL_LEVEL_TIERS } from '../skillTree.js';
+import { SKILL_LEVEL_TIERS } from '../skillTree.js';
 import { skillTree, hero, crystalShop } from '../globals.js';
-import { formatStatName, hideTooltip, positionTooltip, showToast, showTooltip } from './ui.js';
+import { formatStatName, hideTooltip, positionTooltip, showToast, showTooltip, updateResources } from './ui.js';
 import { createModal } from './modal.js';
 
 const html = String.raw;
@@ -52,7 +52,7 @@ function showClassSelection() {
     pathElement.innerHTML = html`
       <div style="display: flex; align-items: flex-start; gap: 18px;">
         <img
-          src="${import.meta.env.BASE_URL}avatars/${pathData.avatar()}"
+          src="${import.meta.env.BASE_URL}/avatars/${pathData.avatar()}"
           alt="${pathData.name()} Avatar"
           style="width: 72px; height: 72px; border-radius: 8px; object-fit: cover; background: #222;"
         />
@@ -63,23 +63,36 @@ function showClassSelection() {
       </div>
       <div class="base-stats" style="margin-top: 15px;">
         ${Object.entries(pathData.baseStats())
-          .map(([stat, value]) => {
-            let readableStat = stat.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
-            let displayValue = value;
-            if (stat.endsWith('Percent')) {
-              readableStat = readableStat.replace(/ Percent$/, '');
-              displayValue = `${value}%`;
-            }
-            const prefix = value > 0 ? '+' : '';
-            return `<div>${readableStat}: ${prefix}${displayValue}</div>`;
-          })
-          .join('')}
+    .map(([stat, value]) => {
+      let readableStat = stat.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
+      let displayValue = value;
+      if (stat.endsWith('Percent')) {
+        readableStat = readableStat.replace(/ Percent$/, '');
+        displayValue = `${value}%`;
+      }
+      const prefix = value > 0 ? '+' : '';
+      return `<div>${readableStat}: ${prefix}${displayValue}</div>`;
+    })
+    .join('')}
       </div>
     `;
 
     const button = document.createElement('button');
-    button.textContent =
-      hero.level < REQ_LEVEL_FOR_SKILL_TREE ? `Requires Level ${REQ_LEVEL_FOR_SKILL_TREE}` : 'Choose Path';
+    const reqLevel = pathData.requiredLevel();
+    const cost = pathData.crystalCost();
+    const alreadyUnlocked = skillTree.unlockedPaths && skillTree.unlockedPaths.includes(pathId);
+    let btnText;
+    if (alreadyUnlocked) {
+      btnText = hero.level < reqLevel ? `Requires Level ${reqLevel}` : 'Select Class';
+    } else if (hero.level < reqLevel) {
+      btnText = `Requires Level ${reqLevel}` + (cost > 0 ? ` & ${cost} Crystal${cost !== 1 ? 's' : ''}` : '');
+    } else if (hero.crystals < cost) {
+      btnText = `Requires ${cost} Crystal${cost !== 1 ? 's' : ''}`;
+    } else {
+      btnText = cost > 0 ? `Select Class (Cost: ${cost} Crystal${cost !== 1 ? 's' : ''})` : 'Select Class';
+    }
+    button.textContent = btnText;
+    button.disabled = hero.level < reqLevel || (!alreadyUnlocked && hero.crystals < cost);
     button.addEventListener('click', () => selectClassPath(pathId));
     pathElement.appendChild(button);
 
@@ -89,6 +102,8 @@ function showClassSelection() {
 
 function selectClassPath(pathId) {
   if (skillTree.selectPath(pathId)) {
+    // Update crystals and other resources display
+    updateResources();
     document.getElementById('class-selection').classList.add('hidden');
     document.getElementById('skill-tree-container').classList.remove('hidden');
     showSkillTree();
@@ -170,7 +185,7 @@ function renderAutoCastToggles() {
   autoCastSection = document.createElement('div');
   autoCastSection.id = 'auto-cast-section';
   autoCastSection.style.marginTop = '32px';
-  autoCastSection.innerHTML = `<h3 style="margin-bottom:8px;">Auto-Cast Settings</h3>`;
+  autoCastSection.innerHTML = '<h3 style="margin-bottom:8px;">Auto-Cast Settings</h3>';
 
   eligibleSkills.forEach((skill) => {
     const wrapper = document.createElement('div');
@@ -182,7 +197,7 @@ function renderAutoCastToggles() {
     icon.className = 'skill-icon';
     icon.style.width = '28px';
     icon.style.height = '28px';
-    icon.style.backgroundImage = `url('${import.meta.env.BASE_URL}skills/${skill.icon()}.jpg')`;
+    icon.style.backgroundImage = `url('${import.meta.env.BASE_URL}/skills/${skill.icon()}.jpg')`;
     icon.style.marginRight = '8px';
     wrapper.appendChild(icon);
 
@@ -228,7 +243,7 @@ function renderDisplayToggles() {
 
   displaySection = document.createElement('div');
   displaySection.id = 'display-section';
-  displaySection.innerHTML = `<h3 style="margin-bottom:8px;">Slot Display Settings</h3>`;
+  displaySection.innerHTML = '<h3 style="margin-bottom:8px;">Slot Display Settings</h3>';
 
   eligibleSkills.forEach((skill) => {
     const wrapper = document.createElement('div');
@@ -237,7 +252,7 @@ function renderDisplayToggles() {
     icon.className = 'skill-icon';
     icon.style.width = '28px';
     icon.style.height = '28px';
-    icon.style.backgroundImage = `url('${import.meta.env.BASE_URL}skills/${skill.icon()}.jpg')`;
+    icon.style.backgroundImage = `url('${import.meta.env.BASE_URL}/skills/${skill.icon()}.jpg')`;
     icon.style.marginRight = '8px';
     wrapper.appendChild(icon);
     const label = document.createElement('label');
@@ -267,10 +282,10 @@ export function updateSkillTreeValues() {
     img.alt = 'Peasant Avatar';
     characterAvatarEl.innerHTML = '';
     characterAvatarEl.appendChild(img);
-    img.src = `${import.meta.env.BASE_URL}avatars/peasant-avatar.jpg`;
+    img.src = `${import.meta.env.BASE_URL}/avatars/peasant-avatar.jpg`;
 
     // reset name
-    characterNameEl.textContent = ``;
+    characterNameEl.textContent = '';
     return;
   }
 
@@ -284,7 +299,7 @@ export function updateSkillTreeValues() {
       characterAvatarEl.innerHTML = '';
       characterAvatarEl.appendChild(img);
     }
-    img.src = `${import.meta.env.BASE_URL}avatars/${selectedPath.avatar()}`;
+    img.src = `${import.meta.env.BASE_URL}/avatars/${selectedPath.avatar()}`;
   }
 
   const characterName =
@@ -390,7 +405,7 @@ function openSkillModal(skillId) {
 
   // Set skill icon in modal
   const iconEl = skillModal.querySelector('.modal-skill-icon');
-  iconEl.style.backgroundImage = `url('${import.meta.env.BASE_URL}skills/${skill.icon()}.jpg')`;
+  iconEl.style.backgroundImage = `url('${import.meta.env.BASE_URL}/skills/${skill.icon()}.jpg')`;
 
   const currentLevel = skillTree.skills[skillId]?.level || 0;
   const nextLevel = currentLevel + 1;
@@ -560,7 +575,7 @@ function createSkillElement(baseSkill) {
   skillElement.innerHTML = html`
     <div
       class="skill-icon"
-      style="background-image: url('${import.meta.env.BASE_URL}skills/${skill.icon()}.jpg')"
+      style="background-image: url('${import.meta.env.BASE_URL}/skills/${skill.icon()}.jpg')"
     ></div>
     <div class="skill-level">
       ${skillTree.skills[skill.id]?.level || 0}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
@@ -593,11 +608,11 @@ const updateTooltipContent = (skillId) => {
   let skillDescription = `
       <strong>${skill.name()} [${skill.type().toUpperCase()}]</strong><br>
       ${skill
-        .description()
-        .split('\n')
-        .map((line) => line.trim())
-        .filter((line) => line)
-        .join('<br>')}
+    .description()
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line)
+    .join('<br>')}
       <br>
       Level: ${currentLevel}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
     `;
@@ -644,7 +659,7 @@ const updateTooltipContent = (skillId) => {
       const valuePrefix = value >= 0 ? '+' : '';
       const diffPrefix = difference >= 0 ? '+' : '';
       skillDescription += `${formatStatName(stat)}: ${valuePrefix}${value.toFixed(
-        decimals
+        decimals,
       )} <span class="bonus">(${diffPrefix}${difference.toFixed(decimals)})</span><br />`;
     });
   }
@@ -680,7 +695,7 @@ export function updateActionBar() {
     // Add skill icon
     const iconDiv = document.createElement('div');
     iconDiv.className = 'skill-icon';
-    iconDiv.style.backgroundImage = `url('${import.meta.env.BASE_URL}skills/${skill.icon()}.jpg')`;
+    iconDiv.style.backgroundImage = `url('${import.meta.env.BASE_URL}/skills/${skill.icon()}.jpg')`;
     skillSlot.appendChild(iconDiv);
 
     // Show active state

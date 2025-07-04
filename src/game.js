@@ -1,5 +1,5 @@
 import { updatePlayerLife, updateEnemyStats, updateStageUI, updateResources, updateBuffIndicators } from './ui/ui.js';
-import { playerAttack, enemyAttack, playerDeath, defeatEnemy } from './combat.js';
+import { playerAttack, enemyAttack, playerDeath, defeatEnemy, createDamageNumber } from './combat.js';
 import { game, hero, crystalShop, skillTree, statistics, dataManager, setGlobals, options } from './globals.js';
 import Enemy from './enemy.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
@@ -59,7 +59,16 @@ class Game {
     if (hero.stats.currentLife <= 0) {
       playerDeath();
     }
+
     updatePlayerLife();
+
+    let color;
+    if (heal > 0) {
+      color = 'green';
+    } else {
+      color = 'red';
+    }
+    createDamageNumber({ heal, isPlayer: true, isCritical: false, color });
   }
 
   restoreMana(mana) {
@@ -68,13 +77,23 @@ class Game {
       hero.stats.currentMana = hero.stats.mana;
     }
     updatePlayerLife();
+
+    let color;
+    if (mana > 0) {
+      color = 'blue';
+    }
+
+    createDamageNumber({ mana, isPlayer: true, isCritical: false, color });
   }
 
-  damageEnemy(damage) {
+  damageEnemy(damage, isCritical = false) {
     damage = Math.floor(damage); // Ensure damage is an integer
     if (this.fightMode === 'arena' && this.currentEnemy) {
       // Boss damage flow
       const isDead = this.currentEnemy.takeDamage(damage);
+
+      // Always show damage number
+      createDamageNumber({ damage, isPlayer: false, isCritical: false, color: 'red' });
 
       if (isDead) {
         defeatEnemy();
@@ -92,6 +111,9 @@ class Game {
       }
       this.currentEnemy.currentLife -= damage;
       if (this.currentEnemy.currentLife < 0) this.currentEnemy.currentLife = 0;
+
+      createDamageNumber({ text: damage, isPlayer: false, isCritical: isCritical, color: 'red' });
+
       updateEnemyStats();
 
       if (this.currentEnemy.currentLife <= 0) {
