@@ -9,7 +9,7 @@ export class Leaderboard {
   async show() {
     this.container.innerHTML = '<div id="leaderboard-list">Loading...</div>';
     try {
-      // this.data = await fetchLeaderboardData();
+      this.data = await fetchLeaderboardData();
       this.render();
     } catch (e) {
       this.container.querySelector('#leaderboard-list').textContent = 'Failed to load leaderboard.';

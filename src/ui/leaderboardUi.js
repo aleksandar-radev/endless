@@ -25,13 +25,13 @@ export function renderLeaderboardTable(leaderboardData) {
   return html`
     <table>
       <thead>
-        <tr><th>Rank</th><th>User Email</th><th>Highest Level</th></tr>
+        <tr><th>Rank</th><th>Username</th><th>Highest Level</th></tr>
       </thead>
       <tbody>
         ${leaderboardData.map((entry, i) => `
           <tr>
             <td>${i + 1}</td>
-            <td>${entry.user?.email ?? 'Unknown'}</td>
+            <td>${entry.user?.username ?? 'Unknown'}</td>
             <td>${entry.highestLevel ?? 0}</td>
           </tr>
         `).join('')}
