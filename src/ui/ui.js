@@ -89,13 +89,12 @@ export function initializeUI() {
       }
 
       game.fightMode = region;
-      updateStatsAndAttributesUI();
 
       // find new enemy/boss based on region
       if (game.fightMode === 'explore') {
         game.currentEnemy = new Enemy(game.stage);
       } else if (game.fightMode === 'arena') {
-        selectBoss(game); // Select boss based on current level
+        selectBoss(); // Select boss based on current level
       }
       // Toggle active tab class
       document.querySelectorAll('.region-tab').forEach((b) => b.classList.toggle('active', b === btn));
@@ -567,7 +566,7 @@ function renderRegionPanel(region) {
     panel.classList.add('region-panel');
     panel.innerHTML = baseHtml;
     container.appendChild(panel);
-    updateBossUI(game.currentEnemy);
+    updateBossUI();
   } else {
     const panel = document.createElement('div');
     panel.id = 'explore-panel';

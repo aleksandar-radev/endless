@@ -223,7 +223,7 @@ class Enemy {
     for (let lvl = 1; lvl <= this.level; lvl++) {
       xp += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
     }
-    return xp * this.region.multiplier.xp * (this.rarityData.multiplier.xp || 1);
+    return xp * this.region.multiplier.xp * (this.rarityData.multiplier.xp || 1) * (this.baseData.multiplier.xp || 1);
   }
 
   calculateGold() {
@@ -234,7 +234,7 @@ class Enemy {
     for (let lvl = 1; lvl <= this.level; lvl++) {
       gold += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
     }
-    return gold * this.region.multiplier.gold * (this.rarityData.multiplier.gold || 1);
+    return gold * this.region.multiplier.gold * (this.rarityData.multiplier.gold || 1) * (this.baseData.multiplier.gold || 1);
   }
 }
 export default Enemy;

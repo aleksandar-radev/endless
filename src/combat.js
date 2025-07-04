@@ -12,7 +12,7 @@ import { hero, game, inventory, crystalShop, statistics, skillTree, dataManager 
 import { ITEM_RARITY } from './constants/items.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateQuestsUI } from './ui/questUi.js';
-import { updateBossUI } from './ui/bossUi.js';
+import { selectBoss, updateBossUI } from './ui/bossUi.js';
 import { getCurrentRegion } from './region.js';
 
 export function enemyAttack(currentTime) {
@@ -101,7 +101,7 @@ export function playerAttack(currentTime) {
         game.damageEnemy(damage, isCritical);
       }
       if (game.fightMode === 'arena') {
-        updateBossUI(game.currentEnemy);
+        updateBossUI();
       }
     }
     game.lastPlayerAttack = currentTime;
@@ -125,7 +125,7 @@ export function playerDeath() {
     // If in arena, reset boss state and player health
     game.currentEnemy.resetLife();
     game.resetAllLife(); // <-- Ensure player health is reset
-    updateBossUI(game.currentEnemy);
+    updateBossUI();
   } else if (game.fightMode === 'explore') {
     // Reset everything regardless of continue state
     game.stage = game.getStartingStage();
@@ -169,8 +169,8 @@ export async function defeatEnemy() {
   await new Promise((resolve) => setTimeout(resolve, 500));
 
   if (game.fightMode === 'arena') {
-    baseExpGained = Math.floor(12 + hero.bossLevel * 2.25);
-    baseGoldGained = 10 + hero.bossLevel * 4;
+    baseExpGained = enemy.xp;
+    baseGoldGained = enemy.gold;
 
     const { crystals, gold, materials, souls } = game.currentEnemy.reward;
     let text = 'Boss defeated! ';
@@ -190,7 +190,9 @@ export async function defeatEnemy() {
       materials.forEach(({ id, qty }) => inventory.addMaterial({ id, qty }));
     }
     showToast(text, 'success');
+    statistics.increment('bossesKilled', null, 1);
     hero.bossLevel++;
+    selectBoss();
     updateResources();
   } else if (game.fightMode === 'explore') {
     baseExpGained = enemy.xp;

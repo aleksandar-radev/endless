@@ -2,8 +2,7 @@
  * Manages boss properties and state.
  */
 import { BOSSES } from './constants/bosses.js';
-import { statistics, game, hero } from './globals.js';
-import { selectBoss } from './ui/bossUi.js';
+import { hero } from './globals.js';
 
 class Boss {
   /**
@@ -14,87 +13,131 @@ class Boss {
     if (!BOSSES.length) {
       throw new Error('No bosses defined in BOSSES array.');
     }
-    const def = BOSSES[Math.floor(Math.random() * BOSSES.length)];
-    this.baseData = def;
-    this.id = def.id;
-    this.name = def.name;
-    this.image = def.image;
+    const baseData = BOSSES[Math.floor(Math.random() * BOSSES.length)];
+    this.baseData = baseData;
+    this.id = baseData.id;
+    this.name = baseData.name;
+    this.image = baseData.image;
 
     // Use boss definition stats and scale by boss level
-    const lvl = hero.bossLevel || 1;
+    this.level = hero.bossLevel || 1;
 
-    // Life scaling (similar to enemy scaling, but with higher base)
-    this.life = this.calculateLife(def, lvl);
+    // Life scaling (4x stronger)
+    this.life = this.calculateLife();
     this.currentLife = this.life;
 
-    // Damage scaling
-    this.damage = this.calculateDamage(def, lvl);
+    this.xp = this.calculateXP();
+    this.gold = this.calculateGold();
 
-    // Other stats
-    this.attackSpeed = def.attackSpeed || 1;
-    this.armor = this.calculateArmor(def, lvl);
-    this.evasion = this.calculateEvasion(def, lvl);
-    this.attackRating = this.calculateAttackRating(def, lvl);
+    // Damage scaling (4x stronger)
+    this.damage = this.calculateDamage();
 
-    // Elemental damages
-    this.fireDamage = (def.fireDamage || 0) * (def.multiplier?.fireDamage || 1);
-    this.coldDamage = (def.coldDamage || 0) * (def.multiplier?.coldDamage || 1);
-    this.airDamage = (def.airDamage || 0) * (def.multiplier?.airDamage || 1);
-    this.earthDamage = (def.earthDamage || 0) * (def.multiplier?.earthDamage || 1);
-    this.lightningDamage = (def.lightningDamage || 0) * (def.multiplier?.lightningDamage || 1);
-    this.waterDamage = (def.waterDamage || 0) * (def.multiplier?.waterDamage || 1);
+    // Other stats (4x stronger)
+    this.attackSpeed = this.baseData.attackSpeed || 1;
+    this.armor = this.calculateArmor();
+    this.evasion = this.calculateEvasion();
+    this.attackRating = this.calculateAttackRating();
 
-    this.reward = def.reward;
+    // Elemental damages (4x stronger, use method)
+    this.fireDamage = this.calculateElementalDamage( 'fire');
+    this.coldDamage = this.calculateElementalDamage( 'cold');
+    this.airDamage = this.calculateElementalDamage('air');
+    this.earthDamage = this.calculateElementalDamage('earth');
+    this.lightningDamage = this.calculateElementalDamage('lightning');
+    this.waterDamage = this.calculateElementalDamage('water');
+
+    this.fireResistance = baseData.fireResistance || 0;
+    this.coldResistance = baseData.coldResistance || 0;
+    this.airResistance = baseData.airResistance || 0;
+    this.earthResistance = baseData.earthResistance || 0;
+    this.lightningResistance = baseData.lightningResistance || 0;
+    this.waterResistance = baseData.waterResistance || 0;
+
+    this.reward = this.baseData.reward;
     this.lastAttack = Date.now();
   }
 
-  calculateLife(def, lvl) {
-    // Example scaling: base + per level, then apply multiplier
-    let life = def.life - 10;
-    const segLen = 10, initialInc = 10, incStep = 5;
-    for (let i = 1; i <= lvl; i++) {
+
+  calculateXP() {
+    let xp = this.baseData.xp;
+    const segLen = 40,
+      initialInc = 4,
+      incStep = 2;
+    for (let lvl = 1; lvl <= this.level; lvl++) {
+      xp += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
+    }
+    return xp * (this.baseData.multiplier.xp || 1);
+  }
+
+  calculateGold() {
+    let gold = this.baseData.gold;
+    const segLen = 40,
+      initialInc = 6,
+      incStep = 3;
+    for (let lvl = 1; lvl <= this.level; lvl++) {
+      gold += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
+    }
+    return gold * (this.baseData.multiplier.gold || 1);
+  }
+
+  calculateLife() {
+    let life = this.baseData.life - 40; // 4x the original -10
+    const segLen = 2.5, initialInc = 40, incStep = 20; // 4x the original values
+    for (let i = 1; i <= this.level; i++) {
       life += initialInc + Math.floor((i - 1) / segLen) * incStep;
     }
-    return life * (def.multiplier?.life || 1);
+    return life * (this.baseData.multiplier?.life || 1);
   }
 
-  calculateDamage(def, lvl) {
-    let dmg = def.damage;
-    const segLen = 10, initialInc = 0.3, incStep = 0.1;
-    for (let i = 1; i <= lvl; i++) {
+  calculateDamage() {
+    let dmg = this.baseData.damage;
+    const segLen = 2.5, initialInc = 1.2, incStep = 0.4; // 4x the original values
+    for (let i = 1; i <= this.level; i++) {
       dmg += initialInc + Math.floor((i - 1) / segLen) * incStep;
     }
-    return dmg * (def.multiplier?.damage || 1);
+    return dmg * (this.baseData.multiplier?.damage || 1);
   }
 
-  calculateArmor(def, lvl) {
-    const baseArmor = def.armor * lvl || 0;
-    const segLen = 10, initialInc = 0.5, incStep = 0.2;
+  calculateArmor() {
+    const baseArmor = this.baseData.armor * this.level || 0;
+    const segLen = 2.5, initialInc = 2, incStep = 0.8; // 4x the original values
     let armor = baseArmor;
-    for (let i = 1; i <= lvl; i++) {
+    for (let i = 1; i <= this.level; i++) {
       armor += initialInc + Math.floor((i - 1) / segLen) * incStep;
     }
-    return armor * (def.multiplier?.armor || 1);
+    return armor * (this.baseData.multiplier?.armor || 1);
   }
 
-  calculateEvasion(def, lvl) {
-    const baseEvasion = def.evasion * lvl || 0;
-    const segLen = 10, initialInc = 0.5, incStep = 0.2;
+  calculateEvasion() {
+    const baseEvasion = this.baseData.evasion * this.level || 0;
+    const segLen = 2.5, initialInc = 2, incStep = 0.8; // 4x the original values
     let evasion = baseEvasion;
-    for (let i = 1; i <= lvl; i++) {
+    for (let i = 1; i <= this.level; i++) {
       evasion += initialInc + Math.floor((i - 1) / segLen) * incStep;
     }
-    return evasion * (def.multiplier?.evasion || 1);
+    return evasion * (this.baseData.multiplier?.evasion || 1);
   }
 
-  calculateAttackRating(def, lvl) {
-    const baseAttackRating = def.attackRating * lvl || 0;
-    const segLen = 10, initialInc = 0.5, incStep = 0.2;
+  calculateAttackRating() {
+    const baseAttackRating = this.baseData.attackRating * this.level || 0;
+    const segLen = 2.5, initialInc = 2, incStep = 0.8; // 4x the original values
     let attackRating = baseAttackRating;
-    for (let i = 1; i <= lvl; i++) {
+    for (let i = 1; i <= this.level; i++) {
       attackRating += initialInc + Math.floor((i - 1) / segLen) * incStep;
     }
-    return attackRating * (def.multiplier?.attackRating || 1);
+    return attackRating * (this.baseData.multiplier?.attackRating || 1);
+  }
+
+  calculateElementalDamage( type) {
+    const base = this.baseData[`${type}Damage`] || 0;
+    if (base === 0) return 0;
+    const segLen = 2.5, initialInc = 1.2, incStep = 0.4; // 4x the original values
+    let dmg = base;
+    for (let i = 1; i <= this.level; i++) {
+      dmg += initialInc + Math.floor((i - 1) / segLen) * incStep;
+    }
+    const mult = this.baseData.multiplier?.[`${type}Damage`] || 1;
+    return dmg * mult;
   }
 
   /**
@@ -106,8 +149,6 @@ class Boss {
     this.currentLife = Math.max(this.currentLife - amount, 0);
     // On death
     if (this.currentLife === 0) {
-      statistics.increment('bossesKilled', null, 1);
-      selectBoss(game);
       return true;
     }
     return false;

@@ -100,7 +100,7 @@ class Game {
       }
       updateEnemyStats();
       // Refresh boss UI
-      updateBossUI(this.currentEnemy);
+      updateBossUI();
       return;
     }
     // Regular enemy flow
