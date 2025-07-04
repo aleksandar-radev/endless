@@ -252,6 +252,7 @@ export async function defeatEnemy() {
   updateResources();
   updateEnemyStats();
   updateStatsAndAttributesUI();
+  updateStageUI();
 
   dataManager.saveGame();
 }
