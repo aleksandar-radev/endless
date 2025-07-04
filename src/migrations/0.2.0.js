@@ -3,6 +3,11 @@ import { createModal } from '../ui/modal.js';
 export function run(rawData) {
   let data = JSON.parse(JSON.stringify(rawData || {}));
 
+  const salt = Math.random().toString(36).substring(2, 15);
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('game_backup_' + salt, JSON.stringify(data));
+  }
+
   // DATA RESET
   data = {};
 
