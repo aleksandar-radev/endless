@@ -1,5 +1,5 @@
 import Item, { AVAILABLE_STATS } from './item.js';
-import { game, hero, statistics, dataManager } from './globals.js';
+import { game, hero, statistics, dataManager, crystalShop } from './globals.js';
 import { showToast, updateResources } from './ui/ui.js';
 import { createModal, closeModal } from './ui/modal.js';
 import { initializeInventoryUI, updateInventoryGrid, updateMaterialsGrid } from './ui/inventoryUi.js';
@@ -75,6 +75,24 @@ export default class Inventory {
   }
   addMaterial(material) {
     // material: { id, icon, qty }
+    // Auto-consume logic
+    const matDef = Object.values(MATERIALS).find((m) => m.id === material.id);
+    const hasAutoConsume = crystalShop.crystalUpgrades.autoConsumeMaterials;
+
+    // Only auto-consume if not isCustom and upgrade is owned
+    if (
+      hasAutoConsume &&
+      matDef &&
+      (!matDef.isCustom || matDef.isCustom === false) &&
+      typeof matDef.onUse === 'function'
+    ) {
+      matDef.onUse(hero, material.qty || 1);
+      statistics.increment('totalMaterialsFound', null, material.qty);
+      dataManager.saveGame();
+      updateMaterialsGrid();
+      return;
+    }
+
     let slot = this.materials.findIndex((m) => m && m.id === material.id);
     if (slot !== -1) {
       this.materials[slot].qty += material.qty;

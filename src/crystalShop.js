@@ -68,6 +68,13 @@ const CRYSTAL_UPGRADE_CONFIG = {
     multiple: true,
     maxLevel: 6,
   },
+  autoConsumeMaterials: {
+    label: 'Auto-Consume Materials',
+    bonus: 'Automatically uses all consumable materials on pickup',
+    bonusLabel: 'Automatically uses all consumable materials on pickup',
+    baseCost: 1000,
+    oneTime: true,
+  },
 };
 
 export default class CrystalShop {

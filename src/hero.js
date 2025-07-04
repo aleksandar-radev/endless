@@ -68,6 +68,7 @@ export default class Hero {
       const xpOverflow = this.exp - this.getExpToNextLevel();
       this.levelUp(1);
       this.exp = xpOverflow; // Carry over excess experience to next level
+      updateStatsAndAttributesUI();
     }
   }
 
