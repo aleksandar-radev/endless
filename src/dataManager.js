@@ -47,17 +47,19 @@ export class DataManager {
     let updated_at = null;
     let source = 'local';
 
-    // ensure session before loading game data
-
     // get cloud save data
     try {
-      if (cloud && this.session?.id) {
+      if (cloud) {
         await this.checkSession();
-        const result = await loadGameData(this.session.id, premium);
-        if (result.data) {
-          data = result.data;
-          updated_at = result.updated_at;
-          source = 'cloud';
+        if (!this.session || !this.session.id) {
+          console.warn('No session found, cannot load cloud data');
+        } else {
+          const result = await loadGameData(this.session.id, premium);
+          if (result.data) {
+            data = result.data;
+            updated_at = result.updated_at;
+            source = 'cloud';
+          }
         }
       }
     } catch (e) {
