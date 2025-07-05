@@ -109,6 +109,7 @@ export const DEFENSE_STATS = {
   fireResistance: {
     base: 0,
     decimalPlaces: 1,
+    training: { cost: 800, bonus: 0.1, maxLevel: 150 },
     item: { min: 2, max: 6, limit: 30,scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
@@ -116,6 +117,7 @@ export const DEFENSE_STATS = {
   coldResistance: {
     base: 0,
     decimalPlaces: 1,
+    training: { cost: 800, bonus: 0.1, maxLevel: 150 },
     item: { min: 2, max: 6, limit: 30,scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
@@ -123,6 +125,7 @@ export const DEFENSE_STATS = {
   airResistance: {
     base: 0,
     decimalPlaces: 1,
+    training: { cost: 800, bonus: 0.1, maxLevel: 150 },
     item: { min: 2, max: 6, limit: 30, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
@@ -130,6 +133,7 @@ export const DEFENSE_STATS = {
   earthResistance: {
     base: 0,
     decimalPlaces: 1,
+    training: { cost: 800, bonus: 0.1, maxLevel: 150 },
     item: { min: 2, max: 6, limit: 30, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
@@ -137,6 +141,7 @@ export const DEFENSE_STATS = {
   lightningResistance: {
     base: 0,
     decimalPlaces: 1,
+    training: { cost: 800, bonus: 0.1, maxLevel: 150 },
     item: { min: 2, max: 6, limit: 30, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
@@ -144,6 +149,7 @@ export const DEFENSE_STATS = {
   waterResistance: {
     base: 0,
     decimalPlaces: 1,
+    training: { cost: 800, bonus: 0.1, maxLevel: 150 },
     item: { min: 2, max: 6, limit: 30, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
