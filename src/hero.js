@@ -364,6 +364,12 @@ export default class Hero {
         if (stat === 'attackSpeed') value = Math.min(value, 5);
         if (stat === 'resurrectionChance') value = Math.min(value, 50);
         if (stat === 'extraMaterialDropMax') value = Math.max(value, 1); // Always at least 1
+        if (stat === 'fireResistance') value = Math.min(value, 75); // Max 75% chance
+        if (stat === 'coldResistance') value = Math.min(value, 75);
+        if (stat === 'airResistance') value = Math.min(value, 75);
+        if (stat === 'earthResistance') value = Math.min(value, 75);
+        if (stat === 'lightningResistance') value = Math.min(value, 75);
+        if (stat === 'waterResistance') value = Math.min(value, 75);
 
         this.stats[stat] = value;
       }
