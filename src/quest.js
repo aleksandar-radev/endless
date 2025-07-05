@@ -28,12 +28,12 @@ export class Quest {
       return Math.min(statistics.enemiesKilled[rarityKey] || 0, this.target);
     }
     if (this.type === 'resource' && this.resource) {
-      // For gold, use statistics.totalGoldEarned; for crystals, use hero.crystals
+      // For gold, use statistics.totalGoldEarned; for crystals, use statistics.totalCrystalsEarned
       if (this.resource === 'totalGoldEarned') {
         return Math.min(statistics.totalGoldEarned, this.target);
       }
       if (this.resource === 'crystals') {
-        return Math.min(hero.crystals, this.target);
+        return Math.min(statistics.totalCrystalsEarned, this.target);
       }
     }
     if (this.type === 'level') {
