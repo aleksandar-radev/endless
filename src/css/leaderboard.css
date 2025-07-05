@@ -60,3 +60,9 @@
     padding: 7px 4px;
   }
 }
+
+#leaderboard-list tr.highlight-user {
+  background: #787953;
+  color: #ffffff;
+  font-weight: bold;
+}

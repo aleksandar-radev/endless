@@ -1,3 +1,4 @@
+import { dataManager } from './globals.js';
 import { fetchLeaderboardData, renderLeaderboardTable } from './ui/leaderboardUi.js';
 
 export class Leaderboard {
@@ -18,6 +19,6 @@ export class Leaderboard {
 
   render() {
     const list = this.container.querySelector('#leaderboard-list');
-    list.innerHTML = renderLeaderboardTable(this.data);
+    list.innerHTML = renderLeaderboardTable(this.data, dataManager.session?.username || null);
   }
 }

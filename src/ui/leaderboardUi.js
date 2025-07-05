@@ -18,7 +18,6 @@ export async function fetchLeaderboardData() {
  * @returns {string} HTML string for the leaderboard table
  */
 export function renderLeaderboardTable(leaderboardData, currentUsername) {
-  console.log('Rendering leaderboard table with data:', leaderboardData);
 
   if (!leaderboardData || leaderboardData.length === 0) {
     return '<div>No leaderboard data available.</div>';
