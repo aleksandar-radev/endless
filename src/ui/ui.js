@@ -117,12 +117,6 @@ export function initializeUI() {
   renderRegionPanel(game.fightMode);
   const regionSelector = document.getElementById('region-selector');
   regionSelector.style.display = game.fightMode === 'arena' ? 'none' : '';
-
-  document.querySelectorAll('.tooltip-target').forEach((element) => {
-    element.addEventListener('mouseenter', (e) => showTooltip('Your tooltip content here', e));
-    element.addEventListener('mousemove', positionTooltip);
-    element.addEventListener('mouseleave', hideTooltip);
-  });
 }
 
 export function switchTab(game, tabName) {

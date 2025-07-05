@@ -1,4 +1,3 @@
-import { ELEMENTS } from './common.js';
 import { FOREST_ENEMIES } from './enemies/forest.js';
 import { CRYSTAL_CAVE_ENEMIES } from './enemies/crystal_cave.js';
 import { TUNDRA_ENEMIES } from './enemies/tundra.js';
