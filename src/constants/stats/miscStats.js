@@ -35,7 +35,7 @@ export const MISC_STATS = {
   manaRegen: {
     base: 0,
     decimalPlaces: 1,
-    training: { cost: 1000, bonus: 0.1, maxLevel: Infinity },
+    training: { cost: 800, bonus: 0.1, maxLevel: 500 },
     item: { min: 1, max: 4, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry'],
     showInUI: true,
