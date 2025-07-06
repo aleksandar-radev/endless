@@ -1,7 +1,7 @@
 // Scaling multiplier for all misc stats
 const FLAT_MULTIPLIER = 0.0025;
 const PERCENT_MULTIPLIER = 0.0005;
-const STAT_MULTIPLIER = 0.015;
+const STAT_MULTIPLIER = 0.010;
 
 const STATS_MIN = 3;
 const STATS_MAX = 10;

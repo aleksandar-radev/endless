@@ -58,8 +58,14 @@ export default class Hero {
    * @returns {number} EXP required for next level
    */
   getExpToNextLevel() {
-    // Original: starts at 66, increases by 84 per level up
-    return 66 + 84 * (this.level - 1);
+  // XP required for next level: 66 for level 1, then each next level: previous + 86 + 40*block
+    if (this.level === 1) return 66;
+    let xp = 66;
+    for (let lvl = 2; lvl <= this.level; lvl++) {
+      const block = Math.floor((lvl - 1) / 20);
+      xp += 86 + 40 * block;
+    }
+    return xp;
   }
 
   gainExp(amount) {
