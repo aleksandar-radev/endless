@@ -1,9 +1,11 @@
+const tier = 7;
+
 export const ABYSS_ENEMIES = [
   {
     name: 'Abyssal Wraith',
     element: 'cold',
     image: '/enemies/abyssal-wraith.jpg',
-    tier: 7,
+    tier: tier,
     coldDamage: 3,
     coldResistance: 30,
     fireResistance: 20,
@@ -17,7 +19,7 @@ export const ABYSS_ENEMIES = [
     name: 'Shadowclaw',
     element: 'air',
     image: '/enemies/shadowclaw.jpg',
-    tier: 7,
+    tier: tier,
     airDamage: 2,
     evasion: 8,
     airResistance: 20,
@@ -31,7 +33,7 @@ export const ABYSS_ENEMIES = [
     name: 'Hellhound',
     element: 'fire',
     image: '/enemies/hellhound.jpg',
-    tier: 7,
+    tier: tier,
     fireDamage: 5,
     fireResistance: 25,
     airResistance: 10,
@@ -47,7 +49,7 @@ export const ABYSS_ENEMIES = [
     name: 'Infernal Knight',
     element: 'fire',
     image: '/enemies/infernal-knight.jpg',
-    tier: 7,
+    tier: tier,
     multiplier: {
       materialDrop: 1.1,
     },

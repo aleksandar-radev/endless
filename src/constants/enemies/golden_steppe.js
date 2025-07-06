@@ -1,9 +1,11 @@
+const tier = 11;
+
 export const GOLDEN_STEPPE_ENEMIES = [
   {
     name: 'Golden Sphinx',
     element: 'earth',
     image: '/enemies/golden-sphinx.jpg',
-    tier: 11,
+    tier: tier,
     armor: 12,
     earthDamage: 3,
     earthResistance: 25,
@@ -17,7 +19,7 @@ export const GOLDEN_STEPPE_ENEMIES = [
     name: 'Aurelius',
     element: 'fire',
     image: '/enemies/aurelius.jpg',
-    tier: 11,
+    tier: tier,
     fireDamage: 4,
     gold: 15,
     fireResistance: 20,
@@ -31,7 +33,7 @@ export const GOLDEN_STEPPE_ENEMIES = [
     name: 'Solar Phoenix',
     element: 'fire',
     image: '/enemies/solar-phoenix.jpg',
-    tier: 11,
+    tier: tier,
     multiplier: {
       itemDrop: 1.1,
     },
@@ -49,7 +51,7 @@ export const GOLDEN_STEPPE_ENEMIES = [
     name: 'Radiant Lion',
     element: 'fire',
     image: '/enemies/radiant-lion.jpg',
-    tier: 11,
+    tier: tier,
     airDamage: 3,
     life: 28,
     fireResistance: 15,

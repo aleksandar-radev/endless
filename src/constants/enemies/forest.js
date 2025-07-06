@@ -1,9 +1,11 @@
+const tier = 1;
+
 export const FOREST_ENEMIES = [
   {
     name: 'Mossback',
     element: 'earth',
     image: '/enemies/mossback.jpg',
-    tier: 1,
+    tier: tier,
     life: 28,
     armor: 10,
     earthResistance: 50,
@@ -16,7 +18,7 @@ export const FOREST_ENEMIES = [
     name: 'Thornling',
     element: 'earth',
     image: '/enemies/thornling.jpg',
-    tier: 1,
+    tier: tier,
     multiplier: {
       itemDrop: 1.1,
     },
@@ -32,7 +34,7 @@ export const FOREST_ENEMIES = [
     name: 'Barkhide',
     element: 'earth',
     image: '/enemies/barkhide.jpg',
-    tier: 1,
+    tier: tier,
     multiplier: {
       damage: 0.9,
       materialDrop: 1.1,
@@ -49,7 +51,7 @@ export const FOREST_ENEMIES = [
     name: 'Sylvan Wisp',
     element: 'air',
     image: '/enemies/sylvan-wisp.jpg',
-    tier: 1,
+    tier: tier,
     multiplier: {
       life: 0.9,
     },

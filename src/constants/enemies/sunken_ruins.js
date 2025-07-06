@@ -1,9 +1,11 @@
+const tier = 9;
+
 export const SUNKEN_RUINS_ENEMIES = [
   {
     name: 'Tide Guardian',
     element: 'cold',
     image: '/enemies/tide-guardian.jpg',
-    tier: 9,
+    tier: tier,
     multiplier: {
       materialDrop: 1.2,
     },
@@ -20,7 +22,7 @@ export const SUNKEN_RUINS_ENEMIES = [
     name: 'Coral Sentinel',
     element: 'earth',
     image: '/enemies/coral-sentinel.jpg',
-    tier: 9,
+    tier: tier,
     earthDamage: 2,
     life: 24,
     earthResistance: 25,
@@ -34,7 +36,7 @@ export const SUNKEN_RUINS_ENEMIES = [
     name: 'Depths Leviathan',
     element: 'cold',
     image: '/enemies/depths-leviathan.jpg',
-    tier: 9,
+    tier: tier,
     multiplier: {
       itemDrop: 1.1,
     },
@@ -51,7 +53,7 @@ export const SUNKEN_RUINS_ENEMIES = [
     name: 'Arcane Construct',
     element: 'air',
     image: '/enemies/arcane-construct.jpg',
-    tier: 9,
+    tier: tier,
     airDamage: 3,
     airResistance: 15,
     coldResistance: 10,

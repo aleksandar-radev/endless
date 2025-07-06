@@ -1,9 +1,11 @@
+const tier = 12;
+
 export const OBSIDIAN_SPIRE_ENEMIES = [
   {
     name: 'Void Sentinel',
     element: 'cold',
     image: '/enemies/void-sentinel.jpg',
-    tier: 12,
+    tier: tier,
     multiplier: {
       itemDrop: 1.1,
       materialDrop: 1.2,
@@ -21,7 +23,7 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
     name: 'Obsidian Golem',
     element: 'earth',
     image: '/enemies/obsidian-golem.jpg',
-    tier: 12,
+    tier: tier,
     multiplier: {
       materialDrop: 1.4,
     },
@@ -38,7 +40,7 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
     name: 'Crimson Wisp',
     element: 'fire',
     image: '/enemies/crimson-wisp.jpg',
-    tier: 12,
+    tier: tier,
     multiplier: {
       itemDrop: 1.2,
     },
@@ -56,7 +58,7 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
     name: 'Flame Djinn',
     element: 'fire',
     image: '/enemies/flame-djinn.jpg',
-    tier: 12,
+    tier: tier,
     multiplier: {
       materialDrop: 1.5,
     },

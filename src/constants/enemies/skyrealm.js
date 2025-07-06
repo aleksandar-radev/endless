@@ -1,9 +1,11 @@
+const tier = 6;
+
 export const SKYREALM_ENEMIES = [
   {
     name: 'Cloudstrider',
     element: 'air',
     image: '/enemies/cloudstrider.jpg',
-    tier: 6,
+    tier: tier,
     airDamage: 3,
     airResistance: 20,
     damage: 2,
@@ -17,7 +19,7 @@ export const SKYREALM_ENEMIES = [
     name: 'Stormbringer',
     element: 'air',
     image: '/enemies/stormbringer.jpg',
-    tier: 6,
+    tier: tier,
     damage: 5,
     airResistance: 15,
     life: 26,
@@ -31,7 +33,7 @@ export const SKYREALM_ENEMIES = [
     name: 'Stormsoul',
     element: 'air',
     image: '/enemies/stormsoul.jpg',
-    tier: 6,
+    tier: tier,
     airDamage: 4,
     airResistance: 30,
     coldResistance: 10,
@@ -45,7 +47,7 @@ export const SKYREALM_ENEMIES = [
     name: 'Midas Beast',
     element: 'air',
     image: '/enemies/midas-beast.jpg',
-    tier: 6,
+    tier: tier,
     gold: 15,
     armor: 15,
     life: 28,

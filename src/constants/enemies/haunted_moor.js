@@ -1,9 +1,11 @@
+const tier = 10;
+
 export const HAUNTED_MOOR_ENEMIES = [
   {
     name: 'Banshee',
     element: 'air',
     image: '/enemies/banshee.jpg',
-    tier: 10,
+    tier: tier,
     airDamage: 4,
     evasion: 10,
     airResistance: 25,
@@ -17,7 +19,7 @@ export const HAUNTED_MOOR_ENEMIES = [
     name: 'Phantom',
     element: 'cold',
     image: '/enemies/phantom.jpg',
-    tier: 10,
+    tier: tier,
     coldDamage: 3,
     life: 18,
     coldResistance: 30,
@@ -31,7 +33,7 @@ export const HAUNTED_MOOR_ENEMIES = [
     name: 'Wraith Lord',
     element: 'earth',
     image: '/enemies/wraith-lord.jpg',
-    tier: 10,
+    tier: tier,
     earthDamage: 2,
     armor: 9,
     earthResistance: 15,
@@ -46,7 +48,7 @@ export const HAUNTED_MOOR_ENEMIES = [
     name: 'Dreadfang',
     element: 'air',
     image: '/enemies/dreadfang.jpg',
-    tier: 10,
+    tier: tier,
     airDamage: 3,
     damage: 4,
     airResistance: 20,

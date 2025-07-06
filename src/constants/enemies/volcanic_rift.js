@@ -1,9 +1,11 @@
+const tier = 8;
+
 export const VOLCANIC_RIFT_ENEMIES = [
   {
     name: 'Magma Titan',
     element: 'fire',
     image: '/enemies/magma-titan.jpg',
-    tier: 8,
+    tier: tier,
     multiplier: {
       materialDrop: 1.2,
     },
@@ -21,7 +23,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
     name: 'Lava Elemental',
     element: 'fire',
     image: '/enemies/lava-elemental.jpg',
-    tier: 8,
+    tier: tier,
     multiplier: {
       materialDrop: 1.1,
     },
@@ -38,7 +40,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
     name: 'Wildfire Spirit',
     element: 'fire',
     image: '/enemies/wildfire-spirit.jpg',
-    tier: 8,
+    tier: tier,
     damage: 3,
     airResistance: 5,
     fireDamage: 3,
@@ -54,7 +56,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
     name: 'Molten Wyrm',
     element: 'fire',
     image: '/enemies/molten-wyrm.jpg',
-    tier: 8,
+    tier: tier,
     multiplier: {
       materialDrop: 1.3,
     },
@@ -72,7 +74,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
     name: 'Thunderwing',
     element: 'air',
     image: '/enemies/thunderwing.jpg',
-    tier: 8,
+    tier: tier,
     airDamage: 4,
     fireResistance: 10,
     airResistance: 20,

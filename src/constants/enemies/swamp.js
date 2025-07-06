@@ -1,9 +1,11 @@
+const tier = 5;
+
 export const SWAMP_ENEMIES = [
   {
     name: 'Boglurker',
     element: 'earth',
     image: '/enemies/boglurker.jpg',
-    tier: 5,
+    tier: tier,
     life: 22,
     earthDamage: 2,
     earthResistance: 10,
@@ -18,7 +20,7 @@ export const SWAMP_ENEMIES = [
     name: 'Toxictoad',
     element: 'earth',
     image: '/enemies/toxictoad.jpg',
-    tier: 5,
+    tier: tier,
     coldResistance: 10,
     earthResistance: 15,
     damage: 2,
@@ -32,7 +34,7 @@ export const SWAMP_ENEMIES = [
     name: 'Venomspitter',
     element: 'earth',
     image: '/enemies/venomspitter.jpg',
-    tier: 5,
+    tier: tier,
     damage: 4,
     attackSpeed: 1.2,
     earthResistance: 5,
@@ -46,7 +48,7 @@ export const SWAMP_ENEMIES = [
     name: 'Frostweaver',
     element: 'cold',
     image: '/enemies/frostweaver.jpg',
-    tier: 5,
+    tier: tier,
     coldDamage: 5,
     earthResistance: 10,
     coldResistance: 25,
