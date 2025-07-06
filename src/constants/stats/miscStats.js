@@ -155,6 +155,38 @@ export const MISC_STATS = {
     },
     itemTags: ['misc', 'jewelry'],
   },
+  intelligence: {
+    base: 0,
+    decimalPlaces: 0,
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level) => miscScaling(level, STAT_MULTIPLIER) },
+    itemTags: ['misc', 'jewelry', 'stat'],
+  },
+  intelligencePercent: {
+    base: 0,
+    decimalPlaces: 1,
+    item: {
+      min: STATS_MIN_PERCENT,
+      max: STATS_MAX_PERCENT,
+      scaling: (level) => miscScaling(level, PERCENT_MULTIPLIER),
+    },
+    itemTags: ['misc', 'jewelry'],
+  },
+  perseverance: {
+    base: 0,
+    decimalPlaces: 0,
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level) => miscScaling(level, STAT_MULTIPLIER) },
+    itemTags: ['misc', 'jewelry', 'stat'],
+  },
+  perseverancePercent: {
+    base: 0,
+    decimalPlaces: 1,
+    item: {
+      min: STATS_MIN_PERCENT,
+      max: STATS_MAX_PERCENT,
+      scaling: (level) => miscScaling(level, PERCENT_MULTIPLIER),
+    },
+    itemTags: ['misc', 'jewelry'],
+  },
   // BONUS GOLD
   bonusGoldPercent: {
     base: 0,

@@ -402,7 +402,7 @@ export const formatStatName = (stat) => {
   if (stat === 'lifeSteal') return 'Life Steal';
   if (stat === 'attackSpeed') return 'Attack Speed';
   if (stat === 'attackRating') return 'Attack Rating';
-  if (stat === 'attackRatingPercent') return 'Attack Rating';
+  if (stat === 'attackRatingPercent') return 'Attack Rating %';
   if (stat === 'damage') return 'Damage';
   if (stat === 'damagePercent') return 'Damage %';
   if (stat === 'lifePercent') return 'Life %';
@@ -447,6 +447,10 @@ export const formatStatName = (stat) => {
   if (stat === 'endurancePercent') return 'Endurance %';
   if (stat === 'dexterity') return 'Dexterity';
   if (stat === 'dexterityPercent') return 'Dexterity %';
+  if (stat === 'intelligence') return 'Intelligence';
+  if (stat === 'intelligencePercent') return 'Intelligence %';
+  if (stat === 'perseverance') return 'Perseverance';
+  if (stat === 'perseverancePercent') return 'Perseverance %';
   if (stat === 'lifePerHit') return 'Life Per Hit';
   if (stat === 'lifePerHitPercent') return 'Life Per Hit %';
   if (stat === 'manaPerHit') return 'Mana Per Hit';

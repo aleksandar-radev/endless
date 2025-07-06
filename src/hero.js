@@ -33,6 +33,8 @@ export default class Hero {
       wisdom: 0,
       endurance: 0,
       dexterity: 0,
+      intelligence: 0,
+      perseverance: 0,
     };
 
     // persistent stats, that are not being reset (usually from elixirs, achievements, etc.)
@@ -223,6 +225,18 @@ export default class Hero {
       (equipmentBonuses.dexterity || 0) +
       (skillTreeBonuses.dexterity || 0) +
       (trainingBonuses.dexterity || 0);
+    this.stats.intelligence =
+      this.primaryStats.intelligence +
+      this.permaStats.intelligence +
+      (equipmentBonuses.intelligence || 0) +
+      (skillTreeBonuses.intelligence || 0) +
+      (trainingBonuses.intelligence || 0);
+    this.stats.perseverance =
+      this.primaryStats.perseverance +
+      this.permaStats.perseverance +
+      (equipmentBonuses.perseverance || 0) +
+      (skillTreeBonuses.perseverance || 0) +
+      (trainingBonuses.perseverance || 0);
   }
 
   calculateAttributeEffects() {
