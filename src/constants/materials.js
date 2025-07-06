@@ -166,6 +166,28 @@ export const MATERIALS = {
       hero.permaStats.dexterity += 1 * qty;
     },
   },
+  POTION_OF_INTELLIGENCE: {
+    id: 'potion_of_intelligence',
+    name: 'Potion of Intelligence',
+    icon: '🧠',
+    description: 'Increases intelligence by 1.',
+    dropChance: 12,
+    sort: 150,
+    onUse: (hero, qty = 1) => {
+      hero.permaStats.intelligence += 1 * qty;
+    },
+  },
+  POTION_OF_PERSEVERANCE: {
+    id: 'potion_of_perseverance',
+    name: 'Potion of Perseverance',
+    icon: '💪',
+    description: 'Increases perseverance by 1.',
+    dropChance: 12,
+    sort: 150,
+    onUse: (hero, qty = 1) => {
+      hero.permaStats.perseverance += 1 * qty;
+    },
+  },
   ARMOR_UPGRADE_STONE: {
     id: 'armor_upgrade_stone',
     name: 'Armor Upgrade Stone',
