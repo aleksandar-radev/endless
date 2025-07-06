@@ -78,6 +78,17 @@ export const RARITY_QUESTS = [
     reward: { gold: 350000, crystals: 15 },
     icon: '🔵',
   },
+  {
+    id: 'kill_rare_30000',
+    category: 'rarity',
+    title: 'Rare Obliteration',
+    description: 'Defeat 30000 rare enemies.',
+    type: 'kill_rarity',
+    rarity: 'rare',
+    target: 30000,
+    reward: { gold: 1200000, crystals: 25 },
+    icon: '🔵',
+  },
   // Epic
   {
     id: 'kill_epic_5',
@@ -154,6 +165,17 @@ export const RARITY_QUESTS = [
     rarity: 'epic',
     target: 4000,
     reward: { gold: 900000, crystals: 30 },
+    icon: '🟣',
+  },
+  {
+    id: 'kill_epic_8000',
+    category: 'rarity',
+    title: 'Epic Cataclysm',
+    description: 'Defeat 8000 epic enemies.',
+    type: 'kill_rarity',
+    rarity: 'epic',
+    target: 8000,
+    reward: { gold: 2500000, crystals: 40 },
     icon: '🟣',
   },
   // Legendary
@@ -234,6 +256,17 @@ export const RARITY_QUESTS = [
     reward: { gold: 4000000, crystals: 60 },
     icon: '🟠',
   },
+  {
+    id: 'kill_legendary_5000',
+    category: 'rarity',
+    title: 'Legendary Apocalypse',
+    description: 'Defeat 5000 legendary enemies.',
+    type: 'kill_rarity',
+    rarity: 'legendary',
+    target: 5000,
+    reward: { gold: 12000000, crystals: 90 },
+    icon: '🟠',
+  },
   // Mythic
   {
     id: 'kill_mythic_1',
@@ -310,6 +343,17 @@ export const RARITY_QUESTS = [
     rarity: 'mythic',
     target: 1200,
     reward: { gold: 7000000, crystals: 100 },
+    icon: '🔴',
+  },
+  {
+    id: 'kill_mythic_3000',
+    category: 'rarity',
+    title: 'Mythic Cataclysm',
+    description: 'Defeat 3000 mythic enemies.',
+    type: 'kill_rarity',
+    rarity: 'mythic',
+    target: 3000,
+    reward: { gold: 20000000, crystals: 150 },
     icon: '🔴',
   },
 ];
