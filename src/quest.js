@@ -69,7 +69,7 @@ export class Quest {
     if (this.reward.item) {
       // Generate a random item of the correct rarity, tier, and player level
       const rarity = this.reward.item.rarity.toUpperCase();
-      const level = hero.level;
+      const level = hero.highestStage;
       const tier = this.reward.item.tier || 1;
       // Pick a random item type
       const itemTypes = Object.keys(ITEM_TYPES);
