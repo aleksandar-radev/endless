@@ -22,7 +22,7 @@ export const FOREST_ENEMIES = [
     multiplier: {
       itemDrop: 1.1,
     },
-    damage: 3,
+    damage: 2,
     earthDamage: 2,
     earthResistance: 25,
     gold: 10,
