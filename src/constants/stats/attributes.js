@@ -36,7 +36,12 @@ export const ATTRIBUTES = {
   },
   intelligence: {
     effects: {
-      elementalDamagePerPoint: 0.06,
+      fireDamagePerPoint: 0.06,
+      coldDamagePerPoint: 0.06,
+      airDamagePerPoint: 0.06,
+      earthDamagePerPoint: 0.06,
+      lightningDamagePerPoint: 0.06,
+      waterDamagePerPoint: 0.06,
     },
   },
   perseverance: {
@@ -58,6 +63,7 @@ export const ATTRIBUTE_TOOLTIPS = {
     <strong>Agility</strong><br />
     Each point increases:<br />
     • Attack Rating by ${ATTRIBUTES.agility.effects.attackRatingPerPoint}<br />
+    • Damage by ${ATTRIBUTES.agility.effects.damagePerPoint}<br />
   `,
 
   getVitalityTooltip: () => html`
@@ -87,7 +93,7 @@ export const ATTRIBUTE_TOOLTIPS = {
   getIntelligenceTooltip: () => html`
     <strong>Intelligence</strong><br />
     Each point increases:<br />
-    • Elemental Damage by ${ATTRIBUTES.intelligence.effects.elementalDamagePerPoint}<br />
+    • Elemental Damage by ${ATTRIBUTES.intelligence.effects.fireDamagePerPoint}<br />
   `,
 
   getPerseveranceTooltip: () => html`
