@@ -17,11 +17,24 @@ export const MATERIALS = {
     id: 'greater_experience_potion',
     name: 'Greater Experience Potion',
     icon: '🧪',
-    description: 'Grants 5000 experience when used.',
+    description: 'Grants 5% experience when used.',
     dropChance: 3,
-    sort: 10,
+    sort: 11,
     onUse: (hero, qty = 1) => {
-      hero.gainExp(5000 * qty);
+      const xpGain = Math.floor(hero.getExpToNextLevel() * 0.05);
+      hero.gainExp(xpGain * qty);
+    },
+  },
+  HUGE_EXPERIENCE_POTION: {
+    id: 'huge_experience_potion',
+    name: 'Huge Experience Potion',
+    icon: '🧪',
+    description: 'Grants 15% experience when used.',
+    dropChance: 1,
+    sort: 12,
+    onUse: (hero, qty = 1) => {
+      const xpGain = Math.floor(hero.getExpToNextLevel() * 0.15);
+      hero.gainExp(xpGain * qty);
     },
   },
   GOLD_COINS: {
