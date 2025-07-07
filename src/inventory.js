@@ -236,6 +236,11 @@ export default class Inventory {
           if (currentIdx < rarities.length - 1) {
             item.rarity = rarities[currentIdx + 1];
             item.applyLevelToStats(item.level);
+            // Add a new stat if below max for new rarity
+            const maxStats = ITEM_RARITY[item.rarity].totalStats;
+            if (Object.keys(item.stats).length < maxStats) {
+              item.addRandomStat();
+            }
           }
           this.handleMaterialUsed(this, mat, matDef, 1, 'material-enchant-dialog', `Enchanted ${item.type} to ${item.rarity}`);
         },
