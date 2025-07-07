@@ -147,6 +147,7 @@ class Game {
 
     // Update buff timers and effects
     skillTree.getActiveBuffEffects();
+    skillTree.processSummons();
     updateBuffIndicators();
 
     const currentTime = Date.now();

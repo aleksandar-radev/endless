@@ -3,10 +3,32 @@ import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
 // Druid skills
 export const DRUID_SKILLS = {
   // Tier 1 Skills
+  summonPest: {
+    id: 'summonPest',
+    name: () => 'Summon Pest',
+    type: () => 'summon',
+    summonStats: (level) => {
+      return {
+        percentOfPlayerDamage: level * 1,
+        damage: level * 1,
+        earthDamage: level * 1,
+        attackSpeed: 1,
+      };
+    },
+    manaCost: (level) => 2 + level * 0.2,
+    cooldown: (level) => 25000,
+    duration: (level) => 15000 + level * 1000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[0],
+    icon: () => 'summon-pest',
+    description: () => 'Summons a pest to your aid, dealing percent of your damage.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+    }),
+  },
   barkSkin: {
     id: 'barkSkin',
     name: () => 'Bark Skin',
-    type: () => 'toggle',
+    type: () => 'passive',
     manaCost: (level) => 1 + level * 0.1,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'bark-skin',

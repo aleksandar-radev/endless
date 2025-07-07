@@ -289,4 +289,8 @@ export const OFFENSE_STATS = {
     item: { min: 4, max: 16, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['offense', 'jewelry', 'gloves'],
   },
+  percentOfPlayerDamage: {
+    base: 0,
+    decimalPlaces: 1,
+  },
 };
