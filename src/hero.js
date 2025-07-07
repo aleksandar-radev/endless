@@ -330,6 +330,7 @@ export default class Hero {
           (bonuses[upgradeConfig.stat] || 0) + soulUpgrades[upgradeKey] * upgradeConfig.bonus;
       }
     }
+
     return bonuses;
   }
 
@@ -347,6 +348,7 @@ export default class Hero {
         percentBonuses[stat] = percentValue; // todo: this or above makes no sense, but keep it
       }
     }
+
 
     for (const stat in STATS) {
       if (!stat.endsWith('Percent')) {
@@ -396,7 +398,7 @@ export default class Hero {
     }
 
     // apply total damage percent
-    this.stats.damage = Math.floor(this.stats.damage * (1 + this.stats.totalDamagePercent / 100));
+    this.stats.damage = Math.floor(this.stats.damage * (1 + this.stats.totalDamagePercent));
 
     // Special handling for elemental damages
     this.stats.fireDamage = Math.floor(
