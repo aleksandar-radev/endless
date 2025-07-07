@@ -62,17 +62,19 @@ export const MAGE_SKILLS = {
   },
 
   // Tier 25 Skills
-  teleport: {
-    id: 'teleport',
-    name: () => 'Teleport',
+  mindControl: {
+    id: 'mindControl',
+    name: () => 'Mind Control',
     type: () => 'instant',
     manaCost: (level) => 15 + level * 1,
     cooldown: (level) => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
-    icon: () => 'teleport',
+    icon: () => 'mind-control',
     description: () => 'Instantly move to a nearby location.',
     maxLevel: () => 100,
-    effect: () => ({}) ,
+    effect: () => ({
+      enemyAttackSpeed: 0.01, // 1% slower attack speed
+    }),
   },
   manaShield: {
     id: 'manaShield',
