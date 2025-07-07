@@ -14,7 +14,7 @@ export const MAGE_SKILLS = {
     description: () => 'Launches a missile of arcane energy.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: level * 4,
+      damagePercent: level * 10,
     }),
   },
   arcaneIntellect: {
@@ -43,7 +43,7 @@ export const MAGE_SKILLS = {
     description: () => 'Fires a bolt of frost at the enemy.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      coldDamagePercent: level * 6,
+      coldDamagePercent: level * 11,
     }),
   },
   fireBlast: {
@@ -57,7 +57,7 @@ export const MAGE_SKILLS = {
     description: () => 'Blasts the target with fire.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: level * 6,
+      fireDamagePercent: level * 13,
     }),
   },
 
@@ -65,7 +65,7 @@ export const MAGE_SKILLS = {
   mindControl: {
     id: 'mindControl',
     name: () => 'Mind Control',
-    type: () => 'instant',
+    type: () => 'passive',
     manaCost: (level) => 15 + level * 1,
     cooldown: (level) => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
@@ -73,7 +73,10 @@ export const MAGE_SKILLS = {
     description: () => 'Instantly move to a nearby location.',
     maxLevel: () => 100,
     effect: () => ({
-      enemyAttackSpeed: 0.01, // 1% slower attack speed
+      perseverance: 4,
+      wisdom: 5,
+      intelligence: 5,
+      intelligencePercent: 1,
     }),
   },
   manaShield: {
@@ -82,13 +85,13 @@ export const MAGE_SKILLS = {
     type: () => 'buff',
     manaCost: (level) => 8 + level * 0.5,
     cooldown: (level) => 20000,
-    duration: (level) => 12000 + level * 500,
+    duration: (level) => 10000 + level * 150,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'mana-shield',
     description: () => 'Absorbs damage using mana.',
     maxLevel: () => 200,
     effect: (level) => ({
-      armorPercent: level * 4,
+      manaShieldPercent: level * 0.5,
     }),
   },
 
@@ -117,7 +120,7 @@ export const MAGE_SKILLS = {
     description: () => 'Improves spell damage and hit rate.',
     maxLevel: () => 500,
     effect: (level) => ({
-      damagePercent: level * 1,
+      elementalDamagePercent: level * 1,
       attackRatingPercent: level * 4,
     }),
   },
@@ -135,7 +138,7 @@ export const MAGE_SKILLS = {
     description: () => 'Engulfs the area in flames.',
     maxLevel: () => 300,
     effect: (level) => ({
-      fireDamagePercent: level * 10,
+      fireDamagePercent: level * 16,
     }),
   },
   timeWarp: {
@@ -150,7 +153,7 @@ export const MAGE_SKILLS = {
     description: () => 'Greatly increases attack speed for a short time.',
     maxLevel: () => 300,
     effect: (level) => ({
-      attackSpeedPercent: level * 0.01,
+      attackSpeed: level * 0.02,
     }),
   },
 

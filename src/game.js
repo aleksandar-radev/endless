@@ -38,6 +38,18 @@ class Game {
   }
 
   damagePlayer(damage) {
+    const activeBuffs = skillTree.getActiveBuffEffects();
+    if (activeBuffs && activeBuffs.manaShieldPercent) {
+      // If manaShieldPercent is active, apply it
+      let manaDamage = Math.floor(damage * activeBuffs.manaShieldPercent / 100);
+      manaDamage = Math.min(manaDamage, hero.stats.currentMana);
+      this.restoreMana(-manaDamage);
+      // special handling of popup when mana is negative:
+      createDamageNumber({ text: `-${manaDamage}`, isPlayer: true, isCritical: false, color: 'blue' });
+      damage -= manaDamage; // Reduce the damage by the mana damage
+    }
+    if (damage < 1) return;
+
     hero.stats.currentLife -= damage;
     if (hero.stats.currentLife <= 0) {
       // check if ressurection will proc
@@ -47,6 +59,7 @@ class Game {
       }
     }
     updatePlayerLife();
+    createDamageNumber({ text: `-${Math.floor(damage)}`, isPlayer: true });
   }
 
   healPlayer(heal) {

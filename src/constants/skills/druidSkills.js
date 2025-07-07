@@ -9,15 +9,16 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: level * 1,
+        percentOfPlayerDamage: level * 0.75,
         damage: level * 1,
         earthDamage: level * 1,
+        waterDamage: level * 0.5,
         attackSpeed: 1,
       };
     },
     manaCost: (level) => 2 + level * 0.2,
-    cooldown: (level) => 25000,
-    duration: (level) => 15000 + level * 1000,
+    cooldown: (level) => 30000,
+    duration: (level) => 10000 + level * 100,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'summon-pest',
     description: () => 'Summons a pest to your aid, dealing percent of your damage.',
@@ -82,7 +83,6 @@ export const DRUID_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       earthDamagePercent: level * 5,
-      attackSpeed: level * -0.005,
     }),
   },
 
@@ -90,15 +90,23 @@ export const DRUID_SKILLS = {
   animalCompanion: {
     id: 'animalCompanion',
     name: () => 'Animal Companion',
-    type: () => 'toggle',
+    type: () => 'summon',
+    summonStats: (level) => {
+      return {
+        percentOfPlayerDamage: level * 1,
+        damage: level * 1,
+        attackSpeed: 0.9,
+        lifePerHit: level * 2,
+      };
+    },
     manaCost: (level) => 5 + level * 0.2,
+    cooldown: (level) => 60000,
+    duration: (level) => 20000 + level * 1000,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'companion',
-    description: () => 'Summons a beast to aid you, increasing damage.',
+    description: () => 'Summons a beast to aid you. Heals you when hitting.',
     maxLevel: () => 200,
     effect: (level) => ({
-      damagePercent: level * 3,
-      lifePerHit: level * 0.5,
     }),
   },
   naturalGrowth: {

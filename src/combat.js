@@ -68,7 +68,6 @@ export function enemyAttack(currentTime) {
         }
 
         game.damagePlayer(totalDamage);
-        createDamageNumber({ text: `-${Math.floor(totalDamage)}`, isPlayer: true });
       }
     }
 

@@ -536,6 +536,13 @@ export default class SkillTree {
         damage += buffData.summonStats.lightningDamage || 0;
         damage += buffData.summonStats.waterDamage || 0;
 
+        if (buffData.summonStats.lifePerHit) {
+          game.healPlayer(buffData.summonStats.lifePerHit);
+        }
+        if (buffData.summonStats.manaPerHit) {
+          game.restoreMana(buffData.summonStats.manaPerHit);
+        }
+
         game.damageEnemy(damage, false);
         // Schedule next attack
         buffData.nextAttackTime = now + 1000 / buffData.summonStats.attackSpeed;

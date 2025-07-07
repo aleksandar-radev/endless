@@ -466,7 +466,8 @@ export const formatStatName = (stat) => {
   if (stat === 'reflectFireDamage') return 'Reflect Fire Damage';
   if (stat === 'skillPoints') return 'Bonus Skill Points';
   if (stat === 'extraMaterialDropPercent') return 'Bonus Material Drop %';
-  if (stat === 'percentOfPlayerDamage') return '% of your Damage';
+  if (stat === 'percentOfPlayerDamage') return '% of your total damage';
+  if (stat === 'manaShieldPercent') return 'Damage taken from mana before life %';
 
   // Fallback: convert camelCase to Title Case with spaces
   return stat
