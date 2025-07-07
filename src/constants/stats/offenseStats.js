@@ -38,7 +38,7 @@ export const OFFENSE_STATS = {
   attackSpeed: {
     base: 1,
     decimalPlaces: 2,
-    training: { cost: 400, bonus: 0.01, maxLevel: Infinity },
+    training: { cost: 500, bonus: 0.01, maxLevel: 500 },
     item: { min: 0.08, max: 0.14, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['offense', 'gloves'],
     showInUI: true,

@@ -207,25 +207,34 @@ export async function defeatEnemy() {
       showLootNotification(newItem);
     }
 
-    if (enemy.rollForMaterialDrop) {
-      if (enemy.rollForMaterialDrop()) {
-        const mat = inventory.getRandomMaterial();
-        inventory.addMaterial({ id: mat.id, icon: mat.icon, qty: 1 });
-        showMaterialNotification(mat);
+    if (enemy.rollForMaterialDrop()) {
+      const mat = inventory.getRandomMaterial();
+      let qty = 1;
+      if (inventory.isUpgradeMaterial(mat)) {
+        const enemyLvl = enemy.level || game.stage;
+        qty = inventory.getScrapPackSize(enemyLvl);
+      }
+      inventory.addMaterial({ id: mat.id, icon: mat.icon, qty });
+      showMaterialNotification(mat);
 
-        // Extra material drop logic: each extra drop is a new random material
-        const extraChance = hero.stats.extraMaterialDropPercent * 100 || 0;
-        let extraRolls = 0;
-        const maxExtraRolls = hero.stats.extraMaterialDropMax;
-        while (Math.random() * 100 < extraChance) {
-          extraRolls++;
-          const extraMat = inventory.getRandomMaterial();
-          inventory.addMaterial({ id: extraMat.id, icon: extraMat.icon, qty: 1 });
-          showMaterialNotification(extraMat);
-          if (extraRolls >= maxExtraRolls) break;
+      // Extra material drop logic: each extra drop is a new random material
+      const extraChance = hero.stats.extraMaterialDropPercent * 100 || 0;
+      let extraRolls = 0;
+      const maxExtraRolls = hero.stats.extraMaterialDropMax;
+      while (Math.random() * 100 < extraChance) {
+        extraRolls++;
+        const extraMat = inventory.getRandomMaterial();
+        let extraQty = 1;
+        if (inventory.isUpgradeMaterial(extraMat)) {
+          const enemyLvl = enemy.level || game.stage;
+          extraQty = inventory.getScrapPackSize(enemyLvl);
         }
+        inventory.addMaterial({ id: extraMat.id, icon: extraMat.icon, qty: extraQty });
+        showMaterialNotification(extraMat);
+        if (extraRolls >= maxExtraRolls) break;
       }
     }
+
 
     // fix a bug where stage gets incremented when game stopped.
     if (game.gameStarted) {

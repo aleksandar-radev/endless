@@ -384,6 +384,25 @@ export default class Inventory {
     }
   }
 
+  // For upgrade materials (scraps/cores/stones), drop amount is variable:
+  // For every 25 enemy levels, there is a 50% chance for an additional drop.
+  // Instead of rolling for each, we calculate the min (1) and max (1 + rolls),
+  // then pick a random integer in that range for efficiency at high stages.
+  getScrapPackSize(enemyLevel) {
+    const rolls = Math.floor(enemyLevel / 25);
+    const min = 1;
+    const max = 1 + rolls;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  isUpgradeMaterial(mat) {
+    return (
+      mat.id === 'armor_upgrade_stone' ||
+      mat.id === 'weapon_upgrade_core' ||
+      mat.id === 'jewelry_upgrade_gem'
+    );
+  }
+
   handleRingSlotDrop(draggedRing, targetSlot) {
     // Find which slot the dragged ring is currently equipped in
     const currentSlot =
