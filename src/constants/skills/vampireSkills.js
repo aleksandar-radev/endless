@@ -92,7 +92,7 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Increases strength and vitality.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strengthPercent: level * 1.5,
+      strengthPercent: level * 0.5,
       vitalityPercent: level * 1,
     }),
   },
@@ -156,7 +156,7 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => 100,
     effect: (level) => ({
       lifePercent: level * 0.5,
-      strengthPercent: level * 0.5,
+      strengthPercent: level * 0.38,
       vitalityPercent: level * 2,
     }),
   },
@@ -171,7 +171,7 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Greatly increases all attributes and gives resurrection.',
     maxLevel: () => 500,
     effect: (level) => ({
-      strengthPercent: level * 3,
+      strengthPercent: level * 1,
       vitalityPercent: level * 2,
       resurrectionChance: level * 0.1,
       wisdomPercent: level * 1,
