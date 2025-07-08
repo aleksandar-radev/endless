@@ -22,14 +22,14 @@ export const MISC_STATS = {
     levelUpBonus: 0,
     training: { cost: 250, bonus: 1, maxLevel: Infinity },
     item: { min: 5, max: 10, scaling: (level) => miscScaling(level) },
-    itemTags: ['misc', 'jewelry'],
+    itemTags: ['misc', 'jewelry', 'magic'],
     showInUI: true,
   },
   manaPercent: {
     base: 0,
     decimalPlaces: 1,
     item: { min: 3, max: 8, scaling: (level) => miscScaling(level) },
-    itemTags: ['misc', 'jewelry'],
+    itemTags: ['misc', 'jewelry', 'magic'],
   },
   // MANA REGEN
   manaRegen: {
@@ -37,21 +37,21 @@ export const MISC_STATS = {
     decimalPlaces: 1,
     training: { cost: 800, bonus: 0.1, maxLevel: 500 },
     item: { min: 1, max: 4, scaling: (level) => miscScaling(level) },
-    itemTags: ['misc', 'jewelry'],
+    itemTags: ['misc', 'jewelry', 'magic'],
     showInUI: true,
   },
   manaRegenPercent: {
     base: 0,
     decimalPlaces: 1,
     item: { min: 4, max: 10, limit: 50, scaling: (level) => miscScaling(level, PERCENT_MULTIPLIER) },
-    itemTags: ['jewelry'],
+    itemTags: ['jewelry', 'magic'],
   },
   // MANA PER HIT
   manaPerHit: {
     base: 0,
     decimalPlaces: 1,
     item: { min: 1, max: 5, scaling: (level) => miscScaling(level) },
-    itemTags: ['misc', 'jewelry'],
+    itemTags: ['misc', 'jewelry', 'magic'],
     showInUI: true,
   },
   manaPerHitPercent: {
@@ -111,7 +111,7 @@ export const MISC_STATS = {
     base: 0,
     decimalPlaces: 0,
     item: { min: STATS_MIN, max: STATS_MAX, scaling: (level) => miscScaling(level, STAT_MULTIPLIER) },
-    itemTags: ['misc', 'jewelry', 'stat'],
+    itemTags: ['misc', 'jewelry', 'stat', 'magic'],
   },
   wisdomPercent: {
     base: 0,
@@ -121,7 +121,7 @@ export const MISC_STATS = {
       max: STATS_MAX_PERCENT,
       scaling: (level) => miscScaling(level, PERCENT_MULTIPLIER),
     },
-    itemTags: ['misc', 'jewelry'],
+    itemTags: ['misc', 'jewelry', 'magic'],
   },
   endurance: {
     base: 0,
@@ -159,7 +159,7 @@ export const MISC_STATS = {
     base: 0,
     decimalPlaces: 0,
     item: { min: STATS_MIN, max: STATS_MAX, scaling: (level) => miscScaling(level, STAT_MULTIPLIER) },
-    itemTags: ['misc', 'jewelry', 'stat'],
+    itemTags: ['misc', 'jewelry', 'stat', 'magic'],
   },
   intelligencePercent: {
     base: 0,
@@ -169,7 +169,7 @@ export const MISC_STATS = {
       max: STATS_MAX_PERCENT,
       scaling: (level) => miscScaling(level, PERCENT_MULTIPLIER),
     },
-    itemTags: ['misc', 'jewelry'],
+    itemTags: ['misc', 'jewelry', 'magic'],
   },
   perseverance: {
     base: 0,
@@ -248,5 +248,7 @@ export const MISC_STATS = {
   manaRegenOfTotalPercent: {
     base: 0,
     decimalPlaces: 2,
+    item: { min: 0.01, max: 0.05, max: 1, scaling: (level) => miscScaling(level, PERCENT_MULTIPLIER) },
+    itemTags: ['staff'],
   },
 };

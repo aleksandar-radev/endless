@@ -58,7 +58,7 @@ export const OFFENSE_STATS = {
       limit: 20,
       scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER),
     },
-    itemTags: ['offense', 'jewelry', 'gloves'],
+    itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
     showInUI: true,
   },
   critChancePercent: {
@@ -71,7 +71,7 @@ export const OFFENSE_STATS = {
     decimalPlaces: 2,
     training: { cost: 2000, bonus: 0.01, maxLevel: 500 }, // max bonus: 5
     item: { min: 0.02, max: 0.1, limit: 2, scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER) },
-    itemTags: ['offense', 'jewelry', 'gloves'],
+    itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
     showInUI: true,
   },
   critDamagePercent: {
@@ -99,7 +99,7 @@ export const OFFENSE_STATS = {
     decimalPlaces: 2,
     training: { cost: 800, bonus: 0.01, maxLevel: 500 }, // max bonus: 5
     item: { min: 1, max: 2.5, limit: 5, scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER) },
-    itemTags: ['axe'],
+    itemTags: ['offense'],
     showInUI: true,
   },
   lifeStealPercent: {
@@ -111,7 +111,7 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
     item: { min: 1, max: 7, limit: Infinity, scaling: (level) => offenseScaling(level) },
-    itemTags: ['axe'],
+    itemTags: ['offense'],
     showInUI: true,
   },
   lifePerHitPercent: {
@@ -129,7 +129,7 @@ export const OFFENSE_STATS = {
       limit: Infinity,
       scaling: (level) => offenseScaling(level),
     },
-    itemTags: ['sword', 'gloves'],
+    itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
   },
   fireDamagePercent: {
@@ -141,7 +141,7 @@ export const OFFENSE_STATS = {
       limit: Infinity,
       scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
     },
-    itemTags: ['sword', 'jewelry', 'gloves'],
+    itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
   },
   // COLD DAMAGE
   coldDamage: {
@@ -154,7 +154,7 @@ export const OFFENSE_STATS = {
       limit: Infinity,
       scaling: (level) => offenseScaling(level),
     },
-    itemTags: ['sword', 'gloves'],
+    itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
   },
   coldDamagePercent: {
@@ -166,7 +166,7 @@ export const OFFENSE_STATS = {
       limit: Infinity,
       scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
     },
-    itemTags: ['sword', 'jewelry', 'gloves'],
+    itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
   },
   // AIR DAMAGE
   airDamage: {
@@ -179,7 +179,7 @@ export const OFFENSE_STATS = {
       limit: Infinity,
       scaling: (level) => offenseScaling(level),
     },
-    itemTags: ['sword', 'gloves'],
+    itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
   },
   airDamagePercent: {
@@ -191,7 +191,7 @@ export const OFFENSE_STATS = {
       limit: Infinity,
       scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
     },
-    itemTags: ['sword', 'jewelry', 'gloves'],
+    itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
   },
   // EARTH DAMAGE
   earthDamage: {
@@ -204,7 +204,7 @@ export const OFFENSE_STATS = {
       limit: Infinity,
       scaling: (level) => offenseScaling(level),
     },
-    itemTags: ['sword', 'gloves'],
+    itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
   },
   earthDamagePercent: {
@@ -216,7 +216,7 @@ export const OFFENSE_STATS = {
       limit: Infinity,
       scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
     },
-    itemTags: ['sword', 'jewelry', 'gloves'],
+    itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
   },
   // LIGHTNING DAMAGE
   lightningDamage: {
@@ -229,7 +229,7 @@ export const OFFENSE_STATS = {
       limit: Infinity,
       scaling: (level) => offenseScaling(level),
     },
-    itemTags: ['sword', 'gloves'],
+    itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
   },
   lightningDamagePercent: {
@@ -241,7 +241,7 @@ export const OFFENSE_STATS = {
       limit: Infinity,
       scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
     },
-    itemTags: ['sword', 'jewelry', 'gloves'],
+    itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
   },
   // WATER DAMAGE
   waterDamage: {
@@ -254,7 +254,7 @@ export const OFFENSE_STATS = {
       limit: Infinity,
       scaling: (level) => offenseScaling(level),
     },
-    itemTags: ['sword', 'gloves'],
+    itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
   },
   waterDamagePercent: {
@@ -266,7 +266,7 @@ export const OFFENSE_STATS = {
       limit: Infinity,
       scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
     },
-    itemTags: ['sword', 'jewelry', 'gloves'],
+    itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
   },
   // DOUBLE DAMAGE
   doubleDamageChance: {
@@ -279,7 +279,7 @@ export const OFFENSE_STATS = {
       limit: 25,
       scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER),
     },
-    itemTags: ['offense', 'gloves'],
+    itemTags: ['offense', 'gloves', 'jewelry', 'wand'],
     showInUI: true,
   },
   // ELEMENTAL DAMAGE PERCENT
@@ -287,7 +287,7 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
     item: { min: 4, max: 16, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
-    itemTags: ['offense', 'jewelry', 'gloves'],
+    itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
   },
   percentOfPlayerDamage: {
     base: 0,
