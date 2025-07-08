@@ -190,15 +190,19 @@ export const DRUID_SKILLS = {
   earthsEmbrace: {
     id: 'earthsEmbrace',
     name: () => "Earth's Embrace",
-    type: () => 'toggle',
+    type: () => 'buff',
     manaCost: (level) => 4 + level * 0.3,
+    cooldown: (level) => 40000,
+    duration: (level) => Math.max(10000 + level * 500, 30000),
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'embrace',
     description: () => 'Embrace the earth for defense and regeneration.',
     maxLevel: () => 500,
     effect: (level) => ({
-      armorPercent: level * 4,
+      armorPercent: level * 2,
       lifeRegenPercent: level * 0.5,
+      lifeRegen: level * 2,
+      lifeRegenOfTotalPercent: level * 0.01,
     }),
   },
   wrathOfNature: {
