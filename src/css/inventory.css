@@ -616,9 +616,6 @@
   color: #fff;
 }
 
-
-
-
 /* Close button for modals */
 .inventory-salvage-modal-content {
   display: flex;
@@ -663,7 +660,8 @@
   user-select: none;
 }
 
-.auto-salvage-toggle+.toggle-btn {
+.auto-salvage-toggle+.toggle-btn,
+.salvage-material-toggle+.toggle-btn {
   display: inline-block;
   width: 48px;
   height: 26px;
@@ -678,6 +676,7 @@
 }
 
 .auto-salvage-toggle:checked+.toggle-btn,
+.salvage-material-toggle:checked+.toggle-btn,
 .toggle-btn.checked {
   background: #2563eb;
   border-color: #2563eb;
@@ -697,6 +696,7 @@
 }
 
 .auto-salvage-toggle:checked+.toggle-btn::before,
+.salvage-material-toggle:checked+.toggle-btn::before,
 .toggle-btn.checked::before {
   left: 25px;
 }
@@ -706,4 +706,47 @@
   border-color: #a1a1aa;
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+.salvage-material-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.salvage-material-row .toggle-label {
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  cursor: pointer;
+}
+
+.salvage-material-row .salvage-material-toggle {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.salvage-reward-title {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: var(--text, #fff);
+  margin-bottom: 8px;
+}
+
+.salvage-material-toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 0.5rem;
+  background: var(--bg-element);
 }

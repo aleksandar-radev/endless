@@ -75,6 +75,13 @@ const CRYSTAL_UPGRADE_CONFIG = {
     baseCost: 1000,
     oneTime: true,
   },
+  salvageMaterials: {
+    label: 'Salvage Materials',
+    bonus: 'Allows salvaging items for upgrade materials instead of gold',
+    bonusLabel: 'Allows salvaging items for upgrade materials instead of gold',
+    baseCost: 200,
+    oneTime: true,
+  },
 };
 
 export default class CrystalShop {
