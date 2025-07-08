@@ -7,6 +7,7 @@ export const TUNDRA_ENEMIES = [
     image: '/enemies/frostbite.jpg',
     tier: tier,
     damage: 0,
+    airDamage: 3,
     coldDamage: 3,
     coldResistance: 25,
     fireResistance: 5,

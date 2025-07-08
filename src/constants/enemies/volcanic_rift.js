@@ -113,7 +113,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
     element: 'air',
     image: '/enemies/thunderwing.jpg',
     tier: tier,
-    damage: 0,
+    damage: 2,
     airDamage: 4,
     fireResistance: 10,
     airResistance: 20,

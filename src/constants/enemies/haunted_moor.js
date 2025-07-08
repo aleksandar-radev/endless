@@ -29,7 +29,7 @@ export const HAUNTED_MOOR_ENEMIES = [
     element: 'cold',
     image: '/enemies/phantom.jpg',
     tier: tier,
-    damage: 0,
+    damage: 1,
     coldDamage: 4,
     life: 20,
     coldResistance: 30,

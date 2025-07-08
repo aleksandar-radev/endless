@@ -158,4 +158,8 @@ export const DEFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
   },
+  lifeRegenOfTotalPercent: {
+    base: 0,
+    decimalPlaces: 2,
+  },
 };

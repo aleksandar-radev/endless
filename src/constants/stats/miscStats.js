@@ -245,4 +245,8 @@ export const MISC_STATS = {
     base: 1,
     decimalPlaces: 0,
   },
+  manaRegenOfTotalPercent: {
+    base: 0,
+    decimalPlaces: 2,
+  },
 };

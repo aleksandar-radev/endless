@@ -27,7 +27,8 @@ export const MAGE_SKILLS = {
     maxLevel: () => 300,
     effect: (level) => ({
       manaPercent: level * 1,
-      wisdomPercent: level * 1,
+      wisdomPercent: level * 0.5,
+      perseverancePercent: level * 1,
     }),
   },
 
@@ -96,6 +97,21 @@ export const MAGE_SKILLS = {
   },
 
   // Tier 50 Skills
+  resourceInfusion: {
+    id: 'resourceInfusion',
+    name: () => 'Resource Infusion',
+    type: () => 'passive',
+    manaCost: (level) => 15 + level * 0.6,
+    cooldown: (level) => 40000,
+    duration: (level) => 20000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[3],
+    icon: () => 'resource-infusion',
+    description: () => 'Infuses yourself with magical energy. Greatly increases mana regeneration.',
+    maxLevel: () => 1000,
+    effect: (level) => ({
+      manaRegenOfTotalPercent: level * 0.01,
+    }),
+  },
   iceStorm: {
     id: 'iceStorm',
     name: () => 'Ice Storm',
@@ -174,7 +190,17 @@ export const MAGE_SKILLS = {
   summonElemental: {
     id: 'summonElemental',
     name: () => 'Summon Elemental',
-    type: () => 'buff',
+    type: () => 'summon',
+    summonStats: (level) => {
+      return {
+        percentOfPlayerDamage: level * 0.8,
+        damage: level * 8,
+        attackSpeed: 1.4,
+        fireDamage: level * 22,
+        airDamage: level * 22,
+        coldDamage: level * 22,
+      };
+    },
     manaCost: (level) => 30 + level * 0.8,
     cooldown: (level) => 80000,
     duration: (level) => 30000,
@@ -183,9 +209,6 @@ export const MAGE_SKILLS = {
     description: () => 'Summons an elemental ally.',
     maxLevel: () => 500,
     effect: (level) => ({
-      fireDamagePercent: level * 2,
-      coldDamagePercent: level * 2,
-      airDamagePercent: level * 2,
     }),
   },
 
