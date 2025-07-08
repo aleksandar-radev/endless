@@ -663,7 +663,8 @@
   user-select: none;
 }
 
-.auto-salvage-toggle+.toggle-btn {
+.auto-salvage-toggle+.toggle-btn,
+.salvage-material-toggle+.toggle-btn {
   display: inline-block;
   width: 48px;
   height: 26px;
@@ -678,6 +679,7 @@
 }
 
 .auto-salvage-toggle:checked+.toggle-btn,
+.salvage-material-toggle:checked+.toggle-btn,
 .toggle-btn.checked {
   background: #2563eb;
   border-color: #2563eb;
@@ -697,6 +699,7 @@
 }
 
 .auto-salvage-toggle:checked+.toggle-btn::before,
+.salvage-material-toggle:checked+.toggle-btn::before,
 .toggle-btn.checked::before {
   left: 25px;
 }
