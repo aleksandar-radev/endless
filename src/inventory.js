@@ -342,7 +342,7 @@ export default class Inventory {
   }
 
   getItemSalvageValue(item) {
-    return 25 * item.level * (Math.max(RARITY_ORDER.indexOf(item.rarity) / 2 + 1, 1)) * Math.max(item.tier / 2, 1);
+    return Math.floor(25 * item.level * (Math.max(RARITY_ORDER.indexOf(item.rarity) / 2 + 1, 1)) * Math.max(item.tier / 2, 1));
   }
 
   getItemSalvageMaterial(item) {
