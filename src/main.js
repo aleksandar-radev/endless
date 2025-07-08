@@ -18,10 +18,12 @@ import {
   options,
   dataManager,
   buildings,
+  prestige,
 } from './globals.js';
 import { initializeRegionSystem, updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { initializeBuildingsUI } from './ui/buildingUi.js';
+import { initializePrestigeUI } from './ui/prestigeUi.js';
 import Enemy from './enemy.js';
 import { setupLeaderboardTabLazyLoad } from './ui/leaderboardUi.js';
 
@@ -45,6 +47,7 @@ window.log = console.log;
   options.initializeOptionsUI();
   initializeSkillTreeUI();
   initializeBuildingsUI();
+  initializePrestigeUI();
 
   updateResources();
   hero.recalculateFromAttributes();

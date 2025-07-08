@@ -1,0 +1,52 @@
+.prestige-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.prestige-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.prestige-bonuses-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.prestige-bonuses-list li {
+  background: var(--bg-element);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prestige-modal-content {
+  background: var(--bg-element);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  width: 360px;
+  text-align: center;
+}
+
+.prestige-cards {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.prestige-card {
+  background: var(--bg-element);
+  border: 1px solid var(--accent);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  cursor: pointer;
+  flex: 1 1 0;
+}
+
+.prestige-card:hover {
+  background: #2d3340;
+}
