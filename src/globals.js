@@ -10,6 +10,7 @@ import SoulShop from './soulShop.js';
 import Statistics from './statistics.js';
 import Training from './training.js';
 import { BuildingManager } from './building.js';
+import Prestige from './prestige.js';
 
 // Global singletons for the game
 export let game = null;
@@ -24,6 +25,7 @@ export let soulShop = null;
 export let options = null;
 export let dataManager = null;
 export let buildings = null;
+export let prestige = null;
 
 // Setters for initialization in main.js
 export async function setGlobals({ cloud = false, reset = false } = {}) {
@@ -47,6 +49,7 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
   const _soulShop = new SoulShop(savedData?.soulShop);
   const _options = new Options(savedData?.options);
   const _buildings = new BuildingManager(savedData?.buildings);
+  const _prestige = new Prestige(savedData?.prestige);
 
   game = _game;
   hero = _hero;
@@ -59,6 +62,7 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
   soulShop = _soulShop;
   buildings = _buildings;
   options = _options;
+  prestige = _prestige;
   dataManager = _dataManager;
 
   // useful when loading from cloud
@@ -78,6 +82,7 @@ export function getGlobals() {
     soulShop,
     buildings,
     options,
+    prestige,
     dataManager,
   };
 }
