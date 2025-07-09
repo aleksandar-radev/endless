@@ -1,6 +1,6 @@
 import { prestige } from '../globals.js';
 import { createModal, closeModal } from './modal.js';
-import { showToast } from './ui.js';
+import { formatStatName, showToast } from './ui.js';
 
 const html = String.raw;
 
@@ -63,7 +63,7 @@ export function updatePrestigeBonuses() {
   const bonuses = prestige.getBonuses();
   list.innerHTML = Object.keys(bonuses).length
     ? Object.entries(bonuses)
-      .map(([stat, val]) => `<li>${formatPrestigeBonus(stat, val)}</li>`)
+      .map(([stat, val]) => `<li>${formatStatName(stat)} ${formatPrestigeBonus(stat, val)}</li>`)
       .join('')
     : '<li>No prestige bonuses yet.</li>';
 }

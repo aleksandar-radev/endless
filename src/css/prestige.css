@@ -48,13 +48,44 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 2px 12px 0 rgba(78, 140, 255, 0.10), 0 1px 4px rgba(0, 0, 0, 0.08);
+  padding: 1.2rem 1.5rem;
 }
 
 .prestige-bonuses-list li {
-  background: var(--bg-element);
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
-  margin-bottom: 0.5rem;
+  list-style: none;
+  background: linear-gradient(90deg, rgba(78, 140, 255, 0.13) 0%, rgba(255, 233, 176, 0.13) 100%);
+  padding: 0.55rem 1.1rem 0.55rem 1.1rem;
+  border-radius: 0.6rem;
+  margin-bottom: 0;
+  color: #ffe9b0;
+  font-size: 1.13rem;
+  font-family: 'Cinzel', 'Georgia', serif;
+  letter-spacing: 0.01em;
+  border-left: 4px solid var(--accent, #4e8cff);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.09);
+  position: relative;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  overflow: visible;
+}
+
+.prestige-bonuses-list li::before {
+  color: var(--accent, #4e8cff);
+  margin-right: 0.7em;
+  font-size: 1.1em;
+  vertical-align: middle;
+  opacity: 0.8;
+}
+
+.prestige-bonuses-list li:hover {
+  background: linear-gradient(90deg, rgba(255, 233, 176, 0.19) 0%, rgba(78, 140, 255, 0.19) 100%);
+  color: #fffbe6;
+  box-shadow: 0 4px 18px 0 rgba(78, 140, 255, 0.16), 0 2px 8px rgba(0, 0, 0, 0.13);
+  transform: translateY(-2px) scale(1.03);
 }
 
 .prestige-modal-content {

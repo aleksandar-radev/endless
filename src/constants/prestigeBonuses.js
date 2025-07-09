@@ -44,9 +44,9 @@ export const PRESTIGE_BONUSES = [
     min: 0.15,
     max: 0.4,
   },
-  {
-    stat: 'manaCostReductionPercent',
-    min: 0.15,
-    max: 0.4,
-  },
+  // {
+  //   stat: 'manaCostReductionPercent',
+  //   min: 0.15,
+  //   max: 0.4,
+  // },
 ];
