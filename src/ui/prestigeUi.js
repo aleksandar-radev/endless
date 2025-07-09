@@ -63,7 +63,7 @@ export function updatePrestigeBonuses() {
   const bonuses = prestige.getBonuses();
   list.innerHTML = Object.keys(bonuses).length
     ? Object.entries(bonuses)
-      .map(([stat, val]) => `<li>${stat}: +${(val * 100).toFixed(1)}%</li>`)
+      .map(([stat, val]) => `<li>${formatPrestigeBonus(stat, val)}</li>`)
       .join('')
     : '<li>No prestige bonuses yet.</li>';
 }
@@ -97,4 +97,11 @@ function openPrestigeModal() {
       updatePrestigeBonuses();
     };
   });
+}
+
+export function formatPrestigeBonus(stat, value) {
+  if (stat.endsWith('Percent')) {
+    return `+${(value * 100).toFixed(1)}%`;
+  }
+  return `+${Math.round(value)}`;
 }

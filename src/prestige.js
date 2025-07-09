@@ -79,8 +79,13 @@ export default class Prestige {
         const value = +(Math.random() * (b.max - b.min) + b.min).toFixed(4);
         card.bonuses[b.stat] = (card.bonuses[b.stat] || 0) + value;
         // Update description to show the actual value
-        const percent = (value * 100).toFixed(1);
-        card.descriptions.push(`${formatStatName(b.stat)}: +${percent}%`);
+        let desc;
+        if (b.stat.endsWith('Percent')) {
+          desc = `${formatStatName(b.stat)}: +${(value * 100).toFixed(1)}%`;
+        } else {
+          desc = `${formatStatName(b.stat)}: +${Math.round(value)}`;
+        }
+        card.descriptions.push(desc);
       });
       cards.push(card);
     }
