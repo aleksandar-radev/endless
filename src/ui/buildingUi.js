@@ -5,7 +5,7 @@ const html = String.raw;
 import { buildings, dataManager, hero } from '../globals.js';
 import { Building } from '../building.js';
 import { createModal, closeModal } from './modal.js';
-import { showConfirmDialog } from './ui.js';
+import { showConfirmDialog, updateResources } from './ui.js';
 
 function createBuildingCard(building) {
   const el = document.createElement('div');
@@ -167,6 +167,7 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
           upgraded = true;
         }
       }
+      updateResources(); // Update UI after upgrade
       if (upgraded && placementOptions) {
         // If in placement mode and this is the first upgrade, place the building
         if (building.placedAt == null) {
