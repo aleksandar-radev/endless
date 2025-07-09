@@ -2,13 +2,12 @@ import { crystalShop, dataManager, game, setGlobals } from './globals.js';
 import { showConfirmDialog, showToast, updateStageUI } from './ui/ui.js';
 import { createModal } from './ui/modal.js';
 import Enemy from './enemy.js';
-import { marked } from 'marked';
 const html = String.raw;
 
 // Options class to store options and version (future-proof for migrations)
 export class Options {
   constructor(data = {}) {
-    this.version = data.version || '0.2.2';
+    this.version = data.version || '0.3.0';
     // Add startingStage, default to null (unset)
     this.startingStage = data.startingStage || null;
     // Add showEnemyStats option, default to false
@@ -100,12 +99,12 @@ export class Options {
     changelogBtn.id = 'view-changelog';
     changelogBtn.textContent = 'View Changelog';
     changelogBtn.onclick = async () => {
-      // Use Vite's import.meta.glob to dynamically import all changelog files
-      const changelogModules = import.meta.glob('./changelog/*.md', { query: '?raw', import: 'default' });
+      // Use Vite's import.meta.glob to dynamically import all changelog files (now .html)
+      const changelogModules = import.meta.glob('./changelog/*.html', { query: '?raw', import: 'default' });
       const entries = Object.entries(changelogModules)
         .map(([path, loader]) => {
-          const match = path.match(/([\d.]+)\.md$/);
-          return match ? { version: match[1] } : null;
+          const match = path.match(/([\\/])(\d+\.\d+\.\d+)\.html$/);
+          return match ? { version: match[2], loader } : null;
         })
         .filter(Boolean)
         .sort((a, b) => b.version.localeCompare(a.version, undefined, { numeric: true, sensitivity: 'base' }));
@@ -141,14 +140,13 @@ export class Options {
       modal.querySelectorAll('.changelog-header').forEach((header) => {
         header.addEventListener('click', () => {
           const entry = header.parentElement;
-          const body = entry.querySelector('.changelog-body');
           const toggle = entry.querySelector('.changelog-toggle');
           const expanded = entry.classList.toggle('expanded');
           if (expanded) {
-            body.style.display = 'block';
+            entry.querySelector('.changelog-body').style.display = 'block';
             toggle.textContent = '▼';
           } else {
-            body.style.display = 'none';
+            entry.querySelector('.changelog-body').style.display = 'none';
             toggle.textContent = '►';
           }
         });
@@ -165,9 +163,9 @@ export class Options {
     upcomingBtn.id = 'view-upcoming';
     upcomingBtn.textContent = 'View Upcoming Changes';
     upcomingBtn.onclick = async () => {
-      // Use Vite's import.meta.glob to dynamically import the upcoming file
-      const upcomingModules = import.meta.glob('./upcoming.md', { query: '?raw', import: 'default' });
-      const loader = upcomingModules['./upcoming.md'];
+      // Use Vite's import.meta.glob to import the upcoming file as HTML
+      const upcomingModules = import.meta.glob('./upcoming.html', { query: '?raw', import: 'default' });
+      const loader = upcomingModules['./upcoming.html'];
       let text = '';
       try {
         text = loader ? await loader() : '(No upcoming changes found)';
@@ -177,7 +175,8 @@ export class Options {
       let content = '<div class="changelog-modal-content">';
       content += '<button class="modal-close">X</button>';
       content += '<h2>Upcoming Changes</h2>';
-      content += `<div class="changelog-body">${text ? marked.parse(text) : ''}</div>`;
+      // For upcoming, now display as HTML
+      content += `<div class="changelog-body">${text || ''}</div>`;
       content += '</div>';
       createModal({
         id: 'upcoming-modal',
@@ -437,23 +436,17 @@ export class Options {
 }
 
 /**
- * Returns the HTML for a given changelog version (from ./changelog/*.md)
+ * Returns the HTML for a given changelog version (from ./changelog/*.html)
  * @param {string} version - The version string, e.g. '0.1.1'
  * @returns {Promise<string>} HTML string for the changelog, or empty string if not found
  */
 export async function getChangelogHtml(version) {
-  const changelogModules = import.meta.glob('./changelog/*.md', { query: '?raw', import: 'default' });
-  const path = `./changelog/${version}.md`;
+  const changelogModules = import.meta.glob('./changelog/*.html', { query: '?raw', import: 'default' });
+  const path = `./changelog/${version}.html`;
   const loader = changelogModules[path];
   if (!loader) return '';
   try {
-    const rawMd = await loader();
-    // Simple markdown to HTML conversion (headings and list)
-    return rawMd
-      .replace(/^# (.*)$/m, '<h3>$1</h3>')
-      .replace(/^- (.*)$/gm, '<li>$1</li>')
-      .replace(/\n{2,}/g, '\n')
-      .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
+    return await loader();
   } catch {
     return '';
   }

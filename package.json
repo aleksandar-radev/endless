@@ -1,6 +1,6 @@
 {
   "name": "endless",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Endless Game",
   "type": "module",
   "scripts": {
@@ -12,7 +12,6 @@
     "obfuscate": "node obfuscate-dist.js"
   },
   "dependencies": {
-    "marked": "^16.0.0",
     "simple-crypto-js": "^3.0.1"
   },
   "devDependencies": {
