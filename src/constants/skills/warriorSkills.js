@@ -26,8 +26,8 @@ export const WARRIOR_SKILLS = {
     description: () => 'Permanently increases armor',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: level * 1,
-      armorPercent: level * 3,
+      armor: level * 3,
+      armorPercent: level * 2.5,
     }),
   },
 
@@ -43,7 +43,7 @@ export const WARRIOR_SKILLS = {
     description: () => 'A powerful strike that deals increased damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 1,
+      damage: level * 2,
       damagePercent: level * 5,
     }),
   },
@@ -58,7 +58,7 @@ export const WARRIOR_SKILLS = {
     effect: (level) => ({
       vitality: level * 1,
       vitalityPercent: level * 1,
-      lifeRegen: level * 0.33,
+      lifeRegen: level * 0.4,
     }),
   },
 
@@ -87,7 +87,8 @@ export const WARRIOR_SKILLS = {
     description: () => 'Increases life regeneration',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegen: level * 0.2,
+      lifeRegenOfTotalPercent: Math.min(level * 0.005, 1),
+      lifeRegen: level * 0.75,
       lifeRegenPercent: level * 1,
     }),
   },
@@ -97,7 +98,7 @@ export const WARRIOR_SKILLS = {
     id: 'groundSlam',
     name: () => 'Ground Slam',
     type: () => 'instant',
-    manaCost: (level) => 5 + level * 0.5,
+    manaCost: (level) => 5 + level * 0.3,
     cooldown: (level) => 5000,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'slam',
@@ -131,7 +132,7 @@ export const WARRIOR_SKILLS = {
     id: 'berserk',
     name: () => 'Berserk',
     type: () => 'toggle',
-    manaCost: (level) => 3 + level * 0.3,
+    manaCost: (level) => 3 + level * 0.15,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'berserk',
     description: () => 'Gives huge amounts of physical and fire damage',
