@@ -5,12 +5,12 @@ const html = String.raw;
 export const ATTRIBUTES = {
   strength: {
     effects: {
-      damagePerPoint: 0.33,
+      damagePerPoint: 0.34,
     },
   },
   agility: {
     effects: {
-      attackRatingPerPoint: 5,
+      attackRatingPerPoint: 4,
       damagePerPoint: 0.2,
     },
   },
@@ -215,5 +215,8 @@ export const ATTRIBUTE_TOOLTIPS = {
     <strong>Water Resistance</strong><br />
     Reduces water damage taken from enemies.<br />
     ${ELEMENTS.water.icon} Effective against water enemies.
+  `,
+  getElementalResistanceTooltip: () => html`
+    <strong>Elemental Resistance. Reduces elemental damage taken from enemies by a %.</strong>
   `,
 };

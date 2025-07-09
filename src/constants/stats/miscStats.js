@@ -251,4 +251,12 @@ export const MISC_STATS = {
     item: { min: 0.01, max: 0.05, max: 1, scaling: (level) => miscScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['staff'],
   },
+  allAttributes: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  allAttributesPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
 };

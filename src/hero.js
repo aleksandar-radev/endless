@@ -109,6 +109,9 @@ export default class Hero {
     dataManager.saveGame();
     updateRegionUI();
     updateTabIndicators();
+
+    // Dispatch a custom event for UI updates (e.g., prestige tab)
+    document.dispatchEvent(new CustomEvent('heroLevelUp', { detail: { level: this.level } }));
   }
 
   /**
@@ -276,6 +279,7 @@ export default class Hero {
 
   calculateFlatValues(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses) {
     const flatValues = {};
+    const attributes = Object.keys(ATTRIBUTES);
 
     for (const stat in STATS) {
       // Sum all sources for each stat
@@ -287,7 +291,8 @@ export default class Hero {
         (STATS[stat].levelUpBonus ?? 0) * (this.level - 1) +
         (trainingBonuses[stat] ?? 0) +
         (equipmentBonuses[stat] ?? 0) +
-        (skillTreeBonuses[stat] ?? 0);
+        (skillTreeBonuses[stat] ?? 0) +
+        (attributes.includes(stat) ? this.permaStats['allAttributes'] : 0);
     }
 
     return flatValues;
@@ -295,15 +300,18 @@ export default class Hero {
 
   calculatePercentBonuses(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses) {
     const percentBonuses = {};
+    const attributes = Object.keys(ATTRIBUTES);
     // Add all standard percent bonuses
     for (const stat in STATS) {
       if (stat.endsWith('Percent')) {
+        const statName = stat.replace('Percent', '');
         percentBonuses[stat] =
           (attributeEffects[stat] || 0) +
-          (this.permaStats[stat] || 0) / 100 +
+          (this.permaStats[stat] || 0) +
           (skillTreeBonuses[stat] || 0) / 100 +
           (equipmentBonuses[stat] || 0) / 100 +
-          (trainingBonuses[stat] || 0) / 100;
+          (trainingBonuses[stat] || 0) / 100 +
+          (attributes.includes(statName) ? this.permaStats['allAttributesPercent'] : 0);
       }
     }
     return percentBonuses;

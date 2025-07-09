@@ -191,6 +191,7 @@ export async function defeatEnemy() {
     showToast(text, 'success');
     statistics.increment('bossesKilled', null, 1);
     hero.bossLevel++;
+    document.dispatchEvent(new CustomEvent('bossKilled', { detail: { level: hero.bossLevel } }));
     selectBoss();
     updateResources();
   } else if (game.fightMode === 'explore') {

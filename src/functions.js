@@ -268,86 +268,182 @@ export function createModifyUI() {
   heroSection.innerHTML = '<h3>Hero</h3>';
   modifyDiv.appendChild(heroSection);
 
-  // Button to give 100 attribute points
-  const give100StatsBtn = document.createElement('button');
-  give100StatsBtn.textContent = 'Give 100 Attributes';
-  give100StatsBtn.addEventListener('click', () => {
-    const freePoints = 100;
-    hero.statPoints += freePoints;
-    hero.recalculateFromAttributes();
-    showToast(`Gave ${freePoints} attribute points!`);
+  // Give Attributes input and button
+  const attrDiv = document.createElement('div');
+  attrDiv.className = 'input-row';
+  const attrInput = document.createElement('input');
+  attrInput.type = 'number';
+  attrInput.min = '1';
+  attrInput.value = '100';
+  attrInput.title = 'Number of attribute points to give';
+  attrInput.className = 'input-number';
+  const giveAttrsBtn = document.createElement('button');
+  giveAttrsBtn.textContent = 'Give Attributes';
+  giveAttrsBtn.addEventListener('click', () => {
+    const val = parseInt(attrInput.value, 10);
+    if (!isNaN(val) && val > 0) {
+      hero.statPoints += val;
+      hero.recalculateFromAttributes();
+      showToast(`Gave ${val} attribute point${val > 1 ? 's' : ''}!`);
+    } else {
+      showToast('Invalid attribute value', 'error');
+    }
   });
-  heroSection.appendChild(give100StatsBtn);
+  attrDiv.appendChild(attrInput);
+  attrDiv.appendChild(giveAttrsBtn);
+  heroSection.appendChild(attrDiv);
 
-  // Button to set highest stage to 100000
-  const setHighestStageBtn = document.createElement('button');
-  setHighestStageBtn.textContent = 'Set Highest Stage to 100000';
-  setHighestStageBtn.addEventListener('click', () => {
-    hero.highestStage = 100000;
-    updateStageUI();
-    dataManager.saveGame();
-    showToast('Set highest stage to 100000!');
-  });
-  heroSection.appendChild(setHighestStageBtn);
-
-  // Button to give experience for level up
-  const giveExpBtn = document.createElement('button');
-  giveExpBtn.textContent = 'Give Experience for Level Up';
-  giveExpBtn.addEventListener('click', () => {
-    hero.levelUp(1);
-  });
-  heroSection.appendChild(giveExpBtn);
-
-  // Button to give experience for 10 level ups
-  const giveExp10Btn = document.createElement('button');
-  giveExp10Btn.textContent = 'Give Experience for 10 Level Ups';
-  giveExp10Btn.addEventListener('click', () => {
-    hero.levelUp(10);
-    showToast('Gave experience for 10 level ups!');
-  });
-  heroSection.appendChild(giveExp10Btn);
-
-  // Button to give experience for 100 level ups
-  const giveExp100Btn = document.createElement('button');
-  giveExp100Btn.textContent = 'Give Experience for 100 Level Ups';
-  giveExp100Btn.addEventListener('click', () => {
-    hero.levelUp(100);
-    showToast('Gave experience for 100 level ups!');
-  });
-  heroSection.appendChild(giveExp100Btn);
-
-  // Button to add gold
+  // Gold input and button
+  const goldDiv = document.createElement('div');
+  goldDiv.className = 'input-row';
+  const goldInput = document.createElement('input');
+  goldInput.type = 'number';
+  goldInput.min = '1';
+  goldInput.value = '100000000';
+  goldInput.title = 'Amount of gold to add';
+  goldInput.className = 'input-number';
   const addGoldBtn = document.createElement('button');
   addGoldBtn.textContent = 'Add Gold';
   addGoldBtn.addEventListener('click', () => {
-    const goldAmount = 100000000; // Amount of gold to add
-    hero.gainGold(goldAmount);
-    updateResources(); // Assuming there's a function to update the UI
-    showToast(`Added ${goldAmount} gold!`);
+    const goldAmount = parseInt(goldInput.value, 10);
+    if (!isNaN(goldAmount) && goldAmount > 0) {
+      hero.gainGold(goldAmount);
+      updateResources();
+      showToast(`Added ${goldAmount} gold!`);
+    } else {
+      showToast('Invalid gold value', 'error');
+    }
   });
-  heroSection.appendChild(addGoldBtn);
+  goldDiv.appendChild(goldInput);
+  goldDiv.appendChild(addGoldBtn);
+  heroSection.appendChild(goldDiv);
 
-  // Button to add crystals
+  // Crystals input and button
+  const crystalsDiv = document.createElement('div');
+  crystalsDiv.className = 'input-row';
+  const crystalsInput = document.createElement('input');
+  crystalsInput.type = 'number';
+  crystalsInput.min = '1';
+  crystalsInput.value = '1000';
+  crystalsInput.title = 'Amount of crystals to add';
+  crystalsInput.className = 'input-number';
   const addCrystalsBtn = document.createElement('button');
   addCrystalsBtn.textContent = 'Add Crystals';
   addCrystalsBtn.addEventListener('click', () => {
-    const crystalsAmount = 1000; // Amount of crystals to add
-    hero.gainCrystals(crystalsAmount);
-    updateResources(); // Assuming there's a function to update the UI
-    showToast(`Added ${crystalsAmount} crystals!`);
+    const crystalsAmount = parseInt(crystalsInput.value, 10);
+    if (!isNaN(crystalsAmount) && crystalsAmount > 0) {
+      hero.gainCrystals(crystalsAmount);
+      updateResources();
+      showToast(`Added ${crystalsAmount} crystals!`);
+    } else {
+      showToast('Invalid crystals value', 'error');
+    }
   });
-  heroSection.appendChild(addCrystalsBtn);
+  crystalsDiv.appendChild(crystalsInput);
+  crystalsDiv.appendChild(addCrystalsBtn);
+  heroSection.appendChild(crystalsDiv);
 
-  // Button to add souls
+  // Souls input and button
+  const soulsDiv = document.createElement('div');
+  soulsDiv.className = 'input-row';
+  const soulsInput = document.createElement('input');
+  soulsInput.type = 'number';
+  soulsInput.min = '1';
+  soulsInput.value = '1000';
+  soulsInput.title = 'Amount of souls to add';
+  soulsInput.className = 'input-number';
   const addSoulsBtn = document.createElement('button');
   addSoulsBtn.textContent = 'Add Souls';
   addSoulsBtn.addEventListener('click', () => {
-    const soulsAmount = 1000; // Amount of souls to add
-    hero.gainSouls(soulsAmount);
-    updateResources(); // Assuming there's a function to update the UI
-    showToast(`Added ${soulsAmount} souls!`);
+    const soulsAmount = parseInt(soulsInput.value, 10);
+    if (!isNaN(soulsAmount) && soulsAmount > 0) {
+      hero.gainSouls(soulsAmount);
+      updateResources();
+      showToast(`Added ${soulsAmount} souls!`);
+    } else {
+      showToast('Invalid souls value', 'error');
+    }
   });
-  heroSection.appendChild(addSoulsBtn);
+  soulsDiv.appendChild(soulsInput);
+  soulsDiv.appendChild(addSoulsBtn);
+  heroSection.appendChild(soulsDiv);
+
+  // Highest Stage input and button
+  const highestStageDiv = document.createElement('div');
+  highestStageDiv.className = 'input-row';
+  const highestStageInput = document.createElement('input');
+  highestStageInput.type = 'number';
+  highestStageInput.min = '1';
+  highestStageInput.value = hero.highestStage || 1;
+  highestStageInput.title = 'Set the highest stage';
+  highestStageInput.className = 'input-number';
+  const setHighestStageBtn = document.createElement('button');
+  setHighestStageBtn.textContent = 'Set Highest Stage';
+  setHighestStageBtn.addEventListener('click', () => {
+    const val = parseInt(highestStageInput.value, 10);
+    if (!isNaN(val) && val > 0) {
+      hero.highestStage = val;
+      updateStageUI();
+      dataManager.saveGame();
+      showToast(`Set highest stage to ${val}!`);
+    } else {
+      showToast('Invalid stage value', 'error');
+    }
+  });
+  highestStageDiv.appendChild(highestStageInput);
+  highestStageDiv.appendChild(setHighestStageBtn);
+  heroSection.appendChild(highestStageDiv);
+
+  // Boss Level input and button
+  const bossLevelDiv = document.createElement('div');
+  bossLevelDiv.className = 'input-row';
+  const bossLevelInput = document.createElement('input');
+  bossLevelInput.type = 'number';
+  bossLevelInput.min = '1';
+  bossLevelInput.value = hero.bossLevel || 1;
+  bossLevelInput.title = 'Set the highest boss level';
+  bossLevelInput.className = 'input-number';
+  const setBossLevelBtn = document.createElement('button');
+  setBossLevelBtn.textContent = 'Set Boss Level';
+  setBossLevelBtn.addEventListener('click', () => {
+    const val = parseInt(bossLevelInput.value, 10);
+    if (!isNaN(val) && val > 0) {
+      hero.bossLevel = val;
+      updateStageUI();
+      document.dispatchEvent(new CustomEvent('bossKilled', { detail: { level: hero.bossLevel } }));
+      dataManager.saveGame();
+      showToast(`Set highest boss level to ${val}!`);
+    } else {
+      showToast('Invalid boss level value', 'error');
+    }
+  });
+  bossLevelDiv.appendChild(bossLevelInput);
+  bossLevelDiv.appendChild(setBossLevelBtn);
+  heroSection.appendChild(bossLevelDiv);
+
+  // Experience input and button
+  const expDiv = document.createElement('div');
+  expDiv.className = 'input-row';
+  const expInput = document.createElement('input');
+  expInput.type = 'number';
+  expInput.min = '1';
+  expInput.value = '1';
+  expInput.title = 'Number of level ups';
+  expInput.className = 'input-number';
+  const giveExpBtn = document.createElement('button');
+  giveExpBtn.textContent = 'Level Up';
+  giveExpBtn.addEventListener('click', () => {
+    const val = parseInt(expInput.value, 10);
+    if (!isNaN(val) && val > 0) {
+      hero.levelUp(val);
+      showToast(`Leveled up ${val} time${val > 1 ? 's' : ''}!`);
+    } else {
+      showToast('Invalid level up value', 'error');
+    }
+  });
+  expDiv.appendChild(expInput);
+  expDiv.appendChild(giveExpBtn);
+  heroSection.appendChild(expDiv);
 
   // Example: Add buttons to modify inventory
   const inventorySection = document.createElement('div');
