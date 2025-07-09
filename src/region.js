@@ -72,6 +72,9 @@ function getRegionTooltip(region) {
 export function updateRegionUI() {
   const container = document.getElementById('region-selector');
   if (!container) return;
+  if (!game.currentRegionId) {
+    game.currentRegionId = REGIONS[0].id; // Default to first region if none set
+  }
   container.innerHTML = '';
   const unlocked = getUnlockedRegions(hero);
   const nextLockedRegion = REGIONS.find((region) => !unlocked.includes(region) && hero.level < region.unlockLevel);
