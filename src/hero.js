@@ -469,20 +469,20 @@ export default class Hero {
     if (toggleEffects.waterDamage) waterDamage += toggleEffects.waterDamage;
 
     // apply percent bonuses from toggles and instant skill effects
-    physicalDamage *= (1 + (toggleEffects.damagePercent || 0 +
-        instantSkillBaseEffects.damagePercent || 0) / 100);
-    fireDamage *= (1 + (toggleEffects.fireDamagePercent || 0 +
-        instantSkillBaseEffects.fireDamagePercent || 0) / 100);
-    coldDamage *= (1 + (toggleEffects.coldDamagePercent || 0 +
-        instantSkillBaseEffects.coldDamagePercent || 0) / 100);
-    airDamage *= (1 + (toggleEffects.airDamagePercent || 0 +
-        instantSkillBaseEffects.airDamagePercent || 0) / 100);
-    earthDamage *= (1 + (toggleEffects.earthDamagePercent || 0 +
-        instantSkillBaseEffects.earthDamagePercent || 0) / 100);
-    lightningDamage *= (1 + (toggleEffects.lightningDamagePercent || 0 +
-        instantSkillBaseEffects.lightningDamagePercent || 0) / 100);
-    waterDamage *= (1 + (toggleEffects.waterDamagePercent || 0 +
-        instantSkillBaseEffects.waterDamagePercent || 0) / 100);
+    physicalDamage *= (1 + ((toggleEffects.damagePercent || 0) +
+        (instantSkillBaseEffects.damagePercent || 0)) / 100);
+    fireDamage *= (1 + ((toggleEffects.fireDamagePercent || 0) +
+        (instantSkillBaseEffects.fireDamagePercent || 0)) / 100);
+    coldDamage *= (1 + ((toggleEffects.coldDamagePercent || 0) +
+        (instantSkillBaseEffects.coldDamagePercent || 0)) / 100);
+    airDamage *= (1 + ((toggleEffects.airDamagePercent || 0) +
+        (instantSkillBaseEffects.airDamagePercent || 0)) / 100);
+    earthDamage *= (1 + ((toggleEffects.earthDamagePercent || 0) +
+        (instantSkillBaseEffects.earthDamagePercent || 0)) / 100);
+    lightningDamage *= (1 + ((toggleEffects.lightningDamagePercent || 0) +
+        (instantSkillBaseEffects.lightningDamagePercent || 0)) / 100);
+    waterDamage *= (1 + ((toggleEffects.waterDamagePercent || 0) +
+        (instantSkillBaseEffects.waterDamagePercent || 0)) / 100);
 
     if (toggleEffects.doubleDamageChance) {
       const doubleDamageChance = Math.random() * 100;
