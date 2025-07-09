@@ -168,8 +168,8 @@ export const DRUID_SKILLS = {
     description: () => 'Increases life steal and mana gain.',
     maxLevel: () => 300,
     effect: (level) => ({
-      lifeSteal: level * 0.01,
-      manaPerHit: level * 0.2,
+      lifeSteal: level * 0.02,
+      manaPerHit: level * 0.5,
     }),
   },
   moonfury: {
