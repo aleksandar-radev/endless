@@ -150,4 +150,28 @@ export default class Item {
     }
     this.level = newLevel;
   }
+
+  addRandomStat() {
+    const pool = ITEM_STAT_POOLS[this.type];
+    if (!pool) return;
+    // Exclude already present stats
+    const availableStats = pool.possible.filter(stat => !(stat in this.stats));
+    if (availableStats.length === 0) return;
+    const stat = availableStats[Math.floor(Math.random() * availableStats.length)];
+    // Generate a base value for the stat (simple random, you may want to use your stat generation logic)
+    const range = AVAILABLE_STATS[stat];
+    const baseValue = Math.random() * (range.max - range.min) + range.min;
+    const tierBonus = this.getTierBonus();
+    const multiplier = this.getMultiplier();
+    const scale = this.getLevelScale(stat, this.level);
+    this.stats[stat] = this.calculateStatValue({
+      baseValue,
+      tierBonus,
+      multiplier,
+      scale,
+      stat,
+    });
+    if (!this.metaData) this.metaData = {};
+    this.metaData[stat] = { baseValue };
+  }
 }

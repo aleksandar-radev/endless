@@ -271,6 +271,7 @@ export default class SkillTree {
     // Handle different skill types
     switch (skill.type()) {
       case 'buff':
+      case 'summon':
         this.activateSkill(skillId);
         break;
       case 'toggle':
@@ -311,7 +312,7 @@ export default class SkillTree {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.cooldown) return 0;
     return Math.floor(
-      skill.cooldown(effectiveLevel) - (skill.cooldown(effectiveLevel) * hero.stats.cooldownReductionPercent) / 100,
+      skill.cooldown(effectiveLevel) - (skill.cooldown(effectiveLevel) * hero.stats.cooldownReductionPercent),
     );
   }
 
@@ -319,7 +320,7 @@ export default class SkillTree {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.duration) return 0;
     return Math.floor(
-      skill.duration(effectiveLevel) + (skill.duration(effectiveLevel) * hero.stats.buffDurationPercent) / 100,
+      skill.duration(effectiveLevel) + (skill.duration(effectiveLevel) * hero.stats.buffDurationPercent),
     );
   }
 
@@ -432,7 +433,7 @@ export default class SkillTree {
 
     const skill = this.getSkill(skillId);
 
-    if (skill.type() !== 'buff') return false;
+    if (skill.type() !== 'buff' && skill.type() !== 'summon') return false;
     if (!isAutoCast && hero.stats.currentMana < this.getSkillManaCost(skill)) {
       showManaWarning();
       return false;
@@ -446,11 +447,25 @@ export default class SkillTree {
     const buffEndTime = Date.now() + this.getSkillDuration(skill);
     const cooldownEndTime = Date.now() + this.getSkillCooldown(skill);
 
-    // Store buff data
-    this.activeBuffs.set(skillId, {
-      endTime: buffEndTime,
-      effects: this.getSkillEffect(skillId, skill.level),
-    });
+
+
+    if (skill.type() === 'summon') {
+      const summonStats = skill.summonStats(skill.level);
+      const now = Date.now();
+      this.activeBuffs.set(skillId, {
+        endTime: now + this.getSkillDuration(skill),
+        summonStats,
+        nextAttackTime: now + 1000 / summonStats.attackSpeed,
+        skillId,
+        effects: {},
+      });
+    } else {
+      // Store buff data
+      this.activeBuffs.set(skillId, {
+        endTime: buffEndTime,
+        effects: this.getSkillEffect(skillId, skill.level),
+      });
+    }
 
     // Set cooldown and active state
     this.skills[skillId].cooldownEndTime = cooldownEndTime;
@@ -503,6 +518,36 @@ export default class SkillTree {
     });
     hero.recalculateFromAttributes();
     updateActionBar(); // Update UI to reset all visual states
+  }
+
+  processSummons() {
+    const now = Date.now();
+    this.activeBuffs.forEach((buffData, skillId) => {
+      if (!buffData.summonStats) return;
+      if (buffData.nextAttackTime <= now) {
+      // Calculate summon damage as % of player's damage
+        const playerDamage = hero.calculateTotalDamage();
+        let damage = playerDamage.damage * (buffData.summonStats.percentOfPlayerDamage / 100);
+        damage += buffData.summonStats.damage || 0;
+        damage += buffData.summonStats.fireDamage || 0;
+        damage += buffData.summonStats.coldDamage || 0;
+        damage += buffData.summonStats.airDamage || 0;
+        damage += buffData.summonStats.earthDamage || 0;
+        damage += buffData.summonStats.lightningDamage || 0;
+        damage += buffData.summonStats.waterDamage || 0;
+
+        if (buffData.summonStats.lifePerHit) {
+          game.healPlayer(buffData.summonStats.lifePerHit);
+        }
+        if (buffData.summonStats.manaPerHit) {
+          game.restoreMana(buffData.summonStats.manaPerHit);
+        }
+
+        game.damageEnemy(damage, false);
+        // Schedule next attack
+        buffData.nextAttackTime = now + 1000 / buffData.summonStats.attackSpeed;
+      }
+    });
   }
 
   // --- Add this method for resetting the skill tree ---
@@ -565,7 +610,7 @@ export default class SkillTree {
             this.useInstantSkill(skillId, true);
           }
         }
-      } else if (skill.type() === 'buff') {
+      } else if (skill.type() === 'buff' || skill.type() === 'summon') {
         // Only cast if not active, not on cooldown, and enough mana
         if (!skillData.active && (!skillData.cooldownEndTime || skillData.cooldownEndTime <= Date.now())) {
           if (hero.stats.currentMana >= this.getSkillManaCost(skill)) {

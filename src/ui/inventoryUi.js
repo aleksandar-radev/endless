@@ -166,7 +166,7 @@ export function showSalvageModal(inv) {
     const isChecked = selectedRarities.includes(rarity);
     const atCap = selectedRarities.length >= autoSalvageLevel;
     const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
-    return `
+    return html`
       <div class="salvage-row" style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
         <button class="salvage-btn-modal" data-rarity="${rarity}">${rarity.charAt(0) + rarity.slice(1).toLowerCase()} Items</button>
         <label class="toggle-label" style="margin-left:8px;display:flex;align-items:center;gap:4px;position:relative;cursor:pointer;">
@@ -181,6 +181,17 @@ export function showSalvageModal(inv) {
         <div class="inventory-trash">
           <span class="inventory-trash-icon">🗑️</span>
           <div class="inventory-trash-label">Drag item here</div>
+        </div>
+        <div class="salvage-material-row">
+          <div>
+            <div class="salvage-reward-title">Salvage reward</div>
+            <div class="salvage-material-toggle-container">
+              Gold<label class="toggle-label">
+                <input type="checkbox" class="salvage-material-toggle" ${inv.salvageUpgradeMaterials ? 'checked' : ''} />
+                <span class="toggle-btn${inv.salvageUpgradeMaterials ? ' checked' : ''}${!crystalShop.crystalUpgrades?.salvageMaterials ? ' disabled' : ''}"></span>
+              </label>Upgrade materials
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -218,8 +229,8 @@ export function showSalvageModal(inv) {
   });
 
   // Auto-salvage toggle logic
-  overlay.querySelectorAll('.toggle-label').forEach((label) => {
-    const input = label.querySelector('.auto-salvage-toggle');
+  overlay.querySelectorAll('.auto-salvage-toggle').forEach((input) => {
+    const label = input.closest('.toggle-label');
     // Always sync visual state on open
     syncToggleState();
     // Input change handler
@@ -267,6 +278,42 @@ export function showSalvageModal(inv) {
     }
   });
 
+  // Salvage material toggle
+  const matToggle = overlay.querySelector('.salvage-material-toggle');
+  if (matToggle) {
+    const matLabel = matToggle.closest('.toggle-label');
+    // Only allow toggle if the crystal upgrade is owned
+    const hasUpgrade = crystalShop.crystalUpgrades.salvageMaterials;
+    matToggle.disabled = !hasUpgrade;
+    if (!hasUpgrade) {
+      matLabel.title = 'Unlock this option by purchasing the Salvage Materials upgrade in the Crystal Shop.';
+      matToggle.checked = false;
+      matLabel.querySelector('.toggle-btn').classList.remove('checked');
+    }
+    function syncMatToggleState() {
+      matToggle.checked = inv.salvageUpgradeMaterials && hasUpgrade;
+      const btn = matLabel.querySelector('.toggle-btn');
+      if (btn) btn.classList.toggle('checked', inv.salvageUpgradeMaterials && hasUpgrade);
+    }
+    matToggle.addEventListener('change', () => {
+      if (!hasUpgrade) {
+        matToggle.checked = false;
+        return;
+      }
+      inv.setSalvageUpgradeMaterials(matToggle.checked);
+      syncMatToggleState();
+    });
+    matLabel.addEventListener('click', (e) => {
+      if (!hasUpgrade) return;
+      if (e.target !== matToggle) {
+        matToggle.checked = !matToggle.checked;
+        matToggle.dispatchEvent(new Event('change'));
+      }
+    });
+    // Always sync on open and after modal update
+    syncMatToggleState();
+  }
+
   // Trash drag logic (scoped to modal)
   const trash = overlay.querySelector('.inventory-trash');
   trash.addEventListener('dragover', (e) => {
@@ -289,15 +336,26 @@ export function showSalvageModal(inv) {
       removed = true;
     }
     if (removed) {
-      let goldGained = inventory.getItemSalvageValue(item);
       let crystalsGained = item.rarity === 'MYTHIC' ? 1 : 0;
-      if (goldGained > 0) hero.gold = (hero.gold || 0) + goldGained;
-      if (crystalsGained > 0) hero.crystals = (hero.crystals || 0) + crystalsGained;
       let msg = `Salvaged 1 ${item.rarity.toLowerCase()} item`;
-      if (goldGained > 0) msg += `, gained ${goldGained} gold`;
-      if (crystalsGained > 0) msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
+      if (inventory.salvageUpgradeMaterials) {
+        const { id, qty } = inventory.getItemSalvageMaterial(item);
+        inventory.addMaterial({ id, qty });
+        msg += `, gained ${qty} ${MATERIALS[id].name}`;
+      } else {
+        let goldGained = inventory.getItemSalvageValue(item);
+        if (goldGained > 0) {
+          hero.gold = (hero.gold || 0) + goldGained;
+          msg += `, gained ${goldGained} gold`;
+        }
+      }
+      if (crystalsGained > 0) {
+        hero.crystals = (hero.crystals || 0) + crystalsGained;
+        msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
+      }
       showToast(msg, 'success');
       updateInventoryGrid();
+      updateMaterialsGrid();
       dataManager.saveGame();
       closeModal(overlay);
       showSalvageModal(inv);
@@ -412,16 +470,26 @@ export function setupDragAndDrop() {
         }
       }
       if (removed) {
-        // Salvage logic (reuse your salvage reward logic)
-        let goldGained = inventory.getItemSalvageValue(item);
         let crystalsGained = item.rarity === 'MYTHIC' ? 1 : 0;
-        if (goldGained > 0) hero.gold = (hero.gold || 0) + goldGained;
-        if (crystalsGained > 0) hero.crystals = (hero.crystals || 0) + crystalsGained;
         let msg = `Salvaged 1 ${item.rarity.toLowerCase()} item`;
-        if (goldGained > 0) msg += `, gained ${goldGained} gold`;
-        if (crystalsGained > 0) msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
+        if (inventory.salvageUpgradeMaterials) {
+          const { id, qty } = inventory.getItemSalvageMaterial(item);
+          inventory.addMaterial({ id, qty });
+          msg += `, gained ${qty} ${MATERIALS[id].name}`;
+        } else {
+          let goldGained = inventory.getItemSalvageValue(item);
+          if (goldGained > 0) {
+            hero.gold = (hero.gold || 0) + goldGained;
+            msg += `, gained ${goldGained} gold`;
+          }
+        }
+        if (crystalsGained > 0) {
+          hero.crystals = (hero.crystals || 0) + crystalsGained;
+          msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
+        }
         showToast(msg, 'success');
         updateInventoryGrid();
+        updateMaterialsGrid();
         dataManager.saveGame();
       }
     });
@@ -578,17 +646,32 @@ export function setupItemDragAndTooltip() {
       // --- Add salvage gold value if in salvage modal (for hovered item only) ---
       const inSalvageModal = item.closest('.inventory-salvage-modal-content');
       if (inSalvageModal) {
-        let goldGained = inventory.getItemSalvageValue(itemData);
-        tooltipContent += `<div style="margin-top:8px;
-          color:#fff;
-          background: rgba(224, 192, 96, 0.6);
-          border-top:1px solid #e0c060;
-          padding:6px 8px 4px 8px;
-          border-radius:0 0 8px 8px;
-          font-weight:bold;
-          text-shadow: 1px 1px 2px #7a5c1c;">
-          <b>Salvage Value:</b> ${goldGained} gold
-        </div>`;
+        if (inventory.salvageUpgradeMaterials) {
+          const { id, qty } = inventory.getItemSalvageMaterial(itemData);
+          let realId = id.toUpperCase();
+          tooltipContent += `<div style="margin-top:8px;
+            color:#fff;
+            background: rgba(224, 192, 96, 0.6);
+            border-top:1px solid #e0c060;
+            padding:6px 8px 4px 8px;
+            border-radius:0 0 8px 8px;
+            font-weight:bold;
+            text-shadow: 1px 1px 2px #7a5c1c;">
+            <b>Salvage Value:</b> ${qty} ${MATERIALS[realId].name}
+          </div>`;
+        } else {
+          let goldGained = inventory.getItemSalvageValue(itemData);
+          tooltipContent += `<div style="margin-top:8px;
+            color:#fff;
+            background: rgba(224, 192, 96, 0.6);
+            border-top:1px solid #e0c060;
+            padding:6px 8px 4px 8px;
+            border-radius:0 0 8px 8px;
+            font-weight:bold;
+            text-shadow: 1px 1px 2px #7a5c1c;">
+            <b>Salvage Value:</b> ${goldGained} gold
+          </div>`;
+        }
       }
       tooltipContent += '</div>';
 

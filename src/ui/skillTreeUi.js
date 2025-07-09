@@ -92,7 +92,6 @@ function showClassSelection() {
       btnText = cost > 0 ? `Select Class (Cost: ${cost} Crystal${cost !== 1 ? 's' : ''})` : 'Select Class';
     }
     button.textContent = btnText;
-    button.disabled = hero.level < reqLevel || (!alreadyUnlocked && hero.crystals < cost);
     button.addEventListener('click', () => selectClassPath(pathId));
     pathElement.appendChild(button);
 
@@ -173,7 +172,7 @@ function renderAutoCastToggles() {
   const eligibleSkills = Object.entries(skillTree.skills)
     .filter(([skillId, skill]) => {
       const base = skillTree.getSkill(skillId);
-      return base && (base.type() === 'instant' || base.type() === 'buff') && skill.level > 0;
+      return base && (base.type() === 'instant' || base.type() === 'buff' || base.type() === 'summon') && skill.level > 0;
     })
     .map(([skillId, skill]) => {
       const base = skillTree.getSkill(skillId);
@@ -540,6 +539,22 @@ function updateSkillModalDetails() {
     }${diff.toFixed(decimals)})</p>`;
   });
 
+  // --- Show summon stats if this is a summon skill ---
+  if (skill.type() === 'summon') {
+    const title = skillModal.querySelector('.modal-skill-effects h3');
+    title.innerHTML = 'Summon Stats';
+    const summonStatsCurrent = skill.summonStats(currentLevel);
+    const summonStatsFuture = skill.summonStats(futureLevel);
+    Object.entries(summonStatsCurrent).forEach(([stat, currVal]) => {
+      const futureVal = summonStatsFuture[stat];
+      const diff = futureVal - currVal;
+      effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${currVal} (${diff >= 0 ? '+' : ''}${diff})</p>`;
+    });
+  } else {
+    const title = skillModal.querySelector('.modal-skill-effects h3');
+    title.innerHTML = 'Skill Effects';
+  }
+
   // Update buy button
   const buyBtn = skillModal.querySelector('.modal-buy');
   buyBtn.disabled = actualQty <= 0;
@@ -650,7 +665,16 @@ const updateTooltipContent = (skillId) => {
   }
 
   // If not at max level, show next level effects and the bonus
-  if (currentLevel < skill.maxLevel() || skill.maxLevel() === Infinity) {
+
+  if (skill.type() === 'summon') {
+  // Show summon stats at current level
+    const level = skillTree.skills[skill.id]?.level || 0;
+    const summonStats = skill.summonStats(level);
+    skillDescription += '<br /><u>Summon Stats:</u><br />';
+    Object.entries(summonStats).forEach(([stat, value]) => {
+      skillDescription += `${formatStatName(stat)}: ${value}<br />`;
+    });
+  } else if (currentLevel < skill.maxLevel() || skill.maxLevel() === Infinity) {
     skillDescription += '<br /><u>Next Level Effects:</u><br />';
     Object.entries(effectsNext).forEach(([stat, value]) => {
       const decimals = STATS[stat].decimalPlaces || 0;
@@ -775,12 +799,12 @@ export function updateBuffIndicators() {
 
     // Handle active states for all skill types
     const isActive =
-      (skill.type() === 'buff' && skillTree.activeBuffs.has(skillId)) || (skill.type() === 'toggle' && skill.active);
+      (skill.type() === 'buff' || skill.type() === 'summon') && skillTree.activeBuffs.has(skillId) || (skill.type() === 'toggle' && skill.active);
 
     slot.classList.toggle('active', isActive);
 
     // Show cooldown for both buff and instant skills
-    if ((skill.type() === 'buff' || skill.type() === 'instant') && skill?.cooldownEndTime) {
+    if ((skill.type() === 'buff' || skill.type() === 'instant' || skill.type() === 'summon') && skill?.cooldownEndTime) {
       const remaining = skill.cooldownEndTime - Date.now();
       if (remaining > 0) {
         const percentage = (remaining / skillTree.getSkillCooldown(skill)) * 100;

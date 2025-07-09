@@ -33,6 +33,8 @@ export default class Hero {
       wisdom: 0,
       endurance: 0,
       dexterity: 0,
+      intelligence: 0,
+      perseverance: 0,
     };
 
     // persistent stats, that are not being reset (usually from elixirs, achievements, etc.)
@@ -58,8 +60,14 @@ export default class Hero {
    * @returns {number} EXP required for next level
    */
   getExpToNextLevel() {
-    // Original: starts at 66, increases by 84 per level up
-    return 66 + 84 * (this.level - 1);
+  // XP required for next level: 66 for level 1, then each next level: previous + 86 + 40*block
+    if (this.level === 1) return 66;
+    let xp = 66;
+    for (let lvl = 2; lvl <= this.level; lvl++) {
+      const block = Math.floor((lvl - 1) / 20);
+      xp += 86 + 40 * block;
+    }
+    return xp;
   }
 
   gainExp(amount) {
@@ -101,6 +109,9 @@ export default class Hero {
     dataManager.saveGame();
     updateRegionUI();
     updateTabIndicators();
+
+    // Dispatch a custom event for UI updates (e.g., prestige tab)
+    document.dispatchEvent(new CustomEvent('heroLevelUp', { detail: { level: this.level } }));
   }
 
   /**
@@ -217,6 +228,18 @@ export default class Hero {
       (equipmentBonuses.dexterity || 0) +
       (skillTreeBonuses.dexterity || 0) +
       (trainingBonuses.dexterity || 0);
+    this.stats.intelligence =
+      this.primaryStats.intelligence +
+      this.permaStats.intelligence +
+      (equipmentBonuses.intelligence || 0) +
+      (skillTreeBonuses.intelligence || 0) +
+      (trainingBonuses.intelligence || 0);
+    this.stats.perseverance =
+      this.primaryStats.perseverance +
+      this.permaStats.perseverance +
+      (equipmentBonuses.perseverance || 0) +
+      (skillTreeBonuses.perseverance || 0) +
+      (trainingBonuses.perseverance || 0);
   }
 
   calculateAttributeEffects() {
@@ -256,6 +279,7 @@ export default class Hero {
 
   calculateFlatValues(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses) {
     const flatValues = {};
+    const attributes = Object.keys(ATTRIBUTES);
 
     for (const stat in STATS) {
       // Sum all sources for each stat
@@ -267,7 +291,8 @@ export default class Hero {
         (STATS[stat].levelUpBonus ?? 0) * (this.level - 1) +
         (trainingBonuses[stat] ?? 0) +
         (equipmentBonuses[stat] ?? 0) +
-        (skillTreeBonuses[stat] ?? 0);
+        (skillTreeBonuses[stat] ?? 0) +
+        (attributes.includes(stat) ? this.permaStats['allAttributes'] : 0);
     }
 
     return flatValues;
@@ -275,15 +300,18 @@ export default class Hero {
 
   calculatePercentBonuses(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses) {
     const percentBonuses = {};
+    const attributes = Object.keys(ATTRIBUTES);
     // Add all standard percent bonuses
     for (const stat in STATS) {
       if (stat.endsWith('Percent')) {
+        const statName = stat.replace('Percent', '');
         percentBonuses[stat] =
           (attributeEffects[stat] || 0) +
-          (this.permaStats[stat] || 0) / 100 +
+          (this.permaStats[stat] || 0) +
           (skillTreeBonuses[stat] || 0) / 100 +
           (equipmentBonuses[stat] || 0) / 100 +
-          (trainingBonuses[stat] || 0) / 100;
+          (trainingBonuses[stat] || 0) / 100 +
+          (attributes.includes(statName) ? this.permaStats['allAttributesPercent'] : 0);
       }
     }
     return percentBonuses;
@@ -310,6 +338,7 @@ export default class Hero {
           (bonuses[upgradeConfig.stat] || 0) + soulUpgrades[upgradeKey] * upgradeConfig.bonus;
       }
     }
+
     return bonuses;
   }
 
@@ -327,6 +356,7 @@ export default class Hero {
         percentBonuses[stat] = percentValue; // todo: this or above makes no sense, but keep it
       }
     }
+
 
     for (const stat in STATS) {
       if (!stat.endsWith('Percent')) {
@@ -375,8 +405,11 @@ export default class Hero {
       }
     }
 
+    this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * this.stats.mana;
+    this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.mana;
+
     // apply total damage percent
-    this.stats.damage = Math.floor(this.stats.damage * (1 + this.stats.totalDamagePercent / 100));
+    this.stats.damage = Math.floor(this.stats.damage * (1 + this.stats.totalDamagePercent));
 
     // Special handling for elemental damages
     this.stats.fireDamage = Math.floor(

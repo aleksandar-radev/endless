@@ -20,7 +20,7 @@ const CRYSTAL_UPGRADE_CONFIG = {
     bonusLabel: 'Increases starting stage by 1',
     showLevel: true,
     baseCost: 2,
-    costIncrement: 0,
+    costIncrement: 0.02, // 1 per 50 levels
     multiple: true,
   },
   continuousPlay: {
@@ -75,6 +75,13 @@ const CRYSTAL_UPGRADE_CONFIG = {
     baseCost: 1000,
     oneTime: true,
   },
+  salvageMaterials: {
+    label: 'Salvage Materials',
+    bonus: 'Allows salvaging items for upgrade materials instead of gold',
+    bonusLabel: 'Allows salvaging items for upgrade materials instead of gold',
+    baseCost: 200,
+    oneTime: true,
+  },
 };
 
 export default class CrystalShop {
@@ -121,7 +128,7 @@ export default class CrystalShop {
   createCrystalUpgradeButton(stat, config) {
     let alreadyPurchased = config.oneTime && this.crystalUpgrades[stat];
     const level = this.crystalUpgrades[stat] || 0;
-    const cost = config.baseCost + (config.costIncrement || 0) * (this.crystalUpgrades[stat] || 0);
+    const cost = Math.floor(config.baseCost + (config.costIncrement || 0) * level);
     let isMaxed = false;
     if (stat === 'autoSalvage' && config.maxLevel) {
       isMaxed = level >= config.maxLevel;
@@ -315,7 +322,7 @@ export default class CrystalShop {
         let lvl = baseLevel;
         let crystals = crystalsAvailable;
         while (true) {
-          const cost = config.baseCost + (config.costIncrement || 0) * lvl;
+          const cost = Math.floor(config.baseCost + (config.costIncrement || 0) * lvl);
           if (crystals < cost) break;
           crystals -= cost;
           totalCost += cost;
@@ -324,7 +331,7 @@ export default class CrystalShop {
         }
       } else {
         for (let i = 0; i < qty; i++) {
-          const cost = config.baseCost + (config.costIncrement || 0) * (baseLevel + i);
+          const cost = Math.floor(config.baseCost + (config.costIncrement || 0) * (baseLevel + i));
           totalCost += cost;
         }
       }
@@ -342,7 +349,7 @@ export default class CrystalShop {
     } else if (stat === 'autoSalvage') {
       const level = this.crystalUpgrades[stat] || 0;
       const cap = config.maxLevel || 6;
-      const nextCost = config.baseCost + (config.costIncrement || 0) * level;
+      const nextCost = Math.floor(config.baseCost + (config.costIncrement || 0) * level);
       const isMaxed = level >= cap;
       if (q('.modal-level')) q('.modal-level').textContent = level;
       if (q('.modal-max-level')) q('.modal-max-level').textContent = cap;
@@ -355,6 +362,10 @@ export default class CrystalShop {
       // Hide cost if maxed
       const costP = q('.modal-total-cost')?.closest('p');
       if (costP) costP.style.display = isMaxed ? 'none' : '';
+    } else if (config.multiple) {
+      // For other multiples, show floored cost
+      const cost = Math.floor(config.baseCost + (config.costIncrement || 0) * (this.crystalUpgrades[stat] || 0));
+      if (q('.modal-total-cost')) q('.modal-total-cost').textContent = cost;
     }
   }
 
@@ -383,7 +394,7 @@ export default class CrystalShop {
     let level = this.crystalUpgrades[stat] || 0;
     let count = 0,
       totalCost = 0;
-    const nextCost = (lvl) => baseCost + costIncrement * lvl;
+    const nextCost = (lvl) => Math.floor(baseCost + costIncrement * lvl);
 
     if (qty === 'max') {
       while (hero.crystals >= nextCost(level)) {

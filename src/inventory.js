@@ -35,6 +35,7 @@ export default class Inventory {
     this.inventoryItems = savedData?.inventoryItems || new Array(ITEM_SLOTS).fill(null);
     this.materials = savedData?.materials || new Array(MATERIALS_SLOTS).fill(null);
     this.autoSalvageRarities = savedData?.autoSalvageRarities || [];
+    this.salvageUpgradeMaterials = savedData?.salvageUpgradeMaterials || false;
 
     if (savedData) {
       // Restore equipped items
@@ -236,6 +237,11 @@ export default class Inventory {
           if (currentIdx < rarities.length - 1) {
             item.rarity = rarities[currentIdx + 1];
             item.applyLevelToStats(item.level);
+            // Add a new stat if below max for new rarity
+            const maxStats = ITEM_RARITY[item.rarity].totalStats;
+            if (Object.keys(item.stats).length < maxStats) {
+              item.addRandomStat();
+            }
           }
           this.handleMaterialUsed(this, mat, matDef, 1, 'material-enchant-dialog', `Enchanted ${item.type} to ${item.rarity}`);
         },
@@ -336,13 +342,41 @@ export default class Inventory {
   }
 
   getItemSalvageValue(item) {
-    return 25 * item.level * (RARITY_ORDER.indexOf(item.rarity) + 1) * item.tier;
+    return Math.floor(25 * item.level * (Math.max(RARITY_ORDER.indexOf(item.rarity) / 2 + 1, 1)) * Math.max(item.tier / 2, 1));
+  }
+
+  getItemSalvageMaterial(item) {
+    const rarityAmounts = {
+      NORMAL: 1,
+      MAGIC: 1.5,
+      RARE: 2,
+      UNIQUE: 2.5,
+      LEGENDARY: 3,
+      MYTHIC: 3.5,
+    };
+    const weaponTypes = getTypesByCategory('weapon');
+    const jewelryTypes = getTypesByCategory('jewelry');
+    let id;
+    if (weaponTypes.includes(item.type)) {
+      id = MATERIALS.WEAPON_UPGRADE_CORE.id;
+    } else if (jewelryTypes.includes(item.type)) {
+      id = MATERIALS.JEWELRY_UPGRADE_GEM.id;
+    } else {
+      id = MATERIALS.ARMOR_UPGRADE_STONE.id;
+    }
+    const qty = Math.floor(
+      (rarityAmounts[item.rarity] || 1) *
+      Math.max(item.level / 200, 1) *
+      Math.max(item.tier / 3, 1),
+    );
+    return { id, qty };
   }
 
   salvageItemsByRarity(rarity) {
     let salvagedItems = 0;
     let goldGained = 0;
     let crystalsGained = 0;
+    const matsGained = {};
 
     // Skip first PERSISTENT_SLOTS slots when salvaging
     this.inventoryItems = this.inventoryItems.map((item, index) => {
@@ -352,9 +386,12 @@ export default class Inventory {
         console.debug(rarity, '==', item.rarity);
 
         salvagedItems++;
-        // Give gold based on rarity and level (customize as needed)
-        goldGained += this.getItemSalvageValue(item);
-        // If mythic, give a crystal
+        if (this.salvageUpgradeMaterials) {
+          const { id, qty } = this.getItemSalvageMaterial(item);
+          matsGained[id] = (matsGained[id] || 0) + qty;
+        } else {
+          goldGained += this.getItemSalvageValue(item);
+        }
         if (item.rarity === 'MYTHIC') {
           crystalsGained++;
         }
@@ -364,11 +401,28 @@ export default class Inventory {
     });
 
     if (salvagedItems > 0) {
-      if (goldGained > 0) hero.gold = (hero.gold || 0) + goldGained;
+      if (this.salvageUpgradeMaterials) {
+        Object.entries(matsGained).forEach(([id, qty]) => {
+          this.addMaterial({ id, qty });
+        });
+      } else if (goldGained > 0) {
+        hero.gold = (hero.gold || 0) + goldGained;
+      }
       if (crystalsGained > 0) hero.crystals = (hero.crystals || 0) + crystalsGained;
       let msg = `Salvaged ${salvagedItems} ${rarity.toLowerCase()} items`;
-      if (goldGained > 0) msg += `, gained ${goldGained} gold`;
-      if (crystalsGained > 0) msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
+      if (this.salvageUpgradeMaterials) {
+        const parts = Object.entries(matsGained).map(
+          ([id, qty]) => {
+            const realId = id.toUpperCase();
+            return `${qty} ${MATERIALS[realId].name}`;
+          },
+        );
+        if (parts.length) msg += `, gained ${parts.join(', ')}`;
+      } else if (goldGained > 0) {
+        msg += `, gained ${goldGained} gold`;
+      }
+      if (crystalsGained > 0)
+        msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
       showToast(msg, 'success');
       updateInventoryGrid();
       updateMaterialsGrid();
@@ -377,6 +431,25 @@ export default class Inventory {
     } else {
       showToast(`No ${rarity.toLowerCase()} items to salvage`, 'info');
     }
+  }
+
+  // For upgrade materials (scraps/cores/stones), drop amount is variable:
+  // For every 25 enemy levels, there is a 50% chance for an additional drop.
+  // Instead of rolling for each, we calculate the min (1) and max (1 + rolls),
+  // then pick a random integer in that range for efficiency at high stages.
+  getScrapPackSize(enemyLevel) {
+    const rolls = Math.floor(enemyLevel / 25);
+    const min = 1;
+    const max = 1 + rolls;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  isUpgradeMaterial(mat) {
+    return (
+      mat.id === 'armor_upgrade_stone' ||
+      mat.id === 'weapon_upgrade_core' ||
+      mat.id === 'jewelry_upgrade_gem'
+    );
   }
 
   handleRingSlotDrop(draggedRing, targetSlot) {
@@ -520,6 +593,11 @@ export default class Inventory {
 
   setAutoSalvageRarities(rarities) {
     this.autoSalvageRarities = rarities;
+    dataManager.saveGame();
+  }
+
+  setSalvageUpgradeMaterials(value) {
+    this.salvageUpgradeMaterials = value;
     dataManager.saveGame();
   }
 

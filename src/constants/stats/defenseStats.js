@@ -154,4 +154,12 @@ export const DEFENSE_STATS = {
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
   },
+  manaShieldPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  lifeRegenOfTotalPercent: {
+    base: 0,
+    decimalPlaces: 2,
+  },
 };

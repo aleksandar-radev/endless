@@ -171,11 +171,11 @@ export const WARRIOR_SKILLS = {
     effect: (level) => ({
       lifePercent: level * 0.3,
       damagePercent: level * 0.3,
-      strengthPercent: level * 2,
-      vitalityPercent: level * 2,
-      agilityPercent: level * 2,
+      strengthPercent: level * 1.5,
+      vitalityPercent: level * 1.5,
+      agilityPercent: level * 1.5,
       wisdomPercent: level * 1,
-      endurancePercent: level * 2,
+      endurancePercent: level * 1.5,
     }),
   },
 };

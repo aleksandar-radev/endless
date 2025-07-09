@@ -138,11 +138,7 @@
   margin-top: 8px;
 }
 
-.elemental-stats-grid .elemental-row {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
+.elemental-stats-grid .elemental-row {}
 
 .stat-row .stat-label {
   display: inline-block;

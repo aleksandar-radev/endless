@@ -380,6 +380,8 @@ export function updateStatsAndAttributesUI() {
     document.getElementById('wisdom-value').textContent = hero.stats['wisdom'];
     document.getElementById('endurance-value').textContent = hero.stats['endurance'];
     document.getElementById('dexterity-value').textContent = hero.stats['dexterity'];
+    document.getElementById('intelligence-value').textContent = hero.stats['intelligence'] || 0;
+    document.getElementById('perseverance-value').textContent = hero.stats['perseverance'] || 0;
   }
 
   const skillTreeTab = document.querySelector('[data-tab="skilltree"]');

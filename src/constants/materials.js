@@ -17,11 +17,24 @@ export const MATERIALS = {
     id: 'greater_experience_potion',
     name: 'Greater Experience Potion',
     icon: '🧪',
-    description: 'Grants 5000 experience when used.',
+    description: 'Grants 5% experience when used.',
     dropChance: 3,
-    sort: 10,
+    sort: 11,
     onUse: (hero, qty = 1) => {
-      hero.gainExp(5000 * qty);
+      const xpGain = Math.floor(hero.getExpToNextLevel() * 0.05);
+      hero.gainExp(xpGain * qty);
+    },
+  },
+  HUGE_EXPERIENCE_POTION: {
+    id: 'huge_experience_potion',
+    name: 'Huge Experience Potion',
+    icon: '🧪',
+    description: 'Grants 15% experience when used.',
+    dropChance: 1,
+    sort: 12,
+    onUse: (hero, qty = 1) => {
+      const xpGain = Math.floor(hero.getExpToNextLevel() * 0.15);
+      hero.gainExp(xpGain * qty);
     },
   },
   GOLD_COINS: {
@@ -164,6 +177,28 @@ export const MATERIALS = {
     sort: 140,
     onUse: (hero, qty = 1) => {
       hero.permaStats.dexterity += 1 * qty;
+    },
+  },
+  POTION_OF_INTELLIGENCE: {
+    id: 'potion_of_intelligence',
+    name: 'Potion of Intelligence',
+    icon: '🧠',
+    description: 'Increases intelligence by 1.',
+    dropChance: 12,
+    sort: 150,
+    onUse: (hero, qty = 1) => {
+      hero.permaStats.intelligence += 1 * qty;
+    },
+  },
+  POTION_OF_PERSEVERANCE: {
+    id: 'potion_of_perseverance',
+    name: 'Potion of Perseverance',
+    icon: '💪',
+    description: 'Increases perseverance by 1.',
+    dropChance: 12,
+    sort: 150,
+    onUse: (hero, qty = 1) => {
+      hero.permaStats.perseverance += 1 * qty;
     },
   },
   ARMOR_UPGRADE_STONE: {

@@ -5,82 +5,49 @@ const html = String.raw;
 export const ATTRIBUTES = {
   strength: {
     effects: {
-      damagePerPoint: 0.5,
-      damagePercentPer: {
-        enabled: false,
-        points: 5,
-        value: 0.01,
-      },
+      damagePerPoint: 0.34,
     },
   },
   agility: {
     effects: {
-      attackRatingPerPoint: 7,
-      attackRatingPercentPer: {
-        enabled: false,
-        points: 5,
-        value: 0.01,
-      },
-      attackSpeedPer: {
-        enabled: false,
-        points: 25,
-        value: 0.01,
-      },
+      attackRatingPerPoint: 4,
+      damagePerPoint: 0.2,
     },
   },
   vitality: {
     effects: {
       lifePerPoint: 5,
-      lifePercentPer: {
-        enabled: false,
-        points: 5,
-        value: 0.01,
-      },
-      regenPercentPer: {
-        enabled: false,
-        points: 10,
-        value: 0.01,
-      },
     },
   },
   wisdom: {
     effects: {
       manaPerPoint: 1,
-      manaPercentPer: {
-        enabled: false,
-        points: 5,
-        value: 0.01,
-      },
-      regenPercentPer: {
-        enabled: false,
-        points: 10,
-        value: 0.1,
-      },
     },
   },
   endurance: {
     effects: {
       armorPerPoint: 4,
-      armorPercentPer: {
-        enabled: false,
-        points: 5,
-        value: 0.01,
-      },
     },
   },
   dexterity: {
     effects: {
       evasionPerPoint: 4,
-      critChancePer: {
-        enabled: false,
-        points: 25,
-        value: 0.01,
-      },
-      critDamagePer: {
-        enabled: false,
-        points: 10,
-        value: 0.01,
-      },
+    },
+  },
+  intelligence: {
+    effects: {
+      fireDamagePerPoint: 0.06,
+      coldDamagePerPoint: 0.06,
+      airDamagePerPoint: 0.06,
+      earthDamagePerPoint: 0.06,
+      lightningDamagePerPoint: 0.06,
+      waterDamagePerPoint: 0.06,
+    },
+  },
+  perseverance: {
+    effects: {
+      lifeRegenPerPoint: 0.25,
+      manaRegenPerPoint: 0.05,
     },
   },
 };
@@ -90,86 +57,50 @@ export const ATTRIBUTE_TOOLTIPS = {
     <strong>Strength</strong><br />
     Each point increases:<br />
     • Damage by ${ATTRIBUTES.strength.effects.damagePerPoint}<br />
-    ${ATTRIBUTES.strength.effects.damagePercentPer.enabled
-    ? `• Every ${ATTRIBUTES.strength.effects.damagePercentPer.points} points adds ${
-      ATTRIBUTES.strength.effects.damagePercentPer.value * 100
-    }% to total damage`
-    : ''}
   `,
 
   getAgilityTooltip: () => html`
     <strong>Agility</strong><br />
     Each point increases:<br />
     • Attack Rating by ${ATTRIBUTES.agility.effects.attackRatingPerPoint}<br />
-    ${ATTRIBUTES.agility.effects.attackRatingPercentPer.enabled
-    ? `• Every ${ATTRIBUTES.agility.effects.attackRatingPercentPer.points} points adds ${
-      ATTRIBUTES.agility.effects.attackRatingPercentPer.value * 100
-    }% to total attack rating`
-    : ''}
-    ${ATTRIBUTES.agility.effects.attackSpeedPer.enabled
-    ? `• Every ${ATTRIBUTES.agility.effects.attackSpeedPer.points} points adds ${
-      ATTRIBUTES.agility.effects.attackSpeedPer.value * 100
-    }% attack speed`
-    : ''}
+    • Damage by ${ATTRIBUTES.agility.effects.damagePerPoint}<br />
   `,
 
   getVitalityTooltip: () => html`
     <strong>Vitality</strong><br />
     Each point increases:<br />
     • Life by ${ATTRIBUTES.vitality.effects.lifePerPoint}<br />
-    ${ATTRIBUTES.vitality.effects.lifePercentPer.enabled
-    ? `• Every ${ATTRIBUTES.vitality.effects.lifePercentPer.points} points adds ${
-      ATTRIBUTES.vitality.effects.lifePercentPer.value * 100
-    }% to total life`
-    : ''}
-    ${ATTRIBUTES.vitality.effects.regenPercentPer.enabled
-    ? `• Every ${ATTRIBUTES.vitality.effects.regenPercentPer.points} points adds ${
-      ATTRIBUTES.vitality.effects.regenPercentPer.value * 100
-    }% life regeneration`
-    : ''}
   `,
 
   getWisdomTooltip: () => html`
     <strong>Wisdom</strong><br />
     Each point increases:<br />
     • Mana by ${ATTRIBUTES.wisdom.effects.manaPerPoint}<br />
-    ${ATTRIBUTES.wisdom.effects.manaPercentPer.enabled
-    ? `• Every ${ATTRIBUTES.wisdom.effects.manaPercentPer.points} points adds ${
-      ATTRIBUTES.wisdom.effects.manaPercentPer.value * 100
-    }% to total mana`
-    : ''}
-    ${ATTRIBUTES.wisdom.effects.regenPercentPer.enabled
-    ? `• Every ${ATTRIBUTES.wisdom.effects.regenPercentPer.points} points adds ${
-      ATTRIBUTES.wisdom.effects.regenPercentPer.value * 100
-    }% mana regeneration`
-    : ''}
   `,
 
   getEnduranceTooltip: () => html`
     <strong>Endurance</strong><br />
     Each point increases:<br />
     • Armor by ${ATTRIBUTES.endurance.effects.armorPerPoint}<br />
-    ${ATTRIBUTES.endurance.effects.armorPercentPer.enabled
-    ? `• Every ${ATTRIBUTES.endurance.effects.armorPercentPer.points} points adds ${
-      ATTRIBUTES.endurance.effects.armorPercentPer.value * 100
-    }% to total armor`
-    : ''}
   `,
 
   getDexterityTooltip: () => html`
     <strong>Dexterity</strong><br />
     Each point increases:<br />
     • Evasion by ${ATTRIBUTES.dexterity.effects.evasionPerPoint}<br />
-    ${ATTRIBUTES.dexterity.effects.critChancePer.enabled
-    ? `• Every ${ATTRIBUTES.dexterity.effects.critChancePer.points} points adds ${
-      ATTRIBUTES.dexterity.effects.critChancePer.value * 100
-    }% critical strike chance`
-    : ''}
-    ${ATTRIBUTES.dexterity.effects.critDamagePer.enabled
-    ? `• Every ${ATTRIBUTES.dexterity.effects.critDamagePer.points} points adds ${
-      ATTRIBUTES.dexterity.effects.critDamagePer.value * 100
-    }% critical strike damage`
-    : ''}
+  `,
+
+  getIntelligenceTooltip: () => html`
+    <strong>Intelligence</strong><br />
+    Each point increases:<br />
+    • Elemental Damage by ${ATTRIBUTES.intelligence.effects.fireDamagePerPoint}<br />
+  `,
+
+  getPerseveranceTooltip: () => html`
+    <strong>Perseverance</strong><br />
+    Each point increases:<br />
+    • Mana Regeneration by ${ATTRIBUTES.perseverance.effects.manaRegenPerPoint}<br />
+    • Life Regeneration by ${ATTRIBUTES.perseverance.effects.lifeRegenPerPoint}
   `,
 
   getElementalDamageTooltip: () => html`
@@ -284,5 +215,8 @@ export const ATTRIBUTE_TOOLTIPS = {
     <strong>Water Resistance</strong><br />
     Reduces water damage taken from enemies.<br />
     ${ELEMENTS.water.icon} Effective against water enemies.
+  `,
+  getElementalResistanceTooltip: () => html`
+    <strong>Elemental Resistance. Reduces elemental damage taken from enemies by a %.</strong>
   `,
 };

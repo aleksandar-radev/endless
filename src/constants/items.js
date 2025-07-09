@@ -20,7 +20,7 @@ export const SLOT_REQUIREMENTS = {
   belt: ['BELT'],
   legs: ['PANTS'],
   boots: ['BOOTS'],
-  weapon: ['SWORD', 'AXE', 'MACE'],
+  weapon: ['SWORD', 'AXE', 'MACE', 'WAND', 'STAFF'],
   offhand: ['SHIELD'],
   gloves: ['GLOVES'],
   amulet: ['AMULET'],
@@ -37,6 +37,8 @@ export const ITEM_TYPES = {
   SWORD: 'SWORD',
   AXE: 'AXE',
   MACE: 'MACE',
+  WAND: 'WAND',
+  STAFF: 'STAFF',
   SHIELD: 'SHIELD',
   GLOVES: 'GLOVES',
   AMULET: 'AMULET',
@@ -52,6 +54,8 @@ export const ITEM_ICONS = {
   SWORD: '⚔️',
   AXE: '🪓',
   MACE: '🔨',
+  WAND: '🪄',
+  STAFF: '🦯',
   SHIELD: '🛡️',
   GLOVES: '🧤',
   AMULET: '📿',
@@ -108,6 +112,14 @@ export const ITEM_STAT_POOLS = {
   MACE: {
     mandatory: [],
     possible: [...getStatsByTags(['offense', 'mace'])],
+  },
+  WAND: {
+    mandatory: [],
+    possible: [...getStatsByTags(['magic', 'wand', 'elemental'])],
+  },
+  STAFF: {
+    mandatory: [],
+    possible: [...getStatsByTags(['magic', 'staff', 'elemental'])],
   },
   SHIELD: {
     mandatory: ['blockChance'],
@@ -166,7 +178,7 @@ export function getTypesByCategory(category) {
     case 'jewelry':
       return ['AMULET', 'RING'];
     case 'weapon':
-      return ['SWORD', 'AXE', 'MACE'];
+      return ['SWORD', 'AXE', 'MACE', 'WAND', 'STAFF'];
     default:
       return [];
   }

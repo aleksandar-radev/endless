@@ -4,6 +4,8 @@ import { VAMPIRE_SKILLS } from '../constants/skills/vampireSkills.js';
 import { PALADIN_SKILLS } from '../constants/skills/paladinSkills.js';
 import { BERSERKER_SKILLS } from '../constants/skills/berserkerSkills.js';
 import { ELEMENTALIST_SKILLS } from '../constants/skills/elementalistSkills.js';
+import { DRUID_SKILLS } from '../constants/skills/druidSkills.js';
+import { MAGE_SKILLS } from '../constants/skills/mageSkills.js';
 
 export const CLASS_PATHS = {
   WARRIOR: {
@@ -91,6 +93,34 @@ export const CLASS_PATHS = {
     requiredLevel: () => 110,
     crystalCost: () => 75,
   },
+  DRUID: {
+    name: () => 'Druid',
+    enabled: () => true,
+    avatar: () => 'druid-avatar.jpg',
+    baseStats: () => ({
+      lifeRegenPercent: 20,
+      lifePercent: 20,
+      coldDamagePercent: 30,
+      earthDamagePercent: 30,
+    }),
+    description: () => 'Wielder of nature magic and animal allies',
+    requiredLevel: () => 130,
+    crystalCost: () => 90,
+  },
+  MAGE: {
+    name: () => 'Mage',
+    enabled: () => true,
+    avatar: () => 'mage-avatar.jpg',
+    baseStats: () => ({
+      manaPercent: 50,
+      manaRegen: 1,
+      elementalDamagePercent: 20,
+      wisdom: 40,
+    }),
+    description: () => 'Master of arcane spells and destructive magic',
+    requiredLevel: () => 150,
+    crystalCost: () => 110,
+  },
 };
 
 export const SKILL_TREES = {
@@ -105,4 +135,8 @@ export const SKILL_TREES = {
   BERSERKER: BERSERKER_SKILLS,
 
   ELEMENTALIST: ELEMENTALIST_SKILLS,
+
+  DRUID: DRUID_SKILLS,
+
+  MAGE: MAGE_SKILLS,
 };
