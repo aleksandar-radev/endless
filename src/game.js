@@ -99,7 +99,7 @@ class Game {
     }
 
     if (mana >= 1) {
-      createDamageNumber({ text: mana, isPlayer: true, isCritical: false, color });
+      createDamageNumber({ text: '+' + Math.floor(mana), isPlayer: true, isCritical: false, color });
     }
   }
 

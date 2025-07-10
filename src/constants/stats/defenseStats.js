@@ -24,7 +24,7 @@ export const DEFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
     item: { min: 6, max: 15, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
-    itemTags: ['pants'],
+    itemTags: ['belt', 'pants'],
   },
   // ARMOR
   armor: {
@@ -60,7 +60,7 @@ export const DEFENSE_STATS = {
     decimalPlaces: 1,
     training: { cost: 250, bonus: 0.1, maxLevel: Infinity },
     item: { min: 3, max: 8, scaling: (level) => defenseScaling(level) },
-    itemTags: ['belt'],
+    itemTags: ['belt', 'pants'],
     showInUI: true,
   },
   lifeRegenPercent: {
@@ -161,5 +161,7 @@ export const DEFENSE_STATS = {
   lifeRegenOfTotalPercent: {
     base: 0,
     decimalPlaces: 2,
+    item: { min: 0.01, max: 0.05, max: 1, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    itemTags: ['belt'],
   },
 };

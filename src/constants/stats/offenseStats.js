@@ -69,7 +69,7 @@ export const OFFENSE_STATS = {
   critDamage: {
     base: 1.5,
     decimalPlaces: 2,
-    training: { cost: 2000, bonus: 0.01, maxLevel: 500 }, // max bonus: 5
+    training: { cost: 1200, bonus: 0.01, maxLevel: 500 }, // max bonus: 5
     item: { min: 0.02, max: 0.1, limit: 2, scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER) },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
     showInUI: true,
@@ -98,7 +98,7 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 2,
     training: { cost: 800, bonus: 0.01, maxLevel: 500 }, // max bonus: 5
-    item: { min: 1, max: 2.5, limit: 5, scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER) },
+    item: { min: 0.5, max: 1.25, limit: 5, scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER) },
     itemTags: ['offense'],
     showInUI: true,
   },
@@ -286,7 +286,7 @@ export const OFFENSE_STATS = {
   elementalDamagePercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 4, max: 16, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 3, max: 10, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
   },
   percentOfPlayerDamage: {
