@@ -41,7 +41,7 @@ const CRYSTAL_UPGRADE_CONFIG = {
     label: 'Reset Skill Tree',
     bonus: 'Refund all skill points and reset path',
     bonusLabel: 'Refund all skill points and reset path',
-    baseCost: 10,
+    baseCost: 50,
     multiple: true,
   },
   resetAttributes: {
