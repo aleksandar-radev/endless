@@ -31,7 +31,7 @@ export const ATTRIBUTES = {
   },
   dexterity: {
     effects: {
-      evasionPerPoint: 4,
+      evasionPerPoint: 5,
     },
   },
   intelligence: {

@@ -58,7 +58,7 @@ export const DEFENSE_STATS = {
   lifeRegen: {
     base: 0,
     decimalPlaces: 1,
-    training: { cost: 250, bonus: 0.1, maxLevel: Infinity },
+    training: { cost: 60, bonus: 0.1, maxLevel: Infinity },
     item: { min: 3, max: 8, scaling: (level) => defenseScaling(level) },
     itemTags: ['belt', 'pants'],
     showInUI: true,
