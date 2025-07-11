@@ -21,7 +21,7 @@ import {
 } from './globals.js';
 import { initializeRegionSystem, updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
-import { initializeBuildingsUI } from './ui/buildingUi.js';
+import { initializeBuildingsUI, renderPurchasedBuildings } from './ui/buildingUi.js';
 import { initializePrestigeUI } from './ui/prestigeUi.js';
 import Enemy from './enemy.js';
 import { setupLeaderboardTabLazyLoad } from './ui/leaderboardUi.js';
@@ -78,6 +78,8 @@ window.log = console.log;
   setInterval(() => {
     statistics.update();
     dataManager.saveGame();
+    // Refresh buildings tab periodically
+    renderPurchasedBuildings();
   }, 60000);
 
   // Sidebar toggle logic for responsive sidebar

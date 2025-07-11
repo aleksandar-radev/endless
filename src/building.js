@@ -7,7 +7,7 @@ const refundPercent = 0.9;
 
 // Represents a single building instance (with state)
 export class Building {
-  constructor({ id, level = 0, placedAt = null, lastBonusTime = null }) {
+  constructor({ id, level = 0, placedAt = null, lastBonusTime = null, totalEarned = 0 }) {
     const data = buildingsData[id];
     if (!data) throw new Error(`Unknown building id: ${id}`);
     this.id = id;
@@ -24,6 +24,8 @@ export class Building {
     this.costIncrease = data.costIncrease || {};
     // Track last bonus time for this building
     this.lastBonusTime = lastBonusTime || Date.now();
+    // Track total bonuses earned for this building
+    this.totalEarned = totalEarned;
   }
 
   upgrade() {
@@ -128,6 +130,7 @@ export class Building {
       level: this.level,
       placedAt: this.placedAt,
       lastBonusTime: this.lastBonusTime,
+      totalEarned: this.totalEarned,
     };
   }
 }
@@ -157,6 +160,7 @@ export class BuildingManager {
         level: bSave?.level || 0,
         placedAt: bSave?.placedAt ?? null,
         lastBonusTime: bSave?.lastBonusTime || this.lastActive,
+        totalEarned: bSave?.totalEarned || 0,
       });
       if (this.buildings[id].placedAt !== null) {
         this.placedBuildings[this.buildings[id].placedAt] = id;
@@ -240,6 +244,8 @@ export class BuildingManager {
           if (b.effect.type === 'gold') hero.gainGold(totalBonus);
           else if (b.effect.type === 'crystal') hero.gainCrystals(totalBonus);
           else if (b.effect.type === 'soul') hero.gainSouls(totalBonus);
+          // Increment total earned for this building
+          b.totalEarned += totalBonus;
           b.lastBonusTime += times * intervalMs;
           changed = true;
         }
@@ -253,6 +259,8 @@ export class BuildingManager {
           if (b.type === 'gold') hero.gainGold(b.amount);
           else if (b.type === 'crystal') hero.gainCrystals(b.amount);
           else if (b.type === 'soul') hero.gainSouls(b.amount);
+          // Increment total earned for this building
+          b.building.totalEarned += b.amount;
           b.building.lastBonusTime += b.timesRaw * b.intervalMs;
         }
         this.lastActive = Date.now();
