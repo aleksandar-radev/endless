@@ -1,12 +1,12 @@
 // Scaling multiplier for all offense stats
 const FLAT_MULTIPLIER = 0.035;
-const PERCENT_MULTIPLIER = 0.0025;
+const PERCENT_MULTIPLIER = 0.0020;
 const CHANCE_MULTIPLIER = 0.0008;
 
-const ELEMENTAL_DAMAGE_MIN = 5;
-const ELEMENTAL_DAMAGE_MAX = 18;
-const ELEMENTAL_DAMAGE_PERCENT_MIN = 7;
-const ELEMENTAL_DAMAGE_PERCENT_MAX = 22;
+const ELEMENTAL_DAMAGE_MIN = 4;
+const ELEMENTAL_DAMAGE_MAX = 14;
+const ELEMENTAL_DAMAGE_PERCENT_MIN = 5;
+const ELEMENTAL_DAMAGE_PERCENT_MAX = 15;
 
 // Generic scaling function for all offense stats
 const offenseScaling = (level, scaling = FLAT_MULTIPLIER, base = 1) => {
@@ -20,14 +20,14 @@ export const OFFENSE_STATS = {
     base: 10,
     decimalPlaces: 0,
     training: { cost: 100, bonus: 1, maxLevel: Infinity },
-    item: { min: 3, max: 10, limit: Infinity, scaling: (level) => offenseScaling(level) },
+    item: { min: 8, max: 22, limit: Infinity, scaling: (level) => offenseScaling(level) },
     itemTags: ['offense'],
     showInUI: true,
   },
   damagePercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 5, max: 20, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 10, max: 30, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['mace'],
   },
   totalDamagePercent: {
@@ -286,7 +286,7 @@ export const OFFENSE_STATS = {
   elementalDamagePercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 3, max: 10, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 2, max: 7, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
   },
   percentOfPlayerDamage: {

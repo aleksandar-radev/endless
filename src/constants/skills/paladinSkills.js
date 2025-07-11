@@ -11,11 +11,11 @@ export const PALADIN_SKILLS = {
     cooldown: (level) => 3000,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'light',
-    description: () => 'A burst of holy light that heals allies and damages enemies.',
+    description: () => 'A burst of holy light that heals allies and damages enemies. (max 5% of max life)',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       life: level * 5,
-      lifePercent: level * 2,
+      lifePercent: Math.min(level * 0.1, 5),
     }),
   },
   smite: {
