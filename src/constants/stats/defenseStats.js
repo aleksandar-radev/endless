@@ -161,7 +161,7 @@ export const DEFENSE_STATS = {
   lifeRegenOfTotalPercent: {
     base: 0,
     decimalPlaces: 2,
-    item: { min: 0.01, max: 0.05, max: 1, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 0.01, max: 0.05, limit: 1.23, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['belt'],
   },
 };
