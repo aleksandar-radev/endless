@@ -30,7 +30,7 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armorPercent: level * 3,
-      coldDamagePercent: level * 3,
+      coldDamagePercent: level * 2,
     }),
   },
 
@@ -121,7 +121,8 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => 200,
     effect: (level) => ({
       manaPercent: level * 1,
-      manaRegenPercent: level * 0.1,
+      manaRegenPercent: level * 0.5,
+      manaRegenOfTotalPercent: level * 0.01,
     }),
   },
 
@@ -137,9 +138,12 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Unleashes a storm of fire, ice, and lightning.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: level * 4,
-      coldDamagePercent: level * 4,
-      airDamagePercent: level * 4,
+      fireDamagePercent: level * 1,
+      coldDamagePercent: level * 1,
+      airDamagePercent: level * 1,
+      earthDamagePercent: level * 1,
+      waterDamagePercent: level * 1,
+      lightningDamagePercent: level * 1,
     }),
   },
   elementalAffinity: {
@@ -186,13 +190,13 @@ export const ELEMENTALIST_SKILLS = {
     manaCost: (level) => 4 + level * 0.5,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'overload',
-    description: () => 'Boosts all elemental damage.',
+    description: () => 'Boosts elemental damage.',
     maxLevel: () => 600,
     effect: (level) => ({
-      fireDamagePercent: level * 3,
-      coldDamagePercent: level * 3,
-      airDamagePercent: level * 3,
-      earthDamagePercent: level * 3,
+      fireDamagePercent: level * 2,
+      coldDamagePercent: level * 2,
+      airDamagePercent: level * 2,
+      lightningDamagePercent: level * 2,
     }),
   },
   primordialControl: {
@@ -204,9 +208,9 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Grants control over elemental forces, increasing all stats.',
     maxLevel: () => 5000,
     effect: (level) => ({
-      earthDamagePercent: level * 3,
+      earthDamagePercent: level * 1.5,
       vitalityPercent: level * 2,
-      wisdomPercent: level * 3,
+      wisdomPercent: level * 2.5,
     }),
   },
 
@@ -220,10 +224,10 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Transforms the caster into a being of pure elemental power.',
     maxLevel: () => 100,
     effect: (level) => ({
-      fireDamage: level * 5,
-      coldDamage: level * 5,
-      airDamage: level * 5,
-      earthDamage: level * 5,
+      fireDamage: level * 3,
+      coldDamage: level * 3,
+      airDamage: level * 3,
+      earthDamage: level * 3,
       elementalDamagePercent: level * 3,
     }),
   },

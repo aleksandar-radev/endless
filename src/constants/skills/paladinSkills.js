@@ -37,13 +37,13 @@ export const PALADIN_SKILLS = {
     name: () => 'Shield Bash',
     type: () => 'instant',
     manaCost: (level) => 3 + level * 0.1,
-    cooldown: (level) => 2000,
+    cooldown: (level) => 3000,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'bash',
     description: () => 'Bashes an enemy with your shield, stunning them.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: level * 5,
+      damagePercent: level * 3,
     }),
   },
   divineProtection: {
@@ -58,7 +58,7 @@ export const PALADIN_SKILLS = {
       armorPercent: level * 2,
       blockChance: level * 0.1,
       thornsDamage: level * 0.5,
-      thornsDamagePercent: level * 1,
+      thornsDamagePercent: level * 0.5,
     }),
   },
 
@@ -75,8 +75,8 @@ export const PALADIN_SKILLS = {
     description: () => 'Blesses the ground, dealing holy damage to enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: level * 6,
-      coldDamagePercent: level * 6,
+      fireDamagePercent: level * 3,
+      coldDamagePercent: level * 3,
     }),
   },
   greaterHealing: {
@@ -108,7 +108,6 @@ export const PALADIN_SKILLS = {
     maxLevel: () => 200,
     effect: (level) => ({
       armorPercent: level * 6,
-      endurancePercent: level * 1,
       blockChance: level * 0.2,
     }),
   },
@@ -123,6 +122,12 @@ export const PALADIN_SKILLS = {
     effect: (level) => ({
       lifePercent: level * 0.4,
       armorPercent: level * 1,
+      fireResistance: level * 0.05,
+      coldResistance: level * 0.05,
+      airResistance: level * 0.05,
+      earthResistance: level * 0.05,
+      waterResistance: level * 0.05,
+      lightningResistance: level * 0.05,
     }),
   },
 
@@ -132,15 +137,15 @@ export const PALADIN_SKILLS = {
     name: () => 'Wrath of the Heavens',
     type: () => 'instant',
     manaCost: (level) => 10 + level * 0.8,
-    cooldown: (level) => Math.max(6000 - level * 100, 1000),
+    cooldown: (level) => Math.max(12000 - level * 100, 6000),
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'wrath',
     description: () => 'Calls down holy energy to smite enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: level * 5,
-      fireDamagePercent: level * 10,
-      airDamagePercent: level * 10,
+      damagePercent: level * 3,
+      fireDamagePercent: level * 6,
+      airDamagePercent: level * 6,
     }),
   },
   beaconOfFaith: {
@@ -153,7 +158,8 @@ export const PALADIN_SKILLS = {
     maxLevel: () => 500,
     effect: (level) => ({
       lifeRegen: level * 0.5,
-      lifeRegenPercent: level * 0.2,
+      lifeRegenPercent: level * 0.5,
+      lifeRegenOfTotalPercent: Math.min(level * 0.1, 1),
     }),
   },
 
@@ -181,13 +187,13 @@ export const PALADIN_SKILLS = {
     id: 'divineWrath',
     name: () => 'Divine Wrath',
     type: () => 'toggle',
-    manaCost: (level) => 4 + level * 0.5,
+    manaCost: (level) => 4 + level * 0.3,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'wrath',
     description: () => 'Unleashes divine energy to increase damage and healing.',
     maxLevel: () => 400,
     effect: (level) => ({
-      damagePercent: level * 3,
+      damagePercent: level * 2,
       lifePerHit: level * 2,
     }),
   },
@@ -201,7 +207,9 @@ export const PALADIN_SKILLS = {
     maxLevel: () => 400,
     effect: (level) => ({
       resurrectionChance: level * 0.1,
+      lifeRegen: level * 2,
       lifeRegenPercent: level * 0.5,
+      manaRegen: level * 0.5,
       manaRegenPercent: level * 1,
     }),
   },
@@ -216,10 +224,12 @@ export const PALADIN_SKILLS = {
     description: () => 'Grants significant bonuses to all attributes.',
     maxLevel: () => 400,
     effect: (level) => ({
-      damagePercent: level * 1,
+      elementalDamagePercent: level * 0.75,
+      endurance: level * 3,
       endurancePercent: level * 1,
+      vitality: level * 3,
       vitalityPercent: level * 1,
-      attackRatingPercent: level * 25,
+      attackRatingPercent: level * 4,
     }),
   },
 };

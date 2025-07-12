@@ -14,7 +14,7 @@ export const MAGE_SKILLS = {
     description: () => 'Launches a missile of arcane energy.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: level * 10,
+      waterDamagePercent: level * 10,
     }),
   },
   arcaneIntellect: {
@@ -26,8 +26,8 @@ export const MAGE_SKILLS = {
     description: () => 'Increases mana and wisdom.',
     maxLevel: () => 300,
     effect: (level) => ({
-      manaPercent: level * 1,
-      wisdomPercent: level * 0.5,
+      manaPercent: level * 1.5,
+      wisdomPercent: level * 1,
       perseverancePercent: level * 1,
     }),
   },
@@ -74,7 +74,7 @@ export const MAGE_SKILLS = {
     description: () => 'Instantly move to a nearby location.',
     maxLevel: () => 100,
     effect: () => ({
-      perseverance: 4,
+      perseverance: 5,
       wisdom: 5,
       intelligence: 5,
       intelligencePercent: 1,
@@ -109,7 +109,8 @@ export const MAGE_SKILLS = {
     description: () => 'Infuses yourself with magical energy. Greatly increases mana regeneration.',
     maxLevel: () => 1000,
     effect: (level) => ({
-      manaRegenOfTotalPercent: level * 0.01,
+      mana: level * 10,
+      manaRegenOfTotalPercent: level * 0.025,
     }),
   },
   iceStorm: {
@@ -224,7 +225,7 @@ export const MAGE_SKILLS = {
     effect: (level) => ({
       wisdomPercent: level * 4,
       elementalDamagePercent: level * 2,
-      manaPercent: level * 2,
+      manaPercent: level * 3,
     }),
   },
 };

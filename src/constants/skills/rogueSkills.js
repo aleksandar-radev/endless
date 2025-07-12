@@ -63,9 +63,9 @@ export const ROGUE_SKILLS = {
     description: () => 'Shadow form increases crit chance, life steal and dexterity (crit damage). (Crit chance capped at 20%, crit damage capped at 3, life steal capped at 4%)',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      critChance: Math.max(level * 0.05, 20),
-      critDamage: Math.max(level * 0.002, 3),
-      lifeSteal: Math.max(level * 0.01, 4),
+      critChance: Math.min(level * 0.05, 20),
+      critDamage: Math.min(level * 0.002, 3),
+      lifeSteal: Math.min(level * 0.01, 4),
       agilityPercent: level * 1,
     }),
   },
@@ -129,7 +129,7 @@ export const ROGUE_SKILLS = {
     description: () => 'Massively increases crit damage temporarily.',
     maxLevel: () => 500,
     effect: (level) => ({
-      critDamage: level * 0.005,
+      critDamage: level * 0.008,
     }),
   },
 
