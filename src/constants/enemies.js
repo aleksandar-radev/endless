@@ -1,10 +1,10 @@
-import { FOREST_ENEMIES } from './enemies/forest.js';
+import { FOREST_ENEMIES } from './enemies/enchanted_forest.js';
 import { CRYSTAL_CAVE_ENEMIES } from './enemies/crystal_cave.js';
-import { TUNDRA_ENEMIES } from './enemies/tundra.js';
-import { DESERT_ENEMIES } from './enemies/desert.js';
-import { SWAMP_ENEMIES } from './enemies/swamp.js';
-import { SKYREALM_ENEMIES } from './enemies/skyrealm.js';
-import { ABYSS_ENEMIES } from './enemies/abyss.js';
+import { TUNDRA_ENEMIES } from './enemies/frozen_tundra.js';
+import { DESERT_ENEMIES } from './enemies/scorching_desert.js';
+import { SWAMP_ENEMIES } from './enemies/murky_swamp.js';
+import { SKYREALM_ENEMIES } from './enemies/skyrealm_peaks.js';
+import { ABYSS_ENEMIES } from './enemies/abyssal_depths.js';
 import { VOLCANIC_RIFT_ENEMIES } from './enemies/volcanic_rift.js';
 import { SUNKEN_RUINS_ENEMIES } from './enemies/sunken_ruins.js';
 import { HAUNTED_MOOR_ENEMIES } from './enemies/haunted_moor.js';
@@ -147,24 +147,28 @@ export function applyDefaultEnemyStats(enemy) {
     tier: tier,
     life: 20 * multiplier,
     damage: 3 * multiplier,
+    attackSpeed: 1,
     attackRating: 5 * multiplier,
-    attackSpeed: 1 * multiplier,
-    xp: 9 * multiplier,
-    gold: 9 * multiplier,
     armor: 5 * multiplier,
     evasion: 5 * multiplier,
+
+    xp: 9 * multiplier,
+    gold: 9 * multiplier,
+
     fireDamage: 0 * multiplier,
     coldDamage: 0 * multiplier,
     airDamage: 0 * multiplier,
     earthDamage: 0 * multiplier,
     lightningDamage: 0 * multiplier,
     waterDamage: 0 * multiplier,
-    fireResistance: 0 * multiplier,
-    coldResistance: 0 * multiplier,
-    airResistance: 0 * multiplier,
-    earthResistance: 0 * multiplier,
-    lightningResistance: 0 * multiplier,
-    waterResistance: 0 * multiplier,
+
+    fireResistance: 0,
+    coldResistance: 0,
+    airResistance: 0,
+    earthResistance: 0,
+    lightningResistance: 0,
+    waterResistance: 0,
+
     multiplier: {
       life: 1.0,
       damage: 1.0,
