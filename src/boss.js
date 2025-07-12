@@ -1,6 +1,7 @@
 /**
  * Manages boss properties and state.
  */
+import { scaleStat } from './common.js';
 import { BOSSES } from './constants/bosses.js';
 import { hero } from './globals.js';
 
@@ -59,85 +60,53 @@ class Boss {
 
 
   calculateXP() {
-    let xp = this.baseData.xp;
-    const segLen = 40,
-      initialInc = 4,
-      incStep = 2;
-    for (let lvl = 1; lvl <= this.level; lvl++) {
-      xp += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
-    }
-    return xp * (this.baseData.multiplier.xp || 1);
+    const base = this.baseData.xp || 0;
+    const val = scaleStat(base, this.level, 4, 40, 2);
+    return val * (this.baseData.multiplier?.xp || 1);
   }
 
   calculateGold() {
-    let gold = this.baseData.gold;
-    const segLen = 40,
-      initialInc = 6,
-      incStep = 3;
-    for (let lvl = 1; lvl <= this.level; lvl++) {
-      gold += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
-    }
-    return gold * (this.baseData.multiplier.gold || 1);
+    const base = this.baseData.gold || 0;
+    const val = scaleStat(base, this.level, 6, 40, 3);
+    return val * (this.baseData.multiplier?.gold || 1);
   }
 
   calculateLife() {
-    let life = this.baseData.life - 40; // 4x the original -10
-    const segLen = 2.5, initialInc = 40, incStep = 20; // 4x the original values
-    for (let i = 1; i <= this.level; i++) {
-      life += initialInc + Math.floor((i - 1) / segLen) * incStep;
-    }
-    return life * (this.baseData.multiplier?.life || 1);
+    // start from base life offset by -140
+    const baseLife = this.baseData.life - 140;
+    const val = scaleStat(baseLife, this.level);
+    return val * (this.baseData.multiplier?.life || 1);
   }
 
   calculateDamage() {
-    let dmg = this.baseData.damage;
-    const segLen = 2.5, initialInc = 1.2, incStep = 0.4; // 4x the original values
-    for (let i = 1; i <= this.level; i++) {
-      dmg += initialInc + Math.floor((i - 1) / segLen) * incStep;
-    }
-    return dmg * (this.baseData.multiplier?.damage || 1);
+    const base = this.baseData.damage || 0;
+    const val = scaleStat(base, this.level);
+    return val * (this.baseData.multiplier?.damage || 1);
   }
 
   calculateArmor() {
-    const baseArmor = this.baseData.armor * this.level || 0;
-    const segLen = 2.5, initialInc = 2, incStep = 0.8; // 4x the original values
-    let armor = baseArmor;
-    for (let i = 1; i <= this.level; i++) {
-      armor += initialInc + Math.floor((i - 1) / segLen) * incStep;
-    }
-    return armor * (this.baseData.multiplier?.armor || 1);
+    const base = this.baseData.armor || 0;
+    const val = scaleStat(base, this.level);
+    return val * (this.baseData.multiplier?.armor || 1);
   }
 
   calculateEvasion() {
-    const baseEvasion = this.baseData.evasion * this.level || 0;
-    const segLen = 2.5, initialInc = 2, incStep = 0.8; // 4x the original values
-    let evasion = baseEvasion;
-    for (let i = 1; i <= this.level; i++) {
-      evasion += initialInc + Math.floor((i - 1) / segLen) * incStep;
-    }
-    return evasion * (this.baseData.multiplier?.evasion || 1);
+    const base = this.baseData.evasion || 0;
+    const val = scaleStat(base, this.level);
+    return val * (this.baseData.multiplier?.evasion || 1);
   }
 
   calculateAttackRating() {
-    const baseAttackRating = this.baseData.attackRating * this.level || 0;
-    const segLen = 2.5, initialInc = 2, incStep = 0.8; // 4x the original values
-    let attackRating = baseAttackRating;
-    for (let i = 1; i <= this.level; i++) {
-      attackRating += initialInc + Math.floor((i - 1) / segLen) * incStep;
-    }
-    return attackRating * (this.baseData.multiplier?.attackRating || 1);
+    const base = this.baseData.attackRating || 0;
+    const val = scaleStat(base, this.level);
+    return val * (this.baseData.multiplier?.attackRating || 1);
   }
 
-  calculateElementalDamage( type) {
+  calculateElementalDamage(type) {
     const base = this.baseData[`${type}Damage`] || 0;
     if (base === 0) return 0;
-    const segLen = 2.5, initialInc = 1.2, incStep = 0.4; // 4x the original values
-    let dmg = base;
-    for (let i = 1; i <= this.level; i++) {
-      dmg += initialInc + Math.floor((i - 1) / segLen) * incStep;
-    }
-    const mult = this.baseData.multiplier?.[`${type}Damage`] || 1;
-    return dmg * mult;
+    const val = scaleStat(base, this.level);
+    return val * (this.baseData.multiplier?.[`${type}Damage`] || 1);
   }
 
   /**
