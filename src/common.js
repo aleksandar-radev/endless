@@ -22,6 +22,7 @@ export function scaleStat(
   bonusIncrease = 0,
   basePercentGain = 0.2,
 ) {
+  if (base <= 0) return 0; // Avoid scaling if base is zero or negative
   if (bonusInterval == 0) bonusInterval = 1; // Avoid division by zero
   if (level <= 1) return base;
   const levelsAboveOne = level - 1;

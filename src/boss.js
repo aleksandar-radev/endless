@@ -72,8 +72,7 @@ class Boss {
   }
 
   calculateLife() {
-    // start from base life offset by -140
-    const baseLife = this.baseData.life - 140;
+    const baseLife = this.baseData.life ;
     const val = scaleStat(baseLife, this.level);
     return val * (this.baseData.multiplier?.life || 1);
   }

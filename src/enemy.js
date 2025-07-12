@@ -5,7 +5,7 @@ import { ELEMENTS } from './constants/common.js';
 import { scaleStat } from './common.js';
 
 // armor, evasion, attackRating scaling
-const ratingScale = 0.01; // 1% base gain per level
+const ratingScale = 0.0001; // 0.01% base gain per level
 // all else
 const baseScale = 0.4; // 40% base gain per level
 
@@ -104,32 +104,32 @@ class Enemy {
   }
 
   calculateLife() {
-    const base = (this.baseData.life - 10) || 0;
-    const val = scaleStat(base, this.level, 16, 2, 26, baseScale);
+    const base = (this.baseData.life) || 0;
+    const val = scaleStat(base, this.level, 14, 2, 22, baseScale);
     return val * this.region.multiplier.life * this.rarityData.multiplier.life * this.baseData.multiplier.life;
   }
 
   calculateDamage = () => {
     const base = this.baseData.damage || 0;
-    const val = scaleStat(base, this.level, 0.4, 10, 0.1, baseScale);
+    const val = scaleStat(base, this.level, 0.75, 5, 0.75, baseScale);
     return val * this.region.multiplier.damage * this.rarityData.multiplier.damage * this.baseData.multiplier.damage;
   };
 
   calculateArmor() {
     const base = (this.baseData.armor * this.level) || 0;
-    const val = scaleStat(base, this.level, 0,0,0, ratingScale);
+    const val = scaleStat(base, this.level, 2.5,0,0, ratingScale);
     return val * this.region.multiplier.armor * this.rarityData.multiplier.armor * this.baseData.multiplier.armor;
   }
 
   calculateEvasion() {
     const base = (this.baseData.evasion * this.level) || 0;
-    const val = scaleStat(base, this.level, 0,0,0, ratingScale);
+    const val = scaleStat(base, this.level, 2.5,0,0, ratingScale);
     return val * this.region.multiplier.evasion * this.rarityData.multiplier.evasion * this.baseData.multiplier.evasion;
   }
 
   calculateAttackRating() {
     const base = (this.baseData.attackRating * this.level) || 0;
-    const val = scaleStat(base, this.level, 0,0,0, ratingScale);
+    const val = scaleStat(base, this.level, 2.5,0,0, ratingScale);
     return (
       val *
       this.region.multiplier.attackRating *

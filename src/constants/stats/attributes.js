@@ -36,12 +36,12 @@ export const ATTRIBUTES = {
   },
   intelligence: {
     effects: {
-      fireDamagePerPoint: 0.06,
-      coldDamagePerPoint: 0.06,
-      airDamagePerPoint: 0.06,
-      earthDamagePerPoint: 0.06,
-      lightningDamagePerPoint: 0.06,
-      waterDamagePerPoint: 0.06,
+      fireDamagePerPoint: 0.09,
+      coldDamagePerPoint: 0.09,
+      airDamagePerPoint: 0.09,
+      earthDamagePerPoint: 0.09,
+      lightningDamagePerPoint: 0.09,
+      waterDamagePerPoint: 0.09,
     },
   },
   perseverance: {
