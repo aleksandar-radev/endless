@@ -169,9 +169,11 @@ export function applyDefaultEnemyStats(enemy) {
     lightningResistance: 0,
     waterResistance: 0,
 
+    // can be used for balancing
+    // example is the damage/ele dmg
     multiplier: {
       life: 1.0,
-      damage: 1.0,
+      damage: 0.6,
       xp: 1.0,
       gold: 1.0,
       itemDrop: 1.0,
@@ -179,12 +181,12 @@ export function applyDefaultEnemyStats(enemy) {
       attackRating: 1.0,
       armor: 1.0,
       evasion: 1.0,
-      fireDamage: 1.0,
-      coldDamage: 1.0,
-      airDamage: 1.0,
-      earthDamage: 1.0,
-      lightningDamage: 1.0,
-      waterDamage: 1.0,
+      fireDamage: 0.6,
+      coldDamage: 0.6,
+      airDamage: 0.6,
+      earthDamage: 0.6,
+      lightningDamage: 0.6,
+      waterDamage: 0.6,
     },
   };
 
