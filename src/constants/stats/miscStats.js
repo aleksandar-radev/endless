@@ -36,7 +36,7 @@ export const MISC_STATS = {
     base: 0,
     decimalPlaces: 1,
     training: { cost: 800, bonus: 0.1, maxLevel: 500 },
-    item: { min: 1, max: 4, scaling: (level) => miscScaling(level) },
+    item: { min: 1, max: 3, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry', 'magic'],
     showInUI: true,
   },

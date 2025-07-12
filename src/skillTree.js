@@ -10,7 +10,7 @@ import {
   updateTabIndicators,
 } from './ui/ui.js';
 
-export const SKILL_LEVEL_TIERS = [1, 10, 25, 60, 150, 400, 750, 1200, 2000, 3000, 5000, 10000];
+export const SKILL_LEVEL_TIERS = [1, 10, 25, 60, 150, 400, 750, 1200, 2000, 3000, 5000];
 export const DEFAULT_MAX_SKILL_LEVEL = Infinity;
 
 export default class SkillTree {

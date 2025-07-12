@@ -116,7 +116,7 @@ export const ENEMY_RARITY = {
     multiplier: {
       life: 3,
       damage: 3,
-      attackSpeed: 0.75,
+      attackSpeed: 0.8,
       xp: 8,
       gold: 8,
       itemDrop: 3,
@@ -134,31 +134,37 @@ export const ENEMY_RARITY = {
   },
 };
 
+export function getEnemyStatMultiplier(tier) {
+  return tier ** 2;
+}
+
 export function applyDefaultEnemyStats(enemy) {
   const tier = enemy.tier ?? 1;
 
+  const multiplier = getEnemyStatMultiplier(tier);
+
   const defaults = {
     tier: tier,
-    life: 20,
-    damage: 3,
-    attackRating: 6,
-    attackSpeed: 1,
-    xp: 9,
-    gold: 9,
-    armor: 5,
-    evasion: 7,
-    fireDamage: 0,
-    coldDamage: 0,
-    airDamage: 0,
-    earthDamage: 0,
-    lightningDamage: 0,
-    waterDamage: 0,
-    fireResistance: 0,
-    coldResistance: 0,
-    airResistance: 0,
-    earthResistance: 0,
-    lightningResistance: 0,
-    waterResistance: 0,
+    life: 20 * multiplier,
+    damage: 3 * multiplier,
+    attackRating: 5 * multiplier,
+    attackSpeed: 1 * multiplier,
+    xp: 9 * multiplier,
+    gold: 9 * multiplier,
+    armor: 5 * multiplier,
+    evasion: 5 * multiplier,
+    fireDamage: 0 * multiplier,
+    coldDamage: 0 * multiplier,
+    airDamage: 0 * multiplier,
+    earthDamage: 0 * multiplier,
+    lightningDamage: 0 * multiplier,
+    waterDamage: 0 * multiplier,
+    fireResistance: 0 * multiplier,
+    coldResistance: 0 * multiplier,
+    airResistance: 0 * multiplier,
+    earthResistance: 0 * multiplier,
+    lightningResistance: 0 * multiplier,
+    waterResistance: 0 * multiplier,
     multiplier: {
       life: 1.0,
       damage: 1.0,
