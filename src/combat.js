@@ -242,6 +242,8 @@ export async function defeatEnemy() {
       game.incrementStage();
     }
     game.currentEnemy = new Enemy(game.stage);
+    // clear defeat guard so next enemy can be damaged
+    game._justDefeated = false;
 
     statistics.increment('enemiesKilled', 'total');
     statistics.increment('enemiesKilled', enemy.rarity.toLowerCase());

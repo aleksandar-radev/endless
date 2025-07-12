@@ -17,6 +17,8 @@ class Game {
     this.soulShopResurrectCount = 0; // Track number of resurrections from SoulShop
     this.lastPlayerAttack = Date.now();
     this.lastRegen = Date.now();
+    // guard to prevent multiple kills in same tick
+    this._justDefeated = false;
   }
 
   incrementStage() {
@@ -45,7 +47,7 @@ class Game {
       manaDamage = Math.min(manaDamage, hero.stats.currentMana);
       this.restoreMana(-manaDamage);
       // special handling of popup when mana is negative:
-      createDamageNumber({ text: `-${manaDamage}`, isPlayer: true, isCritical: false, color: 'blue' });
+      createDamageNumber({ text: `-${Math.floor(manaDamage)}`, isPlayer: true, isCritical: false, color: 'blue' });
       damage -= manaDamage; // Reduce the damage by the mana damage
     }
     if (damage < 1) return;
@@ -104,19 +106,19 @@ class Game {
   }
 
   damageEnemy(damage, isCritical = false) {
+    // bail out if we've already defeated this enemy this tick
+    if (this._justDefeated) return;
     damage = Math.floor(damage); // Ensure damage is an integer
     if (this.fightMode === 'arena' && this.currentEnemy) {
-      // Boss damage flow
       const isDead = this.currentEnemy.takeDamage(damage);
 
-      // Always show damage number
       createDamageNumber({ text: damage, isPlayer: false, isCritical: false, color: 'red' });
 
       if (isDead) {
         defeatEnemy();
+        this._justDefeated = true;
       }
       updateEnemyStats();
-      // Refresh boss UI
       updateBossUI();
       return;
     }
@@ -135,6 +137,7 @@ class Game {
 
       if (this.currentEnemy.currentLife <= 0) {
         defeatEnemy();
+        this._justDefeated = true;
       }
     }
   }
@@ -194,6 +197,8 @@ class Game {
     this.gameStarted = !this.gameStarted;
 
     if (this.gameStarted) {
+      // starting a new fight, clear kill guard
+      this._justDefeated = false;
       this.currentEnemy.lastAttack = Date.now();
       // Reset life and update resources
       this.resetAllLife();
