@@ -283,6 +283,12 @@ export const OFFENSE_STATS = {
     showInUI: true,
   },
   // ELEMENTAL DAMAGE PERCENT
+  elementalDamage: {
+    base: 0,
+    decimalPlaces: 1,
+    item: { min: 1, max: 3, limit: Infinity, scaling: (level) => offenseScaling(level) },
+    itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
+  },
   elementalDamagePercent: {
     base: 0,
     decimalPlaces: 1,

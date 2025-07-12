@@ -413,22 +413,22 @@ export default class Hero {
 
     // Special handling for elemental damages
     this.stats.fireDamage = Math.floor(
-      flatValues.fireDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.fireDamagePercent + this.stats.totalDamagePercent),
+      (flatValues.fireDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.fireDamagePercent + this.stats.totalDamagePercent),
     );
     this.stats.coldDamage = Math.floor(
-      flatValues.coldDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.coldDamagePercent + this.stats.totalDamagePercent),
+      (flatValues.coldDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.coldDamagePercent + this.stats.totalDamagePercent),
     );
     this.stats.airDamage = Math.floor(
-      flatValues.airDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.airDamagePercent + this.stats.totalDamagePercent),
+      (flatValues.airDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.airDamagePercent + this.stats.totalDamagePercent),
     );
     this.stats.earthDamage = Math.floor(
-      flatValues.earthDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.earthDamagePercent + this.stats.totalDamagePercent),
+      (flatValues.earthDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.earthDamagePercent + this.stats.totalDamagePercent),
     );
     this.stats.lightningDamage = Math.floor(
-      flatValues.lightningDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.lightningDamagePercent + this.stats.totalDamagePercent),
+      (flatValues.lightningDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.lightningDamagePercent + this.stats.totalDamagePercent),
     );
     this.stats.waterDamage = Math.floor(
-      flatValues.waterDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.waterDamagePercent + this.stats.totalDamagePercent),
+      (flatValues.waterDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.waterDamagePercent + this.stats.totalDamagePercent),
     );
 
     this.stats.reflectFireDamage = (() => {
