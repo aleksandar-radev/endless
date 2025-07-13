@@ -10,6 +10,6 @@ jobs:
     steps:
       - name: Deploy to Development Server
         run: |
-          cd workspace/env
+          cd ~/workspace/env
           git pull
           ./app2-fe/update dev
