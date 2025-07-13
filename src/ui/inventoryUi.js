@@ -109,7 +109,7 @@ export function initializeInventoryUI(inv) {
       showToast('Sorted items by rarity, then level', 'success');
     } else {
       sortMaterials();
-      showToast('Sorted materials by quantity, then id', 'success');
+      showToast('Sorted materials', 'success');
     }
   });
 
@@ -704,15 +704,12 @@ export function setupItemDragAndTooltip() {
 }
 
 export function sortMaterials() {
-  // Sort by quantity descending, then by sort prop ascending, then by id ascending
+  // Sort by MATERIALS[mat.id].sort ascending, then by id ascending
   const nonNullMaterials = inventory.materials.filter((mat) => mat !== null);
   nonNullMaterials.sort((a, b) => {
-    if (b.qty !== a.qty) return b.qty - a.qty;
-    // Get sort prop from MATERIALS definition
-    const aDef = Object.values(MATERIALS).find((m) => m.id === a.id);
-    const bDef = Object.values(MATERIALS).find((m) => m.id === b.id);
-    const aSort = aDef?.sort ?? 9999;
-    const bSort = bDef?.sort ?? 9999;
+    const aSort = MATERIALS[a.id]?.sort ?? 9999;
+    const bSort = MATERIALS[b.id]?.sort ?? 9999;
+
     if (aSort !== bSort) return aSort - bSort;
     return a.id.localeCompare(b.id);
   });
