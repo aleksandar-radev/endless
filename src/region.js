@@ -30,6 +30,7 @@ export async function setCurrentRegion(regionId) {
   game.resetAllLife();
   dataManager.saveGame();
 
+  hero.recalculateFromAttributes(); // in order to apply region changes to hero stats (elemental resistances)
   updateStatsAndAttributesUI();
   updateStageUI();
   updateRegionUI();
