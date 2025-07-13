@@ -17,6 +17,7 @@ function createBuildingCard(building) {
     <div class="building-info">
       <div class="building-name">${building.name}</div>
       <div class="building-effect">${building.formatEffect()}</div>
+      <div class="building-earned">Total Earned: ${building.totalEarned} ${building.effect?.type || ''}</div>
     </div>
   `;
   return el;
@@ -173,6 +174,8 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
         if (building.placedAt == null) {
           buildings.placeBuilding(building.id, placementOptions.placeholderIdx);
           if (typeof placementOptions.onPlaced === 'function') placementOptions.onPlaced();
+          // Update main buildings tab after first placement
+          renderPurchasedBuildings();
         }
         // If building is now level 1 or higher, switch to normal modal (show sell/refund)
         if (building.level > 0) {
@@ -395,7 +398,7 @@ function showChooseBuildingModal(placeholderIdx, onChoose) {
   modal.querySelector('.modal-close').onclick = () => closeModal('building-choose-modal');
 }
 
-function renderPurchasedBuildings() {
+export function renderPurchasedBuildings() {
   const purchased = document.getElementById('purchased-buildings');
   if (!purchased) return;
   purchased.innerHTML = '';

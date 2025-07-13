@@ -5,9 +5,9 @@ import { updateResources, showToast, updateStageUI, formatStatName } from './ui/
 import Enemy from './enemy.js';
 import { updateRegionUI } from './region.js';
 
-const LEVEL_REQUIREMENT = 5000;
-const LEVEL_REQUIREMENT_INCREASE = 500;
-const BOSSLEVEL_REQUIREMENT = 500;
+const LEVEL_REQUIREMENT = 500;
+const LEVEL_REQUIREMENT_INCREASE = 100;
+const BOSSLEVEL_REQUIREMENT = 200;
 const BOSSLEVEL_REQUIREMENT_INCREASE = 50;
 
 export default class Prestige {

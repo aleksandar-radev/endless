@@ -1,12 +1,12 @@
 // Scaling multiplier for all offense stats
-const FLAT_MULTIPLIER = 0.035;
-const PERCENT_MULTIPLIER = 0.0025;
+const FLAT_MULTIPLIER = 0.025;
+const PERCENT_MULTIPLIER = 0.002;
 const CHANCE_MULTIPLIER = 0.0008;
 
-const ELEMENTAL_DAMAGE_MIN = 5;
-const ELEMENTAL_DAMAGE_MAX = 18;
-const ELEMENTAL_DAMAGE_PERCENT_MIN = 7;
-const ELEMENTAL_DAMAGE_PERCENT_MAX = 22;
+const ELEMENTAL_DAMAGE_MIN = 4;
+const ELEMENTAL_DAMAGE_MAX = 14;
+const ELEMENTAL_DAMAGE_PERCENT_MIN = 5;
+const ELEMENTAL_DAMAGE_PERCENT_MAX = 15;
 
 // Generic scaling function for all offense stats
 const offenseScaling = (level, scaling = FLAT_MULTIPLIER, base = 1) => {
@@ -20,15 +20,15 @@ export const OFFENSE_STATS = {
     base: 10,
     decimalPlaces: 0,
     training: { cost: 100, bonus: 1, maxLevel: Infinity },
-    item: { min: 3, max: 10, limit: Infinity, scaling: (level) => offenseScaling(level) },
+    item: { min: 8, max: 22, limit: Infinity, scaling: (level) => offenseScaling(level) },
     itemTags: ['offense'],
     showInUI: true,
   },
   damagePercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 5, max: 20, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
-    itemTags: ['mace'],
+    item: { min: 10, max: 30, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
+    itemTags: ['offense', 'gloves'],
   },
   totalDamagePercent: {
     base: 0,
@@ -69,7 +69,7 @@ export const OFFENSE_STATS = {
   critDamage: {
     base: 1.5,
     decimalPlaces: 2,
-    training: { cost: 2000, bonus: 0.01, maxLevel: 500 }, // max bonus: 5
+    training: { cost: 1200, bonus: 0.01, maxLevel: 500 }, // max bonus: 5
     item: { min: 0.02, max: 0.1, limit: 2, scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER) },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
     showInUI: true,
@@ -98,7 +98,7 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 2,
     training: { cost: 800, bonus: 0.01, maxLevel: 500 }, // max bonus: 5
-    item: { min: 1, max: 2.5, limit: 5, scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER) },
+    item: { min: 0.5, max: 1.25, limit: 5, scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER) },
     itemTags: ['offense'],
     showInUI: true,
   },
@@ -122,7 +122,7 @@ export const OFFENSE_STATS = {
   fireDamage: {
     base: 0,
     decimalPlaces: 0,
-    training: { cost: 80, bonus: 1, maxLevel: Infinity },
+    training: { cost: 120, bonus: 1, maxLevel: Infinity },
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -147,7 +147,7 @@ export const OFFENSE_STATS = {
   coldDamage: {
     base: 0,
     decimalPlaces: 0,
-    training: { cost: 80, bonus: 1, maxLevel: Infinity },
+    training: { cost: 120, bonus: 1, maxLevel: Infinity },
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -172,7 +172,7 @@ export const OFFENSE_STATS = {
   airDamage: {
     base: 0,
     decimalPlaces: 0,
-    training: { cost: 80, bonus: 1, maxLevel: Infinity },
+    training: { cost: 120, bonus: 1, maxLevel: Infinity },
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -197,7 +197,7 @@ export const OFFENSE_STATS = {
   earthDamage: {
     base: 0,
     decimalPlaces: 0,
-    training: { cost: 80, bonus: 1, maxLevel: Infinity },
+    training: { cost: 120, bonus: 1, maxLevel: Infinity },
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -222,7 +222,7 @@ export const OFFENSE_STATS = {
   lightningDamage: {
     base: 0,
     decimalPlaces: 0,
-    training: { cost: 80, bonus: 1, maxLevel: Infinity },
+    training: { cost: 120, bonus: 1, maxLevel: Infinity },
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -247,7 +247,7 @@ export const OFFENSE_STATS = {
   waterDamage: {
     base: 0,
     decimalPlaces: 0,
-    training: { cost: 80, bonus: 1, maxLevel: Infinity },
+    training: { cost: 120, bonus: 1, maxLevel: Infinity },
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -283,13 +283,83 @@ export const OFFENSE_STATS = {
     showInUI: true,
   },
   // ELEMENTAL DAMAGE PERCENT
+  elementalDamage: {
+    base: 0,
+    decimalPlaces: 1,
+    item: { min: 1, max: 3, limit: Infinity, scaling: (level) => offenseScaling(level) },
+    itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
+  },
   elementalDamagePercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 4, max: 16, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 2, max: 7, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
   },
   percentOfPlayerDamage: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  armorPenetration: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  armorPenetrationPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  firePenetration: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  firePenetrationPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  coldPenetration: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  coldPenetrationPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  airPenetration: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  airPenetrationPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  earthPenetration: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  earthPenetrationPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  lightningPenetration: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  lightningPenetrationPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  waterPenetration: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  waterPenetrationPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  elementalPenetration: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  elementalPenetrationPercent: {
     base: 0,
     decimalPlaces: 1,
   },

@@ -17,35 +17,35 @@ export const SOUL_UPGRADE_CONFIG = {
   bonusGold: {
     label: 'Bonus Gold %',
     bonus: 0.01,
-    baseCost: 7,
+    baseCost: 4,
     costIncrement: 1,
     stat: 'bonusGoldPercent',
   },
   bonusExperience: {
     label: 'Bonus Experience %',
     bonus: 0.01,
-    baseCost: 7,
+    baseCost: 4,
     costIncrement: 1,
     stat: 'bonusExperiencePercent',
   },
   damageBoost: {
     label: 'Damage Boost %',
     bonus: 0.01,
-    baseCost: 10,
+    baseCost: 3,
     costIncrement: 1,
     stat: 'totalDamagePercent',
   },
   lifeBoost: {
     label: 'Life Boost %',
     bonus: 0.01,
-    baseCost: 10,
+    baseCost: 3,
     costIncrement: 1,
     stat: 'lifePercent',
   },
   manaBoost: {
     label: 'Mana Boost %',
     bonus: 0.01,
-    baseCost: 20,
+    baseCost: 3,
     costIncrement: 1,
     stat: 'manaPercent',
   },
@@ -57,10 +57,10 @@ export const SOUL_UPGRADE_CONFIG = {
     label: 'Extra Material Drop Chance',
     bonus: 0.01, // 1% per level
     baseCost: 50,
-    costIncrement: 25,
+    costIncrement: 50,
     stat: 'extraMaterialDropPercent',
     suffix: '%',
-    maxLevel: 50, // Added maximum level
+    maxLevel: 10, // Added maximum level
   },
   /**
    * Extra Material Drop Max
@@ -72,6 +72,7 @@ export const SOUL_UPGRADE_CONFIG = {
     baseCost: 300,
     costIncrement: 200,
     stat: 'extraMaterialDropMax',
+    maxLevel: 100, // Added maximum level
   },
 };
 

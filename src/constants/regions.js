@@ -32,6 +32,7 @@ export const REGIONS = [
       crystalized_rock: 1.1,
     },
     itemBaseBonus: 0.8,
+    resistanceReduction: 0,
   },
   {
     tier: 2,
@@ -64,6 +65,7 @@ export const REGIONS = [
       crystalized_rock: 5,
     },
     itemBaseBonus: 1.05,
+    resistanceReduction: 5,
   },
   {
     tier: 3,
@@ -103,6 +105,7 @@ export const REGIONS = [
       potion_of_perseverance: 3,
     },
     itemBaseBonus: 1.3,
+    resistanceReduction: 10,
   },
   {
     tier: 4,
@@ -136,6 +139,7 @@ export const REGIONS = [
     },
     canDrop: ['elixir'],
     itemBaseBonus: 1.55,
+    resistanceReduction: 15,
   },
   {
     tier: 5,
@@ -171,6 +175,7 @@ export const REGIONS = [
       FREAKY_GOLD_COINS: 4,
     },
     itemBaseBonus: 1.8,
+    resistanceReduction: 20,
   },
   {
     tier: 6,
@@ -210,6 +215,7 @@ export const REGIONS = [
       potion_of_perseverance: 3,
     },
     itemBaseBonus: 2.1,
+    resistanceReduction: 25,
   },
   {
     tier: 7,
@@ -243,6 +249,7 @@ export const REGIONS = [
       freaky_gold_coins: 20,
     },
     itemBaseBonus: 2.4,
+    resistanceReduction: 30,
   },
   {
     tier: 8,
@@ -279,6 +286,7 @@ export const REGIONS = [
       weapon_upgrade_core: 6,
     },
     itemBaseBonus: 2.7,
+    resistanceReduction: 35,
   },
   {
     tier: 9,
@@ -315,6 +323,7 @@ export const REGIONS = [
       crystalized_rock: 6,
     },
     itemBaseBonus: 2.95,
+    resistanceReduction: 40,
   },
   {
     tier: 10,
@@ -350,6 +359,7 @@ export const REGIONS = [
       huge_experience_potion: 10,
     },
     itemBaseBonus: 3.15,
+    resistanceReduction: 45,
   },
   {
     tier: 11,
@@ -383,6 +393,7 @@ export const REGIONS = [
     materialDropWeights: {
     },
     itemBaseBonus: 3.22,
+    resistanceReduction: 50,
   },
   {
     tier: 12,
@@ -417,7 +428,8 @@ export const REGIONS = [
       enchantment_scroll: 5,
       alternation_orb: 5,
     },
-    itemBaseBonus: 3.4,
+    itemBaseBonus: 3.6,
+    resistanceReduction: 55,
   },
 ];
 

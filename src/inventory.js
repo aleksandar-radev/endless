@@ -16,11 +16,9 @@ import {
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
 
-const html = String.raw;
-
 export const ITEM_SLOTS = 200;
 export const PERSISTENT_SLOTS = 30;
-export const MATERIALS_SLOTS = 50;
+export const MATERIALS_SLOTS = 100;
 
 export default class Inventory {
   constructor(savedData = null) {
@@ -358,11 +356,11 @@ export default class Inventory {
     const jewelryTypes = getTypesByCategory('jewelry');
     let id;
     if (weaponTypes.includes(item.type)) {
-      id = MATERIALS.WEAPON_UPGRADE_CORE.id;
+      id = MATERIALS.weapon_upgrade_core.id;
     } else if (jewelryTypes.includes(item.type)) {
-      id = MATERIALS.JEWELRY_UPGRADE_GEM.id;
+      id = MATERIALS.jewelry_upgrade_gem.id;
     } else {
-      id = MATERIALS.ARMOR_UPGRADE_STONE.id;
+      id = MATERIALS.armor_upgrade_stone.id;
     }
     const qty = Math.floor(
       (rarityAmounts[item.rarity] || 1) *

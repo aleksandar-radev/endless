@@ -2,6 +2,12 @@ import { ITEM_TYPES } from './constants/items.js';
 import { getCurrentRegion, getRegionEnemies } from './region.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
 import { ELEMENTS } from './constants/common.js';
+import { scaleStat } from './common.js';
+
+// armor, evasion, attackRating scaling
+const ratingScale = 0.0001; // 0.01% base gain per level
+// all else
+const baseScale = 0.4; // 40% base gain per level
 
 class Enemy {
   constructor(level) {
@@ -98,64 +104,34 @@ class Enemy {
   }
 
   calculateLife() {
-    let life = this.baseData.life - 10; // to account for level 1 enemy having +10 life
-    const segLen = 10,
-      initialInc = 12,
-      incStep = 8;
-    for (let lvl = 1; lvl <= this.level; lvl++) {
-      life += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
-    }
-    return life * this.region.multiplier.life * this.rarityData.multiplier.life * this.baseData.multiplier.life;
+    const base = (this.baseData.life) || 0;
+    const val = scaleStat(base, this.level, 14, 2, 22, baseScale);
+    return val * this.region.multiplier.life * this.rarityData.multiplier.life * this.baseData.multiplier.life;
   }
 
   calculateDamage = () => {
-    let dmg = this.baseData.damage;
-    const segLen = 10,
-      initialInc = 0.4,
-      incStep = 0.1;
-    for (let lvl = 1; lvl <= this.level; lvl++) {
-      dmg += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
-    }
-    return dmg * this.region.multiplier.damage * this.rarityData.multiplier.damage * this.baseData.multiplier.damage;
+    const base = this.baseData.damage || 0;
+    const val = scaleStat(base, this.level, 0.75, 5, 0.75, baseScale);
+    return val * this.region.multiplier.damage * this.rarityData.multiplier.damage * this.baseData.multiplier.damage;
   };
 
   calculateArmor() {
-    const baseArmor = this.baseData.armor * this.level || 0;
-    const segLen = 10,
-      initialInc = 0.5,
-      incStep = 0.2;
-    let armor = baseArmor;
-    for (let lvl = 1; lvl <= this.level; lvl++) {
-      armor += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
-    }
-    return armor * this.region.multiplier.armor * this.rarityData.multiplier.armor * this.baseData.multiplier.armor;
+    const base = (this.baseData.armor * this.level) || 0;
+    const val = scaleStat(base, this.level, 2.5,0,0, ratingScale);
+    return val * this.region.multiplier.armor * this.rarityData.multiplier.armor * this.baseData.multiplier.armor;
   }
 
   calculateEvasion() {
-    const baseEvasion = this.baseData.evasion * this.level || 0;
-    const segLen = 10,
-      initialInc = 0.5,
-      incStep = 0.2;
-    let evasion = baseEvasion;
-    for (let lvl = 1; lvl <= this.level; lvl++) {
-      evasion += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
-    }
-    return (
-      evasion * this.region.multiplier.evasion * this.rarityData.multiplier.evasion * this.baseData.multiplier.evasion
-    );
+    const base = (this.baseData.evasion * this.level) || 0;
+    const val = scaleStat(base, this.level, 2.5,0,0, ratingScale);
+    return val * this.region.multiplier.evasion * this.rarityData.multiplier.evasion * this.baseData.multiplier.evasion;
   }
 
   calculateAttackRating() {
-    const baseAttackRating = this.baseData.attackRating * this.level || 0;
-    const segLen = 10,
-      initialInc = 0.5,
-      incStep = 0.2;
-    let attackRating = baseAttackRating;
-    for (let lvl = 1; lvl <= this.level; lvl++) {
-      attackRating += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
-    }
+    const base = (this.baseData.attackRating * this.level) || 0;
+    const val = scaleStat(base, this.level, 2.5,0,0, ratingScale);
     return (
-      attackRating *
+      val *
       this.region.multiplier.attackRating *
       this.rarityData.multiplier.attackRating *
       this.baseData.multiplier.attackRating
@@ -202,39 +178,23 @@ class Enemy {
     // type: 'fire', 'cold', 'air', 'earth', 'lightning', 'water'
     const base = this.baseData[`${type}Damage`] || 0;
     if (base === 0) return 0;
-    const segLen = 10,
-      initialInc = 0.3,
-      incStep = 0.1;
-    let dmg = base;
-    for (let lvl = 1; lvl <= this.level; lvl++) {
-      dmg += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
-    }
+    const val = scaleStat(base, this.level, 0.3, 10, 0.1, baseScale);
     const regionMult = this.region.multiplier[`${type}Damage`] || 1;
     const rarityMult = this.rarityData.multiplier[`${type}Damage`] || 1;
     const baseMult = this.baseData.multiplier ? this.baseData.multiplier[`${type}Damage`] || 1 : 1;
-    return dmg * regionMult * rarityMult * baseMult;
+    return val * regionMult * rarityMult * baseMult;
   }
 
   calculateXP() {
-    let xp = this.baseData.xp;
-    const segLen = 10,
-      initialInc = 2,
-      incStep = 1;
-    for (let lvl = 1; lvl <= this.level; lvl++) {
-      xp += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
-    }
-    return xp * this.region.multiplier.xp * (this.rarityData.multiplier.xp || 1) * (this.baseData.multiplier.xp || 1);
+    const base = this.baseData.xp || 0;
+    const val = scaleStat(base, this.level, 2, 10, 1, baseScale);
+    return val * this.region.multiplier.xp * (this.rarityData.multiplier.xp || 1) * (this.baseData.multiplier.xp || 1);
   }
 
   calculateGold() {
-    let gold = this.baseData.gold;
-    const segLen = 10,
-      initialInc = 1.5,
-      incStep = 0.75;
-    for (let lvl = 1; lvl <= this.level; lvl++) {
-      gold += initialInc + Math.floor((lvl - 1) / segLen) * incStep;
-    }
-    return gold * this.region.multiplier.gold * (this.rarityData.multiplier.gold || 1) * (this.baseData.multiplier.gold || 1);
+    const base = this.baseData.gold || 0;
+    const val = scaleStat(base, this.level, 1.5, 10, 0.75, baseScale);
+    return val * this.region.multiplier.gold * (this.rarityData.multiplier.gold || 1) * (this.baseData.multiplier.gold || 1);
   }
 }
 export default Enemy;

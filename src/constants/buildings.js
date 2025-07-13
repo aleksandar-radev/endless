@@ -19,7 +19,7 @@ export const buildingsData = {
     image: '/buildings/gold-mine.png',
     effect: { type: 'gold', amount: 10, interval: 'minute' },
     cost: { gold: 2000 }, // Changed to cost gold
-    costIncrease: { gold: 250 },
+    costIncrease: { gold: 100 },
     maxLevel: 100000,
     unlockRequirements: {},
   },

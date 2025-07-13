@@ -1,12 +1,10 @@
-import { defineConfig } from 'vite';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { defineConfig, loadEnv } from 'vite';
 
 export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
   const isNoObf = mode === 'noobf';
   return {
-    base: process.env.VITE_BASE_PATH || '/',
+    base: env.VITE_BASE_PATH || './',
     build: {
       outDir: 'dist',
       emptyOutDir: true,

@@ -1,6 +1,6 @@
 // Scaling multiplier for all defense stats
-const FLAT_MULTIPLIER = 0.035;
-const PERCENT_MULTIPLIER = 0.0025;
+const FLAT_MULTIPLIER = 0.025;
+const PERCENT_MULTIPLIER = 0.002;
 const CHANCE_MULTIPLIER = 0.0008;
 
 // Generic scaling function for all defense stats
@@ -24,7 +24,7 @@ export const DEFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
     item: { min: 6, max: 15, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
-    itemTags: ['pants'],
+    itemTags: ['belt', 'pants'],
   },
   // ARMOR
   armor: {
@@ -58,9 +58,9 @@ export const DEFENSE_STATS = {
   lifeRegen: {
     base: 0,
     decimalPlaces: 1,
-    training: { cost: 250, bonus: 0.1, maxLevel: Infinity },
+    training: { cost: 60, bonus: 0.1, maxLevel: Infinity },
     item: { min: 3, max: 8, scaling: (level) => defenseScaling(level) },
-    itemTags: ['belt'],
+    itemTags: ['belt', 'pants'],
     showInUI: true,
   },
   lifeRegenPercent: {
@@ -110,7 +110,7 @@ export const DEFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
     training: { cost: 800, bonus: 0.1, maxLevel: 150 },
-    item: { min: 2, max: 6, limit: 30,scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 2, max: 6, limit: 45,scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
   },
@@ -118,7 +118,7 @@ export const DEFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
     training: { cost: 800, bonus: 0.1, maxLevel: 150 },
-    item: { min: 2, max: 6, limit: 30,scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 2, max: 6, limit: 45,scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
   },
@@ -126,7 +126,7 @@ export const DEFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
     training: { cost: 800, bonus: 0.1, maxLevel: 150 },
-    item: { min: 2, max: 6, limit: 30, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 2, max: 6, limit: 45, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
   },
@@ -134,7 +134,7 @@ export const DEFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
     training: { cost: 800, bonus: 0.1, maxLevel: 150 },
-    item: { min: 2, max: 6, limit: 30, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 2, max: 6, limit: 45, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
   },
@@ -142,7 +142,7 @@ export const DEFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
     training: { cost: 800, bonus: 0.1, maxLevel: 150 },
-    item: { min: 2, max: 6, limit: 30, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 2, max: 6, limit: 45, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
   },
@@ -150,7 +150,7 @@ export const DEFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
     training: { cost: 800, bonus: 0.1, maxLevel: 150 },
-    item: { min: 2, max: 6, limit: 30, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 2, max: 6, limit: 45, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
   },
@@ -161,5 +161,7 @@ export const DEFENSE_STATS = {
   lifeRegenOfTotalPercent: {
     base: 0,
     decimalPlaces: 2,
+    item: { min: 0.01, max: 0.05, limit: 1.23, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    itemTags: ['belt'],
   },
 };

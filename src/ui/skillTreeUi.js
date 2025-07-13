@@ -374,7 +374,7 @@ function initializeSkillModal() {
       <div class="modal-controls">
         <button data-qty="1">+1</button>
         <button data-qty="5">+5</button>
-        <button data-qty="10">+10</button>
+        <button data-qty="25">+25</button>
         <button class="max-btn" data-qty="max">Max</button>
       </div>
       <button class="modal-buy">Buy</button>

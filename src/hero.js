@@ -388,6 +388,17 @@ export default class Hero {
         const decimals = STATS[stat].decimalPlaces ?? 0;
         value = decimals > 0 ? Number(value.toFixed(decimals)) : Math.floor(value);
 
+        // reduce resistance based on region
+        if (stat.endsWith('Resistance')) {
+          const region = getCurrentRegion();
+          if (region && region.resistanceReduction) {
+            value = Number(value - region.resistanceReduction).toFixed(decimals);
+            if (value < 0) {
+              value = 0; // Ensure resistance doesn't go below 0
+            }
+          }
+        }
+
         // Apply caps
         if (stat === 'blockChance') value = Math.min(value, 75);
         if (stat === 'critChance') value = Math.min(value, 100);
@@ -406,29 +417,29 @@ export default class Hero {
     }
 
     this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * this.stats.mana;
-    this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.mana;
+    this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.life;
 
     // apply total damage percent
     this.stats.damage = Math.floor(this.stats.damage * (1 + this.stats.totalDamagePercent));
 
     // Special handling for elemental damages
     this.stats.fireDamage = Math.floor(
-      flatValues.fireDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.fireDamagePercent + this.stats.totalDamagePercent),
+      (flatValues.fireDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.fireDamagePercent + this.stats.totalDamagePercent),
     );
     this.stats.coldDamage = Math.floor(
-      flatValues.coldDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.coldDamagePercent + this.stats.totalDamagePercent),
+      (flatValues.coldDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.coldDamagePercent + this.stats.totalDamagePercent),
     );
     this.stats.airDamage = Math.floor(
-      flatValues.airDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.airDamagePercent + this.stats.totalDamagePercent),
+      (flatValues.airDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.airDamagePercent + this.stats.totalDamagePercent),
     );
     this.stats.earthDamage = Math.floor(
-      flatValues.earthDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.earthDamagePercent + this.stats.totalDamagePercent),
+      (flatValues.earthDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.earthDamagePercent + this.stats.totalDamagePercent),
     );
     this.stats.lightningDamage = Math.floor(
-      flatValues.lightningDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.lightningDamagePercent + this.stats.totalDamagePercent),
+      (flatValues.lightningDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.lightningDamagePercent + this.stats.totalDamagePercent),
     );
     this.stats.waterDamage = Math.floor(
-      flatValues.waterDamage * (1 + this.stats.elementalDamagePercent + percentBonuses.waterDamagePercent + this.stats.totalDamagePercent),
+      (flatValues.waterDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.waterDamagePercent + this.stats.totalDamagePercent),
     );
 
     this.stats.reflectFireDamage = (() => {
@@ -534,19 +545,64 @@ export default class Hero {
 
     if (!enemy) return result;
 
+    // Calculate effective enemy armor after hero's armor penetration
+    let effectiveArmor = enemy.armor;
+    // Apply percent armor penetration first
+    effectiveArmor *= 1 - (this.stats.armorPenetrationPercent || 0) / 100;
+    // Then apply flat armor penetration
+    effectiveArmor -= this.stats.armorPenetration || 0;
+    // Armor cannot go below zero
+    effectiveArmor = Math.max(0, effectiveArmor);
+
     // Use PoE2 armor formula for physical reduction
-    const armorReduction = calculateArmorReduction(enemy.armor, result.breakdown.physical) / 100;
+    const armorReduction = calculateArmorReduction(effectiveArmor, result.breakdown.physical) / 100;
     const breakdown = result.breakdown;
 
-    // Calculate reduced damages for each type
+    // Helper to calculate effective resistance after penetration
+    function getEffectiveResistance(baseRes, flatPen, percentPen) {
+      let effectiveRes = baseRes;
+      // Apply percent penetration first (elementalPenetrationPercent + specific percent)
+      const totalPercentPen = (percentPen || 0) + (this.stats.elementalPenetrationPercent || 0);
+      effectiveRes *= 1 - totalPercentPen / 100;
+      // Then apply flat penetration (elementalPenetration + specific flat)
+      const totalFlatPen = (flatPen || 0) + (this.stats.elementalPenetration || 0);
+      effectiveRes -= totalFlatPen;
+      // Resistance cannot go below zero
+      return Math.max(0, effectiveRes);
+    }
+
     const reducedBreakdown = {
       physical: breakdown.physical * (1 - armorReduction),
-      fire: breakdown.fire * (1 - enemy.baseData.fireResistance / 100),
-      cold: breakdown.cold * (1 - enemy.baseData.coldResistance / 100),
-      air: breakdown.air * (1 - enemy.baseData.airResistance / 100),
-      earth: breakdown.earth * (1 - enemy.baseData.earthResistance / 100),
-      lightning: breakdown.lightning * (1 - enemy.baseData.lightningResistance / 100),
-      water: breakdown.water * (1 - enemy.baseData.waterResistance / 100),
+      fire: breakdown.fire * (1 - getEffectiveResistance.call(this,
+        enemy.baseData.fireResistance,
+        this.stats.firePenetration,
+        this.stats.firePenetrationPercent,
+      ) / 100),
+      cold: breakdown.cold * (1 - getEffectiveResistance.call(this,
+        enemy.baseData.coldResistance,
+        this.stats.coldPenetration,
+        this.stats.coldPenetrationPercent,
+      ) / 100),
+      air: breakdown.air * (1 - getEffectiveResistance.call(this,
+        enemy.baseData.airResistance,
+        this.stats.airPenetration,
+        this.stats.airPenetrationPercent,
+      ) / 100),
+      earth: breakdown.earth * (1 - getEffectiveResistance.call(this,
+        enemy.baseData.earthResistance,
+        this.stats.earthPenetration,
+        this.stats.earthPenetrationPercent,
+      ) / 100),
+      lightning: breakdown.lightning * (1 - getEffectiveResistance.call(this,
+        enemy.baseData.lightningResistance,
+        this.stats.lightningPenetration,
+        this.stats.lightningPenetrationPercent,
+      ) / 100),
+      water: breakdown.water * (1 - getEffectiveResistance.call(this,
+        enemy.baseData.waterResistance,
+        this.stats.waterPenetration,
+        this.stats.waterPenetrationPercent,
+      ) / 100),
     };
 
     const finalDamage = Object.values(reducedBreakdown).reduce((sum, val) => sum + val, 0);

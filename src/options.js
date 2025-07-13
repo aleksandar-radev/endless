@@ -249,11 +249,7 @@ export class Options {
     cloudSaveStatus.textContent = statusMsg;
 
     if (!userSession) {
-      let loginUrl = '/login';
-      const isLocal = import.meta.env.VITE_IS_LOCAL === 'true';
-      if (isLocal) {
-        loginUrl = 'http://localhost:5173/login';
-      }
+      const loginUrl = import.meta.env.VITE_LOGIN_URL;
       cloudSaveStatus.innerHTML =
         '<span class="login-status">Not logged in</span><div><a href="' +
         loginUrl +
