@@ -299,4 +299,68 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
   },
+  armorPenetration: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  armorPenetrationPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  firePenetration: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  firePenetrationPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  coldPenetration: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  coldPenetrationPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  airPenetration: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  airPenetrationPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  earthPenetration: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  earthPenetrationPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  lightningPenetration: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  lightningPenetrationPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  waterPenetration: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  waterPenetrationPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  elementalPenetration: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  elementalPenetrationPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
 };
