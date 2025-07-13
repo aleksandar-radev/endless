@@ -417,7 +417,7 @@ export const REGIONS = [
       enchantment_scroll: 5,
       alternation_orb: 5,
     },
-    itemBaseBonus: 3.4,
+    itemBaseBonus: 3.6,
   },
 ];
 
