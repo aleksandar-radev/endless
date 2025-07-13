@@ -508,6 +508,35 @@ export function setupDragAndDrop() {
     trash.addEventListener('mousemove', positionTooltip);
     trash.addEventListener('mouseleave', hideTooltip);
   }
+
+  // Add drop logic for material cells
+  const materialCells = document.querySelectorAll('.materials-cell');
+  materialCells.forEach((cell, targetIdx) => {
+    cell.addEventListener('dragover', (e) => {
+      // Only allow material drag
+      if (e.dataTransfer.types.includes('text/material-id')) {
+        e.preventDefault();
+        cell.classList.add('drag-over');
+      }
+    });
+    cell.addEventListener('dragleave', () => {
+      cell.classList.remove('drag-over');
+    });
+    cell.addEventListener('drop', (e) => {
+      if (!e.dataTransfer.types.includes('text/material-id')) return;
+      e.preventDefault();
+      cell.classList.remove('drag-over');
+      const matId = e.dataTransfer.getData('text/material-id');
+      const fromIdx = parseInt(e.dataTransfer.getData('text/material-index'), 10);
+      if (isNaN(fromIdx) || fromIdx === targetIdx) return;
+      // Swap materials between cells
+      const temp = inventory.materials[targetIdx];
+      inventory.materials[targetIdx] = inventory.materials[fromIdx];
+      inventory.materials[fromIdx] = temp;
+      updateMaterialsGrid();
+      dataManager.saveGame();
+    });
+  });
 }
 
 export function removeExistingListeners() {
@@ -704,7 +733,7 @@ export function setupItemDragAndTooltip() {
 }
 
 export function sortMaterials() {
-  // Sort by MATERIALS[mat.id].sort ascending, then by id ascending
+  // Sort by MATERIALS[mat.id]?.sort ascending, then by id ascending
   const nonNullMaterials = inventory.materials.filter((mat) => mat !== null);
   nonNullMaterials.sort((a, b) => {
     const aSort = MATERIALS[a.id]?.sort ?? 9999;
@@ -735,7 +764,7 @@ export function updateMaterialsGrid(inv) {
       const matDef = Object.values(MATERIALS).find((m) => m.id === mat.id) || {};
       // Show only first 2 digits, and "9+" if >9
       let qtyDisplay = mat.qty > 9 ? '+' : String(mat.qty).padStart(2, ' ');
-      cell.innerHTML = `<div class="material-item" data-mat-id="${mat.id}">
+      cell.innerHTML = `<div class="material-item" draggable="true" data-mat-id="${mat.id}" data-mat-index="${i}">
           ${mat.icon || '🔹'}
           <span class="mat-qty">${qtyDisplay}</span>
         </div>`;
@@ -755,7 +784,41 @@ export function updateMaterialsGrid(inv) {
       materialItem.addEventListener('click', () => {
         inventory.openMaterialDialog(mat);
       });
+      // Drag events for materials
+      materialItem.addEventListener('dragstart', (e) => {
+        e.target.classList.add('dragging');
+        e.dataTransfer.setData('text/material-id', mat.id);
+        e.dataTransfer.setData('text/material-index', i);
+        cleanupTooltips();
+      });
+      materialItem.addEventListener('dragend', (e) => {
+        e.target.classList.remove('dragging');
+      });
     }
+    // Add drop logic for this material cell
+    cell.addEventListener('dragover', (e) => {
+      if (e.dataTransfer.types.includes('text/material-id')) {
+        e.preventDefault();
+        cell.classList.add('drag-over');
+      }
+    });
+    cell.addEventListener('dragleave', () => {
+      cell.classList.remove('drag-over');
+    });
+    cell.addEventListener('drop', (e) => {
+      if (!e.dataTransfer.types.includes('text/material-id')) return;
+      e.preventDefault();
+      cell.classList.remove('drag-over');
+      const matId = e.dataTransfer.getData('text/material-id');
+      const fromIdx = parseInt(e.dataTransfer.getData('text/material-index'), 10);
+      if (isNaN(fromIdx) || fromIdx === i) return;
+      // Swap materials between cells
+      const temp = inventory.materials[i];
+      inventory.materials[i] = inventory.materials[fromIdx];
+      inventory.materials[fromIdx] = temp;
+      updateMaterialsGrid();
+      dataManager.saveGame();
+    });
     materialsContainer.appendChild(cell);
   }
 }
