@@ -1,6 +1,6 @@
 // Scaling multiplier for all offense stats
-const FLAT_MULTIPLIER = 0.035;
-const PERCENT_MULTIPLIER = 0.0020;
+const FLAT_MULTIPLIER = 0.02;
+const PERCENT_MULTIPLIER = 0.002;
 const CHANCE_MULTIPLIER = 0.0008;
 
 const ELEMENTAL_DAMAGE_MIN = 4;

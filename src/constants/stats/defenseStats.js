@@ -1,6 +1,6 @@
 // Scaling multiplier for all defense stats
-const FLAT_MULTIPLIER = 0.035;
-const PERCENT_MULTIPLIER = 0.0025;
+const FLAT_MULTIPLIER = 0.02;
+const PERCENT_MULTIPLIER = 0.002;
 const CHANCE_MULTIPLIER = 0.0008;
 
 // Generic scaling function for all defense stats
