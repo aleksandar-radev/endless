@@ -7,7 +7,7 @@ import { scaleStat } from './common.js';
 // armor, evasion, attackRating scaling
 const ratingScale = 0.0001; // 0.01% base gain per level
 // all else
-const baseScale = 0.4; // 40% base gain per level
+const baseScale = 0.2; // 40% base gain per level
 
 class Enemy {
   constructor(level) {
@@ -104,31 +104,31 @@ class Enemy {
 
   calculateLife() {
     const base = (this.baseData.life) || 0;
-    const val = scaleStat(base, this.level, 14, 2, 22, baseScale);
+    const val = scaleStat(base, this.level, 4, 4, 4, baseScale);
     return val * this.region.multiplier.life * this.rarityData.multiplier.life * this.baseData.multiplier.life;
   }
 
   calculateDamage = () => {
     const base = this.baseData.damage || 0;
-    const val = scaleStat(base, this.level, 0.75, 5, 0.75, baseScale);
+    const val = scaleStat(base, this.level, 0.5, 5, 0.5, baseScale);
     return val * this.region.multiplier.damage * this.rarityData.multiplier.damage * this.baseData.multiplier.damage;
   };
 
   calculateArmor() {
     const base = (this.baseData.armor * this.level) || 0;
-    const val = scaleStat(base, this.level, 2.5,0,0, ratingScale);
+    const val = scaleStat(base, this.level, 2,0,0, ratingScale);
     return val * this.region.multiplier.armor * this.rarityData.multiplier.armor * this.baseData.multiplier.armor;
   }
 
   calculateEvasion() {
     const base = (this.baseData.evasion * this.level) || 0;
-    const val = scaleStat(base, this.level, 2.5,0,0, ratingScale);
+    const val = scaleStat(base, this.level, 2,0,0, ratingScale);
     return val * this.region.multiplier.evasion * this.rarityData.multiplier.evasion * this.baseData.multiplier.evasion;
   }
 
   calculateAttackRating() {
     const base = (this.baseData.attackRating * this.level) || 0;
-    const val = scaleStat(base, this.level, 2.5,0,0, ratingScale);
+    const val = scaleStat(base, this.level, 2,0,0, ratingScale);
     return (
       val *
       this.region.multiplier.attackRating *
@@ -177,7 +177,7 @@ class Enemy {
     // type: 'fire', 'cold', 'air', 'earth', 'lightning', 'water'
     const base = this.baseData[`${type}Damage`] || 0;
     if (base === 0) return 0;
-    const val = scaleStat(base, this.level, 0.3, 10, 0.1, baseScale);
+    const val = scaleStat(base, this.level, 0.5, 5, 0.5, baseScale);
     const regionMult = this.region.multiplier[`${type}Damage`] || 1;
     const rarityMult = this.rarityData.multiplier[`${type}Damage`] || 1;
     const baseMult = this.baseData.multiplier ? this.baseData.multiplier[`${type}Damage`] || 1 : 1;
@@ -186,13 +186,13 @@ class Enemy {
 
   calculateXP() {
     const base = this.baseData.xp || 0;
-    const val = scaleStat(base, this.level, 2, 10, 1, baseScale);
+    const val = scaleStat(base, this.level, 0.5, 10, 0.5, baseScale);
     return val * this.region.multiplier.xp * (this.rarityData.multiplier.xp || 1) * (this.baseData.multiplier.xp || 1);
   }
 
   calculateGold() {
     const base = this.baseData.gold || 0;
-    const val = scaleStat(base, this.level, 1.5, 10, 0.75, baseScale);
+    const val = scaleStat(base, this.level, 0.5, 10, 0.5, baseScale);
     return val * this.region.multiplier.gold * (this.rarityData.multiplier.gold || 1) * (this.baseData.multiplier.gold || 1);
   }
 }
