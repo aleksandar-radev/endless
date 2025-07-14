@@ -259,6 +259,9 @@ export function createDebugUI() {
 }
 
 export function createModifyUI() {
+  if (import.meta.env.VITE_ENV == 'production') {
+    return;
+  }
   const modifyDiv = document.createElement('div');
   modifyDiv.className = 'modify-panel modify-ui';
   document.body.appendChild(modifyDiv);
