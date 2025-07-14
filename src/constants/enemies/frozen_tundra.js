@@ -5,7 +5,7 @@ const tier = 3;
 export const TUNDRA_ENEMIES = [
   {
     name: 'Frostbite',
-    element: 'cold',
+     
     image: '/enemies/frostbite.jpg',
     tier: tier,
 
@@ -34,7 +34,7 @@ export const TUNDRA_ENEMIES = [
   },
   {
     name: 'Frostfury',
-    element: 'cold',
+     
     image: '/enemies/frostfury.jpg',
     tier: tier,
 
@@ -60,7 +60,7 @@ export const TUNDRA_ENEMIES = [
   },
   {
     name: 'Frost Giant',
-    element: 'cold',
+     
     image: '/enemies/frost-giant.jpg',
     tier: tier,
 
@@ -91,7 +91,7 @@ export const TUNDRA_ENEMIES = [
   },
   {
     name: 'Ice Wraith',
-    element: 'cold',
+     
     image: '/enemies/ice-wraith.jpg',
     tier: tier,
 

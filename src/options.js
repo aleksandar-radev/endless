@@ -7,7 +7,7 @@ const html = String.raw;
 // Options class to store options and version (future-proof for migrations)
 export class Options {
   constructor(data = {}) {
-    this.version = data.version || '0.3.1';
+    this.version = data.version || '0.4.0';
     // Add startingStage, default to null (unset)
     this.startingStage = data.startingStage || null;
     // Add showEnemyStats option, default to false

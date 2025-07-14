@@ -5,7 +5,7 @@ const tier = 5;
 export const SWAMP_ENEMIES = [
   {
     name: 'Boglurker',
-    element: 'earth',
+     
     image: '/enemies/boglurker.jpg',
     tier: tier,
 
@@ -32,7 +32,7 @@ export const SWAMP_ENEMIES = [
   },
   {
     name: 'Toxictoad',
-    element: 'earth',
+     
     image: '/enemies/toxictoad.jpg',
     tier: tier,
 
@@ -60,7 +60,7 @@ export const SWAMP_ENEMIES = [
   },
   {
     name: 'Venomspitter',
-    element: 'earth',
+     
     image: '/enemies/venomspitter.jpg',
     tier: tier,
 
@@ -88,7 +88,7 @@ export const SWAMP_ENEMIES = [
   },
   {
     name: 'Frostweaver',
-    element: 'cold',
+     
     image: '/enemies/frostweaver.jpg',
     tier: tier,
 

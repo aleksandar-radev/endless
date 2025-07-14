@@ -677,7 +677,6 @@ export function setupItemDragAndTooltip() {
       if (inSalvageModal) {
         if (inventory.salvageUpgradeMaterials) {
           const { id, qty } = inventory.getItemSalvageMaterial(itemData);
-          let realId = id.toUpperCase();
           tooltipContent += `<div style="margin-top:8px;
             color:#fff;
             background: rgba(224, 192, 96, 0.6);
@@ -686,7 +685,7 @@ export function setupItemDragAndTooltip() {
             border-radius:0 0 8px 8px;
             font-weight:bold;
             text-shadow: 1px 1px 2px #7a5c1c;">
-            <b>Salvage Value:</b> ${qty} ${MATERIALS[realId].name}
+            <b>Salvage Value:</b> ${qty} ${MATERIALS[id].name}
           </div>`;
         } else {
           let goldGained = inventory.getItemSalvageValue(itemData);
