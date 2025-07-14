@@ -5,7 +5,7 @@ const tier = 4;
 export const DESERT_ENEMIES = [
   {
     name: 'Dunewraith',
-    element: 'earth',
+     
     image: '/enemies/dunewraith.jpg',
     tier: tier,
 
@@ -32,7 +32,7 @@ export const DESERT_ENEMIES = [
   },
   {
     name: 'Sandstalker',
-    element: 'earth',
+     
     image: '/enemies/sandstalker.jpg',
     tier: tier,
 
@@ -60,7 +60,7 @@ export const DESERT_ENEMIES = [
   },
   {
     name: 'Scorching Salamander',
-    element: 'fire',
+     
     image: '/enemies/scorching-salamander.jpg',
     tier: tier,
 
@@ -84,11 +84,11 @@ export const DESERT_ENEMIES = [
 
     materialDropWeights: {},
     tags: ['desert', 'fire'],
-    icon: '🔥',
+     
   },
   {
     name: 'Dune Blazer',
-    element: 'fire',
+     
     image: '/enemies/dune-blazer.jpg',
     tier: tier,
 
@@ -113,6 +113,6 @@ export const DESERT_ENEMIES = [
 
     materialDropWeights: {},
     tags: ['desert', 'sand'],
-    icon: '🔥',
+     
   },
 ];

@@ -5,7 +5,7 @@ const tier = 1;
 export const FOREST_ENEMIES = [
   {
     name: 'Mossback',
-    element: 'earth',
+
     image: '/enemies/mossback.jpg',
     tier: tier,
 
@@ -30,7 +30,7 @@ export const FOREST_ENEMIES = [
   },
   {
     name: 'Thornling',
-    element: 'earth',
+
     image: '/enemies/thornling.jpg',
     tier: tier,
 
@@ -57,7 +57,7 @@ export const FOREST_ENEMIES = [
   },
   {
     name: 'Barkhide',
-    element: 'earth',
+
     image: '/enemies/barkhide.jpg',
     tier: tier,
 
@@ -83,7 +83,7 @@ export const FOREST_ENEMIES = [
   },
   {
     name: 'Sylvan Wisp',
-    element: 'air',
+
     image: '/enemies/sylvan-wisp.jpg',
     tier: tier,
 

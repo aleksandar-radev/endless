@@ -19,8 +19,7 @@ class Enemy {
     const baseData = regionEnemies[Math.floor(Math.random() * regionEnemies.length)];
     this.baseData = baseData;
 
-    this.name = `${ELEMENTS[baseData.element].icon} ${baseData.name}`;
-    this.element = baseData.element || null;
+    this.name = `${baseData.name}`;
     this.image = baseData.image;
 
     this.rarity = this.generateRarity();

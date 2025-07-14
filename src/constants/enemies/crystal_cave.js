@@ -5,7 +5,7 @@ const tier = 2;
 export const CRYSTAL_CAVE_ENEMIES = [
   {
     name: 'Crystal Golem',
-    element: 'earth',
+     
     image: '/enemies/crystal-golem.jpg',
     tier: tier,
 
@@ -32,7 +32,7 @@ export const CRYSTAL_CAVE_ENEMIES = [
   },
   {
     name: 'Gem Guardian',
-    element: 'earth',
+     
     image: '/enemies/gem-guardian.jpg',
     tier: tier,
 
@@ -55,7 +55,7 @@ export const CRYSTAL_CAVE_ENEMIES = [
   },
   {
     name: 'Grimspike',
-    element: 'earth',
+     
     image: '/enemies/grimspike.jpg',
     tier: tier,
 
@@ -73,7 +73,7 @@ export const CRYSTAL_CAVE_ENEMIES = [
   },
   {
     name: 'Shardling',
-    element: 'earth',
+     
     image: '/enemies/shardling.jpg',
     tier: tier,
 

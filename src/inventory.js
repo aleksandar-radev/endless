@@ -411,8 +411,7 @@ export default class Inventory {
       if (this.salvageUpgradeMaterials) {
         const parts = Object.entries(matsGained).map(
           ([id, qty]) => {
-            const realId = id.toUpperCase();
-            return `${qty} ${MATERIALS[realId].name}`;
+            return `${qty} ${MATERIALS[id].name}`;
           },
         );
         if (parts.length) msg += `, gained ${parts.join(', ')}`;
