@@ -61,13 +61,13 @@ class Boss {
 
   calculateXP() {
     const base = this.baseData.xp || 0;
-    const val = scaleStat(base, this.level, 4, 40, 2);
+    const val = scaleStat(base, this.level);
     return val * (this.baseData.multiplier?.xp || 1);
   }
 
   calculateGold() {
     const base = this.baseData.gold || 0;
-    const val = scaleStat(base, this.level, 6, 40, 3);
+    const val = scaleStat(base, this.level);
     return val * (this.baseData.multiplier?.gold || 1);
   }
 
