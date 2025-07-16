@@ -30,7 +30,7 @@ export const SOUL_UPGRADE_CONFIG = {
   },
   damageBoost: {
     label: 'Damage Boost %',
-    bonus: 0.01,
+    bonus: 0.005,
     baseCost: 3,
     costIncrement: 1,
     stat: 'totalDamagePercent',
@@ -54,12 +54,11 @@ export const SOUL_UPGRADE_CONFIG = {
    * Each level increases the chance to gain an additional material drop.
    */
   extraMaterialDropPercent: {
-    label: 'Extra Material Drop Chance',
+    label: 'Extra Material Drop Chance %',
     bonus: 0.01, // 1% per level
     baseCost: 50,
     costIncrement: 50,
     stat: 'extraMaterialDropPercent',
-    suffix: '%',
     maxLevel: 10, // Added maximum level
   },
   /**
@@ -137,6 +136,7 @@ export default class SoulShop {
     const isOneTime = config.oneTime;
     const isMultiple = config.multiple;
     const isMultiLevel = typeof config.bonus === 'number' && !config.oneTime;
+    const isPercent = config.stat?.endsWith('Percent');
     let alreadyPurchased = isOneTime && this.soulUpgrades[stat];
     // For multiple:true, do not show level
     const level = isOneTime || isMultiple ? undefined : this.soulUpgrades[stat] || 0;
@@ -144,7 +144,7 @@ export default class SoulShop {
     if (isOneTime || isMultiple) {
       bonus = config.bonus;
     } else if (isMultiLevel) {
-      const value = Math.floor(config.bonus * (this.soulUpgrades[stat] || 0) * 100);
+      const value = Math.floor(config.bonus * (this.soulUpgrades[stat] || 0) * (isPercent ? 100 : 1));
       bonus = `+${value}${config.suffix || ''} ${config.label}`;
     } else {
       bonus = `+${config.bonus * (this.soulUpgrades[stat] || 0)} ${config.label}`;
