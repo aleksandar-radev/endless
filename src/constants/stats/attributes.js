@@ -5,13 +5,13 @@ const html = String.raw;
 export const ATTRIBUTES = {
   strength: {
     effects: {
-      damagePerPoint: 0.34,
+      damagePerPoint: 0.3,
     },
   },
   agility: {
     effects: {
       attackRatingPerPoint: 4,
-      damagePerPoint: 0.2,
+      damagePerPoint: 0.1,
     },
   },
   vitality: {
@@ -36,17 +36,12 @@ export const ATTRIBUTES = {
   },
   intelligence: {
     effects: {
-      fireDamagePerPoint: 0.09,
-      coldDamagePerPoint: 0.09,
-      airDamagePerPoint: 0.09,
-      earthDamagePerPoint: 0.09,
-      lightningDamagePerPoint: 0.09,
-      waterDamagePerPoint: 0.09,
+      elementalDamagePerPoint: 0.067,
     },
   },
   perseverance: {
     effects: {
-      lifeRegenPerPoint: 0.25,
+      lifeRegenPerPoint: 0.5,
       manaRegenPerPoint: 0.05,
     },
   },
@@ -93,7 +88,7 @@ export const ATTRIBUTE_TOOLTIPS = {
   getIntelligenceTooltip: () => html`
     <strong>Intelligence</strong><br />
     Each point increases:<br />
-    • Elemental Damage by ${ATTRIBUTES.intelligence.effects.fireDamagePerPoint}<br />
+    • Elemental Damage by ${ATTRIBUTES.intelligence.effects.elementalDamagePerPoint}<br />
   `,
 
   getPerseveranceTooltip: () => html`
