@@ -242,13 +242,13 @@ export async function defeatEnemy() {
       game.incrementStage();
     }
     game.currentEnemy = new Enemy(game.stage);
-    // clear defeat guard so next enemy can be damaged
-    game._justDefeated = false;
 
     statistics.increment('enemiesKilled', 'total');
     statistics.increment('enemiesKilled', enemy.rarity.toLowerCase());
   }
   // END EXPLORE REGION
+  // clear defeat guard so next enemy can be damaged
+  game._justDefeated = false;
 
   const expGained = Math.floor(baseExpGained * (1 + hero.stats.bonusExperiencePercent / 100));
   const goldGained = Math.floor(baseGoldGained * (1 + hero.stats.bonusGoldPercent / 100));
