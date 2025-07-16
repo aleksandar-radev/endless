@@ -94,7 +94,7 @@ export const ROGUE_SKILLS = {
     description: () => 'Significantly increases agility.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      agilityPercent: level * 3,
+      agilityPercent: level * 2.5,
     }),
   },
 
@@ -122,14 +122,14 @@ export const ROGUE_SKILLS = {
     name: () => 'Dark Pact',
     type: () => 'buff',
     manaCost: (level) => 14 + level * 0.3,
-    cooldown: () => 51000,
+    cooldown: () => 61000,
     duration: () => 20000,
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'dark-pact',
     description: () => 'Massively increases crit damage temporarily.',
     maxLevel: () => 500,
     effect: (level) => ({
-      critDamage: level * 0.01,
+      critDamage: level * 0.075,
     }),
   },
 
@@ -160,8 +160,8 @@ export const ROGUE_SKILLS = {
     maxLevel: () => 1000,
     effect: (level) => ({
       critChance: level * 0.05,
-      critDamage: level * 0.01,
-      attackRating: level * 20,
+      critDamage: level * 0.0025,
+      attackRating: level * 15,
       attackRatingPercent: level * 0.5,
     }),
   },
@@ -180,7 +180,7 @@ export const ROGUE_SKILLS = {
       dexterityPercent: level * 2,
       agilityPercent: level * 2,
       wisdomPercent: level * 1,
-      bonusGoldPercent: level * 0.5,
+      bonusGoldPercent: level * 0.25,
     }),
   },
 };
