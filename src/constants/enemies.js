@@ -152,8 +152,8 @@ export function applyDefaultEnemyStats(enemy) {
     armor: 5 * multiplier,
     evasion: 5 * multiplier,
 
-    xp: 9 * multiplier,
-    gold: 9 * multiplier,
+    xp: 7 * multiplier,
+    gold: 7 * multiplier,
 
     fireDamage: 0 * multiplier,
     coldDamage: 0 * multiplier,
