@@ -5,7 +5,7 @@ const tier = 9;
 export const SUNKEN_RUINS_ENEMIES = [
   {
     name: 'Tide Guardian',
-     
+
     image: '/enemies/tide-guardian.jpg',
     tier: tier,
 
@@ -16,8 +16,8 @@ export const SUNKEN_RUINS_ENEMIES = [
     armor: 12 * getEnemyStatMultiplier(tier),
     evasion: 4 * getEnemyStatMultiplier(tier),
 
-    xp: 11 * getEnemyStatMultiplier(tier),
-    gold: 8 * getEnemyStatMultiplier(tier),
+    xp: 9 * getEnemyStatMultiplier(tier),
+    gold: 6 * getEnemyStatMultiplier(tier),
 
     coldDamage: 2.2 * getEnemyStatMultiplier(tier),
     waterDamage: 1.1 * getEnemyStatMultiplier(tier),
@@ -37,7 +37,7 @@ export const SUNKEN_RUINS_ENEMIES = [
   },
   {
     name: 'Coral Sentinel',
-     
+
     image: '/enemies/coral-sentinel.jpg',
     tier: tier,
 
@@ -47,7 +47,7 @@ export const SUNKEN_RUINS_ENEMIES = [
     armor: 4.8 * getEnemyStatMultiplier(tier),
     evasion: 6 * getEnemyStatMultiplier(tier),
 
-    gold: 10 * getEnemyStatMultiplier(tier),
+    gold: 8 * getEnemyStatMultiplier(tier),
 
     earthDamage: 2 * getEnemyStatMultiplier(tier),
 
@@ -63,7 +63,7 @@ export const SUNKEN_RUINS_ENEMIES = [
   },
   {
     name: 'Depths Leviathan',
-     
+
     image: '/enemies/depths-leviathan.jpg',
     tier: tier,
 
@@ -72,7 +72,7 @@ export const SUNKEN_RUINS_ENEMIES = [
     attackSpeed: 0.8,
     armor: 12 * getEnemyStatMultiplier(tier),
 
-    xp: 13 * getEnemyStatMultiplier(tier),
+    xp: 11 * getEnemyStatMultiplier(tier),
 
     coldDamage: 0.4 * getEnemyStatMultiplier(tier),
 
@@ -91,7 +91,7 @@ export const SUNKEN_RUINS_ENEMIES = [
   },
   {
     name: 'Arcane Construct',
-     
+
     image: '/enemies/arcane-construct.jpg',
     tier: tier,
 

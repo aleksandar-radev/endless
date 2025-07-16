@@ -5,7 +5,7 @@ const tier = 10;
 export const HAUNTED_MOOR_ENEMIES = [
   {
     name: 'Banshee',
-     
+
     image: '/enemies/banshee.jpg',
     tier: tier,
 
@@ -13,8 +13,8 @@ export const HAUNTED_MOOR_ENEMIES = [
     attackSpeed: 1.1,
     evasion: 11 * getEnemyStatMultiplier(tier),
 
-    xp: 7 * getEnemyStatMultiplier(tier),
-    gold: 7 * getEnemyStatMultiplier(tier),
+    xp: 5 * getEnemyStatMultiplier(tier),
+    gold: 5 * getEnemyStatMultiplier(tier),
 
     airDamage: 1 * getEnemyStatMultiplier(tier),
 
@@ -30,7 +30,7 @@ export const HAUNTED_MOOR_ENEMIES = [
   },
   {
     name: 'Phantom',
-     
+
     image: '/enemies/phantom.jpg',
     tier: tier,
 
@@ -51,7 +51,7 @@ export const HAUNTED_MOOR_ENEMIES = [
   },
   {
     name: 'Wraith Lord',
-     
+
     image: '/enemies/wraith-lord.jpg',
     tier: tier,
 
@@ -61,7 +61,7 @@ export const HAUNTED_MOOR_ENEMIES = [
     attackRating: 7 * getEnemyStatMultiplier(tier),
     evasion: 7 * getEnemyStatMultiplier(tier),
 
-    gold: 13 * getEnemyStatMultiplier(tier),
+    gold: 11 * getEnemyStatMultiplier(tier),
 
     earthDamage: 0.8 * getEnemyStatMultiplier(tier),
 
@@ -77,7 +77,7 @@ export const HAUNTED_MOOR_ENEMIES = [
   },
   {
     name: 'Dreadfang',
-     
+
     image: '/enemies/dreadfang.jpg',
     tier: tier,
 
@@ -87,7 +87,7 @@ export const HAUNTED_MOOR_ENEMIES = [
     attackRating: 8 * getEnemyStatMultiplier(tier),
     evasion: 7 * getEnemyStatMultiplier(tier),
 
-    xp: 11 * getEnemyStatMultiplier(tier),
+    xp: 9 * getEnemyStatMultiplier(tier),
 
     airDamage: 1.1 * getEnemyStatMultiplier(tier),
 

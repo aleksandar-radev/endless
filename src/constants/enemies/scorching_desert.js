@@ -5,7 +5,7 @@ const tier = 4;
 export const DESERT_ENEMIES = [
   {
     name: 'Dunewraith',
-     
+
     image: '/enemies/dunewraith.jpg',
     tier: tier,
 
@@ -15,8 +15,8 @@ export const DESERT_ENEMIES = [
     armor: 7 * getEnemyStatMultiplier(tier),
     evasion: 9 * getEnemyStatMultiplier(tier),
 
-    xp: 11 * getEnemyStatMultiplier(tier),
-    gold: 9 * getEnemyStatMultiplier(tier),
+    xp: 9 * getEnemyStatMultiplier(tier),
+    gold: 7 * getEnemyStatMultiplier(tier),
 
     earthDamage: 3 * getEnemyStatMultiplier(tier),
 
@@ -32,7 +32,7 @@ export const DESERT_ENEMIES = [
   },
   {
     name: 'Sandstalker',
-     
+
     image: '/enemies/sandstalker.jpg',
     tier: tier,
 
@@ -43,8 +43,8 @@ export const DESERT_ENEMIES = [
     armor: 6 * getEnemyStatMultiplier(tier),
     evasion: 13 * getEnemyStatMultiplier(tier),
 
-    xp: 10 * getEnemyStatMultiplier(tier),
-    gold: 9 * getEnemyStatMultiplier(tier),
+    xp: 8 * getEnemyStatMultiplier(tier),
+    gold: 7 * getEnemyStatMultiplier(tier),
 
     earthDamage: 2 * getEnemyStatMultiplier(tier),
 
@@ -60,7 +60,7 @@ export const DESERT_ENEMIES = [
   },
   {
     name: 'Scorching Salamander',
-     
+
     image: '/enemies/scorching-salamander.jpg',
     tier: tier,
 
@@ -70,8 +70,8 @@ export const DESERT_ENEMIES = [
     attackRating: 12 * getEnemyStatMultiplier(tier),
     armor: 8 * getEnemyStatMultiplier(tier),
 
-    xp: 12 * getEnemyStatMultiplier(tier),
-    gold: 10 * getEnemyStatMultiplier(tier),
+    xp: 10 * getEnemyStatMultiplier(tier),
+    gold: 8 * getEnemyStatMultiplier(tier),
 
     fireDamage: 4 * getEnemyStatMultiplier(tier),
 
@@ -84,11 +84,11 @@ export const DESERT_ENEMIES = [
 
     materialDropWeights: {},
     tags: ['desert', 'fire'],
-     
+
   },
   {
     name: 'Dune Blazer',
-     
+
     image: '/enemies/dune-blazer.jpg',
     tier: tier,
 
@@ -99,8 +99,8 @@ export const DESERT_ENEMIES = [
     armor: 7 * getEnemyStatMultiplier(tier),
     evasion: 8 * getEnemyStatMultiplier(tier),
 
-    xp: 11 * getEnemyStatMultiplier(tier),
-    gold: 11 * getEnemyStatMultiplier(tier),
+    xp: 9 * getEnemyStatMultiplier(tier),
+    gold: 9 * getEnemyStatMultiplier(tier),
 
     fireDamage: 3 * getEnemyStatMultiplier(tier),
 
@@ -113,6 +113,6 @@ export const DESERT_ENEMIES = [
 
     materialDropWeights: {},
     tags: ['desert', 'sand'],
-     
+
   },
 ];

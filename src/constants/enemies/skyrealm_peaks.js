@@ -5,7 +5,7 @@ const tier = 6;
 export const SKYREALM_ENEMIES = [
   {
     name: 'Cloudstrider',
-     
+
     image: '/enemies/cloudstrider.jpg',
     tier: tier,
 
@@ -16,8 +16,8 @@ export const SKYREALM_ENEMIES = [
     armor: 6 * getEnemyStatMultiplier(tier),
     evasion: 11 * getEnemyStatMultiplier(tier),
 
-    xp: 11 * getEnemyStatMultiplier(tier),
-    gold: 10 * getEnemyStatMultiplier(tier),
+    xp: 9 * getEnemyStatMultiplier(tier),
+    gold: 8 * getEnemyStatMultiplier(tier),
 
     airDamage: 3 * getEnemyStatMultiplier(tier),
 
@@ -33,7 +33,7 @@ export const SKYREALM_ENEMIES = [
   },
   {
     name: 'Stormbringer',
-     
+
     image: '/enemies/stormbringer.jpg',
     tier: tier,
 
@@ -44,8 +44,8 @@ export const SKYREALM_ENEMIES = [
     armor: 7 * getEnemyStatMultiplier(tier),
     evasion: 8 * getEnemyStatMultiplier(tier),
 
-    xp: 12 * getEnemyStatMultiplier(tier),
-    gold: 12 * getEnemyStatMultiplier(tier),
+    xp: 10 * getEnemyStatMultiplier(tier),
+    gold: 10 * getEnemyStatMultiplier(tier),
 
     airDamage: 1 * getEnemyStatMultiplier(tier),
 
@@ -61,7 +61,7 @@ export const SKYREALM_ENEMIES = [
   },
   {
     name: 'Stormsoul',
-     
+
     image: '/enemies/stormsoul.jpg',
     tier: tier,
 
@@ -72,8 +72,8 @@ export const SKYREALM_ENEMIES = [
     armor: 6 * getEnemyStatMultiplier(tier),
     evasion: 9 * getEnemyStatMultiplier(tier),
 
-    xp: 11 * getEnemyStatMultiplier(tier),
-    gold: 11 * getEnemyStatMultiplier(tier),
+    xp: 9 * getEnemyStatMultiplier(tier),
+    gold: 9 * getEnemyStatMultiplier(tier),
 
     airDamage: 4 * getEnemyStatMultiplier(tier),
     earthDamage: 2 * getEnemyStatMultiplier(tier),
@@ -90,7 +90,7 @@ export const SKYREALM_ENEMIES = [
   },
   {
     name: 'Midas Beast',
-     
+
     image: '/enemies/midas-beast.jpg',
     tier: tier,
 
@@ -101,8 +101,8 @@ export const SKYREALM_ENEMIES = [
     armor: 15 * getEnemyStatMultiplier(tier),
     evasion: 7 * getEnemyStatMultiplier(tier),
 
-    xp: 13 * getEnemyStatMultiplier(tier),
-    gold: 15 * getEnemyStatMultiplier(tier),
+    xp: 11 * getEnemyStatMultiplier(tier),
+    gold: 13 * getEnemyStatMultiplier(tier),
 
     airDamage: 2 * getEnemyStatMultiplier(tier),
 

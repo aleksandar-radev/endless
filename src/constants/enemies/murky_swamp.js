@@ -5,7 +5,7 @@ const tier = 5;
 export const SWAMP_ENEMIES = [
   {
     name: 'Boglurker',
-     
+
     image: '/enemies/boglurker.jpg',
     tier: tier,
 
@@ -15,8 +15,8 @@ export const SWAMP_ENEMIES = [
     armor: 8 * getEnemyStatMultiplier(tier),
     evasion: 6 * getEnemyStatMultiplier(tier),
 
-    xp: 10 * getEnemyStatMultiplier(tier),
-    gold: 9 * getEnemyStatMultiplier(tier),
+    xp: 8 * getEnemyStatMultiplier(tier),
+    gold: 7 * getEnemyStatMultiplier(tier),
 
     earthDamage: 3 * getEnemyStatMultiplier(tier),
 
@@ -32,7 +32,7 @@ export const SWAMP_ENEMIES = [
   },
   {
     name: 'Toxictoad',
-     
+
     image: '/enemies/toxictoad.jpg',
     tier: tier,
 
@@ -43,8 +43,8 @@ export const SWAMP_ENEMIES = [
     armor: 7 * getEnemyStatMultiplier(tier),
     evasion: 7 * getEnemyStatMultiplier(tier),
 
-    xp: 9 * getEnemyStatMultiplier(tier),
-    gold: 8 * getEnemyStatMultiplier(tier),
+    xp: 7 * getEnemyStatMultiplier(tier),
+    gold: 6 * getEnemyStatMultiplier(tier),
 
     earthDamage: 2 * getEnemyStatMultiplier(tier),
 
@@ -60,7 +60,7 @@ export const SWAMP_ENEMIES = [
   },
   {
     name: 'Venomspitter',
-     
+
     image: '/enemies/venomspitter.jpg',
     tier: tier,
 
@@ -71,8 +71,8 @@ export const SWAMP_ENEMIES = [
     armor: 6 * getEnemyStatMultiplier(tier),
     evasion: 8 * getEnemyStatMultiplier(tier),
 
-    xp: 10 * getEnemyStatMultiplier(tier),
-    gold: 9 * getEnemyStatMultiplier(tier),
+    xp: 8 * getEnemyStatMultiplier(tier),
+    gold: 7 * getEnemyStatMultiplier(tier),
 
     earthDamage: 2 * getEnemyStatMultiplier(tier),
 
@@ -88,7 +88,7 @@ export const SWAMP_ENEMIES = [
   },
   {
     name: 'Frostweaver',
-     
+
     image: '/enemies/frostweaver.jpg',
     tier: tier,
 
@@ -99,8 +99,8 @@ export const SWAMP_ENEMIES = [
     armor: 7 * getEnemyStatMultiplier(tier),
     evasion: 7 * getEnemyStatMultiplier(tier),
 
-    xp: 11 * getEnemyStatMultiplier(tier),
-    gold: 10 * getEnemyStatMultiplier(tier),
+    xp: 9 * getEnemyStatMultiplier(tier),
+    gold: 8 * getEnemyStatMultiplier(tier),
 
     coldDamage: 5 * getEnemyStatMultiplier(tier),
 

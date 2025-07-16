@@ -12,7 +12,7 @@ export const ABYSS_ENEMIES = [
     attackRating: 8 * getEnemyStatMultiplier(tier),
     evasion: 8 * getEnemyStatMultiplier(tier),
 
-    gold: 11 * getEnemyStatMultiplier(tier),
+    gold: 9 * getEnemyStatMultiplier(tier),
 
     coldDamage: 1.4 * getEnemyStatMultiplier(tier),
 

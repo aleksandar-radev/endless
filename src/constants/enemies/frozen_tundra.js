@@ -5,7 +5,7 @@ const tier = 3;
 export const TUNDRA_ENEMIES = [
   {
     name: 'Frostbite',
-     
+
     image: '/enemies/frostbite.jpg',
     tier: tier,
 
@@ -16,8 +16,8 @@ export const TUNDRA_ENEMIES = [
     armor: 9 * getEnemyStatMultiplier(tier),
     evasion: 6 * getEnemyStatMultiplier(tier),
 
-    xp: 11 * getEnemyStatMultiplier(tier),
-    gold: 9 * getEnemyStatMultiplier(tier),
+    xp: 9 * getEnemyStatMultiplier(tier),
+    gold: 7 * getEnemyStatMultiplier(tier),
 
     airDamage: 3 * getEnemyStatMultiplier(tier),
     coldDamage: 3 * getEnemyStatMultiplier(tier),
@@ -34,7 +34,7 @@ export const TUNDRA_ENEMIES = [
   },
   {
     name: 'Frostfury',
-     
+
     image: '/enemies/frostfury.jpg',
     tier: tier,
 
@@ -44,7 +44,7 @@ export const TUNDRA_ENEMIES = [
     armor: 7 * getEnemyStatMultiplier(tier),
     evasion: 8 * getEnemyStatMultiplier(tier),
 
-    xp: 10 * getEnemyStatMultiplier(tier),
+    xp: 8 * getEnemyStatMultiplier(tier),
 
     coldDamage: 1 * getEnemyStatMultiplier(tier),
 
@@ -60,7 +60,7 @@ export const TUNDRA_ENEMIES = [
   },
   {
     name: 'Frost Giant',
-     
+
     image: '/enemies/frost-giant.jpg',
     tier: tier,
 
@@ -71,8 +71,8 @@ export const TUNDRA_ENEMIES = [
     armor: 11 * getEnemyStatMultiplier(tier),
     evasion: 5 * getEnemyStatMultiplier(tier),
 
-    xp: 12 * getEnemyStatMultiplier(tier),
-    gold: 12 * getEnemyStatMultiplier(tier),
+    xp: 10 * getEnemyStatMultiplier(tier),
+    gold: 10 * getEnemyStatMultiplier(tier),
 
     coldDamage: 2 * getEnemyStatMultiplier(tier),
 
@@ -91,7 +91,7 @@ export const TUNDRA_ENEMIES = [
   },
   {
     name: 'Ice Wraith',
-     
+
     image: '/enemies/ice-wraith.jpg',
     tier: tier,
 
@@ -102,8 +102,8 @@ export const TUNDRA_ENEMIES = [
     armor: 6 * getEnemyStatMultiplier(tier),
     evasion: 13 * getEnemyStatMultiplier(tier),
 
-    xp: 10 * getEnemyStatMultiplier(tier),
-    gold: 8 * getEnemyStatMultiplier(tier),
+    xp: 8 * getEnemyStatMultiplier(tier),
+    gold: 6 * getEnemyStatMultiplier(tier),
 
     coldDamage: 3 * getEnemyStatMultiplier(tier),
 

@@ -14,7 +14,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
     armor: 13 * getEnemyStatMultiplier(tier),
     evasion: 9 * getEnemyStatMultiplier(tier),
 
-    xp: 15 * getEnemyStatMultiplier(tier),
+    xp: 13 * getEnemyStatMultiplier(tier),
 
     fireDamage: 1.3 * getEnemyStatMultiplier(tier),
     earthDamage: 1.12 * getEnemyStatMultiplier(tier),
@@ -42,7 +42,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
     attackSpeed: 0.9,
     armor: 9 * getEnemyStatMultiplier(tier),
 
-    xp: 15 * getEnemyStatMultiplier(tier),
+    xp: 13 * getEnemyStatMultiplier(tier),
 
     fireDamage: 2 * getEnemyStatMultiplier(tier),
     earthDamage: 0.8 * getEnemyStatMultiplier(tier),
@@ -117,8 +117,8 @@ export const VOLCANIC_RIFT_ENEMIES = [
     attackRating: 14 * getEnemyStatMultiplier(tier),
     evasion: 9 * getEnemyStatMultiplier(tier),
 
-    xp: 11 * getEnemyStatMultiplier(tier),
-    gold: 11 * getEnemyStatMultiplier(tier),
+    xp: 9 * getEnemyStatMultiplier(tier),
+    gold: 9 * getEnemyStatMultiplier(tier),
 
     airDamage: 2.12 * getEnemyStatMultiplier(tier),
 

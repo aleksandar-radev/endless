@@ -13,8 +13,8 @@ export const FOREST_ENEMIES = [
     damage: 1.8 * getEnemyStatMultiplier(tier),
     armor: 7 * getEnemyStatMultiplier(tier),
 
-    xp: 10 * getEnemyStatMultiplier(tier),
-    gold: 8 * getEnemyStatMultiplier(tier),
+    xp: 8 * getEnemyStatMultiplier(tier),
+    gold: 6 * getEnemyStatMultiplier(tier),
 
     earthDamage: 1.2 * getEnemyStatMultiplier(tier),
 
@@ -38,7 +38,7 @@ export const FOREST_ENEMIES = [
     damage: 1.5 * getEnemyStatMultiplier(tier),
     armor: 6 * getEnemyStatMultiplier(tier),
 
-    gold: 10 * getEnemyStatMultiplier(tier),
+    gold: 8 * getEnemyStatMultiplier(tier),
 
     earthDamage: 1.35 * getEnemyStatMultiplier(tier),
 
@@ -94,7 +94,7 @@ export const FOREST_ENEMIES = [
     armor: 4 * getEnemyStatMultiplier(tier),
     evasion: 12 * getEnemyStatMultiplier(tier),
 
-    gold: 10 * getEnemyStatMultiplier(tier),
+    gold: 8 * getEnemyStatMultiplier(tier),
 
     airDamage: 3 * getEnemyStatMultiplier(tier),
 
