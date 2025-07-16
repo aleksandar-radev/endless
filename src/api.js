@@ -61,3 +61,13 @@ export async function getLeaderboard() {
   }
   return await response.json();
 }
+
+export async function logout() {
+  const response = await apiFetch('/user/logout', {
+    method: 'POST',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to logout');
+  }
+  return await response.json();
+}
