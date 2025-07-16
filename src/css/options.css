@@ -9,23 +9,7 @@
   margin-top: auto;
 }
 
-.login-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #3b82f6;
-  text-decoration: none;
-  padding: 2px 8px;
-  border-radius: 4px;
-  background: #e0e7ef;
-  transition: background 0.2s, color 0.2s;
-}
 
-.login-link:hover {
-  background: #3b82f6;
-  color: #fff;
-  text-decoration: none;
-}
 
 .cloud-save-bar {
   display: flex;
@@ -57,7 +41,9 @@
 }
 
 #cloud-save-btn,
-#cloud-load-btn {
+#cloud-load-btn,
+.login-link,
+#logout-btn {
   background: linear-gradient(90deg, #3b82f6 60%, #2563eb 100%);
   color: #fff;
   border: none;
@@ -66,6 +52,13 @@
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.08);
   transition: background 0.2s, opacity 0.2s;
+}
+
+#cloud-save-btn:hover,
+#cloud-load-btn:hover,
+.login-link:hover,
+#logout-btn:hover {
+  background: linear-gradient(90deg, #186aee 60%, #0f52e4 100%);
 }
 
 #cloud-save-btn:disabled {
@@ -325,4 +318,18 @@
 
 .toggle-btn {
   box-sizing: border-box;
+}
+
+/* Login modal styles */
+.login-modal .modal-content {
+  width: 500px;
+  height: 600px;
+  background: none;
+}
+
+.login-modal .login-iframe {
+  width: 500px;
+  height: 600px;
+  border: 1px solid rgb(100, 92, 92);
+  border-radius: 33px;
 }

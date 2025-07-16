@@ -2,6 +2,7 @@ import { crystalShop, dataManager, game, setGlobals } from './globals.js';
 import { showConfirmDialog, showToast, updateStageUI } from './ui/ui.js';
 import { createModal } from './ui/modal.js';
 import Enemy from './enemy.js';
+import { logout } from './api.js';
 const html = String.raw;
 
 // Options class to store options and version (future-proof for migrations)
@@ -63,6 +64,7 @@ export class Options {
       <span id="cloud-save-status">Checking login...</span>
       <button id="cloud-save-btn">Save to Cloud</button>
       <button id="cloud-load-btn">Load from Cloud</button>
+      <button id="logout-btn" style="display:none;">Log out</button>
     `;
     return bar;
   }
@@ -212,6 +214,7 @@ export class Options {
     const cloudSaveStatus = document.getElementById('cloud-save-status');
     const cloudSaveBtn = document.getElementById('cloud-save-btn');
     const cloudLoadBtn = document.getElementById('cloud-load-btn');
+    const logoutBtn = document.getElementById('logout-btn');
 
     await dataManager.checkSession();
     let userSession = dataManager.getSession();
@@ -251,14 +254,30 @@ export class Options {
     if (!userSession) {
       const loginUrl = import.meta.env.VITE_LOGIN_URL;
       cloudSaveStatus.innerHTML =
-        '<span class="login-status">Not logged in</span><div><a href="' +
-        loginUrl +
-        '" class="login-link" target="_blank">Log in</a></div>';
+        '<span class="login-status">Not logged in</span><div><button id="login-btn" class="login-link">Log in</button></div>';
       cloudSaveStatus.className = 'not-logged-in';
+      const loginBtn = document.getElementById('login-btn');
+      if (loginBtn) {
+        loginBtn.addEventListener('click', () => {
+          createModal({
+            id: 'login-modal',
+            className: 'login-modal',
+            content: `
+              <div class="modal-content">
+                <button class="modal-close">×</button>
+                <iframe src="${loginUrl}-mini" class="login-iframe"></iframe>
+              </div>
+            `,
+          });
+        });
+      }
       cloudSaveBtn.disabled = true;
       cloudSaveBtn.classList.add('disabled');
       cloudLoadBtn.disabled = true;
       cloudLoadBtn.classList.add('disabled');
+      logoutBtn.style.display = 'none';
+    } else {
+      logoutBtn.style.display = '';
     }
 
     // Save
@@ -308,6 +327,12 @@ export class Options {
         console.error('Failed to load from cloud:', e);
         showToast(e.message || 'Failed to load from cloud');
       }
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      logout();
+      dataManager.clearSession();
+      this._initCloudSaveButtons();
     });
   }
 
