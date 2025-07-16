@@ -20,7 +20,7 @@ export function scaleStat(
   increasePerLevel = 0,
   bonusInterval = 1,
   bonusIncrease = 0,
-  basePercentGain = 0.2,
+  basePercentGain = 0.3,
 ) {
   if (base <= 0) return 0; // Avoid scaling if base is zero or negative
   if (bonusInterval == 0) bonusInterval = 1; // Avoid division by zero
