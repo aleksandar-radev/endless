@@ -1,13 +1,25 @@
 import { ITEM_TYPES } from './constants/items.js';
 import { getCurrentRegion, getRegionEnemies } from './region.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
-import { ELEMENTS } from './constants/common.js';
 import { scaleStat } from './common.js';
 
-// armor, evasion, attackRating scaling
-const ratingScale = 0.0001; // 0.01% base gain per level
-// all else
-const baseScale = 0.2; // 40% base gain per level
+// base value increase per level
+// for tier 1 enemy level 1 50 life, level 2 is 50 + 25 = 75 (e.g. 50% increase for base value per level)
+// tier 12 enemy gets 8% increase per level on the base value
+const TIER_STAT_SCALE = {
+  1: 0.5,
+  2: 0.45,
+  3: 0.4,
+  4: 0.35,
+  5: 0.3,
+  6: 0.25,
+  7: 0.28,
+  8: 0.24,
+  9: 0.2,
+  10: 0.15,
+  11: 0.1,
+  12: 0.08,
+};
 
 class Enemy {
   constructor(level) {
@@ -21,6 +33,8 @@ class Enemy {
 
     this.name = `${baseData.name}`;
     this.image = baseData.image;
+
+    this.baseScale = TIER_STAT_SCALE[baseData.tier];
 
     this.rarity = this.generateRarity();
     this.color = this.getRarityColor(this.rarity);
@@ -103,38 +117,61 @@ class Enemy {
   }
 
   calculateLife() {
-    const base = (this.baseData.life) || 0;
-    const val = scaleStat(base, this.level, 4, 4, 4, baseScale);
+    const base = this.baseData.life || 0;
+    const val = scaleStat(base, this.level, 0,0,0, this.baseScale);
     return val * this.region.multiplier.life * this.rarityData.multiplier.life * this.baseData.multiplier.life;
   }
 
   calculateDamage = () => {
     const base = this.baseData.damage || 0;
-    const val = scaleStat(base, this.level, 0.5, 5, 0.5, baseScale);
+    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     return val * this.region.multiplier.damage * this.rarityData.multiplier.damage * this.baseData.multiplier.damage;
   };
 
   calculateArmor() {
-    const base = (this.baseData.armor * this.level) || 0;
-    const val = scaleStat(base, this.level, 2,0,0, ratingScale);
+    const base = this.baseData.armor || 0;
+    const val = scaleStat(base, this.level, 0,0,0, this.baseScale);
     return val * this.region.multiplier.armor * this.rarityData.multiplier.armor * this.baseData.multiplier.armor;
   }
 
   calculateEvasion() {
-    const base = (this.baseData.evasion * this.level) || 0;
-    const val = scaleStat(base, this.level, 2,0,0, ratingScale);
+    const base = this.baseData.evasion || 0;
+    const val = scaleStat(base, this.level, 0,0,0, this.baseScale);
     return val * this.region.multiplier.evasion * this.rarityData.multiplier.evasion * this.baseData.multiplier.evasion;
   }
 
   calculateAttackRating() {
-    const base = (this.baseData.attackRating * this.level) || 0;
-    const val = scaleStat(base, this.level, 2,0,0, ratingScale);
+    const base = this.baseData.attackRating || 0;
+    const val = scaleStat(base, this.level, 0,0,0, this.baseScale);
     return (
       val *
       this.region.multiplier.attackRating *
       this.rarityData.multiplier.attackRating *
       this.baseData.multiplier.attackRating
     );
+  }
+
+  calculateElementalDamage(type) {
+    // type: 'fire', 'cold', 'air', 'earth', 'lightning', 'water'
+    const base = this.baseData[`${type}Damage`] || 0;
+    if (base === 0) return 0;
+    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
+    const regionMult = this.region.multiplier[`${type}Damage`] || 1;
+    const rarityMult = this.rarityData.multiplier[`${type}Damage`] || 1;
+    const baseMult = this.baseData.multiplier ? this.baseData.multiplier[`${type}Damage`] || 1 : 1;
+    return val * regionMult * rarityMult * baseMult;
+  }
+
+  calculateXP() {
+    const base = this.baseData.xp || 0;
+    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
+    return val * this.region.multiplier.xp * (this.rarityData.multiplier.xp || 1) * (this.baseData.multiplier.xp || 1);
+  }
+
+  calculateGold() {
+    const base = this.baseData.gold || 0;
+    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
+    return val * this.region.multiplier.gold * (this.rarityData.multiplier.gold || 1) * (this.baseData.multiplier.gold || 1);
   }
 
   canAttack(currentTime) {
@@ -171,29 +208,6 @@ class Enemy {
   rollForMaterialDrop() {
     const baseChance = 0.025; // Base chance of 2.5%
     return Math.random() < baseChance * (this.region.multiplier.materialDrop || 1) * (this.baseData.multiplier.materialDrop || 1);
-  }
-
-  calculateElementalDamage(type) {
-    // type: 'fire', 'cold', 'air', 'earth', 'lightning', 'water'
-    const base = this.baseData[`${type}Damage`] || 0;
-    if (base === 0) return 0;
-    const val = scaleStat(base, this.level, 0.5, 5, 0.5, baseScale);
-    const regionMult = this.region.multiplier[`${type}Damage`] || 1;
-    const rarityMult = this.rarityData.multiplier[`${type}Damage`] || 1;
-    const baseMult = this.baseData.multiplier ? this.baseData.multiplier[`${type}Damage`] || 1 : 1;
-    return val * regionMult * rarityMult * baseMult;
-  }
-
-  calculateXP() {
-    const base = this.baseData.xp || 0;
-    const val = scaleStat(base, this.level, 0.5, 10, 0.5, baseScale);
-    return val * this.region.multiplier.xp * (this.rarityData.multiplier.xp || 1) * (this.baseData.multiplier.xp || 1);
-  }
-
-  calculateGold() {
-    const base = this.baseData.gold || 0;
-    const val = scaleStat(base, this.level, 0.5, 10, 0.5, baseScale);
-    return val * this.region.multiplier.gold * (this.rarityData.multiplier.gold || 1) * (this.baseData.multiplier.gold || 1);
   }
 }
 export default Enemy;
