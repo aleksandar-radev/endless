@@ -45,8 +45,8 @@ export const DEFENSE_STATS = {
   blockChance: {
     base: 0,
     decimalPlaces: 1,
-    training: { cost: 500, bonus: 0.1, maxLevel: 400 }, // max bonus: 40
-    item: { min: 4, max: 12, limit: 40, scaling: (level) => defenseScaling(level, CHANCE_MULTIPLIER) },
+    training: { cost: 500, bonus: 0.05, maxLevel: 600 }, // max bonus: 30
+    item: { min: 4, max: 8, limit: 40, scaling: (level) => defenseScaling(level, CHANCE_MULTIPLIER) },
     itemTags: ['shield'],
     showInUI: true,
   },
