@@ -1,6 +1,6 @@
 import { crystalShop, dataManager, game, setGlobals } from './globals.js';
 import { showConfirmDialog, showToast, updateStageUI } from './ui/ui.js';
-import { createModal } from './ui/modal.js';
+import { closeModal, createModal } from './ui/modal.js';
 import Enemy from './enemy.js';
 import { logout } from './api.js';
 const html = String.raw;
@@ -209,38 +209,29 @@ export class Options {
     return section;
   }
 
-  async _initCloudSaveButtons() {
-    // Cloud Save UI logic
+  /**
+   * Updates the cloud save status and buttons UI. Can be called to refresh the view.
+   */
+  async _updateCloudSaveUI() {
     const cloudSaveStatus = document.getElementById('cloud-save-status');
     const cloudSaveBtn = document.getElementById('cloud-save-btn');
     const cloudLoadBtn = document.getElementById('cloud-load-btn');
     const logoutBtn = document.getElementById('logout-btn');
 
     await dataManager.checkSession();
-    let userSession = dataManager.getSession();
+    const userSession = dataManager.getSession();
 
-    // Fetch cloud save and compare with local
     let statusMsg = 'Ready to save to cloud';
-
     const formatDateWithTimezone = (dateStr) => {
       if (!dateStr) return 'unknown';
       const date = new Date(dateStr);
-      const options = {
-        year: 'numeric',
-        month: 'short', // e.g., "May"
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      };
+      const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
       return date.toLocaleString(undefined, options);
     };
 
     try {
       const cloudResult = await dataManager.loadGame({ cloud: true, statusCheck: true });
-
-      if (!cloudResult) {
-        statusMsg = 'No cloud save found';
-      } else if (cloudResult.source !== 'cloud') {
+      if (!cloudResult || cloudResult.source !== 'cloud') {
         statusMsg = 'No cloud save found';
       } else {
         statusMsg = `Last save: ${formatDateWithTimezone(cloudResult.updated_at)}`;
@@ -249,16 +240,28 @@ export class Options {
       console.error('Failed to load cloud data:', e);
     }
 
-    cloudSaveStatus.textContent = statusMsg;
-
     if (!userSession) {
       const loginUrl = import.meta.env.VITE_LOGIN_URL;
       cloudSaveStatus.innerHTML =
         '<span class="login-status">Not logged in</span><div><button id="login-btn" class="login-link">Log in</button></div>';
       cloudSaveStatus.className = 'not-logged-in';
+      cloudSaveBtn.disabled = true;
+      cloudSaveBtn.classList.add('disabled');
+      cloudLoadBtn.disabled = true;
+      cloudLoadBtn.classList.add('disabled');
+      logoutBtn.style.display = 'none';
+
       const loginBtn = document.getElementById('login-btn');
       if (loginBtn) {
         loginBtn.addEventListener('click', () => {
+          const onMessage = async (e) => {
+            if (e.data && e.data.type === 'cloud-login-success') {
+              removeEventListener('message', onMessage);
+              closeModal('login-modal');
+              await this._updateCloudSaveUI();
+            }
+          };
+
           createModal({
             id: 'login-modal',
             className: 'login-modal',
@@ -268,21 +271,33 @@ export class Options {
                 <iframe src="${loginUrl}-mini" class="login-iframe"></iframe>
               </div>
             `,
+            onClose: () => removeEventListener('message', onMessage),
           });
+
+          addEventListener('message', onMessage);
         });
       }
-      cloudSaveBtn.disabled = true;
-      cloudSaveBtn.classList.add('disabled');
-      cloudLoadBtn.disabled = true;
-      cloudLoadBtn.classList.add('disabled');
-      logoutBtn.style.display = 'none';
     } else {
+      cloudSaveStatus.textContent = statusMsg;
+      cloudSaveStatus.className = '';
+      cloudSaveBtn.disabled = false;
+      cloudSaveBtn.classList.remove('disabled');
+      cloudLoadBtn.disabled = false;
+      cloudLoadBtn.classList.remove('disabled');
       logoutBtn.style.display = '';
     }
+  }
+  async _initCloudSaveButtons() {
+    // Initialize UI state
+    await this._updateCloudSaveUI();
+    const cloudSaveStatus = document.getElementById('cloud-save-status');
+    const cloudSaveBtn = document.getElementById('cloud-save-btn');
+    const cloudLoadBtn = document.getElementById('cloud-load-btn');
+    const logoutBtn = document.getElementById('logout-btn');
 
     // Save
     cloudSaveBtn.addEventListener('click', async () => {
-      userSession = dataManager.getSession();
+      const userSession = dataManager.getSession();
       if (!userSession) return;
       cloudSaveBtn.disabled = true;
       cloudSaveStatus.textContent = 'Saving...';
@@ -302,7 +317,7 @@ export class Options {
 
     // Load
     cloudLoadBtn.addEventListener('click', async () => {
-      userSession = dataManager.getSession();
+      const userSession = dataManager.getSession();
       if (!userSession) return;
 
       try {
@@ -321,7 +336,7 @@ export class Options {
         if (confirmed) {
           await setGlobals({ cloud: true });
           // Reload the game to apply the cloud save (to make sure all globals have been updated & have correct default values)
-          window.location.reload();
+          location.reload();
         }
       } catch (e) {
         console.error('Failed to load from cloud:', e);
@@ -329,10 +344,10 @@ export class Options {
       }
     });
 
-    logoutBtn.addEventListener('click', () => {
-      logout();
+    logoutBtn.addEventListener('click', async () => {
+      await logout();
       dataManager.clearSession();
-      this._initCloudSaveButtons();
+      await this._updateCloudSaveUI();
     });
   }
 

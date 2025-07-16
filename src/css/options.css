@@ -61,7 +61,9 @@
   background: linear-gradient(90deg, #186aee 60%, #0f52e4 100%);
 }
 
-#cloud-save-btn:disabled {
+#cloud-save-btn:disabled,
+#cloud-load-btn:disabled,
+#logout-btn:disabled {
   background: #a1a1aa;
   color: #e5e7eb;
   cursor: not-allowed;
