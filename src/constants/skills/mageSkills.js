@@ -71,11 +71,11 @@ export const MAGE_SKILLS = {
     icon: () => 'mind-control',
     description: () => 'Instantly move to a nearby location.',
     maxLevel: () => 100,
-    effect: () => ({
-      perseverance: 5,
-      wisdom: 5,
-      intelligence: 5,
-      intelligencePercent: 1,
+    effect: (level) => ({
+      perseverance: level * 5,
+      wisdom: level * 5,
+      intelligence: level * 5,
+      intelligencePercent: level * 1,
     }),
   },
   manaShield: {
