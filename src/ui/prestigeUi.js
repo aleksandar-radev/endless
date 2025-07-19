@@ -4,6 +4,18 @@ import { formatStatName, showToast } from './ui.js';
 
 const html = String.raw;
 
+function updateButtonState() {
+  const tab = document.getElementById('prestige');
+  let container = tab.querySelector('.prestige-container');
+  const btn = container.querySelector('#prestige-now-btn');
+
+  if (prestige.canPrestige()) {
+    btn.classList.remove('disabled');
+  } else {
+    btn.classList.add('disabled');
+  }
+};
+
 export function initializePrestigeUI() {
   const tab = document.getElementById('prestige');
   if (!tab) return;
@@ -24,13 +36,7 @@ export function initializePrestigeUI() {
   `;
 
   const btn = container.querySelector('#prestige-now-btn');
-  const updateButtonState = () => {
-    if (prestige.canPrestige()) {
-      btn.classList.remove('disabled');
-    } else {
-      btn.classList.add('disabled');
-    }
-  };
+
   updateButtonState();
 
   btn.addEventListener('click', (e) => {
@@ -95,6 +101,8 @@ function openPrestigeModal() {
       await prestige.prestigeWithBonus(cards[idx]);
       closeModal(modal);
       updatePrestigeBonuses();
+      // Update button state after prestige
+      updateButtonState();
     };
   });
 }
