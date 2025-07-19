@@ -71,3 +71,12 @@ export async function logout() {
   }
   return await response.json();
 }
+
+export async function fetchTrustedUtcTime() {
+  const response = await apiFetch('/time');
+  if (!response.ok) {
+    throw new Error('Failed to fetch trusted UTC time');
+  }
+  const data = await response.json();
+  return data.unixtime;
+}

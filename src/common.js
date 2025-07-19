@@ -1,3 +1,44 @@
+import { fetchTrustedUtcTime } from './api.js';
+
+let lastApiTime = 0;
+let lastApiTimestamp = 0;
+let pendingPromise = null;
+
+/**
+ * Returns trusted UTC time (ms since epoch), polling the API at most once every 15 seconds.
+ * If called again within 15s, returns cached value. If first call or cache expired, polls API.
+ * Returns a Promise<number>.
+ */
+export async function getTimeNow() {
+  const now = Date.now();
+  // If we have a recent API value (within 15s), return cached value + elapsed
+  if (lastApiTime && (now - lastApiTimestamp < 15000)) {
+    // Add elapsed time since last API poll
+    return lastApiTime + (now - lastApiTimestamp);
+  }
+  // If a request is already pending, wait for it
+  if (pendingPromise) {
+    await pendingPromise;
+    return lastApiTime + (Date.now() - lastApiTimestamp);
+  }
+  // Otherwise, poll the API
+  pendingPromise = (async () => {
+    try {
+      const apiTime = await fetchTrustedUtcTime();
+      lastApiTime = apiTime;
+      lastApiTimestamp = Date.now();
+    } catch (e) {
+      // Fallback to local time if API fails
+      lastApiTime = Date.now();
+      lastApiTimestamp = lastApiTime;
+    } finally {
+      pendingPromise = null;
+    }
+  })();
+  await pendingPromise;
+  return lastApiTime;
+}
+
 /**
  * Scale a base stat from level 1 to a target level.
  *

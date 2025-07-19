@@ -116,11 +116,12 @@ window.log = console.log;
   // Collect offline bonuses on load (show modal if any)
   buildings.collectBonuses({ showOfflineModal: true });
 
-  // Periodically collect building bonuses (every 5 seconds, no modal)
-  setInterval(() => {
-    buildings.collectBonuses();
+  // Periodically collect building bonuses (every 30 seconds, no modal)
+  setInterval(async () => {
+    await buildings.collectBonuses();
     updateResources();
-  }, 5000);
+    renderPurchasedBuildings();
+  }, 30000);
 
   // Conditionally add footer if not production
   if (import.meta.env.VITE_ENV !== 'production') {

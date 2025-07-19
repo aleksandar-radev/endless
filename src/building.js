@@ -3,6 +3,8 @@ import { buildingsData } from './constants/buildings.js';
 import { dataManager, hero } from './globals.js';
 import { updateResources } from './ui/ui.js';
 import { showOfflineBonusesModal } from './ui/buildingUi.js';
+import { fetchTrustedUtcTime } from './api.js';
+import { getTimeNow } from './common.js';
 const refundPercent = 0.9;
 
 // Represents a single building instance (with state)
@@ -13,7 +15,7 @@ export class Building {
     this.id = id;
     this.level = level;
     this.placedAt = placedAt; // index of map placeholder, or null if not placed
-    // Copy static data
+
     this.name = data.name;
     this.description = data.description;
     this.icon = data.icon;
@@ -21,10 +23,15 @@ export class Building {
     this.effect = data.effect;
     this.maxLevel = data.maxLevel;
     this.costStructure = data.costStructure;
-    // Track last bonus time for this building
-    this.lastBonusTime = lastBonusTime || Date.now();
-    // Track total bonuses earned for this building
+    this.lastBonusTime = lastBonusTime;
     this.totalEarned = totalEarned;
+  }
+
+  static async create({ id, level = 0, placedAt = null, lastBonusTime = null, totalEarned = 0 }) {
+    if (!lastBonusTime) {
+      lastBonusTime = await getTimeNow();
+    }
+    return new Building({ id, level, placedAt, lastBonusTime, totalEarned });
   }
 
   upgrade() {
@@ -153,30 +160,33 @@ function intervalToMs(interval) {
 }
 
 export class BuildingManager {
-  constructor(saved = null) {
-    // All building instances (by id)
-    this.buildings = {};
-    // Map: placeholderIdx -> buildingId (or null)
-    this.placedBuildings = [null, null, null];
-    // Track last active time for offline bonus
-    this.lastActive = saved?.lastActive || Date.now();
+  constructor() {
+    throw new Error('Use BuildingManager.create() instead');
+  }
+
+  static async create(saved = null) {
+    const manager = Object.create(BuildingManager.prototype);
+    manager.buildings = {};
+    manager.placedBuildings = [null, null, null];
+    manager.lastActive = saved?.lastActive || await getTimeNow();
     for (const id in buildingsData) {
       const bSave = saved?.buildings?.[id];
-      this.buildings[id] = new Building({
+      manager.buildings[id] = await Building.create({
         id,
         level: bSave?.level || 0,
         placedAt: bSave?.placedAt ?? null,
-        lastBonusTime: bSave?.lastBonusTime || this.lastActive,
+        lastBonusTime: bSave?.lastBonusTime || manager.lastActive,
         totalEarned: bSave?.totalEarned || 0,
       });
-      if (this.buildings[id].placedAt !== null) {
-        this.placedBuildings[this.buildings[id].placedAt] = id;
+      if (manager.buildings[id].placedAt !== null) {
+        manager.placedBuildings[manager.buildings[id].placedAt] = id;
       }
     }
+    return manager;
   }
 
   // Place a building at a map placeholder (returns true if successful)
-  placeBuilding(buildingId, placeholderIdx) {
+  async placeBuilding(buildingId, placeholderIdx) {
     // Remove any building currently at this spot
     const prevId = this.placedBuildings[placeholderIdx];
     if (prevId) this.buildings[prevId].placedAt = null;
@@ -186,17 +196,17 @@ export class BuildingManager {
     b.placedAt = placeholderIdx;
     this.placedBuildings[placeholderIdx] = buildingId;
     // Set lastBonusTime to now when placed
-    b.lastBonusTime = Date.now();
+    b.lastBonusTime = await getTimeNow();
   }
 
   // Remove a building from the map
-  unplaceBuilding(buildingId) {
+  async unplaceBuilding(buildingId) {
     const b = this.buildings[buildingId];
     if (b.placedAt !== null) {
       this.placedBuildings[b.placedAt] = null;
       b.placedAt = null;
       b.level = 0; // Reset level when unplaced
-      b.lastBonusTime = Date.now(); // Optionally reset lastBonusTime
+      b.lastBonusTime = await getTimeNow(); // Optionally reset lastBonusTime
     }
   }
 
@@ -222,8 +232,8 @@ export class BuildingManager {
   }
 
   // --- Bonus collection logic ---
-  collectBonuses({ showOfflineModal = false } = {}) {
-    const now = Date.now();
+  async collectBonuses({ showOfflineModal = false } = {}) {
+    const now = await getTimeNow();
     let offlineBonuses = [];
     const isFirstCollect = showOfflineModal;
     let changed = false;
@@ -260,7 +270,7 @@ export class BuildingManager {
     }
     if (isFirstCollect && offlineBonuses.length > 0) {
       // Only show modal if there are actual bonuses to collect
-      showOfflineBonusesModal(offlineBonuses, () => {
+      showOfflineBonusesModal(offlineBonuses, async () => {
         // On collect: actually add the bonuses and update lastBonusTime
         for (const b of offlineBonuses) {
           if (b.type === 'gold') hero.gainGold(b.amount);
@@ -270,7 +280,7 @@ export class BuildingManager {
           b.building.totalEarned += b.amount;
           b.building.lastBonusTime += b.timesRaw * b.intervalMs;
         }
-        this.lastActive = Date.now();
+        this.lastActive = await fetchTrustedUtcTime();
         updateResources();
         dataManager.saveGame(); // Save after collecting bonuses
       });
