@@ -108,6 +108,9 @@ export default class Prestige {
       hero.permaStats[stat] = (hero.permaStats[stat] || 0) + val;
     });
 
+    dataManager.saveGame();
+    window.location.reload();
+
     game.currentEnemy = new Enemy(game.stage);
     hero.recalculateFromAttributes();
     updateResources();
