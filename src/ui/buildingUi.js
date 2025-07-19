@@ -33,16 +33,6 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
     return building.getMaxUpgradeAmount(hero);
   }
 
-  function getMaxAffordableUpgradeAmount() {
-    let maxAmt = building.maxLevel - building.level;
-    if (maxAmt <= 0) return 0;
-    // For each possible amount from 1 to maxAmt, check if player can afford
-    for (let amt = maxAmt; amt >= 1; amt--) {
-      if (canAffordUpgrade(amt)) return amt;
-    }
-    return 0;
-  }
-
   function getTotalBonus(amount) {
     return building.getNextEffectValue(building.level + amount) - building.getEffectValue();
   }
@@ -58,8 +48,7 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
   }
 
   function renderModalContent() {
-    const maxAmt = getMaxUpgradeAmount();
-    const maxAffordableAmt = getMaxAffordableUpgradeAmount();
+    const maxAffordableAmt = getMaxUpgradeAmount();
     const totalCost = building.getUpgradeCost(upgradeAmount);
     const totalBonus = getTotalBonus(upgradeAmount);
     const refundAmount = building.getRefund();
@@ -97,14 +86,14 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
             <button
               data-amt="10"
               class="upgrade-amt-btn${upgradeAmount === 10 ? ' selected-upgrade-amt' : ''}"
-              ${maxAmt < 10 ? 'disabled' : ''}
+              ${maxAffordableAmt < 10 ? 'disabled' : ''}
             >
               +10
             </button>
             <button
               data-amt="50"
               class="upgrade-amt-btn${upgradeAmount === 50 ? ' selected-upgrade-amt' : ''}"
-              ${maxAmt < 50 ? 'disabled' : ''}
+              ${maxAffordableAmt < 50 ? 'disabled' : ''}
             >
               +50
             </button>
@@ -133,7 +122,7 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
       btn.onclick = () => {
         let amt;
         if (btn.dataset.amt === 'max') {
-          amt = getMaxAffordableUpgradeAmount();
+          amt = getMaxUpgradeAmount();
         } else {
           amt = parseInt(btn.dataset.amt);
         }

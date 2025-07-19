@@ -20,8 +20,7 @@ export class Building {
     this.image = data.image;
     this.effect = data.effect;
     this.maxLevel = data.maxLevel;
-    this.cost = data.cost;
-    this.costIncrease = data.costIncrease || {};
+    this.costStructure = data.costStructure;
     // Track last bonus time for this building
     this.lastBonusTime = lastBonusTime || Date.now();
     // Track total bonuses earned for this building
@@ -64,15 +63,19 @@ export class Building {
 
   // Returns the cost object for a given upgrade amount (default 1)
   getUpgradeCost(amount = 1) {
-    const total = {};
-    const L = this.level;
-    for (const [type, base] of Object.entries(this.cost)) {
-      const inc = this.costIncrease[type] || 0;
-      // sum of incremental increases: inc * (amount*L + (amount*(amount-1))/2)
-      const incSum = inc * (amount * L + (amount * (amount - 1)) / 2);
-      total[type] = base * amount + incSum;
+    // Returns the total cost for upgrading 'amount' levels from current level
+    const costs = {};
+    const startLevel = this.level;
+    for (const [type, { base, increment, cap }] of Object.entries(this.costStructure)) {
+      // Formula: base * amount + increment * (amount * (2 * startLevel + amount - 1) / 2)
+      let total = base * amount + increment * (amount * (2 * startLevel + amount - 1) / 2);
+      if (cap !== null && cap !== undefined) {
+        // Cap applies per level, so max cost for this upgrade is cap * amount
+        total = Math.min(total, cap * amount);
+      }
+      costs[type] = Math.ceil(total);
     }
-    return total;
+    return costs;
   }
 
   // Returns the maximum number of upgrades the player can afford with all resources
@@ -80,7 +83,7 @@ export class Building {
     let maxPossible = this.maxLevel - this.level;
     if (maxPossible <= 0) return 0;
     let affordable = maxPossible;
-    for (const type of Object.keys(this.cost)) {
+    for (const type of Object.keys(this.costStructure)) {
       let playerResource = hero[type + 's'] !== undefined ? hero[type + 's'] : hero[type];
       if (playerResource === undefined) continue;
       let low = 0,
@@ -101,12 +104,16 @@ export class Building {
 
   // Returns the refund object for the current level
   getRefund() {
+    // Returns the refund for the current level
     const refund = {};
     const n = this.level;
-    for (const [type, base] of Object.entries(this.cost)) {
-      const inc = this.costIncrease[type] || 0;
-      // total spent across levels: n*base + inc*(n*(n-1)/2)
-      const totalSpent = base * n + inc * (n * (n - 1) / 2);
+    for (const [type, { base, increment, cap }] of Object.entries(this.costStructure)) {
+      // Total spent across all upgrades up to level n
+      let totalSpent = base * n + increment * (n * (n - 1) / 2);
+      if (cap !== null && cap !== undefined) {
+        // Cap applies per level, so max spent is cap * n
+        totalSpent = Math.min(totalSpent, cap * n);
+      }
       refund[type] = Math.floor(refundPercent * totalSpent);
     }
     return refund;

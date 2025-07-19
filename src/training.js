@@ -272,12 +272,6 @@ export default class Training {
     return `+${formattedValue}${config.suffix || ''} ${formatStatName(stat)}`;
   }
 
-  getUpgradeCost(stat) {
-    const level = this.upgradeLevels[stat] || 0;
-    const cost = STATS[stat].training ? STATS[stat].training.cost * (level + 1) : 0;
-    return cost;
-  }
-
   getTrainingBonuses() {
     // Ensure training bonuses are up-to-date
     this.updateTrainingBonuses();
