@@ -7,8 +7,8 @@ import { updateRegionUI } from './region.js';
 
 const LEVEL_REQUIREMENT = 500;
 const LEVEL_REQUIREMENT_INCREASE = 100;
-const BOSSLEVEL_REQUIREMENT = 200;
-const BOSSLEVEL_REQUIREMENT_INCREASE = 50;
+const BOSSLEVEL_REQUIREMENT = 100;
+const BOSSLEVEL_REQUIREMENT_INCREASE = 20;
 
 export default class Prestige {
   constructor(savedData = null) {
