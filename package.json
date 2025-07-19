@@ -11,7 +11,6 @@
     "build:electron": "vite build --mode electron",
     "preview": "vite preview",
     "lint": "eslint . --ext .js",
-    "obfuscate": "node obfuscate-dist.js",
     "electron": "electron electron-main.js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
@@ -24,9 +23,9 @@
     "electron": "^37.2.0",
     "electron-builder": "^26.0.12",
     "eslint": "^9.30.0",
-    "javascript-obfuscator": "^4.1.1",
     "terser": "^5.43.1",
-    "vite": "^7.0.0"
+    "vite": "^7.0.0",
+    "vite-plugin-javascript-obfuscator": "3.1.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
