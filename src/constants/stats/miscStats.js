@@ -35,7 +35,7 @@ export const MISC_STATS = {
   manaRegen: {
     base: 0,
     decimalPlaces: 1,
-    training: { cost: 800, bonus: 0.1, maxLevel: 500 },
+    training: { cost: 500, bonus: 0.1, maxLevel: 5000 },
     item: { min: 1, max: 3, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry', 'magic'],
     showInUI: true,
@@ -248,6 +248,7 @@ export const MISC_STATS = {
   manaRegenOfTotalPercent: {
     base: 0,
     decimalPlaces: 2,
+    training: { cost: 1000, bonus: 0.01, maxLevel: 100 },
     item: { min: 0.01, max: 0.05, max: 1, scaling: (level) => miscScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['staff'],
   },
