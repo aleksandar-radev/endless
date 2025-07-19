@@ -187,7 +187,7 @@ export default class Inventory {
           <span style="font-size:1.5em;">${item.getIcon()}</span>
           <span><b>${item.type}</b> (Lvl ${item.level})</span>
           <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
-          <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${mat.qty}" value="1" aria-label="Upgrade quantity" />
+          <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${Math.min(mat.qty, Math.max(0, hero.level - item.level))}" value="1" aria-label="Upgrade quantity" />
           <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">Upgrade</button>
         </div>`,
         buttonClass: 'upgrade-btn',
@@ -197,7 +197,14 @@ export default class Inventory {
           const qtyInput = dialog.querySelector(`.upgrade-qty-input[data-idx='${idx}']`);
           let useQty = parseInt(qtyInput.value, 10);
           if (isNaN(useQty) || useQty < 1) useQty = 1;
+          // Limit useQty to not exceed hero level - item.level
+          const maxUpgrade = Math.max(0, hero.level - item.level);
           if (useQty > mat.qty) useQty = mat.qty;
+          if (useQty > maxUpgrade) useQty = maxUpgrade;
+          if (useQty < 1) {
+            showToast('Item cannot surpass hero level', 'error');
+            return;
+          } // Prevent upgrading if already at or above hero level
           const oldLevel = item.level;
           item.applyLevelToStats(oldLevel + useQty);
           this.handleMaterialUsed(this, mat, matDef, useQty, 'material-upgrade-dialog', `Upgraded ${item.type} (Lvl ${oldLevel} → ${item.level})`);
