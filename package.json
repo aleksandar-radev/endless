@@ -16,7 +16,9 @@
     "dist": "electron-builder"
   },
   "dependencies": {
-    "simple-crypto-js": "^3.0.1"
+    "simple-crypto-js": "^3.0.1",
+    "electron-updater": "^5.4.6",
+    "electron-log": "^5.0.0"
   },
   "devDependencies": {
     "dotenv": "^17.0.0",
@@ -46,5 +48,12 @@
     "win": {
       "target": "nsis"
     }
-  }
+  },
+  "publish": [
+    {
+      "provider": "github",
+      "owner": "aleksandar-radev",
+      "repo": "endless"
+    }
+  ]
 }
