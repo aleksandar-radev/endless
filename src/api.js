@@ -47,9 +47,17 @@ export async function loadGameData(userId, premium = 'no') {
   }
 
   const result = await response.json();
+  let decryptedData = null;
+  if (result.data_json) {
+    try {
+      decryptedData = crypt.decrypt(result.data_json);
+    } catch (e) {
+      decryptedData = null;
+    }
+  }
 
   return {
-    data: result.data_json ?? null,
+    data: decryptedData,
     updated_at: result.updated_at || 0,
   };
 }
