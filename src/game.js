@@ -231,9 +231,10 @@ class Game {
 
   resetAllProgress() {
     setGlobals({ reset: true });
+    options.resetRequired = false; // Reset the flag after resetting progress
     // reload to update UI
     window.location.reload();
-    // TODO: update all UI, create a method for this, insteafd of reloading. LOW PRIORITY
+    // TODO: update all UI, create a method for this, instead of reloading. LOW PRIORITY
     dataManager.saveGame();
   }
 }

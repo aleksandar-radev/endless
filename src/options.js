@@ -8,11 +8,12 @@ const html = String.raw;
 // Options class to store options and version (future-proof for migrations)
 export class Options {
   constructor(data = {}) {
-    this.version = data.version || '0.5.4';
+    this.version = data.version || '0.5.5';
     // Add startingStage, default to null (unset)
     this.startingStage = data.startingStage || null;
     // Add showEnemyStats option, default to false
     this.showEnemyStats = data.showEnemyStats ?? false;
+    this.resetRequired = data.resetRequired ?? null;
   }
 
   /**

@@ -1,4 +1,5 @@
 import { getLeaderboard } from '../api.js';
+import { options } from '../globals.js';
 import { Leaderboard } from '../leaderboard.js';
 
 const html = String.raw;
@@ -22,7 +23,10 @@ export function renderLeaderboardTable(leaderboardData, currentUsername) {
   if (!leaderboardData || leaderboardData.length === 0) {
     return '<div>No leaderboard data available.</div>';
   }
+  const updateMessage = '<span style="color: red">In order to see yourself in leaderboard, you have to reset your progress, because of a new update.</span>';
+
   return html`
+    ${options.resetRequired == true ? updateMessage : ''}
     <table>
       <thead>
         <tr><th>Rank</th><th>Username</th><th>Highest Level</th></tr>
