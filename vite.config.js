@@ -3,12 +3,12 @@ import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  const isNoObf = mode === 'noobf';
+  const isProduction = mode === 'production';
 
   return {
     base: env.VITE_BASE_PATH || './',
     plugins: [
-      !isNoObf && obfuscatorPlugin({
+      isProduction && obfuscatorPlugin({
         options: {
           rotateStringArray: true,
           controlFlowFlattening: true,
@@ -25,8 +25,8 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist',
       emptyOutDir: true,
-      minify: isNoObf ? false : 'terser',
-      terserOptions: isNoObf ? undefined : {
+      minify: !isProduction ? false : 'terser',
+      terserOptions: !isProduction ? undefined : {
         compress: {
           drop_console: true,
           drop_debugger: true,

@@ -807,7 +807,7 @@ export function updateBuffIndicators() {
     if ((skill.type() === 'buff' || skill.type() === 'instant' || skill.type() === 'summon') && skill?.cooldownEndTime) {
       const remaining = skill.cooldownEndTime - Date.now();
       if (remaining > 0) {
-        const percentage = (remaining / skillTree.getSkillCooldown(skill)) * 100;
+        const percentage = Math.min((remaining / skillTree.getSkillCooldown(skill)) * 100, 100);
         cooldownOverlay.style.height = `${percentage}%`;
         slot.classList.add('on-cooldown');
       } else {

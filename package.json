@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:noobf": "vite build --mode noobf",
+    "build:production": "vite build --mode production",
     "build:electron": "vite build --mode electron",
     "preview": "vite preview",
     "lint": "eslint . --ext .js",
@@ -16,10 +16,12 @@
     "dist": "electron-builder"
   },
   "dependencies": {
-    "simple-crypto-js": "^3.0.1"
+    "simple-crypto-js": "^3.0.1",
+    "electron-updater": "6.6.2",
+    "electron-log": "5.4.1",
+    "dotenv": "^17.0.0"
   },
   "devDependencies": {
-    "dotenv": "^17.0.0",
     "electron": "^37.2.0",
     "electron-builder": "^26.0.12",
     "eslint": "^9.30.0",
@@ -46,5 +48,12 @@
     "win": {
       "target": "nsis"
     }
-  }
+  },
+  "publish": [
+    {
+      "provider": "github",
+      "owner": "aleksandar-radev",
+      "repo": "endless"
+    }
+  ]
 }
