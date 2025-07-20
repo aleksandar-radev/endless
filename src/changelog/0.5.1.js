@@ -1,4 +1,7 @@
-<span style="color:#4F8A10;">📝 2025-07-19</span>
+const html = String.raw;
+export function run() {
+  return html`
+  <span style="color:#4F8A10;">📝 2025-07-19</span>
 <hr>
 
 <span style="color:#FFA500;">⚖️ Balance Changes</span>
@@ -15,4 +18,5 @@
   <li>Fixed login dialog. If still not working, try clearing cache and reload.</li>
   <li>Fixed a bug where prestiging was unlimited. Prestige now causes reload, to avoid issues with updating the whole
     UI.</li>
-</ul>
+</ul>`;
+}

@@ -1,4 +1,7 @@
-<span style="color:#4F8A10;">📝 2025-07-04</span>
+const html = String.raw;
+export function run() {
+  return html`
+  <span style="color:#4F8A10;">📝 2025-07-04</span>
 
 <hr>
 
@@ -16,4 +19,5 @@
 <span style="color:#FFA500;">🪲 Bug Fixes</span>
 <ul>
   <li><b>Healing & Mana:</b> Healing and mana restoration are now always displayed on top of hero</li>
-</ul>
+</ul>`;
+}

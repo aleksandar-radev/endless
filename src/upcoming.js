@@ -1,4 +1,6 @@
-<h1>Upcoming Changes</h1>
+const html = String.raw;
+export function run() {
+  return html`<h1>Upcoming Changes</h1>
 <p><em>*not guaranteed to be in the next update</em></p>
 <blockquote></blockquote>
 <ul>
@@ -9,4 +11,5 @@
   <li>Live fight. Fight versus other players.</li>
   <li>Leaderboard based on prestige count. ?</li>
 </ul>
-<blockquote></blockquote>
+<blockquote></blockquote>`;
+}

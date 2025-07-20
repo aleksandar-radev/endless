@@ -1,3 +1,6 @@
+const html = String.raw;
+export function run() {
+  return html`
 <span style="color:#4F8A10;">🗓️ 2025-06-17</span>
 
 <hr>
@@ -32,3 +35,5 @@
   <li>Added more stats to the <b>Stats</b> tab for display.</li>
   <li>Improved performance for stat allocation.</li>
 </ul>
+`;
+}

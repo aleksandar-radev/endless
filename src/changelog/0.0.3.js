@@ -1,3 +1,6 @@
+const html = String.raw;
+export function run() {
+  return html`
 <h2>2025-06-16</h2>
 <ul>
   <li>All saving and loading now with improved reliability.</li>
@@ -21,3 +24,5 @@
   <li>Boss damage increased.</li>
   <li>Added new quests: Item and Material drops. They reward you with items with good rarity.</li>
 </ul>
+`;
+}

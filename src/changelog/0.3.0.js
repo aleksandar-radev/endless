@@ -1,4 +1,7 @@
-<span style="color:#4F8A10;">📝 2025-07-09</span>
+const html = String.raw;
+export function run() {
+  return html`
+  <span style="color:#4F8A10;">📝 2025-07-09</span>
 <hr>
 
 <h3 style="color:#c42e2e; margin: 10px 0px;">Progress was not reset for this update, although, it is highly recommended
@@ -38,4 +41,5 @@
 <ul>
   <li>Fixed enchantment scroll did upgrade the rarity of an item, but didn't give extra stats.</li>
   <li>Fixed a bug where soul shop upgrade for damage boost will give 100x less value.</li>
-</ul>
+</ul>`;
+}

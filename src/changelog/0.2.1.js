@@ -1,4 +1,7 @@
-<span style="color:#4F8A10;">🗓️ 2025-07-04</span>
+const html = String.raw;
+export function run() {
+  return html`
+  <span style="color:#4F8A10;">🗓️ 2025-07-04</span>
 
 <hr>
 
@@ -18,3 +21,5 @@
   <li>elemental resistances not showing correctly for bosses</li>
   <li>elemental damages for bosses not incrementing per boss level</li>
 </ul>
+`;
+}

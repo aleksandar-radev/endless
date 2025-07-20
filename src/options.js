@@ -8,7 +8,7 @@ const html = String.raw;
 // Options class to store options and version (future-proof for migrations)
 export class Options {
   constructor(data = {}) {
-    this.version = data.version || '0.5.5';
+    this.version = data.version || '0.5.6';
     // Add startingStage, default to null (unset)
     this.startingStage = data.startingStage || null;
     // Add showEnemyStats option, default to false
@@ -110,11 +110,11 @@ export class Options {
     changelogBtn.id = 'view-changelog';
     changelogBtn.textContent = 'View Changelog';
     changelogBtn.onclick = async () => {
-      // Use Vite's import.meta.glob to dynamically import all changelog files (now .html)
-      const changelogModules = import.meta.glob('./changelog/*.html', { query: '?raw', import: 'default' });
+      // Use Vite's import.meta.glob to dynamically import all changelog files (.js)
+      const changelogModules = import.meta.glob('./changelog/*.js');
       const entries = Object.entries(changelogModules)
         .map(([path, loader]) => {
-          const match = path.match(/([\\/])(\d+\.\d+\.\d+)\.html$/);
+          const match = path.match(/([\\/])(\d+\.\d+\.\d+)\.js$/);
           return match ? { version: match[2], loader } : null;
         })
         .filter(Boolean)
@@ -174,19 +174,27 @@ export class Options {
     upcomingBtn.id = 'view-upcoming';
     upcomingBtn.textContent = 'View Upcoming Changes';
     upcomingBtn.onclick = async () => {
-      // Use Vite's import.meta.glob to import the upcoming file as HTML
-      const upcomingModules = import.meta.glob('./upcoming.html', { query: '?raw', import: 'default' });
-      const loader = upcomingModules['./upcoming.html'];
+      // Use Vite's import.meta.glob to import the upcoming file as JS
+      const upcomingModules = import.meta.glob('./upcoming.js');
+      const loader = upcomingModules['./upcoming.js'];
       let text = '';
       try {
-        text = loader ? await loader() : '(No upcoming changes found)';
+        if (loader) {
+          const mod = await loader();
+          if (typeof mod.run === 'function') {
+            text = mod.run();
+          } else {
+            text = '(No upcoming changes found)';
+          }
+        } else {
+          text = '(No upcoming changes found)';
+        }
       } catch {
         text = '(Could not load upcoming changes)';
       }
       let content = '<div class="changelog-modal-content">';
       content += '<button class="modal-close">X</button>';
       content += '<h2>Upcoming Changes</h2>';
-      // For upcoming, now display as HTML
       content += `<div class="changelog-body">${text || ''}</div>`;
       content += '</div>';
       createModal({
@@ -486,12 +494,16 @@ export class Options {
  * @returns {Promise<string>} HTML string for the changelog, or empty string if not found
  */
 export async function getChangelogHtml(version) {
-  const changelogModules = import.meta.glob('./changelog/*.html', { query: '?raw', import: 'default' });
-  const path = `./changelog/${version}.html`;
+  const changelogModules = import.meta.glob('./changelog/*.js');
+  const path = `./changelog/${version}.js`;
   const loader = changelogModules[path];
   if (!loader) return '';
   try {
-    return await loader();
+    const mod = await loader();
+    if (typeof mod.run === 'function') {
+      return mod.run();
+    }
+    return '';
   } catch {
     return '';
   }

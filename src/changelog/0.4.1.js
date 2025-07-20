@@ -1,4 +1,7 @@
-<span style="color:#4F8A10;">📝 2025-07-14</span>
+const html = String.raw;
+export function run() {
+  return html`
+  <span style="color:#4F8A10;">📝 2025-07-14</span>
 <hr>
 
 <span style="color:#FFA500;">⚖️ Balance Changes</span>
@@ -26,4 +29,5 @@
 <span style="color:#FFA500;">✨ Features & Improvements</span>
 <ul>
   <li>Add total earned tracking for buildings and update UI accordingly.</li>
-</ul>
+</ul>`;
+}

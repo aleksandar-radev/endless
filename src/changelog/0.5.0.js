@@ -1,4 +1,7 @@
-<span style="color:#4F8A10;">📝 2025-07-16</span>
+const html = String.raw;
+export function run() {
+  return html`
+  <span style="color:#4F8A10;">📝 2025-07-16</span>
 <hr>
 
 <span style="color:#FFA500;">⚖️ Balance Changes</span>
@@ -29,4 +32,5 @@
 <ul>
   <li>Added minimum cooldown (20% of total) and new cooldown calculation</li>
   <li>Added in-house login and logout functionality, including logout button.</li>
-</ul>
+</ul>`;
+}

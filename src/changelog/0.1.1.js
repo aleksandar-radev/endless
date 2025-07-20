@@ -1,3 +1,6 @@
+const html = String.raw;
+export function run() {
+  return html`
 <h2>2025-06-17</h2>
 <ul>
   <li>Added a "Starting Stage" option, allowing you to choose your starting stage based on your crystal upgrades.</li>
@@ -9,3 +12,5 @@
 </ul>
 <br>
 <strong>Note: if you have "bugged" items, you might want to salvage them.</strong>
+`;
+}

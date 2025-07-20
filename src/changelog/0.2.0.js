@@ -1,4 +1,7 @@
-<span style="color:#4F8A10;">🗓️ 2025-07-04</span>
+const html = String.raw;
+export function run() {
+  return html`
+  <span style="color:#4F8A10;">🗓️ 2025-07-04</span>
 
 <hr>
 
@@ -22,3 +25,5 @@
   <li><b>Dexterity:</b> Now provides Evasion instead of Critical Damage.</li>
   <li><b>Soul Shop:</b> Damage boost now buffs total damage instead of just physical damage.</li>
 </ul>
+`;
+}
