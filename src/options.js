@@ -47,7 +47,15 @@ export class Options {
     container.appendChild(this._createDiscordSection());
 
     const suggestionsRow = document.createElement('div');
-    suggestionsRow.innerHTML = html` Please add your suggestions for changes in the game in the discord channel :) `;
+    suggestionsRow.innerHTML = html`
+      Current version: ${this.version}. 
+      <br> 
+      <br> 
+      Please add your suggestions for changes in the game in the discord channel :)
+      <br>
+      <br>
+      You can download desktop application (Windows only!) from <a style="color:#fff; background:#0078d7; padding:2px 8px; border-radius:4px; text-decoration:none; font-weight:bold;" target="_blank" href="https://github.com/aleksandar-radev/endless/releases">HERE</a>.
+    `;
     container.appendChild(suggestionsRow);
 
     container.appendChild(this._createResetButton());

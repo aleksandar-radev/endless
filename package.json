@@ -37,6 +37,7 @@
   "build": {
     "appId": "ghost-team.endless",
     "productName": "Endless",
+    "artifactName": "${productName}-Setup-${version}.${ext}",
     "files": [
       "dist/**/*",
       "electron-main.js",
@@ -49,7 +50,6 @@
       "target": "nsis"
     }
   },
-  "artifactName": "${productName}-Setup-${version}.${ext}",
   "publish": [
     {
       "provider": "github",

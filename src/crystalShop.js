@@ -22,6 +22,17 @@ const CRYSTAL_UPGRADE_CONFIG = {
     baseCost: 2,
     costIncrement: 0.02, // 1 per 50 levels
     multiple: true,
+    bulkModal: true,
+  },
+  stageSkip: {
+    label: 'Stage Skip',
+    bonus: 1,
+    bonusLabel: 'Skip +1 stage per kill',
+    showLevel: true,
+    baseCost: 20,
+    costIncrement: 5,
+    multiple: true,
+    bulkModal: true,
   },
   continuousPlay: {
     label: 'Continuous Play',
@@ -241,7 +252,7 @@ export default class CrystalShop {
     const buyBtn = m.querySelector('.modal-buy');
     this.selectedQty = 1;
 
-    if (stat === 'startingStage') {
+    if (config.bulkModal) {
       fields.innerHTML = `
         <p>Current Level: <span class="modal-level"></span></p>
         <p>Current Bonus: <span class="modal-bonus"></span></p>
@@ -312,7 +323,7 @@ export default class CrystalShop {
     const m = this.modal;
     const q = (sel) => m.querySelector(sel);
 
-    if (stat === 'startingStage') {
+    if (config.bulkModal) {
       const baseLevel = this.crystalUpgrades[stat] || 0;
       const crystalsAvailable = hero.crystals;
       let qty = this.selectedQty === 'max' ? 0 : this.selectedQty;

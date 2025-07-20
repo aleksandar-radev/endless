@@ -22,7 +22,9 @@ class Game {
   }
 
   incrementStage() {
-    this.stage += 1;
+    const stageSkipLevel = (crystalShop.crystalUpgrades?.stageSkip || 0);
+    const skipAmount = 1 + stageSkipLevel;
+    this.stage += skipAmount;
     if (this.stage > hero.highestStage) {
       if (statistics.highestStageReached < this.stage) {
         statistics.set('highestStageReached', null, this.stage);
