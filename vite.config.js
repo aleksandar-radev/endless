@@ -39,6 +39,7 @@ export default defineConfig(({ mode }) => {
         },
       } : undefined,
     },
+    assetsInclude: ['**/changelog/*.html'],
     server: {
       open: true,
     },
