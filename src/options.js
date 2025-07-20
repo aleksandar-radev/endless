@@ -3,6 +3,9 @@ import { showConfirmDialog, showToast, updateStageUI } from './ui/ui.js';
 import { closeModal, createModal } from './ui/modal.js';
 import Enemy from './enemy.js';
 import { logout } from './api.js';
+import { CHANGELOG } from './changelog/changelog.js';
+import upcommingChanges from './upcoming.js';
+
 const html = String.raw;
 
 // Options class to store options and version (future-proof for migrations)
@@ -110,38 +113,40 @@ export class Options {
     changelogBtn.id = 'view-changelog';
     changelogBtn.textContent = 'View Changelog';
     changelogBtn.onclick = async () => {
-      // Use Vite's import.meta.glob to dynamically import all changelog files (.js)
-      const changelogModules = import.meta.glob('./changelog/*.js');
-      const entries = Object.entries(changelogModules)
-        .map(([path, loader]) => {
-          const match = path.match(/([\\/])(\d+\.\d+\.\d+)\.js$/);
-          return match ? { version: match[2], loader } : null;
-        })
-        .filter(Boolean)
-        .sort((a, b) => b.version.localeCompare(a.version, undefined, { numeric: true, sensitivity: 'base' }));
-      const changelogs = await Promise.all(
-        entries.map(async (entry) => {
-          const html = await getChangelogHtml(entry.version);
-          return { ...entry, html };
-        }),
-      );
+      // Get all changelog versions, sorted descending
+      const versions = Object.keys(CHANGELOG).sort((a, b) => b.localeCompare(a, undefined, { numeric: true, sensitivity: 'base' }));
       let content = '<div class="changelog-modal-content">';
       content += '<button class="modal-close">X</button>';
       content += '<h2>Changelog</h2>';
-      changelogs.forEach((entry, i) => {
-        const expanded = i === 0 ? 'expanded' : '';
-        const versionLabel =
-          i === 0 ? `${entry.version} <span class="changelog-current">(current)</span>` : `${entry.version}`;
-        content += `
-          <div class="changelog-entry ${expanded}">
-            <div class="changelog-header" data-index="${i}">
-              <span class="changelog-version">${versionLabel}</span>
-              <span class="changelog-toggle">${expanded ? '▼' : '►'}</span>
+      if (versions.length === 0) {
+        content += '<div class="changelog-body">No changelog entries found.</div>';
+      } else {
+        versions.forEach((version, i) => {
+          const mod = CHANGELOG[version];
+          let entryHtml = '';
+          if (mod && typeof mod.run === 'function') {
+            try {
+              entryHtml = mod.run();
+            } catch (e) {
+              entryHtml = `<div style="color:red;">Error loading changelog for ${version}</div>`;
+            }
+          } else {
+            entryHtml = `<div style="color:orange;">No changelog content for ${version}</div>`;
+          }
+          const expanded = i === 0 ? 'expanded' : '';
+          const versionLabel =
+            i === 0 ? `${version} <span class="changelog-current">(current)</span>` : `${version}`;
+          content += `
+            <div class="changelog-entry ${expanded}">
+              <div class="changelog-header" data-index="${i}">
+                <span class="changelog-version">${versionLabel}</span>
+                <span class="changelog-toggle">${expanded ? '▼' : '►'}</span>
+              </div>
+              <div class="changelog-body" style="display:${expanded ? 'block' : 'none'}">${entryHtml}</div>
             </div>
-            <div class="changelog-body" style="display:${expanded ? 'block' : 'none'}">${entry.html || ''}</div>
-          </div>
-        `;
-      });
+          `;
+        });
+      }
       content += '</div>';
       const modal = createModal({
         id: 'changelog-modal',
@@ -174,24 +179,8 @@ export class Options {
     upcomingBtn.id = 'view-upcoming';
     upcomingBtn.textContent = 'View Upcoming Changes';
     upcomingBtn.onclick = async () => {
-      // Use Vite's import.meta.glob to import the upcoming file as JS
-      const upcomingModules = import.meta.glob('./upcoming.js');
-      const loader = upcomingModules['./upcoming.js'];
       let text = '';
-      try {
-        if (loader) {
-          const mod = await loader();
-          if (typeof mod.run === 'function') {
-            text = mod.run();
-          } else {
-            text = '(No upcoming changes found)';
-          }
-        } else {
-          text = '(No upcoming changes found)';
-        }
-      } catch {
-        text = '(Could not load upcoming changes)';
-      }
+      text = upcommingChanges();
       let content = '<div class="changelog-modal-content">';
       content += '<button class="modal-close">X</button>';
       content += '<h2>Upcoming Changes</h2>';
@@ -485,26 +474,5 @@ export class Options {
       if (stats) stats.style.display = this.showEnemyStats ? '' : 'none';
     }, 0);
     return wrapper;
-  }
-}
-
-/**
- * Returns the HTML for a given changelog version (from ./changelog/*.html)
- * @param {string} version - The version string, e.g. '0.1.1'
- * @returns {Promise<string>} HTML string for the changelog, or empty string if not found
- */
-export async function getChangelogHtml(version) {
-  const changelogModules = import.meta.glob('./changelog/*.js');
-  const path = `./changelog/${version}.js`;
-  const loader = changelogModules[path];
-  if (!loader) return '';
-  try {
-    const mod = await loader();
-    if (typeof mod.run === 'function') {
-      return mod.run();
-    }
-    return '';
-  } catch {
-    return '';
   }
 }

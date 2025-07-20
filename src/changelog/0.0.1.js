@@ -1,5 +1,5 @@
 const html = String.raw;
-export function run() {
+export default function run() {
   return html`
 <h2>2025-06-14</h2>
 <ul>

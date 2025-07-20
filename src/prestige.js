@@ -1,4 +1,4 @@
-import { hero, dataManager, setGlobals, prestige as prestigeState, game } from './globals.js';
+import { hero, dataManager, setGlobals, prestige as prestigeState, game, options } from './globals.js';
 import { PRESTIGE_BONUSES } from './constants/prestigeBonuses.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateResources, showToast, updateStageUI, formatStatName } from './ui/ui.js';
@@ -100,7 +100,14 @@ export default class Prestige {
     });
     const newCount = this.prestigeCount + 1;
 
+    const showEnemyStats = options.showEnemyStats;
+    const resetRequired = options.resetRequired;
+
     await setGlobals({ reset: true });
+
+    // persist options
+    options.showEnemyStats = showEnemyStats;
+    options.resetRequired = resetRequired;
 
     prestigeState.bonuses = combined;
     prestigeState.prestigeCount = newCount;

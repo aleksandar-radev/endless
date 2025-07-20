@@ -39,7 +39,6 @@ export default defineConfig(({ mode }) => {
         },
       } : undefined,
     },
-    assetsInclude: ['**/changelog/*.js'],
     server: {
       open: true,
     },

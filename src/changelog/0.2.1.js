@@ -1,5 +1,5 @@
 const html = String.raw;
-export function run() {
+export default function run() {
   return html`
   <span style="color:#4F8A10;">🗓️ 2025-07-04</span>
 

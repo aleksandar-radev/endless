@@ -1,5 +1,5 @@
 const html = String.raw;
-export function run() {
+export default function upcommingChanges() {
   return html`<h1>Upcoming Changes</h1>
 <p><em>*not guaranteed to be in the next update</em></p>
 <blockquote></blockquote>

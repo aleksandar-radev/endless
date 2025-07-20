@@ -1,9 +1,9 @@
 import { loadGameData, saveGameData, apiFetch } from './api.js';
+import { CHANGELOG } from './changelog/changelog.js';
 import { crypt } from './functions.js';
 import { getGlobals } from './globals.js';
 import { createModal } from './ui/modal.js';
 import { showToast } from './ui/ui.js';
-import { getChangelogHtml } from './options.js';
 
 export class DataManager {
   constructor() {
@@ -143,9 +143,10 @@ export class DataManager {
 
     if (lastMigration) {
       // Read changelog for the last migration version using shared logic
-      const changelogHtml = await getChangelogHtml(lastMigration.version);
+      const changelogHtml = CHANGELOG[lastMigration.version];
+
       if (changelogHtml) {
-        this._showMigrationModal(lastMigration.version, changelogHtml);
+        this._showMigrationModal(lastMigration.version, changelogHtml.run());
       }
     }
 
