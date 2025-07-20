@@ -1,6 +1,6 @@
 {
   "name": "endless",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Endless Game",
   "type": "module",
   "main": "electron-main.js",
@@ -49,6 +49,7 @@
       "target": "nsis"
     }
   },
+  "artifactName": "${productName}-Setup-${version}.${ext}",
   "publish": [
     {
       "provider": "github",
