@@ -15,6 +15,7 @@ import v0_5_0 from './0.5.0.js';
 import v0_5_1 from './0.5.1.js';
 import v0_5_2 from './0.5.2.js';
 import v0_5_5 from './0.5.5.js';
+import v0_5_7 from './0.5.7.js';
 
 export const CHANGELOG = {
   '0.0.1': {
@@ -84,5 +85,9 @@ export const CHANGELOG = {
   '0.5.5': {
     version: '0.5.5',
     run: v0_5_5,
+  },
+  '0.5.7': {
+    version: '0.5.7',
+    run: v0_5_7,
   },
 };
