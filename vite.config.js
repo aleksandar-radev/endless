@@ -11,13 +11,12 @@ export default defineConfig(({ mode }) => {
       isProduction && obfuscatorPlugin({
         options: {
           rotateStringArray: true,
-          controlFlowFlattening: true,
-          controlFlowFlatteningThreshold: 0.75,
-          deadCodeInjection: true,
-          deadCodeInjectionThreshold: 0.4,
           stringArray: true,
-          stringArrayThreshold: 0.8,
+          stringArrayThreshold: 1,
           identifierNamesGenerator: 'hexadecimal',
+          compact: true,
+          deadCodeInjection: false,
+          controlFlowFlattening: false,
         },
       }),
     ].filter(Boolean),
@@ -25,17 +24,20 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist',
       emptyOutDir: true,
-      minify: !isProduction ? false : 'terser',
-      terserOptions: !isProduction ? undefined : {
+      minify: isProduction ? 'terser' : false,
+      terserOptions: isProduction ? {
         compress: {
           drop_console: true,
           drop_debugger: true,
+          passes: 3,
         },
         mangle: true,
         format: {
           comments: false,
+          beautify: false,
+          max_line_len: false,
         },
-      },
+      } : undefined,
     },
     server: {
       open: true,
