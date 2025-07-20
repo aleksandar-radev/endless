@@ -132,7 +132,7 @@ window.log = console.log;
     footer.style.alignItems = 'center';
     footer.style.height = '60px';
     footer.innerHTML = `
-      <div>Next update coming on 15/07/2025 and will include a full reset. A production build will be available right after the reset, and this will be used for testing purposes only. Full game on <a href="https://ghost-team.top">ghost-team.top</a></div>
+      <div>Full game on <a href="https://ghost-team.top">ghost-team.top</a></div>
       <div>In this test version, type <span style="color: #007bff; font-size: 1.4em">edev</span> anywhere in the browser to access developer options.</div>
     `;
     document.body.appendChild(footer);
