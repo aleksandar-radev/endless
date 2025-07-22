@@ -616,8 +616,16 @@ export default class Hero {
     };
   }
 
-  calculateTotalThornsDamage(enemyDamage) {
-    const damage = (this.stats.thornsDamage + enemyDamage) * (1 + this.stats.thornsDamagePercent / 100);
+  /**
+   * Calculate the damage returned to the attacker via thorns.
+   *
+   * @param {number} incomingDamage - The total damage the hero received after
+   * armor and resistances have been applied.
+   * @returns {number} The damage to reflect back to the attacker.
+   */
+  calculateTotalThornsDamage(incomingDamage) {
+    const damage = (this.stats.thornsDamage + incomingDamage)
+      * (1 + this.stats.thornsDamagePercent / 100);
     return Math.floor(damage) || 0;
   }
 
