@@ -23,7 +23,6 @@ export default class Hero {
 
     this.statPoints = 0;
     this.souls = 0;
-    this.highestStage = 1;
     this.bossLevel = 1;
 
     this.primaryStats = {

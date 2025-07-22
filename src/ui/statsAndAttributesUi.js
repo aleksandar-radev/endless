@@ -1,4 +1,4 @@
-import { game, hero } from '../globals.js';
+import { game, hero, statistics } from '../globals.js';
 import { STATS } from '../constants/stats/stats.js';
 import { hideTooltip, positionTooltip, showTooltip, updateEnemyStats } from '../ui/ui.js';
 import { OFFENSE_STATS } from '../constants/stats/offenseStats.js';
@@ -43,7 +43,7 @@ export function updateStatsAndAttributesUI() {
         <span id="exp-to-next-level-value">${hero.getExpToNextLevel() || 100}</span>
         (<span id="exp-progress">${((hero.exp / hero.getExpToNextLevel()) * 100).toFixed(1)}%</span>)
       </div>
-      <div><strong>Highest Stage:</strong><span id="highest-stage-value">${hero.highestStage}</span></div>
+      <div><strong>Highest Stage:</strong><span id="highest-stage-value">${statistics.highestStages[1] || 0}</span></div>
       <hr style="border: none; border-top: 1px solid #fff; margin: 10px 0;" />
     `;
     // Create tab buttons
@@ -249,7 +249,7 @@ export function updateStatsAndAttributesUI() {
     document.getElementById('exp-progress').textContent =
       ((hero.exp / hero.getExpToNextLevel()) * 100).toFixed(1) + '%';
     document.getElementById('exp-to-next-level-value').textContent = hero.getExpToNextLevel() || 100;
-    document.getElementById('highest-stage-value').textContent = hero.highestStage;
+    document.getElementById('highest-stage-value').textContent = statistics.highestStages[1] || 0;
 
     // Add hit chance percentage to attackRating
     const attackRatingEl = document.getElementById('attackRating-value');
