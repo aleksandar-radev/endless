@@ -28,6 +28,7 @@ export const PALADIN_SKILLS = {
     description: () => 'A powerful strike that deals holy damage to enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      damage: level * 1,
       damagePercent: level * 1,
       fireDamagePercent: level * 2,
     }),
@@ -43,6 +44,7 @@ export const PALADIN_SKILLS = {
     description: () => 'Bashes an enemy with your shield, stunning them.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      damage: level * 2,
       damagePercent: level * 3,
     }),
   },
@@ -56,7 +58,6 @@ export const PALADIN_SKILLS = {
     maxLevel: () => 200,
     effect: (level) => ({
       armorPercent: level * 2,
-      blockChance: level * 0.1,
       thornsDamage: level * 0.5,
       thornsDamagePercent: level * 0.5,
     }),
@@ -88,9 +89,10 @@ export const PALADIN_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'heal',
     description: () => 'Heals a large amount of life instantly.',
-    maxLevel: () => 200,
+    maxLevel: () => Infinity,
     effect: (level) => ({
-      lifePercent: level * 0.25,
+      life: level * 8,
+      lifePercent: Math.min(level * 0.25, 20),
     }),
   },
 
@@ -120,14 +122,10 @@ export const PALADIN_SKILLS = {
     description: () => 'Increases healing effects and reduces damage taken.',
     maxLevel: () => 500,
     effect: (level) => ({
-      lifePercent: level * 0.4,
+      life: level * 5,
+      lifePercent: level * 0.6,
       armorPercent: level * 1,
-      fireResistance: level * 0.05,
-      coldResistance: level * 0.05,
-      airResistance: level * 0.05,
-      earthResistance: level * 0.05,
-      waterResistance: level * 0.05,
-      lightningResistance: level * 0.05,
+      allResistance: Math.min(level * 0.25, 30),
     }),
   },
 
@@ -143,9 +141,10 @@ export const PALADIN_SKILLS = {
     description: () => 'Calls down holy energy to smite enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: level * 3,
-      fireDamagePercent: level * 5,
-      airDamagePercent: level * 5,
+      damagePercent: level * 2,
+      lightningDamage: level * 8,
+      lightningDamagePercent: level * 5,
+      airDamagePercent: level * 3,
     }),
   },
   beaconOfFaith: {
@@ -157,7 +156,7 @@ export const PALADIN_SKILLS = {
     description: () => 'Increases healing done.',
     maxLevel: () => 500,
     effect: (level) => ({
-      lifeRegen: level * 0.5,
+      lifeRegen: level * 1,
       lifeRegenPercent: level * 0.5,
       lifeRegenOfTotalPercent: Math.min(level * 0.1, 1),
     }),
