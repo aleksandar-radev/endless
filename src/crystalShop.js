@@ -511,7 +511,8 @@ export default class CrystalShop {
     if (config.multiple && config.costIncrement != null) {
       if (stat === 'startingStage') {
         const current = this.crystalUpgrades.startingStage || 0;
-        const cap = Math.floor((statistics.highestStages[1] || 0) * 0.75);
+        const highest = Math.max(...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0));
+        const cap = Math.floor(highest * 0.75);
         if (current >= cap) {
           showToast(`Cannot upgrade Starting Stage above ${cap}. Reach a higher stage to unlock more.`, 'error');
           return;

@@ -61,7 +61,7 @@ export default class Statistics {
     if (!statisticsTab) return;
     statisticsTab.innerHTML = '';
     const container = document.createElement('div');
-    container.className = 'statistics-container';
+    container.className = 'statistics-container highest-stages-container';
     container.innerHTML = `
         <div class="stats-display">
           <div id="stat-total-time-played"></div>
@@ -144,9 +144,19 @@ export default class Statistics {
     if (highestStage) {
       const parts = [];
       for (let i = 1; i <= 12; i++) {
-        parts.push(`T${i}: ${this.highestStages[i] || 0}`);
+        const span = document.createElement('span');
+        span.className = 'stage-value';
+        span.textContent = `T${i}: ${this.highestStages[i] || 0}`;
+        parts.push(span);
+        if (i < 12) {
+          const sep = document.createElement('span');
+          sep.className = 'stage-separator breakable-separator'; // add class for styling
+          sep.textContent = '|||';
+          parts.push(sep);
+        }
       }
-      highestStage.textContent = `Highest Stages: ${parts.join(' | ')}`;
+      highestStage.textContent = 'Highest Stages: ';
+      parts.forEach(el => highestStage.appendChild(el));
     }
 
     // Total Time In Fights

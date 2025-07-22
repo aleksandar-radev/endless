@@ -1,4 +1,4 @@
-import { game, hero, inventory, training, skillTree, dataManager } from './globals.js';
+import { game, hero, inventory, training, skillTree, dataManager, statistics } from './globals.js';
 import { MATERIALS } from './constants/materials.js';
 import SimpleCrypto from 'simple-crypto-js';
 import { showToast, updatePlayerLife, updateResources, updateStageUI } from './ui/ui.js';
@@ -378,17 +378,19 @@ export function createModifyUI() {
   highestStageInput.type = 'number';
   highestStageInput.min = '1';
   highestStageInput.value = statistics.highestStages[1] || 1;
-  highestStageInput.title = 'Set the highest stage';
+  highestStageInput.title = 'Set the highest stage for all 12 stages';
   highestStageInput.className = 'input-number';
   const setHighestStageBtn = document.createElement('button');
-  setHighestStageBtn.textContent = 'Set Highest Stage';
+  setHighestStageBtn.textContent = 'Set All Highest Stages';
   setHighestStageBtn.addEventListener('click', () => {
     const val = parseInt(highestStageInput.value, 10);
     if (!isNaN(val) && val > 0) {
-      statistics.set('highestStages', 1, val);
+      for (let i = 1; i <= 12; i++) {
+        statistics.set('highestStages', i, val);
+      }
       updateStageUI();
       dataManager.saveGame();
-      showToast(`Set highest stage to ${val}!`);
+      showToast(`Set all 12 highest stages to ${val}!`);
     } else {
       showToast('Invalid stage value', 'error');
     }

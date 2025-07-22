@@ -12,3 +12,30 @@
   border-radius: 4px;
   font-size: 14px;
 }
+
+.stage-separator {
+  margin: 0 5px;
+  color: #44d418;
+}
+
+.stage-value {
+  color: #ebe8c8;
+  font-weight: bold;
+  white-space: nowrap;
+  /* Prevent line break inside stage value */
+}
+
+.highest-stages-container {
+  word-break: keep-all;
+}
+
+.breakable-separator {
+  display: inline-block;
+  white-space: pre;
+  margin: 0 5px;
+  color: #44d418;
+}
+
+.breakable-separator::after {
+  content: "\200B";
+}

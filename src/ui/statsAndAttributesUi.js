@@ -35,7 +35,7 @@ export function updateStatsAndAttributesUI() {
   if (!statsContainer) {
     statsContainer = document.createElement('div');
     statsContainer.className = 'stats-container';
-    // Header: level, EXP, highest stage
+    // Header: level, EXP
     const headerHtml = html`
       <div><strong>Level:</strong> <span id="level-value">${hero.level || 1}</span></div>
       <div>
@@ -43,7 +43,6 @@ export function updateStatsAndAttributesUI() {
         <span id="exp-to-next-level-value">${hero.getExpToNextLevel() || 100}</span>
         (<span id="exp-progress">${((hero.exp / hero.getExpToNextLevel()) * 100).toFixed(1)}%</span>)
       </div>
-      <div><strong>Highest Stage:</strong><span id="highest-stage-value">${statistics.highestStages[1] || 0}</span></div>
       <hr style="border: none; border-top: 1px solid #fff; margin: 10px 0;" />
     `;
     // Create tab buttons
@@ -249,7 +248,6 @@ export function updateStatsAndAttributesUI() {
     document.getElementById('exp-progress').textContent =
       ((hero.exp / hero.getExpToNextLevel()) * 100).toFixed(1) + '%';
     document.getElementById('exp-to-next-level-value').textContent = hero.getExpToNextLevel() || 100;
-    document.getElementById('highest-stage-value').textContent = statistics.highestStages[1] || 0;
 
     // Add hit chance percentage to attackRating
     const attackRatingEl = document.getElementById('attackRating-value');
