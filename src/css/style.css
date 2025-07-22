@@ -107,8 +107,7 @@
 
 .tab-panel {
   display: none;
-  background-color: var(--bg-element);
-  padding: 1rem;
+  padding: 0.1rem;
   border-radius: 0.5rem;
   height: 100%;
   min-height: 100%;
@@ -369,10 +368,6 @@
 /* Ensure smooth scrolling behavior */
 .tab-panel {
   scroll-behavior: smooth;
-}
-
-.enemy-section {
-  border: 1px solid;
 }
 
 .enemy-section.gray {

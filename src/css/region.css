@@ -49,11 +49,8 @@
 }
 
 .region-panel {
-  margin-top: 1rem;
-  padding: 1rem;
   background: #2d3748;
   border-radius: 0.5rem;
-  min-height: 200px;
 }
 
 .region-panel.hidden {
