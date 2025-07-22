@@ -154,6 +154,12 @@ export const DEFENSE_STATS = {
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
   },
+  allResistance: {
+    base: 0,
+    decimalPlaces: 1,
+    item: { min: 1, max: 2, limit: 20, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    itemTags: ['defense', 'jewelry'],
+  },
   manaShieldPercent: {
     base: 0,
     decimalPlaces: 1,

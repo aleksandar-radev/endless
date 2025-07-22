@@ -279,6 +279,7 @@ export default class Hero {
   calculateFlatValues(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses) {
     const flatValues = {};
     const attributes = Object.keys(ATTRIBUTES);
+    const resistances = ['fireResistance', 'coldResistance', 'airResistance', 'earthResistance', 'lightningResistance', 'waterResistance'];
 
     for (const stat in STATS) {
       // Sum all sources for each stat
@@ -291,7 +292,8 @@ export default class Hero {
         (trainingBonuses[stat] ?? 0) +
         (equipmentBonuses[stat] ?? 0) +
         (skillTreeBonuses[stat] ?? 0) +
-        (attributes.includes(stat) ? this.permaStats['allAttributes'] : 0);
+        (attributes.includes(stat) ? this.permaStats['allAttributes'] : 0) +
+        (resistances.includes(stat) ? this.permaStats['allResistance'] : 0);
     }
 
     return flatValues;
@@ -404,16 +406,19 @@ export default class Hero {
         if (stat === 'attackSpeed') value = Math.min(value, 5);
         if (stat === 'resurrectionChance') value = Math.min(value, 50);
         if (stat === 'extraMaterialDropMax') value = Math.max(value, 1); // Always at least 1
-        if (stat === 'fireResistance') value = Math.min(value, 75); // Max 75% chance
-        if (stat === 'coldResistance') value = Math.min(value, 75);
-        if (stat === 'airResistance') value = Math.min(value, 75);
-        if (stat === 'earthResistance') value = Math.min(value, 75);
-        if (stat === 'lightningResistance') value = Math.min(value, 75);
-        if (stat === 'waterResistance') value = Math.min(value, 75);
 
         this.stats[stat] = value;
       }
     }
+
+    let allRes = this.stats.allResistance || 0;
+    this.stats.fireResistance = Math.min(this.stats.fireResistance + allRes, 75);
+    this.stats.coldResistance = Math.min(this.stats.coldResistance + allRes, 75);
+    this.stats.airResistance = Math.min(this.stats.airResistance + allRes, 75);
+    this.stats.earthResistance = Math.min(this.stats.earthResistance + allRes, 75);
+    this.stats.lightningResistance = Math.min(this.stats.lightningResistance + allRes, 75);
+    this.stats.waterResistance = Math.min(this.stats.waterResistance + allRes, 75);
+
 
     this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * this.stats.mana;
     this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.life;
