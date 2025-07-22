@@ -40,6 +40,19 @@
   gap: 0.5rem;
 }
 
+.watch-ad-btn {
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.watch-ad-btn:hover {
+  background-color: #2563eb;
+}
+
 .main-content {
   display: grid;
   grid-template-columns: 1fr 1fr;

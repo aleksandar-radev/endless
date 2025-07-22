@@ -25,6 +25,7 @@ import { initializeBuildingsUI, renderPurchasedBuildings } from './ui/buildingUi
 import { initializePrestigeUI } from './ui/prestigeUi.js';
 import Enemy from './enemy.js';
 import { setupLeaderboardTabLazyLoad } from './ui/leaderboardUi.js';
+import { initializeAds } from './ads.js';
 
 window.qwe = console.log;
 window.qw = console.log;
@@ -40,6 +41,7 @@ window.log = console.log;
   game.currentEnemy = new Enemy(game.stage);
 
   initializeUI();
+  initializeAds();
   crystalShop.initializeCrystalShopUI();
   soulShop.initializeSoulShopUI();
   statistics.initializeStatisticsUI();
