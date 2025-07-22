@@ -377,7 +377,7 @@ export function createModifyUI() {
   const highestStageInput = document.createElement('input');
   highestStageInput.type = 'number';
   highestStageInput.min = '1';
-  highestStageInput.value = hero.highestStage || 1;
+  highestStageInput.value = statistics.highestStages[1] || 1;
   highestStageInput.title = 'Set the highest stage';
   highestStageInput.className = 'input-number';
   const setHighestStageBtn = document.createElement('button');
@@ -385,7 +385,7 @@ export function createModifyUI() {
   setHighestStageBtn.addEventListener('click', () => {
     const val = parseInt(highestStageInput.value, 10);
     if (!isNaN(val) && val > 0) {
-      hero.highestStage = val;
+      statistics.set('highestStages', 1, val);
       updateStageUI();
       dataManager.saveGame();
       showToast(`Set highest stage to ${val}!`);

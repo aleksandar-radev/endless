@@ -4,6 +4,7 @@ import { game, hero, crystalShop, skillTree, statistics, dataManager, setGlobals
 import Enemy from './enemy.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateBossUI } from './ui/bossUi.js';
+import { getCurrentRegion } from './region.js';
 
 class Game {
   constructor() {
@@ -22,14 +23,15 @@ class Game {
   }
 
   incrementStage() {
-    const stageSkipLevel = (crystalShop.crystalUpgrades?.stageSkip || 0);
+    const stageSkipLevel = crystalShop.crystalUpgrades?.stageSkip || 0;
     const skipAmount = 1 + stageSkipLevel;
     this.stage += skipAmount;
-    if (this.stage > hero.highestStage) {
-      if (statistics.highestStageReached < this.stage) {
-        statistics.set('highestStageReached', null, this.stage);
-      }
-      hero.highestStage = this.stage;
+
+    const region = getCurrentRegion();
+    const tier = region.tier || 1;
+    const current = statistics.highestStages?.[tier] || 0;
+    if (this.stage > current) {
+      statistics.set('highestStages', tier, this.stage);
     }
 
     updateStageUI();

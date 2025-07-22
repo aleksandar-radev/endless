@@ -40,7 +40,9 @@ export class Quest {
       return Math.min(hero.level, this.target);
     }
     if (this.type === 'stage') {
-      return Math.min(statistics.highestStageReached, this.target);
+      const tier = this.tier || 1;
+      const stage = statistics.highestStages?.[tier] || 0;
+      return Math.min(stage, this.target);
     }
     if (this.type === 'damage') {
       return Math.min(statistics.highestDamageDealt, this.target);
@@ -69,7 +71,7 @@ export class Quest {
     if (this.reward.item) {
       // Generate a random item of the correct rarity, tier, and player level
       const rarity = this.reward.item.rarity.toUpperCase();
-      const level = hero.highestStage;
+      const level = statistics.highestStages?.[1] || 1;
       const tier = this.reward.item.tier || 1;
       // Pick a random item type
       const itemTypes = Object.keys(ITEM_TYPES);

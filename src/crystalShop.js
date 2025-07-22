@@ -1,4 +1,4 @@
-import { dataManager, hero, options, skillTree } from './globals.js';
+import { dataManager, hero, options, skillTree, statistics } from './globals.js';
 import {
   updateResources,
   initializeSkillTreeUI,
@@ -511,7 +511,7 @@ export default class CrystalShop {
     if (config.multiple && config.costIncrement != null) {
       if (stat === 'startingStage') {
         const current = this.crystalUpgrades.startingStage || 0;
-        const cap = Math.floor(hero.highestStage * 0.75);
+        const cap = Math.floor((statistics.highestStages[1] || 0) * 0.75);
         if (current >= cap) {
           showToast(`Cannot upgrade Starting Stage above ${cap}. Reach a higher stage to unlock more.`, 'error');
           return;

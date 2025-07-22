@@ -22,7 +22,8 @@ export default class Statistics {
     this.totalItemsFound = 0;
     this.totalMaterialsFound = 0;
     this.totalTimePlayed = 0;
-    this.highestStageReached = 0;
+    this.highestStages = {};
+    for (let i = 1; i <= 12; i++) this.highestStages[i] = 0;
     this.totalTimeInFights = 0;
 
     handleSavedData(savedData, this);
@@ -46,7 +47,7 @@ export default class Statistics {
     this.totalItemsFound = 0;
     this.totalMaterialsFound = 0;
     this.totalTimePlayed = 0;
-    this.highestStageReached = 0;
+    for (let i = 1; i <= 12; i++) this.highestStages[i] = 0;
     this.totalTimeInFights = 0;
     this.updateStatisticsUI();
   }
@@ -138,10 +139,14 @@ export default class Statistics {
       materialsFound.textContent = `Total Materials Found: ${this.totalMaterialsFound || 0}`;
     }
 
-    // Highest Stage Reached
+    // Highest Stages Reached
     const highestStage = document.getElementById('stat-highest-stage');
     if (highestStage) {
-      highestStage.textContent = `Highest Stage Reached: ${this.highestStageReached || 1}`;
+      const parts = [];
+      for (let i = 1; i <= 12; i++) {
+        parts.push(`T${i}: ${this.highestStages[i] || 0}`);
+      }
+      highestStage.textContent = `Highest Stages: ${parts.join(' | ')}`;
     }
 
     // Total Time In Fights
