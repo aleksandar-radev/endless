@@ -377,6 +377,46 @@ export default class Inventory {
     return { id, qty };
   }
 
+  salvageItem(item) {
+    let removed = false;
+    const invIdx = this.inventoryItems.findIndex((i) => i && i.id === item.id);
+    if (invIdx !== -1) {
+      this.inventoryItems[invIdx] = null;
+      removed = true;
+    } else {
+      for (const [slot, equipped] of Object.entries(this.equippedItems)) {
+        if (equipped && equipped.id === item.id) {
+          delete this.equippedItems[slot];
+          removed = true;
+          break;
+        }
+      }
+    }
+    if (!removed) return;
+
+    let crystalsGained = item.rarity === 'MYTHIC' ? 1 : 0;
+    let msg = `Salvaged 1 ${item.rarity.toLowerCase()} item`;
+    if (this.salvageUpgradeMaterials) {
+      const { id, qty } = this.getItemSalvageMaterial(item);
+      this.addMaterial({ id, qty });
+      msg += `, gained ${qty} ${MATERIALS[id].name}`;
+    } else {
+      const goldGained = this.getItemSalvageValue(item);
+      if (goldGained > 0) {
+        hero.gold = (hero.gold || 0) + goldGained;
+        msg += `, gained ${goldGained} gold`;
+      }
+    }
+    if (crystalsGained > 0) {
+      hero.crystals = (hero.crystals || 0) + crystalsGained;
+      msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
+    }
+    showToast(msg, 'success');
+    updateInventoryGrid();
+    updateMaterialsGrid();
+    dataManager.saveGame();
+  }
+
   salvageItemsByRarity(rarity) {
     let salvagedItems = 0;
     let goldGained = 0;

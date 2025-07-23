@@ -752,3 +752,43 @@
   border-radius: 0.5rem;
   background: var(--bg-element);
 }
+
+/* Mobile interaction helpers */
+.inventory-item.selected {
+  outline: 2px solid #4caf50;
+}
+
+.equipment-slot.selected-slot {
+  box-shadow: 0 0 0 2px #4caf50 inset;
+}
+
+.equipment-slot.eligible-slot {
+  background-color: rgba(76, 175, 80, 0.2);
+}
+
+.equipment-slot.ineligible-slot {
+  background-color: rgba(244, 67, 54, 0.2);
+}
+
+.item-context-menu {
+  position: absolute;
+  background: var(--bg-panel);
+  border: 1px solid var(--bg-element);
+  border-radius: 0.5rem;
+  z-index: 2000;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-context-menu button {
+  background: none;
+  border: none;
+  padding: 6px 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.item-context-menu button:hover {
+  background: var(--bg-element);
+}
