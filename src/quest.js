@@ -4,7 +4,7 @@ import { hero, statistics, dataManager, inventory } from './globals.js';
 import { showToast, updateResources, updateTabIndicators } from './ui/ui.js';
 
 export class Quest {
-  constructor({ id, title, description, type, target, reward, icon, category, rarity, resource }, claimed = false) {
+  constructor({ id, title, description, type, target, reward, icon, category, rarity, resource, tier }, claimed = false) {
     this.id = id;
     this.title = title;
     this.description = description;
@@ -15,6 +15,7 @@ export class Quest {
     this.category = category;
     this.rarity = rarity;
     this.resource = resource;
+    this.tier = tier;
     this.claimed = claimed;
   }
 
@@ -40,9 +41,17 @@ export class Quest {
       return Math.min(hero.level, this.target);
     }
     if (this.type === 'stage') {
-      const tier = this.tier || 1;
-      const stage = statistics.highestStages?.[tier] || 0;
-      return Math.min(stage, this.target);
+      // Use tier from quest definition, or from reward (for legacy/compatibility), or sum all if not set
+      const tier = this.tier || (this.reward && this.reward.tier);
+      if (tier) {
+        const stage = statistics.highestStages?.[tier] || 0;
+        return Math.min(stage, this.target);
+      }
+      let totalStages = 0;
+      for (let t = 1; t <= 12; t++) {
+        totalStages += statistics.highestStages?.[t] || 0;
+      }
+      return Math.min(totalStages, this.target);
     }
     if (this.type === 'damage') {
       return Math.min(statistics.highestDamageDealt, this.target);
