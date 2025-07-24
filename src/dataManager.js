@@ -117,18 +117,29 @@ export class DataManager {
   async runMigrations(data, version) {
     let migratedData = data;
     const migrationContext = import.meta.glob('./migrations/*.js', { eager: true });
+    const compareVersions = (a, b) => {
+      const pa = a.split('.').map(Number);
+      const pb = b.split('.').map(Number);
+      for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+        const na = pa[i] || 0;
+        const nb = pb[i] || 0;
+        if (na > nb) return 1;
+        if (na < nb) return -1;
+      }
+      return 0;
+    };
     const migrations = Object.keys(migrationContext)
       .map((path) => {
         const match = path.match(/([\\/])(\d+\.\d+\.\d+)\.js$/);
         return match ? { version: match[2], path } : null;
       })
       .filter(Boolean)
-      .sort((a, b) => a.version.localeCompare(b.version, undefined, { numeric: true }));
+      .sort((a, b) => compareVersions(a.version, b.version));
 
     let currentVersion = version;
     let lastMigration = null;
     for (const migration of migrations) {
-      if (migration.version > currentVersion) {
+      if (compareVersions(migration.version, currentVersion) > 0) {
         const migrationModule = migrationContext[migration.path];
         if (typeof migrationModule.run === 'function') {
           const { data: newData, result } = await migrationModule.run(migratedData);
