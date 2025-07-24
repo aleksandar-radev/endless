@@ -55,10 +55,6 @@
   border-radius: 0.5rem;
 }
 
-.game-panel {
-  min-width: 450px;
-}
-
 .character-info {
   display: flex;
 }
@@ -111,7 +107,6 @@
   border-radius: 0.5rem;
   height: 100%;
   min-height: 100%;
-  max-height: 70vh;
   overflow-y: auto;
 }
 
