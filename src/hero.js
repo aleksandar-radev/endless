@@ -423,7 +423,7 @@ export default class Hero {
     this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * this.stats.mana;
     this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.life;
 
-    this.stats.damage = Math.floor(flatValues.damage * (1 + this.stats.totalDamagePercent + this.stats.damagePercent/100));
+    this.stats.damage = Math.floor(flatValues.damage * (1 + this.stats.totalDamagePercent + this.stats.damagePercent));
 
     // Special handling for elemental damages
     this.stats.fireDamage = Math.floor(
