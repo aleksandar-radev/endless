@@ -94,6 +94,8 @@ export function updateStatsAndAttributesUI() {
         // Special formatting for extraMaterialDropPercent
         if (key === 'extraMaterialDropPercent') {
           val = (val * 100).toFixed(1) + '%';
+        } else if (key === 'itemQuantityPercent' || key === 'itemRarityPercent') {
+          val = (val * 100).toFixed(statsDef[key].decimalPlaces) + '%';
         } else if (typeof val === 'number' && statsDef[key].decimalPlaces !== undefined) {
           val = formatNumber(val.toFixed(statsDef[key].decimalPlaces));
         } else {
@@ -235,6 +237,12 @@ export function updateStatsAndAttributesUI() {
         } else if (key === 'bonusExperiencePercent') {
           el.textContent =
             (hero.stats.bonusExperiencePercent * 100).toFixed(STATS.bonusExperiencePercent.decimalPlaces) + '%';
+        } else if (key === 'itemQuantityPercent') {
+          el.textContent =
+            (hero.stats.itemQuantityPercent * 100).toFixed(STATS.itemQuantityPercent.decimalPlaces) + '%';
+        } else if (key === 'itemRarityPercent') {
+          el.textContent =
+            (hero.stats.itemRarityPercent * 100).toFixed(STATS.itemRarityPercent.decimalPlaces) + '%';
         } else if (key === 'extraMaterialDropPercent') {
           el.textContent =
             (hero.stats.extraMaterialDropPercent * 100).toFixed(STATS.extraMaterialDropPercent.decimalPlaces) + '%';

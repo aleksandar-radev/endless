@@ -590,9 +590,13 @@ export default class Inventory {
     const boostFactor = enemyRank / maxRank;
 
     // Build weighted chances with bias: rarer items get extra weight based on enemy strength
+    const rarityBonus = hero.stats.itemRarityPercent || 0;
     const entries = Object.entries(ITEM_RARITY).map(([key, config]) => {
       const rarityIndex = RARITY_ORDER.indexOf(config.name);
-      const weight = config.chance * (1 + boostFactor * rarityIndex);
+      const weight =
+        config.chance *
+        (1 + boostFactor * rarityIndex) *
+        (1 + rarityBonus * rarityIndex);
       return { key, weight };
     });
 

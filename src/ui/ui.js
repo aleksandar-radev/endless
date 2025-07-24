@@ -471,6 +471,8 @@ export const formatStatName = (stat) => {
   if (stat === 'manaCostReductionPercent') return 'Mana Cost Reduction %';
   if (stat === 'buffDurationPercent') return 'Buff Duration %';
   if (stat === 'itemBonusesPercent') return 'Item Bonuses %';
+  if (stat === 'itemQuantityPercent') return 'Item Drop Quantity %';
+  if (stat === 'itemRarityPercent') return 'Item Drop Rarity %';
   if (stat === 'doubleDamageChance') return 'Double Damage Chance';
   if (stat === 'resurrectionChance') return 'Resurrection Chance';
   if (stat === 'reflectFireDamage') return 'Reflect Fire Damage';

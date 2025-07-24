@@ -223,6 +223,22 @@ export const MISC_STATS = {
     base: 0,
     decimalPlaces: 1,
   },
+  // ITEM QUANTITY
+  itemQuantityPercent: {
+    base: 0,
+    decimalPlaces: 0,
+    item: { min: 4, max: 13, scaling: (level) => miscScaling(level) },
+    itemTags: ['misc', 'jewelry', 'gloves'],
+    showInUI: true,
+  },
+  // ITEM RARITY
+  itemRarityPercent: {
+    base: 0,
+    decimalPlaces: 0,
+    item: { min: 4, max: 13, scaling: (level) => miscScaling(level) },
+    itemTags: ['misc', 'jewelry', 'gloves'],
+    showInUI: true,
+  },
   // Only from materials. permanent skill points
   skillPoints: {
     base: 0,

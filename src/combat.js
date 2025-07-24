@@ -199,7 +199,8 @@ export async function defeatEnemy() {
     baseExpGained = enemy.xp;
     baseGoldGained = enemy.gold;
 
-    if (enemy.rollForDrop()) {
+    const dropChance = enemy.calculateDropChance() * (1 + hero.stats.itemQuantityPercent);
+    if (Math.random() * 100 <= dropChance) {
       const itemLevel = enemy.calculateItemLevel(game.stage);
       const itemType = enemy.getRandomItemType();
       const region = getCurrentRegion();
