@@ -258,6 +258,8 @@ export function showSalvageModal(inv) {
       if (hiddenEquipment) hiddenEquipment.style.display = '';
       placeholder.parentNode.insertBefore(inventoryTab, placeholder);
       placeholder.remove();
+      // Force UI refresh to fix equipped items disappearing
+      updateInventoryGrid(inv);
     },
   });
 
