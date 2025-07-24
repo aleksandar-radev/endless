@@ -1,9 +1,6 @@
-import { hero, dataManager, setGlobals, prestige as prestigeState, game, options } from './globals.js';
-import { PRESTIGE_BONUSES } from './constants/prestigeBonuses.js';
-import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
-import { updateResources, showToast, updateStageUI, formatStatName } from './ui/ui.js';
-import Enemy from './enemy.js';
-import { updateRegionUI } from './region.js';
+import { hero, dataManager, setGlobals, prestige as prestigeState, options } from './globals.js';
+import { PRESTIGE_BONUSES, STARTING_CRYSTALS_BONUS } from './constants/prestigeBonuses.js';
+import { formatStatName } from './ui/ui.js';
 
 const LEVEL_REQUIREMENT = 500;
 const LEVEL_REQUIREMENT_INCREASE = 100;
@@ -65,12 +62,19 @@ export default class Prestige {
 
   generateCards(count = 3, bonusesPerCard = 3) {
     // If there are pending cards, return them
-    if (this.pendingCards && Array.isArray(this.pendingCards) && this.pendingCards.length === count) {
+    if (
+      this.pendingCards &&
+      Array.isArray(this.pendingCards) &&
+      this.pendingCards.length === count
+    ) {
       return this.pendingCards;
     }
     // Otherwise, generate new cards and save them
     const cards = [];
     for (let i = 0; i < count; i++) {
+      const startingCrystals = Math.floor(
+        Math.random() * (STARTING_CRYSTALS_BONUS.max - STARTING_CRYSTALS_BONUS.min + 1),
+      ) + STARTING_CRYSTALS_BONUS.min;
       const shuffled = [...PRESTIGE_BONUSES].sort(() => 0.5 - Math.random());
       const picked = shuffled.slice(0, bonusesPerCard);
       const card = { bonuses: {}, descriptions: [] };
@@ -87,6 +91,10 @@ export default class Prestige {
         }
         card.descriptions.push(desc);
       });
+      card.bonuses[STARTING_CRYSTALS_BONUS.stat] = startingCrystals;
+      card.descriptions.push(
+        `${formatStatName(STARTING_CRYSTALS_BONUS.stat)}: +${startingCrystals}`,
+      );
       cards.push(card);
     }
     this.pendingCards = cards;
@@ -114,19 +122,23 @@ export default class Prestige {
     Object.entries(combined).forEach(([stat, val]) => {
       hero.permaStats[stat] = (hero.permaStats[stat] || 0) + val;
     });
+    if (combined.startingCrystals) {
+      hero.crystals = combined.startingCrystals;
+    }
 
     dataManager.saveGame();
     window.location.reload();
 
-    game.currentEnemy = new Enemy(game.stage);
-    hero.recalculateFromAttributes();
-    updateResources();
-    updateStageUI();
-    updateRegionUI();
-    updateStatsAndAttributesUI();
-    showToast('Prestige complete!');
-    dataManager.saveGame();
-    // Clear pending cards after prestige
-    this.pendingCards = null;
+    // game.currentEnemy = new Enemy(game.stage);
+    // hero.recalculateFromAttributes();
+    // updateResources();
+    // updateStageUI();
+    // updateRegionUI();
+    // updateStatsAndAttributesUI();
+    // showToast('Prestige complete!');
+    // dataManager.saveGame();
+    // // Clear pending cards after prestige
+    // this.pendingCards = null;
+    // this.pendingStartingCrystals = null;
   }
 }

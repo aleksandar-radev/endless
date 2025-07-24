@@ -50,3 +50,9 @@ export const PRESTIGE_BONUSES = [
   //   max: 0.4,
   // },
 ];
+
+export const STARTING_CRYSTALS_BONUS = {
+  stat: 'startingCrystals',
+  min: 50,
+  max: 150,
+};
