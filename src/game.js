@@ -23,8 +23,8 @@ class Game {
   }
 
   incrementStage() {
-    const stageSkipLevel = crystalShop.crystalUpgrades?.stageSkip || 0;
-    const skipAmount = 1 + stageSkipLevel;
+    // Use the stageSkip option if set, else fall back to crystalShop upgrade
+    let skipAmount = 1 + (options.stageSkip || 0);
     this.stage += skipAmount;
 
     const region = getCurrentRegion();

@@ -17,6 +17,8 @@ export class Options {
     // Add showEnemyStats option, default to false
     this.showEnemyStats = data.showEnemyStats ?? false;
     this.resetRequired = data.resetRequired ?? null;
+    // Add stageSkip option, default to 0
+    this.stageSkip = data.stageSkip || 0;
   }
 
   /**
@@ -41,6 +43,9 @@ export class Options {
     // --- Starting Stage Option ---
     container.appendChild(this._createStartingStageOption());
 
+    // --- Stage Skip Option ---
+    container.appendChild(this._createStageSkipOption());
+
     // --- Changelog & Upcoming buttons row ---
     const changelogRow = document.createElement('div');
     changelogRow.className = 'changelog-row';
@@ -64,6 +69,79 @@ export class Options {
 
     container.appendChild(this._createResetButton());
     optionsTab.appendChild(container);
+  }
+  /**
+   * Creates the stage skip number input UI.
+   */
+  _createStageSkipOption() {
+    let max = crystalShop.crystalUpgrades?.stageSkip || 0;
+    const value = this.stageSkip !== null ? this.stageSkip : 0;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="stage-skip-input" class="stage-skip-label">Stage Skip per Kill:</label>
+      <input
+        type="number"
+        id="stage-skip-input"
+        class="stage-skip-input"
+        min="0"
+        max="${max}"
+        value="${value}"
+        title="Max: ${max} (based on crystal upgrades)"
+      />
+      <button class="apply-btn" type="button">Apply</button>
+    `;
+
+    const input = wrapper.querySelector('input');
+    const applyBtn = wrapper.querySelector('button');
+
+    // Store refs for update
+    this._stageSkipInput = input;
+    this._stageSkipWrapper = wrapper;
+
+    applyBtn.onmouseenter = () => applyBtn.classList.add('hover');
+    applyBtn.onmouseleave = () => applyBtn.classList.remove('hover');
+
+    input.addEventListener('input', () => {
+      let val = parseInt(input.value, 10);
+      let max = crystalShop.crystalUpgrades?.stageSkip || 0;
+      if (isNaN(val) || val < 0) val = 0;
+      if (val > max) val = max;
+      input.value = val;
+    });
+
+    applyBtn.onclick = () => {
+      let val = parseInt(input.value, 10);
+      let max = crystalShop.crystalUpgrades?.stageSkip || 0;
+      if (isNaN(val) || val < 0) val = 0;
+      if (val > max) val = max;
+
+      this.stageSkip = val;
+      dataManager.saveGame();
+      showToast('Stage skip option applied!', 'success');
+    };
+
+    // Initial update to ensure correct max/value
+    this.updateStageSkipOption();
+
+    return wrapper;
+  }
+
+  /**
+   * Updates the stage skip input's max, title, and value if needed.
+   * Call this whenever crystalShop.crystalUpgrades.stageSkip changes.
+   */
+  updateStageSkipOption() {
+    if (!this._stageSkipInput) return;
+    const max = crystalShop.crystalUpgrades?.stageSkip || 0;
+    this._stageSkipInput.max = max;
+    this._stageSkipInput.title = `Max: ${max} (based on crystal upgrades)`;
+
+    let val = parseInt(this._stageSkipInput.value, 10);
+    if (isNaN(val) || val < 0) val = 0;
+    if (val > max) val = max;
+    this._stageSkipInput.value = val;
   }
 
   /**

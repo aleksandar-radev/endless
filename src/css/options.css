@@ -1,3 +1,25 @@
+.stage-skip-label {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.stage-skip-input {
+  background: #232b3a;
+  color: #fff;
+  border: 1px solid #3b82f6;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 1.1em;
+  width: 80px;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.stage-skip-input:focus {
+  border: 1.5px solid #60a5fa;
+  box-shadow: 0 0 0 2px #3b82f633;
+  outline: none;
+}
+
 .options-container {
   display: flex;
   flex-direction: column;
@@ -8,8 +30,6 @@
 .options-container>#reset-progress {
   margin-top: auto;
 }
-
-
 
 .cloud-save-bar {
   display: flex;
