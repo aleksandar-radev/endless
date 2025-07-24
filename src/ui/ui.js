@@ -20,6 +20,16 @@ let tabIndicatorManager = null;
 
 const html = String.raw;
 
+// Format numbers with thousands separators.
+// Accepts numbers or numeric strings and returns a string with the given
+// separator (default comma) applied to the integer part.
+export function formatNumber(value, separator = ',') {
+  if (value === null || value === undefined) return value;
+  const parts = value.toString().split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, separator);
+  return parts.join('.');
+}
+
 export function initializeUI() {
   game.activeTab = 'stats'; // Match the default active tab in HTML
 
@@ -151,83 +161,83 @@ export function updateResources() {
   }
 
   // Update ghost icon (total souls)
-  document.getElementById('souls').textContent = hero.souls || 0;
-  document.getElementById('crystals').textContent = hero.crystals || 0;
+  document.getElementById('souls').textContent = formatNumber(hero.souls || 0);
+  document.getElementById('crystals').textContent = formatNumber(hero.crystals || 0);
 
   // Update other stats
-  document.getElementById('gold').textContent = hero.gold || 0;
+  document.getElementById('gold').textContent = formatNumber(hero.gold || 0);
 }
 
 export function updatePlayerLife() {
   const stats = hero.stats;
   const lifePercentage = (stats.currentLife / stats.life) * 100;
   document.getElementById('life-fill').style.width = `${lifePercentage}%`;
-  document.getElementById('life-text').textContent = `${Math.max(0, Math.floor(stats.currentLife))}/${Math.floor(
-    stats.life,
-  )}`;
+  document.getElementById('life-text').textContent = `${formatNumber(
+    Math.max(0, Math.floor(stats.currentLife)),
+  )}/${formatNumber(Math.floor(stats.life))}`;
 
   const manaPercentage = (stats.currentMana / stats.mana) * 100;
   document.getElementById('mana-fill').style.width = `${manaPercentage}%`;
-  document.getElementById('mana-text').textContent = `${Math.max(0, Math.floor(stats.currentMana))}/${Math.floor(
-    stats.mana,
-  )}`;
+  document.getElementById('mana-text').textContent = `${formatNumber(
+    Math.max(0, Math.floor(stats.currentMana)),
+  )}/${formatNumber(Math.floor(stats.mana))}`;
 }
 
 export function updateEnemyStats() {
   const enemy = game.currentEnemy;
   const lifePercentage = (enemy.currentLife / enemy.life) * 100;
   document.getElementById('enemy-life-fill').style.width = `${lifePercentage}%`;
-  document.getElementById('enemy-life-text').textContent = `${Math.max(0, Math.floor(enemy.currentLife))}/${Math.floor(
-    enemy.life,
-  )}`;
+  document.getElementById('enemy-life-text').textContent = `${formatNumber(
+    Math.max(0, Math.floor(enemy.currentLife)),
+  )}/${formatNumber(Math.floor(enemy.life))}`;
 
   // Main stats
   const dmg = document.getElementById('enemy-damage-value');
-  if (dmg) dmg.textContent = Math.floor(enemy.damage);
+  if (dmg) dmg.textContent = formatNumber(Math.floor(enemy.damage));
   const fireDmg = document.getElementById('enemy-fire-damage-value');
-  if (fireDmg) fireDmg.textContent = Math.floor(enemy.fireDamage || 0);
+  if (fireDmg) fireDmg.textContent = formatNumber(Math.floor(enemy.fireDamage || 0));
   const coldDmg = document.getElementById('enemy-cold-damage-value');
-  if (coldDmg) coldDmg.textContent = Math.floor(enemy.coldDamage || 0);
+  if (coldDmg) coldDmg.textContent = formatNumber(Math.floor(enemy.coldDamage || 0));
   const airDmg = document.getElementById('enemy-air-damage-value');
-  if (airDmg) airDmg.textContent = Math.floor(enemy.airDamage || 0);
+  if (airDmg) airDmg.textContent = formatNumber(Math.floor(enemy.airDamage || 0));
   const earthDmg = document.getElementById('enemy-earth-damage-value');
-  if (earthDmg) earthDmg.textContent = Math.floor(enemy.earthDamage || 0);
+  if (earthDmg) earthDmg.textContent = formatNumber(Math.floor(enemy.earthDamage || 0));
   const lightningDmg = document.getElementById('enemy-lightning-damage-value');
-  if (lightningDmg) lightningDmg.textContent = Math.floor(enemy.lightningDamage || 0);
+  if (lightningDmg) lightningDmg.textContent = formatNumber(Math.floor(enemy.lightningDamage || 0));
   const waterDmg = document.getElementById('enemy-water-damage-value');
-  if (waterDmg) waterDmg.textContent = Math.floor(enemy.waterDamage || 0);
+  if (waterDmg) waterDmg.textContent = formatNumber(Math.floor(enemy.waterDamage || 0));
 
   const armor = document.getElementById('enemy-armor-value');
   if (armor) {
   // Use PoE2 formula: reduction = armor / (armor + 10 * damage)
     const reduction = calculateArmorReduction(enemy.armor, hero.stats.damage);
-    armor.textContent = Math.floor(enemy.armor || 0) + ` (${Math.floor(reduction)}%)`;
+    armor.textContent = `${formatNumber(Math.floor(enemy.armor || 0))} (${Math.floor(reduction)}%)`;
   }
   const evasion = document.getElementById('enemy-evasion-value');
   if (evasion) {
     const reduction = calculateEvasionChance(enemy.evasion, hero.stats.attackRating);
-    evasion.textContent = Math.floor(enemy.evasion || 0) + ` (${Math.floor(reduction)}%)`;
+    evasion.textContent = `${formatNumber(Math.floor(enemy.evasion || 0))} (${Math.floor(reduction)}%)`;
   }
   const atkRating = document.getElementById('enemy-attack-rating-value');
   if (atkRating) {
     // Show enemy attack rating and their hit chance against the player
     const hitChance = calculateHitChance(enemy.attackRating, hero.stats.evasion);
-    atkRating.textContent = Math.floor(enemy.attackRating || 0) + ` (${Math.floor(hitChance)}%)`;
+    atkRating.textContent = `${formatNumber(Math.floor(enemy.attackRating || 0))} (${Math.floor(hitChance)}%)`;
   }
   const atkSpeed = document.getElementById('enemy-attack-speed-value');
-  if (atkSpeed) atkSpeed.textContent = (enemy.attackSpeed || 0).toFixed(2);
+  if (atkSpeed) atkSpeed.textContent = formatNumber((enemy.attackSpeed || 0).toFixed(2));
   const fireRes = document.getElementById('enemy-fire-resistance-value');
-  if (fireRes) fireRes.textContent = Math.floor(enemy.fireResistance || 0);
+  if (fireRes) fireRes.textContent = formatNumber(Math.floor(enemy.fireResistance || 0));
   const coldRes = document.getElementById('enemy-cold-resistance-value');
-  if (coldRes) coldRes.textContent = Math.floor(enemy.coldResistance || 0);
+  if (coldRes) coldRes.textContent = formatNumber(Math.floor(enemy.coldResistance || 0));
   const airRes = document.getElementById('enemy-air-resistance-value');
-  if (airRes) airRes.textContent = Math.floor(enemy.airResistance || 0);
+  if (airRes) airRes.textContent = formatNumber(Math.floor(enemy.airResistance || 0));
   const earthRes = document.getElementById('enemy-earth-resistance-value');
-  if (earthRes) earthRes.textContent = Math.floor(enemy.earthResistance || 0);
+  if (earthRes) earthRes.textContent = formatNumber(Math.floor(enemy.earthResistance || 0));
   const lightningRes = document.getElementById('enemy-lightning-resistance-value');
-  if (lightningRes) lightningRes.textContent = Math.floor(enemy.lightningResistance || 0);
+  if (lightningRes) lightningRes.textContent = formatNumber(Math.floor(enemy.lightningResistance || 0));
   const waterRes = document.getElementById('enemy-water-resistance-value');
-  if (waterRes) waterRes.textContent = Math.floor(enemy.waterResistance || 0);
+  if (waterRes) waterRes.textContent = formatNumber(Math.floor(enemy.waterResistance || 0));
 
   setEnemyName();
   if (game.fightMode === 'explore') {

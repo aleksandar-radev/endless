@@ -5,7 +5,7 @@ const html = String.raw;
 import { buildings, dataManager, hero } from '../globals.js';
 import { Building } from '../building.js';
 import { createModal, closeModal } from './modal.js';
-import { showConfirmDialog, updateResources } from './ui.js';
+import { showConfirmDialog, updateResources, formatNumber } from './ui.js';
 
 function createBuildingCard(building) {
   const el = document.createElement('div');
@@ -17,7 +17,7 @@ function createBuildingCard(building) {
     <div class="building-info">
       <div class="building-name">${building.name}</div>
       <div class="building-effect">${building.formatEffect()}</div>
-      <div class="building-earned">Total Earned: ${building.totalEarned} ${building.effect?.type || ''}</div>
+      <div class="building-earned">Total Earned: ${formatNumber(building.totalEarned)} ${building.effect?.type || ''}</div>
     </div>
   `;
   return el;
@@ -67,14 +67,14 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
           </div>
         </div>
         <div class="building-info-modal-body">
-          <div>Level: <b>${building.level}</b> / ${building.maxLevel}</div>
+          <div>Level: <b>${formatNumber(building.level)}</b> / ${formatNumber(building.maxLevel)}</div>
           <div>Current Bonus: <b>${building.formatEffect()}</b></div>
-          <div>Upgrade Amount: <b>${upgradeAmount}</b></div>
+          <div>Upgrade Amount: <b>${formatNumber(upgradeAmount)}</b></div>
           <div>Total Upgrade Cost: <b>${Building.formatCost(totalCost)}</b></div>
           <div>
             Bonus After Upgrade:
             <b>${building.formatEffect(building.level + upgradeAmount)}</b>
-            <span style="color:#aaa;font-size:0.95em;">(+${totalBonus} ${building.effect?.type || ''})</span>
+            <span style="color:#aaa;font-size:0.95em;">(+${formatNumber(totalBonus)} ${building.effect?.type || ''})</span>
           </div>
         </div>
         <div class="building-info-modal-upgrade">
@@ -424,7 +424,7 @@ export function showOfflineBonusesModal(bonuses, onCollect) {
         ${bonuses
     .map(
       (b) =>
-        `<li style='margin:10px 0;font-size:1.1em;'>${b.icon || ''} <b>${b.name}</b>: +${b.amount} ${
+        `<li style='margin:10px 0;font-size:1.1em;'>${b.icon || ''} <b>${b.name}</b>: +${formatNumber(b.amount)} ${
           b.type
         } <span style='color:#aaa;font-size:0.95em;'>(for ${b.times} ${b.interval}${
           b.times > 1 ? 's' : ''

@@ -1,7 +1,7 @@
 // Game logic and persistent state for buildings
 import { buildingsData } from './constants/buildings.js';
 import { dataManager, hero } from './globals.js';
-import { updateResources } from './ui/ui.js';
+import { updateResources, formatNumber } from './ui/ui.js';
 import { showOfflineBonusesModal } from './ui/buildingUi.js';
 import { fetchTrustedUtcTime } from './api.js';
 import { getTimeNow } from './common.js';
@@ -64,7 +64,7 @@ export class Building {
   static formatCost(costObj) {
     if (!costObj || typeof costObj !== 'object') return '';
     return Object.entries(costObj)
-      .map(([type, value]) => `${value} ${type}`)
+      .map(([type, value]) => `${formatNumber(value)} ${type}`)
       .join(', ');
   }
 

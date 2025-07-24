@@ -1,4 +1,4 @@
-import { formatStatName, updateResources } from './ui/ui.js';
+import { formatStatName, updateResources, formatNumber } from './ui/ui.js';
 
 import { showToast } from './ui/ui.js';
 import { hero, dataManager } from './globals.js';
@@ -148,9 +148,9 @@ export default class Training {
     // Set title and base info
     const m = this.modal;
     m.querySelector('.modal-title').textContent = formatStatName(stat);
-    m.querySelector('.modal-level').textContent = this.upgradeLevels[stat] || 0;
+    m.querySelector('.modal-level').textContent = formatNumber(this.upgradeLevels[stat] || 0);
     m.querySelector('.modal-max-level').textContent =
-      trainingConfig?.maxLevel === Infinity ? '∞' : trainingConfig.maxLevel;
+      trainingConfig?.maxLevel === Infinity ? '∞' : formatNumber(trainingConfig.maxLevel);
     m.querySelector('.modal-bonus').textContent = this.getBonusText(
       stat,
       STATS[stat].training,
@@ -227,13 +227,13 @@ export default class Training {
     const decimals = STATS[stat].decimalPlaces || 0;
 
     // --- Update ALL modal fields ---
-    this.modal.querySelector('.modal-qty').textContent = qty;
-    this.modal.querySelector('.modal-total-cost').textContent = totalCost;
-    this.modal.querySelector('.modal-total-bonus').textContent = `+${bonusValue.toFixed(decimals)} ${formatStatName(
-      stat,
-    )}`;
-    this.modal.querySelector('.modal-level').textContent = baseLevel;
-    this.modal.querySelector('.modal-max-level').textContent = maxLevel === Infinity ? '∞' : maxLevel;
+    this.modal.querySelector('.modal-qty').textContent = formatNumber(qty);
+    this.modal.querySelector('.modal-total-cost').textContent = formatNumber(totalCost);
+    this.modal.querySelector('.modal-total-bonus').textContent = `+${formatNumber(
+      bonusValue.toFixed(decimals),
+    )} ${formatStatName(stat)}`;
+    this.modal.querySelector('.modal-level').textContent = formatNumber(baseLevel);
+    this.modal.querySelector('.modal-max-level').textContent = maxLevel === Infinity ? '∞' : formatNumber(maxLevel);
     this.modal.querySelector('.modal-bonus').textContent = this.getBonusText(stat, config, baseLevel);
     this.modal.querySelector('.modal-next-bonus').textContent = this.getBonusText(stat, config, baseLevel + 1);
 
@@ -260,7 +260,7 @@ export default class Training {
 
     return html`
       <button data-stat="${stat}" ${isMaxed ? ' disabled' : ''}>
-        <span class="upgrade-name">${formatStatName(stat)} (Lvl ${level}${isMaxed ? ' / Max' : ''})</span>
+        <span class="upgrade-name">${formatStatName(stat)} (Lvl ${formatNumber(level)}${isMaxed ? ' / Max' : ''})</span>
         <span class="upgrade-bonus">${bonus}${isMaxed ? ' <strong>Max</strong>' : ''}</span>
       </button>
     `;
@@ -268,7 +268,7 @@ export default class Training {
   getBonusText(stat, config, level) {
     const value = config.bonus * level;
     const decimals = STATS[stat].decimalPlaces || 0;
-    const formattedValue = value.toFixed(decimals);
+    const formattedValue = formatNumber(value.toFixed(decimals));
     return `+${formattedValue}${config.suffix || ''} ${formatStatName(stat)}`;
   }
 

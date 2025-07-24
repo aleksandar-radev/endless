@@ -1,4 +1,5 @@
 import { handleSavedData } from './functions.js';
+import { formatNumber } from './ui/ui.js';
 
 /**
  * @class Statistics
@@ -85,7 +86,7 @@ export default class Statistics {
     // Bosses Killed
     const bossesKilledElem = document.getElementById('stat-bosses-killed');
     if (bossesKilledElem) {
-      bossesKilledElem.textContent = `Bosses Defeated: ${this.bossesKilled}`;
+      bossesKilledElem.textContent = `Bosses Defeated: ${formatNumber(this.bossesKilled)}`;
     }
 
     // Total Time Played (resets on reset)
@@ -100,43 +101,43 @@ export default class Statistics {
     // Total Enemies Killed
     const enemiesKilled = document.getElementById('stat-enemies-killed');
     if (enemiesKilled) {
-      enemiesKilled.textContent = `Total Enemies Killed: ${this.enemiesKilled.total || 0}`;
+      enemiesKilled.textContent = `Total Enemies Killed: ${formatNumber(this.enemiesKilled.total || 0)}`;
     }
 
     // Highest Damage Dealt
     const highestDamage = document.getElementById('stat-highest-damage');
     if (highestDamage) {
-      highestDamage.textContent = `Highest Damage Dealt: ${Math.floor(this.highestDamageDealt) || 0}`;
+      highestDamage.textContent = `Highest Damage Dealt: ${formatNumber(Math.floor(this.highestDamageDealt) || 0)}`;
     }
 
     // Total Gold Earned
     const totalGold = document.getElementById('stat-total-gold');
     if (totalGold) {
-      totalGold.textContent = `Total Gold Earned: ${this.totalGoldEarned || 0}`;
+      totalGold.textContent = `Total Gold Earned: ${formatNumber(this.totalGoldEarned || 0)}`;
     }
 
     // Total Crystals Earned
     const totalCrystals = document.getElementById('stat-total-crystals');
     if (totalCrystals) {
-      totalCrystals.textContent = `Total Crystals Earned: ${this.totalCrystalsEarned || 0}`;
+      totalCrystals.textContent = `Total Crystals Earned: ${formatNumber(this.totalCrystalsEarned || 0)}`;
     }
 
     // Total Souls Earned
     const totalSouls = document.getElementById('stat-total-souls');
     if (totalSouls) {
-      totalSouls.textContent = `Total Souls Earned: ${this.totalSoulsEarned || 0}`;
+      totalSouls.textContent = `Total Souls Earned: ${formatNumber(this.totalSoulsEarned || 0)}`;
     }
 
     // Total Items Found
     const itemsFound = document.getElementById('stat-items-found');
     if (itemsFound) {
-      itemsFound.textContent = `Total Items Found: ${this.totalItemsFound || 0}`;
+      itemsFound.textContent = `Total Items Found: ${formatNumber(this.totalItemsFound || 0)}`;
     }
 
     // Total Materials Found
     const materialsFound = document.getElementById('stat-materials-found');
     if (materialsFound) {
-      materialsFound.textContent = `Total Materials Found: ${this.totalMaterialsFound || 0}`;
+      materialsFound.textContent = `Total Materials Found: ${formatNumber(this.totalMaterialsFound || 0)}`;
     }
 
     // Highest Stages Reached
@@ -146,7 +147,7 @@ export default class Statistics {
       for (let i = 1; i <= 12; i++) {
         const span = document.createElement('span');
         span.className = 'stage-value';
-        span.textContent = `T${i}: ${this.highestStages[i] || 0}`;
+        span.textContent = `T${i}: ${formatNumber(this.highestStages[i] || 0)}`;
         parts.push(span);
         if (i < 12) {
           const sep = document.createElement('span');

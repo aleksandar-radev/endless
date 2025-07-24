@@ -1,6 +1,6 @@
 import { prestige } from '../globals.js';
 import { createModal, closeModal } from './modal.js';
-import { formatStatName, showToast } from './ui.js';
+import { formatStatName, showToast, formatNumber } from './ui.js';
 
 const html = String.raw;
 
@@ -111,5 +111,5 @@ export function formatPrestigeBonus(stat, value) {
   if (stat.endsWith('Percent')) {
     return `+${(value * 100).toFixed(1)}%`;
   }
-  return `+${Math.round(value)}`;
+  return `+${formatNumber(Math.round(value))}`;
 }
