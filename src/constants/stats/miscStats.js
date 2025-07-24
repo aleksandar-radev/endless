@@ -191,7 +191,7 @@ export const MISC_STATS = {
   bonusGoldPercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 10, max: 40, scaling: (level) => miscScaling(level) },
+    item: { min: 5, max: 20, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry'],
     showInUI: true,
   },
@@ -199,7 +199,7 @@ export const MISC_STATS = {
   bonusExperiencePercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 15, max: 30, scaling: (level) => miscScaling(level) },
+    item: { min: 5, max: 15, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry'],
     showInUI: true,
   },
