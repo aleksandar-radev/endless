@@ -411,9 +411,9 @@ export default class Inventory {
           this.addMaterial({ id, qty });
         });
       } else if (goldGained > 0) {
-        hero.gold = (hero.gold || 0) + goldGained;
+        hero.gainGold(goldGained);
       }
-      if (crystalsGained > 0) hero.crystals = (hero.crystals || 0) + crystalsGained;
+      if (crystalsGained > 0) hero.gainCrystals(crystalsGained);
       let msg = `Salvaged ${salvagedItems} ${rarity.toLowerCase()} items`;
       if (this.salvageUpgradeMaterials) {
         const parts = Object.entries(matsGained).map(

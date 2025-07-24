@@ -345,12 +345,12 @@ export function showSalvageModal(inv) {
       } else {
         let goldGained = inventory.getItemSalvageValue(item);
         if (goldGained > 0) {
-          hero.gold = (hero.gold || 0) + goldGained;
+          hero.gainGold(goldGained);
           msg += `, gained ${goldGained} gold`;
         }
       }
       if (crystalsGained > 0) {
-        hero.crystals = (hero.crystals || 0) + crystalsGained;
+        hero.gainCrystals(crystalsGained);
         msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
       }
       showToast(msg, 'success');
@@ -479,12 +479,12 @@ export function setupDragAndDrop() {
         } else {
           let goldGained = inventory.getItemSalvageValue(item);
           if (goldGained > 0) {
-            hero.gold = (hero.gold || 0) + goldGained;
+            hero.gainGold(goldGained);
             msg += `, gained ${goldGained} gold`;
           }
         }
         if (crystalsGained > 0) {
-          hero.crystals = (hero.crystals || 0) + crystalsGained;
+          hero.gainCrystals(crystalsGained);
           msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
         }
         showToast(msg, 'success');
