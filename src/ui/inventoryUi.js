@@ -2,8 +2,12 @@ import { hero, inventory, dataManager, crystalShop } from '../globals.js';
 import { ITEM_SLOTS, MATERIALS_SLOTS, PERSISTENT_SLOTS } from '../inventory.js';
 import { MATERIALS } from '../constants/materials.js';
 import { hideTooltip, positionTooltip, showToast, showTooltip } from '../ui/ui.js';
-import { ITEM_RARITY, RARITY_ORDER, SLOT_REQUIREMENTS } from '../constants/items.js';
+import { ITEM_RARITY, RARITY_ORDER, SLOT_REQUIREMENTS, ITEM_TYPES } from '../constants/items.js';
 import { closeModal, createModal } from './modal.js';
+
+let selectedItemEl = null;
+let selectedSlotEl = null;
+let awaitingSlot = false;
 
 const html = String.raw;
 
@@ -39,6 +43,7 @@ export function initializeInventoryUI(inv) {
         <button id="materials-tab" class="inventory-btn">Materials</button>
       </div>
       <div id="sort-inventory" class="inventory-btn">Sort Items</div>
+      <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn" style="display:none;">Equip</button>
       <button id="open-salvage-modal" class="inventory-btn">Salvage</button>
     </div>
   `;
@@ -67,6 +72,8 @@ export function initializeInventoryUI(inv) {
     gridContainer.appendChild(cell);
   }
   updateInventoryGrid(inv);
+
+  const mobileEquipBtn = document.getElementById('mobile-equip-btn');
 
   const sortBtn = document.getElementById('sort-inventory');
   const itemsTab = document.getElementById('items-tab');
@@ -125,6 +132,24 @@ export function initializeInventoryUI(inv) {
   // Salvage modal logic
   openSalvageModalBtn.addEventListener('click', () => {
     showSalvageModal(inv);
+  });
+
+  mobileEquipBtn.addEventListener('click', () => {
+    if (!selectedItemEl) return;
+    awaitingSlot = true;
+    const itemData = inventory.getItemById(selectedItemEl.dataset.itemId);
+    highlightEligibleSlots(itemData);
+  });
+
+  document.addEventListener('click', (e) => {
+    if (
+      !e.target.closest('.inventory-item') &&
+      !e.target.closest('.equipment-slot') &&
+      !e.target.closest('#item-context-menu') &&
+      e.target.id !== 'mobile-equip-btn'
+    ) {
+      clearMobileSelection();
+    }
   });
 }
 
@@ -605,6 +630,9 @@ export function setupEquipmentSlots() {
   slots.forEach((slot) => {
     slot.addEventListener('dragover', handleDragOver.bind(inventory));
     slot.addEventListener('drop', handleDrop.bind(inventory));
+    slot.addEventListener('click', () => {
+      handleSlotTap(slot);
+    });
   });
 }
 
@@ -728,6 +756,25 @@ export function setupItemDragAndTooltip() {
 
     item.addEventListener('mousemove', positionTooltip);
     item.addEventListener('mouseleave', hideTooltip);
+
+    item.addEventListener('click', () => {
+      handleItemTap(item);
+    });
+
+    let pressTimer;
+    item.addEventListener('touchstart', (e) => {
+      pressTimer = setTimeout(() => {
+        const touch = e.touches[0];
+        openItemContextMenu(item, touch.clientX, touch.clientY);
+      }, 600);
+    });
+    item.addEventListener('touchend', () => {
+      clearTimeout(pressTimer);
+    });
+    item.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      openItemContextMenu(item, e.clientX, e.clientY);
+    });
   });
 }
 
@@ -848,4 +895,147 @@ export function sortInventory() {
   // Update the UI
   updateInventoryGrid();
   dataManager.saveGame();
+}
+
+function clearSlotHighlights() {
+  document.querySelectorAll('.equipment-slot').forEach((slot) => {
+    slot.classList.remove('eligible-slot', 'ineligible-slot', 'selected-slot');
+  });
+}
+
+function showEquipButton(show) {
+  const btn = document.getElementById('mobile-equip-btn');
+  if (btn) btn.style.display = show ? '' : 'none';
+}
+
+export function handleItemTap(itemEl) {
+  const itemData = inventory.getItemById(itemEl.dataset.itemId);
+  if (selectedSlotEl) {
+    if (inventory.canEquipInSlot(itemData, selectedSlotEl.dataset.slot)) {
+      inventory.equipItem(itemData, selectedSlotEl.dataset.slot);
+      hero.recalculateFromAttributes();
+      updateInventoryGrid();
+    }
+    clearMobileSelection();
+    return;
+  }
+  if (selectedItemEl === itemEl && !awaitingSlot) {
+    clearMobileSelection();
+    return;
+  }
+  clearMobileSelection();
+  selectedItemEl = itemEl;
+  itemEl.classList.add('selected');
+  showEquipButton(true);
+}
+
+export function handleSlotTap(slotEl) {
+  if (awaitingSlot && selectedItemEl) {
+    const itemData = inventory.getItemById(selectedItemEl.dataset.itemId);
+    if (inventory.canEquipInSlot(itemData, slotEl.dataset.slot)) {
+      inventory.equipItem(itemData, slotEl.dataset.slot);
+      hero.recalculateFromAttributes();
+      updateInventoryGrid();
+    }
+    clearMobileSelection();
+    return;
+  }
+  if (selectedSlotEl === slotEl) {
+    clearMobileSelection();
+    return;
+  }
+  clearMobileSelection();
+  selectedSlotEl = slotEl;
+  slotEl.classList.add('selected-slot');
+}
+
+function clearMobileSelection() {
+  if (selectedItemEl) selectedItemEl.classList.remove('selected');
+  if (selectedSlotEl) selectedSlotEl.classList.remove('selected-slot');
+  selectedItemEl = null;
+  selectedSlotEl = null;
+  awaitingSlot = false;
+  clearSlotHighlights();
+  showEquipButton(false);
+  closeItemContextMenu();
+}
+
+function highlightEligibleSlots(itemData) {
+  clearSlotHighlights();
+  document.querySelectorAll('.equipment-slot').forEach((slot) => {
+    if (inventory.canEquipInSlot(itemData, slot.dataset.slot)) {
+      slot.classList.add('eligible-slot');
+    } else {
+      slot.classList.add('ineligible-slot');
+    }
+  });
+}
+
+function openItemContextMenu(itemEl, x, y) {
+  closeItemContextMenu();
+  const itemData = inventory.getItemById(itemEl.dataset.itemId);
+  const menu = document.createElement('div');
+  menu.id = 'item-context-menu';
+  menu.className = 'item-context-menu';
+  menu.style.left = `${x}px`;
+  menu.style.top = `${y}px`;
+  menu.innerHTML = `
+    <button data-action="equip">Equip</button>
+    <button data-action="inspect">Inspect</button>
+    <button data-action="salvage">Salvage</button>
+  `;
+  document.body.appendChild(menu);
+
+  menu.querySelector('[data-action="equip"]').onclick = () => {
+    if (itemData.type === ITEM_TYPES.RING) {
+      clearMobileSelection();
+      selectedItemEl = itemEl;
+      itemEl.classList.add('selected');
+      showEquipButton(true);
+      awaitingSlot = true;
+      highlightEligibleSlots(itemData);
+    } else {
+      const slot = Object.keys(SLOT_REQUIREMENTS).find((s) =>
+        SLOT_REQUIREMENTS[s].includes(itemData.type),
+      );
+      if (slot) {
+        inventory.equipItem(itemData, slot);
+        hero.recalculateFromAttributes();
+        updateInventoryGrid();
+      }
+      clearMobileSelection();
+    }
+    closeItemContextMenu();
+  };
+  menu.querySelector('[data-action="inspect"]').onclick = () => {
+    const dialog = createModal({
+      id: 'inspect-item',
+      className: 'inventory-modal',
+      content: `<div class="inventory-modal-content"><button class="modal-close">&times;</button>${itemData.getTooltipHTML()}</div>`,
+    });
+    dialog.querySelector('.modal-close').onclick = () => closeModal('inspect-item');
+    closeItemContextMenu();
+  };
+  menu.querySelector('[data-action="salvage"]').onclick = () => {
+    inventory.salvageItem(itemData);
+    closeItemContextMenu();
+  };
+
+  setTimeout(() => {
+    document.addEventListener('click', handleContextOutside);
+  });
+}
+
+function handleContextOutside(e) {
+  if (!e.target.closest('#item-context-menu')) {
+    closeItemContextMenu();
+  }
+}
+
+function closeItemContextMenu() {
+  const menu = document.getElementById('item-context-menu');
+  if (menu) {
+    menu.remove();
+    document.removeEventListener('click', handleContextOutside);
+  }
 }
