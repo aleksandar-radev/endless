@@ -174,13 +174,13 @@ export function updatePlayerLife() {
   document.getElementById('life-fill').style.width = `${lifePercentage}%`;
   document.getElementById('life-text').textContent = `${formatNumber(
     Math.max(0, Math.floor(stats.currentLife)),
-  )}/${formatNumber(Math.floor(stats.life))}`;
+  )} / ${formatNumber(Math.floor(stats.life))}`;
 
   const manaPercentage = (stats.currentMana / stats.mana) * 100;
   document.getElementById('mana-fill').style.width = `${manaPercentage}%`;
   document.getElementById('mana-text').textContent = `${formatNumber(
     Math.max(0, Math.floor(stats.currentMana)),
-  )}/${formatNumber(Math.floor(stats.mana))}`;
+  )} / ${formatNumber(Math.floor(stats.mana))}`;
 }
 
 export function updateEnemyStats() {
@@ -189,7 +189,7 @@ export function updateEnemyStats() {
   document.getElementById('enemy-life-fill').style.width = `${lifePercentage}%`;
   document.getElementById('enemy-life-text').textContent = `${formatNumber(
     Math.max(0, Math.floor(enemy.currentLife)),
-  )}/${formatNumber(Math.floor(enemy.life))}`;
+  )} / ${formatNumber(Math.floor(enemy.life))}`;
 
   // Main stats
   const dmg = document.getElementById('enemy-damage-value');
