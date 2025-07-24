@@ -1,5 +1,5 @@
 // Quest UI logic moved from ui.js
-import { showTooltip, hideTooltip, positionTooltip } from './ui.js';
+import { showTooltip, hideTooltip, positionTooltip, formatNumber } from './ui.js';
 import { quests } from '../globals.js';
 
 export function updateQuestsUI() {
@@ -102,7 +102,7 @@ export function openQuestModal(quest) {
   modal.querySelector('#quest-modal-desc').textContent = quest.description;
   // Add progress display in green
   const progress = quest.getProgress();
-  const progressHtml = `<span style=\"color:#22c55e;font-weight:bold;\">${progress}/${quest.target}</span>`;
+  const progressHtml = `<span style=\"color:#22c55e;font-weight:bold;\">${formatNumber(progress)}/${formatNumber(quest.target)}</span>`;
   // Add reward display: gold in yellow, crystals in blue, others default
   let rewardParts = [];
   for (const [key, value] of Object.entries(quest.reward)) {
@@ -117,7 +117,7 @@ export function openQuestModal(quest) {
       );
     } else {
       rewardParts.push(
-        `<span style=\"color:${color};font-weight:bold;\">${value} ${key.charAt(0).toUpperCase() + key.slice(1)}</span>`,
+        `<span style=\"color:${color};font-weight:bold;\">${formatNumber(value)} ${key.charAt(0).toUpperCase() + key.slice(1)}</span>`,
       );
     }
   }
@@ -184,7 +184,7 @@ function openClaimableQuestsModal() {
       item.innerHTML = `
         <span class="quest-icon">${q.icon}</span>
         <span class="quest-title">${q.title}</span>
-        <span class="quest-progress">${q.getProgress()}/${q.target}</span>
+        <span class="quest-progress">${formatNumber(q.getProgress())}/${formatNumber(q.target)}</span>
         <button class="modal-btn" style="margin-left:auto;">Claim</button>
       `;
       // Show tooltip on hover

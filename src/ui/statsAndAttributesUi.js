@@ -1,6 +1,6 @@
 import { game, hero, statistics } from '../globals.js';
 import { STATS } from '../constants/stats/stats.js';
-import { hideTooltip, positionTooltip, showTooltip, updateEnemyStats } from '../ui/ui.js';
+import { hideTooltip, positionTooltip, showTooltip, updateEnemyStats, formatNumber } from '../ui/ui.js';
 import { OFFENSE_STATS } from '../constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from '../constants/stats/defenseStats.js';
 import { MISC_STATS } from '../constants/stats/miscStats.js';
@@ -37,10 +37,10 @@ export function updateStatsAndAttributesUI() {
     statsContainer.className = 'stats-container';
     // Header: level, EXP
     const headerHtml = html`
-      <div><strong>Level:</strong> <span id="level-value">${hero.level || 1}</span></div>
+      <div><strong>Level:</strong> <span id="level-value">${formatNumber(hero.level || 1)}</span></div>
       <div>
-        <strong>EXP:</strong> <span id="exp-value">${hero.exp || 0}</span> /
-        <span id="exp-to-next-level-value">${hero.getExpToNextLevel() || 100}</span>
+        <strong>EXP:</strong> <span id="exp-value">${formatNumber(hero.exp || 0)}</span> /
+        <span id="exp-to-next-level-value">${formatNumber(hero.getExpToNextLevel() || 100)}</span>
         (<span id="exp-progress">${((hero.exp / hero.getExpToNextLevel()) * 100).toFixed(1)}%</span>)
       </div>
       <hr style="border: none; border-top: 1px solid #fff; margin: 10px 0;" />
@@ -95,7 +95,9 @@ export function updateStatsAndAttributesUI() {
         if (key === 'extraMaterialDropPercent') {
           val = (val * 100).toFixed(1) + '%';
         } else if (typeof val === 'number' && statsDef[key].decimalPlaces !== undefined) {
-          val = val.toFixed(statsDef[key].decimalPlaces);
+          val = formatNumber(val.toFixed(statsDef[key].decimalPlaces));
+        } else {
+          val = formatNumber(val);
         }
         span.textContent = val;
         row.appendChild(lbl);
@@ -142,7 +144,7 @@ export function updateStatsAndAttributesUI() {
           const span = document.createElement('span');
           span.id = `${key}-value`;
           let val = hero.stats[key];
-          span.textContent = val;
+          span.textContent = formatNumber(val);
           row.appendChild(icon);
           row.appendChild(lbl);
           row.appendChild(document.createTextNode(' '));
@@ -178,7 +180,7 @@ export function updateStatsAndAttributesUI() {
           const span = document.createElement('span');
           span.id = `${key}-value`;
           let val = hero.stats[key];
-          span.textContent = val;
+          span.textContent = formatNumber(val);
           row.appendChild(icon);
           row.appendChild(lbl);
           row.appendChild(document.createTextNode(' '));
@@ -215,7 +217,7 @@ export function updateStatsAndAttributesUI() {
       if (el) {
         // Special formatting for certain stats
         if (key === 'attackSpeed') {
-          el.textContent = hero.stats.attackSpeed.toFixed(STATS.attackSpeed.decimalPlaces);
+          el.textContent = formatNumber(hero.stats.attackSpeed.toFixed(STATS.attackSpeed.decimalPlaces));
         } else if (key === 'critChance') {
           el.textContent = hero.stats.critChance.toFixed(STATS.critChance.decimalPlaces) + '%';
         } else if (key === 'critDamage') {
@@ -223,9 +225,9 @@ export function updateStatsAndAttributesUI() {
         } else if (key === 'lifeSteal') {
           el.textContent = hero.stats.lifeSteal.toFixed(STATS.lifeSteal.decimalPlaces) + '%';
         } else if (key === 'lifeRegen') {
-          el.textContent = hero.stats.lifeRegen.toFixed(STATS.lifeRegen.decimalPlaces);
+          el.textContent = formatNumber(hero.stats.lifeRegen.toFixed(STATS.lifeRegen.decimalPlaces));
         } else if (key === 'manaRegen') {
-          el.textContent = hero.stats.manaRegen.toFixed(STATS.manaRegen.decimalPlaces);
+          el.textContent = formatNumber(hero.stats.manaRegen.toFixed(STATS.manaRegen.decimalPlaces));
         } else if (key === 'blockChance') {
           el.textContent = hero.stats.blockChance.toFixed(STATS.blockChance.decimalPlaces) + '%';
         } else if (key === 'bonusGoldPercent') {
@@ -237,22 +239,22 @@ export function updateStatsAndAttributesUI() {
           el.textContent =
             (hero.stats.extraMaterialDropPercent * 100).toFixed(STATS.extraMaterialDropPercent.decimalPlaces) + '%';
         } else {
-          el.textContent = hero.stats[key];
+          el.textContent = formatNumber(hero.stats[key]);
         }
       }
     });
 
     // Update header values
-    document.getElementById('level-value').textContent = hero.level || 1;
-    document.getElementById('exp-value').textContent = hero.exp || 0;
+    document.getElementById('level-value').textContent = formatNumber(hero.level || 1);
+    document.getElementById('exp-value').textContent = formatNumber(hero.exp || 0);
     document.getElementById('exp-progress').textContent =
       ((hero.exp / hero.getExpToNextLevel()) * 100).toFixed(1) + '%';
-    document.getElementById('exp-to-next-level-value').textContent = hero.getExpToNextLevel() || 100;
+    document.getElementById('exp-to-next-level-value').textContent = formatNumber(hero.getExpToNextLevel() || 100);
 
     // Add hit chance percentage to attackRating
     const attackRatingEl = document.getElementById('attackRating-value');
     if (attackRatingEl) {
-      attackRatingEl.textContent = hero.stats.attackRating;
+      attackRatingEl.textContent = formatNumber(hero.stats.attackRating);
       const hitPct = calculateHitChance(hero.stats.attackRating, game.currentEnemy.evasion).toFixed(2) + '%';
       attackRatingEl.appendChild(document.createTextNode(` (${hitPct})`));
     }
@@ -260,7 +262,7 @@ export function updateStatsAndAttributesUI() {
     // Add armor reduction percentage to armor
     const armorEl = document.getElementById('armor-value');
     if (armorEl) {
-      armorEl.textContent = hero.stats.armor || 0;
+      armorEl.textContent = formatNumber(hero.stats.armor || 0);
       // Use PoE2 formula: reduction = armor / (armor + 10 * enemy damage)
       const reduction = calculateArmorReduction(hero.stats.armor, game.currentEnemy.damage);
       armorEl.appendChild(document.createTextNode(` (${reduction.toFixed(2)}%)`));
@@ -269,7 +271,7 @@ export function updateStatsAndAttributesUI() {
     // add evasion reduction percentage to evasion
     const evasionEl = document.getElementById('evasion-value');
     if (evasionEl) {
-      evasionEl.textContent = hero.stats.evasion || 0;
+      evasionEl.textContent = formatNumber(hero.stats.evasion || 0);
       const er = calculateEvasionChance(hero.stats.evasion, game.currentEnemy.attackRating).toFixed(2) + '%';
       evasionEl.appendChild(document.createTextNode(` (${er})`));
     }
@@ -298,7 +300,7 @@ export function updateStatsAndAttributesUI() {
             <div class="attribute-row">
               <button class="allocate-btn" data-stat="${stat}">+</button>
               <strong>${displayName}:</strong>
-              <span id="${stat}-value">${hero.stats[stat]}</span>
+              <span id="${stat}-value">${formatNumber(hero.stats[stat])}</span>
             </div>
           `;
     })
@@ -372,14 +374,14 @@ export function updateStatsAndAttributesUI() {
   } else {
     document.getElementById('attributes').textContent = `Attributes (+${hero.statPoints})`;
     // Update dynamic attribute values
-    document.getElementById('strength-value').textContent = hero.stats['strength'];
-    document.getElementById('agility-value').textContent = hero.stats['agility'];
-    document.getElementById('vitality-value').textContent = hero.stats['vitality'];
-    document.getElementById('wisdom-value').textContent = hero.stats['wisdom'];
-    document.getElementById('endurance-value').textContent = hero.stats['endurance'];
-    document.getElementById('dexterity-value').textContent = hero.stats['dexterity'];
-    document.getElementById('intelligence-value').textContent = hero.stats['intelligence'] || 0;
-    document.getElementById('perseverance-value').textContent = hero.stats['perseverance'] || 0;
+    document.getElementById('strength-value').textContent = formatNumber(hero.stats['strength']);
+    document.getElementById('agility-value').textContent = formatNumber(hero.stats['agility']);
+    document.getElementById('vitality-value').textContent = formatNumber(hero.stats['vitality']);
+    document.getElementById('wisdom-value').textContent = formatNumber(hero.stats['wisdom']);
+    document.getElementById('endurance-value').textContent = formatNumber(hero.stats['endurance']);
+    document.getElementById('dexterity-value').textContent = formatNumber(hero.stats['dexterity']);
+    document.getElementById('intelligence-value').textContent = formatNumber(hero.stats['intelligence'] || 0);
+    document.getElementById('perseverance-value').textContent = formatNumber(hero.stats['perseverance'] || 0);
   }
 
   const skillTreeTab = document.querySelector('[data-tab="skilltree"]');
