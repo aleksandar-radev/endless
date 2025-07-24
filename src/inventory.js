@@ -403,12 +403,12 @@ export default class Inventory {
     } else {
       const goldGained = this.getItemSalvageValue(item);
       if (goldGained > 0) {
-        hero.gold = (hero.gold || 0) + goldGained;
+        hero.gainGold(goldGained);
         msg += `, gained ${goldGained} gold`;
       }
     }
     if (crystalsGained > 0) {
-      hero.crystals = (hero.crystals || 0) + crystalsGained;
+      hero.gainCrystals(crystalsGained);
       msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
     }
     showToast(msg, 'success');
