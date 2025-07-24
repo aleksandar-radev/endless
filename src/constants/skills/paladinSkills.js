@@ -58,7 +58,7 @@ export const PALADIN_SKILLS = {
     maxLevel: () => 200,
     effect: (level) => ({
       armorPercent: level * 2,
-      thornsDamage: level * 0.5,
+      thornsDamage: level * 1,
       thornsDamagePercent: level * 0.5,
     }),
   },
@@ -76,8 +76,9 @@ export const PALADIN_SKILLS = {
     description: () => 'Blesses the ground, dealing holy damage to enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: level * 3,
-      coldDamagePercent: level * 3,
+      fireDamagePercent: level * 4,
+      coldDamagePercent: level * 4,
+      lightningDamagePercent: level * 4,
     }),
   },
   greaterHealing: {
@@ -109,6 +110,7 @@ export const PALADIN_SKILLS = {
     description: () => 'Creates a shield that absorbs damage.',
     maxLevel: () => 200,
     effect: (level) => ({
+      armor: level * 4,
       armorPercent: level * 6,
       blockChance: level * 0.2,
     }),
@@ -225,10 +227,10 @@ export const PALADIN_SKILLS = {
     effect: (level) => ({
       elementalDamagePercent: level * 0.75,
       endurance: level * 3,
-      endurancePercent: level * 1,
+      endurancePercent: level * 2,
       vitality: level * 3,
-      vitalityPercent: level * 1,
-      attackRatingPercent: level * 4,
+      vitalityPercent: level * 2,
+      attackRatingPercent: level * 6,
     }),
   },
 };

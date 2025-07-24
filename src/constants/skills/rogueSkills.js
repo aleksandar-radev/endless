@@ -30,7 +30,7 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       blockChance: Math.min(level * 0.05, 25),
-      dexterity: level * 2,
+      dexterity: level * 4,
       dexterityPercent: level * 2,
     }),
   },
@@ -46,8 +46,9 @@ export const ROGUE_SKILLS = {
     description: () => 'Applies physical damage to your attacks.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      damage: level * 2,
       damagePercent: level * 2,
-      earthDamagePercent: level * 1.5,
+      earthDamagePercent: level * 2,
       waterDamagePercent: level * 1,
     }),
   },
@@ -82,6 +83,7 @@ export const ROGUE_SKILLS = {
     description: () => 'Unleash a series of rapid attacks, dealing bonus damage.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      damage: level * 5,
       damagePercent: level * 8,
     }),
   },
@@ -94,7 +96,9 @@ export const ROGUE_SKILLS = {
     description: () => 'Significantly increases agility.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      agilityPercent: level * 2.5,
+      dexterity: level * 5,
+      dexterityPercent: level * 2,
+      agilityPercent: level * 2,
     }),
   },
 
@@ -110,9 +114,9 @@ export const ROGUE_SKILLS = {
     description: () => 'A devastating attack from behind, dealing massive damage and stealing resources.',
     maxLevel: () => 100,
     effect: (level) => ({
-      damagePercent: level * 3,
-      lifePerHit: level * 2,
-      manaPerHit: level * 0.33,
+      damagePercent: level * 4,
+      lifePerHit: level * 6,
+      manaPerHit: level * 0.6,
     }),
   },
 
@@ -129,7 +133,7 @@ export const ROGUE_SKILLS = {
     description: () => 'Massively increases crit damage temporarily.',
     maxLevel: () => 500,
     effect: (level) => ({
-      critDamage: level * 0.075,
+      critDamage: level * 0.005,
     }),
   },
 
@@ -144,6 +148,7 @@ export const ROGUE_SKILLS = {
     description: () => 'Greatly increases damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      damage: level * 3,
       damagePercent: level * 3,
       coldDamagePercent: level * 5,
       airDamagePercent: level * 5,
@@ -177,7 +182,7 @@ export const ROGUE_SKILLS = {
     maxLevel: () => 500,
     effect: (level) => ({
       damagePercent: level * 0.5,
-      dexterityPercent: level * 2,
+      dexterityPercent: level * 3,
       agilityPercent: level * 2,
       wisdomPercent: level * 1,
       bonusGoldPercent: level * 0.25,

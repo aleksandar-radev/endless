@@ -36,8 +36,9 @@ export const DRUID_SKILLS = {
     description: () => 'Increases armor while active.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      armor: level * 3,
       armorPercent: level * 2,
-      lifeRegen: level * 0.05,
+      lifeRegen: level * 1,
     }),
   },
   naturalAffinity: {
@@ -49,9 +50,9 @@ export const DRUID_SKILLS = {
     description: () => 'Increases vitality and life regeneration.',
     maxLevel: () => 200,
     effect: (level) => ({
-      vitality: level * 1,
-      lifePercent: level * 0.1,
-      lifeRegen: level * 0.33,
+      vitality: level * 2,
+      lifePercent: level * 0.25,
+      lifeRegenOfTotalPercent: Math.min(level * 0.005, 1),
     }),
   },
 
@@ -61,14 +62,14 @@ export const DRUID_SKILLS = {
     name: () => 'Rejuvenation',
     type: () => 'buff',
     manaCost: (level) => 5 + level * 0.2,
-    cooldown: () => 34000,
+    cooldown: () => 44000,
     duration: () => 10000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'rejuvenation',
     description: () => 'Restores life over time.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegen: level * 0.5,
+      lifeRegen: level * 4,
       lifeRegenPercent: level * 0.5,
     }),
   },
@@ -83,6 +84,7 @@ export const DRUID_SKILLS = {
     description: () => 'Deals earth damage and slows enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      earthDamage: level * 5,
       earthDamagePercent: level * 5,
     }),
   },
@@ -120,7 +122,7 @@ export const DRUID_SKILLS = {
     maxLevel: () => 200,
     effect: (level) => ({
       lifePercent: level * 0.5,
-      lifeRegen: level * 0.2,
+      lifeRegenOfTotalPercent: Math.min(level * 0.005, 1),
     }),
   },
 
@@ -136,7 +138,9 @@ export const DRUID_SKILLS = {
     description: () => 'Calls forth fierce winds to damage enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      airDamage: level * 4,
       airDamagePercent: level * 6,
+      coldDamage: level * 4,
       coldDamagePercent: level * 6,
     }),
   },
@@ -152,6 +156,7 @@ export const DRUID_SKILLS = {
     description: () => 'Hardens your skin, boosting armor and resistance.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      armor: level * 4,
       armorPercent: level * 5,
       earthDamagePercent: level * 2,
     }),
@@ -184,7 +189,9 @@ export const DRUID_SKILLS = {
     maxLevel: () => 300,
     effect: (level) => ({
       coldDamagePercent: level * 2,
+      coldDamage: level * 4,
       airDamagePercent: level * 2,
+      airDamage: level * 4,
     }),
   },
 
@@ -216,7 +223,7 @@ export const DRUID_SKILLS = {
     description: () => 'Nature fights with you, increasing all stats.',
     maxLevel: () => 500,
     effect: (level) => ({
-      damagePercent: level * 1,
+      damagePercent: level * 2.5,
       vitalityPercent: level * 1,
       elementalDamagePercent: level * 1,
     }),
@@ -232,7 +239,9 @@ export const DRUID_SKILLS = {
     description: () => 'Become one with nature, greatly increasing attributes.',
     maxLevel: () => 100,
     effect: (level) => ({
+      vitality: level * 3,
       vitalityPercent: level * 3,
+      strength: level * 4,
       damagePercent: level * 2,
       lifePercent: level * 2,
     }),

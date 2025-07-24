@@ -58,7 +58,7 @@ export const WARRIOR_SKILLS = {
     effect: (level) => ({
       vitality: level * 1,
       vitalityPercent: level * 1,
-      lifeRegen: level * 0.4,
+      lifeRegen: level * 0.75,
     }),
   },
 
@@ -88,8 +88,8 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeRegenOfTotalPercent: Math.min(level * 0.005, 1),
-      lifeRegen: level * 0.75,
-      lifeRegenPercent: level * 1,
+      lifeRegen: level * 1,
+      lifeRegenPercent: level * 0.5,
     }),
   },
 
@@ -139,7 +139,7 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: level * 1,
-      fireDamage: level * 2,
+      fireDamage: level * 3,
       fireDamagePercent: level * 3,
     }),
   },

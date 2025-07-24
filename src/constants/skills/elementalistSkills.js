@@ -14,6 +14,7 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Launches a fireball that deals fire damage.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      fireDamage: level * 2,
       fireDamagePercent: level * 5,
     }),
   },
@@ -29,6 +30,7 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Encases the caster in frost, increasing armor.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      armor: level * 4,
       armorPercent: level * 3,
       coldDamagePercent: level * 2,
     }),
@@ -45,8 +47,9 @@ export const ELEMENTALIST_SKILLS = {
     effect: (level) => ({
       manaPercent: level * 2,
       manaRegen: level * 0.1,
-      manaRegenPercent: level * 0.2,
+      manaRegenPercent: level * 0.5,
       wisdomPercent: level * 0.5,
+      wisdom: level * 2,
     }),
   },
 
@@ -62,8 +65,9 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Strikes an enemy with a bolt of lightning.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      lightningDamage: level * 5,
       lightningDamagePercent: level * 6,
-      airDamagePercent: level * 3,
+      airDamagePercent: level * 2,
     }),
   },
   elementalMastery: {
@@ -96,6 +100,10 @@ export const ELEMENTALIST_SKILLS = {
       airDamagePercent: level * 3,
       waterDamagePercent: level * 3,
       lightningDamagePercent: level * 3,
+      coldDamage: level * 3,
+      airDamage: level * 3,
+      waterDamage: level * 3,
+      lightningDamage: level * 3,
     }),
   },
   fireShield: {
@@ -111,7 +119,7 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       reflectFireDamage: level * 18,
-      fireDamagePercent: level * 1.5,
+      fireDamagePercent: level * 2.5,
     }),
   },
   arcaneWisdom: {
@@ -123,9 +131,10 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Increases mana and mana regeneration.',
     maxLevel: () => 200,
     effect: (level) => ({
-      manaPercent: level * 1,
+      manaPercent: level * 1.5,
+      manaRegen: level * 0.2,
       manaRegenPercent: level * 0.5,
-      manaRegenOfTotalPercent: level * 0.01,
+      manaRegenOfTotalPercent: Math.min(level * 0.005, 1),
     }),
   },
 
@@ -141,12 +150,8 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Unleashes a storm of fire, ice, and lightning.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: level * 1,
-      coldDamagePercent: level * 1,
-      airDamagePercent: level * 1,
-      earthDamagePercent: level * 1,
-      waterDamagePercent: level * 1,
-      lightningDamagePercent: level * 1,
+      elementalDamage: level * 3,
+      elementalDamagePercent: level * 1,
     }),
   },
   elementalAffinity: {
@@ -158,10 +163,9 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Increases resistance to elemental damage.',
     maxLevel: () => 1000,
     effect: (level) => ({
-      fireDamagePercent: level * 0.5,
-      coldDamagePercent: level * 0.5,
-      airDamagePercent: level * 0.5,
-      earthDamagePercent: level * 0.5,
+      elementalDamage: level * 0.5,
+      elementalDamagePercent: level * 0.5,
+      intelligencePercent: level * 0.5,
     }),
   },
 
@@ -178,8 +182,9 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Increases attack rating and resource stealing.',
     maxLevel: () => 200,
     effect: (level) => ({
+      attackRating: level * 5,
       attackRatingPercent: level * 5,
-      lifePerHit: level * 3,
+      lifePerHit: level * 4,
       manaPerHit: level * 0.5,
       attackSpeed: level * 0.01,
     }),
@@ -212,8 +217,9 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => 5000,
     effect: (level) => ({
       earthDamagePercent: level * 1.5,
+      vitality: level * 5,
       vitalityPercent: level * 2,
-      wisdomPercent: level * 2.5,
+      wisdomPercent: level * 2,
     }),
   },
 
@@ -227,11 +233,11 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Transforms the caster into a being of pure elemental power.',
     maxLevel: () => 100,
     effect: (level) => ({
-      fireDamage: level * 3,
-      coldDamage: level * 3,
-      airDamage: level * 3,
-      earthDamage: level * 3,
       elementalDamagePercent: level * 3,
+      elementalDamage: level * 2,
+      allResistance: level * 0.25,
+      perseverance: level * 5,
+      perseverancePercent: level * 2,
     }),
   },
 };

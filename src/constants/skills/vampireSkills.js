@@ -13,9 +13,9 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Steal life from enemies with each attack.',
     maxLevel: () => 300,
     effect: (level) => ({
-      lifePerHit: level * 0.33,
+      lifePerHit: level * 0.5,
       damage: level * 1,
-      damagePercent: level * 0.5,
+      damagePercent: level * 1,
     }),
   },
   nightStalker: {
@@ -28,7 +28,7 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: level * 0.5,
-      agility: level * 2,
+      agility: level * 4,
     }),
   },
 
@@ -44,8 +44,9 @@ export const VAMPIRE_SKILLS = {
     description: () => 'A powerful strike that restores life.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      damage: level * 2,
       damagePercent: level * 2,
-      lifePerHit: level * 1,
+      lifePerHit: level * 2,
     }),
   },
   darkAura: {
@@ -61,7 +62,7 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeSteal: level * 0.02,
-      attackRating: level * 3,
+      attackRating: level * 5,
       attackRatingPercent: level * 2,
     }),
   },
@@ -79,7 +80,7 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => 100,
     effect: (level) => ({
       earthDamage: level * 4,
-      earthDamagePercent: level * 4,
+      earthDamagePercent: level * 5,
       manaPerHit: level * 0.2,
     }),
   },
@@ -92,8 +93,8 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Increases strength and vitality.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strengthPercent: level * 0.5,
-      vitalityPercent: level * 1,
+      strengthPercent: level * 1,
+      vitalityPercent: level * 2,
     }),
   },
 
@@ -127,6 +128,7 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Increases life steal and life temporarily.',
     maxLevel: () => 400,
     effect: (level) => ({
+      life: level * 10,
       lifePercent: level * 1,
     }),
   },

@@ -14,7 +14,8 @@ export const MAGE_SKILLS = {
     description: () => 'Launches a missile of arcane energy.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      waterDamagePercent: level * 10,
+      waterDamage: level * 3,
+      waterDamagePercent: level * 8,
     }),
   },
   arcaneIntellect: {
@@ -27,7 +28,9 @@ export const MAGE_SKILLS = {
     maxLevel: () => 300,
     effect: (level) => ({
       manaPercent: level * 1.5,
+      wisdom: level * 2,
       wisdomPercent: level * 1,
+      perseverance: level * 2,
       perseverancePercent: level * 1,
     }),
   },
@@ -44,7 +47,8 @@ export const MAGE_SKILLS = {
     description: () => 'Fires a bolt of frost at the enemy.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      coldDamagePercent: level * 11,
+      coldDamage: level * 2,
+      coldDamagePercent: level * 10,
     }),
   },
   fireBlast: {
@@ -58,7 +62,8 @@ export const MAGE_SKILLS = {
     description: () => 'Blasts the target with fire.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: level * 13,
+      fireDamagePercent: level * 7,
+      fireDamage: level * 6,
     }),
   },
 
@@ -72,9 +77,9 @@ export const MAGE_SKILLS = {
     description: () => 'Instantly move to a nearby location.',
     maxLevel: () => 100,
     effect: (level) => ({
-      perseverance: level * 5,
-      wisdom: level * 5,
-      intelligence: level * 5,
+      perseverance: level * 6,
+      wisdom: level * 6,
+      intelligence: level * 4,
       intelligencePercent: level * 1,
     }),
   },
@@ -104,7 +109,7 @@ export const MAGE_SKILLS = {
     description: () => 'Infuses yourself with magical energy. Greatly increases mana regeneration.',
     maxLevel: () => 1000,
     effect: (level) => ({
-      mana: level * 10,
+      mana: level * 15,
       manaRegenOfTotalPercent: level * 0.025,
     }),
   },
@@ -120,8 +125,9 @@ export const MAGE_SKILLS = {
     description: () => 'Summons a storm of ice around you.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      coldDamagePercent: level * 8,
+      coldDamagePercent: level * 6,
       waterDamagePercent: level * 3,
+      airDamagePercent: level * 3,
     }),
   },
   arcaneFocus: {
@@ -134,7 +140,8 @@ export const MAGE_SKILLS = {
     maxLevel: () => 500,
     effect: (level) => ({
       elementalDamagePercent: level * 1,
-      attackRatingPercent: level * 4,
+      attackRating: level * 5,
+      attackRatingPercent: level * 5,
     }),
   },
 
@@ -151,6 +158,7 @@ export const MAGE_SKILLS = {
     description: () => 'Engulfs the area in flames.',
     maxLevel: () => 300,
     effect: (level) => ({
+      fireDamage: level * 2,
       fireDamagePercent: level * 16,
     }),
   },
@@ -166,7 +174,7 @@ export const MAGE_SKILLS = {
     description: () => 'Greatly increases attack speed for a short time.',
     maxLevel: () => 300,
     effect: (level) => ({
-      attackSpeed: level * 0.03,
+      attackSpeed: level * 0.04,
     }),
   },
 
@@ -181,7 +189,7 @@ export const MAGE_SKILLS = {
     description: () => 'Unleash arcane power, increasing spell damage.',
     maxLevel: () => 600,
     effect: (level) => ({
-      elementalDamagePercent: level * 3,
+      elementalDamagePercent: level * 2,
     }),
   },
   summonElemental: {
@@ -219,6 +227,7 @@ export const MAGE_SKILLS = {
     description: () => 'Mastery of all magical arts.',
     maxLevel: () => 100,
     effect: (level) => ({
+      wisdom: level * 5,
       wisdomPercent: level * 4,
       elementalDamagePercent: level * 2,
       manaPercent: level * 3,

@@ -13,7 +13,7 @@ export const BERSERKER_SKILLS = {
     description: () => 'Increases attack speed and damage while active.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 1,
+      damage: level * 2,
       damagePercent: level * 2,
       lifePerHit: level * -0.4,
     }),
@@ -27,7 +27,7 @@ export const BERSERKER_SKILLS = {
     description: () => 'Increases armor and reduces damage taken.',
     maxLevel: () => 200,
     effect: (level) => ({
-      armor: level * 2,
+      armor: level * 4,
       armorPercent: level * 2,
     }),
   },
