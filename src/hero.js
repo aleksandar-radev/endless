@@ -390,10 +390,10 @@ export default class Hero {
         value = decimals > 0 ? Number(value.toFixed(decimals)) : Math.floor(value);
 
         // reduce resistance based on region
-        if (stat.endsWith('Resistance')) {
+        if (stat == 'allResistance') {
           const region = getCurrentRegion();
           if (region && region.resistanceReduction) {
-            value = Number(value - region.resistanceReduction).toFixed(decimals);
+            value = Number(value - region.resistanceReduction);
             if (value < 0) {
               value = 0; // Ensure resistance doesn't go below 0
             }
