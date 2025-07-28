@@ -5,7 +5,7 @@
 
 function applyDefaultBossStats(boss) {
   const defaults = {
-    life: 3000,
+    life: 4000,
     damage: 40,
     attackRating: 320,
     attackSpeed: 1,
@@ -26,8 +26,8 @@ function applyDefaultBossStats(boss) {
     lightningResistance: 0,
     waterResistance: 0,
     multiplier: {
-      life: 1.0,
-      damage: 1.0,
+      life: 2,
+      damage: 0.8,
       xp: 1.0,
       gold: 1.0,
       itemDrop: 1.0,
@@ -35,12 +35,12 @@ function applyDefaultBossStats(boss) {
       attackRating: 1.0,
       armor: 1.0,
       evasion: 1.0,
-      fireDamage: 1.0,
-      coldDamage: 1.0,
-      airDamage: 1.0,
-      earthDamage: 1.0,
-      lightningDamage: 1.0,
-      waterDamage: 1.0,
+      fireDamage: 0.8,
+      coldDamage: 0.8,
+      airDamage: 0.8,
+      earthDamage: 0.8,
+      lightningDamage: 0.8,
+      waterDamage: 0.8,
     },
   };
   const merged = { ...defaults, ...boss };
@@ -80,7 +80,7 @@ const RAW_BOSSES = [
     airResistance: 50,
     earthResistance: 20,
     multiplier: {
-      life: 2,
+      life: 1.75,
       damage: 1.3,
       fireDamage: 1.3,
       airDamage: 1.3,
@@ -96,7 +96,7 @@ const RAW_BOSSES = [
     image: '/enemies/obsidian-golem.jpg',
     damage: 25,
     attackSpeed: 1,
-    life: 3800,
+    life: 5000,
     coldDamage: 5,
     waterDamage: 5,
     fireResistance: 30,
@@ -106,7 +106,7 @@ const RAW_BOSSES = [
     lightningResistance: 30,
     waterResistance: 30,
     multiplier: {
-      life: 1.8,
+      life: 2,
       damage: 1.3,
       xp: 1.6,
     },
@@ -128,10 +128,10 @@ const RAW_BOSSES = [
     waterResistance: 30,
     multiplier: {
       life: 1.6,
-      damage: 1.5,
+      damage: 1.3,
       xp: 1.2,
       gold: 1.2,
-      fireDamage: 1.4,
+      fireDamage: 1.2,
     },
     materialDropWeights: {},
     reward: { souls: 1 },

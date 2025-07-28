@@ -12,7 +12,7 @@ export const REGIONS = [
       return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('enchanted_forest')).map((e) => e.name);
     },
     multiplier: {
-      life: 1.0,
+      life: 1.5,
       damage: 1.0,
       xp: 1.0,
       gold: 1.0,
@@ -45,7 +45,7 @@ export const REGIONS = [
       return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('crystal_cave')).map((e) => e.name);
     },
     multiplier: {
-      life: 1.7,
+      life: 2,
       damage: 1.4,
       xp: 1.5,
       gold: 1.1,
