@@ -1,16 +1,17 @@
-// Scaling multiplier for all offense stats
-const FLAT_MULTIPLIER = 0.022;
+import { scaleDownFlatSum } from './stats.js';
+
+const FLAT_MULTIPLIER = 0.015;
 const PERCENT_MULTIPLIER = 0.001;
-const CHANCE_MULTIPLIER = 0.0008;
+const CHANCE_MULTIPLIER = 0.0006;
 
 const ELEMENTAL_DAMAGE_MIN = 4;
 const ELEMENTAL_DAMAGE_MAX = 14;
 const ELEMENTAL_DAMAGE_PERCENT_MIN = 5;
 const ELEMENTAL_DAMAGE_PERCENT_MAX = 15;
 
-// Generic scaling function for all offense stats
 const offenseScaling = (level, scaling = FLAT_MULTIPLIER, base = 1) => {
-  return base + level * scaling;
+  const total = scaleDownFlatSum(level);
+  return base + scaling * total;
 };
 
 // Offense stats

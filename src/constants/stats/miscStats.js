@@ -1,16 +1,17 @@
-// Scaling multiplier for all misc stats
-const FLAT_MULTIPLIER = 0.002;
-const PERCENT_MULTIPLIER = 0.00035;
-const STAT_MULTIPLIER = 0.05;
+import { scaleDownFlatSum } from './stats.js';
+
+const FLAT_MULTIPLIER = 0.001;
+const PERCENT_MULTIPLIER = 0.00025;
+const STAT_MULTIPLIER = 0.005;
 
 const STATS_MIN = 3;
 const STATS_MAX = 10;
 const STATS_MIN_PERCENT = 6;
 const STATS_MAX_PERCENT = 12;
 
-// Generic scaling function for all misc stats
 const miscScaling = (level, scaling = FLAT_MULTIPLIER, base = 1) => {
-  return base + level * scaling;
+  const total = scaleDownFlatSum(level);
+  return base + scaling * total;
 };
 
 // Miscellaneous stats
@@ -19,8 +20,8 @@ export const MISC_STATS = {
   mana: {
     base: 50,
     decimalPlaces: 0,
-    levelUpBonus: 0,
-    training: { cost: 250, bonus: 1, maxLevel: Infinity },
+    levelUpBonus: 1,
+    training: { cost: 50, bonus: 1, maxLevel: Infinity },
     item: { min: 5, max: 10, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry', 'magic'],
     showInUI: true,
@@ -191,7 +192,7 @@ export const MISC_STATS = {
   bonusGoldPercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 5, max: 20, scaling: (level) => miscScaling(level) },
+    item: { min: 5, max: 20, limit: 100, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry'],
     showInUI: true,
   },
@@ -199,7 +200,7 @@ export const MISC_STATS = {
   bonusExperiencePercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 5, max: 15, scaling: (level) => miscScaling(level) },
+    item: { min: 5, max: 15, limit: 100, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry'],
     showInUI: true,
   },
@@ -227,7 +228,7 @@ export const MISC_STATS = {
   itemQuantityPercent: {
     base: 0,
     decimalPlaces: 0,
-    item: { min: 4, max: 13, scaling: (level) => miscScaling(level) },
+    item: { min: 4, max: 13, limit: 100, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry', 'gloves'],
     showInUI: true,
   },
@@ -235,7 +236,7 @@ export const MISC_STATS = {
   itemRarityPercent: {
     base: 0,
     decimalPlaces: 0,
-    item: { min: 4, max: 13, scaling: (level) => miscScaling(level) },
+    item: { min: 4, max: 13, limit: 100, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry', 'gloves'],
     showInUI: true,
   },

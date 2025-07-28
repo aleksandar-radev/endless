@@ -1,11 +1,12 @@
-// Scaling multiplier for all defense stats
-const FLAT_MULTIPLIER = 0.022;
-const PERCENT_MULTIPLIER = 0.0015;
-const CHANCE_MULTIPLIER = 0.0008;
+import { scaleDownFlatSum } from './stats.js';
 
-// Generic scaling function for all defense stats
+const FLAT_MULTIPLIER = 0.015;
+const PERCENT_MULTIPLIER = 0.001;
+const CHANCE_MULTIPLIER = 0.0006;
+
 const defenseScaling = (level, scaling = FLAT_MULTIPLIER, base = 1) => {
-  return base + level * scaling;
+  const total = scaleDownFlatSum(level);
+  return base + scaling * total;
 };
 
 // Defense stats
