@@ -80,3 +80,38 @@ export function scaleStat(
 
   return base + percentGain + flatGain + bonusGain;
 }
+
+export function scaleDownFlat(
+  level,
+  start = 1,
+  interval = 10,
+  max_level = 100,
+  final_percent = 0.15,
+  flat,
+  min,
+) {
+  if (flat === undefined) flat = (1 - final_percent) / (max_level / 10);
+  if (min === undefined) min = final_percent;
+
+  if (level <= 0) return 0;
+
+  // How many intervals before reaching min
+  const stepsToMin = Math.floor((start - min) / flat);
+  const levelsToMin = stepsToMin * interval;
+  if (level <= levelsToMin) {
+    // All levels above min, use arithmetic series sum
+    const k = Math.floor((level - 1) / interval);
+    const rem = level - k * interval;
+    // Sum for full intervals
+    const sumFull = interval * k * (2 * start - flat * (k - 1)) / 2;
+    // Sum for remaining levels
+    const sumRem = rem * Math.max(start - flat * k, min);
+    return sumFull + sumRem;
+  } else {
+    // Sum up to min, then add min for remaining levels
+    const sumToMin = interval * stepsToMin * (2 * start - flat * (stepsToMin - 1)) / 2;
+    const remLevels = level - levelsToMin;
+
+    return sumToMin + remLevels * min;
+  }
+}

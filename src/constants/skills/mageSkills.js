@@ -1,4 +1,5 @@
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
+import { scaleDownFlat } from '../../common.js';
 
 // Mage skills
 export const MAGE_SKILLS = {
@@ -15,7 +16,7 @@ export const MAGE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       waterDamage: level * 3,
-      waterDamagePercent: level * 8,
+      waterDamagePercent: 8 * scaleDownFlat(level),
     }),
   },
   arcaneIntellect: {
