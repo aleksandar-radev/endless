@@ -38,7 +38,7 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
     savedData = null;
   }
 
-  const _game = new Game();
+  const _game = new Game(savedData?.game);
   const _hero = new Hero(savedData?.hero);
   const _inventory = new Inventory(savedData?.inventory);
   const _skillTree = new SkillTree(savedData?.skillTree);

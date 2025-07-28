@@ -7,13 +7,13 @@ import { updateBossUI } from './ui/bossUi.js';
 import { getCurrentRegion } from './region.js';
 
 class Game {
-  constructor() {
+  constructor(savedData = {}) {
     this.activeTab = 'stats';
     this.fightMode = 'explore'; // Default fight mode
     this.gameStarted = false;
     this.currentEnemy = null;
     this.currentRegionId = null;
-    this.stage = 1;
+    this.stage = savedData.stage || 1; // Default to stage 1 if not provided
     this.resurrectCount = 0; // Track number of resurrections
     this.soulShopResurrectCount = 0; // Track number of resurrections from SoulShop
     this.lastPlayerAttack = Date.now();
@@ -213,9 +213,7 @@ class Game {
       skillTree.stopAllBuffs();
       updateBuffIndicators();
 
-      // Reset stage and enemy for Explore mode
-      this.stage = this.getStartingStage();
-      updateStageUI();
+      // Only reset enemy, not stage, when toggling off
       updateStatsAndAttributesUI();
       if (this.fightMode === 'arena' && this.currentEnemy) {
         this.currentEnemy = this.currentEnemy;

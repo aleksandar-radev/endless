@@ -36,7 +36,10 @@ window.log = console.log;
 (async () => {
   await setGlobals();
 
-  game.stage = game.getStartingStage() || 1;
+  // Only set stage if not loaded from save data (undefined or null)
+  if (!game.stage || game.stage == null) {
+    game.stage = game.getStartingStage() || 1;
+  }
   game.currentEnemy = new Enemy(game.stage);
 
   initializeUI();
