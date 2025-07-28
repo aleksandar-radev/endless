@@ -26,7 +26,7 @@ export const FOREST_ENEMIES = [
     waterResistance: 5,
 
     materialDropWeights: {},
-    tags: [ 'forest' ],
+    tags: [ 'enchanted_forest' ],
   },
   {
     name: 'Thornling',
@@ -53,7 +53,7 @@ export const FOREST_ENEMIES = [
       itemDrop: 1.1,
     },
     materialDropWeights: {},
-    tags: [ 'forest' ],
+    tags: [ 'enchanted_forest' ],
   },
   {
     name: 'Barkhide',
@@ -79,7 +79,7 @@ export const FOREST_ENEMIES = [
       materialDrop: 1.1,
     },
     materialDropWeights: {},
-    tags: [ 'forest' ],
+    tags: [ 'enchanted_forest' ],
   },
   {
     name: 'Sylvan Wisp',
@@ -106,6 +106,6 @@ export const FOREST_ENEMIES = [
     waterResistance: 10,
 
     materialDropWeights: {},
-    tags: [ 'forest' ],
+    tags: [ 'enchanted_forest' ],
   },
 ];

@@ -23,7 +23,7 @@ export const GOLDEN_STEPPE_ENEMIES = [
     waterResistance: 45,
 
     materialDropWeights: {},
-    tags: ['steppe', 'gold'],
+    tags: ['golden_steppe'],
   },
   {
     name: 'Aurelius',
@@ -39,7 +39,7 @@ export const GOLDEN_STEPPE_ENEMIES = [
     waterResistance: 25,
 
     materialDropWeights: {},
-    tags: ['steppe', 'gold'],
+    tags: ['golden_steppe'],
   },
   {
     name: 'Solar Phoenix',
@@ -64,7 +64,7 @@ export const GOLDEN_STEPPE_ENEMIES = [
     waterResistance: 0,
 
     materialDropWeights: {},
-    tags: ['steppe', 'gold'],
+    tags: ['golden_steppe'],
 
   },
   {
@@ -87,7 +87,7 @@ export const GOLDEN_STEPPE_ENEMIES = [
     waterResistance: 5,
 
     materialDropWeights: {},
-    tags: ['steppe', 'gold'],
+    tags: ['golden_steppe'],
 
   },
 ];

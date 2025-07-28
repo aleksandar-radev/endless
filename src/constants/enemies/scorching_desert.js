@@ -28,7 +28,7 @@ export const DESERT_ENEMIES = [
     waterResistance: 5,
 
     materialDropWeights: {},
-    tags: ['desert', 'undead'],
+    tags: ['scorching_desert'],
   },
   {
     name: 'Sandstalker',
@@ -56,7 +56,7 @@ export const DESERT_ENEMIES = [
     waterResistance: 5,
 
     materialDropWeights: {},
-    tags: ['desert', 'scorpion'],
+    tags: ['scorching_desert'],
   },
   {
     name: 'Scorching Salamander',
@@ -83,7 +83,7 @@ export const DESERT_ENEMIES = [
     waterResistance: 10,
 
     materialDropWeights: {},
-    tags: ['desert', 'fire'],
+    tags: ['scorching_desert'],
 
   },
   {
@@ -112,7 +112,7 @@ export const DESERT_ENEMIES = [
     waterResistance: 5,
 
     materialDropWeights: {},
-    tags: ['desert', 'sand'],
+    tags: ['scorching_desert'],
 
   },
 ];

@@ -28,7 +28,7 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
       materialDrop: 1.2,
     },
     materialDropWeights: {},
-    tags: ['obsidian', 'arcane'],
+    tags: ['obsidian_spire'],
   },
   {
     name: 'Obsidian Golem',
@@ -55,7 +55,7 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
       materialDrop: 1.4,
     },
     materialDropWeights: {},
-    tags: ['obsidian', 'arcane'],
+    tags: ['obsidian_spire'],
   },
   {
     name: 'Crimson Wisp',
@@ -82,7 +82,7 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
       itemDrop: 1.2,
     },
     materialDropWeights: {},
-    tags: ['obsidian', 'arcane'],
+    tags: ['obsidian_spire'],
 
   },
   {
@@ -108,7 +108,7 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
       materialDrop: 1.5,
     },
     materialDropWeights: {},
-    tags: ['obsidian', 'arcane'],
+    tags: ['obsidian_spire'],
 
   },
 ];

@@ -29,7 +29,7 @@ export const SKYREALM_ENEMIES = [
     waterResistance: 5,
 
     materialDropWeights: {},
-    tags: ['skyrealm', 'air'],
+    tags: ['skyrealm_peaks'],
   },
   {
     name: 'Stormbringer',
@@ -57,7 +57,7 @@ export const SKYREALM_ENEMIES = [
     waterResistance: 5,
 
     materialDropWeights: {},
-    tags: ['skyrealm', 'storm'],
+    tags: ['skyrealm_peaks'],
   },
   {
     name: 'Stormsoul',
@@ -86,7 +86,7 @@ export const SKYREALM_ENEMIES = [
     waterResistance: 5,
 
     materialDropWeights: {},
-    tags: ['skyrealm', 'soul'],
+    tags: ['skyrealm_peaks'],
   },
   {
     name: 'Midas Beast',
@@ -114,6 +114,6 @@ export const SKYREALM_ENEMIES = [
     waterResistance: 5,
 
     materialDropWeights: {},
-    tags: ['skyrealm', 'gold'],
+    tags: ['skyrealm_peaks'],
   },
 ];

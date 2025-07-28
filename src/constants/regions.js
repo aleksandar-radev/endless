@@ -3,13 +3,13 @@ import { ENEMY_LIST } from './enemies.js';
 export const REGIONS = [
   {
     tier: 1,
-    id: 'forest',
+    id: 'enchanted_forest',
     unlockLevel: 1,
     name: 'Enchanted Forest',
     description: 'A mystical forest teeming with elemental creatures.',
-    allowedTags: ['forest'],
+    allowedTags: ['enchanted_forest'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('forest')).map((e) => e.name);
+      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('enchanted_forest')).map((e) => e.name);
     },
     multiplier: {
       life: 1.0,
@@ -31,7 +31,7 @@ export const REGIONS = [
     materialDropWeights: {
       crystalized_rock: 1.1,
     },
-    itemBaseBonus: 0.8,
+    itemBaseBonus: 0.5,
     resistanceReduction: 0,
   },
   {
@@ -40,9 +40,9 @@ export const REGIONS = [
     unlockLevel: 25,
     name: 'Crystal Cave',
     description: 'A shimmering cave filled with rocks. Has a high chance of dropping crystalized rocks.',
-    allowedTags: ['cave', 'crystal'],
+    allowedTags: ['crystal_cave'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('cave')).map((e) => e.name);
+      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('crystal_cave')).map((e) => e.name);
     },
     multiplier: {
       life: 1.7,
@@ -64,18 +64,18 @@ export const REGIONS = [
     materialDropWeights: {
       crystalized_rock: 5,
     },
-    itemBaseBonus: 1.05,
+    itemBaseBonus: 1,
     resistanceReduction: 5,
   },
   {
     tier: 3,
-    id: 'tundra',
+    id: 'frozen_tundra',
     unlockLevel: 50,
     name: 'Frozen Tundra',
     description: 'A land of ice and snow, home to cold and air enemies. Has increased chance of dropping potions.',
-    allowedTags: ['tundra', 'ice'],
+    allowedTags: ['frozen_tundra'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('tundra')).map((e) => e.name);
+      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('frozen_tundra')).map((e) => e.name);
     },
     multiplier: {
       life: 2.5,
@@ -104,18 +104,18 @@ export const REGIONS = [
       potion_of_intelligence: 3,
       potion_of_perseverance: 3,
     },
-    itemBaseBonus: 1.3,
+    itemBaseBonus: 1.5,
     resistanceReduction: 10,
   },
   {
     tier: 4,
-    id: 'desert',
+    id: 'scorching_desert',
     unlockLevel: 150,
     name: 'Scorching Desert',
     description: 'A vast desert with relentless heat and dangerous creatures. Has a chance to drop elixirs.',
-    allowedTags: ['desert', 'sand'],
+    allowedTags: ['scorching_desert'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('desert')).map((e) => e.name);
+      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('scorching_desert')).map((e) => e.name);
     },
     multiplier: {
       life: 3,
@@ -138,18 +138,18 @@ export const REGIONS = [
       elixir: 5,
     },
     canDrop: ['elixir'],
-    itemBaseBonus: 1.55,
+    itemBaseBonus: 2,
     resistanceReduction: 15,
   },
   {
     tier: 5,
-    id: 'swamp',
+    id: 'murky_swamp',
     unlockLevel: 350,
     name: 'Murky Swamp',
     description: 'A dark and damp swamp filled with poisonous creatures. Has increased chance of dropping gold coins.',
-    allowedTags: ['swamp', 'poison'],
+    allowedTags: ['murky_swamp'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('swamp')).map((e) => e.name);
+      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('murky_swamp')).map((e) => e.name);
     },
     multiplier: {
       life: 4,
@@ -174,18 +174,18 @@ export const REGIONS = [
       enormous_gold_coins: 6,
       FREAKY_GOLD_COINS: 4,
     },
-    itemBaseBonus: 1.8,
+    itemBaseBonus: 2.5,
     resistanceReduction: 20,
   },
   {
     tier: 6,
-    id: 'skyrealm',
+    id: 'skyrealm_peaks',
     unlockLevel: 660,
     name: 'Skyrealm Peaks',
     description: 'A floating realm high above the clouds, home to air and lightning creatures. Has a higher chance to drop potions.',
-    allowedTags: ['sky', 'air'],
+    allowedTags: ['skyrealm_peaks'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('sky')).map((e) => e.name);
+      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('skyrealm_peaks')).map((e) => e.name);
     },
     multiplier: {
       life: 6,
@@ -214,18 +214,18 @@ export const REGIONS = [
       potion_of_intelligence: 3,
       potion_of_perseverance: 3,
     },
-    itemBaseBonus: 2.1,
+    itemBaseBonus: 3,
     resistanceReduction: 25,
   },
   {
     tier: 7,
-    id: 'abyss',
+    id: 'abyssal_depths',
     unlockLevel: 1000,
     name: 'Abyssal Depths',
     description: 'A dark and mysterious region filled with ancient horrors. Has a chance to drop high value gold coins.',
-    allowedTags: ['abyss', 'dark'],
+    allowedTags: ['abyssal_depths'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('abyss')).map((e) => e.name);
+      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('abyssal_depths')).map((e) => e.name);
     },
     multiplier: {
       life: 8,
@@ -248,7 +248,7 @@ export const REGIONS = [
       enormous_gold_coins: 6,
       freaky_gold_coins: 20,
     },
-    itemBaseBonus: 2.4,
+    itemBaseBonus: 3.5,
     resistanceReduction: 30,
   },
   {
@@ -257,9 +257,9 @@ export const REGIONS = [
     unlockLevel: 1400,
     name: 'Volcanic Rift',
     description: 'A searing landscape of molten rock and fire elementals. Has a higher chance to drop item upgrade materials.',
-    allowedTags: ['volcano', 'fire'],
+    allowedTags: ['volcanic_rift'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('volcano') || e.tags.includes('fire'))).map(
+      return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('volcanic_rift'))).map(
         (e) => e.name,
       );
     },
@@ -285,7 +285,7 @@ export const REGIONS = [
       armor_upgrade_stone: 3,
       weapon_upgrade_core: 6,
     },
-    itemBaseBonus: 2.7,
+    itemBaseBonus: 4,
     resistanceReduction: 35,
   },
   {
@@ -294,9 +294,9 @@ export const REGIONS = [
     unlockLevel: 1800,
     name: 'Sunken Ruins',
     description: 'Ancient ruins submerged beneath the waves, teeming with aquatic mysteries. Has a chance to drop elixirs and higher chance to drop crystalized rocks.',
-    allowedTags: ['ruins', 'water'],
+    allowedTags: ['sunken_ruins'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('ruins') || e.tags.includes('water'))).map(
+      return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('sunken_ruins'))).map(
         (e) => e.name,
       );
     },
@@ -322,7 +322,7 @@ export const REGIONS = [
       elixir: 3.5,
       crystalized_rock: 6,
     },
-    itemBaseBonus: 2.95,
+    itemBaseBonus: 4.5,
     resistanceReduction: 40,
   },
   {
@@ -331,9 +331,9 @@ export const REGIONS = [
     unlockLevel: 2200,
     name: 'Haunted Moor',
     description: 'A fog-laden moor haunted by restless spirits and lost souls. Has a higher chance to drop experience potions.',
-    allowedTags: ['haunted', 'spirit'],
+    allowedTags: ['haunted_moor'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('haunted') || e.tags.includes('spirit'))).map(
+      return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('haunted_moor'))).map(
         (e) => e.name,
       );
     },
@@ -358,7 +358,7 @@ export const REGIONS = [
       greater_experience_potion: 6,
       huge_experience_potion: 10,
     },
-    itemBaseBonus: 3.15,
+    itemBaseBonus: 5,
     resistanceReduction: 45,
   },
   {
@@ -367,9 +367,9 @@ export const REGIONS = [
     unlockLevel: 2600,
     name: 'Golden Steppe',
     description: 'Vast golden grasslands where fortune favors the bold.',
-    allowedTags: ['steppe', 'gold'],
+    allowedTags: ['golden_steppe'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('steppe') || e.tags.includes('gold'))).map(
+      return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('golden_steppe'))).map(
         (e) => e.name,
       );
     },
@@ -392,7 +392,7 @@ export const REGIONS = [
     },
     materialDropWeights: {
     },
-    itemBaseBonus: 3.22,
+    itemBaseBonus: 5.5,
     resistanceReduction: 50,
   },
   {
@@ -401,9 +401,9 @@ export const REGIONS = [
     unlockLevel: 3000,
     name: 'Obsidian Spire',
     description: 'A towering spire of black glass, pulsing with arcane energy. Has a higher chance of dropping crafting materials.',
-    allowedTags: ['obsidian', 'arcane'],
+    allowedTags: ['obsidian_spire'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('obsidian') || e.tags.includes('arcane'))).map(
+      return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('obsidian_spire'))).map(
         (e) => e.name,
       );
     },
@@ -428,7 +428,7 @@ export const REGIONS = [
       enchantment_scroll: 5,
       alternation_orb: 5,
     },
-    itemBaseBonus: 3.6,
+    itemBaseBonus: 6,
     resistanceReduction: 55,
   },
 ];

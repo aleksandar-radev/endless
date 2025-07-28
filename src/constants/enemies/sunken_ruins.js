@@ -33,7 +33,7 @@ export const SUNKEN_RUINS_ENEMIES = [
       materialDrop: 1.2,
     },
     materialDropWeights: {},
-    tags: ['ruins', 'water'],
+    tags: ['sunken_ruins'],
   },
   {
     name: 'Coral Sentinel',
@@ -59,7 +59,7 @@ export const SUNKEN_RUINS_ENEMIES = [
     waterResistance: 15,
 
     materialDropWeights: {},
-    tags: ['ruins', 'water'],
+    tags: ['sunken_ruins'],
   },
   {
     name: 'Depths Leviathan',
@@ -87,7 +87,7 @@ export const SUNKEN_RUINS_ENEMIES = [
       itemDrop: 1.1,
     },
     materialDropWeights: {},
-    tags: ['ruins', 'water'],
+    tags: ['sunken_ruins'],
   },
   {
     name: 'Arcane Construct',
@@ -109,6 +109,6 @@ export const SUNKEN_RUINS_ENEMIES = [
     waterResistance: 5,
 
     materialDropWeights: {},
-    tags: ['ruins', 'arcane'],
+    tags: ['sunken_ruins'],
   },
 ];

@@ -24,7 +24,7 @@ export const ABYSS_ENEMIES = [
     waterResistance: 15,
 
     materialDropWeights: {},
-    tags: [ 'abyss', 'dark' ],
+    tags: ['abyssal_depths'],
   },
   {
     name: 'Shadowclaw',
@@ -45,7 +45,7 @@ export const ABYSS_ENEMIES = [
     waterResistance: 10,
 
     materialDropWeights: {},
-    tags: [ 'abyss', 'shadow' ],
+    tags: ['abyssal_depths'],
   },
   {
     name: 'Hellhound',
@@ -67,7 +67,7 @@ export const ABYSS_ENEMIES = [
     waterResistance: 5,
 
     materialDropWeights: {},
-    tags: [ 'abyss', 'dark' ],
+    tags: ['abyssal_depths'],
   },
   {
     name: 'Infernal Knight',
@@ -91,6 +91,6 @@ export const ABYSS_ENEMIES = [
       materialDrop: 1.1,
     },
     materialDropWeights: {},
-    tags: [ 'abyss', 'dark' ],
+    tags: ['abyssal_depths'],
   },
 ];

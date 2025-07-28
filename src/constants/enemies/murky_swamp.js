@@ -28,7 +28,7 @@ export const SWAMP_ENEMIES = [
     waterResistance: 20,
 
     materialDropWeights: {},
-    tags: ['swamp', 'poison'],
+    tags: ['murky_swamp'],
   },
   {
     name: 'Toxictoad',
@@ -56,7 +56,7 @@ export const SWAMP_ENEMIES = [
     waterResistance: 20,
 
     materialDropWeights: {},
-    tags: ['swamp', 'toxic'],
+    tags: ['murky_swamp'],
   },
   {
     name: 'Venomspitter',
@@ -84,7 +84,7 @@ export const SWAMP_ENEMIES = [
     waterResistance: 15,
 
     materialDropWeights: {},
-    tags: ['swamp', 'venom'],
+    tags: ['murky_swamp'],
   },
   {
     name: 'Frostweaver',
@@ -112,6 +112,6 @@ export const SWAMP_ENEMIES = [
     waterResistance: 15,
 
     materialDropWeights: {},
-    tags: ['swamp', 'ice'],
+    tags: ['murky_swamp'],
   },
 ];

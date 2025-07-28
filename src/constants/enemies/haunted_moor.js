@@ -26,7 +26,7 @@ export const HAUNTED_MOOR_ENEMIES = [
     waterResistance: 10,
 
     materialDropWeights: {},
-    tags: ['haunted', 'spirit'],
+    tags: ['haunted_moor'],
   },
   {
     name: 'Phantom',
@@ -47,7 +47,7 @@ export const HAUNTED_MOOR_ENEMIES = [
     waterResistance: 10,
 
     materialDropWeights: {},
-    tags: ['haunted', 'spirit'],
+    tags: ['haunted_moor'],
   },
   {
     name: 'Wraith Lord',
@@ -73,7 +73,7 @@ export const HAUNTED_MOOR_ENEMIES = [
     waterResistance: 10,
 
     materialDropWeights: {},
-    tags: ['haunted', 'spirit'],
+    tags: ['haunted_moor'],
   },
   {
     name: 'Dreadfang',
@@ -99,6 +99,6 @@ export const HAUNTED_MOOR_ENEMIES = [
     waterResistance: 15,
 
     materialDropWeights: {},
-    tags: ['haunted', 'beast'],
+    tags: ['haunted_moor'],
   },
 ];

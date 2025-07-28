@@ -28,7 +28,7 @@ export const CRYSTAL_CAVE_ENEMIES = [
     materialDropWeights: {
       crystalized_rock: 4,
     },
-    tags: [ 'golem', 'crystal' ],
+    tags: ['crystal_cave'],
   },
   {
     name: 'Gem Guardian',
@@ -51,7 +51,7 @@ export const CRYSTAL_CAVE_ENEMIES = [
     waterResistance: 5,
 
     materialDropWeights: {},
-    tags: [ 'guardian', 'gem', 'cave' ],
+    tags: ['crystal_cave'],
   },
   {
     name: 'Grimspike',
@@ -69,7 +69,7 @@ export const CRYSTAL_CAVE_ENEMIES = [
     waterResistance: 5,
 
     materialDropWeights: {},
-    tags: [ 'spike', 'earth', 'cave' ],
+    tags: ['crystal_cave'],
   },
   {
     name: 'Shardling',
@@ -90,6 +90,6 @@ export const CRYSTAL_CAVE_ENEMIES = [
     waterResistance: 5,
 
     materialDropWeights: {},
-    tags: [ 'shard', 'earth', 'cave' ],
+    tags: ['crystal_cave'],
   },
 ];

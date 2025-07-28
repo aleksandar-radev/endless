@@ -30,7 +30,7 @@ export const TUNDRA_ENEMIES = [
     waterResistance: 10,
 
     materialDropWeights: {},
-    tags: [ 'ice', 'cold' ],
+    tags: ['frozen_tundra'],
   },
   {
     name: 'Frostfury',
@@ -56,7 +56,7 @@ export const TUNDRA_ENEMIES = [
     waterResistance: 10,
 
     materialDropWeights: {},
-    tags: [ 'ice', 'fury' ],
+    tags: ['frozen_tundra'],
   },
   {
     name: 'Frost Giant',
@@ -87,7 +87,7 @@ export const TUNDRA_ENEMIES = [
       materialDrop: 1.1,
     },
     materialDropWeights: {},
-    tags: [ 'tundra', 'ice' ],
+    tags: ['frozen_tundra'],
   },
   {
     name: 'Ice Wraith',
@@ -115,6 +115,6 @@ export const TUNDRA_ENEMIES = [
     waterResistance: 15,
 
     materialDropWeights: {},
-    tags: [ 'tundra', 'ice' ],
+    tags: ['frozen_tundra'],
   },
 ];

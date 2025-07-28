@@ -30,7 +30,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
       materialDrop: 1.2,
     },
     materialDropWeights: {},
-    tags: ['volcano', 'fire'],
+    tags: ['volcanic_rift'],
   },
   {
     name: 'Lava Elemental',
@@ -58,7 +58,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
       materialDrop: 1.1,
     },
     materialDropWeights: {},
-    tags: ['volcano', 'fire'],
+    tags: ['volcanic_rift'],
   },
   {
     name: 'Wildfire Spirit',
@@ -79,7 +79,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
     waterResistance: 5,
 
     materialDropWeights: {},
-    tags: ['volcano', 'fire'],
+    tags: ['volcanic_rift'],
   },
   {
     name: 'Molten Wyrm',
@@ -104,7 +104,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
       materialDrop: 1.3,
     },
     materialDropWeights: {},
-    tags: ['volcano', 'fire'],
+    tags: ['volcanic_rift'],
   },
   {
     name: 'Thunderwing',
@@ -130,6 +130,6 @@ export const VOLCANIC_RIFT_ENEMIES = [
     waterResistance: 5,
 
     materialDropWeights: {},
-    tags: ['volcano', 'air'],
+    tags: ['volcanic_rift'],
   },
 ];
