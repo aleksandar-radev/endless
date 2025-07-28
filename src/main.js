@@ -1,6 +1,7 @@
 import {
   initializeSkillTreeUI,
   initializeUI,
+  switchTab,
   updateEnemyStats,
   updatePlayerLife,
   updateResources,
@@ -19,12 +20,13 @@ import {
   dataManager,
   buildings,
 } from './globals.js';
-import { initializeRegionSystem, updateRegionUI } from './region.js';
+import { updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { initializeBuildingsUI, renderPurchasedBuildings } from './ui/buildingUi.js';
 import { initializePrestigeUI } from './ui/prestigeUi.js';
 import Enemy from './enemy.js';
 import { setupLeaderboardTabLazyLoad } from './ui/leaderboardUi.js';
+import Boss from './boss.js';
 
 window.qwe = console.log;
 window.qw = console.log;
@@ -40,7 +42,13 @@ window.log = console.log;
   if (!game.stage || game.stage == null) {
     game.stage = game.getStartingStage() || 1;
   }
-  game.currentEnemy = new Enemy(game.stage);
+
+  if (game.fightMode === 'explore') {
+    game.currentEnemy = new Enemy(game.stage);
+  } else if (game.fightMode === 'arena') {
+    game.currentEnemy = new Boss();
+  }
+
 
   initializeUI();
   crystalShop.initializeCrystalShopUI();
@@ -62,10 +70,11 @@ window.log = console.log;
   updateEnemyStats();
   updateTabIndicators();
 
-  initializeRegionSystem();
   updateRegionUI();
 
   setupLeaderboardTabLazyLoad();
+
+  switchTab(game.activeTab);
 
   if (import.meta.env.VITE_ENV !== 'production') {
     initDebugging();

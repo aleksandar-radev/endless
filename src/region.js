@@ -95,8 +95,3 @@ export function updateRegionUI() {
     container.appendChild(btn);
   });
 }
-
-export function initializeRegionSystem() {
-  game.currentRegionId = REGIONS[0].id;
-  updateRegionUI();
-}

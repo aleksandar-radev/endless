@@ -1,5 +1,5 @@
 import Enemy from '../enemy.js';
-import { game, hero, skillTree, quests, statistics, inventory } from '../globals.js';
+import { game, hero, skillTree, quests, statistics, inventory, dataManager } from '../globals.js';
 import { updateQuestsUI } from './questUi.js';
 import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
 import { TabIndicatorManager } from './tabIndicatorManager.js';
@@ -31,13 +31,11 @@ export function formatNumber(value, separator = ',') {
 }
 
 export function initializeUI() {
-  game.activeTab = 'stats'; // Match the default active tab in HTML
-
   // Initialize tab indicator manager
   tabIndicatorManager = new TabIndicatorManager();
 
   document.querySelectorAll('.tab-btn').forEach((btn) => {
-    btn.addEventListener('click', () => switchTab(game, btn.dataset.tab));
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
   document.getElementById('start-btn').addEventListener('click', () => toggleGame());
 
@@ -80,10 +78,7 @@ export function initializeUI() {
 
   updateStageUI();
   updateQuestsUI();
-  // Set default region
-  game.fightMode = 'explore';
-  // Initialize boss level for Arena mode
-  game.bossLevel = game.bossLevel || 1;
+
   // Setup region tab switching (Explore / Arena)
   document.querySelectorAll('.region-tab').forEach((btn) => {
     btn.addEventListener('click', async () => {
@@ -129,7 +124,7 @@ export function initializeUI() {
   regionSelector.style.display = game.fightMode === 'arena' ? 'none' : '';
 }
 
-export function switchTab(game, tabName) {
+export function switchTab(tabName) {
   const previousTab = game.activeTab;
 
   document.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.remove('active'));
@@ -152,6 +147,7 @@ export function switchTab(game, tabName) {
 
   // Update indicators after tab switch
   updateTabIndicators(previousTab);
+  dataManager.saveGame();
 }
 
 export function updateResources() {
@@ -592,4 +588,13 @@ function renderRegionPanel(region) {
     updateEnemyStats();
     updateResources();
   }
+  // Set the active class on the correct region tab based on the region prop
+  document.querySelectorAll('.region-tab').forEach((b) => {
+    if (b.dataset.region === region) {
+      b.classList.add('active');
+    } else {
+      b.classList.remove('active');
+    }
+  });
+  dataManager.saveGame();
 }

@@ -8,11 +8,11 @@ import { getCurrentRegion } from './region.js';
 
 class Game {
   constructor(savedData = {}) {
-    this.activeTab = 'stats';
-    this.fightMode = 'explore'; // Default fight mode
+    this.activeTab = savedData.activeTab || 'stats';
+    this.fightMode = savedData.fightMode || 'explore'; // Default fight mode
     this.gameStarted = false;
     this.currentEnemy = null;
-    this.currentRegionId = null;
+    this.currentRegionId = savedData.currentRegionId || null;
     this.stage = savedData.stage || 1; // Default to stage 1 if not provided
     this.resurrectCount = 0; // Track number of resurrections
     this.soulShopResurrectCount = 0; // Track number of resurrections from SoulShop
