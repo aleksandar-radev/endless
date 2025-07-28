@@ -394,9 +394,6 @@ export default class Hero {
           const region = getCurrentRegion();
           if (region && region.resistanceReduction) {
             value = Number(value - region.resistanceReduction);
-            if (value < 0) {
-              value = 0; // Ensure resistance doesn't go below 0
-            }
           }
         }
 
@@ -412,6 +409,7 @@ export default class Hero {
     }
 
     let allRes = this.stats.allResistance || 0;
+
     this.stats.fireResistance = Math.min(this.stats.fireResistance + allRes, 75);
     this.stats.coldResistance = Math.min(this.stats.coldResistance + allRes, 75);
     this.stats.airResistance = Math.min(this.stats.airResistance + allRes, 75);
@@ -419,6 +417,12 @@ export default class Hero {
     this.stats.lightningResistance = Math.min(this.stats.lightningResistance + allRes, 75);
     this.stats.waterResistance = Math.min(this.stats.waterResistance + allRes, 75);
 
+    if (this.stats.fireResistance < 0) this.stats.fireResistance = 0;
+    if (this.stats.coldResistance < 0) this.stats.coldResistance = 0;
+    if (this.stats.airResistance < 0) this.stats.airResistance = 0;
+    if (this.stats.earthResistance < 0) this.stats.earthResistance = 0;
+    if (this.stats.lightningResistance < 0) this.stats.lightningResistance = 0;
+    if (this.stats.waterResistance < 0) this.stats.waterResistance = 0;
 
     this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * this.stats.mana;
     this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.life;

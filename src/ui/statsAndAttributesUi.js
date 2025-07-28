@@ -181,7 +181,7 @@ export function updateStatsAndAttributesUI() {
           lbl.addEventListener('mouseleave', hideTooltip);
           const span = document.createElement('span');
           span.id = `${key}-value`;
-          let val = hero.stats[key];
+          let val = (hero.stats[key]).toFixed(STATS[key].decimalPlaces || 0);
           span.textContent = formatNumber(val);
           row.appendChild(icon);
           row.appendChild(lbl);
