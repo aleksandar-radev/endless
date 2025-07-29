@@ -1,4 +1,9 @@
-import { initializeSkillTreeStructure, updatePlayerLife, updateTabIndicators } from './ui/ui.js';
+import {
+  initializeSkillTreeStructure,
+  updatePlayerLife,
+  updateTabIndicators,
+  updateResources,
+} from './ui/ui.js';
 import { game, inventory, training, skillTree, statistics, soulShop, dataManager } from './globals.js';
 import { calculateArmorReduction, createCombatText, createDamageNumber } from './combat.js';
 import { handleSavedData } from './functions.js';
@@ -52,6 +57,8 @@ export default class Hero {
     this.stats.currentLife = this.stats.life;
     this.stats.currentMana = this.stats.mana;
 
+    this.activeAdBonuses = [];
+
     handleSavedData(savedData, this);
   }
 
@@ -86,6 +93,9 @@ export default class Hero {
   }
 
   gainCrystals(amount) {
+    if (this.hasDoubleCrystalGain()) {
+      amount *= 2;
+    }
     statistics.increment('totalCrystalsEarned', null, amount);
     this.crystals += amount;
   }
@@ -147,20 +157,26 @@ export default class Hero {
     const skillTreeBonuses = skillTree.getAllSkillTreeBonuses();
     const equipmentBonuses = inventory.getEquipmentBonuses();
     const trainingBonuses = training.getTrainingBonuses();
+    const adBonuses = this.getActiveAdBonuses();
+
+    const combinedSkillBonuses = { ...skillTreeBonuses };
+    Object.entries(adBonuses).forEach(([stat, val]) => {
+      combinedSkillBonuses[stat] = (combinedSkillBonuses[stat] || 0) + val;
+    });
 
     // 1) Build primary (flat) stats
-    this.calculatePrimaryStats(skillTreeBonuses, equipmentBonuses, trainingBonuses);
+    this.calculatePrimaryStats(combinedSkillBonuses, equipmentBonuses, trainingBonuses);
 
     // 2) Get base flatValues & percentBonuses WITHOUT any attributeEffects
     const baseFlat = this.calculateFlatValues(
       /* attributeEffects */ {},
-      skillTreeBonuses,
+      combinedSkillBonuses,
       equipmentBonuses,
       trainingBonuses,
     );
     const basePercent = this.calculatePercentBonuses(
       /* attributeEffects */ {},
-      skillTreeBonuses,
+      combinedSkillBonuses,
       equipmentBonuses,
       trainingBonuses,
     );
@@ -177,10 +193,10 @@ export default class Hero {
     const attributeEffects = this.calculateAttributeEffects();
 
     // 5) Normal flat+% pass
-    const flatValues = this.calculateFlatValues(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses);
+    const flatValues = this.calculateFlatValues(attributeEffects, combinedSkillBonuses, equipmentBonuses, trainingBonuses);
     const percentBonuses = this.calculatePercentBonuses(
       attributeEffects,
-      skillTreeBonuses,
+      combinedSkillBonuses,
       equipmentBonuses,
       trainingBonuses,
     );
@@ -340,6 +356,36 @@ export default class Hero {
     }
 
     return bonuses;
+  }
+
+  addAdBonus(bonus) {
+    const expiresAt = Date.now() + (bonus.duration || 0) * 1000;
+    this.activeAdBonuses.push({ ...bonus, expiresAt });
+    setTimeout(() => {
+      this.removeExpiredAdBonuses();
+      this.recalculateFromAttributes();
+      updateResources();
+    }, bonus.duration * 1000);
+  }
+
+  removeExpiredAdBonuses() {
+    const now = Date.now();
+    this.activeAdBonuses = this.activeAdBonuses.filter((b) => b.expiresAt > now);
+  }
+
+  getActiveAdBonuses() {
+    this.removeExpiredAdBonuses();
+    const effects = {};
+    this.activeAdBonuses.forEach((b) => {
+      if (b.type === 'doubleCrystalGain') return;
+      effects[b.type] = (effects[b.type] || 0) + b.amount;
+    });
+    return effects;
+  }
+
+  hasDoubleCrystalGain() {
+    this.removeExpiredAdBonuses();
+    return this.activeAdBonuses.some((b) => b.type === 'doubleCrystalGain');
   }
 
   applyFinalCalculations(flatValues, percentBonuses) {
