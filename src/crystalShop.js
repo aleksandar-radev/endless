@@ -542,6 +542,7 @@ export default class CrystalShop {
       }
       await this._bulkPurchase(stat, config, qty);
       if (stat === 'startingStage') options.updateStartingStageOption();
+      if (stat === 'stageSkip') options.updateStageSkipOption();
       return;
     }
 
