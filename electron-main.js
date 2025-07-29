@@ -25,6 +25,8 @@ function createWindow() {
       webSecurity: true,
       allowRunningInsecureContent: false,
       experimentalFeatures: false,
+      sandbox: true,
+      enableRemoteModule: false,
     },
   });
 
