@@ -1,4 +1,5 @@
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
+import { scaleDownFlat } from '../../common.js';
 
 // Elementalist skills extracted from skills.js
 export const ELEMENTALIST_SKILLS = {
@@ -15,7 +16,7 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamage: level * 2,
-      fireDamagePercent: level * 5,
+      fireDamagePercent: 5 * scaleDownFlat(level),
     }),
   },
   frostArmor: {
@@ -31,8 +32,8 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: level * 4,
-      armorPercent: level * 3,
-      coldDamagePercent: level * 2,
+      armorPercent: 3 * scaleDownFlat(level),
+      coldDamagePercent: 2 * scaleDownFlat(level),
     }),
   },
 
@@ -45,10 +46,10 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Increases mana and mana regeneration',
     maxLevel: () => 1000,
     effect: (level) => ({
-      manaPercent: level * 2,
+      manaPercent: 2 * scaleDownFlat(level),
       manaRegen: level * 0.1,
-      manaRegenPercent: level * 0.5,
-      wisdomPercent: level * 0.5,
+      manaRegenPercent: 0.5 * scaleDownFlat(level),
+      wisdomPercent: 0.5 * scaleDownFlat(level),
       wisdom: level * 2,
     }),
   },
@@ -66,8 +67,8 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lightningDamage: level * 5,
-      lightningDamagePercent: level * 6,
-      airDamagePercent: level * 2,
+      lightningDamagePercent: 6 * scaleDownFlat(level),
+      airDamagePercent: 2 * scaleDownFlat(level),
     }),
   },
   elementalMastery: {
@@ -79,7 +80,7 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Increases all elemental damage.',
     maxLevel: () => 200,
     effect: (level) => ({
-      elementalDamagePercent: level * 1,
+      elementalDamagePercent: scaleDownFlat(level),
     }),
   },
 
@@ -96,10 +97,10 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Summons a blizzard, covering the battlefield in frost.',
     maxLevel: () => 100,
     effect: (level) => ({
-      coldDamagePercent: level * 3,
-      airDamagePercent: level * 3,
-      waterDamagePercent: level * 3,
-      lightningDamagePercent: level * 3,
+      coldDamagePercent: 3 * scaleDownFlat(level),
+      airDamagePercent: 3 * scaleDownFlat(level),
+      waterDamagePercent: 3 * scaleDownFlat(level),
+      lightningDamagePercent: 3 * scaleDownFlat(level),
       coldDamage: level * 3,
       airDamage: level * 3,
       waterDamage: level * 3,
@@ -119,7 +120,7 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       reflectFireDamage: level * 18,
-      fireDamagePercent: level * 2.5,
+      fireDamagePercent: 2.5 * scaleDownFlat(level),
     }),
   },
   arcaneWisdom: {
@@ -131,10 +132,10 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Increases mana and mana regeneration.',
     maxLevel: () => 200,
     effect: (level) => ({
-      manaPercent: level * 1.5,
+      manaPercent: 1.5 * scaleDownFlat(level),
       manaRegen: level * 0.2,
-      manaRegenPercent: level * 0.5,
-      manaRegenOfTotalPercent: Math.min(level * 0.005, 1),
+      manaRegenPercent: 0.5 * scaleDownFlat(level),
+      manaRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.005, 1),
     }),
   },
 
@@ -151,7 +152,7 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamage: level * 3,
-      elementalDamagePercent: level * 1,
+      elementalDamagePercent: scaleDownFlat(level),
     }),
   },
   elementalAffinity: {
@@ -164,8 +165,8 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => 1000,
     effect: (level) => ({
       elementalDamage: level * 0.5,
-      elementalDamagePercent: level * 0.5,
-      intelligencePercent: level * 0.5,
+      elementalDamagePercent: 0.5 * scaleDownFlat(level),
+      intelligencePercent: 0.5 * scaleDownFlat(level),
     }),
   },
 
@@ -183,7 +184,7 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => 200,
     effect: (level) => ({
       attackRating: level * 5,
-      attackRatingPercent: level * 5,
+      attackRatingPercent: 5 * scaleDownFlat(level),
       lifePerHit: level * 4,
       manaPerHit: level * 0.5,
       attackSpeed: level * 0.01,
@@ -201,10 +202,10 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Boosts elemental damage.',
     maxLevel: () => 600,
     effect: (level) => ({
-      fireDamagePercent: level * 2,
-      coldDamagePercent: level * 2,
-      airDamagePercent: level * 2,
-      lightningDamagePercent: level * 2,
+      fireDamagePercent: 2 * scaleDownFlat(level),
+      coldDamagePercent: 2 * scaleDownFlat(level),
+      airDamagePercent: 2 * scaleDownFlat(level),
+      lightningDamagePercent: 2 * scaleDownFlat(level),
     }),
   },
   primordialControl: {
@@ -216,10 +217,10 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Grants control over elemental forces, increasing all stats.',
     maxLevel: () => 5000,
     effect: (level) => ({
-      earthDamagePercent: level * 1.5,
+      earthDamagePercent: 1.5 * scaleDownFlat(level),
       vitality: level * 5,
-      vitalityPercent: level * 2,
-      wisdomPercent: level * 2,
+      vitalityPercent: 2 * scaleDownFlat(level),
+      wisdomPercent: 2 * scaleDownFlat(level),
     }),
   },
 
@@ -233,11 +234,11 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Transforms the caster into a being of pure elemental power.',
     maxLevel: () => 100,
     effect: (level) => ({
-      elementalDamagePercent: level * 3,
+      elementalDamagePercent: 3 * scaleDownFlat(level),
       elementalDamage: level * 2,
       allResistance: level * 0.25,
       perseverance: level * 5,
-      perseverancePercent: level * 2,
+      perseverancePercent: 2 * scaleDownFlat(level),
     }),
   },
 };

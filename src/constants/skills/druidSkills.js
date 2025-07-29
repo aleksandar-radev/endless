@@ -1,4 +1,5 @@
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
+import { scaleDownFlat } from '../../common.js';
 
 // Druid skills
 export const DRUID_SKILLS = {
@@ -37,7 +38,7 @@ export const DRUID_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: level * 3,
-      armorPercent: level * 2,
+      armorPercent: 2 * scaleDownFlat(level),
       lifeRegen: level * 1,
     }),
   },
@@ -51,8 +52,8 @@ export const DRUID_SKILLS = {
     maxLevel: () => 200,
     effect: (level) => ({
       vitality: level * 2,
-      lifePercent: level * 0.25,
-      lifeRegenOfTotalPercent: Math.min(level * 0.005, 1),
+      lifePercent: 0.25 * scaleDownFlat(level),
+      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.005, 1),
     }),
   },
 
@@ -70,7 +71,7 @@ export const DRUID_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeRegen: level * 4,
-      lifeRegenPercent: level * 0.5,
+      lifeRegenPercent: 0.5 * scaleDownFlat(level),
     }),
   },
   entanglingRoots: {
@@ -85,7 +86,7 @@ export const DRUID_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       earthDamage: level * 5,
-      earthDamagePercent: level * 5,
+      earthDamagePercent: 5 * scaleDownFlat(level),
     }),
   },
 
@@ -121,8 +122,8 @@ export const DRUID_SKILLS = {
     description: () => 'Increases life and life regeneration.',
     maxLevel: () => 200,
     effect: (level) => ({
-      lifePercent: level * 0.5,
-      lifeRegenOfTotalPercent: Math.min(level * 0.005, 1),
+      lifePercent: 0.5 * scaleDownFlat(level),
+      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.005, 1),
     }),
   },
 
@@ -139,9 +140,9 @@ export const DRUID_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       airDamage: level * 4,
-      airDamagePercent: level * 6,
+      airDamagePercent: 6 * scaleDownFlat(level),
       coldDamage: level * 4,
-      coldDamagePercent: level * 6,
+      coldDamagePercent: 6 * scaleDownFlat(level),
     }),
   },
   stoneform: {
@@ -157,8 +158,8 @@ export const DRUID_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: level * 4,
-      armorPercent: level * 5,
-      earthDamagePercent: level * 2,
+      armorPercent: 5 * scaleDownFlat(level),
+      earthDamagePercent: 2 * scaleDownFlat(level),
     }),
   },
 
@@ -188,9 +189,9 @@ export const DRUID_SKILLS = {
     description: () => 'Empowers you under the moon, boosting elemental damage.',
     maxLevel: () => 300,
     effect: (level) => ({
-      coldDamagePercent: level * 2,
+      coldDamagePercent: 2 * scaleDownFlat(level),
       coldDamage: level * 4,
-      airDamagePercent: level * 2,
+      airDamagePercent: 2 * scaleDownFlat(level),
       airDamage: level * 4,
     }),
   },
@@ -208,10 +209,10 @@ export const DRUID_SKILLS = {
     description: () => 'Embrace the earth for defense and regeneration.',
     maxLevel: () => 500,
     effect: (level) => ({
-      armorPercent: level * 2,
-      lifeRegenPercent: level * 0.5,
+      armorPercent: 2 * scaleDownFlat(level),
+      lifeRegenPercent: 0.5 * scaleDownFlat(level),
       lifeRegen: level * 2,
-      lifeRegenOfTotalPercent: level * 0.01,
+      lifeRegenOfTotalPercent: scaleDownFlat(level) * 0.01,
     }),
   },
   wrathOfNature: {
@@ -223,9 +224,9 @@ export const DRUID_SKILLS = {
     description: () => 'Nature fights with you, increasing all stats.',
     maxLevel: () => 500,
     effect: (level) => ({
-      damagePercent: level * 2.5,
-      vitalityPercent: level * 1,
-      elementalDamagePercent: level * 1,
+      damagePercent: 2.5 * scaleDownFlat(level),
+      vitalityPercent: scaleDownFlat(level),
+      elementalDamagePercent: scaleDownFlat(level),
     }),
   },
 
@@ -240,10 +241,10 @@ export const DRUID_SKILLS = {
     maxLevel: () => 100,
     effect: (level) => ({
       vitality: level * 3,
-      vitalityPercent: level * 3,
+      vitalityPercent: 3 * scaleDownFlat(level),
       strength: level * 4,
-      damagePercent: level * 2,
-      lifePercent: level * 2,
+      damagePercent: 2 * scaleDownFlat(level),
+      lifePercent: 2 * scaleDownFlat(level),
     }),
   },
 };

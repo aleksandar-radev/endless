@@ -1,4 +1,5 @@
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
+import { scaleDownFlat } from '../../common.js';
 
 // Rogue skills extracted from skills.js
 export const ROGUE_SKILLS = {
@@ -12,7 +13,7 @@ export const ROGUE_SKILLS = {
     description: () => 'A quick dance from the shadows, increasing your damage.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: level * 0.75,
+      damagePercent: 0.75 * scaleDownFlat(level),
       critChance: level * 0.05,
       agility: level * 3,
     }),
@@ -31,7 +32,7 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       blockChance: Math.min(level * 0.05, 25),
       dexterity: level * 4,
-      dexterityPercent: level * 2,
+      dexterityPercent: 2 * scaleDownFlat(level),
     }),
   },
 
@@ -47,9 +48,9 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: level * 2,
-      damagePercent: level * 2,
-      earthDamagePercent: level * 2,
-      waterDamagePercent: level * 1,
+      damagePercent: 2 * scaleDownFlat(level),
+      earthDamagePercent: 2 * scaleDownFlat(level),
+      waterDamagePercent: scaleDownFlat(level),
     }),
   },
   shadowForm: {
@@ -67,7 +68,7 @@ export const ROGUE_SKILLS = {
       critChance: Math.min(level * 0.05, 20),
       critDamage: Math.min(level * 0.002, 3),
       lifeSteal: Math.min(level * 0.01, 4),
-      agilityPercent: level * 1,
+      agilityPercent: scaleDownFlat(level),
     }),
   },
 
@@ -84,7 +85,7 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: level * 5,
-      damagePercent: level * 8,
+      damagePercent: 8 * scaleDownFlat(level),
     }),
   },
   precision: {
@@ -97,8 +98,8 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       dexterity: level * 5,
-      dexterityPercent: level * 2,
-      agilityPercent: level * 2,
+      dexterityPercent: 2 * scaleDownFlat(level),
+      agilityPercent: 2 * scaleDownFlat(level),
     }),
   },
 
@@ -114,7 +115,7 @@ export const ROGUE_SKILLS = {
     description: () => 'A devastating attack from behind, dealing massive damage and stealing resources.',
     maxLevel: () => 100,
     effect: (level) => ({
-      damagePercent: level * 4,
+      damagePercent: 4 * scaleDownFlat(level),
       lifePerHit: level * 6,
       manaPerHit: level * 0.6,
     }),
@@ -149,9 +150,9 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: level * 3,
-      damagePercent: level * 3,
-      coldDamagePercent: level * 5,
-      airDamagePercent: level * 5,
+      damagePercent: 3 * scaleDownFlat(level),
+      coldDamagePercent: 5 * scaleDownFlat(level),
+      airDamagePercent: 5 * scaleDownFlat(level),
     }),
   },
 
@@ -167,7 +168,7 @@ export const ROGUE_SKILLS = {
       critChance: level * 0.05,
       critDamage: level * 0.0025,
       attackRating: level * 15,
-      attackRatingPercent: level * 0.5,
+      attackRatingPercent: 0.5 * scaleDownFlat(level),
     }),
   },
 
@@ -181,11 +182,11 @@ export const ROGUE_SKILLS = {
     description: () => 'Greatly increases attributes and gold gains.',
     maxLevel: () => 500,
     effect: (level) => ({
-      damagePercent: level * 0.5,
-      dexterityPercent: level * 3,
-      agilityPercent: level * 2,
-      wisdomPercent: level * 1,
-      bonusGoldPercent: level * 0.25,
+      damagePercent: 0.5 * scaleDownFlat(level),
+      dexterityPercent: 3 * scaleDownFlat(level),
+      agilityPercent: 2 * scaleDownFlat(level),
+      wisdomPercent: scaleDownFlat(level),
+      bonusGoldPercent: 0.25 * scaleDownFlat(level),
     }),
   },
 };

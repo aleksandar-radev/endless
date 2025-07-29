@@ -1,4 +1,5 @@
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
+import { scaleDownFlat } from '../../common.js';
 
 // Paladin skills extracted from skills.js
 export const PALADIN_SKILLS = {
@@ -15,7 +16,7 @@ export const PALADIN_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       life: level * 5,
-      lifePercent: Math.min(level * 0.1, 5),
+      lifePercent: Math.min(scaleDownFlat(level) * 0.1, 5),
     }),
   },
   smite: {
@@ -29,8 +30,8 @@ export const PALADIN_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: level * 1,
-      damagePercent: level * 1,
-      fireDamagePercent: level * 2,
+      damagePercent: scaleDownFlat(level),
+      fireDamagePercent: 2 * scaleDownFlat(level),
     }),
   },
   shieldBash: {
@@ -45,7 +46,7 @@ export const PALADIN_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: level * 2,
-      damagePercent: level * 3,
+      damagePercent: 3 * scaleDownFlat(level),
     }),
   },
   divineProtection: {
@@ -57,9 +58,9 @@ export const PALADIN_SKILLS = {
     description: () => 'Greatly increases armor and block chance.',
     maxLevel: () => 200,
     effect: (level) => ({
-      armorPercent: level * 2,
+      armorPercent: 2 * scaleDownFlat(level),
       thornsDamage: level * 1,
-      thornsDamagePercent: level * 0.5,
+      thornsDamagePercent: 0.5 * scaleDownFlat(level),
     }),
   },
 
@@ -76,9 +77,9 @@ export const PALADIN_SKILLS = {
     description: () => 'Blesses the ground, dealing holy damage to enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: level * 4,
-      coldDamagePercent: level * 4,
-      lightningDamagePercent: level * 4,
+      fireDamagePercent: 4 * scaleDownFlat(level),
+      coldDamagePercent: 4 * scaleDownFlat(level),
+      lightningDamagePercent: 4 * scaleDownFlat(level),
     }),
   },
   greaterHealing: {
@@ -93,7 +94,7 @@ export const PALADIN_SKILLS = {
     maxLevel: () => Infinity,
     effect: (level) => ({
       life: level * 8,
-      lifePercent: Math.min(level * 0.25, 20),
+      lifePercent: Math.min(scaleDownFlat(level) * 0.25, 20),
     }),
   },
 
@@ -111,7 +112,7 @@ export const PALADIN_SKILLS = {
     maxLevel: () => 200,
     effect: (level) => ({
       armor: level * 4,
-      armorPercent: level * 6,
+      armorPercent: 6 * scaleDownFlat(level),
       blockChance: level * 0.2,
     }),
   },
@@ -125,8 +126,8 @@ export const PALADIN_SKILLS = {
     maxLevel: () => 500,
     effect: (level) => ({
       life: level * 5,
-      lifePercent: level * 0.6,
-      armorPercent: level * 1,
+      lifePercent: 0.6 * scaleDownFlat(level),
+      armorPercent: scaleDownFlat(level),
       allResistance: Math.min(level * 0.25, 30),
     }),
   },
@@ -143,10 +144,10 @@ export const PALADIN_SKILLS = {
     description: () => 'Calls down holy energy to smite enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: level * 2,
+      damagePercent: 2 * scaleDownFlat(level),
       lightningDamage: level * 8,
-      lightningDamagePercent: level * 5,
-      airDamagePercent: level * 3,
+      lightningDamagePercent: 5 * scaleDownFlat(level),
+      airDamagePercent: 3 * scaleDownFlat(level),
     }),
   },
   beaconOfFaith: {
@@ -159,8 +160,8 @@ export const PALADIN_SKILLS = {
     maxLevel: () => 500,
     effect: (level) => ({
       lifeRegen: level * 1,
-      lifeRegenPercent: level * 0.5,
-      lifeRegenOfTotalPercent: Math.min(level * 0.1, 1),
+      lifeRegenPercent: 0.5 * scaleDownFlat(level),
+      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.1, 1),
     }),
   },
 
@@ -178,7 +179,7 @@ export const PALADIN_SKILLS = {
     maxLevel: () => 500,
     effect: (level) => ({
       vitality: level * 3,
-      vitalityPercent: level * 0.5,
+      vitalityPercent: 0.5 * scaleDownFlat(level),
       resurrectionChance: level * 0.1,
     }),
   },
@@ -194,7 +195,7 @@ export const PALADIN_SKILLS = {
     description: () => 'Unleashes divine energy to increase damage and healing.',
     maxLevel: () => 400,
     effect: (level) => ({
-      damagePercent: level * 2,
+      damagePercent: 2 * scaleDownFlat(level),
       lifePerHit: level * 2,
     }),
   },
@@ -209,9 +210,9 @@ export const PALADIN_SKILLS = {
     effect: (level) => ({
       resurrectionChance: level * 0.1,
       lifeRegen: level * 2,
-      lifeRegenPercent: level * 0.5,
+      lifeRegenPercent: 0.5 * scaleDownFlat(level),
       manaRegen: level * 0.5,
-      manaRegenPercent: level * 1,
+      manaRegenPercent: scaleDownFlat(level),
     }),
   },
 
@@ -225,12 +226,12 @@ export const PALADIN_SKILLS = {
     description: () => 'Grants significant bonuses to all attributes.',
     maxLevel: () => 400,
     effect: (level) => ({
-      elementalDamagePercent: level * 0.75,
+      elementalDamagePercent: 0.75 * scaleDownFlat(level),
       endurance: level * 3,
-      endurancePercent: level * 2,
+      endurancePercent: 2 * scaleDownFlat(level),
       vitality: level * 3,
-      vitalityPercent: level * 2,
-      attackRatingPercent: level * 6,
+      vitalityPercent: 2 * scaleDownFlat(level),
+      attackRatingPercent: 6 * scaleDownFlat(level),
     }),
   },
 };
