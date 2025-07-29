@@ -1,4 +1,5 @@
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
+import { scaleDownFlat } from '../../common.js';
 
 // Warrior skills extracted from skills.js
 export const WARRIOR_SKILLS = {
@@ -14,7 +15,7 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: level * 1,
-      damagePercent: level * 1,
+      damagePercent: scaleDownFlat(level),
     }),
   },
   toughness: {
@@ -27,7 +28,7 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: level * 3,
-      armorPercent: level * 2.5,
+      armorPercent: 2.5 * scaleDownFlat(level),
     }),
   },
 
@@ -44,7 +45,7 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: level * 2,
-      damagePercent: level * 5,
+      damagePercent: 5 * scaleDownFlat(level),
     }),
   },
   ironWill: {
@@ -57,7 +58,7 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       vitality: level * 1,
-      vitalityPercent: level * 1,
+      vitalityPercent: scaleDownFlat(level),
       lifeRegen: level * 0.75,
     }),
   },
@@ -75,7 +76,7 @@ export const WARRIOR_SKILLS = {
     description: () => 'Temporarily increases damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: level * 2,
+      damagePercent: 2 * scaleDownFlat(level),
     }),
   },
   fortitude: {
@@ -87,9 +88,9 @@ export const WARRIOR_SKILLS = {
     description: () => 'Increases life regeneration',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegenOfTotalPercent: Math.min(level * 0.005, 1),
+      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.005, 1),
       lifeRegen: level * 1,
-      lifeRegenPercent: level * 0.5,
+      lifeRegenPercent: 0.5 * scaleDownFlat(level),
     }),
   },
 
@@ -105,7 +106,7 @@ export const WARRIOR_SKILLS = {
     description: () => 'Deals instant damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: level * 8,
+      damagePercent: 8 * scaleDownFlat(level),
     }),
   },
 
@@ -122,7 +123,7 @@ export const WARRIOR_SKILLS = {
     description: () => 'Increases armor and block chance temporarily',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armorPercent: level * 6,
+      armorPercent: 6 * scaleDownFlat(level),
       blockChance: level * 0.1,
     }),
   },
@@ -138,9 +139,9 @@ export const WARRIOR_SKILLS = {
     description: () => 'Gives huge amounts of physical and fire damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: level * 1,
+      damagePercent: scaleDownFlat(level),
       fireDamage: level * 3,
-      fireDamagePercent: level * 3,
+      fireDamagePercent: 3 * scaleDownFlat(level),
     }),
   },
 
@@ -156,7 +157,7 @@ export const WARRIOR_SKILLS = {
       lifeSteal: level * 0.02,
       attackSpeed: level * 0.01,
       attackRating: level * 6,
-      attackRatingPercent: level * 4,
+      attackRatingPercent: 4 * scaleDownFlat(level),
     }),
   },
 
@@ -170,13 +171,13 @@ export const WARRIOR_SKILLS = {
     description: () => 'Increases all attributes significantly',
     maxLevel: () => 200,
     effect: (level) => ({
-      lifePercent: level * 0.3,
-      damagePercent: level * 0.3,
-      strengthPercent: level * 1.5,
-      vitalityPercent: level * 1.5,
-      agilityPercent: level * 1.5,
-      wisdomPercent: level * 1,
-      endurancePercent: level * 1.5,
+      lifePercent: 0.3 * scaleDownFlat(level),
+      damagePercent: 0.3 * scaleDownFlat(level),
+      strengthPercent: 1.5 * scaleDownFlat(level),
+      vitalityPercent: 1.5 * scaleDownFlat(level),
+      agilityPercent: 1.5 * scaleDownFlat(level),
+      wisdomPercent: scaleDownFlat(level),
+      endurancePercent: 1.5 * scaleDownFlat(level),
     }),
   },
 };

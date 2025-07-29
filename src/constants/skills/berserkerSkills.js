@@ -1,4 +1,5 @@
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
+import { scaleDownFlat } from '../../common.js';
 
 // Berserker skills extracted from skills.js
 export const BERSERKER_SKILLS = {
@@ -14,7 +15,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: level * 2,
-      damagePercent: level * 2,
+      damagePercent: 2 * scaleDownFlat(level),
       lifePerHit: level * -0.4,
     }),
   },
@@ -28,7 +29,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => 200,
     effect: (level) => ({
       armor: level * 4,
-      armorPercent: level * 2,
+      armorPercent: 2 * scaleDownFlat(level),
     }),
   },
 
@@ -45,7 +46,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: level * 3,
-      damagePercent: level * 4,
+      damagePercent: 4 * scaleDownFlat(level),
       lifePerHit: level * -1,
     }),
   },
@@ -61,7 +62,7 @@ export const BERSERKER_SKILLS = {
     description: () => 'Boosts damage and attack speed temporarily.',
     maxLevel: () => 100,
     effect: (level) => ({
-      damagePercent: level * 0.5,
+      damagePercent: 0.5 * scaleDownFlat(level),
       attackSpeed: level * 0.005,
       lifeSteal: Math.min(level * 0.01, 4),
     }),
@@ -78,8 +79,8 @@ export const BERSERKER_SKILLS = {
     description: () => 'Greatly increases damage but lowers defense.',
     maxLevel: () => 200,
     effect: (level) => ({
-      fireDamagePercent: level * 3,
-      airDamagePercent: level * 3,
+      fireDamagePercent: 3 * scaleDownFlat(level),
+      airDamagePercent: 3 * scaleDownFlat(level),
       doubleDamageChance: Math.min(level * 0.2, 20),
     }),
   },
@@ -109,8 +110,8 @@ export const BERSERKER_SKILLS = {
     description: () => 'Smashes the ground, dealing earth damage.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: level * 5,
-      earthDamagePercent: level * 10,
+      damagePercent: 5 * scaleDownFlat(level),
+      earthDamagePercent: 10 * scaleDownFlat(level),
     }),
   },
   rageMastery: {
@@ -125,8 +126,8 @@ export const BERSERKER_SKILLS = {
       critChance: Math.min(level * 0.05, 20),
       critDamage: Math.min(level * 0.005, 3),
       doubleDamageChance: Math.min(level * 0.1, 20),
-      attackRatingPercent: level * 5,
-      lifePercent: level * -0.15,
+      attackRatingPercent: 5 * scaleDownFlat(level),
+      lifePercent: -0.15 * scaleDownFlat(level),
     }),
   },
 
@@ -145,7 +146,7 @@ export const BERSERKER_SKILLS = {
     effect: (level) => ({
       attackSpeed: level * 0.002,
       lifeSteal: level * 0.01,
-      lifePercent: level * 0.25,
+      lifePercent: 0.25 * scaleDownFlat(level),
     }),
   },
 
@@ -160,7 +161,7 @@ export const BERSERKER_SKILLS = {
     description: () => 'Increases damage and restores resources.',
     maxLevel: () => 400,
     effect: (level) => ({
-      damagePercent: level * 2,
+      damagePercent: 2 * scaleDownFlat(level),
       manaPerHit: level * 0.1,
       lifePerHit: level * 1,
     }),
@@ -176,8 +177,8 @@ export const BERSERKER_SKILLS = {
     effect: (level) => ({
       resurrectionChance: level * 0.1,
       lifeRegen: level * 1,
-      lifeRegenPercent: level * 0.75,
-      armorPercent: level * 3,
+      lifeRegenPercent: 0.75 * scaleDownFlat(level),
+      armorPercent: 3 * scaleDownFlat(level),
     }),
   },
 
@@ -191,10 +192,10 @@ export const BERSERKER_SKILLS = {
     description: () => 'Significantly increases all combat stats.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strengthPercent: level * 2.5,
+      strengthPercent: 2.5 * scaleDownFlat(level),
       critChance: Math.min(level * 0.05, 20),
       attackSpeed: level * 0.002,
-      damagePercent: level * 1,
+      damagePercent: scaleDownFlat(level),
     }),
   },
 };
