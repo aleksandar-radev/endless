@@ -61,6 +61,9 @@ export const CRYSTAL_CAVE_ENEMIES = [
 
     attackSpeed: 1.2,
 
+    damage: 1.5 * getEnemyStatMultiplier(tier),
+    airDamage: 1.5 * getEnemyStatMultiplier(tier),
+
     airResistance: 10,
     fireResistance: 5,
     coldResistance: 5,
