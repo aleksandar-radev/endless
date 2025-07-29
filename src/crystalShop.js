@@ -6,7 +6,9 @@ import {
   updateSkillTreeValues,
   showConfirmDialog,
   showToast,
+  updateStageUI,
 } from './ui/ui.js';
+import { selectBoss } from './ui/bossUi.js';
 import { handleSavedData } from './functions.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { createModal } from './ui/modal.js';
@@ -226,6 +228,8 @@ export default class CrystalShop {
       if (!confirmed) return;
       hero.crystals -= cost;
       hero.bossLevel = 1;
+      selectBoss();
+      updateStageUI();
       showToast('Boss level has been reset to 1.', 'success');
     }
     updateResources();
