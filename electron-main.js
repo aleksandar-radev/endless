@@ -1,7 +1,10 @@
-// Load .env.electron before anything else
+// Load environment variables
 import dotenv from 'dotenv';
-dotenv.config({ path: '.env.electron' });
-console.log('Environment variables loaded from .env.electron');
+// First load variables from `.env` if present for local development
+dotenv.config();
+// Then load `.env.electron` to ensure required defaults for production
+dotenv.config({ path: '.env.electron', override: false });
+console.log('VITE_ENV:', process.env.VITE_ENV);
 
 
 import { app, BrowserWindow } from 'electron';
@@ -14,6 +17,7 @@ const { autoUpdater } = electronUpdater;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function createWindow() {
+  const isProduction = process.env.VITE_ENV === 'production';
   const win = new BrowserWindow({
     width: 1320,
     height: 800,
@@ -21,10 +25,12 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       backgroundThrottling: false,
-      devTools: false, // Disable DevTools in production
-      webSecurity: true,
-      allowRunningInsecureContent: false,
-      experimentalFeatures: false,
+      devTools: !isProduction,
+      webSecurity: isProduction,
+      allowRunningInsecureContent: !isProduction,
+      experimentalFeatures: !isProduction,
+      sandbox: isProduction,
+      enableRemoteModule: false,
     },
   });
 
