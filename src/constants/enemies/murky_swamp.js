@@ -10,7 +10,7 @@ export const SWAMP_ENEMIES = [
     tier: tier,
 
     life: 24 * getEnemyStatMultiplier(tier),
-    damage: 2 * getEnemyStatMultiplier(tier),
+    damage: 1.5 * getEnemyStatMultiplier(tier),
     attackRating: 12 * getEnemyStatMultiplier(tier),
     armor: 8 * getEnemyStatMultiplier(tier),
     evasion: 6 * getEnemyStatMultiplier(tier),
@@ -18,7 +18,7 @@ export const SWAMP_ENEMIES = [
     xp: 8 * getEnemyStatMultiplier(tier),
     gold: 7 * getEnemyStatMultiplier(tier),
 
-    earthDamage: 3 * getEnemyStatMultiplier(tier),
+    earthDamage: 1.5 * getEnemyStatMultiplier(tier),
 
     fireResistance: 5,
     coldResistance: 5,
@@ -65,7 +65,7 @@ export const SWAMP_ENEMIES = [
     tier: tier,
 
     life: 20 * getEnemyStatMultiplier(tier),
-    damage: 0 * getEnemyStatMultiplier(tier),
+    damage: 1 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.2,
     attackRating: 12 * getEnemyStatMultiplier(tier),
     armor: 6 * getEnemyStatMultiplier(tier),
@@ -93,7 +93,7 @@ export const SWAMP_ENEMIES = [
     tier: tier,
 
     life: 22 * getEnemyStatMultiplier(tier),
-    damage: 0 * getEnemyStatMultiplier(tier),
+    damage: 1.2 * getEnemyStatMultiplier(tier),
     attackSpeed: 0.9,
     attackRating: 10 * getEnemyStatMultiplier(tier),
     armor: 7 * getEnemyStatMultiplier(tier),
@@ -102,7 +102,7 @@ export const SWAMP_ENEMIES = [
     xp: 9 * getEnemyStatMultiplier(tier),
     gold: 8 * getEnemyStatMultiplier(tier),
 
-    coldDamage: 5 * getEnemyStatMultiplier(tier),
+    coldDamage: 2 * getEnemyStatMultiplier(tier),
 
     fireResistance: 5,
     coldResistance: 25,

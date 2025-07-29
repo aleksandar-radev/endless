@@ -9,14 +9,14 @@ export const HAUNTED_MOOR_ENEMIES = [
     image: '/enemies/banshee.jpg',
     tier: tier,
 
-    damage: 1 * getEnemyStatMultiplier(tier),
+    damage: 1.4 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.1,
     evasion: 11 * getEnemyStatMultiplier(tier),
 
     xp: 5 * getEnemyStatMultiplier(tier),
     gold: 5 * getEnemyStatMultiplier(tier),
 
-    airDamage: 1 * getEnemyStatMultiplier(tier),
+    airDamage: 1.2 * getEnemyStatMultiplier(tier),
 
     fireResistance: 5,
     coldResistance: 10,

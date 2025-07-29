@@ -11,6 +11,7 @@ export const GOLDEN_STEPPE_ENEMIES = [
 
     life: 40 * getEnemyStatMultiplier(tier),
     damage: 2 * getEnemyStatMultiplier(tier),
+    earthDamage: 1.2 * getEnemyStatMultiplier(tier),
     armor: 8 * getEnemyStatMultiplier(tier),
 
     gold: 13 * getEnemyStatMultiplier(tier),
@@ -30,6 +31,9 @@ export const GOLDEN_STEPPE_ENEMIES = [
 
     image: '/enemies/aurelius.jpg',
     tier: tier,
+
+    damage: 1.4 * getEnemyStatMultiplier(tier),
+    airDamage: 1.2 * getEnemyStatMultiplier(tier),
 
     fireResistance: 60,
     coldResistance: 25,

@@ -10,7 +10,7 @@ export const TUNDRA_ENEMIES = [
     tier: tier,
 
     life: 26 * getEnemyStatMultiplier(tier),
-    damage: 0 * getEnemyStatMultiplier(tier),
+    damage: 1 * getEnemyStatMultiplier(tier),
     attackSpeed: 0.9,
     attackRating: 10 * getEnemyStatMultiplier(tier),
     armor: 9 * getEnemyStatMultiplier(tier),
@@ -19,8 +19,8 @@ export const TUNDRA_ENEMIES = [
     xp: 9 * getEnemyStatMultiplier(tier),
     gold: 7 * getEnemyStatMultiplier(tier),
 
-    airDamage: 3 * getEnemyStatMultiplier(tier),
-    coldDamage: 3 * getEnemyStatMultiplier(tier),
+    airDamage: 1 * getEnemyStatMultiplier(tier),
+    coldDamage: 1 * getEnemyStatMultiplier(tier),
 
     coldResistance: 25,
     fireResistance: 5,
@@ -39,7 +39,7 @@ export const TUNDRA_ENEMIES = [
     tier: tier,
 
     life: 24 * getEnemyStatMultiplier(tier),
-    damage: 4 * getEnemyStatMultiplier(tier),
+    damage: 2 * getEnemyStatMultiplier(tier),
     attackRating: 11 * getEnemyStatMultiplier(tier),
     armor: 7 * getEnemyStatMultiplier(tier),
     evasion: 8 * getEnemyStatMultiplier(tier),
@@ -65,7 +65,7 @@ export const TUNDRA_ENEMIES = [
     tier: tier,
 
     life: 32 * getEnemyStatMultiplier(tier),
-    damage: 3 * getEnemyStatMultiplier(tier),
+    damage: 2 * getEnemyStatMultiplier(tier),
     attackSpeed: 0.95,
     attackRating: 15 * getEnemyStatMultiplier(tier),
     armor: 11 * getEnemyStatMultiplier(tier),
@@ -74,7 +74,7 @@ export const TUNDRA_ENEMIES = [
     xp: 10 * getEnemyStatMultiplier(tier),
     gold: 10 * getEnemyStatMultiplier(tier),
 
-    coldDamage: 2 * getEnemyStatMultiplier(tier),
+    coldDamage: 1.2 * getEnemyStatMultiplier(tier),
 
     coldResistance: 20,
     fireResistance: 5,

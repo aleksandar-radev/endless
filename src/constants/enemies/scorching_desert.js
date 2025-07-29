@@ -10,7 +10,7 @@ export const DESERT_ENEMIES = [
     tier: tier,
 
     life: 26 * getEnemyStatMultiplier(tier),
-    damage: 2 * getEnemyStatMultiplier(tier),
+    damage: 1.5 * getEnemyStatMultiplier(tier),
     attackRating: 12 * getEnemyStatMultiplier(tier),
     armor: 7 * getEnemyStatMultiplier(tier),
     evasion: 9 * getEnemyStatMultiplier(tier),
@@ -18,7 +18,7 @@ export const DESERT_ENEMIES = [
     xp: 9 * getEnemyStatMultiplier(tier),
     gold: 7 * getEnemyStatMultiplier(tier),
 
-    earthDamage: 3 * getEnemyStatMultiplier(tier),
+    earthDamage: 1.5 * getEnemyStatMultiplier(tier),
 
     fireResistance: 5,
     coldResistance: 15,
@@ -37,7 +37,7 @@ export const DESERT_ENEMIES = [
     tier: tier,
 
     life: 24 * getEnemyStatMultiplier(tier),
-    damage: 0 * getEnemyStatMultiplier(tier),
+    damage: 1 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.1,
     attackRating: 12 * getEnemyStatMultiplier(tier),
     armor: 6 * getEnemyStatMultiplier(tier),
@@ -93,7 +93,7 @@ export const DESERT_ENEMIES = [
     tier: tier,
 
     life: 26 * getEnemyStatMultiplier(tier),
-    damage: 3 * getEnemyStatMultiplier(tier),
+    damage: 2 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.1,
     attackRating: 12 * getEnemyStatMultiplier(tier),
     armor: 7 * getEnemyStatMultiplier(tier),
@@ -102,7 +102,7 @@ export const DESERT_ENEMIES = [
     xp: 9 * getEnemyStatMultiplier(tier),
     gold: 9 * getEnemyStatMultiplier(tier),
 
-    fireDamage: 3 * getEnemyStatMultiplier(tier),
+    fireDamage: 1.5 * getEnemyStatMultiplier(tier),
 
     fireResistance: 20,
     coldResistance: 5,

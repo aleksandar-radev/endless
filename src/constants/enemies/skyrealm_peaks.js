@@ -38,7 +38,7 @@ export const SKYREALM_ENEMIES = [
     tier: tier,
 
     life: 28 * getEnemyStatMultiplier(tier),
-    damage: 4 * getEnemyStatMultiplier(tier),
+    damage: 2.5 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.1,
     attackRating: 14 * getEnemyStatMultiplier(tier),
     armor: 7 * getEnemyStatMultiplier(tier),
@@ -75,8 +75,8 @@ export const SKYREALM_ENEMIES = [
     xp: 9 * getEnemyStatMultiplier(tier),
     gold: 9 * getEnemyStatMultiplier(tier),
 
-    airDamage: 4 * getEnemyStatMultiplier(tier),
-    earthDamage: 2 * getEnemyStatMultiplier(tier),
+    airDamage: 2.5 * getEnemyStatMultiplier(tier),
+    earthDamage: 0.5 * getEnemyStatMultiplier(tier),
 
     fireResistance: 5,
     coldResistance: 10,
@@ -95,7 +95,7 @@ export const SKYREALM_ENEMIES = [
     tier: tier,
 
     life: 30 * getEnemyStatMultiplier(tier),
-    damage: 4 * getEnemyStatMultiplier(tier),
+    damage: 2 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.2,
     attackRating: 14 * getEnemyStatMultiplier(tier),
     armor: 15 * getEnemyStatMultiplier(tier),
@@ -104,7 +104,7 @@ export const SKYREALM_ENEMIES = [
     xp: 11 * getEnemyStatMultiplier(tier),
     gold: 13 * getEnemyStatMultiplier(tier),
 
-    airDamage: 2 * getEnemyStatMultiplier(tier),
+    airDamage: 1 * getEnemyStatMultiplier(tier),
 
     fireResistance: 5,
     coldResistance: 5,
