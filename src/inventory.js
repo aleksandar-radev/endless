@@ -545,19 +545,15 @@ export default class Inventory {
       this.inventoryItems[currentPosition] = targetItem;
       this.inventoryItems[newPosition] = item;
     } else {
-      // Item is equipped, handle unequipping to specific position
+      // Item is equipped, only move if target slot is empty
+      if (targetItem) {
+        return;
+      }
+
       for (const [slot, equippedItem] of Object.entries(this.equippedItems)) {
         if (equippedItem.id === item.id) {
           delete this.equippedItems[slot];
-          if (targetItem) {
-            // If target position has an item, try to equip it
-            if (this.canEquipInSlot(targetItem, slot)) {
-              this.equippedItems[slot] = targetItem;
-              this.inventoryItems[newPosition] = item;
-            }
-          } else {
-            this.inventoryItems[newPosition] = item;
-          }
+          this.inventoryItems[newPosition] = item;
           break;
         }
       }
