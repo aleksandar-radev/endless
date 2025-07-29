@@ -548,7 +548,8 @@ function updateSkillModalDetails() {
     Object.entries(summonStatsCurrent).forEach(([stat, currVal]) => {
       const futureVal = summonStatsFuture[stat];
       const diff = futureVal - currVal;
-      effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${currVal} (${diff >= 0 ? '+' : ''}${diff})</p>`;
+      const decimals = STATS[stat].decimalPlaces || 0;
+      effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${currVal.toFixed(decimals)} (${diff >= 0 ? '+' : ''}${diff.toFixed(decimals)})</p>`;
     });
   } else {
     const title = skillModal.querySelector('.modal-skill-effects h3');
@@ -672,7 +673,8 @@ const updateTooltipContent = (skillId) => {
     const summonStats = skill.summonStats(level);
     skillDescription += '<br /><u>Summon Stats:</u><br />';
     Object.entries(summonStats).forEach(([stat, value]) => {
-      skillDescription += `${formatStatName(stat)}: ${value}<br />`;
+      const decimals = STATS[stat].decimalPlaces || 0;
+      skillDescription += `${formatStatName(stat)}: ${value.toFixed(decimals)}<br />`;
     });
   } else if (currentLevel < skill.maxLevel() || skill.maxLevel() === Infinity) {
     skillDescription += '<br /><u>Next Level Effects:</u><br />';
