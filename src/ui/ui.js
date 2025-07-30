@@ -477,6 +477,14 @@ export const formatStatName = (stat) => {
   if (stat === 'percentOfPlayerDamage') return '% of your total damage';
   if (stat === 'manaShieldPercent') return 'Damage taken from mana before life %';
   if (stat === 'manaRegenOfTotalPercent') return 'Mana regeneration % of total mana';
+  if (stat === 'ignoreEnemyArmor') return 'Ignore Enemy Armor';
+  if (stat === 'ignoreAllEnemyResistances') return 'Ignore All Enemy Resistances';
+  if (stat === 'attackNeverMiss') return 'Attack Never Miss';
+  if (stat === 'lowerEnemyDamagePercent') return 'Lower Enemy Damage %';
+  if (stat === 'reduceEnemyHpPercent') return 'Reduce Enemy HP %';
+  if (stat === 'reduceEnemyAttackSpeedPercent') return 'Reduce Enemy Attack Speed %';
+  if (stat === 'extraDamageFromLifePercent') return 'Extra Damage From % of Life';
+  if (stat === 'extraDamageFromManaPercent') return 'Extra Damage From % of Mana';
 
   // Fallback: convert camelCase to Title Case with spaces
   return stat

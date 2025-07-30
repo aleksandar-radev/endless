@@ -34,7 +34,7 @@ class Boss {
     this.damage = this.calculateDamage();
 
     // Other stats (4x stronger)
-    this.attackSpeed = this.baseData.attackSpeed || 1;
+    this.attackSpeed = this.calculateAttackSpeed();
     this.armor = this.calculateArmor();
     this.evasion = this.calculateEvasion();
     this.attackRating = this.calculateAttackRating();
@@ -71,10 +71,18 @@ class Boss {
     return val * (this.baseData.multiplier?.gold || 1);
   }
 
+
+  calculateAttackSpeed() {
+    const baseSpeed = this.baseData.attackSpeed || 1;
+    const speedRed = hero.stats.reduceEnemyAttackSpeedPercent || 0;
+    return baseSpeed * (1 - speedRed);
+  }
+
   calculateLife() {
-    const baseLife = this.baseData.life ;
+    const baseLife = this.baseData.life;
     const val = scaleStat(baseLife, this.level);
-    return val * (this.baseData.multiplier?.life || 1);
+    const hpRed = hero.stats.reduceEnemyHpPercent || 0;
+    return val * (this.baseData.multiplier?.life || 1) * (1 - hpRed);
   }
 
   calculateDamage() {

@@ -2,6 +2,7 @@ import { ITEM_TYPES } from './constants/items.js';
 import { getCurrentRegion, getRegionEnemies } from './region.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
 import { scaleStat } from './common.js';
+import { hero } from './globals.js';
 
 // base value increase per level
 // for tier 1 enemy level 1 50 life, level 2 is 50 + 25 = 75 (e.g. 50% increase for base value per level)
@@ -108,18 +109,21 @@ class Enemy {
   }
 
   calculateAttackSpeed() {
-    return (
+    const baseSpeed =
       this.baseData.attackSpeed *
       (this.rarityData.multiplier.attackSpeed || 1) *
       (this.region.multiplier.attackSpeed || 1) *
-      (this.baseData.multiplier.attackSpeed || 1)
-    );
+      (this.baseData.multiplier.attackSpeed || 1);
+    const speedRed = hero.stats.reduceEnemyAttackSpeedPercent || 0;
+    return baseSpeed * (1 - speedRed / 100);
   }
 
   calculateLife() {
     const base = this.baseData.life || 0;
-    const val = scaleStat(base, this.level, 0,0,0, this.baseScale);
-    return val * this.region.multiplier.life * this.rarityData.multiplier.life * this.baseData.multiplier.life;
+    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
+    const baseLife = val * this.region.multiplier.life * this.rarityData.multiplier.life * this.baseData.multiplier.life;
+    const hpRed = hero.stats.reduceEnemyHpPercent || 0;
+    return baseLife * (1 - hpRed / 100);
   }
 
   calculateDamage = () => {

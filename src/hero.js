@@ -508,6 +508,23 @@ export default class Hero {
     waterDamage *= (1 + ((toggleEffects.waterDamagePercent || 0) +
         (instantSkillBaseEffects.waterDamagePercent || 0) + (toggleEffects.elementalDamagePercent || 0)) / 100);
 
+    // Extra damage based on hero resources, split between physical and elemental
+    const extraFromLife = this.stats.extraDamageFromLifePercent * this.stats.life / 100;
+    const extraFromMana = this.stats.extraDamageFromManaPercent * this.stats.mana / 100;
+    // Split: 50% to physical, 50% distributed equally among elements
+    const elements = ['fire', 'cold', 'air', 'earth', 'lightning', 'water'];
+    const splitLife = extraFromLife / 2;
+    const splitMana = extraFromMana / 2;
+    physicalDamage += splitLife + splitMana;
+    const eleShareLife = splitLife / elements.length;
+    const eleShareMana = splitMana / elements.length;
+    fireDamage += eleShareLife + eleShareMana;
+    coldDamage += eleShareLife + eleShareMana;
+    airDamage += eleShareLife + eleShareMana;
+    earthDamage += eleShareLife + eleShareMana;
+    lightningDamage += eleShareLife + eleShareMana;
+    waterDamage += eleShareLife + eleShareMana;
+
     if (toggleEffects.doubleDamageChance) {
       const doubleDamageChance = Math.random() * 100;
       if (doubleDamageChance < toggleEffects.doubleDamageChance) {
@@ -560,12 +577,16 @@ export default class Hero {
 
     // Calculate effective enemy armor after hero's armor penetration
     let effectiveArmor = enemy.armor;
-    // Apply percent armor penetration first
-    effectiveArmor *= 1 - (this.stats.armorPenetrationPercent || 0) / 100;
-    // Then apply flat armor penetration
-    effectiveArmor -= this.stats.armorPenetration || 0;
-    // Armor cannot go below zero
-    effectiveArmor = Math.max(0, effectiveArmor);
+    if (this.stats.ignoreEnemyArmor > 0) {
+      effectiveArmor = 0;
+    } else {
+      // Apply percent armor penetration first
+      effectiveArmor *= 1 - (this.stats.armorPenetrationPercent || 0) / 100;
+      // Then apply flat armor penetration
+      effectiveArmor -= this.stats.armorPenetration || 0;
+      // Armor cannot go below zero
+      effectiveArmor = Math.max(0, effectiveArmor);
+    }
 
     // Use PoE2 armor formula for physical reduction
     const armorReduction = calculateArmorReduction(effectiveArmor, result.breakdown.physical) / 100;
@@ -573,6 +594,7 @@ export default class Hero {
 
     // Helper to calculate effective resistance after penetration
     function getEffectiveResistance(baseRes, flatPen, percentPen) {
+      if (this.stats.ignoreAllEnemyResistances > 0) return 0;
       let effectiveRes = baseRes;
       // Apply percent penetration first (elementalPenetrationPercent + specific percent)
       const totalPercentPen = (percentPen || 0) + (this.stats.elementalPenetrationPercent || 0);
