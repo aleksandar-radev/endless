@@ -25,6 +25,10 @@ export const OFFENSE_STATS = {
     itemTags: ['offense'],
     showInUI: true,
   },
+  damagePerLevel: {
+    base: 0,
+    decimalPlaces: 1,
+  },
   damagePercent: {
     base: 0,
     decimalPlaces: 1,

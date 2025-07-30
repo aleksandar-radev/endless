@@ -118,12 +118,12 @@ export const WARRIOR_SKILLS = {
     manaCost: (level) => 5 + level * 0.3,
     cooldown: () => 9500,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
-    icon: () => 'slam',
+    icon: () => 'armor-break',
     description: () => 'Deals instant damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armorPenetration: 5 * level,
-      armorPenetrationPercent: Math.min(0.5 * scaleDownFlat(level), 40),
+      armorPenetrationPercent: Math.min(0.25 * scaleDownFlat(level), 40),
     }),
   },
 
