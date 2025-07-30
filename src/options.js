@@ -1,3 +1,4 @@
+
 import { crystalShop, dataManager, game, setGlobals } from './globals.js';
 import { showConfirmDialog, showToast, updateStageUI } from './ui/ui.js';
 import { closeModal, createModal } from './ui/modal.js';
@@ -5,6 +6,7 @@ import Enemy from './enemy.js';
 import { logout } from './api.js';
 import { CHANGELOG } from './changelog/changelog.js';
 import upcommingChanges from './upcoming.js';
+import { audioManager } from './audio.js';
 
 const html = String.raw;
 
@@ -30,9 +32,7 @@ export class Options {
     this._renderOptionsUI();
     this._initCloudSaveButtons();
     // Always set audio volume to current option when initializing options UI
-    import('./audio.js').then(({ audioManager }) => {
-      audioManager.setVolume(this.soundVolume);
-    });
+    audioManager.setVolume(this.soundVolume);
   }
 
 
@@ -65,17 +65,13 @@ export class Options {
       this.soundVolume = val;
       valueLabel.textContent = `${Math.round(val * 100)}%`;
       // Set global audio volume
-      import('./audio.js').then(({ audioManager }) => {
-        audioManager.setVolume(val);
-      });
+      audioManager.setVolume(val);
       // Save option
       dataManager.saveGame();
     });
     // Set initial volume on load
     setTimeout(() => {
-      import('./audio.js').then(({ audioManager }) => {
-        audioManager.setVolume(this.soundVolume);
-      });
+      audioManager.setVolume(this.soundVolume);
     }, 0);
     return wrapper;
   }
