@@ -33,7 +33,6 @@ export const MAGE_SKILLS = {
       wisdomPercent: 1 * scaleDownFlat(level),
       perseverance: level * 2,
       perseverancePercent: 1 * scaleDownFlat(level),
-      reduceEnemyAttackSpeedPercent: 4 * scaleDownFlat(level),
     }),
   },
 

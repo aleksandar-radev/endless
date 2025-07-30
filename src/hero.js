@@ -409,6 +409,11 @@ export default class Hero {
         if (stat === 'attackSpeed') value = Math.min(value, 5);
         if (stat === 'resurrectionChance') value = Math.min(value, 50);
         if (stat === 'extraMaterialDropMax') value = Math.max(value, 1); // Always at least 1
+        if (stat === 'extraDamageFromLifePercent') value = Math.min(value, 5);
+        if (stat === 'extraDamageFromManaPercent') value = Math.min(value, 5);
+        if (stat === 'reduceEnemyHpPercent') value = Math.min(value, 50);
+        if (stat === 'reduceEnemyAttackSpeedPercent') value = Math.min(value, 50);
+        if (stat === 'lowerEnemyDamagePercent') value = Math.min(value, 50);
 
         this.stats[stat] = value;
       }
