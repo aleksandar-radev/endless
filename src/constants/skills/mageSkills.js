@@ -78,10 +78,10 @@ export const MAGE_SKILLS = {
     description: () => 'Instantly move to a nearby location.',
     maxLevel: () => 100,
     effect: (level) => ({
-      perseverance: level * 5,
-      wisdom: level * 10,
-      intelligence: level * 4,
-      intelligencePercent: 1 * scaleDownFlat(level),
+      perseverance: level * 4,
+      wisdom: level * 8,
+      intelligence: level * 2,
+      intelligencePercent: 0.75 * scaleDownFlat(level),
     }),
   },
   manaShield: {
@@ -112,6 +112,7 @@ export const MAGE_SKILLS = {
     effect: (level) => ({
       mana: level * 25,
       manaRegenOfTotalPercent: 0.025 * scaleDownFlat(level),
+      extraDamageFromManaPercent: Math.min(0.012 * scaleDownFlat(level), 2),
     }),
   },
   iceStorm: {
@@ -230,7 +231,7 @@ export const MAGE_SKILLS = {
     effect: (level) => ({
       wisdom: level * 5,
       wisdomPercent: 4 * scaleDownFlat(level),
-      elementalDamagePercent: 2 * scaleDownFlat(level),
+      elementalDamagePercent: 1.5 * scaleDownFlat(level),
       manaPercent: 3 * scaleDownFlat(level),
     }),
   },

@@ -7,6 +7,7 @@ import { STATS } from './constants/stats/stats.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { ATTRIBUTES } from './constants/stats/attributes.js';
 import { SOUL_UPGRADE_CONFIG } from './soulShop.js';
+import { ELEMENTS } from './constants/common.js';
 
 export const STATS_ON_LEVEL_UP = 3;
 
@@ -364,7 +365,6 @@ export default class Hero {
       }
     }
 
-
     for (const stat in STATS) {
       if (!stat.endsWith('Percent')) {
         let percent = percentBonuses[stat + 'Percent'] || 0;
@@ -381,6 +381,9 @@ export default class Hero {
           value =
             STATS.attackSpeed.base +
             (flatAttackSpeedBonus > 0 ? maxBonus * (1 - Math.exp(-flatAttackSpeedBonus / scale)) : 0);
+        }
+        if (stat ==='mana') {
+          value += (this.stats.manaPerLevel || 0) * (this.level - 1);
         }
 
         // Apply soul shop bonuses (flat or percent)
@@ -438,7 +441,23 @@ export default class Hero {
     this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * this.stats.mana;
     this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.life;
 
-    this.stats.damage = Math.floor(flatValues.damage * (1 + this.stats.totalDamagePercent + this.stats.damagePercent));
+
+    // Extra damage based on hero resources, split between physical and elemental
+    const extraFromLife = (this.stats.extraDamageFromLifePercent || 0) * this.stats.life;
+    const extraFromMana = (this.stats.extraDamageFromManaPercent || 0) * this.stats.mana;
+
+    // Split: 50% to physical, 50% distributed equally among elements
+    const elements = Object.keys(ELEMENTS);
+
+    const splitLife = extraFromLife / 2;
+    const splitMana = extraFromMana / 2;
+    flatValues.damage += splitLife + splitMana;
+
+    const eleShareLife = splitLife / elements.length;
+    const eleShareMana = splitMana / elements.length;
+    flatValues.elementalDamage += eleShareLife + eleShareMana;
+
+    this.stats.damage = Math.floor((flatValues.damage + (this.stats.damagePerLevel || 0) * this.level) * (1 + this.stats.totalDamagePercent + this.stats.damagePercent));
 
     // Special handling for elemental damages
     this.stats.fireDamage = Math.floor(
@@ -512,23 +531,6 @@ export default class Hero {
         (instantSkillBaseEffects.lightningDamagePercent || 0) + (toggleEffects.elementalDamagePercent || 0)) / 100);
     waterDamage *= (1 + ((toggleEffects.waterDamagePercent || 0) +
         (instantSkillBaseEffects.waterDamagePercent || 0) + (toggleEffects.elementalDamagePercent || 0)) / 100);
-
-    // Extra damage based on hero resources, split between physical and elemental
-    const extraFromLife = this.stats.extraDamageFromLifePercent * this.stats.life / 100;
-    const extraFromMana = this.stats.extraDamageFromManaPercent * this.stats.mana / 100;
-    // Split: 50% to physical, 50% distributed equally among elements
-    const elements = ['fire', 'cold', 'air', 'earth', 'lightning', 'water'];
-    const splitLife = extraFromLife / 2;
-    const splitMana = extraFromMana / 2;
-    physicalDamage += splitLife + splitMana;
-    const eleShareLife = splitLife / elements.length;
-    const eleShareMana = splitMana / elements.length;
-    fireDamage += eleShareLife + eleShareMana;
-    coldDamage += eleShareLife + eleShareMana;
-    airDamage += eleShareLife + eleShareMana;
-    earthDamage += eleShareLife + eleShareMana;
-    lightningDamage += eleShareLife + eleShareMana;
-    waterDamage += eleShareLife + eleShareMana;
 
     if (toggleEffects.doubleDamageChance) {
       const doubleDamageChance = Math.random() * 100;

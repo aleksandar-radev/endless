@@ -395,7 +395,9 @@ export default class SkillTree {
       effects.airDamagePercent ||
       effects.earthDamagePercent ||
       effects.lightningDamagePercent ||
-      effects.waterDamagePercent
+      effects.waterDamagePercent ||
+      effects.elementalDamage ||
+      effects.elementalDamagePercent
     );
   }
   applyToggleEffects(isHit = true) {

@@ -57,9 +57,9 @@ export const WARRIOR_SKILLS = {
     description: () => 'Increases resistance to damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      vitality: level * 1,
+      vitality: level * 2,
       vitalityPercent: scaleDownFlat(level),
-      lifeRegen: level * 0.75,
+      lifeRegen: level * 1,
     }),
   },
 
@@ -76,7 +76,7 @@ export const WARRIOR_SKILLS = {
     description: () => 'Temporarily increases damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: 2 * scaleDownFlat(level),
+      damagePercent: 2.5 * scaleDownFlat(level),
     }),
   },
   fortitude: {
@@ -107,6 +107,23 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: 8 * scaleDownFlat(level),
+    }),
+  },
+
+  // Tier 3 Skills
+  armorBreaker: {
+    id: 'armorBreaker',
+    name: () => 'Armor Breaker',
+    type: () => 'passive',
+    manaCost: (level) => 5 + level * 0.3,
+    cooldown: () => 9500,
+    requiredLevel: () => SKILL_LEVEL_TIERS[3],
+    icon: () => 'slam',
+    description: () => 'Deals instant damage',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      armorPenetration: 5 * level,
+      armorPenetrationPercent: Math.min(0.5 * scaleDownFlat(level), 40),
     }),
   },
 
@@ -171,12 +188,10 @@ export const WARRIOR_SKILLS = {
     description: () => 'Increases all attributes significantly',
     maxLevel: () => 200,
     effect: (level) => ({
-      lifePercent: 0.3 * scaleDownFlat(level),
-      damagePercent: 0.3 * scaleDownFlat(level),
+      lifePercent: 1 * scaleDownFlat(level),
+      extraDamageFromLifePercent: Math.min(0.015 * scaleDownFlat(level), 2),
       strengthPercent: 1.5 * scaleDownFlat(level),
       vitalityPercent: 1.5 * scaleDownFlat(level),
-      agilityPercent: 1.5 * scaleDownFlat(level),
-      wisdomPercent: scaleDownFlat(level),
       endurancePercent: 1.5 * scaleDownFlat(level),
     }),
   },

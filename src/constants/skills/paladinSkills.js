@@ -31,6 +31,7 @@ export const PALADIN_SKILLS = {
     effect: (level) => ({
       damage: level * 1,
       damagePercent: scaleDownFlat(level),
+      fireDamage: 2 * level,
       fireDamagePercent: 2 * scaleDownFlat(level),
     }),
   },
@@ -46,7 +47,7 @@ export const PALADIN_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: level * 2,
-      damagePercent: 3 * scaleDownFlat(level),
+      damagePercent: 4 * scaleDownFlat(level),
     }),
   },
   divineProtection: {
@@ -78,9 +79,9 @@ export const PALADIN_SKILLS = {
     description: () => 'Blesses the ground, dealing holy damage to enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: 4 * scaleDownFlat(level),
-      coldDamagePercent: 4 * scaleDownFlat(level),
-      lightningDamagePercent: 4 * scaleDownFlat(level),
+      fireDamagePercent: 5 * scaleDownFlat(level),
+      coldDamagePercent: 5 * scaleDownFlat(level),
+      lightningDamagePercent: 5 * scaleDownFlat(level),
     }),
   },
   greaterHealing: {
@@ -126,8 +127,8 @@ export const PALADIN_SKILLS = {
     description: () => 'Increases healing effects and reduces damage taken.',
     maxLevel: () => 500,
     effect: (level) => ({
-      life: level * 5,
-      lifePercent: 0.6 * scaleDownFlat(level),
+      life: level * 15,
+      lifePercent: 1.2 * scaleDownFlat(level),
       armorPercent: scaleDownFlat(level),
       allResistance: Math.min(level * 0.25, 30),
     }),
@@ -160,9 +161,10 @@ export const PALADIN_SKILLS = {
     description: () => 'Increases healing done.',
     maxLevel: () => 500,
     effect: (level) => ({
-      lifeRegen: level * 1,
-      lifeRegenPercent: 0.5 * scaleDownFlat(level),
+      life: level * 20,
+      lifeRegenPercent: 0.5 * level,
       lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.1, 1),
+      extraDamageFromLifePercent: Math.min(scaleDownFlat(level) * 0.1, 2.5),
     }),
   },
 
@@ -179,10 +181,31 @@ export const PALADIN_SKILLS = {
     description: () => 'Creates a holy barrier that increases all healing effects.',
     maxLevel: () => 500,
     effect: (level) => ({
-      vitality: level * 3,
+      vitality: level * 4,
       vitalityPercent: 0.5 * scaleDownFlat(level),
       resurrectionChance: level * 0.1,
     }),
+  },
+
+  AidFromHeaven: {
+    id: 'AidFromHeaven',
+    name: () => 'Aid From Heaven',
+    type: () => 'summon',
+    summonStats: (level) => {
+      return {
+        percentOfPlayerDamage: Math.min(level * 1, 120),
+        damage: level * 4,
+        attackSpeed: Math.max(0.9, 0.7 + level * 0.003),
+      };
+    },
+    manaCost: (level) => 20 + level * 0.7,
+    cooldown: () => 66000,
+    duration: () => 25000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[4],
+    icon: () => 'aid-from-heaven',
+    description: () => 'Summons an angel from the sky to aid allies.',
+    maxLevel: () => 500,
+    effect: (level) => ({}),
   },
 
   // Tier 100 Skills
@@ -196,7 +219,7 @@ export const PALADIN_SKILLS = {
     description: () => 'Unleashes divine energy to increase damage and healing.',
     maxLevel: () => 400,
     effect: (level) => ({
-      damagePercent: 2 * scaleDownFlat(level),
+      damagePercent: 6 * scaleDownFlat(level),
       lifePerHit: level * 2,
     }),
   },
@@ -209,11 +232,10 @@ export const PALADIN_SKILLS = {
     description: () => 'Provides a chance to resurrect with maximum life upon death',
     maxLevel: () => 400,
     effect: (level) => ({
+      attackSpeed: 0.01 * scaleDownFlat(level),
       resurrectionChance: level * 0.1,
       lifeRegen: level * 2,
       lifeRegenPercent: 0.5 * scaleDownFlat(level),
-      manaRegen: level * 0.5,
-      manaRegenPercent: scaleDownFlat(level),
       allResistance: Math.min(level * 0.15, 20),
     }),
   },

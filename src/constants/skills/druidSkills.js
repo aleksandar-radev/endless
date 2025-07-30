@@ -10,7 +10,7 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: level * 0.75,
+        percentOfPlayerDamage: Math.min(level * 0.75, 80),
         damage: level * 1,
         earthDamage: level * 1,
         waterDamage: level * 0.5,
@@ -49,11 +49,11 @@ export const DRUID_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'leaf',
     description: () => 'Increases vitality and life regeneration.',
-    maxLevel: () => 200,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       vitality: level * 2,
-      lifePercent: 0.25 * scaleDownFlat(level),
-      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.005, 1),
+      lifePercent: 0.5 * scaleDownFlat(level),
+      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.01, 2),
     }),
   },
 
@@ -97,7 +97,7 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: level * 1,
+        percentOfPlayerDamage: Math.min(level * 1, 100),
         damage: level * 4,
         attackSpeed: 0.9,
         lifePerHit: level * 4,
@@ -120,10 +120,10 @@ export const DRUID_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'growth',
     description: () => 'Increases life and life regeneration.',
-    maxLevel: () => 200,
+    maxLevel: () => 1000,
     effect: (level) => ({
-      lifePercent: 0.5 * scaleDownFlat(level),
-      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.005, 1),
+      lifePercent: 1 * scaleDownFlat(level),
+      extraDamageFromLifePercent: Math.min(0.015 * scaleDownFlat(level), 2),
     }),
   },
 

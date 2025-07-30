@@ -20,11 +20,15 @@ export const MISC_STATS = {
   mana: {
     base: 50,
     decimalPlaces: 0,
-    levelUpBonus: 1,
+    levelUpBonus: 0,
     training: { cost: 50, bonus: 1, maxLevel: Infinity },
     item: { min: 5, max: 10, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry', 'magic'],
     showInUI: true,
+  },
+  manaPerLevel: {
+    base: 0,
+    decimalPlaces: 1,
   },
   manaPercent: {
     base: 0,

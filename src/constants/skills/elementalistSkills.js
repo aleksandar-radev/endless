@@ -80,7 +80,9 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Increases all elemental damage.',
     maxLevel: () => 200,
     effect: (level) => ({
-      elementalDamagePercent: scaleDownFlat(level),
+      elementalDamagePercent: 0.75 * scaleDownFlat(level),
+      elementalPenetration: level * 0.1,
+      elementalPenetrationPercent: 0.2 * scaleDownFlat(level),
     }),
   },
 
@@ -151,7 +153,7 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Unleashes a storm of fire, ice, and lightning.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamage: level * 3,
+      elementalDamage: level * 2,
       elementalDamagePercent: scaleDownFlat(level),
     }),
   },
@@ -234,11 +236,11 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Transforms the caster into a being of pure elemental power.',
     maxLevel: () => 100,
     effect: (level) => ({
-      elementalDamagePercent: 3 * scaleDownFlat(level),
+      elementalDamagePercent: 1.5 * scaleDownFlat(level),
       elementalDamage: level * 2,
       allResistance: level * 0.25,
       perseverance: level * 5,
-      perseverancePercent: 2 * scaleDownFlat(level),
+      perseverancePercent: 1.5 * scaleDownFlat(level),
     }),
   },
 };
