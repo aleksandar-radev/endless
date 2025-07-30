@@ -85,7 +85,7 @@ export function scaleDownFlat(
   level,
   start = 1,
   interval = 10,
-  max_level = 100,
+  max_level = 200,
   final_percent = 0.15,
   flat,
   min,
