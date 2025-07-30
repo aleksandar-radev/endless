@@ -19,6 +19,8 @@ export class Options {
     this.resetRequired = data.resetRequired ?? null;
     // Add stageSkip option, default to 0
     this.stageSkip = data.stageSkip || 0;
+    // Add soundVolume option, default to 0
+    this.soundVolume = typeof data.soundVolume === 'number' ? data.soundVolume : 0;
   }
 
   /**
@@ -27,6 +29,55 @@ export class Options {
   initializeOptionsUI() {
     this._renderOptionsUI();
     this._initCloudSaveButtons();
+    // Always set audio volume to current option when initializing options UI
+    import('./audio.js').then(({ audioManager }) => {
+      audioManager.setVolume(this.soundVolume);
+    });
+  }
+
+
+  /**
+   * Creates the sound volume slider UI.
+   */
+  _createSoundVolumeOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="sound-volume-slider" class="sound-volume-label">Sound Volume:</label>
+      <input
+        type="range"
+        id="sound-volume-slider"
+        class="sound-volume-slider"
+        min="0"
+        max="1"
+        step="0.01"
+        value="${this.soundVolume}"
+        title="Adjust game sound volume"
+      />
+      <span class="sound-volume-value">${Math.round(this.soundVolume * 100)}%</span>
+    `;
+    const slider = wrapper.querySelector('input');
+    const valueLabel = wrapper.querySelector('.sound-volume-value');
+    slider.addEventListener('input', () => {
+      let val = parseFloat(slider.value);
+      if (isNaN(val) || val < 0) val = 0;
+      if (val > 1) val = 1;
+      this.soundVolume = val;
+      valueLabel.textContent = `${Math.round(val * 100)}%`;
+      // Set global audio volume
+      import('./audio.js').then(({ audioManager }) => {
+        audioManager.setVolume(val);
+      });
+      // Save option
+      dataManager.saveGame();
+    });
+    // Set initial volume on load
+    setTimeout(() => {
+      import('./audio.js').then(({ audioManager }) => {
+        audioManager.setVolume(this.soundVolume);
+      });
+    }, 0);
+    return wrapper;
   }
 
   _renderOptionsUI() {
@@ -37,6 +88,8 @@ export class Options {
     container.className = 'options-container';
     container.appendChild(this._createCloudSaveBar());
 
+    // --- Sound Volume Option ---
+    container.appendChild(this._createSoundVolumeOption());
     // --- Enemy Stats Toggle Option ---
     container.appendChild(this._createEnemyStatsToggleOption());
 

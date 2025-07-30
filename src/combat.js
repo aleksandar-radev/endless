@@ -15,6 +15,8 @@ import { updateQuestsUI } from './ui/questUi.js';
 import { selectBoss, updateBossUI } from './ui/bossUi.js';
 import { getCurrentRegion } from './region.js';
 
+import { audioManager } from './audio.js';
+
 export function enemyAttack(currentTime) {
   if (!game || !hero || !game.currentEnemy) return;
   if (game.currentEnemy.canAttack(currentTime)) {
@@ -164,6 +166,9 @@ export async function defeatEnemy() {
   const enemy = game.currentEnemy;
   let baseExpGained = 1;
   let baseGoldGained = 1;
+
+  // Play enemy death sound
+  audioManager.play('enemyDeath');
 
   // Add 500ms delay between monster kills
   await new Promise((resolve) => setTimeout(resolve, 500));
