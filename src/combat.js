@@ -50,7 +50,8 @@ export function enemyAttack(currentTime) {
         const lightning = game.currentEnemy.lightningDamage * (1 - hero.stats.lightningResistance / 100);
         const water = game.currentEnemy.waterDamage * (1 - hero.stats.waterResistance / 100);
 
-        const totalDamage = physicalDamage + fire + cold + air + earth + lightning + water;
+        let totalDamage = physicalDamage + fire + cold + air + earth + lightning + water;
+        totalDamage *= 1 - (hero.stats.lowerEnemyDamagePercent || 0) / 100;
 
         // Calculate thorns damage based on the final damage taken
         const thornsDamage = hero.calculateTotalThornsDamage(totalDamage);
@@ -87,8 +88,9 @@ export function playerAttack(currentTime) {
       const hitChance = calculateHitChance(hero.stats.attackRating, game.currentEnemy.evasion);
 
       const roll = Math.random() * 100;
+      const neverMiss = hero.stats.attackNeverMiss > 0;
 
-      if (roll > hitChance) {
+      if (!neverMiss && roll > hitChance) {
         // to take up mana even when missing. (for toggle skills)
         skillTree.applyToggleEffects(false);
         createDamageNumber({ text: 'MISS', color: '#888888' });

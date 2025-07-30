@@ -364,4 +364,36 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
   },
+  ignoreEnemyArmor: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  ignoreAllEnemyResistances: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  attackNeverMiss: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  lowerEnemyDamagePercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  reduceEnemyHpPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  reduceEnemyAttackSpeedPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  extraDamageFromLifePercent: {
+    base: 0,
+    decimalPlaces: 2,
+  },
+  extraDamageFromManaPercent: {
+    base: 0,
+    decimalPlaces: 2,
+  },
 };
