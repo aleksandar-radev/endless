@@ -53,7 +53,6 @@ export function enemyAttack(currentTime) {
         const water = game.currentEnemy.waterDamage * (1 - hero.stats.waterResistance / 100);
 
         let totalDamage = physicalDamage + fire + cold + air + earth + lightning + water;
-        totalDamage *= 1 - (hero.stats.lowerEnemyDamagePercent || 0) / 100;
 
         // Calculate thorns damage based on the final damage taken
         const thornsDamage = hero.calculateTotalThornsDamage(totalDamage);
