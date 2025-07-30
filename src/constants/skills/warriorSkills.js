@@ -195,4 +195,133 @@ export const WARRIOR_SKILLS = {
       endurancePercent: 1.5 * scaleDownFlat(level),
     }),
   },
+
+  // Tier 1200 Skills
+  unstoppableForce: {
+    id: 'unstoppableForce',
+    name: () => 'Unstoppable Force',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[7],
+    icon: () => 'unstoppable-force',
+    description: () => 'Massively increases damage output.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damagePercent: 2 * scaleDownFlat(level),
+      attackRatingPercent: 3 * scaleDownFlat(level),
+      critDamage: level * 0.01,
+    }),
+  },
+  unyieldingDefense: {
+    id: 'unyieldingDefense',
+    name: () => 'Unyielding Defense',
+    type: () => 'buff',
+    manaCost: (level) => 20 + level,
+    cooldown: () => 100000,
+    duration: () => 30000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[7],
+    icon: () => 'unyielding-defense',
+    description: () => 'Temporarily increases armor and block chance.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      armorPercent: 2 * scaleDownFlat(level),
+      blockChance: level * 0.1,
+      lifeRegen: level * 2,
+    }),
+  },
+
+  // Tier 2000 Skills
+  bladeStorm: {
+    id: 'bladeStorm',
+    name: () => 'Blade Storm',
+    type: () => 'instant',
+    manaCost: (level) => 30 + level,
+    cooldown: () => 120000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[8],
+    icon: () => 'blade-storm',
+    description: () => 'Spins violently, striking all nearby enemies.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damage: level * 20,
+      damagePercent: 2 * scaleDownFlat(level),
+      armorPenetrationPercent: 2 * scaleDownFlat(level),
+    }),
+  },
+  ironFortress: {
+    id: 'ironFortress',
+    name: () => 'Iron Fortress',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[8],
+    icon: () => 'iron-fortress',
+    description: () => 'Greatly increases defensive capabilities.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      armor: level * 8,
+      lifePercent: 1.5 * scaleDownFlat(level),
+      allResistance: level * 0.2,
+    }),
+  },
+
+  // Tier 3000 Skills
+  titanStrength: {
+    id: 'titanStrength',
+    name: () => 'Titan Strength',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[9],
+    icon: () => 'titan-strength',
+    description: () => 'Increases raw strength to titanic levels.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      strength: level * 5,
+      strengthPercent: 3 * scaleDownFlat(level),
+      damagePercent: 2 * scaleDownFlat(level),
+    }),
+  },
+  heroicStand: {
+    id: 'heroicStand',
+    name: () => 'Heroic Stand',
+    type: () => 'buff',
+    manaCost: (level) => 40 + level,
+    cooldown: () => 150000,
+    duration: () => 40000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[9],
+    icon: () => 'heroic-stand',
+    description: () => 'Greatly boosts defenses when near death.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      armorPercent: 3 * scaleDownFlat(level),
+      lifeRegenPercent: 2 * scaleDownFlat(level),
+      blockChance: level * 0.15,
+    }),
+  },
+
+  // Tier 5000 Skills
+  legendaryWarlord: {
+    id: 'legendaryWarlord',
+    name: () => 'Legendary Warlord',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[10],
+    icon: () => 'legendary-warlord',
+    description: () => 'Ultimate mastery of warfare.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      attackRatingPercent: 5 * scaleDownFlat(level),
+      critChance: Math.min(level * 0.1, 40),
+      damagePercent: 3 * scaleDownFlat(level),
+    }),
+  },
+  eternalGuardian: {
+    id: 'eternalGuardian',
+    name: () => 'Eternal Guardian',
+    type: () => 'toggle',
+    manaCost: (level) => 15 + level,
+    requiredLevel: () => SKILL_LEVEL_TIERS[10],
+    icon: () => 'eternal-guardian',
+    description: () => 'Channel unmatched protection.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      armor: level * 12,
+      lifePercent: 2 * scaleDownFlat(level),
+      allResistance: level * 0.3,
+    }),
+  },
 };

@@ -189,4 +189,132 @@ export const ROGUE_SKILLS = {
       bonusGoldPercent: 0.25 * scaleDownFlat(level),
     }),
   },
+
+  // Tier 1200 Skills
+  shadowMastery: {
+    id: 'shadowMastery',
+    name: () => 'Shadow Mastery',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[7],
+    icon: () => 'shadow-mastery',
+    description: () => 'Further enhances stealth and critical strikes.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      critChance: Math.min(level * 0.05, 25),
+      damagePercent: 2 * scaleDownFlat(level),
+      evasionPercent: 1.5 * scaleDownFlat(level),
+    }),
+  },
+  venomousAssault: {
+    id: 'venomousAssault',
+    name: () => 'Venomous Assault',
+    type: () => 'instant',
+    manaCost: (level) => 15 + level,
+    cooldown: () => 90000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[7],
+    icon: () => 'venomous-assault',
+    description: () => 'Strikes with poison, dealing heavy damage over time.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damage: level * 10,
+      poisonDamagePercent: 3 * scaleDownFlat(level),
+      attackSpeed: 0.01 * scaleDownFlat(level),
+    }),
+  },
+
+  // Tier 2000 Skills
+  phantomStrike: {
+    id: 'phantomStrike',
+    name: () => 'Phantom Strike',
+    type: () => 'instant',
+    manaCost: (level) => 25 + level,
+    cooldown: () => 110000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[8],
+    icon: () => 'phantom-strike',
+    description: () => 'Blink through shadows to strike the enemy.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damage: level * 15,
+      attackRatingPercent: 3 * scaleDownFlat(level),
+      ignoreEnemyArmor: level * 0.1,
+    }),
+  },
+  silentExecution: {
+    id: 'silentExecution',
+    name: () => 'Silent Execution',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[8],
+    icon: () => 'silent-execution',
+    description: () => 'Increases chance for deadly critical hits.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      critDamage: Math.min(level * 0.02, 3),
+      doubleDamageChance: level * 0.05,
+      attackSpeed: 0.005 * scaleDownFlat(level),
+    }),
+  },
+
+  // Tier 3000 Skills
+  eclipseForm: {
+    id: 'eclipseForm',
+    name: () => 'Eclipse Form',
+    type: () => 'buff',
+    manaCost: (level) => 35 + level,
+    cooldown: () => 140000,
+    duration: () => 35000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[9],
+    icon: () => 'eclipse-form',
+    description: () => 'Become one with the shadows, avoiding attacks.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      evasionPercent: 3 * scaleDownFlat(level),
+      movementSpeed: 0.02 * scaleDownFlat(level),
+      damagePercent: 1.5 * scaleDownFlat(level),
+    }),
+  },
+  perfectDodge: {
+    id: 'perfectDodge',
+    name: () => 'Perfect Dodge',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[9],
+    icon: () => 'perfect-dodge',
+    description: () => 'Grants a chance to completely evade attacks.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      blockChance: level * 0.05,
+      evasionPercent: 2 * scaleDownFlat(level),
+      critChance: Math.min(level * 0.02, 10),
+    }),
+  },
+
+  // Tier 5000 Skills
+  kingOfThieves: {
+    id: 'kingOfThieves',
+    name: () => 'King of Thieves',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[10],
+    icon: () => 'king-of-thieves',
+    description: () => 'Supreme mastery of stealth and theft.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      bonusGoldPercent: 1.5 * scaleDownFlat(level),
+      dexterityPercent: 4 * scaleDownFlat(level),
+      agilityPercent: 3 * scaleDownFlat(level),
+    }),
+  },
+  nightfallAssassin: {
+    id: 'nightfallAssassin',
+    name: () => 'Nightfall Assassin',
+    type: () => 'toggle',
+    manaCost: (level) => 10 + level,
+    requiredLevel: () => SKILL_LEVEL_TIERS[10],
+    icon: () => 'nightfall-assassin',
+    description: () => 'Unleash lethal precision in the darkness.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damagePercent: 4 * scaleDownFlat(level),
+      critChance: Math.min(level * 0.1, 50),
+      attackSpeed: 0.015 * scaleDownFlat(level),
+    }),
+  },
 };

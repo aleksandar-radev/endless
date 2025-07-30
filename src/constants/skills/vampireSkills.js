@@ -181,4 +181,132 @@ export const VAMPIRE_SKILLS = {
       wisdom: level * 2,
     }),
   },
+
+  // Tier 1200 Skills
+  bloodMoon: {
+    id: 'bloodMoon',
+    name: () => 'Blood Moon',
+    type: () => 'buff',
+    manaCost: (level) => 25 + level,
+    cooldown: () => 100000,
+    duration: () => 30000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[7],
+    icon: () => 'blood-moon',
+    description: () => 'Empowers vampiric abilities under the crimson moon.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      lifeSteal: level * 0.05,
+      damagePercent: 2 * scaleDownFlat(level),
+      attackSpeed: 0.01 * scaleDownFlat(level),
+    }),
+  },
+  sanguineFury: {
+    id: 'sanguineFury',
+    name: () => 'Sanguine Fury',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[7],
+    icon: () => 'sanguine-fury',
+    description: () => 'Harness the fury of blood to increase power.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      critChance: Math.min(level * 0.05, 25),
+      lifePerHit: level * 2,
+      damagePercent: scaleDownFlat(level),
+    }),
+  },
+
+  // Tier 2000 Skills
+  twilightVeil: {
+    id: 'twilightVeil',
+    name: () => 'Twilight Veil',
+    type: () => 'buff',
+    manaCost: (level) => 35 + level,
+    cooldown: () => 120000,
+    duration: () => 35000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[8],
+    icon: () => 'twilight-veil',
+    description: () => 'Shrouds the vampire in shadows, restoring life.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      lifeRegen: level * 3,
+      evasionPercent: 2 * scaleDownFlat(level),
+      lifePercent: scaleDownFlat(level),
+    }),
+  },
+  shadowRebirth: {
+    id: 'shadowRebirth',
+    name: () => 'Shadow Rebirth',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[8],
+    icon: () => 'shadow-rebirth',
+    description: () => 'Revive from death with a portion of life.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      resurrectionChance: level * 0.1,
+      lifePercent: 1.5 * scaleDownFlat(level),
+      critDamage: level * 0.01,
+    }),
+  },
+
+  // Tier 3000 Skills
+  eternalHunger: {
+    id: 'eternalHunger',
+    name: () => 'Eternal Hunger',
+    type: () => 'toggle',
+    manaCost: (level) => 15 + level,
+    requiredLevel: () => SKILL_LEVEL_TIERS[9],
+    icon: () => 'eternal-hunger',
+    description: () => 'Constantly drains enemies to sustain yourself.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      lifeSteal: level * 0.07,
+      damagePercent: 2 * scaleDownFlat(level),
+      manaPerHit: level * 0.2,
+    }),
+  },
+  nocturnalDominion: {
+    id: 'nocturnalDominion',
+    name: () => 'Nocturnal Dominion',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[9],
+    icon: () => 'nocturnal-dominion',
+    description: () => 'Rule the night with unparalleled power.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damagePercent: 2.5 * scaleDownFlat(level),
+      attackSpeed: 0.015 * scaleDownFlat(level),
+      lifePercent: 1.5 * scaleDownFlat(level),
+    }),
+  },
+
+  // Tier 5000 Skills
+  vampireOverlord: {
+    id: 'vampireOverlord',
+    name: () => 'Vampire Overlord',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[10],
+    icon: () => 'vampire-overlord',
+    description: () => 'Ascend to the pinnacle of vampiric power.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      strengthPercent: 3 * scaleDownFlat(level),
+      vitalityPercent: 3 * scaleDownFlat(level),
+      elementalDamagePercent: 2 * scaleDownFlat(level),
+    }),
+  },
+  immortalSovereign: {
+    id: 'immortalSovereign',
+    name: () => 'Immortal Sovereign',
+    type: () => 'toggle',
+    manaCost: (level) => 20 + level,
+    requiredLevel: () => SKILL_LEVEL_TIERS[10],
+    icon: () => 'immortal-sovereign',
+    description: () => 'Become nearly unstoppable for a short time.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      lifePercent: 2 * scaleDownFlat(level),
+      resurrectionChance: level * 0.15,
+      damagePercent: 4 * scaleDownFlat(level),
+    }),
+  },
 };
