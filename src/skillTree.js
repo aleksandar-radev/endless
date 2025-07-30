@@ -367,6 +367,13 @@ export default class SkillTree {
       game.restoreMana(baseEffects.manaPerHit);
     }
 
+    if (baseEffects.reduceEnemyDamagePercent) {
+      hero.stats.reduceEnemyDamagePercent += baseEffects.reduceEnemyDamagePercent / 100;
+      game.currentEnemy.damage = game.currentEnemy.calculateDamage();
+      // reset after calculation
+      hero.stats.reduceEnemyDamagePercent -= baseEffects.reduceEnemyDamagePercent / 100;
+    }
+
     if (this.isDamageSkill(baseEffects)) {
       game.damageEnemy(damage, isCritical);
     }
@@ -453,8 +460,6 @@ export default class SkillTree {
     const buffEndTime = Date.now() + this.getSkillDuration(skill);
     const cooldownEndTime = Date.now() + this.getSkillCooldown(skill);
 
-
-
     if (skill.type() === 'summon') {
       const summonStats = skill.summonStats(skill.level);
       const now = Date.now();
@@ -476,6 +481,16 @@ export default class SkillTree {
     // Set cooldown and active state
     this.skills[skillId].cooldownEndTime = cooldownEndTime;
     this.skills[skillId].active = true;
+
+    // update enemy right away
+    if (skill.effect(skill.level).reduceEnemyAttackSpeedPercent) {
+      hero.stats.reduceEnemyAttackSpeedPercent += skill.effect(skill.level).reduceEnemyAttackSpeedPercent / 100;
+      game.currentEnemy.attackSpeed = game.currentEnemy.calculateAttackSpeed();
+    }
+    if (skill.effect(skill.level).reduceEnemyDamagePercent) {
+      hero.stats.reduceEnemyDamagePercent += skill.effect(skill.level).reduceEnemyDamagePercent / 100;
+      game.currentEnemy.attackSpeed = game.currentEnemy.calculateDamage();
+    }
 
     // Apply buff effects
     hero.recalculateFromAttributes();

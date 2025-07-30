@@ -198,4 +198,129 @@ export const BERSERKER_SKILLS = {
       damagePercent: scaleDownFlat(level),
     }),
   },
+
+  // Tier 1200 Skills
+  rageOverflow: {
+    id: 'rageOverflow',
+    name: () => 'Rage Overflow',
+    type: () => 'toggle',
+    manaCost: (level) => 10 + level,
+    requiredLevel: () => SKILL_LEVEL_TIERS[7],
+    icon: () => 'rage-overflow',
+    description: () => 'Unleash uncontrolled rage to boost power.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damagePercent: 2 * scaleDownFlat(level),
+      lifeSteal: level * 0.02,
+    }),
+  },
+  crushingBlows: {
+    id: 'crushingBlows',
+    name: () => 'Crushing Blows',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[7],
+    icon: () => 'crushing-blows',
+    description: () => 'Increases critical damage and armor penetration.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      critDamage: level * 0.02,
+      armorPenetrationPercent: 2 * scaleDownFlat(level),
+      damage: level * 3,
+    }),
+  },
+
+  // Tier 2000 Skills
+  bloodFrenzy: {
+    id: 'bloodFrenzy',
+    name: () => 'Blood Frenzy',
+    type: () => 'buff',
+    manaCost: (level) => 30 + level,
+    cooldown: () => 110000,
+    duration: () => 35000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[8],
+    icon: () => 'blood-frenzy',
+    description: () => 'Enter a frenzy that greatly increases attack speed.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      attackSpeed: 0.02 * scaleDownFlat(level),
+      damagePercent: 2 * scaleDownFlat(level),
+      lifePerHit: level * 2,
+    }),
+  },
+  unyieldingOnslaught: {
+    id: 'unyieldingOnslaught',
+    name: () => 'Unyielding Onslaught',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[8],
+    icon: () => 'unyielding-onslaught',
+    description: () => 'Relentless attacks break enemy defenses.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damagePercent: 2.5 * scaleDownFlat(level),
+      attackRatingPercent: 3 * scaleDownFlat(level),
+    }),
+  },
+
+  // Tier 3000 Skills
+  primalRoar: {
+    id: 'primalRoar',
+    name: () => 'Primal Roar',
+    type: () => 'instant',
+    manaCost: (level) => 40 + level * 0.5,
+    cooldown: () => 280000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[9],
+    icon: () => 'primal-roar',
+    description: () => 'A terrifying roar that weakens foes.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      ignoreEnemyArmor: 1,
+      reduceEnemyDamagePercent: level * 0.1,
+      damage: level * 10,
+    }),
+  },
+  berserkerSpirit: {
+    id: 'berserkerSpirit',
+    name: () => 'Berserker Spirit',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[9],
+    icon: () => 'berserker-spirit',
+    description: () => 'Channel the true spirit of the berserker.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      strengthPercent: 3 * scaleDownFlat(level),
+      lifePercent: 1.5 * scaleDownFlat(level),
+      critChance: Math.min(level * 0.03, 30),
+    }),
+  },
+
+  // Tier 5000 Skills
+  apexPredator: {
+    id: 'apexPredator',
+    name: () => 'Apex Predator',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[10],
+    icon: () => 'apex-predator',
+    description: () => 'Become the ultimate hunter on the battlefield.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damagePercent: 3 * scaleDownFlat(level),
+      attackSpeed: 0.02 * scaleDownFlat(level),
+      lifeSteal: level * 0.05,
+    }),
+  },
+  rageIncarnate: {
+    id: 'rageIncarnate',
+    name: () => 'Rage Incarnate',
+    type: () => 'toggle',
+    manaCost: (level) => 20 + level,
+    requiredLevel: () => SKILL_LEVEL_TIERS[10],
+    icon: () => 'rage-incarnate',
+    description: () => 'Embody pure rage to crush enemies.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damagePercent: 4 * scaleDownFlat(level),
+      armorPenetrationPercent: 3 * scaleDownFlat(level),
+      attackRatingPercent: 4 * scaleDownFlat(level),
+    }),
+  },
 };

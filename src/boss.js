@@ -88,7 +88,7 @@ class Boss {
   calculateDamage() {
     const base = this.baseData.damage || 0;
     const val = scaleStat(base, this.level);
-    const dmgRed = hero.stats.lowerEnemyDamagePercent || 0;
+    const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
     return val * (this.baseData.multiplier?.damage || 1) * (1 - dmgRed);
   }
 
@@ -115,7 +115,7 @@ class Boss {
     if (base === 0) return 0;
     const val = scaleStat(base, this.level);
 
-    const dmgRed = hero.stats.lowerEnemyDamagePercent || 0;
+    const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
     return val * (this.baseData.multiplier?.[`${type}Damage`] || 1) * (1 - dmgRed);
   }
 

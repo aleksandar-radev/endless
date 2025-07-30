@@ -416,7 +416,7 @@ export default class Hero {
         if (stat === 'extraDamageFromManaPercent') value = Math.min(value, 5);
         if (stat === 'reduceEnemyHpPercent') value = Math.min(value, 50);
         if (stat === 'reduceEnemyAttackSpeedPercent') value = Math.min(value, 50);
-        if (stat === 'lowerEnemyDamagePercent') value = Math.min(value, 50);
+        if (stat === 'reduceEnemyDamagePercent') value = Math.min(value, 50);
 
         this.stats[stat] = value;
       }
@@ -581,16 +581,15 @@ export default class Hero {
     const result = this.calculateTotalDamage(instantSkillBaseEffects);
 
     if (!enemy) return result;
-
     // Calculate effective enemy armor after hero's armor penetration
     let effectiveArmor = enemy.armor;
-    if (this.stats.ignoreEnemyArmor > 0) {
+    if (this.stats.ignoreEnemyArmor > 0 || instantSkillBaseEffects.ignoreEnemyArmor > 0) {
       effectiveArmor = 0;
     } else {
       // Apply percent armor penetration first
-      effectiveArmor *= 1 - (this.stats.armorPenetrationPercent || 0) / 100;
+      effectiveArmor *= 1 - ((this.stats.armorPenetrationPercent || 0) + (instantSkillBaseEffects.armorPenetrationPercent || 0)) / 100;
       // Then apply flat armor penetration
-      effectiveArmor -= this.stats.armorPenetration || 0;
+      effectiveArmor -= (this.stats.armorPenetration || 0) + (instantSkillBaseEffects.armorPenetration || 0);
       // Armor cannot go below zero
       effectiveArmor = Math.max(0, effectiveArmor);
     }
@@ -604,10 +603,10 @@ export default class Hero {
       if (this.stats.ignoreAllEnemyResistances > 0) return 0;
       let effectiveRes = baseRes;
       // Apply percent penetration first (elementalPenetrationPercent + specific percent)
-      const totalPercentPen = (percentPen || 0) + (this.stats.elementalPenetrationPercent || 0);
+      const totalPercentPen = (percentPen || 0) + (this.stats.elementalPenetrationPercent || 0) + (instantSkillBaseEffects.elementalPenetrationPercent || 0);
       effectiveRes *= 1 - totalPercentPen / 100;
       // Then apply flat penetration (elementalPenetration + specific flat)
-      const totalFlatPen = (flatPen || 0) + (this.stats.elementalPenetration || 0);
+      const totalFlatPen = (flatPen || 0) + (this.stats.elementalPenetration || 0) + (instantSkillBaseEffects.elementalPenetration || 0);
       effectiveRes -= totalFlatPen;
       // Resistance cannot go below zero
       return Math.max(0, effectiveRes);

@@ -258,4 +258,132 @@ export const PALADIN_SKILLS = {
       attackRatingPercent: 6 * scaleDownFlat(level),
     }),
   },
+
+  // Tier 1200 Skills
+  celestialGuard: {
+    id: 'celestialGuard',
+    name: () => 'Celestial Guard',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[7],
+    icon: () => 'celestial-guard',
+    description: () => 'Greatly boosts block chance and armor.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      armorPercent: 2 * scaleDownFlat(level),
+      blockChance: level * 0.1,
+      lifeRegenPercent: scaleDownFlat(level),
+    }),
+  },
+  holyCrusade: {
+    id: 'holyCrusade',
+    name: () => 'Holy Crusade',
+    type: () => 'toggle',
+    manaCost: (level) => 5 + level * 0.5,
+    requiredLevel: () => SKILL_LEVEL_TIERS[7],
+    icon: () => 'holy-crusade',
+    description: () => 'Empowers attacks with holy power.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damagePercent: 2 * scaleDownFlat(level),
+      fireDamagePercent: 3 * scaleDownFlat(level),
+    }),
+  },
+
+  // Tier 2000 Skills
+  radiantAegis: {
+    id: 'radiantAegis',
+    name: () => 'Radiant Aegis',
+    type: () => 'buff',
+    manaCost: (level) => 40 + level,
+    cooldown: () => 120000,
+    duration: () => 40000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[8],
+    icon: () => 'radiant-aegis',
+    description: () => 'Forms a protective barrier of light.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      armor: level * 10,
+      allResistance: level * 0.25,
+      reflectFireDamage: level * 1,
+    }),
+  },
+  divineJudgment: {
+    id: 'divineJudgment',
+    name: () => 'Divine Judgment',
+    type: () => 'instant',
+    manaCost: (level) => 20 + level * 0.8,
+    cooldown: () => 90000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[8],
+    icon: () => 'divine-judgment',
+    description: () => 'Calls down holy energy on foes.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damage: level * 15,
+      lightningDamagePercent: 3 * scaleDownFlat(level),
+      fireDamagePercent: 3 * scaleDownFlat(level),
+    }),
+  },
+
+  // Tier 3000 Skills
+  angelicResurgence: {
+    id: 'angelicResurgence',
+    name: () => 'Angelic Resurgence',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[9],
+    icon: () => 'angelic-resurgence',
+    description: () => 'Chance to revive with greater strength.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      resurrectionChance: level * 0.1,
+      lifePercent: 1.5 * scaleDownFlat(level),
+      attackSpeed: 0.01 * scaleDownFlat(level),
+    }),
+  },
+  sacredGround: {
+    id: 'sacredGround',
+    name: () => 'Sacred Ground',
+    type: () => 'buff',
+    manaCost: (level) => 30 + level,
+    cooldown: () => 140000,
+    duration: () => 45000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[9],
+    icon: () => 'sacred-ground',
+    description: () => 'Blesses the area, aiding allies.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      lifeRegen: level * 3,
+      lifeRegenPercent: 1.5 * scaleDownFlat(level),
+      manaRegenPercent: scaleDownFlat(level),
+    }),
+  },
+
+  // Tier 5000 Skills
+  eternalLight: {
+    id: 'eternalLight',
+    name: () => 'Eternal Light',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[10],
+    icon: () => 'eternal-light',
+    description: () => 'Radiates unwavering holy power.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      elementalDamagePercent: 2 * scaleDownFlat(level),
+      allResistance: level * 0.3,
+      lifePercent: 2 * scaleDownFlat(level),
+    }),
+  },
+  championOfFaith: {
+    id: 'championOfFaith',
+    name: () => 'Champion of Faith',
+    type: () => 'toggle',
+    manaCost: (level) => 10 + level,
+    requiredLevel: () => SKILL_LEVEL_TIERS[10],
+    icon: () => 'champion-of-faith',
+    description: () => 'Unleashes the ultimate holy might.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damagePercent: 3 * scaleDownFlat(level),
+      fireDamagePercent: 4 * scaleDownFlat(level),
+    }),
+  },
 };

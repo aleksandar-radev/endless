@@ -380,7 +380,7 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 0,
   },
-  lowerEnemyDamagePercent: {
+  reduceEnemyDamagePercent: {
     base: 0,
     decimalPlaces: 2,
   },

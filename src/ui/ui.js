@@ -480,7 +480,7 @@ export const formatStatName = (stat) => {
   if (stat === 'ignoreEnemyArmor') return 'Ignore Enemy Armor';
   if (stat === 'ignoreAllEnemyResistances') return 'Ignore All Enemy Resistances';
   if (stat === 'attackNeverMiss') return 'Attack Never Miss';
-  if (stat === 'lowerEnemyDamagePercent') return 'Lower Enemy Damage %';
+  if (stat === 'reduceEnemyDamagePercent') return 'Lower Enemy Damage %';
   if (stat === 'reduceEnemyHpPercent') return 'Reduce Enemy HP %';
   if (stat === 'reduceEnemyAttackSpeedPercent') return 'Reduce Enemy Attack Speed %';
   if (stat === 'extraDamageFromLifePercent') return 'Extra Damage From % of Life';

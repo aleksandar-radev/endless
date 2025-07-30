@@ -129,7 +129,8 @@ class Enemy {
   calculateDamage = () => {
     const base = this.baseData.damage || 0;
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
-    return val * this.region.multiplier.damage * this.rarityData.multiplier.damage * this.baseData.multiplier.damage;
+    const damageRed = hero.stats.reduceEnemyDamagePercent || 0;
+    return val * this.region.multiplier.damage * this.rarityData.multiplier.damage * this.baseData.multiplier.damage * (1 - damageRed);
   };
 
   calculateArmor() {
@@ -163,7 +164,9 @@ class Enemy {
     const regionMult = this.region.multiplier[`${type}Damage`] || 1;
     const rarityMult = this.rarityData.multiplier[`${type}Damage`] || 1;
     const baseMult = this.baseData.multiplier ? this.baseData.multiplier[`${type}Damage`] || 1 : 1;
-    return val * regionMult * rarityMult * baseMult;
+
+    const damageRed = hero.stats.reduceEnemyDamagePercent || 0;
+    return val * regionMult * rarityMult * baseMult * (1 - damageRed);
   }
 
   calculateXP() {
