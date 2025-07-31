@@ -128,7 +128,12 @@
 
 .skill-slots {
   display: flex;
+  flex-wrap: wrap;
   gap: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .skill-slot {
