@@ -351,7 +351,7 @@ export default class Inventory {
   }
 
   getItemSalvageValue(item) {
-    return Math.floor(25 * item.level * (Math.max(RARITY_ORDER.indexOf(item.rarity) / 2 + 1, 1)) * Math.max(item.tier / 2, 1));
+    return Math.floor(25 * item.level * (Math.max(RARITY_ORDER.indexOf(item.rarity) / 2 + 1, 1)) * Math.max(item.tier * 3, 1));
   }
 
   getItemSalvageMaterial(item) {
@@ -376,7 +376,7 @@ export default class Inventory {
     const qty = Math.floor(
       (rarityAmounts[item.rarity] || 1) *
       Math.max(item.level / 200, 1) *
-      Math.max(item.tier / 3, 1),
+      Math.max(item.tier, 1),
     );
     return { id, qty };
   }
