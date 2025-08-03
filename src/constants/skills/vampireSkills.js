@@ -14,8 +14,8 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Steal life from enemies with each attack.',
     maxLevel: () => 300,
     effect: (level) => ({
-      lifePerHit: level * 0.5,
-      damage: level * 1,
+      lifePerHit: level * 1,
+      damage: level * 2,
       damagePercent: scaleDownFlat(level),
     }),
   },
@@ -28,7 +28,7 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Increases damage at night.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: 0.5 * scaleDownFlat(level),
+      damagePercent: 2 * scaleDownFlat(level),
       agility: level * 4,
     }),
   },
@@ -45,9 +45,9 @@ export const VAMPIRE_SKILLS = {
     description: () => 'A powerful strike that restores life.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 2,
+      damage: level * 1,
       damagePercent: 2 * scaleDownFlat(level),
-      lifePerHit: level * 2,
+      lifePerHit: level * 5,
     }),
   },
   darkAura: {
@@ -65,6 +65,7 @@ export const VAMPIRE_SKILLS = {
       lifeSteal: level * 0.02,
       attackRating: level * 5,
       attackRatingPercent: 2 * scaleDownFlat(level),
+      extraDamageFromLifePercent: Math.min(0.01 * scaleDownFlat(level), 1),
     }),
   },
 
@@ -131,6 +132,7 @@ export const VAMPIRE_SKILLS = {
     effect: (level) => ({
       life: level * 10,
       lifePercent: scaleDownFlat(level),
+      extraDamageFromLifePercent: Math.min(0.01 * scaleDownFlat(level), 1),
     }),
   },
 
@@ -161,6 +163,7 @@ export const VAMPIRE_SKILLS = {
       lifePercent: 0.5 * scaleDownFlat(level),
       strengthPercent: 0.38 * scaleDownFlat(level),
       vitalityPercent: 2 * scaleDownFlat(level),
+      extraDamageFromLifePercent: Math.min(0.01 * scaleDownFlat(level), 1),
     }),
   },
 
@@ -174,11 +177,12 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Greatly increases all attributes and gives resurrection.',
     maxLevel: () => 500,
     effect: (level) => ({
-      strengthPercent: scaleDownFlat(level),
+      strengthPercent: 1.5 * scaleDownFlat(level),
       vitalityPercent: 2 * scaleDownFlat(level),
+      extraDamageFromLifePercent: Math.min(0.0075 * scaleDownFlat(level), 0.5),
       resurrectionChance: level * 0.1,
-      wisdomPercent: scaleDownFlat(level),
-      wisdom: level * 2,
+      perseverancePercent: scaleDownFlat(level),
+      perseverance: level * 2,
     }),
   },
 
@@ -210,7 +214,7 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critChance: Math.min(level * 0.05, 25),
-      lifePerHit: level * 2,
+      lifePerHit: level * 200,
       damagePercent: scaleDownFlat(level),
     }),
   },
@@ -228,8 +232,8 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Shrouds the vampire in shadows, restoring life.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegen: level * 3,
-      evasionPercent: 2 * scaleDownFlat(level),
+      lifeRegen: level * 150,
+      evasionPercent: 5 * scaleDownFlat(level),
       lifePercent: scaleDownFlat(level),
     }),
   },

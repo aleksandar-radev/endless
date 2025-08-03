@@ -8,14 +8,14 @@ export const WARRIOR_SKILLS = {
     id: 'bash',
     name: () => 'Bash',
     type: () => 'toggle',
-    manaCost: (level) => 1 + level * 0.05,
+    manaCost: (level) => 1 + level * 0.1,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'war-axe',
     description: () => 'While active, increases damage but costs mana per attack',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 1,
-      damagePercent: scaleDownFlat(level),
+      damage: level * 2,
+      damagePercent: 2 * scaleDownFlat(level),
     }),
   },
   toughness: {
@@ -57,7 +57,7 @@ export const WARRIOR_SKILLS = {
     description: () => 'Increases resistance to damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      vitality: level * 2,
+      vitality: level * 3,
       vitalityPercent: scaleDownFlat(level),
       lifeRegen: level * 1,
     }),
@@ -90,7 +90,7 @@ export const WARRIOR_SKILLS = {
     effect: (level) => ({
       lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.005, 1),
       lifeRegen: level * 1,
-      lifeRegenPercent: 0.5 * scaleDownFlat(level),
+      lifeRegenPercent: 1 * scaleDownFlat(level),
     }),
   },
 
@@ -141,7 +141,7 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armorPercent: 6 * scaleDownFlat(level),
-      blockChance: level * 0.1,
+      blockChance: Math.min(level * 0.1, 20),
     }),
   },
 
@@ -156,9 +156,9 @@ export const WARRIOR_SKILLS = {
     description: () => 'Gives huge amounts of physical and fire damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: scaleDownFlat(level),
+      damagePercent: 1.5 * scaleDownFlat(level),
       fireDamage: level * 3,
-      fireDamagePercent: 3 * scaleDownFlat(level),
+      fireDamagePercent: 6 * scaleDownFlat(level),
     }),
   },
 
@@ -169,7 +169,7 @@ export const WARRIOR_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'last-stand',
     description: () => 'Greatly increases offensive stats',
-    maxLevel: () => 100,
+    maxLevel: () => 150,
     effect: (level) => ({
       lifeSteal: level * 0.02,
       attackSpeed: level * 0.01,
