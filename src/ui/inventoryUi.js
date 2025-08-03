@@ -640,7 +640,9 @@ export function handleDrop(e) {
     }
     // Special handling for ring slots
     if (slot.dataset.slot === 'ring1' || slot.dataset.slot === 'ring2') {
-      inventory.handleRingSlotDrop(item, slot.dataset.slot);
+      if (inventory.canEquipInSlot(item, slot.dataset.slot)) {
+        inventory.handleRingSlotDrop(item, slot.dataset.slot);
+      }
     } else if (inventory.canEquipInSlot(item, slot.dataset.slot)) {
       inventory.equipItem(item, slot.dataset.slot);
     }

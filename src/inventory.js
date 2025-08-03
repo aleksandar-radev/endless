@@ -497,6 +497,9 @@ export default class Inventory {
   }
 
   handleRingSlotDrop(draggedRing, targetSlot) {
+    if (!this.canEquipInSlot(draggedRing, targetSlot)) {
+      return;
+    }
     // Find which slot the dragged ring is currently equipped in
     const currentSlot =
       this.equippedItems.ring1?.id === draggedRing.id
@@ -667,6 +670,9 @@ export default class Inventory {
   }
 
   equipItem(item, slot) {
+    if (!this.canEquipInSlot(item, slot)) {
+      return;
+    }
     const currentPosition = this.inventoryItems.findIndex((i) => i && i.id === item.id);
 
     // If equipping to the slot it's already in, treat as unequip
