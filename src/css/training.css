@@ -136,6 +136,11 @@
   background: #2563eb;
 }
 
+.training-modal-content .modal-slider {
+  width: 100%;
+  margin-top: 1rem;
+}
+
 .training-modal-content .modal-buy {
   background: var(--accent, #3b82f6);
   color: #fff;

@@ -109,6 +109,7 @@ export default class Training {
             <button data-qty="50">+50</button>
             <button data-qty="max">Max</button>
           </div>
+          <input type="range" class="modal-slider" min="0" max="1" value="1" step="1" />
           <button class="modal-buy">Buy</button>
         </div>
       `;
@@ -125,6 +126,12 @@ export default class Training {
           this.selectedQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
           this.updateModalDetails();
         };
+      });
+      // Slider input
+      const slider = this.modal.querySelector('.modal-slider');
+      slider.addEventListener('input', (e) => {
+        this.selectedQty = parseInt(e.target.value, 10) || 0;
+        this.updateModalDetails();
       });
       // Buy button
       this.modal.querySelector('.modal-buy').onclick = () => this.buyBulk(this.currentStat, this.selectedQty);
@@ -258,6 +265,7 @@ export default class Training {
     const maxLevel = config?.maxLevel ?? Infinity;
 
     const { qty, totalCost } = this.getMaxPurchasable(this.selectedQty, baseLevel, maxLevel, config);
+    const { qty: maxQty } = this.getMaxPurchasable('max', baseLevel, maxLevel, config);
 
     // Compute total bonus gained
     const bonusValue = (config.bonus || 0) * qty;
@@ -273,6 +281,12 @@ export default class Training {
     this.modal.querySelector('.modal-max-level').textContent = maxLevel === Infinity ? '∞' : formatNumber(maxLevel);
     this.modal.querySelector('.modal-bonus').textContent = this.getBonusText(stat, config, baseLevel);
     this.modal.querySelector('.modal-next-bonus').textContent = this.getBonusText(stat, config, baseLevel + 1);
+
+    const slider = this.modal.querySelector('.modal-slider');
+    if (slider) {
+      slider.max = maxQty;
+      slider.value = this.selectedQty === 'max' ? maxQty : qty;
+    }
 
     // Enable/disable Buy button based on quantity and affordability
     const buyBtn = this.modal.querySelector('.modal-buy');
