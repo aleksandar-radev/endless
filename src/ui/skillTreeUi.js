@@ -419,12 +419,12 @@ function openSkillModal(skillId) {
   skillModal.querySelector('.modal-next-mana-cost').textContent = nextMana;
   const currCd = skillTree.getSkillCooldown(skill, currentLevel);
   const nextCd = skillTree.getSkillCooldown(skill, nextLevel);
-  skillModal.querySelector('.modal-current-cooldown').textContent = currCd / 1000 + 's';
-  skillModal.querySelector('.modal-next-cooldown').textContent = nextCd / 1000 + 's';
+  skillModal.querySelector('.modal-current-cooldown').textContent = (currCd / 1000).toFixed(2) + 's';
+  skillModal.querySelector('.modal-next-cooldown').textContent = (nextCd / 1000).toFixed(2) + 's';
   const currDur = skillTree.getSkillDuration(skill, currentLevel);
   const nextDur = skillTree.getSkillDuration(skill, nextLevel);
-  skillModal.querySelector('.modal-current-duration').textContent = currDur / 1000 + 's';
-  skillModal.querySelector('.modal-next-duration').textContent = nextDur / 1000 + 's';
+  skillModal.querySelector('.modal-current-duration').textContent = (currDur / 1000).toFixed(2) + 's';
+  skillModal.querySelector('.modal-next-duration').textContent = (nextDur / 1000).toFixed(2) + 's';
 
   // Show or hide mana cost row
   const manaRow = skillModal.querySelector('.modal-mana-row');
@@ -516,14 +516,14 @@ function updateSkillModalDetails() {
   // Cooldown
   const currCd = skillTree.getSkillCooldown(skill, currentLevel) / 1000;
   const nextCd = skillTree.getSkillCooldown(skill, futureLevel) / 1000;
-  skillModal.querySelector('.modal-current-cooldown').textContent = currCd + 's';
-  skillModal.querySelector('.modal-next-cooldown').textContent = nextCd + 's';
+  skillModal.querySelector('.modal-current-cooldown').textContent = currCd.toFixed(2) + 's';
+  skillModal.querySelector('.modal-next-cooldown').textContent = nextCd.toFixed(2) + 's';
 
   // Duration
   const currDur = skillTree.getSkillDuration(skill, currentLevel) / 1000;
   const nextDur = skillTree.getSkillDuration(skill, futureLevel) / 1000;
-  skillModal.querySelector('.modal-current-duration').textContent = currDur + 's';
-  skillModal.querySelector('.modal-next-duration').textContent = nextDur + 's';
+  skillModal.querySelector('.modal-current-duration').textContent = currDur.toFixed(2) + 's';
+  skillModal.querySelector('.modal-next-duration').textContent = nextDur.toFixed(2) + 's';
 
   // Effects list
   const effectsCurrent = skillTree.getSkillEffect(currentSkillId, currentLevel);
@@ -642,14 +642,14 @@ const updateTooltipContent = (skillId) => {
   const skillCooldownNextLevel = skillTree.getSkillCooldown(skill, nextLevel);
 
   if (skillCooldown) {
-    skillDescription += `<br />Cooldown: ${skillCooldown / 1000}s (${
+    skillDescription += `<br />Cooldown: ${(skillCooldown / 1000).toFixed(2)}s (${
       (skillCooldownNextLevel - skillCooldown) / 1000
     }s)`;
   }
   const skillDuration = skillTree.getSkillDuration(skill);
   const skillDurationNextLevel = skillTree.getSkillDuration(skill, nextLevel);
   if (skillDuration) {
-    skillDescription += `<br />Duration: ${skillDuration / 1000}s (+${
+    skillDescription += `<br />Duration: ${(skillDuration / 1000).toFixed(2)}s (+${
       (skillDurationNextLevel - skillDuration) / 1000
     }s)`;
   }
@@ -769,10 +769,10 @@ function createSkillTooltip(skillId) {
 
   // Add cooldown/duration for applicable skills
   if (skillTree.getSkillCooldown(skill)) {
-    tooltip += `<div class="tooltip-cooldown">Cooldown: ${skillTree.getSkillCooldown(skill) / 1000}s</div>`;
+    tooltip += `<div class="tooltip-cooldown">Cooldown: ${(skillTree.getSkillCooldown(skill) / 1000).toFixed(2)}s</div>`;
   }
   if (skillTree.getSkillDuration(skill)) {
-    tooltip += `<div class="tooltip-duration">Duration: ${skillTree.getSkillDuration(skill) / 1000}s</div>`;
+    tooltip += `<div class="tooltip-duration">Duration: ${(skillTree.getSkillDuration(skill) / 1000).toFixed(2)}s</div>`;
   }
 
   return tooltip;
