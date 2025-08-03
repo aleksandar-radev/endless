@@ -164,7 +164,7 @@ export const PALADIN_SKILLS = {
       life: level * 20,
       lifeRegenPercent: 0.5 * level,
       lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.1, 1),
-      extraDamageFromLifePercent: Math.min(scaleDownFlat(level) * 0.1, 2.5),
+      extraDamageFromLifePercent: Math.min(scaleDownFlat(level) * 0.020, 2.5),
     }),
   },
 
