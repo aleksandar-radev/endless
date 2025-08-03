@@ -61,7 +61,7 @@ const CRYSTAL_UPGRADE_CONFIG = {
     label: 'Reset Attributes',
     bonus: 'Refund all allocated attribute points',
     bonusLabel: 'Refund all allocated attribute points',
-    baseCost: 10,
+    baseCost: 50,
     multiple: true,
   },
   resetArenaLevel: {
@@ -76,7 +76,7 @@ const CRYSTAL_UPGRADE_CONFIG = {
     bonus: 'Automatically salvage items of selected rarities',
     bonusLabel: 'Automatically salvage selected rarities',
     baseCost: 10,
-    costIncrement: 10,
+    costIncrement: 15,
     showLevel: true,
     multiple: true,
     maxLevel: 6,
@@ -85,7 +85,7 @@ const CRYSTAL_UPGRADE_CONFIG = {
     label: 'Auto-Consume Materials',
     bonus: 'Automatically uses all consumable materials on pickup',
     bonusLabel: 'Automatically uses all consumable materials on pickup',
-    baseCost: 1000,
+    baseCost: 600,
     oneTime: true,
   },
   salvageMaterials: {
