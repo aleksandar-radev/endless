@@ -202,7 +202,7 @@ export const MAGE_SKILLS = {
       return {
         percentOfPlayerDamage: Math.min(0.8 * scaleDownFlat(level), 100),
         damage: level * 8,
-        attackSpeed: 1.4,
+        attackSpeed: 1.3,
         fireDamage: level * 22,
         airDamage: level * 22,
         coldDamage: level * 22,
@@ -210,7 +210,7 @@ export const MAGE_SKILLS = {
     },
     manaCost: (level) => 30 + level * 0.8,
     cooldown: () => 48000,
-    duration: () => 30000,
+    duration: () => 22000,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'summon-elemental',
     description: () => 'Summons an elemental ally.',
