@@ -21,6 +21,8 @@ export class Options {
     this.resetRequired = data.resetRequired ?? null;
     // Add stageSkip option, default to 0
     this.stageSkip = data.stageSkip || 0;
+    // Add resetStageSkip option, default to 0 (disabled)
+    this.resetStageSkip = data.resetStageSkip || 0;
     // Add soundVolume option, default to 0
     this.soundVolume = typeof data.soundVolume === 'number' ? data.soundVolume : 0;
     // Remember salvage preference across prestiges
@@ -96,6 +98,9 @@ export class Options {
 
     // --- Stage Skip Option ---
     container.appendChild(this._createStageSkipOption());
+
+    // --- Reset Stage Skip Option ---
+    container.appendChild(this._createResetStageSkipOption());
 
     // --- Changelog & Upcoming buttons row ---
     const changelogRow = document.createElement('div');
@@ -193,6 +198,65 @@ export class Options {
     if (isNaN(val) || val < 0) val = 0;
     if (val > max) val = max;
     this._stageSkipInput.value = val;
+  }
+
+  _createResetStageSkipOption() {
+    const purchased = !!crystalShop.crystalUpgrades?.resetStageSkip;
+    const value = this.resetStageSkip || 0;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="reset-stage-skip-input" class="reset-stage-skip-label">Reset Stage Skip At:</label>
+      <input
+        type="number"
+        id="reset-stage-skip-input"
+        class="reset-stage-skip-input"
+        min="0"
+        value="${value}"
+        title="${purchased ? 'Stage at which stage skip resets' : 'Purchase in crystal shop to enable'}"
+        ${purchased ? '' : 'disabled'}
+      />
+      <button class="apply-btn" type="button" ${purchased ? '' : 'disabled'}>Apply</button>
+    `;
+
+    const input = wrapper.querySelector('input');
+    const applyBtn = wrapper.querySelector('button');
+
+    this._resetStageSkipInput = input;
+    this._resetStageSkipWrapper = wrapper;
+
+    applyBtn.onmouseenter = () => applyBtn.classList.add('hover');
+    applyBtn.onmouseleave = () => applyBtn.classList.remove('hover');
+
+    input.addEventListener('input', () => {
+      let val = parseInt(input.value, 10);
+      if (isNaN(val) || val < 0) val = 0;
+      input.value = val;
+    });
+
+    applyBtn.onclick = () => {
+      let val = parseInt(input.value, 10);
+      if (isNaN(val) || val < 0) val = 0;
+      this.resetStageSkip = val;
+      dataManager.saveGame();
+      showToast('Reset stage skip option applied!', 'success');
+    };
+
+    this.updateResetStageSkipOption();
+
+    return wrapper;
+  }
+
+  updateResetStageSkipOption() {
+    if (!this._resetStageSkipInput) return;
+    const purchased = !!crystalShop.crystalUpgrades?.resetStageSkip;
+    this._resetStageSkipInput.disabled = !purchased;
+    this._resetStageSkipInput.title = purchased
+      ? 'Stage at which stage skip resets'
+      : 'Purchase in crystal shop to enable';
+    const btn = this._resetStageSkipWrapper?.querySelector('button');
+    if (btn) btn.disabled = !purchased;
   }
 
   /**
