@@ -168,6 +168,17 @@ function formatObjectStat(name, obj) {
     }
     return `<li>${formatStatName(name)}: ${parts.join('')}</li>`;
   }
+  if (name === 'enemiesKilledByZone') {
+    const parts = [];
+    for (let i = 1; i <= 12; i++) {
+      const span = `<span class="stage-value">T${i}: ${formatNumber(obj[i] || 0)}</span>`;
+      parts.push(span);
+      if (i < 12) {
+        parts.push('<span class="stage-separator breakable-separator">|||</span>');
+      }
+    }
+    return `<li>Enemies Killed by Zone: ${parts.join('')}</li>`;
+  }
   const entries = Object.entries(obj);
   const parts = entries
     .map(

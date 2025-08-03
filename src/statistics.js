@@ -25,6 +25,8 @@ export default class Statistics {
     this.totalTimePlayed = 0;
     this.highestStages = {};
     for (let i = 1; i <= 12; i++) this.highestStages[i] = 0;
+    this.enemiesKilledByZone = {};
+    for (let i = 1; i <= 12; i++) this.enemiesKilledByZone[i] = 0;
     this.totalTimeInFights = 0;
 
     handleSavedData(savedData, this);
@@ -53,6 +55,7 @@ export default class Statistics {
     this.totalMaterialsFound = 0;
     this.totalTimePlayed = 0;
     for (let i = 1; i <= 12; i++) this.highestStages[i] = 0;
+    for (let i = 1; i <= 12; i++) this.enemiesKilledByZone[i] = 0;
     this.totalTimeInFights = 0;
     this.updateStatisticsUI();
   }
@@ -79,6 +82,7 @@ export default class Statistics {
           <div id="stat-materials-found"></div>
           <div id="stat-total-enemies-killed"></div>
           <div id="stat-enemies-killed-by-rarity"></div>
+          <div id="stat-enemies-killed-by-zone"></div>
           <div id="stat-bosses-killed"></div>
           <div id="stat-highest-damage"></div>
         </div>
@@ -128,6 +132,26 @@ export default class Statistics {
       });
       enemiesByRarity.textContent = 'Enemies Killed by Rarity: ';
       parts.forEach((el) => enemiesByRarity.appendChild(el));
+    }
+
+    // Enemies Killed by Zone
+    const enemiesByZone = document.getElementById('stat-enemies-killed-by-zone');
+    if (enemiesByZone) {
+      const parts = [];
+      for (let i = 1; i <= 12; i++) {
+        const span = document.createElement('span');
+        span.className = 'stage-value';
+        span.textContent = `T${i}: ${formatNumber(this.enemiesKilledByZone[i] || 0)}`;
+        parts.push(span);
+        if (i < 12) {
+          const sep = document.createElement('span');
+          sep.className = 'stage-separator breakable-separator';
+          sep.textContent = '|||';
+          parts.push(sep);
+        }
+      }
+      enemiesByZone.textContent = 'Enemies Killed by Zone: ';
+      parts.forEach((el) => enemiesByZone.appendChild(el));
     }
 
     // Highest Damage Dealt

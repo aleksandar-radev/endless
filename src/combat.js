@@ -253,6 +253,7 @@ export async function defeatEnemy() {
 
     statistics.increment('totalEnemiesKilled');
     statistics.increment('enemiesKilled', enemy.rarity.toLowerCase());
+    statistics.increment('enemiesKilledByZone', enemy.region.tier);
   }
   // END EXPLORE REGION
   // clear defeat guard so next enemy can be damaged
