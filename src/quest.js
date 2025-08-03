@@ -22,7 +22,7 @@ export class Quest {
   // Progress is now computed from statistics, not stored
   getProgress() {
     if (this.type === 'kill') {
-      return Math.min(statistics.enemiesKilled.total, this.target);
+      return Math.min(statistics.totalEnemiesKilled, this.target);
     }
     if (this.type === 'kill_rarity' && this.rarity) {
       const rarityKey = this.rarity.toLowerCase();

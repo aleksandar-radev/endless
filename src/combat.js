@@ -251,7 +251,7 @@ export async function defeatEnemy() {
     }
     game.currentEnemy = new Enemy(game.stage);
 
-    statistics.increment('enemiesKilled', 'total');
+    statistics.increment('totalEnemiesKilled');
     statistics.increment('enemiesKilled', enemy.rarity.toLowerCase());
   }
   // END EXPLORE REGION

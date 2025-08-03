@@ -31,11 +31,13 @@ export function initializePrestigeUI() {
   container.innerHTML = html`
     <div class="prestige-header">
       <button id="prestige-now-btn">Prestige Now</button>
+      <button id="prestige-history-btn">History</button>
     </div>
     <ul class="prestige-bonuses-list"></ul>
   `;
 
   const btn = container.querySelector('#prestige-now-btn');
+  const historyBtn = container.querySelector('#prestige-history-btn');
 
   updateButtonState();
 
@@ -47,6 +49,8 @@ export function initializePrestigeUI() {
     }
     openPrestigeModal();
   });
+
+  historyBtn.addEventListener('click', openPrestigeHistoryModal);
 
   updatePrestigeBonuses();
 
@@ -112,4 +116,85 @@ export function formatPrestigeBonus(stat, value) {
     return `+${(value * 100).toFixed(1)}%`;
   }
   return `+${formatNumber(Math.round(value))}`;
+}
+
+function formatDuration(ms) {
+  const sec = Math.floor(ms / 1000);
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  return `${h}h ${m}m ${s}s`;
+}
+
+function openPrestigeHistoryModal() {
+  const history = prestige.history || [];
+  const items = history
+    .map(
+      (h, i) =>
+        `<li data-idx="${i}">#${h.number} - ${new Date(h.timestamp).toLocaleString()}</li>`,
+    )
+    .join('');
+  const content = html`
+    <div class="prestige-history-modal-content">
+      <button class="modal-close">&times;</button>
+      <h2>Prestige History</h2>
+      <ul class="prestige-history-list">
+        ${items || '<li>No prestiges yet.</li>'}
+      </ul>
+    </div>`;
+  const modal = createModal({
+    id: 'prestige-history-modal',
+    className: 'prestige-history-modal',
+    content,
+  });
+  modal.querySelectorAll('.prestige-history-list li[data-idx]').forEach((el) => {
+    el.addEventListener('click', () => {
+      const idx = parseInt(el.dataset.idx, 10);
+      closeModal(modal);
+      openPrestigeDetailModal(history[idx]);
+    });
+  });
+}
+
+function formatObjectStat(name, obj) {
+  if (name === 'highestStages') {
+    const parts = [];
+    for (let i = 1; i <= 12; i++) {
+      const span = `<span class="stage-value">T${i}: ${formatNumber(obj[i] || 0)}</span>`;
+      parts.push(span);
+      if (i < 12) {
+        parts.push('<span class="stage-separator breakable-separator">|||</span>');
+      }
+    }
+    return `<li>${formatStatName(name)}: ${parts.join('')}</li>`;
+  }
+  const entries = Object.entries(obj);
+  const parts = entries
+    .map(
+      ([key, val]) =>
+        `<span class="stage-value">${formatStatName(key)}: ${formatNumber(val || 0)}</span>`,
+    )
+    .join('<span class="stage-separator breakable-separator">|||</span>');
+  const label = name === 'enemiesKilled' ? 'Enemies Killed by Rarity' : formatStatName(name);
+  return `<li>${label}: ${parts}</li>`;
+}
+
+function openPrestigeDetailModal(entry) {
+  if (!entry) return;
+  const stats = Object.entries(entry.statistics || {})
+    .filter(([k]) => k !== 'lastUpdate')
+    .map(([k, v]) =>
+      typeof v === 'object'
+        ? formatObjectStat(k, v)
+        : `<li>${formatStatName(k)}: ${formatNumber(Math.round(v))}</li>`,
+    )
+    .join('');
+  const content = html`
+    <div class="prestige-history-modal-content">
+      <button class="modal-close">&times;</button>
+      <h2>Prestige #${entry.number}</h2>
+      <div>Time: ${new Date(entry.timestamp).toLocaleString()}</div>
+      <ul class="prestige-stat-list">${stats}</ul>
+    </div>`;
+  createModal({ id: 'prestige-detail-modal', className: 'prestige-history-modal', content });
 }

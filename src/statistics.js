@@ -1,5 +1,5 @@
 import { handleSavedData } from './functions.js';
-import { formatNumber } from './ui/ui.js';
+import { formatNumber, formatStatName } from './ui/ui.js';
 
 /**
  * @class Statistics
@@ -8,8 +8,8 @@ import { formatNumber } from './ui/ui.js';
 export default class Statistics {
   constructor(savedData = null) {
     this.bossesKilled = 0;
+    this.totalEnemiesKilled = 0;
     this.enemiesKilled = {
-      total: 0,
       normal: 0,
       rare: 0,
       epic: 0,
@@ -28,13 +28,17 @@ export default class Statistics {
     this.totalTimeInFights = 0;
 
     handleSavedData(savedData, this);
+    if (this.enemiesKilled?.total != null) {
+      this.totalEnemiesKilled = this.enemiesKilled.total;
+      delete this.enemiesKilled.total;
+    }
     this.lastUpdate = Date.now();
   }
 
   resetStatistics() {
     this.bossesKilled = 0;
+    this.totalEnemiesKilled = 0;
     this.enemiesKilled = {
-      total: 0,
       normal: 0,
       rare: 0,
       epic: 0,
@@ -73,7 +77,8 @@ export default class Statistics {
           <div id="stat-total-souls"></div>
           <div id="stat-items-found"></div>
           <div id="stat-materials-found"></div>
-          <div id="stat-enemies-killed"></div>
+          <div id="stat-total-enemies-killed"></div>
+          <div id="stat-enemies-killed-by-rarity"></div>
           <div id="stat-bosses-killed"></div>
           <div id="stat-highest-damage"></div>
         </div>
@@ -99,9 +104,30 @@ export default class Statistics {
     }
 
     // Total Enemies Killed
-    const enemiesKilled = document.getElementById('stat-enemies-killed');
-    if (enemiesKilled) {
-      enemiesKilled.textContent = `Total Enemies Killed: ${formatNumber(this.enemiesKilled.total || 0)}`;
+    const totalEnemies = document.getElementById('stat-total-enemies-killed');
+    if (totalEnemies) {
+      totalEnemies.textContent = `Total Enemies Killed: ${formatNumber(this.totalEnemiesKilled || 0)}`;
+    }
+
+    // Enemies Killed by Rarity
+    const enemiesByRarity = document.getElementById('stat-enemies-killed-by-rarity');
+    if (enemiesByRarity) {
+      const parts = [];
+      const entries = Object.entries(this.enemiesKilled);
+      entries.forEach(([rarity, count], idx) => {
+        const span = document.createElement('span');
+        span.className = 'stage-value';
+        span.textContent = `${formatStatName(rarity)}: ${formatNumber(count || 0)}`;
+        parts.push(span);
+        if (idx < entries.length - 1) {
+          const sep = document.createElement('span');
+          sep.className = 'stage-separator breakable-separator';
+          sep.textContent = '|||';
+          parts.push(sep);
+        }
+      });
+      enemiesByRarity.textContent = 'Enemies Killed by Rarity: ';
+      parts.forEach((el) => enemiesByRarity.appendChild(el));
     }
 
     // Highest Damage Dealt

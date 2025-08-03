@@ -1,4 +1,11 @@
-import { hero, dataManager, setGlobals, prestige as prestigeState, options } from './globals.js';
+import {
+  hero,
+  dataManager,
+  setGlobals,
+  prestige as prestigeState,
+  options,
+  statistics,
+} from './globals.js';
 import { PRESTIGE_BONUSES, STARTING_CRYSTALS_BONUS } from './constants/prestigeBonuses.js';
 import { formatStatName } from './ui/ui.js';
 
@@ -11,9 +18,13 @@ export default class Prestige {
   constructor(savedData = null) {
     this.prestigeCount = 0;
     this.bonuses = {};
+    this.history = [];
     this.pendingCards = null;
     Object.assign(this, savedData);
     this.modal = null;
+    if (!Array.isArray(this.history)) {
+      this.history = [];
+    }
   }
 
   getCurrentLevelRequirement() {
@@ -108,6 +119,14 @@ export default class Prestige {
     });
     const newCount = this.prestigeCount + 1;
 
+    const statsSnapshot = JSON.parse(JSON.stringify(statistics));
+    const now = Date.now();
+    this.history.push({
+      number: newCount,
+      timestamp: now,
+      statistics: statsSnapshot,
+    });
+
     const showEnemyStats = options.showEnemyStats;
     const resetRequired = options.resetRequired;
 
@@ -119,6 +138,7 @@ export default class Prestige {
 
     prestigeState.bonuses = combined;
     prestigeState.prestigeCount = newCount;
+    prestigeState.history = this.history;
     Object.entries(combined).forEach(([stat, val]) => {
       hero.permaStats[stat] = (hero.permaStats[stat] || 0) + val;
     });
