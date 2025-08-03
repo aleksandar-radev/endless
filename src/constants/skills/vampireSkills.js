@@ -116,6 +116,28 @@ export const VAMPIRE_SKILLS = {
       lifePerHit: level * -1,
     }),
   },
+  summonBats: {
+    id: 'summonBats',
+    name: () => 'Summon Bats',
+    type: () => 'summon',
+    summonStats: (level) => {
+      return {
+        percentOfPlayerDamage: Math.min(level * 0.25, 20),
+        damage: level * 3,
+        airDamage: level * 2,
+        attackSpeed: 4,
+      };
+    },
+    manaCost: (level) => 3 + level * 0.625,
+    cooldown: () => 60000,
+    duration: () => 24000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[3],
+    icon: () => 'bat',
+    description: () => 'Unleashes a swarm of bats to attack enemies.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+    }),
+  },
 
   // Tier 75 Skills
   bloodPact: {
