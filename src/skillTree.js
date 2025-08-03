@@ -417,14 +417,22 @@ export default class SkillTree {
       if (skill.type() === 'toggle' && skillData.active) {
         if (hero.stats.currentMana >= this.getSkillManaCost(skill)) {
           hero.stats.currentMana -= this.getSkillManaCost(skill);
-          effects = { ...effects, ...this.getSkillEffect(skillId, skillData.level) };
+          const skillEffects = this.getSkillEffect(skillId, skillData.level);
+          // Additively combine effects
+          Object.entries(skillEffects).forEach(([stat, value]) => {
+            if (typeof value === 'number') {
+              effects[stat] = (effects[stat] || 0) + value;
+            } else {
+              effects[stat] = value; // fallback for non-numeric
+            }
+          });
 
           if (isHit) {
-            if (effects.lifePerHit) {
-              game.healPlayer(effects.lifePerHit);
+            if (skillEffects.lifePerHit) {
+              game.healPlayer(skillEffects.lifePerHit);
             }
-            if (effects.manaPerHit) {
-              game.restoreMana(effects.manaPerHit);
+            if (skillEffects.manaPerHit) {
+              game.restoreMana(skillEffects.manaPerHit);
             }
           }
         } else {
