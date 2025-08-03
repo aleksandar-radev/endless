@@ -36,6 +36,13 @@ const CRYSTAL_UPGRADE_CONFIG = {
     multiple: true,
     bulkModal: true,
   },
+  resetStageSkip: {
+    label: 'Reset Stage Skip',
+    bonus: 'Unlocks option to stop skipping after a chosen stage',
+    bonusLabel: 'Unlocks reset stage skip option',
+    baseCost: 500,
+    oneTime: true,
+  },
   continuousPlay: {
     label: 'Continuous Play',
     bonus: 'Auto-continue after death',
@@ -460,6 +467,10 @@ export default class CrystalShop {
 
     if (stat === 'salvageMaterials' && options.salvageMaterialsEnabled) {
       inventory.setSalvageUpgradeMaterials(true);
+    }
+
+    if (stat === 'resetStageSkip') {
+      options.updateResetStageSkipOption();
     }
   }
 
