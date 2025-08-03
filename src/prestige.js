@@ -129,12 +129,14 @@ export default class Prestige {
 
     const showEnemyStats = options.showEnemyStats;
     const resetRequired = options.resetRequired;
+    const salvageMaterialsEnabled = options.salvageMaterialsEnabled;
 
     await setGlobals({ reset: true });
 
     // persist options
     options.showEnemyStats = showEnemyStats;
     options.resetRequired = resetRequired;
+    options.salvageMaterialsEnabled = salvageMaterialsEnabled;
 
     prestigeState.bonuses = combined;
     prestigeState.prestigeCount = newCount;

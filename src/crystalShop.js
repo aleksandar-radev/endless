@@ -1,4 +1,4 @@
-import { dataManager, hero, options, skillTree, statistics } from './globals.js';
+import { dataManager, hero, options, skillTree, statistics, inventory } from './globals.js';
 import {
   updateResources,
   initializeSkillTreeUI,
@@ -456,6 +456,10 @@ export default class CrystalShop {
 
     if (stat === 'autoSpellCast') {
       initializeSkillTreeUI();
+    }
+
+    if (stat === 'salvageMaterials' && options.salvageMaterialsEnabled) {
+      inventory.setSalvageUpgradeMaterials(true);
     }
   }
 

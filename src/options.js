@@ -23,6 +23,8 @@ export class Options {
     this.stageSkip = data.stageSkip || 0;
     // Add soundVolume option, default to 0
     this.soundVolume = typeof data.soundVolume === 'number' ? data.soundVolume : 0;
+    // Remember salvage preference across prestiges
+    this.salvageMaterialsEnabled = data.salvageMaterialsEnabled ?? false;
   }
 
   /**

@@ -1,5 +1,5 @@
 import Item, { AVAILABLE_STATS } from './item.js';
-import { game, hero, statistics, dataManager, crystalShop } from './globals.js';
+import { game, hero, statistics, dataManager, crystalShop, options } from './globals.js';
 import { showToast, updateResources } from './ui/ui.js';
 import { createModal, closeModal } from './ui/modal.js';
 import { initializeInventoryUI, updateInventoryGrid, updateMaterialsGrid } from './ui/inventoryUi.js';
@@ -649,6 +649,7 @@ export default class Inventory {
 
   setSalvageUpgradeMaterials(value) {
     this.salvageUpgradeMaterials = value;
+    options.salvageMaterialsEnabled = value;
     dataManager.saveGame();
   }
 
