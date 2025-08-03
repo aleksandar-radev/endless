@@ -171,6 +171,43 @@ export default class Training {
     this.modal.classList.add('hidden');
   }
 
+  calculateTotalCost(config, qty, baseLevel) {
+    let cost = Number(config.cost);
+    let increase = Number(config.costIncrease ?? config.cost);
+    let rate = Number(config.costIncreaseMultiplier ?? 1);
+    const thresholds = (config.costThresholds || []).slice().sort((a, b) => a.level - b.level);
+    let idx = 0;
+
+    const applyThresholds = (level) => {
+      while (idx < thresholds.length && level >= thresholds[idx].level) {
+        const t = thresholds[idx];
+        if (t.cost !== undefined) cost = Number(t.cost);
+        if (t.costMultiplier !== undefined) cost *= Number(t.costMultiplier);
+        if (t.costIncrease !== undefined) increase = Number(t.costIncrease);
+        if (t.costIncreaseMultiplier !== undefined) rate = Number(t.costIncreaseMultiplier);
+        idx++;
+      }
+    };
+
+    applyThresholds(0);
+    for (let lvl = 0; lvl < baseLevel; lvl++) {
+      cost += increase;
+      increase *= rate;
+      applyThresholds(lvl + 1);
+    }
+
+    let total = 0;
+    for (let i = 0; i < qty; i++) {
+      if (!isFinite(cost)) return Infinity;
+      total += cost;
+      cost += increase;
+      increase *= rate;
+      baseLevel++;
+      applyThresholds(baseLevel);
+    }
+    return Math.floor(total);
+  }
+
   getMaxPurchasable(selectedQty, baseLevel, maxLevel, config) {
     // Limit max upgrades per call to 100,000
     const MAX_BULK = 100000;
@@ -186,7 +223,7 @@ export default class Training {
       let best = 0;
       while (low <= high) {
         let mid = Math.floor((low + high) / 2);
-        let cost = (Number(config.cost) * (mid * (2 * baseLevel + mid + 1))) / 2;
+        let cost = this.calculateTotalCost(config, mid, baseLevel);
         if (!isFinite(cost)) {
           high = mid - 1;
           continue;
@@ -199,10 +236,10 @@ export default class Training {
         }
       }
       qty = best;
-      totalCost = (Number(config.cost) * (qty * (2 * baseLevel + qty + 1))) / 2;
+      totalCost = this.calculateTotalCost(config, qty, baseLevel);
     } else {
       qty = Math.min(qty, maxPossible);
-      totalCost = (Number(config.cost) * (qty * (2 * baseLevel + qty + 1))) / 2;
+      totalCost = this.calculateTotalCost(config, qty, baseLevel);
     }
 
     return { qty, totalCost };
@@ -298,7 +335,6 @@ export default class Training {
     const config = STATS[stat].training;
     const maxLevel = config?.maxLevel ?? Infinity;
     let currentLevel = this.upgradeLevels[stat] || 0;
-    const baseCost = config.cost;
     let gold = hero[currency];
     let levelsToBuy = 0;
     let totalCost = 0;
@@ -309,18 +345,18 @@ export default class Training {
     } else {
       levelsToBuy = Math.min(qty, levelsLeft);
       // Calculate total cost for levelsToBuy upgrades
-      totalCost = (baseCost * (levelsToBuy * (2 * currentLevel + levelsToBuy + 1))) / 2;
+      totalCost = this.calculateTotalCost(config, levelsToBuy, currentLevel);
       if (totalCost > gold) {
         // If not enough gold for all, reduce levelsToBuy
         // Find max affordable
         let affordable = 0;
         for (let i = 1; i <= levelsToBuy; i++) {
-          let cost = (baseCost * (i * (2 * currentLevel + i + 1))) / 2;
+          let cost = this.calculateTotalCost(config, i, currentLevel);
           if (cost > gold) break;
           affordable = i;
         }
         levelsToBuy = affordable;
-        totalCost = (baseCost * (levelsToBuy * (2 * currentLevel + levelsToBuy + 1))) / 2;
+        totalCost = this.calculateTotalCost(config, levelsToBuy, currentLevel);
       }
     }
 

@@ -43,7 +43,14 @@ export const OFFENSE_STATS = {
   attackSpeed: {
     base: 1,
     decimalPlaces: 2,
-    training: { cost: 500, bonus: 0.01, maxLevel: 500 },
+    training: {
+      cost: 400,
+      costIncrease: 600,
+      costIncreaseMultiplier: 1.08,
+      costThresholds: [{ level: 50, costIncreaseMultiplier: 1.05 }],
+      bonus: 0.01,
+      maxLevel: 100,
+    }, // max bonus: 25
     item: { min: 0.08, max: 0.14, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['offense', 'gloves'],
     showInUI: true,
@@ -56,14 +63,21 @@ export const OFFENSE_STATS = {
   critChance: {
     base: 5,
     decimalPlaces: 2,
-    training: { cost: 800, bonus: 0.1, maxLevel: 250 }, // max bonus: 25
+    training: {
+      cost: 550,
+      costIncrease: 600,
+      costIncreaseMultiplier: 1.01,
+      costThresholds: [{ level: 50, costIncreaseMultiplier: 1.018 }],
+      bonus: 0.1,
+      maxLevel: 250,
+    }, // max bonus: 25
     item: {
       min: 1,
       max: 5,
       limit: 20,
       scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER),
     },
-    itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
+    itemTags: ['offense', 'jewelry', 'gloves'],
     showInUI: true,
   },
   critChancePercent: {
@@ -74,9 +88,16 @@ export const OFFENSE_STATS = {
   critDamage: {
     base: 1.33,
     decimalPlaces: 2,
-    training: { cost: 1500, bonus: 0.01, maxLevel: 300 }, // max bonus: 3
+    training: {
+      cost: 750,
+      costIncrease: 800,
+      costIncreaseMultiplier: 1.01,
+      costThresholds: [{ level: 50, costIncreaseMultiplier: 1.018 }],
+      bonus: 0.01,
+      maxLevel: 250,
+    }, // max bonus: 2.5
     item: { min: 0.02, max: 0.1, limit: 2, scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER) },
-    itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
+    itemTags: ['offense', 'jewelry', 'gloves'],
     showInUI: true,
   },
   critDamagePercent: {
@@ -277,7 +298,14 @@ export const OFFENSE_STATS = {
   doubleDamageChance: {
     base: 0,
     decimalPlaces: 1,
-    training: { cost: 800, bonus: 0.1, maxLevel: 200 }, // max bonus: 20
+    training: {
+      cost: 550,
+      costIncrease: 600,
+      costIncreaseMultiplier: 1.012,
+      costThresholds: [{ level: 50, costIncreaseMultiplier: 1.025 }],
+      bonus: 0.1,
+      maxLevel: 200,
+    }, // max bonus: 20
     item: {
       min: 2,
       max: 5,
