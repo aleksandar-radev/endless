@@ -205,7 +205,7 @@ class Game {
       this._justDefeated = false;
       this.currentEnemy.lastAttack = Date.now();
       // Reset life and update resources
-      this.resetAllLife();
+      // this.resetAllLife();
       updateResources();
       updateEnemyStats();
     } else {
@@ -221,8 +221,6 @@ class Game {
         this.currentEnemy = new Enemy(this.stage);
       }
 
-      hero.stats.currentLife = hero.stats.life; // Reset player life
-      hero.stats.currentMana = hero.stats.mana; // Reset player mana
       this.currentEnemy.resetLife(); // Reset enemy life
       updatePlayerLife();
       updateEnemyStats();

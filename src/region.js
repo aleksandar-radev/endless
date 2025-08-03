@@ -20,20 +20,21 @@ export async function setCurrentRegion(regionId) {
   game.currentRegionId = regionId;
   // Reset stage progress and enemy as if the hero died
 
-  if (game.gameStarted) {
-    toggleGame();
-    updateRegionUI();
-    return;
-  }
   game.stage = game.getStartingStage();
   game.currentEnemy = new Enemy(game.stage);
   game.resetAllLife();
-  dataManager.saveGame();
-
   hero.recalculateFromAttributes(); // in order to apply region changes to hero stats (elemental resistances)
   updateStatsAndAttributesUI();
   updateStageUI();
   updateRegionUI();
+
+  if (game.gameStarted) {
+    toggleGame();
+    return;
+  }
+
+  dataManager.saveGame();
+
 }
 
 export function getCurrentRegion() {
