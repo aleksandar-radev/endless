@@ -1,13 +1,13 @@
 import { scaleDownFlatSum } from './stats.js';
 
-const FLAT_MULTIPLIER = 0.015;
+const FLAT_MULTIPLIER = 0.018;
 const PERCENT_MULTIPLIER = 0.001;
 const CHANCE_MULTIPLIER = 0.0006;
 
-const ELEMENTAL_DAMAGE_MIN = 4;
-const ELEMENTAL_DAMAGE_MAX = 14;
-const ELEMENTAL_DAMAGE_PERCENT_MIN = 5;
-const ELEMENTAL_DAMAGE_PERCENT_MAX = 15;
+const ELEMENTAL_DAMAGE_MIN = 3;
+const ELEMENTAL_DAMAGE_MAX = 12;
+const ELEMENTAL_DAMAGE_PERCENT_MIN = 4;
+const ELEMENTAL_DAMAGE_PERCENT_MAX = 13;
 
 const offenseScaling = (level, scaling = FLAT_MULTIPLIER, base = 1) => {
   const total = scaleDownFlatSum(level);
@@ -21,7 +21,7 @@ export const OFFENSE_STATS = {
     base: 10,
     decimalPlaces: 0,
     training: { cost: 100, bonus: 1, maxLevel: Infinity },
-    item: { min: 5, max: 12, limit: Infinity, scaling: (level) => offenseScaling(level) },
+    item: { min: 10, max: 28, limit: Infinity, scaling: (level) => offenseScaling(level) },
     itemTags: ['offense'],
     showInUI: true,
   },
@@ -32,7 +32,7 @@ export const OFFENSE_STATS = {
   damagePercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 8, max: 24, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 15, max: 36, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['offense', 'gloves'],
   },
   totalDamagePercent: {

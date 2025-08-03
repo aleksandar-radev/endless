@@ -1,6 +1,6 @@
 import { scaleDownFlatSum } from './stats.js';
 
-const FLAT_MULTIPLIER = 0.001;
+const FLAT_MULTIPLIER = 0.0012;
 const PERCENT_MULTIPLIER = 0.00025;
 const STAT_MULTIPLIER = 0.005;
 

@@ -174,7 +174,7 @@ export const REGIONS = [
       enormous_gold_coins: 6,
       FREAKY_GOLD_COINS: 4,
     },
-    itemBaseBonus: 2.5,
+    itemBaseBonus: 3,
     resistanceReduction: 20,
   },
   {
@@ -214,7 +214,7 @@ export const REGIONS = [
       potion_of_intelligence: 3,
       potion_of_perseverance: 3,
     },
-    itemBaseBonus: 3,
+    itemBaseBonus: 4,
     resistanceReduction: 25,
   },
   {
@@ -248,7 +248,7 @@ export const REGIONS = [
       enormous_gold_coins: 6,
       freaky_gold_coins: 20,
     },
-    itemBaseBonus: 3.5,
+    itemBaseBonus: 5,
     resistanceReduction: 30,
   },
   {
@@ -285,7 +285,7 @@ export const REGIONS = [
       armor_upgrade_stone: 3,
       weapon_upgrade_core: 6,
     },
-    itemBaseBonus: 4,
+    itemBaseBonus: 6,
     resistanceReduction: 35,
   },
   {
@@ -322,7 +322,7 @@ export const REGIONS = [
       elixir: 3.5,
       crystalized_rock: 6,
     },
-    itemBaseBonus: 4.5,
+    itemBaseBonus: 7,
     resistanceReduction: 40,
   },
   {
@@ -358,7 +358,7 @@ export const REGIONS = [
       greater_experience_potion: 6,
       huge_experience_potion: 10,
     },
-    itemBaseBonus: 5,
+    itemBaseBonus: 8,
     resistanceReduction: 45,
   },
   {
@@ -392,7 +392,7 @@ export const REGIONS = [
     },
     materialDropWeights: {
     },
-    itemBaseBonus: 5.5,
+    itemBaseBonus: 9,
     resistanceReduction: 50,
   },
   {
@@ -428,7 +428,7 @@ export const REGIONS = [
       enchantment_scroll: 5,
       alternation_orb: 5,
     },
-    itemBaseBonus: 6,
+    itemBaseBonus: 10,
     resistanceReduction: 55,
   },
 ];
