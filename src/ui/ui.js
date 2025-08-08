@@ -484,6 +484,7 @@ export const formatStatName = (stat) => {
   if (stat === 'reduceEnemyHpPercent') return 'Reduce Enemy HP %';
   if (stat === 'reduceEnemyAttackSpeedPercent') return 'Reduce Enemy Attack Speed %';
   if (stat === 'extraDamageFromLifePercent') return 'Extra Damage From % of Life';
+  if (stat === 'extraDamageFromArmorPercent') return 'Extra Damage From % of Armor';
   if (stat === 'extraDamageFromManaPercent') return 'Extra Damage From % of Mana';
 
   // Fallback: convert camelCase to Title Case with spaces

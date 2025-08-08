@@ -122,8 +122,8 @@ export const WARRIOR_SKILLS = {
     description: () => 'Deals instant damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armorPenetration: 5 * level,
-      armorPenetrationPercent: Math.min(0.25 * scaleDownFlat(level), 40),
+      armorPenetration: 15 * level,
+      armorPenetrationPercent: Math.min(0.5 * scaleDownFlat(level), 40),
     }),
   },
 
@@ -140,6 +140,7 @@ export const WARRIOR_SKILLS = {
     description: () => 'Increases armor and block chance temporarily',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      extraDamageFromArmorPercent: Math.min(0.03 * scaleDownFlat(level), 2),
       armorPercent: 6 * scaleDownFlat(level),
       blockChance: Math.min(level * 0.1, 20),
     }),

@@ -301,7 +301,7 @@ function showLootNotification(item) {
   setTimeout(() => notification.remove(), 3000);
 }
 
-export function calculateHitChance(attackRating, evasion, cap = 0.8) {
+export function calculateHitChance(attackRating, evasion, cap = 0.9) {
   let raw = 1.5 * attackRating / (attackRating + evasion);
   raw = Math.max(0, raw);
   const capped = Math.max(0.2, Math.min(raw, cap));
@@ -309,13 +309,13 @@ export function calculateHitChance(attackRating, evasion, cap = 0.8) {
   return Math.round(capped * 100);
 }
 
-export function calculateEvasionChance(evasion, attackRating, cap = 0.8) {
+export function calculateEvasionChance(evasion, attackRating, cap = 0.9) {
   // Evasion chance is simply 1 - hit chance (after capping)
   const hitChance = calculateHitChance(attackRating, evasion, cap);
   return 100 - hitChance;
 }
 
-export function calculateArmorReduction(armor, damage, cap = 0.75) {
+export function calculateArmorReduction(armor, damage, cap = 0.9) {
   if (damage <= 0) return 0;
   const reduction = armor / (armor + 10 * damage);
   return Math.max(0, Math.min(reduction, cap)) * 100;

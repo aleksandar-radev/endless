@@ -414,6 +414,7 @@ export default class Hero {
         if (stat === 'resurrectionChance') value = Math.min(value, 50);
         if (stat === 'extraMaterialDropMax') value = Math.max(value, 1); // Always at least 1
         if (stat === 'extraDamageFromLifePercent') value = Math.min(value, 5);
+        if (stat === 'extraDamageFromArmorPercent') value = Math.min(value, 5);
         if (stat === 'extraDamageFromManaPercent') value = Math.min(value, 5);
         if (stat === 'reduceEnemyHpPercent') value = Math.min(value, 50);
         if (stat === 'reduceEnemyAttackSpeedPercent') value = Math.min(value, 50);
@@ -445,6 +446,7 @@ export default class Hero {
 
     // Extra damage based on hero resources, split between physical and elemental
     const extraFromLife = (this.stats.extraDamageFromLifePercent || 0) * this.stats.life;
+    const extraFromArmor = (this.stats.extraDamageFromArmorPercent || 0) * this.stats.armor;
     const extraFromMana = (this.stats.extraDamageFromManaPercent || 0) * this.stats.mana;
 
     // Split: 50% to physical, 50% distributed equally among elements
@@ -452,7 +454,7 @@ export default class Hero {
 
     const splitLife = extraFromLife / 2;
     const splitMana = extraFromMana / 2;
-    flatValues.damage += splitLife + splitMana;
+    flatValues.damage += splitLife + splitMana + extraFromArmor;
 
     const eleShareLife = splitLife / elements.length;
     const eleShareMana = splitMana / elements.length;

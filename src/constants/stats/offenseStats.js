@@ -424,6 +424,10 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 2,
   },
+  extraDamageFromArmorPercent: {
+    base: 0,
+    decimalPlaces: 2,
+  },
   extraDamageFromManaPercent: {
     base: 0,
     decimalPlaces: 2,
