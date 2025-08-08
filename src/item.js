@@ -89,7 +89,7 @@ export default class Item {
     return `${ITEM_RARITY[this.rarity].name} ${this.type}`;
   }
 
-  getTooltipHTML(isEquipped = false) {
+  getTooltipHTML(isEquipped = false, showReferenceValues = true) {
     const html = String.raw;
 
     const isPercentStat = (stat) => {
@@ -106,14 +106,14 @@ export default class Item {
           ${isEquipped ? '(Equipped) ' : ''}${this.getDisplayName()}
         </div>
         <div class="item-level">Level ${this.level}, Tier ${this.tier}</div>
-        ${overallQuality > 0 ? html`<div class="item-quality" style="color: ${this.getQualityColor(overallQuality)};">Roll Quality: ${overallQuality.toFixed(1)}%</div>` : ''}
+        ${showReferenceValues && overallQuality > 0 ? html`<div class="item-quality" style="color: ${this.getQualityColor(overallQuality)};">Roll Quality: ${overallQuality.toFixed(1)}%</div>` : ''}
         <div class="item-stats">
           ${Object.entries(this.stats)
     .map(([stat, value]) => {
       const decimals = STATS[stat].decimalPlaces || 0;
       const formattedValue = value.toFixed(decimals);
       const ref = referenceValues[stat];
-      const refText = ref ? html` <span class="reference-value" style="color: #888; font-size: 0.9em;">(Base: ${ref.baseValue.toFixed(decimals)}, ${ref.rollQuality.toFixed(0)}%)</span>` : '';
+      const refText = (showReferenceValues && ref) ? html` <span class="reference-value">(${ref.baseValue.toFixed(decimals)}/${ref.rollQuality.toFixed(0)}%)</span>` : '';
       return html`<div>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}${refText}</div>`;
     })
     .join('')}
