@@ -1,6 +1,7 @@
 import { ITEM_ICONS, ITEM_RARITY, ITEM_STAT_POOLS } from './constants/items.js';
 import { getRegionByTier } from './constants/regions.js';
 import { STATS } from './constants/stats/stats.js';
+import { options } from './globals.js';
 import { formatStatName } from './ui/ui.js';
 
 // Dynamically generate AVAILABLE_STATS from STATS
@@ -46,6 +47,39 @@ export default class Item {
     this.metaData[stat] = { baseValue };
 
     return val;
+  }
+
+  /**
+   * Calculate the min and max possible value for a given stat on this item.
+   * @param {string} stat
+   * @returns {{min: number, max: number}}
+   */
+  getStatMinMax(stat) {
+    const statConfig = AVAILABLE_STATS[stat];
+    if (!statConfig) return { min: 0, max: 0 };
+    const tierBonus = this.getTierBonus();
+    const multiplier = this.getMultiplier();
+    const scale = this.getLevelScale(stat, this.level);
+    const decimals = STATS[stat].decimalPlaces || 0;
+    const limit = STATS[stat].item?.limit || Infinity;
+    // Min value
+    let minVal = Number((statConfig.min * tierBonus * multiplier * scale).toFixed(decimals));
+    let maxVal = Number((statConfig.max * tierBonus * multiplier * scale).toFixed(decimals));
+    minVal = Math.min(minVal, limit);
+    maxVal = Math.min(maxVal, limit);
+    return { min: minVal, max: maxVal };
+  }
+
+  /**
+   * Get min/max for all stats on this item.
+   * @returns {Object} { stat: {min, max}, ... }
+   */
+  getAllStatsMinMax() {
+    const result = {};
+    for (const stat of Object.keys(this.stats)) {
+      result[stat] = this.getStatMinMax(stat);
+    }
+    return result;
   }
 
   generateStats() {
@@ -96,6 +130,20 @@ export default class Item {
       return stat.endsWith('Percent') || stat === 'critChance' || stat === 'blockChance' || stat === 'lifeSteal';
     };
 
+    // Check global options for advanced tooltips
+    let showAdvanced = false;
+    try {
+      if (options.showAdvancedTooltips) {
+        showAdvanced = true;
+      }
+    } catch (e) {}
+
+    // Precompute min/max for all stats if needed
+    let statMinMax = {};
+    if (showAdvanced) {
+      statMinMax = this.getAllStatsMinMax();
+    }
+
     return html`
       <div class="item-tooltip">
         <div class="item-name" style="color: ${ITEM_RARITY[this.rarity].color};">
@@ -107,7 +155,16 @@ export default class Item {
     .map(([stat, value]) => {
       const decimals = STATS[stat].decimalPlaces || 0;
       const formattedValue = value.toFixed(decimals);
-      return `<div>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}</div>`;
+      let adv = '';
+      if (showAdvanced && statMinMax[stat]) {
+        const min = statMinMax[stat].min.toFixed(decimals);
+        const max = statMinMax[stat].max.toFixed(decimals);
+        adv = `<span class="item-ref-range" style="float:right; color:#aaa; text-align:right; min-width:60px;">${min} - ${max}</span>`;
+      }
+      return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+        <span>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}</span>
+        ${adv}
+      </div>`;
     })
     .join('')}
         </div>

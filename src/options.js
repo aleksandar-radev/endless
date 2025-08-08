@@ -27,6 +27,8 @@ export class Options {
     this.soundVolume = typeof data.soundVolume === 'number' ? data.soundVolume : 0;
     // Remember salvage preference across prestiges
     this.salvageMaterialsEnabled = data.salvageMaterialsEnabled ?? false;
+    // Add advanced tooltips option
+    this.showAdvancedTooltips = data.showAdvancedTooltips ?? false;
   }
 
   /**
@@ -90,6 +92,8 @@ export class Options {
 
     // --- Sound Volume Option ---
     container.appendChild(this._createSoundVolumeOption());
+    // --- Advanced Tooltips Option ---
+    container.appendChild(this._createAdvancedTooltipsOption());
     // --- Enemy Stats Toggle Option ---
     container.appendChild(this._createEnemyStatsToggleOption());
 
@@ -126,6 +130,39 @@ export class Options {
     container.appendChild(this._createResetButton());
     optionsTab.appendChild(container);
   }
+
+  /**
+   * Creates the advanced tooltips toggle option UI.
+   */
+  _createAdvancedTooltipsOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = `
+      <label for="advanced-tooltips-toggle" class="advanced-tooltips-toggle-label">Show Advanced Item Tooltips:</label>
+      <input
+        type="checkbox"
+        id="advanced-tooltips-toggle"
+        class="advanced-tooltips-toggle"
+        ${this.showAdvancedTooltips ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    // Make the toggle button clickable and sync with checkbox
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.showAdvancedTooltips = checkbox.checked;
+      // Save option
+      dataManager.saveGame();
+      // Optionally, refresh tooltips if needed
+    });
+    return wrapper;
+  }
+
   /**
    * Creates the stage skip number input UI.
    */

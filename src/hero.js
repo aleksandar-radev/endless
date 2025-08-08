@@ -60,7 +60,6 @@ export default class Hero {
    * @returns {number} EXP required for next level
    */
   getExpToNextLevel() {
-    // Base XP required for level 2
     if (this.level === 1) return 66;
     let xp = 66;
     for (let lvl = 2; lvl <= this.level; lvl++) {
