@@ -410,9 +410,9 @@
 }
 
 .materials-grid {
-  display: block;
-  align-content: center;
-  justify-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .materials-container {
