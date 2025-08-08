@@ -45,12 +45,21 @@ export function enemyAttack(currentTime) {
         const physicalDamageRaw = game.currentEnemy.damage;
         const armorReduction = calculateArmorReduction(hero.stats.armor, physicalDamageRaw) / 100;
         const physicalDamage = Math.floor(physicalDamageRaw * (1 - armorReduction));
-        const fire = game.currentEnemy.fireDamage * (1 - hero.stats.fireResistance / 100);
-        const cold = game.currentEnemy.coldDamage * (1 - hero.stats.coldResistance / 100);
-        const air = game.currentEnemy.airDamage * (1 - hero.stats.airResistance / 100);
-        const earth = game.currentEnemy.earthDamage * (1 - hero.stats.earthResistance / 100);
-        const lightning = game.currentEnemy.lightningDamage * (1 - hero.stats.lightningResistance / 100);
-        const water = game.currentEnemy.waterDamage * (1 - hero.stats.waterResistance / 100);
+
+        // Use PoE2 formula for elemental damage reduction (same as armor)
+        const fireReduction = calculateResistanceReduction(hero.stats.fireResistance, game.currentEnemy.fireDamage) / 100;
+        const coldReduction = calculateResistanceReduction(hero.stats.coldResistance, game.currentEnemy.coldDamage) / 100;
+        const airReduction = calculateResistanceReduction(hero.stats.airResistance, game.currentEnemy.airDamage) / 100;
+        const earthReduction = calculateResistanceReduction(hero.stats.earthResistance, game.currentEnemy.earthDamage) / 100;
+        const lightningReduction = calculateResistanceReduction(hero.stats.lightningResistance, game.currentEnemy.lightningDamage) / 100;
+        const waterReduction = calculateResistanceReduction(hero.stats.waterResistance, game.currentEnemy.waterDamage) / 100;
+
+        const fire = Math.floor(game.currentEnemy.fireDamage * (1 - fireReduction));
+        const cold = Math.floor(game.currentEnemy.coldDamage * (1 - coldReduction));
+        const air = Math.floor(game.currentEnemy.airDamage * (1 - airReduction));
+        const earth = Math.floor(game.currentEnemy.earthDamage * (1 - earthReduction));
+        const lightning = Math.floor(game.currentEnemy.lightningDamage * (1 - lightningReduction));
+        const water = Math.floor(game.currentEnemy.waterDamage * (1 - waterReduction));
 
         let totalDamage = physicalDamage + fire + cold + air + earth + lightning + water;
 
@@ -318,6 +327,12 @@ export function calculateEvasionChance(evasion, attackRating, cap = 0.8) {
 export function calculateArmorReduction(armor, damage, cap = 0.75) {
   if (damage <= 0) return 0;
   const reduction = armor / (armor + 10 * damage);
+  return Math.max(0, Math.min(reduction, cap)) * 100;
+}
+
+export function calculateResistanceReduction(resistance, damage, cap = 0.75) {
+  if (damage <= 0) return 0;
+  const reduction = resistance / (resistance + 10 * damage);
   return Math.max(0, Math.min(reduction, cap)) * 100;
 }
 
