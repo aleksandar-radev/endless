@@ -96,23 +96,43 @@ export default class Item {
       return stat.endsWith('Percent') || stat === 'critChance' || stat === 'blockChance' || stat === 'lifeSteal';
     };
 
+    // Get reference values for this item
+    const referenceValues = this.getReferenceValues();
+    const overallQuality = this.getOverallRollQuality();
+
     return html`
       <div class="item-tooltip">
         <div class="item-name" style="color: ${ITEM_RARITY[this.rarity].color};">
           ${isEquipped ? '(Equipped) ' : ''}${this.getDisplayName()}
         </div>
         <div class="item-level">Level ${this.level}, Tier ${this.tier}</div>
+        ${overallQuality > 0 ? html`<div class="item-quality" style="color: ${this.getQualityColor(overallQuality)};">Roll Quality: ${overallQuality.toFixed(1)}%</div>` : ''}
         <div class="item-stats">
           ${Object.entries(this.stats)
     .map(([stat, value]) => {
       const decimals = STATS[stat].decimalPlaces || 0;
       const formattedValue = value.toFixed(decimals);
-      return `<div>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}</div>`;
+      const ref = referenceValues[stat];
+      const refText = ref ? html` <span class="reference-value" style="color: #888; font-size: 0.9em;">(Base: ${ref.baseValue.toFixed(decimals)}, ${ref.rollQuality.toFixed(0)}%)</span>` : '';
+      return html`<div>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}${refText}</div>`;
     })
     .join('')}
         </div>
       </div>
     `;
+  }
+
+  /**
+   * Get color for roll quality display.
+   * @param {number} quality - Roll quality percentage (0-100)
+   * @returns {string} CSS color value
+   */
+  getQualityColor(quality) {
+    if (quality >= 90) return '#ff6b6b'; // Excellent - Red
+    if (quality >= 75) return '#ffa500'; // Very Good - Orange
+    if (quality >= 60) return '#ffff00'; // Good - Yellow
+    if (quality >= 40) return '#90EE90'; // Average - Light Green
+    return '#808080'; // Poor - Gray
   }
 
   /**
@@ -133,6 +153,46 @@ export default class Item {
       baseValues[stat] = value / (multiplier * scaling * tierBonus);
     }
     return baseValues;
+  }
+
+  /**
+   * Calculate the reference values for this item - base values and roll quality.
+   * @returns {Object} reference data including base values and roll percentages
+   */
+  getReferenceValues() {
+    const baseValues = this.getBaseStatValues();
+    const referenceData = {};
+
+    for (const [stat, baseValue] of Object.entries(baseValues)) {
+      const range = AVAILABLE_STATS[stat];
+      if (range) {
+        // Calculate roll quality as percentage of the possible range
+        const rollQuality = Math.min(100, Math.max(0,
+          ((baseValue - range.min) / (range.max - range.min)) * 100,
+        ));
+
+        referenceData[stat] = {
+          baseValue: baseValue,
+          rollQuality: rollQuality,
+          range: { min: range.min, max: range.max },
+        };
+      }
+    }
+
+    return referenceData;
+  }
+
+  /**
+   * Get the overall roll quality of this item (average of all stat roll qualities).
+   * @returns {number} Overall roll quality percentage (0-100)
+   */
+  getOverallRollQuality() {
+    const referenceValues = this.getReferenceValues();
+    const qualities = Object.values(referenceValues).map(ref => ref.rollQuality);
+
+    if (qualities.length === 0) return 0;
+
+    return qualities.reduce((sum, quality) => sum + quality, 0) / qualities.length;
   }
 
   /**
