@@ -68,6 +68,44 @@ export class Building {
       .join(', ');
   }
 
+  // Returns the remaining time in milliseconds until the next bonus collection
+  async getTimeUntilNextBonus() {
+    if (!this.effect?.interval || this.placedAt === null || this.level <= 0) {
+      return 0;
+    }
+
+    const now = await getTimeNow();
+    const intervalMs = intervalToMs(this.effect.interval);
+    if (!intervalMs) return 0;
+
+    const timeSinceLastBonus = now - this.lastBonusTime;
+    const remainingTime = intervalMs - (timeSinceLastBonus % intervalMs);
+
+    return remainingTime <= 0 ? 0 : remainingTime;
+  }
+
+  // Returns a formatted string for the remaining time (e.g., "2m 30s", "Ready!")
+  async formatTimeUntilNextBonus() {
+    const remainingMs = await this.getTimeUntilNextBonus();
+
+    if (remainingMs <= 0) {
+      return 'Ready!';
+    }
+
+    const totalSeconds = Math.ceil(remainingMs / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    } else if (minutes > 0) {
+      return `${minutes}m ${seconds}s`;
+    } else {
+      return `${seconds}s`;
+    }
+  }
+
   // Returns the cost object for a given upgrade amount (default 1)
   getUpgradeCost(amount = 1) {
     // Returns the total cost for upgrading 'amount' levels from current level

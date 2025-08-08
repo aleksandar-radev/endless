@@ -18,6 +18,9 @@ function createBuildingCard(building) {
       <div class="building-name">${building.name}</div>
       <div class="building-effect">${building.formatEffect()}</div>
       <div class="building-earned">Total Earned: ${formatNumber(building.totalEarned)} ${building.effect?.type || ''}</div>
+      <div class="building-timer" data-building-id="${building.id}">
+        Next: <span class="timer-display">Loading...</span>
+      </div>
     </div>
   `;
   return el;
@@ -69,6 +72,7 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
         <div class="building-info-modal-body">
           <div>Level: <b>${formatNumber(building.level)}</b> / ${formatNumber(building.maxLevel)}</div>
           <div>Current Bonus: <b>${building.formatEffect()}</b></div>
+          <div>Next Bonus: <span class="modal-timer-display" data-building-id="${building.id}">Loading...</span></div>
           <div>Upgrade Amount: <b>${formatNumber(upgradeAmount)}</b></div>
           <div>Total Upgrade Cost: <b>${Building.formatCost(totalCost)}</b></div>
           <div>
@@ -396,6 +400,91 @@ export function renderPurchasedBuildings() {
     .forEach((building) => {
       purchased.appendChild(createBuildingCard(building));
     });
+  // Update timers after rendering
+  updateBuildingTimers();
+}
+
+// Function to update all building timers
+async function updateBuildingTimers() {
+  // Update timers in building cards
+  const timerElements = document.querySelectorAll('.timer-display');
+
+  for (const timerElement of timerElements) {
+    const buildingCard = timerElement.closest('.building-card');
+    if (!buildingCard) continue;
+
+    const buildingTimer = buildingCard.querySelector('.building-timer');
+    if (!buildingTimer) continue;
+
+    const buildingId = buildingTimer.dataset.buildingId;
+    if (!buildingId) continue;
+
+    const building = buildings.buildings[buildingId];
+    if (!building) continue;
+
+    try {
+      const timeText = await building.formatTimeUntilNextBonus();
+      timerElement.textContent = timeText;
+
+      // Add visual indication for ready buildings
+      if (timeText === 'Ready!') {
+        timerElement.classList.add('timer-ready');
+      } else {
+        timerElement.classList.remove('timer-ready');
+      }
+    } catch (error) {
+      timerElement.textContent = 'Error';
+    }
+  }
+
+  // Update timers in modals
+  const modalTimerElements = document.querySelectorAll('.modal-timer-display');
+
+  for (const timerElement of modalTimerElements) {
+    const buildingId = timerElement.dataset.buildingId;
+    if (!buildingId) continue;
+
+    const building = buildings.buildings[buildingId];
+    if (!building) continue;
+
+    try {
+      const timeText = await building.formatTimeUntilNextBonus();
+      timerElement.textContent = timeText;
+
+      // Add visual indication for ready buildings
+      if (timeText === 'Ready!') {
+        timerElement.classList.add('timer-ready');
+        timerElement.style.color = '#4ade80';
+        timerElement.style.fontWeight = 'bold';
+      } else {
+        timerElement.classList.remove('timer-ready');
+        timerElement.style.color = '#fff';
+        timerElement.style.fontWeight = 'bold';
+      }
+    } catch (error) {
+      timerElement.textContent = 'Error';
+    }
+  }
+}
+
+// Store timer interval reference for cleanup
+let timerUpdateInterval = null;
+
+// Start the timer update loop
+function startTimerUpdates() {
+  if (timerUpdateInterval) {
+    clearInterval(timerUpdateInterval);
+  }
+
+  timerUpdateInterval = setInterval(updateBuildingTimers, 1000);
+}
+
+// Stop the timer update loop
+function stopTimerUpdates() {
+  if (timerUpdateInterval) {
+    clearInterval(timerUpdateInterval);
+    timerUpdateInterval = null;
+  }
 }
 
 export function initializeBuildingsUI() {
@@ -406,6 +495,9 @@ export function initializeBuildingsUI() {
   renderPurchasedBuildings();
   // Open map modal
   tab.querySelector('#open-buildings-map').onclick = showBuildingsMapModal;
+
+  // Start timer updates
+  startTimerUpdates();
 }
 
 export function showOfflineBonusesModal(bonuses, onCollect) {

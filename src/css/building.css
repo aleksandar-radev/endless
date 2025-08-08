@@ -45,6 +45,31 @@
   font-size: 0.95rem;
 }
 
+.building-timer {
+  color: #bbb;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.timer-display {
+  font-weight: bold;
+  color: #fff;
+}
+
+.timer-display.timer-ready {
+  color: #4ade80;
+  animation: pulse-ready 2s infinite;
+}
+
+@keyframes pulse-ready {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
 .building-open-map-btn {
   background: linear-gradient(90deg, #4e54c8, #8f94fb);
   color: #fff;
