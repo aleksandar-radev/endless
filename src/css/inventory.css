@@ -801,3 +801,12 @@
 .item-context-menu button:hover {
   background: var(--bg-panel);
 }
+
+.sort-row {
+  display: flex;
+}
+
+.sort-select {
+  padding: 3px 5px;
+  margin: 8px 5px;
+}

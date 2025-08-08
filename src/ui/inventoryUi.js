@@ -41,8 +41,16 @@ export function initializeInventoryUI(inv) {
         <button id="items-tab" class="inventory-btn active">Items</button>
         <button id="materials-tab" class="inventory-btn">Materials</button>
       </div>
-      <div id="sort-inventory" class="inventory-btn">Sort Items</div>
-      <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn" style="display:none;">Equip</button>
+    <div class="sort-row">
+  <select id="sort-mode-select" class="inventory-btn sort-select">
+          <option value="type-rarity-level">T→R→L</option>
+          <option value="type-level-rarity">T→L→R</option>
+          <option value="rarity-level">R→L</option>
+          <option value="level-rarity">L→R</option>
+        </select>
+  <div id="sort-inventory" class="inventory-btn sort-btn"><span role="img" aria-label="Sort">🔃</span></div>
+      </div>
+  <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn hidden">Equip</button>
       <button id="open-salvage-modal" class="inventory-btn">Salvage</button>
     </div>
   `;
@@ -75,20 +83,25 @@ export function initializeInventoryUI(inv) {
   const mobileEquipBtn = document.getElementById('mobile-equip-btn');
 
   const sortBtn = document.getElementById('sort-inventory');
+  const sortModeSelect = document.getElementById('sort-mode-select');
   const itemsTab = document.getElementById('items-tab');
   const materialsTab = document.getElementById('materials-tab');
   const materialsGrid = document.querySelector('.materials-grid');
   const openSalvageModalBtn = document.getElementById('open-salvage-modal');
 
-  // Update button text on tab switch
-  function updateSortBtnText() {
-    if (itemsTab.classList.contains('active')) {
-      sortBtn.textContent = '🔃';
-    } else {
-      sortBtn.textContent = '🔃';
-    }
-  }
-  updateSortBtnText(inv);
+  // Set sort mode from localStorage or default
+  let sortMode = localStorage.getItem('inventorySortMode') || 'type-rarity-level';
+  sortModeSelect.value = sortMode;
+
+  // Map for full text tooltips
+  const sortModeFullText = {
+    'type-rarity-level': 'Type → Rarity → Level',
+    'type-level-rarity': 'Type → Level → Rarity',
+    'rarity-level': 'Rarity → Level',
+    'level-rarity': 'Level → Rarity',
+  };
+  function updateSortBtnText() {}
+  updateSortBtnText();
 
   if (itemsTab && materialsTab && gridContainer && materialsGrid) {
     itemsTab.addEventListener('click', () => {
@@ -108,21 +121,36 @@ export function initializeInventoryUI(inv) {
     });
   }
 
+  // Sort mode change
+  sortModeSelect.addEventListener('change', () => {
+    sortMode = sortModeSelect.value;
+    localStorage.setItem('inventorySortMode', sortMode);
+    updateSortBtnText();
+    if (itemsTab.classList.contains('active')) {
+      sortInventory(sortMode);
+    }
+  });
+
   // Sort button sorts only the visible tab
   sortBtn.addEventListener('click', () => {
     if (itemsTab.classList.contains('active')) {
-      sortInventory();
-      showToast('Sorted items by rarity, then level', 'success');
+      sortInventory(sortMode);
+      showToast(`Sorted items by ${sortModeSelect.options[sortModeSelect.selectedIndex].text}`, 'success');
     } else {
       sortMaterials();
       showToast('Sorted materials', 'success');
     }
   });
 
-  // Add tooltip for sort button
+  // Add tooltip for sort button (custom, shows full text for current sort mode)
   sortBtn.addEventListener('mouseenter', (e) => {
-    const tooltipText = itemsTab.classList.contains('active') ? 'Sort items by rarity then level' : 'Sort materials';
-    const tooltipContent = `<div class="item-tooltip"><b>${tooltipText}</b></div>`;
+    let tooltipText = '';
+    if (itemsTab.classList.contains('active')) {
+      tooltipText = `Sort items by <b>${sortModeFullText[sortModeSelect.value]}</b>`;
+    } else {
+      tooltipText = 'Sort materials';
+    }
+    const tooltipContent = `<div class="item-tooltip">${tooltipText}</div>`;
     showTooltip(tooltipContent, e, 'flex-tooltip');
   });
   sortBtn.addEventListener('mousemove', positionTooltip);
@@ -217,12 +245,12 @@ export function showSalvageModal(inv) {
     const atCap = selectedRarities.length >= autoSalvageLevel;
     const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
     return html`
-      <div class="salvage-row" style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+  <div class="salvage-row">
         <button class="salvage-btn-modal" data-rarity="${rarity}">${rarity.charAt(0) + rarity.slice(1).toLowerCase()} Items</button>
-        <label class="toggle-label" style="margin-left:8px;display:flex;align-items:center;gap:4px;position:relative;cursor:pointer;">
-          <input type="checkbox" class="auto-salvage-toggle" data-rarity="${rarity}" ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} style="opacity:0;position:absolute;width:100%;height:100%;left:0;top:0;z-index:2;cursor:pointer;" />
+        <label class="toggle-label auto-salvage-toggle-label">
+          <input type="checkbox" class="auto-salvage-toggle" data-rarity="${rarity}" ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} />
           <span class="toggle-btn${isChecked ? ' checked' : ''}${isDisabled ? ' disabled' : ''}"></span>
-          <span style="font-size:0.95em;z-index:1;">Auto</span>
+          <span class="auto-salvage-toggle-text">Auto</span>
         </label>
       </div>
     `;
@@ -417,10 +445,10 @@ export function showSalvageModal(inv) {
   // Tooltip for trash
   trash.addEventListener('mouseenter', (e) => {
     const tooltipContent = html`
-      <div class="item-tooltip" style="text-align:center;">
-        <div style="font-size:2em;">🗑️</div>
+      <div class="item-tooltip tooltip-center">
+        <div class="tooltip-trash-icon">🗑️</div>
         <b>Salvage Item</b>
-        <div style="margin-top:4px;font-size:0.95em;">Drag and drop an item here to salvage it.</div>
+        <div class="tooltip-trash-desc">Drag and drop an item here to salvage it.</div>
       </div>
     `;
     showTooltip(tooltipContent, e, 'flex-tooltip');
@@ -890,20 +918,36 @@ export function updateMaterialsGrid(inv) {
   }
 }
 
-export function sortInventory() {
+export function sortInventory(mode = 'type-rarity-level') {
   // Separate persistent and non-persistent items
   const persistentItems = inventory.inventoryItems.slice(0, PERSISTENT_SLOTS);
   const nonPersistentItems = inventory.inventoryItems.slice(PERSISTENT_SLOTS).filter((item) => item !== null);
 
-  // Sort only non-persistent items by rarity and level
-  nonPersistentItems.sort((a, b) => {
-    const rarityA = RARITY_ORDER.indexOf(a.rarity);
-    const rarityB = RARITY_ORDER.indexOf(b.rarity);
+  // Helper for type order
+  const typeOrder = (a, b) => {
+    if (a.type < b.type) return -1;
+    if (a.type > b.type) return 1;
+    return 0;
+  };
+  // Helper for rarity order
+  const rarityOrder = (a, b) => RARITY_ORDER.indexOf(b.rarity) - RARITY_ORDER.indexOf(a.rarity);
+  // Helper for level order
+  const levelOrder = (a, b) => b.level - a.level;
 
-    if (rarityA !== rarityB) {
-      return -(rarityA - rarityB);
+  // Sort logic based on mode
+  nonPersistentItems.sort((a, b) => {
+    switch (mode) {
+      case 'type-rarity-level':
+        return typeOrder(a, b) || rarityOrder(a, b) || levelOrder(a, b);
+      case 'type-level-rarity':
+        return typeOrder(a, b) || levelOrder(a, b) || rarityOrder(a, b);
+      case 'rarity-level':
+        return rarityOrder(a, b) || levelOrder(a, b);
+      case 'level-rarity':
+        return levelOrder(a, b) || rarityOrder(a, b);
+      default:
+        return rarityOrder(a, b) || levelOrder(a, b);
     }
-    return b.level - a.level;
   });
 
   // Combine persistent items with sorted non-persistent items and remaining nulls
