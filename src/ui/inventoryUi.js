@@ -446,7 +446,7 @@ export function updateInventoryGrid(inv) {
     const html = String.raw;
     if (cell && item) {
       cell.innerHTML = html`
-        <div class="inventory-item rarity-${item.rarity.toLowerCase()}" draggable="true" data-item-id="${item.id}">
+        <div class="inventory-item rarity-${item.rarity.toLowerCase()}" draggable="true" data-item-id="${item.id}" style="border-color: ${(ITEM_RARITY[item.rarity] || ITEM_RARITY.NORMAL).color};">
           <div class="item-icon">${item.getIcon()}</div>
         </div>
       `;
@@ -457,10 +457,10 @@ export function updateInventoryGrid(inv) {
     const slotElement = document.querySelector(`[data-slot="${slot}"]`);
     if (slotElement && item) {
       const newItem = document.createElement('div');
-      newItem.className = 'inventory-item';
+      newItem.className = `inventory-item rarity-${item.rarity.toLowerCase()}`;
       newItem.draggable = true;
       newItem.dataset.itemId = item.id;
-      newItem.style.borderColor = ITEM_RARITY[item.rarity].color;
+      newItem.style.borderColor = (ITEM_RARITY[item.rarity] || ITEM_RARITY.NORMAL).color;
       newItem.innerHTML = `<div class="item-icon">${item.getIcon()}</div>`;
 
       const existingItem = slotElement.querySelector('.inventory-item');
@@ -829,8 +829,17 @@ export function updateMaterialsGrid(inv) {
     if (mat) {
       // Get full material definition for tooltip
       const matDef = Object.values(MATERIALS).find((m) => m.id === mat.id) || {};
-      // Show only first 2 digits, and "9+" if >9
-      let qtyDisplay = mat.qty > 9 ? '+' : String(mat.qty).padStart(2, ' ');
+      // Improved quantity display: show actual numbers up to 99, then use compact notation
+      let qtyDisplay;
+      if (mat.qty <= 99) {
+        qtyDisplay = String(mat.qty).padStart(2, ' ');
+      } else if (mat.qty <= 999) {
+        qtyDisplay = Math.floor(mat.qty / 100) + 'H'; // H for hundreds (1H, 2H, etc.)
+      } else if (mat.qty <= 9999) {
+        qtyDisplay = Math.floor(mat.qty / 1000) + 'K'; // K for thousands
+      } else {
+        qtyDisplay = '9K+'; // For very large quantities
+      }
       cell.innerHTML = `<div class="material-item" draggable="true" data-mat-id="${mat.id}" data-mat-index="${i}">
           ${mat.icon || '🔹'}
           <span class="mat-qty">${qtyDisplay}</span>

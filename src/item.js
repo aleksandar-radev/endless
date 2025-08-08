@@ -32,7 +32,12 @@ export default class Item {
   }
 
   getMultiplier() {
-    return ITEM_RARITY[this.rarity].statMultiplier;
+    const rarityData = ITEM_RARITY[this.rarity];
+    if (!rarityData) {
+      console.warn(`Invalid rarity '${this.rarity}' for item, using NORMAL rarity`);
+      return ITEM_RARITY.NORMAL.statMultiplier;
+    }
+    return rarityData.statMultiplier;
   }
 
   calculateStatValue({ baseValue, tierBonus, multiplier, scale, stat }) {
@@ -86,7 +91,12 @@ export default class Item {
   }
 
   getDisplayName() {
-    return `${ITEM_RARITY[this.rarity].name} ${this.type}`;
+    const rarityData = ITEM_RARITY[this.rarity];
+    if (!rarityData) {
+      console.warn(`Invalid rarity '${this.rarity}' for item, using NORMAL rarity`);
+      return `${ITEM_RARITY.NORMAL.name} ${this.type}`;
+    }
+    return `${rarityData.name} ${this.type}`;
   }
 
   getTooltipHTML(isEquipped = false) {
@@ -96,9 +106,14 @@ export default class Item {
       return stat.endsWith('Percent') || stat === 'critChance' || stat === 'blockChance' || stat === 'lifeSteal';
     };
 
+    const rarityData = ITEM_RARITY[this.rarity] || ITEM_RARITY.NORMAL;
+    if (!ITEM_RARITY[this.rarity]) {
+      console.warn(`Invalid rarity '${this.rarity}' for item tooltip, using NORMAL rarity`);
+    }
+
     return html`
       <div class="item-tooltip">
-        <div class="item-name" style="color: ${ITEM_RARITY[this.rarity].color};">
+        <div class="item-name" style="color: ${rarityData.color};">
           ${isEquipped ? '(Equipped) ' : ''}${this.getDisplayName()}
         </div>
         <div class="item-level">Level ${this.level}, Tier ${this.tier}</div>
