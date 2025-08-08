@@ -167,9 +167,9 @@
 }
 
 .inventory-grid {
-  display: block;
-  align-content: center;
-  justify-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   scroll-behavior: smooth;
 }
 
@@ -328,6 +328,7 @@
   border: 1px solid #3fa043;
   color: #fff;
 }
+
 .mobile-equip-btn:hover {
   background: #388e3c;
 }
