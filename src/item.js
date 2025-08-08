@@ -2,6 +2,7 @@ import { ITEM_ICONS, ITEM_RARITY, ITEM_STAT_POOLS } from './constants/items.js';
 import { getRegionByTier } from './constants/regions.js';
 import { STATS } from './constants/stats/stats.js';
 import { formatStatName } from './ui/ui.js';
+import { options } from './globals.js';
 
 // Dynamically generate AVAILABLE_STATS from STATS
 export const AVAILABLE_STATS = Object.fromEntries(
@@ -96,6 +97,10 @@ export default class Item {
       return stat.endsWith('Percent') || stat === 'critChance' || stat === 'blockChance' || stat === 'lifeSteal';
     };
 
+    // Get stat ranges if advanced item values option is enabled
+    const showAdvanced = options?.showAdvancedItemValues || false;
+    const statRanges = showAdvanced ? this.getStatRanges() : {};
+
     return html`
       <div class="item-tooltip">
         <div class="item-name" style="color: ${ITEM_RARITY[this.rarity].color};">
@@ -107,7 +112,17 @@ export default class Item {
     .map(([stat, value]) => {
       const decimals = STATS[stat].decimalPlaces || 0;
       const formattedValue = value.toFixed(decimals);
-      return `<div>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}</div>`;
+      const percent = isPercentStat(stat) ? '%' : '';
+
+      // Add reference range if advanced values are enabled
+      let rangeText = '';
+      if (showAdvanced && statRanges[stat]) {
+        const minValue = statRanges[stat].min.toFixed(decimals);
+        const maxValue = statRanges[stat].max.toFixed(decimals);
+        rangeText = ` <span style="color: #888888;">(${minValue} - ${maxValue})</span>`;
+      }
+
+      return `<div>${formatStatName(stat)}: ${formattedValue}${percent}${rangeText}</div>`;
     })
     .join('')}
         </div>
@@ -133,6 +148,39 @@ export default class Item {
       baseValues[stat] = value / (multiplier * scaling * tierBonus);
     }
     return baseValues;
+  }
+
+  /**
+   * Calculate the minimum and maximum possible values for each stat on this item.
+   * @returns {Object} Object with stat names as keys and {min, max} as values
+   */
+  getStatRanges() {
+    const ranges = {};
+    const tierBonus = this.getTierBonus();
+    const multiplier = this.getMultiplier();
+
+    for (const stat of Object.keys(this.stats)) {
+      const range = AVAILABLE_STATS[stat];
+      if (range) {
+        const scale = this.getLevelScale(stat, this.level);
+        const minValue = this.calculateStatValue({
+          baseValue: range.min,
+          tierBonus,
+          multiplier,
+          scale,
+          stat,
+        });
+        const maxValue = this.calculateStatValue({
+          baseValue: range.max,
+          tierBonus,
+          multiplier,
+          scale,
+          stat,
+        });
+        ranges[stat] = { min: minValue, max: maxValue };
+      }
+    }
+    return ranges;
   }
 
   /**

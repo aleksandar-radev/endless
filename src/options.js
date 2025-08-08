@@ -18,6 +18,8 @@ export class Options {
     this.startingStage = data.startingStage || null;
     // Add showEnemyStats option, default to false
     this.showEnemyStats = data.showEnemyStats ?? false;
+    // Add showAdvancedItemValues option, default to false
+    this.showAdvancedItemValues = data.showAdvancedItemValues ?? false;
     this.resetRequired = data.resetRequired ?? null;
     // Add stageSkip option, default to 0
     this.stageSkip = data.stageSkip || 0;
@@ -92,6 +94,9 @@ export class Options {
     container.appendChild(this._createSoundVolumeOption());
     // --- Enemy Stats Toggle Option ---
     container.appendChild(this._createEnemyStatsToggleOption());
+
+    // --- Advanced Item Values Toggle Option ---
+    container.appendChild(this._createAdvancedItemValuesToggleOption());
 
     // --- Starting Stage Option ---
     container.appendChild(this._createStartingStageOption());
@@ -666,6 +671,37 @@ export class Options {
       const stats = document.querySelector('.enemy-stats');
       if (stats) stats.style.display = this.showEnemyStats ? '' : 'none';
     }, 0);
+    return wrapper;
+  }
+
+  /**
+   * Creates the advanced item values toggle option UI.
+   */
+  _createAdvancedItemValuesToggleOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="advanced-item-values-toggle" class="advanced-item-values-toggle-label">Show advanced item values:</label>
+      <input
+        type="checkbox"
+        id="advanced-item-values-toggle"
+        class="advanced-item-values-toggle"
+        ${this.showAdvancedItemValues ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    // Make the toggle button clickable and sync with checkbox
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.showAdvancedItemValues = checkbox.checked;
+      // Save option
+      dataManager.saveGame();
+    });
     return wrapper;
   }
 }
