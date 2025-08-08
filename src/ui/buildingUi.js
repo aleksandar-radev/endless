@@ -6,6 +6,93 @@ import { buildings, dataManager, hero } from '../globals.js';
 import { Building } from '../building.js';
 import { createModal, closeModal } from './modal.js';
 import { showConfirmDialog, updateResources, formatNumber } from './ui.js';
+import { getTimeNow } from '../common.js';
+
+// Countdown timer state (single updater for all visible cards)
+let buildingCountdownInterval = null;
+let serverTimeOffsetMs = 0; // getTimeNow() - Date.now()
+
+function intervalToMs(interval) {
+  if (!interval) return 0;
+  if (interval === 'minute') return 60 * 1000;
+  if (interval === 'hour') return 60 * 60 * 1000;
+  if (typeof interval === 'string' && interval.endsWith('min')) return parseInt(interval) * 60 * 1000;
+  if (typeof interval === 'string' && interval.endsWith('sec')) return parseInt(interval) * 1000;
+  return 0;
+}
+
+function fmtDuration(ms) {
+  if (ms < 0) ms = 0;
+  const totalSec = Math.ceil(ms / 1000);
+  const s = totalSec % 60;
+  const m = Math.floor(totalSec / 60) % 60;
+  const h = Math.floor(totalSec / 3600);
+  const pad = (n) => String(n).padStart(2, '0');
+  return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${m}:${pad(s)}`;
+}
+
+async function ensureTimeOffsetInitialized() {
+  if (serverTimeOffsetMs !== 0) return;
+  try {
+    const now = await getTimeNow();
+    serverTimeOffsetMs = now - Date.now();
+  } catch {
+    // Fallback to local time only
+    serverTimeOffsetMs = 0;
+  }
+}
+
+function updateBuildingCountdowns() {
+  // If the offline bonuses modal is open, do not auto-collect; let that flow handle it
+  if (document.getElementById('offline-bonuses-modal')) return;
+  const nodes = document.querySelectorAll('.building-next-bonus');
+  if (!nodes.length) return;
+  const now = Date.now() + serverTimeOffsetMs;
+  let needsCollect = false;
+  nodes.forEach((el) => {
+    const id = el.dataset.buildingId;
+    const b = buildings?.buildings?.[id];
+    if (!b || b.placedAt == null || b.level <= 0 || !b.effect?.interval) {
+      el.textContent = 'Next bonus: —';
+      return;
+    }
+    const intervalMs = intervalToMs(b.effect.interval);
+    if (!intervalMs) {
+      el.textContent = 'Next bonus: —';
+      return;
+    }
+    const nextAt = (b.lastBonusTime || now) + intervalMs;
+    const msLeft = nextAt - now;
+    if (msLeft <= 0) {
+      // Mark for collection; UI will refresh after collect
+      needsCollect = true;
+      el.textContent = 'Next bonus: 0:00';
+    } else {
+      el.textContent = `Next bonus: ${fmtDuration(msLeft)}`;
+    }
+  });
+  if (needsCollect && buildings?.collectBonuses) {
+    // Run once for all buildings; then refresh resources and allow timers to reset
+    buildings
+      .collectBonuses({ showOfflineModal: false })
+      .then(() => {
+        updateResources();
+      })
+      .catch(() => {});
+  }
+}
+
+function startBuildingCountdowns() {
+  if (buildingCountdownInterval != null) return;
+  // Initialize server time offset once then start ticking
+  ensureTimeOffsetInitialized().finally(() => {
+    // Small delay to avoid racing the initial offline collection flow in main.js
+    setTimeout(() => {
+      updateBuildingCountdowns();
+      buildingCountdownInterval = setInterval(updateBuildingCountdowns, 1000);
+    }, 1200);
+  });
+}
 
 function createBuildingCard(building) {
   const el = document.createElement('div');
@@ -18,6 +105,7 @@ function createBuildingCard(building) {
       <div class="building-name">${building.name}</div>
       <div class="building-effect">${building.formatEffect()}</div>
       <div class="building-earned">Total Earned: ${formatNumber(building.totalEarned)} ${building.effect?.type || ''}</div>
+  <div class="building-next-bonus" data-building-id="${building.id}">Next bonus: —</div>
     </div>
   `;
   return el;
@@ -396,6 +484,8 @@ export function renderPurchasedBuildings() {
     .forEach((building) => {
       purchased.appendChild(createBuildingCard(building));
     });
+  // Update countdowns after (re)render
+  updateBuildingCountdowns();
 }
 
 export function initializeBuildingsUI() {
@@ -406,6 +496,8 @@ export function initializeBuildingsUI() {
   renderPurchasedBuildings();
   // Open map modal
   tab.querySelector('#open-buildings-map').onclick = showBuildingsMapModal;
+  // Start live countdowns
+  startBuildingCountdowns();
 }
 
 export function showOfflineBonusesModal(bonuses, onCollect) {
