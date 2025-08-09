@@ -328,22 +328,19 @@ export function updateStatsAndAttributesUI() {
           el.textContent = formatNumber(hero.stats.manaRegen.toFixed(STATS.manaRegen.decimalPlaces));
         } else if (key === 'blockChance') {
           el.textContent = hero.stats.blockChance.toFixed(STATS.blockChance.decimalPlaces) + '%';
-        } else if (key === 'bonusGoldPercent') {
-          el.textContent = (hero.stats.bonusGoldPercent * 100).toFixed(STATS.bonusGoldPercent.decimalPlaces) + '%';
-        } else if (key === 'bonusExperiencePercent') {
-          el.textContent =
-            (hero.stats.bonusExperiencePercent * 100).toFixed(STATS.bonusExperiencePercent.decimalPlaces) + '%';
-        } else if (key === 'itemQuantityPercent') {
-          el.textContent =
-            (hero.stats.itemQuantityPercent * 100).toFixed(STATS.itemQuantityPercent.decimalPlaces) + '%';
-        } else if (key === 'itemRarityPercent') {
-          el.textContent =
-            (hero.stats.itemRarityPercent * 100).toFixed(STATS.itemRarityPercent.decimalPlaces) + '%';
-        } else if (key === 'extraMaterialDropPercent') {
-          el.textContent =
-            (hero.stats.extraMaterialDropPercent * 100).toFixed(STATS.extraMaterialDropPercent.decimalPlaces) + '%';
         } else {
-          el.textContent = formatNumber(hero.stats[key]);
+          // Use decimalPlaces from STATS config if available
+          const decimalPlaces = STATS[key]?.decimalPlaces ?? 0;
+          let value = Number(hero.stats[key]);
+          // If stat name ends with %, multiply by 100
+          if (key.endsWith('Percent')) {
+            value = value * 100;
+          }
+          el.textContent = formatNumber(value.toFixed(decimalPlaces));
+          // Add % sign if stat name ends with Percent
+          if (key.endsWith('Percent')) {
+            el.textContent += '%';
+          }
         }
       }
     });
