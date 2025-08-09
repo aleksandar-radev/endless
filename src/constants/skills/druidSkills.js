@@ -1,5 +1,5 @@
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { scaleDownFlat } from '../../common.js';
+import { scaleDownFlat, scaleUpFlat } from '../../common.js';
 
 // Druid skills
 export const DRUID_SKILLS = {
@@ -37,9 +37,9 @@ export const DRUID_SKILLS = {
     description: () => 'Increases armor while active.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: level * 3,
+      armor: level * 5,
       armorPercent: 2 * scaleDownFlat(level),
-      lifeRegen: level * 1,
+      lifeRegen: 1 * scaleUpFlat(level),
     }),
   },
   naturalAffinity: {
