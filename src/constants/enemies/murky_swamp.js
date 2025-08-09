@@ -20,12 +20,12 @@ export const SWAMP_ENEMIES = [
 
     earthDamage: 1.5 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 5,
-    coldResistance: 5,
-    airResistance: 5,
-    earthResistance: 10,
-    lightningResistance: 5,
-    waterResistance: 20,
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 2 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 4 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['murky_swamp'],
@@ -48,12 +48,12 @@ export const SWAMP_ENEMIES = [
 
     earthDamage: 2 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 5,
-    coldResistance: 10,
-    airResistance: 5,
-    earthResistance: 15,
-    lightningResistance: 5,
-    waterResistance: 20,
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 3 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 4 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['murky_swamp'],
@@ -76,12 +76,12 @@ export const SWAMP_ENEMIES = [
 
     earthDamage: 2 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 5,
-    coldResistance: 5,
-    airResistance: 5,
-    earthResistance: 5,
-    lightningResistance: 5,
-    waterResistance: 15,
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 2 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    earthResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 3 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['murky_swamp'],
@@ -104,12 +104,12 @@ export const SWAMP_ENEMIES = [
 
     coldDamage: 2 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 5,
-    coldResistance: 25,
-    airResistance: 5,
-    earthResistance: 10,
-    lightningResistance: 5,
-    waterResistance: 15,
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 4 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 3 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['murky_swamp'],

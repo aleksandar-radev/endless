@@ -21,12 +21,12 @@ export const SKYREALM_ENEMIES = [
 
     airDamage: 3 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 5,
-    coldResistance: 5,
-    airResistance: 20,
-    earthResistance: 5,
-    lightningResistance: 10,
-    waterResistance: 5,
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 2 * getEnemyStatMultiplier(tier),
+    airResistance: 4 * getEnemyStatMultiplier(tier),
+    earthResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 3 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['skyrealm_peaks'],
@@ -49,12 +49,12 @@ export const SKYREALM_ENEMIES = [
 
     airDamage: 1 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 5,
-    coldResistance: 5,
-    airResistance: 15,
-    earthResistance: 5,
-    lightningResistance: 10,
-    waterResistance: 5,
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 2 * getEnemyStatMultiplier(tier),
+    airResistance: 3 * getEnemyStatMultiplier(tier),
+    earthResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 3 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['skyrealm_peaks'],
@@ -78,12 +78,12 @@ export const SKYREALM_ENEMIES = [
     airDamage: 2.5 * getEnemyStatMultiplier(tier),
     earthDamage: 0.5 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 5,
-    coldResistance: 10,
-    airResistance: 30,
-    earthResistance: 5,
-    lightningResistance: 10,
-    waterResistance: 5,
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 3 * getEnemyStatMultiplier(tier),
+    airResistance: 5 * getEnemyStatMultiplier(tier),
+    earthResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 3 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['skyrealm_peaks'],
@@ -106,12 +106,12 @@ export const SKYREALM_ENEMIES = [
 
     airDamage: 1 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 5,
-    coldResistance: 5,
-    airResistance: 15,
-    earthResistance: 10,
-    lightningResistance: 10,
-    waterResistance: 5,
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 2 * getEnemyStatMultiplier(tier),
+    airResistance: 3 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    lightningResistance: 3 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['skyrealm_peaks'],

@@ -18,12 +18,12 @@ export const CRYSTAL_CAVE_ENEMIES = [
 
     earthDamage: 3 * getEnemyStatMultiplier(tier),
 
-    earthResistance: 30,
-    fireResistance: 5,
-    coldResistance: 10,
-    airResistance: 5,
-    lightningResistance: 10,
-    waterResistance: 5,
+    earthResistance: 5 * getEnemyStatMultiplier(tier),
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 3 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 3 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {
       crystalized_rock: 4,
@@ -43,12 +43,12 @@ export const CRYSTAL_CAVE_ENEMIES = [
     earthDamage: 1.5 * getEnemyStatMultiplier(tier),
     waterDamage: 1.5 * getEnemyStatMultiplier(tier),
 
-    earthResistance: 20,
-    fireResistance: 5,
-    coldResistance: 5,
-    airResistance: 5,
-    lightningResistance: 10,
-    waterResistance: 5,
+    earthResistance: 4 * getEnemyStatMultiplier(tier),
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 2 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 3 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['crystal_cave'],
@@ -64,12 +64,12 @@ export const CRYSTAL_CAVE_ENEMIES = [
     damage: 1.5 * getEnemyStatMultiplier(tier),
     airDamage: 1.5 * getEnemyStatMultiplier(tier),
 
-    airResistance: 10,
-    fireResistance: 5,
-    coldResistance: 5,
-    earthResistance: 10,
-    lightningResistance: 5,
-    waterResistance: 5,
+    airResistance: 3 * getEnemyStatMultiplier(tier),
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 2 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['crystal_cave'],
@@ -85,12 +85,12 @@ export const CRYSTAL_CAVE_ENEMIES = [
 
     earthDamage: 2 * getEnemyStatMultiplier(tier),
 
-    earthResistance: 15,
-    fireResistance: 5,
-    coldResistance: 5,
-    airResistance: 5,
-    lightningResistance: 5,
-    waterResistance: 5,
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 2 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['crystal_cave'],

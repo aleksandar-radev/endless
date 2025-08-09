@@ -16,12 +16,12 @@ export const ABYSS_ENEMIES = [
 
     coldDamage: 1.4 * getEnemyStatMultiplier(tier),
 
-    coldResistance: 30,
-    fireResistance: 20,
-    airResistance: 10,
-    earthResistance: 10,
-    lightningResistance: 10,
-    waterResistance: 15,
+    coldResistance: 5 * getEnemyStatMultiplier(tier),
+    fireResistance: 4 * getEnemyStatMultiplier(tier),
+    airResistance: 3 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    lightningResistance: 3 * getEnemyStatMultiplier(tier),
+    waterResistance: 3 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['abyssal_depths'],
@@ -37,12 +37,12 @@ export const ABYSS_ENEMIES = [
 
     airDamage: 2.2 * getEnemyStatMultiplier(tier),
 
-    airResistance: 50,
-    fireResistance: 25,
-    coldResistance: 10,
-    earthResistance: 25,
-    lightningResistance: 10,
-    waterResistance: 10,
+    airResistance: 7 * getEnemyStatMultiplier(tier),
+    fireResistance: 4 * getEnemyStatMultiplier(tier),
+    coldResistance: 3 * getEnemyStatMultiplier(tier),
+    earthResistance: 4 * getEnemyStatMultiplier(tier),
+    lightningResistance: 3 * getEnemyStatMultiplier(tier),
+    waterResistance: 3 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['abyssal_depths'],
@@ -59,12 +59,12 @@ export const ABYSS_ENEMIES = [
 
     fireDamage: 1.1 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 45,
-    airResistance: 10,
-    coldResistance: 25,
-    earthResistance: 10,
-    lightningResistance: 55,
-    waterResistance: 5,
+    fireResistance: 7 * getEnemyStatMultiplier(tier),
+    airResistance: 3 * getEnemyStatMultiplier(tier),
+    coldResistance: 4 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    lightningResistance: 8 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['abyssal_depths'],
@@ -80,12 +80,12 @@ export const ABYSS_ENEMIES = [
 
     fireDamage: 1 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 50,
-    coldResistance: 5,
-    airResistance: 15,
-    earthResistance: 20,
-    lightningResistance: 20,
-    waterResistance: 5,
+    fireResistance: 7 * getEnemyStatMultiplier(tier),
+    coldResistance: 2 * getEnemyStatMultiplier(tier),
+    airResistance: 3 * getEnemyStatMultiplier(tier),
+    earthResistance: 4 * getEnemyStatMultiplier(tier),
+    lightningResistance: 4 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     multiplier: {
       materialDrop: 1.1,

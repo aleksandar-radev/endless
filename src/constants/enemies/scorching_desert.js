@@ -20,12 +20,12 @@ export const DESERT_ENEMIES = [
 
     earthDamage: 1.5 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 5,
-    coldResistance: 15,
-    airResistance: 5,
-    earthResistance: 20,
-    lightningResistance: 5,
-    waterResistance: 5,
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 3 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    earthResistance: 4 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['scorching_desert'],
@@ -48,12 +48,12 @@ export const DESERT_ENEMIES = [
 
     earthDamage: 2 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 5,
-    coldResistance: 5,
-    airResistance: 5,
-    earthResistance: 10,
-    lightningResistance: 5,
-    waterResistance: 5,
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 2 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['scorching_desert'],
@@ -75,12 +75,12 @@ export const DESERT_ENEMIES = [
 
     fireDamage: 4 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 30,
-    coldResistance: 20,
-    airResistance: 5,
-    earthResistance: 5,
-    lightningResistance: 5,
-    waterResistance: 10,
+    fireResistance: 5 * getEnemyStatMultiplier(tier),
+    coldResistance: 4 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    earthResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 3 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['scorching_desert'],
@@ -104,12 +104,12 @@ export const DESERT_ENEMIES = [
 
     fireDamage: 1.5 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 20,
-    coldResistance: 5,
-    airResistance: 5,
-    earthResistance: 10,
-    lightningResistance: 5,
-    waterResistance: 5,
+    fireResistance: 4 * getEnemyStatMultiplier(tier),
+    coldResistance: 2 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['scorching_desert'],

@@ -18,12 +18,12 @@ export const FOREST_ENEMIES = [
 
     earthDamage: 1.2 * getEnemyStatMultiplier(tier),
 
-    earthResistance: 40,
-    fireResistance: 5,
-    coldResistance: 15,
-    airResistance: 5,
-    lightningResistance: 5,
-    waterResistance: 5,
+    earthResistance: 6 * getEnemyStatMultiplier(tier),
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 3 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: [ 'enchanted_forest' ],
@@ -42,12 +42,12 @@ export const FOREST_ENEMIES = [
 
     earthDamage: 1.35 * getEnemyStatMultiplier(tier),
 
-    earthResistance: 20,
-    fireResistance: 5,
-    coldResistance: 10,
-    airResistance: 5,
-    lightningResistance: 5,
-    waterResistance: 5,
+    earthResistance: 4 * getEnemyStatMultiplier(tier),
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 3 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     multiplier: {
       itemDrop: 1.1,
@@ -68,12 +68,12 @@ export const FOREST_ENEMIES = [
 
     earthDamage: 1 * getEnemyStatMultiplier(tier),
 
-    earthResistance: 15,
-    fireResistance: 5,
-    coldResistance: 5,
-    airResistance: 25,
-    lightningResistance: 5,
-    waterResistance: 5,
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 2 * getEnemyStatMultiplier(tier),
+    airResistance: 4 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     multiplier: {
       materialDrop: 1.1,
@@ -98,12 +98,12 @@ export const FOREST_ENEMIES = [
 
     airDamage: 3 * getEnemyStatMultiplier(tier),
 
-    airResistance: 25,
-    fireResistance: 5,
-    coldResistance: 10,
-    earthResistance: 5,
-    lightningResistance: 5,
-    waterResistance: 10,
+    airResistance: 4 * getEnemyStatMultiplier(tier),
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 3 * getEnemyStatMultiplier(tier),
+    earthResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 3 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: [ 'enchanted_forest' ],

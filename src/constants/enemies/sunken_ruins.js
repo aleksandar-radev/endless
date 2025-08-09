@@ -22,12 +22,12 @@ export const SUNKEN_RUINS_ENEMIES = [
     coldDamage: 2.2 * getEnemyStatMultiplier(tier),
     waterDamage: 1.1 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 25,
-    coldResistance: 60,
-    airResistance: 25,
-    earthResistance: 20,
-    lightningResistance: 10,
-    waterResistance: 20,
+    fireResistance: 4 * getEnemyStatMultiplier(tier),
+    coldResistance: 8 * getEnemyStatMultiplier(tier),
+    airResistance: 4 * getEnemyStatMultiplier(tier),
+    earthResistance: 4 * getEnemyStatMultiplier(tier),
+    lightningResistance: 3 * getEnemyStatMultiplier(tier),
+    waterResistance: 4 * getEnemyStatMultiplier(tier),
 
     multiplier: {
       materialDrop: 1.2,
@@ -51,12 +51,12 @@ export const SUNKEN_RUINS_ENEMIES = [
 
     earthDamage: 2 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 5,
-    coldResistance: 45,
-    airResistance: 5,
-    earthResistance: 75,
-    lightningResistance: 10,
-    waterResistance: 15,
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 7 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    earthResistance: 10 * getEnemyStatMultiplier(tier),
+    lightningResistance: 3 * getEnemyStatMultiplier(tier),
+    waterResistance: 3 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['sunken_ruins'],
@@ -76,12 +76,12 @@ export const SUNKEN_RUINS_ENEMIES = [
 
     coldDamage: 0.4 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 5,
-    coldResistance: 40,
-    airResistance: 10,
-    earthResistance: 10,
-    lightningResistance: 10,
-    waterResistance: 25,
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 6 * getEnemyStatMultiplier(tier),
+    airResistance: 3 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    lightningResistance: 3 * getEnemyStatMultiplier(tier),
+    waterResistance: 4 * getEnemyStatMultiplier(tier),
 
     multiplier: {
       itemDrop: 1.1,
@@ -101,12 +101,12 @@ export const SUNKEN_RUINS_ENEMIES = [
 
     airDamage: 3 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 25,
-    coldResistance: 20,
-    airResistance: 45,
-    earthResistance: 25,
-    lightningResistance: 10,
-    waterResistance: 5,
+    fireResistance: 4 * getEnemyStatMultiplier(tier),
+    coldResistance: 4 * getEnemyStatMultiplier(tier),
+    airResistance: 7 * getEnemyStatMultiplier(tier),
+    earthResistance: 4 * getEnemyStatMultiplier(tier),
+    lightningResistance: 3 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['sunken_ruins'],
