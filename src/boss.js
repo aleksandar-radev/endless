@@ -47,12 +47,12 @@ class Boss {
     this.lightningDamage = this.calculateElementalDamage('lightning');
     this.waterDamage = this.calculateElementalDamage('water');
 
-    this.fireResistance = baseData.fireResistance || 0;
-    this.coldResistance = baseData.coldResistance || 0;
-    this.airResistance = baseData.airResistance || 0;
-    this.earthResistance = baseData.earthResistance || 0;
-    this.lightningResistance = baseData.lightningResistance || 0;
-    this.waterResistance = baseData.waterResistance || 0;
+    this.fireResistance = this.calculateElementalResistance('fire');
+    this.coldResistance = this.calculateElementalResistance('cold');
+    this.airResistance = this.calculateElementalResistance('air');
+    this.earthResistance = this.calculateElementalResistance('earth');
+    this.lightningResistance = this.calculateElementalResistance('lightning');
+    this.waterResistance = this.calculateElementalResistance('water');
 
     this.reward = this.baseData.reward;
     this.lastAttack = Date.now();
@@ -117,6 +117,13 @@ class Boss {
 
     const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
     return val * (this.baseData.multiplier?.[`${type}Damage`] || 1) * (1 - dmgRed);
+  }
+
+  calculateElementalResistance(type) {
+    const base = this.baseData[`${type}Resistance`] || 0;
+    if (base === 0) return 0;
+    const val = scaleStat(base, this.level);
+    return val * (this.baseData.multiplier?.[`${type}Resistance`] || 1);
   }
 
   /**
