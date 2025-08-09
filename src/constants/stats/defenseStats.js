@@ -116,7 +116,7 @@ export const DEFENSE_STATS = {
   // ELEMENTAL RESISTANCES
   fireResistance: {
     base: 0,
-    decimalPlaces: 1,
+    decimalPlaces: 0,
     training: { cost: 800, bonus: 0.1, maxLevel: 150 },
     item: { min: 2, max: 6, limit: 45,scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
@@ -124,7 +124,7 @@ export const DEFENSE_STATS = {
   },
   coldResistance: {
     base: 0,
-    decimalPlaces: 1,
+    decimalPlaces: 0,
     training: { cost: 800, bonus: 0.1, maxLevel: 150 },
     item: { min: 2, max: 6, limit: 45,scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
@@ -132,7 +132,7 @@ export const DEFENSE_STATS = {
   },
   airResistance: {
     base: 0,
-    decimalPlaces: 1,
+    decimalPlaces: 0,
     training: { cost: 800, bonus: 0.1, maxLevel: 150 },
     item: { min: 2, max: 6, limit: 45, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
@@ -140,7 +140,7 @@ export const DEFENSE_STATS = {
   },
   earthResistance: {
     base: 0,
-    decimalPlaces: 1,
+    decimalPlaces: 0,
     training: { cost: 800, bonus: 0.1, maxLevel: 150 },
     item: { min: 2, max: 6, limit: 45, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
@@ -148,7 +148,7 @@ export const DEFENSE_STATS = {
   },
   lightningResistance: {
     base: 0,
-    decimalPlaces: 1,
+    decimalPlaces: 0,
     training: { cost: 800, bonus: 0.1, maxLevel: 150 },
     item: { min: 2, max: 6, limit: 45, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
@@ -156,7 +156,7 @@ export const DEFENSE_STATS = {
   },
   waterResistance: {
     base: 0,
-    decimalPlaces: 1,
+    decimalPlaces: 0,
     training: { cost: 800, bonus: 0.1, maxLevel: 150 },
     item: { min: 2, max: 6, limit: 45, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
@@ -164,7 +164,7 @@ export const DEFENSE_STATS = {
   },
   allResistance: {
     base: 0,
-    decimalPlaces: 1,
+    decimalPlaces: 0,
     item: { min: 1, max: 2, limit: 20, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
   },

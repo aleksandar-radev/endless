@@ -130,7 +130,7 @@ export const ATTRIBUTE_TOOLTIPS = {
   getCritDamageTooltip: () => html`
     <strong>Critical Strike Damage</strong><br />
     Damage multiplier on critical hits.<br />
-    Base: 1.5x damage
+    Base: 1.33x damage
   `,
 
   getLifeStealTooltip: () => html`
