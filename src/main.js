@@ -24,6 +24,7 @@ import { updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { initializeBuildingsUI, renderPurchasedBuildings } from './ui/buildingUi.js';
 import { initializePrestigeUI } from './ui/prestigeUi.js';
+import { initializeAscensionUI } from './ui/ascensionUi.js';
 import Enemy from './enemy.js';
 import { setupLeaderboardTabLazyLoad } from './ui/leaderboardUi.js';
 import Boss from './boss.js';
@@ -58,6 +59,7 @@ window.log = console.log;
   initializeSkillTreeUI();
   initializeBuildingsUI();
   initializePrestigeUI();
+  initializeAscensionUI();
 
   updateResources();
   hero.recalculateFromAttributes();

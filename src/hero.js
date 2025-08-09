@@ -1,5 +1,5 @@
 import { initializeSkillTreeStructure, updatePlayerLife, updateTabIndicators } from './ui/ui.js';
-import { game, inventory, training, skillTree, statistics, soulShop, dataManager } from './globals.js';
+import { game, inventory, training, skillTree, statistics, soulShop, dataManager, ascension } from './globals.js';
 import { calculateArmorReduction, calculateResistanceReduction, createCombatText, createDamageNumber } from './combat.js';
 import { handleSavedData } from './functions.js';
 import { getCurrentRegion, updateRegionUI } from './region.js';
@@ -265,7 +265,11 @@ export default class Hero {
         // Flat per-point bonus (e.g., damagePerPoint, lifePerPoint, etc.)
         const flatKey = stat + 'PerPoint';
         if (flatKey in attrEffects) {
-          flatBonus += (this.stats[attr] || 0) * attrEffects[flatKey];
+          let effect = attrEffects[flatKey];
+          if (ascension && typeof ascension.getAttributeMultiplier === 'function') {
+            effect *= ascension.getAttributeMultiplier(attr, stat);
+          }
+          flatBonus += (this.stats[attr] || 0) * effect;
         }
 
         // Percent per N points bonus (e.g., damagePercentPer, lifePercentPer, etc.)

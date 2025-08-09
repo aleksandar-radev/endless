@@ -1,0 +1,24 @@
+.ascension-container {
+  padding: 1rem;
+}
+.ascension-header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.ascension-upgrades-list {
+  list-style: none;
+  padding: 0;
+}
+.ascension-upgrades-list li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+.ascension-upgrades-list .upgrade-label {
+  flex: 1;
+}
+.ascension-upgrade-btn.disabled {
+  opacity: 0.5;
+}
