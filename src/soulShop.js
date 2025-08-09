@@ -49,6 +49,27 @@ export const SOUL_UPGRADE_CONFIG = {
     costIncrement: 0.15,
     stat: 'manaPercent',
   },
+  armorBoost: {
+    label: 'Armor Boost %',
+    bonus: 0.01,
+    baseCost: 5,
+    costIncrement: 0.25,
+    stat: 'armorPercent',
+  },
+  lifeRegenBoost: {
+    label: 'Life Regen Boost %',
+    bonus: 0.05,
+    baseCost: 4,
+    costIncrement: 0.3,
+    stat: 'lifeRegenPercent',
+  },
+  allElementalResistanceBoost: {
+    label: 'All Elemental Resistance Boost %',
+    bonus: 0.01,
+    baseCost: 3,
+    costIncrement: 0.3,
+    stat: 'allElementalResistancePercent',
+  },
   /**
    * Extra Material Drop Chance
    * Each level increases the chance to gain an additional material drop.
