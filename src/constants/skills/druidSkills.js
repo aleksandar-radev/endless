@@ -160,6 +160,7 @@ export const DRUID_SKILLS = {
       armor: level * 4,
       armorPercent: 5 * scaleDownFlat(level),
       earthDamagePercent: 2 * scaleDownFlat(level),
+      allResistance: level * 4,
     }),
   },
 
@@ -359,7 +360,7 @@ export const DRUID_SKILLS = {
     effect: (level) => ({
       armor: level * 12,
       lifePercent: 2 * scaleDownFlat(level),
-      allResistance: level * 0.4,
+      allResistance: level * 12,
     }),
   },
   cosmicHarmony: {

@@ -60,6 +60,7 @@ export const WARRIOR_SKILLS = {
       vitality: level * 3,
       vitalityPercent: scaleDownFlat(level),
       lifeRegen: level * 1,
+      allResistance: level * 3,
     }),
   },
 
@@ -258,7 +259,7 @@ export const WARRIOR_SKILLS = {
     effect: (level) => ({
       armor: level * 8,
       lifePercent: 1.5 * scaleDownFlat(level),
-      allResistance: level * 0.2,
+      allResistance: level * 8,
     }),
   },
 
@@ -322,7 +323,7 @@ export const WARRIOR_SKILLS = {
     effect: (level) => ({
       armor: level * 12,
       lifePercent: 2 * scaleDownFlat(level),
-      allResistance: level * 0.3,
+      allResistance: level * 12,
     }),
   },
 };

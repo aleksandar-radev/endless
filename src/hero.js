@@ -1,6 +1,6 @@
 import { initializeSkillTreeStructure, updatePlayerLife, updateTabIndicators } from './ui/ui.js';
 import { game, inventory, training, skillTree, statistics, soulShop, dataManager } from './globals.js';
-import { calculateArmorReduction, createCombatText, createDamageNumber } from './combat.js';
+import { calculateArmorReduction, calculateResistanceReduction, createCombatText, createDamageNumber } from './combat.js';
 import { handleSavedData } from './functions.js';
 import { getCurrentRegion, updateRegionUI } from './region.js';
 import { STATS } from './constants/stats/stats.js';
@@ -426,19 +426,12 @@ export default class Hero {
 
     let allRes = this.stats.allResistance || 0;
 
-    this.stats.fireResistance = Math.min(this.stats.fireResistance + allRes, 75);
-    this.stats.coldResistance = Math.min(this.stats.coldResistance + allRes, 75);
-    this.stats.airResistance = Math.min(this.stats.airResistance + allRes, 75);
-    this.stats.earthResistance = Math.min(this.stats.earthResistance + allRes, 75);
-    this.stats.lightningResistance = Math.min(this.stats.lightningResistance + allRes, 75);
-    this.stats.waterResistance = Math.min(this.stats.waterResistance + allRes, 75);
-
-    if (this.stats.fireResistance < 0) this.stats.fireResistance = 0;
-    if (this.stats.coldResistance < 0) this.stats.coldResistance = 0;
-    if (this.stats.airResistance < 0) this.stats.airResistance = 0;
-    if (this.stats.earthResistance < 0) this.stats.earthResistance = 0;
-    if (this.stats.lightningResistance < 0) this.stats.lightningResistance = 0;
-    if (this.stats.waterResistance < 0) this.stats.waterResistance = 0;
+    this.stats.fireResistance = Math.max(this.stats.fireResistance + allRes, 0);
+    this.stats.coldResistance = Math.max(this.stats.coldResistance + allRes, 0);
+    this.stats.airResistance = Math.max(this.stats.airResistance + allRes, 0);
+    this.stats.earthResistance = Math.max(this.stats.earthResistance + allRes, 0);
+    this.stats.lightningResistance = Math.max(this.stats.lightningResistance + allRes, 0);
+    this.stats.waterResistance = Math.max(this.stats.waterResistance + allRes, 0);
 
     this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * this.stats.mana;
     this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.life;
@@ -617,35 +610,53 @@ export default class Hero {
 
     const reducedBreakdown = {
       physical: breakdown.physical * (1 - armorReduction),
-      fire: breakdown.fire * (1 - getEffectiveResistance.call(this,
-        enemy.baseData.fireResistance,
-        this.stats.firePenetration,
-        this.stats.firePenetrationPercent,
+      fire: breakdown.fire * (1 - calculateResistanceReduction(
+        getEffectiveResistance.call(this,
+          enemy.baseData.fireResistance,
+          this.stats.firePenetration,
+          this.stats.firePenetrationPercent,
+        ),
+        breakdown.fire,
       ) / 100),
-      cold: breakdown.cold * (1 - getEffectiveResistance.call(this,
-        enemy.baseData.coldResistance,
-        this.stats.coldPenetration,
-        this.stats.coldPenetrationPercent,
+      cold: breakdown.cold * (1 - calculateResistanceReduction(
+        getEffectiveResistance.call(this,
+          enemy.baseData.coldResistance,
+          this.stats.coldPenetration,
+          this.stats.coldPenetrationPercent,
+        ),
+        breakdown.cold,
       ) / 100),
-      air: breakdown.air * (1 - getEffectiveResistance.call(this,
-        enemy.baseData.airResistance,
-        this.stats.airPenetration,
-        this.stats.airPenetrationPercent,
+      air: breakdown.air * (1 - calculateResistanceReduction(
+        getEffectiveResistance.call(this,
+          enemy.baseData.airResistance,
+          this.stats.airPenetration,
+          this.stats.airPenetrationPercent,
+        ),
+        breakdown.air,
       ) / 100),
-      earth: breakdown.earth * (1 - getEffectiveResistance.call(this,
-        enemy.baseData.earthResistance,
-        this.stats.earthPenetration,
-        this.stats.earthPenetrationPercent,
+      earth: breakdown.earth * (1 - calculateResistanceReduction(
+        getEffectiveResistance.call(this,
+          enemy.baseData.earthResistance,
+          this.stats.earthPenetration,
+          this.stats.earthPenetrationPercent,
+        ),
+        breakdown.earth,
       ) / 100),
-      lightning: breakdown.lightning * (1 - getEffectiveResistance.call(this,
-        enemy.baseData.lightningResistance,
-        this.stats.lightningPenetration,
-        this.stats.lightningPenetrationPercent,
+      lightning: breakdown.lightning * (1 - calculateResistanceReduction(
+        getEffectiveResistance.call(this,
+          enemy.baseData.lightningResistance,
+          this.stats.lightningPenetration,
+          this.stats.lightningPenetrationPercent,
+        ),
+        breakdown.lightning,
       ) / 100),
-      water: breakdown.water * (1 - getEffectiveResistance.call(this,
-        enemy.baseData.waterResistance,
-        this.stats.waterPenetration,
-        this.stats.waterPenetrationPercent,
+      water: breakdown.water * (1 - calculateResistanceReduction(
+        getEffectiveResistance.call(this,
+          enemy.baseData.waterResistance,
+          this.stats.waterPenetration,
+          this.stats.waterPenetrationPercent,
+        ),
+        breakdown.water,
       ) / 100),
     };
 
