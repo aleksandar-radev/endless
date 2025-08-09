@@ -97,7 +97,7 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
 
     fireDamage: 1.8 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 7 * getEnemyStatMultiplier(tier),
+    fireResistance: 9 * getEnemyStatMultiplier(tier),
     coldResistance: 5 * getEnemyStatMultiplier(tier),
     airResistance: 5 * getEnemyStatMultiplier(tier),
     earthResistance: 4 * getEnemyStatMultiplier(tier),

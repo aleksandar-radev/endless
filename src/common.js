@@ -90,8 +90,8 @@ export function scaleDownFlat(
   flat,
   min,
 ) {
-  if (flat === undefined) flat = (1 - final_percent) / (max_level / 10);
-  if (min === undefined) min = final_percent;
+  if (flat === undefined) flat = (start * (1 - final_percent)) / (max_level / interval);
+  if (min === undefined) min = start * final_percent;
 
   if (level <= 0) return 0;
 
