@@ -93,9 +93,12 @@ export function setRateCountersVisibility(show) {
 
 document.addEventListener('toggleRateCounters', (e) => setRateCountersVisibility(e.detail));
 
-export function updateStatsAndAttributesUI() {
+export function updateStatsAndAttributesUI(forceRebuild = false) {
   // Create .stats-grid if it doesn't exist
   let statsGrid = document.querySelector('.stats-grid');
+  if (forceRebuild && statsGrid) {
+    statsGrid.innerHTML = '';
+  }
   if (!statsGrid) {
     statsGrid = document.createElement('div');
     statsGrid.className = 'stats-grid';
@@ -127,6 +130,11 @@ export function updateStatsAndAttributesUI() {
   // Ensure sections exist; create them only if they don't
   let statsContainer = document.querySelector('.stats-container');
   let attributesContainer = document.querySelector('.attributes-container');
+
+  if (forceRebuild) {
+    statsContainer = null;
+    attributesContainer = null;
+  }
 
   if (!statsContainer) {
     statsContainer = document.createElement('div');
@@ -169,7 +177,7 @@ export function updateStatsAndAttributesUI() {
       const damageElements = [];
       const resistanceElements = [];
       Object.keys(statsDef).forEach((key) => {
-        if (!statsDef[key].showInUI && key !== 'extraMaterialDropPercent') return;
+        if (!options.showAllStats && !statsDef[key].showInUI && key !== 'extraMaterialDropPercent') return;
         // Collect elementals separately for offense panel
         if (panel === offensePanel && elementalDamageKeys.includes(key)) {
           damageElements.push(key);

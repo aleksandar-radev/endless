@@ -323,9 +323,7 @@ input[type="checkbox"]:checked+.toggle-btn {
 }
 
 
-.advanced-tooltips-toggle:checked+.toggle-btn::before,
-.enemy-stats-toggle:checked+.toggle-btn::before,
-.rate-counters-toggle:checked+.toggle-btn::before {
+input[type="checkbox"]:checked+.toggle-btn::before {
   left: 25px;
 }
 
