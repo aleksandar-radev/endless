@@ -122,6 +122,12 @@ export const DEFENSE_STATS = {
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
   },
+  fireResistancePercent: {
+    base: 0,
+    decimalPlaces: 1,
+    item: { min: 5, max: 15, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    itemTags: ['defense', 'jewelry'],
+  },
   coldResistance: {
     base: 0,
     decimalPlaces: 0,
@@ -129,6 +135,12 @@ export const DEFENSE_STATS = {
     item: { min: 10, max: 30, scaling: (level) => defenseScaling(level) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
+  },
+  coldResistancePercent: {
+    base: 0,
+    decimalPlaces: 1,
+    item: { min: 5, max: 15, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    itemTags: ['defense', 'jewelry'],
   },
   airResistance: {
     base: 0,
@@ -138,6 +150,12 @@ export const DEFENSE_STATS = {
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
   },
+  airResistancePercent: {
+    base: 0,
+    decimalPlaces: 1,
+    item: { min: 5, max: 15, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    itemTags: ['defense', 'jewelry'],
+  },
   earthResistance: {
     base: 0,
     decimalPlaces: 0,
@@ -145,6 +163,12 @@ export const DEFENSE_STATS = {
     item: { min: 10, max: 30, scaling: (level) => defenseScaling(level) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
+  },
+  earthResistancePercent: {
+    base: 0,
+    decimalPlaces: 1,
+    item: { min: 5, max: 15, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    itemTags: ['defense', 'jewelry'],
   },
   lightningResistance: {
     base: 0,
@@ -154,6 +178,12 @@ export const DEFENSE_STATS = {
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
   },
+  lightningResistancePercent: {
+    base: 0,
+    decimalPlaces: 1,
+    item: { min: 5, max: 15, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    itemTags: ['defense', 'jewelry'],
+  },
   waterResistance: {
     base: 0,
     decimalPlaces: 0,
@@ -162,10 +192,22 @@ export const DEFENSE_STATS = {
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
   },
+  waterResistancePercent: {
+    base: 0,
+    decimalPlaces: 1,
+    item: { min: 5, max: 15, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    itemTags: ['defense', 'jewelry'],
+  },
   allResistance: {
     base: 0,
     decimalPlaces: 0,
     item: { min: 5, max: 15, scaling: (level) => defenseScaling(level) },
+    itemTags: ['defense', 'jewelry'],
+  },
+  allElementalResistancePercent: {
+    base: 0,
+    decimalPlaces: 1,
+    item: { min: 2, max: 7, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['defense', 'jewelry'],
   },
   manaShieldPercent: {

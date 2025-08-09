@@ -441,6 +441,13 @@ export const formatStatName = (stat) => {
   if (stat === 'earthResistance') return 'Earth Resistance';
   if (stat === 'lightningResistance') return 'Lightning Resistance';
   if (stat === 'waterResistance') return 'Water Resistance';
+  if (stat === 'fireResistancePercent') return 'Fire Resistance %';
+  if (stat === 'coldResistancePercent') return 'Cold Resistance %';
+  if (stat === 'airResistancePercent') return 'Air Resistance %';
+  if (stat === 'earthResistancePercent') return 'Earth Resistance %';
+  if (stat === 'lightningResistancePercent') return 'Lightning Resistance %';
+  if (stat === 'waterResistancePercent') return 'Water Resistance %';
+  if (stat === 'allElementalResistancePercent') return 'Elemental Resistance %';
   if (stat === 'elementalDamagePercent') return 'Elemental Damage %';
   if (stat === 'lifeRegen') return 'Life Regeneration';
   if (stat === 'manaRegen') return 'Mana Regeneration';

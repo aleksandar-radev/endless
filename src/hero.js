@@ -366,9 +366,21 @@ export default class Hero {
       }
     }
 
+    const elementalResistances = [
+      'fireResistance',
+      'coldResistance',
+      'airResistance',
+      'earthResistance',
+      'lightningResistance',
+      'waterResistance',
+    ];
+
     for (const stat in STATS) {
       if (!stat.endsWith('Percent')) {
         let percent = percentBonuses[stat + 'Percent'] || 0;
+        if (elementalResistances.includes(stat)) {
+          percent += this.stats.allElementalResistancePercent || 0;
+        }
 
         // Use Math.floor for integer stats, Number.toFixed for decimals
         let value = flatValues[stat];
@@ -427,6 +439,9 @@ export default class Hero {
     }
 
     let allRes = this.stats.allResistance || 0;
+    if (allRes) {
+      allRes *= 1 + (this.stats.allElementalResistancePercent || 0);
+    }
 
     this.stats.fireResistance = Math.max(this.stats.fireResistance + allRes, 0);
     this.stats.coldResistance = Math.max(this.stats.coldResistance + allRes, 0);
