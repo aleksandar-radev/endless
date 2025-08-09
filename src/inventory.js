@@ -184,12 +184,16 @@ export default class Inventory {
         equipped,
         itemRowHtml: ({ slot, item }, idx) => {
           const maxStage = statistics.highestStages[item.tier] || 0;
+          const maxLevels = Math.min(
+            Math.floor(mat.qty / item.tier),
+            Math.max(0, maxStage - item.level),
+          );
           return `
         <div class="upgrade-item-row" data-slot="${slot}" data-idx="${idx}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
           <span style="font-size:1.5em;">${item.getIcon()}</span>
           <span><b>${item.type}</b> (Lvl ${item.level})</span>
           <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
-          <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${Math.min(mat.qty, Math.max(0, maxStage - item.level))}" value="1" aria-label="Upgrade quantity" />
+          <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${maxLevels}" value="1" aria-label="Upgrade quantity" />
           <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">Upgrade</button>
         </div>`;
         },
@@ -200,18 +204,20 @@ export default class Inventory {
           const qtyInput = dialog.querySelector(`.upgrade-qty-input[data-idx='${idx}']`);
           let useQty = parseInt(qtyInput.value, 10);
           if (isNaN(useQty) || useQty < 1) useQty = 1;
-          // Limit useQty to not exceed highest stage reached for this tier
+          // Limit useQty to not exceed highest stage reached or available materials
           const maxStage = statistics.highestStages[item.tier] || 0;
-          const maxUpgrade = Math.max(0, maxStage - item.level);
-          if (useQty > mat.qty) useQty = mat.qty;
+          const maxLevelsByStage = Math.max(0, maxStage - item.level);
+          const maxLevelsByMats = Math.floor(mat.qty / item.tier);
+          const maxUpgrade = Math.min(maxLevelsByStage, maxLevelsByMats);
           if (useQty > maxUpgrade) useQty = maxUpgrade;
           if (useQty < 1) {
-            showToast('Item cannot surpass highest stage reached in this tier', 'error');
-            return;
-          } // Prevent upgrading if already at or above highest stage for this tier
+            showToast('Not enough materials or item at max stage', 'error');
+            return; // Prevent upgrading if already at or above highest stage or lacking materials
+          }
           const oldLevel = item.level;
           item.applyLevelToStats(oldLevel + useQty);
-          this.handleMaterialUsed(this, mat, matDef, useQty, 'material-upgrade-dialog', `Upgraded ${item.type} (Lvl ${oldLevel} → ${item.level})`);
+          const matsUsed = useQty * item.tier;
+          this.handleMaterialUsed(this, mat, matDef, matsUsed, 'material-upgrade-dialog', `Upgraded ${item.type} (Lvl ${oldLevel} → ${item.level})`);
         },
         emptyMsg: 'No eligible equipped items.',
         titleExtra: '<div style="margin-bottom:10px;">Select an equipped item to upgrade:</div>',
