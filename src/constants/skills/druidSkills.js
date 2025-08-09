@@ -38,7 +38,7 @@ export const DRUID_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: level * 5,
-      armorPercent: 2 * scaleDownFlat(level),
+      armorPercent: scaleDownFlat(level, 2),
       lifeRegen: 1 * scaleUpFlat(level, 1, 5, 0.3),
       extraDamageFromLifeRegenPercent: Math.min(0.1 * scaleDownFlat(level), 10),
     }),
@@ -53,7 +53,7 @@ export const DRUID_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       vitality: level * 2,
-      lifePercent: 0.5 * scaleDownFlat(level),
+      lifePercent: scaleDownFlat(level, 0.5),
       lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.01, 2),
     }),
   },
