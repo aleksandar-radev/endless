@@ -18,35 +18,35 @@ export const SOUL_UPGRADE_CONFIG = {
     label: 'Bonus Gold %',
     bonus: 0.01,
     baseCost: 4,
-    costIncrement: 1,
+    costIncrement: 0.2,
     stat: 'bonusGoldPercent',
   },
   bonusExperience: {
     label: 'Bonus Experience %',
     bonus: 0.01,
     baseCost: 4,
-    costIncrement: 1,
+    costIncrement: 0.2,
     stat: 'bonusExperiencePercent',
   },
   damageBoost: {
     label: 'Damage Boost %',
     bonus: 0.005,
     baseCost: 3,
-    costIncrement: 1,
+    costIncrement: 0.2,
     stat: 'totalDamagePercent',
   },
   lifeBoost: {
     label: 'Life Boost %',
     bonus: 0.01,
     baseCost: 3,
-    costIncrement: 1,
+    costIncrement: 0.2,
     stat: 'lifePercent',
   },
   manaBoost: {
     label: 'Mana Boost %',
     bonus: 0.01,
     baseCost: 3,
-    costIncrement: 1,
+    costIncrement: 0.15,
     stat: 'manaPercent',
   },
   /**
@@ -82,6 +82,16 @@ export default class SoulShop {
     this.modal = null;
     this.currentStat = null;
     this.selectedQty = 1;
+  }
+
+  /**
+   * Returns the integer cost for a soul shop upgrade at a given level.
+   * @param {object} config - The upgrade config object
+   * @param {number} level - The current level (0-based)
+   * @returns {number} Integer cost
+   */
+  getSoulUpgradeCost(config, level = 0) {
+    return Math.round(config.baseCost + (config.costIncrement || 0) * level);
   }
 
   async initializeSoulShopUI() {
@@ -151,8 +161,8 @@ export default class SoulShop {
     }
     const cost =
       isOneTime || isMultiple
-        ? config.baseCost
-        : config.baseCost + (config.costIncrement || 0) * (this.soulUpgrades[stat] || 0);
+        ? Math.round(config.baseCost)
+        : this.getSoulUpgradeCost(config, this.soulUpgrades[stat] || 0);
     return `
       <button class="soul-upgrade-btn ${alreadyPurchased ? 'purchased' : ''}" data-stat="${stat}" ${
   alreadyPurchased ? 'disabled' : ''
@@ -271,7 +281,7 @@ export default class SoulShop {
         let lvl = baseLevel;
         let souls = soulsAvailable;
         while (lvl < maxLevel) {
-          const cost = config.baseCost + (config.costIncrement || 0) * lvl;
+          const cost = this.getSoulUpgradeCost(config, lvl);
           if (souls < cost) break;
           souls -= cost;
           totalCost += cost;
@@ -283,7 +293,7 @@ export default class SoulShop {
           qty = maxLevel - baseLevel;
         }
         for (let i = 0; i < qty; i++) {
-          const cost = config.baseCost + (config.costIncrement || 0) * (baseLevel + i);
+          const cost = this.getSoulUpgradeCost(config, baseLevel + i);
           totalCost += cost;
         }
       }
@@ -333,7 +343,7 @@ export default class SoulShop {
       if (qty === 'max') {
         let level = this.soulUpgrades[stat] || 0;
         while (level < maxLevel) {
-          const cost = config.baseCost + (config.costIncrement || 0) * level;
+          const cost = this.getSoulUpgradeCost(config, level);
           if (hero.souls < cost) break;
           hero.souls -= cost;
           totalCost += cost;
@@ -345,7 +355,7 @@ export default class SoulShop {
         for (let i = 0; i < qty; i++) {
           let currentLevel = this.soulUpgrades[stat] || 0;
           if (currentLevel >= maxLevel) break;
-          const cost = config.baseCost + (config.costIncrement || 0) * currentLevel;
+          const cost = this.getSoulUpgradeCost(config, currentLevel);
           if (hero.souls < cost) break;
           hero.souls -= cost;
           totalCost += cost;
