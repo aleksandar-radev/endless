@@ -93,13 +93,13 @@ export const MATERIALS = {
     id: 'elixir',
     name: 'Elixir',
     icon: '🥤',
-    description: 'Grants 1 skill point.',
+    description: 'Grants 4 skill points.',
     dropChance: 2,
     sort: 300,
     exclusive: true, // only drops when region or enemy canDrop includes 'elixir'
     onUse: (hero, qty = 1) => {
-      hero.permaStats.skillPoints = hero.permaStats.skillPoints + 1 * qty;
-      skillTree.addSkillPoints(1 * qty);
+      hero.permaStats.skillPoints = hero.permaStats.skillPoints + 4 * qty;
+      skillTree.addSkillPoints(4 * qty);
     },
   },
   crystalized_rock: {

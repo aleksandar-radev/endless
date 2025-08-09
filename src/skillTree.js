@@ -150,7 +150,7 @@ export default class SkillTree {
     if (!skill) return false;
 
     const currentLevel = this.skills[skillId]?.level || 0;
-    const cost = 1 + Math.floor(currentLevel / 50);
+    const cost = 3 + Math.floor(currentLevel / 50);
     // Prevent leveling skill above hero level
     if (currentLevel >= hero.level) {
       if (showWarning) {
@@ -183,7 +183,7 @@ export default class SkillTree {
       // Find how many levels until the next 50-level band
       const nextBand = 50 - (level % 50);
       const bandLevels = Math.min(remaining, nextBand);
-      const bandCost = bandLevels * (1 + Math.floor(level / 50));
+      const bandCost = bandLevels * (3 + Math.floor(level / 50));
       cost += bandCost;
       level += bandLevels;
       remaining -= bandLevels;
@@ -201,7 +201,7 @@ export default class SkillTree {
 
     while (level < maxLevel && availableSP > 0) {
       const band = Math.floor(level / 50);
-      const bandCost = 1 + band;
+      const bandCost = 3 + band;
       // How many levels left in this band?
       const bandEnd = (band + 1) * 50;
       const levelsInBand = Math.min(bandEnd - level, maxLevel - level);
@@ -586,7 +586,7 @@ export default class SkillTree {
     if (container) container.innerHTML = '';
 
     // Refund all skill points
-    this.skillPoints = hero.level - 1 + hero.permaStats.skillPoints;
+    this.skillPoints = (hero.level - 1) * 3 + hero.permaStats.skillPoints;
     this.selectedPath = null;
     this.skills = {};
     this.autoCastSettings = {};
