@@ -28,6 +28,8 @@ export const handleSavedData = (savedData, self) => {
 // Debugging
 let debugUiInterval = null; // Track the interval ID for clearing later
 let saveGameInterval = null; // Track the interval ID for clearing later
+const valueNodes = new Map(); // Cache DOM nodes for quick updates
+let lastEncryptedSave = null; // Cache the last encrypted save to avoid redundant work
 
 // Load saved expanded states
 
@@ -38,17 +40,6 @@ export function initDebugging() {
   let dev = false; // Track if dev mode is active
   let keySequence = [];
   const toggleSequence = ['e', 'd', 'e', 'v'];
-  let debugUiRafId = null; // Track requestAnimationFrame id
-
-  // Helper: requestAnimationFrame update loop
-  function debugUiUpdateLoop() {
-    const debugDiv = document.querySelector('.debug-ui');
-    // Only update if debug UI is visible
-    if (debugDiv && debugDiv.style.display !== 'none') {
-      updateDebugUI();
-    }
-    debugUiRafId = requestAnimationFrame(debugUiUpdateLoop);
-  }
 
   document.addEventListener('keydown', (event) => {
     keySequence.push(event.key.toLowerCase());
@@ -66,12 +57,12 @@ export function initDebugging() {
 
         // Initial update and monitor changes
         updateDebugUI();
-        debugUiRafId = requestAnimationFrame(debugUiUpdateLoop); // Start RAF loop
+        debugUiInterval = setInterval(updateDebugUI, 1000);
         saveGameInterval = setInterval(dataManager.saveGame, 1000);
       } else {
-        if (debugUiRafId) {
-          cancelAnimationFrame(debugUiRafId);
-          debugUiRafId = null;
+        if (debugUiInterval) {
+          clearInterval(debugUiInterval);
+          debugUiInterval = null;
         }
         clearInterval(saveGameInterval);
         document.body.classList.remove('dev-active');
@@ -83,18 +74,22 @@ export function initDebugging() {
         if (modifyUI) {
           modifyUI.remove();
         }
+        valueNodes.clear();
+        lastEncryptedSave = null;
       }
     }
   });
 }
 
 // Function to update the UI
-let lastDecryptedSave = null; // Cache for last decrypted save
 function updateDebugUI() {
   const debugDiv = document.querySelector('.debug-ui');
   if (!debugDiv) return;
 
-  let encrypted = localStorage.getItem('gameProgress');
+  const encrypted = localStorage.getItem('gameProgress');
+  if (encrypted === lastEncryptedSave) return; // Nothing changed
+  lastEncryptedSave = encrypted;
+
   let decrypted;
   try {
     decrypted = crypt.decrypt(encrypted);
@@ -103,27 +98,13 @@ function updateDebugUI() {
     return;
   }
 
-  // Only update if the save has changed
-  if (JSON.stringify(decrypted) === JSON.stringify(lastDecryptedSave)) {
-    return;
-  }
-  lastDecryptedSave = decrypted;
+  const key = 'gameProgress';
+  const fullPath = key;
 
-  debugDiv.innerHTML = '';
-
-  // Remove or comment out noisy log
-  // console.log('Debugging UI updated');
-
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    let value;
-
-    if (key === 'debugUIState') continue;
-    if (key !== 'gameProgress') continue;
-
-    value = decrypted;
-
-    const fullPath = key;
+  // If structure changed or UI not built, rebuild it
+  if (!valueNodes.size || rebuildNeeded(decrypted, fullPath)) {
+    debugDiv.innerHTML = '';
+    valueNodes.clear();
     const details = document.createElement('details');
 
     // Preserve expansion state
@@ -143,14 +124,60 @@ function updateDebugUI() {
     details.appendChild(summary);
 
     // Render the nested object or value
-    renderObject(value, details, fullPath, 0);
+    renderObject(decrypted, details, fullPath, 0);
     debugDiv.appendChild(details);
+  } else {
+    // Update existing values in-place
+    updateValues(decrypted, fullPath);
   }
 }
 
 // Save expanded state whenever it changes
 function saveExpandedState() {
   localStorage.setItem('debugUIState', JSON.stringify([...expandedState]));
+}
+
+// Determine if the structure of the object has changed and the UI needs a full rebuild
+function rebuildNeeded(obj, path) {
+  const newPaths = [];
+
+  function collect(o, currentPath) {
+    for (const key in o) {
+      if (!Object.prototype.hasOwnProperty.call(o, key)) continue;
+      const value = o[key];
+      const full = `${currentPath}.${key}`;
+      if (value && typeof value === 'object') {
+        collect(value, full);
+      } else {
+        newPaths.push(full);
+      }
+    }
+  }
+
+  collect(obj, path);
+
+  if (newPaths.length !== valueNodes.size) return true;
+  return newPaths.some((p) => !valueNodes.has(p));
+}
+
+// Update existing DOM nodes with new values
+function updateValues(obj, path) {
+  for (const key in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
+    const value = obj[key];
+    const fullPath = `${path}.${key}`;
+    if (value && typeof value === 'object') {
+      updateValues(value, fullPath);
+    } else {
+      const node = valueNodes.get(fullPath);
+      if (node) {
+        const newText = `${key}: ${JSON.stringify(value)}`;
+        if (node.textContent !== newText) {
+          node.textContent = newText;
+        }
+      }
+    }
+  }
 }
 
 // Helper function to render nested objects and arrays with spacing
@@ -234,6 +261,7 @@ function renderObject(obj, parent, path = '', level = 0) {
         span.textContent = `${key}: ${JSON.stringify(value)}`;
         parent.appendChild(span);
         parent.appendChild(document.createElement('br'));
+        valueNodes.set(fullPath, span);
       }
     }
   }
