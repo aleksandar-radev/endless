@@ -5,7 +5,7 @@ import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
 import { TabIndicatorManager } from './tabIndicatorManager.js';
 import { selectBoss, updateBossUI } from './bossUi.js';
 import { ELEMENTS } from '../constants/common.js';
-import { calculateArmorReduction, calculateEvasionChance, calculateHitChance } from '../combat.js';
+import { calculateArmorReduction, calculateEvasionChance, calculateHitChance, calculateResistanceReduction } from '../combat.js';
 export {
   initializeSkillTreeUI,
   initializeSkillTreeStructure,
@@ -223,17 +223,35 @@ export function updateEnemyStats() {
   const atkSpeed = document.getElementById('enemy-attack-speed-value');
   if (atkSpeed) atkSpeed.textContent = formatNumber((enemy.attackSpeed || 0).toFixed(2));
   const fireRes = document.getElementById('enemy-fire-resistance-value');
-  if (fireRes) fireRes.textContent = formatNumber(Math.floor(enemy.fireResistance || 0));
+  if (fireRes) {
+    const reduction = calculateResistanceReduction(enemy.fireResistance, hero.stats.fireDamage);
+    fireRes.textContent = `${formatNumber(Math.floor(enemy.fireResistance || 0))} (${Math.floor(reduction)}%)`;
+  }
   const coldRes = document.getElementById('enemy-cold-resistance-value');
-  if (coldRes) coldRes.textContent = formatNumber(Math.floor(enemy.coldResistance || 0));
+  if (coldRes) {
+    const reduction = calculateResistanceReduction(enemy.coldResistance, hero.stats.coldDamage);
+    coldRes.textContent = `${formatNumber(Math.floor(enemy.coldResistance || 0))} (${Math.floor(reduction)}%)`;
+  }
   const airRes = document.getElementById('enemy-air-resistance-value');
-  if (airRes) airRes.textContent = formatNumber(Math.floor(enemy.airResistance || 0));
+  if (airRes) {
+    const reduction = calculateResistanceReduction(enemy.airResistance, hero.stats.airDamage);
+    airRes.textContent = `${formatNumber(Math.floor(enemy.airResistance || 0))} (${Math.floor(reduction)}%)`;
+  }
   const earthRes = document.getElementById('enemy-earth-resistance-value');
-  if (earthRes) earthRes.textContent = formatNumber(Math.floor(enemy.earthResistance || 0));
+  if (earthRes) {
+    const reduction = calculateResistanceReduction(enemy.earthResistance, hero.stats.earthDamage);
+    earthRes.textContent = `${formatNumber(Math.floor(enemy.earthResistance || 0))} (${Math.floor(reduction)}%)`;
+  }
   const lightningRes = document.getElementById('enemy-lightning-resistance-value');
-  if (lightningRes) lightningRes.textContent = formatNumber(Math.floor(enemy.lightningResistance || 0));
+  if (lightningRes) {
+    const reduction = calculateResistanceReduction(enemy.lightningResistance, hero.stats.lightningDamage);
+    lightningRes.textContent = `${formatNumber(Math.floor(enemy.lightningResistance || 0))} (${Math.floor(reduction)}%)`;
+  }
   const waterRes = document.getElementById('enemy-water-resistance-value');
-  if (waterRes) waterRes.textContent = formatNumber(Math.floor(enemy.waterResistance || 0));
+  if (waterRes) {
+    const reduction = calculateResistanceReduction(enemy.waterResistance, hero.stats.waterDamage);
+    waterRes.textContent = `${formatNumber(Math.floor(enemy.waterResistance || 0))} (${Math.floor(reduction)}%)`;
+  }
 
   setEnemyName();
   if (game.fightMode === 'explore') {

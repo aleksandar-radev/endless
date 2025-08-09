@@ -212,6 +212,6 @@ export const ATTRIBUTE_TOOLTIPS = {
     ${ELEMENTS.water.icon} Effective against water enemies.
   `,
   getElementalResistanceTooltip: () => html`
-    <strong>Elemental Resistance. Reduces elemental damage taken from enemies by a %.</strong>
+    <strong>Elemental Resistance. Reduces elemental damage taken from enemies based on your resistance and the enemy's damage.</strong>
   `,
 };

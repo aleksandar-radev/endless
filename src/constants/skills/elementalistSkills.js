@@ -169,6 +169,7 @@ export const ELEMENTALIST_SKILLS = {
       elementalDamage: level * 0.5,
       elementalDamagePercent: 0.5 * scaleDownFlat(level),
       intelligencePercent: 0.5 * scaleDownFlat(level),
+      allResistance: level * 3,
     }),
   },
 
@@ -238,7 +239,7 @@ export const ELEMENTALIST_SKILLS = {
     effect: (level) => ({
       elementalDamagePercent: 1.5 * scaleDownFlat(level),
       elementalDamage: level * 2,
-      allResistance: level * 0.25,
+      allResistance: level * 8,
       perseverance: level * 5,
       perseverancePercent: 1.5 * scaleDownFlat(level),
     }),
@@ -353,7 +354,7 @@ export const ELEMENTALIST_SKILLS = {
     effect: (level) => ({
       elementalDamagePercent: 1 * scaleDownFlat(level),
       elementalPenetrationPercent: 1 * scaleDownFlat(level),
-      allResistance: level * 0.4,
+      allResistance: level * 12,
     }),
   },
   natureCataclysm: {
