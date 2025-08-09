@@ -72,6 +72,7 @@ export default class Hero {
 
   gainExp(amount) {
     this.exp += amount;
+    document.dispatchEvent(new CustomEvent('xpGained', { detail: amount }));
     while (this.exp >= this.getExpToNextLevel()) {
       const xpOverflow = this.exp - this.getExpToNextLevel();
       this.levelUp(1);

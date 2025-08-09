@@ -29,6 +29,10 @@ export class Options {
     this.salvageMaterialsEnabled = data.salvageMaterialsEnabled ?? false;
     // Add advanced tooltips option
     this.showAdvancedTooltips = data.showAdvancedTooltips ?? false;
+    // Show rate counters bar
+    this.showRateCounters = data.showRateCounters ?? false;
+    // Period for rate counters in seconds
+    this.rateCountersPeriod = data.rateCountersPeriod || 1;
   }
 
   /**
@@ -94,6 +98,10 @@ export class Options {
     container.appendChild(this._createSoundVolumeOption());
     // --- Advanced Tooltips Option ---
     container.appendChild(this._createAdvancedTooltipsOption());
+    // --- Rate Counters Toggle Option ---
+    container.appendChild(this._createRateCountersOption());
+    // --- Rate Counters Period Option ---
+    container.appendChild(this._createRateCountersPeriodOption());
     // --- Enemy Stats Toggle Option ---
     container.appendChild(this._createEnemyStatsToggleOption());
 
@@ -159,6 +167,57 @@ export class Options {
       // Save option
       dataManager.saveGame();
       // Optionally, refresh tooltips if needed
+    });
+    return wrapper;
+  }
+
+  _createRateCountersOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = `
+      <label for="rate-counters-toggle" class="rate-counters-toggle-label">Show Counters Bar:</label>
+      <input
+        type="checkbox"
+        id="rate-counters-toggle"
+        class="rate-counters-toggle"
+        ${this.showRateCounters ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.showRateCounters = checkbox.checked;
+      dataManager.saveGame();
+      document.dispatchEvent(new CustomEvent('toggleRateCounters', { detail: this.showRateCounters }));
+    });
+    return wrapper;
+  }
+
+  _createRateCountersPeriodOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = `
+      <label for="rate-counters-period" class="rate-counters-period-label">Counters Period (sec):</label>
+      <input
+        type="number"
+        id="rate-counters-period"
+        class="rate-counters-period-input"
+        min="1"
+        value="${this.rateCountersPeriod}"
+      />
+    `;
+    const input = wrapper.querySelector('input');
+    input.addEventListener('change', () => {
+      let v = parseInt(input.value, 10);
+      if (isNaN(v) || v <= 0) v = 3600;
+      this.rateCountersPeriod = v;
+      dataManager.saveGame();
+      document.dispatchEvent(new CustomEvent('ratePeriodChange', { detail: v }));
     });
     return wrapper;
   }

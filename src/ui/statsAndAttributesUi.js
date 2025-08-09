@@ -1,4 +1,4 @@
-import { game, hero, statistics } from '../globals.js';
+import { game, hero, statistics, options } from '../globals.js';
 import { STATS } from '../constants/stats/stats.js';
 import { hideTooltip, positionTooltip, showTooltip, updateEnemyStats, formatNumber } from '../ui/ui.js';
 import { OFFENSE_STATS } from '../constants/stats/offenseStats.js';
@@ -13,6 +13,85 @@ const html = String.raw;
 
 // allocation mode selector (global for attribute buttons)
 let allocationMode = 1;
+let rateIntervalId = null;
+let startTimeInFights = 0;
+let startGold = 0;
+let startItems = 0;
+let startMaterials = 0;
+let sessionXp = 0;
+let sessionDamage = 0;
+let listenersAttached = false;
+let bottomBar = null;
+
+function formatPeriod(seconds) {
+  if (seconds % 3600 === 0) return `${seconds / 3600}h`;
+  if (seconds % 60 === 0) return `${seconds / 60}m`;
+  return `${seconds}s`;
+}
+
+function updateRateCounters() {
+  let ratePeriod = options.rateCountersPeriod || 1;
+  const elapsed = statistics.totalTimeInFights - startTimeInFights;
+  const periodLabel = formatPeriod(ratePeriod);
+  const dmgEls = document.querySelectorAll('.counter-damage');
+  const xpEls = document.querySelectorAll('.counter-xp');
+  const goldEls = document.querySelectorAll('.counter-gold');
+  const itemsEls = document.querySelectorAll('.counter-items');
+  const matEls = document.querySelectorAll('.counter-materials');
+  if (!elapsed || elapsed <= 0) {
+    dmgEls.forEach((el) => (el.textContent = `Damage/${periodLabel}: 0`));
+    xpEls.forEach((el) => (el.textContent = `XP/${periodLabel}: 0`));
+    goldEls.forEach((el) => (el.textContent = `Gold/${periodLabel}: 0`));
+    itemsEls.forEach((el) => (el.textContent = `Items/${periodLabel}: 0`));
+    matEls.forEach((el) => (el.textContent = `Materials/${periodLabel}: 0`));
+    return;
+  }
+  const damageRate = sessionDamage / elapsed;
+  dmgEls.forEach((el) => (el.textContent = `Damage/${periodLabel}: ${formatNumber((damageRate * ratePeriod).toFixed(1))}`));
+  const xpRate = sessionXp / elapsed;
+  xpEls.forEach((el) => (el.textContent = `XP/${periodLabel}: ${formatNumber((xpRate * ratePeriod).toFixed(1))}`));
+  const goldRate = (statistics.totalGoldEarned - startGold) / elapsed;
+  goldEls.forEach((el) => (el.textContent = `Gold/${periodLabel}: ${formatNumber((goldRate * ratePeriod).toFixed(1))}`));
+  const itemRate = (statistics.totalItemsFound - startItems) / elapsed;
+  itemsEls.forEach((el) => (el.textContent = `Items/${periodLabel}: ${formatNumber((itemRate * ratePeriod).toFixed(1))}`));
+  const matRate = (statistics.totalMaterialsFound - startMaterials) / elapsed;
+  matEls.forEach((el) => (el.textContent = `Materials/${periodLabel}: ${formatNumber((matRate * ratePeriod).toFixed(1))}`));
+}
+
+function resetRateCounters() {
+  startTimeInFights = statistics.totalTimeInFights;
+  startGold = statistics.totalGoldEarned;
+  startItems = statistics.totalItemsFound;
+  startMaterials = statistics.totalMaterialsFound;
+  sessionXp = 0;
+  sessionDamage = 0;
+  updateRateCounters();
+}
+
+export function setRateCountersVisibility(show) {
+  if (show) {
+    if (!bottomBar) {
+      bottomBar = document.createElement('div');
+      bottomBar.className = 'rate-counters-bar';
+      bottomBar.innerHTML = html`
+        <div class="counter counter-damage"></div>
+        <div class="counter counter-xp"></div>
+        <div class="counter counter-gold"></div>
+        <div class="counter counter-items"></div>
+        <div class="counter counter-materials"></div>
+        <button class="reset-btn">Reset</button>
+      `;
+      document.body.appendChild(bottomBar);
+      bottomBar.querySelector('.reset-btn').addEventListener('click', resetRateCounters);
+      updateRateCounters();
+    }
+  } else if (bottomBar) {
+    bottomBar.remove();
+    bottomBar = null;
+  }
+}
+
+document.addEventListener('toggleRateCounters', (e) => setRateCountersVisibility(e.detail));
 
 export function updateStatsAndAttributesUI() {
   // Create .stats-grid if it doesn't exist
@@ -26,6 +105,23 @@ export function updateStatsAndAttributesUI() {
       statsTab.innerHTML = '';
       statsTab.appendChild(statsGrid);
     }
+  }
+
+  if (!listenersAttached) {
+    resetRateCounters();
+    document.addEventListener('xpGained', (e) => {
+      sessionXp += e.detail;
+    });
+    document.addEventListener('damageDealt', (e) => {
+      sessionDamage += e.detail;
+    });
+    document.addEventListener('ratePeriodChange', (e) => {
+      options.rateCountersPeriod = e.detail;
+      updateRateCounters();
+    });
+    if (rateIntervalId) clearInterval(rateIntervalId);
+    rateIntervalId = setInterval(updateRateCounters, 1000);
+    listenersAttached = true;
   }
 
   // Ensure sections exist; create them only if they don't
@@ -391,6 +487,9 @@ export function updateStatsAndAttributesUI() {
     document.getElementById('intelligence-value').textContent = formatNumber(hero.stats['intelligence'] || 0);
     document.getElementById('perseverance-value').textContent = formatNumber(hero.stats['perseverance'] || 0);
   }
+
+  updateRateCounters();
+  setRateCountersVisibility(options.showRateCounters);
 
   const skillTreeTab = document.querySelector('[data-tab="skilltree"]');
   skillTreeTab.classList.remove('hidden');
