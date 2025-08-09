@@ -69,6 +69,19 @@ class Enemy {
     this.lastAttack = Date.now();
   }
 
+  // used when reductions are applied from skills usually buff, but can be instant too
+  recalculateStats() {
+    this.attackSpeed = this.calculateAttackSpeed();
+    this.life = this.calculateLife();
+    this.damage = this.calculateDamage();
+    this.fireDamage = this.calculateElementalDamage('fire');
+    this.coldDamage = this.calculateElementalDamage('cold');
+    this.airDamage = this.calculateElementalDamage('air');
+    this.earthDamage = this.calculateElementalDamage('earth');
+    this.lightningDamage = this.calculateElementalDamage('lightning');
+    this.waterDamage = this.calculateElementalDamage('water');
+  }
+
   setEnemyColor() {
     // Get enemy section element
     const enemySection = document.querySelector('.enemy-section');
