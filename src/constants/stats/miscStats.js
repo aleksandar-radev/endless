@@ -231,17 +231,17 @@ export const MISC_STATS = {
   // ITEM QUANTITY
   itemQuantityPercent: {
     base: 0,
-    decimalPlaces: 0,
+    decimalPlaces: 2,
     item: { min: 4, max: 13, limit: 100, scaling: (level) => miscScaling(level) },
-    itemTags: ['misc', 'jewelry', 'gloves'],
+    itemTags: ['misc', 'jewelry', 'gloves', 'belt', 'amulet'],
     showInUI: true,
   },
   // ITEM RARITY
   itemRarityPercent: {
     base: 0,
-    decimalPlaces: 0,
+    decimalPlaces: 2,
     item: { min: 4, max: 13, limit: 100, scaling: (level) => miscScaling(level) },
-    itemTags: ['misc', 'jewelry', 'gloves'],
+    itemTags: ['misc', 'jewelry', 'gloves', 'belt', 'amulet'],
     showInUI: true,
   },
   // Only from materials. permanent skill points
