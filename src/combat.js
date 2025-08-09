@@ -319,7 +319,7 @@ function showLootNotification(item) {
 export function calculateHitChance(attackRating, evasion, cap = 0.9) {
   let raw = 1.5 * attackRating / (attackRating + evasion);
   raw = Math.max(0, raw);
-  const capped = Math.max(0.2, Math.min(raw, cap));
+  const capped = Math.max(1 - cap, Math.min(raw, cap));
 
   return Math.round(capped * 100);
 }
@@ -336,7 +336,7 @@ export function calculateArmorReduction(armor, damage, cap = 0.9) {
   return Math.max(0, Math.min(reduction, cap)) * 100;
 }
 
-export function calculateResistanceReduction(resistance, damage, cap = 0.75) {
+export function calculateResistanceReduction(resistance, damage, cap = 0.9) {
   if (damage <= 0) return 0;
   const reduction = resistance / (resistance + 10 * damage);
   return Math.max(0, Math.min(reduction, cap)) * 100;
