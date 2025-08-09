@@ -223,7 +223,7 @@
   width: 100%;
 }
 
-input[type=number] {
+#options input[type=number] {
   background: #232b3a;
   color: #fff;
   border: 1px solid #3b82f6;
@@ -234,7 +234,7 @@ input[type=number] {
   transition: border 0.2s, box-shadow 0.2s;
 }
 
-input[type=number]:focus {
+#options input[type=number]:focus {
   border: 1.5px solid #60a5fa;
   box-shadow: 0 0 0 2px #3b82f633;
   outline: none;
@@ -286,7 +286,7 @@ input[type=number]:focus {
   font-size: 1.1em;
 }
 
-input[type="checkbox"] {
+#options input[type="checkbox"] {
   display: none;
 }
 
@@ -304,7 +304,7 @@ input[type="checkbox"] {
 }
 
 
-input[type="checkbox"]:checked+.toggle-btn {
+#options input[type="checkbox"]:checked+.toggle-btn {
   background: #2563eb;
   border-color: #2563eb;
 }
@@ -323,7 +323,7 @@ input[type="checkbox"]:checked+.toggle-btn {
 }
 
 
-input[type="checkbox"]:checked+.toggle-btn::before {
+#options input[type="checkbox"]:checked+.toggle-btn::before {
   left: 25px;
 }
 
