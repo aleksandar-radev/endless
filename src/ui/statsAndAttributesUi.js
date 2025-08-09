@@ -7,7 +7,7 @@ import { MISC_STATS } from '../constants/stats/miscStats.js';
 import { formatStatName } from '../ui/ui.js';
 import { ATTRIBUTE_TOOLTIPS, ATTRIBUTES } from '../constants/stats/attributes.js';
 import { ELEMENTS } from '../constants/common.js';
-import { calculateArmorReduction, calculateEvasionChance, calculateHitChance } from '../combat.js';
+import { calculateArmorReduction, calculateEvasionChance, calculateHitChance, calculateResistanceReduction } from '../combat.js';
 
 const html = String.raw;
 
@@ -368,6 +368,25 @@ export function updateStatsAndAttributesUI() {
       const reduction = calculateArmorReduction(hero.stats.armor, game.currentEnemy.damage);
       armorEl.appendChild(document.createTextNode(` (${reduction.toFixed(2)}%)`));
     }
+
+    // Add elemental resistance reduction percentages
+    const resistanceMap = [
+      ['fireResistance', 'fireDamage'],
+      ['coldResistance', 'coldDamage'],
+      ['airResistance', 'airDamage'],
+      ['earthResistance', 'earthDamage'],
+      ['lightningResistance', 'lightningDamage'],
+      ['waterResistance', 'waterDamage'],
+    ];
+    resistanceMap.forEach(([resKey, dmgKey]) => {
+      const el = document.getElementById(`${resKey}-value`);
+      if (el) {
+        const value = formatNumber(hero.stats[resKey].toFixed(STATS[resKey].decimalPlaces || 0));
+        el.textContent = value;
+        const reduction = calculateResistanceReduction(hero.stats[resKey], game.currentEnemy[dmgKey]);
+        el.appendChild(document.createTextNode(` (${reduction.toFixed(2)}%)`));
+      }
+    });
 
     // add evasion reduction percentage to evasion
     const evasionEl = document.getElementById('evasion-value');
