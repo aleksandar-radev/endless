@@ -99,7 +99,7 @@ export default class Hero {
     this.level += levels;
     this.statPoints += STATS_ON_LEVEL_UP * levels;
 
-    skillTree.addSkillPoints(levels); // Add 1 skill point per level
+    skillTree.addSkillPoints(levels * 3); // Add 3 skill points per level
 
     this.recalculateFromAttributes();
     createCombatText(`LEVEL UP! (${this.level})`);
