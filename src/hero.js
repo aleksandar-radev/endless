@@ -377,8 +377,8 @@ export default class Hero {
         // Diminishing returns for attackSpeed
         if (stat === 'attackSpeed') {
           const flatAttackSpeedBonus = flatValues.attackSpeed - STATS.attackSpeed.base;
-          const maxBonus = 3;
-          const scale = 7;
+          const maxBonus = 4;
+          const scale = 9;
           value =
             STATS.attackSpeed.base +
             (flatAttackSpeedBonus > 0 ? maxBonus * (1 - Math.exp(-flatAttackSpeedBonus / scale)) : 0);
