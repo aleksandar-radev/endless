@@ -39,7 +39,8 @@ export const DRUID_SKILLS = {
     effect: (level) => ({
       armor: level * 5,
       armorPercent: 2 * scaleDownFlat(level),
-      lifeRegen: 1 * scaleUpFlat(level),
+      lifeRegen: 1 * scaleUpFlat(level, 1, 5, 0.3),
+      extraDamageFromLifeRegenPercent: Math.min(0.1 * scaleDownFlat(level), 10),
     }),
   },
   naturalAffinity: {
@@ -63,7 +64,7 @@ export const DRUID_SKILLS = {
     name: () => 'Rejuvenation',
     type: () => 'buff',
     manaCost: (level) => 5 + level * 0.25,
-    cooldown: () => 44000,
+    cooldown: () => 45000,
     duration: () => 10000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'rejuvenation',
@@ -72,6 +73,7 @@ export const DRUID_SKILLS = {
     effect: (level) => ({
       lifeRegen: level * 4,
       lifeRegenPercent: 0.5 * scaleDownFlat(level),
+      extraDamageFromLifeRegenPercent: Math.min(0.2 * scaleDownFlat(level), 15),
     }),
   },
   entanglingRoots: {

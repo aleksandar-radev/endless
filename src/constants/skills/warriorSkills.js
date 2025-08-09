@@ -29,6 +29,7 @@ export const WARRIOR_SKILLS = {
     effect: (level) => ({
       armor: level * 3,
       armorPercent: 2.5 * scaleDownFlat(level),
+      extraDamageFromArmorPercent: Math.min(0.02 * scaleDownFlat(level), 3),
     }),
   },
 
@@ -141,7 +142,7 @@ export const WARRIOR_SKILLS = {
     description: () => 'Increases armor and block chance temporarily',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      extraDamageFromArmorPercent: Math.min(0.03 * scaleDownFlat(level), 2),
+      extraDamageFromArmorPercent: Math.min(0.06 * scaleDownFlat(level), 5),
       armorPercent: 6 * scaleDownFlat(level),
       blockChance: Math.min(level * 0.1, 20),
     }),
