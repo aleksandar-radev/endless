@@ -416,6 +416,8 @@ export default class Hero {
         if (stat === 'extraDamageFromLifePercent') value = Math.min(value, 5);
         if (stat === 'extraDamageFromArmorPercent') value = Math.min(value, 5);
         if (stat === 'extraDamageFromManaPercent') value = Math.min(value, 5);
+        if (stat === 'extraDamageFromLifeRegenPercent') value = Math.min(value, 5);
+        if (stat === 'extraDamageFromEvasionPercent') value = Math.min(value, 5);
         if (stat === 'reduceEnemyHpPercent') value = Math.min(value, 50);
         if (stat === 'reduceEnemyAttackSpeedPercent') value = Math.min(value, 50);
         if (stat === 'reduceEnemyDamagePercent') value = Math.min(value, 50);
@@ -448,17 +450,21 @@ export default class Hero {
     const extraFromLife = (this.stats.extraDamageFromLifePercent || 0) * this.stats.life;
     const extraFromArmor = (this.stats.extraDamageFromArmorPercent || 0) * this.stats.armor;
     const extraFromMana = (this.stats.extraDamageFromManaPercent || 0) * this.stats.mana;
+    const extraFromLifeRegen = (this.stats.extraDamageFromLifeRegenPercent || 0) * this.stats.lifeRegen;
+    const extraFromEvasion = (this.stats.extraDamageFromEvasionPercent || 0) * this.stats.evasion;
 
     // Split: 50% to physical, 50% distributed equally among elements
     const elements = Object.keys(ELEMENTS);
 
     const splitLife = extraFromLife / 2;
     const splitMana = extraFromMana / 2;
-    flatValues.damage += splitLife + splitMana + extraFromArmor;
+    const splitLifeRegen = extraFromLifeRegen / 2;
+    flatValues.damage += splitLife + splitMana + splitLifeRegen + extraFromArmor + extraFromEvasion;
 
     const eleShareLife = splitLife / elements.length;
     const eleShareMana = splitMana / elements.length;
-    flatValues.elementalDamage += eleShareLife + eleShareMana;
+    const eleShareLifeRegen = splitLifeRegen / elements.length;
+    flatValues.elementalDamage += eleShareLife + eleShareMana + eleShareLifeRegen;
 
     this.stats.damage = Math.floor((flatValues.damage + (this.stats.damagePerLevel || 0) * this.level) * (1 + this.stats.totalDamagePercent + this.stats.damagePercent));
 

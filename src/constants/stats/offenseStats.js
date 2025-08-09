@@ -432,4 +432,12 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 2,
   },
+  extraDamageFromLifeRegenPercent: {
+    base: 0,
+    decimalPlaces: 2,
+  },
+  extraDamageFromEvasionPercent: {
+    base: 0,
+    decimalPlaces: 2,
+  },
 };

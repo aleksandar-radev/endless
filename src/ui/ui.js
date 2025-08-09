@@ -486,6 +486,8 @@ export const formatStatName = (stat) => {
   if (stat === 'extraDamageFromLifePercent') return 'Extra Damage From % of Life';
   if (stat === 'extraDamageFromArmorPercent') return 'Extra Damage From % of Armor';
   if (stat === 'extraDamageFromManaPercent') return 'Extra Damage From % of Mana';
+  if (stat === 'extraDamageFromLifeRegenPercent') return 'Extra Damage From % of Life Regen';
+  if (stat === 'extraDamageFromEvasionPercent') return 'Extra Damage From % of Evasion';
 
   // Fallback: convert camelCase to Title Case with spaces
   return stat
