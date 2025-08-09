@@ -162,12 +162,12 @@ export function applyDefaultEnemyStats(enemy) {
     lightningDamage: 0 * multiplier,
     waterDamage: 0 * multiplier,
 
-    fireResistance: 0,
-    coldResistance: 0,
-    airResistance: 0,
-    earthResistance: 0,
-    lightningResistance: 0,
-    waterResistance: 0,
+    fireResistance: 3 * multiplier,
+    coldResistance: 3 * multiplier,
+    airResistance: 3 * multiplier,
+    earthResistance: 3 * multiplier,
+    lightningResistance: 3 * multiplier,
+    waterResistance: 3 * multiplier,
 
     // can be used for balancing
     // example is the damage/ele dmg

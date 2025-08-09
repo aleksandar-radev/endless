@@ -332,13 +332,13 @@ export function calculateEvasionChance(evasion, attackRating, cap = 0.9) {
 
 export function calculateArmorReduction(armor, damage, cap = 0.9) {
   if (damage <= 0) return 0;
-  const reduction = armor / (armor + 10 * damage);
+  const reduction = armor / (armor + 3 * damage);
   return Math.max(0, Math.min(reduction, cap)) * 100;
 }
 
 export function calculateResistanceReduction(resistance, damage, cap = 0.9) {
   if (damage <= 0) return 0;
-  const reduction = resistance / (resistance + 10 * damage);
+  const reduction = resistance / (resistance + 5 * damage);
   return Math.max(0, Math.min(reduction, cap)) * 100;
 }
 
