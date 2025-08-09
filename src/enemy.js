@@ -214,7 +214,8 @@ class Enemy {
 
   rollForMaterialDrop() {
     const baseChance = 0.025; // Base chance of 2.5%
-    return Math.random() < baseChance * (this.region.multiplier.materialDrop || 1) * (this.baseData.multiplier.materialDrop || 1);
+
+    return (baseChance * (this.region.multiplier.materialDrop || 1) * (this.baseData.multiplier.materialDrop || 1) + hero.stats.extraMaterialDropPercent) * 100;
   }
 }
 export default Enemy;

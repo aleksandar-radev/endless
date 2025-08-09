@@ -189,7 +189,7 @@ export default class Hero {
     // cycle through all stats to make all numbers have the correct decimal places
     for (const stat in this.stats) {
       const decimals = STATS[stat]?.decimalPlaces || 0;
-      this.stats[stat] = Number(this.stats[stat].toFixed(decimals));
+      this.stats[stat] = Number((this.stats[stat] * 100).toFixed(decimals) / 100);
     }
 
     updatePlayerLife();

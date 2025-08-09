@@ -216,7 +216,9 @@ export async function defeatEnemy() {
       showLootNotification(newItem);
     }
 
-    if (enemy.rollForMaterialDrop()) {
+    const materialDropChance = enemy.rollForMaterialDrop();
+
+    if (Math.random() * 100 < materialDropChance) {
       const mat = inventory.getRandomMaterial();
       let qty = 1;
       if (inventory.isUpgradeMaterial(mat)) {
@@ -226,12 +228,13 @@ export async function defeatEnemy() {
       inventory.addMaterial({ id: mat.id, icon: mat.icon, qty });
       showMaterialNotification(mat);
 
-      // Extra material drop logic: each extra drop is a new random material
-      const extraChance = hero.stats.extraMaterialDropPercent * 100 || 0;
       let extraRolls = 0;
       const maxExtraRolls = hero.stats.extraMaterialDropMax;
-      while (Math.random() * 100 < extraChance) {
+
+      while (extraRolls < maxExtraRolls) {
         extraRolls++;
+        let chance = Math.random() * 100;
+        if (chance > materialDropChance) continue;
         const extraMat = inventory.getRandomMaterial();
         let extraQty = 1;
         if (inventory.isUpgradeMaterial(extraMat)) {
