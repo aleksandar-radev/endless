@@ -177,6 +177,8 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
       const damageElements = [];
       const resistanceElements = [];
       Object.keys(statsDef).forEach((key) => {
+        // Do not show attributes in misc-panel
+        if (panel === miscPanel && ATTRIBUTES[key]) return;
         if (!options.showAllStats && !statsDef[key].showInUI && key !== 'extraMaterialDropPercent') return;
         // Collect elementals separately for offense panel
         if (panel === offensePanel && elementalDamageKeys.includes(key)) {
@@ -501,15 +503,14 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     statsGrid.appendChild(attributesContainer);
   } else {
     document.getElementById('attributes').textContent = `Attributes (+${hero.statPoints})`;
-    // Update dynamic attribute values
-    document.getElementById('strength-value').textContent = formatNumber(hero.stats['strength']);
-    document.getElementById('agility-value').textContent = formatNumber(hero.stats['agility']);
-    document.getElementById('vitality-value').textContent = formatNumber(hero.stats['vitality']);
-    document.getElementById('wisdom-value').textContent = formatNumber(hero.stats['wisdom']);
-    document.getElementById('endurance-value').textContent = formatNumber(hero.stats['endurance']);
-    document.getElementById('dexterity-value').textContent = formatNumber(hero.stats['dexterity']);
-    document.getElementById('intelligence-value').textContent = formatNumber(hero.stats['intelligence'] || 0);
-    document.getElementById('perseverance-value').textContent = formatNumber(hero.stats['perseverance'] || 0);
+    // Update all attribute values dynamically (works with showAllStats)
+    Object.keys(hero.stats).forEach((stat) => {
+      if (!ATTRIBUTES[stat]) return;
+      const el = document.getElementById(`${stat}-value`);
+      if (el) {
+        el.textContent = formatNumber(hero.stats[stat]);
+      }
+    });
   }
 
   updateRateCounters();
