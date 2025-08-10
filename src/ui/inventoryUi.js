@@ -37,21 +37,23 @@ export function initializeInventoryUI(inv) {
       <div class="character-preview">👤</div>
     </div>
     <div class="salvage-container">
-      <div class="inventory-tabs">
+      <div class="buttons-row">
         <button id="items-tab" class="inventory-btn active">Items</button>
         <button id="materials-tab" class="inventory-btn">Materials</button>
-      </div>
-    <div class="sort-row">
-  <select id="sort-mode-select" class="inventory-btn sort-select">
+        <select id="sort-mode-select" class="inventory-btn sort-select">
           <option value="type-rarity-level">T→R→L</option>
           <option value="type-level-rarity">T→L→R</option>
           <option value="rarity-level">R→L</option>
           <option value="level-rarity">L→R</option>
         </select>
-  <div id="sort-inventory" class="inventory-btn sort-btn"><span role="img" aria-label="Sort">🔃</span></div>
+        <div id="sort-inventory" class="inventory-btn sort-btn"><span role="img" aria-label="Sort">🔃</span></div>
+        <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn hidden">Equip</button>
+        <button id="open-salvage-modal" class="inventory-btn">Salvage</button>
       </div>
-  <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn hidden">Equip</button>
-      <button id="open-salvage-modal" class="inventory-btn">Salvage</button>
+      <div class="search-container">
+        <input type="text" id="inventory-search" class="inventory-search" placeholder="Search items..." />
+        <span class="search-icon">🔍</span>
+      </div>
     </div>
   `;
   inventoryTab.appendChild(equipmentContainer);
@@ -100,7 +102,7 @@ export function initializeInventoryUI(inv) {
     'rarity-level': 'Rarity → Level',
     'level-rarity': 'Level → Rarity',
   };
-  function updateSortBtnText() {}
+  function updateSortBtnText() { }
   updateSortBtnText();
 
   if (itemsTab && materialsTab && gridContainer && materialsGrid) {
@@ -141,6 +143,14 @@ export function initializeInventoryUI(inv) {
       showToast('Sorted materials', 'success');
     }
   });
+
+  // Setup search functionality
+  const searchInput = document.getElementById('inventory-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      highlightMatchingItems(e.target.value);
+    });
+  }
 
   // Add tooltip for sort button (custom, shows full text for current sort mode)
   sortBtn.addEventListener('mouseenter', (e) => {
@@ -455,6 +465,60 @@ export function showSalvageModal(inv) {
   });
   trash.addEventListener('mousemove', positionTooltip);
   trash.addEventListener('mouseleave', hideTooltip);
+}
+
+function highlightMatchingItems(searchText) {
+  const items = document.querySelectorAll('.inventory-item');
+  const materials = document.querySelectorAll('.material-item');
+
+  if (!searchText) {
+    items.forEach(item => item.classList.remove('highlight', 'dimmed'));
+    materials.forEach(mat => mat.classList.remove('highlight', 'dimmed'));
+    return;
+  }
+
+  const searchLower = searchText.toLowerCase();
+
+  // Busca em itens do inventário
+  items.forEach(item => {
+    const itemData = inventory.getItemById(item.dataset.itemId);
+    if (!itemData) return;
+
+    const matchesSearch =
+      itemData.name?.toLowerCase().includes(searchLower) ||
+      itemData.type?.toLowerCase().includes(searchLower) ||
+      itemData.rarity?.toLowerCase().includes(searchLower) ||
+      Object.entries(itemData.stats || {}).some(([stat, value]) =>
+        stat.toLowerCase().includes(searchLower)
+      );
+
+    if (matchesSearch) {
+      item.classList.add('highlight');
+      item.classList.remove('dimmed');
+    } else {
+      item.classList.add('dimmed');
+      item.classList.remove('highlight');
+    }
+  });
+
+  // Busca em materiais
+  materials.forEach(mat => {
+    const matId = mat.dataset.matId;
+    const matDef = MATERIALS[matId] || {};
+
+    const matchesSearch =
+      matDef.name?.toLowerCase().includes(searchLower) ||
+      matDef.description?.toLowerCase().includes(searchLower) ||
+      matId.toLowerCase().includes(searchLower);
+
+    if (matchesSearch) {
+      mat.classList.add('highlight');
+      mat.classList.remove('dimmed');
+    } else {
+      mat.classList.add('dimmed');
+      mat.classList.remove('highlight');
+    }
+  });
 }
 
 export function updateInventoryGrid(inv) {
@@ -866,9 +930,8 @@ export function updateMaterialsGrid(inv) {
       const materialItem = cell.querySelector('.material-item');
       // Tooltip on hover (show name and amount)
       materialItem.addEventListener('mouseenter', (e) => {
-        let tooltipContent = `<div class="item-tooltip"><b>${matDef.icon || mat.icon || '🔹'} ${
-          matDef.name || mat.name || ''
-        } &times; ${mat.qty}</b>`;
+        let tooltipContent = `<div class="item-tooltip"><b>${matDef.icon || mat.icon || '🔹'} ${matDef.name || mat.name || ''
+          } &times; ${mat.qty}</b>`;
         if (matDef.description) tooltipContent += `<div style="margin-top:4px;">${matDef.description}</div>`;
         tooltipContent += '</div>';
         showTooltip(tooltipContent, e, 'flex-tooltip');

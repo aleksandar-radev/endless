@@ -302,9 +302,20 @@
 
 .salvage-container {
   display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px auto;
+  width: fit-content;
+  max-width: 400px;
+}
+
+.buttons-row {
+  display: flex;
   align-items: center;
   justify-content: center;
-  margin: 10px 20px;
+  gap: 8px;
+  flex-wrap: wrap;
+  width: 100%;
 }
 
 .salvage-dropdown {
@@ -400,6 +411,50 @@
 
 .inventory-tabs {
   display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.inventory-tabs .buttons {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 4px auto;
+}
+
+.inventory-search {
+  width: 100%;
+  padding: 6px 8px 6px 30px;
+  background: var(--bg-panel);
+  border: 1px solid var(--bg-element);
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 8px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.inventory-item.highlight {
+  box-shadow: 0 0 8px #ffd700;
+  z-index: 1;
+}
+
+.inventory-item.dimmed {
+  opacity: 0.3;
 }
 
 .inventory-btn.active {
