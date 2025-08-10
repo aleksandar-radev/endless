@@ -97,15 +97,18 @@ export function playerAttack(currentTime) {
 
   if (currentTime - game.lastPlayerAttack >= timeBetweenAttacks) {
     if (game.currentEnemy.currentLife > 0) {
+
       // Calculate if attack hits
-      const hitChance = calculateHitChance(hero.stats.attackRating, game.currentEnemy.evasion);
+      const toggleEffects = skillTree.applyToggleEffects(false);
+      const heroAttackRating = (hero.stats.attackRating + (toggleEffects.attackRating || 0)) * (1 + (toggleEffects.attackRatingPercent || 0) / 100);
+
+      const hitChance = calculateHitChance(heroAttackRating, game.currentEnemy.evasion);
 
       const roll = Math.random() * 100;
       const neverMiss = hero.stats.attackNeverMiss > 0;
 
       if (!neverMiss && roll > hitChance) {
         // to take up mana even when missing. (for toggle skills)
-        skillTree.applyToggleEffects(false);
         createDamageNumber({ text: 'MISS', color: '#888888' });
       } else {
         const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy);

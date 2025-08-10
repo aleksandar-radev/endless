@@ -176,7 +176,7 @@ export const WARRIOR_SKILLS = {
       lifeSteal: Math.min(scaleDownFlat(level, 0.01), 1),
       attackSpeed: Math.min(scaleDownFlat(level, 0.013), 1.5),
       attackRating: scaleUpFlat(level, 6, 5, 0.3),
-      attackRatingPercent: scaleDownFlat(level, 2.8),
+      attackRatingPercent: scaleDownFlat(level, 1.4),
     }),
   },
 

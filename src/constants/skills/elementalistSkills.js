@@ -1,5 +1,5 @@
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { scaleDownFlat } from '../../common.js';
+import { scaleDownFlat, scaleUpFlat } from '../../common.js';
 
 // Elementalist skills extracted from skills.js
 export const ELEMENTALIST_SKILLS = {
@@ -15,8 +15,8 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Launches a fireball that deals fire damage.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamage: level * 2,
-      fireDamagePercent: 5 * scaleDownFlat(level),
+      fireDamage: scaleUpFlat(level, 2),
+      fireDamagePercent: scaleDownFlat(level, 5),
     }),
   },
   frostArmor: {
@@ -31,9 +31,9 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Encases the caster in frost, increasing armor.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: level * 4,
-      armorPercent: 3 * scaleDownFlat(level),
-      coldDamagePercent: 2 * scaleDownFlat(level),
+      armor: scaleUpFlat(level, 4),
+      armorPercent: scaleDownFlat(level, 3),
+      coldDamagePercent: scaleDownFlat(level, 2),
     }),
   },
 
@@ -46,11 +46,11 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Increases mana and mana regeneration',
     maxLevel: () => 1000,
     effect: (level) => ({
-      manaPercent: 2 * scaleDownFlat(level),
-      manaRegen: level * 0.1,
-      manaRegenPercent: 0.5 * scaleDownFlat(level),
-      wisdomPercent: 0.5 * scaleDownFlat(level),
-      wisdom: level * 2,
+      manaPercent: scaleDownFlat(level, 2),
+      manaRegen: scaleUpFlat(level, 0.1),
+      manaRegenPercent: scaleDownFlat(level, 0.5),
+      wisdomPercent: scaleDownFlat(level, 0.5),
+      wisdom: scaleUpFlat(level, 2),
     }),
   },
 
@@ -66,9 +66,9 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Strikes an enemy with a bolt of lightning.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lightningDamage: level * 5,
-      lightningDamagePercent: 6 * scaleDownFlat(level),
-      airDamagePercent: 2 * scaleDownFlat(level),
+      lightningDamage: scaleUpFlat(level, 5),
+      lightningDamagePercent: scaleDownFlat(level, 6),
+      airDamagePercent: scaleDownFlat(level, 2),
     }),
   },
   elementalMastery: {
@@ -80,9 +80,9 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Increases all elemental damage.',
     maxLevel: () => 200,
     effect: (level) => ({
-      elementalDamagePercent: 0.75 * scaleDownFlat(level),
-      elementalPenetration: level * 0.1,
-      elementalPenetrationPercent: 0.2 * scaleDownFlat(level),
+      elementalDamagePercent: scaleDownFlat(level, 0.75),
+      elementalPenetration: scaleUpFlat(level, 0.1),
+      elementalPenetrationPercent: scaleDownFlat(level, 0.2),
     }),
   },
 
@@ -99,14 +99,14 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Summons a blizzard, covering the battlefield in frost.',
     maxLevel: () => 100,
     effect: (level) => ({
-      coldDamagePercent: 3 * scaleDownFlat(level),
-      airDamagePercent: 3 * scaleDownFlat(level),
-      waterDamagePercent: 3 * scaleDownFlat(level),
-      lightningDamagePercent: 3 * scaleDownFlat(level),
-      coldDamage: level * 3,
-      airDamage: level * 3,
-      waterDamage: level * 3,
-      lightningDamage: level * 3,
+      coldDamagePercent: scaleDownFlat(level, 3),
+      airDamagePercent: scaleDownFlat(level, 3),
+      waterDamagePercent: scaleDownFlat(level, 3),
+      lightningDamagePercent: scaleDownFlat(level, 3),
+      coldDamage: scaleUpFlat(level, 3),
+      airDamage: scaleUpFlat(level, 3),
+      waterDamage: scaleUpFlat(level, 3),
+      lightningDamage: scaleUpFlat(level, 3),
     }),
   },
   fireShield: {
@@ -121,8 +121,8 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Surrounds the caster with a shield of fire. Deals only fire damage.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      reflectFireDamage: level * 18,
-      fireDamagePercent: 2.5 * scaleDownFlat(level),
+      reflectFireDamage: scaleUpFlat(level, 18),
+      fireDamagePercent: scaleDownFlat(level, 2.5),
     }),
   },
   arcaneWisdom: {
@@ -134,10 +134,10 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Increases mana and mana regeneration.',
     maxLevel: () => 200,
     effect: (level) => ({
-      manaPercent: 1.5 * scaleDownFlat(level),
-      manaRegen: level * 0.2,
-      manaRegenPercent: 0.5 * scaleDownFlat(level),
-      manaRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.005, 1),
+      manaPercent: scaleDownFlat(level, 1.5),
+      manaRegen: scaleUpFlat(level, 0.2),
+      manaRegenPercent: scaleDownFlat(level, 0.5),
+      manaRegenOfTotalPercent: Math.min(scaleDownFlat(level, 0.005), 1),
     }),
   },
 
@@ -153,7 +153,7 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Unleashes a storm of fire, ice, and lightning.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamage: level * 2,
+      elementalDamage: scaleUpFlat(level, 2),
       elementalDamagePercent: scaleDownFlat(level),
     }),
   },
@@ -166,10 +166,10 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Increases resistance to elemental damage.',
     maxLevel: () => 1000,
     effect: (level) => ({
-      elementalDamage: level * 0.5,
-      elementalDamagePercent: 0.5 * scaleDownFlat(level),
-      intelligencePercent: 0.5 * scaleDownFlat(level),
-      allResistance: level * 3,
+      elementalDamage: scaleUpFlat(level, 0.5),
+      elementalDamagePercent: scaleDownFlat(level, 0.5),
+      intelligencePercent: scaleDownFlat(level, 0.5),
+      allResistance: scaleUpFlat(level, 3),
     }),
   },
 
@@ -186,11 +186,11 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Increases attack rating and resource stealing.',
     maxLevel: () => 200,
     effect: (level) => ({
-      attackRating: level * 5,
-      attackRatingPercent: 5 * scaleDownFlat(level),
-      lifePerHit: level * 4,
-      manaPerHit: level * 0.5,
-      attackSpeed: level * 0.01,
+      attackRating: scaleUpFlat(level, 5),
+      attackRatingPercent: scaleDownFlat(level, 5),
+      lifePerHit: scaleUpFlat(level, 4),
+      manaPerHit: scaleUpFlat(level, 0.5),
+      attackSpeed: Math.min(scaleDownFlat(level, 0.01), 3),
     }),
   },
 
@@ -205,10 +205,10 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Boosts elemental damage.',
     maxLevel: () => 600,
     effect: (level) => ({
-      fireDamagePercent: 2 * scaleDownFlat(level),
-      coldDamagePercent: 2 * scaleDownFlat(level),
-      airDamagePercent: 2 * scaleDownFlat(level),
-      lightningDamagePercent: 2 * scaleDownFlat(level),
+      fireDamagePercent: scaleDownFlat(level, 2),
+      coldDamagePercent: scaleDownFlat(level, 2),
+      airDamagePercent: scaleDownFlat(level, 2),
+      lightningDamagePercent: scaleDownFlat(level, 2),
     }),
   },
   primordialControl: {
@@ -220,10 +220,10 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Grants control over elemental forces, increasing all stats.',
     maxLevel: () => 5000,
     effect: (level) => ({
-      earthDamagePercent: 1.5 * scaleDownFlat(level),
-      vitality: level * 5,
-      vitalityPercent: 2 * scaleDownFlat(level),
-      wisdomPercent: 2 * scaleDownFlat(level),
+      earthDamagePercent: scaleDownFlat(level, 1.5),
+      vitality: scaleUpFlat(level, 5),
+      vitalityPercent: scaleDownFlat(level, 2),
+      wisdomPercent: scaleDownFlat(level, 2),
     }),
   },
 
@@ -237,11 +237,11 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Transforms the caster into a being of pure elemental power.',
     maxLevel: () => 100,
     effect: (level) => ({
-      elementalDamagePercent: 1.5 * scaleDownFlat(level),
-      elementalDamage: level * 2,
-      allResistance: level * 8,
-      perseverance: level * 5,
-      perseverancePercent: 1.5 * scaleDownFlat(level),
+      elementalDamagePercent: scaleDownFlat(level, 1.5),
+      elementalDamage: scaleUpFlat(level, 2),
+      allResistance: scaleUpFlat(level, 8),
+      perseverance: scaleUpFlat(level, 5),
+      perseverancePercent: scaleDownFlat(level, 1.5),
     }),
   },
 
@@ -255,8 +255,8 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Deepen your command of all elements.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: 2 * scaleDownFlat(level),
-      elementalPenetrationPercent: 2 * scaleDownFlat(level),
+      elementalDamagePercent: scaleDownFlat(level, 2),
+      elementalPenetrationPercent: scaleDownFlat(level, 2),
       manaRegenPercent: scaleDownFlat(level),
     }),
   },
@@ -271,8 +271,8 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Erupts fiery explosions around enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: 4 * scaleDownFlat(level),
-      damage: level * 12,
+      fireDamagePercent: scaleDownFlat(level, 4),
+      damage: scaleUpFlat(level, 12),
     }),
   },
 
@@ -288,9 +288,9 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Summons a massive storm of elemental energy.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lightningDamagePercent: 4 * scaleDownFlat(level),
-      coldDamagePercent: 4 * scaleDownFlat(level),
-      damage: level * 15,
+      lightningDamagePercent: scaleDownFlat(level, 4),
+      coldDamagePercent: scaleDownFlat(level, 4),
+      damage: scaleUpFlat(level, 15),
     }),
   },
   earthShatter: {
@@ -304,9 +304,9 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Cracks the earth dealing heavy damage.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      earthDamagePercent: 4 * scaleDownFlat(level),
-      damage: level * 14,
-      armorPenetrationPercent: 2 * scaleDownFlat(level),
+      earthDamagePercent: scaleDownFlat(level, 4),
+      damage: scaleUpFlat(level, 14),
+      armorPenetrationPercent: scaleDownFlat(level, 2),
     }),
   },
 
@@ -323,8 +323,8 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Unleash a giant wave washing away enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      waterDamagePercent: 5 * scaleDownFlat(level),
-      reduceEnemyAttackSpeedPercent: level * 0.1,
+      waterDamagePercent: scaleDownFlat(level, 5),
+      reduceEnemyAttackSpeedPercent: Math.min(scaleDownFlat(level, 0.1), 15),
     }),
   },
   stormLord: {
@@ -336,9 +336,9 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Command storms with ease.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lightningDamagePercent: 5 * scaleDownFlat(level),
-      elementalDamage: level * 3,
-      manaPercent: 1.5 * scaleDownFlat(level),
+      lightningDamagePercent: scaleDownFlat(level, 5),
+      elementalDamage: scaleUpFlat(level, 3),
+      manaPercent: scaleDownFlat(level, 1.5),
     }),
   },
 
@@ -352,9 +352,9 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Transcend normal limits of elemental power.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: 1 * scaleDownFlat(level),
-      elementalPenetrationPercent: 1 * scaleDownFlat(level),
-      allResistance: level * 12,
+      elementalDamagePercent: scaleDownFlat(level, 1),
+      elementalPenetrationPercent: scaleDownFlat(level, 1),
+      allResistance: scaleUpFlat(level, 12),
     }),
   },
   natureCataclysm: {
@@ -368,10 +368,10 @@ export const ELEMENTALIST_SKILLS = {
     description: () => 'Unleashes catastrophic elemental forces.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: 5 * scaleDownFlat(level),
-      coldDamagePercent: 5 * scaleDownFlat(level),
-      lightningDamagePercent: 5 * scaleDownFlat(level),
-      damage: level * 25,
+      fireDamagePercent: scaleDownFlat(level, 5),
+      coldDamagePercent: scaleDownFlat(level, 5),
+      lightningDamagePercent: scaleDownFlat(level, 5),
+      damage: scaleUpFlat(level, 25),
     }),
   },
 };

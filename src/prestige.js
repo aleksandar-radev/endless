@@ -11,8 +11,8 @@ import { formatStatName } from './ui/ui.js';
 
 const LEVEL_REQUIREMENT = 300;
 const LEVEL_REQUIREMENT_INCREASE = 50;
-const BOSSLEVEL_REQUIREMENT = 80;
-const BOSSLEVEL_REQUIREMENT_INCREASE = 20;
+const BOSSLEVEL_REQUIREMENT = 50;
+const BOSSLEVEL_REQUIREMENT_INCREASE = 50;
 
 export default class Prestige {
   constructor(savedData = null) {

@@ -1,5 +1,5 @@
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { scaleDownFlat } from '../../common.js';
+import { scaleDownFlat, scaleUpFlat } from '../../common.js';
 
 // Rogue skills extracted from skills.js
 export const ROGUE_SKILLS = {
@@ -13,9 +13,9 @@ export const ROGUE_SKILLS = {
     description: () => 'A quick dance from the shadows, increasing your damage.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: 0.75 * scaleDownFlat(level),
-      critChance: level * 0.05,
-      agility: level * 3,
+      damagePercent: scaleDownFlat(level, 0.75, 20, 400),
+      critChance: Math.min(scaleDownFlat(level, 0.07), 20),
+      agility: scaleUpFlat(level, 3),
     }),
   },
   evasion: {
@@ -30,9 +30,10 @@ export const ROGUE_SKILLS = {
         `,
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      blockChance: Math.min(level * 0.05, 25),
-      dexterity: level * 4,
-      dexterityPercent: 2 * scaleDownFlat(level),
+      blockChance: Math.min(scaleDownFlat(level, 0.075), 15),
+      dexterity: scaleUpFlat(level, 4),
+      dexterityPercent: scaleDownFlat(level, 1),
+      extraDamageFromEvasionPercent: Math.min(0.04 * scaleDownFlat(level), 5),
     }),
   },
 
@@ -47,10 +48,10 @@ export const ROGUE_SKILLS = {
     description: () => 'Applies physical damage to your attacks.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 2,
-      damagePercent: 2 * scaleDownFlat(level),
-      earthDamagePercent: 2 * scaleDownFlat(level),
-      waterDamagePercent: scaleDownFlat(level),
+      damage: scaleUpFlat(level, 2, 6, 0.2),
+      damagePercent: scaleDownFlat(level, 1.5),
+      earthDamagePercent: scaleDownFlat(level, 3),
+      waterDamagePercent: scaleDownFlat(level, 2),
     }),
   },
   shadowForm: {
@@ -65,9 +66,9 @@ export const ROGUE_SKILLS = {
     description: () => 'Shadow form increases crit chance, life steal and dexterity (crit damage). (Crit chance capped at 20%, crit damage capped at 3, life steal capped at 4%)',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      critChance: Math.min(level * 0.05, 20),
-      critDamage: Math.min(level * 0.002, 3),
-      lifeSteal: Math.min(level * 0.01, 4),
+      critChance: Math.min(scaleDownFlat(level, 0.05), 20),
+      critDamage: Math.min(scaleDownFlat(level, 0.003, 20, 500), 3),
+      lifeSteal: Math.min(scaleDownFlat(level, 0.01), 4),
       agilityPercent: scaleDownFlat(level),
     }),
   },
@@ -78,14 +79,14 @@ export const ROGUE_SKILLS = {
     name: () => 'Flurry',
     type: () => 'instant',
     manaCost: (level) => 5 + level * 0.25,
-    cooldown: () => 5000,
+    cooldown: () => 7000,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'flurry',
     description: () => 'Unleash a series of rapid attacks, dealing bonus damage.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 5,
-      damagePercent: 8 * scaleDownFlat(level),
+      damage: scaleUpFlat(level, 5, 6, 0.3),
+      damagePercent: scaleDownFlat(level, 4.5),
     }),
   },
   precision: {
@@ -97,27 +98,41 @@ export const ROGUE_SKILLS = {
     description: () => 'Significantly increases agility.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      dexterity: level * 5,
-      dexterityPercent: 2 * scaleDownFlat(level),
-      agilityPercent: 2 * scaleDownFlat(level),
+      attackRating: scaleUpFlat(level, 8, 7, 0.2),
+      attackRatingPercent: scaleDownFlat(level, 1),
+      agilityPercent: scaleDownFlat(level, 1.5),
     }),
   },
 
-  // Tier 3 Skills
   backstab: {
     id: 'backstab',
     name: () => 'Backstab',
     type: () => 'instant',
-    manaCost: (level) => 5,
-    cooldown: () => 15200,
+    manaCost: (level) => 0,
+    cooldown: () => 18200,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'backstab',
     description: () => 'A devastating attack from behind, dealing massive damage and stealing resources.',
-    maxLevel: () => 100,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: 4 * scaleDownFlat(level),
-      lifePerHit: level * 6,
-      manaPerHit: level * 0.6,
+      damagePercent: scaleDownFlat(level, 2.5),
+      lifePerHit: scaleUpFlat(level, 6, 5, 0.3),
+      manaPerHit: scaleUpFlat(level, 0.9),
+    }),
+  },
+
+  evasiveManeuver: {
+    id: 'evasiveManeuver',
+    name: () => 'Evasive Maneuver',
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[3],
+    icon: () => 'evasive-maneuver',
+    description: () => 'Increases evasion and reduces damage taken.',
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      dexterity: scaleUpFlat(level, 5),
+      dexterityPercent: scaleDownFlat(level, 2),
+      extraDamageFromEvasionPercent: Math.min(0.03 * scaleDownFlat(level), 6),
     }),
   },
 
@@ -132,9 +147,9 @@ export const ROGUE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'dark-pact',
     description: () => 'Massively increases crit damage temporarily.',
-    maxLevel: () => 500,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      critDamage: level * 0.005,
+      critDamage: Math.min(scaleDownFlat(level, 0.0065), 5),
     }),
   },
 
@@ -149,10 +164,10 @@ export const ROGUE_SKILLS = {
     description: () => 'Greatly increases damage',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 3,
-      damagePercent: 3 * scaleDownFlat(level),
-      coldDamagePercent: 5 * scaleDownFlat(level),
-      airDamagePercent: 5 * scaleDownFlat(level),
+      damage: scaleUpFlat(level, 3, 5, 0.2),
+      damagePercent: scaleDownFlat(level, 2),
+      coldDamage: scaleUpFlat(level, 5, 5, 0.3),
+      coldDamagePercent: scaleDownFlat(level, 4),
     }),
   },
 
@@ -163,12 +178,12 @@ export const ROGUE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'precision',
     description: () => 'Permanently increases crit chance and crit damage.',
-    maxLevel: () => 1000,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      critChance: level * 0.05,
-      critDamage: level * 0.0025,
-      attackRating: level * 15,
-      attackRatingPercent: 0.5 * scaleDownFlat(level),
+      critChance: Math.min(scaleDownFlat(level, 0.05), 20),
+      critDamage: Math.min(scaleDownFlat(level, 0.0035, 10, 350), 3),
+      attackRating: scaleUpFlat(level, 15),
+      attackRatingPercent: scaleDownFlat(level, 1.5),
     }),
   },
 
@@ -180,13 +195,12 @@ export const ROGUE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'master',
     description: () => 'Greatly increases attributes and gold gains.',
-    maxLevel: () => 500,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: 0.5 * scaleDownFlat(level),
-      dexterityPercent: 3 * scaleDownFlat(level),
-      agilityPercent: 2 * scaleDownFlat(level),
-      wisdomPercent: scaleDownFlat(level),
-      bonusGoldPercent: 0.25 * scaleDownFlat(level),
+      damagePercent: scaleDownFlat(level, 1),
+      dexterityPercent: scaleDownFlat(level, 2),
+      agilityPercent: scaleDownFlat(level, 2),
+      bonusGoldPercent: Math.min(scaleDownFlat(level, 0.25), 100),
     }),
   },
 
@@ -200,9 +214,9 @@ export const ROGUE_SKILLS = {
     description: () => 'Further enhances stealth and critical strikes.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      critChance: Math.min(level * 0.05, 25),
-      damagePercent: 2 * scaleDownFlat(level),
-      evasionPercent: 1.5 * scaleDownFlat(level),
+      critChance: Math.min(scaleDownFlat(level, 0.075), 25),
+      damagePercent: scaleDownFlat(level, 2),
+      evasionPercent: scaleDownFlat(level, 1.5),
     }),
   },
   venomousAssault: {
@@ -210,14 +224,14 @@ export const ROGUE_SKILLS = {
     name: () => 'Venomous Assault',
     type: () => 'instant',
     manaCost: (level) => 15 + level * 1.25,
-    cooldown: () => 90000,
+    cooldown: () => 20000,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'venomous-assault',
     description: () => 'Strikes with poison, dealing heavy damage over time.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 10,
-      earthDamagePercent: 20 * scaleDownFlat(level),
+      earthDamage: scaleUpFlat(level, 10, 5, 0.5),
+      earthDamagePercent: scaleDownFlat(level, 15),
     }),
   },
 
@@ -233,8 +247,8 @@ export const ROGUE_SKILLS = {
     description: () => 'Blink through shadows to strike the enemy.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 15,
-      damagePercent: 3 * scaleDownFlat(level),
+      damage: scaleUpFlat(level, 15),
+      damagePercent: scaleDownFlat(level, 3),
       ignoreEnemyArmor: 1,
     }),
   },
@@ -247,9 +261,9 @@ export const ROGUE_SKILLS = {
     description: () => 'Increases chance for deadly critical hits.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      critDamage: Math.min(level * 0.02, 3),
-      doubleDamageChance: level * 0.05,
-      attackSpeed: 0.005 * scaleDownFlat(level),
+      critDamage: Math.min(scaleDownFlat(level, 0.01), 3),
+      doubleDamageChance: Math.min(scaleDownFlat(level, 0.1, 10, 300, 0.5), 20),
+      attackSpeed: Math.min(scaleDownFlat(level, 0.0075), 1.5),
     }),
   },
 
@@ -266,8 +280,9 @@ export const ROGUE_SKILLS = {
     description: () => 'Become one with the shadows, avoiding attacks.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      evasionPercent: 3 * scaleDownFlat(level),
-      damagePercent: 1.5 * scaleDownFlat(level),
+      attackRatingPercent: scaleDownFlat(level, 4),
+      extraDamageFromAttackRatingPercent: Math.min(0.03 * scaleDownFlat(level), 6),
+      damagePercent: scaleDownFlat(level, 1),
     }),
   },
   perfectDodge: {
@@ -279,9 +294,8 @@ export const ROGUE_SKILLS = {
     description: () => 'Grants a chance to completely evade attacks.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      blockChance: level * 0.05,
-      evasionPercent: 2 * scaleDownFlat(level),
-      critChance: Math.min(level * 0.02, 10),
+      blockChance: Math.min(scaleDownFlat(level, 0.085), 25),
+      evasionPercent: scaleDownFlat(level, 3),
     }),
   },
 
@@ -295,23 +309,23 @@ export const ROGUE_SKILLS = {
     description: () => 'Supreme mastery of stealth and theft.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      bonusGoldPercent: 0.5 * scaleDownFlat(level),
-      dexterityPercent: 4 * scaleDownFlat(level),
-      agilityPercent: 3 * scaleDownFlat(level),
+      bonusGoldPercent: scaleDownFlat(level, 0.75),
+      dexterityPercent: scaleDownFlat(level, 2),
+      agilityPercent: scaleDownFlat(level, 2),
     }),
   },
   nightfallAssassin: {
     id: 'nightfallAssassin',
     name: () => 'Nightfall Assassin',
     type: () => 'toggle',
-    manaCost: (level) => 10 + level * 1.25,
+    manaCost: (level) => 10 + level * 0.35,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'nightfall-assassin',
     description: () => 'Unleash lethal precision in the darkness.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: 4 * scaleDownFlat(level),
-      critChance: Math.min(level * 0.1, 50),
+      damagePercent: scaleDownFlat(level, 3.5),
+      critChance: Math.min(scaleDownFlat(level, 0.15), 50),
     }),
   },
 };
