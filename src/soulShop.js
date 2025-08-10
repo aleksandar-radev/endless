@@ -35,6 +35,13 @@ export const SOUL_UPGRADE_CONFIG = {
     costIncrement: 0.2,
     stat: 'totalDamagePercent',
   },
+  attackRatingBoost: {
+    label: 'Attack Rating Boost %',
+    bonus: 0.01,
+    baseCost: 3,
+    costIncrement: 0.2,
+    stat: 'attackRatingPercent',
+  },
   lifeBoost: {
     label: 'Life Boost %',
     bonus: 0.01,
@@ -52,9 +59,16 @@ export const SOUL_UPGRADE_CONFIG = {
   armorBoost: {
     label: 'Armor Boost %',
     bonus: 0.01,
-    baseCost: 5,
+    baseCost: 4,
     costIncrement: 0.25,
     stat: 'armorPercent',
+  },
+  evasionBoost: {
+    label: 'Evasion Boost %',
+    bonus: 0.01,
+    baseCost: 4,
+    costIncrement: 0.25,
+    stat: 'evasionPercent',
   },
   lifeRegenBoost: {
     label: 'Life Regen Boost %',

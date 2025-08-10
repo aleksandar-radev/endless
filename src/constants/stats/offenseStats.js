@@ -440,4 +440,8 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 2,
   },
+  extraDamageFromAttackRatingPercent: {
+    base: 0,
+    decimalPlaces: 2,
+  },
 };

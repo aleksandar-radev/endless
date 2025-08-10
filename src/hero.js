@@ -430,6 +430,7 @@ export default class Hero {
         if (stat === 'extraDamageFromManaPercent') value = Math.min(value, 5);
         if (stat === 'extraDamageFromLifeRegenPercent') value = Math.min(value, 40);
         if (stat === 'extraDamageFromEvasionPercent') value = Math.min(value, 10);
+        if (stat === 'extraDamageFromAttackRatingPercent') value = Math.min(value, 6);
         if (stat === 'reduceEnemyHpPercent') value = Math.min(value, 50);
         if (stat === 'reduceEnemyAttackSpeedPercent') value = Math.min(value, 50);
         if (stat === 'reduceEnemyDamagePercent') value = Math.min(value, 50);
@@ -460,6 +461,7 @@ export default class Hero {
     const extraFromMana = (this.stats.extraDamageFromManaPercent || 0) * this.stats.mana;
     const extraFromLifeRegen = (this.stats.extraDamageFromLifeRegenPercent || 0) * this.stats.lifeRegen;
     const extraFromEvasion = (this.stats.extraDamageFromEvasionPercent || 0) * this.stats.evasion;
+    const extraFromAttackRating = (this.stats.extraDamageFromAttackRatingPercent || 0) * this.stats.attackRating;
 
     // Split: 50% to physical, 50% distributed equally among elements
     const elements = Object.keys(ELEMENTS);
@@ -467,12 +469,20 @@ export default class Hero {
     const splitLife = extraFromLife / 2;
     const splitMana = extraFromMana / 2;
     const splitLifeRegen = extraFromLifeRegen / 2;
-    flatValues.damage += splitLife + splitMana + splitLifeRegen + extraFromArmor + extraFromEvasion;
+    const splitArmor = extraFromArmor / 2;
+    const splitEvasion = extraFromEvasion / 2;
+    const splitAttackRating = extraFromAttackRating / 2;
+
+    flatValues.damage += splitLife + splitMana + splitLifeRegen + splitArmor + splitEvasion + splitAttackRating;
 
     const eleShareLife = splitLife / elements.length;
     const eleShareMana = splitMana / elements.length;
     const eleShareLifeRegen = splitLifeRegen / elements.length;
-    flatValues.elementalDamage += eleShareLife + eleShareMana + eleShareLifeRegen;
+    const eleShareArmor = splitArmor / elements.length;
+    const eleShareEvasion = splitEvasion / elements.length;
+    const eleShareAttackRating = splitAttackRating / elements.length;
+
+    flatValues.elementalDamage += eleShareLife + eleShareMana + eleShareLifeRegen + eleShareArmor + eleShareEvasion + eleShareAttackRating;
 
     this.stats.damage = Math.floor((flatValues.damage + (this.stats.damagePerLevel || 0) * this.level) * (1 + this.stats.totalDamagePercent + this.stats.damagePercent));
 
@@ -510,7 +520,6 @@ export default class Hero {
 
   // calculated when hit is successful
   calculateTotalDamage(instantSkillBaseEffects = {}) {
-    const isCritical = Math.random() * 100 < this.stats.critChance;
 
     let physicalDamage = this.stats.damage + (instantSkillBaseEffects.damage || 0);
     let fireDamage = this.stats.fireDamage + (instantSkillBaseEffects.fireDamage || 0);
@@ -523,6 +532,7 @@ export default class Hero {
 
     // Add toggle skill effects
     const toggleEffects = skillTree.applyToggleEffects();
+    const isCritical = Math.random() * 100 < (this.stats.critChance + (toggleEffects.critChance || 0));
 
     // Add flat bonuses from toggles if present
     if (toggleEffects.damage) physicalDamage += toggleEffects.damage;
