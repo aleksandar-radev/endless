@@ -7,6 +7,7 @@ import { logout } from './api.js';
 import { CHANGELOG } from './changelog/changelog.js';
 import upcommingChanges from './upcoming.js';
 import { audioManager } from './audio.js';
+import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 
 const html = String.raw;
 
@@ -18,6 +19,8 @@ export class Options {
     this.startingStage = data.startingStage || null;
     // Add showEnemyStats option, default to false
     this.showEnemyStats = data.showEnemyStats ?? false;
+    // Option to show all stats including those hidden by default
+    this.showAllStats = data.showAllStats ?? false;
     this.resetRequired = data.resetRequired ?? null;
     // Add stageSkip option, default to 0
     this.stageSkip = data.stageSkip || 0;
@@ -29,6 +32,10 @@ export class Options {
     this.salvageMaterialsEnabled = data.salvageMaterialsEnabled ?? false;
     // Add advanced tooltips option
     this.showAdvancedTooltips = data.showAdvancedTooltips ?? false;
+    // Show rate counters bar
+    this.showRateCounters = data.showRateCounters ?? false;
+    // Period for rate counters in seconds
+    this.rateCountersPeriod = data.rateCountersPeriod || 1;
   }
 
   /**
@@ -94,6 +101,12 @@ export class Options {
     container.appendChild(this._createSoundVolumeOption());
     // --- Advanced Tooltips Option ---
     container.appendChild(this._createAdvancedTooltipsOption());
+    // --- Rate Counters Toggle Option ---
+    container.appendChild(this._createRateCountersOption());
+    // --- Rate Counters Period Option ---
+    container.appendChild(this._createRateCountersPeriodOption());
+    // --- Show All Stats Option ---
+    container.appendChild(this._createShowAllStatsOption());
     // --- Enemy Stats Toggle Option ---
     container.appendChild(this._createEnemyStatsToggleOption());
 
@@ -159,6 +172,57 @@ export class Options {
       // Save option
       dataManager.saveGame();
       // Optionally, refresh tooltips if needed
+    });
+    return wrapper;
+  }
+
+  _createRateCountersOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = `
+      <label for="rate-counters-toggle" class="rate-counters-toggle-label">Show Counters Bar:</label>
+      <input
+        type="checkbox"
+        id="rate-counters-toggle"
+        class="rate-counters-toggle"
+        ${this.showRateCounters ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.showRateCounters = checkbox.checked;
+      dataManager.saveGame();
+      document.dispatchEvent(new CustomEvent('toggleRateCounters', { detail: this.showRateCounters }));
+    });
+    return wrapper;
+  }
+
+  _createRateCountersPeriodOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = `
+      <label for="rate-counters-period" class="rate-counters-period-label">Counters Period (sec):</label>
+      <input
+        type="number"
+        id="rate-counters-period"
+        class="rate-counters-period-input"
+        min="1"
+        value="${this.rateCountersPeriod}"
+      />
+    `;
+    const input = wrapper.querySelector('input');
+    input.addEventListener('change', () => {
+      let v = parseInt(input.value, 10);
+      if (isNaN(v) || v <= 0) v = 3600;
+      this.rateCountersPeriod = v;
+      dataManager.saveGame();
+      document.dispatchEvent(new CustomEvent('ratePeriodChange', { detail: v }));
     });
     return wrapper;
   }
@@ -665,6 +729,36 @@ export class Options {
     if (isNaN(val) || val < 0) val = 0;
     if (val > max) val = max;
     this._startingStageInput.value = val;
+  }
+
+  /**
+   * Creates the show all stats toggle option UI.
+   */
+  _createShowAllStatsOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="show-all-stats-toggle" class="show-all-stats-toggle-label">Show All Stats:</label>
+      <input
+        type="checkbox"
+        id="show-all-stats-toggle"
+        class="show-all-stats-toggle"
+        ${this.showAllStats ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.showAllStats = checkbox.checked;
+      dataManager.saveGame();
+      updateStatsAndAttributesUI(true);
+    });
+    return wrapper;
   }
 
   /**

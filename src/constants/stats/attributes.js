@@ -31,7 +31,7 @@ export const ATTRIBUTES = {
   },
   dexterity: {
     effects: {
-      evasionPerPoint: 5,
+      evasionPerPoint: 4,
     },
   },
   intelligence: {
@@ -43,6 +43,7 @@ export const ATTRIBUTES = {
     effects: {
       lifeRegenPerPoint: 0.5,
       manaRegenPerPoint: 0.05,
+      allResistancePerPoint: 2,
     },
   },
 };
@@ -95,7 +96,8 @@ export const ATTRIBUTE_TOOLTIPS = {
     <strong>Perseverance</strong><br />
     Each point increases:<br />
     • Mana Regeneration by ${ATTRIBUTES.perseverance.effects.manaRegenPerPoint}<br />
-    • Life Regeneration by ${ATTRIBUTES.perseverance.effects.lifeRegenPerPoint}
+    • Life Regeneration by ${ATTRIBUTES.perseverance.effects.lifeRegenPerPoint}<br />
+    • All Resistances by ${ATTRIBUTES.perseverance.effects.allResistancePerPoint}<br
   `,
 
   getElementalDamageTooltip: () => html`
@@ -130,7 +132,7 @@ export const ATTRIBUTE_TOOLTIPS = {
   getCritDamageTooltip: () => html`
     <strong>Critical Strike Damage</strong><br />
     Damage multiplier on critical hits.<br />
-    Base: 1.5x damage
+    Base: 1.33x damage
   `,
 
   getLifeStealTooltip: () => html`
@@ -212,6 +214,6 @@ export const ATTRIBUTE_TOOLTIPS = {
     ${ELEMENTS.water.icon} Effective against water enemies.
   `,
   getElementalResistanceTooltip: () => html`
-    <strong>Elemental Resistance. Reduces elemental damage taken from enemies by a %.</strong>
+    <strong>Elemental Resistance. Reduces elemental damage taken from enemies based on your resistance and the enemy's damage.</strong>
   `,
 };

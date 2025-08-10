@@ -1,6 +1,6 @@
 import { initializeSkillTreeStructure, updatePlayerLife, updateTabIndicators } from './ui/ui.js';
 import { game, inventory, training, skillTree, statistics, soulShop, dataManager } from './globals.js';
-import { calculateArmorReduction, createCombatText, createDamageNumber } from './combat.js';
+import { calculateArmorReduction, calculateResistanceReduction, createCombatText, createDamageNumber } from './combat.js';
 import { handleSavedData } from './functions.js';
 import { getCurrentRegion, updateRegionUI } from './region.js';
 import { STATS } from './constants/stats/stats.js';
@@ -72,6 +72,7 @@ export default class Hero {
 
   gainExp(amount) {
     this.exp += amount;
+    document.dispatchEvent(new CustomEvent('xpGained', { detail: amount }));
     while (this.exp >= this.getExpToNextLevel()) {
       const xpOverflow = this.exp - this.getExpToNextLevel();
       this.levelUp(1);
@@ -99,7 +100,7 @@ export default class Hero {
     this.level += levels;
     this.statPoints += STATS_ON_LEVEL_UP * levels;
 
-    skillTree.addSkillPoints(levels); // Add 1 skill point per level
+    skillTree.addSkillPoints(levels * 1); // Add 1 skill points per level
 
     this.recalculateFromAttributes();
     createCombatText(`LEVEL UP! (${this.level})`);
@@ -189,7 +190,7 @@ export default class Hero {
     // cycle through all stats to make all numbers have the correct decimal places
     for (const stat in this.stats) {
       const decimals = STATS[stat]?.decimalPlaces || 0;
-      this.stats[stat] = Number(this.stats[stat].toFixed(decimals));
+      this.stats[stat] = Number((this.stats[stat] * 100).toFixed(decimals) / 100);
     }
 
     updatePlayerLife();
@@ -365,9 +366,21 @@ export default class Hero {
       }
     }
 
+    const elementalResistances = [
+      'fireResistance',
+      'coldResistance',
+      'airResistance',
+      'earthResistance',
+      'lightningResistance',
+      'waterResistance',
+    ];
+
     for (const stat in STATS) {
       if (!stat.endsWith('Percent')) {
         let percent = percentBonuses[stat + 'Percent'] || 0;
+        if (elementalResistances.includes(stat)) {
+          percent += this.stats.allResistancePercent || 0;
+        }
 
         // Use Math.floor for integer stats, Number.toFixed for decimals
         let value = flatValues[stat];
@@ -376,8 +389,8 @@ export default class Hero {
         // Diminishing returns for attackSpeed
         if (stat === 'attackSpeed') {
           const flatAttackSpeedBonus = flatValues.attackSpeed - STATS.attackSpeed.base;
-          const maxBonus = 3;
-          const scale = 7;
+          const maxBonus = 4;
+          const scale = 9;
           value =
             STATS.attackSpeed.base +
             (flatAttackSpeedBonus > 0 ? maxBonus * (1 - Math.exp(-flatAttackSpeedBonus / scale)) : 0);
@@ -413,8 +426,11 @@ export default class Hero {
         if (stat === 'resurrectionChance') value = Math.min(value, 50);
         if (stat === 'extraMaterialDropMax') value = Math.max(value, 1); // Always at least 1
         if (stat === 'extraDamageFromLifePercent') value = Math.min(value, 5);
-        if (stat === 'extraDamageFromArmorPercent') value = Math.min(value, 5);
+        if (stat === 'extraDamageFromArmorPercent') value = Math.min(value, 10);
         if (stat === 'extraDamageFromManaPercent') value = Math.min(value, 5);
+        if (stat === 'extraDamageFromLifeRegenPercent') value = Math.min(value, 40);
+        if (stat === 'extraDamageFromEvasionPercent') value = Math.min(value, 10);
+        if (stat === 'extraDamageFromAttackRatingPercent') value = Math.min(value, 6);
         if (stat === 'reduceEnemyHpPercent') value = Math.min(value, 50);
         if (stat === 'reduceEnemyAttackSpeedPercent') value = Math.min(value, 50);
         if (stat === 'reduceEnemyDamagePercent') value = Math.min(value, 50);
@@ -424,20 +440,16 @@ export default class Hero {
     }
 
     let allRes = this.stats.allResistance || 0;
+    if (allRes) {
+      allRes *= 1 + (this.stats.allResistancePercent || 0);
+    }
 
-    this.stats.fireResistance = Math.min(this.stats.fireResistance + allRes, 75);
-    this.stats.coldResistance = Math.min(this.stats.coldResistance + allRes, 75);
-    this.stats.airResistance = Math.min(this.stats.airResistance + allRes, 75);
-    this.stats.earthResistance = Math.min(this.stats.earthResistance + allRes, 75);
-    this.stats.lightningResistance = Math.min(this.stats.lightningResistance + allRes, 75);
-    this.stats.waterResistance = Math.min(this.stats.waterResistance + allRes, 75);
-
-    if (this.stats.fireResistance < 0) this.stats.fireResistance = 0;
-    if (this.stats.coldResistance < 0) this.stats.coldResistance = 0;
-    if (this.stats.airResistance < 0) this.stats.airResistance = 0;
-    if (this.stats.earthResistance < 0) this.stats.earthResistance = 0;
-    if (this.stats.lightningResistance < 0) this.stats.lightningResistance = 0;
-    if (this.stats.waterResistance < 0) this.stats.waterResistance = 0;
+    this.stats.fireResistance = Math.max(this.stats.fireResistance + allRes, 0);
+    this.stats.coldResistance = Math.max(this.stats.coldResistance + allRes, 0);
+    this.stats.airResistance = Math.max(this.stats.airResistance + allRes, 0);
+    this.stats.earthResistance = Math.max(this.stats.earthResistance + allRes, 0);
+    this.stats.lightningResistance = Math.max(this.stats.lightningResistance + allRes, 0);
+    this.stats.waterResistance = Math.max(this.stats.waterResistance + allRes, 0);
 
     this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * this.stats.mana;
     this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.life;
@@ -447,17 +459,30 @@ export default class Hero {
     const extraFromLife = (this.stats.extraDamageFromLifePercent || 0) * this.stats.life;
     const extraFromArmor = (this.stats.extraDamageFromArmorPercent || 0) * this.stats.armor;
     const extraFromMana = (this.stats.extraDamageFromManaPercent || 0) * this.stats.mana;
+    const extraFromLifeRegen = (this.stats.extraDamageFromLifeRegenPercent || 0) * this.stats.lifeRegen;
+    const extraFromEvasion = (this.stats.extraDamageFromEvasionPercent || 0) * this.stats.evasion;
+    const extraFromAttackRating = (this.stats.extraDamageFromAttackRatingPercent || 0) * this.stats.attackRating;
 
     // Split: 50% to physical, 50% distributed equally among elements
     const elements = Object.keys(ELEMENTS);
 
     const splitLife = extraFromLife / 2;
     const splitMana = extraFromMana / 2;
-    flatValues.damage += splitLife + splitMana + extraFromArmor;
+    const splitLifeRegen = extraFromLifeRegen / 2;
+    const splitArmor = extraFromArmor / 2;
+    const splitEvasion = extraFromEvasion / 2;
+    const splitAttackRating = extraFromAttackRating / 2;
+
+    flatValues.damage += splitLife + splitMana + splitLifeRegen + splitArmor + splitEvasion + splitAttackRating;
 
     const eleShareLife = splitLife / elements.length;
     const eleShareMana = splitMana / elements.length;
-    flatValues.elementalDamage += eleShareLife + eleShareMana;
+    const eleShareLifeRegen = splitLifeRegen / elements.length;
+    const eleShareArmor = splitArmor / elements.length;
+    const eleShareEvasion = splitEvasion / elements.length;
+    const eleShareAttackRating = splitAttackRating / elements.length;
+
+    flatValues.elementalDamage += eleShareLife + eleShareMana + eleShareLifeRegen + eleShareArmor + eleShareEvasion + eleShareAttackRating;
 
     this.stats.damage = Math.floor((flatValues.damage + (this.stats.damagePerLevel || 0) * this.level) * (1 + this.stats.totalDamagePercent + this.stats.damagePercent));
 
@@ -494,8 +519,7 @@ export default class Hero {
   }
 
   // calculated when hit is successful
-  calculateTotalDamage(instantSkillBaseEffects = {}) {
-    const isCritical = Math.random() * 100 < this.stats.critChance;
+  calculateTotalDamage(instantSkillBaseEffects = {}, toggleEffects = {}) {
 
     let physicalDamage = this.stats.damage + (instantSkillBaseEffects.damage || 0);
     let fireDamage = this.stats.fireDamage + (instantSkillBaseEffects.fireDamage || 0);
@@ -505,9 +529,7 @@ export default class Hero {
     let lightningDamage = this.stats.lightningDamage + (instantSkillBaseEffects.lightningDamage || 0);
     let waterDamage = this.stats.waterDamage + (instantSkillBaseEffects.waterDamage || 0);
 
-
-    // Add toggle skill effects
-    const toggleEffects = skillTree.applyToggleEffects();
+    const isCritical = Math.random() * 100 < (this.stats.critChance + (toggleEffects.critChance || 0));
 
     // Add flat bonuses from toggles if present
     if (toggleEffects.damage) physicalDamage += toggleEffects.damage;
@@ -578,9 +600,9 @@ export default class Hero {
     };
   }
 
-  calculateDamageAgainst(enemy, instantSkillBaseEffects = {}) {
+  calculateDamageAgainst(enemy, instantSkillBaseEffects = {}, toggleEffects = {}) {
     console.debug(instantSkillBaseEffects, 'instantSkillBaseEffects');
-    const result = this.calculateTotalDamage(instantSkillBaseEffects);
+    const result = this.calculateTotalDamage(instantSkillBaseEffects, toggleEffects);
 
     if (!enemy) return result;
     // Calculate effective enemy armor after hero's armor penetration
@@ -605,7 +627,8 @@ export default class Hero {
       if (this.stats.ignoreAllEnemyResistances > 0) return 0;
       let effectiveRes = baseRes;
       // Apply percent penetration first (elementalPenetrationPercent + specific percent)
-      const totalPercentPen = (percentPen || 0) + (this.stats.elementalPenetrationPercent || 0) + (instantSkillBaseEffects.elementalPenetrationPercent || 0);
+      const totalPercentPen = ((percentPen || 0) + (this.stats.elementalPenetrationPercent || 0) + (instantSkillBaseEffects.elementalPenetrationPercent || 0)) * 100;
+
       effectiveRes *= 1 - totalPercentPen / 100;
       // Then apply flat penetration (elementalPenetration + specific flat)
       const totalFlatPen = (flatPen || 0) + (this.stats.elementalPenetration || 0) + (instantSkillBaseEffects.elementalPenetration || 0);
@@ -616,35 +639,53 @@ export default class Hero {
 
     const reducedBreakdown = {
       physical: breakdown.physical * (1 - armorReduction),
-      fire: breakdown.fire * (1 - getEffectiveResistance.call(this,
-        enemy.baseData.fireResistance,
-        this.stats.firePenetration,
-        this.stats.firePenetrationPercent,
+      fire: breakdown.fire * (1 - calculateResistanceReduction(
+        getEffectiveResistance.call(this,
+          enemy.baseData.fireResistance,
+          this.stats.firePenetration,
+          this.stats.firePenetrationPercent,
+        ),
+        breakdown.fire,
       ) / 100),
-      cold: breakdown.cold * (1 - getEffectiveResistance.call(this,
-        enemy.baseData.coldResistance,
-        this.stats.coldPenetration,
-        this.stats.coldPenetrationPercent,
+      cold: breakdown.cold * (1 - calculateResistanceReduction(
+        getEffectiveResistance.call(this,
+          enemy.baseData.coldResistance,
+          this.stats.coldPenetration,
+          this.stats.coldPenetrationPercent,
+        ),
+        breakdown.cold,
       ) / 100),
-      air: breakdown.air * (1 - getEffectiveResistance.call(this,
-        enemy.baseData.airResistance,
-        this.stats.airPenetration,
-        this.stats.airPenetrationPercent,
+      air: breakdown.air * (1 - calculateResistanceReduction(
+        getEffectiveResistance.call(this,
+          enemy.baseData.airResistance,
+          this.stats.airPenetration,
+          this.stats.airPenetrationPercent,
+        ),
+        breakdown.air,
       ) / 100),
-      earth: breakdown.earth * (1 - getEffectiveResistance.call(this,
-        enemy.baseData.earthResistance,
-        this.stats.earthPenetration,
-        this.stats.earthPenetrationPercent,
+      earth: breakdown.earth * (1 - calculateResistanceReduction(
+        getEffectiveResistance.call(this,
+          enemy.baseData.earthResistance,
+          this.stats.earthPenetration,
+          this.stats.earthPenetrationPercent,
+        ),
+        breakdown.earth,
       ) / 100),
-      lightning: breakdown.lightning * (1 - getEffectiveResistance.call(this,
-        enemy.baseData.lightningResistance,
-        this.stats.lightningPenetration,
-        this.stats.lightningPenetrationPercent,
+      lightning: breakdown.lightning * (1 - calculateResistanceReduction(
+        getEffectiveResistance.call(this,
+          enemy.baseData.lightningResistance,
+          this.stats.lightningPenetration,
+          this.stats.lightningPenetrationPercent,
+        ),
+        breakdown.lightning,
       ) / 100),
-      water: breakdown.water * (1 - getEffectiveResistance.call(this,
-        enemy.baseData.waterResistance,
-        this.stats.waterPenetration,
-        this.stats.waterPenetrationPercent,
+      water: breakdown.water * (1 - calculateResistanceReduction(
+        getEffectiveResistance.call(this,
+          enemy.baseData.waterResistance,
+          this.stats.waterPenetration,
+          this.stats.waterPenetrationPercent,
+        ),
+        breakdown.water,
       ) / 100),
     };
 

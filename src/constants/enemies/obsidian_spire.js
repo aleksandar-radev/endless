@@ -16,12 +16,12 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
 
     coldDamage: 3 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 5,
-    coldResistance: 60,
-    airResistance: 30,
-    earthResistance: 30,
-    lightningResistance: 25,
-    waterResistance: 45,
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 8 * getEnemyStatMultiplier(tier),
+    airResistance: 5 * getEnemyStatMultiplier(tier),
+    earthResistance: 5 * getEnemyStatMultiplier(tier),
+    lightningResistance: 4 * getEnemyStatMultiplier(tier),
+    waterResistance: 7 * getEnemyStatMultiplier(tier),
 
     multiplier: {
       itemDrop: 1.1,
@@ -44,12 +44,12 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
 
     earthDamage: 2 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 25,
-    coldResistance: 20,
-    airResistance: 15,
-    earthResistance: 70,
-    lightningResistance: 20,
-    waterResistance: 20,
+    fireResistance: 4 * getEnemyStatMultiplier(tier),
+    coldResistance: 4 * getEnemyStatMultiplier(tier),
+    airResistance: 3 * getEnemyStatMultiplier(tier),
+    earthResistance: 9 * getEnemyStatMultiplier(tier),
+    lightningResistance: 4 * getEnemyStatMultiplier(tier),
+    waterResistance: 4 * getEnemyStatMultiplier(tier),
 
     multiplier: {
       materialDrop: 1.4,
@@ -71,12 +71,12 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
     fireDamage: 2 * getEnemyStatMultiplier(tier),
     airDamage: 1 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 45,
-    coldResistance: 25,
-    airResistance: 30,
-    earthResistance: 20,
-    lightningResistance: 20,
-    waterResistance: 20,
+    fireResistance: 7 * getEnemyStatMultiplier(tier),
+    coldResistance: 4 * getEnemyStatMultiplier(tier),
+    airResistance: 5 * getEnemyStatMultiplier(tier),
+    earthResistance: 4 * getEnemyStatMultiplier(tier),
+    lightningResistance: 4 * getEnemyStatMultiplier(tier),
+    waterResistance: 4 * getEnemyStatMultiplier(tier),
 
     multiplier: {
       itemDrop: 1.2,
@@ -97,12 +97,12 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
 
     fireDamage: 1.8 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 50,
-    coldResistance: 30,
-    airResistance: 30,
-    earthResistance: 25,
-    lightningResistance: 25,
-    waterResistance: 0,
+    fireResistance: 9 * getEnemyStatMultiplier(tier),
+    coldResistance: 5 * getEnemyStatMultiplier(tier),
+    airResistance: 5 * getEnemyStatMultiplier(tier),
+    earthResistance: 4 * getEnemyStatMultiplier(tier),
+    lightningResistance: 4 * getEnemyStatMultiplier(tier),
+    waterResistance: 0 * getEnemyStatMultiplier(tier),
 
     multiplier: {
       materialDrop: 1.5,

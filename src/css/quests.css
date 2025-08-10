@@ -125,6 +125,22 @@
   min-width: 340px;
 }
 
+#claimable-quests-modal .claimable-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+#claimable-quests-modal .claimable-header h2 {
+  margin: 0;
+}
+
+#claimable-quests-modal #claim-all-btn {
+  margin-left: 0;
+}
+
 #claimable-quests-list .quest-item {
   display: flex;
   align-items: center;

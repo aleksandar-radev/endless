@@ -1,7 +1,7 @@
 export function run(rawData) {
   let data = JSON.parse(JSON.stringify(rawData || {}));
 
-  if (data.training.upgradeLevels.critDamage > 300) {
+  if (data.training?.upgradeLevels?.critDamage > 300) {
     // If critDamage is above 300, reset it to 300
     data.training.upgradeLevels.critDamage = 300;
   }

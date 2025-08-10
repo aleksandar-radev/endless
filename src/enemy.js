@@ -22,6 +22,58 @@ const TIER_STAT_SCALE = {
   12: 0.08,
 };
 
+// levelScale -> [fixed increase, bonus interval, bonus increase]
+const BASE_SCALE_PER_TIER_AND_LEVEL = {
+  1: {
+    tierScale: 0.7,
+    levelScale: 0.01,
+  },
+  2: {
+    tierScale: 1,
+    levelScale: 0.01,
+  },
+  3: {
+    tierScale: 2,
+    levelScale: 0.01,
+  },
+  4: {
+    tierScale: 2,
+    levelScale: 0.01,
+  },
+  5: {
+    tierScale: 3,
+    levelScale: 0.01,
+  },
+  6: {
+    tierScale: 3,
+    levelScale: 0.01,
+  },
+  7: {
+    tierScale: 4,
+    levelScale: 0.01,
+  },
+  8: {
+    tierScale: 4,
+    levelScale: 0.01,
+  },
+  9: {
+    tierScale: 5,
+    levelScale: 0.01,
+  },
+  10: {
+    tierScale: 6,
+    levelScale: 0.01,
+  },
+  11: {
+    tierScale: 7,
+    levelScale: 0.01,
+  },
+  12: {
+    tierScale: 8,
+    levelScale: 0.01,
+  },
+};
+
 class Enemy {
   constructor(level) {
     this.level = level; // level of enemy is same as stage
@@ -58,15 +110,28 @@ class Enemy {
     this.evasion = this.calculateEvasion();
     this.attackRating = this.calculateAttackRating(); // Default attackRating if not defined
 
-    this.fireResistance = baseData.fireResistance || 0;
-    this.coldResistance = baseData.coldResistance || 0;
-    this.airResistance = baseData.airResistance || 0;
-    this.earthResistance = baseData.earthResistance || 0;
-    this.lightningResistance = baseData.lightningResistance || 0;
-    this.waterResistance = baseData.waterResistance || 0;
+    this.fireResistance = this.calculateElementalResistance('fire');
+    this.coldResistance = this.calculateElementalResistance('cold');
+    this.airResistance = this.calculateElementalResistance('air');
+    this.earthResistance = this.calculateElementalResistance('earth');
+    this.lightningResistance = this.calculateElementalResistance('lightning');
+    this.waterResistance = this.calculateElementalResistance('water');
 
     this.currentLife = this.life;
     this.lastAttack = Date.now();
+  }
+
+  // used when reductions are applied from skills usually buff, but can be instant too
+  recalculateStats() {
+    this.attackSpeed = this.calculateAttackSpeed();
+    this.life = this.calculateLife();
+    this.damage = this.calculateDamage();
+    this.fireDamage = this.calculateElementalDamage('fire');
+    this.coldDamage = this.calculateElementalDamage('cold');
+    this.airDamage = this.calculateElementalDamage('air');
+    this.earthDamage = this.calculateElementalDamage('earth');
+    this.lightningDamage = this.calculateElementalDamage('lightning');
+    this.waterDamage = this.calculateElementalDamage('water');
   }
 
   setEnemyColor() {
@@ -119,7 +184,11 @@ class Enemy {
   }
 
   calculateLife() {
-    const base = this.baseData.life || 0;
+    let base = this.baseData.life || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const baseLife = val * this.region.multiplier.life * this.rarityData.multiplier.life * this.baseData.multiplier.life;
     const hpRed = hero.stats.reduceEnemyHpPercent || 0;
@@ -127,26 +196,42 @@ class Enemy {
   }
 
   calculateDamage = () => {
-    const base = this.baseData.damage || 0;
+    let base = this.baseData.damage || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const damageRed = hero.stats.reduceEnemyDamagePercent || 0;
     return val * this.region.multiplier.damage * this.rarityData.multiplier.damage * this.baseData.multiplier.damage * (1 - damageRed);
   };
 
   calculateArmor() {
-    const base = this.baseData.armor || 0;
+    let base = this.baseData.armor || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     const val = scaleStat(base, this.level, 0,0,0, this.baseScale);
     return val * this.region.multiplier.armor * this.rarityData.multiplier.armor * this.baseData.multiplier.armor;
   }
 
   calculateEvasion() {
-    const base = this.baseData.evasion || 0;
+    let base = this.baseData.evasion || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     const val = scaleStat(base, this.level, 0,0,0, this.baseScale);
     return val * this.region.multiplier.evasion * this.rarityData.multiplier.evasion * this.baseData.multiplier.evasion;
   }
 
   calculateAttackRating() {
-    const base = this.baseData.attackRating || 0;
+    let base = this.baseData.attackRating || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     const val = scaleStat(base, this.level, 0,0,0, this.baseScale);
     return (
       val *
@@ -158,7 +243,11 @@ class Enemy {
 
   calculateElementalDamage(type) {
     // type: 'fire', 'cold', 'air', 'earth', 'lightning', 'water'
-    const base = this.baseData[`${type}Damage`] || 0;
+    let base = this.baseData[`${type}Damage`] || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     if (base === 0) return 0;
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const regionMult = this.region.multiplier[`${type}Damage`] || 1;
@@ -169,14 +258,36 @@ class Enemy {
     return val * regionMult * rarityMult * baseMult * (1 - damageRed);
   }
 
+  calculateElementalResistance(type) {
+    let base = this.baseData[`${type}Resistance`] || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
+    if (base === 0) return 0;
+    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
+    const regionMult = this.region.multiplier[`${type}Resistance`] || 1;
+    const rarityMult = this.rarityData.multiplier[`${type}Resistance`] || 1;
+    const baseMult = this.baseData.multiplier ? this.baseData.multiplier[`${type}Resistance`] || 1 : 1;
+    return val * regionMult * rarityMult * baseMult;
+  }
+
   calculateXP() {
-    const base = this.baseData.xp || 0;
+    let base = this.baseData.xp || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     return val * this.region.multiplier.xp * (this.rarityData.multiplier.xp || 1) * (this.baseData.multiplier.xp || 1);
   }
 
   calculateGold() {
-    const base = this.baseData.gold || 0;
+    let base = this.baseData.gold || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     return val * this.region.multiplier.gold * (this.rarityData.multiplier.gold || 1) * (this.baseData.multiplier.gold || 1);
   }
@@ -214,7 +325,8 @@ class Enemy {
 
   rollForMaterialDrop() {
     const baseChance = 0.025; // Base chance of 2.5%
-    return Math.random() < baseChance * (this.region.multiplier.materialDrop || 1) * (this.baseData.multiplier.materialDrop || 1);
+
+    return (baseChance * (this.region.multiplier.materialDrop || 1) * (this.baseData.multiplier.materialDrop || 1) + hero.stats.extraMaterialDropPercent) * 100;
   }
 }
 export default Enemy;

@@ -93,13 +93,13 @@ export const MATERIALS = {
     id: 'elixir',
     name: 'Elixir',
     icon: '🥤',
-    description: 'Grants 1 skill point.',
+    description: 'Grants 2 skill points.',
     dropChance: 2,
     sort: 300,
     exclusive: true, // only drops when region or enemy canDrop includes 'elixir'
     onUse: (hero, qty = 1) => {
-      hero.permaStats.skillPoints = hero.permaStats.skillPoints + 1 * qty;
-      skillTree.addSkillPoints(1 * qty);
+      hero.permaStats.skillPoints = hero.permaStats.skillPoints + 2 * qty;
+      skillTree.addSkillPoints(2 * qty);
     },
   },
   crystalized_rock: {
@@ -205,7 +205,7 @@ export const MATERIALS = {
     id: 'armor_upgrade_stone',
     name: 'Armor Upgrade Stone',
     icon: '🪨',
-    description: 'Upgrade the level of an equipped armor item by 1.',
+    description: "Upgrade the level of an equipped armor item. Requires a quantity equal to the item's tier for each level.",
     dropChance: 20,
     sort: 600,
     onUse: (hero, qty = 1) => {
@@ -218,7 +218,7 @@ export const MATERIALS = {
     id: 'jewelry_upgrade_gem',
     name: 'Jewelry Upgrade Gem',
     icon: '💍',
-    description: 'Upgrade the level of an equipped jewelry item by 1.',
+    description: "Upgrade the level of an equipped jewelry item. Requires a quantity equal to the item's tier for each level.",
     dropChance: 4,
     sort: 601,
     onUse: (hero, qty = 1) => {
@@ -231,7 +231,7 @@ export const MATERIALS = {
     id: 'weapon_upgrade_core',
     name: 'Weapon Upgrade Core',
     icon: '⚡',
-    description: 'Upgrade the level of an equipped weapon by 1.',
+    description: "Upgrade the level of an equipped weapon. Requires a quantity equal to the item's tier for each level.",
     dropChance: 3,
     sort: 602,
     onUse: (hero, qty = 1) => {

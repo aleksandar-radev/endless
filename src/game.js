@@ -119,6 +119,7 @@ class Game {
     damage = Math.floor(damage); // Ensure damage is an integer
     if (this.fightMode === 'arena' && this.currentEnemy) {
       const isDead = this.currentEnemy.takeDamage(damage);
+      document.dispatchEvent(new CustomEvent('damageDealt', { detail: damage }));
 
       createDamageNumber({ text: damage, isPlayer: false, isCritical: false, color: 'red' });
 
@@ -137,6 +138,7 @@ class Game {
         statistics.set('highestDamageDealt', null, damage);
       }
       this.currentEnemy.currentLife -= damage;
+      document.dispatchEvent(new CustomEvent('damageDealt', { detail: damage }));
       if (this.currentEnemy.currentLife < 0) this.currentEnemy.currentLife = 0;
 
       createDamageNumber({ text: damage, isPlayer: false, isCritical: isCritical, color: 'red' });

@@ -86,12 +86,12 @@ export function scaleDownFlat(
   start = 1,
   interval = 10,
   max_level = 200,
-  final_percent = 0.15,
+  final_percent = 0.2,
   flat,
   min,
 ) {
-  if (flat === undefined) flat = (1 - final_percent) / (max_level / 10);
-  if (min === undefined) min = final_percent;
+  if (flat === undefined) flat = (start * (1 - final_percent)) / (max_level / interval);
+  if (min === undefined) min = start * final_percent;
 
   if (level <= 0) return 0;
 
@@ -114,4 +114,32 @@ export function scaleDownFlat(
 
     return sumToMin + remLevels * min;
   }
+}
+
+/**
+ * Scale a value up with diminishing returns, similar to scaleDownFlat but for increasing values, with no cap.
+ *
+ * @param {number} level - The current level (integer >= 0).
+ * @param {number} start - Starting value at level 1.
+ * @param {number} interval - Number of levels between each flat increase.
+ * @param {number} flat - Flat percent increase per interval (e.g. 0.1 for +10% per interval). Default: 0.1
+ * @returns {number} The scaled value at the given level.
+ */
+export function scaleUpFlat(
+  level,
+  start = 1,
+  interval = 10,
+  flat = 0.1,
+) {
+  if (level <= 0) return 0;
+
+  // k = number of full intervals completed
+  const k = Math.floor((level - 1) / interval);
+  const rem = level - k * interval;
+  // Each interval increases the multiplier by flat
+  // Sum for full intervals (arithmetic series of multipliers)
+  const sumFull = interval * k * (2 * 1 + flat * (k - 1)) / 2;
+  // Sum for remaining levels (all at last multiplier)
+  const sumRem = rem * (1 + flat * k);
+  return start * (sumFull + sumRem);
 }

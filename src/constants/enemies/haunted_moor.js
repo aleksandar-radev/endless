@@ -18,12 +18,12 @@ export const HAUNTED_MOOR_ENEMIES = [
 
     airDamage: 1.2 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 5,
-    coldResistance: 10,
-    airResistance: 75,
-    earthResistance: 5,
-    lightningResistance: 10,
-    waterResistance: 10,
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 3 * getEnemyStatMultiplier(tier),
+    airResistance: 10 * getEnemyStatMultiplier(tier),
+    earthResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 3 * getEnemyStatMultiplier(tier),
+    waterResistance: 3 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['haunted_moor'],
@@ -39,12 +39,12 @@ export const HAUNTED_MOOR_ENEMIES = [
 
     coldDamage: 3 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 5,
-    coldResistance: 65,
-    airResistance: 35,
-    earthResistance: 35,
-    lightningResistance: 20,
-    waterResistance: 10,
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    coldResistance: 9 * getEnemyStatMultiplier(tier),
+    airResistance: 5 * getEnemyStatMultiplier(tier),
+    earthResistance: 5 * getEnemyStatMultiplier(tier),
+    lightningResistance: 4 * getEnemyStatMultiplier(tier),
+    waterResistance: 3 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['haunted_moor'],
@@ -65,12 +65,12 @@ export const HAUNTED_MOOR_ENEMIES = [
 
     earthDamage: 0.8 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 15,
-    coldResistance: 25,
-    airResistance: 25,
-    earthResistance: 45,
-    lightningResistance: 10,
-    waterResistance: 10,
+    fireResistance: 3 * getEnemyStatMultiplier(tier),
+    coldResistance: 4 * getEnemyStatMultiplier(tier),
+    airResistance: 4 * getEnemyStatMultiplier(tier),
+    earthResistance: 7 * getEnemyStatMultiplier(tier),
+    lightningResistance: 3 * getEnemyStatMultiplier(tier),
+    waterResistance: 3 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['haunted_moor'],
@@ -91,12 +91,12 @@ export const HAUNTED_MOOR_ENEMIES = [
 
     airDamage: 1.1 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 15,
-    coldResistance: 15,
-    airResistance: 50,
-    earthResistance: 5,
-    lightningResistance: 10,
-    waterResistance: 15,
+    fireResistance: 3 * getEnemyStatMultiplier(tier),
+    coldResistance: 3 * getEnemyStatMultiplier(tier),
+    airResistance: 7 * getEnemyStatMultiplier(tier),
+    earthResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 3 * getEnemyStatMultiplier(tier),
+    waterResistance: 3 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['haunted_moor'],

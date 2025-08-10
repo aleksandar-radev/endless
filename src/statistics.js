@@ -8,6 +8,7 @@ import { formatNumber, formatStatName } from './ui/ui.js';
 export default class Statistics {
   constructor(savedData = null) {
     this.bossesKilled = 0;
+    this.highestBossLevel = 0;
     this.totalEnemiesKilled = 0;
     this.enemiesKilled = {
       normal: 0,
@@ -39,6 +40,7 @@ export default class Statistics {
 
   resetStatistics() {
     this.bossesKilled = 0;
+    this.highestBossLevel = 0;
     this.totalEnemiesKilled = 0;
     this.enemiesKilled = {
       normal: 0,
@@ -83,6 +85,7 @@ export default class Statistics {
           <div id="stat-total-enemies-killed"></div>
           <div id="stat-enemies-killed-by-rarity"></div>
           <div id="stat-enemies-killed-by-zone"></div>
+          <div id="stat-highest-boss-level"></div>
           <div id="stat-bosses-killed"></div>
           <div id="stat-highest-damage"></div>
         </div>
@@ -96,6 +99,12 @@ export default class Statistics {
     const bossesKilledElem = document.getElementById('stat-bosses-killed');
     if (bossesKilledElem) {
       bossesKilledElem.textContent = `Bosses Defeated: ${formatNumber(this.bossesKilled)}`;
+    }
+
+    // Highest Boss Level Defeated
+    const highestBossLevelElem = document.getElementById('stat-highest-boss-level');
+    if (highestBossLevelElem) {
+      highestBossLevelElem.textContent = `Highest Boss Level: ${formatNumber(this.highestBossLevel || 0)}`;
     }
 
     // Total Time Played (resets on reset)

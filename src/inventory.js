@@ -149,7 +149,15 @@ export default class Inventory {
     return dialog;
   }
 
-  handleMaterialUsed(inventory, mat, matDef, qty, dialogId, toastMsg) {
+  handleMaterialUsed(
+    inventory,
+    mat,
+    matDef,
+    qty,
+    dialogId,
+    toastMsg,
+    closeDialog = true,
+  ) {
     mat.qty -= qty;
     if (mat.qty <= 0) {
       const idx = inventory.materials.findIndex((m) => m && m.id === mat.id);
@@ -161,7 +169,7 @@ export default class Inventory {
     dataManager.saveGame();
     updateResources();
     updateStatsAndAttributesUI();
-    closeModal(dialogId);
+    if (closeDialog) closeModal(dialogId);
     showToast(toastMsg, 'success');
   }
 
@@ -177,20 +185,25 @@ export default class Inventory {
         .filter(([slot, item]) => eligibleSlots.includes(slot) && item && eligibleTypes.includes(item.type))
         .map(([slot, item]) => ({ slot, item }));
 
-      this.showEquippedItemsModal({
+      const dialog = this.showEquippedItemsModal({
         id: 'material-upgrade-dialog',
         matDef,
         mat,
         equipped,
         itemRowHtml: ({ slot, item }, idx) => {
           const maxStage = statistics.highestStages[item.tier] || 0;
+          const maxLevels = Math.min(
+            Math.floor(mat.qty / item.tier),
+            Math.max(0, maxStage - item.level),
+          );
           return `
         <div class="upgrade-item-row" data-slot="${slot}" data-idx="${idx}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
           <span style="font-size:1.5em;">${item.getIcon()}</span>
           <span><b>${item.type}</b> (Lvl ${item.level})</span>
           <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
-          <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${Math.min(mat.qty, Math.max(0, maxStage - item.level))}" value="1" aria-label="Upgrade quantity" />
+          <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${maxLevels}" value="1" aria-label="Upgrade quantity" />
           <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">Upgrade</button>
+          <span class="upgrade-cost" data-idx="${idx}"></span>
         </div>`;
         },
         buttonClass: 'upgrade-btn',
@@ -200,21 +213,56 @@ export default class Inventory {
           const qtyInput = dialog.querySelector(`.upgrade-qty-input[data-idx='${idx}']`);
           let useQty = parseInt(qtyInput.value, 10);
           if (isNaN(useQty) || useQty < 1) useQty = 1;
-          // Limit useQty to not exceed highest stage reached for this tier
+          // Limit useQty to not exceed highest stage reached or available materials
           const maxStage = statistics.highestStages[item.tier] || 0;
-          const maxUpgrade = Math.max(0, maxStage - item.level);
-          if (useQty > mat.qty) useQty = mat.qty;
+          const maxLevelsByStage = Math.max(0, maxStage - item.level);
+          const maxLevelsByMats = Math.floor(mat.qty / item.tier);
+          const maxUpgrade = Math.min(maxLevelsByStage, maxLevelsByMats);
           if (useQty > maxUpgrade) useQty = maxUpgrade;
           if (useQty < 1) {
-            showToast('Item cannot surpass highest stage reached in this tier', 'error');
-            return;
-          } // Prevent upgrading if already at or above highest stage for this tier
+            showToast('Not enough materials or item at max stage', 'error');
+            return; // Prevent upgrading if already at or above highest stage or lacking materials
+          }
           const oldLevel = item.level;
           item.applyLevelToStats(oldLevel + useQty);
-          this.handleMaterialUsed(this, mat, matDef, useQty, 'material-upgrade-dialog', `Upgraded ${item.type} (Lvl ${oldLevel} → ${item.level})`);
+          const matsUsed = useQty * item.tier;
+          this.handleMaterialUsed(
+            this,
+            mat,
+            matDef,
+            matsUsed,
+            'material-upgrade-dialog',
+            `Upgraded ${item.type} (Lvl ${oldLevel} → ${item.level})`,
+            false,
+          );
+          if (mat.qty > 0) {
+            this.openMaterialDialog(mat);
+          } else {
+            closeModal('material-upgrade-dialog');
+          }
         },
         emptyMsg: 'No eligible equipped items.',
         titleExtra: '<div style="margin-bottom:10px;">Select an equipped item to upgrade:</div>',
+      });
+
+      equipped.forEach(({ item }, idx) => {
+        const input = dialog.querySelector(`.upgrade-qty-input[data-idx='${idx}']`);
+        const costEl = dialog.querySelector(`.upgrade-cost[data-idx='${idx}']`);
+        const updateCost = () => {
+          let val = parseInt(input.value, 10);
+          if (isNaN(val) || val < 1) val = 1;
+          const maxStage = statistics.highestStages[item.tier] || 0;
+          const maxLevelsByStage = Math.max(0, maxStage - item.level);
+          const maxLevelsByMats = Math.floor(mat.qty / item.tier);
+          const maxUpgrade = Math.min(maxLevelsByStage, maxLevelsByMats);
+          if (val > maxUpgrade) {
+            val = maxUpgrade;
+            input.value = val;
+          }
+          costEl.textContent = `Cost: ${val * item.tier}`;
+        };
+        updateCost();
+        input.addEventListener('input', updateCost);
       });
       return;
     }
@@ -338,7 +386,8 @@ export default class Inventory {
     const qtyInput = dialog.querySelector('#material-use-qty');
     qtyInput.focus();
     qtyInput.select();
-    dialog.querySelector('#material-use-btn').onclick = () => {
+    const useBtn = dialog.querySelector('#material-use-btn');
+    const useHandler = () => {
       let useQty = parseInt(qtyInput.value, 10);
       if (isNaN(useQty) || useQty < 1) useQty = 1;
       if (useQty > mat.qty) useQty = mat.qty;
@@ -347,7 +396,17 @@ export default class Inventory {
       }
       this.handleMaterialUsed(this, mat, matDef, useQty, 'material-use-dialog', `Used ${useQty} ${matDef.name || mat.name || ''}${useQty > 1 ? 's' : ''}`);
     };
+    useBtn.onclick = useHandler;
     dialog.querySelector('#material-use-cancel').onclick = () => closeModal('material-use-dialog');
+    // Add Enter key handler for usable materials
+    if (matDef && typeof matDef.onUse === 'function') {
+      qtyInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          useHandler();
+        }
+      });
+    }
   }
 
   getItemSalvageValue(item) {

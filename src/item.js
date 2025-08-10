@@ -1,6 +1,7 @@
 import { ITEM_ICONS, ITEM_RARITY, ITEM_STAT_POOLS } from './constants/items.js';
 import { getRegionByTier } from './constants/regions.js';
 import { STATS } from './constants/stats/stats.js';
+import { ATTRIBUTES } from './constants/stats/attributes.js';
 import { options } from './globals.js';
 import { formatStatName } from './ui/ui.js';
 
@@ -10,6 +11,30 @@ export const AVAILABLE_STATS = Object.fromEntries(
     .filter(([_, config]) => config.item)
     .map(([stat, config]) => [stat, config.item]),
 );
+
+const RESISTANCE_STATS = [
+  'fireResistance',
+  'coldResistance',
+  'airResistance',
+  'earthResistance',
+  'lightningResistance',
+  'waterResistance',
+  'fireResistancePercent',
+  'coldResistancePercent',
+  'airResistancePercent',
+  'earthResistancePercent',
+  'lightningResistancePercent',
+  'waterResistancePercent',
+  'allResistance',
+  'allResistancePercent',
+];
+
+const ATTRIBUTE_STATS = [
+  ...Object.keys(ATTRIBUTES),
+  ...Object.keys(ATTRIBUTES).map((a) => `${a}Percent`),
+  'allAttributes',
+  'allAttributesPercent',
+];
 
 export default class Item {
   constructor(type, level, rarity, tier = 1, existingStats = null, metaData = {}) {
@@ -103,13 +128,24 @@ export default class Item {
     // Add random stats from possible pool until totalStatsNeeded
     const remainingStats = totalStatsNeeded - itemPool.mandatory.length;
     const availableStats = [...itemPool.possible].filter((stat) => !itemPool.mandatory.includes(stat));
+    let resistanceCount = Object.keys(stats).filter((s) => RESISTANCE_STATS.includes(s)).length;
+    let attributeCount = Object.keys(stats).filter((s) => ATTRIBUTE_STATS.includes(s)).length;
 
-    for (let i = 0; i < remainingStats && availableStats.length > 0; i++) {
-      const randomIndex = Math.floor(Math.random() * availableStats.length);
-      const stat = availableStats.splice(randomIndex, 1)[0];
+    for (let i = 0; i < remainingStats && availableStats.length > 0; ) {
+      const eligibleStats = availableStats.filter(
+        (s) =>
+          !(RESISTANCE_STATS.includes(s) && resistanceCount >= 3) &&
+          !(ATTRIBUTE_STATS.includes(s) && attributeCount >= 3),
+      );
+      if (eligibleStats.length === 0) break;
+      const stat = eligibleStats[Math.floor(Math.random() * eligibleStats.length)];
+      availableStats.splice(availableStats.indexOf(stat), 1);
       const range = AVAILABLE_STATS[stat];
       const baseValue = Math.random() * (range.max - range.min) + range.min;
       stats[stat] = calculateStatValue(stat, baseValue);
+      if (RESISTANCE_STATS.includes(stat)) resistanceCount++;
+      if (ATTRIBUTE_STATS.includes(stat)) attributeCount++;
+      i++;
     }
 
     return stats;
@@ -214,8 +250,15 @@ export default class Item {
     // Exclude already present stats
     const availableStats = pool.possible.filter(stat => !(stat in this.stats));
     if (availableStats.length === 0) return;
-    const stat = availableStats[Math.floor(Math.random() * availableStats.length)];
-    // Generate a base value for the stat (simple random, you may want to use your stat generation logic)
+    const resistanceCount = Object.keys(this.stats).filter((s) => RESISTANCE_STATS.includes(s)).length;
+    const attributeCount = Object.keys(this.stats).filter((s) => ATTRIBUTE_STATS.includes(s)).length;
+    const eligibleStats = availableStats.filter(
+      (s) =>
+        !(RESISTANCE_STATS.includes(s) && resistanceCount >= 3) &&
+        !(ATTRIBUTE_STATS.includes(s) && attributeCount >= 3),
+    );
+    if (eligibleStats.length === 0) return;
+    const stat = eligibleStats[Math.floor(Math.random() * eligibleStats.length)];
     const range = AVAILABLE_STATS[stat];
     const baseValue = Math.random() * (range.max - range.min) + range.min;
     const tierBonus = this.getTierBonus();

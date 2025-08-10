@@ -1,5 +1,5 @@
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { scaleDownFlat } from '../../common.js';
+import { scaleDownFlat, scaleUpFlat } from '../../common.js';
 
 // Druid skills
 export const DRUID_SKILLS = {
@@ -10,10 +10,10 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(level * 0.75, 80),
-        damage: level * 1,
-        earthDamage: level * 1,
-        waterDamage: level * 0.5,
+        percentOfPlayerDamage: Math.min(scaleDownFlat(level, 0.75), 80),
+        damage: scaleUpFlat(level, 1),
+        earthDamage: scaleUpFlat(level, 1),
+        waterDamage: scaleUpFlat(level, 0.5),
         attackSpeed: 1,
       };
     },
@@ -37,9 +37,10 @@ export const DRUID_SKILLS = {
     description: () => 'Increases armor while active.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: level * 3,
-      armorPercent: 2 * scaleDownFlat(level),
-      lifeRegen: level * 1,
+      armor: scaleUpFlat(level, 5),
+      armorPercent: scaleDownFlat(level, 2),
+      lifeRegen: 1 * scaleUpFlat(level, 1, 5, 0.3),
+      extraDamageFromLifeRegenPercent: Math.min(0.1 * scaleDownFlat(level), 10),
     }),
   },
   naturalAffinity: {
@@ -51,9 +52,9 @@ export const DRUID_SKILLS = {
     description: () => 'Increases vitality and life regeneration.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      vitality: level * 2,
-      lifePercent: 0.5 * scaleDownFlat(level),
-      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.01, 2),
+      vitality: scaleUpFlat(level, 2),
+      lifePercent: scaleDownFlat(level, 0.5),
+      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level, 0.01), 2),
     }),
   },
 
@@ -63,15 +64,16 @@ export const DRUID_SKILLS = {
     name: () => 'Rejuvenation',
     type: () => 'buff',
     manaCost: (level) => 5 + level * 0.25,
-    cooldown: () => 44000,
+    cooldown: () => 45000,
     duration: () => 10000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'rejuvenation',
     description: () => 'Restores life over time.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegen: level * 4,
-      lifeRegenPercent: 0.5 * scaleDownFlat(level),
+      lifeRegen: scaleUpFlat(level, 4),
+      lifeRegenPercent: scaleDownFlat(level, 0.5),
+      extraDamageFromLifeRegenPercent: Math.min(scaleDownFlat(level, 0.2), 15),
     }),
   },
   entanglingRoots: {
@@ -85,8 +87,8 @@ export const DRUID_SKILLS = {
     description: () => 'Deals earth damage and slows enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      earthDamage: level * 5,
-      earthDamagePercent: 5 * scaleDownFlat(level),
+      earthDamage: scaleUpFlat(level, 5),
+      earthDamagePercent: scaleDownFlat(level, 5),
     }),
   },
 
@@ -97,10 +99,10 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(level * 1, 100),
-        damage: level * 4,
+        percentOfPlayerDamage: Math.min(scaleDownFlat(level, 1), 100),
+        damage: scaleUpFlat(level, 4),
         attackSpeed: 0.9,
-        lifePerHit: level * 4,
+        lifePerHit: scaleUpFlat(level, 4),
       };
     },
     manaCost: (level) => 5 + level * 0.25,
@@ -122,8 +124,8 @@ export const DRUID_SKILLS = {
     description: () => 'Increases life and life regeneration.',
     maxLevel: () => 1000,
     effect: (level) => ({
-      lifePercent: 1 * scaleDownFlat(level),
-      extraDamageFromLifePercent: Math.min(0.015 * scaleDownFlat(level), 2),
+      lifePercent: scaleDownFlat(level, 1),
+      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.015), 2),
     }),
   },
 
@@ -139,10 +141,10 @@ export const DRUID_SKILLS = {
     description: () => 'Calls forth fierce winds to damage enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      airDamage: level * 4,
-      airDamagePercent: 6 * scaleDownFlat(level),
-      coldDamage: level * 4,
-      coldDamagePercent: 6 * scaleDownFlat(level),
+      airDamage: scaleUpFlat(level, 4),
+      airDamagePercent: scaleDownFlat(level, 6),
+      coldDamage: scaleUpFlat(level, 4),
+      coldDamagePercent: scaleDownFlat(level, 6),
     }),
   },
   stoneform: {
@@ -157,9 +159,10 @@ export const DRUID_SKILLS = {
     description: () => 'Hardens your skin, boosting armor and resistance.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: level * 4,
-      armorPercent: 5 * scaleDownFlat(level),
-      earthDamagePercent: 2 * scaleDownFlat(level),
+      armor: scaleUpFlat(level, 4),
+      armorPercent: scaleDownFlat(level, 5),
+      earthDamagePercent: scaleDownFlat(level, 2),
+      allResistance: scaleUpFlat(level, 4),
     }),
   },
 
@@ -176,8 +179,8 @@ export const DRUID_SKILLS = {
     description: () => 'Increases life steal and mana gain.',
     maxLevel: () => 300,
     effect: (level) => ({
-      lifeSteal: level * 0.02,
-      manaPerHit: level * 0.75,
+      lifeSteal: Math.min(scaleDownFlat(level, 0.02), 10),
+      manaPerHit: scaleUpFlat(level, 0.75),
     }),
   },
   moonfury: {
@@ -189,10 +192,10 @@ export const DRUID_SKILLS = {
     description: () => 'Empowers you under the moon, boosting elemental damage.',
     maxLevel: () => 300,
     effect: (level) => ({
-      coldDamagePercent: 2 * scaleDownFlat(level),
-      coldDamage: level * 4,
-      airDamagePercent: 2 * scaleDownFlat(level),
-      airDamage: level * 4,
+      coldDamagePercent: scaleDownFlat(level, 2),
+      coldDamage: scaleUpFlat(level, 4),
+      airDamagePercent: scaleDownFlat(level, 2),
+      airDamage: scaleUpFlat(level, 4),
     }),
   },
 
@@ -209,10 +212,10 @@ export const DRUID_SKILLS = {
     description: () => 'Embrace the earth for defense and regeneration.',
     maxLevel: () => 500,
     effect: (level) => ({
-      armorPercent: 2 * scaleDownFlat(level),
-      lifeRegenPercent: 0.5 * scaleDownFlat(level),
-      lifeRegen: level * 2,
-      lifeRegenOfTotalPercent: scaleDownFlat(level) * 0.01,
+      armorPercent: scaleDownFlat(level, 2),
+      lifeRegenPercent: scaleDownFlat(level, 0.5),
+      lifeRegen: scaleUpFlat(level, 2),
+      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level, 0.01), 2),
     }),
   },
   wrathOfNature: {
@@ -224,7 +227,7 @@ export const DRUID_SKILLS = {
     description: () => 'Nature fights with you, increasing all stats.',
     maxLevel: () => 500,
     effect: (level) => ({
-      damagePercent: 2.5 * scaleDownFlat(level),
+      damagePercent: scaleDownFlat(level, 2.5),
       vitalityPercent: scaleDownFlat(level),
       elementalDamagePercent: scaleDownFlat(level),
     }),
@@ -240,11 +243,11 @@ export const DRUID_SKILLS = {
     description: () => 'Become one with nature, greatly increasing attributes.',
     maxLevel: () => 100,
     effect: (level) => ({
-      vitality: level * 3,
-      vitalityPercent: 3 * scaleDownFlat(level),
-      strength: level * 4,
-      damagePercent: 2 * scaleDownFlat(level),
-      lifePercent: 2 * scaleDownFlat(level),
+      vitality: scaleUpFlat(level, 3),
+      vitalityPercent: scaleDownFlat(level, 3),
+      strength: scaleUpFlat(level, 4),
+      damagePercent: scaleDownFlat(level, 2),
+      lifePercent: scaleDownFlat(level, 2),
     }),
   },
 
@@ -258,9 +261,10 @@ export const DRUID_SKILLS = {
     description: () => 'Bond with spirits to enhance regeneration.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegen: level * 2,
-      lifeRegenPercent: 1.5 * scaleDownFlat(level),
+      lifeRegen: scaleUpFlat(level, 2),
+      lifeRegenPercent: scaleDownFlat(level, 1.5),
       manaRegenPercent: scaleDownFlat(level),
+      extraDamageFromLifeRegenPercent: Math.min(0.1 * scaleDownFlat(level), 10),
     }),
   },
   wildGrowth: {
@@ -275,9 +279,10 @@ export const DRUID_SKILLS = {
     description: () => 'Causes allies to rapidly regenerate life.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegen: level * 4,
+      lifeRegen: scaleUpFlat(level, 4, 2),
+      lifeRegenPercent: scaleDownFlat(level, 2),
       lifePercent: scaleDownFlat(level),
-      vitality: level * 2,
+      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level, 0.01), 2),
     }),
   },
 
@@ -291,9 +296,9 @@ export const DRUID_SKILLS = {
     description: () => 'Tap into ancient power to fortify yourself.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armorPercent: 2 * scaleDownFlat(level),
-      lifePercent: 1.5 * scaleDownFlat(level),
-      earthDamagePercent: 2 * scaleDownFlat(level),
+      armorPercent: scaleDownFlat(level, 2),
+      lifePercent: scaleDownFlat(level, 1.5),
+      earthDamagePercent: scaleDownFlat(level, 4),
     }),
   },
   furyOfTheWilds: {
@@ -301,15 +306,15 @@ export const DRUID_SKILLS = {
     name: () => 'Fury of the Wilds',
     type: () => 'instant',
     manaCost: (level) => 30 + level * 1.25,
-    cooldown: () => 120000,
+    cooldown: () => 20000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'fury-of-the-wilds',
     description: () => 'Unleash nature\'s wrath on your foes.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 14,
-      coldDamagePercent: 3 * scaleDownFlat(level),
-      lightningDamagePercent: 3 * scaleDownFlat(level),
+      damage: scaleUpFlat(level, 14, 4, 0.2),
+      coldDamagePercent: scaleDownFlat(level, 3),
+      lightningDamagePercent: scaleDownFlat(level, 3),
     }),
   },
 
@@ -323,15 +328,24 @@ export const DRUID_SKILLS = {
     description: () => 'Gain everlasting resilience from nature.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifePercent: 2 * scaleDownFlat(level),
-      vitalityPercent: 3 * scaleDownFlat(level),
-      endurancePercent: 2 * scaleDownFlat(level),
+      vitalityPercent: scaleDownFlat(level, 2),
+      endurancePercent: scaleDownFlat(level, 2),
+      perseverancePercent: scaleDownFlat(level, 2),
     }),
   },
   primevalGuardian: {
     id: 'primevalGuardian',
     name: () => 'Primeval Guardian',
-    type: () => 'buff',
+    type: () => 'summon',
+    summonStats: (level) => {
+      return {
+        percentOfPlayerDamage: Math.min(scaleDownFlat(level, 1.2), 150),
+        damage: scaleUpFlat(level, 25, 3),
+        earthDamage: scaleUpFlat(level, 20, 3),
+        earthDamagePercent: scaleDownFlat(level, 2),
+        attackSpeed: 1.25,
+      };
+    },
     manaCost: (level) => 40 + level * 1.25,
     cooldown: () => 150000,
     duration: () => 40000,
@@ -340,10 +354,6 @@ export const DRUID_SKILLS = {
     description: () => 'Summon an ancient guardian to protect allies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      percentOfPlayerDamage: Math.min(level * 1.2, 150),
-      damage: level * 5,
-      earthDamage: level * 5,
-      earthDamagePercent: 2 * scaleDownFlat(level),
     }),
   },
 
@@ -357,9 +367,9 @@ export const DRUID_SKILLS = {
     description: () => 'Become one with the earth for immense fortitude.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: level * 12,
-      lifePercent: 2 * scaleDownFlat(level),
-      allResistance: level * 0.4,
+      armor: scaleUpFlat(level, 12, 5),
+      lifePercent: scaleDownFlat(level, 2.5),
+      allResistance: scaleUpFlat(level, 12, 5),
     }),
   },
   cosmicHarmony: {
@@ -372,9 +382,7 @@ export const DRUID_SKILLS = {
     description: () => 'Balance all energies to empower allies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegenPercent: 2 * scaleDownFlat(level),
-      manaRegenPercent: 2 * scaleDownFlat(level),
-      elementalDamagePercent: 3 * scaleDownFlat(level),
+      elementalDamagePercent: scaleDownFlat(level, 3),
     }),
   },
 };

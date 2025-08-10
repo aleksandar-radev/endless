@@ -1,5 +1,5 @@
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { scaleDownFlat } from '../../common.js';
+import { scaleDownFlat, scaleUpFlat } from '../../common.js';
 
 // Vampire skills extracted from skills.js
 export const VAMPIRE_SKILLS = {
@@ -12,11 +12,11 @@ export const VAMPIRE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'blood',
     description: () => 'Steal life from enemies with each attack.',
-    maxLevel: () => 300,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifePerHit: level * 1,
-      damage: level * 2,
-      damagePercent: scaleDownFlat(level),
+      lifePerHit: scaleUpFlat(level, 1, 5, 0.2),
+      damage: scaleUpFlat(level, 2, 4, 0.2),
+      damagePercent: scaleDownFlat(level, 1.5),
     }),
   },
   nightStalker: {
@@ -28,8 +28,8 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Increases damage at night.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: 2 * scaleDownFlat(level),
-      agility: level * 4,
+      damagePercent: scaleDownFlat(level, 2),
+      agility: scaleUpFlat(level, 4),
     }),
   },
 
@@ -45,9 +45,9 @@ export const VAMPIRE_SKILLS = {
     description: () => 'A powerful strike that restores life.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: level * 1,
-      damagePercent: 2 * scaleDownFlat(level),
-      lifePerHit: level * 5,
+      damage: scaleUpFlat(level, 1),
+      damagePercent: scaleDownFlat(level, 2),
+      lifePerHit: scaleUpFlat(level, 5, 5, 0.1),
     }),
   },
   darkAura: {
@@ -62,10 +62,10 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Increases life steal and damage temporarily.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeSteal: level * 0.02,
-      attackRating: level * 5,
-      attackRatingPercent: 2 * scaleDownFlat(level),
-      extraDamageFromLifePercent: Math.min(0.01 * scaleDownFlat(level), 1),
+      lifeSteal: Math.min(scaleDownFlat(level, 0.02), 10),
+      attackRating: scaleUpFlat(level, 5),
+      attackRatingPercent: scaleDownFlat(level, 2),
+      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.01), 1),
     }),
   },
 
@@ -79,11 +79,11 @@ export const VAMPIRE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'drain',
     description: () => 'Drains life from enemies, restoring your life.',
-    maxLevel: () => 100,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      earthDamage: level * 4,
-      earthDamagePercent: 5 * scaleDownFlat(level),
-      manaPerHit: level * 0.2,
+      earthDamage: scaleUpFlat(level, 4, 3, 0.1),
+      earthDamagePercent: scaleDownFlat(level, 5),
+      manaPerHit: scaleUpFlat(level, 0.2),
     }),
   },
   greaterBloodHunger: {
@@ -96,7 +96,7 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strengthPercent: scaleDownFlat(level),
-      vitalityPercent: 2 * scaleDownFlat(level),
+      vitalityPercent: scaleDownFlat(level, 2),
     }),
   },
 
@@ -112,8 +112,8 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Unleashes a burst of crimson energy, greatly damaging the enemy at the cost of life.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: 10 * scaleDownFlat(level),
-      lifePerHit: level * -1,
+      damagePercent: scaleDownFlat(level, 10),
+      lifePerHit: scaleUpFlat(level, -1),
     }),
   },
   summonBats: {
@@ -122,9 +122,9 @@ export const VAMPIRE_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(level * 0.25, 20),
-        damage: level * 3,
-        airDamage: level * 2,
+        percentOfPlayerDamage: Math.min(scaleDownFlat(level, 0.25), 20),
+        damage: scaleUpFlat(level, 3),
+        airDamage: scaleUpFlat(level, 2),
         attackSpeed: 4,
       };
     },
@@ -150,11 +150,11 @@ export const VAMPIRE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'pact',
     description: () => 'Increases life steal and life temporarily.',
-    maxLevel: () => 400,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      life: level * 10,
+      life: scaleUpFlat(level, 10, 5),
       lifePercent: scaleDownFlat(level),
-      extraDamageFromLifePercent: Math.min(0.01 * scaleDownFlat(level), 1),
+      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.01), 1),
     }),
   },
 
@@ -163,14 +163,14 @@ export const VAMPIRE_SKILLS = {
     id: 'eternalThirst',
     name: () => 'Eternal Thirst',
     type: () => 'toggle',
-    manaCost: (level) => 2 + level * 0.625,
+    manaCost: (level) => 2 + level * 0.425,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'thirst',
     description: () => 'Increases life steal and damage.',
-    maxLevel: () => 200,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: 2 * scaleDownFlat(level),
-      lifePerHit: level * 2,
+      damagePercent: scaleDownFlat(level, 2),
+      lifePerHit: scaleUpFlat(level, 2, 3, 0.1),
     }),
   },
   deathlyPresence: {
@@ -180,12 +180,12 @@ export const VAMPIRE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'presence',
     description: () => 'Increases life greatly, and strength mildly.',
-    maxLevel: () => 100,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifePercent: 0.5 * scaleDownFlat(level),
-      strengthPercent: 0.38 * scaleDownFlat(level),
-      vitalityPercent: 2 * scaleDownFlat(level),
-      extraDamageFromLifePercent: Math.min(0.01 * scaleDownFlat(level), 1),
+      lifePercent: scaleDownFlat(level, 0.5),
+      strengthPercent: scaleDownFlat(level, 1.3),
+      vitalityPercent: scaleDownFlat(level, 2),
+      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.01), 1),
     }),
   },
 
@@ -197,14 +197,14 @@ export const VAMPIRE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'lord',
     description: () => 'Greatly increases all attributes and gives resurrection.',
-    maxLevel: () => 500,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strengthPercent: 1.5 * scaleDownFlat(level),
-      vitalityPercent: 2 * scaleDownFlat(level),
-      extraDamageFromLifePercent: Math.min(0.0075 * scaleDownFlat(level), 0.5),
-      resurrectionChance: level * 0.1,
+      strengthPercent: scaleDownFlat(level, 1.5),
+      vitalityPercent: scaleDownFlat(level, 2),
+      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.0075), 0.5),
+      resurrectionChance: Math.min(scaleDownFlat(level, 0.1, 5, 400), 20),
       perseverancePercent: scaleDownFlat(level),
-      perseverance: level * 2,
+      perseverance: scaleUpFlat(level, 2, 3, 0.1),
     }),
   },
 
@@ -221,9 +221,9 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Empowers vampiric abilities under the crimson moon.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeSteal: level * 0.05,
-      damagePercent: 2 * scaleDownFlat(level),
-      attackSpeed: 0.01 * scaleDownFlat(level),
+      lifeSteal: Math.min(scaleDownFlat(level, 0.024), 3),
+      damagePercent: scaleDownFlat(level, 2),
+      attackSpeed: scaleDownFlat(level, 0.01),
     }),
   },
   sanguineFury: {
@@ -235,8 +235,8 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Harness the fury of blood to increase power.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      critChance: Math.min(level * 0.05, 25),
-      lifePerHit: level * 200,
+      critChance: Math.min(scaleDownFlat(level, 0.12), 25),
+      lifePerHit: scaleUpFlat(level, 120),
       damagePercent: scaleDownFlat(level),
     }),
   },
@@ -254,8 +254,8 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Shrouds the vampire in shadows, restoring life.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegen: level * 150,
-      evasionPercent: 5 * scaleDownFlat(level),
+      lifeRegen: scaleUpFlat(level, 150),
+      evasionPercent: scaleDownFlat(level, 5),
       lifePercent: scaleDownFlat(level),
     }),
   },
@@ -268,9 +268,9 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Revive from death with a portion of life.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      resurrectionChance: level * 0.1,
-      lifePercent: 1.5 * scaleDownFlat(level),
-      critDamage: level * 0.01,
+      resurrectionChance: Math.min(scaleDownFlat(level, 0.1), 50),
+      lifePercent: scaleDownFlat(level, 1.5),
+      critDamage: scaleDownFlat(level, 0.01),
     }),
   },
 
@@ -279,15 +279,15 @@ export const VAMPIRE_SKILLS = {
     id: 'eternalHunger',
     name: () => 'Eternal Hunger',
     type: () => 'toggle',
-    manaCost: (level) => 15 + level * 1.25,
+    manaCost: (level) => 0,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'eternal-hunger',
     description: () => 'Constantly drains enemies to sustain yourself.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeSteal: level * 0.07,
-      damagePercent: 2 * scaleDownFlat(level),
-      manaPerHit: level * 0.2,
+      damage: scaleUpFlat(level, 12, 3, 0.2),
+      damagePercent: scaleDownFlat(level, 2.5),
+      manaPerHit: scaleUpFlat(level, 0.5),
     }),
   },
   nocturnalDominion: {
@@ -299,9 +299,9 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Rule the night with unparalleled power.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: 2.5 * scaleDownFlat(level),
-      attackSpeed: 0.015 * scaleDownFlat(level),
-      lifePercent: 1.5 * scaleDownFlat(level),
+      damagePercent: scaleDownFlat(level, 2.5),
+      attackSpeed: scaleDownFlat(level, 0.015),
+      lifePercent: scaleDownFlat(level, 1.5),
     }),
   },
 
@@ -315,9 +315,9 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Ascend to the pinnacle of vampiric power.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strengthPercent: 3 * scaleDownFlat(level),
-      vitalityPercent: 3 * scaleDownFlat(level),
-      elementalDamagePercent: 2 * scaleDownFlat(level),
+      strengthPercent: scaleDownFlat(level, 3),
+      vitalityPercent: scaleDownFlat(level, 3),
+      elementalDamagePercent: scaleDownFlat(level, 2),
     }),
   },
   immortalSovereign: {
@@ -330,9 +330,9 @@ export const VAMPIRE_SKILLS = {
     description: () => 'Become nearly unstoppable for a short time.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifePercent: 2 * scaleDownFlat(level),
-      resurrectionChance: level * 0.15,
-      damagePercent: 4 * scaleDownFlat(level),
+      fireDamage: scaleUpFlat(level, 26, 4, 0.15),
+      fireDamagePercent: scaleDownFlat(level, 5),
+      damagePercent: scaleDownFlat(level, 3.8),
     }),
   },
 };

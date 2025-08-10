@@ -19,12 +19,12 @@ export const VOLCANIC_RIFT_ENEMIES = [
     fireDamage: 1.3 * getEnemyStatMultiplier(tier),
     earthDamage: 1.12 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 60,
-    coldResistance: 0,
-    airResistance: 20,
-    earthResistance: 15,
-    lightningResistance: 20,
-    waterResistance: 5,
+    fireResistance: 8 * getEnemyStatMultiplier(tier),
+    coldResistance: 0 * getEnemyStatMultiplier(tier),
+    airResistance: 4 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    lightningResistance: 4 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     multiplier: {
       materialDrop: 1.2,
@@ -47,12 +47,12 @@ export const VOLCANIC_RIFT_ENEMIES = [
     fireDamage: 2 * getEnemyStatMultiplier(tier),
     earthDamage: 0.8 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 60,
-    coldResistance: 5,
-    airResistance: 30,
-    earthResistance: 30,
-    lightningResistance: 25,
-    waterResistance: 5,
+    fireResistance: 8 * getEnemyStatMultiplier(tier),
+    coldResistance: 2 * getEnemyStatMultiplier(tier),
+    airResistance: 5 * getEnemyStatMultiplier(tier),
+    earthResistance: 5 * getEnemyStatMultiplier(tier),
+    lightningResistance: 4 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     multiplier: {
       materialDrop: 1.1,
@@ -71,12 +71,12 @@ export const VOLCANIC_RIFT_ENEMIES = [
 
     fireDamage: 3.3 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 45,
-    coldResistance: 5,
-    airResistance: 5,
-    earthResistance: 10,
-    lightningResistance: 5,
-    waterResistance: 5,
+    fireResistance: 7 * getEnemyStatMultiplier(tier),
+    coldResistance: 2 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['volcanic_rift'],
@@ -93,12 +93,12 @@ export const VOLCANIC_RIFT_ENEMIES = [
     fireDamage: 1.9 * getEnemyStatMultiplier(tier),
     earthDamage: 0.6 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 50,
-    coldResistance: 10,
-    airResistance: 25,
-    earthResistance: 10,
-    lightningResistance: 25,
-    waterResistance: 25,
+    fireResistance: 7 * getEnemyStatMultiplier(tier),
+    coldResistance: 3 * getEnemyStatMultiplier(tier),
+    airResistance: 4 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    lightningResistance: 4 * getEnemyStatMultiplier(tier),
+    waterResistance: 4 * getEnemyStatMultiplier(tier),
 
     multiplier: {
       materialDrop: 1.3,
@@ -122,12 +122,12 @@ export const VOLCANIC_RIFT_ENEMIES = [
 
     airDamage: 2.12 * getEnemyStatMultiplier(tier),
 
-    fireResistance: 0,
-    coldResistance: 15,
-    airResistance: 55,
-    earthResistance: 15,
-    lightningResistance: 15,
-    waterResistance: 5,
+    fireResistance: 0 * getEnemyStatMultiplier(tier),
+    coldResistance: 3 * getEnemyStatMultiplier(tier),
+    airResistance: 8 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    lightningResistance: 3 * getEnemyStatMultiplier(tier),
+    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['volcanic_rift'],

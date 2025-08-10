@@ -1,7 +1,9 @@
 export function run(rawData) {
   let data = JSON.parse(JSON.stringify(rawData || {}));
 
-  data.options.resetRequired = true;
+  if (data.options?.resetRequired) {
+    data.options.resetRequired = true;
+  }
 
   return {
     data,

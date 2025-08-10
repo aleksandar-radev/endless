@@ -22,12 +22,12 @@ export const TUNDRA_ENEMIES = [
     airDamage: 1 * getEnemyStatMultiplier(tier),
     coldDamage: 1 * getEnemyStatMultiplier(tier),
 
-    coldResistance: 25,
-    fireResistance: 5,
-    earthResistance: 10,
-    airResistance: 5,
-    lightningResistance: 5,
-    waterResistance: 10,
+    coldResistance: 4 * getEnemyStatMultiplier(tier),
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 3 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['frozen_tundra'],
@@ -48,12 +48,12 @@ export const TUNDRA_ENEMIES = [
 
     coldDamage: 1 * getEnemyStatMultiplier(tier),
 
-    coldResistance: 20,
-    fireResistance: 5,
-    earthResistance: 10,
-    airResistance: 5,
-    lightningResistance: 5,
-    waterResistance: 10,
+    coldResistance: 4 * getEnemyStatMultiplier(tier),
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 3 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['frozen_tundra'],
@@ -76,12 +76,12 @@ export const TUNDRA_ENEMIES = [
 
     coldDamage: 1.2 * getEnemyStatMultiplier(tier),
 
-    coldResistance: 20,
-    fireResistance: 5,
-    earthResistance: 10,
-    airResistance: 5,
-    lightningResistance: 5,
-    waterResistance: 10,
+    coldResistance: 4 * getEnemyStatMultiplier(tier),
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    earthResistance: 3 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 3 * getEnemyStatMultiplier(tier),
 
     multiplier: {
       materialDrop: 1.1,
@@ -107,12 +107,12 @@ export const TUNDRA_ENEMIES = [
 
     coldDamage: 3 * getEnemyStatMultiplier(tier),
 
-    coldResistance: 30,
-    fireResistance: 5,
-    earthResistance: 5,
-    airResistance: 5,
-    lightningResistance: 5,
-    waterResistance: 15,
+    coldResistance: 5 * getEnemyStatMultiplier(tier),
+    fireResistance: 2 * getEnemyStatMultiplier(tier),
+    earthResistance: 2 * getEnemyStatMultiplier(tier),
+    airResistance: 2 * getEnemyStatMultiplier(tier),
+    lightningResistance: 2 * getEnemyStatMultiplier(tier),
+    waterResistance: 3 * getEnemyStatMultiplier(tier),
 
     materialDropWeights: {},
     tags: ['frozen_tundra'],

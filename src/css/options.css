@@ -3,23 +3,6 @@
   font-size: 1.1em;
 }
 
-.stage-skip-input {
-  background: #232b3a;
-  color: #fff;
-  border: 1px solid #3b82f6;
-  border-radius: 4px;
-  padding: 6px 12px;
-  font-size: 1.1em;
-  width: 80px;
-  transition: border 0.2s, box-shadow 0.2s;
-}
-
-.stage-skip-input:focus {
-  border: 1.5px solid #60a5fa;
-  box-shadow: 0 0 0 2px #3b82f633;
-  outline: none;
-}
-
 .options-container {
   display: flex;
   flex-direction: column;
@@ -240,41 +223,23 @@
   width: 100%;
 }
 
-/* Starting Stage option input */
-.starting-stage-input {
+#options input[type=number] {
   background: #232b3a;
   color: #fff;
   border: 1px solid #3b82f6;
   border-radius: 4px;
   padding: 6px 12px;
   font-size: 1.1em;
-  width: 80px;
+  width: 100px;
   transition: border 0.2s, box-shadow 0.2s;
 }
 
-.starting-stage-input:focus {
+#options input[type=number]:focus {
   border: 1.5px solid #60a5fa;
   box-shadow: 0 0 0 2px #3b82f633;
   outline: none;
 }
 
-/* Reset Stage Skip option input */
-.reset-stage-skip-input {
-  background: #232b3a;
-  color: #fff;
-  border: 1px solid #3b82f6;
-  border-radius: 4px;
-  padding: 6px 12px;
-  font-size: 1.1em;
-  width: 80px;
-  transition: border 0.2s, box-shadow 0.2s;
-}
-
-.reset-stage-skip-input:focus {
-  border: 1.5px solid #60a5fa;
-  box-shadow: 0 0 0 2px #3b82f633;
-  outline: none;
-}
 
 .option-row {
   display: flex;
@@ -316,19 +281,16 @@
   width: unset;
 }
 
-.advanced-tooltips-toggle,
-.enemy-stats-toggle-label {
+#options label {
   font-weight: bold;
   font-size: 1.1em;
 }
 
-.advanced-tooltips-toggle,
-.enemy-stats-toggle {
+#options input[type="checkbox"] {
   display: none;
 }
 
-.advanced-tooltips-toggle+.toggle-btn,
-.enemy-stats-toggle+.toggle-btn {
+.toggle-btn {
   display: inline-block;
   width: 48px;
   height: 26px;
@@ -341,8 +303,8 @@
   vertical-align: middle;
 }
 
-.advanced-tooltips-toggle:checked+.toggle-btn,
-.enemy-stats-toggle:checked+.toggle-btn {
+
+#options input[type="checkbox"]:checked+.toggle-btn {
   background: #2563eb;
   border-color: #2563eb;
 }
@@ -361,8 +323,7 @@
 }
 
 
-.advanced-tooltips-toggle:checked+.toggle-btn::before,
-.enemy-stats-toggle:checked+.toggle-btn::before {
+#options input[type="checkbox"]:checked+.toggle-btn::before {
   left: 25px;
 }
 
@@ -395,4 +356,11 @@
   height: 600px;
   border: 1px solid rgb(100, 92, 92);
   border-radius: 33px;
+}
+
+.rate-counters-bar {
+  background: #103d86;
+  border-radius: 4px;
+  font-size: medium;
+  z-index: 10001;
 }

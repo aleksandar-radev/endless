@@ -45,12 +45,24 @@ export function enemyAttack(currentTime) {
         const physicalDamageRaw = game.currentEnemy.damage;
         const armorReduction = calculateArmorReduction(hero.stats.armor, physicalDamageRaw) / 100;
         const physicalDamage = Math.floor(physicalDamageRaw * (1 - armorReduction));
-        const fire = game.currentEnemy.fireDamage * (1 - hero.stats.fireResistance / 100);
-        const cold = game.currentEnemy.coldDamage * (1 - hero.stats.coldResistance / 100);
-        const air = game.currentEnemy.airDamage * (1 - hero.stats.airResistance / 100);
-        const earth = game.currentEnemy.earthDamage * (1 - hero.stats.earthResistance / 100);
-        const lightning = game.currentEnemy.lightningDamage * (1 - hero.stats.lightningResistance / 100);
-        const water = game.currentEnemy.waterDamage * (1 - hero.stats.waterResistance / 100);
+
+        const fireReduction = calculateResistanceReduction(hero.stats.fireResistance, game.currentEnemy.fireDamage) / 100;
+        const fire = game.currentEnemy.fireDamage * (1 - fireReduction);
+
+        const coldReduction = calculateResistanceReduction(hero.stats.coldResistance, game.currentEnemy.coldDamage) / 100;
+        const cold = game.currentEnemy.coldDamage * (1 - coldReduction);
+
+        const airReduction = calculateResistanceReduction(hero.stats.airResistance, game.currentEnemy.airDamage) / 100;
+        const air = game.currentEnemy.airDamage * (1 - airReduction);
+
+        const earthReduction = calculateResistanceReduction(hero.stats.earthResistance, game.currentEnemy.earthDamage) / 100;
+        const earth = game.currentEnemy.earthDamage * (1 - earthReduction);
+
+        const lightningReduction = calculateResistanceReduction(hero.stats.lightningResistance, game.currentEnemy.lightningDamage) / 100;
+        const lightning = game.currentEnemy.lightningDamage * (1 - lightningReduction);
+
+        const waterReduction = calculateResistanceReduction(hero.stats.waterResistance, game.currentEnemy.waterDamage) / 100;
+        const water = game.currentEnemy.waterDamage * (1 - waterReduction);
 
         let totalDamage = physicalDamage + fire + cold + air + earth + lightning + water;
 
@@ -85,22 +97,29 @@ export function playerAttack(currentTime) {
 
   if (currentTime - game.lastPlayerAttack >= timeBetweenAttacks) {
     if (game.currentEnemy.currentLife > 0) {
+
       // Calculate if attack hits
-      const hitChance = calculateHitChance(hero.stats.attackRating, game.currentEnemy.evasion);
+      const toggleEffects = skillTree.applyToggleEffects();
+      const heroAttackRating = (hero.stats.attackRating + (toggleEffects.attackRating || 0)) * (1 + (toggleEffects.attackRatingPercent || 0) / 100);
+
+      const hitChance = calculateHitChance(heroAttackRating, game.currentEnemy.evasion);
 
       const roll = Math.random() * 100;
       const neverMiss = hero.stats.attackNeverMiss > 0;
 
       if (!neverMiss && roll > hitChance) {
         // to take up mana even when missing. (for toggle skills)
-        skillTree.applyToggleEffects(false);
         createDamageNumber({ text: 'MISS', color: '#888888' });
       } else {
-        const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy);
-        const lifeStealAmount = damage * (hero.stats.lifeSteal / 100);
-        const lifePerHitAmount = hero.stats.lifePerHit * (1 + (hero.stats.lifePerHitPercent || 0) / 100);
-        game.healPlayer(lifeStealAmount + lifePerHitAmount);
-        game.restoreMana(hero.stats.manaPerHit * (1 + (hero.stats.manaPerHitPercent || 0) / 100) || 0);
+        const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy, {}, toggleEffects);
+
+        const lifePerHit = ((hero.stats.lifePerHit|| 0) + (toggleEffects.lifePerHit || 0)) * (1 + (hero.stats.lifePerHitPercent || 0) / 100);
+        const lifeStealAmount = damage * ((hero.stats.lifeSteal || 0) + (toggleEffects.lifeSteal || 0)) / 100;
+        game.healPlayer(lifeStealAmount + lifePerHit);
+
+        const manaPerHit = ((hero.stats.manaPerHit || 0) + (toggleEffects.manaPerHit || 0)) * (1 + (hero.stats.manaPerHitPercent || 0) / 100);
+        game.restoreMana(manaPerHit);
+
         game.damageEnemy(damage, isCritical);
       }
       if (game.fightMode === 'arena') {
@@ -198,6 +217,7 @@ export async function defeatEnemy() {
     showToast(text, 'success');
     statistics.increment('bossesKilled', null, 1);
     hero.bossLevel++;
+    statistics.set('highestBossLevel', null, hero.bossLevel - 1);
     document.dispatchEvent(new CustomEvent('bossKilled', { detail: { level: hero.bossLevel } }));
     selectBoss();
     updateResources();
@@ -216,7 +236,9 @@ export async function defeatEnemy() {
       showLootNotification(newItem);
     }
 
-    if (enemy.rollForMaterialDrop()) {
+    const materialDropChance = enemy.rollForMaterialDrop();
+
+    if (Math.random() * 100 < materialDropChance) {
       const mat = inventory.getRandomMaterial();
       let qty = 1;
       if (inventory.isUpgradeMaterial(mat)) {
@@ -226,12 +248,13 @@ export async function defeatEnemy() {
       inventory.addMaterial({ id: mat.id, icon: mat.icon, qty });
       showMaterialNotification(mat);
 
-      // Extra material drop logic: each extra drop is a new random material
-      const extraChance = hero.stats.extraMaterialDropPercent * 100 || 0;
       let extraRolls = 0;
       const maxExtraRolls = hero.stats.extraMaterialDropMax;
-      while (Math.random() * 100 < extraChance) {
+
+      while (extraRolls < maxExtraRolls) {
         extraRolls++;
+        let chance = Math.random() * 100;
+        if (chance > materialDropChance) continue;
         const extraMat = inventory.getRandomMaterial();
         let extraQty = 1;
         if (inventory.isUpgradeMaterial(extraMat)) {
@@ -304,7 +327,7 @@ function showLootNotification(item) {
 export function calculateHitChance(attackRating, evasion, cap = 0.9) {
   let raw = 1.5 * attackRating / (attackRating + evasion);
   raw = Math.max(0, raw);
-  const capped = Math.max(0.2, Math.min(raw, cap));
+  const capped = Math.max(1 - cap, Math.min(raw, cap));
 
   return Math.round(capped * 100);
 }
@@ -317,7 +340,13 @@ export function calculateEvasionChance(evasion, attackRating, cap = 0.9) {
 
 export function calculateArmorReduction(armor, damage, cap = 0.9) {
   if (damage <= 0) return 0;
-  const reduction = armor / (armor + 10 * damage);
+  const reduction = armor / (armor + 3 * damage);
+  return Math.max(0, Math.min(reduction, cap)) * 100;
+}
+
+export function calculateResistanceReduction(resistance, damage, cap = 0.9) {
+  if (damage <= 0) return 0;
+  const reduction = resistance / (resistance + 5 * damage);
   return Math.max(0, Math.min(reduction, cap)) * 100;
 }
 

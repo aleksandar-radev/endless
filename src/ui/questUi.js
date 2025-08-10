@@ -166,7 +166,10 @@ function openClaimableQuestsModal() {
   modal.innerHTML = `
     <div class="quest-modal-content">
       <button class="modal-close">&times;</button>
-      <h2>Claimable Quests</h2>
+      <div class="claimable-header">
+        <button id="claim-all-btn" class="modal-btn claim-all-btn">Claim All</button>
+        <h2>Claimable Quests</h2>
+      </div>
       <div id="claimable-quests-list"></div>
     </div>
   `;
@@ -174,10 +177,18 @@ function openClaimableQuestsModal() {
 
   // Populate the list
   const listDiv = modal.querySelector('#claimable-quests-list');
+  const claimAllBtn = modal.querySelector('#claim-all-btn');
   const claimable = quests.quests.filter((q) => q.isComplete() && !q.claimed);
   if (claimable.length === 0) {
     listDiv.innerHTML = '<p style="color:#aaa;">No quests ready to claim.</p>';
+    claimAllBtn.disabled = true;
   } else {
+    claimAllBtn.disabled = false;
+    claimAllBtn.onclick = () => {
+      claimable.forEach((q) => q.claim());
+      updateQuestsUI();
+      openClaimableQuestsModal();
+    };
     claimable.forEach((q) => {
       const item = document.createElement('div');
       item.className = 'quest-item ready';

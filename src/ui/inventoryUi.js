@@ -4,9 +4,11 @@ import { MATERIALS } from '../constants/materials.js';
 import { hideTooltip, positionTooltip, showToast, showTooltip } from '../ui/ui.js';
 import { ITEM_RARITY, RARITY_ORDER, SLOT_REQUIREMENTS, ITEM_TYPES } from '../constants/items.js';
 import { closeModal, createModal } from './modal.js';
+import { formatStatName } from './ui.js';
 
 let selectedItemEl = null;
 let awaitingSlot = false;
+let currentFilter = '';
 
 const html = String.raw;
 
@@ -90,6 +92,7 @@ export function initializeInventoryUI(inv) {
   const materialsTab = document.getElementById('materials-tab');
   const materialsGrid = document.querySelector('.materials-grid');
   const openSalvageModalBtn = document.getElementById('open-salvage-modal');
+  const filterInput = document.getElementById('inventory-filter');
 
   // Set sort mode from localStorage or default
   let sortMode = localStorage.getItem('inventorySortMode') || 'type-rarity-level';
@@ -112,6 +115,7 @@ export function initializeInventoryUI(inv) {
       gridContainer.style.display = '';
       materialsGrid.style.display = 'none';
       updateSortBtnText();
+      applyFilter(inv);
     });
     materialsTab.addEventListener('click', () => {
       materialsTab.classList.add('active');
@@ -135,6 +139,11 @@ export function initializeInventoryUI(inv) {
     if (itemsTab.classList.contains('active')) {
       sortInventory(sortMode);
     }
+  });
+
+  filterInput.addEventListener('input', () => {
+    currentFilter = filterInput.value.toLowerCase();
+    applyFilter(inv);
   });
 
   // Sort button sorts only the visible tab
@@ -279,14 +288,13 @@ export function showSalvageModal(inv) {
     const isChecked = selectedRarities.includes(rarity);
     const atCap = selectedRarities.length >= autoSalvageLevel;
     const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
+    const inputId = `auto-salvage-toggle-${rarity}`;
     return html`
   <div class="salvage-row">
         <button class="salvage-btn-modal" data-rarity="${rarity}">${rarity.charAt(0) + rarity.slice(1).toLowerCase()} Items</button>
-        <label class="toggle-label auto-salvage-toggle-label">
-          <input type="checkbox" class="auto-salvage-toggle" data-rarity="${rarity}" ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} />
-          <span class="toggle-btn${isChecked ? ' checked' : ''}${isDisabled ? ' disabled' : ''}"></span>
-          <span class="auto-salvage-toggle-text">Auto</span>
-        </label>
+        <input id="${inputId}" name="${inputId}" type="checkbox" class="auto-salvage-toggle" data-rarity="${rarity}" ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} />
+        <span class="toggle-btn${isChecked ? ' checked' : ''}${isDisabled ? ' disabled' : ''}"></span>
+        <label for="${inputId}" class="auto-salvage-toggle-text">Auto</label>
       </div>
     `;
   }).join('')}
@@ -299,10 +307,9 @@ export function showSalvageModal(inv) {
           <div>
             <div class="salvage-reward-title">Salvage reward</div>
             <div class="salvage-material-toggle-container">
-              Gold<label class="toggle-label">
-                <input type="checkbox" class="salvage-material-toggle" ${inv.salvageUpgradeMaterials ? 'checked' : ''} />
-                <span class="toggle-btn${inv.salvageUpgradeMaterials ? ' checked' : ''}${!crystalShop.crystalUpgrades?.salvageMaterials ? ' disabled' : ''}"></span>
-              </label>Upgrade materials
+              Gold<input id="salvage-material-toggle-main" name="salvage-material-toggle-main" type="checkbox" class="salvage-material-toggle" ${inv.salvageUpgradeMaterials ? 'checked' : ''} />
+              <span class="toggle-btn${inv.salvageUpgradeMaterials ? ' checked' : ''}${!crystalShop.crystalUpgrades?.salvageMaterials ? ' disabled' : ''}"></span>
+              <label for="salvage-material-toggle-main">Upgrade materials</label>
             </div>
           </div>
         </div>
@@ -344,8 +351,9 @@ export function showSalvageModal(inv) {
   });
 
   // Auto-salvage toggle logic
-  overlay.querySelectorAll('.auto-salvage-toggle').forEach((input) => {
-    const label = input.closest('.toggle-label');
+  overlay.querySelectorAll('.salvage-row').forEach((row) => {
+    const input = row.querySelector('.auto-salvage-toggle');
+    const toggleBtn = row.querySelector('.toggle-btn');
     // Always sync visual state on open
     syncToggleState();
     // Input change handler
@@ -366,22 +374,19 @@ export function showSalvageModal(inv) {
       inv.setAutoSalvageRarities(selected);
       syncToggleState();
     });
-    // Make the whole label clickable
-    label.addEventListener('click', (e) => {
+    // Click handler for toggle-btn
+    toggleBtn.addEventListener('click', () => {
       if (input.disabled) return;
-      // Only toggle if not clicking the input directly (to avoid double toggle)
-      if (e.target !== input) {
-        input.checked = !input.checked;
-        input.dispatchEvent(new Event('change', { bubbles: true }));
-      }
+      input.checked = !input.checked;
+      input.dispatchEvent(new Event('change'));
     });
     // Helper to sync all toggles' state
     function syncToggleState() {
       const selected = inv.autoSalvageRarities ? [...inv.autoSalvageRarities] : [];
-      overlay.querySelectorAll('.auto-salvage-toggle').forEach((otherInput) => {
+      overlay.querySelectorAll('.salvage-row').forEach((otherRow) => {
+        const otherInput = otherRow.querySelector('.auto-salvage-toggle');
+        const otherBtn = otherRow.querySelector('.toggle-btn');
         const otherRarity = otherInput.dataset.rarity;
-        const otherLabel = otherInput.closest('.toggle-label');
-        const otherBtn = otherLabel.querySelector('.toggle-btn');
         const isChecked = selected.includes(otherRarity);
         const atCap = selected.length >= autoSalvageLevel;
         const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
@@ -395,20 +400,20 @@ export function showSalvageModal(inv) {
 
   // Salvage material toggle
   const matToggle = overlay.querySelector('.salvage-material-toggle');
-  if (matToggle) {
-    const matLabel = matToggle.closest('.toggle-label');
+  const matToggleBtn = overlay.querySelector('.salvage-material-toggle + .toggle-btn');
+  if (matToggle && matToggleBtn) {
     // Only allow toggle if the crystal upgrade is owned
     const hasUpgrade = crystalShop.crystalUpgrades.salvageMaterials;
     matToggle.disabled = !hasUpgrade;
     if (!hasUpgrade) {
-      matLabel.title = 'Unlock this option by purchasing the Salvage Materials upgrade in the Crystal Shop.';
+      matToggle.title = 'Unlock this option by purchasing the Salvage Materials upgrade in the Crystal Shop.';
       matToggle.checked = false;
-      matLabel.querySelector('.toggle-btn').classList.remove('checked');
+      matToggleBtn.classList.remove('checked');
     }
     function syncMatToggleState() {
       matToggle.checked = inv.salvageUpgradeMaterials && hasUpgrade;
-      const btn = matLabel.querySelector('.toggle-btn');
-      if (btn) btn.classList.toggle('checked', inv.salvageUpgradeMaterials && hasUpgrade);
+      matToggleBtn.classList.toggle('checked', inv.salvageUpgradeMaterials && hasUpgrade);
+      matToggleBtn.classList.toggle('disabled', !hasUpgrade);
     }
     matToggle.addEventListener('change', () => {
       if (!hasUpgrade) {
@@ -418,12 +423,10 @@ export function showSalvageModal(inv) {
       inv.setSalvageUpgradeMaterials(matToggle.checked);
       syncMatToggleState();
     });
-    matLabel.addEventListener('click', (e) => {
+    matToggleBtn.addEventListener('click', () => {
       if (!hasUpgrade) return;
-      if (e.target !== matToggle) {
-        matToggle.checked = !matToggle.checked;
-        matToggle.dispatchEvent(new Event('change'));
-      }
+      matToggle.checked = !matToggle.checked;
+      matToggle.dispatchEvent(new Event('change'));
     });
     // Always sync on open and after modal update
     syncMatToggleState();
@@ -538,7 +541,73 @@ export function updateInventoryGrid(inv) {
   });
 
   setupDragAndDrop();
+  applyFilter(inv);
   updateMaterialsGrid(inv);
+}
+
+function applyFilter(inv) {
+  const filter = currentFilter.trim();
+  const items = document.querySelectorAll('.grid-container .inventory-item');
+  if (!inv) return;
+
+  // Parse filter into tokens (split by space, ignore empty)
+  const tokens = filter
+    .split(/\s+/)
+    .map((t) => t.trim())
+    .filter(Boolean);
+
+  items.forEach((el) => {
+    const item = inv.getItemById(el.dataset.itemId);
+    if (!item) return;
+
+    if (!filter) {
+      el.classList.remove('filtered-out', 'filtered-match');
+      return;
+    }
+
+    // For each token, check if item matches ALL tokens (AND logic)
+    let allMatch = true;
+    for (const token of tokens) {
+      let match = false;
+      const [key, ...rest] = token.split(':');
+      const value = rest.join(':');
+      const valLower = value.toLowerCase();
+      if (key.toLowerCase() === 'level') {
+        const num = parseInt(value, 10);
+        match = !isNaN(num) && item.level === num;
+      } else if (key.toLowerCase() === 'tier') {
+        const num = parseInt(value, 10);
+        match = !isNaN(num) && item.tier === num;
+      } else {
+        // Free text: match name, formatted stat names, or stat values
+        const term = token.toLowerCase();
+        // Match item name
+        match = (item.name && item.name.toLowerCase().includes(term));
+        // Match formatted stat names (e.g., "Crit Damage")
+        if (!match && item.stats) {
+          match = Object.keys(item.stats).some((s) =>
+            formatStatName(s).toLowerCase().includes(term),
+          );
+        }
+        // Match stat values (e.g., "10")
+        if (!match && item.stats) {
+          match = Object.values(item.stats).some((v) => String(v).toLowerCase().includes(term));
+        }
+      }
+      if (!match) {
+        allMatch = false;
+        break;
+      }
+    }
+
+    if (allMatch) {
+      el.classList.add('filtered-match');
+      el.classList.remove('filtered-out');
+    } else {
+      el.classList.add('filtered-out');
+      el.classList.remove('filtered-match');
+    }
+  });
 }
 
 export function cleanupTooltips() {

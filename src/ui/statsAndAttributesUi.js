@@ -1,4 +1,4 @@
-import { game, hero, statistics } from '../globals.js';
+import { game, hero, statistics, options } from '../globals.js';
 import { STATS } from '../constants/stats/stats.js';
 import { hideTooltip, positionTooltip, showTooltip, updateEnemyStats, formatNumber } from '../ui/ui.js';
 import { OFFENSE_STATS } from '../constants/stats/offenseStats.js';
@@ -7,16 +7,98 @@ import { MISC_STATS } from '../constants/stats/miscStats.js';
 import { formatStatName } from '../ui/ui.js';
 import { ATTRIBUTE_TOOLTIPS, ATTRIBUTES } from '../constants/stats/attributes.js';
 import { ELEMENTS } from '../constants/common.js';
-import { calculateArmorReduction, calculateEvasionChance, calculateHitChance } from '../combat.js';
+import { calculateArmorReduction, calculateEvasionChance, calculateHitChance, calculateResistanceReduction } from '../combat.js';
 
 const html = String.raw;
 
 // allocation mode selector (global for attribute buttons)
 let allocationMode = 1;
+let rateIntervalId = null;
+let startTimeInFights = 0;
+let startGold = 0;
+let startItems = 0;
+let startMaterials = 0;
+let sessionXp = 0;
+let sessionDamage = 0;
+let listenersAttached = false;
+let bottomBar = null;
 
-export function updateStatsAndAttributesUI() {
+function formatPeriod(seconds) {
+  if (seconds % 3600 === 0) return `${seconds / 3600}h`;
+  if (seconds % 60 === 0) return `${seconds / 60}m`;
+  return `${seconds}s`;
+}
+
+function updateRateCounters() {
+  let ratePeriod = options.rateCountersPeriod || 1;
+  const elapsed = statistics.totalTimeInFights - startTimeInFights;
+  const periodLabel = formatPeriod(ratePeriod);
+  const dmgEls = document.querySelectorAll('.counter-damage');
+  const xpEls = document.querySelectorAll('.counter-xp');
+  const goldEls = document.querySelectorAll('.counter-gold');
+  const itemsEls = document.querySelectorAll('.counter-items');
+  const matEls = document.querySelectorAll('.counter-materials');
+  if (!elapsed || elapsed <= 0) {
+    dmgEls.forEach((el) => (el.textContent = `Damage/${periodLabel}: 0`));
+    xpEls.forEach((el) => (el.textContent = `XP/${periodLabel}: 0`));
+    goldEls.forEach((el) => (el.textContent = `Gold/${periodLabel}: 0`));
+    itemsEls.forEach((el) => (el.textContent = `Items/${periodLabel}: 0`));
+    matEls.forEach((el) => (el.textContent = `Materials/${periodLabel}: 0`));
+    return;
+  }
+  const damageRate = sessionDamage / elapsed;
+  dmgEls.forEach((el) => (el.textContent = `Damage/${periodLabel}: ${formatNumber((damageRate * ratePeriod).toFixed(1))}`));
+  const xpRate = sessionXp / elapsed;
+  xpEls.forEach((el) => (el.textContent = `XP/${periodLabel}: ${formatNumber((xpRate * ratePeriod).toFixed(1))}`));
+  const goldRate = (statistics.totalGoldEarned - startGold) / elapsed;
+  goldEls.forEach((el) => (el.textContent = `Gold/${periodLabel}: ${formatNumber((goldRate * ratePeriod).toFixed(1))}`));
+  const itemRate = (statistics.totalItemsFound - startItems) / elapsed;
+  itemsEls.forEach((el) => (el.textContent = `Items/${periodLabel}: ${formatNumber((itemRate * ratePeriod).toFixed(1))}`));
+  const matRate = (statistics.totalMaterialsFound - startMaterials) / elapsed;
+  matEls.forEach((el) => (el.textContent = `Materials/${periodLabel}: ${formatNumber((matRate * ratePeriod).toFixed(1))}`));
+}
+
+function resetRateCounters() {
+  startTimeInFights = statistics.totalTimeInFights;
+  startGold = statistics.totalGoldEarned;
+  startItems = statistics.totalItemsFound;
+  startMaterials = statistics.totalMaterialsFound;
+  sessionXp = 0;
+  sessionDamage = 0;
+  updateRateCounters();
+}
+
+export function setRateCountersVisibility(show) {
+  if (show) {
+    if (!bottomBar) {
+      bottomBar = document.createElement('div');
+      bottomBar.className = 'rate-counters-bar';
+      bottomBar.innerHTML = html`
+        <div class="counter counter-damage"></div>
+        <div class="counter counter-xp"></div>
+        <div class="counter counter-gold"></div>
+        <div class="counter counter-items"></div>
+        <div class="counter counter-materials"></div>
+        <button class="reset-btn">Reset</button>
+      `;
+      document.body.appendChild(bottomBar);
+      bottomBar.querySelector('.reset-btn').addEventListener('click', resetRateCounters);
+      updateRateCounters();
+    }
+  } else if (bottomBar) {
+    bottomBar.remove();
+    bottomBar = null;
+  }
+}
+
+document.addEventListener('toggleRateCounters', (e) => setRateCountersVisibility(e.detail));
+
+export function updateStatsAndAttributesUI(forceRebuild = false) {
   // Create .stats-grid if it doesn't exist
   let statsGrid = document.querySelector('.stats-grid');
+  if (forceRebuild && statsGrid) {
+    statsGrid.innerHTML = '';
+  }
   if (!statsGrid) {
     statsGrid = document.createElement('div');
     statsGrid.className = 'stats-grid';
@@ -28,9 +110,31 @@ export function updateStatsAndAttributesUI() {
     }
   }
 
+  if (!listenersAttached) {
+    resetRateCounters();
+    document.addEventListener('xpGained', (e) => {
+      sessionXp += e.detail;
+    });
+    document.addEventListener('damageDealt', (e) => {
+      sessionDamage += e.detail;
+    });
+    document.addEventListener('ratePeriodChange', (e) => {
+      options.rateCountersPeriod = e.detail;
+      updateRateCounters();
+    });
+    if (rateIntervalId) clearInterval(rateIntervalId);
+    rateIntervalId = setInterval(updateRateCounters, 1000);
+    listenersAttached = true;
+  }
+
   // Ensure sections exist; create them only if they don't
   let statsContainer = document.querySelector('.stats-container');
   let attributesContainer = document.querySelector('.attributes-container');
+
+  if (forceRebuild) {
+    statsContainer = null;
+    attributesContainer = null;
+  }
 
   if (!statsContainer) {
     statsContainer = document.createElement('div');
@@ -73,7 +177,9 @@ export function updateStatsAndAttributesUI() {
       const damageElements = [];
       const resistanceElements = [];
       Object.keys(statsDef).forEach((key) => {
-        if (!statsDef[key].showInUI && key !== 'extraMaterialDropPercent') return;
+        // Do not show attributes in misc-panel
+        if (panel === miscPanel && ATTRIBUTES[key]) return;
+        if (!options.showAllStats && !statsDef[key].showInUI && key !== 'extraMaterialDropPercent') return;
         // Collect elementals separately for offense panel
         if (panel === offensePanel && elementalDamageKeys.includes(key)) {
           damageElements.push(key);
@@ -232,22 +338,19 @@ export function updateStatsAndAttributesUI() {
           el.textContent = formatNumber(hero.stats.manaRegen.toFixed(STATS.manaRegen.decimalPlaces));
         } else if (key === 'blockChance') {
           el.textContent = hero.stats.blockChance.toFixed(STATS.blockChance.decimalPlaces) + '%';
-        } else if (key === 'bonusGoldPercent') {
-          el.textContent = (hero.stats.bonusGoldPercent * 100).toFixed(STATS.bonusGoldPercent.decimalPlaces) + '%';
-        } else if (key === 'bonusExperiencePercent') {
-          el.textContent =
-            (hero.stats.bonusExperiencePercent * 100).toFixed(STATS.bonusExperiencePercent.decimalPlaces) + '%';
-        } else if (key === 'itemQuantityPercent') {
-          el.textContent =
-            (hero.stats.itemQuantityPercent * 100).toFixed(STATS.itemQuantityPercent.decimalPlaces) + '%';
-        } else if (key === 'itemRarityPercent') {
-          el.textContent =
-            (hero.stats.itemRarityPercent * 100).toFixed(STATS.itemRarityPercent.decimalPlaces) + '%';
-        } else if (key === 'extraMaterialDropPercent') {
-          el.textContent =
-            (hero.stats.extraMaterialDropPercent * 100).toFixed(STATS.extraMaterialDropPercent.decimalPlaces) + '%';
         } else {
-          el.textContent = formatNumber(hero.stats[key]);
+          // Use decimalPlaces from STATS config if available
+          const decimalPlaces = STATS[key]?.decimalPlaces ?? 0;
+          let value = Number(hero.stats[key]);
+          // If stat name ends with %, multiply by 100
+          if (key.endsWith('Percent')) {
+            value = value * 100;
+          }
+          el.textContent = formatNumber(value.toFixed(decimalPlaces));
+          // Add % sign if stat name ends with Percent
+          if (key.endsWith('Percent')) {
+            el.textContent += '%';
+          }
         }
       }
     });
@@ -275,6 +378,25 @@ export function updateStatsAndAttributesUI() {
       const reduction = calculateArmorReduction(hero.stats.armor, game.currentEnemy.damage);
       armorEl.appendChild(document.createTextNode(` (${reduction.toFixed(2)}%)`));
     }
+
+    // Add elemental resistance reduction percentages
+    const resistanceMap = [
+      ['fireResistance', 'fireDamage'],
+      ['coldResistance', 'coldDamage'],
+      ['airResistance', 'airDamage'],
+      ['earthResistance', 'earthDamage'],
+      ['lightningResistance', 'lightningDamage'],
+      ['waterResistance', 'waterDamage'],
+    ];
+    resistanceMap.forEach(([resKey, dmgKey]) => {
+      const el = document.getElementById(`${resKey}-value`);
+      if (el) {
+        const value = formatNumber(hero.stats[resKey].toFixed(STATS[resKey].decimalPlaces || 0));
+        el.textContent = value;
+        const reduction = calculateResistanceReduction(hero.stats[resKey], game.currentEnemy[dmgKey]);
+        el.appendChild(document.createTextNode(` (${reduction.toFixed(2)}%)`));
+      }
+    });
 
     // add evasion reduction percentage to evasion
     const evasionEl = document.getElementById('evasion-value');
@@ -381,16 +503,18 @@ export function updateStatsAndAttributesUI() {
     statsGrid.appendChild(attributesContainer);
   } else {
     document.getElementById('attributes').textContent = `Attributes (+${hero.statPoints})`;
-    // Update dynamic attribute values
-    document.getElementById('strength-value').textContent = formatNumber(hero.stats['strength']);
-    document.getElementById('agility-value').textContent = formatNumber(hero.stats['agility']);
-    document.getElementById('vitality-value').textContent = formatNumber(hero.stats['vitality']);
-    document.getElementById('wisdom-value').textContent = formatNumber(hero.stats['wisdom']);
-    document.getElementById('endurance-value').textContent = formatNumber(hero.stats['endurance']);
-    document.getElementById('dexterity-value').textContent = formatNumber(hero.stats['dexterity']);
-    document.getElementById('intelligence-value').textContent = formatNumber(hero.stats['intelligence'] || 0);
-    document.getElementById('perseverance-value').textContent = formatNumber(hero.stats['perseverance'] || 0);
+    // Update all attribute values dynamically (works with showAllStats)
+    Object.keys(hero.stats).forEach((stat) => {
+      if (!ATTRIBUTES[stat]) return;
+      const el = document.getElementById(`${stat}-value`);
+      if (el) {
+        el.textContent = formatNumber(hero.stats[stat]);
+      }
+    });
   }
+
+  updateRateCounters();
+  setRateCountersVisibility(options.showRateCounters);
 
   const skillTreeTab = document.querySelector('[data-tab="skilltree"]');
   skillTreeTab.classList.remove('hidden');

@@ -1,6 +1,6 @@
-import { prestige } from '../globals.js';
+import { prestige, hero } from '../globals.js';
 import { createModal, closeModal } from './modal.js';
-import { formatStatName, showToast, formatNumber } from './ui.js';
+import { formatStatName, showToast, formatNumber, updateResources } from './ui.js';
 
 const html = String.raw;
 
@@ -80,35 +80,58 @@ export function updatePrestigeBonuses() {
 
 function openPrestigeModal() {
   // Always use prestige.generateCards(3), which now returns the saved cards if present
-  const cards = prestige.generateCards(3);
+  let cards = prestige.generateCards(3);
   const content = html`
     <div class="prestige-modal-content">
       <button class="modal-close">&times;</button>
-      <div class="prestige-cards">
-        ${cards
-    .map(
-      (c, i) => html`
-              <div class="prestige-card" data-idx="${i}">
-                <ul>${c.descriptions.map((d) => `<li>${d}</li>`).join('')}</ul>
-              </div>
-            `,
-    )
-    .join('')}
+      <div class="prestige-cards"></div>
+      <div class="modal-controls">
+        <button id="prestige-reroll-btn">Reroll (100💎)</button>
+      </div>
+      <div class="prestige-info-message" style="margin-top: 10px; color: #9ac7fcff; font-size: 1.05em;">
+        The higher the highest boss level you've reached, the greater your prestige bonuses will be.
       </div>
     </div>
   `;
 
   const modal = createModal({ id: 'prestige-modal', className: 'prestige-modal', content });
-  modal.querySelectorAll('.prestige-card').forEach((el) => {
-    el.onclick = async () => {
-      const idx = parseInt(el.dataset.idx, 10);
-      await prestige.prestigeWithBonus(cards[idx]);
-      closeModal(modal);
-      updatePrestigeBonuses();
-      // Update button state after prestige
-      updateButtonState();
-    };
-  });
+  const cardsContainer = modal.querySelector('.prestige-cards');
+
+  const renderCards = () => {
+    cardsContainer.innerHTML = cards
+      .map(
+        (c, i) => html`
+                <div class="prestige-card" data-idx="${i}">
+                  <ul>${c.descriptions.map((d) => `<li>${d}</li>`).join('')}</ul>
+                </div>
+              `,
+      )
+      .join('');
+    cardsContainer.querySelectorAll('.prestige-card').forEach((el) => {
+      el.onclick = async () => {
+        const idx = parseInt(el.dataset.idx, 10);
+        await prestige.prestigeWithBonus(cards[idx]);
+        closeModal(modal);
+        updatePrestigeBonuses();
+        // Update button state after prestige
+        updateButtonState();
+      };
+    });
+  };
+
+  renderCards();
+
+  const rerollBtn = modal.querySelector('#prestige-reroll-btn');
+  rerollBtn.onclick = () => {
+    if (hero.crystals < 100) {
+      showToast('Not enough crystals to reroll.');
+      return;
+    }
+    hero.crystals -= 100;
+    updateResources();
+    cards = prestige.rerollCards(3);
+    renderCards();
+  };
 }
 
 export function formatPrestigeBonus(stat, value) {
