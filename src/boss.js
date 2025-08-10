@@ -5,6 +5,8 @@ import { scaleStat } from './common.js';
 import { BOSSES } from './constants/bosses.js';
 import { hero } from './globals.js';
 
+const INCREASE_PER_LEVEL = 0.01;
+
 class Boss {
   /**
    * Create a new Boss instance with a random boss definition.
@@ -60,13 +62,19 @@ class Boss {
 
 
   calculateXP() {
-    const base = this.baseData.xp || 0;
+    let base = this.baseData.xp || 0;
+    const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
+    base *= levelBonus;
+
     const val = scaleStat(base, this.level);
     return val * (this.baseData.multiplier?.xp || 1);
   }
 
   calculateGold() {
-    const base = this.baseData.gold || 0;
+    let base = this.baseData.gold || 0;
+    const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
+    base *= levelBonus;
+
     const val = scaleStat(base, this.level);
     return val * (this.baseData.multiplier?.gold || 1);
   }
@@ -79,39 +87,57 @@ class Boss {
   }
 
   calculateLife() {
-    const baseLife = this.baseData.life;
-    const val = scaleStat(baseLife, this.level);
+    let base = this.baseData.life;
+    const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
+    base *= levelBonus;
+
+    const val = scaleStat(base, this.level);
     const hpRed = hero.stats.reduceEnemyHpPercent || 0;
     return val * (this.baseData.multiplier?.life || 1) * (1 - hpRed);
   }
 
   calculateDamage() {
-    const base = this.baseData.damage || 0;
+    let base = this.baseData.damage || 0;
+    const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
+    base *= levelBonus;
+
     const val = scaleStat(base, this.level);
     const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
     return val * (this.baseData.multiplier?.damage || 1) * (1 - dmgRed);
   }
 
   calculateArmor() {
-    const base = this.baseData.armor || 0;
+    let base = this.baseData.armor || 0;
+    const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
+    base *= levelBonus;
+
     const val = scaleStat(base, this.level);
     return val * (this.baseData.multiplier?.armor || 1);
   }
 
   calculateEvasion() {
-    const base = this.baseData.evasion || 0;
+    let base = this.baseData.evasion || 0;
+    const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
+    base *= levelBonus;
+
     const val = scaleStat(base, this.level);
     return val * (this.baseData.multiplier?.evasion || 1);
   }
 
   calculateAttackRating() {
-    const base = this.baseData.attackRating || 0;
+    let base = this.baseData.attackRating || 0;
+    const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
+    base *= levelBonus;
+
     const val = scaleStat(base, this.level);
     return val * (this.baseData.multiplier?.attackRating || 1);
   }
 
   calculateElementalDamage(type) {
-    const base = this.baseData[`${type}Damage`] || 0;
+    let base = this.baseData[`${type}Damage`] || 0;
+    const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
+    base *= levelBonus;
+
     if (base === 0) return 0;
     const val = scaleStat(base, this.level);
 
@@ -120,7 +146,10 @@ class Boss {
   }
 
   calculateElementalResistance(type) {
-    const base = this.baseData[`${type}Resistance`] || 0;
+    let base = this.baseData[`${type}Resistance`] || 0;
+    const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
+    base *= levelBonus;
+
     if (base === 0) return 0;
     const val = scaleStat(base, this.level);
     return val * (this.baseData.multiplier?.[`${type}Resistance`] || 1);
