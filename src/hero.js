@@ -519,7 +519,7 @@ export default class Hero {
   }
 
   // calculated when hit is successful
-  calculateTotalDamage(instantSkillBaseEffects = {}) {
+  calculateTotalDamage(instantSkillBaseEffects = {}, toggleEffects = {}) {
 
     let physicalDamage = this.stats.damage + (instantSkillBaseEffects.damage || 0);
     let fireDamage = this.stats.fireDamage + (instantSkillBaseEffects.fireDamage || 0);
@@ -529,9 +529,6 @@ export default class Hero {
     let lightningDamage = this.stats.lightningDamage + (instantSkillBaseEffects.lightningDamage || 0);
     let waterDamage = this.stats.waterDamage + (instantSkillBaseEffects.waterDamage || 0);
 
-
-    // Add toggle skill effects
-    const toggleEffects = skillTree.applyToggleEffects();
     const isCritical = Math.random() * 100 < (this.stats.critChance + (toggleEffects.critChance || 0));
 
     // Add flat bonuses from toggles if present
@@ -603,9 +600,9 @@ export default class Hero {
     };
   }
 
-  calculateDamageAgainst(enemy, instantSkillBaseEffects = {}) {
+  calculateDamageAgainst(enemy, instantSkillBaseEffects = {}, toggleEffects = {}) {
     console.debug(instantSkillBaseEffects, 'instantSkillBaseEffects');
-    const result = this.calculateTotalDamage(instantSkillBaseEffects);
+    const result = this.calculateTotalDamage(instantSkillBaseEffects, toggleEffects);
 
     if (!enemy) return result;
     // Calculate effective enemy armor after hero's armor penetration

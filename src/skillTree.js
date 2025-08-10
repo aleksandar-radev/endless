@@ -345,7 +345,9 @@ export default class SkillTree {
 
     hero.stats.currentMana -= this.getSkillManaCost(skill);
 
-    const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy, baseEffects);
+    const toggleEffects = this.applyToggleEffects();
+
+    const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy, baseEffects, toggleEffects);
 
     if (baseEffects.lifeSteal) {
       const lifeStealAmount = damage * (baseEffects.lifeSteal / 100);
@@ -407,7 +409,7 @@ export default class SkillTree {
       effects.elementalDamagePercent
     );
   }
-  applyToggleEffects(isHit = true) {
+  applyToggleEffects() {
     if (!game.currentEnemy || game.currentEnemy.currentLife <= 0) return {};
 
     let effects = {};
@@ -426,15 +428,6 @@ export default class SkillTree {
               effects[stat] = value; // fallback for non-numeric
             }
           });
-
-          if (isHit) {
-            if (skillEffects.lifePerHit) {
-              game.healPlayer(skillEffects.lifePerHit);
-            }
-            if (skillEffects.manaPerHit) {
-              game.restoreMana(skillEffects.manaPerHit);
-            }
-          }
         } else {
           // showManaWarning();
           // Deactivate if not enough mana
