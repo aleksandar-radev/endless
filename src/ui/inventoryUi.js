@@ -120,6 +120,10 @@ export function initializeInventoryUI(inv) {
       materialsGrid.style.display = '';
       updateMaterialsGrid(inv);
       updateSortBtnText();
+      // Clear search highlights when switching to materials tab
+      document.querySelectorAll('.inventory-item').forEach(item => {
+        item.classList.remove('highlight', 'dimmed');
+      });
     });
   }
 
@@ -148,7 +152,28 @@ export function initializeInventoryUI(inv) {
   const searchInput = document.getElementById('inventory-search');
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
-      highlightMatchingItems(e.target.value);
+      const searchText = e.target.value.toLowerCase();
+
+      document.querySelectorAll('.inventory-item').forEach(item => {
+        item.classList.remove('highlight', 'dimmed');
+      });
+
+      if (!searchText) return;
+
+      document.querySelectorAll('.grid-container .inventory-item').forEach(item => {
+        const itemData = inventory.getItemById(item.dataset.itemId);
+        if (!itemData) return;
+
+        const matchesSearch =
+          itemData.name?.toLowerCase().includes(searchText) ||
+          itemData.type?.toLowerCase().includes(searchText) ||
+          itemData.rarity?.toLowerCase().includes(searchText) ||
+          Object.entries(itemData.stats || {}).some(([stat]) =>
+            stat.toLowerCase().includes(searchText)
+          );
+
+        item.classList.add(matchesSearch ? 'highlight' : 'dimmed');
+      });
     });
   }
 
@@ -467,59 +492,7 @@ export function showSalvageModal(inv) {
   trash.addEventListener('mouseleave', hideTooltip);
 }
 
-function highlightMatchingItems(searchText) {
-  const items = document.querySelectorAll('.inventory-item');
-  const materials = document.querySelectorAll('.material-item');
 
-  if (!searchText) {
-    items.forEach(item => item.classList.remove('highlight', 'dimmed'));
-    materials.forEach(mat => mat.classList.remove('highlight', 'dimmed'));
-    return;
-  }
-
-  const searchLower = searchText.toLowerCase();
-
-  // Busca em itens do inventário
-  items.forEach(item => {
-    const itemData = inventory.getItemById(item.dataset.itemId);
-    if (!itemData) return;
-
-    const matchesSearch =
-      itemData.name?.toLowerCase().includes(searchLower) ||
-      itemData.type?.toLowerCase().includes(searchLower) ||
-      itemData.rarity?.toLowerCase().includes(searchLower) ||
-      Object.entries(itemData.stats || {}).some(([stat, value]) =>
-        stat.toLowerCase().includes(searchLower)
-      );
-
-    if (matchesSearch) {
-      item.classList.add('highlight');
-      item.classList.remove('dimmed');
-    } else {
-      item.classList.add('dimmed');
-      item.classList.remove('highlight');
-    }
-  });
-
-  // Busca em materiais
-  materials.forEach(mat => {
-    const matId = mat.dataset.matId;
-    const matDef = MATERIALS[matId] || {};
-
-    const matchesSearch =
-      matDef.name?.toLowerCase().includes(searchLower) ||
-      matDef.description?.toLowerCase().includes(searchLower) ||
-      matId.toLowerCase().includes(searchLower);
-
-    if (matchesSearch) {
-      mat.classList.add('highlight');
-      mat.classList.remove('dimmed');
-    } else {
-      mat.classList.add('dimmed');
-      mat.classList.remove('highlight');
-    }
-  });
-}
 
 export function updateInventoryGrid(inv) {
   if (!inv) {
