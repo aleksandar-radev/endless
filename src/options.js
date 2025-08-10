@@ -32,6 +32,8 @@ export class Options {
     this.salvageMaterialsEnabled = data.salvageMaterialsEnabled ?? false;
     // Add advanced tooltips option
     this.showAdvancedTooltips = data.showAdvancedTooltips ?? false;
+    // Add advanced attribute tooltips option
+    this.showAdvancedAttributeTooltips = data.showAdvancedAttributeTooltips ?? false;
     // Show rate counters bar
     this.showRateCounters = data.showRateCounters ?? false;
     // Period for rate counters in seconds
@@ -99,8 +101,10 @@ export class Options {
 
     // --- Sound Volume Option ---
     container.appendChild(this._createSoundVolumeOption());
-    // --- Advanced Tooltips Option ---
+    // --- Advanced Item Tooltips Option ---
     container.appendChild(this._createAdvancedTooltipsOption());
+    // --- Advanced Attribute Tooltips Option ---
+    container.appendChild(this._createAdvancedAttributeTooltipsOption());
     // --- Rate Counters Toggle Option ---
     container.appendChild(this._createRateCountersOption());
     // --- Rate Counters Period Option ---
@@ -172,6 +176,33 @@ export class Options {
       // Save option
       dataManager.saveGame();
       // Optionally, refresh tooltips if needed
+    });
+    return wrapper;
+  }
+
+  _createAdvancedAttributeTooltipsOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = `
+      <label for="advanced-attr-tooltips-toggle" class="advanced-attr-tooltips-toggle-label">Show Advanced Attribute Tooltips:</label>
+      <input
+        type="checkbox"
+        id="advanced-attr-tooltips-toggle"
+        class="advanced-attr-tooltips-toggle"
+        ${this.showAdvancedAttributeTooltips ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.showAdvancedAttributeTooltips = checkbox.checked;
+      dataManager.saveGame();
+      updateStatsAndAttributesUI(true);
     });
     return wrapper;
   }

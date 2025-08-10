@@ -1,5 +1,5 @@
 import { initializeSkillTreeStructure, updatePlayerLife, updateTabIndicators } from './ui/ui.js';
-import { game, inventory, training, skillTree, statistics, soulShop, dataManager } from './globals.js';
+import { game, inventory, training, skillTree, statistics, soulShop, dataManager, prestige } from './globals.js';
 import { calculateArmorReduction, calculateResistanceReduction, createCombatText, createDamageNumber } from './combat.js';
 import { handleSavedData } from './functions.js';
 import { getCurrentRegion, updateRegionUI } from './region.js';
@@ -48,6 +48,8 @@ export default class Hero {
     for (const [stat, config] of Object.entries(STATS)) {
       this.stats[stat] = config.base;
     }
+    // Holds breakdown of stat sources for tooltips
+    this.statBreakdown = {};
     // Optionally, set currentLife and currentMana to their max values:
     this.stats.currentLife = this.stats.life;
     this.stats.currentMana = this.stats.mana;
@@ -148,6 +150,9 @@ export default class Hero {
     const skillTreeBonuses = skillTree.getAllSkillTreeBonuses();
     const equipmentBonuses = inventory.getEquipmentBonuses();
     const trainingBonuses = training.getTrainingBonuses();
+    const soulBonuses = this.getSoulShopBonuses();
+    const prestigeBonuses = prestige?.bonuses || {};
+    this.statBreakdown = {};
 
     // 1) Build primary (flat) stats
     this.calculatePrimaryStats(skillTreeBonuses, equipmentBonuses, trainingBonuses);
@@ -185,6 +190,47 @@ export default class Hero {
       equipmentBonuses,
       trainingBonuses,
     );
+
+    Object.keys(ATTRIBUTES).forEach((attr) => {
+      const base = (STATS[attr]?.base || 0) + (STATS[attr]?.levelUpBonus || 0) * (this.level - 1);
+      const allocated = this.primaryStats[attr] || 0;
+      const prestigeFlat = (prestigeBonuses[attr] || 0) + (prestigeBonuses.allAttributes || 0);
+      const prestigePercent =
+        (prestigeBonuses[`${attr}Percent`] || 0) + (prestigeBonuses.allAttributesPercent || 0);
+      const permaFlat =
+        (this.permaStats[attr] || 0) + (this.permaStats.allAttributes || 0) - prestigeFlat;
+      const permaPercent =
+        (this.permaStats[`${attr}Percent`] || 0) +
+        (this.permaStats.allAttributesPercent || 0) -
+        prestigePercent;
+      const itemsFlat = equipmentBonuses[attr] || 0;
+      const itemsPercent = (equipmentBonuses[`${attr}Percent`] || 0) / 100;
+      const skillsFlat = skillTreeBonuses[attr] || 0;
+      const skillsPercent = (skillTreeBonuses[`${attr}Percent`] || 0) / 100;
+      const trainingFlat = trainingBonuses[attr] || 0;
+      const trainingPercent = (trainingBonuses[`${attr}Percent`] || 0) / 100;
+      const soulFlat = soulBonuses[attr] || 0;
+      const soulPercent = soulBonuses[`${attr}Percent`] || 0;
+      this.statBreakdown[attr] = {
+        base,
+        allocated,
+        perma: permaFlat,
+        prestige: prestigeFlat,
+        items: itemsFlat,
+        skills: skillsFlat,
+        training: trainingFlat,
+        soul: soulFlat,
+        percent: {
+          perma: permaPercent,
+          prestige: prestigePercent,
+          items: itemsPercent,
+          skills: skillsPercent,
+          training: trainingPercent,
+          soul: soulPercent,
+        },
+      };
+    });
+
     this.applyFinalCalculations(flatValues, percentBonuses);
 
     // cycle through all stats to make all numbers have the correct decimal places

@@ -68,6 +68,38 @@ function resetRateCounters() {
   updateRateCounters();
 }
 
+function getAdvancedAttributeTooltip(attr) {
+  const breakdown = hero.statBreakdown?.[attr];
+  if (!breakdown) return '';
+
+  const sources = [
+    { name: 'Base', flat: Math.floor(breakdown.base), percent: 0 },
+    { name: 'Allocated', flat: Math.floor(breakdown.allocated), percent: 0 },
+    { name: 'Potions', flat: Math.floor(breakdown.perma), percent: breakdown.percent.perma },
+    { name: 'Prestige', flat: Math.floor(breakdown.prestige), percent: breakdown.percent.prestige },
+    { name: 'Items', flat: Math.floor(breakdown.items), percent: breakdown.percent.items },
+    { name: 'Skills', flat: Math.floor(breakdown.skills), percent: breakdown.percent.skills },
+    { name: 'Training', flat: Math.floor(breakdown.training), percent: breakdown.percent.training },
+    { name: 'Soul Shop', flat: Math.floor(breakdown.soul), percent: breakdown.percent.soul },
+  ].filter((s) => s.flat || s.percent);
+
+  const totalFlat = sources.reduce((sum, s) => sum + (s.flat || 0), 0);
+  const totalPercent = sources.reduce((sum, s) => sum + (s.percent || 0), 0);
+  const finalValue = hero.stats[attr];
+
+  let lines = sources
+    .map((s) => `${s.name}: ${formatNumber(s.flat || 0)}${s.percent ? ` (${(s.percent * 100).toFixed(1)}%)` : ''}`)
+    .join('<br />');
+
+  return html`
+    <strong>${formatStatName(attr)}</strong><br />
+    ${lines}<br />
+    <em>Total Flat:</em> ${formatNumber(totalFlat)}<br />
+    <em>Total %:</em> ${(totalPercent * 100).toFixed(1)}%<br />
+    <strong>Total:</strong> ${formatNumber(finalValue)}
+  `;
+}
+
 export function setRateCountersVisibility(show) {
   if (show) {
     if (!bottomBar) {
@@ -451,9 +483,12 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
 
     attributesContainer.querySelectorAll('.attribute-row').forEach((row) => {
       const stat = row.querySelector('button').dataset.stat;
-      row.addEventListener('mouseenter', (e) =>
-        showTooltip(ATTRIBUTE_TOOLTIPS[`get${stat.charAt(0).toUpperCase() + stat.slice(1)}Tooltip`](), e),
-      );
+      row.addEventListener('mouseenter', (e) => {
+        const tip = options.showAdvancedAttributeTooltips
+          ? getAdvancedAttributeTooltip(stat)
+          : ATTRIBUTE_TOOLTIPS[`get${stat.charAt(0).toUpperCase() + stat.slice(1)}Tooltip`]();
+        showTooltip(tip, e);
+      });
       row.addEventListener('mousemove', positionTooltip);
       row.addEventListener('mouseleave', hideTooltip);
     });
