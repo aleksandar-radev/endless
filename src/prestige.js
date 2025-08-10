@@ -112,6 +112,11 @@ export default class Prestige {
     return cards;
   }
 
+  rerollCards(count = 3, bonusesPerCard = 3) {
+    this.pendingCards = null;
+    return this.generateCards(count, bonusesPerCard);
+  }
+
   async prestigeWithBonus(card) {
     const combined = { ...this.bonuses };
     Object.entries(card.bonuses).forEach(([stat, val]) => {

@@ -124,6 +124,26 @@
   overflow: visible;
 }
 
+.prestige-modal-content .modal-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.prestige-modal-content .modal-controls button {
+  background: var(--accent, #4e8cff);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.prestige-modal-content .modal-controls button:hover {
+  background: var(--accent-hover, #2c6ad4);
+}
+
 .prestige-modal-content .modal-close {
   position: absolute;
   top: 1rem;
