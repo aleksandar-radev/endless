@@ -215,7 +215,7 @@ export const DRUID_SKILLS = {
       armorPercent: scaleDownFlat(level, 2),
       lifeRegenPercent: scaleDownFlat(level, 0.5),
       lifeRegen: scaleUpFlat(level, 2),
-      lifeRegenOfTotalPercent: scaleDownFlat(level, 0.01),
+      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level, 0.01), 2),
     }),
   },
   wrathOfNature: {
@@ -264,6 +264,7 @@ export const DRUID_SKILLS = {
       lifeRegen: scaleUpFlat(level, 2),
       lifeRegenPercent: scaleDownFlat(level, 1.5),
       manaRegenPercent: scaleDownFlat(level),
+      extraDamageFromLifeRegenPercent: Math.min(0.1 * scaleDownFlat(level), 10),
     }),
   },
   wildGrowth: {
@@ -278,9 +279,10 @@ export const DRUID_SKILLS = {
     description: () => 'Causes allies to rapidly regenerate life.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegen: scaleUpFlat(level, 4),
+      lifeRegen: scaleUpFlat(level, 4, 2),
+      lifeRegenPercent: scaleDownFlat(level, 2),
       lifePercent: scaleDownFlat(level),
-      vitality: scaleUpFlat(level, 2),
+      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level, 0.01), 2),
     }),
   },
 
@@ -296,7 +298,7 @@ export const DRUID_SKILLS = {
     effect: (level) => ({
       armorPercent: scaleDownFlat(level, 2),
       lifePercent: scaleDownFlat(level, 1.5),
-      earthDamagePercent: scaleDownFlat(level, 2),
+      earthDamagePercent: scaleDownFlat(level, 4),
     }),
   },
   furyOfTheWilds: {
@@ -304,13 +306,13 @@ export const DRUID_SKILLS = {
     name: () => 'Fury of the Wilds',
     type: () => 'instant',
     manaCost: (level) => 30 + level * 1.25,
-    cooldown: () => 120000,
+    cooldown: () => 20000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'fury-of-the-wilds',
     description: () => 'Unleash nature\'s wrath on your foes.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 14),
+      damage: scaleUpFlat(level, 14, 4, 0.2),
       coldDamagePercent: scaleDownFlat(level, 3),
       lightningDamagePercent: scaleDownFlat(level, 3),
     }),
@@ -326,15 +328,24 @@ export const DRUID_SKILLS = {
     description: () => 'Gain everlasting resilience from nature.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifePercent: scaleDownFlat(level, 2),
-      vitalityPercent: scaleDownFlat(level, 3),
+      vitalityPercent: scaleDownFlat(level, 2),
       endurancePercent: scaleDownFlat(level, 2),
+      perseverancePercent: scaleDownFlat(level, 2),
     }),
   },
   primevalGuardian: {
     id: 'primevalGuardian',
     name: () => 'Primeval Guardian',
-    type: () => 'buff',
+    type: () => 'summon',
+    summonStats: (level) => {
+      return {
+        percentOfPlayerDamage: Math.min(scaleDownFlat(level, 1.2), 150),
+        damage: scaleUpFlat(level, 25, 3),
+        earthDamage: scaleUpFlat(level, 20, 3),
+        earthDamagePercent: scaleDownFlat(level, 2),
+        attackSpeed: 1.25,
+      };
+    },
     manaCost: (level) => 40 + level * 1.25,
     cooldown: () => 150000,
     duration: () => 40000,
@@ -343,10 +354,6 @@ export const DRUID_SKILLS = {
     description: () => 'Summon an ancient guardian to protect allies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      percentOfPlayerDamage: Math.min(scaleDownFlat(level, 1.2), 150),
-      damage: scaleUpFlat(level, 5),
-      earthDamage: scaleUpFlat(level, 5),
-      earthDamagePercent: scaleDownFlat(level, 2),
     }),
   },
 
@@ -360,9 +367,9 @@ export const DRUID_SKILLS = {
     description: () => 'Become one with the earth for immense fortitude.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: scaleUpFlat(level, 12),
-      lifePercent: scaleDownFlat(level, 2),
-      allResistance: scaleUpFlat(level, 12),
+      armor: scaleUpFlat(level, 12, 5),
+      lifePercent: scaleDownFlat(level, 2.5),
+      allResistance: scaleUpFlat(level, 12, 5),
     }),
   },
   cosmicHarmony: {
@@ -375,8 +382,6 @@ export const DRUID_SKILLS = {
     description: () => 'Balance all energies to empower allies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegenPercent: scaleDownFlat(level, 2),
-      manaRegenPercent: scaleDownFlat(level, 2),
       elementalDamagePercent: scaleDownFlat(level, 3),
     }),
   },

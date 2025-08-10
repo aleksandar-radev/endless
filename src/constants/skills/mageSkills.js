@@ -15,8 +15,8 @@ export const MAGE_SKILLS = {
     description: () => 'Launches a missile of arcane energy.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      waterDamage: scaleUpFlat(level, 3),
-      waterDamagePercent: scaleDownFlat(level, 5),
+      waterDamage: scaleUpFlat(level, 3, 6),
+      waterDamagePercent: scaleDownFlat(level, 4),
     }),
   },
   arcaneIntellect: {
@@ -26,7 +26,7 @@ export const MAGE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'intellect',
     description: () => 'Increases mana and wisdom.',
-    maxLevel: () => 300,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       manaPercent: scaleDownFlat(level, 3),
       wisdom: scaleUpFlat(level, 3),
@@ -76,7 +76,7 @@ export const MAGE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'mind-control',
     description: () => 'Instantly move to a nearby location.',
-    maxLevel: () => 100,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       perseverance: scaleUpFlat(level, 4),
       wisdom: scaleUpFlat(level, 8),
@@ -94,9 +94,9 @@ export const MAGE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'mana-shield',
     description: () => 'Absorbs damage using mana.',
-    maxLevel: () => 200,
+    maxLevel: () => 250,
     effect: (level) => ({
-      manaShieldPercent: scaleDownFlat(level, 0.5),
+      manaShieldPercent: Math.min(scaleDownFlat(level, 0.75), 100),
     }),
   },
 
@@ -108,10 +108,10 @@ export const MAGE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'resource-infusion',
     description: () => 'Infuses yourself with magical energy. Greatly increases mana regeneration.',
-    maxLevel: () => 1000,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      mana: scaleUpFlat(level, 25),
-      manaRegenOfTotalPercent: scaleDownFlat(level, 0.025),
+      mana: scaleUpFlat(level, 25, 7, 0.5),
+      manaRegenOfTotalPercent: Math.min(scaleDownFlat(level, 0.015), 2),
       extraDamageFromManaPercent: Math.min(scaleDownFlat(level, 0.012), 2),
     }),
   },
@@ -139,11 +139,10 @@ export const MAGE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'focus',
     description: () => 'Improves spell damage and hit rate.',
-    maxLevel: () => 500,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamagePercent: scaleDownFlat(level, 0.75),
-      attackRating: scaleUpFlat(level, 5),
-      attackRatingPercent: scaleDownFlat(level, 5),
+      attackRating: scaleUpFlat(level, 5, 5),
     }),
   },
 
@@ -158,7 +157,7 @@ export const MAGE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'pyroclasm',
     description: () => 'Engulfs the area in flames.',
-    maxLevel: () => 300,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamage: scaleUpFlat(level, 2),
       fireDamagePercent: scaleDownFlat(level, 8),
@@ -176,7 +175,7 @@ export const MAGE_SKILLS = {
     description: () => 'Greatly increases attack speed for a short time.',
     maxLevel: () => 300,
     effect: (level) => ({
-      attackSpeed: Math.min(scaleDownFlat(level, 0.04), 3),
+      attackSpeed: Math.min(scaleDownFlat(level, 0.02), 2),
     }),
   },
 
@@ -189,9 +188,9 @@ export const MAGE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'arcane-power',
     description: () => 'Unleash arcane power, increasing spell damage.',
-    maxLevel: () => 600,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: scaleDownFlat(level, 2, 10, 100, 0.2),
+      elementalDamagePercent: scaleDownFlat(level, 1.25),
     }),
   },
   summonElemental: {
@@ -201,11 +200,11 @@ export const MAGE_SKILLS = {
     summonStats: (level) => {
       return {
         percentOfPlayerDamage: Math.min(scaleDownFlat(level, 0.8), 100),
-        damage: scaleUpFlat(level, 8),
+        damage: scaleUpFlat(level, 8, 5),
         attackSpeed: 1.3,
-        fireDamage: scaleUpFlat(level, 22),
-        airDamage: scaleUpFlat(level, 22),
-        coldDamage: scaleUpFlat(level, 22),
+        fireDamage: scaleUpFlat(level, 22, 5),
+        airDamage: scaleUpFlat(level, 22, 5),
+        coldDamage: scaleUpFlat(level, 22, 5),
       };
     },
     manaCost: (level) => 30 + level * 1,
@@ -214,7 +213,7 @@ export const MAGE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'summon-elemental',
     description: () => 'Summons an elemental ally.',
-    maxLevel: () => 500,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
     }),
   },
@@ -227,11 +226,11 @@ export const MAGE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'archmage',
     description: () => 'Mastery of all magical arts.',
-    maxLevel: () => 100,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       wisdom: scaleUpFlat(level, 5),
       wisdomPercent: scaleDownFlat(level, 4),
-      elementalDamagePercent: scaleDownFlat(level, 1.5),
+      elementalDamagePercent: scaleDownFlat(level, 1),
       manaPercent: scaleDownFlat(level, 3),
     }),
   },
@@ -354,7 +353,7 @@ export const MAGE_SKILLS = {
     name: () => 'Apocalypse',
     type: () => 'instant',
     manaCost: (level) => 60 + level * 1.25,
-    cooldown: () => 200000,
+    cooldown: () => 27000,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'apocalypse',
     description: () => 'Release a devastating wave of destruction.',
@@ -363,7 +362,6 @@ export const MAGE_SKILLS = {
       fireDamagePercent: scaleDownFlat(level, 6),
       coldDamagePercent: scaleDownFlat(level, 6),
       lightningDamagePercent: scaleDownFlat(level, 6),
-      damage: scaleUpFlat(level, 30),
     }),
   },
 };

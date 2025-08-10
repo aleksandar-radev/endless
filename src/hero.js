@@ -379,7 +379,7 @@ export default class Hero {
       if (!stat.endsWith('Percent')) {
         let percent = percentBonuses[stat + 'Percent'] || 0;
         if (elementalResistances.includes(stat)) {
-          percent += this.stats.allElementalResistancePercent || 0;
+          percent += this.stats.allResistancePercent || 0;
         }
 
         // Use Math.floor for integer stats, Number.toFixed for decimals
@@ -441,7 +441,7 @@ export default class Hero {
 
     let allRes = this.stats.allResistance || 0;
     if (allRes) {
-      allRes *= 1 + (this.stats.allElementalResistancePercent || 0);
+      allRes *= 1 + (this.stats.allResistancePercent || 0);
     }
 
     this.stats.fireResistance = Math.max(this.stats.fireResistance + allRes, 0);
@@ -627,7 +627,8 @@ export default class Hero {
       if (this.stats.ignoreAllEnemyResistances > 0) return 0;
       let effectiveRes = baseRes;
       // Apply percent penetration first (elementalPenetrationPercent + specific percent)
-      const totalPercentPen = (percentPen || 0) + (this.stats.elementalPenetrationPercent || 0) + (instantSkillBaseEffects.elementalPenetrationPercent || 0);
+      const totalPercentPen = ((percentPen || 0) + (this.stats.elementalPenetrationPercent || 0) + (instantSkillBaseEffects.elementalPenetrationPercent || 0)) * 100;
+
       effectiveRes *= 1 - totalPercentPen / 100;
       // Then apply flat penetration (elementalPenetration + specific flat)
       const totalFlatPen = (flatPen || 0) + (this.stats.elementalPenetration || 0) + (instantSkillBaseEffects.elementalPenetration || 0);

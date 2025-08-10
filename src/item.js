@@ -26,7 +26,7 @@ const RESISTANCE_STATS = [
   'lightningResistancePercent',
   'waterResistancePercent',
   'allResistance',
-  'allElementalResistancePercent',
+  'allResistancePercent',
 ];
 
 const ATTRIBUTE_STATS = [

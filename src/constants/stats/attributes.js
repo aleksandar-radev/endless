@@ -31,7 +31,7 @@ export const ATTRIBUTES = {
   },
   dexterity: {
     effects: {
-      evasionPerPoint: 5,
+      evasionPerPoint: 4,
     },
   },
   intelligence: {
@@ -43,6 +43,7 @@ export const ATTRIBUTES = {
     effects: {
       lifeRegenPerPoint: 0.5,
       manaRegenPerPoint: 0.05,
+      allResistancePerPoint: 2,
     },
   },
 };
@@ -95,7 +96,8 @@ export const ATTRIBUTE_TOOLTIPS = {
     <strong>Perseverance</strong><br />
     Each point increases:<br />
     • Mana Regeneration by ${ATTRIBUTES.perseverance.effects.manaRegenPerPoint}<br />
-    • Life Regeneration by ${ATTRIBUTES.perseverance.effects.lifeRegenPerPoint}
+    • Life Regeneration by ${ATTRIBUTES.perseverance.effects.lifeRegenPerPoint}<br />
+    • All Resistances by ${ATTRIBUTES.perseverance.effects.allResistancePerPoint}<br
   `,
 
   getElementalDamageTooltip: () => html`

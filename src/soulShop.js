@@ -77,12 +77,12 @@ export const SOUL_UPGRADE_CONFIG = {
     costIncrement: 0.3,
     stat: 'lifeRegenPercent',
   },
-  allElementalResistanceBoost: {
+  allResistanceBoost: {
     label: 'All Elemental Resistance Boost %',
     bonus: 0.01,
     baseCost: 3,
     costIncrement: 0.3,
-    stat: 'allElementalResistancePercent',
+    stat: 'allResistancePercent',
   },
   /**
    * Extra Material Drop Chance

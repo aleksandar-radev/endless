@@ -227,7 +227,7 @@ export const WARRIOR_SKILLS = {
     effect: (level) => ({
       armorPercent: scaleDownFlat(level, 1.5),
       blockChance: Math.min(scaleDownFlat(level, 0.1), 10),
-      allElementalResistancePercent: scaleDownFlat(level, 2.5),
+      allResistancePercent: scaleDownFlat(level, 2.5),
     }),
   },
 

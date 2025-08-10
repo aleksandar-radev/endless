@@ -57,12 +57,12 @@ export const PALADIN_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'protection',
     description: () => 'Greatly increases armor and block chance.',
-    maxLevel: () => 200,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: scaleUpFlat(level, 2),
       armorPercent: scaleDownFlat(level, 2),
-      thornsDamage: scaleUpFlat(level, 1),
-      thornsDamagePercent: scaleDownFlat(level, 0.5),
+      thornsDamage: scaleUpFlat(level, 2, 4),
+      thornsDamagePercent: Math.min(scaleDownFlat(level, 1), 250),
     }),
   },
 
@@ -159,12 +159,12 @@ export const PALADIN_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'beacon',
     description: () => 'Increases healing done.',
-    maxLevel: () => 500,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       life: scaleUpFlat(level, 20),
       lifeRegenPercent: scaleDownFlat(level, 0.5),
       lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level, 0.1), 1),
-      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.02), 2.5),
+      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.01), 2.5),
     }),
   },
 
@@ -195,7 +195,7 @@ export const PALADIN_SKILLS = {
       return {
         percentOfPlayerDamage: Math.min(scaleDownFlat(level, 1), 120),
         damage: scaleUpFlat(level, 4),
-        attackSpeed: Math.max(0.9, 0.7 + scaleDownFlat(level, 0.003)),
+        attackSpeed: Math.min(Math.max(0.9, 0.7 + scaleDownFlat(level, 0.003)), 2.2),
       };
     },
     manaCost: (level) => 20 + level * 0.875,
@@ -204,7 +204,7 @@ export const PALADIN_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'aid-from-heaven',
     description: () => 'Summons an angel from the sky to aid allies.',
-    maxLevel: () => 500,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({}),
   },
 

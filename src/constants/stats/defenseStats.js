@@ -204,7 +204,7 @@ export const DEFENSE_STATS = {
     item: { min: 5, max: 15, scaling: (level) => defenseScaling(level) },
     itemTags: ['defense', 'jewelry'],
   },
-  allElementalResistancePercent: {
+  allResistancePercent: {
     base: 0,
     decimalPlaces: 1,
     item: { min: 2, max: 7, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
