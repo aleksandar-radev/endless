@@ -5,7 +5,7 @@ import { scaleStat } from './common.js';
 import { BOSSES } from './constants/bosses.js';
 import { hero } from './globals.js';
 
-const INCREASE_PER_LEVEL = 0.01;
+const INCREASE_PER_LEVEL = 0.02;
 
 class Boss {
   /**
