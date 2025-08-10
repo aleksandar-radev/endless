@@ -8,10 +8,10 @@ import { hero } from './globals.js';
 // for tier 1 enemy level 1 50 life, level 2 is 50 + 25 = 75 (e.g. 50% increase for base value per level)
 // tier 12 enemy gets 8% increase per level on the base value
 const TIER_STAT_SCALE = {
-  1: 0.3,
-  2: 0.4,
-  3: 0.5,
-  4: 0.6,
+  1: 0.7,
+  2: 0.6,
+  3: 0.6,
+  4: 0.5,
   5: 0.5,
   6: 0.4,
   7: 0.32,
@@ -25,7 +25,7 @@ const TIER_STAT_SCALE = {
 // levelScale -> [fixed increase, bonus interval, bonus increase]
 const BASE_SCALE_PER_TIER_AND_LEVEL = {
   1: {
-    tierScale: 0.5,
+    tierScale: 0.6,
     levelScale: 0.01,
   },
   2: {
@@ -203,7 +203,8 @@ class Enemy {
 
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const damageRed = hero.stats.reduceEnemyDamagePercent || 0;
-    return val * this.region.multiplier.damage * this.rarityData.multiplier.damage * this.baseData.multiplier.damage * (1 - damageRed);
+    const totalDamage = val * this.region.multiplier.damage * this.rarityData.multiplier.damage * this.baseData.multiplier.damage * (1 - damageRed);
+    return Math.max(totalDamage, 1);
   };
 
   calculateArmor() {
@@ -255,7 +256,8 @@ class Enemy {
     const baseMult = this.baseData.multiplier ? this.baseData.multiplier[`${type}Damage`] || 1 : 1;
 
     const damageRed = hero.stats.reduceEnemyDamagePercent || 0;
-    return val * regionMult * rarityMult * baseMult * (1 - damageRed);
+    const totalDamage = val * regionMult * rarityMult * baseMult * (1 - damageRed);
+    return Math.max(totalDamage, 1);
   }
 
   calculateElementalResistance(type) {
