@@ -9,10 +9,8 @@ import {
 import { PRESTIGE_BONUSES, STARTING_CRYSTALS_BONUS } from './constants/prestigeBonuses.js';
 import { formatStatName } from './ui/ui.js';
 
-const LEVEL_REQUIREMENT = 150;
+const LEVEL_REQUIREMENT = 100;
 const LEVEL_REQUIREMENT_INCREASE = 50;
-const BOSSLEVEL_REQUIREMENT = 50;
-const BOSSLEVEL_REQUIREMENT_INCREASE = 25;
 
 export default class Prestige {
   constructor(savedData = null) {
@@ -31,21 +29,12 @@ export default class Prestige {
     return LEVEL_REQUIREMENT + (this.prestigeCount * LEVEL_REQUIREMENT_INCREASE);
   }
 
-  getCurrentBossLevelRequirement() {
-    return BOSSLEVEL_REQUIREMENT + (this.prestigeCount * BOSSLEVEL_REQUIREMENT_INCREASE);
-  }
-
   getPrestigeRequirementMessage() {
     const levelReq = this.getCurrentLevelRequirement();
-    const bossLevelReq = this.getCurrentBossLevelRequirement();
     const levelNeeded = levelReq - (hero.level || 0);
-    const bossLevelNeeded = bossLevelReq - (hero.bossLevel || 0);
     let messages = [];
     if (levelNeeded > 0) {
       messages.push(`Reach level ${levelReq} (${levelNeeded} more level${levelNeeded === 1 ? '' : 's'})`);
-    }
-    if (bossLevelNeeded > 0) {
-      messages.push(`Defeat boss level ${bossLevelReq} (${bossLevelNeeded} more boss level${bossLevelNeeded === 1 ? '' : 's'})`);
     }
     if (messages.length > 0) {
       return messages.join(' and ') + ' to prestige.';
@@ -55,8 +44,7 @@ export default class Prestige {
 
   canPrestige() {
     return (
-      hero.level >= this.getCurrentLevelRequirement() &&
-      hero.bossLevel >= this.getCurrentBossLevelRequirement()
+      hero.level >= this.getCurrentLevelRequirement()
     );
   }
 
@@ -72,28 +60,61 @@ export default class Prestige {
   }
 
   generateCards(count = 3, bonusesPerCard = 3) {
-    // If there are pending cards, return them
+    const highestBossLevel = statistics?.highestBossLevel || 0;
+    const scalingFactor = 1 + highestBossLevel / 2000;
+
+    // If there are pending cards, rescale them and return
     if (
       this.pendingCards &&
       Array.isArray(this.pendingCards) &&
       this.pendingCards.length === count
     ) {
+      this.pendingCards.forEach((card) => {
+        // Initialize baseBonuses if missing (cards generated before scaling existed)
+        if (!card.baseBonuses) {
+          card.baseBonuses = { ...card.bonuses };
+        }
+
+        card.bonuses = {};
+        card.descriptions = [];
+        Object.entries(card.baseBonuses).forEach(([stat, baseValue]) => {
+          let scaledValue;
+          if (stat === STARTING_CRYSTALS_BONUS.stat) {
+            scaledValue = Math.floor(baseValue * scalingFactor);
+          } else {
+            scaledValue = +(baseValue * scalingFactor).toFixed(4);
+          }
+          card.bonuses[stat] = scaledValue;
+
+          let desc;
+          if (stat.endsWith('Percent')) {
+            desc = `${formatStatName(stat)}: +${(scaledValue * 100).toFixed(1)}%`;
+          } else {
+            desc = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
+          }
+          card.descriptions.push(desc);
+        });
+      });
       return this.pendingCards;
     }
+
     // Otherwise, generate new cards and save them
     const cards = [];
     for (let i = 0; i < count; i++) {
-      const startingCrystals = Math.floor(
+      const startingCrystalsBase = Math.floor(
         Math.random() * (STARTING_CRYSTALS_BONUS.max - STARTING_CRYSTALS_BONUS.min + 1),
       ) + STARTING_CRYSTALS_BONUS.min;
+      const startingCrystals = Math.floor(startingCrystalsBase * scalingFactor);
       const shuffled = [...PRESTIGE_BONUSES].sort(() => 0.5 - Math.random());
       const picked = shuffled.slice(0, bonusesPerCard);
-      const card = { bonuses: {}, descriptions: [] };
+      const card = { bonuses: {}, baseBonuses: {}, descriptions: [] };
       picked.forEach((b) => {
         // Pick a random value between min and max (inclusive)
-        const value = +(Math.random() * (b.max - b.min) + b.min).toFixed(4);
+        const baseValue = +(Math.random() * (b.max - b.min) + b.min).toFixed(4);
+        const value = +(baseValue * scalingFactor).toFixed(4);
+        card.baseBonuses[b.stat] = (card.baseBonuses[b.stat] || 0) + baseValue;
         card.bonuses[b.stat] = (card.bonuses[b.stat] || 0) + value;
-        // Update description to show the actual value
+        // Update description to show the scaled value
         let desc;
         if (b.stat.endsWith('Percent')) {
           desc = `${formatStatName(b.stat)}: +${(value * 100).toFixed(1)}%`;
@@ -102,6 +123,7 @@ export default class Prestige {
         }
         card.descriptions.push(desc);
       });
+      card.baseBonuses[STARTING_CRYSTALS_BONUS.stat] = startingCrystalsBase;
       card.bonuses[STARTING_CRYSTALS_BONUS.stat] = startingCrystals;
       card.descriptions.push(
         `${formatStatName(STARTING_CRYSTALS_BONUS.stat)}: +${startingCrystals}`,

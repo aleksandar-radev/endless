@@ -88,6 +88,9 @@ function openPrestigeModal() {
       <div class="modal-controls">
         <button id="prestige-reroll-btn">Reroll (100💎)</button>
       </div>
+      <div class="prestige-info-message" style="margin-top: 10px; color: #9ac7fcff; font-size: 1.05em;">
+        The higher the highest boss level you've reached, the greater your prestige bonuses will be.
+      </div>
     </div>
   `;
 

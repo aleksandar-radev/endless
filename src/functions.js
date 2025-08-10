@@ -442,6 +442,7 @@ export function createModifyUI() {
     const val = parseInt(bossLevelInput.value, 10);
     if (!isNaN(val) && val > 0) {
       hero.bossLevel = val;
+      statistics.set('highestBossLevel', null, hero.bossLevel);
       updateStageUI();
       document.dispatchEvent(new CustomEvent('bossKilled', { detail: { level: hero.bossLevel } }));
       dataManager.saveGame();
