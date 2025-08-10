@@ -17,6 +17,13 @@ export default class Statistics {
       legendary: 0,
       mythic: 0,
     };
+    this.itemsFound = {
+      normal: 0,
+      rare: 0,
+      epic: 0,
+      legendary: 0,
+      mythic: 0,
+    };
     this.highestDamageDealt = 0;
     this.totalGoldEarned = 0;
     this.totalCrystalsEarned = 0;
@@ -43,6 +50,13 @@ export default class Statistics {
     this.highestBossLevel = 0;
     this.totalEnemiesKilled = 0;
     this.enemiesKilled = {
+      normal: 0,
+      rare: 0,
+      epic: 0,
+      legendary: 0,
+      mythic: 0,
+    };
+    this.itemsFound = {
       normal: 0,
       rare: 0,
       epic: 0,
@@ -81,6 +95,7 @@ export default class Statistics {
           <div id="stat-total-crystals"></div>
           <div id="stat-total-souls"></div>
           <div id="stat-items-found"></div>
+          <div id="stat-items-found-by-rarity"></div>
           <div id="stat-materials-found"></div>
           <div id="stat-total-enemies-killed"></div>
           <div id="stat-enemies-killed-by-rarity"></div>
@@ -191,6 +206,27 @@ export default class Statistics {
     const itemsFound = document.getElementById('stat-items-found');
     if (itemsFound) {
       itemsFound.textContent = `Total Items Found: ${formatNumber(this.totalItemsFound || 0)}`;
+    }
+
+    // Items Found by Rarity
+    const itemsByRarity = document.getElementById('stat-items-found-by-rarity');
+    if (itemsByRarity) {
+      const parts = [];
+      const entries = Object.entries(this.itemsFound);
+      entries.forEach(([rarity, count], idx) => {
+        const span = document.createElement('span');
+        span.className = 'stage-value';
+        span.textContent = `${formatStatName(rarity)}: ${formatNumber(count || 0)}`;
+        parts.push(span);
+        if (idx < entries.length - 1) {
+          const sep = document.createElement('span');
+          sep.className = 'stage-separator breakable-separator';
+          sep.textContent = '|||';
+          parts.push(sep);
+        }
+      });
+      itemsByRarity.textContent = 'Items Found by Rarity: ';
+      parts.forEach((el) => itemsByRarity.appendChild(el));
     }
 
     // Total Materials Found

@@ -679,6 +679,7 @@ export default class Inventory {
     }
 
     statistics.increment('totalItemsFound', null, 1);
+    statistics.increment('itemsFound', item.rarity.toLowerCase());
     this.hasNewItems = true; // Set flag when new item is added
 
     if (specificPosition !== null && specificPosition < ITEM_SLOTS && !this.inventoryItems[specificPosition]) {

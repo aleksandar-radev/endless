@@ -209,7 +209,12 @@ function formatObjectStat(name, obj) {
         `<span class="stage-value">${formatStatName(key)}: ${formatNumber(val || 0)}</span>`,
     )
     .join('<span class="stage-separator breakable-separator">|||</span>');
-  const label = name === 'enemiesKilled' ? 'Enemies Killed by Rarity' : formatStatName(name);
+  const label =
+    name === 'enemiesKilled'
+      ? 'Enemies Killed by Rarity'
+      : name === 'itemsFound'
+        ? 'Items Found by Rarity'
+        : formatStatName(name);
   return `<li>${label}: ${parts}</li>`;
 }
 
