@@ -211,7 +211,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2),
-      lifeSteal: Math.min(scaleDownFlat(level, 0.02), 10),
+      lifeSteal: Math.min(scaleDownFlat(level, 0.01), 1),
     }),
   },
   crushingBlows: {
@@ -223,9 +223,9 @@ export const BERSERKER_SKILLS = {
     description: () => 'Increases critical damage and armor penetration.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      critDamage: Math.min(scaleDownFlat(level, 0.02), 3),
-      armorPenetrationPercent: scaleDownFlat(level, 2),
-      damage: scaleUpFlat(level, 3),
+      critDamage: Math.min(scaleDownFlat(level, 0.012), 3),
+      armorPenetrationPercent: Math.min(scaleDownFlat(level, 2), 25),
+      damage: scaleUpFlat(level, 3, 5, 1),
     }),
   },
 
@@ -244,7 +244,7 @@ export const BERSERKER_SKILLS = {
     effect: (level) => ({
       attackSpeed: Math.min(scaleDownFlat(level, 0.02), 3),
       damagePercent: scaleDownFlat(level, 2),
-      lifePerHit: scaleUpFlat(level, 2),
+      lifePerHit: scaleUpFlat(level, 5, 2, 1),
     }),
   },
   unyieldingOnslaught: {
@@ -303,7 +303,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 3),
-      attackSpeed: Math.min(scaleDownFlat(level, 0.02), 3),
+      attackSpeed: Math.min(scaleDownFlat(level, 0.013), 3),
       lifeSteal: Math.min(scaleDownFlat(level, 0.01), 3),
     }),
   },
