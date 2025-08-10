@@ -22,6 +22,58 @@ const TIER_STAT_SCALE = {
   12: 0.08,
 };
 
+// levelScale -> [fixed increase, bonus interval, bonus increase]
+const BASE_SCALE_PER_TIER_AND_LEVEL = {
+  1: {
+    tierScale: 0.7,
+    levelScale: 0.01,
+  },
+  2: {
+    tierScale: 1,
+    levelScale: 0.01,
+  },
+  3: {
+    tierScale: 2,
+    levelScale: 0.01,
+  },
+  4: {
+    tierScale: 2,
+    levelScale: 0.01,
+  },
+  5: {
+    tierScale: 3,
+    levelScale: 0.01,
+  },
+  6: {
+    tierScale: 3,
+    levelScale: 0.01,
+  },
+  7: {
+    tierScale: 4,
+    levelScale: 0.01,
+  },
+  8: {
+    tierScale: 4,
+    levelScale: 0.01,
+  },
+  9: {
+    tierScale: 5,
+    levelScale: 0.01,
+  },
+  10: {
+    tierScale: 6,
+    levelScale: 0.01,
+  },
+  11: {
+    tierScale: 7,
+    levelScale: 0.01,
+  },
+  12: {
+    tierScale: 8,
+    levelScale: 0.01,
+  },
+};
+
 class Enemy {
   constructor(level) {
     this.level = level; // level of enemy is same as stage
@@ -132,7 +184,11 @@ class Enemy {
   }
 
   calculateLife() {
-    const base = this.baseData.life || 0;
+    let base = this.baseData.life || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const baseLife = val * this.region.multiplier.life * this.rarityData.multiplier.life * this.baseData.multiplier.life;
     const hpRed = hero.stats.reduceEnemyHpPercent || 0;
@@ -140,26 +196,42 @@ class Enemy {
   }
 
   calculateDamage = () => {
-    const base = this.baseData.damage || 0;
+    let base = this.baseData.damage || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const damageRed = hero.stats.reduceEnemyDamagePercent || 0;
     return val * this.region.multiplier.damage * this.rarityData.multiplier.damage * this.baseData.multiplier.damage * (1 - damageRed);
   };
 
   calculateArmor() {
-    const base = this.baseData.armor || 0;
+    let base = this.baseData.armor || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     const val = scaleStat(base, this.level, 0,0,0, this.baseScale);
     return val * this.region.multiplier.armor * this.rarityData.multiplier.armor * this.baseData.multiplier.armor;
   }
 
   calculateEvasion() {
-    const base = this.baseData.evasion || 0;
+    let base = this.baseData.evasion || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     const val = scaleStat(base, this.level, 0,0,0, this.baseScale);
     return val * this.region.multiplier.evasion * this.rarityData.multiplier.evasion * this.baseData.multiplier.evasion;
   }
 
   calculateAttackRating() {
-    const base = this.baseData.attackRating || 0;
+    let base = this.baseData.attackRating || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     const val = scaleStat(base, this.level, 0,0,0, this.baseScale);
     return (
       val *
@@ -171,7 +243,11 @@ class Enemy {
 
   calculateElementalDamage(type) {
     // type: 'fire', 'cold', 'air', 'earth', 'lightning', 'water'
-    const base = this.baseData[`${type}Damage`] || 0;
+    let base = this.baseData[`${type}Damage`] || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     if (base === 0) return 0;
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const regionMult = this.region.multiplier[`${type}Damage`] || 1;
@@ -183,7 +259,11 @@ class Enemy {
   }
 
   calculateElementalResistance(type) {
-    const base = this.baseData[`${type}Resistance`] || 0;
+    let base = this.baseData[`${type}Resistance`] || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     if (base === 0) return 0;
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const regionMult = this.region.multiplier[`${type}Resistance`] || 1;
@@ -193,13 +273,21 @@ class Enemy {
   }
 
   calculateXP() {
-    const base = this.baseData.xp || 0;
+    let base = this.baseData.xp || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     return val * this.region.multiplier.xp * (this.rarityData.multiplier.xp || 1) * (this.baseData.multiplier.xp || 1);
   }
 
   calculateGold() {
-    const base = this.baseData.gold || 0;
+    let base = this.baseData.gold || 0;
+    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    base *= scale.tierScale * levelBonus;
+
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     return val * this.region.multiplier.gold * (this.rarityData.multiplier.gold || 1) * (this.baseData.multiplier.gold || 1);
   }
