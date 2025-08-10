@@ -43,18 +43,21 @@ export function initializeInventoryUI(inv) {
         <button id="items-tab" class="inventory-btn active">Items</button>
         <button id="materials-tab" class="inventory-btn">Materials</button>
       </div>
-      <input type="text" id="inventory-filter" class="inventory-btn filter-input" placeholder="Filter" />
-    <div class="sort-row">
-  <select id="sort-mode-select" class="inventory-btn sort-select">
+      <div class="sort-row">
+        <select id="sort-mode-select" class="inventory-btn sort-select">
           <option value="type-rarity-level">T→R→L</option>
           <option value="type-level-rarity">T→L→R</option>
           <option value="rarity-level">R→L</option>
           <option value="level-rarity">L→R</option>
         </select>
-  <div id="sort-inventory" class="inventory-btn sort-btn"><span role="img" aria-label="Sort">🔃</span></div>
+        <div id="sort-inventory" class="inventory-btn sort-btn"><span role="img" aria-label="Sort">🔃</span></div>
       </div>
-  <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn hidden">Equip</button>
+      <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn hidden">Equip</button>
       <button id="open-salvage-modal" class="inventory-btn">Salvage</button>
+      <div class="search-container">
+        <input type="text" id="inventory-filter" class="inventory-btn filter-input" placeholder="Search items..." />
+        <span class="search-icon">🔍</span>
+      </div>
     </div>
   `;
   inventoryTab.appendChild(equipmentContainer);
