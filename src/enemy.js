@@ -8,11 +8,11 @@ import { hero } from './globals.js';
 // for tier 1 enemy level 1 50 life, level 2 is 50 + 25 = 75 (e.g. 50% increase for base value per level)
 // tier 12 enemy gets 8% increase per level on the base value
 const TIER_STAT_SCALE = {
-  1: 1,
-  2: 0.86,
-  3: 0.74,
-  4: 0.62,
-  5: 0.48,
+  1: 0.3,
+  2: 0.4,
+  3: 0.5,
+  4: 0.6,
+  5: 0.5,
   6: 0.4,
   7: 0.32,
   8: 0.24,
@@ -25,7 +25,7 @@ const TIER_STAT_SCALE = {
 // levelScale -> [fixed increase, bonus interval, bonus increase]
 const BASE_SCALE_PER_TIER_AND_LEVEL = {
   1: {
-    tierScale: 0.7,
+    tierScale: 0.5,
     levelScale: 0.01,
   },
   2: {
