@@ -175,7 +175,7 @@ body.dev-active .game-container {
   pointer-events: none;
   transition: opacity 0.2s;
   opacity: 0;
-  max-width: min(calc(100vw - 20px), 600px);
+  max-width: calc(100vw - 20px);
   word-wrap: break-word;
   white-space: normal;
 }
