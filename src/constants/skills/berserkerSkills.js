@@ -267,7 +267,7 @@ export const BERSERKER_SKILLS = {
     name: () => 'Primal Roar',
     type: () => 'instant',
     manaCost: (level) => 40 + level * 0.625,
-    cooldown: () => 280000,
+    cooldown: () => 80000,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'primal-roar',
     description: () => 'A terrifying roar that weakens foes.',
@@ -275,7 +275,6 @@ export const BERSERKER_SKILLS = {
     effect: (level) => ({
       ignoreEnemyArmor: 1,
       reduceEnemyDamagePercent: Math.min(scaleDownFlat(level, 0.1), 25),
-      damage: scaleUpFlat(level, 10),
     }),
   },
   berserkerSpirit: {
@@ -289,7 +288,7 @@ export const BERSERKER_SKILLS = {
     effect: (level) => ({
       strengthPercent: scaleDownFlat(level, 3),
       lifePercent: scaleDownFlat(level, 1.5),
-      critChance: Math.min(scaleDownFlat(level, 0.03), 30),
+      critChance: Math.min(scaleDownFlat(level, 0.08), 30),
     }),
   },
 
@@ -305,21 +304,21 @@ export const BERSERKER_SKILLS = {
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 3),
       attackSpeed: Math.min(scaleDownFlat(level, 0.02), 3),
-      lifeSteal: Math.min(scaleDownFlat(level, 0.05), 15),
+      lifeSteal: Math.min(scaleDownFlat(level, 0.01), 3),
     }),
   },
   rageIncarnate: {
     id: 'rageIncarnate',
     name: () => 'Rage Incarnate',
     type: () => 'toggle',
-    manaCost: (level) => 20 + level * 1.25,
+    manaCost: (level) => 20 + level * 0.85,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'rage-incarnate',
     description: () => 'Embody pure rage to crush enemies.',
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 4),
-      armorPenetrationPercent: scaleDownFlat(level, 3),
+      armorPenetrationPercent: Math.min(scaleDownFlat(level, 0.5), 35),
       attackRatingPercent: scaleDownFlat(level, 5),
     }),
   },
