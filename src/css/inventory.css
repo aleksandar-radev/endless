@@ -157,6 +157,9 @@
   z-index: 1000;
   min-width: 200px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  max-width: calc(100vw - 20px);
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 .item-name {
@@ -428,6 +431,7 @@
   align-items: center;
   width: 100%;
   max-width: 400px;
+  height: 30px;
   margin: 4px auto;
 }
 

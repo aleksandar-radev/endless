@@ -52,11 +52,11 @@ export function initializeInventoryUI(inv) {
         </select>
         <div id="sort-inventory" class="inventory-btn sort-btn"><span role="img" aria-label="Sort">🔃</span></div>
       </div>
-      <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn hidden">Equip</button>
       <button id="open-salvage-modal" class="inventory-btn">Salvage</button>
       <div class="search-container">
         <input type="text" id="inventory-filter" class="inventory-btn filter-input" placeholder="Search items..." />
         <span class="search-icon">🔍</span>
+        <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn" style="display: none">Equip</button>
       </div>
     </div>
   `;

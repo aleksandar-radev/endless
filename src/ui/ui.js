@@ -363,6 +363,14 @@ export function positionTooltip(event) {
     left = event.clientX - tooltipRect.width - offset;
   }
 
+  // Ensure tooltip doesn't go off the top or left edge
+  if (top < offset) {
+    top = offset;
+  }
+  if (left < offset) {
+    left = offset;
+  }
+
   tooltip.style.top = `${top}px`;
   tooltip.style.left = `${left}px`;
 }
