@@ -226,17 +226,21 @@
   font-family: 'Cinzel', 'Georgia', serif;
   letter-spacing: 0.01em;
   transition: background 0.2s, color 0.2s;
-  position: relative;
   overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
-.prestige-card li::before {
-  content: '\2728';
-  color: var(--accent, #4e8cff);
-  margin-right: 0.5em;
-  font-size: 1em;
+/* Main text left, reference range right */
+.prestige-main {
+  display: inline-block;
+  /* leave room on the right for the ref */
   vertical-align: middle;
-  opacity: 0.7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .prestige-card li:hover {

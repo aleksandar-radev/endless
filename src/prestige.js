@@ -86,11 +86,39 @@ export default class Prestige {
           }
           card.bonuses[stat] = scaledValue;
 
+          // Compute scaled reference min/max for this stat so the player can
+          // see whether the current roll is a highroll or lowroll.
+          let refMin = null;
+          let refMax = null;
+          if (stat === STARTING_CRYSTALS_BONUS.stat) {
+            refMin = Math.floor(STARTING_CRYSTALS_BONUS.min * scalingFactor);
+            refMax = Math.floor(STARTING_CRYSTALS_BONUS.max * scalingFactor);
+          } else {
+            const def = PRESTIGE_BONUSES.find((p) => p.stat === stat);
+            if (def) {
+              refMin = +(def.min * scalingFactor).toFixed(4);
+              refMax = +(def.max * scalingFactor).toFixed(4);
+            }
+          }
+
           let desc;
           if (stat.endsWith('Percent')) {
-            desc = `${formatStatName(stat)}: +${(scaledValue * 100).toFixed(1)}%`;
+            const scaledPct = (scaledValue * 100).toFixed(1);
+            if (refMin != null && refMax != null) {
+              const main = `${formatStatName(stat)}: +${scaledPct}%`;
+              const right = `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
+              desc = `<span class="prestige-main">✨${main}</span><span class="prestige-ref">(${right})</span>`;
+            } else {
+              desc = `${formatStatName(stat)}: +${scaledPct}%`;
+            }
           } else {
-            desc = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
+            if (refMin != null && refMax != null) {
+              const main = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
+              const right = `${Math.round(refMin)} - ${Math.round(refMax)}`;
+              desc = `<span class="prestige-main">✨${main}</span><span class="prestige-ref">(${right})</span>`;
+            } else {
+              desc = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
+            }
           }
           card.descriptions.push(desc);
         });
@@ -115,19 +143,31 @@ export default class Prestige {
         card.baseBonuses[b.stat] = (card.baseBonuses[b.stat] || 0) + baseValue;
         card.bonuses[b.stat] = (card.bonuses[b.stat] || 0) + value;
         // Update description to show the scaled value
+        // Also include the reference min/max scaled to current scalingFactor
+        let refMin = +(b.min * scalingFactor).toFixed(4);
+        let refMax = +(b.max * scalingFactor).toFixed(4);
         let desc;
         if (b.stat.endsWith('Percent')) {
-          desc = `${formatStatName(b.stat)}: +${(value * 100).toFixed(1)}%`;
+          const main = `${formatStatName(b.stat)}: +${(value * 100).toFixed(1)}%`;
+          const right = `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
+          desc = `<span class="prestige-main">✨${main}</span><span class="prestige-ref">(${right})</span>`;
         } else {
-          desc = `${formatStatName(b.stat)}: +${Math.round(value)}`;
+          const main = `${formatStatName(b.stat)}: +${Math.round(value)}`;
+          const right = `${Math.round(refMin)} - ${Math.round(refMax)}`;
+          desc = `<span class="prestige-main">✨${main}</span><span class="prestige-ref">(${right})</span>`;
         }
         card.descriptions.push(desc);
       });
       card.baseBonuses[STARTING_CRYSTALS_BONUS.stat] = startingCrystalsBase;
       card.bonuses[STARTING_CRYSTALS_BONUS.stat] = startingCrystals;
-      card.descriptions.push(
-        `${formatStatName(STARTING_CRYSTALS_BONUS.stat)}: +${startingCrystals}`,
-      );
+      // Show reference for starting crystals as well
+      const refStartMin = STARTING_CRYSTALS_BONUS.min;
+      const refStartMax = STARTING_CRYSTALS_BONUS.max;
+      {
+        const main = `${formatStatName(STARTING_CRYSTALS_BONUS.stat)}: +${startingCrystals}`;
+        const right = `${Math.floor(refStartMin * scalingFactor)} - ${Math.floor(refStartMax * scalingFactor)}`;
+        card.descriptions.push(`<span class="prestige-main">✨${main}</span><span class="prestige-ref">(${right})</span>`);
+      }
       cards.push(card);
     }
     this.pendingCards = cards;
