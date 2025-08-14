@@ -217,7 +217,10 @@ export async function defeatEnemy() {
     showToast(text, 'success');
     statistics.increment('bossesKilled', null, 1);
     hero.bossLevel++;
-    statistics.set('highestBossLevel', null, hero.bossLevel - 1);
+    // should update highestBossLevel only if the value is higher
+    if (hero.bossLevel > statistics.get('highestBossLevel')) {
+      statistics.set('highestBossLevel', null, hero.bossLevel);
+    }
     document.dispatchEvent(new CustomEvent('bossKilled', { detail: { level: hero.bossLevel } }));
     selectBoss();
     updateResources();

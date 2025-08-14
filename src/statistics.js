@@ -291,6 +291,14 @@ export default class Statistics {
     this.updateStatisticsUI();
   }
 
+  // getter function
+  get(category, subcategory = null) {
+    if (subcategory) {
+      return this[category] ? this[category][subcategory] : 0;
+    }
+    return this[category] || 0;
+  }
+
   update() {
     const now = Date.now();
     const deltaSeconds = (now - this.lastUpdate) / 1000;
