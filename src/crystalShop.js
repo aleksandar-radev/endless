@@ -22,7 +22,7 @@ const CRYSTAL_UPGRADE_CONFIG = {
     bonusLabel: 'Increases starting stage by 1',
     showLevel: true,
     baseCost: 2,
-    costIncrement: 0.02, // 1 per 50 levels
+    costIncrement: 0.05, // 1 per 20 levels
     multiple: true,
     bulkModal: true,
   },
@@ -47,7 +47,7 @@ const CRYSTAL_UPGRADE_CONFIG = {
     label: 'Continuous Play',
     bonus: 'Auto-continue after death',
     bonusLabel: 'Auto-continue after death',
-    baseCost: 20,
+    baseCost: 10,
     oneTime: true,
   },
   autoSpellCast: {
@@ -61,14 +61,14 @@ const CRYSTAL_UPGRADE_CONFIG = {
     label: 'Reset Skill Tree',
     bonus: 'Refund all skill points and reset path',
     bonusLabel: 'Reset your class and refund all skill points. This will allow you to choose a new class.',
-    baseCost: 50,
+    baseCost: 20,
     multiple: true,
   },
   resetAttributes: {
     label: 'Reset Attributes',
     bonus: 'Refund all allocated attribute points',
     bonusLabel: 'Refund all allocated attribute points',
-    baseCost: 50,
+    baseCost: 20,
     multiple: true,
   },
   resetArenaLevel: {
@@ -82,8 +82,8 @@ const CRYSTAL_UPGRADE_CONFIG = {
     label: 'Auto-Salvage',
     bonus: 'Automatically salvage items of selected rarities',
     bonusLabel: 'Automatically salvage selected rarities',
-    baseCost: 10,
-    costIncrement: 15,
+    baseCost: 20,
+    costIncrement: 10,
     showLevel: true,
     multiple: true,
     maxLevel: 6,
