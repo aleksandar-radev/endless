@@ -26,7 +26,8 @@ export default class Prestige {
   }
 
   getCurrentLevelRequirement() {
-    return LEVEL_REQUIREMENT + (this.prestigeCount * LEVEL_REQUIREMENT_INCREASE);
+    const req = LEVEL_REQUIREMENT + (this.prestigeCount * LEVEL_REQUIREMENT_INCREASE);
+    return Math.min(req, 1000);
   }
 
   getPrestigeRequirementMessage() {
