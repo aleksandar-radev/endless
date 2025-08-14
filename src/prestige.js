@@ -10,7 +10,7 @@ import { PRESTIGE_BONUSES, STARTING_CRYSTALS_BONUS } from './constants/prestigeB
 import { formatStatName } from './ui/ui.js';
 
 const LEVEL_REQUIREMENT = 100;
-const LEVEL_REQUIREMENT_INCREASE = 50;
+const LEVEL_REQUIREMENT_INCREASE = 25;
 
 export default class Prestige {
   constructor(savedData = null) {
