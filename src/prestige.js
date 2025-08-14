@@ -154,16 +154,30 @@ export default class Prestige {
       statistics: statsSnapshot,
     });
 
-    const showEnemyStats = options.showEnemyStats;
-    const resetRequired = options.resetRequired;
-    const salvageMaterialsEnabled = options.salvageMaterialsEnabled;
+    // Preserve user options that should survive a prestige (exclude numeric options
+    // that are upgraded via crystal shop: startingStage, stageSkip)
+    const preservedOptions = {
+      showEnemyStats: options.showEnemyStats,
+      resetRequired: options.resetRequired,
+      salvageMaterialsEnabled: options.salvageMaterialsEnabled,
+      showAllStats: options.showAllStats,
+      showAdvancedTooltips: options.showAdvancedTooltips,
+      showAdvancedAttributeTooltips: options.showAdvancedAttributeTooltips,
+      showRateCounters: options.showRateCounters,
+      rateCountersPeriod: options.rateCountersPeriod,
+      // Note: do NOT preserve resetStageSkip, stageSkip or startingStage here —
+      // those are either numeric user options that should reset on prestige or
+      // are handled via crystal upgrades elsewhere.
+      soundVolume: options.soundVolume,
+    };
 
     await setGlobals({ reset: true });
 
-    // persist options
-    options.showEnemyStats = showEnemyStats;
-    options.resetRequired = resetRequired;
-    options.salvageMaterialsEnabled = salvageMaterialsEnabled;
+    // persist preserved options back onto the new globals/options instance
+    Object.entries(preservedOptions).forEach(([k, v]) => {
+      // only set if the option exists on the new options object
+      if (k in options) options[k] = v;
+    });
 
     prestigeState.bonuses = combined;
     prestigeState.prestigeCount = newCount;
