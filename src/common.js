@@ -143,3 +143,75 @@ export function scaleUpFlat(
   const sumRem = rem * (1 + flat * k);
   return start * (sumFull + sumRem);
 }
+
+/**
+ * Reduce a percentage in fixed steps per level interval.
+ *
+ * Example: startPercent=1 (100%), interval=20, reducePerInterval=0.01 (1%) ->
+ * at level 1..20 returns 1.00, at level 21..40 returns 0.99, etc.
+ *
+ * @param {number} startPercent - Starting value (can be any numeric unit, e.g. 1.0 or 100).
+ * @param {number} level - Target level (integer >= 1).
+ * @param {number} interval - Number of levels per reduction step. Default 20.
+ * @param {number} reducePerInterval - Fraction to subtract per interval (e.g. 0.01 = 1%). Default 0.01.
+ * @param {number} minPercent - Minimum allowed percent (fraction). Default 0.
+ * @returns {number} Reduced percentage as fraction, clamped to [minPercent, startPercent].
+ */
+export function percentReducedByLevel(
+  startPercent,
+  level,
+  interval = 20,
+  reducePerInterval = 0.01,
+  minPercent = 0,
+) {
+  // startPercent may be any numeric starting value (not forced to be a fraction).
+  if (interval <= 0) interval = 1; // avoid division by zero
+  const sp = startPercent;
+  const rpi = reducePerInterval;
+  const mp = minPercent;
+
+  // At level 1 return the starting value (but don't go below minPercent)
+  if (level <= 1) return Math.max(mp, sp);
+
+  const intervalsPassed = Math.floor((level - 1) / interval);
+  const reduced = sp - intervalsPassed * rpi;
+  // Clamp between minPercent and the original start value
+  return Math.max(mp, Math.min(reduced, sp));
+}
+
+/**
+ * Increase a percentage in fixed steps per level interval.
+ *
+ * Example: startPercent=1 (100%), interval=20, increasePerInterval=0.01 (1%) ->
+ * at level 1..20 returns 1.00, at level 21..40 returns 1.01, etc., clamped to maxPercent.
+ *
+ * @param {number} startPercent - Starting value (can be any numeric unit, e.g. 1.0 or 100).
+ * @param {number} level - Target level (integer >= 1).
+ * @param {number} interval - Number of levels per increase step. Default 20.
+ * @param {number} increasePerInterval - Fraction to add per interval (e.g. 0.01 = 1%). Default 0.01.
+ *                     If provided as whole-percent (e.g. 1) it will be converted.
+ * @param {number} maxPercent - Maximum allowed percent (fraction). Default 1.
+ * @returns {number} Increased percentage as fraction, clamped to [startPercent, maxPercent].
+ */
+export function percentIncreasedByLevel(
+  startPercent,
+  level,
+  interval = 20,
+  increasePerInterval = 0.01,
+  maxPercent = 1,
+) {
+  // startPercent may be any numeric starting value (not forced to be a fraction).
+  if (interval <= 0) interval = 1; // avoid division by zero
+  const sp = startPercent;
+  const ipi = increasePerInterval;
+  const mp = maxPercent;
+
+  // At level 1 return the starting value (but don't exceed maxPercent)
+  if (level <= 1) return Math.min(mp, sp);
+
+  const intervalsPassed = Math.floor((level - 1) / interval);
+  const increased = sp + intervalsPassed * ipi;
+  // Clamp between original start value and maxPercent
+  return Math.min(mp, Math.max(increased, sp));
+}
+

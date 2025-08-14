@@ -1,26 +1,42 @@
 import { ITEM_TYPES } from './constants/items.js';
 import { getCurrentRegion, getRegionEnemies } from './region.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
-import { scaleStat } from './common.js';
+import { percentIncreasedByLevel, percentReducedByLevel, scaleStat } from './common.js';
 import { hero } from './globals.js';
 
 // base value increase per level
 // for tier 1 enemy level 1 50 life, level 2 is 50 + 25 = 75 (e.g. 50% increase for base value per level)
 // tier 12 enemy gets 8% increase per level on the base value
 const TIER_STAT_SCALE = {
-  1: 0.7,
-  2: 0.6,
-  3: 0.6,
-  4: 0.5,
-  5: 0.5,
-  6: 0.4,
-  7: 0.32,
-  8: 0.24,
-  9: 0.2,
-  10: 0.15,
-  11: 0.1,
-  12: 0.08,
+  1: (level) => percentIncreasedByLevel(0.65, level, 25, 0.025, 3.2),
+  2: (level) => percentIncreasedByLevel(0.6, level, 30, 0.02, 2.9),
+  3: (level) => percentIncreasedByLevel(0.55, level, 35, 0.015, 2.5),
+  4: (level) => percentIncreasedByLevel(0.5, level, 40, 0.01, 2.2),
+  5: (level) => percentIncreasedByLevel(0.45, level, 45, 0.01, 2),
+  6: (level) => percentIncreasedByLevel(0.4, level, 50, 0.01, 1.8),
+  7: (level) => percentIncreasedByLevel(0.32, level, 55, 0.01, 1.5),
+  8: (level) => percentIncreasedByLevel(0.24, level, 60, 0.01, 1.25),
+  9: (level) => percentIncreasedByLevel(0.2, level, 65, 0.01, 1),
+  10: (level) => percentIncreasedByLevel(0.15, level, 70, 0.01, 0.75),
+  11: (level) => percentIncreasedByLevel(0.1, level, 75, 0.01, 0.5),
+  12: (level) => percentIncreasedByLevel(0.08, level, 80, 0.01, 0.3),
 };
+
+const TIER_EXP_GOLD_SCALE = {
+  1: (level) => percentReducedByLevel(1, level, 20, 0.01, 0.25),
+  2: (level) => percentReducedByLevel(1, level, 25, 0.01, 0.28),
+  3: (level) => percentReducedByLevel(1, level, 30, 0.01, 0.31),
+  4: (level) => percentReducedByLevel(1, level, 35, 0.01, 0.34),
+  5: (level) => percentReducedByLevel(1, level, 40, 0.01, 0.37),
+  6: (level) => percentReducedByLevel(1, level, 45, 0.01, 0.4),
+  7: (level) => percentReducedByLevel(1, level, 50, 0.01, 0.43),
+  8: (level) => percentReducedByLevel(1, level, 55, 0.01, 0.46),
+  9: (level) => percentReducedByLevel(1, level, 60, 0.01, 0.49),
+  10: (level) => percentReducedByLevel(1, level, 65, 0.01, 0.52),
+  11: (level) => percentReducedByLevel(1, level, 70, 0.01, 0.56),
+  12: (level) => percentReducedByLevel(1, level, 75, 0.01, 0.6),
+};
+
 
 // levelScale -> [fixed increase, bonus interval, bonus increase]
 const BASE_SCALE_PER_TIER_AND_LEVEL = {
@@ -87,7 +103,7 @@ class Enemy {
     this.name = `${baseData.name}`;
     this.image = baseData.image;
 
-    this.baseScale = TIER_STAT_SCALE[baseData.tier];
+    this.baseScale = TIER_STAT_SCALE[baseData.tier](this.level);
 
     this.rarity = this.generateRarity();
     this.color = this.getRarityColor(this.rarity);
@@ -281,7 +297,14 @@ class Enemy {
     base *= scale.tierScale * levelBonus;
 
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
-    return val * this.region.multiplier.xp * (this.rarityData.multiplier.xp || 1) * (this.baseData.multiplier.xp || 1);
+    const tierXpGoldScale = TIER_EXP_GOLD_SCALE[this.baseData.tier](this.level);
+    return (
+      val *
+      this.region.multiplier.xp *
+      (this.rarityData.multiplier.xp || 1) *
+      (this.baseData.multiplier.xp || 1) *
+      tierXpGoldScale
+    );
   }
 
   calculateGold() {
@@ -291,7 +314,14 @@ class Enemy {
     base *= scale.tierScale * levelBonus;
 
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
-    return val * this.region.multiplier.gold * (this.rarityData.multiplier.gold || 1) * (this.baseData.multiplier.gold || 1);
+    const tierXpGoldScale = TIER_EXP_GOLD_SCALE[this.baseData.tier](this.level);
+    return (
+      val *
+      this.region.multiplier.gold *
+      (this.rarityData.multiplier.gold || 1) *
+      (this.baseData.multiplier.gold || 1) *
+      tierXpGoldScale
+    );
   }
 
   canAttack(currentTime) {
