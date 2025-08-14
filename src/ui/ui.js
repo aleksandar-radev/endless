@@ -582,32 +582,32 @@ function renderRegionPanel(region) {
       <div class="enemy-attack-speed">Attack Speed: <span id="enemy-attack-speed-value"></span></div>
       <div></div>
       <!-- Empty div for layout -->
-      <div>
-        <div class="enemy-fire-damage">${ELEMENTS.fire.icon} Fire: <span id="enemy-fire-damage-value"></span></div>
-        <div class="enemy-cold-damage">${ELEMENTS.cold.icon} Cold: <span id="enemy-cold-damage-value"></span></div>
-        <div class="enemy-air-damage">${ELEMENTS.air.icon} Air: <span id="enemy-air-damage-value"></span></div>
-        <div class="enemy-earth-damage">${ELEMENTS.earth.icon} Earth: <span id="enemy-earth-damage-value"></span></div>
-        <div class="enemy-lightning-damage">${ELEMENTS.lightning.icon} Lightning: <span id="enemy-lightning-damage-value"></span></div>
-        <div class="enemy-water-damage">${ELEMENTS.water.icon} Water: <span id="enemy-water-damage-value"></span></div>
+      <div >
+        <div class="enemy-fire-damage">${ELEMENTS.fire.icon} Damage: <span id="enemy-fire-damage-value"></span></div>
+        <div class="enemy-cold-damage">${ELEMENTS.cold.icon} Damage: <span id="enemy-cold-damage-value"></span></div>
+        <div class="enemy-air-damage">${ELEMENTS.air.icon} Damage: <span id="enemy-air-damage-value"></span></div>
+        <div class="enemy-earth-damage">${ELEMENTS.earth.icon} Damage: <span id="enemy-earth-damage-value"></span></div>
+        <div class="enemy-lightning-damage">${ELEMENTS.lightning.icon} Damage: <span id="enemy-lightning-damage-value"></span></div>
+        <div class="enemy-water-damage">${ELEMENTS.water.icon} Damage: <span id="enemy-water-damage-value"></span></div>
       </div>
-      <div>
+      <div >
         <div class="enemy-fire-resistance">
-          ${ELEMENTS.fire.icon} Fire Res: <span id="enemy-fire-resistance-value"></span>
+          ${ELEMENTS.fire.icon} Res: <span id="enemy-fire-resistance-value"></span>
         </div>
         <div class="enemy-cold-resistance">
-          ${ELEMENTS.cold.icon} Cold Res: <span id="enemy-cold-resistance-value"></span>
+          ${ELEMENTS.cold.icon} Res: <span id="enemy-cold-resistance-value"></span>
         </div>
         <div class="enemy-air-resistance">
-          ${ELEMENTS.air.icon} Air Res: <span id="enemy-air-resistance-value"></span>
+          ${ELEMENTS.air.icon} Res: <span id="enemy-air-resistance-value"></span>
         </div>
         <div class="enemy-earth-resistance">
-          ${ELEMENTS.earth.icon} Earth Res: <span id="enemy-earth-resistance-value"></span>
+          ${ELEMENTS.earth.icon} Res: <span id="enemy-earth-resistance-value"></span>
         </div>
         <div class="enemy-lightning-resistance">
-          ${ELEMENTS.lightning.icon} Lightning Res: <span id="enemy-lightning-resistance-value"></span>
+          ${ELEMENTS.lightning.icon} Res: <span id="enemy-lightning-resistance-value"></span>
         </div>
         <div class="enemy-water-resistance">
-          ${ELEMENTS.water.icon} Water Res: <span id="enemy-water-resistance-value"></span>
+          ${ELEMENTS.water.icon} Res: <span id="enemy-water-resistance-value"></span>
         </div>
       </div>
     </div>
