@@ -149,6 +149,15 @@ function formatDuration(ms) {
   return `${h}h ${m}m ${s}s`;
 }
 
+// Format a duration given in seconds into "Hh Mm Ss"
+function formatDurationSeconds(seconds) {
+  const sec = Math.floor(seconds || 0);
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  return `${h}h ${m}m ${s}s`;
+}
+
 function openPrestigeHistoryModal() {
   const history = prestige.history || [];
   const items = history
@@ -222,11 +231,15 @@ function openPrestigeDetailModal(entry) {
   if (!entry) return;
   const stats = Object.entries(entry.statistics || {})
     .filter(([k]) => k !== 'lastUpdate')
-    .map(([k, v]) =>
-      typeof v === 'object'
-        ? formatObjectStat(k, v)
-        : `<li>${formatStatName(k)}: ${formatNumber(Math.round(v))}</li>`,
-    )
+    .map(([k, v]) => {
+      if (typeof v === 'object') {
+        return formatObjectStat(k, v);
+      }
+      if (k === 'totalTimePlayed' || k === 'totalTimeInFights') {
+        return `<li>${formatStatName(k)}: ${formatDurationSeconds(Math.round(v))}</li>`;
+      }
+      return `<li>${formatStatName(k)}: ${formatNumber(Math.round(v))}</li>`;
+    })
     .join('');
   const content = html`
     <div class="prestige-history-modal-content">
