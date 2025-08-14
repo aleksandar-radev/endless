@@ -163,6 +163,35 @@
   border-radius: 50%;
 }
 
+.prestige-info-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #dff6ff;
+  margin-bottom: 6px;
+}
+
+.prestige-info {
+  margin: 6px 0;
+  color: #e9f8ff;
+  font-size: 0.98rem;
+  line-height: 1.3rem;
+  max-width: 64ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.prestige-info-em {
+  font-style: italic;
+  color: #fff8d6;
+  font-weight: 600;
+}
+
+.prestige-info-cta {
+  margin-top: 8px;
+  color: #cfefff;
+  font-weight: 600;
+}
+
 .prestige-cards {
   display: flex;
   flex-wrap: wrap;

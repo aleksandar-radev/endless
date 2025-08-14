@@ -89,7 +89,10 @@ function openPrestigeModal() {
         <button id="prestige-reroll-btn">Reroll (100💎)</button>
       </div>
       <div class="prestige-info-message" style="margin-top: 10px; color: #9ac7fcff; font-size: 1.05em;">
-        The higher the highest boss level you've reached, the greater your prestige bonuses will be.
+
+      <p class="prestige-info">Prestige starts a fresh run: level, equipment, inventory, buildings, quests and most progress are reset. Only chosen Prestige bonus is kept.</p>
+      <p class="prestige-info">All options apart from ones that are unlocked from crystal shop are preserved after a prestige.</p>
+      <div class="prestige-info-cta">A record is saved to Prestige History so you can review past prestiges.</div>
       </div>
     </div>
   `;
