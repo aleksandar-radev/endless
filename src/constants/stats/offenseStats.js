@@ -148,7 +148,7 @@ export const OFFENSE_STATS = {
   fireDamage: {
     base: 0,
     decimalPlaces: 0,
-    training: { cost: 120, bonus: 1, maxLevel: Infinity },
+    training: { cost: 180, bonus: 1, maxLevel: Infinity },
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -173,7 +173,7 @@ export const OFFENSE_STATS = {
   coldDamage: {
     base: 0,
     decimalPlaces: 0,
-    training: { cost: 120, bonus: 1, maxLevel: Infinity },
+    training: { cost: 180, bonus: 1, maxLevel: Infinity },
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -198,7 +198,7 @@ export const OFFENSE_STATS = {
   airDamage: {
     base: 0,
     decimalPlaces: 0,
-    training: { cost: 120, bonus: 1, maxLevel: Infinity },
+    training: { cost: 180, bonus: 1, maxLevel: Infinity },
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -223,7 +223,7 @@ export const OFFENSE_STATS = {
   earthDamage: {
     base: 0,
     decimalPlaces: 0,
-    training: { cost: 120, bonus: 1, maxLevel: Infinity },
+    training: { cost: 180, bonus: 1, maxLevel: Infinity },
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -248,7 +248,7 @@ export const OFFENSE_STATS = {
   lightningDamage: {
     base: 0,
     decimalPlaces: 0,
-    training: { cost: 120, bonus: 1, maxLevel: Infinity },
+    training: { cost: 180, bonus: 1, maxLevel: Infinity },
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -273,7 +273,7 @@ export const OFFENSE_STATS = {
   waterDamage: {
     base: 0,
     decimalPlaces: 0,
-    training: { cost: 120, bonus: 1, maxLevel: Infinity },
+    training: { cost: 180, bonus: 1, maxLevel: Infinity },
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
