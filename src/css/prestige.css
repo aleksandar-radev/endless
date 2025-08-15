@@ -8,6 +8,16 @@
   display: flex;
   margin-bottom: 1rem;
   gap: 1rem;
+  align-items: center;
+}
+
+.prestige-level-info {
+  background: rgba(78, 140, 255, 0.15);
+  color: #ffe9b0;
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
 }
 
 .prestige-header button#prestige-now-btn {

@@ -16,6 +16,17 @@ function updateButtonState() {
   }
 };
 
+function updateLevelInfo() {
+  const tab = document.getElementById('prestige');
+  if (!tab) return;
+  const levelInfo = tab.querySelector('.prestige-level-info');
+  if (!levelInfo) return;
+  const level = hero.level || 0;
+  const required = prestige.getCurrentLevelRequirement();
+  levelInfo.textContent = `Level ${level} / ${required}`;
+}
+
+
 export function initializePrestigeUI() {
   const tab = document.getElementById('prestige');
   if (!tab) return;
@@ -32,6 +43,7 @@ export function initializePrestigeUI() {
     <div class="prestige-header">
       <button id="prestige-now-btn">Prestige Now</button>
       <button id="prestige-history-btn">History</button>
+      <div class="prestige-level-info"></div>
     </div>
     <ul class="prestige-bonuses-list"></ul>
   `;
@@ -40,6 +52,7 @@ export function initializePrestigeUI() {
   const historyBtn = container.querySelector('#prestige-history-btn');
 
   updateButtonState();
+  updateLevelInfo();
 
   btn.addEventListener('click', (e) => {
     if (btn.classList.contains('disabled')) {
@@ -58,10 +71,12 @@ export function initializePrestigeUI() {
   document.addEventListener('heroLevelUp', () => {
     updateButtonState();
     updatePrestigeBonuses();
+    updateLevelInfo();
   });
   document.addEventListener('bossKilled', () => {
     updateButtonState();
     updatePrestigeBonuses();
+    updateLevelInfo();
   });
 }
 
@@ -118,6 +133,7 @@ function openPrestigeModal() {
         updatePrestigeBonuses();
         // Update button state after prestige
         updateButtonState();
+        updateLevelInfo();
       };
     });
   };
