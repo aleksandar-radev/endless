@@ -5,8 +5,7 @@ import { OFFENSE_STATS } from '../constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from '../constants/stats/defenseStats.js';
 import { MISC_STATS } from '../constants/stats/miscStats.js';
 import { formatStatName } from '../ui/ui.js';
-import { ATTRIBUTE_TOOLTIPS, ATTRIBUTES } from '../constants/stats/attributes.js';
-import { ELEMENTS } from '../constants/common.js';
+import { getAttributeTooltip, ATTRIBUTES } from '../constants/stats/attributes.js';
 import { calculateArmorReduction, calculateEvasionChance, calculateHitChance, calculateResistanceReduction } from '../combat.js';
 import { createModal } from './modal.js';
 import { t } from '../i18n.js';
@@ -278,13 +277,9 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
         row.appendChild(span);
         targetPanel.appendChild(row);
 
-        let tooltipFn = ATTRIBUTE_TOOLTIPS[`${key}Tooltip`];
-
-        if (tooltipFn) {
-          lbl.addEventListener('mouseenter', (e) => showTooltip(tooltipFn(), e));
-          lbl.addEventListener('mousemove', positionTooltip);
-          lbl.addEventListener('mouseleave', hideTooltip);
-        }
+        lbl.addEventListener('mouseenter', (e) => showTooltip(getAttributeTooltip(key), e));
+        lbl.addEventListener('mousemove', positionTooltip);
+        lbl.addEventListener('mouseleave', hideTooltip);
       });
 
       // Elemental damage keys will be rendered above in the normal stat-row flow so they
@@ -458,7 +453,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
       row.addEventListener('mouseenter', (e) => {
         const tip = options.showAdvancedAttributeTooltips
           ? getAdvancedAttributeTooltip(stat)
-          : ATTRIBUTE_TOOLTIPS[`get${stat.charAt(0).toUpperCase() + stat.slice(1)}Tooltip`]();
+          : getAttributeTooltip(stat);
         showTooltip(tip, e);
       });
       row.addEventListener('mousemove', positionTooltip);
