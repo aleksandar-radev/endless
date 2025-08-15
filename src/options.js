@@ -1,5 +1,5 @@
 
-import { crystalShop, dataManager, game, setGlobals } from './globals.js';
+import { crystalShop, dataManager, game, setGlobals, training } from './globals.js';
 import { showConfirmDialog, showToast, updateStageUI } from './ui/ui.js';
 import { closeModal, createModal } from './ui/modal.js';
 import Enemy from './enemy.js';
@@ -38,6 +38,8 @@ export class Options {
     this.showRateCounters = data.showRateCounters ?? false;
     // Period for rate counters in seconds
     this.rateCountersPeriod = data.rateCountersPeriod || 1;
+    // Enable quick training purchases
+    this.quickTraining = data.quickTraining ?? false;
   }
 
   /**
@@ -113,6 +115,8 @@ export class Options {
     container.appendChild(this._createShowAllStatsOption());
     // --- Enemy Stats Toggle Option ---
     container.appendChild(this._createEnemyStatsToggleOption());
+    // --- Quick Training Toggle Option ---
+    container.appendChild(this._createQuickTrainingOption());
 
     // --- Starting Stage Option ---
     container.appendChild(this._createStartingStageOption());
@@ -788,6 +792,36 @@ export class Options {
       this.showAllStats = checkbox.checked;
       dataManager.saveGame();
       updateStatsAndAttributesUI(true);
+    });
+    return wrapper;
+  }
+
+  /**
+   * Creates the quick training toggle option UI.
+   */
+  _createQuickTrainingOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="quick-training-toggle" class="quick-training-toggle-label">Enable Quick Training:</label>
+      <input
+        type="checkbox"
+        id="quick-training-toggle"
+        class="quick-training-toggle"
+        ${this.quickTraining ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.quickTraining = checkbox.checked;
+      dataManager.saveGame();
+      if (training) training.initializeTrainingUI();
     });
     return wrapper;
   }

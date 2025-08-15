@@ -19,6 +19,7 @@ import {
   options,
   dataManager,
   buildings,
+  training,
 } from './globals.js';
 import { updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
@@ -57,6 +58,7 @@ window.setLanguage = setLanguage;
   soulShop.initializeSoulShopUI();
   statistics.initializeStatisticsUI();
   options.initializeOptionsUI();
+  training.initializeTrainingUI();
   initializeSkillTreeUI();
   initializeBuildingsUI();
   initializePrestigeUI();

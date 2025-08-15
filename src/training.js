@@ -1,7 +1,7 @@
 import { formatStatName, updateResources, formatNumber } from './ui/ui.js';
 
 import { showToast } from './ui/ui.js';
-import { hero, dataManager } from './globals.js';
+import { hero, dataManager, options } from './globals.js';
 import { handleSavedData } from './functions.js';
 import { STATS } from './constants/stats/stats.js';
 import { createModal } from './ui/modal.js';
@@ -31,6 +31,7 @@ export default class Training {
 
     handleSavedData(savedData, this);
     this.activeSection = SECTION_DEFS[0].key;
+    this.quickQty = 1;
     this.initializeTrainingUI();
   }
 
@@ -78,6 +79,25 @@ export default class Training {
 }">${sec.label}</button>
     `,
     ).join('');
+    if (options?.quickTraining) {
+      const qtyControls = document.createElement('div');
+      qtyControls.className = 'training-qty-controls';
+      qtyControls.innerHTML = `
+        <button data-qty="1" class="${this.quickQty === 1 ? 'active' : ''}">1</button>
+        <button data-qty="10" class="${this.quickQty === 10 ? 'active' : ''}">10</button>
+        <button data-qty="50" class="${this.quickQty === 50 ? 'active' : ''}">50</button>
+        <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">Max</button>
+      `;
+      nav.appendChild(qtyControls);
+      qtyControls.querySelectorAll('button').forEach((btn) => {
+        btn.onclick = () => {
+          this.quickQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+          qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          this.updateTrainingUI('gold-upgrades');
+        };
+      });
+    }
     nav.querySelectorAll('button[data-section]').forEach((btn) => {
       btn.onclick = () => {
         this.activeSection = btn.dataset.section;
@@ -139,13 +159,16 @@ export default class Training {
   }
 
   attachGridListeners(grid) {
-    grid.addEventListener('click', (e) => {
+    grid.onclick = (e) => {
       const button = e.target.closest('button[data-stat]');
-      if (button) {
-        const stat = button.dataset.stat;
+      if (!button) return;
+      const stat = button.dataset.stat;
+      if (options?.quickTraining) {
+        this.buyBulk(stat, this.quickQty);
+      } else {
         this.openModal(stat);
       }
-    });
+    };
   }
 
   openModal(stat) {
@@ -308,11 +331,19 @@ export default class Training {
     const bonus = this.getBonusText(stat, config.training, level);
     const maxLevel = config.training?.maxLevel ?? Infinity;
     const isMaxed = level >= maxLevel;
+    let disabled = isMaxed;
+    let costLine = '';
+    if (options?.quickTraining && !isMaxed) {
+      const { qty, totalCost } = this.getMaxPurchasable(this.quickQty, level, maxLevel, config.training);
+      if (qty <= 0) disabled = true;
+      costLine = `<span class="upgrade-cost">Cost: ${formatNumber(totalCost)} Gold (${formatNumber(qty)})</span>`;
+    }
 
     return html`
-      <button data-stat="${stat}" ${isMaxed ? ' disabled' : ''}>
+      <button data-stat="${stat}" ${disabled ? ' disabled' : ''}>
         <span class="upgrade-name">${formatStatName(stat)} (Lvl ${formatNumber(level)}${isMaxed ? ' / Max' : ''})</span>
         <span class="upgrade-bonus">${bonus}${isMaxed ? ' <strong>Max</strong>' : ''}</span>
+        ${costLine}
       </button>
     `;
   }
