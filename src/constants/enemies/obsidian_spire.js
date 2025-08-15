@@ -1,10 +1,11 @@
+import { t } from '../../i18n.js';
 import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 12;
 
 export const OBSIDIAN_SPIRE_ENEMIES = [
   {
-    name: 'Void Sentinel',
+    name: t('Void Sentinel'),
 
     image: '/enemies/void-sentinel.jpg',
     tier: tier,
@@ -31,7 +32,7 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
     tags: ['obsidian_spire'],
   },
   {
-    name: 'Obsidian Golem',
+    name: t('Obsidian Golem'),
 
     image: '/enemies/obsidian-golem.jpg',
     tier: tier,
@@ -58,7 +59,7 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
     tags: ['obsidian_spire'],
   },
   {
-    name: 'Crimson Wisp',
+    name: t('Crimson Wisp'),
 
     image: '/enemies/crimson-wisp.jpg',
     tier: tier,
@@ -86,7 +87,7 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
 
   },
   {
-    name: 'Flame Djinn',
+    name: t('Flame Djinn'),
 
     image: '/enemies/flame-djinn.jpg',
     tier: tier,

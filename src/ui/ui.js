@@ -1,5 +1,6 @@
 import Enemy from '../enemy.js';
 import { game, hero, skillTree, quests, statistics, inventory, dataManager } from '../globals.js';
+import { t } from '../i18n.js';
 import { updateQuestsUI } from './questUi.js';
 import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
 import { TabIndicatorManager } from './tabIndicatorManager.js';
@@ -108,10 +109,14 @@ export function initializeUI() {
       updateStatsAndAttributesUI();
       // Update controls label
       const display = document.getElementById('stage-display');
+      const label = display?.querySelector('.stage-label');
+      const value = display?.querySelector('.stage-value');
       if (region === 'explore') {
-        display.textContent = `Stage: ${game.stage}`;
+        if (label) label.textContent = t('combat.stage');
+        if (value) value.textContent = game.stage;
       } else if (region === 'arena') {
-        display.textContent = `Boss Level: ${hero.bossLevel}`;
+        if (label) label.textContent = t('combat.bossLevel');
+        if (value) value.textContent = hero.bossLevel;
       }
       // Hide or show region-selector based on region
       const regionSelector = document.getElementById('region-selector');
@@ -289,20 +294,23 @@ export async function toggleGame() {
   // Toggle game loop state
   game.toggle();
   // Update button label and style
-  startBtn.textContent = game.gameStarted ? 'Stop' : 'Fight';
+  startBtn.textContent = game.gameStarted ? t('combat.stop') : t('combat.fight');
   startBtn.style.backgroundColor = game.gameStarted ? '#DC2626' : '#059669';
 }
 
 export function updateStageUI() {
   const stage = game.stage;
   const stageDisplay = document.getElementById('stage-display');
+  const label = stageDisplay?.querySelector('.stage-label');
+  const value = stageDisplay?.querySelector('.stage-value');
   if (stageDisplay && game.fightMode === 'arena') {
-    // In Arena mode, display boss level instead of stage
-    stageDisplay.textContent = `Boss Level: ${hero.bossLevel}`;
+    if (label) label.textContent = t('combat.bossLevel');
+    if (value) value.textContent = hero.bossLevel;
     return;
   }
   if (stageDisplay) {
-    stageDisplay.textContent = `Stage: ${stage}`;
+    if (label) label.textContent = t('combat.stage');
+    if (value) value.textContent = stage;
   }
 }
 

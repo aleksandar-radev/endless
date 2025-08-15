@@ -5,6 +5,7 @@ import { hideTooltip, positionTooltip, showToast, showTooltip } from '../ui/ui.j
 import { ITEM_RARITY, RARITY_ORDER, SLOT_REQUIREMENTS, ITEM_TYPES } from '../constants/items.js';
 import { closeModal, createModal } from './modal.js';
 import { formatStatName } from './ui.js';
+import { t } from '../i18n.js';
 
 let selectedItemEl = null;
 let awaitingSlot = false;
@@ -40,23 +41,23 @@ export function initializeInventoryUI(inv) {
     </div>
     <div class="salvage-container">
       <div class="inventory-tabs">
-        <button id="items-tab" class="inventory-btn active">Items</button>
-        <button id="materials-tab" class="inventory-btn">Materials</button>
+        <button id="items-tab" class="inventory-btn active" data-i18n="inventory.items">${t('inventory.items')}</button>
+        <button id="materials-tab" class="inventory-btn" data-i18n="inventory.materials">${t('inventory.materials')}</button>
       </div>
       <div class="sort-row">
         <select id="sort-mode-select" class="inventory-btn sort-select">
-          <option value="type-rarity-level">T→R→L</option>
-          <option value="type-level-rarity">T→L→R</option>
-          <option value="rarity-level">R→L</option>
-          <option value="level-rarity">L→R</option>
+          <option value="type-rarity-level">${t('inventory.typeRarityLevel')}</option>
+          <option value="type-level-rarity">${t('inventory.typeLevelRarity')}</option>
+          <option value="rarity-level">${t('inventory.rarityLevel')}</option>
+          <option value="level-rarity">${t('inventory.levelRarity')}</option>
         </select>
-        <div id="sort-inventory" class="inventory-btn sort-btn"><span role="img" aria-label="Sort">🔃</span></div>
+        <div id="sort-inventory" class="inventory-btn sort-btn" aria-label="${t('inventory.sort')}"><span role="img" aria-label="Sort">🔃</span></div>
       </div>
-      <button id="open-salvage-modal" class="inventory-btn">Salvage</button>
+      <button id="open-salvage-modal" class="inventory-btn" data-i18n="inventory.salvage">${t('inventory.salvage')}</button>
       <div class="search-container">
-        <input type="text" id="inventory-filter" class="inventory-btn filter-input" placeholder="Search items..." />
+        <input type="text" id="inventory-filter" class="inventory-btn filter-input" placeholder="${t('inventory.searchItems')}" />
         <span class="search-icon">🔍</span>
-        <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn" style="display: none">Equip</button>
+        <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn" style="display: none" data-i18n="inventory.equip">${t('inventory.equip')}</button>
       </div>
     </div>
   `;
@@ -102,10 +103,10 @@ export function initializeInventoryUI(inv) {
 
   // Map for full text tooltips
   const sortModeFullText = {
-    'type-rarity-level': 'Type → Rarity → Level',
-    'type-level-rarity': 'Type → Level → Rarity',
-    'rarity-level': 'Rarity → Level',
-    'level-rarity': 'Level → Rarity',
+    'type-rarity-level': t('inventory.typeRarityLevel'),
+    'type-level-rarity': t('inventory.typeLevelRarity'),
+    'rarity-level': t('inventory.rarityLevel'),
+    'level-rarity': t('inventory.levelRarity'),
   };
   function updateSortBtnText() {}
   updateSortBtnText();
@@ -148,10 +149,10 @@ export function initializeInventoryUI(inv) {
   sortBtn.addEventListener('click', () => {
     if (itemsTab.classList.contains('active')) {
       sortInventory(sortMode);
-      showToast(`Sorted items by ${sortModeSelect.options[sortModeSelect.selectedIndex].text}`, 'success');
+      showToast(`${t('inventory.sortedItemsBy')} ${sortModeSelect.options[sortModeSelect.selectedIndex].text}`, 'success');
     } else {
       sortMaterials();
-      showToast('Sorted materials', 'success');
+      showToast(t('inventory.sortedMaterials'), 'success');
     }
   });
 
@@ -159,9 +160,9 @@ export function initializeInventoryUI(inv) {
   sortBtn.addEventListener('mouseenter', (e) => {
     let tooltipText = '';
     if (itemsTab.classList.contains('active')) {
-      tooltipText = `Sort items by <b>${sortModeFullText[sortModeSelect.value]}</b>`;
+      tooltipText = `${t('inventory.sortItemsBy')} <b>${sortModeFullText[sortModeSelect.value]}</b>`;
     } else {
-      tooltipText = 'Sort materials';
+      tooltipText = t('inventory.sortMaterials');
     }
     const tooltipContent = `<div class="item-tooltip">${tooltipText}</div>`;
     showTooltip(tooltipContent, e, 'flex-tooltip');
