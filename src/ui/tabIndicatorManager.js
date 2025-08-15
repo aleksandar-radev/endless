@@ -14,15 +14,13 @@ export class TabIndicatorManager {
     this.previousSkillPoints = 0;
     this.previousClaimableQuests = 0;
 
-    // Find all tab buttons and inject indicator dots
+    // Find all tab buttons
     const tabButtons = Array.from(document.querySelectorAll(`${tabsContainerSelector} .tab-btn`));
     tabButtons.forEach((btn) => {
       const tabName = btn.dataset.tab;
       if (tabName) {
-        // Create and inject the indicator dot
-        const dot = document.createElement('span');
-        dot.classList.add('indicator-dot');
-        btn.appendChild(dot);
+        // Store reference to each tab button. Indicator dots are handled via CSS pseudo-elements,
+        // so no additional DOM nodes are required.
         this.tabs[tabName] = btn;
       }
     });

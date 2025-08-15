@@ -75,7 +75,7 @@
   cursor: pointer;
   transition: background-color 0.3s;
   position: relative;
-  /* Add position relative for indicator dot */
+  /* Position relative for indicator pseudo-element */
 }
 
 .tab-btn.active {
@@ -83,7 +83,8 @@
 }
 
 /* Tab indicator dot styles */
-.tab-btn .indicator-dot {
+.tab-btn::after {
+  content: '';
   position: absolute;
   top: 4px;
   right: 2px;
@@ -96,7 +97,7 @@
   z-index: 10;
 }
 
-.tab-btn.has-indicator .indicator-dot {
+.tab-btn.has-indicator::after {
   display: block;
 }
 
