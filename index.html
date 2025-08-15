@@ -100,6 +100,10 @@
                     <div class="character-resources">
                         <div id="character-name"></div>
                         <div class="character-hp-mana">
+                            <div class="xp-bar">
+                                <div id="xp-fill" style="width: 0%"></div>
+                                <div id="xp-text" class="xp-text">0/66</div>
+                            </div>
                             <div class="life-bar">
                                 <div id="life-fill"></div>
                                 <div id="life-text" class="life-text">100/100</div>
@@ -118,7 +122,8 @@
                 </div>
                 <div class="character-controls">
                     <button id="start-btn" data-i18n="combat.fight">Fight</button>
-                    <div id="stage-display"><span class="stage-label" data-i18n="combat.stage">Stage</span>: <span class="stage-value">1</span></div>
+                    <div id="stage-display"><span class="stage-label" data-i18n="combat.stage">Stage</span>: <span
+                            class="stage-value">1</span></div>
                 </div>
 
                 <div id="region-selector"></div>

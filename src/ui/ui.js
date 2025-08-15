@@ -182,6 +182,12 @@ export function updatePlayerLife() {
   document.getElementById('mana-text').textContent = `${formatNumber(
     Math.max(0, Math.floor(stats.currentMana)),
   )} / ${formatNumber(Math.floor(stats.mana))}`;
+
+  const xpPercentage = (hero.exp / hero.getExpToNextLevel()) * 100;
+  document.getElementById('xp-fill').style.width = `${xpPercentage}%`;
+  document.getElementById('xp-text').textContent = `${formatNumber(
+    Math.max(0, Math.floor(hero.exp)),
+  )} / ${formatNumber(Math.floor(hero.getExpToNextLevel()))}`;
 }
 
 export function updateEnemyStats() {

@@ -81,6 +81,7 @@ export default class Hero {
       this.exp = xpOverflow; // Carry over excess experience to next level
       updateStatsAndAttributesUI();
     }
+    updatePlayerLife();
   }
 
   gainGold(amount) {

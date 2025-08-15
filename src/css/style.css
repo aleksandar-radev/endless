@@ -390,6 +390,7 @@
   border-color: #ff0000;
 }
 
+.xp-bar,
 .life-bar,
 .enemy-life-bar,
 .mana-bar {
@@ -416,6 +417,7 @@
   padding: 0px 10px;
 }
 
+#xp-fill,
 #life-fill,
 #mana-fill {
   height: 100%;
@@ -430,6 +432,11 @@
   background-color: #4d4dff;
 }
 
+#xp-fill {
+  background-color: #4dff4d;
+}
+
+.xp-text,
 .life-text,
 #enemy-life-text,
 .mana-text {
@@ -444,6 +451,7 @@
   z-index: 1;
 }
 
+.xp-bar,
 .life-bar,
 .mana-bar {
   overflow: hidden;
