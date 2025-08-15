@@ -925,6 +925,7 @@ export function updateMaterialsGrid(inv) {
   materialsContainer.innerHTML = '';
   for (let i = 0; i < MATERIALS_SLOTS; i++) {
     const mat = inv.materials[i];
+    const icon = MATERIALS[mat?.id]?.icon || '🔹';
     const cell = document.createElement('div');
     cell.classList.add('materials-cell');
     if (mat) {
@@ -933,13 +934,13 @@ export function updateMaterialsGrid(inv) {
       // Show only first 2 digits, and "9+" if >9
       let qtyDisplay = mat.qty > 9 ? '+' : String(mat.qty).padStart(2, ' ');
       cell.innerHTML = `<div class="material-item" draggable="true" data-mat-id="${mat.id}" data-mat-index="${i}">
-          ${mat.icon || '🔹'}
+          ${icon}
           <span class="mat-qty">${qtyDisplay}</span>
         </div>`;
       const materialItem = cell.querySelector('.material-item');
       // Tooltip on hover (show name and amount)
       materialItem.addEventListener('mouseenter', (e) => {
-        let tooltipContent = `<div class="item-tooltip"><b>${matDef.icon || mat.icon || '🔹'} ${
+        let tooltipContent = `<div class="item-tooltip"><b>${matDef.icon || icon} ${
           matDef.name || mat.name || ''
         } &times; ${mat.qty}</b>`;
         if (matDef.description) tooltipContent += `<div style="margin-top:4px;">${matDef.description}</div>`;
