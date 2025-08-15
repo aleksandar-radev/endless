@@ -172,6 +172,12 @@
   margin-bottom: 5px;
 }
 
+.item-tooltip-separator {
+  border: none;
+  border-top: 1px solid #555;
+  margin: 4px 0;
+}
+
 .inventory-grid {
   display: flex;
   align-items: center;

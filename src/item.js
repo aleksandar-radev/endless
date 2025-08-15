@@ -1,6 +1,9 @@
 import { ITEM_ICONS, ITEM_RARITY, ITEM_STAT_POOLS } from './constants/items.js';
 import { getRegionByTier } from './constants/regions.js';
 import { STATS } from './constants/stats/stats.js';
+import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
+import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
+import { MISC_STATS } from './constants/stats/miscStats.js';
 import { ATTRIBUTES } from './constants/stats/attributes.js';
 import { options } from './globals.js';
 import { formatStatName } from './ui/ui.js';
@@ -34,6 +37,22 @@ const ATTRIBUTE_STATS = [
   ...Object.keys(ATTRIBUTES).map((a) => `${a}Percent`),
   'allAttributes',
   'allAttributesPercent',
+];
+
+// Predefined order of stats within groups
+const OFFENSE_ORDER = Object.keys(OFFENSE_STATS);
+const RESISTANCE_ORDER = RESISTANCE_STATS;
+const DEFENSE_ORDER = Object.keys(DEFENSE_STATS).filter((s) => !RESISTANCE_ORDER.includes(s));
+const ATTRIBUTE_ORDER = ATTRIBUTE_STATS;
+const MISC_ORDER = Object.keys(MISC_STATS).filter((s) => !ATTRIBUTE_ORDER.includes(s));
+
+// Group ordering for tooltip display
+const STAT_GROUPS = [
+  { name: 'offense', order: OFFENSE_ORDER },
+  { name: 'defense', order: DEFENSE_ORDER },
+  { name: 'resistance', order: RESISTANCE_ORDER },
+  { name: 'attribute', order: ATTRIBUTE_ORDER },
+  { name: 'misc', order: MISC_ORDER },
 ];
 
 export default class Item {
@@ -187,22 +206,30 @@ export default class Item {
         </div>
         <div class="item-level">Level ${this.level}, Tier ${this.tier}</div>
         <div class="item-stats">
-          ${Object.entries(this.stats)
-    .map(([stat, value]) => {
-      const decimals = STATS[stat].decimalPlaces || 0;
-      const formattedValue = value.toFixed(decimals);
-      let adv = '';
-      if (showAdvanced && statMinMax[stat]) {
-        const min = statMinMax[stat].min.toFixed(decimals);
-        const max = statMinMax[stat].max.toFixed(decimals);
-        adv = `<span class="item-ref-range" style="float:right; color:#aaa; text-align:right; min-width:60px;">${min} - ${max}</span>`;
-      }
-      return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-        <span>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}</span>
-        ${adv}
-      </div>`;
-    })
-    .join('')}
+          ${STAT_GROUPS.map((group) => {
+    const stats = group.order.filter((s) => this.stats[s] !== undefined);
+    if (stats.length === 0) return null;
+    const groupHtml = stats
+      .map((stat) => {
+        const value = this.stats[stat];
+        const decimals = STATS[stat].decimalPlaces || 0;
+        const formattedValue = value.toFixed(decimals);
+        let adv = '';
+        if (showAdvanced && statMinMax[stat]) {
+          const min = statMinMax[stat].min.toFixed(decimals);
+          const max = statMinMax[stat].max.toFixed(decimals);
+          adv = `<span class="item-ref-range" style="float:right; color:#aaa; text-align:right; min-width:60px;">${min} - ${max}</span>`;
+        }
+        return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+          <span>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}</span>
+          ${adv}
+        </div>`;
+      })
+      .join('');
+    return groupHtml;
+  })
+    .filter(Boolean)
+    .join('<hr class="item-tooltip-separator" />')}
         </div>
       </div>
     `;
