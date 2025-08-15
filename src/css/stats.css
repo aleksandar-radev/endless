@@ -159,7 +159,7 @@
 .split-view-modal .split-right {
   flex: 1;
   max-height: 80vh;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 .split-view-modal .split-right-tabs {

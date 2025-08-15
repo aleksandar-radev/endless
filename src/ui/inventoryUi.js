@@ -753,6 +753,10 @@ export function handleDrop(e) {
     inventory.moveItemToPosition(item, cellIndex);
   }
 
+  hero.recalculateFromAttributes();
+  dataManager.saveGame();
+
+
   updateInventoryGrid();
 }
 
