@@ -99,26 +99,30 @@ export function playerAttack(currentTime) {
     if (game.currentEnemy.currentLife > 0) {
 
       // Calculate if attack hits
-      const toggleEffects = skillTree.applyToggleEffects();
-      const heroAttackRating = (hero.stats.attackRating + (toggleEffects.attackRating || 0)) * (1 + (toggleEffects.attackRatingPercent || 0) / 100);
+      const heroAttackRating = hero.stats.attackRating;
 
       const hitChance = calculateHitChance(heroAttackRating, game.currentEnemy.evasion);
 
       const roll = Math.random() * 100;
       const neverMiss = hero.stats.attackNeverMiss > 0;
 
+      const manaPerHit = (hero.stats.manaPerHit || 0) * (1 + (hero.stats.manaPerHitPercent || 0) / 100);
+      if (manaPerHit < 0) {
+        game.restoreMana(manaPerHit);
+      }
+
       if (!neverMiss && roll > hitChance) {
-        // to take up mana even when missing. (for toggle skills)
         createDamageNumber({ text: 'MISS', color: '#888888' });
       } else {
-        const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy, {}, toggleEffects);
+        const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy, {});
 
-        const lifePerHit = ((hero.stats.lifePerHit|| 0) + (toggleEffects.lifePerHit || 0)) * (1 + (hero.stats.lifePerHitPercent || 0) / 100);
-        const lifeStealAmount = damage * ((hero.stats.lifeSteal || 0) + (toggleEffects.lifeSteal || 0)) / 100;
+        const lifePerHit = (hero.stats.lifePerHit || 0) * (1 + (hero.stats.lifePerHitPercent || 0) / 100);
+        const lifeStealAmount = damage * (hero.stats.lifeSteal || 0) / 100;
         game.healPlayer(lifeStealAmount + lifePerHit);
 
-        const manaPerHit = ((hero.stats.manaPerHit || 0) + (toggleEffects.manaPerHit || 0)) * (1 + (hero.stats.manaPerHitPercent || 0) / 100);
-        game.restoreMana(manaPerHit);
+        if (manaPerHit > 0) {
+          game.restoreMana(manaPerHit);
+        }
 
         game.damageEnemy(damage, isCritical);
       }

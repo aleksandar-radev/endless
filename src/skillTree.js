@@ -46,22 +46,14 @@ export default class SkillTree {
     const pathBonuses = this.getPathBonuses();
     const passiveBonuses = this.calculatePassiveBonuses();
     const activeBuffEffects = this.getActiveBuffEffects();
+    const toggleBonuses = this.calculateToggleBonuses();
 
     const allBonuses = {};
 
-    // Combine path bonuses
-    Object.entries(pathBonuses).forEach(([stat, value]) => {
-      allBonuses[stat] = (allBonuses[stat] || 0) + value;
-    });
-
-    // Combine passive bonuses
-    Object.entries(passiveBonuses).forEach(([stat, value]) => {
-      allBonuses[stat] = (allBonuses[stat] || 0) + value;
-    });
-
-    // Combine active buff effects
-    Object.entries(activeBuffEffects).forEach(([stat, value]) => {
-      allBonuses[stat] = (allBonuses[stat] || 0) + value;
+    ;[pathBonuses, passiveBonuses, activeBuffEffects, toggleBonuses].forEach((bonus) => {
+      Object.entries(bonus).forEach(([stat, value]) => {
+        allBonuses[stat] = (allBonuses[stat] || 0) + value;
+      });
     });
 
     return allBonuses;
@@ -86,6 +78,24 @@ export default class SkillTree {
       }
     });
 
+    return bonuses;
+  }
+
+  calculateToggleBonuses() {
+    const bonuses = {};
+    Object.entries(this.skills).forEach(([skillId, skillData]) => {
+      const skill = this.getSkill(skillId);
+      if (skill.type() === 'toggle' && skillData.active) {
+        const effects = this.getSkillEffect(skillId, skillData.level);
+        Object.entries(effects).forEach(([stat, value]) => {
+          bonuses[stat] = (bonuses[stat] || 0) + value;
+        });
+        const manaCost = this.getSkillManaCost(skill);
+        if (manaCost) {
+          bonuses.manaPerHit = (bonuses.manaPerHit || 0) - manaCost;
+        }
+      }
+    });
     return bonuses;
   }
 
@@ -345,9 +355,12 @@ export default class SkillTree {
 
     hero.stats.currentMana -= this.getSkillManaCost(skill);
 
-    const toggleEffects = this.applyToggleEffects();
+    const manaPerHit = (hero.stats.manaPerHit || 0) * (1 + (hero.stats.manaPerHitPercent || 0) / 100);
+    if (manaPerHit < 0) {
+      game.restoreMana(manaPerHit);
+    }
 
-    const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy, baseEffects, toggleEffects);
+    const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy, baseEffects);
 
     if (baseEffects.lifeSteal) {
       const lifeStealAmount = damage * (baseEffects.lifeSteal / 100);
@@ -365,8 +378,13 @@ export default class SkillTree {
       game.healPlayer((hero.stats.life * baseEffects.lifePercent) / 100);
     }
 
-    if (baseEffects.manaPerHit) {
-      game.restoreMana(baseEffects.manaPerHit);
+    if (this.isDamageSkill(baseEffects)) {
+      if (manaPerHit > 0) {
+        game.restoreMana(manaPerHit);
+      }
+      if (baseEffects.manaPerHit) {
+        game.restoreMana(baseEffects.manaPerHit);
+      }
     }
 
     if (baseEffects.reduceEnemyDamagePercent) {
@@ -385,6 +403,7 @@ export default class SkillTree {
 
     // Update UI
     updatePlayerLife();
+    updateActionBar();
 
     return true;
   }
@@ -408,38 +427,6 @@ export default class SkillTree {
       effects.elementalDamage ||
       effects.elementalDamagePercent
     );
-  }
-  applyToggleEffects() {
-    if (!game.currentEnemy || game.currentEnemy.currentLife <= 0) return {};
-
-    let effects = {};
-
-    Object.entries(this.skills).forEach(([skillId, skillData]) => {
-      const skill = this.getSkill(skillId);
-      if (skill.type() === 'toggle' && skillData.active) {
-        if (hero.stats.currentMana >= this.getSkillManaCost(skill)) {
-          hero.stats.currentMana -= this.getSkillManaCost(skill);
-          const skillEffects = this.getSkillEffect(skillId, skillData.level);
-          // Additively combine effects
-          Object.entries(skillEffects).forEach(([stat, value]) => {
-            if (typeof value === 'number') {
-              effects[stat] = (effects[stat] || 0) + value;
-            } else {
-              effects[stat] = value; // fallback for non-numeric
-            }
-          });
-        } else {
-          // showManaWarning();
-          // Deactivate if not enough mana
-          // skillData.active = false;
-          // updateActionBar();
-        }
-      }
-    });
-
-    updateActionBar();
-
-    return effects;
   }
 
   activateSkill(skillId, isAutoCast = false) {

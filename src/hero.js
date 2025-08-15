@@ -565,36 +565,36 @@ export default class Hero {
   }
 
   // calculated when hit is successful
-  calculateTotalDamage(instantSkillBaseEffects = {}, toggleEffects = {}) {
+  calculateTotalDamage(instantSkillBaseEffects = {}) {
     const elements = Object.keys(ELEMENTS);
 
-    // 1) Flat phase: build flat pools including toggle flat bonuses
-    const flatPools = { physical: (this.stats.damage || 0) + (instantSkillBaseEffects.damage || 0) + (toggleEffects.damage || 0) };
+    // 1) Flat phase: build flat pools
+    const flatPools = { physical: (this.stats.damage || 0) + (instantSkillBaseEffects.damage || 0) };
     elements.forEach((e) => {
       const key = `${e}Damage`;
-      flatPools[e] = (this.stats[key] || 0) + (instantSkillBaseEffects[key] || 0) + (toggleEffects[key] || 0);
+      flatPools[e] = (this.stats[key] || 0) + (instantSkillBaseEffects[key] || 0);
     });
 
     // flat elementalDamage applies to every elemental pool
-    const flatElementalDamage = (this.stats.elementalDamage || 0) + (instantSkillBaseEffects.elementalDamage || 0) + (toggleEffects.elementalDamage || 0);
+    const flatElementalDamage = (this.stats.elementalDamage || 0) + (instantSkillBaseEffects.elementalDamage || 0);
     if (flatElementalDamage) elements.forEach((e) => (flatPools[e] += flatElementalDamage));
 
     // 2) Percent phase: apply percent bonuses (physical + per-elemental + global elemental)
     const finalPools = {};
-    const physicalPct = ((instantSkillBaseEffects.damagePercent || 0) + (toggleEffects.damagePercent || 0)) / 100;
+    const physicalPct = (instantSkillBaseEffects.damagePercent || 0) / 100;
     finalPools.physical = flatPools.physical * (1 + physicalPct + (this.stats.totalDamagePercent || 0));
 
     // elemental global percent from both sources
-    const elementalGlobalPct = ((instantSkillBaseEffects.elementalDamagePercent || 0) + (toggleEffects.elementalDamagePercent || 0)) / 100;
+    const elementalGlobalPct = (instantSkillBaseEffects.elementalDamagePercent || 0) / 100;
     elements.forEach((e) => {
-      const specificPct = ((instantSkillBaseEffects[`${e}DamagePercent`] || 0) + (toggleEffects[`${e}DamagePercent`] || 0)) / 100;
+      const specificPct = (instantSkillBaseEffects[`${e}DamagePercent`] || 0) / 100;
       // include hero totalDamagePercent as in other calculations
       finalPools[e] = flatPools[e] * (1 + specificPct + elementalGlobalPct + (this.stats.totalDamagePercent || 0));
     });
 
     // 3) Double-damage and criticals (after percent multipliers)
-    const isCritical = Math.random() * 100 < (this.stats.critChance + (toggleEffects.critChance || 0));
-    if (toggleEffects.doubleDamageChance && Math.random() * 100 < toggleEffects.doubleDamageChance) {
+    const isCritical = Math.random() * 100 < this.stats.critChance;
+    if (this.stats.doubleDamageChance && Math.random() * 100 < this.stats.doubleDamageChance) {
       Object.keys(finalPools).forEach((k) => (finalPools[k] *= 2));
     }
     if (isCritical) Object.keys(finalPools).forEach((k) => (finalPools[k] *= (this.stats.critDamage || 1)));
@@ -605,10 +605,9 @@ export default class Hero {
     return { damage: Math.floor(totalDamage), isCritical, breakdown };
   }
 
-  calculateDamageAgainst(enemy, instantSkillBaseEffects = {}, toggleEffects = {}) {
+  calculateDamageAgainst(enemy, instantSkillBaseEffects = {}) {
     console.debug(instantSkillBaseEffects, 'instantSkillBaseEffects');
-    console.debug(toggleEffects, 'toggleEffects');
-    const result = this.calculateTotalDamage(instantSkillBaseEffects, toggleEffects);
+    const result = this.calculateTotalDamage(instantSkillBaseEffects);
 
     if (!enemy) return result;
     // Calculate effective enemy armor after hero's armor penetration
