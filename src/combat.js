@@ -315,8 +315,8 @@ export async function defeatEnemy() {
   // clear defeat guard so next enemy can be damaged
   game._justDefeated = false;
 
-  const expGained = Math.floor(baseExpGained * (1 + hero.stats.bonusExperiencePercent / 100));
-  const goldGained = Math.floor(baseGoldGained * (1 + hero.stats.bonusGoldPercent / 100));
+  const expGained = Math.floor(baseExpGained * (1 + hero.stats.bonusExperiencePercent));
+  const goldGained = Math.floor(baseGoldGained * (1 + hero.stats.bonusGoldPercent));
 
   hero.gainGold(goldGained);
   hero.gainExp(expGained);
