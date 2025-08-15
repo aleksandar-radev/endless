@@ -73,13 +73,11 @@ export function enemyAttack(currentTime) {
           game.damageEnemy(thornsDamage);
         }
 
-        // check currently applied buffs and if fireShield is active, return its damage to the attacker.
-        if (skillTree.activeBuffs.has('fireShield')) {
-          const fireReflect = Math.floor(hero.stats.reflectFireDamage || 0);
-          if (fireReflect > 0) {
-            game.damageEnemy(fireReflect);
-            updateEnemyStats();
-          }
+
+        const fireReflect = Math.floor(hero.stats.reflectFireDamage || 0);
+        if (fireReflect > 1) {
+          game.damageEnemy(fireReflect);
+          updateEnemyStats();
         }
 
         game.damagePlayer(totalDamage);
