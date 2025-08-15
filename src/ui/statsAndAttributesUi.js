@@ -9,6 +9,7 @@ import { ATTRIBUTE_TOOLTIPS, ATTRIBUTES } from '../constants/stats/attributes.js
 import { ELEMENTS } from '../constants/common.js';
 import { calculateArmorReduction, calculateEvasionChance, calculateHitChance, calculateResistanceReduction } from '../combat.js';
 import { createModal } from './modal.js';
+import { t } from '../i18n.js';
 
 const html = String.raw;
 
@@ -414,7 +415,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     attributesContainer.className = 'attributes-container';
     attributesContainer.innerHTML = html`
       <div class="attributes-header">
-        <h3 id="attributes">Attributes (+${hero.statPoints})</h3>
+        <h3 id="attributes">${t('attributes')} (+${hero.statPoints})</h3>
         <div class="allocate-modes" style="margin-bottom:8px;">
           <button class="mode-btn" data-amount="1">+1</button>
           <button class="mode-btn" data-amount="30">+30</button>
@@ -427,7 +428,8 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
         ${Object.entries(hero.stats)
     .map(([stat, value]) => {
       if (!ATTRIBUTES[stat]) return '';
-      const displayName = stat.charAt(0).toUpperCase() + stat.slice(1);
+
+      const displayName = t(stat);
       return `
             <div class="attribute-row">
               <button class="allocate-btn" data-stat="${stat}">+</button>
@@ -507,7 +509,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     // Add attributes container to the grid
     statsGrid.appendChild(attributesContainer);
   } else {
-    document.getElementById('attributes').textContent = `Attributes (+${hero.statPoints})`;
+    document.getElementById('attributes').textContent = `${t('attributes')} (+${hero.statPoints})`;
     // Update all attribute values dynamically (works with showAllStats)
     Object.keys(hero.stats).forEach((stat) => {
       if (!ATTRIBUTES[stat]) return;

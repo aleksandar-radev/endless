@@ -440,104 +440,11 @@ export function showConfirmDialog(message, options = {}) {
   });
 }
 
-// Helper function to convert camelCase to Title Case with spaces
+// Helper function to convert camelCase to Title Case with spaces and translate stat names
 export const formatStatName = (stat) => {
-  // Handle special cases first
-  if (stat === 'critChance') return 'Crit Chance';
-  if (stat === 'critDamage') return 'Crit Damage';
-  if (stat === 'lifeSteal') return 'Life Steal';
-  if (stat === 'attackSpeed') return 'Attack Speed';
-  if (stat === 'attackRating') return 'Attack Rating';
-  if (stat === 'attackRatingPercent') return 'Attack Rating %';
-  if (stat === 'damage') return 'Damage';
-  if (stat === 'damagePercent') return 'Damage %';
-  if (stat === 'lifePercent') return 'Life %';
-  if (stat === 'manaPercent') return 'Mana %';
-  if (stat === 'armor') return 'Armor';
-  if (stat === 'armorPercent') return 'Armor %';
-  if (stat === 'evasion') return 'Evasion';
-  if (stat === 'evasionPercent') return 'Evasion %';
-  if (stat === 'fireResistance') return `${ELEMENTS.fire.icon} Res`;
-  if (stat === 'coldResistance') return `${ELEMENTS.cold.icon} Res`;
-  if (stat === 'airResistance') return `${ELEMENTS.air.icon} Res`;
-  if (stat === 'earthResistance') return `${ELEMENTS.earth.icon} Res`;
-  if (stat === 'lightningResistance') return `${ELEMENTS.lightning.icon} Res`;
-  if (stat === 'waterResistance') return `${ELEMENTS.water.icon} Res`;
-  if (stat === 'fireResistancePercent') return `${ELEMENTS.fire.icon} Res %`;
-  if (stat === 'coldResistancePercent') return `${ELEMENTS.cold.icon} Res %`;
-  if (stat === 'airResistancePercent') return `${ELEMENTS.air.icon} Res %`;
-  if (stat === 'earthResistancePercent') return `${ELEMENTS.earth.icon} Res %`;
-  if (stat === 'lightningResistancePercent') return `${ELEMENTS.lightning.icon} Res %`;
-  if (stat === 'waterResistancePercent') return `${ELEMENTS.water.icon} Res %`;
-  if (stat === 'allResistancePercent') return 'Elemental Res %';
-  if (stat === 'elementalDamagePercent') return 'Elemental Damage %';
-  if (stat === 'lifeRegen') return 'Life Regeneration';
-  if (stat === 'manaRegen') return 'Mana Regeneration';
-  if (stat === 'bonusGoldPercent') return 'Bonus Gold';
-  if (stat === 'bonusExperiencePercent') return 'Bonus Experience';
-  if (stat === 'blockChance') return 'Block Chance';
-  if (stat === 'fireDamage') return `${ELEMENTS.fire.icon} Damage`;
-  if (stat === 'coldDamage') return `${ELEMENTS.cold.icon} Damage`;
-  if (stat === 'airDamage') return `${ELEMENTS.air.icon} Damage`;
-  if (stat === 'earthDamage') return `${ELEMENTS.earth.icon} Damage`;
-  if (stat === 'lightningDamage') return `${ELEMENTS.lightning.icon} Damage`;
-  if (stat === 'waterDamage') return `${ELEMENTS.water.icon} Damage`;
-  if (stat === 'fireDamagePercent') return `${ELEMENTS.fire.icon} Damage %`;
-  if (stat === 'coldDamagePercent') return `${ELEMENTS.cold.icon} Damage %`;
-  if (stat === 'airDamagePercent') return `${ELEMENTS.air.icon} Damage %`;
-  if (stat === 'earthDamagePercent') return `${ELEMENTS.earth.icon} Damage %`;
-  if (stat === 'lightningDamagePercent') return `${ELEMENTS.lightning.icon} Damage %`;
-  if (stat === 'waterDamagePercent') return `${ELEMENTS.water.icon} Damage %`;
-  if (stat === 'strength') return 'Strength';
-  if (stat === 'strengthPercent') return 'Strength %';
-  if (stat === 'agility') return 'Agility';
-  if (stat === 'agilityPercent') return 'Agility %';
-  if (stat === 'vitality') return 'Vitality';
-  if (stat === 'vitalityPercent') return 'Vitality %';
-  if (stat === 'wisdom') return 'Wisdom';
-  if (stat === 'wisdomPercent') return 'Wisdom %';
-  if (stat === 'endurance') return 'Endurance';
-  if (stat === 'endurancePercent') return 'Endurance %';
-  if (stat === 'dexterity') return 'Dexterity';
-  if (stat === 'dexterityPercent') return 'Dexterity %';
-  if (stat === 'intelligence') return 'Intelligence';
-  if (stat === 'intelligencePercent') return 'Intelligence %';
-  if (stat === 'perseverance') return 'Perseverance';
-  if (stat === 'perseverancePercent') return 'Perseverance %';
-  if (stat === 'lifePerHit') return 'Life Per Hit';
-  if (stat === 'lifePerHitPercent') return 'Life Per Hit %';
-  if (stat === 'manaPerHit') return 'Mana Per Hit';
-  if (stat === 'manaPerHitPercent') return 'Mana Per Hit %';
-  if (stat === 'thornsDamage') return 'Thorns Damage';
-  if (stat === 'thornsDamagePercent') return 'Thorns Damage %';
-  if (stat === 'cooldownReductionPercent') return 'Cooldown Reduction %';
-  if (stat === 'manaCostReductionPercent') return 'Mana Cost Reduction %';
-  if (stat === 'buffDurationPercent') return 'Buff Duration %';
-  if (stat === 'itemBonusesPercent') return 'Item Bonuses %';
-  if (stat === 'itemQuantityPercent') return 'Item Drop Quantity %';
-  if (stat === 'itemRarityPercent') return 'Item Drop Rarity %';
-  if (stat === 'doubleDamageChance') return 'Double Damage Chance';
-  if (stat === 'resurrectionChance') return 'Resurrection Chance';
-  if (stat === 'reflectFireDamage') return 'Reflect Fire Damage';
-  if (stat === 'skillPoints') return 'Bonus Skill Points';
-  if (stat === 'extraMaterialDropPercent') return 'Bonus Material Drop %';
-  if (stat === 'percentOfPlayerDamage') return '% of your total damage';
-  if (stat === 'manaShieldPercent') return 'Damage taken from mana before life %';
-  if (stat === 'manaRegenOfTotalPercent') return 'Mana regeneration % of total mana';
-  if (stat === 'ignoreEnemyArmor') return 'Ignore Enemy Armor';
-  if (stat === 'ignoreAllEnemyResistances') return 'Ignore All Enemy Resistances';
-  if (stat === 'attackNeverMiss') return 'Attack Never Miss';
-  if (stat === 'reduceEnemyDamagePercent') return 'Lower Enemy Damage %';
-  if (stat === 'reduceEnemyHpPercent') return 'Reduce Enemy HP %';
-  if (stat === 'reduceEnemyAttackSpeedPercent') return 'Reduce Enemy Attack Speed %';
-  if (stat === 'extraDamageFromLifePercent') return 'Extra Damage From % of Life';
-  if (stat === 'extraDamageFromArmorPercent') return 'Extra Damage From % of Armor';
-  if (stat === 'extraDamageFromManaPercent') return 'Extra Damage From % of Mana';
-  if (stat === 'extraDamageFromLifeRegenPercent') return 'Extra Damage From % of Life Regen';
-  if (stat === 'extraDamageFromEvasionPercent') return 'Extra Damage From % of Evasion';
-  if (stat === 'extraDamageFromAttackRatingPercent') return 'Extra Damage From % of Attack Rating';
+  const translation = t(stat);
+  if (translation !== stat) return translation;
 
-  // Fallback: convert camelCase to Title Case with spaces
   return stat
     .replace(/([A-Z])/g, ' $1')
     .replace(/^./, (str) => str.toUpperCase())
