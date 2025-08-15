@@ -6,10 +6,11 @@ import { BERSERKER_SKILLS } from '../constants/skills/berserkerSkills.js';
 import { ELEMENTALIST_SKILLS } from '../constants/skills/elementalistSkills.js';
 import { DRUID_SKILLS } from '../constants/skills/druidSkills.js';
 import { MAGE_SKILLS } from '../constants/skills/mageSkills.js';
+import { t } from '../i18n.js';
 
 export const CLASS_PATHS = {
   WARRIOR: {
-    name: () => 'Warrior',
+    name: () => t('class.warrior'),
     enabled: () => true,
     avatar: () => 'warrior-avatar.jpg',
     baseStats: () => ({
@@ -18,12 +19,12 @@ export const CLASS_PATHS = {
       armorPercent: 20,
       lifePercent: 30,
     }),
-    description: () => 'A mighty warrior specializing in heavy armor and raw strength',
+    description: () => t('class.warriorDesc'),
     requiredLevel: () => 0,
     crystalCost: () => 0,
   },
   ROGUE: {
-    name: () => 'Rogue',
+    name: () => t('class.rogue'),
     enabled: () => true,
     avatar: () => 'rogue-avatar.jpg',
     baseStats: () => ({
@@ -32,12 +33,12 @@ export const CLASS_PATHS = {
       critChance: 3,
       damagePercent: 20,
     }),
-    description: () => 'Swift and deadly, focusing on critical hits and attack speed',
+    description: () => t('class.rogueDesc'),
     requiredLevel: () => 0,
     crystalCost: () => 0,
   },
   VAMPIRE: {
-    name: () => 'Vampire',
+    name: () => t('class.vampire'),
     enabled: () => true,
     avatar: () => 'vampire-avatar.jpg',
     baseStats: () => ({
@@ -46,12 +47,12 @@ export const CLASS_PATHS = {
       attackSpeed: 0.2,
       damagePercent: 10,
     }),
-    description: () => 'Master of life-stealing and critical strikes',
+    description: () => t('class.vampireDesc'),
     requiredLevel: () => 0,
     crystalCost: () => 0,
   },
   PALADIN: {
-    name: () => 'Paladin',
+    name: () => t('class.paladin'),
     enabled: () => true,
     avatar: () => 'paladin-avatar.jpg',
     baseStats: () => ({
@@ -60,12 +61,12 @@ export const CLASS_PATHS = {
       vitality: 40,
       lifePercent: 20,
     }),
-    description: () => 'Holy warrior specializing in defense and vitality',
+    description: () => t('class.paladinDesc'),
     requiredLevel: () => 0,
     crystalCost: () => 0,
   },
   BERSERKER: {
-    name: () => 'Berserker',
+    name: () => t('class.berserker'),
     enabled: () => true,
     avatar: () => 'berserker-avatar.jpg',
     baseStats: () => ({
@@ -74,12 +75,12 @@ export const CLASS_PATHS = {
       damagePercent: 30,
       lifePercent: -20,
     }),
-    description: () => 'Frenzied fighter focusing on raw damage output',
+    description: () => t('class.berserkerDesc'),
     requiredLevel: () => 0,
     crystalCost: () => 0,
   },
   ELEMENTALIST: {
-    name: () => 'Elementalist',
+    name: () => t('class.elementalist'),
     enabled: () => true,
     avatar: () => 'elementalist-avatar.jpg',
     baseStats: () => ({
@@ -87,12 +88,12 @@ export const CLASS_PATHS = {
       intelligencePercent: 10,
       elementalDamagePercent: 25,
     }),
-    description: () => 'Master of elemental damage types',
+    description: () => t('class.elementalistDesc'),
     requiredLevel: () => 0,
     crystalCost: () => 0,
   },
   DRUID: {
-    name: () => 'Druid',
+    name: () => t('class.druid'),
     enabled: () => true,
     avatar: () => 'druid-avatar.jpg',
     baseStats: () => ({
@@ -103,12 +104,12 @@ export const CLASS_PATHS = {
       earthDamagePercent: 30,
       waterDamagePercent: 30,
     }),
-    description: () => 'Wielder of nature magic and animal allies',
+    description: () => t('class.druidDesc'),
     requiredLevel: () => 0,
     crystalCost: () => 0,
   },
   MAGE: {
-    name: () => 'Mage',
+    name: () => t('class.mage'),
     enabled: () => true,
     avatar: () => 'mage-avatar.jpg',
     baseStats: () => ({
@@ -118,7 +119,7 @@ export const CLASS_PATHS = {
       wisdom: 40,
       manaPerLevel: 0.5,
     }),
-    description: () => 'Master of arcane spells and destructive magic.',
+    description: () => t('class.mageDesc'),
     requiredLevel: () => 0,
     crystalCost: () => 0,
   },

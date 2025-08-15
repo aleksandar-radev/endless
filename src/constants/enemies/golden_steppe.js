@@ -1,10 +1,11 @@
+import { t } from '../../i18n.js';
 import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 11;
 
 export const GOLDEN_STEPPE_ENEMIES = [
   {
-    name: 'Golden Sphinx',
+    name: t('Golden Sphinx'),
 
     image: '/enemies/golden-sphinx.jpg',
     tier: tier,
@@ -27,7 +28,7 @@ export const GOLDEN_STEPPE_ENEMIES = [
     tags: ['golden_steppe'],
   },
   {
-    name: 'Aurelius',
+    name: t('Aurelius'),
 
     image: '/enemies/aurelius.jpg',
     tier: tier,
@@ -46,7 +47,7 @@ export const GOLDEN_STEPPE_ENEMIES = [
     tags: ['golden_steppe'],
   },
   {
-    name: 'Solar Phoenix',
+    name: t('Solar Phoenix'),
 
     image: '/enemies/solar-phoenix.jpg',
     tier: tier,
@@ -72,7 +73,7 @@ export const GOLDEN_STEPPE_ENEMIES = [
 
   },
   {
-    name: 'Radiant Lion',
+    name: t('Radiant Lion'),
 
     image: '/enemies/radiant-lion.jpg',
     tier: tier,

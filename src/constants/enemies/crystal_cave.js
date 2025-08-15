@@ -1,10 +1,11 @@
+import { t } from '../../i18n.js';
 import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 2;
 
 export const CRYSTAL_CAVE_ENEMIES = [
   {
-    name: 'Crystal Golem',
+    name: t('Crystal Golem'),
 
     image: '/enemies/crystal-golem.jpg',
     tier: tier,
@@ -31,7 +32,7 @@ export const CRYSTAL_CAVE_ENEMIES = [
     tags: ['crystal_cave'],
   },
   {
-    name: 'Gem Guardian',
+    name: t('Gem Guardian'),
 
     image: '/enemies/gem-guardian.jpg',
     tier: tier,
@@ -54,7 +55,7 @@ export const CRYSTAL_CAVE_ENEMIES = [
     tags: ['crystal_cave'],
   },
   {
-    name: 'Grimspike',
+    name: t('Grimspike'),
 
     image: '/enemies/grimspike.jpg',
     tier: tier,
@@ -75,7 +76,7 @@ export const CRYSTAL_CAVE_ENEMIES = [
     tags: ['crystal_cave'],
   },
   {
-    name: 'Shardling',
+    name: t('Shardling'),
 
     image: '/enemies/shardling.jpg',
     tier: tier,

@@ -1,3 +1,4 @@
+import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
 import { scaleDownFlat } from '../../common.js';
 import { scaleUpFlat } from '../../common.js';
@@ -7,12 +8,12 @@ export const WARRIOR_SKILLS = {
   // Tier 0 Skills
   bash: {
     id: 'bash',
-    name: () => 'Bash',
+    name: () => t('Bash'),
     type: () => 'toggle',
     manaCost: (level) => 1 + level * 0.1,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'war-axe',
-    description: () => 'While active, increases damage but costs mana per attack',
+    description: () => t('While active, increases damage but costs mana per attack'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 2, 5, 0.2),
@@ -21,11 +22,11 @@ export const WARRIOR_SKILLS = {
   },
   toughness: {
     id: 'toughness',
-    name: () => 'Toughness',
+    name: () => t('Toughness'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'shield',
-    description: () => 'Permanently increases armor',
+    description: () => t('Permanently increases armor'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: scaleUpFlat(level, 3, 5, 0.2),
@@ -37,13 +38,13 @@ export const WARRIOR_SKILLS = {
   // Tier 1 Skills
   powerStrike: {
     id: 'powerStrike',
-    name: () => 'Power Strike',
+    name: () => t('Power Strike'),
     type: () => 'instant',
     manaCost: (level) => 4 + level * 0.25,
     cooldown: () => 5000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'sword',
-    description: () => 'A powerful strike that deals increased damage',
+    description: () => t('A powerful strike that deals increased damage'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 3, 5, 0.2),
@@ -52,11 +53,11 @@ export const WARRIOR_SKILLS = {
   },
   ironWill: {
     id: 'ironWill',
-    name: () => 'Iron Will',
+    name: () => t('Iron Will'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'helmet',
-    description: () => 'Increases resistance to damage',
+    description: () => t('Increases resistance to damage'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       vitality: scaleUpFlat(level, 3),
@@ -70,14 +71,14 @@ export const WARRIOR_SKILLS = {
   // Tier 2 Skills
   battleCry: {
     id: 'battleCry',
-    name: () => 'Battle Cry',
+    name: () => t('Battle Cry'),
     type: () => 'buff',
     manaCost: (level) => 10 + level * 0.5,
     cooldown: () => 72000,
     duration: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'cry',
-    description: () => 'Temporarily increases damage',
+    description: () => t('Temporarily increases damage'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2.5),
@@ -85,11 +86,11 @@ export const WARRIOR_SKILLS = {
   },
   fortitude: {
     id: 'fortitude',
-    name: () => 'Fortitude',
+    name: () => t('Fortitude'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'armor',
-    description: () => 'Increases life regeneration',
+    description: () => t('Increases life regeneration'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.005, 1),
@@ -101,13 +102,13 @@ export const WARRIOR_SKILLS = {
   // Tier 3 Skills
   groundSlam: {
     id: 'groundSlam',
-    name: () => 'Ground Slam',
+    name: () => t('Ground Slam'),
     type: () => 'instant',
     manaCost: (level) => 5 + level * 0.375,
     cooldown: () => 9500,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'slam',
-    description: () => 'Deals instant damage',
+    description: () => t('Deals instant damage'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 8),
@@ -117,11 +118,11 @@ export const WARRIOR_SKILLS = {
   // Tier 3 Skills
   armorBreaker: {
     id: 'armorBreaker',
-    name: () => 'Armor Breaker',
+    name: () => t('Armor Breaker'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'armor-break',
-    description: () => 'Gives armor penetration',
+    description: () => t('Gives armor penetration'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armorPenetration: scaleUpFlat(level, 15, 5, 0.5),
@@ -132,14 +133,14 @@ export const WARRIOR_SKILLS = {
   // Tier 4 Skills
   shieldWall: {
     id: 'shieldWall',
-    name: () => 'Shield Wall',
+    name: () => t('Shield Wall'),
     type: () => 'buff',
     manaCost: (level) => 12 + level * 0.625,
     cooldown: () => 45000,
     duration: () => 16000,
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'wall',
-    description: () => 'Increases armor and block chance temporarily',
+    description: () => t('Increases armor and block chance temporarily'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       extraDamageFromArmorPercent: Math.min(0.06 * scaleDownFlat(level), 5),
@@ -151,12 +152,12 @@ export const WARRIOR_SKILLS = {
   // Tier 5 Skills
   berserk: {
     id: 'berserk',
-    name: () => 'Berserk',
+    name: () => t('Berserk'),
     type: () => 'toggle',
     manaCost: (level) => 3 + level * 0.188,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'berserk',
-    description: () => 'Gives huge amounts of fire damage',
+    description: () => t('Gives huge amounts of fire damage'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamage: scaleUpFlat(level, 4, 5, 0.5),
@@ -166,11 +167,11 @@ export const WARRIOR_SKILLS = {
 
   lastStand: {
     id: 'lastStand',
-    name: () => 'Last Stand',
+    name: () => t('Last Stand'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'last-stand',
-    description: () => 'Greatly increases offensive stats',
+    description: () => t('Greatly increases offensive stats'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeSteal: Math.min(scaleDownFlat(level, 0.01), 1),
@@ -183,11 +184,11 @@ export const WARRIOR_SKILLS = {
   // Tier 6 Skills
   warlord: {
     id: 'warlord',
-    name: () => 'Warlord',
+    name: () => t('Warlord'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'warlord',
-    description: () => 'Increases all attributes significantly',
+    description: () => t('Increases all attributes significantly'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifePercent: scaleDownFlat(level, 1),
@@ -201,11 +202,11 @@ export const WARRIOR_SKILLS = {
   // Tier 1200 Skills
   unstoppableForce: {
     id: 'unstoppableForce',
-    name: () => 'Unstoppable Force',
+    name: () => t('Unstoppable Force'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'unstoppable-force',
-    description: () => 'Massively increases damage output.',
+    description: () => t('Massively increases damage output.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2),
@@ -215,14 +216,14 @@ export const WARRIOR_SKILLS = {
   },
   unyieldingDefense: {
     id: 'unyieldingDefense',
-    name: () => 'Unyielding Defense',
+    name: () => t('Unyielding Defense'),
     type: () => 'buff',
     manaCost: (level) => 20 + level * 1.25,
     cooldown: () => 100000,
     duration: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'unyielding-defense',
-    description: () => 'Temporarily increases armor and block chance.',
+    description: () => t('Temporarily increases armor and block chance.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armorPercent: scaleDownFlat(level, 1.5),
@@ -234,13 +235,13 @@ export const WARRIOR_SKILLS = {
   // Tier 2000 Skills
   bladeStorm: {
     id: 'bladeStorm',
-    name: () => 'Blade Storm',
+    name: () => t('Blade Storm'),
     type: () => 'instant',
     manaCost: (level) => 30 + level * 0.4,
     cooldown: () => 3500,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'blade-storm',
-    description: () => 'Spins violently, striking all nearby enemies.',
+    description: () => t('Spins violently, striking all nearby enemies.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 20, 5, 0.5),
@@ -250,11 +251,11 @@ export const WARRIOR_SKILLS = {
   },
   ironFortress: {
     id: 'ironFortress',
-    name: () => 'Iron Fortress',
+    name: () => t('Iron Fortress'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'iron-fortress',
-    description: () => 'Greatly increases defensive capabilities.',
+    description: () => t('Greatly increases defensive capabilities.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: scaleUpFlat(level, 15, 5, 0.5),
@@ -266,11 +267,11 @@ export const WARRIOR_SKILLS = {
   // Tier 3000 Skills
   titanStrength: {
     id: 'titanStrength',
-    name: () => 'Titan Strength',
+    name: () => t('Titan Strength'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'titan-strength',
-    description: () => 'Increases raw strength to titanic levels.',
+    description: () => t('Increases raw strength to titanic levels.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strength: scaleUpFlat(level, 10),
@@ -280,14 +281,14 @@ export const WARRIOR_SKILLS = {
   },
   heroicStand: {
     id: 'heroicStand',
-    name: () => 'Heroic Stand',
+    name: () => t('Heroic Stand'),
     type: () => 'buff',
     manaCost: (level) => 40 + level * 1.25,
     cooldown: () => 150000,
     duration: () => 40000,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'heroic-stand',
-    description: () => 'Greatly boosts defenses when near death.',
+    description: () => t('Greatly boosts defenses when near death.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armorPercent: scaleDownFlat(level, 3),
@@ -299,11 +300,11 @@ export const WARRIOR_SKILLS = {
   // Tier 5000 Skills
   legendaryWarlord: {
     id: 'legendaryWarlord',
-    name: () => 'Legendary Warlord',
+    name: () => t('Legendary Warlord'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'legendary-warlord',
-    description: () => 'Ultimate mastery of warfare.',
+    description: () => t('Ultimate mastery of warfare.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critChance: Math.min(scaleDownFlat(level, 0.1), 20),
@@ -313,14 +314,14 @@ export const WARRIOR_SKILLS = {
   },
   eternalGuardian: {
     id: 'eternalGuardian',
-    name: () => 'Eternal Guardian',
+    name: () => t('Eternal Guardian'),
     type: () => 'buff',
     manaCost: (level) => 15 + level * 0.35,
     cooldown: () => 110000,
     duration: () => 40000,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'eternal-guardian',
-    description: () => 'Channel unmatched protection.',
+    description: () => t('Channel unmatched protection.'),
     maxLevel: () => 350,
     effect: (level) => ({
       reduceEnemyAttackSpeedPercent: Math.min(scaleDownFlat(level, 0.1), 15),

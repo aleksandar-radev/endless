@@ -1,10 +1,11 @@
+import { t } from '../../i18n.js';
 import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 6;
 
 export const SKYREALM_ENEMIES = [
   {
-    name: 'Cloudstrider',
+    name: t('Cloudstrider'),
 
     image: '/enemies/cloudstrider.jpg',
     tier: tier,
@@ -32,7 +33,7 @@ export const SKYREALM_ENEMIES = [
     tags: ['skyrealm_peaks'],
   },
   {
-    name: 'Stormbringer',
+    name: t('Stormbringer'),
 
     image: '/enemies/stormbringer.jpg',
     tier: tier,
@@ -60,7 +61,7 @@ export const SKYREALM_ENEMIES = [
     tags: ['skyrealm_peaks'],
   },
   {
-    name: 'Stormsoul',
+    name: t('Stormsoul'),
 
     image: '/enemies/stormsoul.jpg',
     tier: tier,
@@ -89,7 +90,7 @@ export const SKYREALM_ENEMIES = [
     tags: ['skyrealm_peaks'],
   },
   {
-    name: 'Midas Beast',
+    name: t('Midas Beast'),
 
     image: '/enemies/midas-beast.jpg',
     tier: tier,

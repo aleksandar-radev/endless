@@ -1,3 +1,4 @@
+import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
 import { scaleDownFlat, scaleUpFlat } from '../../common.js';
 
@@ -6,12 +7,12 @@ export const VAMPIRE_SKILLS = {
   // Tier 1 Skills
   bloodSiphon: {
     id: 'bloodSiphon',
-    name: () => 'Blood Siphon',
+    name: () => t('Blood Siphon'),
     type: () => 'toggle',
     manaCost: (level) => 1 + level * 0.125,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'blood',
-    description: () => 'Steal life from enemies with each attack.',
+    description: () => t('Steal life from enemies with each attack.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifePerHit: scaleUpFlat(level, 1, 5, 0.2),
@@ -21,11 +22,11 @@ export const VAMPIRE_SKILLS = {
   },
   nightStalker: {
     id: 'nightStalker',
-    name: () => 'Night Stalker',
+    name: () => t('Night Stalker'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'moon',
-    description: () => 'Increases damage at night.',
+    description: () => t('Increases damage at night.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2),
@@ -36,13 +37,13 @@ export const VAMPIRE_SKILLS = {
   // Tier 10 Skills
   vampiricStrike: {
     id: 'vampiricStrike',
-    name: () => 'Vampiric Strike',
+    name: () => t('Vampiric Strike'),
     type: () => 'instant',
     manaCost: (level) => 2 + level * 0.25,
     cooldown: () => 9500,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'bite',
-    description: () => 'A powerful strike that restores life.',
+    description: () => t('A powerful strike that restores life.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 1),
@@ -52,14 +53,14 @@ export const VAMPIRE_SKILLS = {
   },
   darkAura: {
     id: 'darkAura',
-    name: () => 'Dark Aura',
+    name: () => t('Dark Aura'),
     type: () => 'buff',
     manaCost: (level) => 6 + level * 0.625,
     cooldown: () => 64000,
     duration: () => 28000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'blood-aura',
-    description: () => 'Increases life steal and damage temporarily.',
+    description: () => t('Increases life steal and damage temporarily.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeSteal: Math.min(scaleDownFlat(level, 0.02), 10),
@@ -72,13 +73,13 @@ export const VAMPIRE_SKILLS = {
   // Tier 25 Skills
   drainingTouch: {
     id: 'drainingTouch',
-    name: () => 'Draining Touch',
+    name: () => t('Draining Touch'),
     type: () => 'instant',
     manaCost: (level) => 0 + level * 0,
     cooldown: () => 12200,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'drain',
-    description: () => 'Drains life from enemies, restoring your life.',
+    description: () => t('Drains life from enemies, restoring your life.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       earthDamage: scaleUpFlat(level, 4, 3, 0.1),
@@ -88,11 +89,11 @@ export const VAMPIRE_SKILLS = {
   },
   greaterBloodHunger: {
     id: 'greaterBloodHunger',
-    name: () => 'Greater Blood Hunger',
+    name: () => t('Greater Blood Hunger'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'bloodlust',
-    description: () => 'Increases strength and vitality.',
+    description: () => t('Increases strength and vitality.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strengthPercent: scaleDownFlat(level),
@@ -103,13 +104,13 @@ export const VAMPIRE_SKILLS = {
   // Tier 50 Skills
   crimsonBurst: {
     id: 'crimsonBurst',
-    name: () => 'Crimson Burst',
+    name: () => t('Crimson Burst'),
     type: () => 'instant',
     manaCost: (level) => 3 + level * 0.625,
     cooldown: () => 5000,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'burst',
-    description: () => 'Unleashes a burst of crimson energy, greatly damaging the enemy at the cost of life.',
+    description: () => t('Unleashes a burst of crimson energy, greatly damaging the enemy at the cost of life.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 10),
@@ -118,7 +119,7 @@ export const VAMPIRE_SKILLS = {
   },
   summonBats: {
     id: 'summonBats',
-    name: () => 'Summon Bats',
+    name: () => t('Summon Bats'),
     type: () => 'summon',
     summonStats: (level) => {
       return {
@@ -133,7 +134,7 @@ export const VAMPIRE_SKILLS = {
     duration: () => 24000,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'bat',
-    description: () => 'Unleashes a swarm of bats to attack enemies.',
+    description: () => t('Unleashes a swarm of bats to attack enemies.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
     }),
@@ -142,14 +143,14 @@ export const VAMPIRE_SKILLS = {
   // Tier 75 Skills
   bloodPact: {
     id: 'bloodPact',
-    name: () => 'Blood Pact',
+    name: () => t('Blood Pact'),
     type: () => 'buff',
     manaCost: (level) => 20 + level * 0.25,
     cooldown: () => 66000,
     duration: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'pact',
-    description: () => 'Increases life steal and life temporarily.',
+    description: () => t('Increases life steal and life temporarily.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       life: scaleUpFlat(level, 10, 5),
@@ -161,12 +162,12 @@ export const VAMPIRE_SKILLS = {
   // Tier 100 Skills
   eternalThirst: {
     id: 'eternalThirst',
-    name: () => 'Eternal Thirst',
+    name: () => t('Eternal Thirst'),
     type: () => 'toggle',
     manaCost: (level) => 2 + level * 0.425,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'thirst',
-    description: () => 'Increases life steal and damage.',
+    description: () => t('Increases life steal and damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2),
@@ -175,11 +176,11 @@ export const VAMPIRE_SKILLS = {
   },
   deathlyPresence: {
     id: 'deathlyPresence',
-    name: () => 'Deathly Presence',
+    name: () => t('Deathly Presence'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'presence',
-    description: () => 'Increases life greatly, and strength mildly.',
+    description: () => t('Increases life greatly, and strength mildly.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifePercent: scaleDownFlat(level, 0.5),
@@ -192,11 +193,11 @@ export const VAMPIRE_SKILLS = {
   // Tier 200 Skills
   lordOfNight: {
     id: 'lordOfNight',
-    name: () => 'Lord of Night',
+    name: () => t('Lord of Night'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'lord',
-    description: () => 'Greatly increases all attributes and gives resurrection.',
+    description: () => t('Greatly increases all attributes and gives resurrection.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strengthPercent: scaleDownFlat(level, 1.5),
@@ -211,14 +212,14 @@ export const VAMPIRE_SKILLS = {
   // Tier 1200 Skills
   bloodMoon: {
     id: 'bloodMoon',
-    name: () => 'Blood Moon',
+    name: () => t('Blood Moon'),
     type: () => 'buff',
     manaCost: (level) => 25 + level * 1.25,
     cooldown: () => 100000,
     duration: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'blood-moon',
-    description: () => 'Empowers vampiric abilities under the crimson moon.',
+    description: () => t('Empowers vampiric abilities under the crimson moon.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeSteal: Math.min(scaleDownFlat(level, 0.024), 3),
@@ -228,11 +229,11 @@ export const VAMPIRE_SKILLS = {
   },
   sanguineFury: {
     id: 'sanguineFury',
-    name: () => 'Sanguine Fury',
+    name: () => t('Sanguine Fury'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'sanguine-fury',
-    description: () => 'Harness the fury of blood to increase power.',
+    description: () => t('Harness the fury of blood to increase power.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critChance: Math.min(scaleDownFlat(level, 0.12), 25),
@@ -244,14 +245,14 @@ export const VAMPIRE_SKILLS = {
   // Tier 2000 Skills
   twilightVeil: {
     id: 'twilightVeil',
-    name: () => 'Twilight Veil',
+    name: () => t('Twilight Veil'),
     type: () => 'buff',
     manaCost: (level) => 35 + level * 1.25,
     cooldown: () => 120000,
     duration: () => 35000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'twilight-veil',
-    description: () => 'Shrouds the vampire in shadows, restoring life.',
+    description: () => t('Shrouds the vampire in shadows, restoring life.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeRegen: scaleUpFlat(level, 150),
@@ -261,11 +262,11 @@ export const VAMPIRE_SKILLS = {
   },
   shadowRebirth: {
     id: 'shadowRebirth',
-    name: () => 'Shadow Rebirth',
+    name: () => t('Shadow Rebirth'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'shadow-rebirth',
-    description: () => 'Revive from death with a portion of life.',
+    description: () => t('Revive from death with a portion of life.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       resurrectionChance: Math.min(scaleDownFlat(level, 0.1), 50),
@@ -277,12 +278,12 @@ export const VAMPIRE_SKILLS = {
   // Tier 3000 Skills
   eternalHunger: {
     id: 'eternalHunger',
-    name: () => 'Eternal Hunger',
+    name: () => t('Eternal Hunger'),
     type: () => 'toggle',
     manaCost: (level) => 0,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'eternal-hunger',
-    description: () => 'Constantly drains enemies to sustain yourself.',
+    description: () => t('Constantly drains enemies to sustain yourself.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 12, 3, 0.2),
@@ -292,11 +293,11 @@ export const VAMPIRE_SKILLS = {
   },
   nocturnalDominion: {
     id: 'nocturnalDominion',
-    name: () => 'Nocturnal Dominion',
+    name: () => t('Nocturnal Dominion'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'nocturnal-dominion',
-    description: () => 'Rule the night with unparalleled power.',
+    description: () => t('Rule the night with unparalleled power.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2.5),
@@ -308,11 +309,11 @@ export const VAMPIRE_SKILLS = {
   // Tier 5000 Skills
   vampireOverlord: {
     id: 'vampireOverlord',
-    name: () => 'Vampire Overlord',
+    name: () => t('Vampire Overlord'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'vampire-overlord',
-    description: () => 'Ascend to the pinnacle of vampiric power.',
+    description: () => t('Ascend to the pinnacle of vampiric power.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strengthPercent: scaleDownFlat(level, 3),
@@ -322,12 +323,12 @@ export const VAMPIRE_SKILLS = {
   },
   immortalSovereign: {
     id: 'immortalSovereign',
-    name: () => 'Immortal Sovereign',
+    name: () => t('Immortal Sovereign'),
     type: () => 'toggle',
     manaCost: (level) => 20 + level * 1.25,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'immortal-sovereign',
-    description: () => 'Become nearly unstoppable for a short time.',
+    description: () => t('Become nearly unstoppable for a short time.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamage: scaleUpFlat(level, 26, 4, 0.15),

@@ -1,10 +1,11 @@
+import { t } from '../../i18n.js';
 import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 9;
 
 export const SUNKEN_RUINS_ENEMIES = [
   {
-    name: 'Tide Guardian',
+    name: t('Tide Guardian'),
 
     image: '/enemies/tide-guardian.jpg',
     tier: tier,
@@ -36,7 +37,7 @@ export const SUNKEN_RUINS_ENEMIES = [
     tags: ['sunken_ruins'],
   },
   {
-    name: 'Coral Sentinel',
+    name: t('Coral Sentinel'),
 
     image: '/enemies/coral-sentinel.jpg',
     tier: tier,
@@ -62,7 +63,7 @@ export const SUNKEN_RUINS_ENEMIES = [
     tags: ['sunken_ruins'],
   },
   {
-    name: 'Depths Leviathan',
+    name: t('Depths Leviathan'),
 
     image: '/enemies/depths-leviathan.jpg',
     tier: tier,
@@ -90,7 +91,7 @@ export const SUNKEN_RUINS_ENEMIES = [
     tags: ['sunken_ruins'],
   },
   {
-    name: 'Arcane Construct',
+    name: t('Arcane Construct'),
 
     image: '/enemies/arcane-construct.jpg',
     tier: tier,

@@ -1,3 +1,4 @@
+import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
 import { scaleDownFlat, scaleUpFlat } from '../../common.js';
 
@@ -6,13 +7,13 @@ export const MAGE_SKILLS = {
   // Tier 1 Skills
   magicMissile: {
     id: 'magicMissile',
-    name: () => 'Magic Missile',
+    name: () => t('Magic Missile'),
     type: () => 'instant',
     manaCost: (level) => 2 + level * 0.25,
     cooldown: () => 5000,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'missile',
-    description: () => 'Launches a missile of arcane energy.',
+    description: () => t('Launches a missile of arcane energy.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       waterDamage: scaleUpFlat(level, 3, 6),
@@ -21,11 +22,11 @@ export const MAGE_SKILLS = {
   },
   arcaneIntellect: {
     id: 'arcaneIntellect',
-    name: () => 'Arcane Intellect',
+    name: () => t('Arcane Intellect'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'intellect',
-    description: () => 'Increases mana and wisdom.',
+    description: () => t('Increases mana and wisdom.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       manaPercent: scaleDownFlat(level, 3),
@@ -39,13 +40,13 @@ export const MAGE_SKILLS = {
   // Tier 10 Skills
   frostBolt: {
     id: 'frostBolt',
-    name: () => 'Frost Bolt',
+    name: () => t('Frost Bolt'),
     type: () => 'instant',
     manaCost: (level) => 3 + level * 0.25,
     cooldown: () => 5700,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'frost-bolt',
-    description: () => 'Fires a bolt of frost at the enemy.',
+    description: () => t('Fires a bolt of frost at the enemy.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       coldDamage: scaleUpFlat(level, 2),
@@ -54,13 +55,13 @@ export const MAGE_SKILLS = {
   },
   fireBlast: {
     id: 'fireBlast',
-    name: () => 'Fire Blast',
+    name: () => t('Fire Blast'),
     type: () => 'instant',
     manaCost: (level) => 4 + level * 0.25,
     cooldown: () => 7600,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'fire-blast',
-    description: () => 'Blasts the target with fire.',
+    description: () => t('Blasts the target with fire.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamagePercent: scaleDownFlat(level, 5),
@@ -71,11 +72,11 @@ export const MAGE_SKILLS = {
   // Tier 25 Skills
   mindControl: {
     id: 'mindControl',
-    name: () => 'Mind Control',
+    name: () => t('Mind Control'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'mind-control',
-    description: () => 'Instantly move to a nearby location.',
+    description: () => t('Instantly move to a nearby location.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       perseverance: scaleUpFlat(level, 4),
@@ -86,14 +87,14 @@ export const MAGE_SKILLS = {
   },
   manaShield: {
     id: 'manaShield',
-    name: () => 'Mana Shield',
+    name: () => t('Mana Shield'),
     type: () => 'buff',
     manaCost: (level) => 8 + level * 0.625,
     cooldown: () => 30000,
     duration: () => 20000,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'mana-shield',
-    description: () => 'Absorbs damage using mana.',
+    description: () => t('Absorbs damage using mana.'),
     maxLevel: () => 250,
     effect: (level) => ({
       manaShieldPercent: Math.min(scaleDownFlat(level, 0.75), 100),
@@ -103,11 +104,11 @@ export const MAGE_SKILLS = {
   // Tier 50 Skills
   resourceInfusion: {
     id: 'resourceInfusion',
-    name: () => 'Resource Infusion',
+    name: () => t('Resource Infusion'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'resource-infusion',
-    description: () => 'Infuses yourself with magical energy. Greatly increases mana regeneration.',
+    description: () => t('Infuses yourself with magical energy. Greatly increases mana regeneration.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       mana: scaleUpFlat(level, 25, 7, 0.5),
@@ -117,14 +118,14 @@ export const MAGE_SKILLS = {
   },
   iceStorm: {
     id: 'iceStorm',
-    name: () => 'Ice Storm',
+    name: () => t('Ice Storm'),
     type: () => 'buff',
     manaCost: (level) => 15 + level * 0.75,
     cooldown: () => 64000,
     duration: () => 20000,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'ice-storm',
-    description: () => 'Summons a storm of ice around you.',
+    description: () => t('Summons a storm of ice around you.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       coldDamagePercent: scaleDownFlat(level, 5),
@@ -134,11 +135,11 @@ export const MAGE_SKILLS = {
   },
   arcaneFocus: {
     id: 'arcaneFocus',
-    name: () => 'Arcane Focus',
+    name: () => t('Arcane Focus'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'focus',
-    description: () => 'Improves spell damage and hit rate.',
+    description: () => t('Improves spell damage and hit rate.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamagePercent: scaleDownFlat(level, 0.75),
@@ -149,14 +150,14 @@ export const MAGE_SKILLS = {
   // Tier 75 Skills
   pyroclasm: {
     id: 'pyroclasm',
-    name: () => 'Pyroclasm',
+    name: () => t('Pyroclasm'),
     type: () => 'buff',
     manaCost: (level) => 20 + level * 0.75,
     cooldown: () => 72000,
     duration: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'pyroclasm',
-    description: () => 'Engulfs the area in flames.',
+    description: () => t('Engulfs the area in flames.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamage: scaleUpFlat(level, 2),
@@ -165,14 +166,14 @@ export const MAGE_SKILLS = {
   },
   timeWarp: {
     id: 'timeWarp',
-    name: () => 'Time Warp',
+    name: () => t('Time Warp'),
     type: () => 'buff',
     manaCost: (level) => 25 + level * 0.875,
     cooldown: () => 96000,
     duration: () => 15000,
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'time-warp',
-    description: () => 'Greatly increases attack speed for a short time.',
+    description: () => t('Greatly increases attack speed for a short time.'),
     maxLevel: () => 300,
     effect: (level) => ({
       attackSpeed: Math.min(scaleDownFlat(level, 0.02), 2),
@@ -182,12 +183,12 @@ export const MAGE_SKILLS = {
   // Tier 100 Skills
   arcanePower: {
     id: 'arcanePower',
-    name: () => 'Arcane Power',
+    name: () => t('Arcane Power'),
     type: () => 'toggle',
     manaCost: (level) => 5 + level * 0.375,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'arcane-power',
-    description: () => 'Unleash arcane power, increasing spell damage.',
+    description: () => t('Unleash arcane power, increasing spell damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamagePercent: scaleDownFlat(level, 1.25),
@@ -195,7 +196,7 @@ export const MAGE_SKILLS = {
   },
   summonElemental: {
     id: 'summonElemental',
-    name: () => 'Summon Elemental',
+    name: () => t('Summon Elemental'),
     type: () => 'summon',
     summonStats: (level) => {
       return {
@@ -212,7 +213,7 @@ export const MAGE_SKILLS = {
     duration: () => 22000,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'summon-elemental',
-    description: () => 'Summons an elemental ally.',
+    description: () => t('Summons an elemental ally.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
     }),
@@ -221,11 +222,11 @@ export const MAGE_SKILLS = {
   // Tier 200 Skills
   archmage: {
     id: 'archmage',
-    name: () => 'Archmage',
+    name: () => t('Archmage'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'archmage',
-    description: () => 'Mastery of all magical arts.',
+    description: () => t('Mastery of all magical arts.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       wisdom: scaleUpFlat(level, 5),
@@ -238,11 +239,11 @@ export const MAGE_SKILLS = {
   // Tier 1200 Skills
   arcaneMight: {
     id: 'arcaneMight',
-    name: () => 'Arcane Might',
+    name: () => t('Arcane Might'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'arcane-might',
-    description: () => 'Greatly increases magical potency.',
+    description: () => t('Greatly increases magical potency.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamagePercent: scaleDownFlat(level, 2),
@@ -252,13 +253,13 @@ export const MAGE_SKILLS = {
   },
   voidBlast: {
     id: 'voidBlast',
-    name: () => 'Void Blast',
+    name: () => t('Void Blast'),
     type: () => 'instant',
     manaCost: (level) => 25 + level * 1.25,
     cooldown: () => 17000,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'void-blast',
-    description: () => 'Unleashes unstable void energy.',
+    description: () => t('Unleashes unstable void energy.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 15),
@@ -269,14 +270,14 @@ export const MAGE_SKILLS = {
   // Tier 2000 Skills
   chronomancerSurge: {
     id: 'chronomancerSurge',
-    name: () => 'Chronomancer Surge',
+    name: () => t('Chronomancer Surge'),
     type: () => 'buff',
     manaCost: (level) => 35 + level * 1.25,
     cooldown: () => 120000,
     duration: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'chronomancer-surge',
-    description: () => 'Manipulate time to act faster.',
+    description: () => t('Manipulate time to act faster.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackSpeed: Math.min(scaleDownFlat(level, 0.02), 3),
@@ -285,13 +286,13 @@ export const MAGE_SKILLS = {
   },
   starFire: {
     id: 'starFire',
-    name: () => 'Star Fire',
+    name: () => t('Star Fire'),
     type: () => 'instant',
     manaCost: (level) => 30 + level * 1.25,
     cooldown: () => 23000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'star-fire',
-    description: () => 'Calls down stellar flames on enemies.',
+    description: () => t('Calls down stellar flames on enemies.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamagePercent: scaleDownFlat(level, 4),
@@ -304,11 +305,11 @@ export const MAGE_SKILLS = {
   // Tier 3000 Skills
   manaOverflow: {
     id: 'manaOverflow',
-    name: () => 'Mana Overflow',
+    name: () => t('Mana Overflow'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'mana-overflow',
-    description: () => 'Your mana reserves overflow with power.',
+    description: () => t('Your mana reserves overflow with power.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       mana: scaleUpFlat(level, 10),
@@ -318,13 +319,13 @@ export const MAGE_SKILLS = {
   },
   dimensionalRift: {
     id: 'dimensionalRift',
-    name: () => 'Dimensional Rift',
+    name: () => t('Dimensional Rift'),
     type: () => 'instant',
     manaCost: (level) => 45 + level * 1.25,
     cooldown: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'dimensional-rift',
-    description: () => 'Tear open a rift dealing massive damage.',
+    description: () => t('Tear open a rift dealing massive damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 25),
@@ -336,11 +337,11 @@ export const MAGE_SKILLS = {
   // Tier 5000 Skills
   supremeSorcery: {
     id: 'supremeSorcery',
-    name: () => 'Supreme Sorcery',
+    name: () => t('Supreme Sorcery'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'supreme-sorcery',
-    description: () => 'Unmatched arcane knowledge and power.',
+    description: () => t('Unmatched arcane knowledge and power.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamagePercent: scaleDownFlat(level, 1.5),
@@ -350,13 +351,13 @@ export const MAGE_SKILLS = {
   },
   apocalypse: {
     id: 'apocalypse',
-    name: () => 'Apocalypse',
+    name: () => t('Apocalypse'),
     type: () => 'instant',
     manaCost: (level) => 60 + level * 1.25,
     cooldown: () => 27000,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'apocalypse',
-    description: () => 'Release a devastating wave of destruction.',
+    description: () => t('Release a devastating wave of destruction.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamagePercent: scaleDownFlat(level, 6),

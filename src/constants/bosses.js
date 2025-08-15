@@ -1,3 +1,4 @@
+import { t } from '../i18n.js';
 /**
  * List of boss definitions for the Arena.
  * Each boss has a level, unique id, display name, image path, stats, and rewards.
@@ -60,7 +61,7 @@ function applyDefaultBossStats(boss) {
 const RAW_BOSSES = [
   {
     id: 'goblin-king',
-    name: 'Goblin King',
+    name: t('Goblin King'),
     type: 'boss',
     image: '/enemies/goblin-king.jpg',
     attackSpeed: 1.2,
@@ -81,7 +82,7 @@ const RAW_BOSSES = [
   },
   {
     id: 'ogre-chieftain',
-    name: 'Ogre Chieftain',
+    name: t('Ogre Chieftain'),
     type: 'boss',
     image: '/enemies/ogre-chieftain.jpg',
     attackSpeed: 1.5,
@@ -103,7 +104,7 @@ const RAW_BOSSES = [
   },
   {
     id: 'stone-golem',
-    name: 'Stone Golem',
+    name: t('Stone Golem'),
     type: 'boss',
     image: '/enemies/obsidian-golem.jpg',
     damage: 25,
@@ -122,7 +123,7 @@ const RAW_BOSSES = [
   },
   {
     id: 'fire-drake',
-    name: 'Fire Drake',
+    name: t('Fire Drake'),
     type: 'boss',
     image: '/enemies/ember-drake.jpg',
     attackSpeed: 0.8,
@@ -146,7 +147,7 @@ const RAW_BOSSES = [
   },
   {
     id: 'ancient-serpent',
-    name: 'Ancient Serpent',
+    name: t('Ancient Serpent'),
     type: 'boss',
     image: '/enemies/ancient-serpent.jpg',
     attackSpeed: 1.3,

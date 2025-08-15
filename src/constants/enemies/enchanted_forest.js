@@ -1,10 +1,11 @@
+import { t } from '../../i18n.js';
 import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 1;
 
 export const FOREST_ENEMIES = [
   {
-    name: 'Mossback',
+    name: t('Mossback'),
 
     image: '/enemies/mossback.jpg',
     tier: tier,
@@ -29,7 +30,7 @@ export const FOREST_ENEMIES = [
     tags: [ 'enchanted_forest' ],
   },
   {
-    name: 'Thornling',
+    name: t('Thornling'),
 
     image: '/enemies/thornling.jpg',
     tier: tier,
@@ -56,7 +57,7 @@ export const FOREST_ENEMIES = [
     tags: [ 'enchanted_forest' ],
   },
   {
-    name: 'Barkhide',
+    name: t('Barkhide'),
 
     image: '/enemies/barkhide.jpg',
     tier: tier,
@@ -82,7 +83,7 @@ export const FOREST_ENEMIES = [
     tags: [ 'enchanted_forest' ],
   },
   {
-    name: 'Sylvan Wisp',
+    name: t('Sylvan Wisp'),
 
     image: '/enemies/sylvan-wisp.jpg',
     tier: tier,
