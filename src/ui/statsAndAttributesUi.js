@@ -18,7 +18,7 @@ let rateIntervalId = null;
 let startTimeInFights = 0;
 let startGold = 0;
 let startItems = 0;
-let startMaterials = 0;
+let startMaterialsDropped = 0;
 let sessionXp = 0;
 let sessionDamage = 0;
 let listenersAttached = false;
@@ -63,7 +63,7 @@ function updateRateCounters() {
   goldEls.forEach((el) => (el.textContent = `Gold/${periodLabel}: ${formatNumber((goldRate * ratePeriod).toFixed(1))}`));
   const itemRate = (statistics.totalItemsFound - startItems) / elapsed;
   itemsEls.forEach((el) => (el.textContent = `Items/${periodLabel}: ${formatNumber((itemRate * ratePeriod).toFixed(1))}`));
-  const matRate = (statistics.totalMaterialsFound - startMaterials) / elapsed;
+  const matRate = (statistics.totalMaterialsDropped - startMaterialsDropped) / elapsed;
   matEls.forEach((el) => (el.textContent = `Materials/${periodLabel}: ${formatNumber((matRate * ratePeriod).toFixed(1))}`));
 }
 
@@ -71,7 +71,7 @@ function resetRateCounters() {
   startTimeInFights = statistics.totalTimeInFights;
   startGold = statistics.totalGoldEarned;
   startItems = statistics.totalItemsFound;
-  startMaterials = statistics.totalMaterialsFound;
+  startMaterialsDropped = statistics.totalMaterialsDropped;
   sessionXp = 0;
   sessionDamage = 0;
   updateRateCounters();

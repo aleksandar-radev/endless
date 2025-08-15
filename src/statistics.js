@@ -30,6 +30,7 @@ export default class Statistics {
     this.totalSoulsEarned = 0;
     this.totalItemsFound = 0;
     this.totalMaterialsFound = 0;
+    this.totalMaterialsDropped = 0;
     this.totalTimePlayed = 0;
     this.highestStages = {};
     for (let i = 1; i <= 12; i++) this.highestStages[i] = 0;
@@ -70,6 +71,7 @@ export default class Statistics {
     this.totalSoulsEarned = 0;
     this.totalItemsFound = 0;
     this.totalMaterialsFound = 0;
+    this.totalMaterialsDropped = 0;
     this.totalTimePlayed = 0;
     for (let i = 1; i <= 12; i++) this.highestStages[i] = 0;
     for (let i = 1; i <= 12; i++) this.enemiesKilledByZone[i] = 0;

@@ -215,7 +215,10 @@ export async function defeatEnemy() {
       text += `+${souls + Math.floor(hero.bossLevel * 0.003)} souls, `;
     }
     if (materials && materials.length) {
-      materials.forEach(({ id, qty }) => inventory.addMaterial({ id, qty }));
+      materials.forEach(({ id, qty }) => {
+        inventory.addMaterial({ id, qty });
+        statistics.increment('totalMaterialsDropped', null, qty);
+      });
     }
     showToast(text, 'success');
     statistics.increment('bossesKilled', null, 1);
@@ -253,6 +256,7 @@ export async function defeatEnemy() {
         qty = inventory.getScrapPackSize(enemyLvl);
       }
       inventory.addMaterial({ id: mat.id, icon: mat.icon, qty });
+      statistics.increment('totalMaterialsDropped', null, qty);
       showMaterialNotification(mat);
 
       // Calculate extra drops in a single calculation instead of performing many RNG loops.
@@ -294,6 +298,7 @@ export async function defeatEnemy() {
 
         for (const { mat: aMat, qty: totalQty } of aggregate.values()) {
           inventory.addMaterial({ id: aMat.id, icon: aMat.icon, qty: totalQty });
+          statistics.increment('totalMaterialsDropped', null, totalQty);
         }
       }
     }
