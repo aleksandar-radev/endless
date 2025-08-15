@@ -1,10 +1,11 @@
+import { t } from '../../i18n.js';
 import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 8;
 
 export const VOLCANIC_RIFT_ENEMIES = [
   {
-    name: 'Magma Titan',
+    name: t('Magma Titan'),
     image: '/enemies/magma-titan.jpg',
     tier: tier,
 
@@ -33,7 +34,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
     tags: ['volcanic_rift'],
   },
   {
-    name: 'Lava Elemental',
+    name: t('Lava Elemental'),
     image: '/enemies/lava-elemental.jpg',
     tier: tier,
 
@@ -61,7 +62,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
     tags: ['volcanic_rift'],
   },
   {
-    name: 'Wildfire Spirit',
+    name: t('Wildfire Spirit'),
     image: '/enemies/wildfire-spirit.jpg',
     tier: tier,
 
@@ -82,7 +83,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
     tags: ['volcanic_rift'],
   },
   {
-    name: 'Molten Wyrm',
+    name: t('Molten Wyrm'),
     image: '/enemies/molten-wyrm.jpg',
     tier: tier,
 
@@ -107,7 +108,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
     tags: ['volcanic_rift'],
   },
   {
-    name: 'Thunderwing',
+    name: t('Thunderwing'),
     image: '/enemies/thunderwing.jpg',
     tier: tier,
 

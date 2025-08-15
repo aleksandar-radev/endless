@@ -1,10 +1,11 @@
+import { t } from '../../i18n.js';
 import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 5;
 
 export const SWAMP_ENEMIES = [
   {
-    name: 'Boglurker',
+    name: t('Boglurker'),
 
     image: '/enemies/boglurker.jpg',
     tier: tier,
@@ -31,7 +32,7 @@ export const SWAMP_ENEMIES = [
     tags: ['murky_swamp'],
   },
   {
-    name: 'Toxictoad',
+    name: t('Toxictoad'),
 
     image: '/enemies/toxictoad.jpg',
     tier: tier,
@@ -59,7 +60,7 @@ export const SWAMP_ENEMIES = [
     tags: ['murky_swamp'],
   },
   {
-    name: 'Venomspitter',
+    name: t('Venomspitter'),
 
     image: '/enemies/venomspitter.jpg',
     tier: tier,
@@ -87,7 +88,7 @@ export const SWAMP_ENEMIES = [
     tags: ['murky_swamp'],
   },
   {
-    name: 'Frostweaver',
+    name: t('Frostweaver'),
 
     image: '/enemies/frostweaver.jpg',
     tier: tier,

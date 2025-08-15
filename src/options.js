@@ -8,6 +8,7 @@ import { CHANGELOG } from './changelog/changelog.js';
 import upcommingChanges from './upcoming.js';
 import { audioManager } from './audio.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
+import { setLanguage, t } from './i18n.js';
 
 const html = String.raw;
 
@@ -38,6 +39,8 @@ export class Options {
     this.showRateCounters = data.showRateCounters ?? false;
     // Period for rate counters in seconds
     this.rateCountersPeriod = data.rateCountersPeriod || 1;
+    // Selected language
+    this.language = data.language || 'en';
   }
 
   /**
@@ -50,6 +53,29 @@ export class Options {
     audioManager.setVolume(this.soundVolume);
   }
 
+
+  /**
+   * Creates the sound volume slider UI.
+   */
+  _createLanguageOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="language-select" class="language-select-label" data-i18n="options.language">${t('options.language')}</label>
+      <select id="language-select" class="language-select">
+        <option value="en" data-i18n="language.english">${t('language.english')}</option>
+        <option value="es" data-i18n="language.spanish">${t('language.spanish')}</option>
+      </select>
+    `;
+    const select = wrapper.querySelector('select');
+    select.value = this.language;
+    select.addEventListener('change', () => {
+      this.language = select.value;
+      setLanguage(this.language);
+      dataManager.saveGame();
+    });
+    return wrapper;
+  }
 
   /**
    * Creates the sound volume slider UI.
@@ -98,6 +124,8 @@ export class Options {
     const container = document.createElement('div');
     container.className = 'options-container';
     container.appendChild(this._createCloudSaveBar());
+    // --- Language Option ---
+    container.appendChild(this._createLanguageOption());
 
     // --- Sound Volume Option ---
     container.appendChild(this._createSoundVolumeOption());

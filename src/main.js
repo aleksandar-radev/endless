@@ -27,16 +27,21 @@ import { initializePrestigeUI } from './ui/prestigeUi.js';
 import Enemy from './enemy.js';
 import { setupLeaderboardTabLazyLoad } from './ui/leaderboardUi.js';
 import Boss from './boss.js';
+import { applyTranslations, setLanguage } from './i18n.js';
 
 window.qwe = console.log;
 window.qw = console.log;
 window.qq = console.log;
 window.q = console.log;
 window.log = console.log;
+window.setLanguage = setLanguage;
 
 // Wrap initialization in an async IIFE to avoid top-level await error
 (async () => {
   await setGlobals();
+
+  // Apply saved language preference before initializing UI
+  setLanguage(options.language);
 
   // Only set stage if not loaded from save data (undefined or null)
   if (!game.stage || game.stage == null) {
@@ -58,6 +63,9 @@ window.log = console.log;
   initializeSkillTreeUI();
   initializeBuildingsUI();
   initializePrestigeUI();
+
+  // Apply translations after UI components are initialized
+  applyTranslations();
 
   updateResources();
   hero.recalculateFromAttributes();

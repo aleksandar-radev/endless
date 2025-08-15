@@ -1,10 +1,11 @@
+import { t } from '../../i18n.js';
 import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 10;
 
 export const HAUNTED_MOOR_ENEMIES = [
   {
-    name: 'Banshee',
+    name: t('Banshee'),
 
     image: '/enemies/banshee.jpg',
     tier: tier,
@@ -29,7 +30,7 @@ export const HAUNTED_MOOR_ENEMIES = [
     tags: ['haunted_moor'],
   },
   {
-    name: 'Phantom',
+    name: t('Phantom'),
 
     image: '/enemies/phantom.jpg',
     tier: tier,
@@ -50,7 +51,7 @@ export const HAUNTED_MOOR_ENEMIES = [
     tags: ['haunted_moor'],
   },
   {
-    name: 'Wraith Lord',
+    name: t('Wraith Lord'),
 
     image: '/enemies/wraith-lord.jpg',
     tier: tier,
@@ -76,7 +77,7 @@ export const HAUNTED_MOOR_ENEMIES = [
     tags: ['haunted_moor'],
   },
   {
-    name: 'Dreadfang',
+    name: t('Dreadfang'),
 
     image: '/enemies/dreadfang.jpg',
     tier: tier,

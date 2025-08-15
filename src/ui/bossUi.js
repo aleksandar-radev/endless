@@ -1,6 +1,7 @@
 import Boss from '../boss.js';
 import { game, hero } from '../globals.js';
 import { updateEnemyStats } from './ui.js';
+import { t } from '../i18n.js';
 
 /**
  * Handle boss instantiation and display.
@@ -10,7 +11,10 @@ export function selectBoss() {
   game.currentEnemy = new Boss();
   updateBossUI();
   const display = document.getElementById('stage-display');
-  if (display) display.textContent = `Boss Level: ${hero.bossLevel}`;
+  const label = display?.querySelector('.stage-label');
+  const value = display?.querySelector('.stage-value');
+  if (label) label.textContent = t('combat.bossLevel');
+  if (value) value.textContent = hero.bossLevel;
 }
 
 /**

@@ -1,10 +1,11 @@
+import { t } from '../../i18n.js';
 import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 7;
 
 export const ABYSS_ENEMIES = [
   {
-    name: 'Abyssal Wraith',
+    name: t('Abyssal Wraith'),
     image: '/enemies/abyssal-wraith.jpg',
     tier: tier,
 
@@ -27,7 +28,7 @@ export const ABYSS_ENEMIES = [
     tags: ['abyssal_depths'],
   },
   {
-    name: 'Shadowclaw',
+    name: t('Shadowclaw'),
     image: '/enemies/shadowclaw.jpg',
     tier: tier,
 
@@ -48,7 +49,7 @@ export const ABYSS_ENEMIES = [
     tags: ['abyssal_depths'],
   },
   {
-    name: 'Hellhound',
+    name: t('Hellhound'),
     image: '/enemies/hellhound.jpg',
     tier: tier,
 
@@ -70,7 +71,7 @@ export const ABYSS_ENEMIES = [
     tags: ['abyssal_depths'],
   },
   {
-    name: 'Infernal Knight',
+    name: t('Infernal Knight'),
 
     image: '/enemies/infernal-knight.jpg',
     tier: tier,

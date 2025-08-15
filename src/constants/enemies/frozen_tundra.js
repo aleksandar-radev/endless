@@ -1,10 +1,11 @@
+import { t } from '../../i18n.js';
 import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 3;
 
 export const TUNDRA_ENEMIES = [
   {
-    name: 'Frostbite',
+    name: t('Frostbite'),
 
     image: '/enemies/frostbite.jpg',
     tier: tier,
@@ -33,7 +34,7 @@ export const TUNDRA_ENEMIES = [
     tags: ['frozen_tundra'],
   },
   {
-    name: 'Frostfury',
+    name: t('Frostfury'),
 
     image: '/enemies/frostfury.jpg',
     tier: tier,
@@ -59,7 +60,7 @@ export const TUNDRA_ENEMIES = [
     tags: ['frozen_tundra'],
   },
   {
-    name: 'Frost Giant',
+    name: t('Frost Giant'),
 
     image: '/enemies/frost-giant.jpg',
     tier: tier,
@@ -90,7 +91,7 @@ export const TUNDRA_ENEMIES = [
     tags: ['frozen_tundra'],
   },
   {
-    name: 'Ice Wraith',
+    name: t('Ice Wraith'),
 
     image: '/enemies/ice-wraith.jpg',
     tier: tier,

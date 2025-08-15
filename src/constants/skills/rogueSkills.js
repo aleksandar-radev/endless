@@ -1,3 +1,4 @@
+import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
 import { scaleDownFlat, scaleUpFlat } from '../../common.js';
 
@@ -6,11 +7,11 @@ export const ROGUE_SKILLS = {
   // Tier 0 Skills
   shadowDance: {
     id: 'shadowDance',
-    name: () => 'Shadow Dance',
+    name: () => t('Shadow Dance'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'dagger',
-    description: () => 'A quick dance from the shadows, increasing your damage.',
+    description: () => t('A quick dance from the shadows, increasing your damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 0.75, 20, 400),
@@ -20,7 +21,7 @@ export const ROGUE_SKILLS = {
   },
   evasion: {
     id: 'evasion',
-    name: () => 'Evasion',
+    name: () => t('Evasion'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'dodge',
@@ -40,12 +41,12 @@ export const ROGUE_SKILLS = {
   // Tier 1 Skills
   poisonDagger: {
     id: 'poisonDagger',
-    name: () => 'Poison Dagger',
+    name: () => t('Poison Dagger'),
     type: () => 'toggle',
     manaCost: (level) => 2 + level * 0.125,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'poison',
-    description: () => 'Applies physical damage to your attacks.',
+    description: () => t('Applies physical damage to your attacks.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 2, 6, 0.2),
@@ -56,14 +57,14 @@ export const ROGUE_SKILLS = {
   },
   shadowForm: {
     id: 'shadowForm',
-    name: () => 'Shadow Form',
+    name: () => t('Shadow Form'),
     type: () => 'buff',
     manaCost: (level) => 10 + level * 0.625,
     cooldown: () => 66000,
     duration: () => 25000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'stealth',
-    description: () => 'Shadow form increases crit chance, life steal and dexterity (crit damage). (Crit chance capped at 20%, crit damage capped at 3, life steal capped at 4%)',
+    description: () => t('Shadow form increases crit chance, life steal and dexterity (crit damage). (Crit chance capped at 20%, crit damage capped at 3, life steal capped at 4%)'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critChance: Math.min(scaleDownFlat(level, 0.05), 20),
@@ -76,13 +77,13 @@ export const ROGUE_SKILLS = {
   // Tier 2 Skills
   flurry: {
     id: 'flurry',
-    name: () => 'Flurry',
+    name: () => t('Flurry'),
     type: () => 'instant',
     manaCost: (level) => 5 + level * 0.25,
     cooldown: () => 7000,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'flurry',
-    description: () => 'Unleash a series of rapid attacks, dealing bonus damage.',
+    description: () => t('Unleash a series of rapid attacks, dealing bonus damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 5, 6, 0.3),
@@ -91,11 +92,11 @@ export const ROGUE_SKILLS = {
   },
   precision: {
     id: 'precision',
-    name: () => 'Precision',
+    name: () => t('Precision'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'agility',
-    description: () => 'Significantly increases agility.',
+    description: () => t('Significantly increases agility.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackRating: scaleUpFlat(level, 8, 7, 0.2),
@@ -106,13 +107,13 @@ export const ROGUE_SKILLS = {
 
   backstab: {
     id: 'backstab',
-    name: () => 'Backstab',
+    name: () => t('Backstab'),
     type: () => 'instant',
     manaCost: (level) => 0,
     cooldown: () => 18200,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'backstab',
-    description: () => 'A devastating attack from behind, dealing massive damage and stealing resources.',
+    description: () => t('A devastating attack from behind, dealing massive damage and stealing resources.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2.5),
@@ -123,11 +124,11 @@ export const ROGUE_SKILLS = {
 
   evasiveManeuver: {
     id: 'evasiveManeuver',
-    name: () => 'Evasive Maneuver',
+    name: () => t('Evasive Maneuver'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'evasive-maneuver',
-    description: () => 'Increases evasion and reduces damage taken.',
+    description: () => t('Increases evasion and reduces damage taken.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       dexterity: scaleUpFlat(level, 5),
@@ -139,14 +140,14 @@ export const ROGUE_SKILLS = {
   // Tier 4 Skills
   darkPact: {
     id: 'darkPact',
-    name: () => 'Dark Pact',
+    name: () => t('Dark Pact'),
     type: () => 'buff',
     manaCost: (level) => 14 + level * 0.375,
     cooldown: () => 61000,
     duration: () => 20000,
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'dark-pact',
-    description: () => 'Massively increases crit damage temporarily.',
+    description: () => t('Massively increases crit damage temporarily.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critDamage: Math.min(scaleDownFlat(level, 0.0065), 5),
@@ -156,12 +157,12 @@ export const ROGUE_SKILLS = {
   // Tier 5 Skills
   assassination: {
     id: 'assassination',
-    name: () => 'Assassination',
+    name: () => t('Assassination'),
     type: () => 'toggle',
     manaCost: (level) => 2 + level * 0.5,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'assassination',
-    description: () => 'Greatly increases damage',
+    description: () => t('Greatly increases damage'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 3, 5, 0.2),
@@ -173,11 +174,11 @@ export const ROGUE_SKILLS = {
 
   deadlyPrecision: {
     id: 'deadlyPrecision',
-    name: () => 'Deadly Precision',
+    name: () => t('Deadly Precision'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'precision',
-    description: () => 'Permanently increases crit chance and crit damage.',
+    description: () => t('Permanently increases crit chance and crit damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critChance: Math.min(scaleDownFlat(level, 0.05), 20),
@@ -190,11 +191,11 @@ export const ROGUE_SKILLS = {
   // Tier 6 Skills
   masterThief: {
     id: 'masterThief',
-    name: () => 'Master Thief',
+    name: () => t('Master Thief'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'master',
-    description: () => 'Greatly increases attributes and gold gains.',
+    description: () => t('Greatly increases attributes and gold gains.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 1),
@@ -207,11 +208,11 @@ export const ROGUE_SKILLS = {
   // Tier 1200 Skills
   shadowMastery: {
     id: 'shadowMastery',
-    name: () => 'Shadow Mastery',
+    name: () => t('Shadow Mastery'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'shadow-mastery',
-    description: () => 'Further enhances stealth and critical strikes.',
+    description: () => t('Further enhances stealth and critical strikes.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critChance: Math.min(scaleDownFlat(level, 0.075), 25),
@@ -221,13 +222,13 @@ export const ROGUE_SKILLS = {
   },
   venomousAssault: {
     id: 'venomousAssault',
-    name: () => 'Venomous Assault',
+    name: () => t('Venomous Assault'),
     type: () => 'instant',
     manaCost: (level) => 15 + level * 1.25,
     cooldown: () => 20000,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'venomous-assault',
-    description: () => 'Strikes with poison, dealing heavy damage over time.',
+    description: () => t('Strikes with poison, dealing heavy damage over time.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       earthDamage: scaleUpFlat(level, 10, 5, 0.5),
@@ -238,13 +239,13 @@ export const ROGUE_SKILLS = {
   // Tier 2000 Skills
   phantomStrike: {
     id: 'phantomStrike',
-    name: () => 'Phantom Strike',
+    name: () => t('Phantom Strike'),
     type: () => 'instant',
     manaCost: (level) => 25 + level * 1.25,
     cooldown: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'phantom-strike',
-    description: () => 'Blink through shadows to strike the enemy.',
+    description: () => t('Blink through shadows to strike the enemy.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 15),
@@ -254,11 +255,11 @@ export const ROGUE_SKILLS = {
   },
   silentExecution: {
     id: 'silentExecution',
-    name: () => 'Silent Execution',
+    name: () => t('Silent Execution'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'silent-execution',
-    description: () => 'Increases chance for deadly critical hits.',
+    description: () => t('Increases chance for deadly critical hits.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critDamage: Math.min(scaleDownFlat(level, 0.01), 3),
@@ -270,14 +271,14 @@ export const ROGUE_SKILLS = {
   // Tier 3000 Skills
   eclipseForm: {
     id: 'eclipseForm',
-    name: () => 'Eclipse Form',
+    name: () => t('Eclipse Form'),
     type: () => 'buff',
     manaCost: (level) => 35 + level * 1.25,
     cooldown: () => 140000,
     duration: () => 35000,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'eclipse-form',
-    description: () => 'Become one with the shadows, avoiding attacks.',
+    description: () => t('Become one with the shadows, avoiding attacks.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackRatingPercent: scaleDownFlat(level, 4),
@@ -287,11 +288,11 @@ export const ROGUE_SKILLS = {
   },
   perfectDodge: {
     id: 'perfectDodge',
-    name: () => 'Perfect Dodge',
+    name: () => t('Perfect Dodge'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'perfect-dodge',
-    description: () => 'Grants a chance to completely evade attacks.',
+    description: () => t('Grants a chance to completely evade attacks.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       blockChance: Math.min(scaleDownFlat(level, 0.085), 25),
@@ -302,11 +303,11 @@ export const ROGUE_SKILLS = {
   // Tier 5000 Skills
   kingOfThieves: {
     id: 'kingOfThieves',
-    name: () => 'King of Thieves',
+    name: () => t('King of Thieves'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'king-of-thieves',
-    description: () => 'Supreme mastery of stealth and theft.',
+    description: () => t('Supreme mastery of stealth and theft.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       bonusGoldPercent: scaleDownFlat(level, 0.75),
@@ -316,12 +317,12 @@ export const ROGUE_SKILLS = {
   },
   nightfallAssassin: {
     id: 'nightfallAssassin',
-    name: () => 'Nightfall Assassin',
+    name: () => t('Nightfall Assassin'),
     type: () => 'toggle',
     manaCost: (level) => 10 + level * 0.35,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'nightfall-assassin',
-    description: () => 'Unleash lethal precision in the darkness.',
+    description: () => t('Unleash lethal precision in the darkness.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 3.5),
