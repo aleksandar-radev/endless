@@ -36,6 +36,7 @@ export default class Statistics {
     this.enemiesKilledByZone = {};
     for (let i = 1; i <= 12; i++) this.enemiesKilledByZone[i] = 0;
     this.totalTimeInFights = 0;
+    this.deaths = 0;
 
     handleSavedData(savedData, this);
     if (this.enemiesKilled?.total != null) {
@@ -73,6 +74,7 @@ export default class Statistics {
     for (let i = 1; i <= 12; i++) this.highestStages[i] = 0;
     for (let i = 1; i <= 12; i++) this.enemiesKilledByZone[i] = 0;
     this.totalTimeInFights = 0;
+    this.deaths = 0;
     this.updateStatisticsUI();
   }
 
@@ -102,6 +104,7 @@ export default class Statistics {
           <div id="stat-enemies-killed-by-zone"></div>
           <div id="stat-highest-boss-level"></div>
           <div id="stat-bosses-killed"></div>
+          <div id="stat-deaths"></div>
           <div id="stat-highest-damage"></div>
         </div>
     `;
@@ -114,6 +117,12 @@ export default class Statistics {
     const bossesKilledElem = document.getElementById('stat-bosses-killed');
     if (bossesKilledElem) {
       bossesKilledElem.textContent = `Bosses Defeated: ${formatNumber(this.bossesKilled)}`;
+    }
+
+    // Deaths
+    const deathsElem = document.getElementById('stat-deaths');
+    if (deathsElem) {
+      deathsElem.textContent = `Deaths: ${formatNumber(this.deaths || 0)}`;
     }
 
     // Highest Boss Level Defeated

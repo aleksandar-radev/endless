@@ -136,6 +136,7 @@ export function playerAttack(currentTime) {
 
 // Remove any duplicate definitions and keep this single version
 export function playerDeath() {
+  statistics.increment('deaths');
   const shouldContinue = crystalShop.crystalUpgrades.continuousPlay;
 
   if (!shouldContinue) {
