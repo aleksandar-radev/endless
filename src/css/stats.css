@@ -148,6 +148,10 @@
   margin-left: auto;
 }
 
+.split-view-modal #split-view-btn {
+  display: none;
+}
+
 .split-view-modal .modal-content {
   width: 90%;
   max-width: 1200px;
