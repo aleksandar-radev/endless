@@ -68,7 +68,7 @@ export class Options {
         <option value="en" data-i18n="options.lang.english">English</option>
         <option value="es" data-i18n="options.lang.spanish">Español</option>
       </select>
-      <span>Not everything translated yet. You might still see translations in english, as a default language</span>
+      <span>Not everything translated yet. You might still see translations in english, as a default language. You might want to refresh page after changing language, to see all changes take effect.</span>
     `;
     const select = wrapper.querySelector('select');
     select.value = this.language;
