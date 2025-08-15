@@ -334,7 +334,7 @@ export function showSalvageModal(inv) {
   overlay.querySelectorAll('.salvage-btn-modal').forEach((btn) => {
     btn.onclick = () => {
       const rarity = btn.dataset.rarity;
-      inventory.optionsItemsByRarity(rarity);
+      inventory.salvageItemsByRarity(rarity);
       closeModal(overlay);
       showSalvageModal(inv);
     };

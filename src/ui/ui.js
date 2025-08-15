@@ -187,7 +187,7 @@ export function updatePlayerLife() {
   document.getElementById('xp-fill').style.width = `${xpPercentage}%`;
   document.getElementById('xp-text').textContent = `${formatNumber(
     Math.max(0, Math.floor(hero.exp)),
-  )} / ${formatNumber(Math.floor(hero.getExpToNextLevel()))}`;
+  )} / ${formatNumber(Math.floor(hero.getExpToNextLevel()))} XP`;
 }
 
 export function updateEnemyStats() {

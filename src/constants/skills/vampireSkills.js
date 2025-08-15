@@ -26,7 +26,7 @@ export const VAMPIRE_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'moon',
-    description: () => t('Increases damage at night.'),
+    description: () => t('Increases damage at night. Upon unlocking the skill, sun never rises!'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2),
