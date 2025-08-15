@@ -190,7 +190,9 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
       </div>
       <hr style="border: none; border-top: 1px solid #fff; margin: 10px 0;" />
     `;
-    // Create tab buttons
+    // Initialize container with header
+    statsContainer.innerHTML = headerHtml;
+
     const tabsHtml = html`
       <div class="stats-tabs">
         <button class="subtab-btn active" data-subtab="offense">Offense</button>
@@ -199,8 +201,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
         <button class="split-view-btn" id="split-view-btn">Split View</button>
       </div>
     `;
-    // Combine header and tabs
-    statsContainer.innerHTML = headerHtml + tabsHtml;
+    statsContainer.innerHTML += tabsHtml;
 
     const splitBtn = statsContainer.querySelector('#split-view-btn');
     if (splitBtn) {
@@ -214,102 +215,134 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
       panel.id = `${name}-panel`;
       return panel;
     };
+
+    // Populate panels based on showInUI flags
+    const addStatsToPanel = (panel, group, statsDef) => {
+      if (options.showAllStats) {
+        const subcats = SUBCATEGORIES[group];
+        const tabs = document.createElement('div');
+        tabs.className = 'subcat-tabs';
+        const subPanelsContainer = document.createElement('div');
+        const subPanels = {};
+
+        subcats.forEach((name, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'subcat-btn' + (idx === 0 ? ' active' : '');
+          btn.dataset.subcat = name;
+          btn.textContent = name.charAt(0).toUpperCase() + name.slice(1);
+          tabs.appendChild(btn);
+
+          const sp = document.createElement('div');
+          sp.className = 'stat-subpanel' + (idx === 0 ? ' active' : '');
+          subPanels[name] = sp;
+          subPanelsContainer.appendChild(sp);
+        });
+
+        panel.appendChild(tabs);
+        panel.appendChild(subPanelsContainer);
+
+        Object.keys(statsDef).forEach((key) => {
+          if (group === 'misc' && ATTRIBUTES[key]) return;
+          if (!options.showAllStats && !statsDef[key].showInUI) return;
+          if (statsDef[key].forceNotShow) return;
+
+          // Do not special-case elemental stats here; let them be created like other stats so
+          // they appear in the same rows instead of a separate elemental grid.
+
+          const subcat = statsDef[key].subcategory || 'misc';
+          const targetPanel = subPanels[subcat] || subPanels.misc;
+          const row = document.createElement('div');
+          row.className = 'stat-row';
+          const lbl = document.createElement('span');
+          lbl.className = 'stat-label';
+          lbl.textContent = formatStatName(key);
+          const span = document.createElement('span');
+          span.id = `${key}-value`;
+          let val = hero.stats[key];
+          if (key === 'extraMaterialDropPercent') {
+            val = (val * 100).toFixed(1) + '%';
+          } else if (key === 'itemQuantityPercent' || key === 'itemRarityPercent') {
+            val = (val * 100).toFixed(statsDef[key].decimalPlaces) + '%';
+          } else if (typeof val === 'number' && statsDef[key].decimalPlaces !== undefined) {
+            val = formatNumber(val.toFixed(statsDef[key].decimalPlaces));
+          } else {
+            val = formatNumber(val);
+          }
+          span.textContent = val;
+          row.appendChild(lbl);
+          row.appendChild(document.createTextNode(' '));
+          row.appendChild(span);
+          targetPanel.appendChild(row);
+
+          lbl.addEventListener('mouseenter', (e) => showTooltip(getAttributeTooltip(key), e));
+          lbl.addEventListener('mousemove', positionTooltip);
+          lbl.addEventListener('mouseleave', hideTooltip);
+        });
+
+        // Elemental damage keys will be rendered above in the normal stat-row flow so they
+        // match other stats visually and behaviour-wise.
+
+        // Elemental resistance keys will be rendered like other stats (no separate grid).
+
+        tabs.querySelectorAll('.subcat-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            tabs.querySelectorAll('.subcat-btn').forEach((b) => b.classList.remove('active'));
+            btn.classList.add('active');
+            Object.values(subPanels).forEach((p) => p.classList.remove('active'));
+            subPanels[btn.dataset.subcat].classList.add('active');
+          });
+        });
+      } else {
+        Object.keys(statsDef).forEach((key) => {
+          if (group === 'misc' && ATTRIBUTES[key]) return;
+          if (!options.showAllStats && !statsDef[key].showInUI) return;
+          if (statsDef[key].forceNotShow) return;
+
+          const row = document.createElement('div');
+          row.className = 'stat-row';
+          const lbl = document.createElement('span');
+          lbl.className = 'stat-label';
+          lbl.textContent = formatStatName(key);
+          const span = document.createElement('span');
+          span.id = `${key}-value`;
+          let val = hero.stats[key];
+          if (key === 'extraMaterialDropPercent') {
+            val = (val * 100).toFixed(1) + '%';
+          } else if (key === 'itemQuantityPercent' || key === 'itemRarityPercent') {
+            val = (val * 100).toFixed(statsDef[key].decimalPlaces) + '%';
+          } else if (typeof val === 'number' && statsDef[key].decimalPlaces !== undefined) {
+            val = formatNumber(val.toFixed(statsDef[key].decimalPlaces));
+          } else {
+            val = formatNumber(val);
+          }
+          span.textContent = val;
+          row.appendChild(lbl);
+          row.appendChild(document.createTextNode(' '));
+          row.appendChild(span);
+          panel.appendChild(row);
+
+          lbl.addEventListener('mouseenter', (e) => showTooltip(getAttributeTooltip(key), e));
+          lbl.addEventListener('mousemove', positionTooltip);
+          lbl.addEventListener('mouseleave', hideTooltip);
+        });
+      }
+    };
     const offensePanel = createPanel('offense');
     const defensePanel = createPanel('defense');
     const miscPanel = createPanel('misc');
-    // Populate panels based on showInUI flags
-    const addStatsToPanel = (panel, group, statsDef) => {
-      const elementalDamageKeys = ['fireDamage', 'coldDamage', 'airDamage', 'earthDamage', 'lightningDamage', 'waterDamage'];
-      const elementalResistanceKeys = ['fireResistance', 'coldResistance', 'airResistance', 'earthResistance', 'lightningResistance', 'waterResistance'];
-
-      const subcats = SUBCATEGORIES[group];
-      const tabs = document.createElement('div');
-      tabs.className = 'subcat-tabs';
-      const subPanelsContainer = document.createElement('div');
-      const subPanels = {};
-
-      subcats.forEach((name, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'subcat-btn' + (idx === 0 ? ' active' : '');
-        btn.dataset.subcat = name;
-        btn.textContent = name.charAt(0).toUpperCase() + name.slice(1);
-        tabs.appendChild(btn);
-
-        const sp = document.createElement('div');
-        sp.className = 'stat-subpanel' + (idx === 0 ? ' active' : '');
-        subPanels[name] = sp;
-        subPanelsContainer.appendChild(sp);
-      });
-
-      panel.appendChild(tabs);
-      panel.appendChild(subPanelsContainer);
-
-      Object.keys(statsDef).forEach((key) => {
-        if (group === 'misc' && ATTRIBUTES[key]) return;
-        if (!options.showAllStats && !statsDef[key].showInUI) return;
-        if (statsDef[key].forceNotShow) return;
-
-        // Do not special-case elemental stats here; let them be created like other stats so
-        // they appear in the same rows instead of a separate elemental grid.
-
-        const subcat = statsDef[key].subcategory || 'misc';
-        const targetPanel = subPanels[subcat] || subPanels.misc;
-        const row = document.createElement('div');
-        row.className = 'stat-row';
-        const lbl = document.createElement('span');
-        lbl.className = 'stat-label';
-        lbl.textContent = formatStatName(key);
-        const span = document.createElement('span');
-        span.id = `${key}-value`;
-        let val = hero.stats[key];
-        if (key === 'extraMaterialDropPercent') {
-          val = (val * 100).toFixed(1) + '%';
-        } else if (key === 'itemQuantityPercent' || key === 'itemRarityPercent') {
-          val = (val * 100).toFixed(statsDef[key].decimalPlaces) + '%';
-        } else if (typeof val === 'number' && statsDef[key].decimalPlaces !== undefined) {
-          val = formatNumber(val.toFixed(statsDef[key].decimalPlaces));
-        } else {
-          val = formatNumber(val);
-        }
-        span.textContent = val;
-        row.appendChild(lbl);
-        row.appendChild(document.createTextNode(' '));
-        row.appendChild(span);
-        targetPanel.appendChild(row);
-
-        lbl.addEventListener('mouseenter', (e) => showTooltip(getAttributeTooltip(key), e));
-        lbl.addEventListener('mousemove', positionTooltip);
-        lbl.addEventListener('mouseleave', hideTooltip);
-      });
-
-      // Elemental damage keys will be rendered above in the normal stat-row flow so they
-      // match other stats visually and behaviour-wise.
-
-      // Elemental resistance keys will be rendered like other stats (no separate grid).
-
-      tabs.querySelectorAll('.subcat-btn').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          tabs.querySelectorAll('.subcat-btn').forEach((b) => b.classList.remove('active'));
-          btn.classList.add('active');
-          Object.values(subPanels).forEach((p) => p.classList.remove('active'));
-          subPanels[btn.dataset.subcat].classList.add('active');
-        });
-      });
-    };
     addStatsToPanel(offensePanel, 'offense', OFFENSE_STATS);
     addStatsToPanel(defensePanel, 'defense', DEFENSE_STATS);
     addStatsToPanel(miscPanel, 'misc', MISC_STATS);
     statsContainer.appendChild(offensePanel);
     statsContainer.appendChild(defensePanel);
     statsContainer.appendChild(miscPanel);
+
     // Tab switching logic
     statsContainer.querySelectorAll('.subtab-btn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        // mark button active
+      btn.addEventListener('click', () => {
         statsContainer.querySelectorAll('.subtab-btn').forEach((b) => b.classList.remove('active'));
         btn.classList.add('active');
         const sub = btn.dataset.subtab;
-        // toggle panels
         statsContainer.querySelectorAll('.stats-panel').forEach((p) => p.classList.remove('active'));
         const target = statsContainer.querySelector(`#${sub}-panel`);
         if (target) target.classList.add('active');
