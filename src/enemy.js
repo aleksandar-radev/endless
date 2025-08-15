@@ -23,18 +23,18 @@ const TIER_STAT_SCALE = {
 };
 
 const TIER_EXP_GOLD_SCALE = {
-  1: (level) => percentReducedByLevel(1, level, 20, 0.01, 0.25),
-  2: (level) => percentReducedByLevel(1, level, 25, 0.01, 0.28),
-  3: (level) => percentReducedByLevel(1, level, 30, 0.01, 0.31),
-  4: (level) => percentReducedByLevel(1, level, 35, 0.01, 0.34),
-  5: (level) => percentReducedByLevel(1, level, 40, 0.01, 0.37),
-  6: (level) => percentReducedByLevel(1, level, 45, 0.01, 0.4),
-  7: (level) => percentReducedByLevel(1, level, 50, 0.01, 0.43),
-  8: (level) => percentReducedByLevel(1, level, 55, 0.01, 0.46),
-  9: (level) => percentReducedByLevel(1, level, 60, 0.01, 0.49),
-  10: (level) => percentReducedByLevel(1, level, 65, 0.01, 0.52),
-  11: (level) => percentReducedByLevel(1, level, 70, 0.01, 0.56),
-  12: (level) => percentReducedByLevel(1, level, 75, 0.01, 0.6),
+  1: (level) => percentReducedByLevel(1, level, 20, 0.04, 0.01),
+  2: (level) => percentReducedByLevel(1, level, 22, 0.035, 0.01),
+  3: (level) => percentReducedByLevel(1, level, 24, 0.03, 0.01),
+  4: (level) => percentReducedByLevel(1, level, 26, 0.025, 0.01),
+  5: (level) => percentReducedByLevel(1, level, 28, 0.02, 0.01),
+  6: (level) => percentReducedByLevel(1, level, 30, 0.015, 0.01),
+  7: (level) => percentReducedByLevel(1, level, 32, 0.01, 0.01),
+  8: (level) => percentReducedByLevel(1, level, 34, 0.01, 0.01),
+  9: (level) => percentReducedByLevel(1, level, 36, 0.01, 0.01),
+  10: (level) => percentReducedByLevel(1, level, 38, 0.01, 0.01),
+  11: (level) => percentReducedByLevel(1, level, 40, 0.01, 0.01),
+  12: (level) => percentReducedByLevel(1, level, 42, 0.01, 0.01),
 };
 
 
