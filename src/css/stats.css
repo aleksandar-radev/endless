@@ -177,10 +177,74 @@
   margin-top: 8px;
 }
 
-.elemental-stats-grid .elemental-row {}
+.stat-row {
+  /* Let the label/value children participate in the parent grid so
+     the parent (.stat-subpanel) can size the left column based on the
+     widest label across all rows. display:contents flattens the
+     element's children into the parent for layout purposes. */
+  display: contents;
+}
 
+/* Keep label from wrapping so width calculation is stable */
 .stat-row .stat-label {
-  display: inline-block;
-  width: 200px;
+  white-space: nowrap;
   font-weight: bold;
+  grid-column: 1;
+}
+
+/* For rows with multiple value spans, group them into a container that sits in column 2 */
+.stat-row .stat-values {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-self: start;
+  /* keep values left-aligned inside their column */
+  grid-column: 2;
+  /* ensures the values live in the second column */
+}
+
+/* Subcategory tabs inside each stats panel */
+.subcat-tabs {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.subcat-btn {
+  padding: 5px 10px;
+  background-color: #4b5563;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.subcat-btn.active {
+  background-color: #059669;
+}
+
+.subcat-btn:hover {
+  background-color: #6b7280;
+}
+
+.stat-subpanel {
+  display: none;
+}
+
+.stat-subpanel.active {
+  /* When the subpanel is active, create a two-column grid where the
+     left column sizes to the widest label (max-content) and the right
+     column takes the remaining space so all values align in one column. */
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 12px;
+  align-items: center;
+}
+
+/* Handle rows that use a single value element (no .stat-values wrapper)
+   by placing any child that's not .stat-label into column 2. */
+.stat-subpanel .stat-row> :not(.stat-label) {
+  grid-column: 2;
+  justify-self: start;
 }

@@ -24,6 +24,7 @@ export const OFFENSE_STATS = {
     item: { min: 10, max: 28, limit: Infinity, scaling: (level) => offenseScaling(level) },
     itemTags: ['offense'],
     showInUI: true,
+    subcategory: 'attack',
   },
   damagePerLevel: {
     base: 0,
@@ -34,10 +35,12 @@ export const OFFENSE_STATS = {
     decimalPlaces: 1,
     item: { min: 15, max: 36, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['offense', 'gloves'],
+    subcategory: 'attack',
   },
   totalDamagePercent: {
     base: 0,
     decimalPlaces: 1,
+    subcategory: 'attack',
   },
   // ATTACK SPEED
   attackSpeed: {
@@ -54,10 +57,12 @@ export const OFFENSE_STATS = {
     item: { min: 0.08, max: 0.14, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['offense', 'gloves'],
     showInUI: true,
+    subcategory: 'attack',
   },
   attackSpeedPercent: {
     base: 0,
     decimalPlaces: 1,
+    forceNotShow: true,
   },
   // CRIT CHANCE
   critChance: {
@@ -79,10 +84,12 @@ export const OFFENSE_STATS = {
     },
     itemTags: ['offense', 'jewelry', 'gloves'],
     showInUI: true,
+    subcategory: 'attack',
   },
   critChancePercent: {
     base: 0,
     decimalPlaces: 1,
+    forceNotShow: true,
   },
   // CRIT DAMAGE
   critDamage: {
@@ -99,10 +106,12 @@ export const OFFENSE_STATS = {
     item: { min: 0.02, max: 0.1, limit: 2, scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER) },
     itemTags: ['offense', 'jewelry', 'gloves'],
     showInUI: true,
+    subcategory: 'attack',
   },
   critDamagePercent: {
     base: 0,
     decimalPlaces: 1,
+    forceNotShow: true,
   },
   // ATTACK RATING
   attackRating: {
@@ -112,12 +121,14 @@ export const OFFENSE_STATS = {
     item: { min: 30, max: 100, limit: Infinity, scaling: (level) => offenseScaling(level) },
     itemTags: ['offense', 'jewelry', 'gloves'],
     showInUI: true,
+    subcategory: 'attack',
   },
   attackRatingPercent: {
     base: 0,
     decimalPlaces: 1,
     item: { min: 5, max: 20, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['offense', 'gloves'],
+    subcategory: 'attack',
   },
   // LIFE STEAL
   lifeSteal: {
@@ -127,10 +138,12 @@ export const OFFENSE_STATS = {
     item: { min: 0.5, max: 1.25, limit: 5, scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER) },
     itemTags: ['offense'],
     showInUI: true,
+    subcategory: 'attack',
   },
   lifeStealPercent: {
     base: 0,
     decimalPlaces: 1,
+    forceNotShow: true,
   },
   // LIFE PER HIT
   lifePerHit: {
@@ -139,10 +152,12 @@ export const OFFENSE_STATS = {
     item: { min: 1, max: 7, limit: Infinity, scaling: (level) => offenseScaling(level) },
     itemTags: ['offense'],
     showInUI: true,
+    subcategory: 'attack',
   },
   lifePerHitPercent: {
     base: 0,
     decimalPlaces: 1,
+    forceNotShow: true,
   },
   // FIRE DAMAGE
   fireDamage: {
@@ -157,6 +172,7 @@ export const OFFENSE_STATS = {
     },
     itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
+    subcategory: 'elemental',
   },
   fireDamagePercent: {
     base: 0,
@@ -168,6 +184,7 @@ export const OFFENSE_STATS = {
       scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
     },
     itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
+    subcategory: 'elemental',
   },
   // COLD DAMAGE
   coldDamage: {
@@ -182,6 +199,7 @@ export const OFFENSE_STATS = {
     },
     itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
+    subcategory: 'elemental',
   },
   coldDamagePercent: {
     base: 0,
@@ -193,6 +211,7 @@ export const OFFENSE_STATS = {
       scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
     },
     itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
+    subcategory: 'elemental',
   },
   // AIR DAMAGE
   airDamage: {
@@ -207,6 +226,7 @@ export const OFFENSE_STATS = {
     },
     itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
+    subcategory: 'elemental',
   },
   airDamagePercent: {
     base: 0,
@@ -218,6 +238,7 @@ export const OFFENSE_STATS = {
       scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
     },
     itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
+    subcategory: 'elemental',
   },
   // EARTH DAMAGE
   earthDamage: {
@@ -232,6 +253,7 @@ export const OFFENSE_STATS = {
     },
     itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
+    subcategory: 'elemental',
   },
   earthDamagePercent: {
     base: 0,
@@ -243,6 +265,7 @@ export const OFFENSE_STATS = {
       scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
     },
     itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
+    subcategory: 'elemental',
   },
   // LIGHTNING DAMAGE
   lightningDamage: {
@@ -257,6 +280,7 @@ export const OFFENSE_STATS = {
     },
     itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
+    subcategory: 'elemental',
   },
   lightningDamagePercent: {
     base: 0,
@@ -268,6 +292,7 @@ export const OFFENSE_STATS = {
       scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
     },
     itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
+    subcategory: 'elemental',
   },
   // WATER DAMAGE
   waterDamage: {
@@ -282,6 +307,7 @@ export const OFFENSE_STATS = {
     },
     itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
+    subcategory: 'elemental',
   },
   waterDamagePercent: {
     base: 0,
@@ -293,6 +319,7 @@ export const OFFENSE_STATS = {
       scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
     },
     itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
+    subcategory: 'elemental',
   },
   // DOUBLE DAMAGE
   doubleDamageChance: {
@@ -314,6 +341,7 @@ export const OFFENSE_STATS = {
     },
     itemTags: ['offense', 'gloves', 'jewelry', 'wand'],
     showInUI: true,
+    subcategory: 'attack',
   },
   // ELEMENTAL DAMAGE PERCENT
   elementalDamage: {
@@ -321,80 +349,99 @@ export const OFFENSE_STATS = {
     decimalPlaces: 1,
     item: { min: 1, max: 3, limit: Infinity, scaling: (level) => offenseScaling(level) },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
+    subcategory: 'elemental',
   },
   elementalDamagePercent: {
     base: 0,
     decimalPlaces: 1,
     item: { min: 2, max: 7, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
+    subcategory: 'elemental',
   },
   percentOfPlayerDamage: {
     base: 0,
     decimalPlaces: 1,
+    forceNotShow: true,
   },
   armorPenetration: {
     base: 0,
     decimalPlaces: 0,
+    subcategory: 'attack',
   },
   armorPenetrationPercent: {
     base: 0,
     decimalPlaces: 1,
+    subcategory: 'attack',
   },
   firePenetration: {
     base: 0,
     decimalPlaces: 0,
+    subcategory: 'elemental',
   },
   firePenetrationPercent: {
     base: 0,
     decimalPlaces: 1,
+    subcategory: 'elemental',
   },
   coldPenetration: {
     base: 0,
     decimalPlaces: 0,
+    subcategory: 'elemental',
   },
   coldPenetrationPercent: {
     base: 0,
     decimalPlaces: 1,
+    subcategory: 'elemental',
   },
   airPenetration: {
     base: 0,
     decimalPlaces: 0,
+    subcategory: 'elemental',
   },
   airPenetrationPercent: {
     base: 0,
     decimalPlaces: 1,
+    subcategory: 'elemental',
   },
   earthPenetration: {
     base: 0,
     decimalPlaces: 0,
+    subcategory: 'elemental',
   },
   earthPenetrationPercent: {
     base: 0,
     decimalPlaces: 1,
+    subcategory: 'elemental',
   },
   lightningPenetration: {
     base: 0,
     decimalPlaces: 0,
+    subcategory: 'elemental',
   },
   lightningPenetrationPercent: {
     base: 0,
     decimalPlaces: 1,
+    subcategory: 'elemental',
   },
   waterPenetration: {
     base: 0,
     decimalPlaces: 0,
+    subcategory: 'elemental',
   },
   waterPenetrationPercent: {
     base: 0,
     decimalPlaces: 1,
+    subcategory: 'elemental',
   },
   elementalPenetration: {
     base: 0,
     decimalPlaces: 0,
+    subcategory: 'elemental',
   },
   elementalPenetrationPercent: {
     base: 0,
     decimalPlaces: 1,
+    subcategory: 'elemental',
   },
   ignoreEnemyArmor: {
     base: 0,

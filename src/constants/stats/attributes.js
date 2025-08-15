@@ -49,171 +49,175 @@ export const ATTRIBUTES = {
 };
 
 export const ATTRIBUTE_TOOLTIPS = {
-  getStrengthTooltip: () => html`
+  strengthTooltip: () => html`
     <strong>Strength</strong><br />
     Each point increases:<br />
     • Damage by ${ATTRIBUTES.strength.effects.damagePerPoint}<br />
   `,
 
-  getAgilityTooltip: () => html`
+  agilityTooltip: () => html`
     <strong>Agility</strong><br />
     Each point increases:<br />
     • Attack Rating by ${ATTRIBUTES.agility.effects.attackRatingPerPoint}<br />
     • Damage by ${ATTRIBUTES.agility.effects.damagePerPoint}<br />
   `,
 
-  getVitalityTooltip: () => html`
+  vitalityTooltip: () => html`
     <strong>Vitality</strong><br />
     Each point increases:<br />
     • Life by ${ATTRIBUTES.vitality.effects.lifePerPoint}<br />
   `,
 
-  getWisdomTooltip: () => html`
+  wisdomTooltip: () => html`
     <strong>Wisdom</strong><br />
     Each point increases:<br />
     • Mana by ${ATTRIBUTES.wisdom.effects.manaPerPoint}<br />
   `,
 
-  getEnduranceTooltip: () => html`
+  enduranceTooltip: () => html`
     <strong>Endurance</strong><br />
     Each point increases:<br />
     • Armor by ${ATTRIBUTES.endurance.effects.armorPerPoint}<br />
   `,
 
-  getDexterityTooltip: () => html`
+  dexterityTooltip: () => html`
     <strong>Dexterity</strong><br />
     Each point increases:<br />
     • Evasion by ${ATTRIBUTES.dexterity.effects.evasionPerPoint}<br />
   `,
 
-  getIntelligenceTooltip: () => html`
+  intelligenceTooltip: () => html`
     <strong>Intelligence</strong><br />
     Each point increases:<br />
     • Elemental Damage by ${ATTRIBUTES.intelligence.effects.elementalDamagePerPoint}<br />
   `,
 
-  getPerseveranceTooltip: () => html`
+  perseveranceTooltip: () => html`
     <strong>Perseverance</strong><br />
     Each point increases:<br />
     • Mana Regeneration by ${ATTRIBUTES.perseverance.effects.manaRegenPerPoint}<br />
     • Life Regeneration by ${ATTRIBUTES.perseverance.effects.lifeRegenPerPoint}<br />
-    • All Resistances by ${ATTRIBUTES.perseverance.effects.allResistancePerPoint}<br
+    • All Resistances by ${ATTRIBUTES.perseverance.effects.allResistancePerPoint}<br />
   `,
 
-  getElementalDamageTooltip: () => html`
+  elementalDamageTooltip: () => html`
     <strong>Elemental Damage</strong><br />
     Included in base hit damage. Reduced by enemy resistances.
   `,
 
-  getDamageTooltip: () => html`
+  damageTooltip: () => html`
     <strong>Damage</strong><br />
     Base physical damage dealt to enemies.<br />
     Increased by Strength and equipment.
   `,
 
-  getAttackSpeedTooltip: () => html`
+  attackSpeedTooltip: () => html`
     <strong>Attack Speed</strong><br />
     Number of attacks per second.<br />
     Maximum: 5 attacks/second
   `,
 
-  getAttackRatingTooltip: () => html`
+  attackRatingTooltip: () => html`
     <strong>Attack Rating</strong><br />
     Determines hit chance against enemies.<br />
     Higher stages require more Attack Rating.
   `,
 
-  getCritChanceTooltip: () => html`
+  critChanceTooltip: () => html`
     <strong>Critical Strike Chance</strong><br />
     Chance to deal critical damage.<br />
     Maximum: 100%
   `,
 
-  getCritDamageTooltip: () => html`
+  critDamageTooltip: () => html`
     <strong>Critical Strike Damage</strong><br />
     Damage multiplier on critical hits.<br />
     Base: 1.33x damage
   `,
 
-  getLifeStealTooltip: () => html`
+  lifeStealTooltip: () => html`
     <strong>Life Steal</strong><br />
     Percentage of damage dealt recovered as life.
   `,
 
-  getLifeTooltip: () => html`
+  lifeTooltip: () => html`
     <strong>Life</strong><br />
     Maximum life points.<br />
     Increased by Vitality and level ups.
   `,
 
-  getLifeRegenerationTooltip: () => html`
+  lifeRegenerationTooltip: () => html`
     <strong>Life Regeneration</strong><br />
     Amount of life recovered per second.
   `,
 
-  getManaTooltip: () => html`
+  manaTooltip: () => html`
     <strong>Mana</strong><br />
     Maximum mana points.<br />
     Increased by Wisdom and level ups.
   `,
 
-  getManaRegenerationTooltip: () => html`
+  manaRegenerationTooltip: () => html`
     <strong>Mana Regeneration</strong><br />
     Amount of mana recovered per second.
   `,
 
-  getArmorTooltip: () => html`
+  armorTooltip: () => html`
     <strong>Armor</strong><br />
     Reduces incoming damage.<br />
     Effectiveness decreases in higher stages.
   `,
 
-  getBlockChanceTooltip: () => html`
+  blockChanceTooltip: () => html`
     <strong>Block Chance</strong><br />
     Chance to block incoming attacks.<br />
     Maximum: 75%
   `,
 
-  getEvasionTooltip: () => html`
+  evasionTooltip: () => html`
     <strong>Evasion</strong><br />
     Chance to dodge enemy attacks completely.<br />
     Higher evasion reduces enemy hit chance.
   `,
 
-  getFireResistanceTooltip: () => html`
+  fireResistanceTooltip: () => html`
     <strong>Fire Resistance</strong><br />
     Reduces fire damage taken from enemies.<br />
     ${ELEMENTS.fire.icon} Effective against fire enemies.
   `,
 
-  getColdResistanceTooltip: () => html`
+  coldResistanceTooltip: () => html`
     <strong>Cold Resistance</strong><br />
     Reduces cold damage taken from enemies.<br />
     ${ELEMENTS.cold.icon} Effective against cold enemies.
   `,
 
-  getAirResistanceTooltip: () => html`
+  airResistanceTooltip: () => html`
     <strong>Air Resistance</strong><br />
     Reduces air damage taken from enemies.<br />
     ${ELEMENTS.air.icon} Effective against air enemies.
   `,
 
-  getEarthResistanceTooltip: () => html`
+  earthResistanceTooltip: () => html`
     <strong>Earth Resistance</strong><br />
     Reduces earth damage taken from enemies.<br />
     ${ELEMENTS.earth.icon} Effective against earth enemies.
   `,
-  getLightningResistanceTooltip: () => html`
+
+  lightningResistanceTooltip: () => html`
     <strong>Lightning Resistance</strong><br />
     Reduces lightning damage taken from enemies.<br />
     ${ELEMENTS.lightning.icon} Effective against lightning enemies.
   `,
-  getWaterResistanceTooltip: () => html`
+
+  waterResistanceTooltip: () => html`
     <strong>Water Resistance</strong><br />
     Reduces water damage taken from enemies.<br />
     ${ELEMENTS.water.icon} Effective against water enemies.
   `,
-  getElementalResistanceTooltip: () => html`
-    <strong>Elemental Resistance. Reduces elemental damage taken from enemies based on your resistance and the enemy's damage.</strong>
+
+  elementalResistanceTooltip: () => html`
+    <strong>Elemental Resistance</strong><br />
+    Reduces elemental damage taken from enemies based on your resistance and the enemy's damage.
   `,
 };

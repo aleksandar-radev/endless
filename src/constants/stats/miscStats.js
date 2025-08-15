@@ -25,6 +25,7 @@ export const MISC_STATS = {
     item: { min: 5, max: 10, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry', 'magic'],
     showInUI: true,
+    subcategory: 'resources',
   },
   manaPerLevel: {
     base: 0,
@@ -44,6 +45,7 @@ export const MISC_STATS = {
     item: { min: 1, max: 3, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry', 'magic'],
     showInUI: true,
+    subcategory: 'resources',
   },
   manaRegenPercent: {
     base: 0,
@@ -58,6 +60,7 @@ export const MISC_STATS = {
     item: { min: 1, max: 5, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry', 'magic'],
     showInUI: true,
+    subcategory: 'resources',
   },
   manaPerHitPercent: {
     base: 0,
@@ -199,6 +202,7 @@ export const MISC_STATS = {
     item: { min: 5, max: 20, limit: 100, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry'],
     showInUI: true,
+    subcategory: 'rewards',
   },
   // BONUS EXPERIENCE
   bonusExperiencePercent: {
@@ -207,6 +211,7 @@ export const MISC_STATS = {
     item: { min: 5, max: 15, limit: 100, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry'],
     showInUI: true,
+    subcategory: 'rewards',
   },
   // COOLDOWN REDUCTION
   cooldownReductionPercent: {
@@ -235,6 +240,7 @@ export const MISC_STATS = {
     item: { min: 4, max: 13, limit: 100, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry', 'gloves'],
     showInUI: true,
+    subcategory: 'rewards',
   },
   // ITEM RARITY
   itemRarityPercent: {
@@ -243,12 +249,14 @@ export const MISC_STATS = {
     item: { min: 4, max: 13, limit: 100, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry', 'gloves'],
     showInUI: true,
+    subcategory: 'rewards',
   },
   // Only from materials. permanent skill points
   skillPoints: {
     base: 0,
     decimalPlaces: 0,
     showInUI: true,
+    subcategory: 'rewards',
   },
   /**
    * Chance (%) to drop extra materials on enemy kill.

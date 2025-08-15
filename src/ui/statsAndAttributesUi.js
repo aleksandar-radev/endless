@@ -24,6 +24,14 @@ let sessionDamage = 0;
 let listenersAttached = false;
 let bottomBar = null;
 
+// Ordered subcategories for each stat group. Stats define their own
+// `subcategory` property which determines the panel they appear in.
+const SUBCATEGORIES = {
+  offense: ['attack', 'elemental', 'misc'],
+  defense: ['defense', 'elemental', 'misc'],
+  misc: ['resources', 'rewards', 'misc'],
+};
+
 function formatPeriod(seconds) {
   if (seconds % 3600 === 0) return `${seconds / 3600}h`;
   if (seconds % 60 === 0) return `${seconds / 60}m`;
@@ -210,24 +218,42 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     const defensePanel = createPanel('defense');
     const miscPanel = createPanel('misc');
     // Populate panels based on showInUI flags
-    const addStatsToPanel = (panel, statsDef) => {
+    const addStatsToPanel = (panel, group, statsDef) => {
       const elementalDamageKeys = ['fireDamage', 'coldDamage', 'airDamage', 'earthDamage', 'lightningDamage', 'waterDamage'];
       const elementalResistanceKeys = ['fireResistance', 'coldResistance', 'airResistance', 'earthResistance', 'lightningResistance', 'waterResistance'];
-      const damageElements = [];
-      const resistanceElements = [];
+
+      const subcats = SUBCATEGORIES[group];
+      const tabs = document.createElement('div');
+      tabs.className = 'subcat-tabs';
+      const subPanelsContainer = document.createElement('div');
+      const subPanels = {};
+
+      subcats.forEach((name, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'subcat-btn' + (idx === 0 ? ' active' : '');
+        btn.dataset.subcat = name;
+        btn.textContent = name.charAt(0).toUpperCase() + name.slice(1);
+        tabs.appendChild(btn);
+
+        const sp = document.createElement('div');
+        sp.className = 'stat-subpanel' + (idx === 0 ? ' active' : '');
+        subPanels[name] = sp;
+        subPanelsContainer.appendChild(sp);
+      });
+
+      panel.appendChild(tabs);
+      panel.appendChild(subPanelsContainer);
+
       Object.keys(statsDef).forEach((key) => {
-        // Do not show attributes in misc-panel
-        if (panel === miscPanel && ATTRIBUTES[key]) return;
-        if (!options.showAllStats && !statsDef[key].showInUI && key !== 'extraMaterialDropPercent') return;
-        // Collect elementals separately for offense panel
-        if (panel === offensePanel && elementalDamageKeys.includes(key)) {
-          damageElements.push(key);
-          return;
-        }
-        if (panel === defensePanel && elementalResistanceKeys.includes(key)) {
-          resistanceElements.push(key);
-          return;
-        }
+        if (group === 'misc' && ATTRIBUTES[key]) return;
+        if (!options.showAllStats && !statsDef[key].showInUI) return;
+        if (statsDef[key].forceNotShow) return;
+
+        // Do not special-case elemental stats here; let them be created like other stats so
+        // they appear in the same rows instead of a separate elemental grid.
+
+        const subcat = statsDef[key].subcategory || 'misc';
+        const targetPanel = subPanels[subcat] || subPanels.misc;
         const row = document.createElement('div');
         row.className = 'stat-row';
         const lbl = document.createElement('span');
@@ -236,7 +262,6 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
         const span = document.createElement('span');
         span.id = `${key}-value`;
         let val = hero.stats[key];
-        // Special formatting for extraMaterialDropPercent
         if (key === 'extraMaterialDropPercent') {
           val = (val * 100).toFixed(1) + '%';
         } else if (key === 'itemQuantityPercent' || key === 'itemRarityPercent') {
@@ -250,96 +275,34 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
         row.appendChild(lbl);
         row.appendChild(document.createTextNode(' '));
         row.appendChild(span);
-        panel.appendChild(row);
-        // Add tooltip if defined (special-case elemental stats)
-        const baseKey = lbl.textContent.replace(/[^a-zA-Z]/g, '');
-        let tooltipFn = ATTRIBUTE_TOOLTIPS[`get${baseKey}Tooltip`];
-        // For offense elementals override tooltip
-        if (panel === offensePanel && ['fireDamage', 'coldDamage', 'airDamage', 'earthDamage', 'lightningDamage', 'waterDamage'].includes(key)) {
-          tooltipFn = ATTRIBUTE_TOOLTIPS.getElementalDamageTooltip;
-        }
+        targetPanel.appendChild(row);
+
+        let tooltipFn = ATTRIBUTE_TOOLTIPS[`${key}Tooltip`];
+
         if (tooltipFn) {
           lbl.addEventListener('mouseenter', (e) => showTooltip(tooltipFn(), e));
           lbl.addEventListener('mousemove', positionTooltip);
           lbl.addEventListener('mouseleave', hideTooltip);
         }
       });
-      // After other stats, render elemental grid in offense panel
-      if (panel === offensePanel && damageElements.length) {
-        const iconMap = {
-          fireDamage: ELEMENTS.fire.icon,
-          coldDamage: ELEMENTS.cold.icon,
-          airDamage: ELEMENTS.air.icon,
-          earthDamage: ELEMENTS.earth.icon,
-          lightningDamage: ELEMENTS.lightning.icon,
-          waterDamage: ELEMENTS.water.icon,
-        };
-        const grid = document.createElement('div');
-        grid.className = 'elemental-stats-grid';
-        ['fireDamage', 'coldDamage', 'airDamage', 'earthDamage', 'lightningDamage', 'waterDamage'].forEach((key) => {
-          if (!damageElements.includes(key)) return;
-          const row = document.createElement('div');
-          row.className = 'elemental-row';
-          const icon = document.createElement('span');
-          icon.textContent = iconMap[key];
-          const lbl = document.createElement('strong');
-          lbl.textContent = formatStatName(key);
-          // Add tooltip for elemental damage
-          lbl.addEventListener('mouseenter', (e) => showTooltip(ATTRIBUTE_TOOLTIPS.getElementalDamageTooltip(), e));
-          lbl.addEventListener('mousemove', positionTooltip);
-          lbl.addEventListener('mouseleave', hideTooltip);
-          const span = document.createElement('span');
-          span.id = `${key}-value`;
-          let val = hero.stats[key];
-          span.textContent = formatNumber(val);
-          row.appendChild(icon);
-          row.appendChild(lbl);
-          row.appendChild(document.createTextNode(' '));
-          row.appendChild(span);
-          grid.appendChild(row);
-        });
-        panel.appendChild(grid);
-      }
 
-      if (panel === defensePanel && resistanceElements.length) {
-        const iconMap = {
-          fireResistance: ELEMENTS.fire.icon,
-          coldResistance: ELEMENTS.cold.icon,
-          airResistance: ELEMENTS.air.icon,
-          earthResistance: ELEMENTS.earth.icon,
-          lightningResistance: ELEMENTS.lightning.icon,
-          waterResistance: ELEMENTS.water.icon,
-        };
-        const grid = document.createElement('div');
-        grid.className = 'elemental-stats-grid';
-        ['fireResistance', 'coldResistance', 'airResistance', 'earthResistance', 'lightningResistance', 'waterResistance'].forEach((key) => {
-          if (!resistanceElements.includes(key)) return;
-          const row = document.createElement('div');
-          row.className = 'elemental-row';
-          const icon = document.createElement('span');
-          icon.textContent = iconMap[key];
-          const lbl = document.createElement('strong');
-          lbl.textContent = formatStatName(key);
-          // Add tooltip for elemental Resistance
-          lbl.addEventListener('mouseenter', (e) => showTooltip(ATTRIBUTE_TOOLTIPS.getElementalResistanceTooltip(), e));
-          lbl.addEventListener('mousemove', positionTooltip);
-          lbl.addEventListener('mouseleave', hideTooltip);
-          const span = document.createElement('span');
-          span.id = `${key}-value`;
-          let val = (hero.stats[key]).toFixed(STATS[key].decimalPlaces || 0);
-          span.textContent = formatNumber(val);
-          row.appendChild(icon);
-          row.appendChild(lbl);
-          row.appendChild(document.createTextNode(' '));
-          row.appendChild(span);
-          grid.appendChild(row);
+      // Elemental damage keys will be rendered above in the normal stat-row flow so they
+      // match other stats visually and behaviour-wise.
+
+      // Elemental resistance keys will be rendered like other stats (no separate grid).
+
+      tabs.querySelectorAll('.subcat-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          tabs.querySelectorAll('.subcat-btn').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          Object.values(subPanels).forEach((p) => p.classList.remove('active'));
+          subPanels[btn.dataset.subcat].classList.add('active');
         });
-        panel.appendChild(grid);
-      }
+      });
     };
-    addStatsToPanel(offensePanel, OFFENSE_STATS);
-    addStatsToPanel(defensePanel, DEFENSE_STATS);
-    addStatsToPanel(miscPanel, MISC_STATS);
+    addStatsToPanel(offensePanel, 'offense', OFFENSE_STATS);
+    addStatsToPanel(defensePanel, 'defense', DEFENSE_STATS);
+    addStatsToPanel(miscPanel, 'misc', MISC_STATS);
     statsContainer.appendChild(offensePanel);
     statsContainer.appendChild(defensePanel);
     statsContainer.appendChild(miscPanel);
