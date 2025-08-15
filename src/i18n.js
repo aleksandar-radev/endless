@@ -52,6 +52,9 @@ const translations = {
     'class.druidDesc': 'Wielder of nature magic and animal allies',
     'class.mage': 'Mage',
     'class.mageDesc': 'Master of arcane spells and destructive magic',
+    'options.language': 'Language',
+    'options.lang.english': 'English',
+    'options.lang.spanish': 'Spanish',
   },
   es: {
     'app.title': 'Interminable',
@@ -106,6 +109,9 @@ const translations = {
     'class.druidDesc': 'Portador de magia de la naturaleza y aliados animales',
     'class.mage': 'Mago',
     'class.mageDesc': 'Maestro de hechizos arcanos y magia destructiva',
+    'options.language': 'Idioma',
+    'options.lang.english': 'Inglés',
+    'options.lang.spanish': 'Español',
   },
 };
 

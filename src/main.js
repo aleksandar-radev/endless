@@ -40,6 +40,7 @@ window.setLanguage = setLanguage;
 // Wrap initialization in an async IIFE to avoid top-level await error
 (async () => {
   await setGlobals();
+  setLanguage(options.language);
 
   // Only set stage if not loaded from save data (undefined or null)
   if (!game.stage || game.stage == null) {

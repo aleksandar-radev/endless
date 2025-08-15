@@ -8,6 +8,7 @@ import { CHANGELOG } from './changelog/changelog.js';
 import upcommingChanges from './upcoming.js';
 import { audioManager } from './audio.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
+import { setLanguage } from './i18n.js';
 
 const html = String.raw;
 
@@ -40,6 +41,8 @@ export class Options {
     this.rateCountersPeriod = data.rateCountersPeriod || 1;
     // Enable quick training purchases
     this.quickTraining = data.quickTraining ?? false;
+    // Preferred language, default to English
+    this.language = data.language || 'en';
   }
 
   /**
@@ -52,6 +55,30 @@ export class Options {
     audioManager.setVolume(this.soundVolume);
   }
 
+
+  /**
+   * Creates the language selection dropdown.
+   */
+  _createLanguageOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="language-select" data-i18n="options.language">Language:</label>
+      <select id="language-select">
+        <option value="en" data-i18n="options.lang.english">English</option>
+        <option value="es" data-i18n="options.lang.spanish">Español</option>
+      </select>
+      <span>Not everything translated yet. You might still see translations in english, as a default language</span>
+    `;
+    const select = wrapper.querySelector('select');
+    select.value = this.language;
+    select.addEventListener('change', () => {
+      this.language = select.value;
+      setLanguage(this.language);
+      dataManager.saveGame();
+    });
+    return wrapper;
+  }
 
   /**
    * Creates the sound volume slider UI.
@@ -101,6 +128,8 @@ export class Options {
     container.className = 'options-container';
     container.appendChild(this._createCloudSaveBar());
 
+    // --- Language Option ---
+    container.appendChild(this._createLanguageOption());
     // --- Sound Volume Option ---
     container.appendChild(this._createSoundVolumeOption());
     // --- Advanced Item Tooltips Option ---
