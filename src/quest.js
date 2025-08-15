@@ -2,6 +2,7 @@ import { ITEM_TYPES } from './constants/items.js';
 import { QUEST_DEFINITIONS } from './constants/quests.js';
 import { hero, statistics, dataManager, inventory } from './globals.js';
 import { showToast, updateResources, updateTabIndicators } from './ui/ui.js';
+import { MATERIALS } from './constants/materials.js';
 
 export class Quest {
   constructor({ id, title, description, type, target, reward, icon, category, rarity, resource, tier }, claimed = false) {
@@ -88,6 +89,18 @@ export class Quest {
       const newItem = inventory.createItem(type, level, rarity, tier);
       inventory.addItemToInventory(newItem);
       showToast(`You received a ${rarity} ${type} (Tier ${tier})!`, 'normal');
+    }
+    if (this.reward.materials && Array.isArray(this.reward.materials)) {
+      this.reward.materials.forEach(({ id, qty }) => {
+        inventory.addMaterial({ id, qty });
+        const matDef = MATERIALS[id] || Object.values(MATERIALS).find((m) => m.id === id);
+        if (matDef) {
+          showToast(
+            `You received ${qty} ${matDef.name}${qty > 1 ? 's' : ''}!`,
+            'normal',
+          );
+        }
+      });
     }
     showToast(`Quest "${this.title}" claimed!`, 'normal');
     updateResources();

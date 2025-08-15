@@ -1,6 +1,7 @@
 // Quest UI logic moved from ui.js
 import { showTooltip, hideTooltip, positionTooltip, formatNumber } from './ui.js';
 import { quests } from '../globals.js';
+import { MATERIALS } from '../constants/materials.js';
 
 export function updateQuestsUI() {
   const panel = document.getElementById('quests');
@@ -115,6 +116,13 @@ export function openQuestModal(quest) {
       rewardParts.push(
         `<span style="color:#fff;font-weight:bold;">Random Item (Rarity: <span class="item-color-${value.rarity}">${value.rarity}</span>, Tier: <span style='color:#38bdf8'>${value.tier}</span>)</span>`,
       );
+    } else if (key === 'materials' && Array.isArray(value)) {
+      value.forEach(({ id, qty }) => {
+        const matDef = MATERIALS[id] || Object.values(MATERIALS).find((m) => m.id === id);
+        rewardParts.push(
+          `<span style=\"color:#fff;font-weight:bold;\">${formatNumber(qty)} ${matDef?.name || id}</span>`,
+        );
+      });
     } else {
       rewardParts.push(
         `<span style=\"color:${color};font-weight:bold;\">${formatNumber(value)} ${key.charAt(0).toUpperCase() + key.slice(1)}</span>`,
