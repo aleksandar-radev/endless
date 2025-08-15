@@ -13,6 +13,30 @@ let currentFilter = '';
 
 const html = String.raw;
 
+let sortMode = (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) || 'type-rarity-level';
+
+const sortModeShortText = {
+  'type-rarity-level': t('inventory.typeRarityLevel'),
+  'type-level-rarity': t('inventory.typeLevelRarity'),
+  'rarity-level': t('inventory.rarityLevel'),
+  'level-rarity': t('inventory.levelRarity'),
+  'tier-rarity-level': t('inventory.tierRarityLevel'),
+  'tier-level-rarity': t('inventory.tierLevelRarity'),
+  'rarity-tier-level': t('inventory.rarityTierLevel'),
+  'level-tier-rarity': t('inventory.levelTierRarity'),
+};
+
+const sortModeFullText = {
+  'type-rarity-level': t('inventory.typeRarityLevelFull'),
+  'type-level-rarity': t('inventory.typeLevelRarityFull'),
+  'rarity-level': t('inventory.rarityLevelFull'),
+  'level-rarity': t('inventory.levelRarityFull'),
+  'tier-rarity-level': t('inventory.tierRarityLevelFull'),
+  'tier-level-rarity': t('inventory.tierLevelRarityFull'),
+  'rarity-tier-level': t('inventory.rarityTierLevelFull'),
+  'level-tier-rarity': t('inventory.levelTierRarityFull'),
+};
+
 export function initializeInventoryUI(inv) {
   // Create all inventory UI structure dynamically
   const inventoryTab = document.getElementById('inventory');
@@ -45,12 +69,6 @@ export function initializeInventoryUI(inv) {
         <button id="materials-tab" class="inventory-btn" data-i18n="inventory.materials">${t('inventory.materials')}</button>
       </div>
       <div class="sort-row">
-        <select id="sort-mode-select" class="inventory-btn sort-select">
-          <option value="type-rarity-level">${t('inventory.typeRarityLevel')}</option>
-          <option value="type-level-rarity">${t('inventory.typeLevelRarity')}</option>
-          <option value="rarity-level">${t('inventory.rarityLevel')}</option>
-          <option value="level-rarity">${t('inventory.levelRarity')}</option>
-        </select>
         <div id="sort-inventory" class="inventory-btn sort-btn" aria-label="${t('inventory.sort')}"><span role="img" aria-label="Sort">🔃</span></div>
       </div>
       <button id="open-salvage-modal" class="inventory-btn" data-i18n="inventory.salvage">${t('inventory.salvage')}</button>
@@ -90,24 +108,11 @@ export function initializeInventoryUI(inv) {
   const mobileEquipBtn = document.getElementById('mobile-equip-btn');
 
   const sortBtn = document.getElementById('sort-inventory');
-  const sortModeSelect = document.getElementById('sort-mode-select');
   const itemsTab = document.getElementById('items-tab');
   const materialsTab = document.getElementById('materials-tab');
   const materialsGrid = document.querySelector('.materials-grid');
   const openSalvageModalBtn = document.getElementById('open-salvage-modal');
   const filterInput = document.getElementById('inventory-filter');
-
-  // Set sort mode from localStorage or default
-  let sortMode = localStorage.getItem('inventorySortMode') || 'type-rarity-level';
-  sortModeSelect.value = sortMode;
-
-  // Map for full text tooltips
-  const sortModeFullText = {
-    'type-rarity-level': t('inventory.typeRarityLevelFull'),
-    'type-level-rarity': t('inventory.typeLevelRarityFull'),
-    'rarity-level': t('inventory.rarityLevelFull'),
-    'level-rarity': t('inventory.levelRarityFull'),
-  };
   function updateSortBtnText() {}
   updateSortBtnText();
 
@@ -130,16 +135,6 @@ export function initializeInventoryUI(inv) {
     });
   }
 
-  // Sort mode change
-  sortModeSelect.addEventListener('change', () => {
-    sortMode = sortModeSelect.value;
-    localStorage.setItem('inventorySortMode', sortMode);
-    updateSortBtnText();
-    if (itemsTab.classList.contains('active')) {
-      sortInventory(sortMode);
-    }
-  });
-
   filterInput.addEventListener('input', () => {
     currentFilter = filterInput.value.toLowerCase();
     applyFilter(inv);
@@ -149,7 +144,7 @@ export function initializeInventoryUI(inv) {
   sortBtn.addEventListener('click', () => {
     if (itemsTab.classList.contains('active')) {
       sortInventory(sortMode);
-      showToast(`${t('inventory.sortedItemsBy')} ${sortModeSelect.options[sortModeSelect.selectedIndex].text}`, 'success');
+      showToast(`${t('inventory.sortedItemsBy')} ${sortModeShortText[sortMode]}`, 'success');
     } else {
       sortMaterials();
       showToast(t('inventory.sortedMaterials'), 'success');
@@ -160,7 +155,7 @@ export function initializeInventoryUI(inv) {
   sortBtn.addEventListener('mouseenter', (e) => {
     let tooltipText = '';
     if (itemsTab.classList.contains('active')) {
-      tooltipText = `${t('inventory.sortItemsBy')} <b>${sortModeFullText[sortModeSelect.value]}</b>`;
+      tooltipText = `${t('inventory.sortItemsBy')} <b>${sortModeFullText[sortMode]}</b>`;
     } else {
       tooltipText = t('inventory.sortMaterials');
     }
@@ -283,6 +278,18 @@ export function showSalvageModal(inv) {
             </div>
           </div>
         </div>
+        <div class="sort-row">
+          <select id="sort-mode-select" class="inventory-btn sort-select">
+            <option value="type-rarity-level">${t('inventory.typeRarityLevel')}</option>
+            <option value="type-level-rarity">${t('inventory.typeLevelRarity')}</option>
+            <option value="rarity-level">${t('inventory.rarityLevel')}</option>
+            <option value="level-rarity">${t('inventory.levelRarity')}</option>
+            <option value="tier-rarity-level">${t('inventory.tierRarityLevel')}</option>
+            <option value="tier-level-rarity">${t('inventory.tierLevelRarity')}</option>
+            <option value="rarity-tier-level">${t('inventory.rarityTierLevel')}</option>
+            <option value="level-tier-rarity">${t('inventory.levelTierRarity')}</option>
+          </select>
+        </div>
       </div>
     </div>
   `;
@@ -309,6 +316,18 @@ export function showSalvageModal(inv) {
   // Hide the equipment container inside the modal
   const hiddenEquipment = inventoryTab.querySelector('.equipment-container');
   if (hiddenEquipment) hiddenEquipment.style.display = 'none';
+
+  const sortModeSelect = overlay.querySelector('#sort-mode-select');
+  if (sortModeSelect) {
+    sortModeSelect.value = sortMode;
+    sortModeSelect.addEventListener('change', () => {
+      sortMode = sortModeSelect.value;
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('inventorySortMode', sortMode);
+      }
+      sortInventory(sortMode);
+    });
+  }
 
   // Salvage button logic
   overlay.querySelectorAll('.salvage-btn-modal').forEach((btn) => {
@@ -1012,6 +1031,8 @@ export function sortInventory(mode = 'type-rarity-level') {
   const rarityOrder = (a, b) => RARITY_ORDER.indexOf(b.rarity) - RARITY_ORDER.indexOf(a.rarity);
   // Helper for level order
   const levelOrder = (a, b) => b.level - a.level;
+  // Helper for tier order
+  const tierOrder = (a, b) => b.tier - a.tier;
 
   // Sort logic based on mode
   nonPersistentItems.sort((a, b) => {
@@ -1024,6 +1045,14 @@ export function sortInventory(mode = 'type-rarity-level') {
         return rarityOrder(a, b) || levelOrder(a, b);
       case 'level-rarity':
         return levelOrder(a, b) || rarityOrder(a, b);
+      case 'tier-rarity-level':
+        return tierOrder(a, b) || rarityOrder(a, b) || levelOrder(a, b);
+      case 'tier-level-rarity':
+        return tierOrder(a, b) || levelOrder(a, b) || rarityOrder(a, b);
+      case 'rarity-tier-level':
+        return rarityOrder(a, b) || tierOrder(a, b) || levelOrder(a, b);
+      case 'level-tier-rarity':
+        return levelOrder(a, b) || tierOrder(a, b) || rarityOrder(a, b);
       default:
         return rarityOrder(a, b) || levelOrder(a, b);
     }
