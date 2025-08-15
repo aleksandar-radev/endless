@@ -5,7 +5,7 @@ import { percentIncreasedByLevel, percentReducedByLevel, scaleStat } from './com
 import { BOSSES } from './constants/bosses.js';
 import { hero } from './globals.js';
 
-const INCREASE_PER_LEVEL = 0.02;
+const INCREASE_PER_LEVEL = 0.01;
 const stat_increase = (level) => percentIncreasedByLevel(0.1, level, 50, 0.025, 2);
 const xp_gold_scale = (level) => percentReducedByLevel(1, level, 20, 0.01, 0.25);
 

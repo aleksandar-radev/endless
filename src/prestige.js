@@ -12,6 +12,39 @@ import { formatStatName } from './ui/ui.js';
 const LEVEL_REQUIREMENT = 100;
 const LEVEL_REQUIREMENT_INCREASE = 25;
 
+// Compute scaling factor based on highest boss level:
+// - 5% bonus for the first 20 levels (interval 1)
+// - for each subsequent 20-level interval the per-interval bonus linearly
+//   diminishes from 5% down to 1% at level 500
+// - after level 500 each 20-level interval gives 1%
+function getBossScalingFactor(highestBossLevel) {
+  const levelsPerInterval = 20;
+  if (!highestBossLevel || highestBossLevel <= 0) return 1;
+
+  const intervals = Math.ceil(highestBossLevel / levelsPerInterval); // 1..n, 1 means levels 1-20
+  const firstPercent = 0.05; // 5%
+  const finalPercent = 0.01; // 1% at level 500
+  const finalInterval = Math.ceil(500 / levelsPerInterval); // 25
+
+  let totalPercent = 0;
+  for (let i = 1; i <= intervals; i++) {
+    let perInterval;
+    if (i <= finalInterval) {
+      // linear interpolation from firstPercent (i=1) to finalPercent (i=finalInterval)
+      if (finalInterval === 1) {
+        perInterval = finalPercent;
+      } else {
+        perInterval = firstPercent - (i - 1) * (firstPercent - finalPercent) / (finalInterval - 1);
+      }
+    } else {
+      perInterval = finalPercent; // beyond level 500, fixed 1% per interval
+    }
+    totalPercent += perInterval;
+  }
+
+  return 1 + totalPercent;
+}
+
 export default class Prestige {
   constructor(savedData = null) {
     this.prestigeCount = 0;
@@ -62,7 +95,7 @@ export default class Prestige {
 
   generateCards(count = 3, bonusesPerCard = 3) {
     const highestBossLevel = statistics?.highestBossLevel || 0;
-    const scalingFactor = 1 + highestBossLevel / 2000;
+    const scalingFactor = getBossScalingFactor(highestBossLevel);
 
     // If there are pending cards, rescale them and return
     if (
