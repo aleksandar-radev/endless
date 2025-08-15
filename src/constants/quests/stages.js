@@ -28,7 +28,7 @@ export const STAGE_QUESTS = [];
 for (let tier = 1; tier <= 12; tier++) {
   BASE_STAGE_QUESTS.forEach((base) => {
     // Scale rewards for higher tiers (tier 12 gets ~6x rewards compared to tier 1)
-    const scale = 1 + ((tier - 1) * 7) / 11; // tier 1: 1x, tier 12: ~6x
+    const scale = 1 + ((tier - 1) * 7); // tier 1: 1x, tier 12: ~66x
     const scaledGold = Math.round(base.reward.gold * scale);
     const scaledCrystals = base.reward.crystals
       ? Math.max(1, Math.round(base.reward.crystals * scale))
