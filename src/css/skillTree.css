@@ -252,6 +252,7 @@
   text-align: center;
   position: relative;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  z-index: 1100;
 }
 
 .skill-modal-content h2 {

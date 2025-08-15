@@ -169,6 +169,7 @@
   max-height: 80vh;
   overflow-y: auto;
   position: relative;
+  z-index: 1100;
 }
 
 .changelog-modal-content h2 {

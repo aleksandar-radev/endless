@@ -171,13 +171,13 @@ body.dev-active .game-container {
   color: #fff;
   padding: 5px 10px;
   border-radius: 4px;
-  z-index: 1000;
   pointer-events: none;
   transition: opacity 0.2s;
   opacity: 0;
   max-width: calc(100vw - 20px);
   word-wrap: break-word;
   white-space: normal;
+  z-index: 1100;
 }
 
 .tooltip.show {

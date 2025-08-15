@@ -122,6 +122,7 @@
   text-align: center;
   margin: 0 auto;
   overflow: visible;
+  z-index: 1100;
 }
 
 .prestige-modal-content .modal-controls {

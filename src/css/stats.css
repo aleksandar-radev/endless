@@ -112,7 +112,7 @@
   margin-bottom: 10px;
 }
 
-.stats-tabs .subtab-btn {
+.split-view-btn {
   padding: 5px 10px;
   background-color: #4b5563;
   color: #fff;
@@ -122,12 +122,51 @@
   transition: background-color 0.2s;
 }
 
-.stats-tabs .subtab-btn.active {
+.split-view-btn:hover {
+  background-color: #6b7280;
+}
+
+.subtab-btn {
+  padding: 5px 10px;
+  background-color: #4b5563;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.subtab-btn.active {
   background-color: #059669;
 }
 
-.stats-tabs .subtab-btn:hover {
+.subtab-btn:hover {
   background-color: #6b7280;
+}
+
+.split-view-btn {
+  margin-left: auto;
+}
+
+.split-view-modal .modal-content {
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  gap: 10px;
+}
+
+.split-view-modal .split-left,
+.split-view-modal .split-right {
+  flex: 1;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.split-view-modal .split-right-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
 }
 
 /* Elemental stats grid: 2 columns, 2 rows */

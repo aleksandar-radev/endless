@@ -1,6 +1,6 @@
 import { game, hero, statistics, options } from '../globals.js';
 import { STATS } from '../constants/stats/stats.js';
-import { hideTooltip, positionTooltip, showTooltip, updateEnemyStats, formatNumber } from '../ui/ui.js';
+import { hideTooltip, positionTooltip, showTooltip, updateEnemyStats, formatNumber, switchTab } from '../ui/ui.js';
 import { OFFENSE_STATS } from '../constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from '../constants/stats/defenseStats.js';
 import { MISC_STATS } from '../constants/stats/miscStats.js';
@@ -8,6 +8,7 @@ import { formatStatName } from '../ui/ui.js';
 import { ATTRIBUTE_TOOLTIPS, ATTRIBUTES } from '../constants/stats/attributes.js';
 import { ELEMENTS } from '../constants/common.js';
 import { calculateArmorReduction, calculateEvasionChance, calculateHitChance, calculateResistanceReduction } from '../combat.js';
+import { createModal } from './modal.js';
 
 const html = String.raw;
 
@@ -187,10 +188,16 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
         <button class="subtab-btn active" data-subtab="offense">Offense</button>
         <button class="subtab-btn" data-subtab="defense">Defense</button>
         <button class="subtab-btn" data-subtab="misc">Misc</button>
+        <button class="split-view-btn" id="split-view-btn">Split View</button>
       </div>
     `;
     // Combine header and tabs
     statsContainer.innerHTML = headerHtml + tabsHtml;
+
+    const splitBtn = statsContainer.querySelector('#split-view-btn');
+    if (splitBtn) {
+      splitBtn.addEventListener('click', openSplitView);
+    }
     // Create panels
     const createPanel = (name) => {
       const panel = document.createElement('div');
@@ -555,4 +562,84 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
   skillTreeTab.classList.remove('hidden');
 
   updateEnemyStats();
+}
+
+function openSplitView() {
+  const html = String.raw;
+  const splitState = { placeholders: {}, currentRight: null };
+
+  function movePanel(id, target) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const placeholder = document.createElement('div');
+    splitState.placeholders[id] = placeholder;
+    el.parentElement.insertBefore(placeholder, el);
+    target.appendChild(el);
+    el.classList.add('active');
+  }
+
+  function restorePanel(id) {
+    const el = document.getElementById(id);
+    const placeholder = splitState.placeholders[id];
+    if (el && placeholder) {
+      placeholder.parentElement.insertBefore(el, placeholder);
+      el.classList.remove('active');
+      placeholder.remove();
+      delete splitState.placeholders[id];
+    }
+  }
+
+  const modal = createModal({
+    id: 'split-view-modal',
+    className: 'split-view-modal',
+    content: html`
+      <div class="modal-content">
+        <button class="modal-close">&times;</button>
+        <div class="split-left"></div>
+        <div class="split-right">
+          <div class="split-right-tabs"></div>
+          <div class="split-right-panel"></div>
+        </div>
+      </div>
+    `,
+    onClose: () => {
+      restorePanel('stats');
+      if (splitState.currentRight) restorePanel(splitState.currentRight);
+      switchTab('stats');
+    },
+  });
+
+  const left = modal.querySelector('.split-left');
+  const rightTabs = modal.querySelector('.split-right-tabs');
+  const rightPanel = modal.querySelector('.split-right-panel');
+
+  movePanel('stats', left);
+  const statsEl = document.getElementById('stats');
+
+  function showRight(tab) {
+    if (splitState.currentRight) {
+      restorePanel(splitState.currentRight);
+    }
+    switchTab(tab);
+    statsEl.classList.add('active');
+    movePanel(tab, rightPanel);
+    splitState.currentRight = tab;
+    rightTabs.querySelectorAll('button').forEach((b) => {
+      b.classList.toggle('active', b.dataset.tab === tab);
+    });
+  }
+
+  document.querySelectorAll('.tab-buttons .tab-btn').forEach((btn) => {
+
+    const tab = btn.dataset.tab;
+    if (tab !== 'inventory') return;
+    const clone = document.createElement('button');
+    clone.className = 'subtab-btn';
+    clone.dataset.tab = tab;
+    clone.textContent = btn.textContent;
+    clone.addEventListener('click', () => showRight(tab));
+    rightTabs.appendChild(clone);
+  });
+
+  showRight('inventory');
 }
