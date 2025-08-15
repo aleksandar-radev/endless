@@ -680,8 +680,6 @@ export default class Inventory {
 
     statistics.increment('totalItemsFound', null, 1);
     statistics.increment('itemsFound', item.rarity.toLowerCase());
-    this.hasNewItems = true; // Set flag when new item is added
-
     if (specificPosition !== null && specificPosition < ITEM_SLOTS && !this.inventoryItems[specificPosition]) {
       this.inventoryItems[specificPosition] = item;
     } else {
@@ -692,12 +690,15 @@ export default class Inventory {
       }
     }
     // Auto-salvage logic
-    if (this.autoSalvageRarities && this.autoSalvageRarities.length > 0) {
-      if (this.autoSalvageRarities.includes(item.rarity)) {
-        this.salvageItemsByRarity(item.rarity);
-        return;
-      }
+    if (
+      this.autoSalvageRarities &&
+      this.autoSalvageRarities.length > 0 &&
+      this.autoSalvageRarities.includes(item.rarity)
+    ) {
+      this.salvageItemsByRarity(item.rarity);
+      return;
     }
+    this.hasNewItems = true; // Set flag when new item is added and kept
     updateInventoryGrid();
     dataManager.saveGame();
   }
