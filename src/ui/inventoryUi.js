@@ -103,10 +103,10 @@ export function initializeInventoryUI(inv) {
 
   // Map for full text tooltips
   const sortModeFullText = {
-    'type-rarity-level': t('inventory.typeRarityLevel'),
-    'type-level-rarity': t('inventory.typeLevelRarity'),
-    'rarity-level': t('inventory.rarityLevel'),
-    'level-rarity': t('inventory.levelRarity'),
+    'type-rarity-level': t('inventory.typeRarityLevelFull'),
+    'type-level-rarity': t('inventory.typeLevelRarityFull'),
+    'rarity-level': t('inventory.rarityLevelFull'),
+    'level-rarity': t('inventory.levelRarityFull'),
   };
   function updateSortBtnText() {}
   updateSortBtnText();
