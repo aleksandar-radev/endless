@@ -222,7 +222,7 @@ export function updateEnemyStats() {
   }
   const evasion = document.getElementById('enemy-evasion-value');
   if (evasion) {
-    const reduction = calculateEvasionChance(enemy.evasion, hero.stats.attackRating);
+    const reduction = calculateEvasionChance(enemy.evasion, hero.stats.attackRating, undefined, hero.stats.chanceToHitPercent || 0);
     evasion.textContent = `${formatNumber(Math.floor(enemy.evasion || 0))} (${Math.floor(reduction)}%)`;
   }
   const atkRating = document.getElementById('enemy-attack-rating-value');

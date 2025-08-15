@@ -2,6 +2,53 @@ import { ELEMENTS } from '../common.js';
 
 const html = String.raw;
 
+export const ATTRIBUTES = {
+  strength: {
+    effects: {
+      damagePerPoint: 0.3,
+    },
+  },
+  agility: {
+    effects: {
+      attackRatingPerPoint: 4,
+      damagePerPoint: 0.1,
+    },
+  },
+  vitality: {
+    effects: {
+      lifePerPoint: 5,
+    },
+  },
+  wisdom: {
+    effects: {
+      manaPerPoint: 3,
+      manaRegenPerPoint: 0.05,
+    },
+  },
+  endurance: {
+    effects: {
+      armorPerPoint: 5,
+    },
+  },
+  dexterity: {
+    effects: {
+      evasionPerPoint: 4,
+    },
+  },
+  intelligence: {
+    effects: {
+      elementalDamagePerPoint: 0.067,
+    },
+  },
+  perseverance: {
+    effects: {
+      lifeRegenPerPoint: 0.5,
+      manaRegenPerPoint: 0.05,
+      allResistancePerPoint: 2,
+    },
+  },
+};
+
 const formatTitle = (stat) =>
   stat.replace(/([A-Z])/g, ' $1').replace(/^./, (c) => c.toUpperCase());
 
@@ -49,51 +96,6 @@ const generateDescription = (stat) => {
   return `Description for ${formatTitle(stat)}.`;
 };
 
-export const ATTRIBUTES = {
-  strength: {
-    effects: {
-      damagePerPoint: 0.3,
-    },
-  },
-  agility: {
-    effects: {
-      attackRatingPerPoint: 4,
-      damagePerPoint: 0.1,
-    },
-  },
-  vitality: {
-    effects: {
-      lifePerPoint: 5,
-    },
-  },
-  wisdom: {
-    effects: {
-      manaPerPoint: 1,
-    },
-  },
-  endurance: {
-    effects: {
-      armorPerPoint: 4,
-    },
-  },
-  dexterity: {
-    effects: {
-      evasionPerPoint: 4,
-    },
-  },
-  intelligence: {
-    effects: {
-      elementalDamagePerPoint: 0.067,
-    },
-  },
-  perseverance: {
-    effects: {
-      lifeRegenPerPoint: 0.5,
-      manaRegenPerPoint: 0.05,
-      allResistancePerPoint: 2,
-    },
-  },
-};
 const CUSTOM_DESCRIPTIONS = {
   strength: () => `Each point increases:<br />• Damage by ${ATTRIBUTES.strength.effects.damagePerPoint}<br />`,
   agility: () =>
@@ -162,6 +164,7 @@ const CUSTOM_DESCRIPTIONS = {
   thornsDamage: () => 'Deals damage back to attackers when hit.',
   thornsDamagePercent: () => 'Increases reflected damage by a percentage.',
   attackNeverMiss: () => 'Attacks always hit the target.',
+  chanceToHitPercent: () => 'Adds a flat bonus to your chance to hit.',
   ignoreEnemyArmor: () => 'Attacks completely ignore enemy armor.',
   ignoreAllEnemyResistances: () => 'Attacks ignore all enemy resistances.',
   percentOfPlayerDamage: () => "Deals a percentage of the player's damage.",

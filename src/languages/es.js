@@ -71,6 +71,7 @@ export default {
   attackSpeed: 'Velocidad de Ataque',
   attackRating: 'Puntuación de Ataque',
   attackRatingPercent: 'Puntuación de Ataque %',
+  chanceToHitPercent: 'Probabilidad de Acierto %',
   damage: 'Daño',
   damagePercent: 'Daño %',
   lifePercent: 'Vida %',

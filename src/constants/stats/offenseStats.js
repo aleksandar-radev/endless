@@ -117,7 +117,7 @@ export const OFFENSE_STATS = {
   attackRating: {
     base: 100,
     decimalPlaces: 0,
-    training: { cost: 240, bonus: 10, maxLevel: Infinity },
+    training: { cost: 160, bonus: 10, maxLevel: Infinity },
     item: { min: 60, max: 140, limit: Infinity, scaling: (level) => offenseScaling(level) },
     itemTags: ['offense', 'jewelry', 'gloves'],
     showInUI: true,
@@ -128,6 +128,14 @@ export const OFFENSE_STATS = {
     decimalPlaces: 1,
     item: { min: 10, max: 30, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['offense', 'gloves'],
+    subcategory: 'attack',
+  },
+  chanceToHitPercent: {
+    base: 0,
+    decimalPlaces: 1,
+    item: { min: 5, max: 10, limit: 20, scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER) },
+    itemTags: ['offense', 'magic', 'gloves'],
+    showInUI: true,
     subcategory: 'attack',
   },
   // LIFE STEAL

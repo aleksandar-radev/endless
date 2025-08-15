@@ -32,7 +32,7 @@ export const DEFENSE_STATS = {
   armor: {
     base: 0,
     decimalPlaces: 0,
-    training: { cost: 100, bonus: 3, maxLevel: Infinity },
+    training: { cost: 100, bonus: 4, maxLevel: Infinity },
     item: { min: 10, max: 30, scaling: (level) => defenseScaling(level) },
     itemTags: ['defense'],
     showInUI: true,

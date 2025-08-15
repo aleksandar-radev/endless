@@ -402,7 +402,12 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     const attackRatingEl = document.getElementById('attackRating-value');
     if (attackRatingEl) {
       attackRatingEl.textContent = formatNumber(hero.stats.attackRating);
-      const hitPct = calculateHitChance(hero.stats.attackRating, game.currentEnemy.evasion).toFixed(2) + '%';
+      const hitPct = calculateHitChance(
+        hero.stats.attackRating,
+        game.currentEnemy.evasion,
+        undefined,
+        hero.stats.chanceToHitPercent || 0,
+      ).toFixed(2) + '%';
       attackRatingEl.appendChild(document.createTextNode(` (${hitPct})`));
     }
 

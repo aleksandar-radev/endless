@@ -99,7 +99,12 @@ export function playerAttack(currentTime) {
       // Calculate if attack hits
       const heroAttackRating = hero.stats.attackRating;
 
-      const hitChance = calculateHitChance(heroAttackRating, game.currentEnemy.evasion);
+      const hitChance = calculateHitChance(
+        heroAttackRating,
+        game.currentEnemy.evasion,
+        undefined,
+        hero.stats.chanceToHitPercent || 0,
+      );
 
       const roll = Math.random() * 100;
       const neverMiss = hero.stats.attackNeverMiss > 0;
@@ -360,17 +365,17 @@ function showLootNotification(item) {
   setTimeout(() => notification.remove(), 3000);
 }
 
-export function calculateHitChance(attackRating, evasion, cap = 0.9) {
+export function calculateHitChance(attackRating, evasion, cap = 0.9, bonus = 0) {
   let raw = 1.5 * attackRating / (attackRating + evasion);
-  raw = Math.max(0, raw);
+  raw = Math.max(0, raw) + bonus;
   const capped = Math.max(1 - cap, Math.min(raw, cap));
-
-  return Math.round(capped * 100);
+  const result = Math.min(capped, 1);
+  return Math.round(result * 100);
 }
 
-export function calculateEvasionChance(evasion, attackRating, cap = 0.9) {
+export function calculateEvasionChance(evasion, attackRating, cap = 0.9, bonus = 0) {
   // Evasion chance is simply 1 - hit chance (after capping)
-  const hitChance = calculateHitChance(attackRating, evasion, cap);
+  const hitChance = calculateHitChance(attackRating, evasion, cap, bonus);
   return 100 - hitChance;
 }
 
