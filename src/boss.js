@@ -1,11 +1,13 @@
 /**
  * Manages boss properties and state.
  */
-import { scaleStat } from './common.js';
+import { percentIncreasedByLevel, percentReducedByLevel, scaleStat } from './common.js';
 import { BOSSES } from './constants/bosses.js';
 import { hero } from './globals.js';
 
 const INCREASE_PER_LEVEL = 0.02;
+const stat_increase = (level) => percentIncreasedByLevel(0.1, level, 50, 0.025, 2);
+const xp_gold_scale = (level) => percentReducedByLevel(1, level, 20, 0.01, 0.25);
 
 class Boss {
   /**
@@ -21,6 +23,8 @@ class Boss {
     this.id = baseData.id;
     this.name = baseData.name;
     this.image = baseData.image;
+
+    this.baseScale = stat_increase(hero.bossLevel || 1);
 
     // Use boss definition stats and scale by boss level
     this.level = hero.bossLevel || 1;
@@ -66,8 +70,9 @@ class Boss {
     const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
     base *= levelBonus;
 
-    const val = scaleStat(base, this.level);
-    return val * (this.baseData.multiplier?.xp || 1);
+    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
+    const tierXpGoldScale = xp_gold_scale(this.level);
+    return val * (this.baseData.multiplier?.xp || 1) * tierXpGoldScale;
   }
 
   calculateGold() {
@@ -75,8 +80,9 @@ class Boss {
     const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
     base *= levelBonus;
 
-    const val = scaleStat(base, this.level);
-    return val * (this.baseData.multiplier?.gold || 1);
+    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
+    const tierXpGoldScale = xp_gold_scale(this.level);
+    return val * (this.baseData.multiplier?.gold || 1) * tierXpGoldScale;
   }
 
 
@@ -91,7 +97,7 @@ class Boss {
     const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
     base *= levelBonus;
 
-    const val = scaleStat(base, this.level);
+    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const hpRed = hero.stats.reduceEnemyHpPercent || 0;
     return val * (this.baseData.multiplier?.life || 1) * (1 - hpRed);
   }
@@ -101,7 +107,7 @@ class Boss {
     const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
     base *= levelBonus;
 
-    const val = scaleStat(base, this.level);
+    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
     return val * (this.baseData.multiplier?.damage || 1) * (1 - dmgRed);
   }
@@ -111,7 +117,7 @@ class Boss {
     const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
     base *= levelBonus;
 
-    const val = scaleStat(base, this.level);
+    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     return val * (this.baseData.multiplier?.armor || 1);
   }
 
@@ -120,7 +126,7 @@ class Boss {
     const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
     base *= levelBonus;
 
-    const val = scaleStat(base, this.level);
+    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     return val * (this.baseData.multiplier?.evasion || 1);
   }
 
@@ -129,7 +135,7 @@ class Boss {
     const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
     base *= levelBonus;
 
-    const val = scaleStat(base, this.level);
+    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     return val * (this.baseData.multiplier?.attackRating || 1);
   }
 
@@ -139,7 +145,7 @@ class Boss {
     base *= levelBonus;
 
     if (base === 0) return 0;
-    const val = scaleStat(base, this.level);
+    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
 
     const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
     return val * (this.baseData.multiplier?.[`${type}Damage`] || 1) * (1 - dmgRed);
@@ -151,7 +157,7 @@ class Boss {
     base *= levelBonus;
 
     if (base === 0) return 0;
-    const val = scaleStat(base, this.level);
+    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     return val * (this.baseData.multiplier?.[`${type}Resistance`] || 1);
   }
 
