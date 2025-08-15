@@ -84,8 +84,8 @@ export const CLASS_PATHS = {
     enabled: () => true,
     avatar: () => 'elementalist-avatar.jpg',
     baseStats: () => ({
-      elementalDamage: 8,
-      intelligencePercent: 10,
+      elementalDamage: 3,
+      intelligencePercent: 15,
       elementalDamagePercent: 25,
     }),
     description: () => t('class.elementalistDesc'),
