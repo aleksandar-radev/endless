@@ -211,6 +211,11 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     const createPanel = (name) => {
       const panel = document.createElement('div');
       panel.className = 'stats-panel';
+      if (!options.showAllStats) {
+        panel.classList.add('default');
+      } else {
+        panel.classList.remove('default');
+      }
       if (name === 'offense') panel.classList.add('active');
       panel.id = `${name}-panel`;
       return panel;

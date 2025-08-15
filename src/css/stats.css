@@ -102,7 +102,12 @@
 }
 
 .stats-panel.active {
-  display: block;
+  display: grid;
+}
+
+.stats-panel.active.default {
+  grid-template-columns: max-content 1fr;
+  gap: 3px 12px;
 }
 
 /* Tab button styling */
@@ -194,6 +199,20 @@
   white-space: nowrap;
   font-weight: bold;
   grid-column: 1;
+  position: relative;
+  padding-right: 6px;
+}
+
+.stat-row .stat-label::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  /* extend the underline beyond the label; adjust --label-underline-extend as needed */
+  width: calc(100% + var(--label-underline-extend, 120px));
+  background-color: #666565;
+  pointer-events: none;
 }
 
 /* For rows with multiple value spans, group them into a container that sits in column 2 */
@@ -242,7 +261,7 @@
      column takes the remaining space so all values align in one column. */
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: 6px 12px;
+  gap: 3px 12px;
   align-items: center;
 }
 
