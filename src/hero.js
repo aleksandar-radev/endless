@@ -566,88 +566,48 @@ export default class Hero {
 
   // calculated when hit is successful
   calculateTotalDamage(instantSkillBaseEffects = {}, toggleEffects = {}) {
+    const elements = Object.keys(ELEMENTS);
 
-    let physicalDamage = this.stats.damage + (instantSkillBaseEffects.damage || 0);
-    let fireDamage = this.stats.fireDamage + (instantSkillBaseEffects.fireDamage || 0);
-    let coldDamage = this.stats.coldDamage + (instantSkillBaseEffects.coldDamage || 0);
-    let airDamage = this.stats.airDamage + (instantSkillBaseEffects.airDamage || 0);
-    let earthDamage = this.stats.earthDamage + (instantSkillBaseEffects.earthDamage || 0);
-    let lightningDamage = this.stats.lightningDamage + (instantSkillBaseEffects.lightningDamage || 0);
-    let waterDamage = this.stats.waterDamage + (instantSkillBaseEffects.waterDamage || 0);
+    // 1) Flat phase: build flat pools including toggle flat bonuses
+    const flatPools = { physical: (this.stats.damage || 0) + (instantSkillBaseEffects.damage || 0) + (toggleEffects.damage || 0) };
+    elements.forEach((e) => {
+      const key = `${e}Damage`;
+      flatPools[e] = (this.stats[key] || 0) + (instantSkillBaseEffects[key] || 0) + (toggleEffects[key] || 0);
+    });
 
+    // flat elementalDamage applies to every elemental pool
+    const flatElementalDamage = (this.stats.elementalDamage || 0) + (instantSkillBaseEffects.elementalDamage || 0) + (toggleEffects.elementalDamage || 0);
+    if (flatElementalDamage) elements.forEach((e) => (flatPools[e] += flatElementalDamage));
+
+    // 2) Percent phase: apply percent bonuses (physical + per-elemental + global elemental)
+    const finalPools = {};
+    const physicalPct = ((instantSkillBaseEffects.damagePercent || 0) + (toggleEffects.damagePercent || 0)) / 100;
+    finalPools.physical = flatPools.physical * (1 + physicalPct + (this.stats.totalDamagePercent || 0));
+
+    // elemental global percent from both sources
+    const elementalGlobalPct = ((instantSkillBaseEffects.elementalDamagePercent || 0) + (toggleEffects.elementalDamagePercent || 0)) / 100;
+    elements.forEach((e) => {
+      const specificPct = ((instantSkillBaseEffects[`${e}DamagePercent`] || 0) + (toggleEffects[`${e}DamagePercent`] || 0)) / 100;
+      // include hero totalDamagePercent as in other calculations
+      finalPools[e] = flatPools[e] * (1 + specificPct + elementalGlobalPct + (this.stats.totalDamagePercent || 0));
+    });
+
+    // 3) Double-damage and criticals (after percent multipliers)
     const isCritical = Math.random() * 100 < (this.stats.critChance + (toggleEffects.critChance || 0));
-
-    // Add flat bonuses from toggles if present
-    if (toggleEffects.damage) physicalDamage += toggleEffects.damage;
-    if (toggleEffects.fireDamage) fireDamage += toggleEffects.fireDamage;
-    if (toggleEffects.coldDamage) coldDamage += toggleEffects.coldDamage;
-    if (toggleEffects.airDamage) airDamage += toggleEffects.airDamage;
-    if (toggleEffects.earthDamage) earthDamage += toggleEffects.earthDamage;
-    if (toggleEffects.lightningDamage) lightningDamage += toggleEffects.lightningDamage;
-    if (toggleEffects.waterDamage) waterDamage += toggleEffects.waterDamage;
-
-    // apply percent bonuses from toggles and instant skill effects
-    physicalDamage *= (1 + ((toggleEffects.damagePercent || 0) +
-        (instantSkillBaseEffects.damagePercent || 0)) / 100);
-    fireDamage *= (1 + ((toggleEffects.fireDamagePercent || 0) +
-        (instantSkillBaseEffects.fireDamagePercent || 0) + (toggleEffects.elementalDamagePercent || 0)) / 100);
-    coldDamage *= (1 + ((toggleEffects.coldDamagePercent || 0) +
-        (instantSkillBaseEffects.coldDamagePercent || 0) + (toggleEffects.elementalDamagePercent || 0)) / 100);
-    airDamage *= (1 + ((toggleEffects.airDamagePercent || 0) +
-        (instantSkillBaseEffects.airDamagePercent || 0) + (toggleEffects.elementalDamagePercent || 0)) / 100);
-    earthDamage *= (1 + ((toggleEffects.earthDamagePercent || 0) +
-        (instantSkillBaseEffects.earthDamagePercent || 0) + (toggleEffects.elementalDamagePercent || 0)) / 100);
-    lightningDamage *= (1 + ((toggleEffects.lightningDamagePercent || 0) +
-        (instantSkillBaseEffects.lightningDamagePercent || 0) + (toggleEffects.elementalDamagePercent || 0)) / 100);
-    waterDamage *= (1 + ((toggleEffects.waterDamagePercent || 0) +
-        (instantSkillBaseEffects.waterDamagePercent || 0) + (toggleEffects.elementalDamagePercent || 0)) / 100);
-
-    if (toggleEffects.doubleDamageChance) {
-      const doubleDamageChance = Math.random() * 100;
-      if (doubleDamageChance < toggleEffects.doubleDamageChance) {
-        physicalDamage *= 2;
-        fireDamage *= 2;
-        coldDamage *= 2;
-        airDamage *= 2;
-        earthDamage *= 2;
-        lightningDamage *= 2;
-        waterDamage *= 2;
-      }
+    if (toggleEffects.doubleDamageChance && Math.random() * 100 < toggleEffects.doubleDamageChance) {
+      Object.keys(finalPools).forEach((k) => (finalPools[k] *= 2));
     }
+    if (isCritical) Object.keys(finalPools).forEach((k) => (finalPools[k] *= (this.stats.critDamage || 1)));
 
-    if (isCritical) {
-      physicalDamage *= this.stats.critDamage;
-      fireDamage *= this.stats.critDamage;
-      coldDamage *= this.stats.critDamage;
-      airDamage *= this.stats.critDamage;
-      earthDamage *= this.stats.critDamage;
-      lightningDamage *= this.stats.critDamage;
-      waterDamage *= this.stats.critDamage;
-    }
-
-    let totalDamage = physicalDamage + fireDamage + coldDamage + airDamage + earthDamage + lightningDamage + waterDamage;
-
-    const breakdown = {
-      physical: Math.floor(physicalDamage),
-      fire: Math.floor(fireDamage),
-      cold: Math.floor(coldDamage),
-      air: Math.floor(airDamage),
-      earth: Math.floor(earthDamage),
-      lightning: Math.floor(lightningDamage),
-      water: Math.floor(waterDamage),
-    };
-
+    const totalDamage = Object.values(finalPools).reduce((sum, v) => sum + v, 0);
+    const breakdown = Object.fromEntries(Object.entries(finalPools).map(([k, v]) => [k, Math.floor(v)]));
     console.debug('Damage Breakdown:', breakdown);
-
-    return {
-      damage: Math.floor(totalDamage),
-      isCritical,
-      breakdown,
-    };
+    return { damage: Math.floor(totalDamage), isCritical, breakdown };
   }
 
   calculateDamageAgainst(enemy, instantSkillBaseEffects = {}, toggleEffects = {}) {
     console.debug(instantSkillBaseEffects, 'instantSkillBaseEffects');
+    console.debug(toggleEffects, 'toggleEffects');
     const result = this.calculateTotalDamage(instantSkillBaseEffects, toggleEffects);
 
     if (!enemy) return result;
