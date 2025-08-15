@@ -118,7 +118,7 @@ export const OFFENSE_STATS = {
     base: 100,
     decimalPlaces: 0,
     training: { cost: 240, bonus: 10, maxLevel: Infinity },
-    item: { min: 30, max: 100, limit: Infinity, scaling: (level) => offenseScaling(level) },
+    item: { min: 60, max: 140, limit: Infinity, scaling: (level) => offenseScaling(level) },
     itemTags: ['offense', 'jewelry', 'gloves'],
     showInUI: true,
     subcategory: 'attack',
@@ -126,7 +126,7 @@ export const OFFENSE_STATS = {
   attackRatingPercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 5, max: 20, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 10, max: 30, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['offense', 'gloves'],
     subcategory: 'attack',
   },
