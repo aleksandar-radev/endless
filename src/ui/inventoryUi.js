@@ -71,7 +71,7 @@ export function initializeInventoryUI(inv) {
       <div class="sort-row">
         <div id="sort-inventory" class="inventory-btn sort-btn" aria-label="${t('inventory.sort')}"><span role="img" aria-label="Sort">🔃</span></div>
       </div>
-      <button id="open-salvage-modal" class="inventory-btn" data-i18n="inventory.salvage">${t('inventory.salvage')}</button>
+      <button id="open-salvage-modal" class="inventory-btn" data-i18n="inventory.options">${t('inventory.options')}</button>
       <div class="search-container">
         <input type="text" id="inventory-filter" class="inventory-btn filter-input" placeholder="${t('inventory.searchItems')}" />
         <span class="search-icon">🔍</span>
@@ -278,6 +278,7 @@ export function showSalvageModal(inv) {
             </div>
           </div>
         </div>
+        <div class="salvage-reward-title">Sort by: </div>
         <div class="sort-row">
           <select id="sort-mode-select" class="inventory-btn sort-select">
             <option value="type-rarity-level">${t('inventory.typeRarityLevel')}</option>
@@ -333,7 +334,7 @@ export function showSalvageModal(inv) {
   overlay.querySelectorAll('.salvage-btn-modal').forEach((btn) => {
     btn.onclick = () => {
       const rarity = btn.dataset.rarity;
-      inventory.salvageItemsByRarity(rarity);
+      inventory.optionsItemsByRarity(rarity);
       closeModal(overlay);
       showSalvageModal(inv);
     };
@@ -445,7 +446,7 @@ export function showSalvageModal(inv) {
     if (removed) {
       let crystalsGained = item.rarity === 'MYTHIC' ? 1 : 0;
       let msg = `Salvaged 1 ${item.rarity.toLowerCase()} item`;
-      if (inventory.salvageUpgradeMaterials) {
+      if (inventory.optionsUpgradeMaterials) {
         const { id, qty } = inventory.getItemSalvageMaterial(item);
         inventory.addMaterial({ id, qty });
         msg += `, gained ${qty} ${MATERIALS[id].name}`;
@@ -645,7 +646,7 @@ export function setupDragAndDrop() {
       if (removed) {
         let crystalsGained = item.rarity === 'MYTHIC' ? 1 : 0;
         let msg = `Salvaged 1 ${item.rarity.toLowerCase()} item`;
-        if (inventory.salvageUpgradeMaterials) {
+        if (inventory.optionsUpgradeMaterials) {
           const { id, qty } = inventory.getItemSalvageMaterial(item);
           inventory.addMaterial({ id, qty });
           msg += `, gained ${qty} ${MATERIALS[id].name}`;
@@ -849,7 +850,7 @@ export function setupItemDragAndTooltip() {
       // --- Add salvage gold value if in salvage modal (for hovered item only) ---
       const inSalvageModal = item.closest('.inventory-salvage-modal-content');
       if (inSalvageModal) {
-        if (inventory.salvageUpgradeMaterials) {
+        if (inventory.optionsUpgradeMaterials) {
           const { id, qty } = inventory.getItemSalvageMaterial(itemData);
           tooltipContent += `<div style="margin-top:8px;
             color:#fff;
@@ -1190,7 +1191,7 @@ function openItemContextMenu(itemEl, x, y) {
     closeItemContextMenu();
   };
   menu.querySelector('[data-action="salvage"]').onclick = () => {
-    inventory.salvageItem(itemData);
+    inventory.optionsItem(itemData);
     closeItemContextMenu();
   };
 
