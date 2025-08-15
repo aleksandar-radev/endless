@@ -77,7 +77,7 @@ export const REGIONS = [
     materialDropWeights: {
       crystalized_rock: 5,
     },
-    itemBaseBonus: 1,
+    itemBaseBonus: 0.9,
     resistanceReduction: 5,
   },
   {
@@ -123,7 +123,7 @@ export const REGIONS = [
       potion_of_intelligence: 3,
       potion_of_perseverance: 3,
     },
-    itemBaseBonus: 1.5,
+    itemBaseBonus: 1.3,
     resistanceReduction: 10,
   },
   {
@@ -163,7 +163,7 @@ export const REGIONS = [
       elixir: 5,
     },
     canDrop: ['elixir'],
-    itemBaseBonus: 2,
+    itemBaseBonus: 1.7,
     resistanceReduction: 15,
   },
   {
@@ -205,7 +205,7 @@ export const REGIONS = [
       enormous_gold_coins: 6,
       FREAKY_GOLD_COINS: 4,
     },
-    itemBaseBonus: 3,
+    itemBaseBonus: 2.1,
     resistanceReduction: 20,
   },
   {
@@ -251,7 +251,7 @@ export const REGIONS = [
       potion_of_intelligence: 3,
       potion_of_perseverance: 3,
     },
-    itemBaseBonus: 4,
+    itemBaseBonus: 2.5,
     resistanceReduction: 25,
   },
   {
@@ -291,7 +291,7 @@ export const REGIONS = [
       enormous_gold_coins: 6,
       freaky_gold_coins: 20,
     },
-    itemBaseBonus: 5,
+    itemBaseBonus: 2.9,
     resistanceReduction: 30,
   },
   {
@@ -334,7 +334,7 @@ export const REGIONS = [
       armor_upgrade_stone: 3,
       weapon_upgrade_core: 6,
     },
-    itemBaseBonus: 6,
+    itemBaseBonus: 3.3,
     resistanceReduction: 35,
   },
   {
@@ -377,7 +377,7 @@ export const REGIONS = [
       elixir: 3.5,
       crystalized_rock: 6,
     },
-    itemBaseBonus: 7,
+    itemBaseBonus: 3.7,
     resistanceReduction: 40,
   },
   {
@@ -419,7 +419,7 @@ export const REGIONS = [
       greater_experience_potion: 6,
       huge_experience_potion: 10,
     },
-    itemBaseBonus: 8,
+    itemBaseBonus: 4.1,
     resistanceReduction: 45,
   },
   {
@@ -459,7 +459,7 @@ export const REGIONS = [
     },
     materialDropWeights: {
     },
-    itemBaseBonus: 9,
+    itemBaseBonus: 4.5,
     resistanceReduction: 50,
   },
   {
@@ -501,7 +501,7 @@ export const REGIONS = [
       enchantment_scroll: 5,
       alternation_orb: 5,
     },
-    itemBaseBonus: 10,
+    itemBaseBonus: 4.9,
     resistanceReduction: 55,
   },
 ];
