@@ -242,6 +242,7 @@ export async function defeatEnemy() {
     const materialDropChance = enemy.rollForMaterialDrop();
 
     if (Math.random() * 100 < materialDropChance) {
+      // First (guaranteed) drop
       const mat = inventory.getRandomMaterial();
       let qty = 1;
       if (inventory.isUpgradeMaterial(mat)) {
@@ -251,22 +252,46 @@ export async function defeatEnemy() {
       inventory.addMaterial({ id: mat.id, icon: mat.icon, qty });
       showMaterialNotification(mat);
 
-      let extraRolls = 0;
-      const maxExtraRolls = hero.stats.extraMaterialDropMax;
+      // Calculate extra drops in a single calculation instead of performing many RNG loops.
+      const maxExtraRolls = Math.max(0, Math.floor(hero.stats.extraMaterialDropMax || 0));
+      const p = Math.max(0, Math.min(materialDropChance / 100, 1));
 
-      while (extraRolls < maxExtraRolls) {
-        extraRolls++;
-        let chance = Math.random() * 100;
-        if (chance > materialDropChance) continue;
-        const extraMat = inventory.getRandomMaterial();
-        let extraQty = 1;
-        if (inventory.isUpgradeMaterial(extraMat)) {
-          const enemyLvl = enemy.level || game.stage;
-          extraQty = inventory.getScrapPackSize(enemyLvl);
+      let extraDrops = 0;
+      if (maxExtraRolls <= 20) {
+        // For small numbers just do exact Bernoulli trials (cheap).
+        for (let i = 0; i < maxExtraRolls; i++) {
+          if (Math.random() < p) extraDrops++;
         }
-        inventory.addMaterial({ id: extraMat.id, icon: extraMat.icon, qty: extraQty });
-        showMaterialNotification(extraMat);
-        if (extraRolls >= maxExtraRolls) break;
+      } else {
+        // For larger numbers approximate the binomial with a normal sample (fast, constant-time).
+        const mean = maxExtraRolls * p;
+        const variance = maxExtraRolls * p * (1 - p);
+        const std = Math.sqrt(Math.max(0, variance));
+        // Box-Muller transform to get a normal deviate
+        const u1 = Math.random() || 1e-12;
+        const u2 = Math.random();
+        const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+        extraDrops = Math.round(Math.max(0, mean + z0 * std));
+      }
+
+      if (extraDrops > 0) {
+        // Aggregate materials to minimize inventory operations and notifications
+        const aggregate = new Map();
+        const enemyLvl = enemy.level || game.stage;
+        for (let i = 0; i < extraDrops; i++) {
+          const extraMat = inventory.getRandomMaterial();
+          let extraQty = 1;
+          if (inventory.isUpgradeMaterial(extraMat)) {
+            extraQty = inventory.getScrapPackSize(enemyLvl);
+          }
+          const key = extraMat.id;
+          if (!aggregate.has(key)) aggregate.set(key, { mat: extraMat, qty: 0 });
+          aggregate.get(key).qty += extraQty;
+        }
+
+        for (const { mat: aMat, qty: totalQty } of aggregate.values()) {
+          inventory.addMaterial({ id: aMat.id, icon: aMat.icon, qty: totalQty });
+        }
       }
     }
 
