@@ -1191,7 +1191,7 @@ function openItemContextMenu(itemEl, x, y) {
     closeItemContextMenu();
   };
   menu.querySelector('[data-action="salvage"]').onclick = () => {
-    inventory.optionsItem(itemData);
+    inventory.salvageItem(itemData);
     closeItemContextMenu();
   };
 
