@@ -38,12 +38,12 @@
   display: flex;
   gap: 8px;
   margin-bottom: 8px;
+  align-items: self-start;
 }
 
 .battle-log-controls button {
-  flex: 1;
-  padding: 6px 0;
-  background: var(--bg-element);
+  padding: 6px 6px;
+  background: #3e5d91;
   color: var(--text);
   border: 1px solid var(--bg-element);
   border-radius: 4px;
@@ -69,6 +69,10 @@
   overflow-y: auto;
 }
 
+.log-list>* {
+  user-select: text;
+}
+
 .log-entry {
   font-size: 0.9em;
   padding: 2px 0;
@@ -85,4 +89,3 @@
 .hidden {
   display: none;
 }
-

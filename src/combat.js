@@ -161,6 +161,7 @@ export function playerDeath() {
 
   const timerReduction = (crystalShop.crystalUpgrades.deathTimerReduction || 0) * 0.5;
   const deathTimer = Math.max(3, 10 - timerReduction);
+  battleLog.addBattle('Died');
   showDeathScreen(deathTimer, () => {
     if (!shouldContinue) {
       const startBtn = document.getElementById('start-btn');

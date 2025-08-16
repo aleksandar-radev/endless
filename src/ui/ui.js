@@ -1,5 +1,5 @@
 import Enemy from '../enemy.js';
-import { game, hero, skillTree, quests, statistics, inventory, dataManager } from '../globals.js';
+import { game, hero, skillTree, quests, statistics, inventory, dataManager, options } from '../globals.js';
 import { t } from '../i18n.js';
 import { updateQuestsUI } from './questUi.js';
 import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
@@ -298,6 +298,20 @@ export function updateEnemyStats() {
   }
 }
 
+export function updateEnemyStatLabels() {
+  ['fire', 'cold', 'air', 'earth', 'lightning', 'water'].forEach((el) => {
+    const dmg = document.querySelector(`.enemy-${el}-damage`);
+    if (dmg) {
+      dmg.innerHTML = `${formatStatName(`${el}Damage`)}: <span id="enemy-${el}-damage-value"></span>`;
+    }
+    const res = document.querySelector(`.enemy-${el}-resistance`);
+    if (res) {
+      res.innerHTML = `${formatStatName(`${el}Resistance`)}: <span id="enemy-${el}-resistance-value"></span>`;
+    }
+  });
+  updateEnemyStats();
+}
+
 /**
  * Start/stop the game loop
  */
@@ -500,6 +514,27 @@ export function showConfirmDialog(message, options = {}) {
 
 // Helper function to convert camelCase to Title Case with spaces and translate stat names
 export const formatStatName = (stat) => {
+  const match = stat.match(/^(fire|cold|air|earth|lightning|water)(Damage|DamagePercent|Resistance|ResistancePercent|Penetration|PenetrationPercent)$/);
+  if (match) {
+    const [, element, suffix] = match;
+    const icon = ELEMENTS[element]?.icon || '';
+    const translation = t(stat);
+    const baseMap = {
+      Damage: 'Damage',
+      DamagePercent: 'Damage %',
+      Resistance: 'Res',
+      ResistancePercent: 'Res %',
+      Penetration: 'Penetration',
+      PenetrationPercent: 'Penetration %',
+    };
+    let base = translation !== stat ? translation.replace(icon, '').trim() : baseMap[suffix];
+    if (options?.shortElementalNames) {
+      return `${icon} ${base}`.trim();
+    }
+    const elementName = element.charAt(0).toUpperCase() + element.slice(1);
+    return `${icon} ${elementName} ${base}`.trim();
+  }
+
   const translation = t(stat);
   if (translation !== stat) return translation;
 
@@ -562,32 +597,20 @@ function renderRegionPanel(region) {
       <div></div>
       <!-- Empty div for layout -->
       <div >
-        <div class="enemy-fire-damage">${ELEMENTS.fire.icon} Damage: <span id="enemy-fire-damage-value"></span></div>
-        <div class="enemy-cold-damage">${ELEMENTS.cold.icon} Damage: <span id="enemy-cold-damage-value"></span></div>
-        <div class="enemy-air-damage">${ELEMENTS.air.icon} Damage: <span id="enemy-air-damage-value"></span></div>
-        <div class="enemy-earth-damage">${ELEMENTS.earth.icon} Damage: <span id="enemy-earth-damage-value"></span></div>
-        <div class="enemy-lightning-damage">${ELEMENTS.lightning.icon} Damage: <span id="enemy-lightning-damage-value"></span></div>
-        <div class="enemy-water-damage">${ELEMENTS.water.icon} Damage: <span id="enemy-water-damage-value"></span></div>
+        <div class="enemy-fire-damage">${formatStatName('fireDamage')}: <span id="enemy-fire-damage-value"></span></div>
+        <div class="enemy-cold-damage">${formatStatName('coldDamage')}: <span id="enemy-cold-damage-value"></span></div>
+        <div class="enemy-air-damage">${formatStatName('airDamage')}: <span id="enemy-air-damage-value"></span></div>
+        <div class="enemy-earth-damage">${formatStatName('earthDamage')}: <span id="enemy-earth-damage-value"></span></div>
+        <div class="enemy-lightning-damage">${formatStatName('lightningDamage')}: <span id="enemy-lightning-damage-value"></span></div>
+        <div class="enemy-water-damage">${formatStatName('waterDamage')}: <span id="enemy-water-damage-value"></span></div>
       </div>
       <div >
-        <div class="enemy-fire-resistance">
-          ${ELEMENTS.fire.icon} Res: <span id="enemy-fire-resistance-value"></span>
-        </div>
-        <div class="enemy-cold-resistance">
-          ${ELEMENTS.cold.icon} Res: <span id="enemy-cold-resistance-value"></span>
-        </div>
-        <div class="enemy-air-resistance">
-          ${ELEMENTS.air.icon} Res: <span id="enemy-air-resistance-value"></span>
-        </div>
-        <div class="enemy-earth-resistance">
-          ${ELEMENTS.earth.icon} Res: <span id="enemy-earth-resistance-value"></span>
-        </div>
-        <div class="enemy-lightning-resistance">
-          ${ELEMENTS.lightning.icon} Res: <span id="enemy-lightning-resistance-value"></span>
-        </div>
-        <div class="enemy-water-resistance">
-          ${ELEMENTS.water.icon} Res: <span id="enemy-water-resistance-value"></span>
-        </div>
+        <div class="enemy-fire-resistance">${formatStatName('fireResistance')}: <span id="enemy-fire-resistance-value"></span></div>
+        <div class="enemy-cold-resistance">${formatStatName('coldResistance')}: <span id="enemy-cold-resistance-value"></span></div>
+        <div class="enemy-air-resistance">${formatStatName('airResistance')}: <span id="enemy-air-resistance-value"></span></div>
+        <div class="enemy-earth-resistance">${formatStatName('earthResistance')}: <span id="enemy-earth-resistance-value"></span></div>
+        <div class="enemy-lightning-resistance">${formatStatName('lightningResistance')}: <span id="enemy-lightning-resistance-value"></span></div>
+        <div class="enemy-water-resistance">${formatStatName('waterResistance')}: <span id="enemy-water-resistance-value"></span></div>
       </div>
     </div>
   </div>`;

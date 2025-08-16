@@ -73,6 +73,7 @@ class Game {
     if (damage < 1) return;
 
     hero.stats.currentLife -= damage;
+    battleLog.addBattle(`Received ${Math.floor(damage)} damage${formatDamageBreakdown(breakdown)}`);
     if (hero.stats.currentLife <= 0) {
       // check if ressurection will proc
       if (!hero.willRessurect()) {
@@ -82,7 +83,6 @@ class Game {
     }
     updatePlayerLife();
     createDamageNumber({ text: `-${Math.floor(damage)}`, isPlayer: true });
-    battleLog.addBattle(`Received ${Math.floor(damage)} damage${formatDamageBreakdown(breakdown)}`);
   }
 
   healPlayer(heal) {

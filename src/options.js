@@ -1,6 +1,6 @@
 
 import { crystalShop, dataManager, game, setGlobals, training, soulShop } from './globals.js';
-import { showConfirmDialog, showToast, updateStageUI } from './ui/ui.js';
+import { showConfirmDialog, showToast, updateStageUI, updateEnemyStatLabels } from './ui/ui.js';
 import { closeModal, createModal } from './ui/modal.js';
 import Enemy from './enemy.js';
 import { logout } from './api.js';
@@ -45,6 +45,8 @@ export class Options {
     this.quickSoulShop = data.quickSoulShop ?? false;
     // Preferred language, default to English
     this.language = data.language || 'en';
+    // Use short elemental stat names
+    this.shortElementalNames = data.shortElementalNames ?? false;
   }
 
   /**
@@ -144,6 +146,8 @@ export class Options {
     container.appendChild(this._createRateCountersPeriodOption());
     // --- Show All Stats Option ---
     container.appendChild(this._createShowAllStatsOption());
+    // --- Elemental Stat Names Option ---
+    container.appendChild(this._createShortElementalNamesOption());
     // --- Enemy Stats Toggle Option ---
     container.appendChild(this._createEnemyStatsToggleOption());
     // --- Quick Training Toggle Option ---
@@ -797,6 +801,37 @@ export class Options {
     if (isNaN(val) || val < 0) val = 0;
     if (val > max) val = max;
     this._startingStageInput.value = val;
+  }
+
+  /**
+   * Creates the toggle for short/long elemental stat names.
+   */
+  _createShortElementalNamesOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="short-elemental-names-toggle" class="short-elemental-names-toggle-label">Use Short Elemental Stat Names:</label>
+      <input
+        type="checkbox"
+        id="short-elemental-names-toggle"
+        class="short-elemental-names-toggle"
+        ${this.shortElementalNames ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.shortElementalNames = checkbox.checked;
+      dataManager.saveGame();
+      updateStatsAndAttributesUI(true);
+      updateEnemyStatLabels();
+    });
+    return wrapper;
   }
 
   /**
