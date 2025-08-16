@@ -2,11 +2,11 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #2d1f0f;
-  border: 2px solid #8b5a2b;
+  background: var(--bg-panel);
+  border: 1px solid var(--bg-element);
   border-radius: 8px;
-  color: #f9f5e9;
-  font-family: 'Cinzel', serif;
+  color: var(--text);
+  font-family: inherit;
   padding: 6px;
 }
 
@@ -18,8 +18,8 @@
 .battle-log-tab {
   flex: 1;
   padding: 8px;
-  background: #3b2a16;
-  color: #f9f5e9;
+  background: var(--bg-element);
+  color: var(--text);
   border: none;
   cursor: pointer;
   font-weight: bold;
@@ -27,11 +27,11 @@
 }
 
 .battle-log-tab:not(.active):hover {
-  background: #4e3b1e;
+  filter: brightness(1.1);
 }
 
 .battle-log-tab.active {
-  background: #654321;
+  background: var(--accent);
 }
 
 .battle-log-controls {
@@ -43,23 +43,23 @@
 .battle-log-controls button {
   flex: 1;
   padding: 6px 0;
-  background: #4e3b1e;
-  color: #f9f5e9;
-  border: 1px solid #8b5a2b;
+  background: var(--bg-element);
+  color: var(--text);
+  border: 1px solid var(--bg-element);
   border-radius: 4px;
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .battle-log-controls button:hover {
-  background: #715330;
+  filter: brightness(1.1);
 }
 
 .battle-log-content {
   flex: 1;
   display: flex;
-  background: #1b130d;
-  border: 1px solid #8b5a2b;
+  background: var(--bg-dark);
+  border: 1px solid var(--bg-element);
   border-radius: 4px;
   padding: 8px;
 }
@@ -72,7 +72,7 @@
 .log-entry {
   font-size: 0.9em;
   padding: 2px 0;
-  border-bottom: 1px solid #3b2a16;
+  border-bottom: 1px solid var(--bg-element);
 }
 
 .timestamp {

@@ -70,6 +70,16 @@ export function enemyAttack(currentTime) {
 
         let totalDamage = physicalDamage + fire + cold + air + earth + lightning + water;
 
+        const breakdown = {
+          physical: physicalDamage,
+          fire,
+          cold,
+          air,
+          earth,
+          lightning,
+          water,
+        };
+
         // Calculate thorns damage based on the final damage taken
         const thornsDamage = hero.calculateTotalThornsDamage(totalDamage);
         // only if there is some thorns damage to deal, only paladin
@@ -84,7 +94,7 @@ export function enemyAttack(currentTime) {
           updateEnemyStats();
         }
 
-        game.damagePlayer(totalDamage);
+        game.damagePlayer(totalDamage, breakdown);
       }
     }
 
@@ -122,7 +132,7 @@ export function playerAttack(currentTime) {
         createDamageNumber({ text: 'MISS', color: '#888888' });
         battleLog.addBattle('Missed attack');
       } else {
-        const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy, {});
+        const { damage, isCritical, breakdown } = hero.calculateDamageAgainst(game.currentEnemy, {});
 
         const lifePerHit = (hero.stats.lifePerHit || 0) * (1 + (hero.stats.lifePerHitPercent || 0) / 100);
         const lifeStealAmount = damage * (hero.stats.lifeSteal || 0) / 100;
@@ -132,7 +142,7 @@ export function playerAttack(currentTime) {
           game.restoreMana(manaPerHit);
         }
 
-        game.damageEnemy(damage, isCritical);
+        game.damageEnemy(damage, isCritical, breakdown);
       }
       if (game.fightMode === 'arena') {
         updateBossUI();

@@ -360,7 +360,7 @@ export default class SkillTree {
       game.restoreMana(manaPerHit);
     }
 
-    const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy, baseEffects);
+    const { damage, isCritical, breakdown } = hero.calculateDamageAgainst(game.currentEnemy, baseEffects);
 
     if (baseEffects.lifeSteal) {
       const lifeStealAmount = damage * (baseEffects.lifeSteal / 100);
@@ -395,7 +395,7 @@ export default class SkillTree {
     }
 
     if (this.isDamageSkill(baseEffects)) {
-      game.damageEnemy(damage, isCritical);
+      game.damageEnemy(damage, isCritical, breakdown, skill.name());
     }
 
     // Set cooldown
