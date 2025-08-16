@@ -12,9 +12,9 @@ export const DRUID_SKILLS = {
     summonStats: (level) => {
       return {
         percentOfPlayerDamage: Math.min(scaleDownFlat(level, 0.75), 80),
-        damage: scaleUpFlat(level, 1),
-        earthDamage: scaleUpFlat(level, 1),
-        waterDamage: scaleUpFlat(level, 0.5),
+        damage: scaleUpFlat(level, 1.25),
+        earthDamage: scaleUpFlat(level, 1.6),
+        waterDamage: scaleUpFlat(level, 1),
         attackSpeed: 1,
       };
     },
@@ -93,6 +93,29 @@ export const DRUID_SKILLS = {
     }),
   },
 
+  sproutling: {
+    id: 'sproutling',
+    name: () => t('Sproutling'),
+    type: () => 'summon',
+    summonStats: (level) => {
+      return {
+        percentOfPlayerDamage: Math.min(scaleDownFlat(level, 0.2, 25), 60),
+        damage: scaleUpFlat(level, 5),
+        earthDamage: scaleUpFlat(level, 4),
+        attackSpeed: 2,
+      };
+    },
+    manaCost: (level) => 3 + level * 0.2,
+    cooldown: () => 14000,
+    duration: () => 5250,
+    requiredLevel: () => SKILL_LEVEL_TIERS[1],
+    icon: () => 'sproutling',
+    description: () => t('Summons a sproutling that nibbles at enemies and slightly restores its master.'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+    }),
+  },
+
   // Tier 25 Skills
   animalCompanion: {
     id: 'animalCompanion',
@@ -146,6 +169,29 @@ export const DRUID_SKILLS = {
       airDamagePercent: scaleDownFlat(level, 6),
       coldDamage: scaleUpFlat(level, 4),
       coldDamagePercent: scaleDownFlat(level, 6),
+    }),
+  },
+
+  spiritBear: {
+    id: 'spiritBear',
+    name: () => t('Spirit Bear'),
+    type: () => 'summon',
+    summonStats: (level) => {
+      return {
+        percentOfPlayerDamage: Math.min(scaleDownFlat(level, 1.5), 200),
+        damage: scaleUpFlat(level, 8, 10, 0.5),
+        earthDamage: scaleUpFlat(level, 6, 10, 0.4),
+        attackSpeed: 0.6,
+      };
+    },
+    manaCost: (level) => 8 + level * 0.5,
+    cooldown: () => 120000,
+    duration: () => 43250,
+    requiredLevel: () => SKILL_LEVEL_TIERS[3],
+    icon: () => 'spirit-bear',
+    description: () => t('Summons a spectral bear that soaks damage and heals you when it strikes.'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
     }),
   },
   stoneform: {
