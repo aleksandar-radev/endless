@@ -46,7 +46,7 @@ export function initializeUI() {
       selector: '.resource-gold',
       tooltip: () => html`
         <div class="tooltip-header">Gold <span class="icon"><i class="mdi mdi-currency-usd"></i></span></div>
-        <div class="tooltip-desc">Used to buy upgrades.</div>
+        <div class="tooltip-desc">Used for training.</div>
         <div class="tooltip-note"></div>
       `,
     },
@@ -62,7 +62,7 @@ export function initializeUI() {
       selector: '.resource-souls',
       tooltip: () => html`
         <div class="tooltip-header">Souls <span class="icon"><i class="mdi mdi-ghost"></i></span></div>
-        <div class="tooltip-desc">Earned from killing monsters.</div>
+        <div class="tooltip-desc">Earned from killing bosses in Arena.</div>
         <div class="tooltip-note"></div>
       `,
     },

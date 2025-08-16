@@ -49,15 +49,15 @@ export const ITEM_TYPES = {
 export const ITEM_ICONS = {
   HELMET: '<i class="mdi mdi-diving-helmet"></i>',
   ARMOR: '<i class="mdi mdi-tshirt-crew"></i>',
-  BELT: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-  <!-- Belt strap -->
-  <rect x="2" y="7.5" width="14" height="3" fill="#2c3e50" stroke="#000" stroke-width="0.3"/>
+  BELT: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 18 18">
+  <!-- Belt strap (slightly brighter for dark bg) -->
+  <rect x="2" y="7.5" width="14" height="3" fill="#3b4f5d" stroke="#ffffff" stroke-width="0.45"/>
   
-  <!-- Belt buckle -->
-  <rect x="12" y="7" width="4" height="4" fill="#c0a050" stroke="#000" stroke-width="0.3"/>
+  <!-- Belt buckle (brighter gold, white stroke) -->
+  <rect x="12" y="7" width="4" height="4" fill="#e3c16a" stroke="#ffffff" stroke-width="0.45"/>
   <rect x="13" y="8" width="2" height="2" fill="#2c3e50"/>
 </svg>`,
-  PANTS: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+  PANTS: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 18 18">
   <path d="M4 1.3 
            L14 1.3 
            L16 17 
@@ -66,12 +66,12 @@ export const ITEM_ICONS = {
            L8.1 17 
            L3 17 
            Z"
-        fill="#326ca7ff" stroke="#000" stroke-width="0.3"/>
+        fill="#4aa3df" stroke="#ffffff" stroke-width="0.5"/>
   
-  <rect x="4" y="0.6" width="10" height="0.7" fill="#1a252f"/>
+  <rect x="4" y="0.6" width="10" height="0.7" fill="#dbeffb"/>
   
-  <line x1="4.3" y1="2" x2="5.8" y2="4" stroke="#fff" stroke-width="0.3"/>
-  <line x1="13.7" y1="2" x2="12.2" y2="4" stroke="#fff" stroke-width="0.3"/>
+  <line x1="4.3" y1="2" x2="5.8" y2="4" stroke="#ffffff" stroke-width="0.5"/>
+  <line x1="13.7" y1="2" x2="12.2" y2="4" stroke="#ffffff" stroke-width="0.5"/>
 </svg>`,
   BOOTS: '<i class="mdi mdi-shoe-formal"></i>',
   SWORD: '<i class="mdi mdi-sword"></i>',

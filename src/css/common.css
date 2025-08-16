@@ -357,6 +357,91 @@ body.dev-active .game-container {
   color: var(--water);
 }
 
+/* Additional icon colors */
+.mdi-menu {
+  color: var(--text);
+}
+
+.mdi-currency-usd,
+.mdi-crown,
+.mdi-trophy,
+.mdi-star,
+.mdi-star-circle,
+.mdi-star-four-points,
+.mdi-star-shooting,
+.mdi-account-star,
+.mdi-map,
+.mdi-necklace,
+.mdi-ring {
+  color: #fbbf24;
+}
+
+.mdi-diamond-stone,
+.mdi-diamond-outline,
+.mdi-cube,
+.mdi-test-tube {
+  color: #0ea5e9;
+}
+
+.mdi-ghost,
+.mdi-wizard-hat,
+.mdi-orbit,
+.mdi-weather-night,
+.mdi-circle,
+.mdi-brain,
+.mdi-auto-fix {
+  color: #a855f7;
+}
+
+.mdi-tshirt-crew,
+.mdi-account {
+  color: #3b82f6;
+}
+
+.mdi-shield,
+.mdi-diving-helmet {
+  color: #64748b;
+}
+
+.mdi-sword,
+.mdi-sword-cross,
+.mdi-axe,
+.mdi-hammer,
+.mdi-magnify,
+.mdi-sort,
+.mdi-script-text,
+.mdi-shoe-formal,
+.mdi-skull,
+.mdi-skull-crossbones {
+  color: #9ca3af;
+}
+
+.mdi-boxing-glove,
+.mdi-bullseye-arrow,
+.mdi-heart,
+.mdi-close,
+.mdi-delete,
+.mdi-alert {
+  color: #ef4444;
+}
+
+.mdi-arm-flex,
+.mdi-cup,
+.mdi-sack {
+  color: #f97316;
+}
+
+.mdi-run,
+.mdi-gift,
+.mdi-check,
+.mdi-refresh {
+  color: #22c55e;
+}
+
+.mdi-lightning-bolt {
+  color: var(--lightning);
+}
+
 /* Slightly larger icons in sidebars or resource bars */
 .resource-bar .mdi,
 .sidebar .mdi {
