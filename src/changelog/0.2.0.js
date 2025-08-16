@@ -1,11 +1,11 @@
 const html = String.raw;
 export default function run() {
   return html`
-  <span style="color:#4F8A10;">🗓️ 2025-07-04</span>
+  <span style="color:#4F8A10;"><i class="mdi mdi-calendar"></i> 2025-07-04</span>
 
 <hr>
 
-<span style="color:#1E90FF;">✨ New Features</span>
+<span style="color:#1E90FF;"><i class="mdi mdi-star-four-points"></i> New Features</span>
 <ul>
   <li><b>Salvage System:</b> New salvage system added, including auto-salvage.</li>
   <li><b>New Stats:</b> Evasion and Elemental Resistances introduced.</li>
@@ -13,7 +13,7 @@ export default function run() {
   <li><b>New Materials:</b> Added <i>enchantment scroll</i>, <i>alternation orb</i>, <i>greater xp potion</i>.</li>
 </ul>
 
-<span style="color:#FFA500;">⚖️ Balance Changes</span>
+<span style="color:#FFA500;"><i class="mdi mdi-scale-balance"></i> Balance Changes</span>
 <ul>
   <li><b>Training:</b> Now has maximum level for some stats. Costs have been adjusted.</li>
   <li><b>Item Stats:</b> Reworked for more stable progression throughout the game.</li>

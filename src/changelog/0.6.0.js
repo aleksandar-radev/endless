@@ -2,10 +2,10 @@
 const html = String.raw;
 export default function run() {
   return html`
-  <span style="color:#4F8A10;">📝 2025-07-30</span>
+  <span style="color:#4F8A10;"><i class="mdi mdi-notebook"></i> 2025-07-30</span>
   <hr>
 
-  <span style="color:#FFA500;">✨ Features & Improvements</span>
+  <span style="color:#FFA500;"><i class="mdi mdi-star-four-points"></i> Features & Improvements</span>
   <ul>
     <li>Warrior and Paladin reworked to be more competitive (more damage, speed)</li>
     <li>New skills for Paladin and Warrior.</li>

@@ -1,10 +1,10 @@
 const html = String.raw;
 export default function run() {
   return html`
-  <span style="color:#4F8A10;">📝 2025-08-10</span>
+  <span style="color:#4F8A10;"><i class="mdi mdi-notebook"></i> 2025-08-10</span>
   <hr>
 
-  <span style="color:#FFA500;">✨ Features & Improvements</span>
+  <span style="color:#FFA500;"><i class="mdi mdi-star-four-points"></i> Features & Improvements</span>
   <ul>
     <li>Tracked items found by rarity in statistics.</li>
     <li>Added highest boss level tracking and prestige bonuses scaling.</li>
@@ -25,7 +25,7 @@ export default function run() {
     <li>Added prestige history.</li>
   </ul>
 
-  <span style="color:#1E90FF;">🔧 Improvements & Refactoring</span>
+  <span style="color:#1E90FF;"><i class="mdi mdi-wrench"></i> Improvements & Refactoring</span>
   <ul>
     <li>Refactored boss and enemy resistance calculations and scaling.</li>
     <li>Refactored stats display logic and material handling in inventory.</li>
@@ -33,7 +33,7 @@ export default function run() {
     <li>Refactored combat calculations and region resistance attributes.</li>
   </ul>
 
-  <span style="color:#4F8A10;">🔄 Balance Changes</span>
+  <span style="color:#4F8A10;"><i class="mdi mdi-refresh"></i> Balance Changes</span>
   <ul>
     <li>Adjusted enemy scaling, resistances, and boss scaling for lower tiers and various environments.</li>
     <li>Adjusted berserker, warrior, druid, and vampire skills for cooldown, crit, life steal, and mana cost.</li>
@@ -50,7 +50,7 @@ export default function run() {
     <li>XP required increases every 50 levels.</li>
   </ul>
 
-  <span style="color:#FF0000;">🔧 Fixes</span>
+  <span style="color:#FF0000;"><i class="mdi mdi-wrench"></i> Fixes</span>
   <ul>
     <li>Fixed lag for dev tools and material drop chance issues.</li>
     <li>Fixed inventory and materials centering on Firefox.</li>

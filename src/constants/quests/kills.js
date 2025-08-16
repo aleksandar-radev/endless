@@ -9,7 +9,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 10,
     reward: { gold: 500, item: { rarity: 'rare', type: 'random', tier: 1 } },
-    icon: '⚔️',
+    icon: '<i class="mdi mdi-sword-cross"></i>',
   },
   {
     id: 'kill50',
@@ -19,7 +19,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 50,
     reward: { gold: 1500 },
-    icon: '⚔️',
+    icon: '<i class="mdi mdi-sword-cross"></i>',
   },
   {
     id: 'kill250',
@@ -29,7 +29,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 250,
     reward: { gold: 4000, item: { rarity: 'rare', type: 'random', tier: 1 } },
-    icon: '💥',
+    icon: '<i class="mdi mdi-flash"></i>',
   },
   {
     id: 'kill1000',
@@ -39,7 +39,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 1000,
     reward: { gold: 10000, crystals: 1 },
-    icon: '💀',
+    icon: '<i class="mdi mdi-skull"></i>',
   },
   {
     id: 'kill2500',
@@ -49,7 +49,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 2500,
     reward: { gold: 30000, crystals: 4 },
-    icon: '💀',
+    icon: '<i class="mdi mdi-skull"></i>',
   },
   {
     id: 'kill5000',
@@ -59,7 +59,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 5000,
     reward: { gold: 60000, crystals: 2 },
-    icon: '☠️',
+    icon: '<i class="mdi mdi-skull-crossbones"></i>',
   },
   {
     id: 'kill10000',
@@ -69,7 +69,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 10000,
     reward: { gold: 100000, crystals: 3 },
-    icon: '☠️',
+    icon: '<i class="mdi mdi-skull-crossbones"></i>',
   },
   {
     id: 'kill25000',
@@ -79,7 +79,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 25000,
     reward: { gold: 200000, crystals: 5 },
-    icon: '🌍',
+    icon: '<i class="mdi mdi-earth"></i>',
   },
   {
     id: 'kill50000',
@@ -89,7 +89,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 50000,
     reward: { gold: 400000, crystals: 8 },
-    icon: '🌍',
+    icon: '<i class="mdi mdi-earth"></i>',
   },
   {
     id: 'kill100000',
@@ -99,7 +99,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 100000,
     reward: { gold: 700000, crystals: 12 },
-    icon: '🌌',
+    icon: '<i class="mdi mdi-weather-night"></i>',
   },
   {
     id: 'kill250000',
@@ -109,7 +109,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 250000,
     reward: { gold: 2000000, crystals: 20 },
-    icon: '🌌',
+    icon: '<i class="mdi mdi-weather-night"></i>',
   },
   {
     id: 'kill500000',
@@ -119,7 +119,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 500000,
     reward: { gold: 6000000, crystals: 30 },
-    icon: '⭐',
+    icon: '<i class="mdi mdi-star"></i>',
   },
   {
     id: 'kill1000000',
@@ -129,7 +129,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 1000000,
     reward: { gold: 15000000, crystals: 50 },
-    icon: '⭐',
+    icon: '<i class="mdi mdi-star"></i>',
   },
   {
     id: 'kill2500000',
@@ -139,7 +139,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 2500000,
     reward: { gold: 25000000, crystals: 70 },
-    icon: '🌟',
+    icon: '<i class="mdi mdi-star-circle"></i>',
   },
   {
     id: 'kill5000000',
@@ -149,7 +149,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 5000000,
     reward: { gold: 60000000, crystals: 100 },
-    icon: '🌠',
+    icon: '<i class="mdi mdi-star-shooting"></i>',
   },
   {
     id: 'kill10000000',
@@ -159,6 +159,6 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 10000000,
     reward: { gold: 150000000, crystals: 200 },
-    icon: '💫',
+    icon: '<i class="mdi mdi-orbit"></i>',
   },
 ];

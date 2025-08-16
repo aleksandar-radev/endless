@@ -1,7 +1,7 @@
 const html = String.raw;
 export default function run() {
   return html`
-  <span style="color:#4F8A10;">📝 2025-07-22</span>
+  <span style="color:#4F8A10;"><i class="mdi mdi-notebook"></i> 2025-07-22</span>
   <hr>
   <ul>
     <li>Track highest stage per zone tier.</li>

@@ -49,19 +49,19 @@ export function initializeInventoryUI(inv) {
   equipmentContainer.innerHTML = html`
     <div class="equipment-layout">
       <div class="equipment-slots">
-        <div class="equipment-slot" data-slot="head"><div class="slot-indicator">🪖</div></div>
-        <div class="equipment-slot" data-slot="amulet"><div class="slot-indicator">📿</div></div>
-        <div class="equipment-slot" data-slot="chest"><div class="slot-indicator">👕</div></div>
-        <div class="equipment-slot" data-slot="belt"><div class="slot-indicator">🎗️</div></div>
-        <div class="equipment-slot" data-slot="weapon"><div class="slot-indicator">⚔️</div></div>
-        <div class="equipment-slot" data-slot="offhand"><div class="slot-indicator">🛡️</div></div>
-        <div class="equipment-slot" data-slot="gloves"><div class="slot-indicator">🧤</div></div>
-        <div class="equipment-slot" data-slot="ring1"><div class="slot-indicator">💍</div></div>
-        <div class="equipment-slot" data-slot="legs"><div class="slot-indicator">👖</div></div>
-        <div class="equipment-slot" data-slot="ring2"><div class="slot-indicator">💍</div></div>
-        <div class="equipment-slot" data-slot="boots"><div class="slot-indicator">👢</div></div>
+        <div class="equipment-slot" data-slot="head"><div class="slot-indicator"><i class="mdi mdi-diving-helmet"></i></div></div>
+        <div class="equipment-slot" data-slot="amulet"><div class="slot-indicator"><i class="mdi mdi-necklace"></i></div></div>
+        <div class="equipment-slot" data-slot="chest"><div class="slot-indicator"><i class="mdi mdi-tshirt-crew"></i></div></div>
+        <div class="equipment-slot" data-slot="belt"><div class="slot-indicator"><i class="mdi mdi-ribbon"></i></div></div>
+        <div class="equipment-slot" data-slot="weapon"><div class="slot-indicator"><i class="mdi mdi-sword-cross"></i></div></div>
+        <div class="equipment-slot" data-slot="offhand"><div class="slot-indicator"><i class="mdi mdi-shield"></i></div></div>
+        <div class="equipment-slot" data-slot="gloves"><div class="slot-indicator"><i class="mdi mdi-boxing-glove"></i></div></div>
+        <div class="equipment-slot" data-slot="ring1"><div class="slot-indicator"><i class="mdi mdi-ring"></i></div></div>
+        <div class="equipment-slot" data-slot="legs"><div class="slot-indicator"><i class="mdi mdi-hanger"></i></div></div>
+        <div class="equipment-slot" data-slot="ring2"><div class="slot-indicator"><i class="mdi mdi-ring"></i></div></div>
+        <div class="equipment-slot" data-slot="boots"><div class="slot-indicator"><i class="mdi mdi-shoe-formal"></i></div></div>
       </div>
-      <div class="character-preview">👤</div>
+      <div class="character-preview"><i class="mdi mdi-account"></i></div>
     </div>
     <div class="salvage-container">
       <div class="inventory-tabs">
@@ -69,12 +69,12 @@ export function initializeInventoryUI(inv) {
         <button id="materials-tab" class="inventory-btn" data-i18n="inventory.materials">${t('inventory.materials')}</button>
       </div>
       <div class="sort-row">
-        <div id="sort-inventory" class="inventory-btn sort-btn" aria-label="${t('inventory.sort')}"><span role="img" aria-label="Sort">🔃</span></div>
+        <div id="sort-inventory" class="inventory-btn sort-btn" aria-label="${t('inventory.sort')}"><span role="img" aria-label="Sort"><i class="mdi mdi-sort"></i></span></div>
       </div>
       <button id="open-salvage-modal" class="inventory-btn" data-i18n="inventory.options">${t('inventory.options')}</button>
       <div class="search-container">
         <input type="text" id="inventory-filter" class="inventory-btn filter-input" placeholder="${t('inventory.searchItems')}" />
-        <span class="search-icon">🔍</span>
+        <span class="search-icon"><i class="mdi mdi-magnify"></i></span>
         <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn" style="display: none" data-i18n="inventory.equip">${t('inventory.equip')}</button>
       </div>
     </div>
@@ -265,7 +265,7 @@ export function showSalvageModal(inv) {
   }).join('')}
         </div>
         <div class="inventory-trash">
-          <span class="inventory-trash-icon">🗑️</span>
+          <span class="inventory-trash-icon"><i class="mdi mdi-delete"></i></span>
           <div class="inventory-trash-label">Drag item here</div>
         </div>
         <div class="salvage-material-row">
@@ -474,7 +474,7 @@ export function showSalvageModal(inv) {
   trash.addEventListener('mouseenter', (e) => {
     const tooltipContent = html`
       <div class="item-tooltip tooltip-center">
-        <div class="tooltip-trash-icon">🗑️</div>
+        <div class="tooltip-trash-icon"><i class="mdi mdi-delete"></i></div>
         <b>Salvage Item</b>
         <div class="tooltip-trash-desc">Drag and drop an item here to salvage it.</div>
       </div>
@@ -672,7 +672,7 @@ export function setupDragAndDrop() {
     trash.addEventListener('mouseenter', (e) => {
       const tooltipContent = html`
         <div class="item-tooltip" style="text-align:center;">
-          <div style="font-size:2em;">🗑️</div>
+          <div style="font-size:2em;"><i class="mdi mdi-delete"></i></div>
           <b>Salvage Item</b>
           <div style="margin-top:4px;font-size:0.95em;">Drag and drop an item here to salvage it.</div>
         </div>
@@ -950,7 +950,7 @@ export function updateMaterialsGrid(inv) {
   materialsContainer.innerHTML = '';
   for (let i = 0; i < MATERIALS_SLOTS; i++) {
     const mat = inv.materials[i];
-    const icon = MATERIALS[mat?.id]?.icon || '🔹';
+    const icon = MATERIALS[mat?.id]?.icon || '<i class="mdi mdi-diamond-outline"></i>';
     const cell = document.createElement('div');
     cell.classList.add('materials-cell');
     if (mat) {

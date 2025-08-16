@@ -11,7 +11,7 @@ export const RARITY_QUESTS = [
     rarity: 'rare',
     target: 10,
     reward: { gold: 500, crystals: 1, item: { rarity: 'rare', type: 'random', tier: 1 } },
-    icon: '🔵',
+    icon: '<i class="mdi mdi-circle" style="color:#2196f3"></i>',
   },
   {
     id: 'kill_rare_50',
@@ -22,7 +22,7 @@ export const RARITY_QUESTS = [
     rarity: 'rare',
     target: 50,
     reward: { gold: 1500, crystals: 1 },
-    icon: '🔵',
+    icon: '<i class="mdi mdi-circle" style="color:#2196f3"></i>',
   },
   {
     id: 'kill_rare_200',
@@ -33,7 +33,7 @@ export const RARITY_QUESTS = [
     rarity: 'rare',
     target: 200,
     reward: { gold: 4000, crystals: 2 },
-    icon: '🔵',
+    icon: '<i class="mdi mdi-circle" style="color:#2196f3"></i>',
   },
   {
     id: 'kill_rare_600',
@@ -44,7 +44,7 @@ export const RARITY_QUESTS = [
     rarity: 'rare',
     target: 600,
     reward: { gold: 12000, crystals: 3 },
-    icon: '🔵',
+    icon: '<i class="mdi mdi-circle" style="color:#2196f3"></i>',
   },
   {
     id: 'kill_rare_1500',
@@ -55,7 +55,7 @@ export const RARITY_QUESTS = [
     rarity: 'rare',
     target: 1500,
     reward: { gold: 30000, crystals: 5 },
-    icon: '🔵',
+    icon: '<i class="mdi mdi-circle" style="color:#2196f3"></i>',
   },
   {
     id: 'kill_rare_4000',
@@ -66,7 +66,7 @@ export const RARITY_QUESTS = [
     rarity: 'rare',
     target: 4000,
     reward: { gold: 90000, crystals: 8 },
-    icon: '🔵',
+    icon: '<i class="mdi mdi-circle" style="color:#2196f3"></i>',
   },
   {
     id: 'kill_rare_15000',
@@ -77,7 +77,7 @@ export const RARITY_QUESTS = [
     rarity: 'rare',
     target: 15000,
     reward: { gold: 350000, crystals: 15 },
-    icon: '🔵',
+    icon: '<i class="mdi mdi-circle" style="color:#2196f3"></i>',
   },
   {
     id: 'kill_rare_30000',
@@ -88,7 +88,7 @@ export const RARITY_QUESTS = [
     rarity: 'rare',
     target: 30000,
     reward: { gold: 1200000, crystals: 25 },
-    icon: '🔵',
+    icon: '<i class="mdi mdi-circle" style="color:#2196f3"></i>',
   },
   // Epic
   {
@@ -100,7 +100,7 @@ export const RARITY_QUESTS = [
     rarity: 'epic',
     target: 5,
     reward: { gold: 1200, crystals: 1, item: { rarity: 'unique', type: 'random', tier: 1 } },
-    icon: '🟣',
+    icon: '<i class="mdi mdi-circle" style="color:#9c27b0"></i>',
   },
   {
     id: 'kill_epic_30',
@@ -111,7 +111,7 @@ export const RARITY_QUESTS = [
     rarity: 'epic',
     target: 30,
     reward: { gold: 6000, crystals: 2 },
-    icon: '🟣',
+    icon: '<i class="mdi mdi-circle" style="color:#9c27b0"></i>',
   },
   {
     id: 'kill_epic_75',
@@ -122,7 +122,7 @@ export const RARITY_QUESTS = [
     rarity: 'epic',
     target: 75,
     reward: { gold: 15000, crystals: 3 },
-    icon: '🟣',
+    icon: '<i class="mdi mdi-circle" style="color:#9c27b0"></i>',
   },
   {
     id: 'kill_epic_200',
@@ -133,7 +133,7 @@ export const RARITY_QUESTS = [
     rarity: 'epic',
     target: 200,
     reward: { gold: 40000, crystals: 5 },
-    icon: '🟣',
+    icon: '<i class="mdi mdi-circle" style="color:#9c27b0"></i>',
   },
   {
     id: 'kill_epic_500',
@@ -144,7 +144,7 @@ export const RARITY_QUESTS = [
     rarity: 'epic',
     target: 500,
     reward: { gold: 120000, crystals: 8 },
-    icon: '🟣',
+    icon: '<i class="mdi mdi-circle" style="color:#9c27b0"></i>',
   },
   {
     id: 'kill_epic_1200',
@@ -155,7 +155,7 @@ export const RARITY_QUESTS = [
     rarity: 'epic',
     target: 1200,
     reward: { gold: 350000, crystals: 15 },
-    icon: '🟣',
+    icon: '<i class="mdi mdi-circle" style="color:#9c27b0"></i>',
   },
   {
     id: 'kill_epic_4000',
@@ -166,7 +166,7 @@ export const RARITY_QUESTS = [
     rarity: 'epic',
     target: 4000,
     reward: { gold: 900000, crystals: 30 },
-    icon: '🟣',
+    icon: '<i class="mdi mdi-circle" style="color:#9c27b0"></i>',
   },
   {
     id: 'kill_epic_8000',
@@ -177,7 +177,7 @@ export const RARITY_QUESTS = [
     rarity: 'epic',
     target: 8000,
     reward: { gold: 2500000, crystals: 40 },
-    icon: '🟣',
+    icon: '<i class="mdi mdi-circle" style="color:#9c27b0"></i>',
   },
   // Legendary
   {
@@ -189,7 +189,7 @@ export const RARITY_QUESTS = [
     rarity: 'legendary',
     target: 3,
     reward: { gold: 3500, crystals: 2 },
-    icon: '🟠',
+    icon: '<i class="mdi mdi-circle" style="color:#ff9800"></i>',
   },
   {
     id: 'kill_legendary_15',
@@ -200,7 +200,7 @@ export const RARITY_QUESTS = [
     rarity: 'legendary',
     target: 15,
     reward: { gold: 20000, crystals: 5, item: { rarity: 'legendary', type: 'random', tier: 1 } },
-    icon: '🟠',
+    icon: '<i class="mdi mdi-circle" style="color:#ff9800"></i>',
   },
   {
     id: 'kill_legendary_50',
@@ -211,7 +211,7 @@ export const RARITY_QUESTS = [
     rarity: 'legendary',
     target: 50,
     reward: { gold: 70000, crystals: 8 },
-    icon: '🟠',
+    icon: '<i class="mdi mdi-circle" style="color:#ff9800"></i>',
   },
   {
     id: 'kill_legendary_120',
@@ -222,7 +222,7 @@ export const RARITY_QUESTS = [
     rarity: 'legendary',
     target: 120,
     reward: { gold: 180000, crystals: 12 },
-    icon: '🟠',
+    icon: '<i class="mdi mdi-circle" style="color:#ff9800"></i>',
   },
   {
     id: 'kill_legendary_400',
@@ -233,7 +233,7 @@ export const RARITY_QUESTS = [
     rarity: 'legendary',
     target: 400,
     reward: { gold: 600000, crystals: 20 },
-    icon: '🟠',
+    icon: '<i class="mdi mdi-circle" style="color:#ff9800"></i>',
   },
   {
     id: 'kill_legendary_900',
@@ -244,7 +244,7 @@ export const RARITY_QUESTS = [
     rarity: 'legendary',
     target: 900,
     reward: { gold: 1500000, crystals: 35 },
-    icon: '🟠',
+    icon: '<i class="mdi mdi-circle" style="color:#ff9800"></i>',
   },
   {
     id: 'kill_legendary_2400',
@@ -255,7 +255,7 @@ export const RARITY_QUESTS = [
     rarity: 'legendary',
     target: 2400,
     reward: { gold: 4000000, crystals: 60 },
-    icon: '🟠',
+    icon: '<i class="mdi mdi-circle" style="color:#ff9800"></i>',
   },
   {
     id: 'kill_legendary_5000',
@@ -266,7 +266,7 @@ export const RARITY_QUESTS = [
     rarity: 'legendary',
     target: 5000,
     reward: { gold: 12000000, crystals: 90 },
-    icon: '🟠',
+    icon: '<i class="mdi mdi-circle" style="color:#ff9800"></i>',
   },
   // Mythic
   {
@@ -278,7 +278,7 @@ export const RARITY_QUESTS = [
     rarity: 'mythic',
     target: 1,
     reward: { gold: 5000, crystals: 3 },
-    icon: '🔴',
+    icon: '<i class="mdi mdi-circle" style="color:#f44336"></i>',
   },
   {
     id: 'kill_mythic_8',
@@ -289,7 +289,7 @@ export const RARITY_QUESTS = [
     rarity: 'mythic',
     target: 8,
     reward: { gold: 35000, crystals: 8 },
-    icon: '🔴',
+    icon: '<i class="mdi mdi-circle" style="color:#f44336"></i>',
   },
   {
     id: 'kill_mythic_38',
@@ -300,7 +300,7 @@ export const RARITY_QUESTS = [
     rarity: 'mythic',
     target: 38,
     reward: { gold: 120000, crystals: 15 },
-    icon: '🔴',
+    icon: '<i class="mdi mdi-circle" style="color:#f44336"></i>',
   },
   {
     id: 'kill_mythic_80',
@@ -311,7 +311,7 @@ export const RARITY_QUESTS = [
     rarity: 'mythic',
     target: 80,
     reward: { gold: 350000, crystals: 25, item: { rarity: 'mythic', type: 'random', tier: 1 } },
-    icon: '🔴',
+    icon: '<i class="mdi mdi-circle" style="color:#f44336"></i>',
   },
   {
     id: 'kill_mythic_200',
@@ -322,7 +322,7 @@ export const RARITY_QUESTS = [
     rarity: 'mythic',
     target: 200,
     reward: { gold: 900000, crystals: 40 },
-    icon: '🔴',
+    icon: '<i class="mdi mdi-circle" style="color:#f44336"></i>',
   },
   {
     id: 'kill_mythic_450',
@@ -333,7 +333,7 @@ export const RARITY_QUESTS = [
     rarity: 'mythic',
     target: 450,
     reward: { gold: 2500000, crystals: 60 },
-    icon: '🔴',
+    icon: '<i class="mdi mdi-circle" style="color:#f44336"></i>',
   },
   {
     id: 'kill_mythic_1200',
@@ -344,7 +344,7 @@ export const RARITY_QUESTS = [
     rarity: 'mythic',
     target: 1200,
     reward: { gold: 7000000, crystals: 100 },
-    icon: '🔴',
+    icon: '<i class="mdi mdi-circle" style="color:#f44336"></i>',
   },
   {
     id: 'kill_mythic_3000',
@@ -355,6 +355,6 @@ export const RARITY_QUESTS = [
     rarity: 'mythic',
     target: 3000,
     reward: { gold: 20000000, crystals: 150 },
-    icon: '🔴',
+    icon: '<i class="mdi mdi-circle" style="color:#f44336"></i>',
   },
 ];

@@ -47,20 +47,20 @@ export const ITEM_TYPES = {
 };
 
 export const ITEM_ICONS = {
-  HELMET: '🪖',
-  ARMOR: '👚',
-  BELT: '🎗️',
-  PANTS: '👖',
-  BOOTS: '👢',
-  SWORD: '⚔️',
-  AXE: '🪓',
-  MACE: '🔨',
-  WAND: '🪄',
-  STAFF: '🦯',
-  SHIELD: '🛡️',
-  GLOVES: '🧤',
-  AMULET: '📿',
-  RING: '💍',
+  HELMET: '<i class="mdi mdi-diving-helmet"></i>',
+  ARMOR: '<i class="mdi mdi-tshirt-crew"></i>',
+  BELT: '<i class="mdi mdi-ribbon"></i>',
+  PANTS: '<i class="mdi mdi-hanger"></i>',
+  BOOTS: '<i class="mdi mdi-shoe-formal"></i>',
+  SWORD: '<i class="mdi mdi-sword"></i>',
+  AXE: '<i class="mdi mdi-axe"></i>',
+  MACE: '<i class="mdi mdi-hammer"></i>',
+  WAND: '<i class="mdi mdi-auto-fix"></i>',
+  STAFF: '<i class="mdi mdi-cane"></i>',
+  SHIELD: '<i class="mdi mdi-shield"></i>',
+  GLOVES: '<i class="mdi mdi-boxing-glove"></i>',
+  AMULET: '<i class="mdi mdi-necklace"></i>',
+  RING: '<i class="mdi mdi-ring"></i>',
 };
 
 export const ITEM_RARITY = {
