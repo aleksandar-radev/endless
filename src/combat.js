@@ -16,6 +16,7 @@ import { selectBoss, updateBossUI } from './ui/bossUi.js';
 import { getCurrentRegion } from './region.js';
 
 import { audioManager } from './audio.js';
+import { battleLog } from './battleLog.js';
 
 export function enemyAttack(currentTime) {
   if (!game || !hero || !game.currentEnemy) return;
@@ -28,6 +29,7 @@ export function enemyAttack(currentTime) {
     if (isEvaded) {
       // Show "EVADED" text
       createDamageNumber({ text: 'EVADED', isPlayer: true, color: '#FFD700' });
+      battleLog.addBattle('Evaded attack');
     } else {
       const isBlocked = Math.random() * 100 < hero.stats.blockChance;
 
@@ -37,8 +39,10 @@ export function enemyAttack(currentTime) {
 
         // Show "BLOCKED" text instead of damage number
         createDamageNumber({ text: 'BLOCKED', isPlayer: true, color: '#66bd02' });
+        battleLog.addBattle('Blocked attack');
         if (healAmount > 0) {
           createDamageNumber({ text: `+${Math.floor(healAmount)}`, isPlayer: true, color: '#4CAF50' });
+          battleLog.addBattle(`Healed ${Math.floor(healAmount)} life`);
         }
       } else {
         // Use PoE2 armor formula for physical damage reduction
@@ -66,6 +70,16 @@ export function enemyAttack(currentTime) {
 
         let totalDamage = physicalDamage + fire + cold + air + earth + lightning + water;
 
+        const breakdown = {
+          physical: physicalDamage,
+          fire,
+          cold,
+          air,
+          earth,
+          lightning,
+          water,
+        };
+
         // Calculate thorns damage based on the final damage taken
         const thornsDamage = hero.calculateTotalThornsDamage(totalDamage);
         // only if there is some thorns damage to deal, only paladin
@@ -80,7 +94,7 @@ export function enemyAttack(currentTime) {
           updateEnemyStats();
         }
 
-        game.damagePlayer(totalDamage);
+        game.damagePlayer(totalDamage, breakdown);
       }
     }
 
@@ -116,8 +130,9 @@ export function playerAttack(currentTime) {
 
       if (!neverMiss && roll > hitChance) {
         createDamageNumber({ text: 'MISS', color: '#888888' });
+        battleLog.addBattle('Missed attack');
       } else {
-        const { damage, isCritical } = hero.calculateDamageAgainst(game.currentEnemy, {});
+        const { damage, isCritical, breakdown } = hero.calculateDamageAgainst(game.currentEnemy, {});
 
         const lifePerHit = (hero.stats.lifePerHit || 0) * (1 + (hero.stats.lifePerHitPercent || 0) / 100);
         const lifeStealAmount = damage * (hero.stats.lifeSteal || 0) / 100;
@@ -127,7 +142,7 @@ export function playerAttack(currentTime) {
           game.restoreMana(manaPerHit);
         }
 
-        game.damageEnemy(damage, isCritical);
+        game.damageEnemy(damage, isCritical, breakdown);
       }
       if (game.fightMode === 'arena') {
         updateBossUI();
@@ -246,6 +261,8 @@ export async function defeatEnemy() {
       const region = getCurrentRegion();
       const newItem = inventory.createItem(itemType, itemLevel, undefined, region.tier);
       inventory.addItemToInventory(newItem);
+      const rarityName = ITEM_RARITY[newItem.rarity]?.name || newItem.rarity;
+      battleLog.addDrop(`Dropped ${rarityName} ${newItem.type}`);
 
       showLootNotification(newItem);
     }
@@ -262,6 +279,7 @@ export async function defeatEnemy() {
       }
       inventory.addMaterial({ id: mat.id, icon: mat.icon, qty });
       statistics.increment('totalMaterialsDropped', null, qty);
+      battleLog.addDrop(`Dropped ${mat.name} x${qty}`);
       showMaterialNotification(mat);
 
       // Calculate extra drops in a single calculation instead of performing many RNG loops.
@@ -304,6 +322,7 @@ export async function defeatEnemy() {
         for (const { mat: aMat, qty: totalQty } of aggregate.values()) {
           inventory.addMaterial({ id: aMat.id, icon: aMat.icon, qty: totalQty });
           statistics.increment('totalMaterialsDropped', null, totalQty);
+          battleLog.addDrop(`Dropped ${aMat.name} x${totalQty}`);
         }
       }
     }

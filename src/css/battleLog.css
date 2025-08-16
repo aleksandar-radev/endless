@@ -1,0 +1,88 @@
+.battle-log-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-panel);
+  border: 1px solid var(--bg-element);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: inherit;
+  padding: 6px;
+}
+
+.battle-log-tabs {
+  display: flex;
+  margin-bottom: 6px;
+}
+
+.battle-log-tab {
+  flex: 1;
+  padding: 8px;
+  background: var(--bg-element);
+  color: var(--text);
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.battle-log-tab:not(.active):hover {
+  filter: brightness(1.1);
+}
+
+.battle-log-tab.active {
+  background: var(--accent);
+}
+
+.battle-log-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.battle-log-controls button {
+  flex: 1;
+  padding: 6px 0;
+  background: var(--bg-element);
+  color: var(--text);
+  border: 1px solid var(--bg-element);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.battle-log-controls button:hover {
+  filter: brightness(1.1);
+}
+
+.battle-log-content {
+  flex: 1;
+  display: flex;
+  background: var(--bg-dark);
+  border: 1px solid var(--bg-element);
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.log-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.log-entry {
+  font-size: 0.9em;
+  padding: 2px 0;
+  border-bottom: 1px solid var(--bg-element);
+}
+
+.timestamp {
+  color: #9ca3af;
+  font-size: 0.8em;
+  margin-right: 6px;
+  font-family: monospace;
+}
+
+.hidden {
+  display: none;
+}
+

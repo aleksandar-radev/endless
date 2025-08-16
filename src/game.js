@@ -5,6 +5,18 @@ import Enemy from './enemy.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateBossUI } from './ui/bossUi.js';
 import { getCurrentRegion } from './region.js';
+import { battleLog } from './battleLog.js';
+
+function formatDamageBreakdown(breakdown) {
+  if (!breakdown) return '';
+  const parts = Object.entries(breakdown)
+    .filter(([, val]) => Math.floor(val) > 0)
+    .map(
+      ([type, val]) => `${type.charAt(0).toUpperCase() + type.slice(1)} ${Math.floor(val)}`,
+    )
+    .join(', ');
+  return parts ? ` (${parts})` : '';
+}
 
 class Game {
   constructor(savedData = {}) {
@@ -47,7 +59,7 @@ class Game {
     return options.startingStage > 0 ? options.startingStage : 1 + (crystalShop.crystalUpgrades?.startingStage || 0);
   }
 
-  damagePlayer(damage) {
+  damagePlayer(damage, breakdown) {
     const activeBuffs = skillTree.getActiveBuffEffects();
     if (activeBuffs && activeBuffs.manaShieldPercent) {
       // If manaShieldPercent is active, apply it
@@ -70,6 +82,7 @@ class Game {
     }
     updatePlayerLife();
     createDamageNumber({ text: `-${Math.floor(damage)}`, isPlayer: true });
+    battleLog.addBattle(`Received ${Math.floor(damage)} damage${formatDamageBreakdown(breakdown)}`);
   }
 
   healPlayer(heal) {
@@ -93,6 +106,7 @@ class Game {
     }
     if (heal >= 1) {
       createDamageNumber({ text: '+' + Math.floor(heal), isPlayer: true, isCritical: false, color });
+      battleLog.addBattle(`Healed ${Math.floor(heal)} life`);
     }
   }
 
@@ -110,13 +124,19 @@ class Game {
 
     if (mana >= 1) {
       createDamageNumber({ text: '+' + Math.floor(mana), isPlayer: true, isCritical: false, color });
+      battleLog.addBattle(`Restored ${Math.floor(mana)} mana`);
     }
   }
 
-  damageEnemy(damage, isCritical = false) {
+  damageEnemy(damage, isCritical = false, breakdown = null, skillName = null) {
     // bail out if we've already defeated this enemy this tick
     if (this._justDefeated) return;
     damage = Math.floor(damage); // Ensure damage is an integer
+    battleLog.addBattle(
+      `${skillName ? `Cast ${skillName} for` : 'Dealt'} ${damage} damage${formatDamageBreakdown(breakdown)}${
+        isCritical ? ' (critical)' : ''
+      }`,
+    );
     if (this.fightMode === 'arena' && this.currentEnemy) {
       const isDead = this.currentEnemy.takeDamage(damage);
       document.dispatchEvent(new CustomEvent('damageDealt', { detail: damage }));

@@ -3,6 +3,7 @@ import { getCurrentRegion, getRegionEnemies } from './region.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
 import { percentIncreasedByLevel, percentReducedByLevel, scaleStat } from './common.js';
 import { hero } from './globals.js';
+import { battleLog } from './battleLog.js';
 
 // base value increase per level
 // for tier 1 enemy level 1 50 life, level 2 is 50 + 25 = 75 (e.g. 50% increase for base value per level)
@@ -135,6 +136,9 @@ class Enemy {
 
     this.currentLife = this.life;
     this.lastAttack = Date.now();
+
+    const rarityName = this.rarity.charAt(0) + this.rarity.slice(1).toLowerCase();
+    battleLog.addBattle(`Encountered ${rarityName} Level ${this.level} ${this.name}`);
   }
 
   // used when reductions are applied from skills usually buff, but can be instant too

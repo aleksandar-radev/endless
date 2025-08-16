@@ -4,6 +4,7 @@
 import { percentIncreasedByLevel, percentReducedByLevel, scaleStat } from './common.js';
 import { BOSSES } from './constants/bosses.js';
 import { hero } from './globals.js';
+import { battleLog } from './battleLog.js';
 
 const INCREASE_PER_LEVEL = 0.01;
 const stat_increase = (level) => percentIncreasedByLevel(0.1, level, 50, 0.015, 1);
@@ -62,6 +63,7 @@ class Boss {
 
     this.reward = this.baseData.reward;
     this.lastAttack = Date.now();
+    battleLog.addBattle(`Encountered Boss Level ${this.level} ${this.name}`);
   }
 
 
