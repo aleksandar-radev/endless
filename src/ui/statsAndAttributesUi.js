@@ -260,7 +260,8 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           row.className = 'stat-row';
           const lbl = document.createElement('span');
           lbl.className = 'stat-label';
-          lbl.textContent = formatStatName(key);
+          const lblText = formatStatName(key);
+          if (lblText && lblText.includes('<')) lbl.innerHTML = lblText; else lbl.textContent = lblText;
           const span = document.createElement('span');
           span.id = `${key}-value`;
           let val = hero.stats[key];
@@ -307,7 +308,8 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           row.className = 'stat-row';
           const lbl = document.createElement('span');
           lbl.className = 'stat-label';
-          lbl.textContent = formatStatName(key);
+          const lblText = formatStatName(key);
+          if (lblText && lblText.includes('<')) lbl.innerHTML = lblText; else lbl.textContent = lblText;
           const span = document.createElement('span');
           span.id = `${key}-value`;
           let val = hero.stats[key];

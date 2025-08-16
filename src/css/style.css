@@ -1,8 +1,8 @@
 :root {
   --fire: rgb(228, 85, 85);
   --cold: rgb(85, 170, 228);
-  --air: rgb(164, 196, 218);
-  --earth: rgb(165, 155, 68);
+  --air: rgb(138, 170, 190);
+  --earth: rgb(96, 163, 40);
   --lightning: rgb(255, 204, 0);
   --water: rgb(0, 128, 255);
 }

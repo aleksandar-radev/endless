@@ -112,10 +112,16 @@ export function initializeUI() {
       const label = display?.querySelector('.stage-label');
       const value = display?.querySelector('.stage-value');
       if (region === 'explore') {
-        if (label) label.textContent = t('combat.stage');
+        if (label) {
+          const val = t('combat.stage');
+          if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
+        }
         if (value) value.textContent = game.stage;
       } else if (region === 'arena') {
-        if (label) label.textContent = t('combat.bossLevel');
+        if (label) {
+          const val = t('combat.bossLevel');
+          if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
+        }
         if (value) value.textContent = hero.bossLevel;
       }
       // Hide or show region-selector based on region
@@ -310,12 +316,18 @@ export function updateStageUI() {
   const label = stageDisplay?.querySelector('.stage-label');
   const value = stageDisplay?.querySelector('.stage-value');
   if (stageDisplay && game.fightMode === 'arena') {
-    if (label) label.textContent = t('combat.bossLevel');
+    if (label) {
+      const val = t('combat.bossLevel');
+      if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
+    }
     if (value) value.textContent = hero.bossLevel;
     return;
   }
   if (stageDisplay) {
-    if (label) label.textContent = t('combat.stage');
+    if (label) {
+      const val = t('combat.stage');
+      if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
+    }
     if (value) value.textContent = stage;
   }
 }

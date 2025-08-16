@@ -5,6 +5,13 @@
   --accent: #3b82f6;
   --text: #ffffff;
   --life: #ef4444;
+  /* Element icon gradients */
+  --grad-fire: linear-gradient(135deg, #ff6b6b 0%, #ffb86b 100%);
+  --grad-cold: linear-gradient(135deg, #9be7ff 0%, #60a5fa 100%);
+  --grad-air: linear-gradient(135deg, #d8f3ff 0%, #8bd3ff 100%);
+  --grad-earth: linear-gradient(135deg, #86efac 0%, #4ade80 100%);
+  --grad-lightning: linear-gradient(135deg, #fff59a 0%, #f97316 100%);
+  --grad-water: linear-gradient(135deg, #67e8f9 0%, #2563eb 100%);
   --persistent-storage-slot: rgb(57, 175, 230);
 }
 
@@ -313,4 +320,53 @@ body.dev-active .game-container {
   border: 1px solid #374151;
   font-size: 12px;
   font-family: inherit;
+}
+
+/* Material Design Icon (MDI) styles - simple color only (no gradients or effects) */
+.mdi {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 1.05em;
+  line-height: 1;
+  color: var(--accent);
+  transition: color 0.12s ease;
+}
+
+/* Per-element solid color classes (keeps icons as font glyphs, only applies color) */
+.mdi-fire {
+  color: var(--fire);
+}
+
+.mdi-snowflake {
+  color: var(--cold);
+}
+
+.mdi-weather-windy {
+  color: var(--air);
+}
+
+.mdi-earth {
+  color: var(--earth);
+}
+
+.mdi-flash {
+  color: var(--lightning);
+}
+
+.mdi-water {
+  color: var(--water);
+}
+
+/* Slightly larger icons in sidebars or resource bars */
+.resource-bar .mdi,
+.sidebar .mdi {
+  font-size: 1.2em;
+}
+
+/* icon helper used elsewhere (emoji fallback) */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
 }

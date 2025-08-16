@@ -13,7 +13,10 @@ export function selectBoss() {
   const display = document.getElementById('stage-display');
   const label = display?.querySelector('.stage-label');
   const value = display?.querySelector('.stage-value');
-  if (label) label.textContent = t('combat.bossLevel');
+  if (label) {
+    const val = t('combat.bossLevel');
+    if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
+  }
   if (value) value.textContent = hero.bossLevel;
 }
 

@@ -20,9 +20,18 @@ export function t(key) {
 export function applyTranslations() {
   document.querySelectorAll('[data-i18n]').forEach((el) => {
     const key = el.getAttribute('data-i18n');
-    el.textContent = t(key);
+    const value = t(key) || '';
+    // If the translation contains HTML (or element explicitly requests HTML), insert as HTML
+    const forceHtml = el.hasAttribute('data-i18n-html');
+    if (forceHtml || value.includes('<')) {
+      el.innerHTML = value;
+    } else {
+      el.textContent = value;
+    }
   });
-  document.title = t('app.title');
+  // Ensure the document title does not contain raw HTML tags
+  const rawTitle = t('app.title') || '';
+  document.title = rawTitle.replace(/<[^>]*>/g, '');
 }
 
 export function getCurrentLanguage() {
