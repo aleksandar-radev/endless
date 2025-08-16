@@ -25,6 +25,7 @@ import { updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { initializeBuildingsUI, renderPurchasedBuildings } from './ui/buildingUi.js';
 import { initializePrestigeUI } from './ui/prestigeUi.js';
+import { initializeBattleLogUI } from './ui/battleLogUi.js';
 import Enemy from './enemy.js';
 import { setupLeaderboardTabLazyLoad } from './ui/leaderboardUi.js';
 import Boss from './boss.js';
@@ -63,6 +64,7 @@ window.setLanguage = setLanguage;
   initializeSkillTreeUI();
   initializeBuildingsUI();
   initializePrestigeUI();
+  initializeBattleLogUI();
 
   // Apply translations after UI components are initialized
   applyTranslations();
@@ -150,10 +152,8 @@ window.setLanguage = setLanguage;
     footer.style.flexDirection = 'column';
     footer.style.justifyContent = 'center';
     footer.style.alignItems = 'center';
-    footer.style.height = '60px';
     footer.innerHTML = `
-      <div>Full game on <a href="https://ghost-team.top">ghost-team.top</a></div>
-      <div>In this test version, type <span style="color: #007bff; font-size: 1.4em">edev</span> anywhere in the browser to access developer options.</div>
+      <div>Full game on <a href="https://ghost-team.top">ghost-team.top</a> In this test version, type <span style="color: #007bff; font-size: 1.4em">edev</span> anywhere in the browser to access developer options.</div>
     `;
     document.body.appendChild(footer);
   }
