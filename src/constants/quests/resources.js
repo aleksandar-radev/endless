@@ -31,7 +31,7 @@ export const RESOURCE_QUESTS = [
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 15000,
-    reward: { crystals: 1 },
+    reward: { crystals: 2 },
     icon: '💰',
   },
   {
@@ -42,7 +42,7 @@ export const RESOURCE_QUESTS = [
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 50000,
-    reward: { crystals: 1 },
+    reward: { crystals: 3 },
     icon: '💰',
   },
   {
@@ -53,7 +53,7 @@ export const RESOURCE_QUESTS = [
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 150000,
-    reward: { crystals: 2 },
+    reward: { crystals: 4 },
     icon: '💰',
   },
   {
@@ -64,7 +64,7 @@ export const RESOURCE_QUESTS = [
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 500000,
-    reward: { crystals: 2 },
+    reward: { crystals: 5 },
     icon: '🏆',
   },
   {
@@ -75,7 +75,7 @@ export const RESOURCE_QUESTS = [
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 1500000,
-    reward: { crystals: 3 },
+    reward: { crystals: 6 },
     icon: '🏆',
   },
   {
@@ -86,7 +86,7 @@ export const RESOURCE_QUESTS = [
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 5000000,
-    reward: { crystals: 5 },
+    reward: { crystals: 7 },
     icon: '🏆',
   },
   {

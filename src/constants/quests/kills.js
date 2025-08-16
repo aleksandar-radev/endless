@@ -8,7 +8,7 @@ export const KILL_QUESTS = [
     description: t('Defeat 10 enemies.'),
     type: 'kill',
     target: 10,
-    reward: { gold: 500, item: { rarity: 'rare', type: 'random', tier: 1 } },
+    reward: { gold: 500, crystals: 1, item: { rarity: 'rare', type: 'random', tier: 1 } },
     icon: '⚔️',
   },
   {
@@ -18,7 +18,7 @@ export const KILL_QUESTS = [
     description: t('Defeat 50 enemies.'),
     type: 'kill',
     target: 50,
-    reward: { gold: 1500 },
+    reward: { gold: 1500, crystals: 2 },
     icon: '⚔️',
   },
   {

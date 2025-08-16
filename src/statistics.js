@@ -19,8 +19,9 @@ export default class Statistics {
     };
     this.itemsFound = {
       normal: 0,
+      magic: 0,
       rare: 0,
-      epic: 0,
+      unique: 0,
       legendary: 0,
       mythic: 0,
     };
@@ -60,8 +61,9 @@ export default class Statistics {
     };
     this.itemsFound = {
       normal: 0,
+      magic: 0,
       rare: 0,
-      epic: 0,
+      unique: 0,
       legendary: 0,
       mythic: 0,
     };
