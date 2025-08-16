@@ -6,6 +6,7 @@ import {
   updateBuffIndicators,
   updateTabIndicators,
   showToast,
+  showDeathScreen,
 } from './ui/ui.js';
 import Enemy from './enemy.js';
 import { hero, game, inventory, crystalShop, statistics, skillTree, dataManager } from './globals.js';
@@ -156,53 +157,55 @@ export function playerAttack(currentTime) {
 export function playerDeath() {
   statistics.increment('deaths');
   const shouldContinue = crystalShop.crystalUpgrades.continuousPlay;
+  game.gameStarted = false;
 
-  if (!shouldContinue) {
-    game.gameStarted = false;
-    const startBtn = document.getElementById('start-btn');
-    if (startBtn) {
-      startBtn.textContent = 'Fight';
-      startBtn.style.backgroundColor = '#059669';
+  showDeathScreen(10, () => {
+    if (!shouldContinue) {
+      const startBtn = document.getElementById('start-btn');
+      if (startBtn) {
+        startBtn.textContent = 'Fight';
+        startBtn.style.backgroundColor = '#059669';
+      }
     }
-  }
 
-  if (game.fightMode === 'arena') {
-    // If in arena, reset boss state and player health
-    game.currentEnemy.resetLife();
-    game.resetAllLife(); // <-- Ensure player health is reset
-    updateBossUI();
-  } else if (game.fightMode === 'explore') {
-    // Reset everything regardless of continue state
-    game.stage = game.getStartingStage();
-    updateStageUI();
-    game.currentEnemy = new Enemy(game.stage);
-    game.resetAllLife();
-  }
+    if (game.fightMode === 'arena') {
+      // If in arena, reset boss state and player health
+      game.currentEnemy.resetLife();
+      game.resetAllLife(); // <-- Ensure player health is reset
+      updateBossUI();
+    } else if (game.fightMode === 'explore') {
+      // Reset everything regardless of continue state
+      game.stage = game.getStartingStage();
+      updateStageUI();
+      game.currentEnemy = new Enemy(game.stage);
+      game.resetAllLife();
+    }
 
-  // reset ressurect counts
-  game.resurrectCount = 0;
-  game.soulShopResurrectCount = 0;
+    // reset ressurect counts
+    game.resurrectCount = 0;
+    game.soulShopResurrectCount = 0;
 
-  // Update all UI elements
-  if (game.currentEnemy) {
-    updateEnemyStats();
-  }
-  updateResources();
-  updateStatsAndAttributesUI();
-  updatePlayerLife();
-
-  // Reset buffs and indicators
-  skillTree.stopAllBuffs();
-  updateBuffIndicators();
-
-  // If continuing, restart the game state
-  if (shouldContinue) {
-    game.gameStarted = true;
-    game.lastPlayerAttack = Date.now();
+    // Update all UI elements
     if (game.currentEnemy) {
-      game.currentEnemy.lastAttack = Date.now();
+      updateEnemyStats();
     }
-  }
+    updateResources();
+    updateStatsAndAttributesUI();
+    updatePlayerLife();
+
+    // Reset buffs and indicators
+    skillTree.stopAllBuffs();
+    updateBuffIndicators();
+
+    // If continuing, restart the game state
+    if (shouldContinue) {
+      game.gameStarted = true;
+      game.lastPlayerAttack = Date.now();
+      if (game.currentEnemy) {
+        game.currentEnemy.lastAttack = Date.now();
+      }
+    }
+  });
 }
 
 export async function defeatEnemy() {

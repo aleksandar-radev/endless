@@ -54,6 +54,10 @@
   border-radius: 0.5rem;
 }
 
+.combat-panel {
+  position: relative;
+}
+
 .character-info {
   display: flex;
 }
@@ -494,4 +498,18 @@
 
 #start-btn:hover {
   background-color: #047857;
+}
+
+#death-screen {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  color: var(--text);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 2000;
+  font-size: 2rem;
 }

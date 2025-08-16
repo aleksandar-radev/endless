@@ -357,6 +357,47 @@ export function showToast(message, type = 'normal', duration = 3000) {
   }, duration);
 }
 
+let deathScreenInterval = null;
+export function showDeathScreen(duration = 10, onRevive) {
+  if (deathScreenInterval) clearInterval(deathScreenInterval);
+  const overlay = document.getElementById('death-screen');
+  const countdownElem = document.getElementById('revive-countdown');
+  if (!overlay || !countdownElem) {
+    if (onRevive) onRevive();
+    return;
+  }
+  const charInfo = document.querySelector('.combat-panel .character-info');
+  const actionBar = document.querySelector('.combat-panel .action-bar');
+  if (charInfo && actionBar) {
+    const top = charInfo.offsetTop;
+    const height = actionBar.offsetTop + actionBar.offsetHeight - top;
+    overlay.style.top = `${top}px`;
+    overlay.style.height = `${height}px`;
+  }
+  overlay.style.display = 'flex';
+  let remaining = duration;
+  countdownElem.textContent = remaining;
+  deathScreenInterval = setInterval(() => {
+    remaining -= 1;
+    countdownElem.textContent = remaining;
+    if (remaining <= 0) {
+      clearInterval(deathScreenInterval);
+      overlay.style.display = 'none';
+      if (onRevive) onRevive();
+    }
+  }, 1000);
+}
+
+export function hideDeathScreen() {
+  const overlay = document.getElementById('death-screen');
+  if (overlay) {
+    overlay.style.display = 'none';
+    overlay.style.top = '';
+    overlay.style.height = '';
+  }
+  if (deathScreenInterval) clearInterval(deathScreenInterval);
+}
+
 // Function to show the tooltip
 export function showTooltip(content, event, classes = '') {
   const tooltip = document.getElementById('tooltip');
