@@ -375,17 +375,22 @@ export function showDeathScreen(duration = 10, onRevive) {
     overlay.style.height = `${height}px`;
   }
   overlay.style.display = 'flex';
+  if (duration <= 0) {
+    overlay.style.display = 'none';
+    if (onRevive) onRevive();
+    return;
+  }
   let remaining = duration;
-  countdownElem.textContent = remaining;
+  countdownElem.textContent = Math.ceil(remaining);
   deathScreenInterval = setInterval(() => {
-    remaining -= 1;
-    countdownElem.textContent = remaining;
+    remaining -= 0.5;
+    countdownElem.textContent = Math.ceil(remaining);
     if (remaining <= 0) {
       clearInterval(deathScreenInterval);
       overlay.style.display = 'none';
       if (onRevive) onRevive();
     }
-  }, 1000);
+  }, 500);
 }
 
 export function hideDeathScreen() {

@@ -159,7 +159,9 @@ export function playerDeath() {
   const shouldContinue = crystalShop.crystalUpgrades.continuousPlay;
   game.gameStarted = false;
 
-  showDeathScreen(10, () => {
+  const timerReduction = (crystalShop.crystalUpgrades.deathTimerReduction || 0) * 0.5;
+  const deathTimer = Math.max(3, 10 - timerReduction);
+  showDeathScreen(deathTimer, () => {
     if (!shouldContinue) {
       const startBtn = document.getElementById('start-btn');
       if (startBtn) {

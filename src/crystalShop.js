@@ -16,6 +16,31 @@ import { createModal } from './ui/modal.js';
 const html = String.raw;
 
 const CRYSTAL_UPGRADE_CONFIG = {
+  continuousPlay: {
+    label: 'Continuous Play',
+    bonus: 'Auto-continue after death',
+    bonusLabel: 'Auto-continue after death',
+    baseCost: 6,
+    oneTime: true,
+  },
+  autoSpellCast: {
+    label: 'Auto Spell Cast',
+    bonus: 'Automatically casts instant and buff skills',
+    bonusLabel: 'Automatically casts instant and buff skills',
+    baseCost: 40,
+    oneTime: true,
+  },
+  deathTimerReduction: {
+    label: 'Death Timer Reduction (s)',
+    bonus: 0.5,
+    bonusLabel: 'Reduces death countdown by 0.5s',
+    showLevel: true,
+    baseCost: 100,
+    costIncrement: 50,
+    multiple: true,
+    bulkModal: true,
+    maxLevel: 14,
+  },
   startingStage: {
     label: 'Starting Stage',
     bonus: 1,
@@ -41,20 +66,6 @@ const CRYSTAL_UPGRADE_CONFIG = {
     bonus: 'Unlocks option to stop skipping after a chosen stage',
     bonusLabel: 'Unlocks reset stage skip option',
     baseCost: 500,
-    oneTime: true,
-  },
-  continuousPlay: {
-    label: 'Continuous Play',
-    bonus: 'Auto-continue after death',
-    bonusLabel: 'Auto-continue after death',
-    baseCost: 7,
-    oneTime: true,
-  },
-  autoSpellCast: {
-    label: 'Auto Spell Cast',
-    bonus: 'Automatically casts instant and buff skills',
-    bonusLabel: 'Automatically casts instant and buff skills',
-    baseCost: 40,
     oneTime: true,
   },
   resetSkillTree: {
@@ -150,7 +161,7 @@ export default class CrystalShop {
     const level = this.crystalUpgrades[stat] || 0;
     const cost = Math.floor(config.baseCost + (config.costIncrement || 0) * level);
     let isMaxed = false;
-    if (stat === 'autoSalvage' && config.maxLevel) {
+    if (config.maxLevel) {
       isMaxed = level >= config.maxLevel;
     }
     return `
@@ -264,8 +275,9 @@ export default class CrystalShop {
     this.selectedQty = 1;
 
     if (config.bulkModal) {
+      const maxLevelText = config.maxLevel ? ' / <span class="modal-max-level"></span>' : '';
       fields.innerHTML = `
-        <p>Current Level: <span class="modal-level"></span></p>
+        <p>Current Level: <span class="modal-level"></span>${maxLevelText}</p>
         <p>Current Bonus: <span class="modal-bonus"></span></p>
         <p>Next Level Bonus: <span class="modal-next-bonus"></span></p>
         <p>Total Bonus: <span class="modal-total-bonus"></span></p>
@@ -337,13 +349,17 @@ export default class CrystalShop {
     if (config.bulkModal) {
       const baseLevel = this.crystalUpgrades[stat] || 0;
       const crystalsAvailable = hero.crystals;
-      let qty = this.selectedQty === 'max' ? 0 : this.selectedQty;
+      const cap = config.maxLevel || Infinity;
+      const levelsLeft = Math.max(0, cap - baseLevel);
+      let qty = this.selectedQty === 'max' ? levelsLeft : this.selectedQty;
+      qty = Math.min(qty, levelsLeft);
       let totalCost = 0;
 
       if (this.selectedQty === 'max') {
         let lvl = baseLevel;
         let crystals = crystalsAvailable;
-        while (true) {
+        qty = 0;
+        while (lvl < cap) {
           const cost = Math.floor(config.baseCost + (config.costIncrement || 0) * lvl);
           if (crystals < cost) break;
           crystals -= cost;
@@ -358,16 +374,26 @@ export default class CrystalShop {
         }
       }
 
-      const bonusValue = (config.bonus || 0) * qty;
-      if (q('.modal-qty')) q('.modal-qty').textContent = qty;
-      if (q('.modal-total-cost')) q('.modal-total-cost').textContent = totalCost;
-      if (q('.modal-total-bonus')) q('.modal-total-bonus').textContent = `+${bonusValue} ${config.label}`;
+      const isMaxed = levelsLeft === 0;
+      if (q('.modal-max-level')) q('.modal-max-level').textContent = cap;
       if (q('.modal-level')) q('.modal-level').textContent = baseLevel;
       if (q('.modal-bonus')) q('.modal-bonus').textContent = this.getBonusText(stat, config, baseLevel);
-      if (q('.modal-next-bonus')) q('.modal-next-bonus').textContent = this.getBonusText(stat, config, baseLevel + 1);
+
+      if (isMaxed) {
+        if (q('.modal-next-bonus')) q('.modal-next-bonus').textContent = 'Maxed';
+        if (q('.modal-total-bonus')) q('.modal-total-bonus').textContent = this.getBonusText(stat, config, baseLevel);
+        if (q('.modal-total-cost')) q('.modal-total-cost').textContent = 0;
+        if (q('.modal-qty')) q('.modal-qty').textContent = 0;
+      } else {
+        const bonusValue = (config.bonus || 0) * qty;
+        if (q('.modal-qty')) q('.modal-qty').textContent = qty;
+        if (q('.modal-total-cost')) q('.modal-total-cost').textContent = totalCost;
+        if (q('.modal-total-bonus')) q('.modal-total-bonus').textContent = `+${bonusValue} ${config.label}`;
+        if (q('.modal-next-bonus')) q('.modal-next-bonus').textContent = this.getBonusText(stat, config, baseLevel + 1);
+      }
 
       const buyBtn = q('.modal-buy');
-      if (buyBtn) buyBtn.disabled = qty <= 0 || totalCost > crystalsAvailable;
+      if (buyBtn) buyBtn.disabled = isMaxed || qty <= 0 || totalCost > crystalsAvailable;
     } else if (stat === 'autoSalvage') {
       const level = this.crystalUpgrades[stat] || 0;
       const cap = config.maxLevel || 6;
@@ -542,11 +568,12 @@ export default class CrystalShop {
         } else {
           qty = Math.min(qty, cap - current);
         }
-      } else if (stat === 'autoSalvage') {
-        const current = this.crystalUpgrades.autoSalvage || 0;
-        const cap = CRYSTAL_UPGRADE_CONFIG.autoSalvage.maxLevel || 6;
+      }
+      if (config.maxLevel) {
+        const current = this.crystalUpgrades[stat] || 0;
+        const cap = config.maxLevel;
         if (current >= cap) {
-          showToast('Auto-Salvage is maxed out.', 'error');
+          showToast(`${config.label} is maxed out.`, 'error');
           return;
         }
         if (qty === 'max') {
