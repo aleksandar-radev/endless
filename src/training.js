@@ -102,7 +102,8 @@ export default class Training {
       btn.onclick = () => {
         this.activeSection = btn.dataset.section;
         this.updateTrainingUI('gold-upgrades');
-        nav.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+        // Only toggle active state among section buttons so qty controls keep their active state
+        nav.querySelectorAll('button[data-section]').forEach((b) => b.classList.remove('active'));
         btn.classList.add('active');
       };
     });
