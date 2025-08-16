@@ -101,7 +101,8 @@ const CUSTOM_DESCRIPTIONS = {
   agility: () =>
     `Each point increases:<br />• Attack Rating by ${ATTRIBUTES.agility.effects.attackRatingPerPoint}<br />• Damage by ${ATTRIBUTES.agility.effects.damagePerPoint}<br />`,
   vitality: () => `Each point increases:<br />• Life by ${ATTRIBUTES.vitality.effects.lifePerPoint}<br />`,
-  wisdom: () => `Each point increases:<br />• Mana by ${ATTRIBUTES.wisdom.effects.manaPerPoint}<br />`,
+  wisdom: () =>
+    `Each point increases:<br />• Mana by ${ATTRIBUTES.wisdom.effects.manaPerPoint}<br />• Mana Regeneration by ${ATTRIBUTES.wisdom.effects.manaRegenPerPoint}<br />`,
   endurance: () => `Each point increases:<br />• Armor by ${ATTRIBUTES.endurance.effects.armorPerPoint}<br />`,
   dexterity: () => `Each point increases:<br />• Evasion by ${ATTRIBUTES.dexterity.effects.evasionPerPoint}<br />`,
   intelligence: () =>
