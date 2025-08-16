@@ -10,7 +10,7 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 5,
     reward: { gold: 200, crystals: 1, item: { rarity: 'rare', type: 'random', tier: 1 } },
-    icon: '🧙',
+    icon: '<i class="mdi mdi-wizard-hat"></i>',
   },
   {
     id: 'level_10',
@@ -20,7 +20,7 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 10,
     reward: { gold: 500, crystals: 1, item: { rarity: 'rare', type: 'random', tier: 1 } },
-    icon: '🧙',
+    icon: '<i class="mdi mdi-wizard-hat"></i>',
   },
   {
     id: 'level_25',
@@ -30,7 +30,7 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 25,
     reward: { gold: 1000, crystals: 1 },
-    icon: '🦸',
+    icon: '<i class="mdi mdi-account-star"></i>',
   },
   {
     id: 'level_50',
@@ -40,7 +40,7 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 50,
     reward: { gold: 2000, crystals: 2 },
-    icon: '🦸',
+    icon: '<i class="mdi mdi-account-star"></i>',
   },
   {
     id: 'level_75',
@@ -50,7 +50,7 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 75,
     reward: { gold: 5000, crystals: 2 },
-    icon: '🦸',
+    icon: '<i class="mdi mdi-account-star"></i>',
   },
   {
     id: 'level_100',
@@ -60,7 +60,7 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 100,
     reward: { gold: 10000, crystals: 3 },
-    icon: '⭐',
+    icon: '<i class="mdi mdi-star"></i>',
   },
   {
     id: 'level_150',
@@ -70,7 +70,7 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 150,
     reward: { gold: 20000, crystals: 5 },
-    icon: '⭐',
+    icon: '<i class="mdi mdi-star"></i>',
   },
   {
     id: 'level_200',
@@ -80,7 +80,7 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 200,
     reward: { gold: 40000, crystals: 8 },
-    icon: '🌟',
+    icon: '<i class="mdi mdi-star-circle"></i>',
   },
   {
     id: 'level_300',
@@ -90,7 +90,7 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 300,
     reward: { gold: 80000, crystals: 12 },
-    icon: '🌟',
+    icon: '<i class="mdi mdi-star-circle"></i>',
   },
   {
     id: 'level_500',
@@ -100,7 +100,7 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 500,
     reward: { gold: 150000, crystals: 20 },
-    icon: '✨',
+    icon: '<i class="mdi mdi-star-four-points"></i>',
   },
   {
     id: 'level_750',
@@ -110,7 +110,7 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 750,
     reward: { gold: 300000, crystals: 30 },
-    icon: '✨',
+    icon: '<i class="mdi mdi-star-four-points"></i>',
   },
   {
     id: 'level_1000',
@@ -120,7 +120,7 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 1000,
     reward: { gold: 600000, crystals: 50 },
-    icon: '💫',
+    icon: '<i class="mdi mdi-orbit"></i>',
   },
   // Damage
   {
@@ -131,7 +131,7 @@ export const PROGRESSION_QUESTS = [
     type: 'damage',
     target: 1000,
     reward: { crystals: 1 },
-    icon: '💥',
+    icon: '<i class="mdi mdi-flash"></i>',
   },
   {
     id: 'damage_10000',
@@ -141,7 +141,7 @@ export const PROGRESSION_QUESTS = [
     type: 'damage',
     target: 10000,
     reward: { crystals: 2 },
-    icon: '💥',
+    icon: '<i class="mdi mdi-flash"></i>',
   },
   {
     id: 'damage_100000',
@@ -151,7 +151,7 @@ export const PROGRESSION_QUESTS = [
     type: 'damage',
     target: 100000,
     reward: { crystals: 3 },
-    icon: '💢',
+    icon: '<i class="mdi mdi-alert"></i>',
   },
   {
     id: 'damage_1000000',
@@ -161,7 +161,7 @@ export const PROGRESSION_QUESTS = [
     type: 'damage',
     target: 1000000,
     reward: { crystals: 5 },
-    icon: '💢',
+    icon: '<i class="mdi mdi-alert"></i>',
   },
   {
     id: 'damage_5000000',
@@ -171,7 +171,7 @@ export const PROGRESSION_QUESTS = [
     type: 'damage',
     target: 5000000,
     reward: { crystals: 8 },
-    icon: '💥',
+    icon: '<i class="mdi mdi-flash"></i>',
   },
   {
     id: 'damage_10000000',
@@ -181,6 +181,6 @@ export const PROGRESSION_QUESTS = [
     type: 'damage',
     target: 10000000,
     reward: { crystals: 12 },
-    icon: '💥',
+    icon: '<i class="mdi mdi-flash"></i>',
   },
 ];

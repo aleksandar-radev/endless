@@ -101,7 +101,7 @@ function openPrestigeModal() {
       <button class="modal-close">&times;</button>
       <div class="prestige-cards"></div>
       <div class="modal-controls">
-        <button id="prestige-reroll-btn">Reroll (100💎)</button>
+        <button id="prestige-reroll-btn">Reroll (100<i class="mdi mdi-diamond-stone"></i>)</button>
       </div>
       <div class="prestige-info-message" style="margin-top: 10px; color: #9ac7fcff; font-size: 1.05em;">
 

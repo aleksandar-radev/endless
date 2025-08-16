@@ -141,7 +141,7 @@ export default class Prestige {
             if (refMin != null && refMax != null) {
               const main = `${formatStatName(stat)}: +${scaledPct}%`;
               const right = `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
-              desc = `<span class="prestige-main">✨${main}</span><span class="prestige-ref">(${right})</span>`;
+              desc = `<span class="prestige-main"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
             } else {
               desc = `${formatStatName(stat)}: +${scaledPct}%`;
             }
@@ -149,7 +149,7 @@ export default class Prestige {
             if (refMin != null && refMax != null) {
               const main = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
               const right = `${Math.round(refMin)} - ${Math.round(refMax)}`;
-              desc = `<span class="prestige-main">✨${main}</span><span class="prestige-ref">(${right})</span>`;
+              desc = `<span class="prestige-main"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
             } else {
               desc = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
             }
@@ -184,11 +184,11 @@ export default class Prestige {
         if (b.stat.endsWith('Percent')) {
           const main = `${formatStatName(b.stat)}: +${(value * 100).toFixed(1)}%`;
           const right = `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
-          desc = `<span class="prestige-main">✨${main}</span><span class="prestige-ref">(${right})</span>`;
+          desc = `<span class="prestige-main"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
         } else {
           const main = `${formatStatName(b.stat)}: +${Math.round(value)}`;
           const right = `${Math.round(refMin)} - ${Math.round(refMax)}`;
-          desc = `<span class="prestige-main">✨${main}</span><span class="prestige-ref">(${right})</span>`;
+          desc = `<span class="prestige-main"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
         }
         card.descriptions.push(desc);
       });
@@ -200,7 +200,7 @@ export default class Prestige {
       {
         const main = `${formatStatName(STARTING_CRYSTALS_BONUS.stat)}: +${startingCrystals}`;
         const right = `${Math.floor(refStartMin * scalingFactor)} - ${Math.floor(refStartMax * scalingFactor)}`;
-        card.descriptions.push(`<span class="prestige-main">✨${main}</span><span class="prestige-ref">(${right})</span>`);
+        card.descriptions.push(`<span class=\"prestige-main\"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`);
       }
       cards.push(card);
     }

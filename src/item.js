@@ -171,7 +171,7 @@ export default class Item {
   }
 
   getIcon() {
-    return ITEM_ICONS[this.type] || '❓';
+    return ITEM_ICONS[this.type] || '<i class="mdi mdi-help-circle"></i>';
   }
 
   getDisplayName() {

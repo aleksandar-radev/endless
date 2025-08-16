@@ -1,26 +1,26 @@
 const BASE_STAGE_QUESTS = [
-  { target: 10, reward: { gold: 1200, materials: [{ id: 'experience_potion', qty: 1 }] }, icon: '🗺️' },
+  { target: 10, reward: { gold: 1200, materials: [{ id: 'experience_potion', qty: 1 }] }, icon: '<i class="mdi mdi-map"></i>' },
   {
     target: 25,
     reward: { gold: 2400, crystals: 1, materials: [{ id: 'experience_potion', qty: 2 }] },
-    icon: '🗺️',
+    icon: '<i class="mdi mdi-map"></i>',
   },
   {
     target: 50,
     reward: { gold: 8000, crystals: 2, materials: [{ id: 'experience_potion', qty: 3 }] },
-    icon: '🗺️',
+    icon: '<i class="mdi mdi-map"></i>',
   },
   {
     target: 100,
     reward: { gold: 18000, crystals: 4, materials: [{ id: 'experience_potion', qty: 5 }] },
-    icon: '🗺️',
+    icon: '<i class="mdi mdi-map"></i>',
   },
-  { target: 200, reward: { gold: 32000, crystals: 6 }, icon: '🌍' },
-  { target: 300, reward: { gold: 40000, crystals: 8 }, icon: '🌍' },
-  { target: 500, reward: { gold: 100000, crystals: 15 }, icon: '🌌' },
-  { target: 1000, reward: { gold: 200000, crystals: 25 }, icon: '🌌' },
-  { target: 2500, reward: { gold: 600000, crystals: 40 }, icon: '🌌' },
-  { target: 5000, reward: { gold: 1600000, crystals: 75 }, icon: '🌌' },
+  { target: 200, reward: { gold: 32000, crystals: 6 }, icon: '<i class="mdi mdi-earth"></i>' },
+  { target: 300, reward: { gold: 40000, crystals: 8 }, icon: '<i class="mdi mdi-earth"></i>' },
+  { target: 500, reward: { gold: 100000, crystals: 15 }, icon: '<i class="mdi mdi-weather-night"></i>' },
+  { target: 1000, reward: { gold: 200000, crystals: 25 }, icon: '<i class="mdi mdi-weather-night"></i>' },
+  { target: 2500, reward: { gold: 600000, crystals: 40 }, icon: '<i class="mdi mdi-weather-night"></i>' },
+  { target: 5000, reward: { gold: 1600000, crystals: 75 }, icon: '<i class="mdi mdi-weather-night"></i>' },
 ];
 
 export const STAGE_QUESTS = [];

@@ -45,7 +45,7 @@ export function initializeUI() {
     {
       selector: '.resource-gold',
       tooltip: () => html`
-        <div class="tooltip-header">Gold <span class="icon">💰</span></div>
+        <div class="tooltip-header">Gold <span class="icon"><i class="mdi mdi-currency-usd"></i></span></div>
         <div class="tooltip-desc">Used to buy upgrades.</div>
         <div class="tooltip-note"></div>
       `,
@@ -53,7 +53,7 @@ export function initializeUI() {
     {
       selector: '.resource-crystal',
       tooltip: () => html`
-        <div class="tooltip-header">Crystals <span class="icon">💎</span></div>
+        <div class="tooltip-header">Crystals <span class="icon"><i class="mdi mdi-diamond-stone"></i></span></div>
         <div class="tooltip-desc">Rare currency for powerful upgrades and skill resets.</div>
         <div class="tooltip-note"></div>
       `,
@@ -61,7 +61,7 @@ export function initializeUI() {
     {
       selector: '.resource-souls',
       tooltip: () => html`
-        <div class="tooltip-header">Souls <span class="icon">👻</span></div>
+        <div class="tooltip-header">Souls <span class="icon"><i class="mdi mdi-ghost"></i></span></div>
         <div class="tooltip-desc">Earned from killing monsters.</div>
         <div class="tooltip-note"></div>
       `,

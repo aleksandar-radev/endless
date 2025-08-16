@@ -10,7 +10,7 @@ export const RESOURCE_QUESTS = [
     resource: 'totalGoldEarned',
     target: 1000,
     reward: { gold: 500 },
-    icon: '💰',
+    icon: '<i class="mdi mdi-currency-usd"></i>',
   },
   {
     id: 'gold_5000',
@@ -21,7 +21,7 @@ export const RESOURCE_QUESTS = [
     resource: 'totalGoldEarned',
     target: 5000,
     reward: { crystals: 1 },
-    icon: '💰',
+    icon: '<i class="mdi mdi-currency-usd"></i>',
   },
   {
     id: 'gold_15000',
@@ -32,7 +32,7 @@ export const RESOURCE_QUESTS = [
     resource: 'totalGoldEarned',
     target: 15000,
     reward: { crystals: 2 },
-    icon: '💰',
+    icon: '<i class="mdi mdi-trophy"></i>',
   },
   {
     id: 'gold_50000',
@@ -43,7 +43,7 @@ export const RESOURCE_QUESTS = [
     resource: 'totalGoldEarned',
     target: 50000,
     reward: { crystals: 3 },
-    icon: '💰',
+    icon: '<i class="mdi mdi-trophy"></i>',
   },
   {
     id: 'gold_150000',
@@ -54,7 +54,7 @@ export const RESOURCE_QUESTS = [
     resource: 'totalGoldEarned',
     target: 150000,
     reward: { crystals: 4 },
-    icon: '💰',
+    icon: '<i class="mdi mdi-trophy"></i>',
   },
   {
     id: 'gold_500000',
@@ -65,7 +65,7 @@ export const RESOURCE_QUESTS = [
     resource: 'totalGoldEarned',
     target: 500000,
     reward: { crystals: 5 },
-    icon: '🏆',
+    icon: '<i class="mdi mdi-trophy"></i>',
   },
   {
     id: 'gold_1500000',
@@ -76,7 +76,7 @@ export const RESOURCE_QUESTS = [
     resource: 'totalGoldEarned',
     target: 1500000,
     reward: { crystals: 6 },
-    icon: '🏆',
+    icon: '<i class="mdi mdi-trophy"></i>',
   },
   {
     id: 'gold_5000000',
@@ -87,7 +87,7 @@ export const RESOURCE_QUESTS = [
     resource: 'totalGoldEarned',
     target: 5000000,
     reward: { crystals: 7 },
-    icon: '🏆',
+    icon: '<i class="mdi mdi-trophy"></i>',
   },
   {
     id: 'gold_15000000',
@@ -98,7 +98,7 @@ export const RESOURCE_QUESTS = [
     resource: 'totalGoldEarned',
     target: 15000000,
     reward: { crystals: 8 },
-    icon: '🏆',
+    icon: '<i class="mdi mdi-trophy"></i>',
   },
   {
     id: 'gold_50000000',
@@ -109,7 +109,7 @@ export const RESOURCE_QUESTS = [
     resource: 'totalGoldEarned',
     target: 50000000,
     reward: { crystals: 12 },
-    icon: '👑',
+    icon: '<i class="mdi mdi-crown"></i>',
   },
   {
     id: 'gold_100000000',
@@ -120,7 +120,7 @@ export const RESOURCE_QUESTS = [
     resource: 'totalGoldEarned',
     target: 100000000,
     reward: { crystals: 20 },
-    icon: '👑',
+    icon: '<i class="mdi mdi-crown"></i>',
   },
   {
     id: 'gold_250000000',
@@ -131,7 +131,7 @@ export const RESOURCE_QUESTS = [
     resource: 'totalGoldEarned',
     target: 250000000,
     reward: { crystals: 30 },
-    icon: '✨',
+    icon: '<i class="mdi mdi-star-four-points"></i>',
   },
   {
     id: 'gold_500000000',
@@ -142,7 +142,7 @@ export const RESOURCE_QUESTS = [
     resource: 'totalGoldEarned',
     target: 500000000,
     reward: { crystals: 40 },
-    icon: '💰',
+    icon: '<i class="mdi mdi-currency-usd"></i>',
   },
   {
     id: 'gold_1000000000',
@@ -153,7 +153,7 @@ export const RESOURCE_QUESTS = [
     resource: 'totalGoldEarned',
     target: 1000000000,
     reward: { crystals: 60 },
-    icon: '💎',
+    icon: '<i class="mdi mdi-diamond-stone"></i>',
   },
   // Crystals
   {
@@ -165,7 +165,7 @@ export const RESOURCE_QUESTS = [
     resource: 'crystals',
     target: 5,
     reward: { gold: 1000 },
-    icon: '🔷',
+    icon: '<i class="mdi mdi-diamond-outline"></i>',
   },
   {
     id: 'crystals_10',
@@ -176,7 +176,7 @@ export const RESOURCE_QUESTS = [
     resource: 'crystals',
     target: 10,
     reward: { gold: 2000 },
-    icon: '🔷',
+    icon: '<i class="mdi mdi-diamond-outline"></i>',
   },
   {
     id: 'crystals_25',
@@ -187,7 +187,7 @@ export const RESOURCE_QUESTS = [
     resource: 'crystals',
     target: 25,
     reward: { gold: 5000 },
-    icon: '🔷',
+    icon: '<i class="mdi mdi-diamond-outline"></i>',
   },
   {
     id: 'crystals_50',
@@ -198,7 +198,7 @@ export const RESOURCE_QUESTS = [
     resource: 'crystals',
     target: 50,
     reward: { gold: 10000 },
-    icon: '💎',
+    icon: '<i class="mdi mdi-diamond-stone"></i>',
   },
   {
     id: 'crystals_100',
@@ -209,7 +209,7 @@ export const RESOURCE_QUESTS = [
     resource: 'crystals',
     target: 100,
     reward: { gold: 25000 },
-    icon: '💎',
+    icon: '<i class="mdi mdi-diamond-stone"></i>',
   },
   {
     id: 'crystals_250',
@@ -220,7 +220,7 @@ export const RESOURCE_QUESTS = [
     resource: 'crystals',
     target: 250,
     reward: { gold: 50000 },
-    icon: '💎',
+    icon: '<i class="mdi mdi-diamond-stone"></i>',
   },
   {
     id: 'crystals_500',
@@ -231,7 +231,7 @@ export const RESOURCE_QUESTS = [
     resource: 'crystals',
     target: 500,
     reward: { gold: 100000 },
-    icon: '✨',
+    icon: '<i class="mdi mdi-star-four-points"></i>',
   },
   {
     id: 'crystals_1000',
@@ -242,7 +242,7 @@ export const RESOURCE_QUESTS = [
     resource: 'crystals',
     target: 1000,
     reward: { gold: 250000 },
-    icon: '✨',
+    icon: '<i class="mdi mdi-star-four-points"></i>',
   },
   {
     id: 'crystals_2000',
@@ -253,6 +253,6 @@ export const RESOURCE_QUESTS = [
     resource: 'crystals',
     target: 2000,
     reward: { gold: 500000 },
-    icon: '👑',
+    icon: '<i class="mdi mdi-crown"></i>',
   },
 ];

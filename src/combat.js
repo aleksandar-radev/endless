@@ -368,7 +368,7 @@ function showMaterialNotification(mat) {
   const notification = document.createElement('div');
   notification.className = 'loot-notification';
   notification.style.color = '#FFD700';
-  notification.textContent = `Found: ${mat.icon} ${mat.name}`;
+  notification.innerHTML = `Found: ${mat.icon} ${mat.name}`;
   document.body.appendChild(notification);
 
   setTimeout(() => notification.remove(), 3000);
@@ -422,7 +422,7 @@ export function createDamageNumber({ text = '', isPlayer = false, isCritical = f
 
   const damageEl = document.createElement('div');
   damageEl.className = isCritical ? 'damage-number critical' : 'damage-number';
-  damageEl.textContent = isCritical ? `💥 ${text}` : text;
+  damageEl.innerHTML = isCritical ? '<i class="mdi mdi-flash"></i> ' + text : text;
   if (color) {
     damageEl.style.color = color;
   }

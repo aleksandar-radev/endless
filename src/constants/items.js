@@ -47,20 +47,48 @@ export const ITEM_TYPES = {
 };
 
 export const ITEM_ICONS = {
-  HELMET: '🪖',
-  ARMOR: '👚',
-  BELT: '🎗️',
-  PANTS: '👖',
-  BOOTS: '👢',
-  SWORD: '⚔️',
-  AXE: '🪓',
-  MACE: '🔨',
-  WAND: '🪄',
-  STAFF: '🦯',
-  SHIELD: '🛡️',
-  GLOVES: '🧤',
-  AMULET: '📿',
-  RING: '💍',
+  HELMET: '<i class="mdi mdi-diving-helmet"></i>',
+  ARMOR: '<i class="mdi mdi-tshirt-crew"></i>',
+  BELT: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+  <!-- Belt strap -->
+  <rect x="2" y="7.5" width="14" height="3" fill="#2c3e50" stroke="#000" stroke-width="0.3"/>
+  
+  <!-- Belt buckle -->
+  <rect x="12" y="7" width="4" height="4" fill="#c0a050" stroke="#000" stroke-width="0.3"/>
+  <rect x="13" y="8" width="2" height="2" fill="#2c3e50"/>
+</svg>`,
+  PANTS: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+  <path d="M4 1.3 
+           L14 1.3 
+           L16 17 
+           L11 17 
+           L9.9 7 
+           L8.1 17 
+           L3 17 
+           Z"
+        fill="#326ca7ff" stroke="#000" stroke-width="0.3"/>
+  
+  <rect x="4" y="0.6" width="10" height="0.7" fill="#1a252f"/>
+  
+  <line x1="4.3" y1="2" x2="5.8" y2="4" stroke="#fff" stroke-width="0.3"/>
+  <line x1="13.7" y1="2" x2="12.2" y2="4" stroke="#fff" stroke-width="0.3"/>
+</svg>`,
+  BOOTS: '<i class="mdi mdi-shoe-formal"></i>',
+  SWORD: '<i class="mdi mdi-sword"></i>',
+  AXE: '<i class="mdi mdi-axe"></i>',
+  MACE: '<i class="mdi mdi-hammer"></i>',
+  WAND: '<i class="mdi mdi-auto-fix"></i>',
+  STAFF: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+  <!-- Staff shaft -->
+  <rect x="8.2" y="2" width="1.6" height="14" fill="#8b5a2b" stroke="#000" stroke-width="0.2"/>
+  
+  <!-- Decorative top (crystal orb) -->
+  <circle cx="9" cy="2.5" r="2" fill="#4aa3df" stroke="#000" stroke-width="0.3"/>
+</svg>`,
+  SHIELD: '<i class="mdi mdi-shield"></i>',
+  GLOVES: '<i class="mdi mdi-boxing-glove"></i>',
+  AMULET: '<i class="mdi mdi-necklace"></i>',
+  RING: '<i class="mdi mdi-ring"></i>',
 };
 
 export const ITEM_RARITY = {

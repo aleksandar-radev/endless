@@ -6,7 +6,7 @@ export const MATERIALS = {
   experience_potion: {
     id: 'experience_potion',
     name: t('Experience Potion'),
-    icon: '🧪',
+    icon: '<i class="mdi mdi-test-tube"></i>',
     description: t('Grants 1000 experience when used.'),
     dropChance: 20,
     sort: 100,
@@ -17,7 +17,7 @@ export const MATERIALS = {
   greater_experience_potion: {
     id: 'greater_experience_potion',
     name: t('Greater Experience Potion'),
-    icon: '🧪',
+    icon: '<i class="mdi mdi-test-tube"></i>',
     description: t('Grants 5% experience when used.'),
     dropChance: 3,
     sort: 101,
@@ -29,7 +29,7 @@ export const MATERIALS = {
   huge_experience_potion: {
     id: 'huge_experience_potion',
     name: t('Huge Experience Potion'),
-    icon: '🧪',
+    icon: '<i class="mdi mdi-test-tube"></i>',
     description: t('Grants 15% experience when used.'),
     dropChance: 1,
     sort: 102,
@@ -41,7 +41,7 @@ export const MATERIALS = {
   gold_coins: {
     id: 'gold_coins',
     name: t('Gold Coins'),
-    icon: '🪙',
+    icon: '<i class="mdi mdi-sack"></i>',
     get description() {
       return `Adds ${1000} gold per coin to your total.`;
     },
@@ -54,7 +54,7 @@ export const MATERIALS = {
   large_gold_coins: {
     id: 'large_gold_coins',
     name: t('Large Gold Coins'),
-    icon: '🪙',
+    icon: '<i class="mdi mdi-sack"></i>',
     get description() {
       return `Adds ${10000} gold per coin to your total.`;
     },
@@ -67,7 +67,7 @@ export const MATERIALS = {
   enormous_gold_coins: {
     id: 'enormous_gold_coins',
     name: t('Enormous Gold Coins'),
-    icon: '🪙',
+    icon: '<i class="mdi mdi-sack"></i>',
     get description() {
       return `Adds ${50000} gold per coin to your total.`;
     },
@@ -80,7 +80,7 @@ export const MATERIALS = {
   freaky_gold_coins: {
     id: 'freaky_gold_coins',
     name: t('Freaky Gold Coins'),
-    icon: '🪙',
+    icon: '<i class="mdi mdi-sack"></i>',
     get description() {
       return `Adds ${1000000} gold per coin to your total.`;
     },
@@ -93,7 +93,7 @@ export const MATERIALS = {
   elixir: {
     id: 'elixir',
     name: t('Elixir'),
-    icon: '🥤',
+    icon: '<i class="mdi mdi-cup"></i>',
     description: t('Grants 2 skill points.'),
     dropChance: 2,
     sort: 300,
@@ -106,7 +106,7 @@ export const MATERIALS = {
   crystalized_rock: {
     id: 'crystalized_rock',
     name: t('Crystalized Rock'),
-    icon: '💎',
+    icon: '<i class="mdi mdi-diamond-stone"></i>',
     description: t('Gives 1 crystal.'),
     dropChance: 20,
     sort: 400,
@@ -117,7 +117,7 @@ export const MATERIALS = {
   potion_of_strength: {
     id: 'potion_of_strength',
     name: t('Potion of Strength'),
-    icon: '💥',
+    icon: '<i class="mdi mdi-flash"></i>',
     description: t('Increases strength by 1.'),
     dropChance: 12,
     sort: 500,
@@ -128,7 +128,7 @@ export const MATERIALS = {
   potion_of_agility: {
     id: 'potion_of_agility',
     name: t('Potion of Agility'),
-    icon: '🏃',
+    icon: '<i class="mdi mdi-run"></i>',
     description: t('Increases agility by 1.'),
     dropChance: 12,
     sort: 501,
@@ -139,7 +139,7 @@ export const MATERIALS = {
   potion_of_vitality: {
     id: 'potion_of_vitality',
     name: t('Potion of Vitality'),
-    icon: '❤️',
+    icon: '<i class="mdi mdi-heart"></i>',
     description: t('Increases vitality by 1.'),
     dropChance: 12,
     sort: 502,
@@ -150,7 +150,7 @@ export const MATERIALS = {
   potion_of_endurance: {
     id: 'potion_of_endurance',
     name: t('Potion of Endurance'),
-    icon: '🛡️',
+    icon: '<i class="mdi mdi-shield"></i>',
     description: t('Increases endurance by 1.'),
     dropChance: 12,
     sort: 503,
@@ -161,7 +161,7 @@ export const MATERIALS = {
   potion_of_wisdom: {
     id: 'potion_of_wisdom',
     name: t('Potion of Wisdom'),
-    icon: '🧠',
+    icon: '<i class="mdi mdi-brain"></i>',
     description: t('Increases wisdom by 1.'),
     dropChance: 12,
     sort: 504,
@@ -172,7 +172,7 @@ export const MATERIALS = {
   potion_of_dexterity: {
     id: 'potion_of_dexterity',
     name: t('Potion of Dexterity'),
-    icon: '🎯',
+    icon: '<i class="mdi mdi-bullseye-arrow"></i>',
     description: t('Increases dexterity by 1.'),
     dropChance: 12,
     sort: 505,
@@ -183,7 +183,7 @@ export const MATERIALS = {
   potion_of_intelligence: {
     id: 'potion_of_intelligence',
     name: t('Potion of Intelligence'),
-    icon: '🧠',
+    icon: '<i class="mdi mdi-brain"></i>',
     description: t('Increases intelligence by 1.'),
     dropChance: 12,
     sort: 506,
@@ -194,7 +194,7 @@ export const MATERIALS = {
   potion_of_perseverance: {
     id: 'potion_of_perseverance',
     name: t('Potion of Perseverance'),
-    icon: '💪',
+    icon: '<i class="mdi mdi-arm-flex"></i>',
     description: t('Increases perseverance by 1.'),
     dropChance: 12,
     sort: 507,
@@ -205,7 +205,7 @@ export const MATERIALS = {
   armor_upgrade_stone: {
     id: 'armor_upgrade_stone',
     name: t('Armor Upgrade Stone'),
-    icon: '🪨',
+    icon: '<i class="mdi mdi-cube"></i>',
     description: t("Upgrade the level of an equipped armor item. Requires a quantity equal to the item's tier for each level."),
     dropChance: 20,
     sort: 600,
@@ -218,7 +218,7 @@ export const MATERIALS = {
   jewelry_upgrade_gem: {
     id: 'jewelry_upgrade_gem',
     name: t('Jewelry Upgrade Gem'),
-    icon: '💍',
+    icon: '<i class="mdi mdi-ring"></i>',
     description: t("Upgrade the level of an equipped jewelry item. Requires a quantity equal to the item's tier for each level."),
     dropChance: 4,
     sort: 601,
@@ -231,7 +231,7 @@ export const MATERIALS = {
   weapon_upgrade_core: {
     id: 'weapon_upgrade_core',
     name: t('Weapon Upgrade Core'),
-    icon: '⚡',
+    icon: '<i class="mdi mdi-lightning-bolt"></i>',
     description: t("Upgrade the level of an equipped weapon. Requires a quantity equal to the item's tier for each level."),
     dropChance: 3,
     sort: 602,
@@ -244,7 +244,7 @@ export const MATERIALS = {
   enchantment_scroll: {
     id: 'enchantment_scroll',
     name: t('Enchantment Scroll'),
-    icon: '📜',
+    icon: '<i class="mdi mdi-script-text"></i>',
     description: t('Increases the rarity of an equipped item. (cannot be used on mythic items)'),
     dropChance: 0.5,
     sort: 700,
@@ -256,7 +256,7 @@ export const MATERIALS = {
   alternation_orb: {
     id: 'alternation_orb',
     name: t('Alternation Orb'),
-    icon: '🔄',
+    icon: '<i class="mdi mdi-refresh"></i>',
     description: t('Re-rolls the value of one random stat on an equipped item.'),
     dropChance: 2,
     sort: 701,

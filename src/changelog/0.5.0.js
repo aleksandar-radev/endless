@@ -1,10 +1,10 @@
 const html = String.raw;
 export default function run() {
   return html`
-  <span style="color:#4F8A10;">📝 2025-07-16</span>
+  <span style="color:#4F8A10;"><i class="mdi mdi-notebook"></i> 2025-07-16</span>
 <hr>
 
-<span style="color:#FFA500;">⚖️ Balance Changes</span>
+<span style="color:#FFA500;"><i class="mdi mdi-scale-balance"></i> Balance Changes</span>
 <ul>
   <li>Adjusted blockChance training cost and max level.</li>
   <li>Reduced XP and gold per level for bosses and monsters.</li>
@@ -21,14 +21,14 @@ export default function run() {
   <li>Lowered enemy scaling overall. Higher stages will have weaker enemies. Especially on higher tiers.</li>
 </ul>
 
-<span style="color:#FFA500;">🪲 Bug Fixes</span>
+<span style="color:#FFA500;"><i class="mdi mdi-bug"></i> Bug Fixes</span>
 <ul>
   <li>Fixed damage calculation for hero: % damage bonus and % total damage bonus were stacking incorrectly, causing very
     high values.</li>
   <li>Hotfix: after killing a boss, the next was unable to be defeated.</li>
 </ul>
 
-<span style="color:#FFA500;">✨ Features & Improvements</span>
+<span style="color:#FFA500;"><i class="mdi mdi-star-four-points"></i> Features & Improvements</span>
 <ul>
   <li>Added minimum cooldown (20% of total) and new cooldown calculation</li>
   <li>Added in-house login and logout functionality, including logout button.</li>

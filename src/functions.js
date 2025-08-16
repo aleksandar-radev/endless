@@ -630,7 +630,7 @@ export function createModifyUI() {
   Object.values(MATERIALS).forEach((mat) => {
     const option = document.createElement('option');
     option.value = mat.id;
-    option.textContent = `${mat.icon} ${mat.name}`;
+    option.innerHTML = `${mat.icon} ${mat.name}`;
     materialSelect.appendChild(option);
   });
 
