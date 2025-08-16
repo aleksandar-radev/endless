@@ -69,7 +69,7 @@ export function initializeInventoryUI(inv) {
         <button id="materials-tab" class="inventory-btn" data-i18n="inventory.materials">${t('inventory.materials')}</button>
       </div>
       <div class="sort-row">
-        <div id="sort-inventory" class="inventory-btn sort-btn" aria-label="${t('inventory.sort')}"><span role="img" aria-label="Sort"><i class="mdi mdi-sort"></i></span></div>
+        <div id="sort-inventory" class="inventory-btn sort-btn" aria-label="${t('inventory.sort')}"><span role="img" aria-label="Sort"><i class="mdi mdi-autorenew"></i></span></div>
       </div>
       <button id="open-salvage-modal" class="inventory-btn" data-i18n="inventory.options">${t('inventory.options')}</button>
       <div class="search-container">

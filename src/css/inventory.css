@@ -424,9 +424,15 @@
 
 .search-icon {
   position: absolute;
+  top: 3px;
   left: 8px;
   opacity: 0.5;
   pointer-events: none;
+}
+
+.search-icon .mdi {
+
+  font-size: 24px;
 }
 
 .search-container {
@@ -860,4 +866,13 @@
 .sort-select {
   padding: 3px 5px;
   margin: 8px 5px;
+}
+
+.sort-btn {
+  background: rgb(85, 154, 211);
+  cursor: pointer;
+}
+
+.salvage-container button {
+  cursor: pointer;
 }

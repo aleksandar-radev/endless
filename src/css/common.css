@@ -407,13 +407,16 @@ body.dev-active .game-container {
 .mdi-sword-cross,
 .mdi-axe,
 .mdi-hammer,
-.mdi-magnify,
-.mdi-sort,
 .mdi-script-text,
 .mdi-shoe-formal,
 .mdi-skull,
 .mdi-skull-crossbones {
   color: #9ca3af;
+}
+
+.mdi-magnify,
+.mdi-autorenew {
+  color: white;
 }
 
 .mdi-boxing-glove,
