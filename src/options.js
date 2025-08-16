@@ -140,29 +140,26 @@ export class Options {
     container.appendChild(this._createAdvancedTooltipsOption());
     // --- Advanced Attribute Tooltips Option ---
     container.appendChild(this._createAdvancedAttributeTooltipsOption());
-    // --- Rate Counters Toggle Option ---
-    container.appendChild(this._createRateCountersOption());
-    // --- Rate Counters Period Option ---
-    container.appendChild(this._createRateCountersPeriodOption());
+    // --- Enemy Stats Toggle Option ---
+    container.appendChild(this._createEnemyStatsToggleOption());
     // --- Show All Stats Option ---
     container.appendChild(this._createShowAllStatsOption());
     // --- Elemental Stat Names Option ---
     container.appendChild(this._createShortElementalNamesOption());
-    // --- Enemy Stats Toggle Option ---
-    container.appendChild(this._createEnemyStatsToggleOption());
     // --- Quick Training Toggle Option ---
     container.appendChild(this._createQuickTrainingOption());
     // --- Quick Soul Shop Toggle Option ---
     container.appendChild(this._createQuickSoulShopOption());
-
     // --- Starting Stage Option ---
     container.appendChild(this._createStartingStageOption());
-
     // --- Stage Skip Option ---
     container.appendChild(this._createStageSkipOption());
-
     // --- Reset Stage Skip Option ---
     container.appendChild(this._createResetStageSkipOption());
+    // --- Rate Counters Toggle Option ---
+    container.appendChild(this._createRateCountersOption());
+    // --- Rate Counters Period Option ---
+    container.appendChild(this._createRateCountersPeriodOption());
 
     // --- Changelog & Upcoming buttons row ---
     const changelogRow = document.createElement('div');
