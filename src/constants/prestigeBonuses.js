@@ -2,12 +2,12 @@ export const PRESTIGE_BONUSES = [
   {
     stat: 'totalDamagePercent',
     min: 0.1,
-    max: 0.25,
+    max: 0.2,
   },
   {
     stat: 'lifePercent',
     min: 0.1,
-    max: 0.3,
+    max: 0.25,
   },
   {
     stat: 'manaPercent',
@@ -55,24 +55,24 @@ export const PRESTIGE_BONUSES = [
     max: 0.15,
   },
   {
-    stat: 'lifeRegen',
-    min: 5,
-    max: 15,
+    stat: 'lifeRegenPercent',
+    min: 30,
+    max: 75,
   },
   {
-    stat: 'evasion',
-    min: 50,
-    max: 100,
+    stat: 'evasionPercent',
+    min: 30,
+    max: 60,
   },
   {
-    stat: 'armor',
-    min: 50,
-    max: 100,
+    stat: 'armorPercent',
+    min: 30,
+    max: 60,
   },
   {
-    stat: 'attackRating',
-    min: 50,
-    max: 100,
+    stat: 'attackRatingPercent',
+    min: 30,
+    max: 60,
   },
   // {
   //   stat: 'manaCostReductionPercent',
@@ -83,6 +83,6 @@ export const PRESTIGE_BONUSES = [
 
 export const STARTING_CRYSTALS_BONUS = {
   stat: 'startingCrystals',
-  min: 50,
+  min: 40,
   max: 150,
 };

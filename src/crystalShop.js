@@ -47,7 +47,7 @@ const CRYSTAL_UPGRADE_CONFIG = {
     label: 'Continuous Play',
     bonus: 'Auto-continue after death',
     bonusLabel: 'Auto-continue after death',
-    baseCost: 10,
+    baseCost: 7,
     oneTime: true,
   },
   autoSpellCast: {
