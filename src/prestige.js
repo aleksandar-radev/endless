@@ -58,6 +58,43 @@ export default class Prestige {
     }
   }
 
+  _createCard(bonusesPerCard, scalingFactor) {
+    const startingCrystalsBase = Math.floor(
+      Math.random() * (STARTING_CRYSTALS_BONUS.max - STARTING_CRYSTALS_BONUS.min + 1),
+    ) + STARTING_CRYSTALS_BONUS.min;
+    const startingCrystals = Math.floor(startingCrystalsBase * scalingFactor);
+    const shuffled = [...PRESTIGE_BONUSES].sort(() => 0.5 - Math.random());
+    const picked = shuffled.slice(0, bonusesPerCard);
+    const card = { bonuses: {}, baseBonuses: {}, descriptions: [], locked: false };
+    picked.forEach((b) => {
+      const baseValue = +(Math.random() * (b.max - b.min) + b.min).toFixed(4);
+      const value = +(baseValue * scalingFactor).toFixed(4);
+      card.baseBonuses[b.stat] = (card.baseBonuses[b.stat] || 0) + baseValue;
+      card.bonuses[b.stat] = (card.bonuses[b.stat] || 0) + value;
+      let refMin = +(b.min * scalingFactor).toFixed(4);
+      let refMax = +(b.max * scalingFactor).toFixed(4);
+      let desc;
+      if (b.stat.endsWith('Percent')) {
+        const main = `${formatStatName(b.stat)}: +${(value * 100).toFixed(1)}%`;
+        const right = `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
+        desc = `<span class=\"prestige-main\"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+      } else {
+        const main = `${formatStatName(b.stat)}: +${Math.round(value)}`;
+        const right = `${Math.round(refMin)} - ${Math.round(refMax)}`;
+        desc = `<span class=\"prestige-main\"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+      }
+      card.descriptions.push(desc);
+    });
+    card.baseBonuses[STARTING_CRYSTALS_BONUS.stat] = startingCrystalsBase;
+    card.bonuses[STARTING_CRYSTALS_BONUS.stat] = startingCrystals;
+    const refStartMin = STARTING_CRYSTALS_BONUS.min;
+    const refStartMax = STARTING_CRYSTALS_BONUS.max;
+    const main = `${formatStatName(STARTING_CRYSTALS_BONUS.stat)}: +${startingCrystals}`;
+    const right = `${Math.floor(refStartMin * scalingFactor)} - ${Math.floor(refStartMax * scalingFactor)}`;
+    card.descriptions.push(`<span class=\"prestige-main\"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`);
+    return card;
+  }
+
   getCurrentLevelRequirement() {
     const req = LEVEL_REQUIREMENT + (this.prestigeCount * LEVEL_REQUIREMENT_INCREASE);
     return Math.min(req, 1000);
@@ -209,8 +246,66 @@ export default class Prestige {
   }
 
   rerollCards(count = 3, bonusesPerCard = 3) {
-    this.pendingCards = null;
-    return this.generateCards(count, bonusesPerCard);
+    const highestBossLevel = statistics?.highestBossLevel || 0;
+    const scalingFactor = getBossScalingFactor(highestBossLevel);
+    const current = this.pendingCards || [];
+    const cards = [];
+    for (let i = 0; i < count; i++) {
+      const card = current[i];
+      if (card && card.locked) {
+        if (!card.baseBonuses) {
+          card.baseBonuses = { ...card.bonuses };
+        }
+        card.bonuses = {};
+        card.descriptions = [];
+        Object.entries(card.baseBonuses).forEach(([stat, baseValue]) => {
+          let scaledValue;
+          if (stat === STARTING_CRYSTALS_BONUS.stat) {
+            scaledValue = Math.floor(baseValue * scalingFactor);
+          } else {
+            scaledValue = +(baseValue * scalingFactor).toFixed(4);
+          }
+          card.bonuses[stat] = scaledValue;
+          let refMin = null;
+          let refMax = null;
+          if (stat === STARTING_CRYSTALS_BONUS.stat) {
+            refMin = Math.floor(STARTING_CRYSTALS_BONUS.min * scalingFactor);
+            refMax = Math.floor(STARTING_CRYSTALS_BONUS.max * scalingFactor);
+          } else {
+            const def = PRESTIGE_BONUSES.find((p) => p.stat === stat);
+            if (def) {
+              refMin = +(def.min * scalingFactor).toFixed(4);
+              refMax = +(def.max * scalingFactor).toFixed(4);
+            }
+          }
+          let desc;
+          if (stat.endsWith('Percent')) {
+            const scaledPct = (scaledValue * 100).toFixed(1);
+            if (refMin != null && refMax != null) {
+              const main = `${formatStatName(stat)}: +${scaledPct}%`;
+              const right = `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
+              desc = `<span class=\"prestige-main\"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+            } else {
+              desc = `${formatStatName(stat)}: +${scaledPct}%`;
+            }
+          } else {
+            if (refMin != null && refMax != null) {
+              const main = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
+              const right = `${Math.round(refMin)} - ${Math.round(refMax)}`;
+              desc = `<span class=\"prestige-main\"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+            } else {
+              desc = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
+            }
+          }
+          card.descriptions.push(desc);
+        });
+        cards[i] = card;
+      } else {
+        cards[i] = this._createCard(bonusesPerCard, scalingFactor);
+      }
+    }
+    this.pendingCards = cards;
+    return cards;
   }
 
   async prestigeWithBonus(card) {

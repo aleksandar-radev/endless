@@ -101,7 +101,7 @@ function openPrestigeModal() {
       <button class="modal-close">&times;</button>
       <div class="prestige-cards"></div>
       <div class="modal-controls">
-        <button id="prestige-reroll-btn">Reroll (100<i class="mdi mdi-diamond-stone"></i>)</button>
+        <button id="prestige-reroll-btn">Reroll (60<i class="mdi mdi-diamond-stone"></i>)</button>
       </div>
       <div class="prestige-info-message" style="margin-top: 10px; color: #9ac7fcff; font-size: 1.05em;">
 
@@ -109,32 +109,64 @@ function openPrestigeModal() {
       <p class="prestige-info">All options apart from ones that are unlocked from crystal shop are preserved after a prestige.</p>
       <div class="prestige-info-cta">A record is saved to Prestige History so you can review past prestiges.</div>
       </div>
+      <div class="modal-footer" style="margin-top: 12px; text-align: center;">
+        <button id="prestige-perform-btn" class="disabled">Perform Prestige</button>
+      </div>
     </div>
   `;
 
   const modal = createModal({ id: 'prestige-modal', className: 'prestige-modal', content });
   const cardsContainer = modal.querySelector('.prestige-cards');
+  const performBtn = modal.querySelector('#prestige-perform-btn');
+  let selectedIdx = null;
 
   const renderCards = () => {
     cardsContainer.innerHTML = cards
-      .map(
-        (c, i) => html`
-                <div class="prestige-card" data-idx="${i}">
-                  <ul>${c.descriptions.map((d) => `<li>${d}</li>`).join('')}</ul>
-                </div>
-              `,
-      )
+      .map((c, i) => {
+        const lockLabel = c.locked
+          ? '<i class="mdi mdi-lock"></i>'
+          : 'Lock (20<i class="mdi mdi-diamond-stone"></i>)';
+        return html`
+          <div class="prestige-card-wrapper" data-idx="${i}">
+            <div class="prestige-card ${c.locked ? 'locked' : ''} ${selectedIdx === i ? 'selected' : ''}">
+              <ul>${c.descriptions.map((d) => `<li>${d}</li>`).join('')}</ul>
+            </div>
+            <button class="prestige-lock-btn">${lockLabel}</button>
+          </div>
+        `;
+      })
       .join('');
     cardsContainer.querySelectorAll('.prestige-card').forEach((el) => {
-      el.onclick = async () => {
-        const idx = parseInt(el.dataset.idx, 10);
-        await prestige.prestigeWithBonus(cards[idx]);
-        closeModal(modal);
-        updatePrestigeBonuses();
-        // Update button state after prestige
-        updateButtonState();
-        updateLevelInfo();
+      el.onclick = () => {
+        const idx = parseInt(el.parentElement.dataset.idx, 10);
+        selectedIdx = idx;
+        cardsContainer.querySelectorAll('.prestige-card').forEach((c) => c.classList.remove('selected'));
+        el.classList.add('selected');
+        performBtn.classList.remove('disabled');
       };
+    });
+    cardsContainer.querySelectorAll('.prestige-lock-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = parseInt(btn.parentElement.dataset.idx, 10);
+        const card = cards[idx];
+        const cardEl = btn.parentElement.querySelector('.prestige-card');
+        if (card.locked) {
+          card.locked = false;
+          btn.innerHTML = 'Lock (20<i class="mdi mdi-diamond-stone"></i>)';
+          cardEl.classList.remove('locked');
+        } else {
+          if (hero.crystals < 20) {
+            showToast('Not enough crystals to lock.');
+            return;
+          }
+          hero.crystals -= 20;
+          updateResources();
+          card.locked = true;
+          btn.innerHTML = '<i class="mdi mdi-lock"></i>';
+          cardEl.classList.add('locked');
+        }
+      });
     });
   };
 
@@ -142,14 +174,26 @@ function openPrestigeModal() {
 
   const rerollBtn = modal.querySelector('#prestige-reroll-btn');
   rerollBtn.onclick = () => {
-    if (hero.crystals < 100) {
+    if (hero.crystals < 60) {
       showToast('Not enough crystals to reroll.');
       return;
     }
-    hero.crystals -= 100;
+    hero.crystals -= 60;
     updateResources();
     cards = prestige.rerollCards(3);
+    selectedIdx = null;
+    performBtn.classList.add('disabled');
     renderCards();
+  };
+
+  performBtn.onclick = async () => {
+    if (selectedIdx == null) return;
+    await prestige.prestigeWithBonus(cards[selectedIdx]);
+    closeModal(modal);
+    updatePrestigeBonuses();
+    // Update button state after prestige
+    updateButtonState();
+    updateLevelInfo();
   };
 }
 

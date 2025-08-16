@@ -137,7 +137,9 @@
 
 .prestige-modal-content .modal-controls {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
   margin-top: 1rem;
 }
 
@@ -153,6 +155,46 @@
 
 .prestige-modal-content .modal-controls button:hover {
   background: var(--accent-hover, #2c6ad4);
+}
+
+.prestige-modal-content .modal-controls button.disabled,
+.prestige-modal-content .modal-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.3);
+  background: #444a5a;
+  color: #b0b8c9;
+}
+
+/* Footer with primary action button placed at bottom of modal */
+.prestige-modal-content .modal-footer {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.prestige-modal-content .modal-footer button {
+  background: var(--accent, #4e8cff);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.prestige-modal-content .modal-footer button:hover {
+  background: var(--accent-hover, #2c6ad4);
+}
+
+.prestige-modal-content .modal-footer button.disabled,
+.prestige-modal-content .modal-footer button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.3);
+  background: #444a5a;
+  color: #b0b8c9;
 }
 
 .prestige-modal-content .modal-close {
@@ -224,6 +266,36 @@
   align-items: center;
   position: relative;
   overflow: hidden;
+}
+
+.prestige-card.locked {
+  border: 2px solid #ffe9b0;
+}
+
+.prestige-card.selected {
+  border: 2px solid var(--accent, #4e8cff);
+}
+
+.prestige-card.locked.selected {
+  border-color: var(--accent, #4e8cff);
+}
+
+.prestige-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.prestige-lock-btn {
+  background: transparent;
+  border: none;
+  color: #ffe9b0;
+  border: 1px solid #ffe9b0;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
 }
 
 .prestige-card::after {
