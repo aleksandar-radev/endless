@@ -1,0 +1,88 @@
+.battle-log-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #2d1f0f;
+  border: 2px solid #8b5a2b;
+  border-radius: 8px;
+  color: #f9f5e9;
+  font-family: 'Cinzel', serif;
+  padding: 6px;
+}
+
+.battle-log-tabs {
+  display: flex;
+  margin-bottom: 6px;
+}
+
+.battle-log-tab {
+  flex: 1;
+  padding: 8px;
+  background: #3b2a16;
+  color: #f9f5e9;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.battle-log-tab:not(.active):hover {
+  background: #4e3b1e;
+}
+
+.battle-log-tab.active {
+  background: #654321;
+}
+
+.battle-log-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.battle-log-controls button {
+  flex: 1;
+  padding: 6px 0;
+  background: #4e3b1e;
+  color: #f9f5e9;
+  border: 1px solid #8b5a2b;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.battle-log-controls button:hover {
+  background: #715330;
+}
+
+.battle-log-content {
+  flex: 1;
+  display: flex;
+  background: #1b130d;
+  border: 1px solid #8b5a2b;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.log-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.log-entry {
+  font-size: 0.9em;
+  padding: 2px 0;
+  border-bottom: 1px solid #3b2a16;
+}
+
+.timestamp {
+  color: #9ca3af;
+  font-size: 0.8em;
+  margin-right: 6px;
+  font-family: monospace;
+}
+
+.hidden {
+  display: none;
+}
+
