@@ -5,6 +5,7 @@ import { percentIncreasedByLevel, percentReducedByLevel, scaleStat } from './com
 import { BOSSES } from './constants/bosses.js';
 import { hero } from './globals.js';
 import { battleLog } from './battleLog.js';
+import { ELEMENTS } from './constants/common.js';
 
 const INCREASE_PER_LEVEL = 0.01;
 const stat_increase = (level) => percentIncreasedByLevel(0.1, level, 50, 0.015, 1);
@@ -46,20 +47,11 @@ class Boss {
     this.evasion = this.calculateEvasion();
     this.attackRating = this.calculateAttackRating();
 
-    // Elemental damages (4x stronger, use method)
-    this.fireDamage = this.calculateElementalDamage( 'fire');
-    this.coldDamage = this.calculateElementalDamage( 'cold');
-    this.airDamage = this.calculateElementalDamage('air');
-    this.earthDamage = this.calculateElementalDamage('earth');
-    this.lightningDamage = this.calculateElementalDamage('lightning');
-    this.waterDamage = this.calculateElementalDamage('water');
-
-    this.fireResistance = this.calculateElementalResistance('fire');
-    this.coldResistance = this.calculateElementalResistance('cold');
-    this.airResistance = this.calculateElementalResistance('air');
-    this.earthResistance = this.calculateElementalResistance('earth');
-    this.lightningResistance = this.calculateElementalResistance('lightning');
-    this.waterResistance = this.calculateElementalResistance('water');
+    // Elemental damages and resistances
+    Object.values(ELEMENTS).forEach(({ id }) => {
+      this[`${id}Damage`] = this.calculateElementalDamage(id);
+      this[`${id}Resistance`] = this.calculateElementalResistance(id);
+    });
 
     this.reward = this.baseData.reward;
     this.lastAttack = Date.now();

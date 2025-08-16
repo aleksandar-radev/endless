@@ -16,6 +16,11 @@ export {
   showManaWarning,
 } from './skillTreeUi.js';
 
+const ELEMENT_IDS = Object.keys(ELEMENTS);
+const ELEMENT_REGEX = new RegExp(
+  `^(${ELEMENT_IDS.join('|')})(Damage|DamagePercent|Resistance|ResistancePercent|Penetration|PenetrationPercent)$`,
+);
+
 // Tab indicator manager instance
 let tabIndicatorManager = null;
 
@@ -207,18 +212,10 @@ export function updateEnemyStats() {
   // Main stats
   const dmg = document.getElementById('enemy-damage-value');
   if (dmg) dmg.textContent = formatNumber(Math.floor(enemy.damage));
-  const fireDmg = document.getElementById('enemy-fire-damage-value');
-  if (fireDmg) fireDmg.textContent = formatNumber(Math.floor(enemy.fireDamage || 0));
-  const coldDmg = document.getElementById('enemy-cold-damage-value');
-  if (coldDmg) coldDmg.textContent = formatNumber(Math.floor(enemy.coldDamage || 0));
-  const airDmg = document.getElementById('enemy-air-damage-value');
-  if (airDmg) airDmg.textContent = formatNumber(Math.floor(enemy.airDamage || 0));
-  const earthDmg = document.getElementById('enemy-earth-damage-value');
-  if (earthDmg) earthDmg.textContent = formatNumber(Math.floor(enemy.earthDamage || 0));
-  const lightningDmg = document.getElementById('enemy-lightning-damage-value');
-  if (lightningDmg) lightningDmg.textContent = formatNumber(Math.floor(enemy.lightningDamage || 0));
-  const waterDmg = document.getElementById('enemy-water-damage-value');
-  if (waterDmg) waterDmg.textContent = formatNumber(Math.floor(enemy.waterDamage || 0));
+  ELEMENT_IDS.forEach((id) => {
+    const dmgEl = document.getElementById(`enemy-${id}-damage-value`);
+    if (dmgEl) dmgEl.textContent = formatNumber(Math.floor(enemy[`${id}Damage`] || 0));
+  });
 
   const armor = document.getElementById('enemy-armor-value');
   if (armor) {
@@ -239,36 +236,16 @@ export function updateEnemyStats() {
   }
   const atkSpeed = document.getElementById('enemy-attack-speed-value');
   if (atkSpeed) atkSpeed.textContent = formatNumber((enemy.attackSpeed || 0).toFixed(2));
-  const fireRes = document.getElementById('enemy-fire-resistance-value');
-  if (fireRes) {
-    const reduction = calculateResistanceReduction(enemy.fireResistance, hero.stats.fireDamage);
-    fireRes.textContent = `${formatNumber(Math.floor(enemy.fireResistance || 0))} (${Math.floor(reduction)}%)`;
-  }
-  const coldRes = document.getElementById('enemy-cold-resistance-value');
-  if (coldRes) {
-    const reduction = calculateResistanceReduction(enemy.coldResistance, hero.stats.coldDamage);
-    coldRes.textContent = `${formatNumber(Math.floor(enemy.coldResistance || 0))} (${Math.floor(reduction)}%)`;
-  }
-  const airRes = document.getElementById('enemy-air-resistance-value');
-  if (airRes) {
-    const reduction = calculateResistanceReduction(enemy.airResistance, hero.stats.airDamage);
-    airRes.textContent = `${formatNumber(Math.floor(enemy.airResistance || 0))} (${Math.floor(reduction)}%)`;
-  }
-  const earthRes = document.getElementById('enemy-earth-resistance-value');
-  if (earthRes) {
-    const reduction = calculateResistanceReduction(enemy.earthResistance, hero.stats.earthDamage);
-    earthRes.textContent = `${formatNumber(Math.floor(enemy.earthResistance || 0))} (${Math.floor(reduction)}%)`;
-  }
-  const lightningRes = document.getElementById('enemy-lightning-resistance-value');
-  if (lightningRes) {
-    const reduction = calculateResistanceReduction(enemy.lightningResistance, hero.stats.lightningDamage);
-    lightningRes.textContent = `${formatNumber(Math.floor(enemy.lightningResistance || 0))} (${Math.floor(reduction)}%)`;
-  }
-  const waterRes = document.getElementById('enemy-water-resistance-value');
-  if (waterRes) {
-    const reduction = calculateResistanceReduction(enemy.waterResistance, hero.stats.waterDamage);
-    waterRes.textContent = `${formatNumber(Math.floor(enemy.waterResistance || 0))} (${Math.floor(reduction)}%)`;
-  }
+  ELEMENT_IDS.forEach((id) => {
+    const resEl = document.getElementById(`enemy-${id}-resistance-value`);
+    if (resEl) {
+      const reduction = calculateResistanceReduction(
+        enemy[`${id}Resistance`],
+        hero.stats[`${id}Damage`],
+      );
+      resEl.textContent = `${formatNumber(Math.floor(enemy[`${id}Resistance`] || 0))} (${Math.floor(reduction)}%)`;
+    }
+  });
 
   setEnemyName();
   if (game.fightMode === 'explore') {
@@ -299,7 +276,7 @@ export function updateEnemyStats() {
 }
 
 export function updateEnemyStatLabels() {
-  ['fire', 'cold', 'air', 'earth', 'lightning', 'water'].forEach((el) => {
+  ELEMENT_IDS.forEach((el) => {
     const dmg = document.querySelector(`.enemy-${el}-damage`);
     if (dmg) {
       dmg.innerHTML = `${formatStatName(`${el}Damage`)}: <span id="enemy-${el}-damage-value"></span>`;
@@ -514,7 +491,7 @@ export function showConfirmDialog(message, options = {}) {
 
 // Helper function to convert camelCase to Title Case with spaces and translate stat names
 export const formatStatName = (stat) => {
-  const match = stat.match(/^(fire|cold|air|earth|lightning|water)(Damage|DamagePercent|Resistance|ResistancePercent|Penetration|PenetrationPercent)$/);
+  const match = stat.match(ELEMENT_REGEX);
   if (match) {
     const [, element, suffix] = match;
     const icon = ELEMENTS[element]?.icon || '';
@@ -596,21 +573,11 @@ function renderRegionPanel(region) {
       <div class="enemy-attack-speed">Attack Speed: <span id="enemy-attack-speed-value"></span></div>
       <div></div>
       <!-- Empty div for layout -->
-      <div >
-        <div class="enemy-fire-damage">${formatStatName('fireDamage')}: <span id="enemy-fire-damage-value"></span></div>
-        <div class="enemy-cold-damage">${formatStatName('coldDamage')}: <span id="enemy-cold-damage-value"></span></div>
-        <div class="enemy-air-damage">${formatStatName('airDamage')}: <span id="enemy-air-damage-value"></span></div>
-        <div class="enemy-earth-damage">${formatStatName('earthDamage')}: <span id="enemy-earth-damage-value"></span></div>
-        <div class="enemy-lightning-damage">${formatStatName('lightningDamage')}: <span id="enemy-lightning-damage-value"></span></div>
-        <div class="enemy-water-damage">${formatStatName('waterDamage')}: <span id="enemy-water-damage-value"></span></div>
+      <div>
+        ${ELEMENT_IDS.map((id) => `<div class="enemy-${id}-damage">${formatStatName(id + 'Damage')}: <span id="enemy-${id}-damage-value"></span></div>`).join('')}
       </div>
-      <div >
-        <div class="enemy-fire-resistance">${formatStatName('fireResistance')}: <span id="enemy-fire-resistance-value"></span></div>
-        <div class="enemy-cold-resistance">${formatStatName('coldResistance')}: <span id="enemy-cold-resistance-value"></span></div>
-        <div class="enemy-air-resistance">${formatStatName('airResistance')}: <span id="enemy-air-resistance-value"></span></div>
-        <div class="enemy-earth-resistance">${formatStatName('earthResistance')}: <span id="enemy-earth-resistance-value"></span></div>
-        <div class="enemy-lightning-resistance">${formatStatName('lightningResistance')}: <span id="enemy-lightning-resistance-value"></span></div>
-        <div class="enemy-water-resistance">${formatStatName('waterResistance')}: <span id="enemy-water-resistance-value"></span></div>
+      <div>
+        ${ELEMENT_IDS.map((id) => `<div class="enemy-${id}-resistance">${formatStatName(id + 'Resistance')}: <span id="enemy-${id}-resistance-value"></span></div>`).join('')}
       </div>
     </div>
   </div>`;

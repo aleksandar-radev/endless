@@ -4,6 +4,7 @@ import { ENEMY_RARITY } from './constants/enemies.js';
 import { percentIncreasedByLevel, percentReducedByLevel, scaleStat } from './common.js';
 import { hero } from './globals.js';
 import { battleLog } from './battleLog.js';
+import { ELEMENTS } from './constants/common.js';
 
 // base value increase per level
 // for tier 1 enemy level 1 50 life, level 2 is 50 + 25 = 75 (e.g. 50% increase for base value per level)
@@ -114,12 +115,9 @@ class Enemy {
 
     // to add increases for stage
     this.damage = this.calculateDamage();
-    this.fireDamage = this.calculateElementalDamage('fire');
-    this.coldDamage = this.calculateElementalDamage('cold');
-    this.airDamage = this.calculateElementalDamage('air');
-    this.earthDamage = this.calculateElementalDamage('earth');
-    this.lightningDamage = this.calculateElementalDamage('lightning');
-    this.waterDamage = this.calculateElementalDamage('water');
+    Object.values(ELEMENTS).forEach(({ id }) => {
+      this[`${id}Damage`] = this.calculateElementalDamage(id);
+    });
 
     this.life = this.calculateLife();
     this.attackSpeed = this.calculateAttackSpeed();
@@ -127,12 +125,9 @@ class Enemy {
     this.evasion = this.calculateEvasion();
     this.attackRating = this.calculateAttackRating(); // Default attackRating if not defined
 
-    this.fireResistance = this.calculateElementalResistance('fire');
-    this.coldResistance = this.calculateElementalResistance('cold');
-    this.airResistance = this.calculateElementalResistance('air');
-    this.earthResistance = this.calculateElementalResistance('earth');
-    this.lightningResistance = this.calculateElementalResistance('lightning');
-    this.waterResistance = this.calculateElementalResistance('water');
+    Object.values(ELEMENTS).forEach(({ id }) => {
+      this[`${id}Resistance`] = this.calculateElementalResistance(id);
+    });
 
     this.currentLife = this.life;
     this.lastAttack = Date.now();
@@ -146,12 +141,9 @@ class Enemy {
     this.attackSpeed = this.calculateAttackSpeed();
     this.life = this.calculateLife();
     this.damage = this.calculateDamage();
-    this.fireDamage = this.calculateElementalDamage('fire');
-    this.coldDamage = this.calculateElementalDamage('cold');
-    this.airDamage = this.calculateElementalDamage('air');
-    this.earthDamage = this.calculateElementalDamage('earth');
-    this.lightningDamage = this.calculateElementalDamage('lightning');
-    this.waterDamage = this.calculateElementalDamage('water');
+    Object.values(ELEMENTS).forEach(({ id }) => {
+      this[`${id}Damage`] = this.calculateElementalDamage(id);
+    });
   }
 
   setEnemyColor() {
@@ -263,7 +255,7 @@ class Enemy {
   }
 
   calculateElementalDamage(type) {
-    // type: 'fire', 'cold', 'air', 'earth', 'lightning', 'water'
+    // type should be an id from ELEMENTS (e.g., ELEMENTS.fire.id)
     let base = this.baseData[`${type}Damage`] || 0;
     const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
     const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;

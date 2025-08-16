@@ -9,6 +9,8 @@ import { ATTRIBUTES } from './constants/stats/attributes.js';
 import { SOUL_UPGRADE_CONFIG } from './soulShop.js';
 import { ELEMENTS } from './constants/common.js';
 
+const ELEMENT_IDS = Object.keys(ELEMENTS);
+
 export const STATS_ON_LEVEL_UP = 3;
 
 export default class Hero {
@@ -511,7 +513,7 @@ export default class Hero {
     const extraFromAttackRating = (this.stats.extraDamageFromAttackRatingPercent || 0) * this.stats.attackRating;
 
     // Split: 50% to physical, 50% distributed equally among elements
-    const elements = Object.keys(ELEMENTS);
+    const elements = ELEMENT_IDS;
 
     const splitLife = extraFromLife / 2;
     const splitMana = extraFromMana / 2;
@@ -534,28 +536,28 @@ export default class Hero {
     this.stats.damage = Math.floor((flatValues.damage + (this.stats.damagePerLevel || 0) * this.level) * (1 + this.stats.totalDamagePercent + this.stats.damagePercent));
 
     // Special handling for elemental damages
-    this.stats.fireDamage = Math.floor(
-      (flatValues.fireDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.fireDamagePercent + this.stats.totalDamagePercent),
-    );
-    this.stats.coldDamage = Math.floor(
-      (flatValues.coldDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.coldDamagePercent + this.stats.totalDamagePercent),
-    );
-    this.stats.airDamage = Math.floor(
-      (flatValues.airDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.airDamagePercent + this.stats.totalDamagePercent),
-    );
-    this.stats.earthDamage = Math.floor(
-      (flatValues.earthDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.earthDamagePercent + this.stats.totalDamagePercent),
-    );
-    this.stats.lightningDamage = Math.floor(
-      (flatValues.lightningDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.lightningDamagePercent + this.stats.totalDamagePercent),
-    );
-    this.stats.waterDamage = Math.floor(
-      (flatValues.waterDamage + flatValues.elementalDamage) * (1 + this.stats.elementalDamagePercent + percentBonuses.waterDamagePercent + this.stats.totalDamagePercent),
-    );
+    ELEMENT_IDS.forEach((id) => {
+      this.stats[`${id}Damage`] = Math.floor(
+        (flatValues[`${id}Damage`] + flatValues.elementalDamage) *
+          (1 +
+            this.stats.elementalDamagePercent +
+            percentBonuses[`${id}DamagePercent`] +
+            this.stats.totalDamagePercent),
+      );
+    });
 
-    this.stats.reflectFireDamage = (() => {
-      const base = flatValues.fireDamage + flatValues.reflectFireDamage;
-      return Math.floor(base * (1 + this.stats.elementalDamagePercent + percentBonuses.fireDamagePercent + this.stats.totalDamagePercent));
+    const fireId = ELEMENTS.fire.id;
+    this.stats[`reflect${fireId.charAt(0).toUpperCase()}${fireId.slice(1)}Damage`] = (() => {
+      const base =
+        flatValues[`${fireId}Damage`] +
+        flatValues[`reflect${fireId.charAt(0).toUpperCase()}${fireId.slice(1)}Damage`];
+      return Math.floor(
+        base *
+          (1 +
+            this.stats.elementalDamagePercent +
+            percentBonuses[`${fireId}DamagePercent`] +
+            this.stats.totalDamagePercent),
+      );
     })();
   }
 
@@ -567,7 +569,7 @@ export default class Hero {
 
   // calculated when hit is successful
   calculateTotalDamage(instantSkillBaseEffects = {}) {
-    const elements = Object.keys(ELEMENTS);
+    const elements = ELEMENT_IDS;
 
     // 1) Flat phase: build flat pools
     const flatPools = { physical: (this.stats.damage || 0) + (instantSkillBaseEffects.damage || 0) };
@@ -645,55 +647,21 @@ export default class Hero {
 
     const reducedBreakdown = {
       physical: breakdown.physical * (1 - armorReduction),
-      fire: breakdown.fire * (1 - calculateResistanceReduction(
-        getEffectiveResistance.call(this,
-          enemy.baseData.fireResistance,
-          this.stats.firePenetration,
-          this.stats.firePenetrationPercent,
-        ),
-        breakdown.fire,
-      ) / 100),
-      cold: breakdown.cold * (1 - calculateResistanceReduction(
-        getEffectiveResistance.call(this,
-          enemy.baseData.coldResistance,
-          this.stats.coldPenetration,
-          this.stats.coldPenetrationPercent,
-        ),
-        breakdown.cold,
-      ) / 100),
-      air: breakdown.air * (1 - calculateResistanceReduction(
-        getEffectiveResistance.call(this,
-          enemy.baseData.airResistance,
-          this.stats.airPenetration,
-          this.stats.airPenetrationPercent,
-        ),
-        breakdown.air,
-      ) / 100),
-      earth: breakdown.earth * (1 - calculateResistanceReduction(
-        getEffectiveResistance.call(this,
-          enemy.baseData.earthResistance,
-          this.stats.earthPenetration,
-          this.stats.earthPenetrationPercent,
-        ),
-        breakdown.earth,
-      ) / 100),
-      lightning: breakdown.lightning * (1 - calculateResistanceReduction(
-        getEffectiveResistance.call(this,
-          enemy.baseData.lightningResistance,
-          this.stats.lightningPenetration,
-          this.stats.lightningPenetrationPercent,
-        ),
-        breakdown.lightning,
-      ) / 100),
-      water: breakdown.water * (1 - calculateResistanceReduction(
-        getEffectiveResistance.call(this,
-          enemy.baseData.waterResistance,
-          this.stats.waterPenetration,
-          this.stats.waterPenetrationPercent,
-        ),
-        breakdown.water,
-      ) / 100),
     };
+    ELEMENT_IDS.forEach((id) => {
+      reducedBreakdown[id] =
+        breakdown[id] *
+        (1 -
+          calculateResistanceReduction(
+            getEffectiveResistance.call(
+              this,
+              enemy.baseData[`${id}Resistance`],
+              this.stats[`${id}Penetration`],
+              this.stats[`${id}PenetrationPercent`],
+            ),
+            breakdown[id],
+          ) / 100);
+    });
 
     const finalDamage = Object.values(reducedBreakdown).reduce((sum, val) => sum + val, 0);
 

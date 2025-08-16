@@ -18,6 +18,9 @@ import { getCurrentRegion } from './region.js';
 
 import { audioManager } from './audio.js';
 import { battleLog } from './battleLog.js';
+import { ELEMENTS } from './constants/common.js';
+
+const ELEMENT_IDS = Object.keys(ELEMENTS);
 
 export function enemyAttack(currentTime) {
   if (!game || !hero || !game.currentEnemy) return;
@@ -51,35 +54,20 @@ export function enemyAttack(currentTime) {
         const armorReduction = calculateArmorReduction(hero.stats.armor, physicalDamageRaw) / 100;
         const physicalDamage = Math.floor(physicalDamageRaw * (1 - armorReduction));
 
-        const fireReduction = calculateResistanceReduction(hero.stats.fireResistance, game.currentEnemy.fireDamage) / 100;
-        const fire = game.currentEnemy.fireDamage * (1 - fireReduction);
+        const elementalDamage = {};
+        ELEMENT_IDS.forEach((id) => {
+          const reduction =
+            calculateResistanceReduction(
+              hero.stats[`${id}Resistance`],
+              game.currentEnemy[`${id}Damage`],
+            ) / 100;
+          elementalDamage[id] = game.currentEnemy[`${id}Damage`] * (1 - reduction);
+        });
 
-        const coldReduction = calculateResistanceReduction(hero.stats.coldResistance, game.currentEnemy.coldDamage) / 100;
-        const cold = game.currentEnemy.coldDamage * (1 - coldReduction);
+        let totalDamage =
+          physicalDamage + ELEMENT_IDS.reduce((sum, id) => sum + elementalDamage[id], 0);
 
-        const airReduction = calculateResistanceReduction(hero.stats.airResistance, game.currentEnemy.airDamage) / 100;
-        const air = game.currentEnemy.airDamage * (1 - airReduction);
-
-        const earthReduction = calculateResistanceReduction(hero.stats.earthResistance, game.currentEnemy.earthDamage) / 100;
-        const earth = game.currentEnemy.earthDamage * (1 - earthReduction);
-
-        const lightningReduction = calculateResistanceReduction(hero.stats.lightningResistance, game.currentEnemy.lightningDamage) / 100;
-        const lightning = game.currentEnemy.lightningDamage * (1 - lightningReduction);
-
-        const waterReduction = calculateResistanceReduction(hero.stats.waterResistance, game.currentEnemy.waterDamage) / 100;
-        const water = game.currentEnemy.waterDamage * (1 - waterReduction);
-
-        let totalDamage = physicalDamage + fire + cold + air + earth + lightning + water;
-
-        const breakdown = {
-          physical: physicalDamage,
-          fire,
-          cold,
-          air,
-          earth,
-          lightning,
-          water,
-        };
+        const breakdown = { physical: physicalDamage, ...elementalDamage };
 
         // Calculate thorns damage based on the final damage taken
         const thornsDamage = hero.calculateTotalThornsDamage(totalDamage);
@@ -89,7 +77,10 @@ export function enemyAttack(currentTime) {
         }
 
 
-        const fireReflect = Math.floor(hero.stats.reflectFireDamage || 0);
+        const fireId = ELEMENTS.fire.id;
+        const fireReflect = Math.floor(
+          hero.stats[`reflect${fireId.charAt(0).toUpperCase()}${fireId.slice(1)}Damage`] || 0,
+        );
         if (fireReflect > 1) {
           game.damageEnemy(fireReflect);
           updateEnemyStats();
