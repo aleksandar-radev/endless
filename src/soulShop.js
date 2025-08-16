@@ -1,4 +1,4 @@
-import { dataManager, hero } from './globals.js';
+import { dataManager, hero, options } from './globals.js';
 import { updateResources, showToast, updatePlayerLife } from './ui/ui.js';
 import { handleSavedData } from './functions.js';
 import { closeModal, createModal } from './ui/modal.js';
@@ -117,6 +117,7 @@ export default class SoulShop {
     this.modal = null;
     this.currentStat = null;
     this.selectedQty = 1;
+    this.quickQty = 1;
   }
 
   /**
@@ -146,6 +147,30 @@ export default class SoulShop {
       upgradesContainer.className = 'soulShop-upgrades-container';
       shopContainer.appendChild(upgradesContainer);
     }
+    let qtyControls = shopContainer.querySelector('.soulShop-qty-controls');
+    if (options?.quickSoulShop) {
+      if (!qtyControls) {
+        qtyControls = document.createElement('div');
+        qtyControls.className = 'soulShop-qty-controls';
+        qtyControls.innerHTML = `
+          <button data-qty="1" class="${this.quickQty === 1 ? 'active' : ''}">1</button>
+          <button data-qty="10" class="${this.quickQty === 10 ? 'active' : ''}">10</button>
+          <button data-qty="50" class="${this.quickQty === 50 ? 'active' : ''}">50</button>
+          <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">Max</button>
+        `;
+        shopContainer.insertBefore(qtyControls, upgradesContainer);
+        qtyControls.querySelectorAll('button').forEach((btn) => {
+          btn.onclick = () => {
+            this.quickQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+            qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+            btn.classList.add('active');
+            this.updateSoulShopUI();
+          };
+        });
+      }
+    } else if (qtyControls) {
+      qtyControls.remove();
+    }
     this.updateSoulShopUI();
   }
 
@@ -174,6 +199,7 @@ export default class SoulShop {
     this.modal = null;
     this.currentStat = null;
     this.selectedQty = 1;
+    this.quickQty = 1;
     this.updateSoulShopUI();
   }
 
@@ -183,7 +209,6 @@ export default class SoulShop {
     const isMultiLevel = typeof config.bonus === 'number' && !config.oneTime;
     const isPercent = config.stat?.endsWith('Percent');
     let alreadyPurchased = isOneTime && this.soulUpgrades[stat];
-    // For multiple:true, do not show level
     const level = isOneTime || isMultiple ? undefined : this.soulUpgrades[stat] || 0;
     let bonus;
     if (isOneTime || isMultiple) {
@@ -194,19 +219,89 @@ export default class SoulShop {
     } else {
       bonus = `+${config.bonus * (this.soulUpgrades[stat] || 0)} ${config.label}`;
     }
-    const cost =
+    let cost =
       isOneTime || isMultiple
         ? Math.round(config.baseCost)
         : this.getSoulUpgradeCost(config, this.soulUpgrades[stat] || 0);
+    let bonusClass = '';
+    let disabled = alreadyPurchased;
+    if (options?.quickSoulShop && !alreadyPurchased) {
+      const baseLevel = this.soulUpgrades[stat] || 0;
+      const levelsLeft = isMultiLevel ? (config.maxLevel || Infinity) - baseLevel : Infinity;
+      let qty;
+      if (this.quickQty === 'max') {
+        const { qty: affordableQty, totalCost } = this.getBulkCost(stat, 'max');
+        qty = affordableQty > 0 ? affordableQty : Math.min(1, levelsLeft);
+        cost = affordableQty > 0 ? totalCost : this.calculateTotalCost(stat, qty, baseLevel);
+        if (affordableQty <= 0 || hero.souls < cost) {
+          disabled = true;
+          bonusClass = 'unaffordable';
+        }
+      } else {
+        qty = Math.min(this.quickQty, levelsLeft);
+        cost = this.calculateTotalCost(stat, qty, baseLevel);
+        if (qty <= 0 || hero.souls < cost) {
+          disabled = true;
+          bonusClass = 'unaffordable';
+        }
+      }
+    } else if (hero.souls < cost && !alreadyPurchased) {
+      bonusClass = 'unaffordable';
+    }
     return `
       <button class="soul-upgrade-btn ${alreadyPurchased ? 'purchased' : ''}" data-stat="${stat}" ${
-  alreadyPurchased ? 'disabled' : ''
+  disabled ? 'disabled' : ''
 }>
         <span class="upgrade-name">${config.label} ${isOneTime ? '' : isMultiple ? '' : `(Lvl ${level})`}</span>
-        <span class="upgrade-bonus">${bonus}</span>
-        <span class="upgrade-cost">${alreadyPurchased ? 'Purchased' : `${cost} Souls`}</span>
+        <span class="upgrade-bonus ${bonusClass}">${bonus}</span>
+        <span class="upgrade-cost ${bonusClass}">${alreadyPurchased ? 'Purchased' : `${cost} Souls`}</span>
       </button>
     `;
+  }
+
+  getBulkCost(stat, desiredQty) {
+    const config = SOUL_UPGRADE_CONFIG[stat];
+    if (!config) return { qty: 0, totalCost: 0 };
+    const isMultiLevel = typeof config.bonus === 'number' && !config.oneTime;
+    const baseLevel = this.soulUpgrades[stat] || 0;
+    const soulsAvailable = hero.souls;
+    if (isMultiLevel) {
+      const maxLevel = config.maxLevel || Infinity;
+      let maxQty = 0;
+      let soulsTemp = soulsAvailable;
+      for (let lvl = baseLevel; lvl < maxLevel; lvl++) {
+        const c = this.getSoulUpgradeCost(config, lvl);
+        if (soulsTemp < c) break;
+        soulsTemp -= c;
+        maxQty++;
+      }
+      const qty = desiredQty === 'max' ? maxQty : Math.min(desiredQty, maxQty);
+      let totalCost = 0;
+      for (let i = 0; i < qty; i++) {
+        totalCost += this.getSoulUpgradeCost(config, baseLevel + i);
+      }
+      return { qty, totalCost };
+    }
+    if (config.multiple) {
+      const unitCost = Math.round(config.baseCost);
+      const maxQty = Math.floor(soulsAvailable / unitCost);
+      const qty = desiredQty === 'max' ? maxQty : Math.min(desiredQty, maxQty);
+      return { qty, totalCost: qty * unitCost };
+    }
+    return { qty: 1, totalCost: Math.round(config.baseCost) };
+  }
+
+  calculateTotalCost(stat, qty, baseLevel = this.soulUpgrades[stat] || 0) {
+    const config = SOUL_UPGRADE_CONFIG[stat];
+    if (!config) return 0;
+    if (config.oneTime || config.multiple) {
+      return Math.round(config.baseCost) * qty;
+    }
+    let total = 0;
+    for (let i = 0; i < qty; i++) {
+      total += this.getSoulUpgradeCost(config, baseLevel + i);
+    }
+    return total;
   }
 
   setupSoulUpgradeHandlers() {
@@ -214,7 +309,11 @@ export default class SoulShop {
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
         const stat = button.dataset.stat;
-        this.openUpgradeModal(stat);
+        if (options?.quickSoulShop) {
+          this.buyBulk(stat, this.quickQty);
+        } else {
+          this.openUpgradeModal(stat);
+        }
       });
     });
   }
@@ -226,6 +325,7 @@ export default class SoulShop {
         <h2 class="modal-title"></h2>
         <div class="modal-fields"></div>
         <div class="modal-controls" style="display:none;"></div>
+        <input type="range" class="modal-slider" min="0" max="1" value="1" step="1" style="display:none;" />
         <button class="modal-buy">Buy</button>
       </div>
     `;
@@ -237,6 +337,11 @@ export default class SoulShop {
     });
     this.modal.querySelector('.modal-close').onclick = () => closeModal('#soulShop-modal');
     this.modal.querySelector('.modal-buy').onclick = () => this.buyBulk(this.currentStat, this.selectedQty);
+    const slider = this.modal.querySelector('.modal-slider');
+    slider.addEventListener('input', (e) => {
+      this.selectedQty = parseInt(e.target.value, 10) || 0;
+      this.updateModalDetails();
+    });
   }
 
   openUpgradeModal(stat) {
@@ -248,6 +353,7 @@ export default class SoulShop {
     const fields = m.querySelector('.modal-fields');
     const controls = m.querySelector('.modal-controls');
     const buyBtn = m.querySelector('.modal-buy');
+    const slider = m.querySelector('.modal-slider');
     this.selectedQty = 1;
     // Multi-level (increasing cost): any with numeric bonus and not oneTime
     const isMultiLevel = typeof config.bonus === 'number' && !config.oneTime;
@@ -272,6 +378,9 @@ export default class SoulShop {
           this.updateModalDetails();
         };
       });
+      if (slider) {
+        slider.style.display = '';
+      }
       buyBtn.style.display = '';
       this.updateModalDetails();
     } else if (config.oneTime) {
@@ -286,6 +395,7 @@ export default class SoulShop {
       `;
       buyBtn.style.display = purchased ? 'none' : '';
       buyBtn.disabled = purchased;
+      if (slider) slider.style.display = 'none';
     } else if (config.multiple) {
       controls.style.display = 'none';
       fields.innerHTML = `
@@ -294,6 +404,7 @@ export default class SoulShop {
       `;
       buyBtn.style.display = '';
       buyBtn.disabled = false;
+      if (slider) slider.style.display = 'none';
     }
     m.classList.remove('hidden');
     if (isMultiLevel) this.updateModalDetails();
@@ -309,31 +420,17 @@ export default class SoulShop {
     if (isMultiLevel) {
       const baseLevel = this.soulUpgrades[stat] || 0;
       const maxLevel = config.maxLevel || Infinity;
-      const soulsAvailable = hero.souls;
-      let qty = this.selectedQty === 'max' ? 0 : this.selectedQty;
-      let totalCost = 0;
-      if (this.selectedQty === 'max') {
-        let lvl = baseLevel;
-        let souls = soulsAvailable;
-        while (lvl < maxLevel) {
-          const cost = this.getSoulUpgradeCost(config, lvl);
-          if (souls < cost) break;
-          souls -= cost;
-          totalCost += cost;
-          lvl++;
-          qty++;
-        }
-      } else {
-        if (baseLevel + qty > maxLevel) {
-          qty = maxLevel - baseLevel;
-        }
-        for (let i = 0; i < qty; i++) {
-          const cost = this.getSoulUpgradeCost(config, baseLevel + i);
-          totalCost += cost;
-        }
-      }
+      const levelsLeft = maxLevel - baseLevel;
+      const { qty: affordableQty } = this.getBulkCost(stat, 'max');
+      let qty =
+        this.selectedQty === 'max'
+          ? affordableQty > 0
+            ? affordableQty
+            : Math.min(1, levelsLeft)
+          : Math.min(this.selectedQty, levelsLeft);
+      const totalCost = this.calculateTotalCost(stat, qty, baseLevel);
+      const affordable = hero.souls >= totalCost && qty > 0 && qty <= affordableQty;
       let bonus = config.bonus || 0;
-      // if stat ends with Percent, bonus should be multiplied by 100 for display
       if (config.stat && config.stat.endsWith('Percent')) {
         bonus *= 100;
       }
@@ -341,15 +438,27 @@ export default class SoulShop {
 
       const decimals = 0;
       if (q('.modal-qty')) q('.modal-qty').textContent = qty;
-      if (q('.modal-total-cost')) q('.modal-total-cost').textContent = totalCost;
-      if (q('.modal-total-bonus'))
-        q('.modal-total-bonus').textContent = `+${bonusValue.toFixed(decimals)} ${config.label}`;
+      const costEl = q('.modal-total-cost');
+      if (costEl) {
+        costEl.textContent = totalCost;
+        costEl.classList.toggle('unaffordable', !affordable);
+      }
+      const bonusEl = q('.modal-total-bonus');
+      if (bonusEl) {
+        bonusEl.textContent = `+${bonusValue.toFixed(decimals)} ${config.label}`;
+        bonusEl.classList.toggle('unaffordable', !affordable);
+      }
       if (q('.modal-level'))
         q('.modal-level').textContent = baseLevel + (maxLevel !== Infinity ? ` / ${maxLevel}` : '');
       if (q('.modal-bonus')) q('.modal-bonus').textContent = this.getBonusText(stat, config, baseLevel);
       if (q('.modal-next-bonus')) q('.modal-next-bonus').textContent = this.getBonusText(stat, config, baseLevel + 1);
       const buyBtn = q('.modal-buy');
-      if (buyBtn) buyBtn.disabled = qty <= 0 || totalCost > soulsAvailable || baseLevel >= maxLevel;
+      if (buyBtn) buyBtn.disabled = !affordable || baseLevel >= maxLevel;
+      const slider = q('.modal-slider');
+      if (slider) {
+        slider.max = levelsLeft;
+        slider.value = this.selectedQty === 'max' ? levelsLeft : Math.min(this.selectedQty, levelsLeft);
+      }
     }
   }
 

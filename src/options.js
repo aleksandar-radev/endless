@@ -1,5 +1,5 @@
 
-import { crystalShop, dataManager, game, setGlobals, training } from './globals.js';
+import { crystalShop, dataManager, game, setGlobals, training, soulShop } from './globals.js';
 import { showConfirmDialog, showToast, updateStageUI } from './ui/ui.js';
 import { closeModal, createModal } from './ui/modal.js';
 import Enemy from './enemy.js';
@@ -41,6 +41,8 @@ export class Options {
     this.rateCountersPeriod = data.rateCountersPeriod || 1;
     // Enable quick training purchases
     this.quickTraining = data.quickTraining ?? false;
+    // Enable quick soul shop purchases
+    this.quickSoulShop = data.quickSoulShop ?? false;
     // Preferred language, default to English
     this.language = data.language || 'en';
   }
@@ -146,6 +148,8 @@ export class Options {
     container.appendChild(this._createEnemyStatsToggleOption());
     // --- Quick Training Toggle Option ---
     container.appendChild(this._createQuickTrainingOption());
+    // --- Quick Soul Shop Toggle Option ---
+    container.appendChild(this._createQuickSoulShopOption());
 
     // --- Starting Stage Option ---
     container.appendChild(this._createStartingStageOption());
@@ -851,6 +855,36 @@ export class Options {
       this.quickTraining = checkbox.checked;
       dataManager.saveGame();
       if (training) training.initializeTrainingUI();
+    });
+    return wrapper;
+  }
+
+  /**
+   * Creates the quick soul shop toggle option UI.
+   */
+  _createQuickSoulShopOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="quick-soulshop-toggle" class="quick-soulshop-toggle-label">Enable Quick Soul Shop:</label>
+      <input
+        type="checkbox"
+        id="quick-soulshop-toggle"
+        class="quick-soulshop-toggle"
+        ${this.quickSoulShop ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.quickSoulShop = checkbox.checked;
+      dataManager.saveGame();
+      if (soulShop) soulShop.initializeSoulShopUI();
     });
     return wrapper;
   }

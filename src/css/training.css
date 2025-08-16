@@ -60,6 +60,12 @@
   margin-top: 0.25rem;
 }
 
+.training-grid .upgrade-bonus.unaffordable,
+.training-grid .upgrade-cost.unaffordable,
+.training-modal-content .unaffordable {
+  color: #6b7280;
+}
+
 .training-section-nav {
   display: flex;
   gap: 0.5rem;

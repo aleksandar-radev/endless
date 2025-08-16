@@ -287,8 +287,16 @@ export default class Training {
     const baseLevel = this.upgradeLevels[stat] || 0;
     const maxLevel = config?.maxLevel ?? Infinity;
 
-    const { qty, totalCost } = this.getMaxPurchasable(this.selectedQty, baseLevel, maxLevel, config);
-    const { qty: maxQty } = this.getMaxPurchasable('max', baseLevel, maxLevel, config);
+    const levelsLeft = maxLevel - baseLevel;
+    const { qty: affordableQty } = this.getMaxPurchasable('max', baseLevel, maxLevel, config);
+    let qty =
+      this.selectedQty === 'max'
+        ? affordableQty > 0
+          ? affordableQty
+          : Math.min(1, levelsLeft)
+        : Math.min(this.selectedQty, levelsLeft);
+    const totalCost = this.calculateTotalCost(config, qty, baseLevel);
+    const affordable = hero.gold >= totalCost && qty > 0 && qty <= affordableQty;
 
     // Compute total bonus gained
     const bonusValue = (config.bonus || 0) * qty;
@@ -296,10 +304,12 @@ export default class Training {
 
     // --- Update ALL modal fields ---
     this.modal.querySelector('.modal-qty').textContent = formatNumber(qty);
-    this.modal.querySelector('.modal-total-cost').textContent = formatNumber(totalCost);
-    this.modal.querySelector('.modal-total-bonus').textContent = `+${formatNumber(
-      bonusValue.toFixed(decimals),
-    )} ${formatStatName(stat)}`;
+    const totalCostEl = this.modal.querySelector('.modal-total-cost');
+    totalCostEl.textContent = formatNumber(totalCost);
+    totalCostEl.classList.toggle('unaffordable', !affordable);
+    const totalBonusEl = this.modal.querySelector('.modal-total-bonus');
+    totalBonusEl.textContent = `+${formatNumber(bonusValue.toFixed(decimals))} ${formatStatName(stat)}`;
+    totalBonusEl.classList.toggle('unaffordable', !affordable);
     this.modal.querySelector('.modal-level').textContent = formatNumber(baseLevel);
     this.modal.querySelector('.modal-max-level').textContent = maxLevel === Infinity ? '∞' : formatNumber(maxLevel);
     this.modal.querySelector('.modal-bonus').textContent = this.getBonusText(stat, config, baseLevel);
@@ -307,13 +317,13 @@ export default class Training {
 
     const slider = this.modal.querySelector('.modal-slider');
     if (slider) {
-      slider.max = maxQty;
-      slider.value = this.selectedQty === 'max' ? maxQty : qty;
+      slider.max = levelsLeft;
+      slider.value = this.selectedQty === 'max' ? levelsLeft : Math.min(this.selectedQty, levelsLeft);
     }
 
     // Enable/disable Buy button based on quantity and affordability
     const buyBtn = this.modal.querySelector('.modal-buy');
-    buyBtn.disabled = qty <= 0 || totalCost > hero.gold || baseLevel >= maxLevel;
+    buyBtn.disabled = !affordable || baseLevel >= maxLevel;
   }
 
   updateTrainingUI(subTab) {
@@ -328,21 +338,43 @@ export default class Training {
 
   createUpgradeButton(stat, config) {
     const level = this.upgradeLevels[stat] || 0;
-    const bonus = this.getBonusText(stat, config.training, level);
     const maxLevel = config.training?.maxLevel ?? Infinity;
     const isMaxed = level >= maxLevel;
+    let bonus = this.getBonusText(stat, config.training, level);
     let disabled = isMaxed;
     let costLine = '';
+    let bonusClass = '';
+
     if (options?.quickTraining && !isMaxed) {
-      const { qty, totalCost } = this.getMaxPurchasable(this.quickQty, level, maxLevel, config.training);
-      if (qty <= 0) disabled = true;
-      costLine = `<span class="upgrade-cost">Cost: ${formatNumber(totalCost)} Gold (${formatNumber(qty)})</span>`;
+      const levelsLeft = maxLevel - level;
+      let desiredQty;
+      let totalCost;
+      if (this.quickQty === 'max') {
+        const { qty: affordableQty } = this.getMaxPurchasable('max', level, maxLevel, config.training);
+        desiredQty = affordableQty > 0 ? affordableQty : Math.min(1, levelsLeft);
+        totalCost = this.calculateTotalCost(config.training, desiredQty, level);
+        if (affordableQty <= 0) disabled = true;
+        if (hero.gold < totalCost) {
+          disabled = true;
+          bonusClass = 'unaffordable';
+        }
+      } else {
+        desiredQty = Math.min(this.quickQty, levelsLeft);
+        totalCost = this.calculateTotalCost(config.training, desiredQty, level);
+        if (desiredQty <= 0 || hero.gold < totalCost) {
+          disabled = true;
+          bonusClass = 'unaffordable';
+        }
+      }
+      costLine = `<span class="upgrade-cost ${bonusClass}">Cost: ${formatNumber(totalCost)} Gold (${formatNumber(desiredQty)})</span>`;
+    } else if ((hero?.gold || 0) < this.calculateTotalCost(config.training, 1, level)) {
+      bonusClass = 'unaffordable';
     }
 
     return html`
       <button data-stat="${stat}" ${disabled ? ' disabled' : ''}>
         <span class="upgrade-name">${formatStatName(stat)} (Lvl ${formatNumber(level)}${isMaxed ? ' / Max' : ''})</span>
-        <span class="upgrade-bonus">${bonus}${isMaxed ? ' <strong>Max</strong>' : ''}</span>
+        <span class="upgrade-bonus ${bonusClass}">${bonus}${isMaxed ? ' <strong>Max</strong>' : ''}</span>
         ${costLine}
       </button>
     `;
