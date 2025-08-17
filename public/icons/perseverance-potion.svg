@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <style>
+    :root{ --stroke:#0f172a; --glass:#e2e8f0; --p1:#64748b; --p2:#4f46e5; --cork:#312e81; --shine:#fff; --badge:#0f172a; }
+  </style>
+  <defs>
+    <linearGradient id="gP" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" style="stop-color:var(--p1)"/><stop offset="100%" style="stop-color:var(--p2)"/></linearGradient>
+    <clipPath id="clipP"><circle cx="128" cy="160" r="78"/></clipPath>
+  </defs>
+  <rect x="112" y="32" width="32" height="24" rx="5" fill="var(--cork)" stroke="var(--stroke)" stroke-width="6"/>
+  <rect x="102" y="56" width="52" height="12" rx="6" fill="var(--glass)" stroke="var(--stroke)" stroke-width="6"/>
+  <rect x="106" y="68" width="44" height="32" rx="10" fill="var(--glass)" stroke="var(--stroke)" stroke-width="6"/>
+  <circle cx="128" cy="160" r="78" fill="var(--glass)" stroke="var(--stroke)" stroke-width="6"/>
+  <g clip-path="url(#clipP)"><path d="M48 190C88 162 168 212 208 176V264H48Z" fill="url(#gP)"/></g>
+  <circle cx="128" cy="148" r="30" fill="#fff" stroke="var(--badge)" stroke-width="6"/>
+  <!-- Mountain + flag -->
+  <path d="M108 166l14-18 12 16 8-10 6 12h-40z" fill="var(--badge)"/>
+  <path d="M140 140v-10l10 3-10 3" stroke="var(--badge)" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M176 118c0-20-20-32-38-30 10 6 18 18 18 30 0 14-10 26-24 30" fill="none" stroke="var(--shine)" stroke-width="6" opacity="0.55" stroke-linecap="round"/>
+</svg>

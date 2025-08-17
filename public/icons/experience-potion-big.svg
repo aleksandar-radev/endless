@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 288" role="img" aria-labelledby="title desc">
+  <title id="title">XP Potion — Large Elixir</title>
+  <desc id="desc">A large round elixir bottle with emerald XP liquid and a bold badge.</desc>
+  <style>
+    :root{
+      --stroke:#0f172a; --glass:#e2e8f0;
+      --potion:#34d399; --potion2:#10b981;
+      --cork:#065f46; --shine:#ffffff; --badge:#0f172a;
+    }
+  </style>
+  <defs>
+    <linearGradient id="gL" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" style="stop-color:var(--potion)"/><stop offset="100%" style="stop-color:var(--potion2)"/>
+    </linearGradient>
+    <clipPath id="clipL"><circle cx="144" cy="180" r="96"/></clipPath>
+  </defs>
+
+  <!-- Big cork -->
+  <rect x="124" y="28" width="40" height="30" rx="6" fill="var(--cork)" stroke="var(--stroke)" stroke-width="8"/>
+
+  <!-- Ornate collar -->
+  <rect x="104" y="58" width="80" height="16" rx="8" fill="var(--glass)" stroke="var(--stroke)" stroke-width="8"/>
+  <rect x="112" y="74" width="64" height="38" rx="12" fill="var(--glass)" stroke="var(--stroke)" stroke-width="8"/>
+
+  <!-- Body -->
+  <circle cx="144" cy="180" r="96" fill="var(--glass)" stroke="var(--stroke)" stroke-width="8"/>
+
+  <!-- Liquid -->
+  <g clip-path="url(#clipL)">
+    <path d="M48 210c48-36 144 18 240-18v124H48z" fill="url(#gL)"/>
+    <ellipse cx="144" cy="224" rx="84" ry="44" fill="var(--potion2)" opacity="0.25"/>
+    <circle cx="122" cy="230" r="4" fill="var(--shine)" opacity="0.6"/>
+    <circle cx="170" cy="238" r="3.2" fill="var(--shine)" opacity="0.55"/>
+    <circle cx="156" cy="212" r="2.8" fill="var(--shine)" opacity="0.55"/>
+  </g>
+
+  <!-- Emblem -->
+  <circle cx="144" cy="160" r="36" fill="#fff" stroke="var(--badge)" stroke-width="8"/>
+  <text x="144" y="168" text-anchor="middle" font-size="20" font-weight="800" fill="var(--badge)">XP</text>
+
+  <!-- Arc highlight -->
+  <path d="M196 132c0-24-22-38-42-36 12 7 20 20 20 34 0 16-10 30-26 36"
+        fill="none" stroke="var(--shine)" stroke-width="8" opacity="0.55" stroke-linecap="round"/>
+</svg>

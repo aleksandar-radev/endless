@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 288" role="img" aria-labelledby="title desc">
+  <title id="title">XP Potion — Crystal Flask</title>
+  <desc id="desc">A faceted crystal flask filled with emerald XP liquid and a bold XP emblem.</desc>
+
+  <style>
+    :root{
+      --stroke:#0f172a; --glass:#e2e8f0;
+      --potion:#34d399; --potion2:#10b981;
+      --cork:#065f46; --shine:#ffffff; --badge:#0f172a;
+    }
+  </style>
+
+  <defs>
+    <linearGradient id="gC" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" style="stop-color:var(--potion)"/>
+      <stop offset="100%" style="stop-color:var(--potion2)"/>
+    </linearGradient>
+    <clipPath id="clipC">
+      <polygon points="128,88 196,136 168,244 88,244 60,136"/>
+    </clipPath>
+  </defs>
+
+  <!-- Cork -->
+  <rect x="112" y="24" width="32" height="28" rx="5"
+        fill="var(--cork)" stroke="var(--stroke)" stroke-width="6"/>
+
+  <!-- Collar -->
+  <rect x="102" y="52" width="52" height="16" rx="6"
+        fill="var(--glass)" stroke="var(--stroke)" stroke-width="6"/>
+  <rect x="108" y="68" width="40" height="28" rx="8"
+        fill="var(--glass)" stroke="var(--stroke)" stroke-width="6"/>
+
+  <!-- Crystal body -->
+  <polygon points="128,88 196,136 168,244 88,244 60,136"
+           fill="var(--glass)" stroke="var(--stroke)" stroke-width="6"/>
+
+  <!-- Liquid -->
+  <g clip-path="url(#clipC)">
+    <path d="M60 172c40-18 96 22 136-10v82H60z" fill="url(#gC)"/>
+    <circle cx="106" cy="200" r="3" fill="var(--shine)" opacity="0.6"/>
+    <circle cx="150" cy="210" r="3" fill="var(--shine)" opacity="0.5"/>
+    <circle cx="128" cy="188" r="2.4" fill="var(--shine)" opacity="0.55"/>
+  </g>
+
+  <!-- Emblem -->
+  <circle cx="128" cy="156" r="28" fill="#fff" stroke="var(--badge)" stroke-width="6"/>
+  <text x="128" y="162" text-anchor="middle" font-size="18" font-weight="700" fill="var(--badge)">XP</text>
+
+  <!-- Highlight -->
+  <path d="M176 122c0-18-18-30-34-28 10 6 16 14 16 26 0 12-8 22-20 28"
+        fill="none" stroke="var(--shine)" stroke-width="5" opacity="0.55" stroke-linecap="round"/>
+</svg>

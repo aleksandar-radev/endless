@@ -30,7 +30,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 250,
     reward: { gold: 4000, item: { rarity: 'rare', type: 'random', tier: 1 } },
-    icon: `<img src="${BASE}/icons/lightning.svg" class="icon" alt="crit"/>`,
+    icon: `<img src="${BASE}/icons/strength-potion.svg" class="icon" alt="crit"/>`,
   },
   {
     id: 'kill1000',

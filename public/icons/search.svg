@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="64" height="64" viewBox="0 0 64 64">
+  <!-- Lens with gradient -->
+  <defs>
+    <radialGradient id="lensGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#a0d8ff"/>
+      <stop offset="100%" stop-color="#0077cc"/>
+    </radialGradient>
+  </defs>
+  <circle cx="28" cy="28" r="16" 
+          stroke="#004080" stroke-width="4" 
+          fill="url(#lensGrad)"/>
+  <!-- Handle -->
+  <line x1="40" y1="40" x2="56" y2="56" 
+        stroke="#333" stroke-width="6" 
+        stroke-linecap="round"/>
+</svg>

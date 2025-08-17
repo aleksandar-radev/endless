@@ -102,7 +102,7 @@ function openPrestigeModal() {
       <button class="modal-close">&times;</button>
       <div class="prestige-cards"></div>
       <div class="modal-controls">
-        <button id="prestige-reroll-btn">Reroll (60<img src="${BASE}/icons/gem.svg" class="icon" alt="gem"/>)</button>
+        <button id="prestige-reroll-btn">Reroll (60<img src="${BASE}/icons/crystal.svg" class="icon" alt="gem"/>)</button>
       </div>
       <div class="prestige-info-message" style="margin-top: 10px; color: #9ac7fcff; font-size: 1.05em;">
 
@@ -126,7 +126,7 @@ function openPrestigeModal() {
       .map((c, i) => {
         const lockLabel = c.locked
           ? `<img src="${BASE}/icons/lock.svg" class="icon" alt="lock"/>`
-          : `Lock (20<img src="${BASE}/icons/gem.svg" class="icon" alt="gem"/>)`;
+          : `Lock (20<img src="${BASE}/icons/crystal.svg" class="icon" alt="gem"/>)`;
         return html`
           <div class="prestige-card-wrapper" data-idx="${i}">
             <div class="prestige-card ${c.locked ? 'locked' : ''} ${selectedIdx === i ? 'selected' : ''}">
@@ -154,7 +154,7 @@ function openPrestigeModal() {
         const cardEl = btn.parentElement.querySelector('.prestige-card');
         if (card.locked) {
           card.locked = false;
-          btn.innerHTML = `Lock (20<img src="${BASE}/icons/gem.svg" class="icon" alt="gem"/>)`;
+          btn.innerHTML = `Lock (20<img src="${BASE}/icons/crystal.svg" class="icon" alt="gem"/>)`;
           cardEl.classList.remove('locked');
         } else {
           if (hero.crystals < 20) {

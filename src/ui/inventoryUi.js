@@ -79,7 +79,7 @@ export function initializeInventoryUI(inv) {
       <button id="open-salvage-modal" class="inventory-btn" data-i18n="inventory.options">${t('inventory.options')}</button>
       <div class="search-container">
         <input type="text" id="inventory-filter" class="inventory-btn filter-input" placeholder="${t('inventory.searchItems')}" />
-        <span class="search-icon"><img src="${BASE}/icons/magnify.svg" class="icon" alt="search"/></span>
+        <span class="search-icon"><img src="${BASE}/icons/search.svg" class="icon" alt="search"/></span>
         <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn" style="display: none" data-i18n="inventory.equip">${t('inventory.equip')}</button>
       </div>
     </div>
@@ -957,7 +957,7 @@ export function updateMaterialsGrid(inv) {
   materialsContainer.innerHTML = '';
   for (let i = 0; i < MATERIALS_SLOTS; i++) {
     const mat = inv.materials[i];
-    const icon = MATERIALS[mat?.id]?.icon || `<img src="${BASE}/icons/gem.svg" class="icon" alt="mat"/>`;
+    const icon = MATERIALS[mat?.id]?.icon || `<img src="${BASE}/icons/crystal.svg" class="icon" alt="mat"/>`;
     const cell = document.createElement('div');
     cell.classList.add('materials-cell');
     if (mat) {

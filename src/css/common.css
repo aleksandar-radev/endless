@@ -324,7 +324,7 @@ body.dev-active .game-container {
 
 /* Generic icon styling for inline SVG images */
 img.icon {
-  width: 1.2em;
-  height: 1.2em;
+  width: 24px;
+  height: 24px;
   vertical-align: middle;
 }

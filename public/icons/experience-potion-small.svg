@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 256" role="img" aria-labelledby="title desc">
+  <title id="title">XP Potion — Small Vial</title>
+  <desc id="desc">A slim vial with green XP liquid and a tiny XP badge.</desc>
+  <style>
+    :root{
+      --stroke:#0f172a; --glass:#e2e8f0;
+      --potion:#34d399; --potion2:#10b981;
+      --cork:#065f46; --shine:#ffffff; --badge:#0f172a;
+    }
+  </style>
+  <defs>
+    <linearGradient id="gS" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" style="stop-color:var(--potion)"/><stop offset="100%" style="stop-color:var(--potion2)"/>
+    </linearGradient>
+    <clipPath id="clipS"><rect x="64" y="92" width="64" height="124" rx="20"/></clipPath>
+  </defs>
+
+  <!-- Cork + lip + neck -->
+  <rect x="82" y="26" width="28" height="20" rx="4" fill="var(--cork)" stroke="var(--stroke)" stroke-width="6"/>
+  <rect x="72" y="46" width="48" height="10" rx="6" fill="var(--glass)" stroke="var(--stroke)" stroke-width="6"/>
+  <rect x="74" y="56" width="44" height="40" rx="12" fill="var(--glass)" stroke="var(--stroke)" stroke-width="6"/>
+
+  <!-- Body (tube) -->
+  <rect x="64" y="92" width="64" height="124" rx="20" fill="var(--glass)" stroke="var(--stroke)" stroke-width="6"/>
+
+  <!-- Liquid -->
+  <g clip-path="url(#clipS)">
+    <path d="M64 168c12-10 52-6 64-18v66H64z" fill="url(#gS)"/>
+    <circle cx="92" cy="188" r="3" fill="var(--shine)" opacity="0.6"/>
+    <circle cx="116" cy="176" r="2.6" fill="var(--shine)" opacity="0.55"/>
+  </g>
+
+  <!-- Emblem -->
+  <circle cx="96" cy="140" r="18" fill="#fff" stroke="var(--badge)" stroke-width="5"/>
+  <text x="96" y="145" text-anchor="middle" font-size="12" font-weight="700" fill="var(--badge)">XP</text>
+
+  <!-- Highlight -->
+  <path d="M120 108c0-12-12-20-24-18 7 4 12 11 12 18 0 9-7 16-15 18"
+        fill="none" stroke="var(--shine)" stroke-width="5" opacity="0.55" stroke-linecap="round"/>
+</svg>

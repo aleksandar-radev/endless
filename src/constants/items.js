@@ -51,45 +51,17 @@ export const ITEM_TYPES = {
 export const ITEM_ICONS = {
   HELMET: `<img src="${BASE}/icons/helmet.svg" class="icon" alt="helmet"/>`,
   ARMOR: `<img src="${BASE}/icons/armor.svg" class="icon" alt="armor"/>`,
-  BELT: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 18 18">
-  <!-- Belt strap (slightly brighter for dark bg) -->
-  <rect x="2" y="7.5" width="14" height="3" fill="#3b4f5d" stroke="#ffffff" stroke-width="0.45"/>
-  
-  <!-- Belt buckle (brighter gold, white stroke) -->
-  <rect x="12" y="7" width="4" height="4" fill="#e3c16a" stroke="#ffffff" stroke-width="0.45"/>
-  <rect x="13" y="8" width="2" height="2" fill="#2c3e50"/>
-</svg>`,
-  PANTS: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 18 18">
-  <path d="M4 1.3 
-           L14 1.3 
-           L16 17 
-           L11 17 
-           L9.9 7 
-           L8.1 17 
-           L3 17 
-           Z"
-        fill="#4aa3df" stroke="#ffffff" stroke-width="0.5"/>
-  
-  <rect x="4" y="0.6" width="10" height="0.7" fill="#dbeffb"/>
-  
-  <line x1="4.3" y1="2" x2="5.8" y2="4" stroke="#ffffff" stroke-width="0.5"/>
-  <line x1="13.7" y1="2" x2="12.2" y2="4" stroke="#ffffff" stroke-width="0.5"/>
-</svg>`,
+  BELT: `<img src="${BASE}/icons/belt.svg" class="icon" alt="belt"/>`,
+  PANTS: `<img src="${BASE}/icons/pants.svg" class="icon" alt="pants"/>`,
   BOOTS: `<img src="${BASE}/icons/boots.svg" class="icon" alt="boots"/>`,
   SWORD: `<img src="${BASE}/icons/sword.svg" class="icon" alt="sword"/>`,
   AXE: `<img src="${BASE}/icons/axe.svg" class="icon" alt="axe"/>`,
-  MACE: `<img src="${BASE}/icons/hammer.svg" class="icon" alt="mace"/>`,
+  MACE: `<img src="${BASE}/icons/mace.svg" class="icon" alt="mace"/>`,
   WAND: `<img src="${BASE}/icons/wand.svg" class="icon" alt="wand"/>`,
-  STAFF: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-  <!-- Staff shaft -->
-  <rect x="8.2" y="2" width="1.6" height="14" fill="#8b5a2b" stroke="#000" stroke-width="0.2"/>
-  
-  <!-- Decorative top (crystal orb) -->
-  <circle cx="9" cy="2.5" r="2" fill="#4aa3df" stroke="#000" stroke-width="0.3"/>
-</svg>`,
+  STAFF: `<img src="${BASE}/icons/staff.svg" class="icon" alt="staff"/>`,
   SHIELD: `<img src="${BASE}/icons/shield.svg" class="icon" alt="shield"/>`,
   GLOVES: `<img src="${BASE}/icons/gloves.svg" class="icon" alt="gloves"/>`,
-  AMULET: `<img src="${BASE}/icons/necklace.svg" class="icon" alt="amulet"/>`,
+  AMULET: `<img src="${BASE}/icons/amulet.svg" class="icon" alt="amulet"/>`,
   RING: `<img src="${BASE}/icons/ring.svg" class="icon" alt="ring"/>`,
 };
 

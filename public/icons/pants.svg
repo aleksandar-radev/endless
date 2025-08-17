@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Pants / Leggings Icon</title>
+  <desc id="desc">Fabric leggings with belt, seams, and metal knee guards.</desc>
+
+  <style>
+    :root{
+      --stroke:#0f172a;     /* outline */
+      --fabric1:#9ca3af;    /* fabric light (default: gray) */
+      --fabric2:#6b7280;    /* fabric dark */
+      --leather:#7c5a3a;    /* belt/trim */
+      --buckle:#facc15;     /* belt buckle */
+      --metal1:#cbd5e1;     /* knee guard light */
+      --metal2:#64748b;     /* knee guard dark */
+      --seam:#111827;       /* stitch line */
+      --rivet:#e2e8f0;      /* rivets */
+      --shine:#ffffff;      /* highlights */
+      --tint:transparent;   /* rarity overlay (e.g., rgba(99,102,241,.18)) */
+      --glow:#60a5fa;       /* outer glow */
+    }
+  </style>
+
+  <defs>
+    <!-- Fabric gradient -->
+    <linearGradient id="fabGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="var(--fabric1)"/>
+      <stop offset="100%" stop-color="var(--fabric2)"/>
+    </linearGradient>
+    <!-- Metal gradient -->
+    <linearGradient id="steelV" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="var(--metal1)"/>
+      <stop offset="100%" stop-color="var(--metal2)"/>
+    </linearGradient>
+    <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="var(--glow)" flood-opacity="0.45"/>
+    </filter>
+    <!-- Clip for rarity tint -->
+    <clipPath id="pantsClip">
+      <rect x="56" y="66" width="144" height="54" rx="22"/>
+      <rect x="64" y="112" width="52" height="108" rx="16"/>
+      <rect x="140" y="112" width="52" height="108" rx="16"/>
+    </clipPath>
+  </defs>
+
+  <!-- Belt -->
+  <g filter="url(#softGlow)">
+    <rect x="56" y="58" width="144" height="18" rx="6" fill="var(--leather)" stroke="var(--stroke)" stroke-width="6"/>
+    <!-- Buckle -->
+    <rect x="116" y="54" width="24" height="26" rx="4" fill="var(--buckle)" stroke="var(--stroke)" stroke-width="4"/>
+    <rect x="122" y="60" width="12" height="14" rx="2" fill="none" stroke="var(--stroke)" stroke-width="3"/>
+  </g>
+
+  <!-- Upper yoke -->
+  <rect x="56" y="66" width="144" height="54" rx="22" fill="url(#fabGrad)" stroke="var(--stroke)" stroke-width="8" filter="url(#softGlow)"/>
+
+  <!-- Left leg -->
+  <rect x="64" y="112" width="52" height="108" rx="16" fill="url(#fabGrad)" stroke="var(--stroke)" stroke-width="8" filter="url(#softGlow)"/>
+  <!-- Right leg -->
+  <rect x="140" y="112" width="52" height="108" rx="16" fill="url(#fabGrad)" stroke="var(--stroke)" stroke-width="8" filter="url(#softGlow)"/>
+
+  <!-- Knee guards -->
+  <g>
+    <ellipse cx="90"  cy="168" rx="20" ry="16" fill="url(#steelV)" stroke="var(--stroke)" stroke-width="6"/>
+    <ellipse cx="166" cy="168" rx="20" ry="16" fill="url(#steelV)" stroke="var(--stroke)" stroke-width="6"/>
+  </g>
+
+  <!-- Seams / stitching -->
+  <g stroke="var(--seam)" stroke-width="4" stroke-linecap="round" opacity="0.9">
+    <!-- Center crotch seam suggestion -->
+    <path d="M128 94c-10 4-18 10-18 18" fill="none"/>
+    <path d="M128 94c10 4 18 10 18 18" fill="none"/>
+    <!-- Vertical seams on legs -->
+    <path d="M90 116v92" stroke-dasharray="8 10"/>
+    <path d="M166 116v92" stroke-dasharray="8 10"/>
+  </g>
+
+  <!-- Rivets at belt points -->
+  <g fill="var(--rivet)" stroke="var(--stroke)" stroke-width="2.5">
+    <circle cx="74" cy="66" r="4"/><circle cx="182" cy="66" r="4"/>
+  </g>
+
+  <!-- Rarity tint overlay -->
+  <g clip-path="url(#pantsClip)">
+    <rect x="0" y="0" width="256" height="256" fill="var(--tint)"/>
+  </g>
+
+  <!-- Highlights -->
+  <path d="M176 86c0-16-18-26-34-24 10 6 16 14 16 24 0 12-8 22-20 28"
+        fill="none" stroke="var(--shine)" stroke-width="5" opacity="0.45" stroke-linecap="round"/>
+  <path d="M76 126c8-6 22-10 36-10" fill="none" stroke="var(--shine)" stroke-width="4" opacity="0.35" stroke-linecap="round"/>
+</svg>

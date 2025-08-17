@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <style>
+    :root{
+      --gold1:#facc15; --gold2:#eab308;
+      --gem1:#f87171; --gem2:#b91c1c;
+      --stroke:#0f172a; --shine:#fff;
+    }
+  </style>
+  <defs>
+    <radialGradient id="coinGemGrad" cx="40%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="var(--gold1)"/><stop offset="100%" stop-color="var(--gold2)"/>
+    </radialGradient>
+    <radialGradient id="gemGrad" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="var(--gem1)"/><stop offset="100%" stop-color="var(--gem2)"/>
+    </radialGradient>
+  </defs>
+  <circle cx="64" cy="64" r="56" fill="url(#coinGemGrad)" stroke="var(--stroke)" stroke-width="6"/>
+  <!-- Gem -->
+  <circle cx="64" cy="64" r="18" fill="url(#gemGrad)" stroke="var(--stroke)" stroke-width="4"/>
+  <path d="M78 46c0-10-10-16-20-14 6 4 10 10 10 16 0 6-4 12-12 14" fill="none" stroke="var(--shine)" stroke-width="4" opacity="0.45" stroke-linecap="round"/>
+</svg>

@@ -7,11 +7,11 @@ export const ELEMENTS = {
   },
   cold: {
     id: 'cold',
-    icon: `<img src="${BASE}/icons/snowflake.svg" class="icon" alt="cold"/>`,
+    icon: `<img src="${BASE}/icons/cold.svg" class="icon" alt="cold"/>`,
   },
   air: {
     id: 'air',
-    icon: `<img src="${BASE}/icons/wind.svg" class="icon" alt="air"/>`,
+    icon: `<img src="${BASE}/icons/air.svg" class="icon" alt="air"/>`,
   },
   earth: {
     id: 'earth',

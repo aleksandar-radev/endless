@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 288" role="img" aria-labelledby="title desc">
+  <title id="title">Mage Staff Icon</title>
+  <desc id="desc">Wooden staff with metal bands and a faceted crystal focus surrounded by a rune ring.</desc>
+
+  <style>
+    :root{
+      --stroke:#0f172a;      /* outline */
+      --wood1:#8b5e3c;       /* shaft light */
+      --wood2:#5b3d1f;       /* shaft dark */
+      --metal1:#cbd5e1;      /* ferrules light */
+      --metal2:#64748b;      /* ferrules dark */
+      --crystal1:#60a5fa;    /* crystal light */
+      --crystal2:#2563eb;    /* crystal dark */
+      --rune:#e2e8f0;        /* runes */
+      --shine:#ffffff;       /* highlights */
+      --glow:#60a5fa;        /* ambient glow */
+      --tint:transparent;    /* rarity overlay (rgba(...,.18)) */
+    }
+  </style>
+
+  <defs>
+    <!-- Wood grain gradient -->
+    <linearGradient id="woodGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="var(--wood1)"/>
+      <stop offset="100%" stop-color="var(--wood2)"/>
+    </linearGradient>
+
+    <!-- Metal gradient -->
+    <linearGradient id="metalGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="var(--metal1)"/>
+      <stop offset="100%" stop-color="var(--metal2)"/>
+    </linearGradient>
+
+    <!-- Crystal gradient -->
+    <linearGradient id="crystalGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="var(--crystal1)"/>
+      <stop offset="100%" stop-color="var(--crystal2)"/>
+    </linearGradient>
+
+    <!-- Glow -->
+    <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="var(--glow)" flood-opacity="0.55"/>
+    </filter>
+
+    <!-- Rarity clip -->
+    <clipPath id="staffClip">
+      <rect x="110" y="30" width="20" height="196" rx="8"/>
+      <circle cx="120" cy="228" r="12"/>
+      <rect x="106" y="226" width="28" height="26" rx="8"/>
+    </clipPath>
+  </defs>
+
+  <g id="tilt" transform="rotate(45 120 128)">
+  <!-- Shaft -->
+  <rect x="110" y="30" width="20" height="196" rx="8"
+        fill="url(#woodGrad)" stroke="var(--stroke)" stroke-width="6"/>
+
+  <!-- Carved grip lines -->
+  <g stroke="#000" stroke-opacity="0.25" stroke-width="2">
+    <path d="M112 70h16"/><path d="M112 86h16"/><path d="M112 102h16"/>
+    <path d="M112 154h16"/><path d="M112 170h16"/><path d="M112 186h16"/>
+  </g>
+
+  <!-- Metal ferrules -->
+  <g>
+    <rect x="106" y="54"  width="28" height="12" rx="4" fill="url(#metalGrad)" stroke="var(--stroke)" stroke-width="5"/>
+    <rect x="106" y="118" width="28" height="12" rx="4" fill="url(#metalGrad)" stroke="var(--stroke)" stroke-width="5"/>
+    <rect x="106" y="182" width="28" height="12" rx="4" fill="url(#metalGrad)" stroke="var(--stroke)" stroke-width="5"/>
+  </g>
+
+  <!-- Crystal head (faceted) -->
+  <g filter="url(#softGlow)" transform="translate(-60,-20) scale(1.5)">
+    <polygon points="120,18 138,36 132,62 120,74 108,62 102,36"
+             fill="url(#crystalGrad)" stroke="var(--stroke)" stroke-width="3"/>
+    <!-- specular -->
+    <path d="M114 30c6-6 14-6 18 0" stroke="var(--shine)" stroke-width="4" opacity="0.55" stroke-linecap="round"/>
+  </g>
+
+  <!-- Rune ring around crystal -->
+  <g transform="translate(0,-4)">
+    <g stroke="var(--rune)" stroke-width="4" stroke-linecap="round">
+      <path d="M120 20v8"/><path d="M120 64v8"/>
+      <path d="M92 46h8"/><path d="M140 46h8"/>
+      <path d="M104 30l6 6"/><path d="M136 56l6 6"/>
+      <path d="M136 30l-6 6"/><path d="M104 56l-6 6"/>
+    </g>
+  </g>
+
+  <!-- Pommel -->
+  <g>
+    <circle cx="120" cy="228" r="12" fill="url(#metalGrad)" stroke="var(--stroke)" stroke-width="6"/>
+    <rect x="106" y="226" width="28" height="26" rx="8" fill="url(#metalGrad)" stroke="var(--stroke)" stroke-width="6"/>
+  </g>
+  </g>
+
+</svg>

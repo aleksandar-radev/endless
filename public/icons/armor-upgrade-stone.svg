@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Armor Upgrade Stone</title>
+  <desc id="desc">A faceted blue gem set in steel with a carved shield rune to signify armor enhancement.</desc>
+
+  <style>
+    :root{
+      --stroke:#0f172a;     /* outlines */
+      --metal1:#94a3b8;     /* steel outer */
+      --metal2:#64748b;     /* steel inner */
+      --gem1:#60a5fa;       /* gem top */
+      --gem2:#2563eb;       /* gem bottom */
+      --rune:#e2e8f0;       /* rune inlay */
+      --shine:#ffffff;      /* highlights */
+      --glow:#3b82f6;       /* outer glow color */
+    }
+  </style>
+
+  <defs>
+    <!-- Metal ring gradient -->
+    <linearGradient id="metalGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  style="stop-color:var(--metal1)"/>
+      <stop offset="100%" style="stop-color:var(--metal2)"/>
+    </linearGradient>
+
+    <!-- Gem gradient -->
+    <linearGradient id="gemGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  style="stop-color:var(--gem1)"/>
+      <stop offset="100%" style="stop-color:var(--gem2)"/>
+    </linearGradient>
+
+    <!-- Soft glow -->
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="var(--glow)" flood-opacity="0.55"/>
+    </filter>
+
+    <!-- Facet shine -->
+    <linearGradient id="facetShine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" style="stop-color:var(--shine); stop-opacity:0.25"/>
+      <stop offset="100%" style="stop-color:var(--shine); stop-opacity:0"/>
+    </linearGradient>
+
+    <!-- Octagon path (reusable) -->
+    <polygon id="oct" points="
+      128,36  176,52  204,88  220,136
+      204,184 176,220 128,236 80,220
+      52,184 36,136 52,88 80,52"/>
+  </defs>
+
+  <!-- Outer glow -->
+  <use href="#oct" fill="none" filter="url(#glow)"/>
+
+  <!-- Steel bezel -->
+  <use href="#oct" fill="url(#metalGrad)" stroke="var(--stroke)" stroke-width="6" />
+
+  <!-- Inner gem (inset octagon) -->
+  <g transform="translate(0,0)">
+    <polygon points="
+      128,56  166,68  190,96  202,134
+      190,172 166,200 128,212 90,200
+      66,172 54,134 66,96 90,68"
+      fill="url(#gemGrad)" stroke="var(--stroke)" stroke-width="5" />
+  </g>
+
+  <!-- Facets (subtle triangles) -->
+  <g opacity="0.25">
+    <polygon points="128,56 166,68 128,134" fill="url(#facetShine)"/>
+    <polygon points="128,56 90,68 128,134"  fill="url(#facetShine)"/>
+    <polygon points="128,212 166,200 128,134" fill="url(#facetShine)"/>
+    <polygon points="128,212 90,200 128,134"  fill="url(#facetShine)"/>
+    <polygon points="54,134 90,68 128,134"   fill="url(#facetShine)"/>
+    <polygon points="202,134 166,68 128,134" fill="url(#facetShine)"/>
+  </g>
+
+  <!-- Inset rim -->
+  <polygon points="
+      128,64  160,74  182,100  192,134
+      182,168 160,194 128,204 96,194
+      74,168 64,134 74,100 96,74"
+      fill="none" stroke="var(--shine)" stroke-opacity="0.35" stroke-width="3"/>
+
+  <!-- Carved shield rune -->
+  <g transform="translate(0,0)">
+    <path d="M128 92l26 8v18c0 18-12 34-26 42-14-8-26-24-26-42v-18z"
+          fill="none" stroke="var(--rune)" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M128 112v36" stroke="var(--rune)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M118 128h20" stroke="var(--rune)" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <!-- Top sparkle -->
+  <path d="M170 88c0-18-18-28-34-26 10 6 16 16 16 26 0 12-8 22-20 28"
+        fill="none" stroke="var(--shine)" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
+
+  <!-- Rivets on bezel -->
+  <g fill="var(--shine)" opacity="0.7">
+    <circle cx="176" cy="60" r="3"/>
+    <circle cx="208" cy="136" r="3"/>
+    <circle cx="176" cy="212" r="3"/>
+    <circle cx="80"  cy="212" r="3"/>
+    <circle cx="48"  cy="136" r="3"/>
+    <circle cx="80"  cy="60"  r="3"/>
+  </g>
+</svg>

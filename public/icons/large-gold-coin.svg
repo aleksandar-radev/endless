@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <style>
+    :root{--gold1:#fcd34d; --gold2:#f59e0b; --stroke:#0f172a; --shine:#fff;}
+  </style>
+  <defs>
+    <radialGradient id="coinStarGrad" cx="35%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="var(--gold1)"/><stop offset="100%" stop-color="var(--gold2)"/>
+    </radialGradient>
+  </defs>
+  <circle cx="64" cy="64" r="56" fill="url(#coinStarGrad)" stroke="var(--stroke)" stroke-width="6"/>
+  <polygon points="64,40 72,58 92,58 76,70 82,90 64,78 46,90 52,70 36,58 56,58"
+           fill="var(--stroke)" opacity="0.9"/>
+  <path d="M80 44c0-10-10-16-20-14 6 4 10 10 10 16 0 6-6 12-12 14" fill="none" stroke="var(--shine)" stroke-width="4" opacity="0.45" stroke-linecap="round"/>
+</svg>

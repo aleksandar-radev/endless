@@ -59,7 +59,7 @@ export function initializeUI() {
     {
       selector: '.resource-crystal',
       tooltip: () => html`
-        <div class="tooltip-header">Crystals <img src="${BASE}/icons/gem.svg" class="icon" alt="crystal"/></div>
+        <div class="tooltip-header">Crystals <img src="${BASE}/icons/crystal.svg" class="icon" alt="crystal"/></div>
         <div class="tooltip-desc">Rare currency for powerful upgrades and skill resets.</div>
         <div class="tooltip-note"></div>
       `,
@@ -67,7 +67,7 @@ export function initializeUI() {
     {
       selector: '.resource-souls',
       tooltip: () => html`
-        <div class="tooltip-header">Souls <img src="${BASE}/icons/ghost.svg" class="icon" alt="soul"/></div>
+        <div class="tooltip-header">Souls <img src="${BASE}/icons/soul.svg" class="icon" alt="soul"/></div>
         <div class="tooltip-desc">Earned from killing bosses in Arena.</div>
         <div class="tooltip-note"></div>
       `,

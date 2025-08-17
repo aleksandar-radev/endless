@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <style>
+    :root{ --stroke:#0f172a; --glass:#e2e8f0; --p1:#22c55e; --p2:#16a34a; --cork:#166534; --shine:#fff; --badge:#0f172a; }
+  </style>
+  <defs>
+    <linearGradient id="gV" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" style="stop-color:var(--p1)"/><stop offset="100%" style="stop-color:var(--p2)"/></linearGradient>
+    <clipPath id="clipV"><circle cx="128" cy="160" r="78"/></clipPath>
+  </defs>
+  <rect x="112" y="32" width="32" height="24" rx="5" fill="var(--cork)" stroke="var(--stroke)" stroke-width="6"/>
+  <rect x="102" y="56" width="52" height="12" rx="6" fill="var(--glass)" stroke="var(--stroke)" stroke-width="6"/>
+  <rect x="106" y="68" width="44" height="32" rx="10" fill="var(--glass)" stroke="var(--stroke)" stroke-width="6"/>
+  <circle cx="128" cy="160" r="78" fill="var(--glass)" stroke="var(--stroke)" stroke-width="6"/>
+  <g clip-path="url(#clipV)"><path d="M48 190C88 162 168 212 208 176V264H48Z" fill="url(#gV)"/></g>
+  <circle cx="128" cy="148" r="30" fill="#fff" stroke="var(--badge)" stroke-width="6"/>
+  <!-- Heart/leaf -->
+  <path d="M128 165c-12-8-24-16-24-27 0-7 5-12 12-12 5 0 9 3 12 7 3-4 7-7 12-7 7 0 12 5 12 12 0 11-12 19-24 27z"
+        fill="var(--badge)"/>
+  <path d="M128 149v16" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+  <path d="M176 118c0-20-20-32-38-30 10 6 18 18 18 30 0 14-10 26-24 30" fill="none" stroke="var(--shine)" stroke-width="6" opacity="0.55" stroke-linecap="round"/>
+</svg>
