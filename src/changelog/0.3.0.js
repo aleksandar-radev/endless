@@ -1,7 +1,7 @@
 const html = String.raw;
 export default function run() {
   return html`
-  <span style="color:#4F8A10;"><i class="mdi mdi-notebook"></i> 2025-07-09</span>
+  <span style="color:#4F8A10;"> 2025-07-09</span>
 <hr>
 
 <h3 style="color:#c42e2e; margin: 10px 0px;">Progress was not reset for this update, although, it is highly recommended
@@ -9,7 +9,7 @@ export default function run() {
 
 <hr>
 
-<span style="color:#1E90FF;"><i class="mdi mdi-star-four-points"></i> New Features</span>
+<span style="color:#1E90FF;"> New Features</span>
 <ul>
   <li>Added 2 new classes: Mage and Druid.</li>
   <li>Added new quests.</li>
@@ -23,7 +23,7 @@ export default function run() {
   <li>Few new bosses added.</li>
 </ul>
 
-<span style="color:#FFA500;"><i class="mdi mdi-scale-balance"></i> Balance Changes</span>
+<span style="color:#FFA500;"> Balance Changes</span>
 <ul>
   <li>Increased experience requirement for higher levels.</li>
   <li>Decreased % stats bonuses on items.</li>
@@ -37,7 +37,7 @@ export default function run() {
   <li>Greatly increased the drop quantity of item level upgrade materials, based on enemy level.</li>
 </ul>
 
-<span style="color:#FFA500;"><i class="mdi mdi-bug"></i> Bug Fixes</span>
+<span style="color:#FFA500;"> Bug Fixes</span>
 <ul>
   <li>Fixed enchantment scroll did upgrade the rarity of an item, but didn't give extra stats.</li>
   <li>Fixed a bug where soul shop upgrade for damage boost will give 100x less value.</li>

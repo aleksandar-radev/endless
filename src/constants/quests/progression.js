@@ -1,4 +1,9 @@
 import { t } from '../../i18n.js';
+const BASE = import.meta.env.VITE_BASE_PATH;
+const PROGRESSION_ICONS = {
+  level: `<img src="${BASE}/icons/experience-potion.svg" class="icon" alt="level"/>`,
+  damage: `<img src="${BASE}/icons/strength-potion.svg" class="icon" alt="damage"/>`,
+};
 // Progression quests
 export const PROGRESSION_QUESTS = [
   // Level
@@ -165,4 +170,4 @@ export const PROGRESSION_QUESTS = [
     target: 10000000,
     reward: { crystals: 12 },
   },
-];
+].map((q) => ({ ...q, icon: PROGRESSION_ICONS[q.type] }));

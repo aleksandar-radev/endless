@@ -1,10 +1,10 @@
 const html = String.raw;
 export default function run() {
   return html`
-  <span style="color:#4F8A10;"><i class="mdi mdi-notebook"></i> 2025-07-24</span>
+  <span style="color:#4F8A10;"> 2025-07-24</span>
   <hr>
 
-  <span style="color:#FFA500;"><i class="mdi mdi-star-four-points"></i> Features & Improvements</span>
+  <span style="color:#FFA500;"> Features & Improvements</span>
   <ul>
     <li>Added Item Quantity % and Item Rarity % stats.</li>
     <li>Added starting crystals bonus to prestige.</li>

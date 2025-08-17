@@ -1,4 +1,9 @@
 import { t } from '../../i18n.js';
+const BASE = import.meta.env.VITE_BASE_PATH;
+const RESOURCE_ICONS = {
+  totalGoldEarned: `<img src="${BASE}/icons/gold-coin.svg" class="icon" alt="gold"/>`,
+  crystals: `<img src="${BASE}/icons/crystal.svg" class="icon" alt="crystal"/>`,
+};
 // Resource quests
 export const RESOURCE_QUESTS = [
   {
@@ -232,4 +237,4 @@ export const RESOURCE_QUESTS = [
     target: 2000,
     reward: { gold: 500000 },
   },
-];
+].map((q) => ({ ...q, icon: RESOURCE_ICONS[q.resource] }));

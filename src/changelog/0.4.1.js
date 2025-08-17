@@ -1,10 +1,10 @@
 const html = String.raw;
 export default function run() {
   return html`
-  <span style="color:#4F8A10;"><i class="mdi mdi-notebook"></i> 2025-07-14</span>
+  <span style="color:#4F8A10;"> 2025-07-14</span>
 <hr>
 
-<span style="color:#FFA500;"><i class="mdi mdi-scale-balance"></i> Balance Changes</span>
+<span style="color:#FFA500;"> Balance Changes</span>
 <ul>
   <li>Increase cooldown and reduce duration of all skills.</li>
   <li>Add resistance reduction based on region. Each region now reduces your overall resistance by 5.</li>
@@ -19,14 +19,14 @@ export default function run() {
   <li>Rebalanced some stats & all skills. Especially Paladin.</li>
 </ul>
 
-<span style="color:#FFA500;"><i class="mdi mdi-bug"></i> Bug Fixes</span>
+<span style="color:#FFA500;"> Bug Fixes</span>
 <ul>
   <li>Fixed material sorting. Materials can now be dragged and dropped.</li>
   <li>Fixed enemy defeat handling to prevent multiple kills in the same tick.</li>
   <li>Fixed life regeneration bug. (for % of life)</li>
 </ul>
 
-<span style="color:#FFA500;"><i class="mdi mdi-star-four-points"></i> Features & Improvements</span>
+<span style="color:#FFA500;"> Features & Improvements</span>
 <ul>
   <li>Add total earned tracking for buildings and update UI accordingly.</li>
 </ul>`;

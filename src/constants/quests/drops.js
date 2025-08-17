@@ -1,4 +1,9 @@
 import { t } from '../../i18n.js';
+const BASE = import.meta.env.VITE_BASE_PATH;
+const DROP_ICONS = {
+  item_drop: `<img src="${BASE}/icons/armor.svg" class="icon" alt="item drop"/>`,
+  material_drop: `<img src="${BASE}/icons/armor-upgrade-stone.svg" class="icon" alt="material drop"/>`,
+};
 // Item and material drop quests
 export const DROP_QUESTS = [
   // Item Drop Quests
@@ -165,4 +170,4 @@ export const DROP_QUESTS = [
     target: 6000,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 6 } },
   },
-];
+].map((q) => ({ ...q, icon: DROP_ICONS[q.type] }));
