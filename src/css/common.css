@@ -362,6 +362,14 @@ body.dev-active .game-container {
   color: var(--text);
 }
 
+.mdi-axe-battle {
+  color: #b12d2d;
+}
+
+.mdi-test-tube {
+  color: #44a119;
+}
+
 .mdi-currency-usd,
 .mdi-crown,
 .mdi-trophy,
@@ -378,8 +386,7 @@ body.dev-active .game-container {
 
 .mdi-diamond-stone,
 .mdi-diamond-outline,
-.mdi-cube,
-.mdi-test-tube {
+.mdi-cube {
   color: #0ea5e9;
 }
 

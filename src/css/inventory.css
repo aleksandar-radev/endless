@@ -489,6 +489,10 @@
   height: 38px;
 }
 
+.material-item i {
+  font-size: 24px;
+}
+
 .inventory-trash {
   display: flex;
   align-items: center;
@@ -875,4 +879,8 @@
 
 .salvage-container button {
   cursor: pointer;
+}
+
+.item-stats {
+  line-height: 22px;
 }

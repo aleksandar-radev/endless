@@ -22,6 +22,8 @@ const sortModeShortText = {
   'level-rarity': t('inventory.levelRarity'),
   'tier-rarity-level': t('inventory.tierRarityLevel'),
   'tier-level-rarity': t('inventory.tierLevelRarity'),
+  'type-tier-rarity': t('inventory.typeTierRarity'),
+  'type-tier-level': t('inventory.typeTierLevel'),
   'rarity-tier-level': t('inventory.rarityTierLevel'),
   'level-tier-rarity': t('inventory.levelTierRarity'),
 };
@@ -33,6 +35,8 @@ const sortModeFullText = {
   'level-rarity': t('inventory.levelRarityFull'),
   'tier-rarity-level': t('inventory.tierRarityLevelFull'),
   'tier-level-rarity': t('inventory.tierLevelRarityFull'),
+  'type-tier-rarity': t('inventory.typeTierRarityFull'),
+  'type-tier-level': t('inventory.typeTierLevelFull'),
   'rarity-tier-level': t('inventory.rarityTierLevelFull'),
   'level-tier-rarity': t('inventory.levelTierRarityFull'),
 };
@@ -287,6 +291,8 @@ export function showSalvageModal(inv) {
             <option value="level-rarity">${t('inventory.levelRarity')}</option>
             <option value="tier-rarity-level">${t('inventory.tierRarityLevel')}</option>
             <option value="tier-level-rarity">${t('inventory.tierLevelRarity')}</option>
+            <option value="type-tier-rarity">${t('inventory.typeTierRarity')}</option>
+            <option value="type-tier-level">${t('inventory.typeTierLevel')}</option>
             <option value="rarity-tier-level">${t('inventory.rarityTierLevel')}</option>
             <option value="level-tier-rarity">${t('inventory.levelTierRarity')}</option>
           </select>
@@ -1050,6 +1056,10 @@ export function sortInventory(mode = 'type-rarity-level') {
         return tierOrder(a, b) || rarityOrder(a, b) || levelOrder(a, b);
       case 'tier-level-rarity':
         return tierOrder(a, b) || levelOrder(a, b) || rarityOrder(a, b);
+      case 'type-tier-rarity':
+        return typeOrder(a, b) || tierOrder(a, b) || rarityOrder(a, b);
+      case 'type-tier-level':
+        return typeOrder(a, b) || tierOrder(a, b) || levelOrder(a, b);
       case 'rarity-tier-level':
         return rarityOrder(a, b) || tierOrder(a, b) || levelOrder(a, b);
       case 'level-tier-rarity':

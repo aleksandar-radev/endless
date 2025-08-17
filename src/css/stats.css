@@ -201,6 +201,7 @@
   grid-column: 1;
   position: relative;
   padding-right: 6px;
+  line-height: 20px;
 }
 
 .stat-row .stat-label::after {

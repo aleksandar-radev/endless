@@ -13,7 +13,7 @@ export const ELEMENTALIST_SKILLS = {
     cooldown: () => 5200,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'fireball',
-    description: () => t('Launches a fireball that deals fire damage.'),
+    description: () => t('Launches a fireball dealing increased fire damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamage: scaleUpFlat(level, 2, 6),
@@ -29,7 +29,7 @@ export const ELEMENTALIST_SKILLS = {
     duration: () => 10000,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'frost-armor',
-    description: () => t('Encases the caster in frost, increasing armor.'),
+    description: () => t('Encases the caster in frost, boosting armor and cold damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: scaleUpFlat(level, 4, 8),
@@ -44,7 +44,7 @@ export const ELEMENTALIST_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'storm',
-    description: () => t('Increases mana and mana regeneration'),
+    description: () => t('Increases mana, mana regeneration, and wisdom'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       manaPercent: scaleDownFlat(level, 2),
@@ -64,7 +64,7 @@ export const ELEMENTALIST_SKILLS = {
     cooldown: () => 3000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'lightning',
-    description: () => t('Strikes an enemy with a bolt of lightning.'),
+    description: () => t('Strikes an enemy with lightning, increasing lightning and air damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lightningDamage: scaleUpFlat(level, 5, 6),
@@ -78,7 +78,7 @@ export const ELEMENTALIST_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'elemental-mastery',
-    description: () => t('Increases all elemental damage.'),
+    description: () => t('Increases elemental damage and penetration.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamagePercent: scaleDownFlat(level, 0.75),
@@ -97,7 +97,7 @@ export const ELEMENTALIST_SKILLS = {
     duration: () => 40000,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'blizzard',
-    description: () => t('Summons a blizzard, covering the battlefield in frost.'),
+    description: () => t('Summons a blizzard that boosts all elemental damages.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       coldDamagePercent: scaleDownFlat(level, 3),
@@ -119,7 +119,7 @@ export const ELEMENTALIST_SKILLS = {
     duration: () => 15000,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'fire-shield',
-    description: () => t('Surrounds the caster with a shield of fire. Deals only fire damage.'),
+    description: () => t('Surrounds the caster with a fiery shield that reflects and increases fire damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       reflectFireDamage: scaleUpFlat(level, 18),
@@ -132,7 +132,7 @@ export const ELEMENTALIST_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'wisdom',
-    description: () => t('Increases mana and mana regeneration.'),
+    description: () => t('Raises mana and various mana regeneration rates.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       manaPercent: scaleDownFlat(level, 1.5),
@@ -151,7 +151,7 @@ export const ELEMENTALIST_SKILLS = {
     cooldown: () => 4500,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'storm',
-    description: () => t('Unleashes a storm of fire, ice, and lightning.'),
+    description: () => t('Unleashes a storm that adds elemental damage and damage percent.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamage: scaleUpFlat(level, 2),
@@ -164,7 +164,7 @@ export const ELEMENTALIST_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'affinity',
-    description: () => t('Increases resistance to elemental damage.'),
+    description: () => t('Adds elemental damage, intelligence, and resistance.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamage: scaleUpFlat(level, 1),
@@ -184,7 +184,7 @@ export const ELEMENTALIST_SKILLS = {
     duration: () => 25000,
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'pulse',
-    description: () => t('Increases attack rating and resource stealing.'),
+    description: () => t('Boosts attack rating, life and mana per hit, and attack speed.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackRatingPercent: scaleDownFlat(level, 1.9),
@@ -202,7 +202,7 @@ export const ELEMENTALIST_SKILLS = {
     manaCost: (level) => 4 + level * 0.625,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'overload',
-    description: () => t('Boosts elemental damage.'),
+    description: () => t('Boosts fire, cold, air, and lightning damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamagePercent: scaleDownFlat(level, 2),
@@ -217,7 +217,7 @@ export const ELEMENTALIST_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'control',
-    description: () => t('Grants control over elemental forces, increasing all stats.'),
+    description: () => t('Increases earth damage, vitality, and wisdom.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       earthDamagePercent: scaleDownFlat(level, 1.5),
@@ -234,7 +234,7 @@ export const ELEMENTALIST_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'avatar-of-elements',
-    description: () => t('Transforms the caster into a being of pure elemental power.'),
+    description: () => t('Transforms the caster, boosting elemental damage, resistance, and perseverance.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamagePercent: scaleDownFlat(level, 1.2),
@@ -252,7 +252,7 @@ export const ELEMENTALIST_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'elemental-corrosion',
-    description: () => t('Deepen your command of all elements.'),
+    description: () => t('Increases elemental damage, penetration, and mana regeneration.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamagePercent: scaleDownFlat(level, 1.4),
@@ -268,7 +268,7 @@ export const ELEMENTALIST_SKILLS = {
     cooldown: () => 100000,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'volcanic-wrath',
-    description: () => t('Erupts fiery explosions around enemies.'),
+    description: () => t('Erupts fiery explosions with added fire and flat damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamagePercent: scaleDownFlat(level, 4),
@@ -286,7 +286,7 @@ export const ELEMENTALIST_SKILLS = {
     cooldown: () => 40000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'tempest-nova',
-    description: () => t('Summons a massive storm of elemental energy.'),
+    description: () => t('Summons a storm dealing heavy lightning and cold damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lightningDamage: scaleUpFlat(level, 10, 4),
@@ -303,7 +303,7 @@ export const ELEMENTALIST_SKILLS = {
     cooldown: () => 25000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'earth-shatter',
-    description: () => t('Cracks the earth dealing heavy damage.'),
+    description: () => t('Cracks the earth, dealing earth damage and penetrating armor.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       earthDamagePercent: scaleDownFlat(level, 4),
@@ -322,7 +322,7 @@ export const ELEMENTALIST_SKILLS = {
     duration: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'tidal-wave',
-    description: () => t('Unleash a giant wave washing away enemies.'),
+    description: () => t('Unleashes a wave that deals water damage and slows enemy attacks.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       waterDamage: scaleUpFlat(level, 15, 5, 0.2),
@@ -336,7 +336,7 @@ export const ELEMENTALIST_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'storm-lord',
-    description: () => t('Command storms with ease.'),
+    description: () => t('Increases lightning and elemental damage while boosting mana.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lightningDamagePercent: scaleDownFlat(level, 5),
@@ -352,7 +352,7 @@ export const ELEMENTALIST_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'elemental-ascension',
-    description: () => t('Transcend normal limits of elemental power.'),
+    description: () => t('Raises elemental damage, penetration, and resistance.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamagePercent: scaleDownFlat(level, 1.5),
@@ -368,7 +368,7 @@ export const ELEMENTALIST_SKILLS = {
     cooldown: () => 28000,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'nature-cataclysm',
-    description: () => t('Unleashes catastrophic elemental forces.'),
+    description: () => t('Unleashes catastrophic forces, boosting all elemental damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamagePercent: scaleDownFlat(level, 5),

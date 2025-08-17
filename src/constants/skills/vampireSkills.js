@@ -12,7 +12,7 @@ export const VAMPIRE_SKILLS = {
     manaCost: (level) => 1 + level * 0.125,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'blood',
-    description: () => t('Steal life from enemies with each attack.'),
+    description: () => t('Steal life and deal extra damage with each attack.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifePerHit: scaleUpFlat(level, 1, 5, 0.2),
@@ -26,7 +26,7 @@ export const VAMPIRE_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'moon',
-    description: () => t('Increases damage at night. Upon unlocking the skill, sun never rises!'),
+    description: () => t('Increases damage and agility at night. Upon unlocking the skill, sun never rises!'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2),
@@ -43,7 +43,7 @@ export const VAMPIRE_SKILLS = {
     cooldown: () => 9500,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'bite',
-    description: () => t('A powerful strike that restores life.'),
+    description: () => t('A powerful strike that deals damage and restores life.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 1),
@@ -60,7 +60,7 @@ export const VAMPIRE_SKILLS = {
     duration: () => 28000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'blood-aura',
-    description: () => t('Increases life steal and damage temporarily.'),
+    description: () => t('Temporarily boosts life steal, attack rating, and damage from life.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeSteal: Math.min(scaleDownFlat(level, 0.02), 10),
@@ -79,7 +79,7 @@ export const VAMPIRE_SKILLS = {
     cooldown: () => 12200,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'drain',
-    description: () => t('Drains life from enemies, restoring your life.'),
+    description: () => t('Drains life with earth damage, restoring mana and life.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       earthDamage: scaleUpFlat(level, 4, 3, 0.1),
@@ -110,7 +110,7 @@ export const VAMPIRE_SKILLS = {
     cooldown: () => 5000,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'burst',
-    description: () => t('Unleashes a burst of crimson energy, greatly damaging the enemy at the cost of life.'),
+    description: () => t('Unleashes crimson energy, greatly damaging enemies while draining life per hit.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 10),
@@ -150,7 +150,7 @@ export const VAMPIRE_SKILLS = {
     duration: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'pact',
-    description: () => t('Increases life steal and life temporarily.'),
+    description: () => t('Temporarily increases life and converts life into extra damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       life: scaleUpFlat(level, 10, 5),
@@ -167,7 +167,7 @@ export const VAMPIRE_SKILLS = {
     manaCost: (level) => 2 + level * 0.425,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'thirst',
-    description: () => t('Increases life steal and damage.'),
+    description: () => t('Increases damage and life gained per hit.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2),
@@ -180,7 +180,7 @@ export const VAMPIRE_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'presence',
-    description: () => t('Increases life greatly, and strength mildly.'),
+    description: () => t('Greatly increases life and vitality with a modest strength boost, adding damage from life.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifePercent: scaleDownFlat(level, 0.5),
@@ -197,7 +197,7 @@ export const VAMPIRE_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'lord',
-    description: () => t('Greatly increases all attributes and gives resurrection.'),
+    description: () => t('Boosts strength, vitality, perseverance, and grants resurrection with bonus damage from life.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strengthPercent: scaleDownFlat(level, 1.5),
@@ -219,7 +219,7 @@ export const VAMPIRE_SKILLS = {
     duration: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'blood-moon',
-    description: () => t('Empowers vampiric abilities under the crimson moon.'),
+    description: () => t('Empowers vampiric abilities with life steal, damage, and attack speed.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeSteal: Math.min(scaleDownFlat(level, 0.024), 3),
@@ -233,7 +233,7 @@ export const VAMPIRE_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'sanguine-fury',
-    description: () => t('Harness the fury of blood to increase power.'),
+    description: () => t('Increases crit chance, life per hit, and damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critChance: Math.min(scaleDownFlat(level, 0.12), 25),
@@ -252,7 +252,7 @@ export const VAMPIRE_SKILLS = {
     duration: () => 35000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'twilight-veil',
-    description: () => t('Shrouds the vampire in shadows, restoring life.'),
+    description: () => t('Shrouds the vampire in shadows, restoring life and boosting evasion.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeRegen: scaleUpFlat(level, 150),
@@ -266,7 +266,7 @@ export const VAMPIRE_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'shadow-rebirth',
-    description: () => t('Revive from death with a portion of life.'),
+    description: () => t('Grants a chance to revive with extra life and crit damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       resurrectionChance: Math.min(scaleDownFlat(level, 0.1), 50),
@@ -283,7 +283,7 @@ export const VAMPIRE_SKILLS = {
     manaCost: (level) => 0,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'eternal-hunger',
-    description: () => t('Constantly drains enemies to sustain yourself.'),
+    description: () => t('Constantly drains enemies, dealing damage and restoring mana.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 12, 3, 0.2),
@@ -297,7 +297,7 @@ export const VAMPIRE_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'nocturnal-dominion',
-    description: () => t('Rule the night with unparalleled power.'),
+    description: () => t('Rules the night with increased damage, attack speed, and life.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2.5),
@@ -313,7 +313,7 @@ export const VAMPIRE_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'vampire-overlord',
-    description: () => t('Ascend to the pinnacle of vampiric power.'),
+    description: () => t('Increases strength, vitality, and elemental damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strengthPercent: scaleDownFlat(level, 3),
@@ -328,7 +328,7 @@ export const VAMPIRE_SKILLS = {
     manaCost: (level) => 20 + level * 1.25,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'immortal-sovereign',
-    description: () => t('Become nearly unstoppable for a short time.'),
+    description: () => t('Become nearly unstoppable with massive fire and damage boosts.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamage: scaleUpFlat(level, 26, 4, 0.15),

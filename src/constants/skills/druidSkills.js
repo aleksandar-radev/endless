@@ -23,7 +23,7 @@ export const DRUID_SKILLS = {
     duration: () => 12000,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'summon-pest',
-    description: () => t('Summons a pest to your aid, dealing percent of your damage.'),
+    description: () => t('Summons a pest that deals a portion of your damage with earth and water attacks.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
     }),
@@ -35,7 +35,7 @@ export const DRUID_SKILLS = {
     manaCost: (level) => 1 + level * 0.125,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'bark-skin',
-    description: () => t('Increases armor while active.'),
+    description: () => t('Increases armor and life regeneration, converting regen to damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: scaleUpFlat(level, 5),
@@ -50,7 +50,7 @@ export const DRUID_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'leaf',
-    description: () => t('Increases vitality and life regeneration.'),
+    description: () => t('Increases vitality, life percent, and life regeneration.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       vitality: scaleUpFlat(level, 2),
@@ -69,7 +69,7 @@ export const DRUID_SKILLS = {
     duration: () => 10000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'rejuvenation',
-    description: () => t('Restores life over time.'),
+    description: () => t('Restores life over time and adds damage based on life regen.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeRegen: scaleUpFlat(level, 4),
@@ -85,7 +85,7 @@ export const DRUID_SKILLS = {
     cooldown: () => 15200,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'roots',
-    description: () => t('Deals earth damage and slows enemies.'),
+    description: () => t('Deals heavy earth damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       earthDamage: scaleUpFlat(level, 5),
@@ -110,7 +110,7 @@ export const DRUID_SKILLS = {
     duration: () => 5250,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'sproutling',
-    description: () => t('Summons a sproutling that nibbles at enemies and slightly restores its master.'),
+    description: () => t('Summons a sproutling that bites foes and slightly heals its master.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
     }),
@@ -134,7 +134,7 @@ export const DRUID_SKILLS = {
     duration: () => 20000,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'companion',
-    description: () => t('Summons a beast to aid you. Heals you when hitting.'),
+    description: () => t('Summons a beast that attacks and heals you per hit.'),
     maxLevel: () => 200,
     effect: (level) => ({
     }),
@@ -145,7 +145,7 @@ export const DRUID_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'growth',
-    description: () => t('Increases life and life regeneration.'),
+    description: () => t('Increases life and grants damage based on total life.'),
     maxLevel: () => 1000,
     effect: (level) => ({
       lifePercent: scaleDownFlat(level, 1),
@@ -162,7 +162,7 @@ export const DRUID_SKILLS = {
     cooldown: () => 11400,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'hurricane',
-    description: () => t('Calls forth fierce winds to damage enemies.'),
+    description: () => t('Calls forth winds that deal air and cold damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       airDamage: scaleUpFlat(level, 4),
@@ -189,7 +189,7 @@ export const DRUID_SKILLS = {
     duration: () => 43250,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'spirit-bear',
-    description: () => t('Summons a spectral bear that soaks damage and heals you when it strikes.'),
+    description: () => t('Summons a spectral bear dealing earth damage and healing you when it strikes.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
     }),
@@ -203,7 +203,7 @@ export const DRUID_SKILLS = {
     duration: () => 20000,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'stoneform',
-    description: () => t('Hardens your skin, boosting armor and resistance.'),
+    description: () => t('Hardens your skin, boosting armor, resistance, and earth damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: scaleUpFlat(level, 4),
@@ -223,7 +223,7 @@ export const DRUID_SKILLS = {
     duration: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'spirit-link',
-    description: () => t('Increases life steal and mana gain.'),
+    description: () => t('Increases life steal and mana per hit.'),
     maxLevel: () => 300,
     effect: (level) => ({
       lifeSteal: Math.min(scaleDownFlat(level, 0.02), 10),
@@ -236,7 +236,7 @@ export const DRUID_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'moonfury',
-    description: () => t('Empowers you under the moon, boosting elemental damage.'),
+    description: () => t('Empowers you under the moon, boosting cold and air damage.'),
     maxLevel: () => 300,
     effect: (level) => ({
       coldDamagePercent: scaleDownFlat(level, 2),
@@ -256,7 +256,7 @@ export const DRUID_SKILLS = {
     duration: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'embrace',
-    description: () => t('Embrace the earth for defense and regeneration.'),
+    description: () => t('Embrace the earth for armor and enhanced life regeneration.'),
     maxLevel: () => 500,
     effect: (level) => ({
       armorPercent: scaleDownFlat(level, 2),
@@ -271,7 +271,7 @@ export const DRUID_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'wrath-of-nature',
-    description: () => t('Nature fights with you, increasing all stats.'),
+    description: () => t('Increases damage, vitality, and elemental damage.'),
     maxLevel: () => 500,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2.5),
@@ -287,7 +287,7 @@ export const DRUID_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'avatar-of-nature',
-    description: () => t('Become one with nature, greatly increasing attributes.'),
+    description: () => t('Increases vitality, strength, damage, and life.'),
     maxLevel: () => 100,
     effect: (level) => ({
       vitality: scaleUpFlat(level, 3),
@@ -305,7 +305,7 @@ export const DRUID_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'spirit-bond',
-    description: () => t('Bond with spirits to enhance regeneration.'),
+    description: () => t('Boosts life and mana regeneration, adding damage from life regen.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeRegen: scaleUpFlat(level, 2),
@@ -323,7 +323,7 @@ export const DRUID_SKILLS = {
     duration: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'wild-growth',
-    description: () => t('Causes allies to rapidly regenerate life.'),
+    description: () => t('Greatly increases life regeneration and life percent for allies.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeRegen: scaleUpFlat(level, 4, 2),
@@ -340,7 +340,7 @@ export const DRUID_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'ancient-roots',
-    description: () => t('Tap into ancient power to fortify yourself.'),
+    description: () => t('Increases armor, life percent, and earth damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armorPercent: scaleDownFlat(level, 2),
@@ -356,7 +356,7 @@ export const DRUID_SKILLS = {
     cooldown: () => 20000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'fury-of-the-wilds',
-    description: () => t('Unleash nature\'s wrath on your foes.'),
+    description: () => t('Unleashes nature\'s wrath with extra damage plus cold and lightning damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 14, 4, 0.2),
@@ -372,7 +372,7 @@ export const DRUID_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'nature-eternal',
-    description: () => t('Gain everlasting resilience from nature.'),
+    description: () => t('Increases vitality, endurance, and perseverance.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       vitalityPercent: scaleDownFlat(level, 2),
@@ -398,7 +398,7 @@ export const DRUID_SKILLS = {
     duration: () => 40000,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'primeval-guardian',
-    description: () => t('Summon an ancient guardian to protect allies.'),
+    description: () => t('Summons an ancient guardian that deals heavy earth damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
     }),
@@ -411,7 +411,7 @@ export const DRUID_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'earths-embrace',
-    description: () => t('Become one with the earth for immense fortitude.'),
+    description: () => t('Grants armor, life percent, and all resistance.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: scaleUpFlat(level, 12, 5),
@@ -426,7 +426,7 @@ export const DRUID_SKILLS = {
     manaCost: (level) => 20 + level * 1.25,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'cosmic-harmony',
-    description: () => t('Balance all energies to empower allies.'),
+    description: () => t('Balances energies, increasing elemental damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamagePercent: scaleDownFlat(level, 3),

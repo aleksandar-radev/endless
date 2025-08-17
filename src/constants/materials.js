@@ -161,7 +161,7 @@ export const MATERIALS = {
   potion_of_wisdom: {
     id: 'potion_of_wisdom',
     name: t('Potion of Wisdom'),
-    icon: '<i class="mdi mdi-brain"></i>',
+    icon: '<i class="mdi mdi-head-snowflake"></i>',
     description: t('Increases wisdom by 1.'),
     dropChance: 12,
     sort: 504,
@@ -205,7 +205,7 @@ export const MATERIALS = {
   armor_upgrade_stone: {
     id: 'armor_upgrade_stone',
     name: t('Armor Upgrade Stone'),
-    icon: '<i class="mdi mdi-cube"></i>',
+    icon: '<i class="mdi mdi-tshirt-crew-outline"></i>',
     description: t("Upgrade the level of an equipped armor item. Requires a quantity equal to the item's tier for each level."),
     dropChance: 20,
     sort: 600,
@@ -231,7 +231,7 @@ export const MATERIALS = {
   weapon_upgrade_core: {
     id: 'weapon_upgrade_core',
     name: t('Weapon Upgrade Core'),
-    icon: '<i class="mdi mdi-lightning-bolt"></i>',
+    icon: '<i class="mdi mdi-axe-battle"></i>',
     description: t("Upgrade the level of an equipped weapon. Requires a quantity equal to the item's tier for each level."),
     dropChance: 3,
     sort: 602,
