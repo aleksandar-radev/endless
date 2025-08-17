@@ -31,6 +31,8 @@ import { setupLeaderboardTabLazyLoad } from './ui/leaderboardUi.js';
 import Boss from './boss.js';
 import { applyTranslations, setLanguage } from './i18n.js';
 import '@mdi/font/css/materialdesignicons.min.css';
+import { getGameInfo } from './api.js';
+import { createModal } from './ui/modal.js';
 
 window.qwe = console.log;
 window.qw = console.log;
@@ -69,6 +71,81 @@ window.setLanguage = setLanguage;
 
   // Apply translations after UI components are initialized
   applyTranslations();
+
+  // Poll remote game info (version) every 10 seconds and notify player if a newer version exists
+  (function setupVersionPolling() {
+    let notified = false; // avoid spamming the player with multiple modals
+    let lastSeenServerVersion = null;
+
+    const compareVersions = (a, b) => {
+      const pa = String(a).split('.').map(Number);
+      const pb = String(b).split('.').map(Number);
+      for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+        const na = pa[i] || 0;
+        const nb = pb[i] || 0;
+        if (na > nb) return 1;
+        if (na < nb) return -1;
+      }
+      return 0;
+    };
+
+    async function checkOnce() {
+      try {
+        const info = await getGameInfo();
+        const serverVersion = info?.version;
+        const localVersion = options?.version;
+        if (!serverVersion || !localVersion) return;
+
+        // If server version changed since last check, clear notified flag so user gets a modal for a new release
+        if (lastSeenServerVersion && serverVersion !== lastSeenServerVersion) {
+          notified = false;
+        }
+        lastSeenServerVersion = serverVersion;
+
+        if (!notified && compareVersions(serverVersion, localVersion) > 0) {
+          notified = true;
+          const contentHtml = `
+            <div class="modal-content">
+              <span class="modal-close">&times;</span>
+              <h2>New version available</h2>
+              <p>Server version: ${serverVersion} &nbsp; — &nbsp; Your version: v${localVersion}</p>
+              Refresh the page for the changes to take effect<div style="text-align:center; margin-top: 24px; display:flex; gap:12px; justify-content:center;">
+                    <button id="new-version-modal-refresh" style="padding: 8px 24px; font-size: 1.1em;">Refresh now</button>
+                    <button id="new-version-modal-ok" style="padding: 8px 24px; font-size: 1.1em;">OK</button>
+                  </div>
+            </div>
+          `;
+          createModal({ id: 'new-version-modal', className: 'new-version-modal', content: contentHtml, onClose: () => {} });
+          setTimeout(() => {
+            const okBtn = document.getElementById('new-version-modal-ok');
+            const refreshBtn = document.getElementById('new-version-modal-refresh');
+            if (okBtn) okBtn.addEventListener('click', () => {
+              const modal = document.getElementById('new-version-modal');
+              if (modal) modal.remove();
+            });
+            if (refreshBtn) refreshBtn.addEventListener('click', () => {
+              // Try to perform a normal reload; this will refresh the page and pick up the new version
+              try {
+                window.location.reload();
+              } catch (e) {
+                // Fallback: set href to force navigation
+                window.location.href = window.location.href;
+              }
+            });
+          }, 0);
+        }
+      } catch (e) {
+        // ignore network/errors silently
+      }
+    }
+
+    // schedule first check after 1 hour, then poll every 1 hour
+    const versionCheckInterval = 60 * 60 * 1000;
+    setTimeout(() => {
+      // then run every hour
+      setInterval(checkOnce, versionCheckInterval);
+    }, versionCheckInterval);
+  })();
 
   updateResources();
   hero.recalculateFromAttributes();

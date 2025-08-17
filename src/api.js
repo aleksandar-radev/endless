@@ -88,3 +88,11 @@ export async function fetchTrustedUtcTime() {
   const data = await response.json();
   return data.unixtime;
 }
+
+export async function getGameInfo() {
+  const response = await apiFetch('/games/' + gameName);
+  if (!response.ok) {
+    throw new Error('Failed to fetch game info');
+  }
+  return await response.json();
+}
