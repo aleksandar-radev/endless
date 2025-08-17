@@ -254,7 +254,7 @@ export default class SoulShop {
 }>
         <span class="upgrade-name">${config.label} ${isOneTime ? '' : isMultiple ? '' : `(Lvl ${level})`}</span>
         <span class="upgrade-bonus ${bonusClass}">${bonus}</span>
-        <span class="upgrade-cost ${bonusClass}">${alreadyPurchased ? 'Purchased' : `${cost} Souls`}</span>
+        <span class="upgrade-cost ${bonusClass}">${alreadyPurchased ? 'Purchased' : `${cost} Souls`}<img style="width: 20px; height: 20px;" src="endless/icons/soul.svg" alt="Soul Icon"></span>
       </button>
     `;
   }
