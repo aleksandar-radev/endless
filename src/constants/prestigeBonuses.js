@@ -56,23 +56,23 @@ export const PRESTIGE_BONUSES = [
   },
   {
     stat: 'lifeRegenPercent',
-    min: 30,
-    max: 75,
+    min: 0.3,
+    max: 0.75,
   },
   {
     stat: 'evasionPercent',
-    min: 30,
-    max: 60,
+    min: 0.3,
+    max: 0.6,
   },
   {
     stat: 'armorPercent',
-    min: 30,
-    max: 60,
+    min: 0.4,
+    max: 0.8,
   },
   {
     stat: 'attackRatingPercent',
-    min: 30,
-    max: 60,
+    min: 0.4,
+    max: 0.8,
   },
   // {
   //   stat: 'manaCostReductionPercent',
