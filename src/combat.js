@@ -155,9 +155,18 @@ export function playerDeath() {
   const timerReduction = (crystalShop.crystalUpgrades.deathTimerReduction || 0) * 0.5;
   const deathTimer = Math.max(3, 10 - timerReduction);
   battleLog.addBattle('Died');
+
+  // Disable the fight/stop button while the death screen is active
+  const startBtn = document.getElementById('start-btn');
+  if (startBtn) {
+    startBtn.disabled = true;
+    // keep visual cue (optional): dim the button while disabled
+    startBtn.style.opacity = '0.6';
+    startBtn.style.cursor = 'not-allowed';
+  }
+
   showDeathScreen(deathTimer, () => {
     if (!shouldContinue) {
-      const startBtn = document.getElementById('start-btn');
       if (startBtn) {
         startBtn.textContent = 'Fight';
         startBtn.style.backgroundColor = '#059669';
@@ -200,6 +209,13 @@ export function playerDeath() {
       if (game.currentEnemy) {
         game.currentEnemy.lastAttack = Date.now();
       }
+    }
+
+    // Re-enable the fight/stop button now that death screen finished
+    if (startBtn) {
+      startBtn.disabled = false;
+      startBtn.style.opacity = '';
+      startBtn.style.cursor = '';
     }
   });
 }
