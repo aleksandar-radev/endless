@@ -25,6 +25,7 @@ const ELEMENT_REGEX = new RegExp(
 let tabIndicatorManager = null;
 
 const html = String.raw;
+const BASE = import.meta.env.VITE_BASE_PATH;
 
 // Format numbers with thousands separators.
 // Accepts numbers or numeric strings and returns a string with the given
@@ -50,7 +51,7 @@ export function initializeUI() {
     {
       selector: '.resource-gold',
       tooltip: () => html`
-        <div class="tooltip-header">Gold <span class="icon"><i class="mdi mdi-currency-usd"></i></span></div>
+        <div class="tooltip-header">Gold <img src="${BASE}/icons/gold.svg" class="icon" alt="gold"/></div>
         <div class="tooltip-desc">Used for training.</div>
         <div class="tooltip-note"></div>
       `,
@@ -58,7 +59,7 @@ export function initializeUI() {
     {
       selector: '.resource-crystal',
       tooltip: () => html`
-        <div class="tooltip-header">Crystals <span class="icon"><i class="mdi mdi-diamond-stone"></i></span></div>
+        <div class="tooltip-header">Crystals <img src="${BASE}/icons/gem.svg" class="icon" alt="crystal"/></div>
         <div class="tooltip-desc">Rare currency for powerful upgrades and skill resets.</div>
         <div class="tooltip-note"></div>
       `,
@@ -66,7 +67,7 @@ export function initializeUI() {
     {
       selector: '.resource-souls',
       tooltip: () => html`
-        <div class="tooltip-header">Souls <span class="icon"><i class="mdi mdi-ghost"></i></span></div>
+        <div class="tooltip-header">Souls <img src="${BASE}/icons/ghost.svg" class="icon" alt="soul"/></div>
         <div class="tooltip-desc">Earned from killing bosses in Arena.</div>
         <div class="tooltip-note"></div>
       `,
@@ -265,10 +266,10 @@ export function updateEnemyStats() {
         enemyAvatar.innerHTML = '';
         enemyAvatar.appendChild(img);
       }
-      // Use Vite's BASE_URL if available, else fallback
+      // Use Vite's base path if available, else fallback
       let baseUrl = '';
       try {
-        baseUrl = import.meta.env.BASE_URL || '';
+        baseUrl = import.meta.env.VITE_BASE_PATH || '';
       } catch (e) {}
       img.src = baseUrl + game.currentEnemy.image;
     }

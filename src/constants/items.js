@@ -1,6 +1,8 @@
 import { t } from '../i18n.js';
 import { STATS } from './stats/stats.js';
 
+const BASE = import.meta.env.VITE_BASE_PATH;
+
 export const EQUIPMENT_SLOTS = {
   HEAD: 'head',
   CHEST: 'chest',
@@ -47,8 +49,8 @@ export const ITEM_TYPES = {
 };
 
 export const ITEM_ICONS = {
-  HELMET: '<i class="mdi mdi-diving-helmet"></i>',
-  ARMOR: '<i class="mdi mdi-tshirt-crew"></i>',
+  HELMET: `<img src="${BASE}/icons/helmet.svg" class="icon" alt="helmet"/>`,
+  ARMOR: `<img src="${BASE}/icons/armor.svg" class="icon" alt="armor"/>`,
   BELT: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 18 18">
   <!-- Belt strap (slightly brighter for dark bg) -->
   <rect x="2" y="7.5" width="14" height="3" fill="#3b4f5d" stroke="#ffffff" stroke-width="0.45"/>
@@ -73,11 +75,11 @@ export const ITEM_ICONS = {
   <line x1="4.3" y1="2" x2="5.8" y2="4" stroke="#ffffff" stroke-width="0.5"/>
   <line x1="13.7" y1="2" x2="12.2" y2="4" stroke="#ffffff" stroke-width="0.5"/>
 </svg>`,
-  BOOTS: '<i class="mdi mdi-shoe-formal"></i>',
-  SWORD: '<i class="mdi mdi-sword"></i>',
-  AXE: '<i class="mdi mdi-axe"></i>',
-  MACE: '<i class="mdi mdi-hammer"></i>',
-  WAND: '<i class="mdi mdi-auto-fix"></i>',
+  BOOTS: `<img src="${BASE}/icons/boots.svg" class="icon" alt="boots"/>`,
+  SWORD: `<img src="${BASE}/icons/sword.svg" class="icon" alt="sword"/>`,
+  AXE: `<img src="${BASE}/icons/axe.svg" class="icon" alt="axe"/>`,
+  MACE: `<img src="${BASE}/icons/hammer.svg" class="icon" alt="mace"/>`,
+  WAND: `<img src="${BASE}/icons/wand.svg" class="icon" alt="wand"/>`,
   STAFF: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
   <!-- Staff shaft -->
   <rect x="8.2" y="2" width="1.6" height="14" fill="#8b5a2b" stroke="#000" stroke-width="0.2"/>
@@ -85,10 +87,10 @@ export const ITEM_ICONS = {
   <!-- Decorative top (crystal orb) -->
   <circle cx="9" cy="2.5" r="2" fill="#4aa3df" stroke="#000" stroke-width="0.3"/>
 </svg>`,
-  SHIELD: '<i class="mdi mdi-shield"></i>',
-  GLOVES: '<i class="mdi mdi-boxing-glove"></i>',
-  AMULET: '<i class="mdi mdi-necklace"></i>',
-  RING: '<i class="mdi mdi-ring"></i>',
+  SHIELD: `<img src="${BASE}/icons/shield.svg" class="icon" alt="shield"/>`,
+  GLOVES: `<img src="${BASE}/icons/gloves.svg" class="icon" alt="gloves"/>`,
+  AMULET: `<img src="${BASE}/icons/necklace.svg" class="icon" alt="amulet"/>`,
+  RING: `<img src="${BASE}/icons/ring.svg" class="icon" alt="ring"/>`,
 };
 
 export const ITEM_RARITY = {

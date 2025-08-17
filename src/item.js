@@ -8,6 +8,8 @@ import { ATTRIBUTES } from './constants/stats/attributes.js';
 import { options } from './globals.js';
 import { formatStatName } from './ui/ui.js';
 
+const BASE = import.meta.env.VITE_BASE_PATH;
+
 // Dynamically generate AVAILABLE_STATS from STATS
 export const AVAILABLE_STATS = Object.fromEntries(
   Object.entries(STATS)
@@ -171,7 +173,7 @@ export default class Item {
   }
 
   getIcon() {
-    return ITEM_ICONS[this.type] || '<i class="mdi mdi-help-circle"></i>';
+    return ITEM_ICONS[this.type] || `<img src="${BASE}/icons/help.svg" class="icon" alt="?"/>`;
   }
 
   getDisplayName() {

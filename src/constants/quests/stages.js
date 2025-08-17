@@ -1,26 +1,28 @@
+const BASE = import.meta.env.VITE_BASE_PATH;
+
 const BASE_STAGE_QUESTS = [
-  { target: 10, reward: { gold: 1200, materials: [{ id: 'experience_potion', qty: 1 }] }, icon: '<i class="mdi mdi-map"></i>' },
+  { target: 10, reward: { gold: 1200, materials: [{ id: 'experience_potion', qty: 1 }] }, icon: `<img src="${BASE}/icons/target.svg" class="icon" alt="stage"/>` },
   {
     target: 25,
     reward: { gold: 2400, crystals: 1, materials: [{ id: 'experience_potion', qty: 2 }] },
-    icon: '<i class="mdi mdi-map"></i>',
+    icon: `<img src="${BASE}/icons/target.svg" class="icon" alt="stage"/>`,
   },
   {
     target: 50,
     reward: { gold: 8000, crystals: 2, materials: [{ id: 'experience_potion', qty: 3 }] },
-    icon: '<i class="mdi mdi-map"></i>',
+    icon: `<img src="${BASE}/icons/target.svg" class="icon" alt="stage"/>`,
   },
   {
     target: 100,
     reward: { gold: 18000, crystals: 4, materials: [{ id: 'experience_potion', qty: 5 }] },
-    icon: '<i class="mdi mdi-map"></i>',
+    icon: `<img src="${BASE}/icons/target.svg" class="icon" alt="stage"/>`,
   },
-  { target: 200, reward: { gold: 32000, crystals: 6 }, icon: '<i class="mdi mdi-earth"></i>' },
-  { target: 300, reward: { gold: 40000, crystals: 8 }, icon: '<i class="mdi mdi-earth"></i>' },
-  { target: 500, reward: { gold: 100000, crystals: 15 }, icon: '<i class="mdi mdi-weather-night"></i>' },
-  { target: 1000, reward: { gold: 200000, crystals: 25 }, icon: '<i class="mdi mdi-weather-night"></i>' },
-  { target: 2500, reward: { gold: 600000, crystals: 40 }, icon: '<i class="mdi mdi-weather-night"></i>' },
-  { target: 5000, reward: { gold: 1600000, crystals: 75 }, icon: '<i class="mdi mdi-weather-night"></i>' },
+  { target: 200, reward: { gold: 32000, crystals: 6 }, icon: `<img src="${BASE}/icons/earth.svg" class="icon" alt="earth"/>` },
+  { target: 300, reward: { gold: 40000, crystals: 8 }, icon: `<img src="${BASE}/icons/earth.svg" class="icon" alt="earth"/>` },
+  { target: 500, reward: { gold: 100000, crystals: 15 }, icon: `<img src="${BASE}/icons/moon.svg" class="icon" alt="night"/>` },
+  { target: 1000, reward: { gold: 200000, crystals: 25 }, icon: `<img src="${BASE}/icons/moon.svg" class="icon" alt="night"/>` },
+  { target: 2500, reward: { gold: 600000, crystals: 40 }, icon: `<img src="${BASE}/icons/moon.svg" class="icon" alt="night"/>` },
+  { target: 5000, reward: { gold: 1600000, crystals: 75 }, icon: `<img src="${BASE}/icons/moon.svg" class="icon" alt="night"/>` },
 ];
 
 export const STAGE_QUESTS = [];

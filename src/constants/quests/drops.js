@@ -10,7 +10,6 @@ export const DROP_QUESTS = [
     type: 'item_drop',
     target: 5,
     reward: { item: { rarity: 'rare', type: 'random', tier: 2 } },
-    icon: '<i class="mdi mdi-gift"></i>',
   },
   {
     id: 'itemdrop_25',
@@ -20,7 +19,6 @@ export const DROP_QUESTS = [
     type: 'item_drop',
     target: 25,
     reward: { item: { rarity: 'unique', type: 'random', tier: 2 } },
-    icon: '<i class="mdi mdi-gift"></i>',
   },
   {
     id: 'itemdrop_60',
@@ -30,7 +28,6 @@ export const DROP_QUESTS = [
     type: 'item_drop',
     target: 60,
     reward: { item: { rarity: 'unique', type: 'random', tier: 3 } },
-    icon: '<i class="mdi mdi-gift"></i>',
   },
   {
     id: 'itemdrop_150',
@@ -40,7 +37,6 @@ export const DROP_QUESTS = [
     type: 'item_drop',
     target: 150,
     reward: { item: { rarity: 'legendary', type: 'random', tier: 3 } },
-    icon: '<i class="mdi mdi-gift"></i>',
   },
   {
     id: 'itemdrop_300',
@@ -50,7 +46,6 @@ export const DROP_QUESTS = [
     type: 'item_drop',
     target: 300,
     reward: { item: { rarity: 'legendary', type: 'random', tier: 4 } },
-    icon: '<i class="mdi mdi-gift"></i>',
   },
   {
     id: 'itemdrop_750',
@@ -60,7 +55,6 @@ export const DROP_QUESTS = [
     type: 'item_drop',
     target: 750,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 5 } },
-    icon: '<i class="mdi mdi-gift"></i>',
   },
   {
     id: 'itemdrop_1500',
@@ -70,7 +64,6 @@ export const DROP_QUESTS = [
     type: 'item_drop',
     target: 1500,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 5 } },
-    icon: '<i class="mdi mdi-gift"></i>',
   },
   {
     id: 'itemdrop_3000',
@@ -80,7 +73,6 @@ export const DROP_QUESTS = [
     type: 'item_drop',
     target: 3000,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 6 } },
-    icon: '<i class="mdi mdi-gift"></i>',
   },
   {
     id: 'itemdrop_6000',
@@ -90,7 +82,6 @@ export const DROP_QUESTS = [
     type: 'item_drop',
     target: 6000,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 7 } },
-    icon: '<i class="mdi mdi-gift"></i>',
   },
   // Material Drop Quests
   {
@@ -101,7 +92,6 @@ export const DROP_QUESTS = [
     type: 'material_drop',
     target: 5,
     reward: { item: { rarity: 'rare', type: 'random', tier: 1 } },
-    icon: '<i class="mdi mdi-cube"></i>',
   },
   {
     id: 'matdrop_25',
@@ -111,7 +101,6 @@ export const DROP_QUESTS = [
     type: 'material_drop',
     target: 25,
     reward: { item: { rarity: 'unique', type: 'random', tier: 1 } },
-    icon: '<i class="mdi mdi-cube"></i>',
   },
   {
     id: 'matdrop_60',
@@ -121,7 +110,6 @@ export const DROP_QUESTS = [
     type: 'material_drop',
     target: 60,
     reward: { item: { rarity: 'unique', type: 'random', tier: 2 } },
-    icon: '<i class="mdi mdi-cube"></i>',
   },
   {
     id: 'matdrop_150',
@@ -131,7 +119,6 @@ export const DROP_QUESTS = [
     type: 'material_drop',
     target: 150,
     reward: { item: { rarity: 'legendary', type: 'random', tier: 3 } },
-    icon: '<i class="mdi mdi-cube"></i>',
   },
   {
     id: 'matdrop_300',
@@ -141,7 +128,6 @@ export const DROP_QUESTS = [
     type: 'material_drop',
     target: 300,
     reward: { item: { rarity: 'legendary', type: 'random', tier: 3 } },
-    icon: '<i class="mdi mdi-cube"></i>',
   },
   {
     id: 'matdrop_750',
@@ -151,7 +137,6 @@ export const DROP_QUESTS = [
     type: 'material_drop',
     target: 750,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 3 } },
-    icon: '<i class="mdi mdi-cube"></i>',
   },
   {
     id: 'matdrop_1500',
@@ -161,7 +146,6 @@ export const DROP_QUESTS = [
     type: 'material_drop',
     target: 1500,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 4 } },
-    icon: '<i class="mdi mdi-cube"></i>',
   },
   {
     id: 'matdrop_3000',
@@ -171,7 +155,6 @@ export const DROP_QUESTS = [
     type: 'material_drop',
     target: 3000,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 5 } },
-    icon: '<i class="mdi mdi-cube"></i>',
   },
   {
     id: 'matdrop_6000',
@@ -181,6 +164,5 @@ export const DROP_QUESTS = [
     type: 'material_drop',
     target: 6000,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 6 } },
-    icon: '<i class="mdi mdi-cube"></i>',
   },
 ];

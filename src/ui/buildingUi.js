@@ -99,7 +99,7 @@ function createBuildingCard(building) {
   el.className = 'building-card';
   el.innerHTML = html`
     <div class="building-image">
-      <img src="${import.meta.env.BASE_URL + building.image}" alt="${building.name}" class="building-img" />
+      <img src="${import.meta.env.VITE_BASE_PATH + building.image}" alt="${building.name}" class="building-img" />
     </div>
     <div class="building-info">
       <div class="building-name">${building.name}</div>
@@ -145,7 +145,7 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
         <button class="modal-close">×</button>
         <div class="building-info-modal-header">
           <img
-            src="${import.meta.env.BASE_URL + building.image}"
+            src="${import.meta.env.VITE_BASE_PATH + building.image}"
             class="building-map-img building-map-img-inset building-map-img-large"
             alt="${building.name}"
           />
@@ -300,7 +300,7 @@ function showBuildingsMapModal() {
     <div class="building-modal-content">
       <button class="modal-close">×</button>
       <div class="building-map-container">
-        <img src="${import.meta.env.BASE_URL}/buildings/building-map.jpg" class="building-map-img" draggable="false" />
+        <img src="${import.meta.env.VITE_BASE_PATH}/buildings/building-map.jpg" class="building-map-img" draggable="false" />
         <div class="building-map-placeholders"></div>
       </div>
     </div>
@@ -403,7 +403,7 @@ function showBuildingsMapModal() {
       if (placed[idx]) {
         ph.classList.add('building-map-has-building');
         const img = document.createElement('img');
-        img.src = import.meta.env.BASE_URL + placed[idx].image;
+        img.src = import.meta.env.VITE_BASE_PATH + placed[idx].image;
         img.alt = placed[idx].name;
         img.className = 'building-map-img building-map-img-inset building-map-img-large';
         img.style.cursor = 'pointer';
@@ -458,7 +458,7 @@ function showChooseBuildingModal(placeholderIdx, onChoose) {
       el.style.cursor = 'pointer';
       el.innerHTML = `
         <div class="building-image" >
-          <img src="${import.meta.env.BASE_URL + building.image}" alt="${building.name}" class="building-img" />
+          <img src="${import.meta.env.VITE_BASE_PATH + building.image}" alt="${building.name}" class="building-img" />
         </div>
         <div class="building-info">
           <div class="building-name">${building.name}</div>

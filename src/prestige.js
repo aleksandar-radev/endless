@@ -9,6 +9,8 @@ import {
 import { PRESTIGE_BONUSES, STARTING_CRYSTALS_BONUS } from './constants/prestigeBonuses.js';
 import { formatStatName } from './ui/ui.js';
 
+const BASE = import.meta.env.VITE_BASE_PATH;
+
 const LEVEL_REQUIREMENT = 100;
 const LEVEL_REQUIREMENT_INCREASE = 25;
 
@@ -77,11 +79,11 @@ export default class Prestige {
       if (b.stat.endsWith('Percent')) {
         const main = `${formatStatName(b.stat)}: +${(value * 100).toFixed(1)}%`;
         const right = `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
-        desc = `<span class=\"prestige-main\"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+        desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt="star"/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
       } else {
         const main = `${formatStatName(b.stat)}: +${Math.round(value)}`;
         const right = `${Math.round(refMin)} - ${Math.round(refMax)}`;
-        desc = `<span class=\"prestige-main\"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+        desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt="star"/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
       }
       card.descriptions.push(desc);
     });
@@ -91,7 +93,7 @@ export default class Prestige {
     const refStartMax = STARTING_CRYSTALS_BONUS.max;
     const main = `${formatStatName(STARTING_CRYSTALS_BONUS.stat)}: +${startingCrystals}`;
     const right = `${Math.floor(refStartMin * scalingFactor)} - ${Math.floor(refStartMax * scalingFactor)}`;
-    card.descriptions.push(`<span class=\"prestige-main\"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`);
+    card.descriptions.push(`<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt="star"/>${main}</span><span class=\"prestige-ref\">(${right})</span>`);
     return card;
   }
 
@@ -178,7 +180,7 @@ export default class Prestige {
             if (refMin != null && refMax != null) {
               const main = `${formatStatName(stat)}: +${scaledPct}%`;
               const right = `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
-              desc = `<span class="prestige-main"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+              desc = `<span class="prestige-main"><img src="${BASE}/icons/star.svg" class="icon" alt="star"/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
             } else {
               desc = `${formatStatName(stat)}: +${scaledPct}%`;
             }
@@ -186,7 +188,7 @@ export default class Prestige {
             if (refMin != null && refMax != null) {
               const main = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
               const right = `${Math.round(refMin)} - ${Math.round(refMax)}`;
-              desc = `<span class="prestige-main"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+              desc = `<span class="prestige-main"><img src="${BASE}/icons/star.svg" class="icon" alt="star"/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
             } else {
               desc = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
             }
@@ -221,11 +223,11 @@ export default class Prestige {
         if (b.stat.endsWith('Percent')) {
           const main = `${formatStatName(b.stat)}: +${(value * 100).toFixed(1)}%`;
           const right = `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
-          desc = `<span class="prestige-main"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+          desc = `<span class="prestige-main"><img src="${BASE}/icons/star.svg" class="icon" alt="star"/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
         } else {
           const main = `${formatStatName(b.stat)}: +${Math.round(value)}`;
           const right = `${Math.round(refMin)} - ${Math.round(refMax)}`;
-          desc = `<span class="prestige-main"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+          desc = `<span class="prestige-main"><img src="${BASE}/icons/star.svg" class="icon" alt="star"/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
         }
         card.descriptions.push(desc);
       });
@@ -237,7 +239,7 @@ export default class Prestige {
       {
         const main = `${formatStatName(STARTING_CRYSTALS_BONUS.stat)}: +${startingCrystals}`;
         const right = `${Math.floor(refStartMin * scalingFactor)} - ${Math.floor(refStartMax * scalingFactor)}`;
-        card.descriptions.push(`<span class=\"prestige-main\"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`);
+        card.descriptions.push(`<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt="star"/>${main}</span><span class=\"prestige-ref\">(${right})</span>`);
       }
       cards.push(card);
     }
@@ -284,7 +286,7 @@ export default class Prestige {
             if (refMin != null && refMax != null) {
               const main = `${formatStatName(stat)}: +${scaledPct}%`;
               const right = `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
-              desc = `<span class=\"prestige-main\"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+              desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt="star"/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
             } else {
               desc = `${formatStatName(stat)}: +${scaledPct}%`;
             }
@@ -292,7 +294,7 @@ export default class Prestige {
             if (refMin != null && refMax != null) {
               const main = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
               const right = `${Math.round(refMin)} - ${Math.round(refMax)}`;
-              desc = `<span class=\"prestige-main\"><i class=\"mdi mdi-star-four-points\"></i>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+              desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt="star"/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
             } else {
               desc = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
             }

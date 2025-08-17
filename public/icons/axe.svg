@@ -1,0 +1,14 @@
+<svg class="icon-axe" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <defs>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="currentColor"/>
+      <stop offset="100%" stop-color="currentColor"/>
+    </linearGradient>
+    <linearGradient id="wood" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="currentColor"/>
+      <stop offset="100%" stop-color="currentColor"/>
+    </linearGradient>
+  </defs>
+  <rect x="11" y="4" width="2" height="16" fill="url(#wood)" stroke="currentColor" stroke-width="1"/>
+  <path d="M13 4 L20 7 L20 13 L13 16 Z" fill="url(#metal)" stroke="currentColor" stroke-width="1"/>
+</svg>

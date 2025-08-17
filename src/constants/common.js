@@ -1,27 +1,28 @@
+const BASE = import.meta.env.VITE_BASE_PATH;
+
 export const ELEMENTS = {
   fire: {
     id: 'fire',
-    // Using MDI icon HTML strings. Ensure MDI CSS is imported (done in src/main.js).
-    icon: '<i class="mdi mdi-fire"></i>',
+    icon: `<img src="${BASE}/icons/fire.svg" class="icon" alt="fire"/>`,
   },
   cold: {
     id: 'cold',
-    icon: '<i class="mdi mdi-snowflake"></i>',
+    icon: `<img src="${BASE}/icons/snowflake.svg" class="icon" alt="cold"/>`,
   },
   air: {
     id: 'air',
-    icon: '<i class="mdi mdi-weather-windy"></i>',
+    icon: `<img src="${BASE}/icons/wind.svg" class="icon" alt="air"/>`,
   },
   earth: {
     id: 'earth',
-    icon: '<i class="mdi mdi-earth"></i>',
+    icon: `<img src="${BASE}/icons/earth.svg" class="icon" alt="earth"/>`,
   },
   lightning: {
     id: 'lightning',
-    icon: '<i class="mdi mdi-flash"></i>',
+    icon: `<img src="${BASE}/icons/lightning.svg" class="icon" alt="lightning"/>`,
   },
   water: {
     id: 'water',
-    icon: '<i class="mdi mdi-water"></i>',
+    icon: `<img src="${BASE}/icons/water.svg" class="icon" alt="water"/>`,
   },
 };

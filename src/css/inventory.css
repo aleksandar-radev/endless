@@ -430,9 +430,9 @@
   pointer-events: none;
 }
 
-.search-icon .mdi {
-
-  font-size: 24px;
+.search-icon img.icon {
+  width: 24px;
+  height: 24px;
 }
 
 .search-container {

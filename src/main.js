@@ -30,7 +30,6 @@ import Enemy from './enemy.js';
 import { setupLeaderboardTabLazyLoad } from './ui/leaderboardUi.js';
 import Boss from './boss.js';
 import { applyTranslations, setLanguage } from './i18n.js';
-import '@mdi/font/css/materialdesignicons.min.css';
 import { getGameInfo } from './api.js';
 import { createModal } from './ui/modal.js';
 

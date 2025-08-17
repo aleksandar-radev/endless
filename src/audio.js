@@ -2,7 +2,7 @@
 // All sounds must be imported statically at the top
 
 const SOUNDS = {
-  enemyDeath: (import.meta.env.BASE_URL || '/') + '/sounds/enemy-death.mp3',
+  enemyDeath: (import.meta.env.VITE_BASE_PATH || '/') + '/sounds/enemy-death.mp3',
 };
 
 class AudioManager {

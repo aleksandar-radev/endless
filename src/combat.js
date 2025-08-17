@@ -18,6 +18,8 @@ import { getCurrentRegion } from './region.js';
 
 import { audioManager } from './audio.js';
 import { battleLog } from './battleLog.js';
+
+const BASE = import.meta.env.VITE_BASE_PATH;
 import { ELEMENTS } from './constants/common.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
@@ -419,7 +421,7 @@ export function createDamageNumber({ text = '', isPlayer = false, isCritical = f
 
   const damageEl = document.createElement('div');
   damageEl.className = isCritical ? 'damage-number critical' : 'damage-number';
-  damageEl.innerHTML = isCritical ? '<i class="mdi mdi-flash"></i> ' + text : text;
+  damageEl.innerHTML = isCritical ? `<img src="${BASE}/icons/lightning.svg" class="icon" alt="crit"/> ` + text : text;
   if (color) {
     damageEl.style.color = color;
   }

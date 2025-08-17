@@ -3,6 +3,8 @@ import { showTooltip, hideTooltip, positionTooltip, formatNumber } from './ui.js
 import { quests } from '../globals.js';
 import { MATERIALS } from '../constants/materials.js';
 
+const BASE = import.meta.env.VITE_BASE_PATH;
+
 export function updateQuestsUI() {
   const panel = document.getElementById('quests');
   panel.innerHTML = '';
@@ -24,10 +26,10 @@ export function updateQuestsUI() {
   // Check if there are claimable quests
   const hasClaimable = quests.quests.some((q) => q.isComplete() && !q.claimed);
   if (hasClaimable) {
-    claimableBtn.innerHTML = '<i class="mdi mdi-check"></i>';
+    claimableBtn.innerHTML = `<img src="${BASE}/icons/check.svg" class="icon" alt="check"/>`;
     claimableBtn.style.backgroundColor = '';
   } else {
-    claimableBtn.innerHTML = '<i class="mdi mdi-close"></i>';
+    claimableBtn.innerHTML = `<img src="${BASE}/icons/close.svg" class="icon" alt="close"/>`;
     claimableBtn.style.backgroundColor = '#dc2626'; // red-600
   }
   claimableBtn.style.marginRight = '12px';

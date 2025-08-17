@@ -12,6 +12,7 @@ let awaitingSlot = false;
 let currentFilter = '';
 
 const html = String.raw;
+const BASE = import.meta.env.VITE_BASE_PATH;
 
 let sortMode = (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) || 'type-rarity-level';
 
@@ -65,7 +66,7 @@ export function initializeInventoryUI(inv) {
         <div class="equipment-slot" data-slot="ring2"><div class="slot-indicator">${ITEM_ICONS.RING}</div></div>
         <div class="equipment-slot" data-slot="boots"><div class="slot-indicator">${ITEM_ICONS.BOOTS}</div></div>
       </div>
-      <div class="character-preview"><i class="mdi mdi-account"></i></div>
+      <div class="character-preview"><img src="${BASE}/icons/account.svg" class="icon" alt="avatar"/></div>
     </div>
     <div class="salvage-container">
       <div class="inventory-tabs">
@@ -73,12 +74,12 @@ export function initializeInventoryUI(inv) {
         <button id="materials-tab" class="inventory-btn" data-i18n="inventory.materials">${t('inventory.materials')}</button>
       </div>
       <div class="sort-row">
-        <div id="sort-inventory" class="inventory-btn sort-btn" aria-label="${t('inventory.sort')}"><span role="img" aria-label="Sort"><i class="mdi mdi-autorenew"></i></span></div>
+        <div id="sort-inventory" class="inventory-btn sort-btn" aria-label="${t('inventory.sort')}"><span role="img" aria-label="Sort"><img src="${BASE}/icons/refresh.svg" class="icon" alt="sort"/></span></div>
       </div>
       <button id="open-salvage-modal" class="inventory-btn" data-i18n="inventory.options">${t('inventory.options')}</button>
       <div class="search-container">
         <input type="text" id="inventory-filter" class="inventory-btn filter-input" placeholder="${t('inventory.searchItems')}" />
-        <span class="search-icon"><i class="mdi mdi-magnify"></i></span>
+        <span class="search-icon"><img src="${BASE}/icons/magnify.svg" class="icon" alt="search"/></span>
         <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn" style="display: none" data-i18n="inventory.equip">${t('inventory.equip')}</button>
       </div>
     </div>
@@ -269,7 +270,7 @@ export function showSalvageModal(inv) {
   }).join('')}
         </div>
         <div class="inventory-trash">
-          <span class="inventory-trash-icon"><i class="mdi mdi-delete"></i></span>
+          <span class="inventory-trash-icon"><img src="${BASE}/icons/delete.svg" class="icon" alt="delete"/></span>
           <div class="inventory-trash-label">Drag item here</div>
         </div>
         <div class="salvage-material-row">
@@ -480,7 +481,7 @@ export function showSalvageModal(inv) {
   trash.addEventListener('mouseenter', (e) => {
     const tooltipContent = html`
       <div class="item-tooltip tooltip-center">
-        <div class="tooltip-trash-icon"><i class="mdi mdi-delete"></i></div>
+        <div class="tooltip-trash-icon"><img src="${BASE}/icons/delete.svg" class="icon" alt="delete"/></div>
         <b>Salvage Item</b>
         <div class="tooltip-trash-desc">Drag and drop an item here to salvage it.</div>
       </div>
@@ -678,7 +679,7 @@ export function setupDragAndDrop() {
     trash.addEventListener('mouseenter', (e) => {
       const tooltipContent = html`
         <div class="item-tooltip" style="text-align:center;">
-          <div style="font-size:2em;"><i class="mdi mdi-delete"></i></div>
+          <div style="font-size:2em;"><img src="${BASE}/icons/delete.svg" class="icon" alt="delete"/></div>
           <b>Salvage Item</b>
           <div style="margin-top:4px;font-size:0.95em;">Drag and drop an item here to salvage it.</div>
         </div>
@@ -956,7 +957,7 @@ export function updateMaterialsGrid(inv) {
   materialsContainer.innerHTML = '';
   for (let i = 0; i < MATERIALS_SLOTS; i++) {
     const mat = inv.materials[i];
-    const icon = MATERIALS[mat?.id]?.icon || '<i class="mdi mdi-diamond-outline"></i>';
+    const icon = MATERIALS[mat?.id]?.icon || `<img src="${BASE}/icons/gem.svg" class="icon" alt="mat"/>`;
     const cell = document.createElement('div');
     cell.classList.add('materials-cell');
     if (mat) {

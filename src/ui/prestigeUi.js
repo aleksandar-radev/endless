@@ -3,6 +3,7 @@ import { createModal, closeModal } from './modal.js';
 import { formatStatName, showToast, formatNumber, updateResources } from './ui.js';
 
 const html = String.raw;
+const BASE = import.meta.env.VITE_BASE_PATH;
 
 function updateButtonState() {
   const tab = document.getElementById('prestige');
@@ -101,7 +102,7 @@ function openPrestigeModal() {
       <button class="modal-close">&times;</button>
       <div class="prestige-cards"></div>
       <div class="modal-controls">
-        <button id="prestige-reroll-btn">Reroll (60<i class="mdi mdi-diamond-stone"></i>)</button>
+        <button id="prestige-reroll-btn">Reroll (60<img src="${BASE}/icons/gem.svg" class="icon" alt="gem"/>)</button>
       </div>
       <div class="prestige-info-message" style="margin-top: 10px; color: #9ac7fcff; font-size: 1.05em;">
 
@@ -124,8 +125,8 @@ function openPrestigeModal() {
     cardsContainer.innerHTML = cards
       .map((c, i) => {
         const lockLabel = c.locked
-          ? '<i class="mdi mdi-lock"></i>'
-          : 'Lock (20<i class="mdi mdi-diamond-stone"></i>)';
+          ? `<img src="${BASE}/icons/lock.svg" class="icon" alt="lock"/>`
+          : `Lock (20<img src="${BASE}/icons/gem.svg" class="icon" alt="gem"/>)`;
         return html`
           <div class="prestige-card-wrapper" data-idx="${i}">
             <div class="prestige-card ${c.locked ? 'locked' : ''} ${selectedIdx === i ? 'selected' : ''}">
@@ -153,7 +154,7 @@ function openPrestigeModal() {
         const cardEl = btn.parentElement.querySelector('.prestige-card');
         if (card.locked) {
           card.locked = false;
-          btn.innerHTML = 'Lock (20<i class="mdi mdi-diamond-stone"></i>)';
+          btn.innerHTML = `Lock (20<img src="${BASE}/icons/gem.svg" class="icon" alt="gem"/>)`;
           cardEl.classList.remove('locked');
         } else {
           if (hero.crystals < 20) {
@@ -163,7 +164,7 @@ function openPrestigeModal() {
           hero.crystals -= 20;
           updateResources();
           card.locked = true;
-          btn.innerHTML = '<i class="mdi mdi-lock"></i>';
+          btn.innerHTML = `<img src="${BASE}/icons/lock.svg" class="icon" alt="lock"/>`;
           cardEl.classList.add('locked');
         }
       });
