@@ -1,88 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
-  <title id="title">Strength Potion</title>
-  <desc id="desc">A round potion bottle with glowing orange-red liquid and a dumbbell emblem to represent a strength buff.</desc>
-
-  <style>
-    :root {
-      --stroke: #0f172a;   /* outline */
-      --glass:  #e2e8f0;   /* bottle body */
-      --potion: #f97316;   /* top gradient */
-      --potion2:#ef4444;   /* bottom gradient */
-      --cork:   #b45309;
-      --shine:  #ffffff;
-    }
-  </style>
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
   <defs>
-    <linearGradient id="potionGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%"  style="stop-color: var(--potion, #f97316)"/>
-      <stop offset="100%" style="stop-color: var(--potion2, #ef4444)"/>
-    </linearGradient>
-
-    <clipPath id="bottleClip">
-      <circle cx="128" cy="158" r="76"/>
-    </clipPath>
-
-    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
+    <radialGradient id="critGradient" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="yellow"/>
+      <stop offset="30%" stop-color="orange"/>
+      <stop offset="70%" stop-color="red"/>
+      <stop offset="100%" stop-color="darkred"/>
+    </radialGradient>
   </defs>
 
-  <!-- Cork -->
-  <rect x="114" y="36" width="28" height="22" rx="4"
-        fill="var(--cork, #b45309)" stroke="var(--stroke, #0f172a)" stroke-width="6"/>
-
-  <!-- Lip -->
-  <rect x="104" y="56" width="48" height="12" rx="6"
-        fill="var(--glass, #e2e8f0)" stroke="var(--stroke, #0f172a)" stroke-width="6"/>
-
-  <!-- Neck -->
-  <rect x="108" y="68" width="40" height="30" rx="10"
-        fill="var(--glass, #e2e8f0)" stroke="var(--stroke, #0f172a)" stroke-width="6"/>
-
-  <!-- Bottle body -->
-  <circle cx="128" cy="158" r="76"
-          fill="var(--glass, #e2e8f0)" stroke="var(--stroke, #0f172a)" stroke-width="6"/>
-
-  <!-- Liquid (clipped to bottle) -->
-  <g clip-path="url(#bottleClip)">
-    <!-- Glow -->
-    <ellipse cx="128" cy="195" rx="70" ry="38" fill="var(--potion2, #ef4444)" opacity="0.25" filter="url(#glow)"/>
-    <!-- Slosh -->
-    <path d="
-      M 52 186
-      C 86 162, 170 210, 204 178
-      L 204 256
-      L 52 256 Z"
-      fill="url(#potionGrad)"/>
-
-    <!-- Bubbles -->
-    <circle cx="98" cy="200" r="5" fill="var(--shine, #ffffff)" opacity="0.55"/>
-    <circle cx="150" cy="210" r="4" fill="var(--shine, #ffffff)" opacity="0.45"/>
-    <circle cx="133" cy="188" r="3" fill="var(--shine, #ffffff)" opacity="0.6"/>
-  </g>
-
-  <!-- Dumbbell emblem (strength) -->
-  <g transform="translate(0,0)">
-    <circle cx="96" cy="160" r="12" fill="var(--stroke, #0f172a)"/>
-    <circle cx="160" cy="160" r="12" fill="var(--stroke, #0f172a)"/>
-    <rect x="110" y="154" width="46" height="12" rx="6" fill="var(--stroke, #0f172a)"/>
-  </g>
-
-  <!-- Glass highlight -->
-  <path d="M176 122
-           C176 100,156 88,138 90
-           C150 96,156 106,156 116
-           C156 130,146 142,132 146"
-        fill="none" stroke="var(--shine, #ffffff)" stroke-width="6" opacity="0.55" stroke-linecap="round"/>
-
-  <!-- Sparkles -->
-  <g fill="var(--shine, #ffffff)" opacity="0.9">
-    <path d="M210 88 l4 6 l-4 6 l-4 -6 z"/>
-    <path d="M64 96 l3 5 l-3 5 l-3 -5 z"/>
-  </g>
+  <polygon 
+    points="100,15 120,45 160,30 150,65 185,90 
+            145,105 170,140 130,135 115,180 
+            95,150 60,175 65,130 25,115 
+            55,95 30,55 75,60 85,25"
+    fill="url(#critGradient)"
+    stroke="black"
+    stroke-width="4"/>
 </svg>
