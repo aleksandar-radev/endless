@@ -488,6 +488,7 @@ export default class CrystalShop {
     showToast(`Purchased ${label}!`, 'success');
 
     if (stat === 'autoSpellCast') {
+      skillTree.enableAutoCastForAllSkills();
       initializeSkillTreeUI();
     }
 

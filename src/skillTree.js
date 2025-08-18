@@ -1,5 +1,5 @@
 import { handleSavedData } from './functions.js';
-import { dataManager, game, hero } from './globals.js';
+import { dataManager, game, hero, crystalShop } from './globals.js';
 import { CLASS_PATHS, SKILL_TREES } from './constants/skills.js';
 import {
   showManaWarning,
@@ -261,6 +261,10 @@ export default class SkillTree {
       active: skill.type() === 'toggle' ? wasActive : false,
       slot: skill.type() !== 'passive' ? Object.keys(this.skills).length + 1 : null,
     };
+
+    if (crystalShop.hasAutoSpellCastUpgrade()) {
+      this.autoCastSettings[skillId] = true;
+    }
 
     this.skillPoints -= totalCost;
     hero.recalculateFromAttributes();
@@ -583,6 +587,13 @@ export default class SkillTree {
         event_category: 'SkillTree',
       });
     }
+  }
+
+  enableAutoCastForAllSkills() {
+    Object.keys(this.skills).forEach((skillId) => {
+      this.autoCastSettings[skillId] = true;
+    });
+    dataManager.saveGame();
   }
 
   setAutoCast(skillId, enabled) {

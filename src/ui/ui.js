@@ -146,7 +146,10 @@ export function switchTab(tabName) {
 
   document.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach((btn) => btn.classList.remove('active'));
-  document.getElementById(tabName).classList.add('active');
+  let tabElement = document.getElementById(tabName);
+  if (!tabElement) tabElement = document.getElementById('stats');
+  tabElement.classList.add('active');
+
   document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
 
   if (tabName === 'stats') {
