@@ -153,7 +153,13 @@ export function playerDeath() {
   game.gameStarted = false;
 
   const timerReduction = (crystalShop.crystalUpgrades.deathTimerReduction || 0) * 0.5;
-  const deathTimer = Math.max(3, 10 - timerReduction);
+  // Death timer only applies in explore mode. Arena (boss) deaths revive immediately.
+  let deathTimer = 0;
+  if (game.fightMode === 'explore') {
+    // Use the current stage for death timer calculations
+    const baseDeathTimer = 1 + 0.5 * Math.floor(game.stage / 100);
+    deathTimer = Math.max(0, baseDeathTimer - timerReduction);
+  }
   battleLog.addBattle('Died');
 
   // Disable the fight/stop button while the death screen is active

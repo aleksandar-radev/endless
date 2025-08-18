@@ -353,7 +353,7 @@ export function showToast(message, type = 'normal', duration = 3000) {
 }
 
 let deathScreenInterval = null;
-export function showDeathScreen(duration = 10, onRevive) {
+export function showDeathScreen(duration = 1, onRevive) {
   if (deathScreenInterval) clearInterval(deathScreenInterval);
   const overlay = document.getElementById('death-screen');
   const countdownElem = document.getElementById('revive-countdown');

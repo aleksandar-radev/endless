@@ -39,7 +39,6 @@ const CRYSTAL_UPGRADE_CONFIG = {
     costIncrement: 50,
     multiple: true,
     bulkModal: true,
-    maxLevel: 14,
   },
   startingStage: {
     label: 'Starting Stage',
