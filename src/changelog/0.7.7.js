@@ -19,6 +19,7 @@ export default function run() {
     <li>Added prestige lock and a button to perform the prestige, to avoid accidental prestiges.</li>
     <li>Added 2 more summon skills to druid.</li>
     <li>Autocast for all skills is now enabled by default after purchasing the auto cast upgrade.</li>
+    <li>Add one more modifier to all items, except normal.</li>
   </ul>
   `;
 }
