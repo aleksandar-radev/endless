@@ -1,5 +1,5 @@
 import Enemy from '../enemy.js';
-import { game, hero, skillTree, quests, statistics, inventory, dataManager, options } from '../globals.js';
+import { game, hero, skillTree, quests, statistics, inventory, dataManager, options, crystalShop } from '../globals.js';
 import { t } from '../i18n.js';
 import { updateQuestsUI } from './questUi.js';
 import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
@@ -23,6 +23,7 @@ const ELEMENT_REGEX = new RegExp(
 
 // Tab indicator manager instance
 let tabIndicatorManager = null;
+let autoClaiming = false;
 
 const html = String.raw;
 const BASE = import.meta.env.VITE_BASE_PATH;
@@ -535,6 +536,15 @@ export function updateTabIndicators(previousTab = null) {
     tabIndicatorManager.markTabAsVisited(previousTab);
   }
   tabIndicatorManager.markTabAsVisited(game.activeTab);
+  if (crystalShop?.crystalUpgrades?.autoClaimQuests && !autoClaiming) {
+    const claimable = quests?.quests?.filter((q) => q.isComplete() && !q.claimed) || [];
+    if (claimable.length > 0) {
+      autoClaiming = true;
+      claimable.forEach((q) => q.claim());
+      autoClaiming = false;
+      updateQuestsUI();
+    }
+  }
 
   // Count claimable quests
   const claimableQuests = quests?.quests?.filter((q) => q.isComplete(statistics) && !q.claimed).length || 0;

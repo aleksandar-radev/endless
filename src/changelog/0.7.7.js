@@ -12,6 +12,7 @@ export default function run() {
     <li>Item attack ratings increased.</li>
     <li>All skills descriptions improved.</li>
     <li>Quests & rewards: quest rewards increased (more crystals) and some reward names fixed.</li>
+    <li>Added crystal upgrade to auto-claim completed quests.</li>
     <li>Death screen: added a revive countdown and a death timer reduction upgrade.</li>
     <li>Quick-purchase buttons added to the Soul Shop</li>
     <li>Added battle log.</li>

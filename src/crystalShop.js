@@ -105,6 +105,13 @@ const CRYSTAL_UPGRADE_CONFIG = {
     baseCost: 600,
     oneTime: true,
   },
+  autoClaimQuests: {
+    label: 'Auto-Claim Quests',
+    bonus: 'Automatically claim completed quests',
+    bonusLabel: 'Automatically claim completed quests',
+    baseCost: 400,
+    oneTime: true,
+  },
   salvageMaterials: {
     label: 'Salvage Materials',
     bonus: 'Allows salvaging items for upgrade materials instead of gold',
