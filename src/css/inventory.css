@@ -223,12 +223,25 @@
 }
 
 .item-icon {
+  width: 100%;
+  height: 100%;
   font-size: 1em;
   text-align: center;
   user-select: none;
 }
 
 .item-icon img {
+  width: 100%;
+  height: 100%;
+}
+
+.slot-indicator {
+  width: 100%;
+  height: 100%;
+
+}
+
+.slot-indicator img {
   width: 100%;
   height: 100%;
 }

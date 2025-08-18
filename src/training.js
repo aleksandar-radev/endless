@@ -178,16 +178,16 @@ export default class Training {
     this.currentStat = stat;
     // Set title and base info
     const m = this.modal;
-    m.querySelector('.modal-title').textContent = formatStatName(stat);
-    m.querySelector('.modal-level').textContent = formatNumber(this.upgradeLevels[stat] || 0);
-    m.querySelector('.modal-max-level').textContent =
+    m.querySelector('.modal-title').innerHTML = formatStatName(stat);
+    m.querySelector('.modal-level').innerHTML = formatNumber(this.upgradeLevels[stat] || 0);
+    m.querySelector('.modal-max-level').innerHTML =
       trainingConfig?.maxLevel === Infinity ? '∞' : formatNumber(trainingConfig.maxLevel);
-    m.querySelector('.modal-bonus').textContent = this.getBonusText(
+    m.querySelector('.modal-bonus').innerHTML = this.getBonusText(
       stat,
       STATS[stat].training,
       this.upgradeLevels[stat] || 0,
     );
-    m.querySelector('.modal-next-bonus').textContent = this.getBonusText(
+    m.querySelector('.modal-next-bonus').innerHTML = this.getBonusText(
       stat,
       STATS[stat].training,
       (this.upgradeLevels[stat] || 0) + 1,
@@ -304,17 +304,17 @@ export default class Training {
     const decimals = STATS[stat].decimalPlaces || 0;
 
     // --- Update ALL modal fields ---
-    this.modal.querySelector('.modal-qty').textContent = formatNumber(qty);
+    this.modal.querySelector('.modal-qty').innerHTML = formatNumber(qty);
     const totalCostEl = this.modal.querySelector('.modal-total-cost');
-    totalCostEl.textContent = formatNumber(totalCost);
+    totalCostEl.innerHTML = formatNumber(totalCost);
     totalCostEl.classList.toggle('unaffordable', !affordable);
     const totalBonusEl = this.modal.querySelector('.modal-total-bonus');
-    totalBonusEl.textContent = `+${formatNumber(bonusValue.toFixed(decimals))} ${formatStatName(stat)}`;
+    totalBonusEl.innerHTML = `+${formatNumber(bonusValue.toFixed(decimals))} ${formatStatName(stat)}`;
     totalBonusEl.classList.toggle('unaffordable', !affordable);
-    this.modal.querySelector('.modal-level').textContent = formatNumber(baseLevel);
-    this.modal.querySelector('.modal-max-level').textContent = maxLevel === Infinity ? '∞' : formatNumber(maxLevel);
-    this.modal.querySelector('.modal-bonus').textContent = this.getBonusText(stat, config, baseLevel);
-    this.modal.querySelector('.modal-next-bonus').textContent = this.getBonusText(stat, config, baseLevel + 1);
+    this.modal.querySelector('.modal-level').innerHTML = formatNumber(baseLevel);
+    this.modal.querySelector('.modal-max-level').innerHTML = maxLevel === Infinity ? '∞' : formatNumber(maxLevel);
+    this.modal.querySelector('.modal-bonus').innerHTML = this.getBonusText(stat, config, baseLevel);
+    this.modal.querySelector('.modal-next-bonus').innerHTML = this.getBonusText(stat, config, baseLevel + 1);
 
     const slider = this.modal.querySelector('.modal-slider');
     if (slider) {

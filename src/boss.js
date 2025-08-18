@@ -58,6 +58,16 @@ class Boss {
     battleLog.addBattle(`Encountered Boss Level ${this.level} ${this.name}`);
   }
 
+  // used when reductions are applied from skills usually buff, but can be instant too
+  recalculateStats() {
+    this.attackSpeed = this.calculateAttackSpeed();
+    this.life = this.calculateLife();
+    this.damage = this.calculateDamage();
+    Object.values(ELEMENTS).forEach(({ id }) => {
+      this[`${id}Damage`] = this.calculateElementalDamage(id);
+    });
+  }
+
 
   calculateXP() {
     let base = this.baseData.xp || 0;
