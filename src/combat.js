@@ -427,6 +427,7 @@ function showLootNotification(item) {
 
 export function calculateHitChance(attackRating, evasion, cap = 0.9, bonus = 0) {
   let raw = 1.5 * attackRating / (attackRating + evasion);
+  raw = Math.max(0.1, raw); // Ensure raw chance is never below 10%
   raw = Math.max(0, raw) + bonus;
   const capped = Math.max(1 - cap, Math.min(raw, cap));
   const result = Math.min(capped, 1);
