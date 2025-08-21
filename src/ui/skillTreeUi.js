@@ -303,7 +303,7 @@ export function updateSkillTreeValues() {
 
   const characterName =
     skillTree.selectedPath.name.charAt(0).toUpperCase() + skillTree.selectedPath.name.slice(1).toLowerCase();
-  characterNameEl.textContent = `${characterName}`;
+  characterNameEl.innerHTML = `<span class="character-name">${characterName}</span> (Level: ${hero.level})`;
 
   const container = document.getElementById('skill-tree-container');
 

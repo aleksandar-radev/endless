@@ -272,3 +272,9 @@
   grid-column: 2;
   justify-self: start;
 }
+
+.character-name {
+  font-weight: bold;
+  color: rgb(219, 219, 219);
+  font-size: 1.4em;
+}
