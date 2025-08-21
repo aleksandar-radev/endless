@@ -250,7 +250,6 @@ export function showSalvageModal(inv) {
   const modalContent = html`
     <div class="inventory-salvage-modal-content">
       <button class="modal-close" aria-label="Close">&times;</button>
-      <div class="inventory-modal-full-content"></div>
       <div class="salvage-modal-sidebar">
         <h3>Salvage</h3>
         <div class="salvage-options-modal">
@@ -299,6 +298,8 @@ export function showSalvageModal(inv) {
           </select>
         </div>
       </div>
+      
+      <div class="inventory-modal-full-content"></div>
     </div>
   `;
 
