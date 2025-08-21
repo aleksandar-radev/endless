@@ -252,7 +252,7 @@ export function showSalvageModal(inv) {
       <button class="modal-close" aria-label="Close">&times;</button>
       <div class="inventory-modal-full-content"></div>
       <div class="salvage-modal-sidebar">
-        <h3>Salvage Options</h3>
+        <h3>Salvage</h3>
         <div class="salvage-options-modal">
           ${RARITY_ORDER.map(rarity => {
     const isChecked = selectedRarities.includes(rarity);

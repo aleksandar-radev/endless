@@ -629,13 +629,27 @@
 
 .inventory-salvage-modal-content {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  background: var(--bg-element, #1e2127);
+  align-items: flex-start;
   border-radius: 0.75rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  gap: 32px;
+  position: relative;
+  background: var(--bg-panel);
+  padding: 32px;
+  width: 820px;
+  max-height: 80%;
+  overflow: auto;
+}
+
+/* Responsive: stack items in rows on small screens */
+@media (max-width: 900px) {
+  .inventory-salvage-modal-content {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    padding: 16px;
+    gap: 16px;
+    max-height: 80%;
+  }
 }
 
 .inventory-salvage-modal-content h2 {
@@ -658,8 +672,9 @@
 }
 
 .salvage-options-modal {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: max-content 1fr 1fr;
+  align-items: center;
   gap: 8px;
   margin-bottom: 24px;
 }
@@ -675,54 +690,43 @@
   cursor: pointer;
   margin-bottom: 2px;
   transition: background 0.2s, border-color 0.2s, color 0.2s;
+  box-sizing: border-box;
+  display: inline-block;
 }
 
 .salvage-btn-modal[data-rarity='NORMAL'] {
   color: #fff;
-  border-left: 4px solid #fff;
+  box-shadow: 0 4px #fff;
 }
 
 .salvage-btn-modal[data-rarity='MAGIC'] {
   color: #4287f5;
-  border-left: 4px solid #4287f5;
+  box-shadow: 0 4px #4287f5;
 }
 
 .salvage-btn-modal[data-rarity='RARE'] {
   color: #ffd700;
-  border-left: 4px solid #ffd700;
+  box-shadow: 0 4px #ffd700;
 }
 
 .salvage-btn-modal[data-rarity='UNIQUE'] {
   color: #ff8c00;
-  border-left: 4px solid #ff8c00;
+  box-shadow: 0 4px #ff8c00;
 }
 
 .salvage-btn-modal[data-rarity='LEGENDARY'] {
   color: #e65a27;
-  border-left: 4px solid #e65a27;
+  box-shadow: 0 4px #e65a27;
 }
 
 .salvage-btn-modal[data-rarity='MYTHIC'] {
   color: #ff0033;
-  border-left: 4px solid #ff0033;
+  box-shadow: 0 4px #ff0033;
 }
 
 .salvage-btn-modal:hover {
   background: #34495e;
   color: #fff;
-}
-
-/* Close button for modals */
-.inventory-salvage-modal-content {
-  display: flex;
-  flex-direction: row;
-  gap: 32px;
-  align-items: flex-start;
-  position: relative;
-  background: var(--bg-panel);
-  border-radius: 0.5rem;
-  padding: 32px 32px 32px 32px;
-  min-width: 900px;
 }
 
 .salvage-modal-sidebar {
@@ -911,4 +915,12 @@
 .inventory-btn.sort-btn img {
   width: 18px;
   height: 18px;
+}
+
+.salvage-row {
+  display: contents;
+}
+
+.salvage-row .toggle-btn {
+  margin: 0.25em;
 }
