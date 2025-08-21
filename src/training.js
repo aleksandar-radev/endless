@@ -97,6 +97,17 @@ export default class Training {
           this.updateTrainingUI('gold-upgrades');
         };
       });
+
+      const bulkControls = document.createElement('div');
+      bulkControls.className = 'training-bulk-controls';
+      bulkControls.innerHTML = `
+        <button class="bulk-buy">Bulk Buy</button>
+        <span class="training-bulk-cost"></span>
+      `;
+      nav.appendChild(bulkControls);
+      this.bulkBuyBtn = bulkControls.querySelector('.bulk-buy');
+      this.bulkCostEl = bulkControls.querySelector('.training-bulk-cost');
+      this.bulkBuyBtn.onclick = () => this.bulkBuySection();
     }
     nav.querySelectorAll('button[data-section]').forEach((btn) => {
       btn.onclick = () => {
@@ -239,7 +250,7 @@ export default class Training {
     return Math.floor(total);
   }
 
-  getMaxPurchasable(selectedQty, baseLevel, maxLevel, config) {
+  getMaxPurchasable(selectedQty, baseLevel, maxLevel, config, availableGold = hero.gold) {
     // Limit max upgrades per call to 100,000
     const MAX_BULK = 100000;
     let safeMaxLevel = maxLevel === Infinity || !isFinite(maxLevel) ? baseLevel + MAX_BULK : maxLevel;
@@ -248,7 +259,7 @@ export default class Training {
     let totalCost = 0;
 
     if (selectedQty === 'max') {
-      let gold = hero.gold;
+      let gold = availableGold;
       let low = 0;
       let high = maxPossible;
       let best = 0;
@@ -335,6 +346,66 @@ export default class Training {
       .filter(([stat, config]) => config.training && section.stats.includes(stat))
       .map(([stat, config]) => this.createUpgradeButton(stat, config))
       .join('');
+    if (options?.quickTraining) this.updateBulkCost();
+  }
+
+  calculateBulkCostAndPurchases(qty) {
+    const section = SECTION_DEFS.find((s) => s.key === this.activeSection);
+    let availableGold = hero.gold;
+    let totalCost = 0;
+    const purchases = [];
+    section.stats.forEach((stat) => {
+      const config = STATS[stat].training;
+      if (!config) return;
+      const level = this.upgradeLevels[stat] || 0;
+      const maxLevel = config?.maxLevel ?? Infinity;
+      const levelsLeft = maxLevel - level;
+      if (levelsLeft <= 0) return;
+      let qtyToBuy = 0;
+      let cost = 0;
+      if (qty === 'max') {
+        const res = this.getMaxPurchasable('max', level, maxLevel, config, availableGold);
+        qtyToBuy = res.qty;
+        cost = res.totalCost;
+        availableGold -= cost;
+      } else {
+        qtyToBuy = Math.min(qty, levelsLeft);
+        cost = this.calculateTotalCost(config, qtyToBuy, level);
+      }
+      if (qtyToBuy > 0 && cost > 0) {
+        totalCost += cost;
+        purchases.push({ stat, qty: qtyToBuy, cost });
+      }
+    });
+    const affordable = hero.gold >= totalCost;
+    return { totalCost, purchases, affordable };
+  }
+
+  updateBulkCost() {
+    if (!this.bulkCostEl || !this.bulkBuyBtn) return;
+    const { totalCost, affordable } = this.calculateBulkCostAndPurchases(this.quickQty);
+    this.bulkCostEl.textContent = `Cost: ${formatNumber(totalCost)} Gold`;
+    this.bulkCostEl.classList.toggle('unaffordable', !affordable);
+    this.bulkBuyBtn.disabled = totalCost === 0 || !affordable;
+  }
+
+  bulkBuySection() {
+    const { totalCost, purchases, affordable } = this.calculateBulkCostAndPurchases(this.quickQty);
+    if (purchases.length === 0) return;
+    if (!affordable) {
+      showToast('Not enough gold to bulk buy!', 'error');
+      return;
+    }
+    hero.gold -= totalCost;
+    purchases.forEach((p) => {
+      this.upgradeLevels[p.stat] += p.qty;
+    });
+    showToast('Bulk purchase successful!');
+    this.updateTrainingUI('gold-upgrades');
+    hero.recalculateFromAttributes();
+    updateStatsAndAttributesUI();
+    updateResources();
+    dataManager.saveGame();
   }
 
   createUpgradeButton(stat, config) {

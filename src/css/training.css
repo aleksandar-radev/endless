@@ -105,6 +105,44 @@
   border-color: var(--accent, #3b82f6);
 }
 
+.training-bulk-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.training-bulk-controls button {
+  background: var(--bg-element, #23272f);
+  color: var(--text, #fff);
+  border: 2px solid var(--accent, #3b82f6);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.8rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.training-bulk-controls button:hover:not(:disabled) {
+  background: #2d3340;
+  color: var(--accent, #3b82f6);
+  border-color: var(--accent, #3b82f6);
+}
+
+.training-bulk-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.training-bulk-cost {
+  color: #fbbf24;
+  font-size: 0.9rem;
+}
+
+.training-bulk-cost.unaffordable {
+  color: #a0a7b4;
+}
+
 .training-section-btn {
   background: var(--bg-element, #23272f);
   color: var(--text, #fff);
