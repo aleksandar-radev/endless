@@ -1,6 +1,7 @@
-import { prestige, hero } from '../globals.js';
+import { prestige, hero, statistics } from '../globals.js';
 import { createModal, closeModal } from './modal.js';
 import { formatStatName, showToast, formatNumber, updateResources } from './ui.js';
+import { getBossScalingFactor } from '../prestige.js';
 
 const html = String.raw;
 const BASE = import.meta.env.VITE_BASE_PATH;
@@ -97,6 +98,9 @@ export function updatePrestigeBonuses() {
 function openPrestigeModal() {
   // Always use prestige.generateCards(3), which now returns the saved cards if present
   let cards = prestige.generateCards(3);
+  const highestBossLevel = statistics?.highestBossLevel || 0;
+  const scalingFactor = getBossScalingFactor(highestBossLevel);
+  const bonusPercent = Math.round((scalingFactor - 1) * 100);
   const content = html`
     <div class="prestige-modal-content">
       <button class="modal-close">&times;</button>
@@ -105,7 +109,7 @@ function openPrestigeModal() {
         <button id="prestige-reroll-btn">Reroll (60<img src="${BASE}/icons/crystal.svg" class="icon" alt="gem"/>)</button>
       </div>
       <div class="prestige-info-message" style="margin-top: 10px; color: #9ac7fcff; font-size: 1.05em;">
-
+      <p class="prestige-info prestige-bonus-info">Defeat arena bosses to boost prestige bonuses. Current bonus: ${bonusPercent}%.</p>
       <p class="prestige-info">Prestige starts a fresh run: level, equipment, inventory, buildings, quests and most progress are reset. Only chosen Prestige bonus is kept.</p>
       <p class="prestige-info">All options apart from ones that are unlocked from crystal shop are preserved after a prestige.</p>
       <div class="prestige-info-cta">A record is saved to Prestige History so you can review past prestiges.</div>

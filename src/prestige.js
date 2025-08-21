@@ -20,7 +20,7 @@ const LEVEL_REQUIREMENT_INCREASE = 25;
 // - for each subsequent 20-level interval the per-interval bonus linearly
 //   diminishes from 5% down to 1% at level 500
 // - after level 500 each 20-level interval gives 1%
-function getBossScalingFactor(highestBossLevel) {
+export function getBossScalingFactor(highestBossLevel) {
   const levelsPerInterval = 20;
   if (!highestBossLevel || highestBossLevel <= 0) return 1;
 

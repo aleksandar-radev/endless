@@ -245,6 +245,11 @@
   font-weight: 600;
 }
 
+.prestige-bonus-info {
+  color: #ffd166;
+  font-weight: 600;
+}
+
 .prestige-cards {
   display: flex;
   flex-wrap: wrap;
