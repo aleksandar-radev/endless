@@ -82,6 +82,13 @@ export const DEFENSE_STATS = {
     item: { min: 5, max: 15, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
     itemTags: ['belt'],
   },
+  lifeRegenOfTotalPercent: {
+    base: 0,
+    decimalPlaces: 2,
+    training: { cost: 1000, bonus: 0.01, maxLevel: 100 },
+    item: { min: 0.01, max: 0.05, limit: 1.23, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
+    itemTags: ['belt'],
+  },
   // THORNS
   thornsDamage: {
     base: 0,
@@ -235,12 +242,5 @@ export const DEFENSE_STATS = {
   manaShieldPercent: {
     base: 0,
     decimalPlaces: 1,
-  },
-  lifeRegenOfTotalPercent: {
-    base: 0,
-    decimalPlaces: 2,
-    training: { cost: 1000, bonus: 0.01, maxLevel: 100 },
-    item: { min: 0.01, max: 0.05, limit: 1.23, scaling: (level) => defenseScaling(level, PERCENT_MULTIPLIER) },
-    itemTags: ['belt'],
   },
 };
