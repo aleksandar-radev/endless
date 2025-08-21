@@ -15,6 +15,7 @@ export default {
   'tab.options': 'Options',
   'tab.buildings': 'Buildings',
   'tab.prestige': 'Prestige',
+  'tab.ascension': 'Ascension',
   'combat.fight': 'Fight',
   'combat.stop': 'Stop',
   'combat.stage': 'Stage',

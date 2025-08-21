@@ -15,6 +15,7 @@ export default {
   'tab.options': 'Opciones',
   'tab.buildings': 'Edificios',
   'tab.prestige': 'Prestigio',
+  'tab.ascension': 'Ascensión',
   'combat.fight': 'Luchar',
   'combat.stop': 'Detener',
   'combat.stage': 'Etapa',

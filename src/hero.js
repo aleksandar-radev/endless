@@ -1,5 +1,5 @@
 import { initializeSkillTreeStructure, updatePlayerLife, updateTabIndicators } from './ui/ui.js';
-import { game, inventory, training, skillTree, statistics, soulShop, dataManager, prestige } from './globals.js';
+import { game, inventory, training, skillTree, statistics, soulShop, dataManager, prestige, ascension } from './globals.js';
 import { calculateArmorReduction, calculateResistanceReduction, createCombatText, createDamageNumber } from './combat.js';
 import { handleSavedData } from './functions.js';
 import { getCurrentRegion, updateRegionUI } from './region.js';
@@ -306,6 +306,7 @@ export default class Hero {
 
   calculateAttributeEffects() {
     const effects = {};
+    const ascensionBonuses = ascension?.getBonuses() || {};
 
     // Loop through all stats in STATS
     for (const stat in STATS) {
@@ -320,7 +321,14 @@ export default class Hero {
         // Flat per-point bonus (e.g., damagePerPoint, lifePerPoint, etc.)
         const flatKey = stat + 'PerPoint';
         if (flatKey in attrEffects) {
-          flatBonus += (this.stats[attr] || 0) * attrEffects[flatKey];
+          let perPoint = attrEffects[flatKey];
+          if (attr === 'strength' && flatKey === 'damagePerPoint') {
+            perPoint *= 1 + (ascensionBonuses.strengthDamagePercent || 0);
+          }
+          if (attr === 'vitality' && flatKey === 'lifePerPoint') {
+            perPoint *= 1 + (ascensionBonuses.vitalityLifePercent || 0);
+          }
+          flatBonus += (this.stats[attr] || 0) * perPoint;
         }
 
         // Percent per N points bonus (e.g., damagePercentPer, lifePercentPer, etc.)
@@ -365,17 +373,20 @@ export default class Hero {
   calculatePercentBonuses(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses) {
     const percentBonuses = {};
     const attributes = Object.keys(ATTRIBUTES);
+    const ascensionBonuses = ascension?.getBonuses() || {};
     // Add all standard percent bonuses
     for (const stat in STATS) {
       if (stat.endsWith('Percent')) {
         const statName = stat.replace('Percent', '');
-        percentBonuses[stat] =
+        let value =
           (attributeEffects[stat] || 0) +
           (this.permaStats[stat] || 0) +
           (skillTreeBonuses[stat] || 0) / 100 +
           (equipmentBonuses[stat] || 0) / 100 +
           (trainingBonuses[stat] || 0) / 100 +
           (attributes.includes(statName) ? this.permaStats['allAttributesPercent'] : 0);
+        value += ascensionBonuses[stat] || 0;
+        percentBonuses[stat] = value;
       }
     }
     return percentBonuses;
@@ -408,6 +419,7 @@ export default class Hero {
 
   applyFinalCalculations(flatValues, percentBonuses) {
     // Apply percent bonuses to all stats that have them
+    const ascensionBonuses = ascension?.getBonuses() || {};
 
     for (const stat in STATS) {
       if (stat.endsWith('Percent')) {
@@ -438,7 +450,7 @@ export default class Hero {
         }
 
         // Use Math.floor for integer stats, Number.toFixed for decimals
-        let value = flatValues[stat];
+        let value = flatValues[stat] + (ascensionBonuses[stat] || 0);
         if (percent) value *= 1 + percent;
 
         // Diminishing returns for attackSpeed

@@ -11,6 +11,7 @@ import Statistics from './statistics.js';
 import Training from './training.js';
 import { BuildingManager } from './building.js';
 import Prestige from './prestige.js';
+import Ascension from './ascension.js';
 
 // Global singletons for the game
 export let game = null;
@@ -26,6 +27,7 @@ export let options = null;
 export let dataManager = null;
 export let buildings = null;
 export let prestige = null;
+export let ascension = null;
 
 // Setters for initialization in main.js
 export async function setGlobals({ cloud = false, reset = false } = {}) {
@@ -50,6 +52,7 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
   const _options = new Options(savedData?.options);
   const _buildings = await BuildingManager.create(savedData?.buildings);
   const _prestige = new Prestige(savedData?.prestige);
+  const _ascension = new Ascension(savedData?.ascension);
 
   game = _game;
   hero = _hero;
@@ -63,6 +66,7 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
   buildings = _buildings;
   options = _options;
   prestige = _prestige;
+  ascension = _ascension;
   dataManager = _dataManager;
 
   // useful when loading from cloud
@@ -83,6 +87,7 @@ export function getGlobals() {
     buildings,
     options,
     prestige,
+    ascension,
     dataManager,
   };
 }
