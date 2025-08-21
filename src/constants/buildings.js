@@ -41,5 +41,43 @@ export const buildingsData = {
     maxLevel: 30000,
     unlockRequirements: {},
   },
-  // Add more buildings as needed
+  experienceWorkshop: {
+    id: 'experienceWorkshop',
+    name: t('Experience Workshop'),
+    description: t('Produces experience potions every hour.'),
+    image: '/buildings/experience-workshop.png',
+    effect: {
+      type: 'material',
+      displayName: t('random experience potion'),
+      materialIds: ['experience_potion', 'greater_experience_potion', 'huge_experience_potion'],
+      amount: 1,
+      interval: 'minute',
+    },
+    costStructure: {
+      gold: { base: 3000, increment: 200, cap: 16000 },
+      crystal: { base: 2, increment: 1, cap: 16 },
+    },
+    maxLevel: 40000,
+    unlockRequirements: {},
+  },
+  materialDepot: {
+    id: 'materialDepot',
+    name: t('Material Depot'),
+    description: t('Generates a random material each hour.'),
+    image: '/buildings/material-depot.png',
+    effect: {
+      type: 'material',
+      displayName: t('random material'),
+      random: true,
+      weighted: true,
+      amount: 1,
+      interval: 'minute',
+    },
+    costStructure: {
+      gold: { base: 4000, increment: 250, cap: 18000 },
+      crystal: { base: 4, increment: 1, cap: 20 },
+    },
+    maxLevel: 40000,
+    unlockRequirements: {},
+  },
 };

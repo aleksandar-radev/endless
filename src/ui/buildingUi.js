@@ -12,6 +12,15 @@ import { getTimeNow } from '../common.js';
 let buildingCountdownInterval = null;
 let serverTimeOffsetMs = 0; // getTimeNow() - Date.now()
 
+
+const placeholders = [
+  { left: 342, top: 411 },
+  { left: 514, top: 136 },
+  { left: 709, top: 240 },
+  { left: 700, top: 534 },
+  { left: 420, top: 270 },
+];
+
 function intervalToMs(interval) {
   if (!interval) return 0;
   if (interval === 'minute') return 60 * 1000;
@@ -384,11 +393,6 @@ function showBuildingsMapModal() {
     isDragging = false;
     mapContainer.style.cursor = '';
   });
-  const placeholders = [
-    { left: 342, top: 411 },
-    { left: 514, top: 136 },
-    { left: 709, top: 240 },
-  ];
   function renderPlaceholders() {
     phContainer.innerHTML = '';
     const placed = buildings.getPlacedBuildings();

@@ -1,10 +1,11 @@
 // Game logic and persistent state for buildings
 import { buildingsData } from './constants/buildings.js';
-import { dataManager, hero } from './globals.js';
+import { dataManager, hero, inventory } from './globals.js';
 import { updateResources, formatNumber } from './ui/ui.js';
 import { showOfflineBonusesModal } from './ui/buildingUi.js';
 import { fetchTrustedUtcTime } from './api.js';
 import { getTimeNow } from './common.js';
+import { MATERIALS } from './constants/materials.js';
 const refundPercent = 0.9;
 
 // Represents a single building instance (with state)
@@ -57,7 +58,8 @@ export class Building {
   formatEffect(level = this.level) {
     if (!this.effect || typeof this.effect !== 'object') return '';
     let interval = this.effect.interval ? ` per ${this.effect.interval}` : '';
-    return `+${this.effect.amount * level} ${this.effect.type}${interval}`;
+    const typeName = this.effect.displayName || this.effect.type;
+    return `+${this.effect.amount * level} ${typeName}${interval}`;
   }
 
   // Returns a formatted string for a cost object
@@ -247,7 +249,7 @@ export class BuildingManager {
         if (isFirstCollect) {
           offlineBonuses.push({
             name: b.name,
-            type: b.effect.type,
+            type: b.effect.displayName || b.effect.type,
             amount: totalBonus,
             times,
             interval: b.effect.interval,
@@ -255,12 +257,38 @@ export class BuildingManager {
             building: b,
             timesRaw: times,
             intervalMs,
+            materialId: b.effect.materialId,
+            materialIds: b.effect.materialIds,
+            random: b.effect.random || false,
+            weighted: b.effect.weighted || false,
           });
         } else {
           // Online collection: add instantly
           if (b.effect.type === 'gold') hero.gainGold(totalBonus);
           else if (b.effect.type === 'crystal') hero.gainCrystals(totalBonus);
           else if (b.effect.type === 'soul') hero.gainSouls(totalBonus);
+          else if (b.effect.type === 'material') {
+            if (b.effect.materialIds) {
+              for (let i = 0; i < totalBonus; i++) {
+                const ids = b.effect.materialIds;
+                const randId = ids[Math.floor(Math.random() * ids.length)];
+                inventory.addMaterial({ id: randId, qty: 1 });
+              }
+            } else if (b.effect.random && b.effect.weighted) {
+              for (let i = 0; i < totalBonus; i++) {
+                const mat = inventory.getRandomMaterial();
+                inventory.addMaterial({ id: mat.id, qty: 1 });
+              }
+            } else if (b.effect.random) {
+              for (let i = 0; i < totalBonus; i++) {
+                const ids = Object.keys(MATERIALS);
+                const randId = ids[Math.floor(Math.random() * ids.length)];
+                inventory.addMaterial({ id: randId, qty: 1 });
+              }
+            } else if (b.effect.materialId) {
+              inventory.addMaterial({ id: b.effect.materialId, qty: totalBonus });
+            }
+          }
           // Increment total earned for this building
           b.totalEarned += totalBonus;
           b.lastBonusTime += times * intervalMs;
@@ -276,6 +304,28 @@ export class BuildingManager {
           if (b.type === 'gold') hero.gainGold(b.amount);
           else if (b.type === 'crystal') hero.gainCrystals(b.amount);
           else if (b.type === 'soul') hero.gainSouls(b.amount);
+          else if (b.building.effect.type === 'material') {
+            if (b.materialIds) {
+              for (let i = 0; i < b.amount; i++) {
+                const ids = b.materialIds;
+                const randId = ids[Math.floor(Math.random() * ids.length)];
+                inventory.addMaterial({ id: randId, qty: 1 });
+              }
+            } else if (b.random && b.weighted) {
+              for (let i = 0; i < b.amount; i++) {
+                const mat = inventory.getRandomMaterial();
+                inventory.addMaterial({ id: mat.id, qty: 1 });
+              }
+            } else if (b.random) {
+              for (let i = 0; i < b.amount; i++) {
+                const ids = Object.keys(MATERIALS);
+                const randId = ids[Math.floor(Math.random() * ids.length)];
+                inventory.addMaterial({ id: randId, qty: 1 });
+              }
+            } else if (b.materialId) {
+              inventory.addMaterial({ id: b.materialId, qty: b.amount });
+            }
+          }
           // Increment total earned for this building
           b.building.totalEarned += b.amount;
           b.building.lastBonusTime += b.timesRaw * b.intervalMs;
