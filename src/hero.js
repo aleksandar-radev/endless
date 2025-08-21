@@ -56,6 +56,12 @@ export default class Hero {
     this.stats.currentLife = this.stats.life;
     this.stats.currentMana = this.stats.mana;
 
+    // Track flat-only damage values for later calculations
+    this.baseDamages = { physical: 0, elemental: 0 };
+    ELEMENT_IDS.forEach((id) => {
+      this.baseDamages[id] = 0;
+    });
+
     handleSavedData(savedData, this);
   }
 
@@ -531,17 +537,36 @@ export default class Hero {
     const eleShareEvasion = splitEvasion / elements.length;
     const eleShareAttackRating = splitAttackRating / elements.length;
 
-    flatValues.elementalDamage += eleShareLife + eleShareMana + eleShareLifeRegen + eleShareArmor + eleShareEvasion + eleShareAttackRating;
+    flatValues.elementalDamage +=
+      eleShareLife +
+      eleShareMana +
+      eleShareLifeRegen +
+      eleShareArmor +
+      eleShareEvasion +
+      eleShareAttackRating;
 
-    this.stats.damage = Math.floor((flatValues.damage + (this.stats.damagePerLevel || 0) * this.level) * (1 + this.stats.totalDamagePercent + this.stats.damagePercent));
+    // Store flat-only values for later damage calculations
+    this.baseDamages.physical = Math.floor(
+      flatValues.damage + (this.stats.damagePerLevel || 0) * this.level,
+    );
+    this.baseDamages.elemental = Math.floor(flatValues.elementalDamage);
+    ELEMENT_IDS.forEach((id) => {
+      this.baseDamages[id] = Math.floor(flatValues[`${id}Damage`] || 0);
+    });
+
+    this.stats.damage = Math.floor(
+      this.baseDamages.physical *
+        (1 + this.stats.totalDamagePercent + this.stats.damagePercent),
+    );
 
     // Special handling for elemental damages
     ELEMENT_IDS.forEach((id) => {
+      const base = this.baseDamages[id] + this.baseDamages.elemental;
       this.stats[`${id}Damage`] = Math.floor(
-        (flatValues[`${id}Damage`] + flatValues.elementalDamage) *
+        base *
           (1 +
             this.stats.elementalDamagePercent +
-            percentBonuses[`${id}DamagePercent`] +
+            this.stats[`${id}DamagePercent`] +
             this.stats.totalDamagePercent),
       );
     });
@@ -549,13 +574,13 @@ export default class Hero {
     const fireId = ELEMENTS.fire.id;
     this.stats[`reflect${fireId.charAt(0).toUpperCase()}${fireId.slice(1)}Damage`] = (() => {
       const base =
-        flatValues[`${fireId}Damage`] +
+        this.baseDamages[fireId] +
         flatValues[`reflect${fireId.charAt(0).toUpperCase()}${fireId.slice(1)}Damage`];
       return Math.floor(
         base *
           (1 +
             this.stats.elementalDamagePercent +
-            percentBonuses[`${fireId}DamagePercent`] +
+            this.stats[`${fireId}DamagePercent`] +
             this.stats.totalDamagePercent),
       );
     })();
@@ -571,28 +596,42 @@ export default class Hero {
   calculateTotalDamage(instantSkillBaseEffects = {}) {
     const elements = ELEMENT_IDS;
 
-    // 1) Flat phase: build flat pools
-    const flatPools = { physical: (this.stats.damage || 0) + (instantSkillBaseEffects.damage || 0) };
+    // 1) Flat phase: build flat pools from stored flat-only values
+    const flatPools = {
+      physical: (this.baseDamages?.physical || 0) + (instantSkillBaseEffects.damage || 0),
+    };
     elements.forEach((e) => {
       const key = `${e}Damage`;
-      flatPools[e] = (this.stats[key] || 0) + (instantSkillBaseEffects[key] || 0);
+      flatPools[e] = (this.baseDamages?.[e] || 0) + (instantSkillBaseEffects[key] || 0);
     });
 
     // flat elementalDamage applies to every elemental pool
-    const flatElementalDamage = (this.stats.elementalDamage || 0) + (instantSkillBaseEffects.elementalDamage || 0);
+    const flatElementalDamage =
+      (this.baseDamages?.elemental || 0) + (instantSkillBaseEffects.elementalDamage || 0);
     if (flatElementalDamage) elements.forEach((e) => (flatPools[e] += flatElementalDamage));
 
     // 2) Percent phase: apply percent bonuses (physical + per-elemental + global elemental)
     const finalPools = {};
     const physicalPct = (instantSkillBaseEffects.damagePercent || 0) / 100;
-    finalPools.physical = flatPools.physical * (1 + physicalPct + (this.stats.totalDamagePercent || 0));
+    finalPools.physical =
+      flatPools.physical *
+      (1 +
+        physicalPct +
+        (this.stats.totalDamagePercent || 0) +
+        (this.stats.damagePercent || 0));
 
     // elemental global percent from both sources
     const elementalGlobalPct = (instantSkillBaseEffects.elementalDamagePercent || 0) / 100;
     elements.forEach((e) => {
       const specificPct = (instantSkillBaseEffects[`${e}DamagePercent`] || 0) / 100;
-      // include hero totalDamagePercent as in other calculations
-      finalPools[e] = flatPools[e] * (1 + specificPct + elementalGlobalPct + (this.stats.totalDamagePercent || 0));
+      finalPools[e] =
+        flatPools[e] *
+        (1 +
+          specificPct +
+          elementalGlobalPct +
+          (this.stats.totalDamagePercent || 0) +
+          (this.stats.elementalDamagePercent || 0) +
+          (this.stats[`${e}DamagePercent`] || 0));
     });
 
     // 3) Double-damage and criticals (after percent multipliers)
