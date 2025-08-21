@@ -1,6 +1,7 @@
 
 import { crystalShop, dataManager, game, setGlobals, training, soulShop } from './globals.js';
 import { showConfirmDialog, showToast, updateStageUI, updateEnemyStatLabels } from './ui/ui.js';
+import { updateBuffIndicators } from './ui/skillTreeUi.js';
 import { closeModal, createModal } from './ui/modal.js';
 import Enemy from './enemy.js';
 import { logout } from './api.js';
@@ -47,6 +48,8 @@ export class Options {
     this.language = data.language || 'en';
     // Use short elemental stat names
     this.shortElementalNames = data.shortElementalNames ?? false;
+    // Show cooldown numbers on skill slots
+    this.showSkillCooldowns = data.showSkillCooldowns ?? false;
   }
 
   /**
@@ -146,6 +149,8 @@ export class Options {
     container.appendChild(this._createShowAllStatsOption());
     // --- Elemental Stat Names Option ---
     container.appendChild(this._createShortElementalNamesOption());
+    // --- Skill Cooldown Numbers Option ---
+    container.appendChild(this._createShowSkillCooldownsOption());
     // --- Quick Training Toggle Option ---
     container.appendChild(this._createQuickTrainingOption());
     // --- Quick Soul Shop Toggle Option ---
@@ -827,6 +832,36 @@ export class Options {
       dataManager.saveGame();
       updateStatsAndAttributesUI(true);
       updateEnemyStatLabels();
+    });
+    return wrapper;
+  }
+
+  /**
+   * Creates the show skill cooldown numbers toggle option UI.
+   */
+  _createShowSkillCooldownsOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="show-skill-cooldowns-toggle" class="show-skill-cooldowns-toggle-label">Show Skill Cooldown Numbers:</label>
+      <input
+        type="checkbox"
+        id="show-skill-cooldowns-toggle"
+        class="show-skill-cooldowns-toggle"
+        ${this.showSkillCooldowns ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.showSkillCooldowns = checkbox.checked;
+      dataManager.saveGame();
+      updateBuffIndicators();
     });
     return wrapper;
   }

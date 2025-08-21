@@ -194,6 +194,17 @@
   z-index: 2;
 }
 
+.cooldown-text {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  color: white;
+  font-size: 14px;
+  pointer-events: none;
+  background-color: #333;
+  z-index: 2;
+}
+
 .tooltip-type {
   color: #888;
   font-size: 0.9em;

@@ -1,7 +1,7 @@
 import { STATS } from '../constants/stats/stats.js';
 import { CLASS_PATHS, SKILL_TREES } from '../constants/skills.js';
 import { SKILL_LEVEL_TIERS } from '../skillTree.js';
-import { skillTree, hero, crystalShop } from '../globals.js';
+import { skillTree, hero, crystalShop, options } from '../globals.js';
 import { formatStatName, hideTooltip, positionTooltip, showToast, showTooltip, updateResources } from './ui.js';
 import { createModal } from './modal.js';
 
@@ -718,6 +718,12 @@ export function updateActionBar() {
     cooldownOverlay.className = 'cooldown-overlay';
     skillSlot.appendChild(cooldownOverlay);
 
+    // Add cooldown text
+    const cooldownText = document.createElement('div');
+    cooldownText.className = 'cooldown-text';
+    if (!options.showSkillCooldowns) cooldownText.style.display = 'none';
+    skillSlot.appendChild(cooldownText);
+
     // Add skill icon
     const iconDiv = document.createElement('div');
     iconDiv.className = 'skill-icon';
@@ -798,6 +804,7 @@ export function updateBuffIndicators() {
     const skillId = slot.dataset.skillId;
     const skill = skillTree.getSkill(skillId);
     const cooldownOverlay = slot.querySelector('.cooldown-overlay');
+    const cooldownText = slot.querySelector('.cooldown-text');
 
     // Handle active states for all skill types
     const isActive =
@@ -812,10 +819,23 @@ export function updateBuffIndicators() {
         const percentage = Math.min((remaining / skillTree.getSkillCooldown(skill)) * 100, 100);
         cooldownOverlay.style.height = `${percentage}%`;
         slot.classList.add('on-cooldown');
+        if (options.showSkillCooldowns) {
+          cooldownText.textContent = Math.ceil(remaining / 1000);
+          cooldownText.style.display = '';
+        } else {
+          cooldownText.style.display = 'none';
+        }
       } else {
         cooldownOverlay.style.height = '0';
         slot.classList.remove('on-cooldown');
+        cooldownText.textContent = '';
+        cooldownText.style.display = 'none';
       }
+    } else {
+      cooldownOverlay.style.height = '0';
+      slot.classList.remove('on-cooldown');
+      cooldownText.textContent = '';
+      cooldownText.style.display = 'none';
     }
   });
 }
