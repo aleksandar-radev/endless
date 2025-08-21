@@ -4,8 +4,8 @@ const FLAT_MULTIPLIER = 0.0012;
 const PERCENT_MULTIPLIER = 0.00025;
 const STAT_MULTIPLIER = 0.005;
 
-const STATS_MIN = 3;
-const STATS_MAX = 10;
+const STATS_MIN = 8;
+const STATS_MAX = 15;
 const STATS_MIN_PERCENT = 6;
 const STATS_MAX_PERCENT = 12;
 
@@ -22,7 +22,7 @@ export const MISC_STATS = {
     decimalPlaces: 0,
     levelUpBonus: 0,
     training: { cost: 50, bonus: 1, maxLevel: Infinity },
-    item: { min: 5, max: 10, scaling: (level) => miscScaling(level) },
+    item: { min: 25, max: 70, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry', 'magic'],
     showInUI: true,
     subcategory: 'resources',
@@ -42,7 +42,7 @@ export const MISC_STATS = {
     base: 0,
     decimalPlaces: 1,
     training: { cost: 300, bonus: 0.1, maxLevel: 8000 },
-    item: { min: 1, max: 3, scaling: (level) => miscScaling(level) },
+    item: { min: 2, max: 4, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry', 'magic'],
     showInUI: true,
     subcategory: 'resources',
@@ -57,7 +57,7 @@ export const MISC_STATS = {
   manaPerHit: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 1, max: 5, scaling: (level) => miscScaling(level) },
+    item: { min: 3, max: 6, scaling: (level) => miscScaling(level) },
     itemTags: ['misc', 'jewelry', 'magic'],
     showInUI: true,
     subcategory: 'resources',
