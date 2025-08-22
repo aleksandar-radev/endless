@@ -24,7 +24,7 @@ export const buildingsData = {
     costStructure: {
       gold: { base: 2000, increment: 100, cap: 12000 },
     },
-    maxLevel: 100000,
+    maxLevel: 1000000,
     unlockRequirements: {},
   },
   soulForge: {
@@ -54,8 +54,8 @@ export const buildingsData = {
       interval: 'minute',
     },
     costStructure: {
-      gold: { base: 3000, increment: 200, cap: 16000 },
-      crystal: { base: 2, increment: 1, cap: 16 },
+      gold: { base: 4000, increment: 200, cap: 16000 },
+      crystal: { base: 3, increment: 1, cap: 25 },
     },
     maxLevel: 40000,
     unlockRequirements: {},
@@ -74,10 +74,10 @@ export const buildingsData = {
       interval: 'minute',
     },
     costStructure: {
-      gold: { base: 4000, increment: 250, cap: 18000 },
-      crystal: { base: 4, increment: 1, cap: 20 },
+      gold: { base: 3000, increment: 250, cap: 18000 },
+      crystal: { base: 2, increment: 1, cap: 40 },
     },
-    maxLevel: 40000,
+    maxLevel: 1000,
     unlockRequirements: {},
   },
 };
