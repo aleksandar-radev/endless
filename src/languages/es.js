@@ -106,6 +106,7 @@ export default {
   'options.language': 'Idioma',
   'options.lang.english': 'Inglés',
   'options.lang.spanish': 'Español',
+  'options.lang.chinese': 'Chino',
   'options.lang.note': 'Aún no todo está traducido. Es posible que todavía veas textos en inglés como idioma predeterminado. Puede que debas refrescar la página después de cambiar el idioma para que todos los cambios surtan efecto.',
   'options.soundVolume': 'Volumen de Sonido',
   'options.soundVolume.tooltip': 'Ajusta el volumen del sonido del juego',

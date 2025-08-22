@@ -17,7 +17,7 @@ const html = String.raw;
 // Options class to store options and version (future-proof for migrations)
 export class Options {
   constructor(data = {}) {
-    this.version = data.version || '0.7.8';
+    this.version = data.version || '0.7.9';
     // Add startingStage, default to null (unset)
     this.startingStage = data.startingStage || null;
     // Add showEnemyStats option, default to false
@@ -86,6 +86,7 @@ export class Options {
       <select id="language-select">
         <option value="en" data-i18n="options.lang.english">English</option>
         <option value="es" data-i18n="options.lang.spanish">Español</option>
+        <option value="zh" data-i18n="options.lang.chinese">中文</option>
       </select>
       <span data-i18n="options.lang.note">Not everything translated yet. You might still see translations in english, as a default language. You might want to refresh page after changing language, to see all changes take effect.</span>
     `;

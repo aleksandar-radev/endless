@@ -1,7 +1,8 @@
 import en from './languages/en.js';
 import es from './languages/es.js';
+import zh from './languages/zh.js';
 
-const translations = { en, es };
+const translations = { en, es, zh };
 
 let currentLang = 'en';
 
