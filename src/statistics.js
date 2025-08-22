@@ -39,6 +39,7 @@ export default class Statistics {
     for (let i = 1; i <= 12; i++) this.enemiesKilledByZone[i] = 0;
     this.totalTimeInFights = 0;
     this.deaths = 0;
+    this.heroLevel = 1;
 
     handleSavedData(savedData, this);
     if (this.enemiesKilled?.total != null) {
@@ -79,6 +80,7 @@ export default class Statistics {
     for (let i = 1; i <= 12; i++) this.enemiesKilledByZone[i] = 0;
     this.totalTimeInFights = 0;
     this.deaths = 0;
+    this.heroLevel = 1;
     this.updateStatisticsUI();
   }
 
@@ -107,6 +109,7 @@ export default class Statistics {
           <div id="stat-enemies-killed-by-rarity"></div>
           <div id="stat-enemies-killed-by-zone"></div>
           <div id="stat-highest-boss-level"></div>
+          <div id="stat-hero-level"></div>
           <div id="stat-bosses-killed"></div>
           <div id="stat-deaths"></div>
           <div id="stat-highest-damage"></div>
@@ -133,6 +136,12 @@ export default class Statistics {
     const highestBossLevelElem = document.getElementById('stat-highest-boss-level');
     if (highestBossLevelElem) {
       highestBossLevelElem.textContent = `Highest Boss Level: ${formatNumber(this.highestBossLevel || 0)}`;
+    }
+
+    // Hero Level
+    const heroLevelElem = document.getElementById('stat-hero-level');
+    if (heroLevelElem) {
+      heroLevelElem.textContent = `Hero Level: ${formatNumber(this.heroLevel || 0)}`;
     }
 
     // Total Time Played (resets on reset)

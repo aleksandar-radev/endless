@@ -146,6 +146,8 @@ export default class Hero {
     this.exp = 0;
     this.level += levels;
     this.statPoints += STATS_ON_LEVEL_UP * levels;
+    statistics.heroLevel = this.level;
+    statistics.updateStatisticsUI();
 
     skillTree.addSkillPoints(levels * 1); // Add 1 skill points per level
 

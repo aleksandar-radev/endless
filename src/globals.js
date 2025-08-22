@@ -56,6 +56,7 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
   const _crystalShop = new CrystalShop(savedData?.crystalShop);
   const _training = new Training(savedData?.training);
   const _statistics = new Statistics(savedData?.statistics);
+  _statistics.heroLevel = _hero.level;
   const _quests = new QuestTracker(savedData?.quests);
   const _soulShop = new SoulShop(savedData?.soulShop);
   const _buildings = await BuildingManager.create(savedData?.buildings);
