@@ -89,6 +89,7 @@ export default class Hero {
       this.exp = xpOverflow; // Carry over excess experience to next level
       updateStatsAndAttributesUI();
     }
+    this.recalculateFromAttributes();
     updatePlayerLife();
   }
 
@@ -113,7 +114,6 @@ export default class Hero {
 
     skillTree.addSkillPoints(levels * 1); // Add 1 skill points per level
 
-    this.recalculateFromAttributes();
     createCombatText(`LEVEL UP! (${this.level})`);
     updatePlayerLife();
     updateStatsAndAttributesUI();

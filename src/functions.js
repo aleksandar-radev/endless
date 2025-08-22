@@ -470,6 +470,7 @@ export function createModifyUI() {
     const val = parseInt(expInput.value, 10);
     if (!isNaN(val) && val > 0) {
       hero.levelUp(val);
+      hero.recalculateFromAttributes();
       showToast(`Leveled up ${val} time${val > 1 ? 's' : ''}!`);
     } else {
       showToast('Invalid level up value', 'error');
