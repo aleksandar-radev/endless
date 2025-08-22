@@ -6,6 +6,7 @@ import {
   options,
   statistics,
   game,
+  runtime,
 } from './globals.js';
 import { PRESTIGE_BONUSES, STARTING_CRYSTALS_BONUS } from './constants/prestigeBonuses.js';
 import { formatStatName } from './ui/ui.js';
@@ -312,8 +313,9 @@ export default class Prestige {
   }
 
   async prestigeWithBonus(card) {
-    // mark that a prestige is in progress to avoid concurrent reward application
-    game.prestigeInProgress = true;
+    // mark that a prestige is in progress and halt combat
+    runtime.prestigeInProgress = true;
+    game.gameStarted = false;
 
     const combined = { ...this.bonuses };
     Object.entries(card.bonuses).forEach(([stat, val]) => {

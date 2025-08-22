@@ -9,7 +9,7 @@ import {
   showDeathScreen,
 } from './ui/ui.js';
 import Enemy from './enemy.js';
-import { hero, game, inventory, crystalShop, statistics, skillTree, dataManager } from './globals.js';
+import { hero, game, inventory, crystalShop, statistics, skillTree, dataManager, runtime } from './globals.js';
 import { ITEM_RARITY } from './constants/items.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateQuestsUI } from './ui/questUi.js';
@@ -228,7 +228,7 @@ export function playerDeath() {
 
 export async function defeatEnemy() {
   // If a prestige is in progress, skip granting rewards from this kill
-  if (game.prestigeInProgress) {
+  if (runtime.prestigeInProgress) {
     // clear the justDefeated guard and return early without applying rewards
     game._justDefeated = false;
     return;
@@ -243,6 +243,13 @@ export async function defeatEnemy() {
 
   // Add 500ms delay between monster kills
   await new Promise((resolve) => setTimeout(resolve, 500));
+
+  // If a prestige started during the delay, skip granting rewards
+  if (runtime.prestigeInProgress) {
+    // clear the justDefeated guard and return early without applying rewards
+    game._justDefeated = false;
+    return;
+  }
 
   if (game.fightMode === 'arena') {
     baseExpGained = enemy.xp;

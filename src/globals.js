@@ -29,6 +29,11 @@ export let buildings = null;
 export let prestige = null;
 export let ascension = null;
 
+// Runtime state that persists during resets
+export const runtime = {
+  prestigeInProgress: false,
+};
+
 // Setters for initialization in main.js
 export async function setGlobals({ cloud = false, reset = false } = {}) {
   // setup data manager. version not set yet
