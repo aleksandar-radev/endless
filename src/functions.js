@@ -2,6 +2,7 @@ import { game, hero, inventory, training, skillTree, dataManager, statistics } f
 import { MATERIALS } from './constants/materials.js';
 import SimpleCrypto from 'simple-crypto-js';
 import { showToast, updatePlayerLife, updateResources, updateStageUI } from './ui/ui.js';
+import { createImageDropdownFromData } from './ui/imageDropdown.js';
 import { ITEM_RARITY, ITEM_TYPES } from './constants/items.js';
 
 export const crypt = new SimpleCrypto(import.meta.env.VITE_ENCRYPT_KEY);
@@ -625,14 +626,27 @@ export function createModifyUI() {
   const addMaterialByIdDiv = document.createElement('div');
   addMaterialByIdDiv.style.marginTop = '8px';
 
-  // Create dropdown for all materials
-  const materialSelect = document.createElement('select');
-  materialSelect.id = 'material-id-select';
-  Object.values(MATERIALS).forEach((mat) => {
-    const option = document.createElement('option');
-    option.value = mat.id;
-    option.innerHTML = `${mat.icon} ${mat.name}`;
-    materialSelect.appendChild(option);
+  // Build data-driven image dropdown for materials (native <option> can't show images reliably)
+  const materialItems = Object.values(MATERIALS).map((mat) => {
+    let iconUrl = '';
+    try {
+      if (typeof mat.icon === 'string') {
+        const t = mat.icon.trim();
+        if (t.startsWith('<img')) {
+          const tmp = document.createElement('div');
+          tmp.innerHTML = t;
+          const img = tmp.querySelector('img');
+          if (img) iconUrl = img.getAttribute('src') || img.src || '';
+        } else if (/^(https?:|\/)/.test(t) || /\.(png|jpe?g|svg|gif)(\?|$)/i.test(t)) {
+          iconUrl = t;
+        }
+      } else if (mat.icon && mat.icon.src) {
+        iconUrl = mat.icon.src;
+      }
+    } catch (e) {
+      iconUrl = '';
+    }
+    return { id: mat.id, text: mat.name, icon: iconUrl };
   });
 
   // Quantity input
@@ -648,13 +662,15 @@ export function createModifyUI() {
   addBtn.id = 'add-material-by-id-btn';
   addBtn.textContent = 'Add Material';
 
-  addMaterialByIdDiv.appendChild(materialSelect);
+  // Create the image dropdown component
+  const imgDd = createImageDropdownFromData(materialItems, materialItems[0] && materialItems[0].id);
+  addMaterialByIdDiv.appendChild(imgDd.container);
   addMaterialByIdDiv.appendChild(qtyInput);
   addMaterialByIdDiv.appendChild(addBtn);
   inventorySection.appendChild(addMaterialByIdDiv);
 
   addBtn.onclick = () => {
-    const id = materialSelect.value;
+    const id = imgDd.getValue();
     const qty = parseInt(qtyInput.value, 10) || 1;
     const matDef = Object.values(MATERIALS).find((m) => m.id === id);
     if (matDef) {
