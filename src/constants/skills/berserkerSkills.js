@@ -27,7 +27,7 @@ export const BERSERKER_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'tough-skin',
     description: () => t('Raises armor and armor percent to reduce damage taken.'),
-    maxLevel: () => 200,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: scaleUpFlat(level, 4),
       armorPercent: scaleDownFlat(level, 2),
@@ -61,7 +61,7 @@ export const BERSERKER_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'battle-cry',
     description: () => t('Temporarily increases damage, attack speed, and life steal.'),
-    maxLevel: () => 100,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 0.5),
       attackSpeed: Math.min(scaleDownFlat(level, 0.005), 1.5),
@@ -78,7 +78,7 @@ export const BERSERKER_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'berserker-rage',
     description: () => t('Greatly boosts fire and air damage with a chance to deal double damage.'),
-    maxLevel: () => 200,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamagePercent: scaleDownFlat(level, 3),
       airDamagePercent: scaleDownFlat(level, 3),
@@ -92,7 +92,7 @@ export const BERSERKER_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'greater-rage',
     description: () => t('Passively grants extra attack speed and life per hit.'),
-    maxLevel: () => 300,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackSpeed: Math.min(scaleDownFlat(level, 0.0075), 1.5),
       lifePerHit: scaleUpFlat(level, 0.75),
@@ -122,7 +122,7 @@ export const BERSERKER_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'mastery',
     description: () => t('Raises crit chance, crit damage, double damage chance, and attack rating at the cost of life.'),
-    maxLevel: () => 100,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critChance: Math.min(scaleDownFlat(level, 0.05), 20),
       critDamage: Math.min(scaleDownFlat(level, 0.005), 3),
@@ -143,7 +143,7 @@ export const BERSERKER_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'bloodlust',
     description: () => t('Temporarily boosts attack speed, life steal, and life percent.'),
-    maxLevel: () => 250,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackSpeed: Math.min(scaleDownFlat(level, 0.002), 1.5),
       lifeSteal: Math.min(scaleDownFlat(level, 0.01), 4),
@@ -160,7 +160,7 @@ export const BERSERKER_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'fury',
     description: () => t('Increases damage and restores mana and life per hit.'),
-    maxLevel: () => 400,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2),
       manaPerHit: scaleUpFlat(level, 0.1),
@@ -174,7 +174,7 @@ export const BERSERKER_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'undying',
     description: () => t('Grants a resurrection chance with extra life regeneration and armor.'),
-    maxLevel: () => 500,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       resurrectionChance: Math.min(scaleDownFlat(level, 0.1), 50),
       lifeRegen: scaleUpFlat(level, 1),
