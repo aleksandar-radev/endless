@@ -486,7 +486,10 @@ export function renderPurchasedBuildings() {
   Object.values(buildings.buildings)
     .filter((building) => building.placedAt !== null)
     .forEach((building) => {
-      purchased.appendChild(createBuildingCard(building));
+      const card = createBuildingCard(building);
+      card.style.cursor = 'pointer';
+      card.onclick = () => showBuildingInfoModal(building, renderPurchasedBuildings);
+      purchased.appendChild(card);
     });
   // Update countdowns after (re)render
   updateBuildingCountdowns();
