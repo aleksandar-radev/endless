@@ -87,9 +87,9 @@ export class Options {
     wrapper.innerHTML = html`
       <label for="language-select" data-i18n="options.language">Language:</label>
       <select id="language-select">
-        <option value="en" data-i18n="options.lang.english">English</option>
-        <option value="es" data-i18n="options.lang.spanish">Español</option>
-        <option value="zh" data-i18n="options.lang.chinese">中文</option>
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="zh">中文</option>
       </select>
       <span data-i18n="options.lang.note">Not everything translated yet. You might still see translations in english, as a default language. You might want to refresh page after changing language, to see all changes take effect.</span>
     `;
@@ -528,7 +528,7 @@ export class Options {
       // Get all changelog versions, sorted descending
       const versions = Object.keys(CHANGELOG).sort((a, b) => b.localeCompare(a, undefined, { numeric: true, sensitivity: 'base' }));
       let content = '<div class="changelog-modal-content">';
-      content += '<button class="modal-close">X</button>';
+      content += '<button class="modal-close">✖</button>';
       content += `<h2>${t('options.changelog.title')}</h2>`;
       if (versions.length === 0) {
         content += `<div class="changelog-body">${t('options.changelog.empty')}</div>`;
@@ -552,7 +552,7 @@ export class Options {
             <div class="changelog-entry ${expanded}">
               <div class="changelog-header" data-index="${i}">
                 <span class="changelog-version">${versionLabel}</span>
-                <span class="changelog-toggle">${expanded ? '▼' : '►'}</span>
+                  <span class="changelog-toggle">${expanded ? '▼' : '▶'}</span>
               </div>
               <div class="changelog-body" style="display:${expanded ? 'block' : 'none'}">${entryHtml}</div>
             </div>
@@ -575,7 +575,7 @@ export class Options {
             toggle.textContent = '▼';
           } else {
             entry.querySelector('.changelog-body').style.display = 'none';
-            toggle.textContent = '►';
+            toggle.textContent = '▶';
           }
         });
       });
@@ -686,7 +686,7 @@ export class Options {
             className: 'login-modal',
             content: `
               <div class="modal-content">
-                <button class="modal-close">×</button>
+                <button class="modal-close">�</button>
                 <iframe src="${loginUrl}-mini" class="login-iframe"></iframe>
               </div>
             `,
