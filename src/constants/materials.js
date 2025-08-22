@@ -44,9 +44,7 @@ export const MATERIALS = {
     id: 'gold_coins',
     name: t('Gold Coins'),
     icon: `<img src="${BASE}/icons/gold-coin.svg" class="icon" alt="gold"/>`,
-    get description() {
-      return `Adds ${1000} gold per coin to your total.`;
-    },
+    description: t('Adds 1000 gold per coin to your total.'),
     dropChance: 60,
     sort: 200,
     onUse: (hero, qty = 1) => {
@@ -57,9 +55,7 @@ export const MATERIALS = {
     id: 'large_gold_coins',
     name: t('Large Gold Coins'),
     icon: `<img src="${BASE}/icons/large-gold-coin.svg" class="icon" alt="gold"/>`,
-    get description() {
-      return `Adds ${10000} gold per coin to your total.`;
-    },
+    description: t('Adds 10000 gold per coin to your total.'),
     dropChance: 20,
     sort: 201,
     onUse: (hero, qty = 1) => {
@@ -70,9 +66,7 @@ export const MATERIALS = {
     id: 'enormous_gold_coins',
     name: t('Enormous Gold Coins'),
     icon: `<img src="${BASE}/icons/enormous-gold-coin.svg" class="icon" alt="gold"/>`,
-    get description() {
-      return `Adds ${50000} gold per coin to your total.`;
-    },
+    description: t('Adds 50000 gold per coin to your total.'),
     dropChance: 1,
     sort: 202,
     onUse: (hero, qty = 1) => {
@@ -83,9 +77,7 @@ export const MATERIALS = {
     id: 'freaky_gold_coins',
     name: t('Freaky Gold Coins'),
     icon: `<img src="${BASE}/icons/freaky-gold-coin.svg" class="icon" alt="gold"/>`,
-    get description() {
-      return `Adds ${1000000} gold per coin to your total.`;
-    },
+    description: t('Adds 1000000 gold per coin to your total.'),
     dropChance: 0.01,
     sort: 203,
     onUse: (hero, qty = 1) => {
