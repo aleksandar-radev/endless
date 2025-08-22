@@ -6,6 +6,7 @@ import { initializeInventoryUI, updateInventoryGrid, updateMaterialsGrid } from 
 import { getCurrentRegion } from './region.js';
 import { MATERIALS } from './constants/materials.js';
 import { STATS } from './constants/stats/stats.js';
+import { t } from './i18n.js';
 import {
   ITEM_RARITY,
   RARITY_ORDER,
@@ -31,7 +32,9 @@ export default class Inventory {
 
     this.equippedItems = savedData?.equippedItems || {};
     this.inventoryItems = savedData?.inventoryItems || new Array(ITEM_SLOTS).fill(null);
-    this.materials = savedData?.materials || new Array(MATERIALS_SLOTS).fill(null);
+    this.materials = savedData?.materials
+      ? savedData.materials.map((mat) => (mat ? { id: mat.id, qty: mat.qty } : null))
+      : new Array(MATERIALS_SLOTS).fill(null);
     this.autoSalvageRarities = savedData?.autoSalvageRarities || [];
     this.salvageUpgradeMaterials = savedData?.salvageUpgradeMaterials || false;
 
@@ -57,7 +60,7 @@ export default class Inventory {
         return null;
       });
       this.materials = savedData.materials
-        ? savedData.materials.map((mat) => (mat ? { ...mat } : null))
+        ? savedData.materials.map((mat) => (mat ? { id: mat.id, qty: mat.qty } : null))
         : new Array(MATERIALS_SLOTS).fill(null);
     } else {
       this.equippedItems = {};
@@ -73,7 +76,7 @@ export default class Inventory {
     });
   }
   addMaterial(material) {
-    // material: { id, icon, qty }
+    // material: { id, qty }
     // Auto-consume logic
     const matDef = Object.values(MATERIALS).find((m) => m.id === material.id);
     const hasAutoConsume = crystalShop.crystalUpgrades.autoConsumeMaterials;
@@ -99,7 +102,7 @@ export default class Inventory {
       slot = this.materials.findIndex((m) => m === null);
       if (slot !== -1) {
         // Default to qty or 1
-        this.materials[slot] = { ...material, qty: material.qty || 1 };
+        this.materials[slot] = { id: material.id, qty: material.qty || 1 };
       }
     }
     this.hasNewItems = true; // Set flag when new material is added
@@ -123,8 +126,8 @@ export default class Inventory {
     let content = html`
     <div class="inventory-modal-content">
       <button class="modal-close">&times;</button>
-      <h2>${matDef.name || mat.name || ''}</h2>
-      <p>${matDef.description || ''}</p>
+      <h2>${t(matDef.name || mat.name || '')}</h2>
+      <p>${t(matDef.description || '')}</p>
       <p>You have <b>${mat.qty}</b></p>
       ${titleExtra}
       <div>
@@ -360,8 +363,8 @@ export default class Inventory {
     const content = html`
     <div class="inventory-modal-content">
       <button class="modal-close">&times;</button>
-      <h2>${matDef.name || mat.name || ''}</h2>
-      <p>${matDef.description || ''}</p>
+      <h2>${t(matDef.name || mat.name || '')}</h2>
+      <p>${t(matDef.description || '')}</p>
       <p>You have <b>${mat.qty}</b></p>
       <label for="material-use-qty">Quantity:</label>
       <input
@@ -394,7 +397,14 @@ export default class Inventory {
       if (matDef && typeof matDef.onUse === 'function') {
         matDef.onUse(hero, useQty);
       }
-      this.handleMaterialUsed(this, mat, matDef, useQty, 'material-use-dialog', `Used ${useQty} ${matDef.name || mat.name || ''}${useQty > 1 ? 's' : ''}`);
+      this.handleMaterialUsed(
+        this,
+        mat,
+        matDef,
+        useQty,
+        'material-use-dialog',
+        `Used ${useQty} ${t(matDef.name || mat.name || '')}${useQty > 1 ? 's' : ''}`,
+      );
     };
     useBtn.onclick = useHandler;
     dialog.querySelector('#material-use-cancel').onclick = () => closeModal('material-use-dialog');
@@ -462,7 +472,7 @@ export default class Inventory {
     if (this.salvageUpgradeMaterials) {
       const { id, qty } = this.getItemSalvageMaterial(item);
       this.addMaterial({ id, qty });
-      msg += `, gained ${qty} ${MATERIALS[id].name}`;
+      msg += `, gained ${qty} ${t(MATERIALS[id].name)}`;
     } else {
       const goldGained = this.getItemSalvageValue(item);
       if (goldGained > 0) {
@@ -521,7 +531,7 @@ export default class Inventory {
       if (this.salvageUpgradeMaterials) {
         const parts = Object.entries(matsGained).map(
           ([id, qty]) => {
-            return `${qty} ${MATERIALS[id].name}`;
+            return `${qty} ${t(MATERIALS[id].name)}`;
           },
         );
         if (parts.length) msg += `, gained ${parts.join(', ')}`;

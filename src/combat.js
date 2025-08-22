@@ -301,7 +301,7 @@ export async function defeatEnemy() {
         const enemyLvl = enemy.level || game.stage;
         qty = inventory.getScrapPackSize(enemyLvl);
       }
-      inventory.addMaterial({ id: mat.id, icon: mat.icon, qty });
+      inventory.addMaterial({ id: mat.id, qty });
       statistics.increment('totalMaterialsDropped', null, qty);
       battleLog.addDrop(`Dropped ${mat.name} x${qty}`);
       showMaterialNotification(mat);
@@ -344,7 +344,7 @@ export async function defeatEnemy() {
         }
 
         for (const { mat: aMat, qty: totalQty } of aggregate.values()) {
-          inventory.addMaterial({ id: aMat.id, icon: aMat.icon, qty: totalQty });
+          inventory.addMaterial({ id: aMat.id, qty: totalQty });
           statistics.increment('totalMaterialsDropped', null, totalQty);
           battleLog.addDrop(`Dropped ${aMat.name} x${totalQty}`);
         }

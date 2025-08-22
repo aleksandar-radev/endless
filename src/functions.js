@@ -616,7 +616,7 @@ export function createModifyUI() {
   addRandomMaterialBtn.textContent = 'Add Random Material';
   addRandomMaterialBtn.addEventListener('click', () => {
     const mat = inventory.getRandomMaterial();
-    inventory.addMaterial({ id: mat.id, icon: mat.icon, qty: 1 });
+    inventory.addMaterial({ id: mat.id, qty: 1 });
     showToast(`Added 1 ${mat.name} to materials`);
   });
   inventorySection.appendChild(addRandomMaterialBtn);
@@ -658,7 +658,7 @@ export function createModifyUI() {
     const qty = parseInt(qtyInput.value, 10) || 1;
     const matDef = Object.values(MATERIALS).find((m) => m.id === id);
     if (matDef) {
-      inventory.addMaterial({ id: matDef.id, icon: matDef.icon, qty });
+      inventory.addMaterial({ id: matDef.id, qty });
       showToast(`Added ${qty} ${matDef.name}${qty > 1 ? 's' : ''} to materials`);
     } else {
       showToast('Invalid material ID', 'error');

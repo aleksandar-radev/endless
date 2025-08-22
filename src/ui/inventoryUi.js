@@ -457,7 +457,7 @@ export function showSalvageModal(inv) {
       if (inventory.salvageUpgradeMaterials) {
         const { id, qty } = inventory.getItemSalvageMaterial(item);
         inventory.addMaterial({ id, qty });
-        msg += `, gained ${qty} ${MATERIALS[id].name}`;
+        msg += `, gained ${qty} ${t(MATERIALS[id].name)}`;
       } else {
         let goldGained = inventory.getItemSalvageValue(item);
         if (goldGained > 0) {
@@ -657,7 +657,7 @@ export function setupDragAndDrop() {
         if (inventory.salvageUpgradeMaterials) {
           const { id, qty } = inventory.getItemSalvageMaterial(item);
           inventory.addMaterial({ id, qty });
-          msg += `, gained ${qty} ${MATERIALS[id].name}`;
+          msg += `, gained ${qty} ${t(MATERIALS[id].name)}`;
         } else {
           let goldGained = inventory.getItemSalvageValue(item);
           if (goldGained > 0) {
@@ -868,7 +868,7 @@ export function setupItemDragAndTooltip() {
             border-radius:0 0 8px 8px;
             font-weight:bold;
             text-shadow: 1px 1px 2px #7a5c1c;">
-            <b>Salvage Value:</b> ${qty} ${MATERIALS[id].name}
+            <b>Salvage Value:</b> ${qty} ${t(MATERIALS[id].name)}
           </div>`;
         } else {
           let goldGained = inventory.getItemSalvageValue(itemData);
@@ -973,10 +973,11 @@ export function updateMaterialsGrid(inv) {
       const materialItem = cell.querySelector('.material-item');
       // Tooltip on hover (show name and amount)
       materialItem.addEventListener('mouseenter', (e) => {
-        let tooltipContent = `<div class="item-tooltip"><b>${matDef.icon || icon} ${
-          matDef.name || mat.name || ''
-        } &times; ${mat.qty}</b>`;
-        if (matDef.description) tooltipContent += `<div style="margin-top:4px;">${matDef.description}</div>`;
+        let tooltipContent = `<div class="item-tooltip"><b>${
+          matDef.icon || icon
+        } ${t(matDef.name || mat.name || '')} &times; ${mat.qty}</b>`;
+        if (matDef.description)
+          tooltipContent += `<div style="margin-top:4px;">${t(matDef.description)}</div>`;
         tooltipContent += '</div>';
         showTooltip(tooltipContent, e, 'flex-tooltip');
       });
