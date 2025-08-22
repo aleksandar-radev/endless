@@ -29,14 +29,14 @@ const TIER_EXP_GOLD_SCALE = {
   2: (level) => percentReducedByLevel(1, level, 41, 0.009, 0.1),
   3: (level) => percentReducedByLevel(1, level, 42, 0.008, 0.1),
   4: (level) => percentReducedByLevel(1, level, 43, 0.007, 0.1),
-  5: (level) => percentReducedByLevel(1, level, 44, 0.006, 0.1),
-  6: (level) => percentReducedByLevel(1, level, 45, 0.005, 0.1),
-  7: (level) => percentReducedByLevel(1, level, 46, 0.004, 0.1),
-  8: (level) => percentReducedByLevel(1, level, 47, 0.003, 0.1),
-  9: (level) => percentReducedByLevel(1, level, 48, 0.002, 0.1),
-  10: (level) => percentReducedByLevel(1, level, 49, 0.002, 0.1),
-  11: (level) => percentReducedByLevel(1, level, 50, 0.002, 0.1),
-  12: (level) => percentReducedByLevel(1, level, 51, 0.002, 0.1),
+  5: (level) => percentReducedByLevel(0.95, level, 44, 0.006, 0.1),
+  6: (level) => percentReducedByLevel(0.9, level, 45, 0.005, 0.1),
+  7: (level) => percentReducedByLevel(0.85, level, 46, 0.004, 0.1),
+  8: (level) => percentReducedByLevel(0.8, level, 47, 0.003, 0.1),
+  9: (level) => percentReducedByLevel(0.75, level, 48, 0.002, 0.095),
+  10: (level) => percentReducedByLevel(0.7, level, 49, 0.002, 0.09),
+  11: (level) => percentReducedByLevel(0.65, level, 50, 0.002, 0.085),
+  12: (level) => percentReducedByLevel(0.6, level, 51, 0.002, 0.08),
 };
 
 
