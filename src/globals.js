@@ -45,8 +45,12 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
     savedData = null;
   }
 
+  const _options = new Options(savedData?.options);
+  options = _options;
   const _game = new Game(savedData?.game);
+  game = _game;
   const _hero = new Hero(savedData?.hero);
+  hero = _hero;
   const _inventory = new Inventory(savedData?.inventory);
   const _skillTree = new SkillTree(savedData?.skillTree);
   const _crystalShop = new CrystalShop(savedData?.crystalShop);
@@ -54,13 +58,10 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
   const _statistics = new Statistics(savedData?.statistics);
   const _quests = new QuestTracker(savedData?.quests);
   const _soulShop = new SoulShop(savedData?.soulShop);
-  const _options = new Options(savedData?.options);
   const _buildings = await BuildingManager.create(savedData?.buildings);
   const _prestige = new Prestige(savedData?.prestige);
   const _ascension = new Ascension(savedData?.ascension);
 
-  game = _game;
-  hero = _hero;
   inventory = _inventory;
   training = _training;
   skillTree = _skillTree;
@@ -69,7 +70,6 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
   quests = _quests;
   soulShop = _soulShop;
   buildings = _buildings;
-  options = _options;
   prestige = _prestige;
   ascension = _ascension;
   dataManager = _dataManager;

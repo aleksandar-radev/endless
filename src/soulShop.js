@@ -116,8 +116,8 @@ export default class SoulShop {
     handleSavedData(savedData, this);
     this.modal = null;
     this.currentStat = null;
-    this.selectedQty = 1;
-    this.quickQty = 1;
+    this.selectedQty = options.useNumericInputs ? options.soulShopQty || 1 : 1;
+    this.quickQty = options.useNumericInputs ? options.soulShopQuickQty || 1 : 1;
   }
 
   /**
@@ -148,10 +148,34 @@ export default class SoulShop {
       shopContainer.appendChild(upgradesContainer);
     }
     let qtyControls = shopContainer.querySelector('.soulShop-qty-controls');
+    if (qtyControls) qtyControls.remove();
     if (options?.quickSoulShop) {
-      if (!qtyControls) {
-        qtyControls = document.createElement('div');
-        qtyControls.className = 'soulShop-qty-controls';
+      qtyControls = document.createElement('div');
+      qtyControls.className = 'soulShop-qty-controls';
+      if (options.useNumericInputs) {
+        qtyControls.innerHTML = `
+          <input type="number" class="soul-qty-input input-number" min="1" value="${this.quickQty === 'max' ? options.soulShopQuickQty || 1 : this.quickQty}" />
+          <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">Max</button>
+        `;
+        shopContainer.insertBefore(qtyControls, upgradesContainer);
+        const input = qtyControls.querySelector('.soul-qty-input');
+        const maxBtn = qtyControls.querySelector('button[data-qty="max"]');
+        input.oninput = () => {
+          let val = parseInt(input.value, 10);
+          if (isNaN(val) || val < 1) val = 1;
+          this.quickQty = val;
+          options.soulShopQuickQty = val;
+          maxBtn.classList.remove('active');
+          this.updateSoulShopUI();
+          dataManager.saveGame();
+        };
+        maxBtn.onclick = () => {
+          this.quickQty = 'max';
+          maxBtn.classList.add('active');
+          this.updateSoulShopUI();
+          dataManager.saveGame();
+        };
+      } else {
         qtyControls.innerHTML = `
           <button data-qty="1" class="${this.quickQty === 1 ? 'active' : ''}">1</button>
           <button data-qty="10" class="${this.quickQty === 10 ? 'active' : ''}">10</button>
@@ -168,8 +192,6 @@ export default class SoulShop {
           };
         });
       }
-    } else if (qtyControls) {
-      qtyControls.remove();
     }
     this.updateSoulShopUI();
   }
@@ -198,8 +220,8 @@ export default class SoulShop {
     this.soulUpgrades = {};
     this.modal = null;
     this.currentStat = null;
-    this.selectedQty = 1;
-    this.quickQty = 1;
+    this.selectedQty = options.soulShopQty || 1;
+    this.quickQty = options.soulShopQuickQty || 1;
     this.updateSoulShopUI();
   }
 
@@ -340,6 +362,12 @@ export default class SoulShop {
     const slider = this.modal.querySelector('.modal-slider');
     slider.addEventListener('input', (e) => {
       this.selectedQty = parseInt(e.target.value, 10) || 0;
+      const input = this.modal.querySelector('.modal-qty-input');
+      if (input) {
+        input.value = this.selectedQty;
+        options.soulShopQty = this.selectedQty;
+        dataManager.saveGame();
+      }
       this.updateModalDetails();
     });
   }
@@ -354,7 +382,7 @@ export default class SoulShop {
     const controls = m.querySelector('.modal-controls');
     const buyBtn = m.querySelector('.modal-buy');
     const slider = m.querySelector('.modal-slider');
-    this.selectedQty = 1;
+    this.selectedQty = options.useNumericInputs ? options.soulShopQty || 1 : 1;
     // Multi-level (increasing cost): any with numeric bonus and not oneTime
     const isMultiLevel = typeof config.bonus === 'number' && !config.oneTime;
     if (isMultiLevel) {
@@ -366,18 +394,39 @@ export default class SoulShop {
         <p>Total Cost: <span class="modal-total-cost"></span> Souls (<span class="modal-qty">1</span>)</p>
       `;
       controls.style.display = '';
-      controls.innerHTML = `
-        <button data-qty="1">+1</button>
-        <button data-qty="10">+10</button>
-        <button data-qty="50">+50</button>
+      if (options.useNumericInputs) {
+        controls.innerHTML = `
+        <input type="number" class="modal-qty-input input-number" min="1" value="${this.selectedQty}" />
         <button data-qty="max">Max</button>
       `;
-      controls.querySelectorAll('button').forEach((btn) => {
-        btn.onclick = () => {
-          this.selectedQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+        const qtyInput = controls.querySelector('.modal-qty-input');
+        const maxBtn = controls.querySelector('button[data-qty="max"]');
+        qtyInput.addEventListener('input', () => {
+          let val = parseInt(qtyInput.value, 10);
+          if (isNaN(val) || val < 1) val = 1;
+          this.selectedQty = val;
+          options.soulShopQty = val;
+          this.updateModalDetails();
+          dataManager.saveGame();
+        });
+        maxBtn.onclick = () => {
+          this.selectedQty = 'max';
           this.updateModalDetails();
         };
-      });
+      } else {
+        controls.innerHTML = `
+          <button data-qty="1">+1</button>
+          <button data-qty="10">+10</button>
+          <button data-qty="50">+50</button>
+          <button data-qty="max">Max</button>
+        `;
+        controls.querySelectorAll('button').forEach((btn) => {
+          btn.onclick = () => {
+            this.selectedQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+            this.updateModalDetails();
+          };
+        });
+      }
       if (slider) {
         slider.style.display = '';
       }
@@ -459,6 +508,8 @@ export default class SoulShop {
         slider.max = levelsLeft;
         slider.value = this.selectedQty === 'max' ? levelsLeft : Math.min(this.selectedQty, levelsLeft);
       }
+      const input = q('.modal-qty-input');
+      if (input && this.selectedQty !== 'max') input.value = this.selectedQty;
     }
   }
 

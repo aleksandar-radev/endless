@@ -1,5 +1,6 @@
 
 import { crystalShop, dataManager, game, setGlobals, training, soulShop } from './globals.js';
+import { initializeBuildingsUI } from './ui/buildingUi.js';
 import { showConfirmDialog, showToast, updateStageUI, updateEnemyStatLabels } from './ui/ui.js';
 import { updateBuffIndicators } from './ui/skillTreeUi.js';
 import { closeModal, createModal } from './ui/modal.js';
@@ -44,6 +45,15 @@ export class Options {
     this.quickTraining = data.quickTraining ?? false;
     // Enable quick soul shop purchases
     this.quickSoulShop = data.quickSoulShop ?? false;
+    // Use numeric inputs for bulk purchases
+    this.useNumericInputs = data.useNumericInputs ?? false;
+    // Default quantities for bulk purchases
+    this.soulShopQty = typeof data.soulShopQty === 'number' ? data.soulShopQty : 1;
+    this.soulShopQuickQty = typeof data.soulShopQuickQty === 'number' ? data.soulShopQuickQty : 1;
+    this.crystalShopQty = typeof data.crystalShopQty === 'number' ? data.crystalShopQty : 1;
+    this.trainingQty = typeof data.trainingQty === 'number' ? data.trainingQty : 1;
+    this.trainingQuickQty = typeof data.trainingQuickQty === 'number' ? data.trainingQuickQty : 1;
+    this.buildingQty = typeof data.buildingQty === 'number' ? data.buildingQty : 1;
     // Preferred language, default to English
     this.language = data.language || 'en';
     // Use short elemental stat names
@@ -158,6 +168,7 @@ export class Options {
     gameContent.appendChild(this._createShortElementalNamesOption());
     gameContent.appendChild(this._createQuickTrainingOption());
     gameContent.appendChild(this._createQuickSoulShopOption());
+    gameContent.appendChild(this._createNumericInputOption());
     gameContent.appendChild(this._createStartingStageOption());
     gameContent.appendChild(this._createStageSkipOption());
     gameContent.appendChild(this._createResetStageSkipOption());
@@ -974,6 +985,52 @@ export class Options {
       this.quickSoulShop = checkbox.checked;
       dataManager.saveGame();
       if (soulShop) soulShop.initializeSoulShopUI();
+    });
+    return wrapper;
+  }
+
+  /**
+   * Toggle numeric input fields for bulk purchases.
+   */
+  _createNumericInputOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="numeric-input-toggle" class="numeric-input-toggle-label">Enable Numeric Purchase Inputs:</label>
+      <input
+        type="checkbox"
+        id="numeric-input-toggle"
+        class="numeric-input-toggle"
+        ${this.useNumericInputs ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.useNumericInputs = checkbox.checked;
+      if (!this.useNumericInputs) {
+        if (training) training.quickQty = 1;
+        if (soulShop) soulShop.quickQty = 1;
+      }
+      dataManager.saveGame();
+      if (training) {
+        training.modal = null;
+        training.initializeTrainingUI();
+      }
+      if (soulShop) {
+        soulShop.modal = null;
+        soulShop.initializeSoulShopUI();
+      }
+      if (crystalShop) {
+        crystalShop.modal = null;
+        crystalShop.initializeCrystalShopUI();
+      }
+      initializeBuildingsUI();
     });
     return wrapper;
   }

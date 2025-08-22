@@ -2,7 +2,7 @@
 // This file will handle rendering and updating the buildings tab UI.
 const html = String.raw;
 
-import { buildings, dataManager, hero } from '../globals.js';
+import { buildings, dataManager, hero, options } from '../globals.js';
 import { Building } from '../building.js';
 import { createModal, closeModal } from './modal.js';
 import { showConfirmDialog, updateResources, formatNumber } from './ui.js';
@@ -123,7 +123,7 @@ function createBuildingCard(building) {
 function showBuildingInfoModal(building, onUpgrade, placementOptions) {
   const canUpgrade = building.level < building.maxLevel;
 
-  let upgradeAmount = 1;
+  let upgradeAmount = options.useNumericInputs ? options.buildingQty || 1 : 1;
   let modal;
 
   function getMaxUpgradeAmount() {
@@ -146,9 +146,17 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
 
   function renderModalContent() {
     const maxAffordableAmt = getMaxUpgradeAmount();
+    upgradeAmount = Math.max(1, Math.min(upgradeAmount, maxAffordableAmt));
     const totalCost = building.getUpgradeCost(upgradeAmount);
     const totalBonus = getTotalBonus(upgradeAmount);
     const refundAmount = building.getRefund();
+    const upgradeControls = options.useNumericInputs
+      ? `<input type="number" class="upgrade-amt-input input-number" min="1" value="${upgradeAmount}" />
+          <button data-amt="max" class="upgrade-amt-btn${upgradeAmount === maxAffordableAmt ? ' selected-upgrade-amt' : ''}">Max</button>`
+      : `<button data-amt="1" class="upgrade-amt-btn${upgradeAmount === 1 ? ' selected-upgrade-amt' : ''}">+1</button>
+          <button data-amt="10" class="upgrade-amt-btn${upgradeAmount === 10 ? ' selected-upgrade-amt' : ''}" ${maxAffordableAmt < 10 ? 'disabled' : ''}>+10</button>
+          <button data-amt="50" class="upgrade-amt-btn${upgradeAmount === 50 ? ' selected-upgrade-amt' : ''}" ${maxAffordableAmt < 50 ? 'disabled' : ''}>+50</button>
+          <button data-amt="max" class="upgrade-amt-btn${upgradeAmount === maxAffordableAmt ? ' selected-upgrade-amt' : ''}">Max</button>`;
     return html`
       <div class="building-modal-content">
         <button class="modal-close">×</button>
@@ -176,31 +184,7 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
         </div>
         <div class="building-info-modal-upgrade">
           <div style="margin: 10px 0 6px 0;">Upgrade Amount:</div>
-          <div class="building-upgrade-amounts">
-            <button data-amt="1" class="upgrade-amt-btn${upgradeAmount === 1 ? ' selected-upgrade-amt' : ''}">
-              +1
-            </button>
-            <button
-              data-amt="10"
-              class="upgrade-amt-btn${upgradeAmount === 10 ? ' selected-upgrade-amt' : ''}"
-              ${maxAffordableAmt < 10 ? 'disabled' : ''}
-            >
-              +10
-            </button>
-            <button
-              data-amt="50"
-              class="upgrade-amt-btn${upgradeAmount === 50 ? ' selected-upgrade-amt' : ''}"
-              ${maxAffordableAmt < 50 ? 'disabled' : ''}
-            >
-              +50
-            </button>
-            <button
-              data-amt="max"
-              class="upgrade-amt-btn${upgradeAmount === maxAffordableAmt ? ' selected-upgrade-amt' : ''}"
-            >
-              Max
-            </button>
-          </div>
+          <div class="building-upgrade-amounts">${upgradeControls}</div>
           <button class="building-upgrade-btn" ${canUpgrade && canAffordUpgrade(upgradeAmount) ? '' : 'disabled'}>
             Upgrade
           </button>
@@ -215,18 +199,42 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
   function rerenderModal() {
     modal.innerHTML = renderModalContent();
     // Re-attach event listeners
-    modal.querySelectorAll('.upgrade-amt-btn').forEach((btn) => {
-      btn.onclick = () => {
-        let amt;
-        if (btn.dataset.amt === 'max') {
-          amt = getMaxUpgradeAmount();
-        } else {
-          amt = parseInt(btn.dataset.amt);
-        }
+    const input = modal.querySelector('.upgrade-amt-input');
+    const maxBtn = modal.querySelector('button[data-amt="max"]');
+    if (input) {
+      input.addEventListener('input', () => {
+        let amt = parseInt(input.value, 10);
+        if (isNaN(amt) || amt < 1) amt = 1;
         upgradeAmount = Math.max(1, Math.min(getMaxUpgradeAmount(), amt));
+        options.buildingQty = upgradeAmount;
+        dataManager.saveGame();
+        rerenderModal();
+        const newInput = modal.querySelector('.upgrade-amt-input');
+        newInput.focus();
+        newInput.setSelectionRange(newInput.value.length, newInput.value.length);
+      });
+    } else {
+      modal.querySelectorAll('.upgrade-amt-btn').forEach((btn) => {
+        btn.onclick = () => {
+          let amt;
+          if (btn.dataset.amt === 'max') {
+            amt = getMaxUpgradeAmount();
+          } else {
+            amt = parseInt(btn.dataset.amt);
+          }
+          upgradeAmount = Math.max(1, Math.min(getMaxUpgradeAmount(), amt));
+          rerenderModal();
+        };
+      });
+    }
+    if (maxBtn && input) {
+      maxBtn.onclick = () => {
+        upgradeAmount = getMaxUpgradeAmount();
+        options.buildingQty = upgradeAmount;
+        dataManager.saveGame();
         rerenderModal();
       };
-    });
+    }
     modal.querySelector('.building-upgrade-btn').onclick = () => {
       let amt = Math.min(upgradeAmount, getMaxUpgradeAmount());
       let upgraded = false;

@@ -314,12 +314,20 @@ body.dev-active .game-container {
 }
 
 .input-number {
-  width: 80px;
-  padding: 2px 6px;
+  background: #232b3a;
+  color: #fff;
+  border: 1px solid var(--accent, #3b82f6);
   border-radius: 4px;
-  border: 1px solid #374151;
-  font-size: 12px;
-  font-family: inherit;
+  padding: 6px 12px;
+  font-size: 1.1em;
+  width: 100px;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.input-number:focus {
+  border: 1.5px solid #60a5fa;
+  box-shadow: 0 0 0 2px #3b82f633;
+  outline: none;
 }
 
 /* Generic icon styling for inline SVG images */

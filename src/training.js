@@ -31,7 +31,7 @@ export default class Training {
 
     handleSavedData(savedData, this);
     this.activeSection = SECTION_DEFS[0].key;
-    this.quickQty = 1;
+    this.quickQty = options.useNumericInputs ? options.trainingQuickQty || 1 : 1;
     this.initializeTrainingUI();
   }
 
@@ -42,6 +42,7 @@ export default class Training {
     Object.keys(this.trainingBonuses).forEach((stat) => {
       this.trainingBonuses[stat] = 0;
     });
+    this.quickQty = options.useNumericInputs ? options.trainingQuickQty || 1 : 1;
   }
 
   initializeTrainingUI() {
@@ -82,21 +83,46 @@ export default class Training {
     if (options?.quickTraining) {
       const qtyControls = document.createElement('div');
       qtyControls.className = 'training-qty-controls';
-      qtyControls.innerHTML = `
-        <button data-qty="1" class="${this.quickQty === 1 ? 'active' : ''}">1</button>
-        <button data-qty="10" class="${this.quickQty === 10 ? 'active' : ''}">10</button>
-        <button data-qty="50" class="${this.quickQty === 50 ? 'active' : ''}">50</button>
-        <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">Max</button>
-      `;
-      nav.appendChild(qtyControls);
-      qtyControls.querySelectorAll('button').forEach((btn) => {
-        btn.onclick = () => {
-          this.quickQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
-          qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
-          btn.classList.add('active');
+      if (options.useNumericInputs) {
+        qtyControls.innerHTML = `
+          <input type="number" class="training-qty-input input-number" min="1" value="${this.quickQty === 'max' ? options.trainingQuickQty || 1 : this.quickQty}" />
+          <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">Max</button>
+        `;
+        nav.appendChild(qtyControls);
+        const input = qtyControls.querySelector('.training-qty-input');
+        const maxBtn = qtyControls.querySelector('button[data-qty="max"]');
+        input.oninput = () => {
+          let val = parseInt(input.value, 10);
+          if (isNaN(val) || val < 1) val = 1;
+          this.quickQty = val;
+          options.trainingQuickQty = val;
+          maxBtn.classList.remove('active');
           this.updateTrainingUI('gold-upgrades');
+          dataManager.saveGame();
         };
-      });
+        maxBtn.onclick = () => {
+          this.quickQty = 'max';
+          maxBtn.classList.add('active');
+          this.updateTrainingUI('gold-upgrades');
+          dataManager.saveGame();
+        };
+      } else {
+        qtyControls.innerHTML = `
+          <button data-qty="1" class="${this.quickQty === 1 ? 'active' : ''}">1</button>
+          <button data-qty="10" class="${this.quickQty === 10 ? 'active' : ''}">10</button>
+          <button data-qty="50" class="${this.quickQty === 50 ? 'active' : ''}">50</button>
+          <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">Max</button>
+        `;
+        nav.appendChild(qtyControls);
+        qtyControls.querySelectorAll('button').forEach((btn) => {
+          btn.onclick = () => {
+            this.quickQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+            qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+            btn.classList.add('active');
+            this.updateTrainingUI('gold-upgrades');
+          };
+        });
+      }
 
       const bulkControls = document.createElement('div');
       bulkControls.className = 'training-bulk-controls';
@@ -126,6 +152,13 @@ export default class Training {
     // Create modal for bulk upgrades if not exists
     if (!this.modal) {
       // Build markup for bulk-buy modal
+      const controlsMarkup = options.useNumericInputs
+        ? `<input type="number" class="modal-qty-input input-number" min="1" />
+            <button data-qty="max">Max</button>`
+        : `<button data-qty="1">+1</button>
+            <button data-qty="10">+10</button>
+            <button data-qty="50">+50</button>
+            <button data-qty="max">Max</button>`;
       const content = html`
         <div class="training-modal-content">
           <button class="modal-close">&times;</button>
@@ -135,12 +168,7 @@ export default class Training {
           <p>Next Level Bonus: <span class="modal-next-bonus"></span></p>
           <p>Total Bonus: <span class="modal-total-bonus"></span></p>
           <p>Total Cost: <span class="modal-total-cost"></span> Gold (<span class="modal-qty">1</span>)</p>
-          <div class="modal-controls">
-            <button data-qty="1">+1</button>
-            <button data-qty="10">+10</button>
-            <button data-qty="50">+50</button>
-            <button data-qty="max">Max</button>
-          </div>
+          <div class="modal-controls">${controlsMarkup}</div>
           <input type="range" class="modal-slider" min="0" max="1" value="1" step="1" />
           <button class="modal-buy">Buy</button>
         </div>
@@ -152,17 +180,39 @@ export default class Training {
         content,
         onClose: () => this.closeModal(),
       });
-      // Attach quantity buttons
-      this.modal.querySelectorAll('.modal-controls button').forEach((btn) => {
-        btn.onclick = () => {
-          this.selectedQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+      if (options.useNumericInputs) {
+        const qtyInput = this.modal.querySelector('.modal-qty-input');
+        const maxBtn = this.modal.querySelector('.modal-controls button[data-qty="max"]');
+        qtyInput.addEventListener('input', () => {
+          let val = parseInt(qtyInput.value, 10);
+          if (isNaN(val) || val < 1) val = 1;
+          this.selectedQty = val;
+          options.trainingQty = val;
+          this.updateModalDetails();
+          dataManager.saveGame();
+        });
+        maxBtn.onclick = () => {
+          this.selectedQty = 'max';
           this.updateModalDetails();
         };
-      });
+      } else {
+        this.modal.querySelectorAll('.modal-controls button').forEach((btn) => {
+          btn.onclick = () => {
+            this.selectedQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+            this.updateModalDetails();
+          };
+        });
+      }
       // Slider input
       const slider = this.modal.querySelector('.modal-slider');
       slider.addEventListener('input', (e) => {
         this.selectedQty = parseInt(e.target.value, 10) || 0;
+        const input = this.modal.querySelector('.modal-qty-input');
+        if (input) input.value = this.selectedQty;
+        if (options.useNumericInputs) {
+          options.trainingQty = this.selectedQty;
+          dataManager.saveGame();
+        }
         this.updateModalDetails();
       });
       // Buy button
@@ -204,7 +254,9 @@ export default class Training {
       (this.upgradeLevels[stat] || 0) + 1,
     );
     // Reset to default quantity
-    this.selectedQty = 1;
+    this.selectedQty = options.useNumericInputs ? options.trainingQty || 1 : 1;
+    const qtyInput = m.querySelector('.modal-qty-input');
+    if (qtyInput) qtyInput.value = this.selectedQty;
     this.updateModalDetails();
     m.classList.remove('hidden');
   }
@@ -332,6 +384,8 @@ export default class Training {
       slider.max = levelsLeft;
       slider.value = this.selectedQty === 'max' ? levelsLeft : Math.min(this.selectedQty, levelsLeft);
     }
+    const input = this.modal.querySelector('.modal-qty-input');
+    if (input && this.selectedQty !== 'max') input.value = this.selectedQty;
 
     // Enable/disable Buy button based on quantity and affordability
     const buyBtn = this.modal.querySelector('.modal-buy');

@@ -127,7 +127,7 @@ export default class CrystalShop {
     handleSavedData(savedData, this);
     this.modal = null;
     this.currentStat = null;
-    this.selectedQty = 1;
+    this.selectedQty = options.useNumericInputs ? options.crystalShopQty || 1 : 1;
   }
 
   resetCrystalShop() {
@@ -298,7 +298,7 @@ export default class CrystalShop {
     const fields = m.querySelector('.modal-fields');
     const controls = m.querySelector('.modal-controls');
     const buyBtn = m.querySelector('.modal-buy');
-    this.selectedQty = 1;
+    this.selectedQty = options.useNumericInputs ? options.crystalShopQty || 1 : 1;
 
     if (config.bulkModal) {
       const maxLevelText = config.maxLevel ? ' / <span class="modal-max-level"></span>' : '';
@@ -310,18 +310,39 @@ export default class CrystalShop {
         <p>Total Cost: <span class="modal-total-cost"></span> Crystals (<span class="modal-qty">1</span>)</p>
       `;
       controls.style.display = '';
-      controls.innerHTML = `
-        <button data-qty="1">+1</button>
-        <button data-qty="10">+10</button>
-        <button data-qty="50">+50</button>
+      if (options.useNumericInputs) {
+        controls.innerHTML = `
+        <input type="number" class="modal-qty-input input-number" min="1" value="${this.selectedQty}" />
         <button data-qty="max">Max</button>
       `;
-      controls.querySelectorAll('button').forEach((btn) => {
-        btn.onclick = () => {
-          this.selectedQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+        const qtyInput = controls.querySelector('.modal-qty-input');
+        const maxBtn = controls.querySelector('button[data-qty="max"]');
+        qtyInput.addEventListener('input', () => {
+          let val = parseInt(qtyInput.value, 10);
+          if (isNaN(val) || val < 1) val = 1;
+          this.selectedQty = val;
+          options.crystalShopQty = val;
+          this.updateModalDetails();
+          dataManager.saveGame();
+        });
+        maxBtn.onclick = () => {
+          this.selectedQty = 'max';
           this.updateModalDetails();
         };
-      });
+      } else {
+        controls.innerHTML = `
+          <button data-qty="1">+1</button>
+          <button data-qty="10">+10</button>
+          <button data-qty="50">+50</button>
+          <button data-qty="max">Max</button>
+        `;
+        controls.querySelectorAll('button').forEach((btn) => {
+          btn.onclick = () => {
+            this.selectedQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+            this.updateModalDetails();
+          };
+        });
+      }
       buyBtn.style.display = '';
       this.updateModalDetails();
     } else if (config.oneTime) {
@@ -416,6 +437,8 @@ export default class CrystalShop {
         if (q('.modal-total-cost')) q('.modal-total-cost').textContent = totalCost;
         if (q('.modal-total-bonus')) q('.modal-total-bonus').textContent = `+${bonusValue} ${config.label}`;
         if (q('.modal-next-bonus')) q('.modal-next-bonus').textContent = this.getBonusText(stat, config, baseLevel + 1);
+        const input = q('.modal-qty-input');
+        if (input && this.selectedQty !== 'max') input.value = this.selectedQty;
       }
 
       const buyBtn = q('.modal-buy');
