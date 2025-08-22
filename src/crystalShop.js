@@ -1,4 +1,4 @@
-import { dataManager, hero, options, skillTree, statistics, inventory } from './globals.js';
+import { dataManager, hero, options, skillTree, statistics, inventory, game } from './globals.js';
 import {
   updateResources,
   initializeSkillTreeUI,
@@ -270,7 +270,9 @@ export default class CrystalShop {
       if (!confirmed) return;
       hero.crystals -= cost;
       hero.bossLevel = 1;
-      selectBoss();
+      if (game.fightMode === 'arena') {
+        selectBoss();
+      }
       updateStageUI();
       showToast('Boss level has been reset to 1.', 'success');
     }
