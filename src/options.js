@@ -131,63 +131,85 @@ export class Options {
     const optionsTab = document.getElementById('options');
     if (!optionsTab) return;
     optionsTab.innerHTML = '';
+
     const container = document.createElement('div');
     container.className = 'options-container';
-    container.appendChild(this._createCloudSaveBar());
 
-    // --- Language Option ---
-    container.appendChild(this._createLanguageOption());
-    // --- Sound Volume Option ---
-    container.appendChild(this._createSoundVolumeOption());
-    // --- Advanced Item Tooltips Option ---
-    container.appendChild(this._createAdvancedTooltipsOption());
-    // --- Advanced Attribute Tooltips Option ---
-    container.appendChild(this._createAdvancedAttributeTooltipsOption());
-    // --- Enemy Stats Toggle Option ---
-    container.appendChild(this._createEnemyStatsToggleOption());
-    // --- Show All Stats Option ---
-    container.appendChild(this._createShowAllStatsOption());
-    // --- Elemental Stat Names Option ---
-    container.appendChild(this._createShortElementalNamesOption());
-    // --- Skill Cooldown Numbers Option ---
-    container.appendChild(this._createShowSkillCooldownsOption());
-    // --- Quick Training Toggle Option ---
-    container.appendChild(this._createQuickTrainingOption());
-    // --- Quick Soul Shop Toggle Option ---
-    container.appendChild(this._createQuickSoulShopOption());
-    // --- Starting Stage Option ---
-    container.appendChild(this._createStartingStageOption());
-    // --- Stage Skip Option ---
-    container.appendChild(this._createStageSkipOption());
-    // --- Reset Stage Skip Option ---
-    container.appendChild(this._createResetStageSkipOption());
-    // --- Rate Counters Toggle Option ---
-    container.appendChild(this._createRateCountersOption());
-    // --- Rate Counters Period Option ---
-    container.appendChild(this._createRateCountersPeriodOption());
+    // --- Tabs ---
+    const tabs = document.createElement('div');
+    tabs.className = 'options-tabs';
+    const gameTabBtn = document.createElement('button');
+    gameTabBtn.className = 'options-tab active';
+    gameTabBtn.textContent = 'Game';
+    const generalTabBtn = document.createElement('button');
+    generalTabBtn.className = 'options-tab';
+    generalTabBtn.textContent = 'General';
+    tabs.appendChild(gameTabBtn);
+    tabs.appendChild(generalTabBtn);
+    container.appendChild(tabs);
 
-    // --- Changelog & Upcoming buttons row ---
+    // --- Game Options Content ---
+    const gameContent = document.createElement('div');
+    gameContent.className = 'options-content active';
+    gameContent.appendChild(this._createAdvancedTooltipsOption());
+    gameContent.appendChild(this._createAdvancedAttributeTooltipsOption());
+    gameContent.appendChild(this._createEnemyStatsToggleOption());
+    gameContent.appendChild(this._createShowAllStatsOption());
+    gameContent.appendChild(this._createShortElementalNamesOption());
+    gameContent.appendChild(this._createQuickTrainingOption());
+    gameContent.appendChild(this._createQuickSoulShopOption());
+    gameContent.appendChild(this._createStartingStageOption());
+    gameContent.appendChild(this._createStageSkipOption());
+    gameContent.appendChild(this._createResetStageSkipOption());
+    gameContent.appendChild(this._createRateCountersOption());
+    gameContent.appendChild(this._createRateCountersPeriodOption());
+
+    // --- General Options Content ---
+    const generalContent = document.createElement('div');
+    generalContent.className = 'options-content';
+    generalContent.appendChild(this._createCloudSaveBar());
+    generalContent.appendChild(this._createLanguageOption());
+    generalContent.appendChild(this._createSoundVolumeOption());
+
     const changelogRow = document.createElement('div');
     changelogRow.className = 'changelog-row';
     changelogRow.appendChild(this._createChangelogButton());
     changelogRow.appendChild(this._createUpcomingChangesButton());
-    container.appendChild(changelogRow);
+    generalContent.appendChild(changelogRow);
 
-    container.appendChild(this._createDiscordSection());
+    generalContent.appendChild(this._createDiscordSection());
 
     const suggestionsRow = document.createElement('div');
     suggestionsRow.innerHTML = html`
-      Current version: ${this.version}. 
-      <br> 
-      <br> 
+      Current version: ${this.version}.
+      <br>
+      <br>
       Please add your suggestions for changes in the game in the discord channel :)
       <br>
       <br>
       You can download desktop application (Windows only!) from <a style="color:#fff; background:#0078d7; padding:2px 8px; border-radius:4px; text-decoration:none; font-weight:bold;" target="_blank" href="https://github.com/aleksandar-radev/endless/releases">HERE</a>.
     `;
-    container.appendChild(suggestionsRow);
+    generalContent.appendChild(suggestionsRow);
+    generalContent.appendChild(this._createResetButton());
 
-    container.appendChild(this._createResetButton());
+    container.appendChild(gameContent);
+    container.appendChild(generalContent);
+
+    // --- Tab Switching Logic ---
+    gameTabBtn.addEventListener('click', () => {
+      gameTabBtn.classList.add('active');
+      generalTabBtn.classList.remove('active');
+      gameContent.classList.add('active');
+      generalContent.classList.remove('active');
+    });
+
+    generalTabBtn.addEventListener('click', () => {
+      generalTabBtn.classList.add('active');
+      gameTabBtn.classList.remove('active');
+      generalContent.classList.add('active');
+      gameContent.classList.remove('active');
+    });
+
     optionsTab.appendChild(container);
   }
 
