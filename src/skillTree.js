@@ -533,6 +533,15 @@ export default class SkillTree {
     updateActionBar(); // Update UI to reset all visual states
   }
 
+  resetAllCooldowns() {
+    Object.values(this.skills).forEach((skill) => {
+      if (skill.cooldownEndTime) {
+        skill.cooldownEndTime = 0;
+      }
+    });
+    updateActionBar();
+  }
+
   processSummons() {
     const now = Date.now();
     this.activeBuffs.forEach((buffData, skillId) => {

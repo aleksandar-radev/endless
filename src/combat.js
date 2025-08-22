@@ -203,8 +203,9 @@ export function playerDeath() {
     updateStatsAndAttributesUI();
     updatePlayerLife();
 
-    // Reset buffs and indicators
+    // Reset buffs, cooldowns, and indicators
     skillTree.stopAllBuffs();
+    skillTree.resetAllCooldowns();
     updateBuffIndicators();
 
     // If continuing, restart the game state
