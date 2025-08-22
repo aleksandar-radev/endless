@@ -92,6 +92,8 @@ const BASE_SCALE_PER_TIER_AND_LEVEL = {
   },
 };
 
+const attackRatingAndEvasionScale = 0.6;
+
 class Enemy {
   constructor(level) {
     this.level = level; // level of enemy is same as stage
@@ -236,7 +238,7 @@ class Enemy {
     base *= scale.tierScale * levelBonus;
 
     const val = scaleStat(base, this.level, 0,0,0, this.baseScale);
-    return val * this.region.multiplier.evasion * this.rarityData.multiplier.evasion * this.baseData.multiplier.evasion;
+    return val * this.region.multiplier.evasion * this.rarityData.multiplier.evasion * this.baseData.multiplier.evasion * attackRatingAndEvasionScale;
   }
 
   calculateAttackRating() {
@@ -250,7 +252,8 @@ class Enemy {
       val *
       this.region.multiplier.attackRating *
       this.rarityData.multiplier.attackRating *
-      this.baseData.multiplier.attackRating
+      this.baseData.multiplier.attackRating *
+      attackRatingAndEvasionScale
     );
   }
 

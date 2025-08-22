@@ -10,6 +10,7 @@ import { ELEMENTS } from './constants/common.js';
 const INCREASE_PER_LEVEL = 0.01;
 const stat_increase = (level) => percentIncreasedByLevel(0.1, level, 50, 0.015, 1);
 const xp_gold_scale = (level) => percentReducedByLevel(1, level, 20, 0.01, 0.025);
+const attackRatingAndEvasionScale = 0.7;
 
 class Boss {
   /**
@@ -131,7 +132,7 @@ class Boss {
     base *= levelBonus;
 
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
-    return val * (this.baseData.multiplier?.evasion || 1);
+    return val * (this.baseData.multiplier?.evasion || 1) * attackRatingAndEvasionScale;
   }
 
   calculateAttackRating() {
@@ -140,7 +141,7 @@ class Boss {
     base *= levelBonus;
 
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
-    return val * (this.baseData.multiplier?.attackRating || 1);
+    return val * (this.baseData.multiplier?.attackRating || 1) * attackRatingAndEvasionScale;
   }
 
   calculateElementalDamage(type) {
