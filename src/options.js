@@ -50,12 +50,15 @@ export class Options {
     // Use numeric inputs for bulk purchases
     this.useNumericInputs = data.useNumericInputs ?? false;
     // Default quantities for bulk purchases
-    this.soulShopQty = typeof data.soulShopQty === 'number' ? data.soulShopQty : 1;
-    this.soulShopQuickQty = typeof data.soulShopQuickQty === 'number' ? data.soulShopQuickQty : 1;
-    this.crystalShopQty = typeof data.crystalShopQty === 'number' ? data.crystalShopQty : 1;
-    this.trainingQty = typeof data.trainingQty === 'number' ? data.trainingQty : 1;
-    this.trainingQuickQty = typeof data.trainingQuickQty === 'number' ? data.trainingQuickQty : 1;
-    this.buildingQty = typeof data.buildingQty === 'number' ? data.buildingQty : 1;
+    this.soulShopQty = typeof data.soulShopQty === 'number' ? Math.min(data.soulShopQty, 10000) : 1;
+    this.soulShopQuickQty =
+      typeof data.soulShopQuickQty === 'number' ? Math.min(data.soulShopQuickQty, 10000) : 1;
+    this.crystalShopQty =
+      typeof data.crystalShopQty === 'number' ? Math.min(data.crystalShopQty, 10000) : 1;
+    this.trainingQty = typeof data.trainingQty === 'number' ? Math.min(data.trainingQty, 10000) : 1;
+    this.trainingQuickQty =
+      typeof data.trainingQuickQty === 'number' ? Math.min(data.trainingQuickQty, 10000) : 1;
+    this.buildingQty = typeof data.buildingQty === 'number' ? Math.min(data.buildingQty, 10000) : 1;
     // Preferred language, default to English
     this.language = data.language || 'en';
     // Use short elemental stat names

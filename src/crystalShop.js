@@ -127,7 +127,7 @@ export default class CrystalShop {
     handleSavedData(savedData, this);
     this.modal = null;
     this.currentStat = null;
-    this.selectedQty = options.useNumericInputs ? options.crystalShopQty || 1 : 1;
+    this.selectedQty = options.useNumericInputs ? Math.min(options.crystalShopQty || 1, 10000) : 1;
   }
 
   resetCrystalShop() {
@@ -298,7 +298,7 @@ export default class CrystalShop {
     const fields = m.querySelector('.modal-fields');
     const controls = m.querySelector('.modal-controls');
     const buyBtn = m.querySelector('.modal-buy');
-    this.selectedQty = options.useNumericInputs ? options.crystalShopQty || 1 : 1;
+    this.selectedQty = options.useNumericInputs ? Math.min(options.crystalShopQty || 1, 10000) : 1;
 
     if (config.bulkModal) {
       const maxLevelText = config.maxLevel ? ' / <span class="modal-max-level"></span>' : '';
@@ -312,7 +312,7 @@ export default class CrystalShop {
       controls.style.display = '';
       if (options.useNumericInputs) {
         controls.innerHTML = `
-        <input type="number" class="modal-qty-input input-number" min="1" value="${this.selectedQty}" />
+        <input type="number" class="modal-qty-input input-number" min="1" max="10000" value="${this.selectedQty}" />
         <button data-qty="max">Max</button>
       `;
         const qtyInput = controls.querySelector('.modal-qty-input');
@@ -320,6 +320,7 @@ export default class CrystalShop {
         qtyInput.addEventListener('input', () => {
           let val = parseInt(qtyInput.value, 10);
           if (isNaN(val) || val < 1) val = 1;
+          if (val > 10000) val = 10000;
           this.selectedQty = val;
           options.crystalShopQty = val;
           this.updateModalDetails();
@@ -399,14 +400,14 @@ export default class CrystalShop {
       const cap = config.maxLevel || Infinity;
       const levelsLeft = Math.max(0, cap - baseLevel);
       let qty = this.selectedQty === 'max' ? levelsLeft : this.selectedQty;
-      qty = Math.min(qty, levelsLeft);
+      qty = Math.min(qty, levelsLeft, 10000);
       let totalCost = 0;
 
       if (this.selectedQty === 'max') {
         let lvl = baseLevel;
         let crystals = crystalsAvailable;
         qty = 0;
-        while (lvl < cap) {
+        while (lvl < cap && qty < 10000) {
           const cost = Math.floor(config.baseCost + (config.costIncrement || 0) * lvl);
           if (crystals < cost) break;
           crystals -= cost;
@@ -494,13 +495,14 @@ export default class CrystalShop {
     const nextCost = (lvl) => Math.floor(baseCost + costIncrement * lvl);
 
     if (qty === 'max') {
-      while (hero.crystals >= nextCost(level)) {
+      while (hero.crystals >= nextCost(level) && count < 10000) {
         const cost = nextCost(level++);
         hero.crystals -= cost;
         totalCost += cost;
         count++;
       }
     } else {
+      qty = Math.min(qty, 10000);
       for (let i = 0; i < qty; i++) {
         const cost = nextCost(level);
         if (hero.crystals < cost) break;
@@ -591,10 +593,11 @@ export default class CrystalShop {
    * Routes to resets, bulk, one-time or multiple handlers.
    * @param {string} stat
    * @param {number|'max'} qty
-   */
+  */
   async buyBulk(stat, qty) {
     const config = CRYSTAL_UPGRADE_CONFIG[stat];
     if (!config) return;
+    if (qty !== 'max') qty = Math.min(qty, 10000);
 
     // special resets use confirm dialog
     if (['resetSkillTree', 'resetAttributes', 'resetArenaLevel'].includes(stat)) {

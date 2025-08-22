@@ -204,7 +204,7 @@ export default class Inventory {
           <span style="font-size:1.5em;">${item.getIcon()}</span>
           <span><b>${item.type}</b> (Lvl ${item.level})</span>
           <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
-          <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${maxLevels}" value="1" aria-label="Upgrade quantity" />
+          <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${Math.min(maxLevels, 10000)}" value="1" aria-label="Upgrade quantity" />
           <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">Upgrade</button>
           <span class="upgrade-cost" data-idx="${idx}"></span>
         </div>`;
@@ -216,6 +216,7 @@ export default class Inventory {
           const qtyInput = dialog.querySelector(`.upgrade-qty-input[data-idx='${idx}']`);
           let useQty = parseInt(qtyInput.value, 10);
           if (isNaN(useQty) || useQty < 1) useQty = 1;
+          if (useQty > 10000) useQty = 10000;
           // Limit useQty to not exceed highest stage reached or available materials
           const maxStage = statistics.highestStages[item.tier] || 0;
           const maxLevelsByStage = Math.max(0, maxStage - item.level);
@@ -254,6 +255,10 @@ export default class Inventory {
         const updateCost = () => {
           let val = parseInt(input.value, 10);
           if (isNaN(val) || val < 1) val = 1;
+          if (val > 10000) {
+            val = 10000;
+            input.value = val;
+          }
           const maxStage = statistics.highestStages[item.tier] || 0;
           const maxLevelsByStage = Math.max(0, maxStage - item.level);
           const maxLevelsByMats = Math.floor(mat.qty / item.tier);
@@ -372,8 +377,8 @@ export default class Inventory {
         style="padding: 5px; border-radius: 10px;"
         type="number"
         min="1"
-        max="${mat.qty}"
-        value="${mat.qty}"
+        max="${Math.min(mat.qty, 10000)}"
+        value="${Math.min(mat.qty, 10000)}"
       />
       <div class="modal-controls">
         <button class="modal-buy" id="material-use-btn">Use</button>
@@ -393,6 +398,7 @@ export default class Inventory {
     const useHandler = () => {
       let useQty = parseInt(qtyInput.value, 10);
       if (isNaN(useQty) || useQty < 1) useQty = 1;
+      if (useQty > 10000) useQty = 10000;
       if (useQty > mat.qty) useQty = mat.qty;
       if (matDef && typeof matDef.onUse === 'function') {
         matDef.onUse(hero, useQty);

@@ -123,11 +123,11 @@ function createBuildingCard(building) {
 function showBuildingInfoModal(building, onUpgrade, placementOptions) {
   const canUpgrade = building.level < building.maxLevel;
 
-  let upgradeAmount = options.useNumericInputs ? options.buildingQty || 1 : 1;
+  let upgradeAmount = options.useNumericInputs ? Math.min(options.buildingQty || 1, 10000) : 1;
   let modal;
 
   function getMaxUpgradeAmount() {
-    return building.getMaxUpgradeAmount(hero);
+    return Math.min(building.getMaxUpgradeAmount(hero), 10000);
   }
 
   function getTotalBonus(amount) {
@@ -151,7 +151,7 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
     const totalBonus = getTotalBonus(upgradeAmount);
     const refundAmount = building.getRefund();
     const upgradeControls = options.useNumericInputs
-      ? `<input type="number" class="upgrade-amt-input input-number" min="1" value="${upgradeAmount}" />
+      ? `<input type="number" class="upgrade-amt-input input-number" min="1" max="10000" value="${upgradeAmount}" />
           <button data-amt="max" class="upgrade-amt-btn${upgradeAmount === maxAffordableAmt ? ' selected-upgrade-amt' : ''}">Max</button>`
       : `<button data-amt="1" class="upgrade-amt-btn${upgradeAmount === 1 ? ' selected-upgrade-amt' : ''}">+1</button>
           <button data-amt="10" class="upgrade-amt-btn${upgradeAmount === 10 ? ' selected-upgrade-amt' : ''}" ${maxAffordableAmt < 10 ? 'disabled' : ''}>+10</button>
@@ -205,6 +205,7 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
       input.addEventListener('input', () => {
         let amt = parseInt(input.value, 10);
         if (isNaN(amt) || amt < 1) amt = 1;
+        if (amt > 10000) amt = 10000;
         upgradeAmount = Math.max(1, Math.min(getMaxUpgradeAmount(), amt));
         options.buildingQty = upgradeAmount;
         dataManager.saveGame();

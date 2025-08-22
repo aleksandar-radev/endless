@@ -31,7 +31,7 @@ export default class Training {
 
     handleSavedData(savedData, this);
     this.activeSection = SECTION_DEFS[0].key;
-    this.quickQty = options.useNumericInputs ? options.trainingQuickQty || 1 : 1;
+    this.quickQty = options.useNumericInputs ? Math.min(options.trainingQuickQty || 1, 10000) : 1;
     this.initializeTrainingUI();
   }
 
@@ -42,7 +42,7 @@ export default class Training {
     Object.keys(this.trainingBonuses).forEach((stat) => {
       this.trainingBonuses[stat] = 0;
     });
-    this.quickQty = options.useNumericInputs ? options.trainingQuickQty || 1 : 1;
+    this.quickQty = options.useNumericInputs ? Math.min(options.trainingQuickQty || 1, 10000) : 1;
   }
 
   initializeTrainingUI() {
@@ -85,7 +85,7 @@ export default class Training {
       qtyControls.className = 'training-qty-controls';
       if (options.useNumericInputs) {
         qtyControls.innerHTML = `
-          <input type="number" class="training-qty-input input-number" min="1" value="${this.quickQty === 'max' ? options.trainingQuickQty || 1 : this.quickQty}" />
+          <input type="number" class="training-qty-input input-number" min="1" max="10000" value="${this.quickQty === 'max' ? options.trainingQuickQty || 1 : this.quickQty}" />
           <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">Max</button>
         `;
         nav.appendChild(qtyControls);
@@ -94,6 +94,7 @@ export default class Training {
         input.oninput = () => {
           let val = parseInt(input.value, 10);
           if (isNaN(val) || val < 1) val = 1;
+          if (val > 10000) val = 10000;
           this.quickQty = val;
           options.trainingQuickQty = val;
           maxBtn.classList.remove('active');
@@ -158,7 +159,7 @@ export default class Training {
     if (!this.modal) {
       // Build markup for bulk-buy modal
       const controlsMarkup = options.useNumericInputs
-        ? `<input type="number" class="modal-qty-input input-number" min="1" />
+        ? `<input type="number" class="modal-qty-input input-number" min="1" max="10000" />
             <button data-qty="max">Max</button>`
         : `<button data-qty="1">+1</button>
             <button data-qty="10">+10</button>
@@ -191,6 +192,7 @@ export default class Training {
         qtyInput.addEventListener('input', () => {
           let val = parseInt(qtyInput.value, 10);
           if (isNaN(val) || val < 1) val = 1;
+          if (val > 10000) val = 10000;
           this.selectedQty = val;
           options.trainingQty = val;
           this.updateModalDetails();
@@ -211,7 +213,8 @@ export default class Training {
       // Slider input
       const slider = this.modal.querySelector('.modal-slider');
       slider.addEventListener('input', (e) => {
-        this.selectedQty = parseInt(e.target.value, 10) || 0;
+        this.selectedQty = Math.min(parseInt(e.target.value, 10) || 0, 10000);
+        e.target.value = this.selectedQty;
         const input = this.modal.querySelector('.modal-qty-input');
         if (input) input.value = this.selectedQty;
         if (options.useNumericInputs) {
@@ -259,7 +262,7 @@ export default class Training {
       (this.upgradeLevels[stat] || 0) + 1,
     );
     // Reset to default quantity
-    this.selectedQty = options.useNumericInputs ? options.trainingQty || 1 : 1;
+    this.selectedQty = options.useNumericInputs ? Math.min(options.trainingQty || 1, 10000) : 1;
     const qtyInput = m.querySelector('.modal-qty-input');
     if (qtyInput) qtyInput.value = this.selectedQty;
     this.updateModalDetails();
@@ -308,8 +311,8 @@ export default class Training {
   }
 
   getMaxPurchasable(selectedQty, baseLevel, maxLevel, config, availableGold = hero.gold) {
-    // Limit max upgrades per call to 100,000
-    const MAX_BULK = 100000;
+    // Limit max upgrades per call to 10,000
+    const MAX_BULK = 10000;
     let safeMaxLevel = maxLevel === Infinity || !isFinite(maxLevel) ? baseLevel + MAX_BULK : maxLevel;
     let maxPossible = Math.min(safeMaxLevel - baseLevel, MAX_BULK);
     let qty = selectedQty === 'max' ? 0 : selectedQty;
@@ -361,9 +364,9 @@ export default class Training {
     let qty =
       this.selectedQty === 'max'
         ? affordableQty > 0
-          ? affordableQty
+          ? Math.min(affordableQty, 10000)
           : Math.min(1, levelsLeft)
-        : Math.min(this.selectedQty, levelsLeft);
+        : Math.min(this.selectedQty, levelsLeft, 10000);
     const totalCost = this.calculateTotalCost(config, qty, baseLevel);
     const affordable = hero.gold >= totalCost && qty > 0 && qty <= affordableQty;
 
@@ -386,8 +389,8 @@ export default class Training {
 
     const slider = this.modal.querySelector('.modal-slider');
     if (slider) {
-      slider.max = levelsLeft;
-      slider.value = this.selectedQty === 'max' ? levelsLeft : Math.min(this.selectedQty, levelsLeft);
+      slider.max = Math.min(levelsLeft, 10000);
+      slider.value = this.selectedQty === 'max' ? Math.min(levelsLeft, 10000) : Math.min(this.selectedQty, levelsLeft, 10000);
     }
     const input = this.modal.querySelector('.modal-qty-input');
     if (input && this.selectedQty !== 'max') input.value = this.selectedQty;
@@ -410,6 +413,7 @@ export default class Training {
 
   calculateBulkCostAndPurchases(qty) {
     const section = SECTION_DEFS.find((s) => s.key === this.activeSection);
+    if (qty !== 'max') qty = Math.min(qty, 10000);
     let availableGold = hero.gold;
     let totalCost = 0;
     const purchases = [];
@@ -482,7 +486,7 @@ export default class Training {
       let totalCost;
       if (this.quickQty === 'max') {
         const { qty: affordableQty } = this.getMaxPurchasable('max', level, maxLevel, config.training);
-        desiredQty = affordableQty > 0 ? affordableQty : Math.min(1, levelsLeft);
+        desiredQty = affordableQty > 0 ? Math.min(affordableQty, 10000) : Math.min(1, levelsLeft);
         totalCost = this.calculateTotalCost(config.training, desiredQty, level);
         if (affordableQty <= 0) disabled = true;
         if (hero.gold < totalCost) {
@@ -490,7 +494,7 @@ export default class Training {
           bonusClass = 'unaffordable';
         }
       } else {
-        desiredQty = Math.min(this.quickQty, levelsLeft);
+        desiredQty = Math.min(this.quickQty, levelsLeft, 10000);
         totalCost = this.calculateTotalCost(config.training, desiredQty, level);
         if (desiredQty <= 0 || hero.gold < totalCost) {
           disabled = true;
@@ -551,6 +555,7 @@ export default class Training {
     if (qty === 'max') {
       ({ qty: levelsToBuy, totalCost } = this.getMaxPurchasable(qty, currentLevel, maxLevel, config));
     } else {
+      qty = Math.min(qty, 10000);
       levelsToBuy = Math.min(qty, levelsLeft);
       // Calculate total cost for levelsToBuy upgrades
       totalCost = this.calculateTotalCost(config, levelsToBuy, currentLevel);

@@ -24,7 +24,7 @@ export default function run() {
     <li>All options are now preserved between prestiges, apart from the ones that are purchased from the crystal shop.</li>
     <li>Buildings can now be upgraded without opening the map. (Map itself might be removed in the future.)</li>
     <li>Improved overall performance a little.</li>
-    <li>Added an option to allow numeric inputs for buying upgrades (training, soul shop).</li>
+    <li>Added an option to allow numeric inputs for buying upgrades (training, soul shop). With 10k limit.</li>
     <li>Added an option to allow bulk purchase in training. (buying all upgrades at once, for the same amount)</li>
     <li>Added hero level tracking in statistics. Now you can see what level you did your prestige in history</li>
     <li>Reduced gold gains from higher tier enemies a little.</li>
