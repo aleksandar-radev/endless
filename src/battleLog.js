@@ -3,8 +3,8 @@ export class BattleLog {
     this.maxEntries = maxEntries;
     this.battle = [];
     this.drops = [];
-    this.battleFrozen = false;
-    this.dropsFrozen = false;
+    this.battleFrozen = true;
+    this.dropsFrozen = true;
   }
 
   addBattle(message) {

@@ -36,8 +36,8 @@ export function initializeBattleLogUI() {
   }
 
   function render() {
-    battleList.innerHTML = battleLog.battle.map(format).join('');
-    dropList.innerHTML = battleLog.drops.map(format).join('');
+    battleList.innerHTML = battleLog.battle.slice().reverse().map(format).join('');
+    dropList.innerHTML = battleLog.drops.slice().reverse().map(format).join('');
   }
 
   function updateButtons() {
