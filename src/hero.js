@@ -94,12 +94,8 @@ export default class Hero {
    */
   getExpToNextLevel() {
     if (this.level === 1) return 66;
-    let xp = 66;
-    for (let lvl = 2; lvl <= this.level; lvl++) {
-      const block = Math.floor((lvl - 1) / 20);
-      const xpPerLevel = 86 + 4 * Math.floor((lvl - 1) / 50);
-      xp += xpPerLevel + 40 * block;
-    }
+    let xp = 40;
+    xp += 60 + 2.5 * this.level ** 2;
     return xp;
   }
 
