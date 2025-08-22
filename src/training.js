@@ -123,7 +123,9 @@ export default class Training {
           };
         });
       }
+    }
 
+    if (options?.bulkTraining) {
       const bulkControls = document.createElement('div');
       bulkControls.className = 'training-bulk-controls';
       bulkControls.innerHTML = `
@@ -134,6 +136,9 @@ export default class Training {
       this.bulkBuyBtn = bulkControls.querySelector('.bulk-buy');
       this.bulkCostEl = bulkControls.querySelector('.training-bulk-cost');
       this.bulkBuyBtn.onclick = () => this.bulkBuySection();
+    } else {
+      this.bulkBuyBtn = null;
+      this.bulkCostEl = null;
     }
     nav.querySelectorAll('button[data-section]').forEach((btn) => {
       btn.onclick = () => {
@@ -400,7 +405,7 @@ export default class Training {
       .filter(([stat, config]) => config.training && section.stats.includes(stat))
       .map(([stat, config]) => this.createUpgradeButton(stat, config))
       .join('');
-    if (options?.quickTraining) this.updateBulkCost();
+    if (options?.bulkTraining) this.updateBulkCost();
   }
 
   calculateBulkCostAndPurchases(qty) {

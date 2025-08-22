@@ -43,6 +43,8 @@ export class Options {
     this.rateCountersPeriod = data.rateCountersPeriod || 1;
     // Enable quick training purchases
     this.quickTraining = data.quickTraining ?? false;
+    // Enable bulk training purchases
+    this.bulkTraining = data.bulkTraining ?? false;
     // Enable quick soul shop purchases
     this.quickSoulShop = data.quickSoulShop ?? false;
     // Use numeric inputs for bulk purchases
@@ -167,6 +169,7 @@ export class Options {
     gameContent.appendChild(this._createShowAllStatsOption());
     gameContent.appendChild(this._createShortElementalNamesOption());
     gameContent.appendChild(this._createQuickTrainingOption());
+    gameContent.appendChild(this._createBulkTrainingOption());
     gameContent.appendChild(this._createQuickSoulShopOption());
     gameContent.appendChild(this._createNumericInputOption());
     gameContent.appendChild(this._createStartingStageOption());
@@ -953,6 +956,36 @@ export class Options {
     });
     checkbox.addEventListener('change', () => {
       this.quickTraining = checkbox.checked;
+      dataManager.saveGame();
+      if (training) training.initializeTrainingUI();
+    });
+    return wrapper;
+  }
+
+  /**
+   * Creates the bulk training toggle option UI.
+   */
+  _createBulkTrainingOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="bulk-training-toggle" class="bulk-training-toggle-label">Enable Training Bulk Buy:</label>
+      <input
+        type="checkbox"
+        id="bulk-training-toggle"
+        class="bulk-training-toggle"
+        ${this.bulkTraining ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.bulkTraining = checkbox.checked;
       dataManager.saveGame();
       if (training) training.initializeTrainingUI();
     });
