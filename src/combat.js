@@ -228,15 +228,12 @@ export function playerDeath() {
 
 export async function defeatEnemy() {
   // If a prestige is in progress, skip granting rewards from this kill
-  try {
-    if (game && game.prestigeInProgress) {
-      // clear the justDefeated guard and return early without applying rewards
-      game._justDefeated = false;
-      return;
-    }
-  } catch (e) {
-    // ignore any errors checking the flag
+  if (game.prestigeInProgress) {
+    // clear the justDefeated guard and return early without applying rewards
+    game._justDefeated = false;
+    return;
   }
+
   const enemy = game.currentEnemy;
   let baseExpGained = 1;
   let baseGoldGained = 1;
@@ -246,16 +243,6 @@ export async function defeatEnemy() {
 
   // Add 500ms delay between monster kills
   await new Promise((resolve) => setTimeout(resolve, 500));
-
-  // If a prestige started while we were waiting, skip all reward processing
-  try {
-    if (game && game.prestigeInProgress) {
-      game._justDefeated = false;
-      return;
-    }
-  } catch (e) {
-    // ignore
-  }
 
   if (game.fightMode === 'arena') {
     baseExpGained = enemy.xp;
