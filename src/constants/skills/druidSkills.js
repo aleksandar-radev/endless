@@ -135,7 +135,7 @@ export const DRUID_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'companion',
     description: () => t('skill.animalCompanion'),
-    maxLevel: () => 200,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
     }),
   },
@@ -224,7 +224,7 @@ export const DRUID_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'spirit-link',
     description: () => t('skill.spiritLink'),
-    maxLevel: () => 300,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeSteal: Math.min(scaleDownFlat(level, 0.02), 10),
       manaPerHit: scaleUpFlat(level, 0.75),
@@ -237,7 +237,7 @@ export const DRUID_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'moonfury',
     description: () => t('skill.moonfury'),
-    maxLevel: () => 300,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       coldDamagePercent: scaleDownFlat(level, 2),
       coldDamage: scaleUpFlat(level, 4),
@@ -257,7 +257,7 @@ export const DRUID_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'embrace',
     description: () => t('skill.earthsEmbrace'),
-    maxLevel: () => 500,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armorPercent: scaleDownFlat(level, 2),
       lifeRegenPercent: scaleDownFlat(level, 0.5),
@@ -272,7 +272,7 @@ export const DRUID_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'wrath-of-nature',
     description: () => t('skill.wrathOfNature'),
-    maxLevel: () => 500,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2.5),
       vitalityPercent: scaleDownFlat(level),
@@ -288,11 +288,11 @@ export const DRUID_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'avatar-of-nature',
     description: () => t('skill.avatarOfNature'),
-    maxLevel: () => 100,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      vitality: scaleUpFlat(level, 3),
+      vitality: scaleUpFlat(level, 3, 6),
       vitalityPercent: scaleDownFlat(level, 3),
-      strength: scaleUpFlat(level, 4),
+      strength: scaleUpFlat(level, 4, 6),
       damagePercent: scaleDownFlat(level, 2),
       lifePercent: scaleDownFlat(level, 2),
     }),

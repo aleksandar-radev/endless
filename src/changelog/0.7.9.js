@@ -37,6 +37,7 @@ export default function run() {
     <li>Increased maximum allowed size for save on server, so there should be no problems with saving progress anymore.</li>
     <li>Vampire draining touch skill description has been improved.</li>
     <li>Overall attack rating and evasion has been reduced by 40% for all enemies and 30% for bosses.</li>
+    <li>Remove level cap on all druid skills.</li>
   </ul>
 
   <span style="color:#FF8C00;"> Fixes & polish</span>
