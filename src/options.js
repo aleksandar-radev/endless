@@ -10,7 +10,7 @@ import { CHANGELOG } from './changelog/changelog.js';
 import upcommingChanges from './upcoming.js';
 import { audioManager } from './audio.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
-import { setLanguage } from './i18n.js';
+import { setLanguage, t } from './i18n.js';
 
 const html = String.raw;
 
@@ -87,7 +87,7 @@ export class Options {
         <option value="en" data-i18n="options.lang.english">English</option>
         <option value="es" data-i18n="options.lang.spanish">Español</option>
       </select>
-      <span>Not everything translated yet. You might still see translations in english, as a default language. You might want to refresh page after changing language, to see all changes take effect.</span>
+      <span data-i18n="options.lang.note">Not everything translated yet. You might still see translations in english, as a default language. You might want to refresh page after changing language, to see all changes take effect.</span>
     `;
     const select = wrapper.querySelector('select');
     select.value = this.language;
@@ -106,7 +106,7 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="sound-volume-slider" class="sound-volume-label">Sound Volume:</label>
+      <label for="sound-volume-slider" class="sound-volume-label" data-i18n="options.soundVolume">Sound Volume:</label>
       <input
         type="range"
         id="sound-volume-slider"
@@ -115,7 +115,7 @@ export class Options {
         max="1"
         step="0.01"
         value="${this.soundVolume}"
-        title="Adjust game sound volume"
+        title="${t('options.soundVolume.tooltip')}"
       />
       <span class="sound-volume-value">${Math.round(this.soundVolume * 100)}%</span>
     `;
@@ -152,10 +152,12 @@ export class Options {
     tabs.className = 'options-tabs';
     const gameTabBtn = document.createElement('button');
     gameTabBtn.className = 'options-tab active';
-    gameTabBtn.textContent = 'Game';
+    gameTabBtn.setAttribute('data-i18n', 'options.tab.game');
+    gameTabBtn.textContent = t('options.tab.game');
     const generalTabBtn = document.createElement('button');
     generalTabBtn.className = 'options-tab';
-    generalTabBtn.textContent = 'General';
+    generalTabBtn.setAttribute('data-i18n', 'options.tab.general');
+    generalTabBtn.textContent = t('options.tab.general');
     tabs.appendChild(gameTabBtn);
     tabs.appendChild(generalTabBtn);
     container.appendChild(tabs);
@@ -195,13 +197,13 @@ export class Options {
 
     const suggestionsRow = document.createElement('div');
     suggestionsRow.innerHTML = html`
-      Current version: ${this.version}.
+      ${t('options.currentVersion')} ${this.version}.
       <br>
       <br>
-      Please add your suggestions for changes in the game in the discord channel :)
+      ${t('options.suggestionsPrompt')}
       <br>
       <br>
-      You can download desktop application (Windows only!) from <a style="color:#fff; background:#0078d7; padding:2px 8px; border-radius:4px; text-decoration:none; font-weight:bold;" target="_blank" href="https://github.com/aleksandar-radev/endless/releases">HERE</a>.
+      ${t('options.desktopDownload')} <a style="color:#fff; background:#0078d7; padding:2px 8px; border-radius:4px; text-decoration:none; font-weight:bold;" target="_blank" href="https://github.com/aleksandar-radev/endless/releases">${t('options.here')}</a>.
     `;
     generalContent.appendChild(suggestionsRow);
     generalContent.appendChild(this._createResetButton());
@@ -234,7 +236,7 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = `
-      <label for="advanced-tooltips-toggle" class="advanced-tooltips-toggle-label">Show Advanced Item Tooltips:</label>
+      <label for="advanced-tooltips-toggle" class="advanced-tooltips-toggle-label" data-i18n="options.advancedTooltips">Show Advanced Item Tooltips:</label>
       <input
         type="checkbox"
         id="advanced-tooltips-toggle"
@@ -263,7 +265,7 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = `
-      <label for="advanced-attr-tooltips-toggle" class="advanced-attr-tooltips-toggle-label">Show Advanced Attribute Tooltips:</label>
+      <label for="advanced-attr-tooltips-toggle" class="advanced-attr-tooltips-toggle-label" data-i18n="options.advancedAttributeTooltips">Show Advanced Attribute Tooltips:</label>
       <input
         type="checkbox"
         id="advanced-attr-tooltips-toggle"
@@ -290,7 +292,7 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = `
-      <label for="rate-counters-toggle" class="rate-counters-toggle-label">Show Counters Bar:</label>
+      <label for="rate-counters-toggle" class="rate-counters-toggle-label" data-i18n="options.showRateCounters">Show Counters Bar:</label>
       <input
         type="checkbox"
         id="rate-counters-toggle"
@@ -317,7 +319,7 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = `
-      <label for="rate-counters-period" class="rate-counters-period-label">Counters Period (sec):</label>
+      <label for="rate-counters-period" class="rate-counters-period-label" data-i18n="options.rateCountersPeriod">Counters Period (sec):</label>
       <input
         type="number"
         id="rate-counters-period"
@@ -347,7 +349,7 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="stage-skip-input" class="stage-skip-label">Stage Skip per Kill:</label>
+      <label for="stage-skip-input" class="stage-skip-label" data-i18n="options.stageSkipPerKill">Stage Skip per Kill:</label>
       <input
         type="number"
         id="stage-skip-input"
@@ -355,9 +357,9 @@ export class Options {
         min="0"
         max="${max}"
         value="${value}"
-        title="Max: ${max} (based on crystal upgrades)"
+        title="${t('options.max')}: ${max} ${t('options.basedOnCrystal')}"
       />
-      <button class="apply-btn" type="button">Apply</button>
+      <button class="apply-btn" type="button" data-i18n="common.apply">Apply</button>
     `;
 
     const input = wrapper.querySelector('input');
@@ -386,7 +388,7 @@ export class Options {
 
       this.stageSkip = val;
       dataManager.saveGame();
-      showToast('Stage skip option applied!', 'success');
+      showToast(t('options.toast.stageSkipApplied'), 'success');
     };
 
     // Initial update to ensure correct max/value
@@ -403,7 +405,7 @@ export class Options {
     if (!this._stageSkipInput) return;
     const max = crystalShop.crystalUpgrades?.stageSkip || 0;
     this._stageSkipInput.max = max;
-    this._stageSkipInput.title = `Max: ${max} (based on crystal upgrades)`;
+    this._stageSkipInput.title = `${t('options.max')}: ${max} ${t('options.basedOnCrystal')}`;
 
     let val = parseInt(this._stageSkipInput.value, 10);
     if (isNaN(val) || val < 0) val = 0;
@@ -418,17 +420,17 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="reset-stage-skip-input" class="reset-stage-skip-label">Reset Stage Skip At:</label>
+      <label for="reset-stage-skip-input" class="reset-stage-skip-label" data-i18n="options.resetStageSkipAt">Reset Stage Skip At:</label>
       <input
         type="number"
         id="reset-stage-skip-input"
         class="reset-stage-skip-input"
         min="0"
         value="${value}"
-        title="${purchased ? 'Stage at which stage skip resets' : 'Purchase in crystal shop to enable'}"
+        title="${purchased ? t('options.resetStageSkip.enabledTooltip') : t('options.resetStageSkip.disabledTooltip')}"
         ${purchased ? '' : 'disabled'}
       />
-      <button class="apply-btn" type="button" ${purchased ? '' : 'disabled'}>Apply</button>
+      <button class="apply-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.apply">Apply</button>
     `;
 
     const input = wrapper.querySelector('input');
@@ -451,7 +453,7 @@ export class Options {
       if (isNaN(val) || val < 0) val = 0;
       this.resetStageSkip = val;
       dataManager.saveGame();
-      showToast('Reset stage skip option applied!', 'success');
+      showToast(t('options.toast.resetStageSkipApplied'), 'success');
     };
 
     this.updateResetStageSkipOption();
@@ -464,8 +466,8 @@ export class Options {
     const purchased = !!crystalShop.crystalUpgrades?.resetStageSkip;
     this._resetStageSkipInput.disabled = !purchased;
     this._resetStageSkipInput.title = purchased
-      ? 'Stage at which stage skip resets'
-      : 'Purchase in crystal shop to enable';
+      ? t('options.resetStageSkip.enabledTooltip')
+      : t('options.resetStageSkip.disabledTooltip');
     const btn = this._resetStageSkipWrapper?.querySelector('button');
     if (btn) btn.disabled = !purchased;
   }
@@ -477,10 +479,10 @@ export class Options {
     const bar = document.createElement('div');
     bar.className = 'cloud-save-bar';
     bar.innerHTML = `
-      <span id="cloud-save-status">Checking login...</span>
-      <button id="cloud-save-btn">Save to Cloud</button>
-      <button id="cloud-load-btn">Load from Cloud</button>
-      <button id="logout-btn" style="display:none;">Log out</button>
+      <span id="cloud-save-status" data-i18n="options.cloud.checking">Checking login...</span>
+      <button id="cloud-save-btn" data-i18n="options.cloud.save">Save to Cloud</button>
+      <button id="cloud-load-btn" data-i18n="options.cloud.load">Load from Cloud</button>
+      <button id="logout-btn" style="display:none;" data-i18n="options.cloud.logout">Log out</button>
     `;
     return bar;
   }
@@ -491,11 +493,12 @@ export class Options {
   _createResetButton() {
     const resetButton = document.createElement('button');
     resetButton.id = 'reset-progress';
-    resetButton.textContent = 'Reset All Progress';
+    resetButton.setAttribute('data-i18n', 'options.resetAllProgress');
+    resetButton.textContent = t('options.resetAllProgress');
     resetButton.onclick = async () => {
       try {
         const confirmed = await showConfirmDialog(
-          'Are you sure you want to reset all progress? This cannot be undone!',
+          t('options.resetProgressConfirm'),
         );
         if (confirmed) {
           game.resetAllProgress();
@@ -503,7 +506,7 @@ export class Options {
       } catch (error) {
 
         console.error('Error resetting progress:', error);
-        alert('An error occurred while resetting progress.');
+        alert(t('options.resetProgressError'));
       }
     };
     return resetButton;
@@ -515,15 +518,16 @@ export class Options {
   _createChangelogButton() {
     const changelogBtn = document.createElement('button');
     changelogBtn.id = 'view-changelog';
-    changelogBtn.textContent = 'View Changelog';
+    changelogBtn.setAttribute('data-i18n', 'options.changelog.view');
+    changelogBtn.textContent = t('options.changelog.view');
     changelogBtn.onclick = async () => {
       // Get all changelog versions, sorted descending
       const versions = Object.keys(CHANGELOG).sort((a, b) => b.localeCompare(a, undefined, { numeric: true, sensitivity: 'base' }));
       let content = '<div class="changelog-modal-content">';
       content += '<button class="modal-close">X</button>';
-      content += '<h2>Changelog</h2>';
+      content += `<h2>${t('options.changelog.title')}</h2>`;
       if (versions.length === 0) {
-        content += '<div class="changelog-body">No changelog entries found.</div>';
+        content += `<div class="changelog-body">${t('options.changelog.empty')}</div>`;
       } else {
         versions.forEach((version, i) => {
           const mod = CHANGELOG[version];
@@ -532,14 +536,14 @@ export class Options {
             try {
               entryHtml = mod.run();
             } catch (e) {
-              entryHtml = `<div style="color:red;">Error loading changelog for ${version}</div>`;
+              entryHtml = `<div style="color:red;">${t('options.changelog.errorFor')} ${version}</div>`;
             }
           } else {
-            entryHtml = `<div style="color:orange;">No changelog content for ${version}</div>`;
+            entryHtml = `<div style="color:orange;">${t('options.changelog.noContentFor')} ${version}</div>`;
           }
           const expanded = i === 0 ? 'expanded' : '';
           const versionLabel =
-            i === 0 ? `${version} <span class="changelog-current">(current)</span>` : `${version}`;
+            i === 0 ? `${version} <span class="changelog-current">(${t('options.changelog.current')})</span>` : `${version}`;
           content += `
             <div class="changelog-entry ${expanded}">
               <div class="changelog-header" data-index="${i}">
@@ -581,13 +585,14 @@ export class Options {
   _createUpcomingChangesButton() {
     const upcomingBtn = document.createElement('button');
     upcomingBtn.id = 'view-upcoming';
-    upcomingBtn.textContent = 'View Upcoming Changes';
+    upcomingBtn.setAttribute('data-i18n', 'options.upcoming.view');
+    upcomingBtn.textContent = t('options.upcoming.view');
     upcomingBtn.onclick = async () => {
       let text = '';
       text = upcommingChanges();
       let content = '<div class="changelog-modal-content">';
       content += '<button class="modal-close">X</button>';
-      content += '<h2>Upcoming Changes</h2>';
+      content += `<h2>${t('options.upcoming.title')}</h2>`;
       content += `<div class="changelog-body">${text || ''}</div>`;
       content += '</div>';
       createModal({
@@ -611,9 +616,9 @@ export class Options {
         target="_blank"
         rel="noopener noreferrer"
         class="discord-link"
-        aria-label="Join our Discord"
+        aria-label="${t('options.discord')}"
       >
-        <span>Join our Discord</span>
+        <span data-i18n="options.discord">Join our Discord</span>
       </a>
     `;
     return section;
@@ -631,9 +636,9 @@ export class Options {
     await dataManager.checkSession();
     const userSession = dataManager.getSession();
 
-    let statusMsg = 'Ready to save to cloud';
+    let statusMsg = t('options.cloud.ready');
     const formatDateWithTimezone = (dateStr) => {
-      if (!dateStr) return 'unknown';
+      if (!dateStr) return t('options.cloud.unknown');
       const date = new Date(dateStr);
       const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
       return date.toLocaleString(undefined, options);
@@ -642,9 +647,9 @@ export class Options {
     try {
       const cloudResult = await dataManager.loadGame({ cloud: true, statusCheck: true });
       if (!cloudResult || cloudResult.source !== 'cloud') {
-        statusMsg = 'No cloud save found';
+        statusMsg = t('options.cloud.none');
       } else {
-        statusMsg = `Last save: ${formatDateWithTimezone(cloudResult.updated_at)}`;
+        statusMsg = `${t('options.cloud.lastSave')} ${formatDateWithTimezone(cloudResult.updated_at)}`;
       }
     } catch (e) {
       console.error('Failed to load cloud data:', e);
@@ -653,7 +658,7 @@ export class Options {
     if (!userSession) {
       const loginUrl = import.meta.env.VITE_LOGIN_URL;
       cloudSaveStatus.innerHTML =
-        '<span class="login-status">Not logged in</span><div><button id="login-btn" class="login-link">Log in</button></div>';
+        `<span class="login-status">${t('options.cloud.notLoggedIn')}</span><div><button id="login-btn" class="login-link">${t('options.cloud.login')}</button></div>`;
       cloudSaveStatus.className = 'not-logged-in';
       cloudSaveBtn.disabled = true;
       cloudSaveBtn.classList.add('disabled');
@@ -710,15 +715,15 @@ export class Options {
       const userSession = dataManager.getSession();
       if (!userSession) return;
       cloudSaveBtn.disabled = true;
-      cloudSaveStatus.textContent = 'Saving...';
+      cloudSaveStatus.textContent = t('options.cloud.saving');
       cloudSaveStatus.className = 'saving';
       try {
         // Use robust saveGame method
         await dataManager.saveGame({ cloud: true });
-        cloudSaveStatus.textContent = `Last cloud save: ${new Date(Date.now()).toLocaleTimeString()}`;
+        cloudSaveStatus.textContent = `${t('options.cloud.lastCloudSave')} ${new Date(Date.now()).toLocaleTimeString()}`;
       } catch (e) {
         console.error('Cloud save failed:', e);
-        cloudSaveStatus.textContent = 'Cloud save failed';
+        cloudSaveStatus.textContent = t('options.cloud.saveFailed');
         cloudSaveStatus.className = 'failed';
       } finally {
         cloudSaveBtn.disabled = !userSession;
@@ -733,13 +738,13 @@ export class Options {
       try {
         const cloudData = await dataManager.loadGame({ cloud: true });
 
-        if (!cloudData || cloudData.source !== 'cloud') throw new Error('No cloud save found');
+        if (!cloudData || cloudData.source !== 'cloud') throw new Error(t('options.cloud.none'));
 
-        const msg = `Cloud Save Info:\n\nLevel: ${cloudData.hero.level || 1}\nGold: ${
-          cloudData.hero.gold || 0
-        }\nCrystals: ${cloudData.hero.crystals || 0}\nSouls: ${
-          cloudData.hero.souls || 0
-        }\n\nAre you sure you want to overwrite your local save with this cloud save? This cannot be undone.`;
+        const msg = `${t('options.cloud.info')}\n\n${t('options.cloud.level')}: ${
+          cloudData.hero.level || 1
+        }\n${t('options.cloud.gold')}: ${cloudData.hero.gold || 0}\n${t('options.cloud.crystals')}: ${
+          cloudData.hero.crystals || 0
+        }\n${t('options.cloud.souls')}: ${cloudData.hero.souls || 0}\n\n${t('options.cloud.overwritePrompt')}`;
 
         const confirmed = await showConfirmDialog(msg);
 
@@ -750,7 +755,7 @@ export class Options {
         }
       } catch (e) {
         console.error('Failed to load from cloud:', e);
-        showToast(e.message || 'Failed to load from cloud');
+        showToast(e.message || t('options.cloud.loadFailed'));
       }
     });
 
@@ -771,7 +776,7 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="starting-stage-input" class="starting-stage-label">Starting Stage:</label>
+      <label for="starting-stage-input" class="starting-stage-label" data-i18n="options.startingStage">Starting Stage:</label>
       <input
         type="number"
         id="starting-stage-input"
@@ -779,9 +784,9 @@ export class Options {
         min="0"
         max="${max}"
         value="${value}"
-        title="Max: ${max} (based on crystal upgrades)"
+        title="${t('options.max')}: ${max} ${t('options.basedOnCrystal')}"
       />
-      <button class="apply-btn" type="button">Apply</button>
+      <button class="apply-btn" type="button" data-i18n="common.apply">Apply</button>
     `;
 
     const input = wrapper.querySelector('input');
@@ -816,7 +821,7 @@ export class Options {
         game.resetAllLife();
       }
       dataManager.saveGame();
-      showToast('Starting stage option applied!', 'success');
+      showToast(t('options.toast.startingStageApplied'), 'success');
     };
 
     // Initial update to ensure correct max/value
@@ -833,7 +838,7 @@ export class Options {
     if (!this._startingStageInput) return;
     const max = 1 + (crystalShop.crystalUpgrades?.startingStage || 0);
     this._startingStageInput.max = max;
-    this._startingStageInput.title = `Max: ${max} (based on crystal upgrades)`;
+    this._startingStageInput.title = `${t('options.max')}: ${max} ${t('options.basedOnCrystal')}`;
 
     let val = parseInt(this._startingStageInput.value, 10);
     if (isNaN(val) || val < 0) val = 0;
@@ -848,7 +853,7 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="short-elemental-names-toggle" class="short-elemental-names-toggle-label">Use Short Elemental Stat Names:</label>
+      <label for="short-elemental-names-toggle" class="short-elemental-names-toggle-label" data-i18n="options.shortElementalNames">Use Short Elemental Stat Names:</label>
       <input
         type="checkbox"
         id="short-elemental-names-toggle"
@@ -879,7 +884,7 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="show-skill-cooldowns-toggle" class="show-skill-cooldowns-toggle-label">Show Skill Cooldown Numbers:</label>
+      <label for="show-skill-cooldowns-toggle" class="show-skill-cooldowns-toggle-label" data-i18n="options.showSkillCooldowns">Show Skill Cooldown Numbers:</label>
       <input
         type="checkbox"
         id="show-skill-cooldowns-toggle"
@@ -909,7 +914,7 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="show-all-stats-toggle" class="show-all-stats-toggle-label">Show All Stats:</label>
+      <label for="show-all-stats-toggle" class="show-all-stats-toggle-label" data-i18n="options.showAllStats">Show All Stats:</label>
       <input
         type="checkbox"
         id="show-all-stats-toggle"
@@ -939,7 +944,7 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="quick-training-toggle" class="quick-training-toggle-label">Enable Quick Training:</label>
+      <label for="quick-training-toggle" class="quick-training-toggle-label" data-i18n="options.quickTraining">Enable Quick Training:</label>
       <input
         type="checkbox"
         id="quick-training-toggle"
@@ -969,7 +974,7 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="bulk-training-toggle" class="bulk-training-toggle-label">Enable Training Bulk Buy:</label>
+      <label for="bulk-training-toggle" class="bulk-training-toggle-label" data-i18n="options.bulkTraining">Enable Training Bulk Buy:</label>
       <input
         type="checkbox"
         id="bulk-training-toggle"
@@ -999,7 +1004,7 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="quick-soulshop-toggle" class="quick-soulshop-toggle-label">Enable Quick Soul Shop:</label>
+      <label for="quick-soulshop-toggle" class="quick-soulshop-toggle-label" data-i18n="options.quickSoulShop">Enable Quick Soul Shop:</label>
       <input
         type="checkbox"
         id="quick-soulshop-toggle"
@@ -1029,7 +1034,7 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="numeric-input-toggle" class="numeric-input-toggle-label">Enable Numeric Purchase Inputs:</label>
+      <label for="numeric-input-toggle" class="numeric-input-toggle-label" data-i18n="options.numericPurchaseInputs">Enable Numeric Purchase Inputs:</label>
       <input
         type="checkbox"
         id="numeric-input-toggle"
@@ -1075,7 +1080,7 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="enemy-stats-toggle" class="enemy-stats-toggle-label">Show Enemy Stats:</label>
+      <label for="enemy-stats-toggle" class="enemy-stats-toggle-label" data-i18n="options.showEnemyStats">Show Enemy Stats:</label>
       <input
         type="checkbox"
         id="enemy-stats-toggle"
