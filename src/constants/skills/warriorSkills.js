@@ -31,7 +31,7 @@ export const WARRIOR_SKILLS = {
     effect: (level) => ({
       armor: scaleUpFlat(level, 3, 5, 0.2),
       armorPercent: scaleDownFlat(level, 2.5),
-      extraDamageFromArmorPercent: Math.min(0.016 * scaleDownFlat(level), 2),
+      extraDamageFromArmorPercent: Math.min(0.014 * scaleDownFlat(level), 1.5),
     }),
   },
 
@@ -143,8 +143,8 @@ export const WARRIOR_SKILLS = {
     description: () => t('Increases armor percent, block chance, and damage from armor temporarily'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      extraDamageFromArmorPercent: Math.min(0.06 * scaleDownFlat(level), 5),
-      armorPercent: 6 * scaleDownFlat(level),
+      extraDamageFromArmorPercent: Math.min(0.03 * scaleDownFlat(level), 2),
+      armorPercent: 4 * scaleDownFlat(level),
       blockChance: Math.min(level * 0.1, 20),
     }),
   },
@@ -192,7 +192,7 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifePercent: scaleDownFlat(level, 1),
-      extraDamageFromLifePercent: Math.min(0.015 * scaleDownFlat(level), 2),
+      extraDamageFromLifePercent: Math.min(0.008 * scaleDownFlat(level), 1),
       strengthPercent: scaleDownFlat(level, 1.5),
       vitalityPercent: scaleDownFlat(level, 1.5),
       endurancePercent: scaleDownFlat(level, 1.5),
@@ -274,9 +274,9 @@ export const WARRIOR_SKILLS = {
     description: () => t('Greatly increases strength and damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strength: scaleUpFlat(level, 10),
-      strengthPercent: scaleDownFlat(level, 1.5),
-      damagePercent: scaleDownFlat(level, 2),
+      strength: scaleUpFlat(level, 6),
+      strengthPercent: scaleDownFlat(level, 1.3),
+      damagePercent: scaleDownFlat(level, 1.3),
     }),
   },
   heroicStand: {

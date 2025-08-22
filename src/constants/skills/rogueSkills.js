@@ -31,7 +31,7 @@ export const ROGUE_SKILLS = {
       blockChance: Math.min(scaleDownFlat(level, 0.075), 15),
       dexterity: scaleUpFlat(level, 4),
       dexterityPercent: scaleDownFlat(level, 1),
-      extraDamageFromEvasionPercent: Math.min(0.04 * scaleDownFlat(level), 5),
+      extraDamageFromEvasionPercent: Math.min(0.03 * scaleDownFlat(level), 2.5),
     }),
   },
 
@@ -114,8 +114,8 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2.5),
-      lifePerHit: scaleUpFlat(level, 6, 5, 0.3),
-      manaPerHit: scaleUpFlat(level, 0.9),
+      lifePerHit: scaleUpFlat(level, 6, 5, 0.5),
+      manaPerHit: scaleUpFlat(level, 1.5),
     }),
   },
 
@@ -130,7 +130,7 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       dexterity: scaleUpFlat(level, 5),
       dexterityPercent: scaleDownFlat(level, 2),
-      extraDamageFromEvasionPercent: Math.min(0.03 * scaleDownFlat(level), 6),
+      extraDamageFromEvasionPercent: Math.min(0.02 * scaleDownFlat(level), 3),
     }),
   },
 

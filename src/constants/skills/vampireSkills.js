@@ -66,7 +66,7 @@ export const VAMPIRE_SKILLS = {
       lifeSteal: Math.min(scaleDownFlat(level, 0.02), 10),
       attackRating: scaleUpFlat(level, 5),
       attackRatingPercent: scaleDownFlat(level, 2),
-      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.01), 1),
+      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.005), 0.5),
     }),
   },
 
@@ -97,7 +97,7 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strengthPercent: scaleDownFlat(level),
-      vitalityPercent: scaleDownFlat(level, 2),
+      vitalityPercent: scaleDownFlat(level, 1.33),
     }),
   },
 
@@ -153,9 +153,9 @@ export const VAMPIRE_SKILLS = {
     description: () => t('Temporarily increases life and converts life into extra damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      life: scaleUpFlat(level, 10, 5),
+      life: scaleUpFlat(level, 10, 6),
       lifePercent: scaleDownFlat(level),
-      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.01), 1),
+      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.005), 0.5),
     }),
   },
 
@@ -183,10 +183,10 @@ export const VAMPIRE_SKILLS = {
     description: () => t('Greatly increases life and vitality with a modest strength boost, adding damage from life.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifePercent: scaleDownFlat(level, 0.5),
+      lifePercent: scaleDownFlat(level, 0.34),
       strengthPercent: scaleDownFlat(level, 1.3),
-      vitalityPercent: scaleDownFlat(level, 2),
-      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.01), 1),
+      vitalityPercent: scaleDownFlat(level, 1.5),
+      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.005), 0.5),
     }),
   },
 
@@ -201,8 +201,8 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strengthPercent: scaleDownFlat(level, 1.5),
-      vitalityPercent: scaleDownFlat(level, 2),
-      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.0075), 0.5),
+      vitalityPercent: scaleDownFlat(level, 1.4),
+      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.0075), 0.8),
       resurrectionChance: Math.min(scaleDownFlat(level, 0.1, 5, 400), 20),
       perseverancePercent: scaleDownFlat(level),
       perseverance: scaleUpFlat(level, 2, 3, 0.1),
@@ -317,7 +317,7 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strengthPercent: scaleDownFlat(level, 3),
-      vitalityPercent: scaleDownFlat(level, 3),
+      vitalityPercent: scaleDownFlat(level, 2),
       elementalDamagePercent: scaleDownFlat(level, 2),
     }),
   },

@@ -146,10 +146,10 @@ export const DRUID_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'growth',
     description: () => t('Increases life and grants damage based on total life.'),
-    maxLevel: () => 1000,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifePercent: scaleDownFlat(level, 1),
-      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.015), 2),
+      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.008), 1.11),
     }),
   },
 

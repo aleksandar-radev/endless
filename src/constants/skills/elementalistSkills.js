@@ -17,7 +17,7 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamage: scaleUpFlat(level, 2, 6),
-      fireDamagePercent: scaleDownFlat(level, 5),
+      fireDamagePercent: scaleDownFlat(level, 4),
     }),
   },
   frostArmor: {
@@ -67,8 +67,8 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('Strikes an enemy with lightning, increasing lightning and air damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lightningDamage: scaleUpFlat(level, 5, 6),
-      lightningDamagePercent: scaleDownFlat(level, 6),
+      lightningDamage: scaleUpFlat(level, 5, 7),
+      lightningDamagePercent: scaleDownFlat(level, 4),
       airDamagePercent: scaleDownFlat(level, 2),
     }),
   },

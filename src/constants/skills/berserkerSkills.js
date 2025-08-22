@@ -29,7 +29,7 @@ export const BERSERKER_SKILLS = {
     description: () => t('Raises armor and armor percent to reduce damage taken.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: scaleUpFlat(level, 4),
+      armor: scaleUpFlat(level, 5),
       armorPercent: scaleDownFlat(level, 2),
     }),
   },
@@ -64,7 +64,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 0.5),
-      attackSpeed: Math.min(scaleDownFlat(level, 0.005), 1.5),
+      attackSpeed: Math.min(scaleDownFlat(level, 0.01), 1.5),
       lifeSteal: Math.min(scaleDownFlat(level, 0.01), 4),
     }),
   },
@@ -74,15 +74,17 @@ export const BERSERKER_SKILLS = {
     id: 'berserkersRage',
     name: () => t('Berserker\'s Rage'),
     type: () => 'toggle',
-    manaCost: (level) => 4 + level * 0.125,
+    manaCost: (level) => 2 + level * 0.025,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'berserker-rage',
     description: () => t('Greatly boosts fire and air damage with a chance to deal double damage.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      fireDamage: scaleUpFlat(level, 4, 6),
       fireDamagePercent: scaleDownFlat(level, 3),
+      airDamage: scaleUpFlat(level, 4, 6),
       airDamagePercent: scaleDownFlat(level, 3),
-      doubleDamageChance: Math.min(scaleDownFlat(level, 0.2), 20),
+      doubleDamageChance: Math.min(scaleDownFlat(level, 0.35), 25),
     }),
   },
   greaterFrenzy: {
@@ -126,7 +128,6 @@ export const BERSERKER_SKILLS = {
     effect: (level) => ({
       critChance: Math.min(scaleDownFlat(level, 0.05), 20),
       critDamage: Math.min(scaleDownFlat(level, 0.005), 3),
-      doubleDamageChance: Math.min(scaleDownFlat(level, 0.1), 20),
       attackRatingPercent: scaleDownFlat(level, 5),
       lifePercent: -scaleDownFlat(level, 0.15),
     }),
@@ -147,7 +148,7 @@ export const BERSERKER_SKILLS = {
     effect: (level) => ({
       attackSpeed: Math.min(scaleDownFlat(level, 0.002), 1.5),
       lifeSteal: Math.min(scaleDownFlat(level, 0.01), 4),
-      lifePercent: scaleDownFlat(level, 0.25),
+      lifePercent: scaleDownFlat(level, 1),
     }),
   },
 
@@ -176,10 +177,9 @@ export const BERSERKER_SKILLS = {
     description: () => t('Grants a resurrection chance with extra life regeneration and armor.'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      resurrectionChance: Math.min(scaleDownFlat(level, 0.1), 50),
-      lifeRegen: scaleUpFlat(level, 1),
-      lifeRegenPercent: scaleDownFlat(level, 0.75),
-      armorPercent: scaleDownFlat(level, 3),
+      resurrectionChance: Math.min(scaleDownFlat(level, 0.25), 50),
+      attackSpeed: Math.min(scaleDownFlat(level, 0.0085), 1.5),
+      armorPenetration: scaleUpFlat(level, 20, 7, 0.4),
     }),
   },
 
