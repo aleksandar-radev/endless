@@ -1,18 +1,19 @@
-import { scaleDownFlatSum } from './stats.js';
+import { itemLevelScaling } from './itemScaling.js';
 
-const FLAT_MULTIPLIER = 0.018;
-const PERCENT_MULTIPLIER = 0.001;
-const CHANCE_MULTIPLIER = 0.0006;
+// Scaling configuration shared across offensive stats.
+// Values gradually reduce from `start` to `end` over the first 2000 levels with
+// slight boosts for higher tier items.
+const FLAT_SCALING = { start: 0.04, end: 0.01 };
+const PERCENT_SCALING = { start: 0.002, end: 0.0005 };
+const CHANCE_SCALING = { start: 0.0012, end: 0.0003 };
 
 const ELEMENTAL_DAMAGE_MIN = 3;
 const ELEMENTAL_DAMAGE_MAX = 12;
 const ELEMENTAL_DAMAGE_PERCENT_MIN = 4;
 const ELEMENTAL_DAMAGE_PERCENT_MAX = 13;
 
-const offenseScaling = (level, scaling = FLAT_MULTIPLIER, base = 1) => {
-  const total = scaleDownFlatSum(level);
-  return base + scaling * total;
-};
+const offenseScaling = (level, tier, config = FLAT_SCALING) =>
+  itemLevelScaling(level, tier, config);
 
 // Offense stats
 export const OFFENSE_STATS = {
@@ -21,7 +22,7 @@ export const OFFENSE_STATS = {
     base: 10,
     decimalPlaces: 0,
     training: { cost: 100, bonus: 1, maxLevel: Infinity },
-    item: { min: 10, max: 28, limit: Infinity, scaling: (level) => offenseScaling(level) },
+    item: { min: 10, max: 28, limit: Infinity, scaling: (level, tier) => offenseScaling(level, tier) },
     itemTags: ['offense'],
     showInUI: true,
     subcategory: 'attack',
@@ -33,7 +34,7 @@ export const OFFENSE_STATS = {
   damagePercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 15, max: 36, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 15, max: 36, limit: Infinity, scaling: (level, tier) => offenseScaling(level, tier, PERCENT_SCALING) },
     itemTags: ['offense', 'gloves'],
     subcategory: 'attack',
   },
@@ -54,7 +55,7 @@ export const OFFENSE_STATS = {
       bonus: 0.01,
       maxLevel: 100,
     }, // max bonus: 25
-    item: { min: 0.08, max: 0.14, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 0.08, max: 0.14, limit: Infinity, scaling: (level, tier) => offenseScaling(level, tier, PERCENT_SCALING) },
     itemTags: ['offense', 'gloves'],
     showInUI: true,
     subcategory: 'attack',
@@ -80,7 +81,7 @@ export const OFFENSE_STATS = {
       min: 1,
       max: 5,
       limit: 20,
-      scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER),
+      scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING),
     },
     itemTags: ['offense', 'jewelry', 'gloves'],
     showInUI: true,
@@ -103,7 +104,7 @@ export const OFFENSE_STATS = {
       bonus: 0.01,
       maxLevel: 250,
     }, // max bonus: 2.5
-    item: { min: 0.02, max: 0.1, limit: 2, scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER) },
+    item: { min: 0.02, max: 0.1, limit: 2, scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING) },
     itemTags: ['offense', 'jewelry', 'gloves'],
     showInUI: true,
     subcategory: 'attack',
@@ -118,7 +119,7 @@ export const OFFENSE_STATS = {
     base: 100,
     decimalPlaces: 0,
     training: { cost: 160, bonus: 10, maxLevel: Infinity },
-    item: { min: 60, max: 140, limit: Infinity, scaling: (level) => offenseScaling(level) },
+    item: { min: 60, max: 140, limit: Infinity, scaling: (level, tier) => offenseScaling(level, tier) },
     itemTags: ['offense', 'jewelry', 'gloves'],
     showInUI: true,
     subcategory: 'attack',
@@ -126,14 +127,14 @@ export const OFFENSE_STATS = {
   attackRatingPercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 10, max: 30, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 10, max: 30, limit: Infinity, scaling: (level, tier) => offenseScaling(level, tier, PERCENT_SCALING) },
     itemTags: ['offense', 'gloves'],
     subcategory: 'attack',
   },
   chanceToHitPercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 5, max: 10, limit: 20, scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER) },
+    item: { min: 5, max: 10, limit: 20, scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING) },
     itemTags: ['offense', 'magic', 'gloves'],
     showInUI: true,
     subcategory: 'attack',
@@ -143,7 +144,7 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 2,
     training: { cost: 800, bonus: 0.01, maxLevel: 500 }, // max bonus: 5
-    item: { min: 0.5, max: 1.25, limit: 5, scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER) },
+    item: { min: 0.5, max: 1.25, limit: 5, scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING) },
     itemTags: ['offense'],
     showInUI: true,
     subcategory: 'attack',
@@ -157,7 +158,7 @@ export const OFFENSE_STATS = {
   lifePerHit: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 1, max: 7, limit: Infinity, scaling: (level) => offenseScaling(level) },
+    item: { min: 1, max: 7, limit: Infinity, scaling: (level, tier) => offenseScaling(level, tier) },
     itemTags: ['offense'],
     showInUI: true,
     subcategory: 'attack',
@@ -176,7 +177,7 @@ export const OFFENSE_STATS = {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
       limit: Infinity,
-      scaling: (level) => offenseScaling(level),
+      scaling: (level, tier) => offenseScaling(level, tier),
     },
     itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
@@ -189,7 +190,7 @@ export const OFFENSE_STATS = {
       min: ELEMENTAL_DAMAGE_PERCENT_MIN,
       max: ELEMENTAL_DAMAGE_PERCENT_MAX,
       limit: Infinity,
-      scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
+      scaling: (level, tier) => offenseScaling(level, tier, PERCENT_SCALING),
     },
     itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
     subcategory: 'elemental',
@@ -203,7 +204,7 @@ export const OFFENSE_STATS = {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
       limit: Infinity,
-      scaling: (level) => offenseScaling(level),
+      scaling: (level, tier) => offenseScaling(level, tier),
     },
     itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
@@ -216,7 +217,7 @@ export const OFFENSE_STATS = {
       min: ELEMENTAL_DAMAGE_PERCENT_MIN,
       max: ELEMENTAL_DAMAGE_PERCENT_MAX,
       limit: Infinity,
-      scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
+      scaling: (level, tier) => offenseScaling(level, tier, PERCENT_SCALING),
     },
     itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
     subcategory: 'elemental',
@@ -230,7 +231,7 @@ export const OFFENSE_STATS = {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
       limit: Infinity,
-      scaling: (level) => offenseScaling(level),
+      scaling: (level, tier) => offenseScaling(level, tier),
     },
     itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
@@ -243,7 +244,7 @@ export const OFFENSE_STATS = {
       min: ELEMENTAL_DAMAGE_PERCENT_MIN,
       max: ELEMENTAL_DAMAGE_PERCENT_MAX,
       limit: Infinity,
-      scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
+      scaling: (level, tier) => offenseScaling(level, tier, PERCENT_SCALING),
     },
     itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
     subcategory: 'elemental',
@@ -257,7 +258,7 @@ export const OFFENSE_STATS = {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
       limit: Infinity,
-      scaling: (level) => offenseScaling(level),
+      scaling: (level, tier) => offenseScaling(level, tier),
     },
     itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
@@ -270,7 +271,7 @@ export const OFFENSE_STATS = {
       min: ELEMENTAL_DAMAGE_PERCENT_MIN,
       max: ELEMENTAL_DAMAGE_PERCENT_MAX,
       limit: Infinity,
-      scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
+      scaling: (level, tier) => offenseScaling(level, tier, PERCENT_SCALING),
     },
     itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
     subcategory: 'elemental',
@@ -284,7 +285,7 @@ export const OFFENSE_STATS = {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
       limit: Infinity,
-      scaling: (level) => offenseScaling(level),
+      scaling: (level, tier) => offenseScaling(level, tier),
     },
     itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
@@ -297,7 +298,7 @@ export const OFFENSE_STATS = {
       min: ELEMENTAL_DAMAGE_PERCENT_MIN,
       max: ELEMENTAL_DAMAGE_PERCENT_MAX,
       limit: Infinity,
-      scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
+      scaling: (level, tier) => offenseScaling(level, tier, PERCENT_SCALING),
     },
     itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
     subcategory: 'elemental',
@@ -311,7 +312,7 @@ export const OFFENSE_STATS = {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
       limit: Infinity,
-      scaling: (level) => offenseScaling(level),
+      scaling: (level, tier) => offenseScaling(level, tier),
     },
     itemTags: ['sword', 'gloves', 'magic'],
     showInUI: true,
@@ -324,7 +325,7 @@ export const OFFENSE_STATS = {
       min: ELEMENTAL_DAMAGE_PERCENT_MIN,
       max: ELEMENTAL_DAMAGE_PERCENT_MAX,
       limit: Infinity,
-      scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER),
+      scaling: (level, tier) => offenseScaling(level, tier, PERCENT_SCALING),
     },
     itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
     subcategory: 'elemental',
@@ -345,7 +346,7 @@ export const OFFENSE_STATS = {
       min: 2,
       max: 5,
       limit: 25,
-      scaling: (level) => offenseScaling(level, CHANCE_MULTIPLIER),
+      scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING),
     },
     itemTags: ['offense', 'gloves', 'jewelry', 'wand'],
     showInUI: true,
@@ -355,14 +356,14 @@ export const OFFENSE_STATS = {
   elementalDamage: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 1, max: 3, limit: Infinity, scaling: (level) => offenseScaling(level) },
+    item: { min: 1, max: 3, limit: Infinity, scaling: (level, tier) => offenseScaling(level, tier) },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
     subcategory: 'elemental',
   },
   elementalDamagePercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 2, max: 7, limit: Infinity, scaling: (level) => offenseScaling(level, PERCENT_MULTIPLIER) },
+    item: { min: 2, max: 7, limit: Infinity, scaling: (level, tier) => offenseScaling(level, tier, PERCENT_SCALING) },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
     subcategory: 'elemental',
   },

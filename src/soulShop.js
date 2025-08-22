@@ -247,10 +247,10 @@ export default class SoulShop {
         : this.getSoulUpgradeCost(config, this.soulUpgrades[stat] || 0);
     let bonusClass = '';
     let disabled = alreadyPurchased;
+    let qty = 1;
     if (options?.quickSoulShop && !alreadyPurchased) {
       const baseLevel = this.soulUpgrades[stat] || 0;
       const levelsLeft = isMultiLevel ? (config.maxLevel || Infinity) - baseLevel : Infinity;
-      let qty;
       if (this.quickQty === 'max') {
         const { qty: affordableQty, totalCost } = this.getBulkCost(stat, 'max');
         qty = affordableQty > 0 ? affordableQty : Math.min(1, levelsLeft);
@@ -276,7 +276,7 @@ export default class SoulShop {
 }>
         <span class="upgrade-name">${config.label} ${isOneTime ? '' : isMultiple ? '' : `(Lvl ${level})`}</span>
         <span class="upgrade-bonus ${bonusClass}">${bonus}</span>
-        <span class="upgrade-cost ${bonusClass}">${alreadyPurchased ? 'Purchased' : `${cost} Souls`}<img style="width: 20px; height: 20px;" src="endless/icons/soul.svg" alt="Soul Icon"></span>
+        <span class="upgrade-cost ${bonusClass}">${alreadyPurchased ? 'Purchased' : `${cost} Souls`}<img style="width: 20px; height: 20px;" src="endless/icons/soul.svg" alt="Soul Icon">(${qty})</span>
       </button>
     `;
   }

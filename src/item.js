@@ -70,8 +70,8 @@ export default class Item {
   }
 
   getLevelScale(stat, level) {
-    const scaling = AVAILABLE_STATS[stat].scaling(level);
-    return scaling;
+    const scalingFn = AVAILABLE_STATS[stat].scaling;
+    return typeof scalingFn === 'function' ? scalingFn(level, this.tier) : 1;
   }
 
   getTierBonus() {
