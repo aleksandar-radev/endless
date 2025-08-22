@@ -133,6 +133,8 @@
   margin: 0 auto;
   overflow: visible;
   z-index: 1100;
+  max-height: 90%;
+  overflow: auto;
 }
 
 .prestige-modal-content .modal-controls {
