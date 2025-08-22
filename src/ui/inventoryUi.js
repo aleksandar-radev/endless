@@ -454,7 +454,7 @@ export function showSalvageModal(inv) {
     if (removed) {
       let crystalsGained = item.rarity === 'MYTHIC' ? 1 : 0;
       let msg = `Salvaged 1 ${item.rarity.toLowerCase()} item`;
-      if (inventory.optionsUpgradeMaterials) {
+      if (inventory.salvageUpgradeMaterials) {
         const { id, qty } = inventory.getItemSalvageMaterial(item);
         inventory.addMaterial({ id, qty });
         msg += `, gained ${qty} ${MATERIALS[id].name}`;
@@ -654,7 +654,7 @@ export function setupDragAndDrop() {
       if (removed) {
         let crystalsGained = item.rarity === 'MYTHIC' ? 1 : 0;
         let msg = `Salvaged 1 ${item.rarity.toLowerCase()} item`;
-        if (inventory.optionsUpgradeMaterials) {
+        if (inventory.salvageUpgradeMaterials) {
           const { id, qty } = inventory.getItemSalvageMaterial(item);
           inventory.addMaterial({ id, qty });
           msg += `, gained ${qty} ${MATERIALS[id].name}`;
@@ -858,7 +858,7 @@ export function setupItemDragAndTooltip() {
       // --- Add salvage gold value if in salvage modal (for hovered item only) ---
       const inSalvageModal = item.closest('.inventory-salvage-modal-content');
       if (inSalvageModal) {
-        if (inventory.optionsUpgradeMaterials) {
+        if (inventory.salvageUpgradeMaterials) {
           const { id, qty } = inventory.getItemSalvageMaterial(itemData);
           tooltipContent += `<div style="margin-top:8px;
             color:#fff;
