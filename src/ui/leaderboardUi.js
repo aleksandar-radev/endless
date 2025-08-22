@@ -1,6 +1,7 @@
 import { getLeaderboard } from '../api.js';
 import { options } from '../globals.js';
 import { Leaderboard } from '../leaderboard.js';
+import { t } from '../i18n.js';
 
 const html = String.raw;
 
@@ -21,15 +22,15 @@ export async function fetchLeaderboardData() {
 export function renderLeaderboardTable(leaderboardData, currentUsername) {
 
   if (!leaderboardData || leaderboardData.length === 0) {
-    return '<div>No leaderboard data available.</div>';
+    return `<div>${t('leaderboard.noData')}</div>`;
   }
-  const updateMessage = '<span style="color: red">In order to see yourself in leaderboard, you have to reset your progress, because of a new update.</span>';
+  const updateMessage = `<span style="color: red">${t('leaderboard.updateMessage')}</span>`;
 
   return html`
     ${options.resetRequired == true ? updateMessage : ''}
     <table>
       <thead>
-        <tr><th>Rank</th><th>Username</th><th>Highest Level</th></tr>
+        <tr><th>${t('leaderboard.rank')}</th><th>${t('leaderboard.username')}</th><th>${t('leaderboard.highestLevel')}</th></tr>
       </thead>
       <tbody>
         ${leaderboardData.map((entry, i) => {
@@ -37,7 +38,7 @@ export function renderLeaderboardTable(leaderboardData, currentUsername) {
     return `
             <tr${isCurrentUser ? ' class="highlight-user"' : ''}>
               <td>${i + 1}</td>
-              <td>${entry.user?.username ?? 'Unknown'}</td>
+              <td>${entry.user?.username ?? t('leaderboard.unknown')}</td>
               <td>${entry.highestLevel ?? 0}</td>
             </tr>
           `;

@@ -30,7 +30,7 @@ import { initializeAscensionUI } from './ui/ascensionUi.js';
 import Enemy from './enemy.js';
 import { setupLeaderboardTabLazyLoad } from './ui/leaderboardUi.js';
 import Boss from './boss.js';
-import { applyTranslations, setLanguage } from './i18n.js';
+import { applyTranslations, setLanguage, t } from './i18n.js';
 import { getGameInfo } from './api.js';
 import { createModal } from './ui/modal.js';
 
@@ -108,11 +108,11 @@ window.setLanguage = setLanguage;
           const contentHtml = `
             <div class="modal-content">
               <span class="modal-close">&times;</span>
-              <h2>New version available</h2>
-              <p>Server version: ${serverVersion} &nbsp; — &nbsp; Your version: v${localVersion}</p>
-              Refresh the page for the changes to take effect<div style="text-align:center; margin-top: 24px; display:flex; gap:12px; justify-content:center;">
-                    <button id="new-version-modal-refresh" style="padding: 8px 24px; font-size: 1.1em;">Refresh now</button>
-                    <button id="new-version-modal-ok" style="padding: 8px 24px; font-size: 1.1em;">OK</button>
+              <h2>${t('versionModal.title')}</h2>
+              <p>${t('versionModal.serverVersion')}: ${serverVersion} &nbsp; — &nbsp; ${t('versionModal.yourVersion')}: v${localVersion}</p>
+              ${t('versionModal.refreshPrompt')}<div style="text-align:center; margin-top: 24px; display:flex; gap:12px; justify-content:center;">
+                    <button id="new-version-modal-refresh" style="padding: 8px 24px; font-size: 1.1em;">${t('versionModal.refreshNow')}</button>
+                    <button id="new-version-modal-ok" style="padding: 8px 24px; font-size: 1.1em;">${t('versionModal.ok')}</button>
                   </div>
             </div>
           `;

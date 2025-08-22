@@ -1,5 +1,6 @@
 import { dataManager } from './globals.js';
 import { fetchLeaderboardData, renderLeaderboardTable } from './ui/leaderboardUi.js';
+import { t } from './i18n.js';
 
 export class Leaderboard {
   constructor(container) {
@@ -8,12 +9,12 @@ export class Leaderboard {
   }
 
   async show() {
-    this.container.innerHTML = '<div id="leaderboard-list">Loading...</div>';
+    this.container.innerHTML = `<div id="leaderboard-list">${t('leaderboard.loading')}</div>`;
     try {
       this.data = await fetchLeaderboardData();
       this.render();
     } catch (e) {
-      this.container.querySelector('#leaderboard-list').textContent = 'Failed to load leaderboard.';
+      this.container.querySelector('#leaderboard-list').textContent = t('leaderboard.error');
     }
   }
 

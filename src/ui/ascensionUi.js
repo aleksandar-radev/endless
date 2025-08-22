@@ -1,6 +1,7 @@
 import { ascension, prestige } from '../globals.js';
 import { showToast } from './ui.js';
 import { createModal, closeModal } from './modal.js';
+import { t } from '../i18n.js';
 
 export function initializeAscensionUI() {
   const tab = document.getElementById('ascension');
@@ -26,15 +27,15 @@ function renderAscension() {
   const container = tab.querySelector('.ascension-container');
   container.innerHTML = `
     <div class="ascension-header">
-      <button id="ascend-now-btn">Ascend Now</button>
-      <div class="ascension-points">Points: ${ascension.points}</div>
+      <button id="ascend-now-btn">${t('ascension.ascendNow')}</button>
+      <div class="ascension-points">${t('ascension.points')}: ${ascension.points}</div>
     </div>
     <ul class="ascension-upgrades-list"></ul>
   `;
   const btn = container.querySelector('#ascend-now-btn');
   btn.onclick = () => {
     if (!ascension.canAscend()) {
-      showToast('Need at least 10 prestiges to ascend.');
+      showToast(t('ascension.needPrestiges'));
       return;
     }
     openAscensionModal();
@@ -47,10 +48,10 @@ function renderAscension() {
       const max = cfg.maxLevel || Infinity;
       const disabled = ascension.points < cost || level >= max ? 'disabled' : '';
       const levelText = cfg.maxLevel ? `${level}/${cfg.maxLevel}` : level;
-      return `<li data-key="${key}">${cfg.label} (Lvl ${levelText}) - Cost ${cost} <button class="ascension-upgrade-btn" ${disabled}>Buy</button></li>`;
+      return `<li data-key="${key}">${cfg.label} (${t('ascension.upgrade.lvl')} ${levelText}) - ${t('ascension.upgrade.cost')} ${cost} <button class="ascension-upgrade-btn" ${disabled}>${t('ascension.upgrade.buy')}</button></li>`;
     })
     .join('');
-  list.innerHTML = items || '<li>No upgrades yet.</li>';
+  list.innerHTML = items || `<li>${t('ascension.upgrade.none')}</li>`;
   list.querySelectorAll('.ascension-upgrade-btn').forEach((b) => {
     b.onclick = () => {
       const key = b.parentElement.dataset.key;
@@ -65,12 +66,12 @@ function openAscensionModal() {
   const earned = prestige.prestigeCount;
   const content = `
     <div class="ascension-modal-content">
-      <button class="modal-close" aria-label="Close">&times;</button>
-      <h2>Ascend to Greater Power?</h2>
-      <p>Ascending resets all progress and prestige bonuses but grants <span class="ascension-earned">${earned}</span> ascension point${earned === 1 ? '' : 's'}.</p>
+      <button class="modal-close" aria-label="${t('common.close')}">&times;</button>
+      <h2>${t('ascension.modal.title')}</h2>
+      <p>${t('ascension.modal.body')} <span class="ascension-earned">${earned}</span> ${earned === 1 ? t('ascension.modal.point') : t('ascension.modal.points')}.</p>
       <div class="modal-controls">
-        <button id="ascension-confirm-btn">Ascend</button>
-        <button id="ascension-cancel-btn">Cancel</button>
+        <button id="ascension-confirm-btn">${t('ascension.modal.confirm')}</button>
+        <button id="ascension-cancel-btn">${t('ascension.modal.cancel')}</button>
       </div>
     </div>
   `;
