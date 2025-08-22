@@ -270,13 +270,16 @@ export default class SoulShop {
     } else if (hero.souls < cost && !alreadyPurchased) {
       bonusClass = 'unaffordable';
     }
+
+    const BASE = import.meta.env.VITE_BASE_PATH;
+
     return `
       <button class="soul-upgrade-btn ${alreadyPurchased ? 'purchased' : ''}" data-stat="${stat}" ${
   disabled ? 'disabled' : ''
 }>
         <span class="upgrade-name">${config.label} ${isOneTime ? '' : isMultiple ? '' : `(Lvl ${level})`}</span>
         <span class="upgrade-bonus ${bonusClass}">${bonus}</span>
-        <span class="upgrade-cost ${bonusClass}">${alreadyPurchased ? 'Purchased' : `${cost} Souls`}<img style="width: 20px; height: 20px;" src="endless/icons/soul.svg" alt="Soul Icon">(${qty})</span>
+        <span class="upgrade-cost ${bonusClass}">${alreadyPurchased ? 'Purchased' : `${cost} Souls`}<img style="width: 20px; height: 20px;" src="${BASE}/icons/soul.svg" alt="Soul Icon">(${qty})</span>
       </button>
     `;
   }
