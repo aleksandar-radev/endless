@@ -48,6 +48,7 @@ export default function run() {
     <li>Added additional guard to avoid getting rewards from killing an enemy after prestige.</li>
     <li>Fixed a bug where sometimes reseting boss level could cause issues.</li>
     <li>Fixed a bug where drag and drop on trash always salvaged items for gold.</li>
+    <li>Fixed a bug where enemy resistance is not being calculated correctly.</li>
   </ul>
   `;
 }
