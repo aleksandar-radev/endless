@@ -66,12 +66,12 @@ export const ITEM_ICONS = {
 };
 
 export const ITEM_RARITY = {
-  NORMAL: { name: t('NORMAL'), color: '#ffffff', chance: 130, statMultiplier: 1, totalStats: 3 },
-  MAGIC: { name: t('MAGIC'), color: '#4287f5', chance: 40, statMultiplier: 1, totalStats: 4 },
-  RARE: { name: t('RARE'), color: '#ffd700', chance: 18, statMultiplier: 1, totalStats: 5 },
-  UNIQUE: { name: t('UNIQUE'), color: '#ff8c00', chance: 6, statMultiplier: 1, totalStats: 6 },
-  LEGENDARY: { name: t('LEGENDARY'), color: '#e65a27', chance: 2, statMultiplier: 1, totalStats: 7 },
-  MYTHIC: { name: t('MYTHIC'), color: '#ff0033', chance: 1, statMultiplier: 1, totalStats: 8 },
+  NORMAL: { name: t('NORMAL'), color: 'var(--item-normal)', chance: 130, statMultiplier: 1, totalStats: 3 },
+  MAGIC: { name: t('MAGIC'), color: 'var(--item-magic)', chance: 40, statMultiplier: 1, totalStats: 4 },
+  RARE: { name: t('RARE'), color: 'var(--item-rare)', chance: 18, statMultiplier: 1, totalStats: 5 },
+  UNIQUE: { name: t('UNIQUE'), color: 'var(--item-unique)', chance: 6, statMultiplier: 1, totalStats: 6 },
+  LEGENDARY: { name: t('LEGENDARY'), color: 'var(--item-legendary)', chance: 2, statMultiplier: 1, totalStats: 7 },
+  MYTHIC: { name: t('MYTHIC'), color: 'var(--item-mythic)', chance: 1, statMultiplier: 1, totalStats: 8 },
 };
 
 export const RARITY_ORDER = [

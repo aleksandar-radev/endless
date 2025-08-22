@@ -5,6 +5,12 @@
   --earth: rgb(96, 163, 40);
   --lightning: rgb(255, 204, 0);
   --water: rgb(0, 128, 255);
+  --item-normal: #ffffff;
+  --item-magic: #4287f5;
+  --item-rare: #eef12a;
+  --item-unique: #ff8c00;
+  --item-legendary: #0aa80a;
+  --item-mythic: #ff0033;
 }
 
 .game-container {
