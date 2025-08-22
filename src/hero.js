@@ -21,6 +21,18 @@ import { SOUL_UPGRADE_CONFIG } from './soulShop.js';
 import { ELEMENTS } from './constants/common.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
+const ATTRIBUTE_KEYS = Object.keys(ATTRIBUTES);
+const ATTRIBUTE_SET = new Set(ATTRIBUTE_KEYS);
+const RESISTANCE_KEYS = [
+  'fireResistance',
+  'coldResistance',
+  'airResistance',
+  'earthResistance',
+  'lightningResistance',
+  'waterResistance',
+];
+const RESISTANCE_SET = new Set(RESISTANCE_KEYS);
+const STAT_KEYS = Object.keys(STATS);
 
 export const STATS_ON_LEVEL_UP = 3;
 
@@ -204,7 +216,7 @@ export default class Hero {
     );
 
     // 3) “Lock in” each attribute (STR, VIT, etc.) so that attributeEffects sees the %-increased value
-    Object.keys(ATTRIBUTES).forEach((attr) => {
+    ATTRIBUTE_KEYS.forEach((attr) => {
       const pct = basePercent[`${attr}Percent`] || 0;
       let v = baseFlat[attr] * (1 + pct);
       const decimals = STATS[attr].decimalPlaces ?? 0;
@@ -223,7 +235,7 @@ export default class Hero {
       trainingBonuses,
     );
 
-    Object.keys(ATTRIBUTES).forEach((attr) => {
+    ATTRIBUTE_KEYS.forEach((attr) => {
       const base = (STATS[attr]?.base || 0) + (STATS[attr]?.levelUpBonus || 0) * (this.level - 1);
       const allocated = this.primaryStats[attr] || 0;
       const prestigeFlat = (prestigeBonuses[attr] || 0) + (prestigeBonuses.allAttributes || 0);
@@ -263,7 +275,7 @@ export default class Hero {
       };
     });
 
-    this.applyFinalCalculations(flatValues, percentBonuses);
+    this.applyFinalCalculations(flatValues, percentBonuses, soulBonuses);
 
     // cycle through all stats to make all numbers have the correct decimal places
     for (const stat in this.stats) {
@@ -277,54 +289,14 @@ export default class Hero {
   }
 
   calculatePrimaryStats(skillTreeBonuses, equipmentBonuses, trainingBonuses) {
-    this.stats.strength =
-      this.primaryStats.strength +
-      this.permaStats.strength +
-      (equipmentBonuses.strength || 0) +
-      (skillTreeBonuses.strength || 0) +
-      (trainingBonuses.strength || 0);
-    this.stats.agility =
-      this.primaryStats.agility +
-      this.permaStats.agility +
-      (equipmentBonuses.agility || 0) +
-      (skillTreeBonuses.agility || 0) +
-      (trainingBonuses.agility || 0);
-    this.stats.vitality =
-      this.primaryStats.vitality +
-      this.permaStats.vitality +
-      (equipmentBonuses.vitality || 0) +
-      (skillTreeBonuses.vitality || 0) +
-      (trainingBonuses.vitality || 0);
-    this.stats.wisdom =
-      this.primaryStats.wisdom +
-      this.permaStats.wisdom +
-      (equipmentBonuses.wisdom || 0) +
-      (skillTreeBonuses.wisdom || 0) +
-      (trainingBonuses.wisdom || 0);
-    this.stats.endurance =
-      this.primaryStats.endurance +
-      this.permaStats.endurance +
-      (equipmentBonuses.endurance || 0) +
-      (skillTreeBonuses.endurance || 0) +
-      (trainingBonuses.endurance || 0);
-    this.stats.dexterity =
-      this.primaryStats.dexterity +
-      this.permaStats.dexterity +
-      (equipmentBonuses.dexterity || 0) +
-      (skillTreeBonuses.dexterity || 0) +
-      (trainingBonuses.dexterity || 0);
-    this.stats.intelligence =
-      this.primaryStats.intelligence +
-      this.permaStats.intelligence +
-      (equipmentBonuses.intelligence || 0) +
-      (skillTreeBonuses.intelligence || 0) +
-      (trainingBonuses.intelligence || 0);
-    this.stats.perseverance =
-      this.primaryStats.perseverance +
-      this.permaStats.perseverance +
-      (equipmentBonuses.perseverance || 0) +
-      (skillTreeBonuses.perseverance || 0) +
-      (trainingBonuses.perseverance || 0);
+    ATTRIBUTE_KEYS.forEach((attr) => {
+      this.stats[attr] =
+        (this.primaryStats[attr] || 0) +
+        (this.permaStats[attr] || 0) +
+        (equipmentBonuses[attr] || 0) +
+        (skillTreeBonuses[attr] || 0) +
+        (trainingBonuses[attr] || 0);
+    });
   }
 
   calculateAttributeEffects() {
@@ -332,13 +304,13 @@ export default class Hero {
     const ascensionBonuses = ascension?.getBonuses() || {};
 
     // Loop through all stats in STATS
-    for (const stat in STATS) {
+    for (const stat of STAT_KEYS) {
       // Flat bonuses: look for {stat}Flat in attribute effects
       let flatBonus = 0;
       let percentBonus = 0;
 
       // Check each attribute for contributions to this stat
-      for (const attr in ATTRIBUTES) {
+      for (const attr of ATTRIBUTE_KEYS) {
         const attrEffects = ATTRIBUTES[attr].effects;
 
         // Flat per-point bonus (e.g., damagePerPoint, lifePerPoint, etc.)
@@ -372,11 +344,7 @@ export default class Hero {
 
   calculateFlatValues(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses) {
     const flatValues = {};
-    const attributes = Object.keys(ATTRIBUTES);
-    const resistances = ['fireResistance', 'coldResistance', 'airResistance', 'earthResistance', 'lightningResistance', 'waterResistance'];
-
-    for (const stat in STATS) {
-      // Sum all sources for each stat
+    for (const stat of STAT_KEYS) {
       flatValues[stat] =
         (this.primaryStats[stat] ?? 0) +
         (this.permaStats[stat] ?? 0) +
@@ -386,19 +354,16 @@ export default class Hero {
         (trainingBonuses[stat] ?? 0) +
         (equipmentBonuses[stat] ?? 0) +
         (skillTreeBonuses[stat] ?? 0) +
-        (attributes.includes(stat) ? this.permaStats['allAttributes'] : 0) +
-        (resistances.includes(stat) ? this.permaStats['allResistance'] : 0);
+        (ATTRIBUTE_SET.has(stat) ? this.permaStats['allAttributes'] : 0) +
+        (RESISTANCE_SET.has(stat) ? this.permaStats['allResistance'] : 0);
     }
-
     return flatValues;
   }
 
   calculatePercentBonuses(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses) {
     const percentBonuses = {};
-    const attributes = Object.keys(ATTRIBUTES);
     const ascensionBonuses = ascension?.getBonuses() || {};
-    // Add all standard percent bonuses
-    for (const stat in STATS) {
+    for (const stat of STAT_KEYS) {
       if (stat.endsWith('Percent')) {
         const statName = stat.replace('Percent', '');
         let value =
@@ -407,7 +372,7 @@ export default class Hero {
           (skillTreeBonuses[stat] || 0) / 100 +
           (equipmentBonuses[stat] || 0) / 100 +
           (trainingBonuses[stat] || 0) / 100 +
-          (attributes.includes(statName) ? this.permaStats['allAttributesPercent'] : 0);
+          (ATTRIBUTE_SET.has(statName) ? this.permaStats['allAttributesPercent'] : 0);
         value += ascensionBonuses[stat] || 0;
         percentBonuses[stat] = value;
       }
@@ -440,35 +405,23 @@ export default class Hero {
     return bonuses;
   }
 
-  applyFinalCalculations(flatValues, percentBonuses) {
+  applyFinalCalculations(flatValues, percentBonuses, soulBonuses) {
     // Apply percent bonuses to all stats that have them
     const ascensionBonuses = ascension?.getBonuses() || {};
 
-    for (const stat in STATS) {
+    for (const stat of STAT_KEYS) {
       if (stat.endsWith('Percent')) {
-        // add percent bonuses to stats, mainly for elemental damage
         let percentValue = percentBonuses[stat] || 0;
-        // Add soul shop percent bonuses
-        const soulShopBonuses = this.getSoulShopBonuses();
-        if (soulShopBonuses[stat]) percentValue += soulShopBonuses[stat];
+        percentValue += soulBonuses[stat] || 0;
         this.stats[stat] = percentValue;
-        percentBonuses[stat] = percentValue; // todo: this or above makes no sense, but keep it
+        percentBonuses[stat] = percentValue;
       }
     }
 
-    const elementalResistances = [
-      'fireResistance',
-      'coldResistance',
-      'airResistance',
-      'earthResistance',
-      'lightningResistance',
-      'waterResistance',
-    ];
-
-    for (const stat in STATS) {
+    for (const stat of STAT_KEYS) {
       if (!stat.endsWith('Percent')) {
         let percent = percentBonuses[stat + 'Percent'] || 0;
-        if (elementalResistances.includes(stat)) {
+        if (RESISTANCE_SET.has(stat)) {
           percent += this.stats.allResistancePercent || 0;
         }
 
@@ -485,16 +438,15 @@ export default class Hero {
             STATS.attackSpeed.base +
             (flatAttackSpeedBonus > 0 ? maxBonus * (1 - Math.exp(-flatAttackSpeedBonus / scale)) : 0);
         }
-        if (stat ==='mana') {
+        if (stat === 'mana') {
           value += (this.stats.manaPerLevel || 0) * (this.level - 1);
         }
 
         // Apply soul shop bonuses (flat or percent)
-        const soulShopBonuses = this.getSoulShopBonuses();
         if (stat.endsWith('Percent')) {
-          value += soulShopBonuses[stat] || 0;
-        } else if (soulShopBonuses[stat]) {
-          value += soulShopBonuses[stat];
+          value += soulBonuses[stat] || 0;
+        } else if (soulBonuses[stat]) {
+          value += soulBonuses[stat];
         }
 
         // Apply decimal places
@@ -502,7 +454,7 @@ export default class Hero {
         value = decimals > 0 ? Number(value.toFixed(decimals)) : Math.floor(value);
 
         // reduce resistance based on region
-        if (stat == 'allResistance') {
+        if (stat === 'allResistance') {
           const region = getCurrentRegion();
           if (region && region.resistanceReduction) {
             value = Number(value - region.resistanceReduction);
