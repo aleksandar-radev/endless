@@ -329,30 +329,17 @@ export default class Prestige {
       statistics: statsSnapshot,
     });
 
-    // Preserve user options that should survive a prestige (exclude numeric options
-    // that are upgraded via crystal shop: startingStage, stageSkip)
-    const preservedOptions = {
-      showEnemyStats: options.showEnemyStats,
-      resetRequired: options.resetRequired,
-      salvageMaterialsEnabled: options.salvageMaterialsEnabled,
-      showAllStats: options.showAllStats,
-      showAdvancedTooltips: options.showAdvancedTooltips,
-      showAdvancedAttributeTooltips: options.showAdvancedAttributeTooltips,
-      showRateCounters: options.showRateCounters,
-      rateCountersPeriod: options.rateCountersPeriod,
-      // Note: do NOT preserve resetStageSkip, stageSkip or startingStage here —
-      // those are either numeric user options that should reset on prestige or
-      // are handled via crystal upgrades elsewhere.
-      soundVolume: options.soundVolume,
-    };
+    // Preserve all user options and restore them after reset, except those tied
+    // to crystal-shop purchases which should revert to defaults.
+    const preservedOptions = { ...options };
+    ['startingStage', 'stageSkip', 'resetStageSkip'].forEach((k) => {
+      delete preservedOptions[k];
+    });
 
     await setGlobals({ reset: true });
 
-    // persist preserved options back onto the new globals/options instance
-    Object.entries(preservedOptions).forEach(([k, v]) => {
-      // only set if the option exists on the new options object
-      if (k in options) options[k] = v;
-    });
+    // Reapply preserved options onto the new options instance
+    Object.assign(options, preservedOptions);
 
     prestigeState.bonuses = combined;
     prestigeState.prestigeCount = newCount;
