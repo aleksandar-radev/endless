@@ -3,7 +3,7 @@ import { playerAttack, enemyAttack, playerDeath, defeatEnemy, createDamageNumber
 import { game, hero, crystalShop, skillTree, statistics, dataManager, setGlobals, options } from './globals.js';
 import Enemy from './enemy.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
-import { updateBossUI } from './ui/bossUi.js';
+import { updateBossUI, selectBoss } from './ui/bossUi.js';
 import { getCurrentRegion } from './region.js';
 import { battleLog } from './battleLog.js';
 
@@ -239,17 +239,26 @@ class Game {
       skillTree.stopAllBuffs();
       updateBuffIndicators();
 
-      // Only reset enemy, not stage, when toggling off
-      updateStatsAndAttributesUI();
-      if (this.fightMode === 'arena' && this.currentEnemy) {
-        this.currentEnemy = this.currentEnemy;
+      if (this.fightMode === 'arena') {
+        // Ensure a boss is displayed when stopping in arena
+        if (!this.currentEnemy) {
+          selectBoss();
+        } else {
+          this.currentEnemy.resetLife();
+          updateBossUI();
+        }
       } else {
-        this.currentEnemy = new Enemy(this.stage);
+        // Explore mode: keep existing enemy or generate one if missing
+        if (!this.currentEnemy) {
+          this.currentEnemy = new Enemy(this.stage);
+        } else {
+          this.currentEnemy.resetLife();
+        }
+        updateEnemyStats();
       }
 
-      this.currentEnemy.resetLife(); // Reset enemy life
       updatePlayerLife();
-      updateEnemyStats();
+      updateStatsAndAttributesUI();
     }
   }
 

@@ -208,6 +208,9 @@ export function updatePlayerLife() {
 
 export function updateEnemyStats() {
   const enemy = game.currentEnemy;
+  if (!enemy) {
+    return;
+  }
   const lifePercentage = (enemy.currentLife / enemy.life) * 100;
   document.getElementById('enemy-life-fill').style.width = `${lifePercentage}%`;
   document.getElementById('enemy-life-text').textContent = `${formatNumber(

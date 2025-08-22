@@ -400,26 +400,33 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
       ((hero.exp / hero.getExpToNextLevel()) * 100).toFixed(1) + '%';
     document.getElementById('exp-to-next-level-value').textContent = formatNumber(hero.getExpToNextLevel() || 100);
 
+    // Add enemy-based calculations only if an enemy exists
+    const enemy = game.currentEnemy;
+
     // Add hit chance percentage to attackRating
     const attackRatingEl = document.getElementById('attackRating-value');
     if (attackRatingEl) {
       attackRatingEl.textContent = formatNumber(hero.stats.attackRating);
-      const hitPct = calculateHitChance(
-        hero.stats.attackRating,
-        game.currentEnemy.evasion,
-        undefined,
-        hero.stats.chanceToHitPercent || 0,
-      ).toFixed(2) + '%';
-      attackRatingEl.appendChild(document.createTextNode(` (${hitPct})`));
+      if (enemy) {
+        const hitPct = calculateHitChance(
+          hero.stats.attackRating,
+          enemy.evasion,
+          undefined,
+          hero.stats.chanceToHitPercent || 0,
+        ).toFixed(2) + '%';
+        attackRatingEl.appendChild(document.createTextNode(` (${hitPct})`));
+      }
     }
 
     // Add armor reduction percentage to armor
     const armorEl = document.getElementById('armor-value');
     if (armorEl) {
       armorEl.textContent = formatNumber(hero.stats.armor || 0);
-      // Use PoE2 formula: reduction = armor / (armor + 10 * enemy damage)
-      const reduction = calculateArmorReduction(hero.stats.armor, game.currentEnemy.damage);
-      armorEl.appendChild(document.createTextNode(` (${reduction.toFixed(2)}%)`));
+      if (enemy) {
+        // Use PoE2 formula: reduction = armor / (armor + 10 * enemy damage)
+        const reduction = calculateArmorReduction(hero.stats.armor, enemy.damage);
+        armorEl.appendChild(document.createTextNode(` (${reduction.toFixed(2)}%)`));
+      }
     }
 
     // Add elemental resistance reduction percentages
@@ -436,8 +443,10 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
       if (el) {
         const value = formatNumber(hero.stats[resKey].toFixed(STATS[resKey].decimalPlaces || 0));
         el.textContent = value;
-        const reduction = calculateResistanceReduction(hero.stats[resKey], game.currentEnemy[dmgKey]);
-        el.appendChild(document.createTextNode(` (${reduction.toFixed(2)}%)`));
+        if (enemy) {
+          const reduction = calculateResistanceReduction(hero.stats[resKey], enemy[dmgKey]);
+          el.appendChild(document.createTextNode(` (${reduction.toFixed(2)}%)`));
+        }
       }
     });
 
@@ -445,8 +454,10 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     const evasionEl = document.getElementById('evasion-value');
     if (evasionEl) {
       evasionEl.textContent = formatNumber(hero.stats.evasion || 0);
-      const er = calculateEvasionChance(hero.stats.evasion, game.currentEnemy.attackRating).toFixed(2) + '%';
-      evasionEl.appendChild(document.createTextNode(` (${er})`));
+      if (enemy) {
+        const er = calculateEvasionChance(hero.stats.evasion, enemy.attackRating).toFixed(2) + '%';
+        evasionEl.appendChild(document.createTextNode(` (${er})`));
+      }
     }
   }
 
@@ -566,7 +577,9 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
   const skillTreeTab = document.querySelector('[data-tab="skilltree"]');
   skillTreeTab.classList.remove('hidden');
 
-  updateEnemyStats();
+  if (game.currentEnemy) {
+    updateEnemyStats();
+  }
 }
 
 function openSplitView() {

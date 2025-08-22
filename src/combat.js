@@ -14,7 +14,6 @@ import { ITEM_RARITY } from './constants/items.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateQuestsUI } from './ui/questUi.js';
 import { selectBoss, updateBossUI } from './ui/bossUi.js';
-import { getCurrentRegion } from './region.js';
 
 import { audioManager } from './audio.js';
 import { battleLog } from './battleLog.js';
@@ -235,27 +234,18 @@ export async function defeatEnemy() {
   }
 
   const enemy = game.currentEnemy;
+  const initialFightMode = game.fightMode;
   let baseExpGained = 1;
   let baseGoldGained = 1;
 
   // Play enemy death sound
   audioManager.play('enemyDeath');
 
-  // Add 500ms delay between monster kills
-  await new Promise((resolve) => setTimeout(resolve, 500));
-
-  // If a prestige started during the delay, skip granting rewards
-  if (runtime.prestigeInProgress) {
-    // clear the justDefeated guard and return early without applying rewards
-    game._justDefeated = false;
-    return;
-  }
-
-  if (game.fightMode === 'arena') {
+  if (initialFightMode === 'arena') {
     baseExpGained = enemy.xp;
     baseGoldGained = enemy.gold;
 
-    const { crystals, gold, materials, souls } = game.currentEnemy.reward;
+    const { crystals, gold, materials, souls } = enemy.reward;
     let text = 'Boss defeated! ';
     if (gold) {
       hero.gainGold(gold);
@@ -283,9 +273,7 @@ export async function defeatEnemy() {
       statistics.set('highestBossLevel', null, hero.bossLevel);
     }
     document.dispatchEvent(new CustomEvent('bossKilled', { detail: { level: hero.bossLevel } }));
-    selectBoss();
-    updateResources();
-  } else if (game.fightMode === 'explore') {
+  } else if (initialFightMode === 'explore') {
     baseExpGained = enemy.xp;
     baseGoldGained = enemy.gold;
 
@@ -293,7 +281,7 @@ export async function defeatEnemy() {
     if (Math.random() * 100 <= dropChance) {
       const itemLevel = enemy.calculateItemLevel(game.stage);
       const itemType = enemy.getRandomItemType();
-      const region = getCurrentRegion();
+      const region = enemy.region;
       const newItem = inventory.createItem(itemType, itemLevel, undefined, region.tier);
       inventory.addItemToInventory(newItem);
       const rarityName = ITEM_RARITY[newItem.rarity]?.name || newItem.rarity;
@@ -362,28 +350,22 @@ export async function defeatEnemy() {
       }
     }
 
-
     // fix a bug where stage gets incremented when game stopped.
     if (game.gameStarted) {
       game.incrementStage();
     }
-    game.currentEnemy = new Enemy(game.stage);
 
     statistics.increment('totalEnemiesKilled');
     statistics.increment('enemiesKilled', enemy.rarity.toLowerCase());
     statistics.increment('enemiesKilledByZone', enemy.region.tier);
   }
   // END EXPLORE REGION
-  // clear defeat guard so next enemy can be damaged
-  game._justDefeated = false;
 
   const expGained = Math.floor(baseExpGained * (1 + hero.stats.bonusExperiencePercent));
   const goldGained = Math.floor(baseGoldGained * (1 + hero.stats.bonusGoldPercent));
 
   hero.gainGold(goldGained);
   hero.gainExp(expGained);
-
-  game.currentEnemy.lastAttack = Date.now();
 
   updateQuestsUI();
 
@@ -392,11 +374,37 @@ export async function defeatEnemy() {
 
   // Continue existing UI updates
   updateResources();
-  updateEnemyStats();
   updateStatsAndAttributesUI();
   updateStageUI();
 
   dataManager.saveGame();
+
+  // remove current enemy before spawning next after a delay
+  game.currentEnemy = null;
+
+  // Add 500ms delay between monster kills before spawning next enemy/boss
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  // If combat stopped or a prestige started during the delay, don't spawn a new enemy
+  if (!game.gameStarted || runtime.prestigeInProgress) {
+    game._justDefeated = false;
+    return;
+  }
+
+  if (game.fightMode === 'arena') {
+    selectBoss();
+  } else if (game.fightMode === 'explore') {
+    game.currentEnemy = new Enemy(game.stage);
+    updateEnemyStats();
+  }
+
+  if (game.currentEnemy) {
+    updateStatsAndAttributesUI();
+    game.currentEnemy.lastAttack = Date.now();
+  }
+
+  // clear defeat guard so next enemy can be damaged
+  game._justDefeated = false;
 }
 
 function showMaterialNotification(mat) {
