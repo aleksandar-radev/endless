@@ -13,7 +13,7 @@ export const PALADIN_SKILLS = {
     cooldown: () => 6000,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'light',
-    description: () => t('A burst of holy light that heals allies for flat and percent life (max 5% of max life).'),
+    description: () => t('skill.holyLight'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       life: scaleUpFlat(level, 5, 5, 0.2),
@@ -27,7 +27,7 @@ export const PALADIN_SKILLS = {
     manaCost: (level) => 1,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'smite',
-    description: () => t('A toggle that adds damage and fire damage to attacks.'),
+    description: () => t('skill.smite'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 1),
@@ -44,7 +44,7 @@ export const PALADIN_SKILLS = {
     cooldown: () => 4500,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'bash',
-    description: () => t('Bashes an enemy with your shield for increased damage.'),
+    description: () => t('skill.shieldBash'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 2),
@@ -57,7 +57,7 @@ export const PALADIN_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'protection',
-    description: () => t('Greatly increases armor and thorns damage.'),
+    description: () => t('skill.divineProtection'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: scaleUpFlat(level, 2),
@@ -77,7 +77,7 @@ export const PALADIN_SKILLS = {
     duration: () => 28000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'consecration',
-    description: () => t('Blesses the ground, increasing fire, cold, and lightning damage.'),
+    description: () => t('skill.consecration'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamagePercent: scaleDownFlat(level, 5),
@@ -93,7 +93,7 @@ export const PALADIN_SKILLS = {
     cooldown: () => 18000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'heal',
-    description: () => t('Heals a large amount of life instantly.'),
+    description: () => t('skill.greaterHealing'),
     maxLevel: () => Infinity,
     effect: (level) => ({
       life: scaleUpFlat(level, 8),
@@ -111,7 +111,7 @@ export const PALADIN_SKILLS = {
     duration: () => 20000,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'holy-shield',
-    description: () => t('Creates a shield that raises armor, armor percent, and block chance.'),
+    description: () => t('skill.divineShield'),
     maxLevel: () => 200,
     effect: (level) => ({
       armor: scaleUpFlat(level, 4),
@@ -125,7 +125,7 @@ export const PALADIN_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'holy-aura',
-    description: () => t('Increases life, armor percent, and all resistance.'),
+    description: () => t('skill.auraOfLight'),
     maxLevel: () => 500,
     effect: (level) => ({
       life: scaleUpFlat(level, 15),
@@ -144,7 +144,7 @@ export const PALADIN_SKILLS = {
     cooldown: () => 12400,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'wrath',
-    description: () => t('Calls down holy energy, increasing damage and lightning output.'),
+    description: () => t('skill.wrathOfTheHeavens'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2),
@@ -159,7 +159,7 @@ export const PALADIN_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'beacon',
-    description: () => t('Boosts life and life regeneration while converting life into extra damage.'),
+    description: () => t('skill.beaconOfFaith'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       life: scaleUpFlat(level, 20),
@@ -179,7 +179,7 @@ export const PALADIN_SKILLS = {
     duration: () => 20000,
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'barrier',
-    description: () => t('Creates a barrier that boosts vitality and grants a resurrection chance.'),
+    description: () => t('skill.holyBarrier'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       vitality: scaleUpFlat(level, 4),
@@ -204,7 +204,7 @@ export const PALADIN_SKILLS = {
     duration: () => 25000,
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'aid-from-heaven',
-    description: () => t('Summons an angel from the sky to aid allies.'),
+    description: () => t('skill.AidFromHeaven'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({}),
   },
@@ -217,7 +217,7 @@ export const PALADIN_SKILLS = {
     manaCost: (level) => 4 + level * 0.3,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'wrath',
-    description: () => t('Unleashes divine energy to increase damage and life per hit.'),
+    description: () => t('skill.divineWrath'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 5),
@@ -230,7 +230,7 @@ export const PALADIN_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'angel',
-    description: () => t('Provides attack speed, resurrection chance, life regeneration, and resistance.'),
+    description: () => t('skill.guardianAngel'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackSpeed: scaleDownFlat(level, 0.01),
@@ -248,7 +248,7 @@ export const PALADIN_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'ascension',
-    description: () => t('Grants elemental damage, endurance, vitality, and attack rating.'),
+    description: () => t('skill.ascension'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamagePercent: scaleDownFlat(level, 0.75),
@@ -267,7 +267,7 @@ export const PALADIN_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'celestial-guard',
-    description: () => t('Increases armor percent, block chance, and life regeneration.'),
+    description: () => t('skill.celestialGuard'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armorPercent: scaleDownFlat(level, 2),
@@ -282,7 +282,7 @@ export const PALADIN_SKILLS = {
     manaCost: (level) => 5 + level * 0.625,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'holy-crusade',
-    description: () => t('Empowers attacks with bonus damage and fire damage.'),
+    description: () => t('skill.holyCrusade'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2),
@@ -300,7 +300,7 @@ export const PALADIN_SKILLS = {
     duration: () => 40000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'radiant-aegis',
-    description: () => t('Forms a barrier adding armor, resistance, and reflected fire damage.'),
+    description: () => t('skill.radiantAegis'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: scaleUpFlat(level, 15, 4, 0.1),
@@ -316,7 +316,7 @@ export const PALADIN_SKILLS = {
     cooldown: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'divine-judgment',
-    description: () => t('Calls down holy energy to deal damage with extra fire and lightning.'),
+    description: () => t('skill.divineJudgment'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 15),
@@ -332,7 +332,7 @@ export const PALADIN_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'angelic-resurgence',
-    description: () => t('Provides a chance to resurrect with extra life and attack speed.'),
+    description: () => t('skill.angelicResurgence'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       resurrectionChance: Math.min(scaleDownFlat(level, 0.1), 50),
@@ -349,7 +349,7 @@ export const PALADIN_SKILLS = {
     duration: () => 45000,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'sacred-ground',
-    description: () => t('Blesses the area, increasing life and mana regeneration.'),
+    description: () => t('skill.sacredGround'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeRegen: scaleUpFlat(level, 5, 5, 1),
@@ -365,7 +365,7 @@ export const PALADIN_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'eternal-light',
-    description: () => t('Increases elemental damage, resistance, and life.'),
+    description: () => t('skill.eternalLight'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamagePercent: scaleDownFlat(level, 2),
@@ -380,7 +380,7 @@ export const PALADIN_SKILLS = {
     manaCost: (level) => 10 + level * 1.25,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'champion-of-faith',
-    description: () => t('Greatly increases damage and fire damage.'),
+    description: () => t('skill.championOfFaith'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 3),

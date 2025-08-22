@@ -13,7 +13,7 @@ export const WARRIOR_SKILLS = {
     manaCost: (level) => 1 + level * 0.1,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'war-axe',
-    description: () => t('While active, increases damage but costs mana per attack'),
+    description: () => t('skill.bash'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 2, 5, 0.2),
@@ -26,7 +26,7 @@ export const WARRIOR_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'shield',
-    description: () => t('Permanently increases armor, armor percent, and adds damage from armor'),
+    description: () => t('skill.toughness'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: scaleUpFlat(level, 3, 5, 0.2),
@@ -44,7 +44,7 @@ export const WARRIOR_SKILLS = {
     cooldown: () => 5000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'sword',
-    description: () => t('A powerful strike that deals increased damage'),
+    description: () => t('skill.powerStrike'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 3, 5, 0.2),
@@ -57,7 +57,7 @@ export const WARRIOR_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'helmet',
-    description: () => t('Increases vitality, life regen, and resistance while converting life regen to damage'),
+    description: () => t('skill.ironWill'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       vitality: scaleUpFlat(level, 3),
@@ -78,7 +78,7 @@ export const WARRIOR_SKILLS = {
     duration: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'cry',
-    description: () => t('Temporarily increases damage'),
+    description: () => t('skill.battleCry'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2.5),
@@ -90,7 +90,7 @@ export const WARRIOR_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'armor',
-    description: () => t('Increases life regeneration'),
+    description: () => t('skill.fortitude'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.005, 1),
@@ -108,7 +108,7 @@ export const WARRIOR_SKILLS = {
     cooldown: () => 9500,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'slam',
-    description: () => t('Deals instant damage'),
+    description: () => t('skill.groundSlam'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 8),
@@ -122,7 +122,7 @@ export const WARRIOR_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'armor-break',
-    description: () => t('Gives armor penetration'),
+    description: () => t('skill.armorBreaker'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armorPenetration: scaleUpFlat(level, 15, 5, 0.5),
@@ -140,7 +140,7 @@ export const WARRIOR_SKILLS = {
     duration: () => 16000,
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'wall',
-    description: () => t('Increases armor percent, block chance, and damage from armor temporarily'),
+    description: () => t('skill.shieldWall'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       extraDamageFromArmorPercent: Math.min(0.03 * scaleDownFlat(level), 2),
@@ -157,7 +157,7 @@ export const WARRIOR_SKILLS = {
     manaCost: (level) => 3 + level * 0.188,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'berserk',
-    description: () => t('Grants large amounts of fire damage and fire damage percent'),
+    description: () => t('skill.berserk'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamage: scaleUpFlat(level, 4, 5, 0.5),
@@ -171,7 +171,7 @@ export const WARRIOR_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'last-stand',
-    description: () => t('Increases life steal, attack speed, and attack rating'),
+    description: () => t('skill.lastStand'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeSteal: Math.min(scaleDownFlat(level, 0.01), 1),
@@ -188,7 +188,7 @@ export const WARRIOR_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'warlord',
-    description: () => t('Boosts life, strength, vitality, and endurance while adding damage from life'),
+    description: () => t('skill.warlord'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifePercent: scaleDownFlat(level, 1),
@@ -206,7 +206,7 @@ export const WARRIOR_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'unstoppable-force',
-    description: () => t('Massively boosts damage, attack rating, and crit damage.'),
+    description: () => t('skill.unstoppableForce'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2),
@@ -223,7 +223,7 @@ export const WARRIOR_SKILLS = {
     duration: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'unyielding-defense',
-    description: () => t('Temporarily increases armor percent, block chance, and resistance.'),
+    description: () => t('skill.unyieldingDefense'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armorPercent: scaleDownFlat(level, 1.5),
@@ -241,7 +241,7 @@ export const WARRIOR_SKILLS = {
     cooldown: () => 3500,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'blade-storm',
-    description: () => t('Spins violently, dealing damage and penetrating armor.'),
+    description: () => t('skill.bladeStorm'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 20, 5, 0.5),
@@ -255,7 +255,7 @@ export const WARRIOR_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'iron-fortress',
-    description: () => t('Increases armor, life, and resistance.'),
+    description: () => t('skill.ironFortress'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: scaleUpFlat(level, 15, 5, 0.5),
@@ -271,7 +271,7 @@ export const WARRIOR_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'titan-strength',
-    description: () => t('Greatly increases strength and damage.'),
+    description: () => t('skill.titanStrength'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strength: scaleUpFlat(level, 6),
@@ -288,7 +288,7 @@ export const WARRIOR_SKILLS = {
     duration: () => 40000,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'heroic-stand',
-    description: () => t('Greatly boosts armor and life regeneration when near death.'),
+    description: () => t('skill.heroicStand'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armorPercent: scaleDownFlat(level, 3),
@@ -304,7 +304,7 @@ export const WARRIOR_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'legendary-warlord',
-    description: () => t('Provides crit chance, crit damage, and increased damage.'),
+    description: () => t('skill.legendaryWarlord'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critChance: Math.min(scaleDownFlat(level, 0.1), 20),
@@ -321,7 +321,7 @@ export const WARRIOR_SKILLS = {
     duration: () => 40000,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'eternal-guardian',
-    description: () => t('Channels protection that reduces enemy attack speed and damage.'),
+    description: () => t('skill.eternalGuardian'),
     maxLevel: () => 350,
     effect: (level) => ({
       reduceEnemyAttackSpeedPercent: Math.min(scaleDownFlat(level, 0.1), 15),

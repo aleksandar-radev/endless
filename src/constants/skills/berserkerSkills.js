@@ -12,7 +12,7 @@ export const BERSERKER_SKILLS = {
     manaCost: (level) => 2 + level * 0.125,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'frenzy',
-    description: () => t('Boosts damage but drains life per hit while active.'),
+    description: () => t('skill.frenzy'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 2),
@@ -26,7 +26,7 @@ export const BERSERKER_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'tough-skin',
-    description: () => t('Raises armor and armor percent to reduce damage taken.'),
+    description: () => t('skill.toughSkin'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: scaleUpFlat(level, 5),
@@ -43,7 +43,7 @@ export const BERSERKER_SKILLS = {
     cooldown: () => 8000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'swing',
-    description: () => t('Delivers a powerful strike that boosts damage at the cost of life per hit.'),
+    description: () => t('skill.recklessSwing'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 3),
@@ -60,7 +60,7 @@ export const BERSERKER_SKILLS = {
     duration: () => 12000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'battle-cry',
-    description: () => t('Temporarily increases damage, attack speed, and life steal.'),
+    description: () => t('skill.battleCry'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 0.5),
@@ -77,7 +77,7 @@ export const BERSERKER_SKILLS = {
     manaCost: (level) => 2 + level * 0.025,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'berserker-rage',
-    description: () => t('Greatly boosts fire and air damage with a chance to deal double damage.'),
+    description: () => t('skill.berserkersRage'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamage: scaleUpFlat(level, 4, 6),
@@ -93,7 +93,7 @@ export const BERSERKER_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'greater-rage',
-    description: () => t('Passively grants extra attack speed and life per hit.'),
+    description: () => t('skill.greaterFrenzy'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackSpeed: Math.min(scaleDownFlat(level, 0.0075), 1.5),
@@ -110,7 +110,7 @@ export const BERSERKER_SKILLS = {
     cooldown: () => 9900,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'earthquake',
-    description: () => t('Smashes the ground, increasing damage and earth damage.'),
+    description: () => t('skill.earthquake'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 5),
@@ -123,7 +123,7 @@ export const BERSERKER_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'mastery',
-    description: () => t('Raises crit chance, crit damage, double damage chance, and attack rating at the cost of life.'),
+    description: () => t('skill.rageMastery'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critChance: Math.min(scaleDownFlat(level, 0.05), 20),
@@ -143,7 +143,7 @@ export const BERSERKER_SKILLS = {
     duration: () => 28000,
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'bloodlust',
-    description: () => t('Temporarily boosts attack speed, life steal, and life percent.'),
+    description: () => t('skill.bloodLust'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackSpeed: Math.min(scaleDownFlat(level, 0.002), 1.5),
@@ -160,7 +160,7 @@ export const BERSERKER_SKILLS = {
     manaCost: (level) => 0,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'fury',
-    description: () => t('Increases damage and restores mana and life per hit.'),
+    description: () => t('skill.unbridledFury'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2),
@@ -174,7 +174,7 @@ export const BERSERKER_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'undying',
-    description: () => t('Grants a resurrection chance with extra life regeneration and armor.'),
+    description: () => t('skill.undyingRage'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       resurrectionChance: Math.min(scaleDownFlat(level, 0.25), 50),
@@ -190,7 +190,7 @@ export const BERSERKER_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'warlord',
-    description: () => t('Boosts strength, crit chance, attack speed, and damage.'),
+    description: () => t('skill.warlord'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strengthPercent: scaleDownFlat(level, 2.5),
@@ -208,7 +208,7 @@ export const BERSERKER_SKILLS = {
     manaCost: (level) => 10 + level * 1.25,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'rage-overflow',
-    description: () => t('Unleashes rage to raise damage and add life steal.'),
+    description: () => t('skill.rageOverflow'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2),
@@ -221,7 +221,7 @@ export const BERSERKER_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'crushing-blows',
-    description: () => t('Increases crit damage, armor penetration, and flat damage.'),
+    description: () => t('skill.crushingBlows'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critDamage: Math.min(scaleDownFlat(level, 0.012), 3),
@@ -240,7 +240,7 @@ export const BERSERKER_SKILLS = {
     duration: () => 35000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'blood-frenzy',
-    description: () => t('Greatly increases attack speed, damage, and life per hit.'),
+    description: () => t('skill.bloodFrenzy'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackSpeed: Math.min(scaleDownFlat(level, 0.02), 3),
@@ -254,7 +254,7 @@ export const BERSERKER_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'unyielding-onslaught',
-    description: () => t('Passively increases damage and attack rating.'),
+    description: () => t('skill.unyieldingOnslaught'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2.5),
@@ -271,7 +271,7 @@ export const BERSERKER_SKILLS = {
     cooldown: () => 80000,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'primal-roar',
-    description: () => t('Ignores enemy armor and reduces enemy damage.'),
+    description: () => t('skill.primalRoar'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       ignoreEnemyArmor: 1,
@@ -284,7 +284,7 @@ export const BERSERKER_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'berserker-spirit',
-    description: () => t('Boosts strength, life, and crit chance.'),
+    description: () => t('skill.berserkerSpirit'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strengthPercent: scaleDownFlat(level, 3),
@@ -300,7 +300,7 @@ export const BERSERKER_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'apex-predator',
-    description: () => t('Increases damage, attack speed, and life steal.'),
+    description: () => t('skill.apexPredator'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 3),
@@ -315,7 +315,7 @@ export const BERSERKER_SKILLS = {
     manaCost: (level) => 20 + level * 0.85,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'rage-incarnate',
-    description: () => t('Increases damage with added armor penetration and attack rating.'),
+    description: () => t('skill.rageIncarnate'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 4),
