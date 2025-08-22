@@ -679,7 +679,7 @@ export default class Hero {
           calculateResistanceReduction(
             getEffectiveResistance.call(
               this,
-              enemy.baseData[`${id}Resistance`],
+              enemy[`${id}Resistance`],
               this.stats[`${id}Penetration`],
               this.stats[`${id}PenetrationPercent`],
             ),
