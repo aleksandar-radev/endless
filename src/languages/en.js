@@ -319,4 +319,5 @@ export default {
   'Increases the rarity of an equipped item. (cannot be used on mythic items)': 'Increases the rarity of an equipped item. (cannot be used on mythic items)',
   'Alternation Orb': 'Alternation Orb',
   'Re-rolls the value of one random stat on an equipped item.': 'Re-rolls the value of one random stat on an equipped item.',
+  'skill.drainingTouch': 'Drains mana with earth damage.',
 };

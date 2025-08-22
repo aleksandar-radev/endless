@@ -79,12 +79,12 @@ export const VAMPIRE_SKILLS = {
     cooldown: () => 12200,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'drain',
-    description: () => t('Drains life with earth damage, restoring mana and life.'),
+    description: () => t('skill.drainingTouch'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       earthDamage: scaleUpFlat(level, 4, 3, 0.1),
       earthDamagePercent: scaleDownFlat(level, 5),
-      manaPerHit: scaleUpFlat(level, 0.2),
+      manaPerHit: scaleUpFlat(level, 0.5),
     }),
   },
   greaterBloodHunger: {
