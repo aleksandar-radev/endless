@@ -162,6 +162,24 @@ export default class CrystalShop {
     if (!this.modal) this.createUpgradeModal();
   }
 
+  updateCrystalShopUI() {
+    const crystalShopTab = document.getElementById('crystalShop');
+    if (!crystalShopTab) return;
+    const shopContainer = crystalShopTab.querySelector('.crystalShop-container');
+    if (!shopContainer) return;
+    const upgradesContainer = shopContainer.querySelector('.crystalShop-upgrades-container');
+    if (!upgradesContainer) return;
+    upgradesContainer.innerHTML = `
+      <div class="crystal-upgrades-grid">
+        ${Object.entries(CRYSTAL_UPGRADE_CONFIG)
+    .map(([stat, config]) => this.createCrystalUpgradeButton(stat, config))
+    .join('')}
+      </div>
+    `;
+    this.setupCrystalUpgradeHandlers();
+    if (!this.modal) this.createUpgradeModal();
+  }
+
   createCrystalUpgradeButton(stat, config) {
     let alreadyPurchased = config.oneTime && this.crystalUpgrades[stat];
     const level = this.crystalUpgrades[stat] || 0;

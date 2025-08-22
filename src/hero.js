@@ -1,5 +1,16 @@
 import { initializeSkillTreeStructure, updatePlayerLife, updateTabIndicators } from './ui/ui.js';
-import { game, inventory, training, skillTree, statistics, soulShop, dataManager, prestige, ascension } from './globals.js';
+import {
+  game,
+  inventory,
+  training,
+  skillTree,
+  statistics,
+  soulShop,
+  dataManager,
+  prestige,
+  ascension,
+  crystalShop,
+} from './globals.js';
 import { calculateArmorReduction, calculateResistanceReduction, createCombatText, createDamageNumber } from './combat.js';
 import { handleSavedData } from './functions.js';
 import { getCurrentRegion, updateRegionUI } from './region.js';
@@ -96,16 +107,28 @@ export default class Hero {
   gainGold(amount) {
     statistics.increment('totalGoldEarned', null, amount);
     this.gold += amount;
+    if (game.activeTab === 'training') {
+      training.updateTrainingUI('gold-upgrades');
+    }
   }
 
   gainCrystals(amount) {
     statistics.increment('totalCrystalsEarned', null, amount);
     this.crystals += amount;
+    if (game.activeTab === 'crystalShop') {
+      crystalShop.updateCrystalShopUI();
+    }
+    if (game.activeTab === 'training') {
+      training.updateTrainingUI('crystal-upgrades');
+    }
   }
 
   gainSouls(amount) {
     statistics.increment('totalSoulsEarned', null, amount);
     this.souls += amount;
+    if (game.activeTab === 'soulShop') {
+      soulShop.updateSoulShopUI();
+    }
   }
   levelUp(levels) {
     this.exp = 0;
