@@ -14,7 +14,7 @@ export function initializeBattleLogUI() {
     </div>
     <div class="battle-log-controls">
       <button id="battle-log-reset" data-i18n="battleLog.reset">${t('battleLog.reset')}</button>
-      <button id="battle-log-freeze" data-i18n="battleLog.freeze">${t('battleLog.freeze')}</button>
+      <button id="battle-log-freeze" data-i18n="battleLog.unfreeze">${t('battleLog.unfreeze')}</button>
     </div>
     <div class="battle-log-content">
       <div id="battle-log-battle" class="log-list"></div>
