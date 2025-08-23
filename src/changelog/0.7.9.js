@@ -47,6 +47,8 @@ export default function run() {
     <li>Added tint to armor and pants items, to make them more distinct.</li>
     <li>Added salvage all button and salvage button for a single item in inventory options.</li>
     <li>Unique items renamed to "EPIC" with purple color.</li>
+    <li>Death timer crystal upgrade cost reduced by a lot. It's now fixed at 50 crystals with no increasing cost.</li>
+    <li>Hero level ups performance improved, so gaining even 1k+ levels at once is now smoother and will not cause lag.</li>
   </ul>
 
   <span style="color:#FF8C00;"> Fixes & polish</span>

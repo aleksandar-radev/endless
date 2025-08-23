@@ -1,9 +1,12 @@
 import { game, hero, inventory, training, skillTree, dataManager, statistics } from './globals.js';
 import { MATERIALS } from './constants/materials.js';
 import SimpleCrypto from 'simple-crypto-js';
-import { showToast, updatePlayerLife, updateResources, updateStageUI } from './ui/ui.js';
+import { initializeSkillTreeStructure, showToast, updatePlayerLife, updateResources, updateStageUI, updateTabIndicators } from './ui/ui.js';
 import { createImageDropdownFromData } from './ui/imageDropdown.js';
 import { ITEM_RARITY, ITEM_TYPES } from './constants/items.js';
+import { updateRegionUI } from './region.js';
+import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
+import { createCombatText } from './combat.js';
 
 export const crypt = new SimpleCrypto(import.meta.env.VITE_ENCRYPT_KEY);
 
@@ -471,7 +474,17 @@ export function createModifyUI() {
     const val = parseInt(expInput.value, 10);
     if (!isNaN(val) && val > 0) {
       hero.levelUp(val);
+
+      updateStatsAndAttributesUI();
       hero.recalculateFromAttributes();
+      createCombatText(`LEVEL UP! (${hero.level})`);
+      updateStatsAndAttributesUI();
+      initializeSkillTreeStructure();
+      dataManager.saveGame();
+      updateRegionUI();
+      updateTabIndicators();
+      statistics.updateStatisticsUI();
+
       showToast(`Leveled up ${val} time${val > 1 ? 's' : ''}!`);
     } else {
       showToast('Invalid level up value', 'error');

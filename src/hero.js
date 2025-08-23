@@ -101,15 +101,28 @@ export default class Hero {
 
   gainExp(amount) {
     this.exp += amount;
+    let didLevelUp = false;
     document.dispatchEvent(new CustomEvent('xpGained', { detail: amount }));
     while (this.exp >= this.getExpToNextLevel()) {
       const xpOverflow = this.exp - this.getExpToNextLevel();
       this.levelUp(1);
       this.exp = xpOverflow; // Carry over excess experience to next level
-      updateStatsAndAttributesUI();
+      didLevelUp = true;
     }
-    this.recalculateFromAttributes();
-    updatePlayerLife();
+
+    if (didLevelUp) {
+      updateStatsAndAttributesUI();
+      this.recalculateFromAttributes();
+      updatePlayerLife();
+      createCombatText(`LEVEL UP! (${this.level})`);
+      updatePlayerLife();
+      updateStatsAndAttributesUI();
+      initializeSkillTreeStructure();
+      dataManager.saveGame();
+      updateRegionUI();
+      updateTabIndicators();
+      statistics.updateStatisticsUI();
+    }
   }
 
   gainGold(amount) {
@@ -143,17 +156,8 @@ export default class Hero {
     this.level += levels;
     this.statPoints += STATS_ON_LEVEL_UP * levels;
     statistics.heroLevel = this.level;
-    statistics.updateStatisticsUI();
 
     skillTree.addSkillPoints(levels * 1); // Add 1 skill points per level
-
-    createCombatText(`LEVEL UP! (${this.level})`);
-    updatePlayerLife();
-    updateStatsAndAttributesUI();
-    initializeSkillTreeStructure();
-    dataManager.saveGame();
-    updateRegionUI();
-    updateTabIndicators();
 
     // Dispatch a custom event for UI updates (e.g., prestige tab)
     document.dispatchEvent(new CustomEvent('heroLevelUp', { detail: { level: this.level } }));
