@@ -40,6 +40,7 @@ export default function run() {
     <li>Remove level cap on all druid skills.</li>
     <li>Changed function calculating xp requirement per level.</li>
     <li>Equipping a ring now when there is an empty slot automatically equips on that slot.</li>
+    <li>Added reset all purchased training bonuses in crystal shop.</li>
   </ul>
 
   <span style="color:#FF8C00;"> Fixes & polish</span>
