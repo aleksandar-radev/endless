@@ -33,6 +33,8 @@ export class Options {
     this.soundVolume = typeof data.soundVolume === 'number' ? data.soundVolume : 0;
     // Remember salvage preference across prestiges
     this.salvageMaterialsEnabled = data.salvageMaterialsEnabled ?? false;
+    // Enable auto inventory sorting
+    this.autoSortInventory = data.autoSortInventory ?? false;
     // Add advanced tooltips option
     this.showAdvancedTooltips = data.showAdvancedTooltips ?? false;
     // Add advanced attribute tooltips option
@@ -178,6 +180,7 @@ export class Options {
     gameContent.appendChild(this._createBulkTrainingOption());
     gameContent.appendChild(this._createQuickSoulShopOption());
     gameContent.appendChild(this._createNumericInputOption());
+    gameContent.appendChild(this._createAutoSortInventoryOption());
     gameContent.appendChild(this._createStartingStageOption());
     gameContent.appendChild(this._createStageSkipOption());
     gameContent.appendChild(this._createResetStageSkipOption());
@@ -1075,6 +1078,50 @@ export class Options {
       initializeBuildingsUI();
     });
     return wrapper;
+  }
+
+  _createAutoSortInventoryOption() {
+    const purchased = !!crystalShop.crystalUpgrades?.autoSortInventory;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="auto-sort-inventory-toggle" class="auto-sort-inventory-toggle-label" data-i18n="options.autoSortInventory">Auto Sort Inventory:</label>
+      <input
+        type="checkbox"
+        id="auto-sort-inventory-toggle"
+        class="auto-sort-inventory-toggle"
+        ${this.autoSortInventory ? 'checked' : ''}
+        ${purchased ? '' : 'disabled'}
+        title="${purchased ? '' : t('options.autoSortInventory.disabledTooltip')}"
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+      if (checkbox.disabled) return;
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.autoSortInventory = checkbox.checked;
+      dataManager.saveGame();
+    });
+    this._autoSortInventoryToggle = checkbox;
+    this._autoSortInventoryWrapper = wrapper;
+    this.updateAutoSortInventoryOption();
+    return wrapper;
+  }
+
+  updateAutoSortInventoryOption() {
+    if (!this._autoSortInventoryToggle) return;
+    const purchased = !!crystalShop.crystalUpgrades?.autoSortInventory;
+    this._autoSortInventoryToggle.disabled = !purchased;
+    this._autoSortInventoryToggle.title = purchased
+      ? ''
+      : t('options.autoSortInventory.disabledTooltip');
+    const toggleBtn = this._autoSortInventoryWrapper?.querySelector('.toggle-btn');
+    if (toggleBtn) toggleBtn.classList.toggle('disabled', !purchased);
   }
 
   /**

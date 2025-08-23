@@ -193,6 +193,8 @@ export default {
   'options.bulkTraining': 'Habilitar compras masivas de entrenamiento',
   'options.quickSoulShop': 'Habilitar tienda de almas rápida',
   'options.numericPurchaseInputs': 'Habilitar entradas numéricas de compra',
+  'options.autoSortInventory': 'Habilitar auto ordenar inventario',
+  'options.autoSortInventory.disabledTooltip': 'Compra en la tienda de cristales para habilitar',
   'options.showEnemyStats': 'Mostrar estadísticas del enemigo',
   critChance: 'Probabilidad de Crítico',
   critDamage: 'Daño Crítico',

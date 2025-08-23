@@ -193,6 +193,8 @@ export default {
   'options.bulkTraining': '启用批量训练',
   'options.quickSoulShop': '启用快速灵魂商店',
   'options.numericPurchaseInputs': '启用数字购买输入',
+  'options.autoSortInventory': '启用自动整理库存',
+  'options.autoSortInventory.disabledTooltip': '在水晶商店购买以启用',
   'options.showEnemyStats': '显示敌人统计',
   critChance: '暴击几率',
   critDamage: '暴击伤害',

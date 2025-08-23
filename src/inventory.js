@@ -2,7 +2,13 @@ import Item, { AVAILABLE_STATS } from './item.js';
 import { game, hero, statistics, dataManager, crystalShop, options } from './globals.js';
 import { showToast, updateResources } from './ui/ui.js';
 import { createModal, closeModal } from './ui/modal.js';
-import { initializeInventoryUI, updateInventoryGrid, updateMaterialsGrid } from './ui/inventoryUi.js';
+import {
+  initializeInventoryUI,
+  updateInventoryGrid,
+  updateMaterialsGrid,
+  sortInventory,
+  sortMaterials,
+} from './ui/inventoryUi.js';
 import { getCurrentRegion } from './region.js';
 import { MATERIALS } from './constants/materials.js';
 import { STATS } from './constants/stats/stats.js';
@@ -106,9 +112,13 @@ export default class Inventory {
       }
     }
     this.hasNewItems = true; // Set flag when new material is added
-    updateMaterialsGrid();
     statistics.increment('totalMaterialsFound', null, material.qty);
-    dataManager.saveGame();
+    if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
+      sortMaterials();
+    } else {
+      updateMaterialsGrid();
+      dataManager.saveGame();
+    }
   }
 
   showEquippedItemsModal({
@@ -491,9 +501,16 @@ export default class Inventory {
       msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
     }
     showToast(msg, 'success');
-    updateInventoryGrid();
+    if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
+      const sortMode =
+        (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) ||
+        'type-rarity-level';
+      sortInventory(sortMode);
+    } else {
+      updateInventoryGrid();
+      dataManager.saveGame();
+    }
     updateMaterialsGrid();
-    dataManager.saveGame();
   }
 
   salvageItemsByRarity(rarity) {
@@ -547,10 +564,17 @@ export default class Inventory {
       if (crystalsGained > 0)
         msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
       showToast(msg, 'success');
-      updateInventoryGrid();
+      if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
+        const sortMode =
+          (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) ||
+          'type-rarity-level';
+        sortInventory(sortMode);
+      } else {
+        updateInventoryGrid();
+        dataManager.saveGame();
+      }
       updateMaterialsGrid();
       updateResources(); // <-- update the UI after using a material
-      dataManager.saveGame();
     } else {
       showToast(`No ${rarity.toLowerCase()} items to salvage`, 'info');
     }
@@ -715,8 +739,15 @@ export default class Inventory {
       return;
     }
     this.hasNewItems = true; // Set flag when new item is added and kept
-    updateInventoryGrid();
-    dataManager.saveGame();
+    if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
+      const sortMode =
+        (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) ||
+        'type-rarity-level';
+      sortInventory(sortMode);
+    } else {
+      updateInventoryGrid();
+      dataManager.saveGame();
+    }
   }
 
   setAutoSalvageRarities(rarities) {

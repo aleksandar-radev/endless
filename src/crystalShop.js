@@ -112,6 +112,13 @@ const CRYSTAL_UPGRADE_CONFIG = {
     baseCost: 400,
     oneTime: true,
   },
+  autoSortInventory: {
+    label: 'Auto-Sort Inventory',
+    bonus: 'Automatically sorts inventory and materials on pickup',
+    bonusLabel: 'Automatically sorts inventory and materials on pickup',
+    baseCost: 25,
+    oneTime: true,
+  },
   salvageMaterials: {
     label: 'Salvage Materials',
     bonus: 'Allows salvaging items for upgrade materials instead of gold',
@@ -549,6 +556,10 @@ export default class CrystalShop {
 
     if (stat === 'resetStageSkip') {
       options.updateResetStageSkipOption();
+    }
+
+    if (stat === 'autoSortInventory') {
+      options.updateAutoSortInventoryOption();
     }
   }
 
