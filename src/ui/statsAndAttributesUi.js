@@ -195,10 +195,10 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
 
     const tabsHtml = html`
       <div class="stats-tabs">
-        <button class="subtab-btn active" data-subtab="offense">Offense</button>
-        <button class="subtab-btn" data-subtab="defense">Defense</button>
-        <button class="subtab-btn" data-subtab="misc">Misc</button>
-        <button class="split-view-btn" id="split-view-btn">Split View</button>
+        <button class="subtab-btn active" data-subtab="offense">${t('stats.offense')}</button>
+        <button class="subtab-btn" data-subtab="defense">${t('stats.defense')}</button>
+        <button class="subtab-btn" data-subtab="misc">${t('stats.misc')}</button>
+        <button class="split-view-btn" id="split-view-btn">${t('stats.splitView')}</button>
       </div>
     `;
     statsContainer.innerHTML += tabsHtml;
@@ -234,7 +234,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           const btn = document.createElement('button');
           btn.className = 'subcat-btn' + (idx === 0 ? ' active' : '');
           btn.dataset.subcat = name;
-          btn.textContent = name.charAt(0).toUpperCase() + name.slice(1);
+          btn.textContent = t(`stats.${group}.${name}`);
           tabs.appendChild(btn);
 
           const sp = document.createElement('div');
