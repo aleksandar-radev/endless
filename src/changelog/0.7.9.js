@@ -30,6 +30,7 @@ export default function run() {
     <li>Reduced gold gains from higher tier enemies a little.</li>
     <li>Added a new language: Chinese. Still not everything is translated, although many things already are.</li>
     <li>Berserker class reworked (remains mostly the same, but should be stronger).</li>
+    <li>Rogue now gets some attack speed from skills.</li>
     <li>Percent damage from life, armor, evasion have been nerfed (nearly 2 times weaker now).</li>
     <li>Vitality bonusees on vampire have been reduced a little.</li>
     <li>Warrior armor bonuses have been reduced a little</li>
@@ -56,6 +57,7 @@ export default function run() {
     <li>Fixed a bug where drag and drop on trash always salvaged items for gold.</li>
     <li>Fixed a bug where enemy resistance is not being calculated correctly.</li>
     <li>Removed buildings map for simplicity. A map might or might not be added back in the future.</li>
+    <li>Fixed a bug where mana can go negative, causing it to stay at 0 for long time.</li>
   </ul>
   `;
 }

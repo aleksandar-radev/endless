@@ -28,7 +28,6 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.evasion'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      blockChance: Math.min(scaleDownFlat(level, 0.075), 15),
       dexterity: scaleUpFlat(level, 4),
       dexterityPercent: scaleDownFlat(level, 1),
       extraDamageFromEvasionPercent: Math.min(0.03 * scaleDownFlat(level), 2.5),
@@ -48,8 +47,7 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       damage: scaleUpFlat(level, 2, 6, 0.2),
       damagePercent: scaleDownFlat(level, 1.5),
-      earthDamagePercent: scaleDownFlat(level, 3),
-      waterDamagePercent: scaleDownFlat(level, 2),
+      attackSpeed: Math.min(scaleDownFlat(level, 0.0075), 2),
     }),
   },
   shadowForm: {
@@ -66,8 +64,7 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       critChance: Math.min(scaleDownFlat(level, 0.05), 20),
       critDamage: Math.min(scaleDownFlat(level, 0.003, 20, 500), 3),
-      lifeSteal: Math.min(scaleDownFlat(level, 0.01), 4),
-      agilityPercent: scaleDownFlat(level),
+      agilityPercent: scaleDownFlat(level, 1.5),
     }),
   },
 
@@ -148,6 +145,7 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critDamage: Math.min(scaleDownFlat(level, 0.0065), 5),
+      attackSpeed: Math.min(scaleDownFlat(level, 0.005), 2),
     }),
   },
 

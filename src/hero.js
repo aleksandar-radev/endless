@@ -574,6 +574,8 @@ export default class Hero {
   regenerate() {
     this.stats.currentLife = Math.min(this.stats.life, this.stats.currentLife + this.stats.lifeRegen / 10);
     this.stats.currentMana = Math.min(this.stats.mana, this.stats.currentMana + this.stats.manaRegen / 10);
+    if (this.stats.currentLife < 0) this.stats.currentLife = 0;
+    if (this.stats.currentMana < 0) this.stats.currentMana = 0;
     updatePlayerLife();
   }
 

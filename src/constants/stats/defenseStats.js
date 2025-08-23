@@ -3,8 +3,8 @@ import { itemLevelScaling } from './itemScaling.js';
 // Base scaling configurations. Values are slowly reduced towards `end` over the
 // first 2000 levels to provide diminishing returns. Higher tier items receive a
 // bonus via itemLevelScaling's tier handling.
-const FLAT_SCALING = { start: 0.05, end: 0.01 };
-const PERCENT_SCALING = { start: 0.002, end: 0.0005 };
+const FLAT_SCALING = { start: 0.05, end: 0.02 };
+const PERCENT_SCALING = { start: 0.002, end: 0.0001 };
 const CHANCE_SCALING = { start: 0.0012, end: 0.0003 };
 
 const defenseScaling = (level, tier, config = FLAT_SCALING) =>
