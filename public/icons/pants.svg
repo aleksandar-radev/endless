@@ -5,7 +5,7 @@
   <style>
     :root{
       --stroke:#0f172a;     /* outline */
-      --fabric1:#9ca3af;    /* fabric light (default: gray) */
+      --fabric1:#6666FF;    /* fabric light (default: gray) */
       --fabric2:#6b7280;    /* fabric dark */
       --leather:#7c5a3a;    /* belt/trim */
       --buckle:#facc15;     /* belt buckle */
