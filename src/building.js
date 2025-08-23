@@ -290,6 +290,7 @@ export class BuildingManager {
           if (b.effect.type === 'gold') hero.gainGold(totalBonus);
           else if (b.effect.type === 'crystal') hero.gainCrystals(totalBonus);
           else if (b.effect.type === 'soul') hero.gainSouls(totalBonus);
+          else if (b.effect.type === 'level') hero.levelUp(totalBonus);
           else if (b.effect.type === 'material') {
             if (b.effect.materialIds) {
               const ids = b.effect.materialIds;
@@ -321,7 +322,9 @@ export class BuildingManager {
           if (b.type === 'gold') hero.gainGold(b.amount);
           else if (b.type === 'crystal') hero.gainCrystals(b.amount);
           else if (b.type === 'soul') hero.gainSouls(b.amount);
-          else if (b.building.effect.type === 'material') {
+          else if (b.building.effect.type === 'level') {
+            hero.levelUp(b.amount);
+          } else if (b.building.effect.type === 'material') {
             if (b.materialIds) {
               const ids = b.materialIds;
               const randId = ids[Math.floor(Math.random() * ids.length)];

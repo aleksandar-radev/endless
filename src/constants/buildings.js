@@ -44,20 +44,19 @@ export const buildingsData = {
   experienceWorkshop: {
     id: 'experienceWorkshop',
     get name() { return t('Experience Workshop'); },
-    get description() { return t('Produces experience potions every hour.');},
+    get description() { return t('Grants levels every hour.');},
     image: '/buildings/experience-workshop.png',
     effect: {
-      type: 'material',
-      displayName: t('random experience potion'),
-      materialIds: ['experience_potion', 'greater_experience_potion', 'huge_experience_potion'],
+      type: 'level',
+      displayName: t('level'),
       amount: 1,
-      interval: '1min',
+      interval: '30min',
     },
     costStructure: {
-      gold: { base: 500, increment: 1000, cap: 50000 },
-      crystal: { base: 0, increment: 1, cap: 100 },
+      gold: { base: 500, increment: 1000, cap: 25000 },
+      crystal: { base: 0, increment: 1, cap: 30 },
     },
-    maxLevel: 1000,
+    maxLevel: 500,
     unlockRequirements: {},
   },
   materialDepot: {
@@ -71,13 +70,13 @@ export const buildingsData = {
       random: true,
       weighted: true,
       amount: 1,
-      interval: '1min',
+      interval: '10min',
     },
     costStructure: {
       gold: { base: 500, increment: 1000, cap: 70000 },
       crystal: { base: 1, increment: 1, cap: 50 },
     },
-    maxLevel: 1000,
+    maxLevel: 2000,
     unlockRequirements: {},
   },
 };
