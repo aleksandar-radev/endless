@@ -687,6 +687,65 @@ export default class Inventory {
     }
   }
 
+  salvageAllItems() {
+    let salvagedItems = 0;
+    let goldGained = 0;
+    let crystalsGained = 0;
+    const matsGained = {};
+
+    this.inventoryItems = this.inventoryItems.map((item, index) => {
+      if (index < PERSISTENT_SLOTS) return item;
+      if (item) {
+        salvagedItems++;
+        if (this.salvageUpgradeMaterials) {
+          const { id, qty } = this.getItemSalvageMaterial(item);
+          matsGained[id] = (matsGained[id] || 0) + qty;
+        } else {
+          goldGained += this.getItemSalvageValue(item);
+        }
+        if (item.rarity === 'MYTHIC') crystalsGained++;
+        return null;
+      }
+      return item;
+    });
+
+    if (salvagedItems > 0) {
+      if (this.salvageUpgradeMaterials) {
+        Object.entries(matsGained).forEach(([id, qty]) => {
+          this.addMaterial({ id, qty });
+        });
+      } else if (goldGained > 0) {
+        hero.gainGold(goldGained);
+      }
+      if (crystalsGained > 0) hero.gainCrystals(crystalsGained);
+      let msg = `Salvaged ${salvagedItems} items`;
+      if (this.salvageUpgradeMaterials) {
+        const parts = Object.entries(matsGained).map(
+          ([id, qty]) => `${qty} ${t(MATERIALS[id].name)}`,
+        );
+        if (parts.length) msg += `, gained ${parts.join(', ')}`;
+      } else if (goldGained > 0) {
+        msg += `, gained ${goldGained} gold`;
+      }
+      if (crystalsGained > 0)
+        msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
+      showToast(msg, 'success');
+      if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
+        const sortMode =
+          (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) ||
+          'type-rarity-level';
+        sortInventory(sortMode);
+      } else {
+        updateInventoryGrid();
+        dataManager.saveGame();
+      }
+      updateMaterialsGrid();
+      updateResources();
+    } else {
+      showToast('No items to salvage', 'info');
+    }
+  }
+
   // For upgrade materials (scraps/cores/stones), drop amount is variable:
   // For every 25 enemy levels, there is a 50% chance for an additional drop.
   // Instead of rolling for each, we calculate the min (1) and max (1 + rolls),

@@ -238,6 +238,9 @@ export function showSalvageModal(inv) {
     materialsGrid.style.display = 'none';
   }
 
+  // Clear any previous selection and hide salvage button
+  clearMobileSelection();
+
   // Get the inventory tab DOM node
   const inventoryTab = document.getElementById('inventory');
   if (!inventoryTab) return;
@@ -271,10 +274,16 @@ export function showSalvageModal(inv) {
       </div>
     `;
   }).join('')}
+          <div class="salvage-all-row">
+            <button id="salvage-all-btn" class="salvage-all-btn">All Items</button>
+          </div>
         </div>
-        <div class="inventory-trash">
-          <span class="inventory-trash-icon"><img src="${BASE}/icons/delete.svg" class="icon" alt="delete"/></span>
-          <div class="inventory-trash-label">Drag item here</div>
+        <div class="inventory-trash-row">
+          <div class="inventory-trash">
+            <span class="inventory-trash-icon"><img src="${BASE}/icons/delete.svg" class="icon" alt="delete"/></span>
+            <div class="inventory-trash-label">Drag item here</div>
+          </div>
+          <button id="salvage-selected-btn" class="inventory-btn" style="display: none;">Salvage</button>
         </div>
         <div class="salvage-material-row">
           <div>
@@ -342,8 +351,8 @@ export function showSalvageModal(inv) {
     });
   }
 
-  // Salvage button logic
-  overlay.querySelectorAll('.salvage-btn-modal').forEach((btn) => {
+  // Salvage button logic for specific rarities
+  overlay.querySelectorAll('.salvage-btn-modal[data-rarity]').forEach((btn) => {
     btn.onclick = () => {
       const rarity = btn.dataset.rarity;
       inventory.salvageItemsByRarity(rarity);
@@ -351,6 +360,29 @@ export function showSalvageModal(inv) {
       showSalvageModal(inv);
     };
   });
+
+  // Salvage all button
+  const salvageAllBtn = overlay.querySelector('#salvage-all-btn');
+  if (salvageAllBtn) {
+    salvageAllBtn.onclick = () => {
+      inventory.salvageAllItems();
+      closeModal(overlay);
+      showSalvageModal(inv);
+    };
+  }
+
+  // Salvage selected item button
+  const salvageSelectedBtn = overlay.querySelector('#salvage-selected-btn');
+  if (salvageSelectedBtn) {
+    salvageSelectedBtn.addEventListener('click', () => {
+      if (!selectedItemEl) return;
+      const item = inventory.getItemById(selectedItemEl.dataset.itemId);
+      if (item) {
+        inventory.salvageItem(item);
+        clearMobileSelection();
+      }
+    });
+  }
 
   // Auto-salvage toggle logic
   overlay.querySelectorAll('.salvage-row').forEach((row) => {
@@ -1105,6 +1137,13 @@ function clearSlotHighlights() {
 
 function showEquipButton(show) {
   const btn = document.getElementById('mobile-equip-btn');
+  // Hide equip button when salvage modal is open
+  if (document.getElementById('salvage-modal')) show = false;
+  if (btn) btn.style.display = show ? '' : 'none';
+}
+
+function showSalvageButton(show) {
+  const btn = document.getElementById('salvage-selected-btn');
   if (btn) btn.style.display = show ? '' : 'none';
 }
 
@@ -1121,6 +1160,7 @@ export function handleItemTap(itemEl) {
     selectedItemEl = itemEl;
     itemEl.classList.add('selected');
     showEquipButton(true);
+    showSalvageButton(true);
   }
 }
 
@@ -1144,6 +1184,7 @@ function clearMobileSelection() {
   awaitingSlot = false;
   clearSlotHighlights();
   showEquipButton(false);
+  showSalvageButton(false);
   closeItemContextMenu();
 }
 
