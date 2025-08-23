@@ -18,8 +18,6 @@ export class Building {
     this.level = level;
     this.placedAt = placedAt; // index of map placeholder, or null if not placed
 
-    this.name = data.name;
-    this.description = data.description;
     this.icon = data.icon;
     this.image = data.image;
     this.effect = data.effect;
@@ -27,6 +25,14 @@ export class Building {
     this.costStructure = data.costStructure;
     this.lastBonusTime = lastBonusTime;
     this.totalEarned = totalEarned;
+  }
+
+  get name() {
+    return buildingsData[this.id].name;
+  }
+
+  get description() {
+    return buildingsData[this.id].description;
   }
 
   static async create({ id, level = 0, placedAt = null, lastBonusTime = null, totalEarned = 0 }) {
