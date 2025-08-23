@@ -451,14 +451,6 @@ export default class Hero {
         const decimals = STATS[stat].decimalPlaces ?? 0;
         value = decimals > 0 ? Number(value.toFixed(decimals)) : Math.floor(value);
 
-        // reduce resistance based on region
-        if (stat === 'allResistance') {
-          const region = getCurrentRegion();
-          if (region && region.resistanceReduction) {
-            value = Number(value - region.resistanceReduction);
-          }
-        }
-
         // Apply caps
         if (stat === 'blockChance') value = Math.min(value, 75);
         if (stat === 'critChance') value = Math.min(value, 100);

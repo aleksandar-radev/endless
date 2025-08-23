@@ -43,7 +43,6 @@ export const REGIONS = [
       crystalized_rock: 1.1,
     },
     itemBaseBonus: 0.5,
-    resistanceReduction: 0,
   },
   {
     tier: 2,
@@ -86,7 +85,6 @@ export const REGIONS = [
       crystalized_rock: 5,
     },
     itemBaseBonus: 0.9,
-    resistanceReduction: 5,
   },
   {
     tier: 3,
@@ -136,7 +134,6 @@ export const REGIONS = [
       potion_of_perseverance: 3,
     },
     itemBaseBonus: 1.3,
-    resistanceReduction: 10,
   },
   {
     tier: 4,
@@ -180,7 +177,6 @@ export const REGIONS = [
     },
     canDrop: ['elixir'],
     itemBaseBonus: 1.7,
-    resistanceReduction: 15,
   },
   {
     tier: 5,
@@ -226,7 +222,6 @@ export const REGIONS = [
       FREAKY_GOLD_COINS: 4,
     },
     itemBaseBonus: 2.1,
-    resistanceReduction: 20,
   },
   {
     tier: 6,
@@ -276,7 +271,6 @@ export const REGIONS = [
       potion_of_perseverance: 3,
     },
     itemBaseBonus: 2.5,
-    resistanceReduction: 25,
   },
   {
     tier: 7,
@@ -320,7 +314,6 @@ export const REGIONS = [
       freaky_gold_coins: 20,
     },
     itemBaseBonus: 2.9,
-    resistanceReduction: 30,
   },
   {
     tier: 8,
@@ -367,7 +360,6 @@ export const REGIONS = [
       weapon_upgrade_core: 6,
     },
     itemBaseBonus: 3.3,
-    resistanceReduction: 35,
   },
   {
     tier: 9,
@@ -414,7 +406,6 @@ export const REGIONS = [
       crystalized_rock: 6,
     },
     itemBaseBonus: 3.7,
-    resistanceReduction: 40,
   },
   {
     tier: 10,
@@ -460,7 +451,6 @@ export const REGIONS = [
       huge_experience_potion: 10,
     },
     itemBaseBonus: 4.1,
-    resistanceReduction: 45,
   },
   {
     tier: 11,
@@ -504,7 +494,6 @@ export const REGIONS = [
     materialDropWeights: {
     },
     itemBaseBonus: 4.5,
-    resistanceReduction: 50,
   },
   {
     tier: 12,
@@ -529,7 +518,7 @@ export const REGIONS = [
       gold: 9,
       itemDrop: 10,
       materialDrop: 7,
-      attackRating: 40,
+      attackRating: 25,
       armor: 40,
       fireResistance: 40,
       coldResistance: 40,
@@ -537,7 +526,7 @@ export const REGIONS = [
       earthResistance: 40,
       lightningResistance: 40,
       waterResistance: 40,
-      evasion: 40,
+      evasion: 25,
       fireDamage: 50,
       coldDamage: 50,
       airDamage: 50,
@@ -550,7 +539,6 @@ export const REGIONS = [
       alternation_orb: 5,
     },
     itemBaseBonus: 4.9,
-    resistanceReduction: 55,
   },
 ];
 
