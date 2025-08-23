@@ -2,6 +2,7 @@
 import { showTooltip, hideTooltip, positionTooltip, formatNumber } from './ui.js';
 import { quests } from '../globals.js';
 import { MATERIALS } from '../constants/materials.js';
+import { t } from '../i18n.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 
@@ -38,7 +39,7 @@ export function updateQuestsUI() {
   categories.forEach((cat) => {
     const tab = document.createElement('button');
     tab.className = 'quest-tab' + (cat === selectedCategory ? ' active' : '');
-    tab.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+    tab.textContent = t(`quests.tab.${cat}`) || cat.charAt(0).toUpperCase() + cat.slice(1);
     tab.onclick = () => {
       updateQuestsUI.selectedCategory = cat;
       updateQuestsUI();
@@ -97,10 +98,11 @@ export function openQuestModal(quest) {
 
   // Set quest info
   modal.querySelector('#quest-modal-title').textContent = quest.title;
-  if (modal.querySelector('#quest-modal-category')) {
-    modal.querySelector('#quest-modal-category').textContent = quest.category
-      ? `Category: ${quest.category.charAt(0).toUpperCase() + quest.category.slice(1)}`
-      : '';
+  const categoryEl = modal.querySelector('#quest-modal-category');
+  if (categoryEl) {
+    const catLabel = t('quests.category');
+    const catName = t(`quests.tab.${quest.category}`) || quest.category;
+    categoryEl.textContent = quest.category ? `${catLabel}: ${catName}` : '';
   }
   modal.querySelector('#quest-modal-desc').textContent = quest.description;
   // Add progress display in green

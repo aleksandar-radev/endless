@@ -1,3 +1,4 @@
+import { tp } from '../../i18n.js';
 const BASE = import.meta.env.VITE_BASE_PATH;
 
 const BASE_STAGE_QUESTS = [
@@ -45,8 +46,8 @@ for (let tier = 1; tier <= 12; tier++) {
     STAGE_QUESTS.push({
       id: `stage_${base.target}_t${tier}`,
       category: 'stages',
-      title: `Reach stage ${base.target} (Tier ${tier})`,
-      description: `Reach stage ${base.target} in tier ${tier}.`,
+      get title() { return tp('Reach stage {target} (Tier {tier})', { target: base.target, tier }); },
+      get description() { return tp('Reach stage {target} in tier {tier}.', { target: base.target, tier }); },
       type: 'stage',
       tier,
       target: base.target,

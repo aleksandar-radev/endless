@@ -5,18 +5,8 @@ import { showToast, updateResources, updateTabIndicators } from './ui/ui.js';
 import { MATERIALS } from './constants/materials.js';
 
 export class Quest {
-  constructor({ id, title, description, type, target, reward, icon, category, rarity, resource, tier }, claimed = false) {
-    this.id = id;
-    this.title = title;
-    this.description = description;
-    this.type = type;
-    this.target = target;
-    this.reward = reward;
-    this.icon = icon;
-    this.category = category;
-    this.rarity = rarity;
-    this.resource = resource;
-    this.tier = tier;
+  constructor(def, claimed = false) {
+    Object.defineProperties(this, Object.getOwnPropertyDescriptors(def));
     this.claimed = claimed;
   }
 
