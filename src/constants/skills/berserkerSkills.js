@@ -126,10 +126,10 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.rageMastery'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      critChance: Math.min(scaleDownFlat(level, 0.05), 20),
-      critDamage: Math.min(scaleDownFlat(level, 0.005), 3),
-      attackRatingPercent: scaleDownFlat(level, 5),
-      lifePercent: -scaleDownFlat(level, 0.15),
+      critChance: Math.min(scaleDownFlat(level, 0.05), 25),
+      critDamage: Math.min(scaleDownFlat(level, 0.005), 2),
+      attackRatingPercent: scaleDownFlat(level, 7),
+      lifePercent: Math.max(-scaleDownFlat(level, 0.15), -10),
     }),
   },
 
