@@ -516,6 +516,6 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  z-index: 2000;
+  z-index: 20;
   font-size: 2rem;
 }

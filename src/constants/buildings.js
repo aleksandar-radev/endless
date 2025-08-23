@@ -4,7 +4,7 @@ import { t } from '../i18n.js';
 export const buildingsData = {
   crystalLab: {
     id: 'crystalLab',
-    name: t('Crystal Lab'),
+    get name() { return t('Crystal Lab'); },
     description: t('Generates crystals over time.'),
     image: '/buildings/crystal-lab.png',
     effect: { type: 'crystal', amount: 1, interval: 'hour' },
@@ -17,7 +17,7 @@ export const buildingsData = {
   },
   goldMine: {
     id: 'goldMine',
-    name: t('Gold Mine'),
+    get name() { return t('Gold Mine'); },
     description: t('Produces gold every few minutes.'),
     image: '/buildings/gold-mine.png',
     effect: { type: 'gold', amount: 10, interval: 'minute' },
@@ -29,7 +29,7 @@ export const buildingsData = {
   },
   soulForge: {
     id: 'soulForge',
-    name: t('Soul Forge'),
+    get name() { return t('Soul Forge'); },
     description: t('Converts resources into souls.'),
     image: '/buildings/soul-forge.png',
     effect: { type: 'soul', amount: 5, interval: 'hour' },
@@ -43,7 +43,7 @@ export const buildingsData = {
   },
   experienceWorkshop: {
     id: 'experienceWorkshop',
-    name: t('Experience Workshop'),
+    get name() { return t('Experience Workshop'); },
     description: t('Produces experience potions every hour.'),
     image: '/buildings/experience-workshop.png',
     effect: {
@@ -62,7 +62,7 @@ export const buildingsData = {
   },
   materialDepot: {
     id: 'materialDepot',
-    name: t('Material Depot'),
+    get name() { return t('Material Depot'); },
     description: t('Generates a random material each hour.'),
     image: '/buildings/material-depot.png',
     effect: {

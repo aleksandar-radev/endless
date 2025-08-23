@@ -6,8 +6,12 @@ export const REGIONS = [
     tier: 1,
     id: 'enchanted_forest',
     unlockLevel: 1,
-    name: t('Enchanted Forest'),
-    description: t('A mystical forest teeming with elemental creatures.'),
+    get name() {
+      return t('Enchanted Forest');
+    },
+    get description() {
+      return t('A mystical forest teeming with elemental creatures.');
+    },
     allowedTags: ['enchanted_forest'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('enchanted_forest')).map((e) => e.name);
@@ -45,8 +49,12 @@ export const REGIONS = [
     tier: 2,
     id: 'crystal_cave',
     unlockLevel: 25,
-    name: t('Crystal Cave'),
-    description: t('A shimmering cave filled with rocks. Has a high chance of dropping crystalized rocks.'),
+    get name() {
+      return t('Crystal Cave');
+    },
+    get description() {
+      return t('A shimmering cave filled with rocks. Has a high chance of dropping crystalized rocks.');
+    },
     allowedTags: ['crystal_cave'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('crystal_cave')).map((e) => e.name);
@@ -84,8 +92,12 @@ export const REGIONS = [
     tier: 3,
     id: 'frozen_tundra',
     unlockLevel: 50,
-    name: t('Frozen Tundra'),
-    description: t('A land of ice and snow, home to cold and air enemies. Has increased chance of dropping potions.'),
+    get name() {
+      return t('Frozen Tundra');
+    },
+    get description() {
+      return t('A land of ice and snow, home to cold and air enemies. Has increased chance of dropping potions.');
+    },
     allowedTags: ['frozen_tundra'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('frozen_tundra')).map((e) => e.name);
@@ -130,8 +142,12 @@ export const REGIONS = [
     tier: 4,
     id: 'scorching_desert',
     unlockLevel: 150,
-    name: t('Scorching Desert'),
-    description: t('A vast desert with relentless heat and dangerous creatures. Has a chance to drop elixirs.'),
+    get name() {
+      return t('Scorching Desert');
+    },
+    get description() {
+      return t('A vast desert with relentless heat and dangerous creatures. Has a chance to drop elixirs.');
+    },
     allowedTags: ['scorching_desert'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('scorching_desert')).map((e) => e.name);
@@ -170,8 +186,12 @@ export const REGIONS = [
     tier: 5,
     id: 'murky_swamp',
     unlockLevel: 350,
-    name: t('Murky Swamp'),
-    description: t('A dark and damp swamp filled with poisonous creatures. Has increased chance of dropping gold coins.'),
+    get name() {
+      return t('Murky Swamp');
+    },
+    get description() {
+      return t('A dark and damp swamp filled with poisonous creatures. Has increased chance of dropping gold coins.');
+    },
     allowedTags: ['murky_swamp'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('murky_swamp')).map((e) => e.name);
@@ -212,8 +232,12 @@ export const REGIONS = [
     tier: 6,
     id: 'skyrealm_peaks',
     unlockLevel: 660,
-    name: t('Skyrealm Peaks'),
-    description: t('A floating realm high above the clouds, home to air and lightning creatures. Has a higher chance to drop potions.'),
+    get name() {
+      return t('Skyrealm Peaks');
+    },
+    get description() {
+      return t('A floating realm high above the clouds, home to air and lightning creatures. Has a higher chance to drop potions.');
+    },
     allowedTags: ['skyrealm_peaks'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('skyrealm_peaks')).map((e) => e.name);
@@ -258,8 +282,12 @@ export const REGIONS = [
     tier: 7,
     id: 'abyssal_depths',
     unlockLevel: 1000,
-    name: t('Abyssal Depths'),
-    description: t('A dark and mysterious region filled with ancient horrors. Has a chance to drop high value gold coins.'),
+    get name() {
+      return t('Abyssal Depths');
+    },
+    get description() {
+      return t('A dark and mysterious region filled with ancient horrors. Has a chance to drop high value gold coins.');
+    },
     allowedTags: ['abyssal_depths'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('abyssal_depths')).map((e) => e.name);
@@ -298,8 +326,12 @@ export const REGIONS = [
     tier: 8,
     id: 'volcanic_rift',
     unlockLevel: 1400,
-    name: t('Volcanic Rift'),
-    description: t('A searing landscape of molten rock and fire elementals. Has a higher chance to drop item upgrade materials.'),
+    get name() {
+      return t('Volcanic Rift');
+    },
+    get description() {
+      return t('A searing landscape of molten rock and fire elementals. Has a higher chance to drop item upgrade materials.');
+    },
     allowedTags: ['volcanic_rift'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('volcanic_rift'))).map(
@@ -341,8 +373,12 @@ export const REGIONS = [
     tier: 9,
     id: 'sunken_ruins',
     unlockLevel: 1800,
-    name: t('Sunken Ruins'),
-    description: t('Ancient ruins submerged beneath the waves, teeming with aquatic mysteries. Has a chance to drop elixirs and higher chance to drop crystalized rocks.'),
+    get name() {
+      return t('Sunken Ruins');
+    },
+    get description() {
+      return t('Ancient ruins submerged beneath the waves, teeming with aquatic mysteries. Has a chance to drop elixirs and higher chance to drop crystalized rocks.');
+    },
     allowedTags: ['sunken_ruins'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('sunken_ruins'))).map(
@@ -384,8 +420,12 @@ export const REGIONS = [
     tier: 10,
     id: 'haunted_moor',
     unlockLevel: 2200,
-    name: t('Haunted Moor'),
-    description: t('A fog-laden moor haunted by restless spirits and lost souls. Has a higher chance to drop experience potions.'),
+    get name() {
+      return t('Haunted Moor');
+    },
+    get description() {
+      return t('A fog-laden moor haunted by restless spirits and lost souls. Has a higher chance to drop experience potions.');
+    },
     allowedTags: ['haunted_moor'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('haunted_moor'))).map(
@@ -426,8 +466,12 @@ export const REGIONS = [
     tier: 11,
     id: 'golden_steppe',
     unlockLevel: 2600,
-    name: t('Golden Steppe'),
-    description: t('Vast golden grasslands where fortune favors the bold.'),
+    get name() {
+      return t('Golden Steppe');
+    },
+    get description() {
+      return t('Vast golden grasslands where fortune favors the bold.');
+    },
     allowedTags: ['golden_steppe'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('golden_steppe'))).map(
@@ -466,8 +510,12 @@ export const REGIONS = [
     tier: 12,
     id: 'obsidian_spire',
     unlockLevel: 3000,
-    name: t('Obsidian Spire'),
-    description: t('A towering spire of black glass, pulsing with arcane energy. Has a higher chance of dropping crafting materials.'),
+    get name() {
+      return t('Obsidian Spire');
+    },
+    get description() {
+      return t('A towering spire of black glass, pulsing with arcane energy. Has a higher chance of dropping crafting materials.');
+    },
     allowedTags: ['obsidian_spire'],
     get enemyNames() {
       return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('obsidian_spire'))).map(
