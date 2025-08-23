@@ -9,13 +9,14 @@ import { MISC_STATS } from './constants/stats/miscStats.js';
 import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
+import { t, tp } from './i18n.js';
 
 const html = String.raw;
 
 const SECTION_DEFS = [
-  { key: 'offense', label: 'Offense', stats: Object.keys(OFFENSE_STATS) },
-  { key: 'defense', label: 'Defense', stats: Object.keys(DEFENSE_STATS) },
-  { key: 'misc', label: 'Misc', stats: Object.keys(MISC_STATS) },
+  { key: 'offense', labelKey: 'stats.offense', stats: Object.keys(OFFENSE_STATS) },
+  { key: 'defense', labelKey: 'stats.defense', stats: Object.keys(DEFENSE_STATS) },
+  { key: 'misc', labelKey: 'stats.misc', stats: Object.keys(MISC_STATS) },
 ];
 
 export default class Training {
@@ -88,9 +89,9 @@ export default class Training {
     }
     nav.innerHTML = SECTION_DEFS.map(
       (sec) => `
-      <button class="training-section-btn${this.activeSection === sec.key ? ' active' : ''}" data-section="${
-  sec.key
-}">${sec.label}</button>
+      <button class="training-section-btn${this.activeSection === sec.key ? ' active' : ''}" data-section="${sec.key}" data-i18n="${sec.labelKey}">
+        ${t(sec.labelKey)}
+      </button>
     `,
     ).join('');
     if (options?.quickTraining) {
@@ -186,7 +187,7 @@ export default class Training {
           <p>Current Bonus: <span class="modal-bonus"></span></p>
           <p>Next Level Bonus: <span class="modal-next-bonus"></span></p>
           <p>Total Bonus: <span class="modal-total-bonus"></span></p>
-          <p>Total Cost: <span class="modal-total-cost"></span> Gold (<span class="modal-qty">1</span>)</p>
+          <p>${t('training.totalCost')}: <span class="modal-total-cost"></span> ${t('resource.gold.name')} (<span class="modal-qty">1</span>)</p>
           <div class="modal-controls">${controlsMarkup}</div>
           <input type="range" class="modal-slider" min="0" max="1" value="1" step="1" />
           <button class="modal-buy">Buy</button>
@@ -460,7 +461,7 @@ export default class Training {
   updateBulkCost() {
     if (!this.bulkCostEl || !this.bulkBuyBtn) return;
     const { totalCost, affordable } = this.calculateBulkCostAndPurchases(this.quickQty);
-    this.bulkCostEl.textContent = `Cost: ${formatNumber(totalCost)} Gold`;
+    this.bulkCostEl.textContent = `${t('training.cost')}: ${formatNumber(totalCost)} ${t('resource.gold.name')}`;
     this.bulkCostEl.classList.toggle('unaffordable', !affordable);
     this.bulkBuyBtn.disabled = totalCost === 0 || !affordable;
   }
@@ -515,7 +516,7 @@ export default class Training {
           bonusClass = 'unaffordable';
         }
       }
-      costLine = `<span class="upgrade-cost ${bonusClass}">Cost: ${formatNumber(totalCost)} Gold (${formatNumber(desiredQty)})</span>`;
+      costLine = `<span class="upgrade-cost ${bonusClass}">${t('training.cost')}: ${formatNumber(totalCost)} ${t('resource.gold.name')} (${formatNumber(desiredQty)})</span>`;
     } else if ((hero?.gold || 0) < this.calculateTotalCost(config.training, 1, level)) {
       bonusClass = 'unaffordable';
     }
@@ -592,9 +593,9 @@ export default class Training {
       this.goldSpent += totalCost;
       this.upgradeLevels[stat] += levelsToBuy;
       count = levelsToBuy;
-      showToast(`Upgraded ${formatStatName(stat)} by ${count} levels!`);
+      showToast(tp('training.upgraded', { stat: formatStatName(stat), count: formatNumber(count) }));
     } else {
-      showToast(`Not enough gold to upgrade ${formatStatName(stat)}!`, 'error');
+      showToast(tp('training.notEnoughGold', { stat: formatStatName(stat) }), 'error');
     }
     this.updateTrainingUI('gold-upgrades');
     hero.recalculateFromAttributes();
