@@ -634,7 +634,7 @@ export default {
   'tooltip.extraMaterialDropPercent': '击杀敌人时有几率掉落额外材料。',
   'tooltip.extraMaterialDropMax': '每个敌人掉落额外材料的最大数量。',
   'tooltip.itemBonusesPercent': '提高物品提供的加成。',
-  'tooltip.cooldownReductionPercent': '按百分比减少技能冷却时间。',
+  'tooltip.cooldownReductionPercent': '按百分比减少技能冷却时间（上限 400 — 最多 80% 冷却缩减）。',
   'tooltip.manaCostReductionPercent': '按百分比减少技能的法力消耗。',
   'tooltip.buffDurationPercent': '按百分比延长增益效果持续时间。',
   'tooltip.lifeRegenOfTotalPercent': '按总生命值的百分比回复生命。',

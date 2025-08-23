@@ -633,7 +633,7 @@ export default {
   'tooltip.extraMaterialDropPercent': 'Chance to drop extra materials on enemy kill.',
   'tooltip.extraMaterialDropMax': 'Maximum extra materials dropped per enemy kill.',
   'tooltip.itemBonusesPercent': 'Increases bonuses provided by items.',
-  'tooltip.cooldownReductionPercent': 'Reduces ability cooldowns by a percentage.',
+  'tooltip.cooldownReductionPercent': 'Reduces ability cooldowns by a percentage (capped at 400 — max 80% cooldown reduction).',
   'tooltip.manaCostReductionPercent': 'Reduces mana costs of abilities by a percentage.',
   'tooltip.buffDurationPercent': 'Increases the duration of buffs by a percentage.',
   'tooltip.lifeRegenOfTotalPercent': 'Regenerates life equal to a percentage of total life.',

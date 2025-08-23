@@ -634,7 +634,7 @@ export default {
   'tooltip.extraMaterialDropPercent': 'Probabilidad de soltar materiales extra al matar enemigos.',
   'tooltip.extraMaterialDropMax': 'Máximo de materiales extra soltados por enemigo.',
   'tooltip.itemBonusesPercent': 'Incrementa las bonificaciones proporcionadas por los objetos.',
-  'tooltip.cooldownReductionPercent': 'Reduce el enfriamiento de las habilidades en un porcentaje.',
+  'tooltip.cooldownReductionPercent': 'Reduce el enfriamiento de las habilidades en un porcentaje (limitado a 400 — máx 80% de reducción).',
   'tooltip.manaCostReductionPercent': 'Reduce el costo de maná de las habilidades en un porcentaje.',
   'tooltip.buffDurationPercent': 'Incrementa la duración de los beneficios en un porcentaje.',
   'tooltip.lifeRegenOfTotalPercent': 'Regenera vida igual a un porcentaje de la vida total.',
