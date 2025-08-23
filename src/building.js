@@ -292,22 +292,16 @@ export class BuildingManager {
           else if (b.effect.type === 'soul') hero.gainSouls(totalBonus);
           else if (b.effect.type === 'material') {
             if (b.effect.materialIds) {
-              for (let i = 0; i < totalBonus; i++) {
-                const ids = b.effect.materialIds;
-                const randId = ids[Math.floor(Math.random() * ids.length)];
-                inventory.addMaterial({ id: randId, qty: 1 });
-              }
+              const ids = b.effect.materialIds;
+              const randId = ids[Math.floor(Math.random() * ids.length)];
+              inventory.addMaterial({ id: randId, qty: totalBonus });
             } else if (b.effect.random && b.effect.weighted) {
-              for (let i = 0; i < totalBonus; i++) {
-                const mat = inventory.getRandomMaterial();
-                inventory.addMaterial({ id: mat.id, qty: 1 });
-              }
+              const mat = inventory.getRandomMaterial();
+              inventory.addMaterial({ id: mat.id, qty: totalBonus });
             } else if (b.effect.random) {
-              for (let i = 0; i < totalBonus; i++) {
-                const ids = Object.keys(MATERIALS);
-                const randId = ids[Math.floor(Math.random() * ids.length)];
-                inventory.addMaterial({ id: randId, qty: 1 });
-              }
+              const ids = Object.keys(MATERIALS);
+              const randId = ids[Math.floor(Math.random() * ids.length)];
+              inventory.addMaterial({ id: randId, qty: totalBonus });
             } else if (b.effect.materialId) {
               inventory.addMaterial({ id: b.effect.materialId, qty: totalBonus });
             }
@@ -329,22 +323,16 @@ export class BuildingManager {
           else if (b.type === 'soul') hero.gainSouls(b.amount);
           else if (b.building.effect.type === 'material') {
             if (b.materialIds) {
-              for (let i = 0; i < b.amount; i++) {
-                const ids = b.materialIds;
-                const randId = ids[Math.floor(Math.random() * ids.length)];
-                inventory.addMaterial({ id: randId, qty: 1 });
-              }
+              const ids = b.materialIds;
+              const randId = ids[Math.floor(Math.random() * ids.length)];
+              inventory.addMaterial({ id: randId, qty: b.amount });
             } else if (b.random && b.weighted) {
-              for (let i = 0; i < b.amount; i++) {
-                const mat = inventory.getRandomMaterial();
-                inventory.addMaterial({ id: mat.id, qty: 1 });
-              }
+              const mat = inventory.getRandomMaterial();
+              inventory.addMaterial({ id: mat.id, qty: b.amount });
             } else if (b.random) {
-              for (let i = 0; i < b.amount; i++) {
-                const ids = Object.keys(MATERIALS);
-                const randId = ids[Math.floor(Math.random() * ids.length)];
-                inventory.addMaterial({ id: randId, qty: 1 });
-              }
+              const ids = Object.keys(MATERIALS);
+              const randId = ids[Math.floor(Math.random() * ids.length)];
+              inventory.addMaterial({ id: randId, qty: b.amount });
             } else if (b.materialId) {
               inventory.addMaterial({ id: b.materialId, qty: b.amount });
             }

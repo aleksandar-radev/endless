@@ -5,7 +5,7 @@ const html = String.raw;
 import { buildings, dataManager, hero, options } from '../globals.js';
 import { Building } from '../building.js';
 import { createModal, closeModal } from './modal.js';
-import { showConfirmDialog, updateResources, formatNumber } from './ui.js';
+import { showConfirmDialog, updateResources, formatNumber, showToast } from './ui.js';
 import { getTimeNow } from '../common.js';
 import { t, tp } from '../i18n.js';
 
@@ -306,7 +306,7 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
 function showSelectBuildingModal() {
   const placeholderIdx = buildings.placedBuildings.findIndex((id) => id === null);
   if (placeholderIdx === -1) {
-    alert(t('buildings.noSlots'));
+    showToast(t('buildings.noSlots'));
     return;
   }
   const content = html`
