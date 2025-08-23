@@ -147,11 +147,16 @@ class Game {
       });
     }
     battleLog.addBattle(message);
+
+    // Only update highestDamageDealt if damage is greater than the current value
+    if (damage > statistics.highestDamageDealt) {
+      statistics.set('highestDamageDealt', null, damage);
+    }
+    document.dispatchEvent(new CustomEvent('damageDealt', { detail: damage }));
+    createDamageNumber({ text: damage, isPlayer: false, isCritical: isCritical, color: 'red' });
+
     if (this.fightMode === 'arena' && this.currentEnemy) {
       const isDead = this.currentEnemy.takeDamage(damage);
-      document.dispatchEvent(new CustomEvent('damageDealt', { detail: damage }));
-
-      createDamageNumber({ text: damage, isPlayer: false, isCritical: false, color: 'red' });
 
       if (isDead) {
         defeatEnemy();
@@ -163,15 +168,8 @@ class Game {
     }
     // Regular enemy flow
     if (this.currentEnemy) {
-      // Only update highestDamageDealt if damage is greater than the current value
-      if (damage > statistics.highestDamageDealt) {
-        statistics.set('highestDamageDealt', null, damage);
-      }
       this.currentEnemy.currentLife -= damage;
-      document.dispatchEvent(new CustomEvent('damageDealt', { detail: damage }));
       if (this.currentEnemy.currentLife < 0) this.currentEnemy.currentLife = 0;
-
-      createDamageNumber({ text: damage, isPlayer: false, isCritical: isCritical, color: 'red' });
 
       updateEnemyStats();
 
