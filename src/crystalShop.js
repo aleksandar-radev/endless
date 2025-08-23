@@ -9,6 +9,7 @@ import {
   updateStageUI,
   formatNumber,
 } from './ui/ui.js';
+import { t } from './i18n.js';
 import { selectBoss } from './ui/bossUi.js';
 import { handleSavedData } from './functions.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
@@ -18,25 +19,25 @@ const html = String.raw;
 
 const CRYSTAL_UPGRADE_CONFIG = {
   continuousPlay: {
-    label: 'Continuous Play',
-    bonus: 'Auto-continue after death',
-    bonusLabel: 'Auto-continue after death',
+    label: 'crystalShop.upgrade.continuousPlay.label',
+    bonus: 'crystalShop.upgrade.continuousPlay.bonus',
+    bonusLabel: 'crystalShop.upgrade.continuousPlay.bonusLabel',
     baseCost: 6,
     oneTime: true,
     category: 'auto',
   },
   autoSpellCast: {
-    label: 'Auto Spell Cast',
-    bonus: 'Automatically casts instant and buff skills',
-    bonusLabel: 'Automatically casts instant and buff skills',
+    label: 'crystalShop.upgrade.autoSpellCast.label',
+    bonus: 'crystalShop.upgrade.autoSpellCast.bonus',
+    bonusLabel: 'crystalShop.upgrade.autoSpellCast.bonusLabel',
     baseCost: 40,
     oneTime: true,
     category: 'auto',
   },
   autoSalvage: {
-    label: 'Auto-Salvage',
-    bonus: 'Automatically salvage items of selected rarities',
-    bonusLabel: 'Automatically salvage selected rarities',
+    label: 'crystalShop.upgrade.autoSalvage.label',
+    bonus: 'crystalShop.upgrade.autoSalvage.bonus',
+    bonusLabel: 'crystalShop.upgrade.autoSalvage.bonusLabel',
     baseCost: 20,
     costIncrement: 10,
     showLevel: true,
@@ -45,33 +46,33 @@ const CRYSTAL_UPGRADE_CONFIG = {
     category: 'auto',
   },
   autoConsumeMaterials: {
-    label: 'Auto-Consume Materials',
-    bonus: 'Automatically uses all consumable materials on pickup',
-    bonusLabel: 'Automatically uses all consumable materials on pickup',
+    label: 'crystalShop.upgrade.autoConsumeMaterials.label',
+    bonus: 'crystalShop.upgrade.autoConsumeMaterials.bonus',
+    bonusLabel: 'crystalShop.upgrade.autoConsumeMaterials.bonusLabel',
     baseCost: 600,
     oneTime: true,
     category: 'auto',
   },
   autoClaimQuests: {
-    label: 'Auto-Claim Quests',
-    bonus: 'Automatically claim completed quests',
-    bonusLabel: 'Automatically claim completed quests',
+    label: 'crystalShop.upgrade.autoClaimQuests.label',
+    bonus: 'crystalShop.upgrade.autoClaimQuests.bonus',
+    bonusLabel: 'crystalShop.upgrade.autoClaimQuests.bonusLabel',
     baseCost: 400,
     oneTime: true,
     category: 'auto',
   },
   autoSortInventory: {
-    label: 'Auto-Sort Inventory',
-    bonus: 'Automatically sorts inventory and materials on pickup',
-    bonusLabel: 'Automatically sorts inventory and materials on pickup',
+    label: 'crystalShop.upgrade.autoSortInventory.label',
+    bonus: 'crystalShop.upgrade.autoSortInventory.bonus',
+    bonusLabel: 'crystalShop.upgrade.autoSortInventory.bonusLabel',
     baseCost: 25,
     oneTime: true,
     category: 'auto',
   },
   startingStage: {
-    label: 'Starting Stage',
+    label: 'crystalShop.upgrade.startingStage.label',
     bonus: 1,
-    bonusLabel: 'Increases starting stage by 1',
+    bonusLabel: 'crystalShop.upgrade.startingStage.bonusLabel',
     showLevel: true,
     baseCost: 2,
     costIncrement: 0.05, // 1 per 20 levels
@@ -80,9 +81,9 @@ const CRYSTAL_UPGRADE_CONFIG = {
     category: 'stage',
   },
   stageSkip: {
-    label: 'Stage Skip',
+    label: 'crystalShop.upgrade.stageSkip.label',
     bonus: 1,
-    bonusLabel: 'Skip +1 stage per kill',
+    bonusLabel: 'crystalShop.upgrade.stageSkip.bonusLabel',
     showLevel: true,
     baseCost: 20,
     costIncrement: 5,
@@ -91,49 +92,49 @@ const CRYSTAL_UPGRADE_CONFIG = {
     category: 'stage',
   },
   resetStageSkip: {
-    label: 'Reset Stage Skip',
-    bonus: 'Unlocks option to stop skipping after a chosen stage',
-    bonusLabel: 'Unlocks reset stage skip option',
+    label: 'crystalShop.upgrade.resetStageSkip.label',
+    bonus: 'crystalShop.upgrade.resetStageSkip.bonus',
+    bonusLabel: 'crystalShop.upgrade.resetStageSkip.bonusLabel',
     baseCost: 500,
     oneTime: true,
     category: 'stage',
   },
   resetSkillTree: {
-    label: 'Reset Skill Tree',
-    bonus: 'Refund all skill points and reset path',
-    bonusLabel: 'Reset your class and refund all skill points. This will allow you to choose a new class.',
+    label: 'crystalShop.upgrade.resetSkillTree.label',
+    bonus: 'crystalShop.upgrade.resetSkillTree.bonus',
+    bonusLabel: 'crystalShop.upgrade.resetSkillTree.bonusLabel',
     baseCost: 20,
     multiple: true,
     category: 'reset',
   },
   resetAttributes: {
-    label: 'Reset Attributes',
-    bonus: 'Refund all allocated attribute points',
-    bonusLabel: 'Refund all allocated attribute points',
+    label: 'crystalShop.upgrade.resetAttributes.label',
+    bonus: 'crystalShop.upgrade.resetAttributes.bonus',
+    bonusLabel: 'crystalShop.upgrade.resetAttributes.bonusLabel',
     baseCost: 20,
     multiple: true,
     category: 'reset',
   },
   resetArenaLevel: {
-    label: 'Reset Arena Level',
-    bonus: 'Reset Arena level to 1',
-    bonusLabel: 'Reset Arena level to 1',
+    label: 'crystalShop.upgrade.resetArenaLevel.label',
+    bonus: 'crystalShop.upgrade.resetArenaLevel.bonus',
+    bonusLabel: 'crystalShop.upgrade.resetArenaLevel.bonusLabel',
     baseCost: 50,
     multiple: true,
     category: 'reset',
   },
   resetTraining: {
-    label: 'Reset Training',
-    bonus: 'Refund all gold spent on training upgrades',
-    bonusLabel: 'Refund all gold spent on training upgrades',
+    label: 'crystalShop.upgrade.resetTraining.label',
+    bonus: 'crystalShop.upgrade.resetTraining.bonus',
+    bonusLabel: 'crystalShop.upgrade.resetTraining.bonusLabel',
     baseCost: 150,
     multiple: true,
     category: 'reset',
   },
   deathTimerReduction: {
-    label: 'Death Timer Reduction (s)',
+    label: 'crystalShop.upgrade.deathTimerReduction.label',
     bonus: 0.5,
-    bonusLabel: 'Reduces death countdown by 0.5s',
+    bonusLabel: 'crystalShop.upgrade.deathTimerReduction.bonusLabel',
     showLevel: true,
     baseCost: 100,
     costIncrement: 50,
@@ -142,9 +143,9 @@ const CRYSTAL_UPGRADE_CONFIG = {
     category: 'misc',
   },
   salvageMaterials: {
-    label: 'Salvage Materials',
-    bonus: 'Allows salvaging items for upgrade materials instead of gold',
-    bonusLabel: 'Allows salvaging items for upgrade materials instead of gold',
+    label: 'crystalShop.upgrade.salvageMaterials.label',
+    bonus: 'crystalShop.upgrade.salvageMaterials.bonus',
+    bonusLabel: 'crystalShop.upgrade.salvageMaterials.bonusLabel',
     baseCost: 200,
     oneTime: true,
     category: 'misc',
@@ -218,13 +219,22 @@ export default class CrystalShop {
     if (config.maxLevel) {
       isMaxed = level >= config.maxLevel;
     }
+    const label = t(config.label);
+    const bonusLabel = t(config.bonusLabel);
+    const levelText = config.showLevel
+      ? `(${t('common.lvl')} ${level}${isMaxed ? ' / ' + t('common.max') : ''})`
+      : '';
+    const bonusText = `${bonusLabel}${isMaxed ? ' <strong>' + t('common.max') + '</strong>' : ''}`;
+    const costText = alreadyPurchased
+      ? t('common.purchased')
+      : isMaxed
+        ? t('common.max')
+        : `${cost} ${t('resource.crystal.name')}`;
     return `
-      <button class="crystal-upgrade-btn ${config.category} ${alreadyPurchased || isMaxed ? 'purchased' : ''}" data-stat="${stat}" ${
-  alreadyPurchased || isMaxed ? 'disabled' : ''
-}>
-        <span class="upgrade-name">${config.label} ${config.showLevel ? `(Lvl ${level}${isMaxed ? ' / Max' : ''})` : ''}</span>
-        <span class="upgrade-bonus">${config.bonusLabel}${isMaxed ? ' <strong>Max</strong>' : ''}</span>
-        <span class="upgrade-cost">${alreadyPurchased ? 'Purchased' : isMaxed ? 'Max' : `${cost} Crystals`}</span>
+      <button class="crystal-upgrade-btn ${config.category} ${alreadyPurchased || isMaxed ? 'purchased' : ''}" data-stat="${stat}" ${alreadyPurchased || isMaxed ? 'disabled' : ''}>
+        <span class="upgrade-name">${label} ${levelText}</span>
+        <span class="upgrade-bonus">${bonusText}</span>
+        <span class="upgrade-cost">${costText}</span>
       </button>
     `;
   }

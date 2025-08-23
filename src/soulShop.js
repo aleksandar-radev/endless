@@ -3,82 +3,83 @@ import { updateResources, showToast, updatePlayerLife } from './ui/ui.js';
 import { handleSavedData } from './functions.js';
 import { closeModal, createModal } from './ui/modal.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
+import { t } from './i18n.js';
 
 const html = String.raw;
 
 export const SOUL_UPGRADE_CONFIG = {
   // One-time purchase
   extraLife: {
-    label: 'Extra Life',
-    bonus: 'Gain 1 resurrection per run',
+    label: 'soulShop.upgrade.extraLife.label',
+    bonus: 'soulShop.upgrade.extraLife.bonus',
     baseCost: 1000,
     oneTime: true,
   },
   bonusGold: {
-    label: 'Bonus Gold %',
+    label: 'soulShop.upgrade.bonusGold.label',
     bonus: 0.01,
     baseCost: 4,
     costIncrement: 0.2,
     stat: 'bonusGoldPercent',
   },
   bonusExperience: {
-    label: 'Bonus Experience %',
+    label: 'soulShop.upgrade.bonusExperience.label',
     bonus: 0.01,
     baseCost: 4,
     costIncrement: 0.2,
     stat: 'bonusExperiencePercent',
   },
   damageBoost: {
-    label: 'Damage Boost %',
+    label: 'soulShop.upgrade.damageBoost.label',
     bonus: 0.005,
     baseCost: 3,
     costIncrement: 0.2,
     stat: 'totalDamagePercent',
   },
   attackRatingBoost: {
-    label: 'Attack Rating Boost %',
+    label: 'soulShop.upgrade.attackRatingBoost.label',
     bonus: 0.01,
     baseCost: 3,
     costIncrement: 0.2,
     stat: 'attackRatingPercent',
   },
   lifeBoost: {
-    label: 'Life Boost %',
+    label: 'soulShop.upgrade.lifeBoost.label',
     bonus: 0.01,
     baseCost: 3,
     costIncrement: 0.2,
     stat: 'lifePercent',
   },
   manaBoost: {
-    label: 'Mana Boost %',
+    label: 'soulShop.upgrade.manaBoost.label',
     bonus: 0.01,
     baseCost: 3,
     costIncrement: 0.15,
     stat: 'manaPercent',
   },
   armorBoost: {
-    label: 'Armor Boost %',
+    label: 'soulShop.upgrade.armorBoost.label',
     bonus: 0.01,
     baseCost: 4,
     costIncrement: 0.25,
     stat: 'armorPercent',
   },
   evasionBoost: {
-    label: 'Evasion Boost %',
+    label: 'soulShop.upgrade.evasionBoost.label',
     bonus: 0.01,
     baseCost: 4,
     costIncrement: 0.25,
     stat: 'evasionPercent',
   },
   lifeRegenBoost: {
-    label: 'Life Regen Boost %',
+    label: 'soulShop.upgrade.lifeRegenBoost.label',
     bonus: 0.05,
     baseCost: 4,
     costIncrement: 0.3,
     stat: 'lifeRegenPercent',
   },
   allResistanceBoost: {
-    label: 'All Elemental Resistance Boost %',
+    label: 'soulShop.upgrade.allResistanceBoost.label',
     bonus: 0.01,
     baseCost: 3,
     costIncrement: 0.3,
@@ -87,9 +88,9 @@ export const SOUL_UPGRADE_CONFIG = {
   /**
    * Extra Material Drop Chance
    * Each level increases the chance to gain an additional material drop.
-   */
+  */
   extraMaterialDropPercent: {
-    label: 'Extra Material Drop Chance %',
+    label: 'soulShop.upgrade.extraMaterialDropPercent.label',
     bonus: 0.01, // 1% per level
     baseCost: 50,
     costIncrement: 50,
@@ -99,9 +100,9 @@ export const SOUL_UPGRADE_CONFIG = {
   /**
    * Extra Material Drop Max
    * Each level increases the maximum number of extra material drops per kill.
-   */
+  */
   extraMaterialDropMax: {
-    label: 'Extra Material Drop Max',
+    label: 'soulShop.upgrade.extraMaterialDropMax.label',
     bonus: 1, // +1 max per level
     baseCost: 300,
     costIncrement: 200,
@@ -233,14 +234,15 @@ export default class SoulShop {
     const isPercent = config.stat?.endsWith('Percent');
     let alreadyPurchased = isOneTime && this.soulUpgrades[stat];
     const level = isOneTime || isMultiple ? undefined : this.soulUpgrades[stat] || 0;
+    const label = t(config.label);
     let bonus;
     if (isOneTime || isMultiple) {
-      bonus = config.bonus;
+      bonus = typeof config.bonus === 'string' ? t(config.bonus) : config.bonus;
     } else if (isMultiLevel) {
       const value = Math.floor(config.bonus * (this.soulUpgrades[stat] || 0) * (isPercent ? 100 : 1));
-      bonus = `+${value}${config.suffix || ''} ${config.label}`;
+      bonus = `+${value}${config.suffix || ''} ${label}`;
     } else {
-      bonus = `+${config.bonus * (this.soulUpgrades[stat] || 0)} ${config.label}`;
+      bonus = `+${config.bonus * (this.soulUpgrades[stat] || 0)} ${label}`;
     }
     let cost =
       isOneTime || isMultiple
@@ -275,12 +277,10 @@ export default class SoulShop {
     const BASE = import.meta.env.VITE_BASE_PATH;
 
     return `
-      <button class="soul-upgrade-btn ${alreadyPurchased ? 'purchased' : ''}" data-stat="${stat}" ${
-  disabled ? 'disabled' : ''
-}>
-        <span class="upgrade-name">${config.label} ${isOneTime ? '' : isMultiple ? '' : `(Lvl ${level})`}</span>
+      <button class="soul-upgrade-btn ${alreadyPurchased ? 'purchased' : ''}" data-stat="${stat}" ${disabled ? 'disabled' : ''}>
+        <span class="upgrade-name">${label} ${isOneTime ? '' : isMultiple ? '' : `(${t('common.lvl')} ${level})`}</span>
         <span class="upgrade-bonus ${bonusClass}">${bonus}</span>
-        <span class="upgrade-cost ${bonusClass}">${alreadyPurchased ? 'Purchased' : `${cost} Souls`}<img style="width: 20px; height: 20px;" src="${BASE}/icons/soul.svg" alt="Soul Icon">(${qty})</span>
+        <span class="upgrade-cost ${bonusClass}">${alreadyPurchased ? t('common.purchased') : `${cost} ${t('resource.souls.name')}`}<img style="width: 20px; height: 20px;" src="${BASE}/icons/soul.svg" alt="Soul Icon">(${qty})</span>
       </button>
     `;
   }
