@@ -7,6 +7,7 @@ import { Building } from '../building.js';
 import { createModal, closeModal } from './modal.js';
 import { showConfirmDialog, updateResources, formatNumber } from './ui.js';
 import { getTimeNow } from '../common.js';
+import { t, tp } from '../i18n.js';
 
 // Countdown timer state (single updater for all visible cards)
 let buildingCountdownInterval = null;
@@ -53,12 +54,12 @@ function updateBuildingCountdowns() {
     const id = el.dataset.buildingId;
     const b = buildings?.buildings?.[id];
     if (!b || b.placedAt == null || b.level <= 0 || !b.effect?.interval) {
-      el.textContent = 'Next bonus: —';
+      el.textContent = tp('buildings.nextBonus', { time: '—' });
       return;
     }
     const intervalMs = intervalToMs(b.effect.interval);
     if (!intervalMs) {
-      el.textContent = 'Next bonus: —';
+      el.textContent = tp('buildings.nextBonus', { time: '—' });
       return;
     }
     const nextAt = (b.lastBonusTime || now) + intervalMs;
@@ -66,9 +67,9 @@ function updateBuildingCountdowns() {
     if (msLeft <= 0) {
       // Mark for collection; UI will refresh after collect
       needsCollect = true;
-      el.textContent = 'Next bonus: 0:00';
+      el.textContent = tp('buildings.nextBonus', { time: '0:00' });
     } else {
-      el.textContent = `Next bonus: ${fmtDuration(msLeft)}`;
+      el.textContent = tp('buildings.nextBonus', { time: fmtDuration(msLeft) });
     }
   });
   if (needsCollect && buildings?.collectBonuses) {
@@ -104,8 +105,8 @@ function createBuildingCard(building) {
     <div class="building-info">
       <div class="building-name">${building.name}</div>
       <div class="building-effect">${building.formatEffect()}</div>
-      <div class="building-earned">Total Earned: ${formatNumber(building.totalEarned)} ${building.effect?.type || ''}</div>
-  <div class="building-next-bonus" data-building-id="${building.id}">Next bonus: —</div>
+      <div class="building-earned">${tp('buildings.totalEarned', { amount: formatNumber(building.totalEarned), type: building.effect?.type || '' })}</div>
+  <div class="building-next-bonus" data-building-id="${building.id}">${tp('buildings.nextBonus', { time: '—' })}</div>
     </div>
   `;
   return el;
@@ -143,11 +144,11 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
     const refundAmount = building.getRefund();
     const upgradeControls = options.useNumericInputs
       ? `<input type="number" class="upgrade-amt-input input-number" min="1" max="10000" value="${upgradeAmount}" />
-          <button data-amt="max" class="upgrade-amt-btn${upgradeAmount === maxAffordableAmt ? ' selected-upgrade-amt' : ''}">Max</button>`
+          <button data-amt="max" class="upgrade-amt-btn${upgradeAmount === maxAffordableAmt ? ' selected-upgrade-amt' : ''}">${t('options.max')}</button>`
       : `<button data-amt="1" class="upgrade-amt-btn${upgradeAmount === 1 ? ' selected-upgrade-amt' : ''}">+1</button>
           <button data-amt="10" class="upgrade-amt-btn${upgradeAmount === 10 ? ' selected-upgrade-amt' : ''}" ${maxAffordableAmt < 10 ? 'disabled' : ''}>+10</button>
           <button data-amt="50" class="upgrade-amt-btn${upgradeAmount === 50 ? ' selected-upgrade-amt' : ''}" ${maxAffordableAmt < 50 ? 'disabled' : ''}>+50</button>
-          <button data-amt="max" class="upgrade-amt-btn${upgradeAmount === maxAffordableAmt ? ' selected-upgrade-amt' : ''}">Max</button>`;
+          <button data-amt="max" class="upgrade-amt-btn${upgradeAmount === maxAffordableAmt ? ' selected-upgrade-amt' : ''}">${t('options.max')}</button>`;
     return html`
       <div class="building-modal-content">
         <button class="modal-close">×</button>
@@ -163,24 +164,22 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
           </div>
         </div>
         <div class="building-info-modal-body">
-          <div>Level: <b>${formatNumber(building.level)}</b> / ${formatNumber(building.maxLevel)}</div>
-          <div>Current Bonus: <b>${building.formatEffect()}</b></div>
-          <div>Upgrade Amount: <b>${formatNumber(upgradeAmount)}</b></div>
-          <div>Total Upgrade Cost: <b>${Building.formatCost(totalCost)}</b></div>
+          <div>${tp('buildings.levelInfo', { level: formatNumber(building.level), max: formatNumber(building.maxLevel) })}</div>
+          <div>${tp('buildings.currentBonus', { bonus: building.formatEffect() })}</div>
+          <div>${tp('buildings.upgradeAmountLine', { amount: formatNumber(upgradeAmount) })}</div>
+          <div>${tp('buildings.totalUpgradeCost', { cost: Building.formatCost(totalCost) })}</div>
           <div>
-            Bonus After Upgrade:
-            <b>${building.formatEffect(building.level + upgradeAmount)}</b>
-            <span style="color:#aaa;font-size:0.95em;">(+${formatNumber(totalBonus)} ${building.effect?.type || ''})</span>
+            ${tp('buildings.bonusAfterUpgrade', { bonus: building.formatEffect(building.level + upgradeAmount), extra: formatNumber(totalBonus), type: building.effect?.type || '' })}
           </div>
         </div>
         <div class="building-info-modal-upgrade">
-          <div style="margin: 10px 0 6px 0;">Upgrade Amount:</div>
+          <div style="margin: 10px 0 6px 0;" data-i18n="buildings.upgradeAmountLabel">${t('buildings.upgradeAmountLabel')}</div>
           <div class="building-upgrade-amounts">${upgradeControls}</div>
           <button class="building-upgrade-btn" ${canUpgrade && canAffordUpgrade(upgradeAmount) ? '' : 'disabled'}>
-            Upgrade
+            ${t('buildings.upgrade')}
           </button>
           ${!placementOptions
-    ? `<button class="building-sell-btn">Sell / Refund (+${Building.formatCost(refundAmount)})</button>`
+    ? `<button class="building-sell-btn">${tp('buildings.sellRefund', { refund: Building.formatCost(refundAmount) })}</button>`
     : ''}
         </div>
       </div>
@@ -240,7 +239,7 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
         }
       }
       if (!canAfford) {
-        alert('Not enough resources to upgrade!');
+        alert(t('buildings.notEnoughResources'));
         return;
       }
       // Deduct resources
@@ -277,7 +276,7 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
     };
     if (!placementOptions) {
       modal.querySelector('.building-sell-btn').onclick = () => {
-        showConfirmDialog(`Are you sure you want to remove <b>${building.name}</b> from the map?`).then((confirmed) => {
+        showConfirmDialog(tp('buildings.removeConfirm', { name: building.name })).then((confirmed) => {
           if (confirmed) {
             building.refundToHero();
             buildings.unplaceBuilding(building.id);
@@ -307,13 +306,13 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
 function showSelectBuildingModal() {
   const placeholderIdx = buildings.placedBuildings.findIndex((id) => id === null);
   if (placeholderIdx === -1) {
-    alert('No available building slots.');
+    alert(t('buildings.noSlots'));
     return;
   }
   const content = html`
     <div class="building-choose-modal-content">
       <button class="modal-close">×</button>
-      <h3>Select a building to place</h3>
+      <h3 data-i18n="buildings.selectToPlace">${t('buildings.selectToPlace')}</h3>
       <div class="choose-building-list"></div>
     </div>
   `;
@@ -376,7 +375,7 @@ export function initializeBuildingsUI() {
   const tab = document.getElementById('buildings');
   if (!tab) return;
   tab.innerHTML =
-    '<button id="select-building-btn" class="building-select-btn">Select a building</button><div id="purchased-buildings"></div>';
+    `<button id="select-building-btn" class="building-select-btn" data-i18n="buildings.selectBuilding">${t('buildings.selectBuilding')}</button><div id="purchased-buildings"></div>`;
   renderPurchasedBuildings();
   // Open building selection modal
   tab.querySelector('#select-building-btn').onclick = showSelectBuildingModal;
@@ -394,27 +393,32 @@ export function showOfflineBonusesModal(bonuses, onCollect) {
   }
   let htmlContent = html` <div class="offline-bonuses-modal-content">
     <button class="modal-close">×</button>
-    <h2>Offline Building Rewards</h2>
+    <h2 data-i18n="buildings.offlineRewardsTitle">${t('buildings.offlineRewardsTitle')}</h2>
     <div style="margin:12px 0 0 0;">
       <ul style="list-style:none;padding:0;">
         ${bonuses
-    .map(
-      (b) =>
-        `<li style='margin:10px 0;font-size:1.1em;'>${b.icon || ''} <b>${b.name}</b>: +${formatNumber(b.amount)} ${
-          b.type
-        } <span style='color:#aaa;font-size:0.95em;'>(for ${b.times} ${b.interval}${
-          b.times > 1 ? 's' : ''
-        })</span></li>`,
-    )
+    .map((b) => {
+      const intName = b.interval === 'min' ? 'minute' : b.interval === 'sec' ? 'second' : b.interval;
+      const intervalKey = `time.${b.times > 1 ? intName + 's' : intName}`;
+      return tp('buildings.offlineBonusItem', {
+        icon: b.icon || '',
+        name: b.name,
+        amount: formatNumber(b.amount),
+        type: b.type,
+        times: formatNumber(b.times),
+        interval: t(intervalKey),
+      });
+    })
     .join('')}
       </ul>
     </div>
-    <div style="margin-top:18px;color:#aaa;font-size:0.98em;">Bonuses were earned while you were away!</div>
+    <div style="margin-top:18px;color:#aaa;font-size:0.98em;" data-i18n="buildings.offlineRewardsInfo">${t('buildings.offlineRewardsInfo')}</div>
     <button
       class="offline-bonuses-collect-btn"
       style="margin-top:24px;font-size:1.1em;padding:10px 32px;border-radius:8px;background:linear-gradient(90deg,#4e54c8,#8f94fb);color:#fff;font-weight:bold;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(78,84,200,0.15);"
+      data-i18n="buildings.collect"
     >
-      Collect
+      ${t('buildings.collect')}
     </button>
   </div>`;
   const modal = createModal({

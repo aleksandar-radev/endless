@@ -2,6 +2,7 @@ import { prestige, hero, statistics } from '../globals.js';
 import { createModal, closeModal } from './modal.js';
 import { formatStatName, showToast, formatNumber, updateResources } from './ui.js';
 import { getBossScalingFactor } from '../prestige.js';
+import { t, tp } from '../i18n.js';
 
 const html = String.raw;
 const BASE = import.meta.env.VITE_BASE_PATH;
@@ -25,7 +26,7 @@ function updateLevelInfo() {
   if (!levelInfo) return;
   const level = hero.level || 0;
   const required = prestige.getCurrentLevelRequirement();
-  levelInfo.textContent = `Level ${level} / ${required}`;
+  levelInfo.textContent = tp('prestige.levelInfo', { level, required });
 }
 
 
@@ -43,8 +44,8 @@ export function initializePrestigeUI() {
 
   container.innerHTML = html`
     <div class="prestige-header">
-      <button id="prestige-now-btn">Prestige Now</button>
-      <button id="prestige-history-btn">History</button>
+      <button id="prestige-now-btn" data-i18n="prestige.prestigeNow">${t('prestige.prestigeNow')}</button>
+      <button id="prestige-history-btn" data-i18n="prestige.history">${t('prestige.history')}</button>
       <div class="prestige-level-info"></div>
     </div>
     <ul class="prestige-bonuses-list"></ul>
@@ -92,7 +93,7 @@ export function updatePrestigeBonuses() {
     ? Object.entries(bonuses)
       .map(([stat, val]) => `<li>${formatStatName(stat)} ${formatPrestigeBonus(stat, val)}</li>`)
       .join('')
-    : '<li>No prestige bonuses yet.</li>';
+    : `<li>${t('prestige.noBonuses')}</li>`;
 }
 
 function openPrestigeModal() {
@@ -106,16 +107,16 @@ function openPrestigeModal() {
       <button class="modal-close">&times;</button>
       <div class="prestige-cards"></div>
       <div class="modal-controls">
-        <button id="prestige-reroll-btn">Reroll (60<img src="${BASE}/icons/crystal.svg" class="icon" alt="gem"/>)</button>
+        <button id="prestige-reroll-btn">${t('prestige.reroll')} (60<img src="${BASE}/icons/crystal.svg" class="icon" alt="gem"/>)</button>
       </div>
       <div class="prestige-info-message" style="margin-top: 10px; color: #9ac7fcff; font-size: 1.05em;">
-      <p class="prestige-info prestige-bonus-info">Defeat arena bosses to boost prestige bonuses. Current bonus: ${bonusPercent}%.</p>
-      <p class="prestige-info">Prestige starts a fresh run: level, equipment, inventory, buildings, quests and most progress are reset. Only chosen Prestige bonus is kept.</p>
-      <p class="prestige-info">All options apart from ones that are unlocked from crystal shop are preserved after a prestige.</p>
-      <div class="prestige-info-cta">A record is saved to Prestige History so you can review past prestiges.</div>
+      <p class="prestige-info prestige-bonus-info">${tp('prestige.bonusInfo', { bonus: bonusPercent })}</p>
+      <p class="prestige-info">${t('prestige.resetInfo')}</p>
+      <p class="prestige-info">${t('prestige.optionsInfo')}</p>
+      <div class="prestige-info-cta">${t('prestige.historyRecord')}</div>
       </div>
       <div class="modal-footer" style="margin-top: 12px; text-align: center;">
-        <button id="prestige-perform-btn" class="disabled">Perform Prestige</button>
+        <button id="prestige-perform-btn" class="disabled">${t('prestige.perform')}</button>
       </div>
     </div>
   `;
@@ -129,8 +130,8 @@ function openPrestigeModal() {
     cardsContainer.innerHTML = cards
       .map((c, i) => {
         const lockLabel = c.locked
-          ? `<img src="${BASE}/icons/lock.svg" class="icon" alt="lock"/>`
-          : `Lock (20<img src="${BASE}/icons/crystal.svg" class="icon" alt="gem"/>)`;
+          ? `<img src="${BASE}/icons/lock.svg" class="icon" alt="${t('prestige.lock')}"/>`
+          : `${t('prestige.lock')} (20<img src="${BASE}/icons/crystal.svg" class="icon" alt="gem"/>)`;
         return html`
           <div class="prestige-card-wrapper" data-idx="${i}">
             <div class="prestige-card ${c.locked ? 'locked' : ''} ${selectedIdx === i ? 'selected' : ''}">
@@ -158,17 +159,17 @@ function openPrestigeModal() {
         const cardEl = btn.parentElement.querySelector('.prestige-card');
         if (card.locked) {
           card.locked = false;
-          btn.innerHTML = `Lock (20<img src="${BASE}/icons/crystal.svg" class="icon" alt="gem"/>)`;
+          btn.innerHTML = `${t('prestige.lock')} (20<img src="${BASE}/icons/crystal.svg" class="icon" alt="gem"/>)`;
           cardEl.classList.remove('locked');
         } else {
           if (hero.crystals < 20) {
-            showToast('Not enough crystals to lock.');
+            showToast(t('prestige.notEnoughCrystalsLock'));
             return;
           }
           hero.crystals -= 20;
           updateResources();
           card.locked = true;
-          btn.innerHTML = `<img src="${BASE}/icons/lock.svg" class="icon" alt="lock"/>`;
+          btn.innerHTML = `<img src="${BASE}/icons/lock.svg" class="icon" alt="${t('prestige.lock')}"/>`;
           cardEl.classList.add('locked');
         }
       });
@@ -180,7 +181,7 @@ function openPrestigeModal() {
   const rerollBtn = modal.querySelector('#prestige-reroll-btn');
   rerollBtn.onclick = () => {
     if (hero.crystals < 60) {
-      showToast('Not enough crystals to reroll.');
+      showToast(t('prestige.notEnoughCrystalsReroll'));
       return;
     }
     hero.crystals -= 60;
@@ -237,9 +238,9 @@ function openPrestigeHistoryModal() {
   const content = html`
     <div class="prestige-history-modal-content">
       <button class="modal-close">&times;</button>
-      <h2>Prestige History</h2>
+      <h2 data-i18n="prestige.historyTitle">${t('prestige.historyTitle')}</h2>
       <ul class="prestige-history-list">
-        ${items || '<li>No prestiges yet.</li>'}
+        ${items || `<li>${t('prestige.noPrestiges')}</li>`}
       </ul>
     </div>`;
   const modal = createModal({
@@ -277,7 +278,7 @@ function formatObjectStat(name, obj) {
         parts.push('<span class="stage-separator breakable-separator">|||</span>');
       }
     }
-    return `<li>Enemies Killed by Zone: ${parts.join('')}</li>`;
+    return `<li>${t('prestige.enemiesKilledByZone')}: ${parts.join('')}</li>`;
   }
   const entries = Object.entries(obj);
   const parts = entries
@@ -288,9 +289,9 @@ function formatObjectStat(name, obj) {
     .join('<span class="stage-separator breakable-separator">|||</span>');
   const label =
     name === 'enemiesKilled'
-      ? 'Enemies Killed by Rarity'
+      ? t('prestige.enemiesKilledByRarity')
       : name === 'itemsFound'
-        ? 'Items Found by Rarity'
+        ? t('prestige.itemsFoundByRarity')
         : formatStatName(name);
   return `<li>${label}: ${parts}</li>`;
 }
@@ -312,8 +313,8 @@ function openPrestigeDetailModal(entry) {
   const content = html`
     <div class="prestige-history-modal-content">
       <button class="modal-close">&times;</button>
-      <h2>Prestige #${entry.number}</h2>
-      <div>Time: ${new Date(entry.timestamp).toLocaleString()}</div>
+      <h2>${tp('prestige.entryTitle', { number: entry.number })}</h2>
+      <div>${tp('prestige.timeLabel', { time: new Date(entry.timestamp).toLocaleString() })}</div>
       <ul class="prestige-stat-list">${stats}</ul>
     </div>`;
   createModal({ id: 'prestige-detail-modal', className: 'prestige-history-modal', content });

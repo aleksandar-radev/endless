@@ -10,6 +10,7 @@ import {
 } from './globals.js';
 import { PRESTIGE_BONUSES, STARTING_CRYSTALS_BONUS } from './constants/prestigeBonuses.js';
 import { formatStatName } from './ui/ui.js';
+import { t, tp } from './i18n.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 
@@ -107,14 +108,10 @@ export default class Prestige {
   getPrestigeRequirementMessage() {
     const levelReq = this.getCurrentLevelRequirement();
     const levelNeeded = levelReq - (hero.level || 0);
-    let messages = [];
     if (levelNeeded > 0) {
-      messages.push(`Reach level ${levelReq} (${levelNeeded} more level${levelNeeded === 1 ? '' : 's'})`);
+      return tp('prestige.requirement.level', { level: levelReq, needed: levelNeeded });
     }
-    if (messages.length > 0) {
-      return messages.join(' and ') + ' to prestige.';
-    }
-    return 'You do not meet the requirements to prestige.';
+    return t('prestige.requirement.unmet');
   }
 
   canPrestige() {
