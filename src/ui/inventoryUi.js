@@ -194,15 +194,11 @@ export function initializeInventoryUI(inv) {
 
     if (itemData.type === ITEM_TYPES.RING) {
       const emptyRingSlots = ['ring1', 'ring2'].filter((s) => !inventory.equippedItems[s]);
-      if (emptyRingSlots.length === 1) {
-        inventory.equipItem(itemData, emptyRingSlots[0]);
-        hero.recalculateFromAttributes();
-        updateInventoryGrid();
-        clearMobileSelection();
-      } else {
-        awaitingSlot = true;
-        highlightEligibleSlots(itemData);
-      }
+      const slot = emptyRingSlots[0] || 'ring1';
+      inventory.equipItem(itemData, slot);
+      hero.recalculateFromAttributes();
+      updateInventoryGrid();
+      clearMobileSelection();
     } else {
       const slot = Object.keys(SLOT_REQUIREMENTS).find((s) =>
         SLOT_REQUIREMENTS[s].includes(itemData.type),
@@ -829,13 +825,11 @@ export function setupItemDragAndTooltip() {
 
       if (itemData.type === ITEM_TYPES.RING) {
         const emptyRingSlots = ['ring1', 'ring2'].filter((s) => !inventory.equippedItems[s]);
-        if (emptyRingSlots.length === 1) {
-          const slot = emptyRingSlots[0];
-          inventory.equipItem(itemData, slot);
-          hero.recalculateFromAttributes();
-          updateInventoryGrid();
-          return;
-        }
+        const slot = emptyRingSlots[0] || 'ring1';
+        inventory.equipItem(itemData, slot);
+        hero.recalculateFromAttributes();
+        updateInventoryGrid();
+        return;
       }
 
       for (const [slot, requirements] of Object.entries(SLOT_REQUIREMENTS)) {
@@ -1195,19 +1189,11 @@ function openItemContextMenu(itemEl, x, y) {
 
     if (itemData.type === ITEM_TYPES.RING) {
       const emptyRingSlots = ['ring1', 'ring2'].filter((s) => !inventory.equippedItems[s]);
-      if (emptyRingSlots.length === 1) {
-        inventory.equipItem(itemData, emptyRingSlots[0]);
-        hero.recalculateFromAttributes();
-        updateInventoryGrid();
-        clearMobileSelection();
-      } else {
-        clearMobileSelection();
-        selectedItemEl = itemEl;
-        itemEl.classList.add('selected');
-        showEquipButton(true);
-        awaitingSlot = true;
-        highlightEligibleSlots(itemData);
-      }
+      const slot = emptyRingSlots[0] || 'ring1';
+      inventory.equipItem(itemData, slot);
+      hero.recalculateFromAttributes();
+      updateInventoryGrid();
+      clearMobileSelection();
     } else {
       const slot = Object.keys(SLOT_REQUIREMENTS).find((s) =>
         SLOT_REQUIREMENTS[s].includes(itemData.type),
