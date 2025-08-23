@@ -165,7 +165,7 @@ export default {
   'options.lang.english': 'English',
   'options.lang.spanish': 'Spanish',
   'options.lang.chinese': 'Chinese',
-  'options.lang.note': 'Not everything translated yet. You might still see translations in English as a default language. You might want to refresh page after changing language, to see all changes take effect.',
+  'options.lang.note': 'Not everything translated yet. You might still see translations in English as a default language. You might want to refresh page after changing language, to see all changes take effect. If you would like to see another language, request it in discord.',
   'options.soundVolume': 'Sound Volume',
   'options.soundVolume.tooltip': 'Adjust game sound volume',
   'options.tab.game': 'Game',

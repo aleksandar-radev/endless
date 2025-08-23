@@ -165,7 +165,7 @@ export default {
   'options.lang.english': '英语',
   'options.lang.spanish': '西班牙语',
   'options.lang.chinese': '中文',
-  'options.lang.note': '并非所有内容都已翻译。更改语言后你可能需要刷新页面以使所有更改生效。',
+  'options.lang.note': '并非所有内容都已翻译。更改语言后你可能需要刷新页面以使所有更改生效。如果你想看到其他语言，请在 Discord 中请求。',
   'options.soundVolume': '音量',
   'options.soundVolume.tooltip': '调整游戏音量',
   'options.tab.game': '游戏',
