@@ -93,7 +93,9 @@ export function enemyAttack(currentTime) {
     }
 
     // Record the enemy's last attack time
-    game.currentEnemy.lastAttack = currentTime;
+    if(game.currentEnemy) {
+      game.currentEnemy.lastAttack = currentTime;
+    }
   }
 }
 

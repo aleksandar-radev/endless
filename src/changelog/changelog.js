@@ -28,7 +28,7 @@ import c0_7_5 from './0.7.5.js';
 import c0_7_6 from './0.7.6.js';
 import c0_7_7 from './0.7.7.js';
 import c0_7_8 from './0.7.8.js';
-import c0_7_9 from './0.7.9.js';
+import c0_7_10 from './0.7.10.js';
 
 export const CHANGELOG = {
   '0.0.1': {
@@ -151,8 +151,8 @@ export const CHANGELOG = {
     version: '0.7.8',
     run: c0_7_8,
   },
-  '0.7.9': {
-    version: '0.7.9',
-    run: c0_7_9,
+  '0.7.10': {
+    version: '0.7.10',
+    run: c0_7_10,
   },
 };
