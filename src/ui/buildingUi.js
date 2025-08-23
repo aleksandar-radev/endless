@@ -105,7 +105,7 @@ function createBuildingCard(building) {
     <div class="building-info">
       <div class="building-name">${building.name}</div>
       <div class="building-effect">${building.formatEffect()}</div>
-      <div class="building-earned">${tp('buildings.totalEarned', { amount: formatNumber(building.totalEarned), type: building.effect?.type || '' })}</div>
+      <div class="building-earned">${tp('buildings.totalEarned', { amount: formatNumber(building.totalEarned), type: t(building.effect.displayName || building.effect.type) })}</div>
   <div class="building-next-bonus" data-building-id="${building.id}">${tp('buildings.nextBonus', { time: '—' })}</div>
     </div>
   `;
@@ -169,7 +169,7 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
           <div>${tp('buildings.upgradeAmountLine', { amount: formatNumber(upgradeAmount) })}</div>
           <div>${tp('buildings.totalUpgradeCost', { cost: Building.formatCost(totalCost) })}</div>
           <div>
-            ${tp('buildings.bonusAfterUpgrade', { bonus: building.formatEffect(building.level + upgradeAmount), extra: formatNumber(totalBonus), type: building.effect?.type || '' })}
+            ${tp('buildings.bonusAfterUpgrade', { bonus: building.formatEffect(building.level + upgradeAmount), extra: formatNumber(totalBonus), type: t(building.effect.displayName || building.effect.type) })}
           </div>
         </div>
         <div class="building-info-modal-upgrade">
@@ -404,7 +404,7 @@ export function showOfflineBonusesModal(bonuses, onCollect) {
         icon: b.icon || '',
         name: b.name,
         amount: formatNumber(b.amount),
-        type: b.type,
+        type: t(b.type),
         times: formatNumber(b.times),
         interval: t(intervalKey),
       });

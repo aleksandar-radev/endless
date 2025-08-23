@@ -5,6 +5,7 @@ import { updateResources, formatNumber } from './ui/ui.js';
 import { showOfflineBonusesModal } from './ui/buildingUi.js';
 import { fetchTrustedUtcTime } from './api.js';
 import { getTimeNow } from './common.js';
+import { t, tp } from './i18n.js';
 import { MATERIALS } from './constants/materials.js';
 const refundPercent = 0.9;
 
@@ -57,8 +58,14 @@ export class Building {
   // Returns a formatted string for the effect at a given level
   formatEffect(level = this.level) {
     if (!this.effect || typeof this.effect !== 'object') return '';
-    let interval = this.effect.interval ? ` per ${this.effect.interval}` : '';
-    const typeName = this.effect.displayName || this.effect.type;
+    let interval = '';
+    if (this.effect.interval) {
+      let intName = this.effect.interval;
+      if (intName === 'min') intName = 'minute';
+      else if (intName === 'sec') intName = 'second';
+      interval = ' ' + tp('buildings.perInterval', { interval: t(`time.${intName}`) });
+    }
+    const typeName = t(this.effect.displayName || this.effect.type);
     return `+${this.effect.amount * level} ${typeName}${interval}`;
   }
 
