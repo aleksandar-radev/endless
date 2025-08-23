@@ -52,24 +52,24 @@ export function initializeUI() {
     {
       selector: '.resource-gold',
       tooltip: () => html`
-        <div class="tooltip-header">Gold <img src="${BASE}/icons/gold.svg" class="icon" alt="gold"/></div>
-        <div class="tooltip-desc">Used for training.</div>
+        <div class="tooltip-header">${t('resource.gold.name')} <img src="${BASE}/icons/gold.svg" class="icon" alt="gold"/></div>
+        <div class="tooltip-desc">${t('resource.gold.desc')}</div>
         <div class="tooltip-note"></div>
       `,
     },
     {
       selector: '.resource-crystal',
       tooltip: () => html`
-        <div class="tooltip-header">Crystals <img src="${BASE}/icons/crystal.svg" class="icon" alt="crystal"/></div>
-        <div class="tooltip-desc">Rare currency for powerful upgrades and skill resets.</div>
+        <div class="tooltip-header">${t('resource.crystal.name')} <img src="${BASE}/icons/crystal.svg" class="icon" alt="crystal"/></div>
+        <div class="tooltip-desc">${t('resource.crystal.desc')}</div>
         <div class="tooltip-note"></div>
       `,
     },
     {
       selector: '.resource-souls',
       tooltip: () => html`
-        <div class="tooltip-header">Souls <img src="${BASE}/icons/soul.svg" class="icon" alt="soul"/></div>
-        <div class="tooltip-desc">Earned from killing bosses in Arena.</div>
+        <div class="tooltip-header">${t('resource.souls.name')} <img src="${BASE}/icons/soul.svg" class="icon" alt="soul"/></div>
+        <div class="tooltip-desc">${t('resource.souls.desc')}</div>
         <div class="tooltip-note"></div>
       `,
     },
@@ -583,11 +583,11 @@ function renderRegionPanel(region) {
       </div>
     </div>
     <div class="enemy-stats">
-      <div class="enemy-damage">Damage: <span id="enemy-damage-value"></span></div>
-      <div class="enemy-armor">Armor: <span id="enemy-armor-value"></span></div>
-      <div class="enemy-evasion">Evasion: <span id="enemy-evasion-value"></span></div>
-      <div class="enemy-attack-rating">Attack Rating: <span id="enemy-attack-rating-value"></span></div>
-      <div class="enemy-attack-speed">Attack Speed: <span id="enemy-attack-speed-value"></span></div>
+      <div class="enemy-damage">${formatStatName('damage')}: <span id="enemy-damage-value"></span></div>
+      <div class="enemy-armor">${formatStatName('armor')}: <span id="enemy-armor-value"></span></div>
+      <div class="enemy-evasion">${formatStatName('evasion')}: <span id="enemy-evasion-value"></span></div>
+      <div class="enemy-attack-rating">${formatStatName('attackRating')}: <span id="enemy-attack-rating-value"></span></div>
+      <div class="enemy-attack-speed">${formatStatName('attackSpeed')}: <span id="enemy-attack-speed-value"></span></div>
       <div></div>
       <!-- Empty div for layout -->
       <div>

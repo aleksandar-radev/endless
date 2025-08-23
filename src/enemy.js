@@ -5,6 +5,7 @@ import { percentIncreasedByLevel, percentReducedByLevel, scaleStat } from './com
 import { hero } from './globals.js';
 import { battleLog } from './battleLog.js';
 import { ELEMENTS } from './constants/common.js';
+import { t, tp } from './i18n.js';
 
 // base value increase per level
 // for tier 1 enemy level 1 50 life, level 2 is 50 + 25 = 75 (e.g. 50% increase for base value per level)
@@ -134,8 +135,8 @@ class Enemy {
     this.currentLife = this.life;
     this.lastAttack = Date.now();
 
-    const rarityName = this.rarity.charAt(0) + this.rarity.slice(1).toLowerCase();
-    battleLog.addBattle(`Encountered ${rarityName} Level ${this.level} ${this.name}`);
+    const rarityName = t(`rarity.${this.rarity.toLowerCase()}`);
+    battleLog.addBattle(tp('battleLog.encounteredEnemy', { rarity: rarityName, level: this.level, name: t(this.name) }));
   }
 
   // used when reductions are applied from skills usually buff, but can be instant too

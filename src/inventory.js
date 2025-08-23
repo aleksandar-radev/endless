@@ -8,6 +8,7 @@ import {
   hideTooltip,
   positionTooltip,
 } from './ui/ui.js';
+import { t } from './i18n.js';
 import { createModal, closeModal } from './ui/modal.js';
 import {
   initializeInventoryUI,
@@ -19,7 +20,6 @@ import {
 import { getCurrentRegion } from './region.js';
 import { MATERIALS } from './constants/materials.js';
 import { STATS } from './constants/stats/stats.js';
-import { t } from './i18n.js';
 import {
   ITEM_RARITY,
   RARITY_ORDER,
@@ -417,7 +417,7 @@ export default class Inventory {
         dialog.querySelector('#alternation-selected-item').innerHTML = `
           <div class="item-tooltip" style="position:static;pointer-events:auto;">
             <div class="item-name" style="color:${ITEM_RARITY[item.rarity].color};">${item.getDisplayName()}</div>
-            <div class="item-level">Level ${item.level}, Tier ${item.tier}</div>
+            <div class="item-level">${t('item.level')}: ${item.level}, ${t('item.tier')}: ${item.tier}</div>
             <div class="item-stats">${statsHtml}</div>
           </div>`;
 

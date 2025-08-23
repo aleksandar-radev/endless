@@ -17,6 +17,7 @@ import { selectBoss, updateBossUI } from './ui/bossUi.js';
 
 import { audioManager } from './audio.js';
 import { battleLog } from './battleLog.js';
+import { t, tp } from './i18n.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 import { ELEMENTS } from './constants/common.js';
@@ -34,7 +35,7 @@ export function enemyAttack(currentTime) {
     if (isEvaded) {
       // Show "EVADED" text
       createDamageNumber({ text: 'EVADED', isPlayer: true, color: '#FFD700' });
-      battleLog.addBattle('Evaded attack');
+      battleLog.addBattle(t('battleLog.evadedAttack'));
     } else {
       const isBlocked = Math.random() * 100 < hero.stats.blockChance;
 
@@ -44,10 +45,10 @@ export function enemyAttack(currentTime) {
 
         // Show "BLOCKED" text instead of damage number
         createDamageNumber({ text: 'BLOCKED', isPlayer: true, color: '#66bd02' });
-        battleLog.addBattle('Blocked attack');
+        battleLog.addBattle(t('battleLog.blockedAttack'));
         if (healAmount > 0) {
           createDamageNumber({ text: `+${Math.floor(healAmount)}`, isPlayer: true, color: '#4CAF50' });
-          battleLog.addBattle(`Healed ${Math.floor(healAmount)} life`);
+          battleLog.addBattle(tp('battleLog.healedLife', { value: Math.floor(healAmount) }));
         }
       } else {
         // Use PoE2 armor formula for physical damage reduction
@@ -123,7 +124,7 @@ export function playerAttack(currentTime) {
 
       if (!neverMiss && roll > hitChance) {
         createDamageNumber({ text: 'MISS', color: '#888888' });
-        battleLog.addBattle('Missed attack');
+        battleLog.addBattle(t('battleLog.missedAttack'));
       } else {
         const { damage, isCritical, breakdown } = hero.calculateDamageAgainst(game.currentEnemy, {});
 
@@ -159,7 +160,7 @@ export function playerDeath() {
     const baseDeathTimer = 1 + 0.5 * Math.floor(game.stage / 100);
     deathTimer = Math.max(0, baseDeathTimer - timerReduction);
   }
-  battleLog.addBattle('Died');
+  battleLog.addBattle(t('battleLog.died'));
 
   // Disable the fight/stop button while the death screen is active
   const startBtn = document.getElementById('start-btn');
@@ -286,7 +287,7 @@ export async function defeatEnemy() {
       const newItem = inventory.createItem(itemType, itemLevel, undefined, region.tier);
       inventory.addItemToInventory(newItem);
       const rarityName = ITEM_RARITY[newItem.rarity]?.name || newItem.rarity;
-      battleLog.addDrop(`Dropped ${rarityName} ${newItem.type}`);
+      battleLog.addDrop(tp('battleLog.droppedItem', { rarity: rarityName, type: t(newItem.type) }));
 
       showLootNotification(newItem);
     }
@@ -303,7 +304,7 @@ export async function defeatEnemy() {
       }
       inventory.addMaterial({ id: mat.id, qty });
       statistics.increment('totalMaterialsDropped', null, qty);
-      battleLog.addDrop(`Dropped ${mat.name} x${qty}`);
+      battleLog.addDrop(tp('battleLog.droppedMaterial', { name: mat.name, qty }));
       showMaterialNotification(mat);
 
       // Calculate extra drops in a single calculation instead of performing many RNG loops.
@@ -346,7 +347,7 @@ export async function defeatEnemy() {
         for (const { mat: aMat, qty: totalQty } of aggregate.values()) {
           inventory.addMaterial({ id: aMat.id, qty: totalQty });
           statistics.increment('totalMaterialsDropped', null, totalQty);
-          battleLog.addDrop(`Dropped ${aMat.name} x${totalQty}`);
+          battleLog.addDrop(tp('battleLog.droppedMaterial', { name: aMat.name, qty: totalQty }));
         }
       }
     }

@@ -78,7 +78,7 @@ export function initializeInventoryUI(inv) {
       </div>
       <button id="open-salvage-modal" class="inventory-btn" data-i18n="inventory.options">${t('inventory.options')}</button>
       <div class="search-container">
-        <input type="text" id="inventory-filter" class="inventory-btn filter-input" placeholder="${t('inventory.searchItems')}" />
+        <input type="text" id="inventory-filter" class="inventory-btn filter-input" data-i18n-placeholder="inventory.searchItems" placeholder="${t('inventory.searchItems')}" />
         <span class="search-icon"><img src="${BASE}/icons/search.svg" class="icon" alt="search"/></span>
         <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn" style="display: none" data-i18n="inventory.equip">${t('inventory.equip')}</button>
       </div>

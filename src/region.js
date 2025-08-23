@@ -3,6 +3,7 @@
 
 import { dataManager, game, hero } from './globals.js';
 import { showConfirmDialog, toggleGame, updateStageUI } from './ui/ui.js';
+import { t } from './i18n.js';
 import Enemy from './enemy.js';
 // Tooltip imports
 import { showTooltip, positionTooltip, hideTooltip } from './ui/ui.js';
@@ -53,20 +54,20 @@ export function getUnlockedRegions(hero) {
 function getRegionTooltip(region) {
   const html = String.raw;
   return html`
-    <div class="tooltip-header">${region.name}</div>
-    <div class="tooltip-content">${region.description}</div>
-    <div><strong>Unlock Level:</strong> ${region.unlockLevel}</div>
+    <div class="tooltip-header">${t(region.name)}</div>
+    <div class="tooltip-content">${t(region.description)}</div>
+    <div><strong>${t('region.unlockLevel')}:</strong> ${region.unlockLevel}</div>
     ${region.multiplier.xp != 1
-    ? `<div><strong>XP bonus:</strong> ${((region.multiplier.xp - 1) * 100).toFixed(0)}%</div>`
+    ? `<div><strong>${t('region.xpBonus')}:</strong> ${((region.multiplier.xp - 1) * 100).toFixed(0)}%</div>`
     : ''}
     ${region.multiplier.gold != 1
-    ? `<div><strong>Gold bonus:</strong> ${((region.multiplier.gold - 1) * 100).toFixed(0)}%</div>`
+    ? `<div><strong>${t('region.goldBonus')}:</strong> ${((region.multiplier.gold - 1) * 100).toFixed(0)}%</div>`
     : ''}
     ${region.multiplier.itemDrop != 1
-    ? `<div><strong>Item Drop bonus:</strong> ${((region.multiplier.itemDrop - 1) * 100).toFixed(0)}%</div>`
+    ? `<div><strong>${t('region.itemDropBonus')}:</strong> ${((region.multiplier.itemDrop - 1) * 100).toFixed(0)}%</div>`
     : ''}
     ${region.multiplier.materialDrop && region.multiplier.materialDrop != 1
-    ? `<div><strong>Material Drop bonus:</strong> ${((region.multiplier.materialDrop - 1) * 100).toFixed(0)}%</div>`
+    ? `<div><strong>${t('region.materialDropBonus')}:</strong> ${((region.multiplier.materialDrop - 1) * 100).toFixed(0)}%</div>`
     : ''}
   `;
 }

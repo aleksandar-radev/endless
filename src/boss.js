@@ -6,6 +6,7 @@ import { BOSSES } from './constants/bosses.js';
 import { hero } from './globals.js';
 import { battleLog } from './battleLog.js';
 import { ELEMENTS } from './constants/common.js';
+import { t, tp } from './i18n.js';
 
 const INCREASE_PER_LEVEL = 0.01;
 const stat_increase = (level) => percentIncreasedByLevel(0.1, level, 50, 0.015, 1);
@@ -56,7 +57,7 @@ class Boss {
 
     this.reward = this.baseData.reward;
     this.lastAttack = Date.now();
-    battleLog.addBattle(`Encountered Boss Level ${this.level} ${this.name}`);
+    battleLog.addBattle(tp('battleLog.encounteredBoss', { level: this.level, name: t(this.name) }));
   }
 
   // used when reductions are applied from skills usually buff, but can be instant too

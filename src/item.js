@@ -7,6 +7,7 @@ import { MISC_STATS } from './constants/stats/miscStats.js';
 import { ATTRIBUTES } from './constants/stats/attributes.js';
 import { options } from './globals.js';
 import { formatStatName } from './ui/ui.js';
+import { t } from './i18n.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 
@@ -206,7 +207,7 @@ export default class Item {
         <div class="item-name" style="color: ${ITEM_RARITY[this.rarity].color};">
           ${isEquipped ? '(Equipped) ' : ''}${this.getDisplayName()}
         </div>
-        <div class="item-level">Level ${this.level}, Tier ${this.tier}</div>
+        <div class="item-level">${t('item.level')}: ${this.level}, ${t('item.tier')}: ${this.tier}</div>
         <div class="item-stats">
           ${STAT_GROUPS.map((group) => {
     const stats = group.order.filter((s) => this.stats[s] !== undefined);

@@ -1,5 +1,6 @@
 import { handleSavedData } from './functions.js';
 import { formatNumber, formatStatName } from './ui/ui.js';
+import { t, tp } from './i18n.js';
 
 /**
  * @class Statistics
@@ -123,25 +124,25 @@ export default class Statistics {
     // Bosses Killed
     const bossesKilledElem = document.getElementById('stat-bosses-killed');
     if (bossesKilledElem) {
-      bossesKilledElem.textContent = `Bosses Defeated: ${formatNumber(this.bossesKilled)}`;
+      bossesKilledElem.textContent = tp('statistics.bossesDefeated', { value: formatNumber(this.bossesKilled) });
     }
 
     // Deaths
     const deathsElem = document.getElementById('stat-deaths');
     if (deathsElem) {
-      deathsElem.textContent = `Deaths: ${formatNumber(this.deaths || 0)}`;
+      deathsElem.textContent = tp('statistics.deaths', { value: formatNumber(this.deaths || 0) });
     }
 
     // Highest Boss Level Defeated
     const highestBossLevelElem = document.getElementById('stat-highest-boss-level');
     if (highestBossLevelElem) {
-      highestBossLevelElem.textContent = `Highest Boss Level: ${formatNumber(this.highestBossLevel || 0)}`;
+      highestBossLevelElem.textContent = tp('statistics.highestBossLevel', { value: formatNumber(this.highestBossLevel || 0) });
     }
 
     // Hero Level
     const heroLevelElem = document.getElementById('stat-hero-level');
     if (heroLevelElem) {
-      heroLevelElem.textContent = `Hero Level: ${formatNumber(this.heroLevel || 0)}`;
+      heroLevelElem.textContent = tp('statistics.heroLevel', { value: formatNumber(this.heroLevel || 0) });
     }
 
     // Total Time Played (resets on reset)
@@ -150,13 +151,13 @@ export default class Statistics {
       const seconds = Math.floor(this.totalTimePlayed);
       const hours = Math.floor(seconds / 3600);
       const minutes = Math.floor((seconds % 3600) / 60);
-      totalTime.textContent = `Total Time Played: ${hours}h ${minutes}m`;
+      totalTime.textContent = tp('statistics.totalTimePlayed', { hours, minutes });
     }
 
     // Total Enemies Killed
     const totalEnemies = document.getElementById('stat-total-enemies-killed');
     if (totalEnemies) {
-      totalEnemies.textContent = `Total Enemies Killed: ${formatNumber(this.totalEnemiesKilled || 0)}`;
+      totalEnemies.textContent = tp('statistics.totalEnemiesKilled', { value: formatNumber(this.totalEnemiesKilled || 0) });
     }
 
     // Enemies Killed by Rarity
@@ -176,7 +177,7 @@ export default class Statistics {
           parts.push(sep);
         }
       });
-      enemiesByRarity.textContent = 'Enemies Killed by Rarity: ';
+      enemiesByRarity.textContent = t('statistics.enemiesKilledByRarity') + ' ';
       parts.forEach((el) => enemiesByRarity.appendChild(el));
     }
 
@@ -187,7 +188,7 @@ export default class Statistics {
       for (let i = 1; i <= 12; i++) {
         const span = document.createElement('span');
         span.className = 'stage-value';
-        span.textContent = `T${i}: ${formatNumber(this.enemiesKilledByZone[i] || 0)}`;
+        span.textContent = `${t('statistics.tierAbbr')}${i}: ${formatNumber(this.enemiesKilledByZone[i] || 0)}`;
         parts.push(span);
         if (i < 12) {
           const sep = document.createElement('span');
@@ -196,38 +197,38 @@ export default class Statistics {
           parts.push(sep);
         }
       }
-      enemiesByZone.textContent = 'Enemies Killed by Zone: ';
+      enemiesByZone.textContent = t('statistics.enemiesKilledByZone') + ' ';
       parts.forEach((el) => enemiesByZone.appendChild(el));
     }
 
     // Highest Damage Dealt
     const highestDamage = document.getElementById('stat-highest-damage');
     if (highestDamage) {
-      highestDamage.textContent = `Highest Damage Dealt: ${formatNumber(Math.floor(this.highestDamageDealt) || 0)}`;
+      highestDamage.textContent = tp('statistics.highestDamageDealt', { value: formatNumber(Math.floor(this.highestDamageDealt) || 0) });
     }
 
     // Total Gold Earned
     const totalGold = document.getElementById('stat-total-gold');
     if (totalGold) {
-      totalGold.textContent = `Total Gold Earned: ${formatNumber(this.totalGoldEarned || 0)}`;
+      totalGold.textContent = tp('statistics.totalGoldEarned', { value: formatNumber(this.totalGoldEarned || 0) });
     }
 
     // Total Crystals Earned
     const totalCrystals = document.getElementById('stat-total-crystals');
     if (totalCrystals) {
-      totalCrystals.textContent = `Total Crystals Earned: ${formatNumber(this.totalCrystalsEarned || 0)}`;
+      totalCrystals.textContent = tp('statistics.totalCrystalsEarned', { value: formatNumber(this.totalCrystalsEarned || 0) });
     }
 
     // Total Souls Earned
     const totalSouls = document.getElementById('stat-total-souls');
     if (totalSouls) {
-      totalSouls.textContent = `Total Souls Earned: ${formatNumber(this.totalSoulsEarned || 0)}`;
+      totalSouls.textContent = tp('statistics.totalSoulsEarned', { value: formatNumber(this.totalSoulsEarned || 0) });
     }
 
     // Total Items Found
     const itemsFound = document.getElementById('stat-items-found');
     if (itemsFound) {
-      itemsFound.textContent = `Total Items Found: ${formatNumber(this.totalItemsFound || 0)}`;
+      itemsFound.textContent = tp('statistics.totalItemsFound', { value: formatNumber(this.totalItemsFound || 0) });
     }
 
     // Items Found by Rarity
@@ -247,14 +248,14 @@ export default class Statistics {
           parts.push(sep);
         }
       });
-      itemsByRarity.textContent = 'Items Found by Rarity: ';
+      itemsByRarity.textContent = t('statistics.itemsFoundByRarity') + ' ';
       parts.forEach((el) => itemsByRarity.appendChild(el));
     }
 
     // Total Materials Found
     const materialsFound = document.getElementById('stat-materials-found');
     if (materialsFound) {
-      materialsFound.textContent = `Total Materials Found: ${formatNumber(this.totalMaterialsFound || 0)}`;
+      materialsFound.textContent = tp('statistics.totalMaterialsFound', { value: formatNumber(this.totalMaterialsFound || 0) });
     }
 
     // Highest Stages Reached
@@ -264,7 +265,7 @@ export default class Statistics {
       for (let i = 1; i <= 12; i++) {
         const span = document.createElement('span');
         span.className = 'stage-value';
-        span.textContent = `T${i}: ${formatNumber(this.highestStages[i] || 0)}`;
+        span.textContent = `${t('statistics.tierAbbr')}${i}: ${formatNumber(this.highestStages[i] || 0)}`;
         parts.push(span);
         if (i < 12) {
           const sep = document.createElement('span');
@@ -273,8 +274,8 @@ export default class Statistics {
           parts.push(sep);
         }
       }
-      highestStage.textContent = 'Highest Stages: ';
-      parts.forEach(el => highestStage.appendChild(el));
+      highestStage.textContent = t('statistics.highestStages') + ' ';
+      parts.forEach((el) => highestStage.appendChild(el));
     }
 
     // Total Time In Fights
@@ -283,7 +284,11 @@ export default class Statistics {
       const seconds = Math.floor(this.totalTimeInFights);
       const hours = Math.floor(seconds / 3600);
       const minutes = Math.floor((seconds % 3600) / 60);
-      timeInFights.textContent = `Total Time In Fights: ${hours}h ${minutes}m ${seconds % 60}s`;
+      timeInFights.textContent = tp('statistics.totalTimeInFights', {
+        hours,
+        minutes,
+        seconds: seconds % 60,
+      });
     }
   }
 

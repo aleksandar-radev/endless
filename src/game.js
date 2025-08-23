@@ -6,14 +6,13 @@ import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateBossUI, selectBoss } from './ui/bossUi.js';
 import { getCurrentRegion } from './region.js';
 import { battleLog } from './battleLog.js';
+import { t, tp } from './i18n.js';
 
 function formatDamageBreakdown(breakdown) {
   if (!breakdown) return '';
   const parts = Object.entries(breakdown)
     .filter(([, val]) => Math.floor(val) > 0)
-    .map(
-      ([type, val]) => `${type.charAt(0).toUpperCase() + type.slice(1)} ${Math.floor(val)}`,
-    )
+    .map(([type, val]) => `${t(type)} ${Math.floor(val)}`)
     .join(', ');
   return parts ? ` (${parts})` : '';
 }
@@ -73,7 +72,7 @@ class Game {
     if (damage < 1) return;
 
     hero.stats.currentLife -= damage;
-    battleLog.addBattle(`Received ${Math.floor(damage)} damage${formatDamageBreakdown(breakdown)}`);
+    battleLog.addBattle(tp('battleLog.receivedDamage', { value: Math.floor(damage), breakdown: formatDamageBreakdown(breakdown) }));
     if (hero.stats.currentLife <= 0) {
       // check if ressurection will proc
       if (!hero.willRessurect()) {
@@ -106,7 +105,7 @@ class Game {
     }
     if (heal >= 1) {
       createDamageNumber({ text: '+' + Math.floor(heal), isPlayer: true, isCritical: false, color });
-      battleLog.addBattle(`Healed ${Math.floor(heal)} life`);
+      battleLog.addBattle(tp('battleLog.healedLife', { value: Math.floor(heal) }));
     }
   }
 
@@ -124,7 +123,7 @@ class Game {
 
     if (mana >= 1) {
       createDamageNumber({ text: '+' + Math.floor(mana), isPlayer: true, isCritical: false, color });
-      battleLog.addBattle(`Restored ${Math.floor(mana)} mana`);
+      battleLog.addBattle(tp('battleLog.restoredMana', { value: Math.floor(mana) }));
     }
   }
 
@@ -132,11 +131,22 @@ class Game {
     // bail out if we've already defeated this enemy this tick
     if (this._justDefeated) return;
     damage = Math.floor(damage); // Ensure damage is an integer
-    battleLog.addBattle(
-      `${skillName ? `Cast ${skillName} for` : 'Dealt'} ${damage} damage${formatDamageBreakdown(breakdown)}${
-        isCritical ? ' (critical)' : ''
-      }`,
-    );
+    let message;
+    if (skillName) {
+      message = tp('battleLog.castDamage', {
+        skill: t(skillName),
+        value: damage,
+        breakdown: formatDamageBreakdown(breakdown),
+        critical: isCritical ? t('battleLog.critical') : '',
+      });
+    } else {
+      message = tp('battleLog.dealtDamage', {
+        value: damage,
+        breakdown: formatDamageBreakdown(breakdown),
+        critical: isCritical ? t('battleLog.critical') : '',
+      });
+    }
+    battleLog.addBattle(message);
     if (this.fightMode === 'arena' && this.currentEnemy) {
       const isDead = this.currentEnemy.takeDamage(damage);
       document.dispatchEvent(new CustomEvent('damageDealt', { detail: damage }));
