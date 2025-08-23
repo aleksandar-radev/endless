@@ -23,7 +23,7 @@ export const DROP_QUESTS = [
     get description() { return tp('Find {count} items.', { count: 25 }); },
     type: 'item_drop',
     target: 25,
-    reward: { item: { rarity: 'unique', type: 'random', tier: 2 } },
+    reward: { item: { rarity: 'epic', type: 'random', tier: 2 } },
   },
   {
     id: 'itemdrop_60',
@@ -32,7 +32,7 @@ export const DROP_QUESTS = [
     get description() { return tp('Find {count} items.', { count: 60 }); },
     type: 'item_drop',
     target: 60,
-    reward: { item: { rarity: 'unique', type: 'random', tier: 3 } },
+    reward: { item: { rarity: 'epic', type: 'random', tier: 3 } },
   },
   {
     id: 'itemdrop_150',
@@ -105,7 +105,7 @@ export const DROP_QUESTS = [
     get description() { return tp('Collect {count} materials.', { count: 25 }); },
     type: 'material_drop',
     target: 25,
-    reward: { item: { rarity: 'unique', type: 'random', tier: 1 } },
+    reward: { item: { rarity: 'epic', type: 'random', tier: 1 } },
   },
   {
     id: 'matdrop_60',
@@ -114,7 +114,7 @@ export const DROP_QUESTS = [
     get description() { return tp('Collect {count} materials.', { count: 60 }); },
     type: 'material_drop',
     target: 60,
-    reward: { item: { rarity: 'unique', type: 'random', tier: 2 } },
+    reward: { item: { rarity: 'epic', type: 'random', tier: 2 } },
   },
   {
     id: 'matdrop_150',

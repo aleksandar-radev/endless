@@ -46,6 +46,7 @@ export default function run() {
     <li>Improve usability of alternation orb.</li>
     <li>Added tint to armor and pants items, to make them more distinct.</li>
     <li>Added salvage all button and salvage button for a single item in inventory options.</li>
+    <li>Unique items renamed to "EPIC" with purple color.</li>
   </ul>
 
   <span style="color:#FF8C00;"> Fixes & polish</span>

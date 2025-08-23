@@ -294,8 +294,8 @@
   border-color: var(--item-rare);
 }
 
-.rarity-unique {
-  border-color: var(--item-unique);
+.rarity-epic {
+  border-color: var(--item-epic);
 }
 
 .rarity-legendary {
@@ -318,8 +318,8 @@
   color: var(--item-rare);
 }
 
-.item-color-unique {
-  color: var(--item-unique);
+.item-color-epic {
+  color: var(--item-epic);
 }
 
 .item-color-legendary {
@@ -402,9 +402,9 @@
   border-left: 4px solid var(--item-rare);
 }
 
-.salvage-options div[data-rarity='UNIQUE'] {
-  color: var(--item-unique);
-  border-left: 4px solid var(--item-unique);
+.salvage-options div[data-rarity='EPIC'] {
+  color: var(--item-epic);
+  border-left: 4px solid var(--item-epic);
 }
 
 .salvage-options div[data-rarity='LEGENDARY'] {
@@ -750,9 +750,9 @@
   box-shadow: 0 4px var(--item-rare);
 }
 
-.salvage-btn-modal[data-rarity='UNIQUE'] {
-  color: var(--item-unique);
-  box-shadow: 0 4px var(--item-unique);
+.salvage-btn-modal[data-rarity='EPIC'] {
+  color: var(--item-epic);
+  box-shadow: 0 4px var(--item-epic);
 }
 
 .salvage-btn-modal[data-rarity='LEGENDARY'] {

@@ -98,7 +98,7 @@ export const RARITY_QUESTS = [
     type: 'kill_rarity',
     rarity: 'epic',
     target: 5,
-    reward: { gold: 1200, crystals: 1, item: { rarity: 'unique', type: 'random', tier: 1 } },
+    reward: { gold: 1200, crystals: 1, item: { rarity: 'epic', type: 'random', tier: 1 } },
   },
   {
     id: 'kill_epic_30',

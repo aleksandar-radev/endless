@@ -134,7 +134,7 @@ export default {
   'rarity.normal': 'Normal',
   'rarity.magic': 'Magic',
   'rarity.rare': 'Rare',
-  'rarity.unique': 'Unique',
+  'rarity.epic': 'Epic',
   'rarity.legendary': 'Legendary',
   'rarity.mythic': 'Mythic',
   'inventory.salvage': 'Salvage',

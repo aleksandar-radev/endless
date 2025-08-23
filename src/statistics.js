@@ -22,7 +22,7 @@ export default class Statistics {
       normal: 0,
       magic: 0,
       rare: 0,
-      unique: 0,
+      epic: 0,
       legendary: 0,
       mythic: 0,
     };
@@ -65,7 +65,7 @@ export default class Statistics {
       normal: 0,
       magic: 0,
       rare: 0,
-      unique: 0,
+      epic: 0,
       legendary: 0,
       mythic: 0,
     };

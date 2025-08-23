@@ -134,7 +134,7 @@ export default {
   'rarity.normal': '普通',
   'rarity.magic': '魔法',
   'rarity.rare': '稀有',
-  'rarity.unique': '独特',
+  'rarity.epic': '史诗',
   'rarity.legendary': '传奇',
   'rarity.mythic': '神话',
   'inventory.salvage': '分解',

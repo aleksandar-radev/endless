@@ -551,7 +551,7 @@ export default class Inventory {
       NORMAL: 1,
       MAGIC: 1.5,
       RARE: 2,
-      UNIQUE: 2.5,
+      EPIC: 2.5,
       LEGENDARY: 3,
       MYTHIC: 3.5,
     };
