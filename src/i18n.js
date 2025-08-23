@@ -18,6 +18,13 @@ export function t(key) {
   return langStrings[key] || translations.en[key] || key;
 }
 
+export function tp(key, params = {}) {
+  let str = t(key);
+  return str.replace(/\{(\w+)\}/g, (_, k) =>
+    Object.prototype.hasOwnProperty.call(params, k) ? params[k] : `{${k}}`,
+  );
+}
+
 export function applyTranslations() {
   document.querySelectorAll('[data-i18n]').forEach((el) => {
     const key = el.getAttribute('data-i18n');

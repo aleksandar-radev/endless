@@ -1,4 +1,5 @@
 import { ELEMENTS } from '../common.js';
+import { t, tp } from '../../i18n.js';
 
 const html = String.raw;
 
@@ -49,163 +50,175 @@ export const ATTRIBUTES = {
   },
 };
 
-const formatTitle = (stat) =>
-  stat.replace(/([A-Z])/g, ' $1').replace(/^./, (c) => c.toUpperCase());
+const formatTitle = (stat) => {
+  const translated = t(stat);
+  if (translated && translated !== stat) return translated;
+  return stat.replace(/([A-Z])/g, ' $1').replace(/^./, (c) => c.toUpperCase());
+};
 
 const generateDescription = (stat) => {
   const base = stat.replace(/Percent$|PerLevel$|OfTotalPercent$/, '');
-  if (stat.endsWith('Percent')) {
-    return `Increases ${formatTitle(base)} by a percentage.`;
-  }
-  if (stat.endsWith('PerLevel')) {
-    return `${formatTitle(base)} gained per level.`;
-  }
-  if (stat.endsWith('OfTotalPercent')) {
-    return `${formatTitle(base)} based on total ${formatTitle(base)}.`;
-  }
   if (stat.endsWith('PenetrationPercent')) {
-    return `Ignores a percentage of enemy ${formatTitle(base.replace(/PenetrationPercent$/, '')).toLowerCase()} resistance.`;
+    const b = stat.replace('PenetrationPercent', '');
+    return tp('tooltip.pattern.penetrationPercent', { stat: formatTitle(b).toLowerCase() });
   }
   if (stat.endsWith('Penetration')) {
-    return `Ignores a flat amount of enemy ${formatTitle(base.replace(/Penetration$/, '')).toLowerCase()} resistance.`;
+    const b = stat.replace('Penetration', '');
+    return tp('tooltip.pattern.penetration', { stat: formatTitle(b).toLowerCase() });
   }
   if (stat.endsWith('ResistancePercent')) {
-    return `Increases ${formatTitle(base.replace(/ResistancePercent$/, ''))} resistance by a percentage.`;
+    const b = stat.replace('ResistancePercent', '');
+    return tp('tooltip.pattern.resistancePercent', { stat: formatTitle(b) });
   }
   if (stat.endsWith('Resistance')) {
-    return `Reduces ${formatTitle(base.replace(/Resistance$/, ''))} damage taken.`;
+    const b = stat.replace('Resistance', '');
+    return tp('tooltip.pattern.resistance', { stat: formatTitle(b) });
   }
   if (stat.endsWith('DamagePercent')) {
-    return `Increases ${formatTitle(base.replace(/DamagePercent$/, ''))} damage by a percentage.`;
+    const b = stat.replace('DamagePercent', '');
+    return tp('tooltip.pattern.damagePercent', { stat: formatTitle(b) });
   }
   if (stat.endsWith('Damage')) {
-    return `Adds ${formatTitle(base.replace(/Damage$/, ''))} damage to your attacks.`;
+    const b = stat.replace('Damage', '');
+    return tp('tooltip.pattern.damage', { stat: formatTitle(b) });
   }
   if (stat.endsWith('RegenPercent')) {
-    return `Increases ${formatTitle(base.replace(/RegenPercent$/, '') + ' regeneration')} by a percentage.`;
+    const b = stat.replace('RegenPercent', '') + ' regeneration';
+    return tp('tooltip.pattern.regenPercent', { stat: formatTitle(b) });
   }
   if (stat.endsWith('Regen')) {
-    return `Amount of ${formatTitle(base.replace(/Regen$/, '') + ' regeneration').toLowerCase()}.`;
+    const b = stat.replace('Regen', '') + ' regeneration';
+    return tp('tooltip.pattern.regen', { stat: formatTitle(b).toLowerCase() });
+  }
+  if (stat.endsWith('Percent')) {
+    return tp('tooltip.pattern.percent', { stat: formatTitle(base) });
+  }
+  if (stat.endsWith('PerLevel')) {
+    return tp('tooltip.pattern.perLevel', { stat: formatTitle(base) });
+  }
+  if (stat.endsWith('OfTotalPercent')) {
+    return tp('tooltip.pattern.ofTotalPercent', { stat: formatTitle(base) });
   }
   if (stat.startsWith('extraDamageFrom')) {
-    return `Adds damage equal to a percentage of your ${formatTitle(stat.replace('extraDamageFrom', '')).toLowerCase()}.`;
+    const b = stat.replace('extraDamageFrom', '');
+    return tp('tooltip.pattern.extraDamageFrom', { stat: formatTitle(b).toLowerCase() });
   }
   if (stat.endsWith('Chance')) {
-    return `Chance to ${formatTitle(stat.replace('Chance', '')).toLowerCase()}.`;
+    const b = stat.replace('Chance', '');
+    return tp('tooltip.pattern.chance', { action: formatTitle(b).toLowerCase() });
   }
-  return `Description for ${formatTitle(stat)}.`;
+  return tp('tooltip.pattern.default', { stat: formatTitle(stat) });
 };
 
 const CUSTOM_DESCRIPTIONS = {
-  strength: () => `Each point increases:<br />• Damage by ${ATTRIBUTES.strength.effects.damagePerPoint}<br />`,
+  strength: () =>
+    tp('tooltip.strength', { damage: ATTRIBUTES.strength.effects.damagePerPoint }),
   agility: () =>
-    `Each point increases:<br />• Attack Rating by ${ATTRIBUTES.agility.effects.attackRatingPerPoint}<br />• Damage by ${ATTRIBUTES.agility.effects.damagePerPoint}<br />`,
-  vitality: () => `Each point increases:<br />• Life by ${ATTRIBUTES.vitality.effects.lifePerPoint}<br />`,
+    tp('tooltip.agility', {
+      attackRating: ATTRIBUTES.agility.effects.attackRatingPerPoint,
+      damage: ATTRIBUTES.agility.effects.damagePerPoint,
+    }),
+  vitality: () =>
+    tp('tooltip.vitality', { life: ATTRIBUTES.vitality.effects.lifePerPoint }),
   wisdom: () =>
-    `Each point increases:<br />• Mana by ${ATTRIBUTES.wisdom.effects.manaPerPoint}<br />• Mana Regeneration by ${ATTRIBUTES.wisdom.effects.manaRegenPerPoint}<br />`,
-  endurance: () => `Each point increases:<br />• Armor by ${ATTRIBUTES.endurance.effects.armorPerPoint}<br />`,
-  dexterity: () => `Each point increases:<br />• Evasion by ${ATTRIBUTES.dexterity.effects.evasionPerPoint}<br />`,
+    tp('tooltip.wisdom', {
+      mana: ATTRIBUTES.wisdom.effects.manaPerPoint,
+      manaRegen: ATTRIBUTES.wisdom.effects.manaRegenPerPoint,
+    }),
+  endurance: () =>
+    tp('tooltip.endurance', { armor: ATTRIBUTES.endurance.effects.armorPerPoint }),
+  dexterity: () =>
+    tp('tooltip.dexterity', { evasion: ATTRIBUTES.dexterity.effects.evasionPerPoint }),
   intelligence: () =>
-    `Each point increases:<br />• Elemental Damage by ${ATTRIBUTES.intelligence.effects.elementalDamagePerPoint}<br />`,
+    tp('tooltip.intelligence', {
+      elementalDamage: ATTRIBUTES.intelligence.effects.elementalDamagePerPoint,
+    }),
   perseverance: () =>
-    `Each point increases:<br />• Mana Regeneration by ${ATTRIBUTES.perseverance.effects.manaRegenPerPoint}<br />• Life Regeneration by ${ATTRIBUTES.perseverance.effects.lifeRegenPerPoint}<br />• All Resistances by ${ATTRIBUTES.perseverance.effects.allResistancePerPoint}<br />`,
-  elementalDamage: () => 'Included in base hit damage. Reduced by enemy resistances.',
-  damage: () => 'Base physical damage dealt to enemies.<br />Increased by Strength and equipment.',
-  attackSpeed: () => 'Number of attacks per second.<br />Maximum: 5 attacks/second',
-  attackRating: () => 'Determines hit chance against enemies.<br />Higher stages require more Attack Rating.',
-  critChance: () => 'Chance to deal critical damage.<br />Maximum: 100%',
-  critDamage: () => 'Damage multiplier on critical hits.<br />Base: 1.33x damage',
-  lifeSteal: () => 'Percentage of damage dealt recovered as life.',
-  life: () => 'Maximum life points.<br />Increased by Vitality and level ups.',
-  lifeRegen: () => 'Amount of life recovered per second.',
-  mana: () => 'Maximum mana points.<br />Increased by Wisdom and level ups.',
-  manaRegen: () => 'Amount of mana recovered per second.',
-  armor: () => 'Reduces incoming damage.<br />Effectiveness decreases in higher stages.',
-  blockChance: () => 'Chance to block incoming attacks.<br />Maximum: 75%',
-  evasion: () => 'Chance to dodge enemy attacks completely.<br />Higher evasion reduces enemy hit chance.',
-  fireResistance: () =>
-    `Reduces fire damage taken from enemies.<br />${ELEMENTS.fire.icon} Effective against fire enemies.`,
-  coldResistance: () =>
-    `Reduces cold damage taken from enemies.<br />${ELEMENTS.cold.icon} Effective against cold enemies.`,
-  airResistance: () =>
-    `Reduces air damage taken from enemies.<br />${ELEMENTS.air.icon} Effective against air enemies.`,
-  earthResistance: () =>
-    `Reduces earth damage taken from enemies.<br />${ELEMENTS.earth.icon} Effective against earth enemies.`,
+    tp('tooltip.perseverance', {
+      manaRegen: ATTRIBUTES.perseverance.effects.manaRegenPerPoint,
+      lifeRegen: ATTRIBUTES.perseverance.effects.lifeRegenPerPoint,
+      allResistance: ATTRIBUTES.perseverance.effects.allResistancePerPoint,
+    }),
+  elementalDamage: () => t('tooltip.elementalDamage'),
+  damage: () => t('tooltip.damage'),
+  attackSpeed: () => t('tooltip.attackSpeed'),
+  attackRating: () => t('tooltip.attackRating'),
+  critChance: () => t('tooltip.critChance'),
+  critDamage: () => t('tooltip.critDamage'),
+  lifeSteal: () => t('tooltip.lifeSteal'),
+  life: () => t('tooltip.life'),
+  lifeRegen: () => t('tooltip.lifeRegen'),
+  mana: () => t('tooltip.mana'),
+  manaRegen: () => t('tooltip.manaRegen'),
+  armor: () => t('tooltip.armor'),
+  blockChance: () => t('tooltip.blockChance'),
+  evasion: () => t('tooltip.evasion'),
+  fireResistance: () => tp('tooltip.fireResistance', { icon: ELEMENTS.fire.icon }),
+  coldResistance: () => tp('tooltip.coldResistance', { icon: ELEMENTS.cold.icon }),
+  airResistance: () => tp('tooltip.airResistance', { icon: ELEMENTS.air.icon }),
+  earthResistance: () => tp('tooltip.earthResistance', { icon: ELEMENTS.earth.icon }),
   lightningResistance: () =>
-    `Reduces lightning damage taken from enemies.<br />${ELEMENTS.lightning.icon} Effective against lightning enemies.`,
-  waterResistance: () =>
-    `Reduces water damage taken from enemies.<br />${ELEMENTS.water.icon} Effective against water enemies.`,
-  allResistance: () =>
-    'Reduces elemental damage taken from enemies based on your resistance and the enemy\'s damage.',
-  lifePerHit: () => 'Restores life whenever your attack hits an enemy.',
-  manaPerHit: () => 'Restores mana whenever your attack hits an enemy.',
-  fireDamage: () =>
-    `Adds fire damage to your attacks.<br />${ELEMENTS.fire.icon} Reduced by enemy fire resistance.`,
-  coldDamage: () =>
-    `Adds cold damage to your attacks.<br />${ELEMENTS.cold.icon} Reduced by enemy cold resistance.`,
-  airDamage: () =>
-    `Adds air damage to your attacks.<br />${ELEMENTS.air.icon} Reduced by enemy air resistance.`,
-  earthDamage: () =>
-    `Adds earth damage to your attacks.<br />${ELEMENTS.earth.icon} Reduced by enemy earth resistance.`,
-  lightningDamage: () =>
-    `Adds lightning damage to your attacks.<br />${ELEMENTS.lightning.icon} Reduced by enemy lightning resistance.`,
-  waterDamage: () =>
-    `Adds water damage to your attacks.<br />${ELEMENTS.water.icon} Reduced by enemy water resistance.`,
-  doubleDamageChance: () => 'Chance for an attack to deal double damage.',
-  resurrectionChance: () => 'Chance to revive after death.',
-  bonusGoldPercent: () => 'Increases gold dropped by enemies.',
-  bonusExperiencePercent: () => 'Increases experience gained from enemies.',
-  itemQuantityPercent: () => 'Increases the number of items that drop.',
-  itemRarityPercent: () => 'Increases the chance to find higher rarity items.',
-  skillPoints: () => 'Permanent skill points earned from materials.',
-  allAttributes: () => 'Adds points to all attributes.',
-  allAttributesPercent: () => 'Increases all attributes by a percentage.',
-  manaShieldPercent: () => 'Portion of damage taken from mana before life.',
-  reflectFireDamage: () => 'Reflects fire damage back to attackers.',
-  thornsDamage: () => 'Deals damage back to attackers when hit.',
-  thornsDamagePercent: () => 'Increases reflected damage by a percentage.',
-  attackNeverMiss: () => 'Attacks always hit the target.',
-  chanceToHitPercent: () => 'Adds a flat bonus to your chance to hit.',
-  ignoreEnemyArmor: () => 'Attacks completely ignore enemy armor.',
-  ignoreAllEnemyResistances: () => 'Attacks ignore all enemy resistances.',
-  percentOfPlayerDamage: () => "Deals a percentage of the player's damage.",
-  extraMaterialDropPercent: () => 'Chance to drop extra materials on enemy kill.',
-  extraMaterialDropMax: () => 'Maximum extra materials dropped per enemy kill.',
-  itemBonusesPercent: () => 'Increases bonuses provided by items.',
-  cooldownReductionPercent: () => 'Reduces ability cooldowns by a percentage.',
-  manaCostReductionPercent: () => 'Reduces mana costs of abilities by a percentage.',
-  buffDurationPercent: () => 'Increases the duration of buffs by a percentage.',
-  lifeRegenOfTotalPercent: () => 'Regenerates life equal to a percentage of total life.',
-  manaRegenOfTotalPercent: () => 'Regenerates mana equal to a percentage of total mana.',
-  reduceEnemyDamagePercent: () => 'Reduces enemy damage by a percentage.',
-  reduceEnemyHpPercent: () => 'Reduces enemy health by a percentage.',
-  reduceEnemyAttackSpeedPercent: () => 'Reduces enemy attack speed by a percentage.',
+    tp('tooltip.lightningResistance', { icon: ELEMENTS.lightning.icon }),
+  waterResistance: () => tp('tooltip.waterResistance', { icon: ELEMENTS.water.icon }),
+  allResistance: () => t('tooltip.allResistance'),
+  lifePerHit: () => t('tooltip.lifePerHit'),
+  manaPerHit: () => t('tooltip.manaPerHit'),
+  fireDamage: () => tp('tooltip.fireDamage', { icon: ELEMENTS.fire.icon }),
+  coldDamage: () => tp('tooltip.coldDamage', { icon: ELEMENTS.cold.icon }),
+  airDamage: () => tp('tooltip.airDamage', { icon: ELEMENTS.air.icon }),
+  earthDamage: () => tp('tooltip.earthDamage', { icon: ELEMENTS.earth.icon }),
+  lightningDamage: () => tp('tooltip.lightningDamage', { icon: ELEMENTS.lightning.icon }),
+  waterDamage: () => tp('tooltip.waterDamage', { icon: ELEMENTS.water.icon }),
+  doubleDamageChance: () => t('tooltip.doubleDamageChance'),
+  resurrectionChance: () => t('tooltip.resurrectionChance'),
+  bonusGoldPercent: () => t('tooltip.bonusGoldPercent'),
+  bonusExperiencePercent: () => t('tooltip.bonusExperiencePercent'),
+  itemQuantityPercent: () => t('tooltip.itemQuantityPercent'),
+  itemRarityPercent: () => t('tooltip.itemRarityPercent'),
+  skillPoints: () => t('tooltip.skillPoints'),
+  allAttributes: () => t('tooltip.allAttributes'),
+  allAttributesPercent: () => t('tooltip.allAttributesPercent'),
+  manaShieldPercent: () => t('tooltip.manaShieldPercent'),
+  reflectFireDamage: () => t('tooltip.reflectFireDamage'),
+  thornsDamage: () => t('tooltip.thornsDamage'),
+  thornsDamagePercent: () => t('tooltip.thornsDamagePercent'),
+  attackNeverMiss: () => t('tooltip.attackNeverMiss'),
+  chanceToHitPercent: () => t('tooltip.chanceToHitPercent'),
+  ignoreEnemyArmor: () => t('tooltip.ignoreEnemyArmor'),
+  ignoreAllEnemyResistances: () => t('tooltip.ignoreAllEnemyResistances'),
+  percentOfPlayerDamage: () => t('tooltip.percentOfPlayerDamage'),
+  extraMaterialDropPercent: () => t('tooltip.extraMaterialDropPercent'),
+  extraMaterialDropMax: () => t('tooltip.extraMaterialDropMax'),
+  itemBonusesPercent: () => t('tooltip.itemBonusesPercent'),
+  cooldownReductionPercent: () => t('tooltip.cooldownReductionPercent'),
+  manaCostReductionPercent: () => t('tooltip.manaCostReductionPercent'),
+  buffDurationPercent: () => t('tooltip.buffDurationPercent'),
+  lifeRegenOfTotalPercent: () => t('tooltip.lifeRegenOfTotalPercent'),
+  manaRegenOfTotalPercent: () => t('tooltip.manaRegenOfTotalPercent'),
+  reduceEnemyDamagePercent: () => t('tooltip.reduceEnemyDamagePercent'),
+  reduceEnemyHpPercent: () => t('tooltip.reduceEnemyHpPercent'),
+  reduceEnemyAttackSpeedPercent: () => t('tooltip.reduceEnemyAttackSpeedPercent'),
   firePenetrationPercent: () =>
-    `Ignores a percentage of enemy ${ELEMENTS.fire.icon} resistance.`,
+    tp('tooltip.firePenetrationPercent', { icon: ELEMENTS.fire.icon }),
   coldPenetrationPercent: () =>
-    `Ignores a percentage of enemy ${ELEMENTS.cold.icon} resistance.`,
+    tp('tooltip.coldPenetrationPercent', { icon: ELEMENTS.cold.icon }),
   airPenetrationPercent: () =>
-    `Ignores a percentage of enemy ${ELEMENTS.air.icon} resistance.`,
+    tp('tooltip.airPenetrationPercent', { icon: ELEMENTS.air.icon }),
   earthPenetrationPercent: () =>
-    `Ignores a percentage of enemy ${ELEMENTS.earth.icon} resistance.`,
+    tp('tooltip.earthPenetrationPercent', { icon: ELEMENTS.earth.icon }),
   lightningPenetrationPercent: () =>
-    `Ignores a percentage of enemy ${ELEMENTS.lightning.icon} resistance.`,
+    tp('tooltip.lightningPenetrationPercent', { icon: ELEMENTS.lightning.icon }),
   waterPenetrationPercent: () =>
-    `Ignores a percentage of enemy ${ELEMENTS.water.icon} resistance.`,
-  elementalPenetrationPercent: () =>
-    'Ignores a percentage of all enemy elemental resistances.',
-  extraDamageFromLifePercent: () =>
-    'Adds extra damage based on a percentage of your current life — the bonus is split 50% physical and 50% elemental.',
-  extraDamageFromArmorPercent: () =>
-    'Adds extra damage based on a percentage of your current armor — the bonus is split 50% physical and 50% elemental.',
-  extraDamageFromManaPercent: () =>
-    'Adds extra damage based on a percentage of your current mana — the bonus is split 50% physical and 50% elemental.',
-  extraDamageFromEvasionPercent: () =>
-    'Adds extra damage based on a percentage of your current evasion — the bonus is split 50% physical and 50% elemental.',
+    tp('tooltip.waterPenetrationPercent', { icon: ELEMENTS.water.icon }),
+  elementalPenetrationPercent: () => t('tooltip.elementalPenetrationPercent'),
+  extraDamageFromLifePercent: () => t('tooltip.extraDamageFromLifePercent'),
+  extraDamageFromArmorPercent: () => t('tooltip.extraDamageFromArmorPercent'),
+  extraDamageFromManaPercent: () => t('tooltip.extraDamageFromManaPercent'),
+  extraDamageFromEvasionPercent: () => t('tooltip.extraDamageFromEvasionPercent'),
   extraDamageFromAttackRatingPercent: () =>
-    'Adds extra damage based on a percentage of your current attack rating — the bonus is split 50% physical and 50% elemental.',
+    t('tooltip.extraDamageFromAttackRatingPercent'),
   extraDamageFromLifeRegenPercent: () =>
-    'Adds extra damage based on a percentage of your current life regeneration — the bonus is split 50% physical and 50% elemental.',
+    t('tooltip.extraDamageFromLifeRegenPercent'),
 };
 
 export const getAttributeTooltip = (stat) => {
