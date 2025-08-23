@@ -607,6 +607,46 @@
   cursor: not-allowed;
 }
 
+.alternation-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  margin-bottom: 6px;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.alternation-item:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: var(--accent, #3b82f6);
+}
+
+.alternation-item.selected {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: var(--accent, #3b82f6);
+}
+
+.reroll-btn {
+  background: var(--accent, #3b82f6);
+  color: #fff;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.reroll-btn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.reroll-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .upgrade-item-row .upgrade-btn {
   background: var(--accent, #3b82f6);
   padding: 7px;

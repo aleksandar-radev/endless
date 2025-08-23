@@ -251,7 +251,7 @@ export const MATERIALS = {
     id: 'alternation_orb',
     get name() { return t('Alternation Orb'); },
     icon: `<img src="${BASE}/icons/alternation-orb.svg" class="icon" alt="orb"/>`,
-    get description() { return t('Re-rolls the value of one random stat on an equipped item.'); },
+    get description() { return t('Re-rolls the value of one chosen stat on an equipped item.'); },
     dropChance: 2,
     sort: 701,
     onUse: (hero, qty = 1) => {

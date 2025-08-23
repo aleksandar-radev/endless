@@ -1,6 +1,13 @@
 import Item, { AVAILABLE_STATS } from './item.js';
 import { game, hero, statistics, dataManager, crystalShop, options } from './globals.js';
-import { showToast, updateResources } from './ui/ui.js';
+import {
+  showToast,
+  updateResources,
+  formatStatName,
+  showTooltip,
+  hideTooltip,
+  positionTooltip,
+} from './ui/ui.js';
 import { createModal, closeModal } from './ui/modal.js';
 import {
   initializeInventoryUI,
@@ -138,7 +145,7 @@ export default class Inventory {
       <button class="modal-close">&times;</button>
       <h2>${t(matDef.name || mat.name || '')}</h2>
       <p>${t(matDef.description || '')}</p>
-      <p>You have <b>${mat.qty}</b></p>
+      <p>You have <b class="material-qty">${mat.qty}</b></p>
       ${titleExtra}
       <div>
         ${equipped.length === 0
@@ -332,44 +339,144 @@ export default class Inventory {
         .filter(([slot, item]) => item)
         .map(([slot, item]) => ({ slot, item }));
 
-      this.showEquippedItemsModal({
-        id: 'material-reroll-dialog',
-        matDef,
-        mat,
-        equipped,
-        itemRowHtml: ({ slot, item }, idx) => `
-        <div class="upgrade-item-row" data-slot="${slot}" data-idx="${idx}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-          <span style="font-size:1.5em;">${item.getIcon()}</span>
+      const html = String.raw;
+      const itemRows = equipped
+        .map(
+          ({ slot, item }, idx) => `
+        <div class="alternation-item" data-slot="${slot}" data-idx="${idx}">
+          <span class="alternation-icon">${item.getIcon()}</span>
           <span><b>${item.type}</b> (Lvl ${item.level})</span>
           <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
-          <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">Re-roll Stat</button>
         </div>`,
-        buttonClass: 'upgrade-btn',
-        buttonHandler: (e) => {
-          const idx = parseInt(e.currentTarget.dataset.idx, 10);
-          const { item } = equipped[idx];
-          const statKeys = Object.keys(item.stats);
-          if (statKeys.length === 0) return;
-          const statToReroll = statKeys[Math.floor(Math.random() * statKeys.length)];
-          const range = AVAILABLE_STATS[statToReroll];
-          const baseValue = Math.random() * (range.max - range.min) + range.min;
-          const tierBonus = item.getTierBonus();
-          const multiplier = item.getMultiplier();
-          const scale = item.getLevelScale(statToReroll, item.level);
-          item.stats[statToReroll] = item.calculateStatValue({
-            baseValue,
-            tierBonus,
-            multiplier,
-            scale,
-            stat: statToReroll,
-          });
-          if (!item.metaData) item.metaData = {};
-          item.metaData[statToReroll] = { baseValue };
-          this.handleMaterialUsed(this, mat, matDef, 1, 'material-reroll-dialog', `Re-rolled 1 stat on ${item.type}`);
-        },
-        emptyMsg: 'No equipped items.',
-        titleExtra: '<div style="margin-bottom:10px;">Select an equipped item to re-roll one stat:</div>',
+        )
+        .join('');
+
+      const content = html`
+        <div class="inventory-modal-content">
+          <button class="modal-close">&times;</button>
+          <h2>${t(matDef.name || mat.name || '')}</h2>
+          <p>${t(matDef.description || '')}</p>
+          <p>You have <b class="material-qty">${mat.qty}</b></p>
+          <p>Select an item and stat to re-roll.</p>
+          <p>Selected item: <span id="alternation-selected-name">None</span></p>
+          <div id="alternation-item-list">
+            ${equipped.length === 0 ? '<div style="color:#f55;">No equipped items.</div>' : itemRows}
+          </div>
+          <div id="alternation-selected-item" style="margin-top:10px;"></div>
+          <div class="modal-controls">
+            <button id="material-use-cancel">Cancel</button>
+          </div>
+        </div>`;
+
+      const dialog = createModal({
+        id: 'material-reroll-dialog',
+        className: 'inventory-modal',
+        content,
       });
+
+      const renderSelected = (idx) => {
+        const { item } = equipped[idx];
+        dialog.querySelector('#alternation-selected-name').textContent = item.getDisplayName();
+
+        const statsEntries = Object.entries(item.stats);
+        const isPercentStat = (stat) =>
+          stat.endsWith('Percent') || stat === 'critChance' || stat === 'blockChance' || stat === 'lifeSteal';
+        let showAdvanced = false;
+        try {
+          if (options.showAdvancedTooltips) showAdvanced = true;
+        } catch (e) {}
+        let statMinMax = {};
+        if (showAdvanced) {
+          statMinMax = item.getAllStatsMinMax();
+        }
+        let statsHtml;
+        if (statsEntries.length === 0) {
+          statsHtml = '<div>No stats to re-roll.</div>';
+        } else {
+          statsHtml = statsEntries
+            .map(([stat, value]) => {
+              const decimals = STATS[stat].decimalPlaces || 0;
+              const formattedValue = value.toFixed(decimals);
+              let adv = '';
+              if (showAdvanced && statMinMax[stat]) {
+                const min = statMinMax[stat].min.toFixed(decimals);
+                const max = statMinMax[stat].max.toFixed(decimals);
+                adv = `<span class="item-ref-range" style="color:#aaa;">${min} - ${max}</span>`;
+              }
+              return `<div class="stat-row" data-stat="${stat}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                <div style="flex:1;display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                  <span>${formatStatName(stat)}: <b>${formattedValue}${isPercentStat(stat) ? '%' : ''}</b></span>
+                  ${adv}
+                </div>
+                <button class="reroll-btn" data-idx="${idx}" data-stat="${stat}">Re-roll</button>
+              </div>`;
+            })
+            .join('');
+        }
+
+        dialog.querySelector('#alternation-selected-item').innerHTML = `
+          <div class="item-tooltip" style="position:static;pointer-events:auto;">
+            <div class="item-name" style="color:${ITEM_RARITY[item.rarity].color};">${item.getDisplayName()}</div>
+            <div class="item-level">Level ${item.level}, Tier ${item.tier}</div>
+            <div class="item-stats">${statsHtml}</div>
+          </div>`;
+
+        dialog.querySelectorAll('.reroll-btn').forEach((btn) => {
+          btn.onclick = (e) => {
+            if (mat.qty <= 0) return;
+            const statToReroll = e.currentTarget.dataset.stat;
+            const range = AVAILABLE_STATS[statToReroll];
+            const baseValue = Math.random() * (range.max - range.min) + range.min;
+            const tierBonus = item.getTierBonus();
+            const multiplier = item.getMultiplier();
+            const scale = item.getLevelScale(statToReroll, item.level);
+            item.stats[statToReroll] = item.calculateStatValue({
+              baseValue,
+              tierBonus,
+              multiplier,
+              scale,
+              stat: statToReroll,
+            });
+            if (!item.metaData) item.metaData = {};
+            item.metaData[statToReroll] = { baseValue };
+            this.handleMaterialUsed(
+              this,
+              mat,
+              matDef,
+              1,
+              'material-reroll-dialog',
+              `Re-rolled ${formatStatName(statToReroll)} on ${item.type}`,
+              false,
+            );
+            dialog.querySelector('.material-qty').textContent = mat.qty;
+            renderSelected(idx);
+            if (mat.qty <= 0) {
+              dialog.querySelectorAll('.reroll-btn').forEach((b) => {
+                b.disabled = true;
+              });
+            }
+          };
+        });
+      };
+
+      dialog.querySelectorAll('.alternation-item').forEach((row) => {
+        const idx = parseInt(row.dataset.idx, 10);
+        const { item } = equipped[idx];
+        row.addEventListener('mouseenter', (e) => {
+          showTooltip(item.getTooltipHTML(true), e, 'flex-tooltip');
+        });
+        row.addEventListener('mousemove', positionTooltip);
+        row.addEventListener('mouseleave', hideTooltip);
+        row.onclick = () => {
+          dialog
+            .querySelectorAll('.alternation-item')
+            .forEach((r) => r.classList.remove('selected'));
+          row.classList.add('selected');
+          renderSelected(idx);
+        };
+      });
+
+      dialog.querySelector('#material-use-cancel').onclick = () => closeModal('material-reroll-dialog');
       return;
     }
 

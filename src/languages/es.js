@@ -345,7 +345,7 @@ export default {
   'Enchantment Scroll': 'Pergamino de encantamiento',
   'Increases the rarity of an equipped item. (cannot be used on mythic items)': 'Aumenta la rareza de un objeto equipado (no puede usarse en objetos míticos).',
   'Alternation Orb': 'Orbe de alteración',
-  'Re-rolls the value of one random stat on an equipped item.': 'Reasigna el valor de una estadística aleatoria en un objeto equipado.',
+  'Re-rolls the value of one chosen stat on an equipped item.': 'Reasigna el valor de una estadística elegida en un objeto equipado.',
   'skill.frenzy': 'Aumenta el daño pero drena vida por golpe mientras está activo.',
   'skill.toughSkin': 'Aumenta la armadura y el porcentaje de armadura para reducir el daño recibido.',
   'skill.recklessSwing': 'Lanza un golpe poderoso que aumenta el daño a costa de vida por golpe.',

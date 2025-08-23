@@ -345,7 +345,7 @@ export default {
   'Enchantment Scroll': '附魔卷轴',
   'Increases the rarity of an equipped item. (cannot be used on mythic items)': '提高已装备物品的稀有度。（无法用于神话物品）',
   'Alternation Orb': '变换之球',
-  'Re-rolls the value of one random stat on an equipped item.': '重新随机已装备物品的一项属性值。',
+  'Re-rolls the value of one chosen stat on an equipped item.': '重新随机已装备物品的一项指定属性值。',
   'skill.drainingTouch': '以土属性伤害汲取法力。',
   'skill.frenzy': '提高伤害，但激活时每次命中会消耗生命。',
   'skill.toughSkin': '提高护甲和护甲百分比以减少所受伤害。',

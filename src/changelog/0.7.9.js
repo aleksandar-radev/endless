@@ -42,6 +42,7 @@ export default function run() {
     <li>Equipping a ring now when there is an empty slot automatically equips on that slot.</li>
     <li>Added reset all purchased training bonuses in crystal shop.</li>
     <li>Added colors to crystal shop upgrades for better clarity. Also reordered the upgrades.</li>
+    <li>Improve usability of alternation orb.</li>
   </ul>
 
   <span style="color:#FF8C00;"> Fixes & polish</span>
