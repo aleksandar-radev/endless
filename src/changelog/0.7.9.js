@@ -43,6 +43,7 @@ export default function run() {
     <li>Added reset all purchased training bonuses in crystal shop.</li>
     <li>Added colors to crystal shop upgrades for better clarity. Also reordered the upgrades.</li>
     <li>Improve usability of alternation orb.</li>
+    <li>Added tint to armor and pants items, to make them more distinct.</li>
   </ul>
 
   <span style="color:#FF8C00;"> Fixes & polish</span>
