@@ -25,7 +25,23 @@
 }
 
 .crystal-upgrade-btn:hover {
-  background: #34495e;
+  filter: brightness(1.2);
+}
+
+.crystal-upgrade-btn.auto {
+  background-color: #284e28;
+}
+
+.crystal-upgrade-btn.reset {
+  background-color: #5f3030;
+}
+
+.crystal-upgrade-btn.stage {
+  background-color: #1e3657;
+}
+
+.crystal-upgrade-btn.misc {
+  background-color: #691c70;
 }
 
 .crystal-upgrade-btn .upgrade-name {

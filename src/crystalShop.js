@@ -23,6 +23,7 @@ const CRYSTAL_UPGRADE_CONFIG = {
     bonusLabel: 'Auto-continue after death',
     baseCost: 6,
     oneTime: true,
+    category: 'auto',
   },
   autoSpellCast: {
     label: 'Auto Spell Cast',
@@ -30,71 +31,7 @@ const CRYSTAL_UPGRADE_CONFIG = {
     bonusLabel: 'Automatically casts instant and buff skills',
     baseCost: 40,
     oneTime: true,
-  },
-  deathTimerReduction: {
-    label: 'Death Timer Reduction (s)',
-    bonus: 0.5,
-    bonusLabel: 'Reduces death countdown by 0.5s',
-    showLevel: true,
-    baseCost: 100,
-    costIncrement: 50,
-    multiple: true,
-    bulkModal: true,
-  },
-  startingStage: {
-    label: 'Starting Stage',
-    bonus: 1,
-    bonusLabel: 'Increases starting stage by 1',
-    showLevel: true,
-    baseCost: 2,
-    costIncrement: 0.05, // 1 per 20 levels
-    multiple: true,
-    bulkModal: true,
-  },
-  stageSkip: {
-    label: 'Stage Skip',
-    bonus: 1,
-    bonusLabel: 'Skip +1 stage per kill',
-    showLevel: true,
-    baseCost: 20,
-    costIncrement: 5,
-    multiple: true,
-    bulkModal: true,
-  },
-  resetStageSkip: {
-    label: 'Reset Stage Skip',
-    bonus: 'Unlocks option to stop skipping after a chosen stage',
-    bonusLabel: 'Unlocks reset stage skip option',
-    baseCost: 500,
-    oneTime: true,
-  },
-  resetSkillTree: {
-    label: 'Reset Skill Tree',
-    bonus: 'Refund all skill points and reset path',
-    bonusLabel: 'Reset your class and refund all skill points. This will allow you to choose a new class.',
-    baseCost: 20,
-    multiple: true,
-  },
-  resetAttributes: {
-    label: 'Reset Attributes',
-    bonus: 'Refund all allocated attribute points',
-    bonusLabel: 'Refund all allocated attribute points',
-    baseCost: 20,
-    multiple: true,
-  },
-  resetArenaLevel: {
-    label: 'Reset Arena Level',
-    bonus: 'Reset Arena level to 1',
-    bonusLabel: 'Reset Arena level to 1',
-    baseCost: 50,
-    multiple: true,
-  },
-  resetTraining: {
-    label: 'Reset Training',
-    bonus: 'Refund all gold spent on training upgrades',
-    bonusLabel: 'Refund all gold spent on training upgrades',
-    baseCost: 150,
-    multiple: true,
+    category: 'auto',
   },
   autoSalvage: {
     label: 'Auto-Salvage',
@@ -105,6 +42,7 @@ const CRYSTAL_UPGRADE_CONFIG = {
     showLevel: true,
     multiple: true,
     maxLevel: 6,
+    category: 'auto',
   },
   autoConsumeMaterials: {
     label: 'Auto-Consume Materials',
@@ -112,6 +50,7 @@ const CRYSTAL_UPGRADE_CONFIG = {
     bonusLabel: 'Automatically uses all consumable materials on pickup',
     baseCost: 600,
     oneTime: true,
+    category: 'auto',
   },
   autoClaimQuests: {
     label: 'Auto-Claim Quests',
@@ -119,6 +58,7 @@ const CRYSTAL_UPGRADE_CONFIG = {
     bonusLabel: 'Automatically claim completed quests',
     baseCost: 400,
     oneTime: true,
+    category: 'auto',
   },
   autoSortInventory: {
     label: 'Auto-Sort Inventory',
@@ -126,6 +66,80 @@ const CRYSTAL_UPGRADE_CONFIG = {
     bonusLabel: 'Automatically sorts inventory and materials on pickup',
     baseCost: 25,
     oneTime: true,
+    category: 'auto',
+  },
+  startingStage: {
+    label: 'Starting Stage',
+    bonus: 1,
+    bonusLabel: 'Increases starting stage by 1',
+    showLevel: true,
+    baseCost: 2,
+    costIncrement: 0.05, // 1 per 20 levels
+    multiple: true,
+    bulkModal: true,
+    category: 'stage',
+  },
+  stageSkip: {
+    label: 'Stage Skip',
+    bonus: 1,
+    bonusLabel: 'Skip +1 stage per kill',
+    showLevel: true,
+    baseCost: 20,
+    costIncrement: 5,
+    multiple: true,
+    bulkModal: true,
+    category: 'stage',
+  },
+  resetStageSkip: {
+    label: 'Reset Stage Skip',
+    bonus: 'Unlocks option to stop skipping after a chosen stage',
+    bonusLabel: 'Unlocks reset stage skip option',
+    baseCost: 500,
+    oneTime: true,
+    category: 'stage',
+  },
+  resetSkillTree: {
+    label: 'Reset Skill Tree',
+    bonus: 'Refund all skill points and reset path',
+    bonusLabel: 'Reset your class and refund all skill points. This will allow you to choose a new class.',
+    baseCost: 20,
+    multiple: true,
+    category: 'reset',
+  },
+  resetAttributes: {
+    label: 'Reset Attributes',
+    bonus: 'Refund all allocated attribute points',
+    bonusLabel: 'Refund all allocated attribute points',
+    baseCost: 20,
+    multiple: true,
+    category: 'reset',
+  },
+  resetArenaLevel: {
+    label: 'Reset Arena Level',
+    bonus: 'Reset Arena level to 1',
+    bonusLabel: 'Reset Arena level to 1',
+    baseCost: 50,
+    multiple: true,
+    category: 'reset',
+  },
+  resetTraining: {
+    label: 'Reset Training',
+    bonus: 'Refund all gold spent on training upgrades',
+    bonusLabel: 'Refund all gold spent on training upgrades',
+    baseCost: 150,
+    multiple: true,
+    category: 'reset',
+  },
+  deathTimerReduction: {
+    label: 'Death Timer Reduction (s)',
+    bonus: 0.5,
+    bonusLabel: 'Reduces death countdown by 0.5s',
+    showLevel: true,
+    baseCost: 100,
+    costIncrement: 50,
+    multiple: true,
+    bulkModal: true,
+    category: 'misc',
   },
   salvageMaterials: {
     label: 'Salvage Materials',
@@ -133,6 +147,7 @@ const CRYSTAL_UPGRADE_CONFIG = {
     bonusLabel: 'Allows salvaging items for upgrade materials instead of gold',
     baseCost: 200,
     oneTime: true,
+    category: 'misc',
   },
 };
 
@@ -204,7 +219,7 @@ export default class CrystalShop {
       isMaxed = level >= config.maxLevel;
     }
     return `
-      <button class="crystal-upgrade-btn ${alreadyPurchased || isMaxed ? 'purchased' : ''}" data-stat="${stat}" ${
+      <button class="crystal-upgrade-btn ${config.category} ${alreadyPurchased || isMaxed ? 'purchased' : ''}" data-stat="${stat}" ${
   alreadyPurchased || isMaxed ? 'disabled' : ''
 }>
         <span class="upgrade-name">${config.label} ${config.showLevel ? `(Lvl ${level}${isMaxed ? ' / Max' : ''})` : ''}</span>

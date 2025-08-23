@@ -41,6 +41,7 @@ export default function run() {
     <li>Changed function calculating xp requirement per level.</li>
     <li>Equipping a ring now when there is an empty slot automatically equips on that slot.</li>
     <li>Added reset all purchased training bonuses in crystal shop.</li>
+    <li>Added colors to crystal shop upgrades for better clarity. Also reordered the upgrades.</li>
   </ul>
 
   <span style="color:#FF8C00;"> Fixes & polish</span>
