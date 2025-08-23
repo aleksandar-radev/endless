@@ -1,4 +1,4 @@
-import { dataManager, hero, options, skillTree, statistics, inventory, game } from './globals.js';
+import { dataManager, hero, options, skillTree, statistics, inventory, game, training } from './globals.js';
 import {
   updateResources,
   initializeSkillTreeUI,
@@ -7,6 +7,7 @@ import {
   showConfirmDialog,
   showToast,
   updateStageUI,
+  formatNumber,
 } from './ui/ui.js';
 import { selectBoss } from './ui/bossUi.js';
 import { handleSavedData } from './functions.js';
@@ -86,6 +87,13 @@ const CRYSTAL_UPGRADE_CONFIG = {
     bonus: 'Reset Arena level to 1',
     bonusLabel: 'Reset Arena level to 1',
     baseCost: 50,
+    multiple: true,
+  },
+  resetTraining: {
+    label: 'Reset Training',
+    bonus: 'Refund all gold spent on training upgrades',
+    bonusLabel: 'Refund all gold spent on training upgrades',
+    baseCost: 150,
     multiple: true,
   },
   autoSalvage: {
@@ -282,6 +290,25 @@ export default class CrystalShop {
       }
       updateStageUI();
       showToast('Boss level has been reset to 1.', 'success');
+    } else if (stat === 'resetTraining') {
+      confirmed = await showConfirmDialog(
+        'Are you sure you want to reset all training upgrades and refund the gold spent?<br>' +
+          `This will cost <strong>${cost} crystals</strong> and cannot be undone.`,
+      );
+      if (!confirmed) return;
+      hero.crystals -= cost;
+      const refund = training.goldSpent || 0;
+      const prevQty = training.quickQty;
+      training.reset();
+      training.quickQty = prevQty;
+      hero.gold += refund;
+      training.updateTrainingUI('gold-upgrades');
+      hero.recalculateFromAttributes();
+      updateStatsAndAttributesUI();
+      showToast(
+        `All training upgrades have been reset. Refunded ${formatNumber(refund)} Gold.`,
+        'success',
+      );
     }
     updateResources();
     dataManager.saveGame();
@@ -292,7 +319,7 @@ export default class CrystalShop {
    * Opens the upgrade modal or, for reset buttons, shows confirmation dialogs.
    */
   async openUpgradeModal(stat) {
-    if (stat === 'resetSkillTree' || stat === 'resetAttributes' || stat === 'resetArenaLevel') {
+    if (['resetSkillTree', 'resetAttributes', 'resetArenaLevel', 'resetTraining'].includes(stat)) {
       await this.confirmReset(stat);
       return;
     }
@@ -611,7 +638,7 @@ export default class CrystalShop {
     if (qty !== 'max') qty = Math.min(qty, 10000);
 
     // special resets use confirm dialog
-    if (['resetSkillTree', 'resetAttributes', 'resetArenaLevel'].includes(stat)) {
+    if (['resetSkillTree', 'resetAttributes', 'resetArenaLevel', 'resetTraining'].includes(stat)) {
       await this.confirmReset(stat);
       return;
     }

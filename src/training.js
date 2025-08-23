@@ -22,6 +22,7 @@ export default class Training {
   constructor(savedData = null) {
     this.upgradeLevels = {};
     this.trainingBonuses = {};
+    this.goldSpent = 0;
     Object.entries(STATS).forEach(([stat, config]) => {
       if (config.training) {
         this.upgradeLevels[stat] = 0;
@@ -30,6 +31,17 @@ export default class Training {
     });
 
     handleSavedData(savedData, this);
+    if (savedData && savedData.goldSpent === undefined) {
+      this.goldSpent = 0;
+      Object.entries(this.upgradeLevels).forEach(([stat, lvl]) => {
+        if (lvl > 0) {
+          const config = STATS[stat].training;
+          if (config) {
+            this.goldSpent += this.calculateTotalCost(config, lvl, 0);
+          }
+        }
+      });
+    }
     this.activeSection = SECTION_DEFS[0].key;
     this.quickQty = options.useNumericInputs ? Math.min(options.trainingQuickQty || 1, 10000) : 1;
     this.initializeTrainingUI();
@@ -42,6 +54,7 @@ export default class Training {
     Object.keys(this.trainingBonuses).forEach((stat) => {
       this.trainingBonuses[stat] = 0;
     });
+    this.goldSpent = 0;
     this.quickQty = options.useNumericInputs ? Math.min(options.trainingQuickQty || 1, 10000) : 1;
   }
 
@@ -460,6 +473,7 @@ export default class Training {
       return;
     }
     hero.gold -= totalCost;
+    this.goldSpent += totalCost;
     purchases.forEach((p) => {
       this.upgradeLevels[p.stat] += p.qty;
     });
@@ -575,6 +589,7 @@ export default class Training {
 
     if (levelsToBuy > 0) {
       hero[currency] -= totalCost;
+      this.goldSpent += totalCost;
       this.upgradeLevels[stat] += levelsToBuy;
       count = levelsToBuy;
       showToast(`Upgraded ${formatStatName(stat)} by ${count} levels!`);
