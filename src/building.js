@@ -192,7 +192,7 @@ export class BuildingManager {
   static async create(saved = null) {
     const manager = Object.create(BuildingManager.prototype);
     manager.buildings = {};
-    manager.placedBuildings = [null, null, null];
+    manager.placedBuildings = [null, null, null, null, null];
     manager.lastActive = saved?.lastActive || await getTimeNow();
     for (const id in buildingsData) {
       const bSave = saved?.buildings?.[id];

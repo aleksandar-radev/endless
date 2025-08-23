@@ -353,7 +353,7 @@ export default class CrystalShop {
     if (!config) return;
     this.currentStat = stat;
     const m = this.modal;
-    m.querySelector('.modal-title').textContent = config.label;
+    m.querySelector('.modal-title').textContent = t(config.label);
     const fields = m.querySelector('.modal-fields');
     const controls = m.querySelector('.modal-controls');
     const buyBtn = m.querySelector('.modal-buy');
@@ -408,11 +408,12 @@ export default class CrystalShop {
     } else if (config.oneTime) {
       controls.style.display = 'none';
       const purchased = !!this.crystalUpgrades[stat];
+      const oneTimeBonusText = typeof config.bonus === 'string' ? t(config.bonus) : (config.bonus || '');
       fields.innerHTML = `
-        <p>${config.bonus && typeof config.bonus === 'string' ? config.bonus : ''}</p>
+        <p>${oneTimeBonusText}</p>
         <p>Cost: <span class="modal-total-cost">${config.baseCost}</span> Crystals</p>
         <div class="modal-status">${
-  purchased ? '<span style="color:#10b981;font-weight:bold;">Purchased</span>' : ''
+  purchased ? '<span style="color:#10b981;font-weight:bold;">' + t('common.purchased') + '</span>' : ''
 }</div>
       `;
       buyBtn.style.display = purchased ? 'none' : '';
@@ -425,18 +426,20 @@ export default class CrystalShop {
         const cap = config.maxLevel || 6;
         const nextCost = config.baseCost + (config.costIncrement || 0) * level;
         const isMaxed = level >= cap;
+        const autoSalvageBonus = typeof config.bonus === 'string' ? t(config.bonus) : (config.bonus || '');
         fields.innerHTML = `
-          <p>${config.bonus && typeof config.bonus === 'string' ? config.bonus : ''}</p>
+          <p>${autoSalvageBonus}</p>
           <p>Current Level: <span class="modal-level">${level}</span> / <span class="modal-max-level">${cap}</span></p>
-          ${isMaxed ? '<p style="color:#10b981;font-weight:bold;">Maxed</p>' : `<p>Next Level Cost: <span class="modal-total-cost">${nextCost}</span> Crystals</p>`}
+          ${isMaxed ? '<p style="color:#10b981;font-weight:bold;">' + t('common.max') + '</p>' : `<p>Next Level Cost: <span class="modal-total-cost">${nextCost}</span> Crystals</p>`}
         `;
         buyBtn.disabled = isMaxed;
         buyBtn.style.display = isMaxed ? 'none' : '';
       } else {
+        const multipleBonus = typeof config.bonus === 'string' ? t(config.bonus) : (config.bonus || '');
         fields.innerHTML = `
-          <p>${config.bonus && typeof config.bonus === 'string' ? config.bonus : ''}</p>
-          <p>Cost: <span class="modal-total-cost">${config.baseCost}</span> Crystals</p>
-        `;
+            <p>${multipleBonus}</p>
+            <p>Cost: <span class="modal-total-cost">${config.baseCost}</span> Crystals</p>
+          `;
         buyBtn.style.display = '';
         buyBtn.disabled = false;
       }
@@ -495,7 +498,10 @@ export default class CrystalShop {
         const bonusValue = (config.bonus || 0) * qty;
         if (q('.modal-qty')) q('.modal-qty').textContent = qty;
         if (q('.modal-total-cost')) q('.modal-total-cost').textContent = totalCost;
-        if (q('.modal-total-bonus')) q('.modal-total-bonus').textContent = `+${bonusValue} ${config.label}`;
+        if (q('.modal-total-bonus')) {
+          const bonusLabel = config.bonusLabel ? t(config.bonusLabel) : t(config.label);
+          q('.modal-total-bonus').textContent = `+${bonusValue} ${bonusLabel}`;
+        }
         if (q('.modal-next-bonus')) q('.modal-next-bonus').textContent = this.getBonusText(stat, config, baseLevel + 1);
         const input = q('.modal-qty-input');
         if (input && this.selectedQty !== 'max') input.value = this.selectedQty;
@@ -528,9 +534,12 @@ export default class CrystalShop {
 
   getBonusText(stat, config, level) {
     if (config.oneTime) return '';
-    const baseBonus = config.bonus || 0;
+    // If bonus is a translation key (string), return translated bonus text.
+    if (typeof config.bonus === 'string') return t(config.bonus);
+    const baseBonus = typeof config.bonus === 'number' ? config.bonus : 0;
     const bonus = baseBonus * level;
-    return `+${bonus} ${config.label}`;
+    const label = config.bonusLabel ? t(config.bonusLabel) : t(config.label);
+    return `+${bonus} ${label}`;
   }
 
   closeModal() {

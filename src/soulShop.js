@@ -382,7 +382,7 @@ export default class SoulShop {
     if (!config) return;
     this.currentStat = stat;
     const m = this.modal;
-    m.querySelector('.modal-title').textContent = config.label;
+    m.querySelector('.modal-title').textContent = t(config.label);
     const fields = m.querySelector('.modal-fields');
     const controls = m.querySelector('.modal-controls');
     const buyBtn = m.querySelector('.modal-buy');
@@ -441,11 +441,12 @@ export default class SoulShop {
     } else if (config.oneTime) {
       controls.style.display = 'none';
       const purchased = !!this.soulUpgrades[stat];
+      const oneTimeBonusText = typeof config.bonus === 'string' ? t(config.bonus) : (config.bonus || '');
       fields.innerHTML = `
-        <p>${config.bonus && typeof config.bonus === 'string' ? config.bonus : ''}</p>
-        <p>Cost: <span class="modal-total-cost">${config.baseCost}</span> Souls</p>
+        <p>${oneTimeBonusText}</p>
+        <p>Cost: <span class="modal-total-cost">${config.baseCost}</span> ${t('resource.souls.name')}</p>
         <div class="modal-status">${
-  purchased ? '<span style="color:#10b981;font-weight:bold;">Purchased</span>' : ''
+  purchased ? '<span style="color:#10b981;font-weight:bold;">' + t('common.purchased') + '</span>' : ''
 }</div>
       `;
       buyBtn.style.display = purchased ? 'none' : '';
@@ -453,9 +454,10 @@ export default class SoulShop {
       if (slider) slider.style.display = 'none';
     } else if (config.multiple) {
       controls.style.display = 'none';
+      const multipleBonusText = typeof config.bonus === 'string' ? t(config.bonus) : (config.bonus || '');
       fields.innerHTML = `
-        <p>${config.bonus && typeof config.bonus === 'string' ? config.bonus : ''}</p>
-        <p>Cost: <span class="modal-total-cost">${config.baseCost}</span> Souls</p>
+        <p>${multipleBonusText}</p>
+        <p>Cost: <span class="modal-total-cost">${config.baseCost}</span> ${t('resource.souls.name')}</p>
       `;
       buyBtn.style.display = '';
       buyBtn.disabled = false;
@@ -500,7 +502,8 @@ export default class SoulShop {
       }
       const bonusEl = q('.modal-total-bonus');
       if (bonusEl) {
-        bonusEl.textContent = `+${bonusValue.toFixed(decimals)} ${config.label}`;
+        const bonusLabel = config.bonusLabel ? t(config.bonusLabel) : t(config.label);
+        bonusEl.textContent = `+${bonusValue.toFixed(decimals)} ${bonusLabel}`;
         bonusEl.classList.toggle('unaffordable', !affordable);
       }
       if (q('.modal-level'))
@@ -523,17 +526,16 @@ export default class SoulShop {
   }
 
   getBonusText(stat, config, level) {
-    if (config.oneTime) return ''; // No bonus text for one-time upgrades
+    if (config.oneTime) return '';
+    if (typeof config.bonus === 'string') return t(config.bonus);
     let bonusValue = (config.bonus || 0) * level;
     let decimals = 0;
-
-    // if stat ends with Percent, bonus should be multiplied by 100 for display
     if (config.stat && config.stat.endsWith('Percent')) {
       bonusValue *= 100;
       decimals = 1;
     }
-
-    return `+${bonusValue.toFixed(decimals)} ${config.label}`;
+    const label = config.bonusLabel ? t(config.bonusLabel) : t(config.label);
+    return `+${bonusValue.toFixed(decimals)} ${label}`;
   }
 
   async buyBulk(stat, qty) {
@@ -568,20 +570,20 @@ export default class SoulShop {
           count++;
         }
       }
-      showToast(`Upgraded ${config.label} by ${count} levels!`, count > 0 ? 'success' : 'error');
+      showToast(`Upgraded ${t(config.label)} by ${count} levels!`, count > 0 ? 'success' : 'error');
     } else if (config.oneTime || config.multiple) {
       if (config.oneTime && this.soulUpgrades[stat]) {
-        showToast('Already purchased!', 'error');
+        showToast(t('common.alreadyPurchased') || 'Already purchased!', 'error');
         return;
       }
       const cost = config.baseCost;
       if (hero.souls < cost) {
-        showToast('Not enough souls!', 'error');
+        showToast(t('common.notEnoughSouls') || 'Not enough souls!', 'error');
         return;
       }
       hero.souls -= cost;
       this.soulUpgrades[stat] = config.oneTime ? true : (this.soulUpgrades[stat] || 0) + 1;
-      showToast(`Purchased ${config.label}!`, 'success');
+      showToast(`${t(config.label)} ${t('common.purchased') || 'purchased'}!`, 'success');
     }
 
     dataManager.saveGame();
