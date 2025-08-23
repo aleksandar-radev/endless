@@ -63,7 +63,7 @@ export const buildingsData = {
   materialDepot: {
     id: 'materialDepot',
     get name() { return t('Material Depot'); },
-    get description() { return t('Generates a random material each hour.');},
+    get description() { return t('Generates a random material every 10 minutes.'); },
     image: '/buildings/material-depot.png',
     effect: {
       type: 'material',
@@ -71,7 +71,7 @@ export const buildingsData = {
       random: true,
       weighted: true,
       amount: 1,
-      interval: 'minute',
+      interval: '10min',
     },
     costStructure: {
       gold: { base: 3000, increment: 250, cap: 18000 },

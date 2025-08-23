@@ -59,13 +59,23 @@ export class Building {
   formatEffect(level = this.level) {
     if (!this.effect || typeof this.effect !== 'object') return '';
     let interval = '';
-    if (this.effect.interval) {
-      let intName = this.effect.interval;
-      if (intName === 'min') intName = 'minute';
-      else if (intName === 'sec') intName = 'second';
-      interval = ' ' + tp('buildings.perInterval', { interval: t(`time.${intName}`) });
+    const int = this.effect.interval;
+    if (int) {
+      if (int === 'minute' || int === 'hour') {
+        interval = ` per ${t('time.' + int)}`;
+      } else if (int.endsWith('min')) {
+        const val = parseInt(int);
+        const key = 'time.' + (val === 1 ? 'minute' : 'minutes');
+        interval = ` per ${val} ${t(key)}`;
+      } else if (int.endsWith('sec')) {
+        const val = parseInt(int);
+        const key = 'time.' + (val === 1 ? 'second' : 'seconds');
+        interval = ` per ${val} ${t(key)}`;
+      } else {
+        interval = ` per ${int}`;
+      }
     }
-    const typeName = t(this.effect.displayName || this.effect.type);
+    const typeName = this.effect.displayName || this.effect.type;
     return `+${this.effect.amount * level} ${typeName}${interval}`;
   }
 

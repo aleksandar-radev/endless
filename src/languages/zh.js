@@ -796,7 +796,7 @@ export default {
   'Produces experience potions every hour.': '每小时生产经验药水。',
   'random experience potion': '随机经验药水',
   'Material Depot': '材料仓库',
-  'Generates a random material each hour.': '每小时生成随机材料。',
+  'Generates a random material every 10 minutes.': '每10分钟生成随机材料。',
   'random material': '随机材料',
   'quests.tab.kills': '击杀',
   'quests.tab.rarity': '稀有度',

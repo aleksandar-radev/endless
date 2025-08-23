@@ -796,7 +796,7 @@ export default {
   'Produces experience potions every hour.': 'Produce pociones de experiencia cada hora.',
   'random experience potion': 'poción de experiencia aleatoria',
   'Material Depot': 'Depósito de Materiales',
-  'Generates a random material each hour.': 'Genera un material aleatorio cada hora.',
+  'Generates a random material every 10 minutes.': 'Genera un material aleatorio cada 10 minutos.',
   'random material': 'material aleatorio',
   'quests.tab.kills': 'Asesinatos',
   'quests.tab.rarity': 'Rareza',

@@ -398,14 +398,30 @@ export function showOfflineBonusesModal(bonuses, onCollect) {
       <ul style="list-style:none;padding:0;">
         ${bonuses
     .map((b) => {
-      const intName = b.interval === 'min' ? 'minute' : b.interval === 'sec' ? 'second' : b.interval;
-      const intervalKey = `time.${b.times > 1 ? intName + 's' : intName}`;
+      let intName = b.interval;
+      let times = b.times;
+      if (typeof b.interval === 'string') {
+        if (b.interval === 'min') {
+          intName = 'minute';
+        } else if (b.interval === 'sec') {
+          intName = 'second';
+        } else if (b.interval.endsWith('min')) {
+          const val = parseInt(b.interval) || 1;
+          times *= val;
+          intName = 'minute';
+        } else if (b.interval.endsWith('sec')) {
+          const val = parseInt(b.interval) || 1;
+          times *= val;
+          intName = 'second';
+        }
+      }
+      const intervalKey = `time.${times > 1 ? intName + 's' : intName}`;
       return tp('buildings.offlineBonusItem', {
         icon: b.icon || '',
         name: b.name,
         amount: formatNumber(b.amount),
-        type: t(b.type),
-        times: formatNumber(b.times),
+        type: b.type,
+        times: formatNumber(times),
         interval: t(intervalKey),
       });
     })
