@@ -550,21 +550,19 @@ export default class Hero {
             this.stats[`${id}DamagePercent`] +
             this.stats.totalDamagePercent),
       );
-    });
 
-    const fireId = ELEMENTS.fire.id;
-    this.stats[`reflect${fireId.charAt(0).toUpperCase()}${fireId.slice(1)}Damage`] = (() => {
-      const base =
-        this.baseDamages[fireId] +
-        flatValues[`reflect${fireId.charAt(0).toUpperCase()}${fireId.slice(1)}Damage`];
-      return Math.floor(
-        base *
+      // reflect damage calculation
+      const reflectKey = `reflect${id.charAt(0).toUpperCase()}${id.slice(1)}Damage`;
+      if (flatValues[reflectKey] > 0) {
+        this.stats[reflectKey] = Math.floor(
+          (flatValues[reflectKey] + base) *
           (1 +
-            this.stats.elementalDamagePercent +
-            this.stats[`${fireId}DamagePercent`] +
-            this.stats.totalDamagePercent),
-      );
-    })();
+            this.stats.totalDamagePercent +
+            this.stats[`${id}DamagePercent`] +
+            this.stats.elementalDamagePercent),
+        );
+      }
+    });
   }
 
   regenerate() {
