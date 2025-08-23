@@ -29,8 +29,10 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.toughSkin'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: scaleUpFlat(level, 5),
+      armor: scaleUpFlat(level, 5, 7, 0.2),
       armorPercent: scaleDownFlat(level, 2),
+      allResistance: scaleUpFlat(level, 4, 5, 0.2),
+      allResistancePercent: scaleDownFlat(level, 2),
     }),
   },
 
