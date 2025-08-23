@@ -39,6 +39,7 @@ export default function run() {
     <li>Overall attack rating and evasion has been reduced by 40% for all enemies and 30% for bosses.</li>
     <li>Remove level cap on all druid skills.</li>
     <li>Changed function calculating xp requirement per level.</li>
+    <li>Equipping a ring now when there is an empty slot automatically equips on that slot.</li>
   </ul>
 
   <span style="color:#FF8C00;"> Fixes & polish</span>
