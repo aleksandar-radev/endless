@@ -5,7 +5,7 @@ import { hideTooltip, positionTooltip, showToast, showTooltip } from '../ui/ui.j
 import { ITEM_RARITY, RARITY_ORDER, SLOT_REQUIREMENTS, ITEM_TYPES, ITEM_ICONS } from '../constants/items.js';
 import { closeModal, createModal } from './modal.js';
 import { formatStatName } from './ui.js';
-import { t } from '../i18n.js';
+import { t, tp } from '../i18n.js';
 
 let selectedItemEl = null;
 let awaitingSlot = false;
@@ -258,7 +258,7 @@ export function showSalvageModal(inv) {
     <div class="inventory-salvage-modal-content">
       <button class="modal-close" aria-label="Close">&times;</button>
       <div class="salvage-modal-sidebar">
-        <h3>Salvage</h3>
+        <h3>${t('inventory.salvage')}</h3>
         <div class="salvage-options-modal">
           ${RARITY_ORDER.map(rarity => {
     const isChecked = selectedRarities.includes(rarity);
@@ -267,35 +267,35 @@ export function showSalvageModal(inv) {
     const inputId = `auto-salvage-toggle-${rarity}`;
     return html`
   <div class="salvage-row">
-        <button class="salvage-btn-modal" data-rarity="${rarity}">${rarity.charAt(0) + rarity.slice(1).toLowerCase()} Items</button>
+        <button class="salvage-btn-modal" data-rarity="${rarity}">${tp('inventory.salvageRarityItems', { rarity: t('rarity.' + rarity.toLowerCase()) })}</button>
         <input id="${inputId}" name="${inputId}" type="checkbox" class="auto-salvage-toggle" data-rarity="${rarity}" ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} />
         <span class="toggle-btn${isChecked ? ' checked' : ''}${isDisabled ? ' disabled' : ''}"></span>
-        <label for="${inputId}" class="auto-salvage-toggle-text">Auto</label>
+        <label for="${inputId}" class="auto-salvage-toggle-text">${t('inventory.auto')}</label>
       </div>
     `;
   }).join('')}
           <div class="salvage-all-row">
-            <button id="salvage-all-btn" class="salvage-all-btn">All Items</button>
+            <button id="salvage-all-btn" class="salvage-all-btn">${t('inventory.allItems')}</button>
           </div>
         </div>
         <div class="inventory-trash-row">
           <div class="inventory-trash">
             <span class="inventory-trash-icon"><img src="${BASE}/icons/delete.svg" class="icon" alt="delete"/></span>
-            <div class="inventory-trash-label">Drag item here</div>
+            <div class="inventory-trash-label">${t('inventory.dragItemHere')}</div>
           </div>
-          <button id="salvage-selected-btn" class="inventory-btn" style="display: none;">Salvage</button>
+          <button id="salvage-selected-btn" class="inventory-btn" style="display: none;">${t('inventory.salvage')}</button>
         </div>
         <div class="salvage-material-row">
           <div>
-            <div class="salvage-reward-title">Salvage reward</div>
+            <div class="salvage-reward-title">${t('inventory.salvageReward')}</div>
             <div class="salvage-material-toggle-container">
-              Gold<input id="salvage-material-toggle-main" name="salvage-material-toggle-main" type="checkbox" class="salvage-material-toggle" ${inv.salvageUpgradeMaterials ? 'checked' : ''} />
+              ${t('inventory.gold')}<input id="salvage-material-toggle-main" name="salvage-material-toggle-main" type="checkbox" class="salvage-material-toggle" ${inv.salvageUpgradeMaterials ? 'checked' : ''} />
               <span class="toggle-btn${inv.salvageUpgradeMaterials ? ' checked' : ''}${!crystalShop.crystalUpgrades?.salvageMaterials ? ' disabled' : ''}"></span>
-              <label for="salvage-material-toggle-main">Upgrade materials</label>
+              <label for="salvage-material-toggle-main">${t('inventory.upgradeMaterials')}</label>
             </div>
           </div>
         </div>
-        <div class="salvage-reward-title">Sort by: </div>
+        <div class="salvage-reward-title">${t('inventory.sortBy')}</div>
         <div class="sort-row">
           <select id="sort-mode-select" class="inventory-btn sort-select">
             <option value="type-rarity-level">${t('inventory.typeRarityLevel')}</option>
@@ -398,7 +398,8 @@ export function showSalvageModal(inv) {
       if (input.checked) {
         if (selected.length >= autoSalvageLevel && !selected.includes(rarity)) {
           input.checked = false;
-          showToast(`You can only auto-salvage ${autoSalvageLevel} rarit${autoSalvageLevel === 1 ? 'y' : 'ies'}.`, 'info');
+          const key = autoSalvageLevel === 1 ? 'inventory.autoSalvageLimitOne' : 'inventory.autoSalvageLimit';
+          showToast(tp(key, { count: autoSalvageLevel }), 'info');
           return;
         }
         if (!selected.includes(rarity)) selected.push(rarity);
@@ -440,7 +441,7 @@ export function showSalvageModal(inv) {
     const hasUpgrade = crystalShop.crystalUpgrades.salvageMaterials;
     matToggle.disabled = !hasUpgrade;
     if (!hasUpgrade) {
-      matToggle.title = 'Unlock this option by purchasing the Salvage Materials upgrade in the Crystal Shop.';
+      matToggle.title = t('inventory.unlockSalvageMaterials');
       matToggle.checked = false;
       matToggleBtn.classList.remove('checked');
     }
@@ -519,8 +520,8 @@ export function showSalvageModal(inv) {
     const tooltipContent = html`
       <div class="item-tooltip tooltip-center">
         <div class="tooltip-trash-icon"><img src="${BASE}/icons/delete.svg" class="icon" alt="delete"/></div>
-        <b>Salvage Item</b>
-        <div class="tooltip-trash-desc">Drag and drop an item here to salvage it.</div>
+        <b>${t('inventory.salvageItem')}</b>
+        <div class="tooltip-trash-desc">${t('inventory.dragDropToSalvage')}</div>
       </div>
     `;
     showTooltip(tooltipContent, e, 'flex-tooltip');
@@ -717,8 +718,8 @@ export function setupDragAndDrop() {
       const tooltipContent = html`
         <div class="item-tooltip" style="text-align:center;">
           <div style="font-size:2em;"><img src="${BASE}/icons/delete.svg" class="icon" alt="delete"/></div>
-          <b>Salvage Item</b>
-          <div style="margin-top:4px;font-size:0.95em;">Drag and drop an item here to salvage it.</div>
+          <b>${t('inventory.salvageItem')}</b>
+          <div style="margin-top:4px;font-size:0.95em;">${t('inventory.dragDropToSalvage')}</div>
         </div>
       `;
       showTooltip(tooltipContent, e, 'flex-tooltip');
@@ -913,7 +914,7 @@ export function setupItemDragAndTooltip() {
             border-radius:0 0 8px 8px;
             font-weight:bold;
             text-shadow: 1px 1px 2px #7a5c1c;">
-            <b>Salvage Value:</b> ${qty} ${t(MATERIALS[id].name)}
+            <b>${t('inventory.salvageValue')}</b> ${qty} ${t(MATERIALS[id].name)}
           </div>`;
         } else {
           let goldGained = inventory.getItemSalvageValue(itemData);
@@ -925,7 +926,7 @@ export function setupItemDragAndTooltip() {
             border-radius:0 0 8px 8px;
             font-weight:bold;
             text-shadow: 1px 1px 2px #7a5c1c;">
-            <b>Salvage Value:</b> ${goldGained} gold
+            <b>${t('inventory.salvageValue')}</b> ${goldGained} ${t('inventory.gold').toLowerCase()}
           </div>`;
         }
       }
