@@ -44,7 +44,7 @@
   font-size: 0.95rem;
 }
 
-.building-open-map-btn {
+.building-select-btn {
   background: linear-gradient(90deg, #4e54c8, #8f94fb);
   color: #fff;
   border: none;
@@ -58,24 +58,9 @@
   transition: background 0.2s, transform 0.1s;
 }
 
-.building-open-map-btn:hover {
+.building-select-btn:hover {
   background: linear-gradient(90deg, #8f94fb, #4e54c8);
   transform: translateY(-2px) scale(1.03);
-}
-
-/* Modal overlay */
-.building-modal.building-map-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(20, 20, 30, 0.85);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: fadeIn 0.2s;
 }
 
 @keyframes fadeIn {
@@ -118,22 +103,6 @@
   opacity: 1;
 }
 
-.building-map-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background: #181828;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.building-map-container::-webkit-scrollbar {
-  display: none;
-}
-
 .building-map-img {
   display: block;
   max-width: none;
@@ -156,54 +125,6 @@
 /* Large inset map image */
 .building-map-img.building-map-img-inset.building-map-img-large {
   margin-bottom: 10px;
-}
-
-.building-map-placeholders {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-}
-
-.building-map-placeholder {
-  position: absolute;
-  width: 32px;
-  height: 32px;
-  background: rgba(82, 90, 231, 0.45);
-  border: 2px dashed #fff;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(78, 84, 200, 0.25);
-  cursor: pointer;
-  pointer-events: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s, transform 0.1s;
-}
-
-.building-map-placeholder:hover {
-  background: rgb(106, 148, 86);
-  border-color: #4e54c8;
-  transform: scale(1.12);
-}
-
-/* Map placeholder positioning */
-.building-map-placeholder {
-  position: absolute;
-  pointer-events: auto;
-}
-
-.building-map-placeholder.building-map-has-building {
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  cursor: default !important;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .building-map-img-inset.building-map-img-large {

@@ -49,6 +49,7 @@ export default function run() {
     <li>Fixed a bug where sometimes reseting boss level could cause issues.</li>
     <li>Fixed a bug where drag and drop on trash always salvaged items for gold.</li>
     <li>Fixed a bug where enemy resistance is not being calculated correctly.</li>
+    <li>Removed buildings map for simplicity. A map might or might not be added back in the future.</li>
   </ul>
   `;
 }

@@ -12,15 +12,6 @@ import { getTimeNow } from '../common.js';
 let buildingCountdownInterval = null;
 let serverTimeOffsetMs = 0; // getTimeNow() - Date.now()
 
-
-const placeholders = [
-  { left: 342, top: 411 },
-  { left: 514, top: 136 },
-  { left: 709, top: 240 },
-  { left: 700, top: 534 },
-  { left: 420, top: 270 },
-];
-
 function intervalToMs(interval) {
   if (!interval) return 0;
   if (interval === 'minute') return 60 * 1000;
@@ -313,140 +304,16 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
   rerenderModal();
 }
 
-function showBuildingsMapModal() {
-  const content = html`
-    <div class="building-modal-content">
-      <button class="modal-close">×</button>
-      <div class="building-map-container">
-        <img src="${import.meta.env.VITE_BASE_PATH}/buildings/building-map.jpg" class="building-map-img" draggable="false" />
-        <div class="building-map-placeholders"></div>
-      </div>
-    </div>
-  `;
-  const modal = createModal({
-    id: 'building-map-modal',
-    className: 'building-modal building-map-modal',
-    content,
-    onClose: null,
-    closeOnOutsideClick: false,
-  });
-  const mapContainer = modal.querySelector('.building-map-container');
-  const mapImg = modal.querySelector('.building-map-img');
-  const phContainer = modal.querySelector('.building-map-placeholders');
-  // Wrap map image and placeholders in an inner container for scaling
-  const mapInner = document.createElement('div');
-  mapInner.className = 'building-map-inner';
-  mapInner.style.position = 'relative';
-  mapInner.style.width = mapImg.naturalWidth + 'px';
-  mapInner.style.height = mapImg.naturalHeight + 'px';
-  mapInner.appendChild(mapImg);
-  mapInner.appendChild(phContainer);
-  mapContainer.innerHTML = '';
-  mapContainer.appendChild(mapInner);
-
-  let isDragging = false,
-    startX,
-    startY;
-  let mapScale = 1;
-  const minScale = 1;
-  const maxScale = 2.5;
-
-  function clampScroll() {
-    // Clamp scroll so you can't scroll past the map
-    const scaledWidth = mapImg.naturalWidth * mapScale;
-    const scaledHeight = mapImg.naturalHeight * mapScale;
-    mapContainer.scrollLeft = Math.max(0, Math.min(mapContainer.scrollLeft, scaledWidth - mapContainer.clientWidth));
-    mapContainer.scrollTop = Math.max(0, Math.min(mapContainer.scrollTop, scaledHeight - mapContainer.clientHeight));
+function showSelectBuildingModal() {
+  const placeholderIdx = buildings.placedBuildings.findIndex((id) => id === null);
+  if (placeholderIdx === -1) {
+    alert('No available building slots.');
+    return;
   }
-
-  mapContainer.addEventListener(
-    'wheel',
-    (e) => {
-      e.preventDefault();
-      const scaleAmount = 0.1;
-      let newScale = mapScale + (e.deltaY < 0 ? scaleAmount : -scaleAmount);
-      newScale = Math.max(minScale, Math.min(maxScale, newScale));
-      if (newScale === mapScale) return;
-      // Zoom towards mouse position
-      const rect = mapContainer.getBoundingClientRect();
-      const mouseX = e.clientX - rect.left + mapContainer.scrollLeft;
-      const mouseY = e.clientY - rect.top + mapContainer.scrollTop;
-      const percentX = mouseX / (mapImg.naturalWidth * mapScale);
-      const percentY = mouseY / (mapImg.naturalHeight * mapScale);
-      mapScale = newScale;
-      mapInner.style.transformOrigin = `${percentX * 100}% ${percentY * 100}%`;
-      mapInner.style.transform = `scale(${mapScale})`;
-      // Clamp scroll after zoom
-      setTimeout(clampScroll, 0);
-    },
-    { passive: false },
-  );
-  mapContainer.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    startX = e.pageX - mapContainer.offsetLeft;
-    startY = e.pageY - mapContainer.offsetTop;
-    mapContainer.style.cursor = 'grabbing';
-    // // Uncomment the following lines to log the click position on the map
-    // const rect = mapImg.getBoundingClientRect();
-    // const x = Math.round(e.clientX - rect.left);
-    // const y = Math.round(e.clientY - rect.top);
-    // console.log(`Map clicked at: { left: ${x}, top: ${y} }`);
-  });
-  document.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    mapContainer.scrollLeft -= e.movementX;
-    mapContainer.scrollTop -= e.movementY;
-    clampScroll();
-  });
-  document.addEventListener('mouseup', () => {
-    isDragging = false;
-    mapContainer.style.cursor = '';
-  });
-  function renderPlaceholders() {
-    phContainer.innerHTML = '';
-    const placed = buildings.getPlacedBuildings();
-    placeholders.forEach((pos, idx) => {
-      const ph = document.createElement('div');
-      ph.className = 'building-map-placeholder';
-      ph.style.left = pos.left + 'px';
-      ph.style.top = pos.top + 'px';
-      ph.title = placed[idx] ? placed[idx].name : `Place building #${idx + 1}`;
-      ph.style.position = 'absolute';
-      ph.style.pointerEvents = 'auto';
-      if (placed[idx]) {
-        ph.classList.add('building-map-has-building');
-        const img = document.createElement('img');
-        img.src = import.meta.env.VITE_BASE_PATH + placed[idx].image;
-        img.alt = placed[idx].name;
-        img.className = 'building-map-img building-map-img-inset building-map-img-large';
-        img.style.cursor = 'pointer';
-        img.style.pointerEvents = 'auto';
-        ph.style.pointerEvents = 'auto';
-        img.onclick = (e) => {
-          e.stopPropagation();
-          showBuildingInfoModal(placed[idx], renderPlaceholders);
-        };
-        ph.appendChild(img);
-      } else {
-        ph.addEventListener('click', (e) => {
-          e.stopPropagation();
-          showChooseBuildingModal(idx, renderPlaceholders);
-        });
-      }
-      phContainer.appendChild(ph);
-    });
-  }
-  mapImg.onload = () => {
-    renderPlaceholders();
-  };
-  if (mapImg.complete) mapImg.onload();
-}
-
-function showChooseBuildingModal(placeholderIdx, onChoose) {
   const content = html`
     <div class="building-choose-modal-content">
       <button class="modal-close">×</button>
-      <h3>Choose a building to place</h3>
+      <h3>Select a building to place</h3>
       <div class="choose-building-list"></div>
     </div>
   `;
@@ -457,7 +324,6 @@ function showChooseBuildingModal(placeholderIdx, onChoose) {
     onClose: null,
   });
   const list = modal.querySelector('.choose-building-list');
-  // Only show buildings that are not already placed
   const placedIds = new Set(
     Object.values(buildings.buildings)
       .filter((b) => b.placedAt !== null)
@@ -470,7 +336,7 @@ function showChooseBuildingModal(placeholderIdx, onChoose) {
       el.className = 'building-card';
       el.style.cursor = 'pointer';
       el.innerHTML = `
-        <div class="building-image" >
+        <div class="building-image">
           <img src="${import.meta.env.VITE_BASE_PATH + building.image}" alt="${building.name}" class="building-img" />
         </div>
         <div class="building-info">
@@ -480,8 +346,10 @@ function showChooseBuildingModal(placeholderIdx, onChoose) {
       `;
       el.onclick = () => {
         closeModal('building-choose-modal');
-        // Show upgrade modal in placement mode
-        showBuildingInfoModal(building, onChoose, { placeholderIdx, onPlaced: onChoose });
+        showBuildingInfoModal(building, renderPurchasedBuildings, {
+          placeholderIdx,
+          onPlaced: renderPurchasedBuildings,
+        });
       };
       list.appendChild(el);
     });
@@ -508,10 +376,10 @@ export function initializeBuildingsUI() {
   const tab = document.getElementById('buildings');
   if (!tab) return;
   tab.innerHTML =
-    '<button id="open-buildings-map" class="building-open-map-btn">Open Buildings Map</button><div id="purchased-buildings"></div>';
+    '<button id="select-building-btn" class="building-select-btn">Select a building</button><div id="purchased-buildings"></div>';
   renderPurchasedBuildings();
-  // Open map modal
-  tab.querySelector('#open-buildings-map').onclick = showBuildingsMapModal;
+  // Open building selection modal
+  tab.querySelector('#select-building-btn').onclick = showSelectBuildingModal;
   // Start live countdowns
   startBuildingCountdowns();
 }
