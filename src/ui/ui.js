@@ -516,7 +516,7 @@ export const formatStatName = (stat) => {
     if (options?.shortElementalNames) {
       return `${icon} ${base}`.trim();
     }
-    const elementName = element.charAt(0).toUpperCase() + element.slice(1);
+    const elementName = t(element);
     return `${icon} ${elementName} ${base}`.trim();
   }
 
