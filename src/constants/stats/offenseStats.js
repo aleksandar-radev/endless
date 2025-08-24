@@ -7,10 +7,10 @@ const FLAT_SCALING = { start: 0.04, end: 0.01 };
 const PERCENT_SCALING = { start: 0.002, end: 0.0005 };
 const CHANCE_SCALING = { start: 0.0012, end: 0.0003 };
 
-const ELEMENTAL_DAMAGE_MIN = 3;
-const ELEMENTAL_DAMAGE_MAX = 12;
-const ELEMENTAL_DAMAGE_PERCENT_MIN = 4;
-const ELEMENTAL_DAMAGE_PERCENT_MAX = 13;
+const ELEMENTAL_DAMAGE_MIN = 8;
+const ELEMENTAL_DAMAGE_MAX = 20;
+const ELEMENTAL_DAMAGE_PERCENT_MIN = 14;
+const ELEMENTAL_DAMAGE_PERCENT_MAX = 28;
 
 const offenseScaling = (level, tier, config = FLAT_SCALING) =>
   itemLevelScaling(level, tier, config);
