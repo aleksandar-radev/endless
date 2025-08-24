@@ -418,7 +418,7 @@ export default {
   'skill.frenzy': '提高伤害，但激活时每次命中会消耗生命。',
   'skill.toughSkin': '提高护甲和护甲百分比以减少所受伤害。',
   'skill.recklessSwing': '发动强力一击，提升伤害但每次命中消耗生命。',
-  'skill.battleCry': '暂时提高伤害、攻速和生命偷取。',
+  'skill.battleCry': '发出战吼，短时间内提升你的伤害。',
   'skill.berserkersRage': '大幅提升火焰与风系伤害，并有几率造成双倍伤害。',
   'skill.greaterFrenzy': '被动提供额外攻速和每击生命回复。',
   'skill.earthquake': '震撼大地，提升伤害及土系伤害。',
