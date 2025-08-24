@@ -477,11 +477,15 @@ export default class SkillTree {
     // update enemy right away
     if (skill.effect(skill.level).reduceEnemyAttackSpeedPercent) {
       hero.stats.reduceEnemyAttackSpeedPercent += skill.effect(skill.level).reduceEnemyAttackSpeedPercent / 100;
-      game.currentEnemy.recalculateStats();
+      if (game.currentEnemy) {
+        game.currentEnemy.recalculateStats();
+      }
     }
     if (skill.effect(skill.level).reduceEnemyDamagePercent) {
       hero.stats.reduceEnemyDamagePercent += skill.effect(skill.level).reduceEnemyDamagePercent / 100;
-      game.currentEnemy.recalculateStats();
+      if (game.currentEnemy) {
+        game.currentEnemy.recalculateStats();
+      }
     }
 
     // Apply buff effects
