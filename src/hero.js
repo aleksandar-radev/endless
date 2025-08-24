@@ -111,11 +111,9 @@ export default class Hero {
     }
 
     if (didLevelUp) {
-      updateStatsAndAttributesUI();
       this.recalculateFromAttributes();
       updatePlayerLife();
       createCombatText(`LEVEL UP! (${this.level})`);
-      updatePlayerLife();
       updateStatsAndAttributesUI();
       initializeSkillTreeStructure();
       dataManager.saveGame();

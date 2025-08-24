@@ -793,7 +793,7 @@ export default {
   'Soul Forge': 'Forja de Almas',
   'Converts resources into souls.': 'Convierte recursos en almas.',
   'Experience Workshop': 'Taller de Experiencia',
-  'Grants levels every hour.': 'Otorga niveles cada hora.',
+  'Grants levels every 30 minutes.': 'Otorga niveles cada 30 minutos.',
   level: 'nivel',
   'Material Depot': 'Depósito de Materiales',
   'Generates a random material every 10 minutes.': 'Genera un material aleatorio cada 10 minutos.',

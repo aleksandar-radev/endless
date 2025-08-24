@@ -793,7 +793,7 @@ export default {
   'Soul Forge': '灵魂熔炉',
   'Converts resources into souls.': '将资源转化为灵魂。',
   'Experience Workshop': '经验工坊',
-  'Grants levels every hour.': '每小时获得等级。',
+  'Grants levels every 30 minutes.': '每30分钟获得等级。',
   level: '等级',
   'Material Depot': '材料仓库',
   'Generates a random material every 10 minutes.': '每10分钟生成随机材料。',

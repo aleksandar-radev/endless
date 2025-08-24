@@ -1,12 +1,15 @@
 // Game logic and persistent state for buildings
 import { buildingsData } from './constants/buildings.js';
-import { dataManager, hero, inventory } from './globals.js';
-import { updateResources, formatNumber } from './ui/ui.js';
+import { dataManager, hero, inventory, statistics } from './globals.js';
+import { updateResources, formatNumber, updatePlayerLife, initializeSkillTreeStructure, updateTabIndicators } from './ui/ui.js';
 import { showOfflineBonusesModal } from './ui/buildingUi.js';
 import { fetchTrustedUtcTime } from './api.js';
 import { getTimeNow } from './common.js';
 import { t, tp } from './i18n.js';
 import { MATERIALS } from './constants/materials.js';
+import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
+import { createCombatText } from './combat.js';
+import { updateRegionUI } from './region.js';
 const refundPercent = 0.9;
 
 // Represents a single building instance (with state)
@@ -324,6 +327,16 @@ export class BuildingManager {
           else if (b.type === 'soul') hero.gainSouls(b.amount);
           else if (b.building.effect.type === 'level') {
             hero.levelUp(b.amount);
+
+            updateStatsAndAttributesUI();
+            hero.recalculateFromAttributes();
+            updatePlayerLife();
+            initializeSkillTreeStructure();
+            dataManager.saveGame();
+            updateRegionUI();
+            updateTabIndicators();
+            statistics.updateStatisticsUI();
+
           } else if (b.building.effect.type === 'material') {
             if (b.materialIds) {
               const ids = b.materialIds;

@@ -792,7 +792,7 @@ export default {
   'Soul Forge': 'Soul Forge',
   'Converts resources into souls.': 'Converts resources into souls.',
   'Experience Workshop': 'Experience Workshop',
-  'Grants levels every hour.': 'Grants levels every hour.',
+  'Grants levels every 30 minutes.': 'Grants levels every 30 minutes.',
   level: 'level',
   'Material Depot': 'Material Depot',
   'Generates a random material every 10 minutes.': 'Generates a random material every 10 minutes.',
