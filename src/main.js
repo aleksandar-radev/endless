@@ -95,6 +95,7 @@ window.setLanguage = setLanguage;
         const info = await getGameInfo();
         const serverVersion = info?.version;
         const localVersion = options?.version;
+        window.q(`Local version: ${localVersion}, server version: ${serverVersion}`);
         if (!serverVersion || !localVersion) return;
 
         // If server version changed since last check, clear notified flag so user gets a modal for a new release
@@ -142,7 +143,10 @@ window.setLanguage = setLanguage;
 
     // schedule first check after 1 hour, then poll every 1 hour
     const versionCheckInterval = 60 * 60 * 1000;
+    window.q('Starting version check interval...');
     setTimeout(() => {
+      window.q('Checking for game updates...');
+
       // then run every hour
       setInterval(checkOnce, versionCheckInterval);
     }, versionCheckInterval);

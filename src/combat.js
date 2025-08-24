@@ -152,9 +152,7 @@ export function playerAttack(currentTime) {
 export function playerDeath() {
   statistics.increment('deaths');
   const shouldContinue = crystalShop.crystalUpgrades.continuousPlay;
-  if (!shouldContinue) {
-    game.gameStarted = false;
-  }
+  game.gameStarted = false;
 
   const timerReduction = (crystalShop.crystalUpgrades.deathTimerReduction || 0) * 0.5;
   // Death timer only applies in explore mode. Arena (boss) deaths revive immediately.
