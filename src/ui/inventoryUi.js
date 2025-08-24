@@ -1138,8 +1138,9 @@ function clearSlotHighlights() {
 
 function showEquipButton(show) {
   const btn = document.getElementById('mobile-equip-btn');
-  // Hide equip button when salvage modal is open
-  if (document.getElementById('salvage-modal')) show = false;
+  // Hide equip button only when the salvage modal is actually visible
+  const modal = document.getElementById('salvage-modal');
+  if (modal && !modal.classList.contains('hidden')) show = false;
   if (btn) btn.style.display = show ? '' : 'none';
 }
 
