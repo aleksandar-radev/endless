@@ -218,6 +218,71 @@ export default class SoulShop {
     this.setupSoulUpgradeHandlers();
   }
 
+  updateSoulShopAffordability() {
+    const grid = document.querySelector('#soulShop .soul-upgrades-grid');
+    if (!grid) return;
+    const BASE = import.meta.env.VITE_BASE_PATH;
+    grid.querySelectorAll('.soul-upgrade-btn').forEach((button) => {
+      const stat = button.dataset.stat;
+      const config = SOUL_UPGRADE_CONFIG[stat];
+      if (!config) return;
+      const isOneTime = config.oneTime;
+      const isMultiple = config.multiple;
+      const isMultiLevel = typeof config.bonus === 'number' && !isOneTime;
+      const alreadyPurchased = isOneTime && this.soulUpgrades[stat];
+      const baseLevel = this.soulUpgrades[stat] || 0;
+      const maxLevel = isMultiLevel ? config.maxLevel || Infinity : Infinity;
+      const levelsLeft = maxLevel - baseLevel;
+      let qty = 1;
+      let cost = isOneTime || isMultiple
+        ? Math.round(config.baseCost)
+        : this.getSoulUpgradeCost(config, baseLevel);
+      let disabled = alreadyPurchased;
+      let unaffordable = false;
+      if (options?.quickSoulShop && !alreadyPurchased) {
+        if (isMultiLevel || isMultiple) {
+          if (this.quickQty === 'max') {
+            const { qty: affordableQty, totalCost } = this.getBulkCost(stat, 'max');
+            qty = affordableQty > 0 ? Math.min(affordableQty, 10000) : Math.min(1, levelsLeft);
+            cost = affordableQty > 0
+              ? totalCost
+              : isMultiple
+                ? Math.round(config.baseCost) * qty
+                : this.calculateTotalCost(stat, qty, baseLevel);
+            if (affordableQty <= 0 || hero.souls < cost) {
+              disabled = true;
+              unaffordable = true;
+            }
+          } else {
+            qty = Math.min(this.quickQty, isMultiLevel ? levelsLeft : 10000, 10000);
+            cost = isMultiple
+              ? Math.round(config.baseCost) * qty
+              : this.calculateTotalCost(stat, qty, baseLevel);
+            if (qty <= 0 || hero.souls < cost) {
+              disabled = true;
+              unaffordable = true;
+            }
+          }
+        } else if (hero.souls < cost) {
+          disabled = true;
+          unaffordable = true;
+        }
+      } else if (hero.souls < cost && !alreadyPurchased) {
+        unaffordable = true;
+      }
+      button.disabled = disabled;
+      const costEl = button.querySelector('.upgrade-cost');
+      const bonusEl = button.querySelector('.upgrade-bonus');
+      if (costEl) {
+        costEl.innerHTML = alreadyPurchased
+          ? t('common.purchased')
+          : `${cost} ${t('resource.souls.name')}<img style="width: 20px; height: 20px;" src="${BASE}/icons/soul.svg" alt="Soul Icon">(${qty})`;
+        costEl.classList.toggle('unaffordable', unaffordable);
+      }
+      if (bonusEl) bonusEl.classList.toggle('unaffordable', unaffordable);
+    });
+  }
+
   resetSoulShop() {
     this.soulUpgrades = {};
     this.modal = null;

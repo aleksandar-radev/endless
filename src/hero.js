@@ -137,7 +137,7 @@ export default class Hero {
     statistics.increment('totalCrystalsEarned', null, amount);
     this.crystals += amount;
     if (game.activeTab === 'crystalShop') {
-      crystalShop.updateCrystalShopUI();
+      crystalShop.updateCrystalShopAffordability();
     }
     if (game.activeTab === 'training') {
       training.updateTrainingAffordability('crystal-upgrades');
@@ -148,7 +148,7 @@ export default class Hero {
     statistics.increment('totalSoulsEarned', null, amount);
     this.souls += amount;
     if (game.activeTab === 'soulShop') {
-      soulShop.updateSoulShopUI();
+      soulShop.updateSoulShopAffordability();
     }
   }
   levelUp(levels) {

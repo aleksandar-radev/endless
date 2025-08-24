@@ -60,6 +60,12 @@
   color: #10b981;
 }
 
+.crystal-upgrade-btn .upgrade-bonus.unaffordable,
+.crystal-upgrade-btn .upgrade-cost.unaffordable,
+.crystalShop-modal-content .unaffordable {
+  color: #f87171;
+}
+
 .crystal-upgrade-btn.purchased {
   opacity: 0.7;
   cursor: default;

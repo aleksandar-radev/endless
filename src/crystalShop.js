@@ -211,6 +211,32 @@ export default class CrystalShop {
     if (!this.modal) this.createUpgradeModal();
   }
 
+  updateCrystalShopAffordability() {
+    const buttons = document.querySelectorAll('.crystal-upgrade-btn');
+    buttons.forEach((button) => {
+      const stat = button.dataset.stat;
+      const config = CRYSTAL_UPGRADE_CONFIG[stat];
+      if (!config) return;
+      const level = this.crystalUpgrades[stat] || 0;
+      const cost = Math.floor(config.baseCost + (config.costIncrement || 0) * level);
+      const alreadyPurchased = config.oneTime && this.crystalUpgrades[stat];
+      const isMaxed = config.maxLevel ? level >= config.maxLevel : false;
+      const costEl = button.querySelector('.upgrade-cost');
+      const bonusEl = button.querySelector('.upgrade-bonus');
+      const unaffordable = hero.crystals < cost && !alreadyPurchased && !isMaxed;
+      if (costEl) {
+        costEl.textContent = alreadyPurchased
+          ? t('common.purchased')
+          : isMaxed
+            ? t('common.max')
+            : `${cost} ${t('resource.crystal.name')}`;
+        costEl.classList.toggle('unaffordable', unaffordable);
+      }
+      if (bonusEl) bonusEl.classList.toggle('unaffordable', unaffordable);
+      button.disabled = alreadyPurchased || isMaxed;
+    });
+  }
+
   createCrystalUpgradeButton(stat, config) {
     let alreadyPurchased = config.oneTime && this.crystalUpgrades[stat];
     const level = this.crystalUpgrades[stat] || 0;
