@@ -184,8 +184,10 @@ class Game {
     hero.stats.currentLife = hero.stats.life;
     hero.stats.currentMana = hero.stats.mana;
     updatePlayerLife();
-    this.currentEnemy.resetLife();
-    updateEnemyStats();
+    if (this.currentEnemy) {
+      this.currentEnemy.resetLife();
+      updateEnemyStats();
+    }
 
     // Reset combat timers
     const currentTime = Date.now();
@@ -237,6 +239,13 @@ class Game {
     if (this.gameStarted) {
       // starting a new fight, clear kill guard
       this._justDefeated = false;
+      if (!this.currentEnemy) {
+        if (this.fightMode === 'arena') {
+          selectBoss();
+        } else {
+          this.currentEnemy = new Enemy(this.stage);
+        }
+      }
       this.currentEnemy.lastAttack = Date.now();
       // Reset life and update resources
       // this.resetAllLife();

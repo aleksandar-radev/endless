@@ -152,7 +152,9 @@ export function playerAttack(currentTime) {
 export function playerDeath() {
   statistics.increment('deaths');
   const shouldContinue = crystalShop.crystalUpgrades.continuousPlay;
-  game.gameStarted = false;
+  if (!shouldContinue) {
+    game.gameStarted = false;
+  }
 
   const timerReduction = (crystalShop.crystalUpgrades.deathTimerReduction || 0) * 0.5;
   // Death timer only applies in explore mode. Arena (boss) deaths revive immediately.
@@ -183,7 +185,6 @@ export function playerDeath() {
 
     if (game.fightMode === 'arena') {
       // If in arena, reset boss state and player health
-      game.currentEnemy.resetLife();
       game.resetAllLife(); // <-- Ensure player health is reset
       updateBossUI();
     } else if (game.fightMode === 'explore') {
@@ -390,7 +391,7 @@ export async function defeatEnemy() {
   await new Promise((resolve) => setTimeout(resolve, 500));
 
   // If combat stopped or a prestige started during the delay, don't spawn a new enemy
-  if (!game.gameStarted || runtime.prestigeInProgress) {
+  if (runtime.prestigeInProgress) {
     game._justDefeated = false;
     return;
   }
