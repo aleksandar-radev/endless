@@ -129,7 +129,7 @@ export default class Hero {
     statistics.increment('totalGoldEarned', null, amount);
     this.gold += amount;
     if (game.activeTab === 'training') {
-      training.updateTrainingUI('gold-upgrades');
+      training.updateTrainingAffordability('gold-upgrades');
     }
   }
 
@@ -140,7 +140,7 @@ export default class Hero {
       crystalShop.updateCrystalShopUI();
     }
     if (game.activeTab === 'training') {
-      training.updateTrainingUI('crystal-upgrades');
+      training.updateTrainingAffordability('crystal-upgrades');
     }
   }
 

@@ -425,6 +425,56 @@ export default class Training {
     if (options?.bulkTraining) this.updateBulkCost();
   }
 
+  updateTrainingAffordability(subTab) {
+    const trainingGrid = document.querySelector(`#${subTab} .training-grid`);
+    if (!trainingGrid) return;
+    trainingGrid.querySelectorAll('button[data-stat]').forEach((button) => {
+      const stat = button.dataset.stat;
+      const config = STATS[stat];
+      if (!config?.training) return;
+      const level = this.upgradeLevels[stat] || 0;
+      const maxLevel = config.training?.maxLevel ?? Infinity;
+      const isMaxed = level >= maxLevel;
+      let disabled = isMaxed;
+      let qty = 1;
+      let totalCost = this.calculateTotalCost(config.training, qty, level);
+      let unaffordable = hero.gold < totalCost;
+
+      if (options?.quickTraining && !isMaxed) {
+        const levelsLeft = maxLevel - level;
+        if (this.quickQty === 'max') {
+          const { qty: affordableQty } = this.getMaxPurchasable('max', level, maxLevel, config.training);
+          qty = affordableQty > 0 ? Math.min(affordableQty, 10000) : Math.min(1, levelsLeft);
+          totalCost = this.calculateTotalCost(config.training, qty, level);
+          if (affordableQty <= 0) disabled = true;
+        } else {
+          qty = Math.min(this.quickQty, levelsLeft, 10000);
+          totalCost = this.calculateTotalCost(config.training, qty, level);
+          if (qty <= 0) disabled = true;
+        }
+        unaffordable = hero.gold < totalCost;
+        disabled = disabled || unaffordable;
+        const costEl = button.querySelector('.upgrade-cost');
+        if (costEl) {
+          costEl.textContent = `${t('training.cost')}: ${formatNumber(totalCost)} ${t('resource.gold.name')} (${formatNumber(qty)})`;
+          costEl.classList.toggle('unaffordable', unaffordable);
+        }
+        const bonusEl = button.querySelector('.upgrade-bonus');
+        if (bonusEl) bonusEl.classList.toggle('unaffordable', unaffordable);
+      } else {
+        unaffordable = hero.gold < totalCost;
+        disabled = disabled || unaffordable;
+        const bonusEl = button.querySelector('.upgrade-bonus');
+        if (bonusEl) bonusEl.classList.toggle('unaffordable', unaffordable);
+        const costEl = button.querySelector('.upgrade-cost');
+        if (costEl) costEl.classList.toggle('unaffordable', unaffordable);
+      }
+
+      button.disabled = disabled;
+    });
+    if (options?.bulkTraining) this.updateBulkCost();
+  }
+
   calculateBulkCostAndPurchases(qty) {
     const section = SECTION_DEFS.find((s) => s.key === this.activeSection);
     if (qty !== 'max') qty = Math.min(qty, 10000);
