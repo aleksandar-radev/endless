@@ -4,9 +4,6 @@ import {
   showToast,
   updateResources,
   formatStatName,
-  showTooltip,
-  hideTooltip,
-  positionTooltip,
 } from './ui/ui.js';
 import { t } from './i18n.js';
 import { createModal, closeModal } from './ui/modal.js';
@@ -333,6 +330,154 @@ export default class Inventory {
       return;
     }
 
+    // Transmutation Orb
+    if (matDef.isCustom && matDef.id === 'transmutation_orb') {
+      const equipped = Object.entries(this.equippedItems)
+        .filter(([slot, item]) => item)
+        .map(([slot, item]) => ({ slot, item }));
+
+      const html = String.raw;
+      const itemRows = equipped
+        .map(
+          ({ slot, item }, idx) => `
+        <div class="transmutation-item" data-slot="${slot}" data-idx="${idx}">
+          <span class="alternation-icon">${item.getIcon()}</span>
+          <span><b>${item.type}</b> (Lvl ${item.level})</span>
+          <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
+        </div>`,
+        )
+        .join('');
+
+      const content = html`
+        <div class="inventory-modal-content">
+          <button class="modal-close">&times;</button>
+          <h2>${t(matDef.name || mat.name || '')}</h2>
+          <p>${t(matDef.description || '')}</p>
+          <p>You have <b class="material-qty">${mat.qty}</b></p>
+          <p>Select an item and stat to transmute.</p>
+          <p>Selected item: <span id="transmutation-selected-name">None</span></p>
+          <div id="transmutation-item-list">
+            ${equipped.length === 0 ? '<div style="color:#f55;">No equipped items.</div>' : itemRows}
+          </div>
+          <div id="transmutation-selected-item" style="margin-top:10px;"></div>
+          <div class="modal-controls">
+            <button id="material-use-cancel">Cancel</button>
+          </div>
+        </div>`;
+
+      const dialog = createModal({
+        id: 'material-transmute-dialog',
+        className: 'inventory-modal',
+        content,
+      });
+
+      let statOrder = [];
+      let currentIdx = null;
+      const renderSelected = (idx) => {
+        const { item } = equipped[idx];
+        dialog.querySelector('#transmutation-selected-name').textContent = item.getDisplayName();
+
+        const statsKeys = Object.keys(item.stats);
+        if (currentIdx !== idx) {
+          statOrder = [...statsKeys];
+          currentIdx = idx;
+        }
+
+        const isPercentStat = (stat) =>
+          stat.endsWith('Percent') || stat === 'critChance' || stat === 'blockChance' || stat === 'lifeSteal';
+        let showAdvanced = false;
+        try {
+          if (options.showAdvancedTooltips) showAdvanced = true;
+        } catch (e) {}
+        let statMinMax = {};
+        if (showAdvanced) {
+          statMinMax = item.getAllStatsMinMax();
+        }
+        let statsHtml;
+        if (statsKeys.length === 0) {
+          statsHtml = '<div>No stats to transmute.</div>';
+        } else {
+          statsHtml = statOrder
+            .filter((stat) => statsKeys.includes(stat))
+            .map((stat) => {
+              const value = item.stats[stat];
+              const decimals = STATS[stat].decimalPlaces || 0;
+              const formattedValue = value.toFixed(decimals);
+              let adv = '';
+              if (showAdvanced && statMinMax[stat]) {
+                const min = statMinMax[stat].min.toFixed(decimals);
+                const max = statMinMax[stat].max.toFixed(decimals);
+                adv = `<span class="item-ref-range" style="color:#aaa;">${min} - ${max}</span>`;
+              }
+              return `<div class="stat-row" data-stat="${stat}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                <div style="flex:1;display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                  <span>${formatStatName(stat)}: <b>${formattedValue}${isPercentStat(stat) ? '%' : ''}</b></span>
+                  ${adv}
+                </div>
+                <button class="reroll-btn" data-idx="${idx}" data-stat="${stat}">Transmute</button>
+              </div>`;
+            })
+            .join('');
+        }
+
+        dialog.querySelector('#transmutation-selected-item').innerHTML = `
+          <div class="item-preview">
+            <div class="item-name" style="color:${ITEM_RARITY[item.rarity].color};">${item.getDisplayName()}</div>
+            <div class="item-level">${t('item.level')}: ${item.level}, ${t('item.tier')}: ${item.tier}</div>
+            <div class="item-stats">${statsHtml}</div>
+          </div>`;
+
+        dialog.querySelectorAll('.reroll-btn').forEach((btn) => {
+          btn.onclick = (e) => {
+            if (mat.qty <= 0) return;
+            const statToChange = e.currentTarget.dataset.stat;
+            const orderIndex = statOrder.indexOf(statToChange);
+            delete item.stats[statToChange];
+            if (item.metaData) delete item.metaData[statToChange];
+            const newStat = item.addRandomStat(statToChange);
+            if (newStat) {
+              statOrder[orderIndex] = newStat;
+            } else {
+              statOrder.splice(orderIndex, 1);
+            }
+            const msg = newStat
+              ? `Transmuted ${formatStatName(statToChange)} into ${formatStatName(newStat)} on ${item.type}`
+              : `Transmuted ${formatStatName(statToChange)} on ${item.type}`;
+            this.handleMaterialUsed(
+              this,
+              mat,
+              matDef,
+              1,
+              'material-transmute-dialog',
+              msg,
+              false,
+            );
+            dialog.querySelector('.material-qty').textContent = mat.qty;
+            renderSelected(idx);
+            if (mat.qty <= 0) {
+              dialog.querySelectorAll('.reroll-btn').forEach((b) => {
+                b.disabled = true;
+              });
+            }
+          };
+        });
+      };
+
+      dialog.querySelectorAll('.transmutation-item').forEach((row) => {
+        const idx = parseInt(row.dataset.idx, 10);
+        row.onclick = () => {
+          dialog
+            .querySelectorAll('.transmutation-item')
+            .forEach((r) => r.classList.remove('selected'));
+          row.classList.add('selected');
+          renderSelected(idx);
+        };
+      });
+
+      dialog.querySelector('#material-use-cancel').onclick = () => closeModal('material-transmute-dialog');
+      return;
+    }
+
     // Alternation Orb
     if (matDef.isCustom && matDef.id === 'alternation_orb') {
       const equipped = Object.entries(this.equippedItems)
@@ -415,7 +560,7 @@ export default class Inventory {
         }
 
         dialog.querySelector('#alternation-selected-item').innerHTML = `
-          <div class="item-tooltip" style="position:static;pointer-events:auto;">
+          <div class="item-preview">
             <div class="item-name" style="color:${ITEM_RARITY[item.rarity].color};">${item.getDisplayName()}</div>
             <div class="item-level">${t('item.level')}: ${item.level}, ${t('item.tier')}: ${item.tier}</div>
             <div class="item-stats">${statsHtml}</div>
@@ -461,12 +606,6 @@ export default class Inventory {
 
       dialog.querySelectorAll('.alternation-item').forEach((row) => {
         const idx = parseInt(row.dataset.idx, 10);
-        const { item } = equipped[idx];
-        row.addEventListener('mouseenter', (e) => {
-          showTooltip(item.getTooltipHTML(true), e, 'flex-tooltip');
-        });
-        row.addEventListener('mousemove', positionTooltip);
-        row.addEventListener('mouseleave', hideTooltip);
         row.onclick = () => {
           dialog
             .querySelectorAll('.alternation-item')

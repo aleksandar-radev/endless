@@ -537,6 +537,7 @@ export const REGIONS = [
     materialDropWeights: {
       enchantment_scroll: 5,
       alternation_orb: 5,
+      transmutation_orb: 5,
     },
     itemBaseBonus: 4.9,
   },

@@ -259,4 +259,16 @@ export const MATERIALS = {
     },
     isCustom: true,
   },
+  transmutation_orb: {
+    id: 'transmutation_orb',
+    get name() { return t('Transmutation Orb'); },
+    icon: `<img src="${BASE}/icons/transmutation-orb.svg" class="icon" alt="orb"/>`,
+    get description() { return t('Replaces one chosen stat on an equipped item with a random new stat.'); },
+    dropChance: 1,
+    sort: 702,
+    onUse: (hero, qty = 1) => {
+      // Custom modal logic handled in inventory UI
+    },
+    isCustom: true,
+  },
 };

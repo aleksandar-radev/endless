@@ -274,11 +274,12 @@ export default class Item {
     this.level = newLevel;
   }
 
-  addRandomStat() {
+  addRandomStat(excludeStat = null) {
     const pool = ITEM_STAT_POOLS[this.type];
     if (!pool) return;
     // Exclude already present stats
-    const availableStats = pool.possible.filter(stat => !(stat in this.stats));
+    let availableStats = pool.possible.filter((stat) => !(stat in this.stats));
+    if (excludeStat) availableStats = availableStats.filter((stat) => stat !== excludeStat);
     if (availableStats.length === 0) return;
     const resistanceCount = Object.keys(this.stats).filter((s) => RESISTANCE_STATS.includes(s)).length;
     const attributeCount = Object.keys(this.stats).filter((s) => ATTRIBUTE_STATS.includes(s)).length;
@@ -303,5 +304,6 @@ export default class Item {
     });
     if (!this.metaData) this.metaData = {};
     this.metaData[stat] = { baseValue };
+    return stat;
   }
 }
