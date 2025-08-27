@@ -485,9 +485,8 @@ export default class Hero {
     this.stats.lightningResistance = Math.max(this.stats.lightningResistance + allRes, 0);
     this.stats.waterResistance = Math.max(this.stats.waterResistance + allRes, 0);
 
-    this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * this.stats.mana;
-    this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.life;
-
+    this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * this.stats.mana * (1 + this.stats.manaRegenPercent);
+    this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.life * (1 + this.stats.lifeRegenPercent);
 
     // Extra damage based on hero resources, split between physical and elemental
     const extraFromLife = (this.stats.extraDamageFromLifePercent || 0) * this.stats.life;
