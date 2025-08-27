@@ -1254,7 +1254,9 @@ function openItemContextMenu(itemEl, x, y) {
     const dialog = createModal({
       id: 'inspect-item',
       className: 'inventory-modal',
-      content: `<div class="inventory-modal-content"><button class="modal-close">&times;</button>${itemData.getTooltipHTML()}</div>`,
+      content: `<div class="inventory-modal-content"><button class="modal-close">&times;</button>${itemData
+        .getTooltipHTML()
+        .replace('item-tooltip', 'item-preview')}</div>`,
     });
     dialog.querySelector('.modal-close').onclick = () => closeModal('inspect-item');
     closeItemContextMenu();
