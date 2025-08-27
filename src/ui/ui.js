@@ -353,6 +353,7 @@ export function updateStageUI() {
 }
 
 export function showToast(message, type = 'normal', duration = 3000) {
+  if (!options?.showInfoMessages) return;
   // Remove existing toast if any
   const existingToast = document.querySelector('.toast');
   if (existingToast) {

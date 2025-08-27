@@ -9,7 +9,7 @@ import {
   showDeathScreen,
 } from './ui/ui.js';
 import Enemy from './enemy.js';
-import { hero, game, inventory, crystalShop, statistics, skillTree, dataManager, runtime } from './globals.js';
+import { hero, game, inventory, crystalShop, statistics, skillTree, dataManager, runtime, options } from './globals.js';
 import { ITEM_RARITY } from './constants/items.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateQuestsUI } from './ui/questUi.js';
@@ -411,6 +411,7 @@ export async function defeatEnemy() {
 }
 
 function showMaterialNotification(mat) {
+  if (!options?.showNotifications) return;
   const notification = document.createElement('div');
   notification.className = 'loot-notification';
   notification.style.color = '#FFD700';
@@ -421,6 +422,7 @@ function showMaterialNotification(mat) {
 }
 
 function showLootNotification(item) {
+  if (!options?.showNotifications) return;
   const notification = document.createElement('div');
   notification.className = 'loot-notification';
   notification.style.color = ITEM_RARITY[item.rarity].color;
@@ -458,6 +460,7 @@ export function calculateResistanceReduction(resistance, damage, cap = 0.9) {
 }
 
 export function createDamageNumber({ text = '', isPlayer = false, isCritical = false, color = '' } = {}) {
+  if (!options?.showCombatText) return;
   const target = isPlayer ? '#character-avatar' : '.enemy-avatar';
   const avatar = document.querySelector(target);
   // Use parent container for positioning
@@ -492,6 +495,7 @@ export function createDamageNumber({ text = '', isPlayer = false, isCritical = f
 }
 
 export function createCombatText(text, isPlayer = true) {
+  if (!options?.showCombatText) return;
   // Allow targeting enemy or player
   const target = isPlayer ? '#character-avatar' : '.enemy-avatar';
   const avatar = document.querySelector(target);

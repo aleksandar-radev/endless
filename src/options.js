@@ -67,6 +67,12 @@ export class Options {
     this.shortElementalNames = data.shortElementalNames ?? false;
     // Show cooldown numbers on skill slots
     this.showSkillCooldowns = data.showSkillCooldowns ?? false;
+    // Show informational toast messages
+    this.showInfoMessages = data.showInfoMessages ?? true;
+    // Show bottom notifications for loot and materials
+    this.showNotifications = data.showNotifications ?? true;
+    // Show combat texts (damage numbers, level up text)
+    this.showCombatText = data.showCombatText ?? true;
   }
 
   /**
@@ -186,6 +192,9 @@ export class Options {
     gameContent.appendChild(this._createResetStageSkipOption());
     gameContent.appendChild(this._createRateCountersOption());
     gameContent.appendChild(this._createRateCountersPeriodOption());
+    gameContent.appendChild(this._createShowInfoMessagesOption());
+    gameContent.appendChild(this._createShowNotificationsOption());
+    gameContent.appendChild(this._createShowCombatTextOption());
 
     // --- General Options Content ---
     const generalContent = document.createElement('div');
@@ -342,6 +351,84 @@ export class Options {
       this.rateCountersPeriod = v;
       dataManager.saveGame();
       document.dispatchEvent(new CustomEvent('ratePeriodChange', { detail: v }));
+    });
+    return wrapper;
+  }
+
+  _createShowInfoMessagesOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = `
+      <label for="show-info-messages-toggle" class="show-info-messages-toggle-label" data-i18n="options.showInfoMessages">Show Info Messages:</label>
+      <input
+        type="checkbox"
+        id="show-info-messages-toggle"
+        class="show-info-messages-toggle"
+        ${this.showInfoMessages ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.showInfoMessages = checkbox.checked;
+      dataManager.saveGame();
+    });
+    return wrapper;
+  }
+
+  _createShowNotificationsOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = `
+      <label for="show-notifications-toggle" class="show-notifications-toggle-label" data-i18n="options.showNotifications">Show Notifications:</label>
+      <input
+        type="checkbox"
+        id="show-notifications-toggle"
+        class="show-notifications-toggle"
+        ${this.showNotifications ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.showNotifications = checkbox.checked;
+      dataManager.saveGame();
+    });
+    return wrapper;
+  }
+
+  _createShowCombatTextOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = `
+      <label for="show-combat-text-toggle" class="show-combat-text-toggle-label" data-i18n="options.showCombatText">Show Combat Texts:</label>
+      <input
+        type="checkbox"
+        id="show-combat-text-toggle"
+        class="show-combat-text-toggle"
+        ${this.showCombatText ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.showCombatText = checkbox.checked;
+      dataManager.saveGame();
     });
     return wrapper;
   }
