@@ -143,13 +143,41 @@ export const OFFENSE_STATS = {
   lifeSteal: {
     base: 0,
     decimalPlaces: 2,
-    training: { cost: 800, bonus: 0.01, maxLevel: 500 }, // max bonus: 5
+    training: { cost: 800, bonus: 0.01, maxLevel: 100 }, // max bonus: 1
     item: { min: 0.5, max: 1.25, limit: 5, scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING) },
     itemTags: ['offense'],
     showInUI: true,
     subcategory: 'attack',
   },
   lifeStealPercent: {
+    base: 0,
+    decimalPlaces: 1,
+    forceNotShow: true,
+  },
+  // MANA STEAL
+  manaSteal: {
+    base: 0,
+    decimalPlaces: 2,
+    item: { min: 0.5, max: 1.25, limit: 5, scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING) },
+    itemTags: ['magic', 'wand', 'staff'],
+    showInUI: true,
+    subcategory: 'attack',
+  },
+  manaStealPercent: {
+    base: 0,
+    decimalPlaces: 1,
+    forceNotShow: true,
+  },
+  // OMNI STEAL
+  omniSteal: {
+    base: 0,
+    decimalPlaces: 2,
+    item: { min: 0.5, max: 1.25, limit: 5, scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING) },
+    itemTags: ['offense', 'magic'],
+    showInUI: true,
+    subcategory: 'attack',
+  },
+  omniStealPercent: {
     base: 0,
     decimalPlaces: 1,
     forceNotShow: true,

@@ -7,6 +7,9 @@ export default function run() {
     <span style="color:#FF8A00;"> Improvements</span>
     <ul>
       <li>Going to any shop tab now immediately updates it, showing what is affordable. </li>
+      <li>Percent health and mana regen now increases the % of total bonus.</li>
+      <li>Add tooltips for all options, to provide more information about their effects.</li>
+      <li>Add mana steal and omni steal stats.</li>
     </ul>
 
     <span style="color:#FF0000;"> Fixes</span>

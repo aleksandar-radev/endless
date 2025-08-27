@@ -185,7 +185,14 @@ export default class Item {
     const html = String.raw;
 
     const isPercentStat = (stat) => {
-      return stat.endsWith('Percent') || stat === 'critChance' || stat === 'blockChance' || stat === 'lifeSteal';
+      return (
+        stat.endsWith('Percent') ||
+        stat === 'critChance' ||
+        stat === 'blockChance' ||
+        stat === 'lifeSteal' ||
+        stat === 'manaSteal' ||
+        stat === 'omniSteal'
+      );
     };
 
     // Check global options for advanced tooltips

@@ -132,10 +132,13 @@ export function playerAttack(currentTime) {
 
         const lifePerHit = (hero.stats.lifePerHit || 0) * (1 + (hero.stats.lifePerHitPercent || 0) / 100);
         const lifeStealAmount = damage * (hero.stats.lifeSteal || 0) / 100;
-        game.healPlayer(lifeStealAmount + lifePerHit);
+        const manaStealAmount = damage * (hero.stats.manaSteal || 0) / 100;
+        const omniStealAmount = damage * (hero.stats.omniSteal || 0) / 100;
+        game.healPlayer(lifeStealAmount + lifePerHit + omniStealAmount);
 
-        if (manaPerHit > 0) {
-          game.restoreMana(manaPerHit);
+        const manaRestore = (manaPerHit > 0 ? manaPerHit : 0) + manaStealAmount + omniStealAmount;
+        if (manaRestore > 0) {
+          game.restoreMana(manaRestore);
         }
 
         game.damageEnemy(damage, isCritical, breakdown);

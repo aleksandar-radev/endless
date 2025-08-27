@@ -384,7 +384,12 @@ export default class Inventory {
         }
 
         const isPercentStat = (stat) =>
-          stat.endsWith('Percent') || stat === 'critChance' || stat === 'blockChance' || stat === 'lifeSteal';
+          stat.endsWith('Percent') ||
+          stat === 'critChance' ||
+          stat === 'blockChance' ||
+          stat === 'lifeSteal' ||
+          stat === 'manaSteal' ||
+          stat === 'omniSteal';
         let showAdvanced = false;
         try {
           if (options.showAdvancedTooltips) showAdvanced = true;
@@ -525,7 +530,12 @@ export default class Inventory {
 
         const statsEntries = Object.entries(item.stats);
         const isPercentStat = (stat) =>
-          stat.endsWith('Percent') || stat === 'critChance' || stat === 'blockChance' || stat === 'lifeSteal';
+          stat.endsWith('Percent') ||
+          stat === 'critChance' ||
+          stat === 'blockChance' ||
+          stat === 'lifeSteal' ||
+          stat === 'manaSteal' ||
+          stat === 'omniSteal';
         let showAdvanced = false;
         try {
           if (options.showAdvancedTooltips) showAdvanced = true;

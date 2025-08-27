@@ -370,6 +370,10 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           el.textContent = hero.stats.critDamage.toFixed(STATS.critDamage.decimalPlaces) + 'x';
         } else if (key === 'lifeSteal') {
           el.textContent = hero.stats.lifeSteal.toFixed(STATS.lifeSteal.decimalPlaces) + '%';
+        } else if (key === 'manaSteal') {
+          el.textContent = hero.stats.manaSteal.toFixed(STATS.manaSteal.decimalPlaces) + '%';
+        } else if (key === 'omniSteal') {
+          el.textContent = hero.stats.omniSteal.toFixed(STATS.omniSteal.decimalPlaces) + '%';
         } else if (key === 'lifeRegen') {
           el.textContent = formatNumber(hero.stats.lifeRegen.toFixed(STATS.lifeRegen.decimalPlaces));
         } else if (key === 'manaRegen') {

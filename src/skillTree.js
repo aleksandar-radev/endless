@@ -370,6 +370,15 @@ export default class SkillTree {
       const lifeStealAmount = damage * (baseEffects.lifeSteal / 100);
       game.healPlayer(lifeStealAmount);
     }
+    if (baseEffects.manaSteal) {
+      const manaStealAmount = damage * (baseEffects.manaSteal / 100);
+      game.restoreMana(manaStealAmount);
+    }
+    if (baseEffects.omniSteal) {
+      const omniStealAmount = damage * (baseEffects.omniSteal / 100);
+      game.healPlayer(omniStealAmount);
+      game.restoreMana(omniStealAmount);
+    }
     if (baseEffects.lifePerHit) {
       game.healPlayer(baseEffects.lifePerHit);
     }
