@@ -1,5 +1,17 @@
 import Enemy from '../enemy.js';
-import { game, hero, skillTree, quests, statistics, inventory, dataManager, options, crystalShop } from '../globals.js';
+import {
+  game,
+  hero,
+  skillTree,
+  quests,
+  statistics,
+  inventory,
+  dataManager,
+  options,
+  crystalShop,
+  training,
+  soulShop,
+} from '../globals.js';
 import { t } from '../i18n.js';
 import { updateQuestsUI } from './questUi.js';
 import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
@@ -165,6 +177,15 @@ export function switchTab(tabName) {
   }
 
   game.activeTab = tabName;
+
+  if (tabName === 'training') {
+    training.updateTrainingAffordability('gold-upgrades');
+    training.updateTrainingAffordability('crystal-upgrades');
+  }
+
+  if (tabName === 'soulShop') {
+    soulShop.updateSoulShopAffordability();
+  }
 
   // Update indicators after tab switch
   updateTabIndicators(previousTab);
