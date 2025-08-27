@@ -17,6 +17,7 @@ export default function run() {
     <span style="color:#FF0000;"> Fixes</span>
     <ul>
       <li>Equipped items no longer disappear in split view.</li>
+      <li>Re-rolling or transmuting a modifier on item now properly shows the updated values (previously sometimes showed html).</li>
     </ul>
   `;
 }

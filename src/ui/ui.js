@@ -368,7 +368,7 @@ export function showToast(message, type = 'normal', duration = 3000) {
   // Create new toast
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
-  toast.textContent = message;
+  toast.innerHTML = message;
 
   // Add to DOM
   document.body.appendChild(toast);
