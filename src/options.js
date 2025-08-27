@@ -1,7 +1,15 @@
 
 import { crystalShop, dataManager, game, setGlobals, training, soulShop } from './globals.js';
 import { initializeBuildingsUI } from './ui/buildingUi.js';
-import { showConfirmDialog, showToast, updateStageUI, updateEnemyStatLabels } from './ui/ui.js';
+import {
+  showConfirmDialog,
+  showToast,
+  updateStageUI,
+  updateEnemyStatLabels,
+  showTooltip,
+  positionTooltip,
+  hideTooltip,
+} from './ui/ui.js';
 import { updateBuffIndicators } from './ui/skillTreeUi.js';
 import { closeModal, createModal } from './ui/modal.js';
 import Enemy from './enemy.js';
@@ -13,6 +21,46 @@ import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { setLanguage, t } from './i18n.js';
 
 const html = String.raw;
+
+const OPTION_TOOLTIPS = {
+  languageLabel: () => html`Select the game language`,
+  languageSelect: () => html`Change the game's language`,
+  soundVolumeLabel: () => html`Adjust overall sound volume`,
+  soundVolumeSlider: () => html`${t('options.soundVolume.tooltip')}`,
+  advancedTooltipsLabel: () => html`Show detailed information in item tooltips`,
+  advancedAttrTooltipsLabel: () => html`Display extra attribute details in tooltips`,
+  showRateCountersLabel: () => html`Toggle the resource rate counters bar`,
+  rateCountersPeriodLabel: () => html`Period used to calculate rate counters`,
+  showInfoMessagesLabel: () => html`Display informational messages during gameplay`,
+  showNotificationsLabel: () => html`Enable browser notifications for game events`,
+  showCombatTextLabel: () => html`Show damage numbers and other combat text`,
+  stageSkipLabel: () => html`Skip ahead by this many stages after each kill`,
+  stageSkipInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnCrystal')}`,
+  resetStageSkipLabel: () => html`Stage where stage skip resets to zero`,
+  resetStageSkipInput: (isPurchased) =>
+    html`${isPurchased()
+      ? t('options.resetStageSkip.enabledTooltip')
+      : t('options.resetStageSkip.disabledTooltip')}`,
+  startingStageLabel: () => html`Stage to begin from after resetting`,
+  startingStageInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnCrystal')}`,
+  shortElementalNamesLabel: () => html`Use abbreviated elemental stat names`,
+  showSkillCooldownsLabel: () => html`Display numeric cooldown timers on skills`,
+  showAllStatsLabel: () => html`Display every available statistic`,
+  quickTrainingLabel: () => html`Enable quick buy buttons for training`,
+  bulkTrainingLabel: () => html`Allow purchasing multiple training levels at once`,
+  quickSoulShopLabel: () => html`Enable quick purchase buttons in the soul shop`,
+  numericInputLabel: () => html`Use numeric fields to specify purchase quantities`,
+  autoSortInventoryLabel: () => html`Automatically sort inventory items`,
+  autoSortInventoryToggle: (isPurchased) =>
+    html`${isPurchased() ? '' : t('options.autoSortInventory.disabledTooltip')}`,
+  enemyStatsLabel: () => html`Display enemy statistics during combat`,
+};
+
+function attachTooltip(el, key, ...params) {
+  el.addEventListener('mouseenter', (e) => showTooltip(OPTION_TOOLTIPS[key](...params), e));
+  el.addEventListener('mousemove', positionTooltip);
+  el.addEventListener('mouseleave', hideTooltip);
+}
 
 // Options class to store options and version (future-proof for migrations)
 export class Options {
@@ -101,7 +149,10 @@ export class Options {
       </select>
       <span data-i18n="options.lang.note">Not everything translated yet. You might still see translations in english, as a default language. You might want to refresh page after changing language, to see all changes take effect.</span>
     `;
+    const label = wrapper.querySelector('label');
     const select = wrapper.querySelector('select');
+    attachTooltip(label, 'languageLabel');
+    attachTooltip(select, 'languageSelect');
     select.value = this.language;
     select.addEventListener('change', () => {
       this.language = select.value;
@@ -127,12 +178,14 @@ export class Options {
         max="1"
         step="0.01"
         value="${this.soundVolume}"
-        title="${t('options.soundVolume.tooltip')}"
       />
       <span class="sound-volume-value">${Math.round(this.soundVolume * 100)}%</span>
     `;
+    const label = wrapper.querySelector('.sound-volume-label');
     const slider = wrapper.querySelector('input');
     const valueLabel = wrapper.querySelector('.sound-volume-value');
+    attachTooltip(label, 'soundVolumeLabel');
+    attachTooltip(slider, 'soundVolumeSlider');
     slider.addEventListener('input', () => {
       let val = parseFloat(slider.value);
       if (isNaN(val) || val < 0) val = 0;
@@ -261,8 +314,10 @@ export class Options {
       />
       <span class="toggle-btn"></span>
     `;
+    const label = wrapper.querySelector('.advanced-tooltips-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'advancedTooltipsLabel');
     // Make the toggle button clickable and sync with checkbox
     toggleBtn.addEventListener('click', () => {
       checkbox.checked = !checkbox.checked;
@@ -290,8 +345,10 @@ export class Options {
       />
       <span class="toggle-btn"></span>
     `;
+    const label = wrapper.querySelector('.advanced-attr-tooltips-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'advancedAttrTooltipsLabel');
     toggleBtn.addEventListener('click', () => {
       checkbox.checked = !checkbox.checked;
       checkbox.dispatchEvent(new Event('change'));
@@ -317,8 +374,10 @@ export class Options {
       />
       <span class="toggle-btn"></span>
     `;
+    const label = wrapper.querySelector('.rate-counters-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'showRateCountersLabel');
     toggleBtn.addEventListener('click', () => {
       checkbox.checked = !checkbox.checked;
       checkbox.dispatchEvent(new Event('change'));
@@ -344,7 +403,9 @@ export class Options {
         value="${this.rateCountersPeriod}"
       />
     `;
+    const label = wrapper.querySelector('.rate-counters-period-label');
     const input = wrapper.querySelector('input');
+    attachTooltip(label, 'rateCountersPeriodLabel');
     input.addEventListener('change', () => {
       let v = parseInt(input.value, 10);
       if (isNaN(v) || v <= 0) v = 3600;
@@ -368,8 +429,10 @@ export class Options {
       />
       <span class="toggle-btn"></span>
     `;
+    const label = wrapper.querySelector('.show-info-messages-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'showInfoMessagesLabel');
     toggleBtn.addEventListener('click', () => {
       checkbox.checked = !checkbox.checked;
       checkbox.dispatchEvent(new Event('change'));
@@ -394,8 +457,10 @@ export class Options {
       />
       <span class="toggle-btn"></span>
     `;
+    const label = wrapper.querySelector('.show-notifications-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'showNotificationsLabel');
     toggleBtn.addEventListener('click', () => {
       checkbox.checked = !checkbox.checked;
       checkbox.dispatchEvent(new Event('change'));
@@ -420,8 +485,10 @@ export class Options {
       />
       <span class="toggle-btn"></span>
     `;
+    const label = wrapper.querySelector('.show-combat-text-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'showCombatTextLabel');
     toggleBtn.addEventListener('click', () => {
       checkbox.checked = !checkbox.checked;
       checkbox.dispatchEvent(new Event('change'));
@@ -451,13 +518,15 @@ export class Options {
         min="0"
         max="${max}"
         value="${value}"
-        title="${t('options.max')}: ${max} ${t('options.basedOnCrystal')}"
       />
       <button class="apply-btn" type="button" data-i18n="common.apply">Apply</button>
     `;
 
+    const label = wrapper.querySelector('.stage-skip-label');
     const input = wrapper.querySelector('input');
     const applyBtn = wrapper.querySelector('button');
+    attachTooltip(label, 'stageSkipLabel');
+    attachTooltip(input, 'stageSkipInput', () => crystalShop.crystalUpgrades?.stageSkip || 0);
 
     // Store refs for update
     this._stageSkipInput = input;
@@ -499,7 +568,6 @@ export class Options {
     if (!this._stageSkipInput) return;
     const max = crystalShop.crystalUpgrades?.stageSkip || 0;
     this._stageSkipInput.max = max;
-    this._stageSkipInput.title = `${t('options.max')}: ${max} ${t('options.basedOnCrystal')}`;
 
     let val = parseInt(this._stageSkipInput.value, 10);
     if (isNaN(val) || val < 0) val = 0;
@@ -521,14 +589,16 @@ export class Options {
         class="reset-stage-skip-input"
         min="0"
         value="${value}"
-        title="${purchased ? t('options.resetStageSkip.enabledTooltip') : t('options.resetStageSkip.disabledTooltip')}"
         ${purchased ? '' : 'disabled'}
       />
       <button class="apply-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.apply">Apply</button>
     `;
 
+    const label = wrapper.querySelector('.reset-stage-skip-label');
     const input = wrapper.querySelector('input');
     const applyBtn = wrapper.querySelector('button');
+    attachTooltip(label, 'resetStageSkipLabel');
+    attachTooltip(input, 'resetStageSkipInput', () => !!crystalShop.crystalUpgrades?.resetStageSkip);
 
     this._resetStageSkipInput = input;
     this._resetStageSkipWrapper = wrapper;
@@ -559,9 +629,6 @@ export class Options {
     if (!this._resetStageSkipInput) return;
     const purchased = !!crystalShop.crystalUpgrades?.resetStageSkip;
     this._resetStageSkipInput.disabled = !purchased;
-    this._resetStageSkipInput.title = purchased
-      ? t('options.resetStageSkip.enabledTooltip')
-      : t('options.resetStageSkip.disabledTooltip');
     const btn = this._resetStageSkipWrapper?.querySelector('button');
     if (btn) btn.disabled = !purchased;
   }
@@ -878,13 +945,15 @@ export class Options {
         min="0"
         max="${max}"
         value="${value}"
-        title="${t('options.max')}: ${max} ${t('options.basedOnCrystal')}"
       />
       <button class="apply-btn" type="button" data-i18n="common.apply">Apply</button>
     `;
 
+    const label = wrapper.querySelector('.starting-stage-label');
     const input = wrapper.querySelector('input');
     const applyBtn = wrapper.querySelector('button');
+    attachTooltip(label, 'startingStageLabel');
+    attachTooltip(input, 'startingStageInput', () => 1 + (crystalShop.crystalUpgrades?.startingStage || 0));
 
     // Store refs for update
     this._startingStageInput = input;
@@ -932,7 +1001,6 @@ export class Options {
     if (!this._startingStageInput) return;
     const max = 1 + (crystalShop.crystalUpgrades?.startingStage || 0);
     this._startingStageInput.max = max;
-    this._startingStageInput.title = `${t('options.max')}: ${max} ${t('options.basedOnCrystal')}`;
 
     let val = parseInt(this._startingStageInput.value, 10);
     if (isNaN(val) || val < 0) val = 0;
@@ -956,8 +1024,10 @@ export class Options {
       />
       <span class="toggle-btn"></span>
     `;
+    const label = wrapper.querySelector('.short-elemental-names-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'shortElementalNamesLabel');
     toggleBtn.addEventListener('click', () => {
       checkbox.checked = !checkbox.checked;
       checkbox.dispatchEvent(new Event('change'));
@@ -987,8 +1057,10 @@ export class Options {
       />
       <span class="toggle-btn"></span>
     `;
+    const label = wrapper.querySelector('.show-skill-cooldowns-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'showSkillCooldownsLabel');
     toggleBtn.addEventListener('click', () => {
       checkbox.checked = !checkbox.checked;
       checkbox.dispatchEvent(new Event('change'));
@@ -1017,8 +1089,10 @@ export class Options {
       />
       <span class="toggle-btn"></span>
     `;
+    const label = wrapper.querySelector('.show-all-stats-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'showAllStatsLabel');
     toggleBtn.addEventListener('click', () => {
       checkbox.checked = !checkbox.checked;
       checkbox.dispatchEvent(new Event('change'));
@@ -1047,8 +1121,10 @@ export class Options {
       />
       <span class="toggle-btn"></span>
     `;
+    const label = wrapper.querySelector('.quick-training-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'quickTrainingLabel');
     toggleBtn.addEventListener('click', () => {
       checkbox.checked = !checkbox.checked;
       checkbox.dispatchEvent(new Event('change'));
@@ -1077,8 +1153,10 @@ export class Options {
       />
       <span class="toggle-btn"></span>
     `;
+    const label = wrapper.querySelector('.bulk-training-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'bulkTrainingLabel');
     toggleBtn.addEventListener('click', () => {
       checkbox.checked = !checkbox.checked;
       checkbox.dispatchEvent(new Event('change'));
@@ -1107,8 +1185,10 @@ export class Options {
       />
       <span class="toggle-btn"></span>
     `;
+    const label = wrapper.querySelector('.quick-soulshop-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'quickSoulShopLabel');
     toggleBtn.addEventListener('click', () => {
       checkbox.checked = !checkbox.checked;
       checkbox.dispatchEvent(new Event('change'));
@@ -1137,8 +1217,10 @@ export class Options {
       />
       <span class="toggle-btn"></span>
     `;
+    const label = wrapper.querySelector('.numeric-input-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'numericInputLabel');
     toggleBtn.addEventListener('click', () => {
       checkbox.checked = !checkbox.checked;
       checkbox.dispatchEvent(new Event('change'));
@@ -1179,12 +1261,14 @@ export class Options {
         class="auto-sort-inventory-toggle"
         ${this.autoSortInventory ? 'checked' : ''}
         ${purchased ? '' : 'disabled'}
-        title="${purchased ? '' : t('options.autoSortInventory.disabledTooltip')}"
       />
       <span class="toggle-btn"></span>
     `;
+    const label = wrapper.querySelector('.auto-sort-inventory-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'autoSortInventoryLabel');
+    attachTooltip(checkbox, 'autoSortInventoryToggle', () => !!crystalShop.crystalUpgrades?.autoSortInventory);
     toggleBtn.addEventListener('click', () => {
       if (checkbox.disabled) return;
       checkbox.checked = !checkbox.checked;
@@ -1204,9 +1288,6 @@ export class Options {
     if (!this._autoSortInventoryToggle) return;
     const purchased = !!crystalShop.crystalUpgrades?.autoSortInventory;
     this._autoSortInventoryToggle.disabled = !purchased;
-    this._autoSortInventoryToggle.title = purchased
-      ? ''
-      : t('options.autoSortInventory.disabledTooltip');
     const toggleBtn = this._autoSortInventoryWrapper?.querySelector('.toggle-btn');
     if (toggleBtn) toggleBtn.classList.toggle('disabled', !purchased);
   }
@@ -1227,8 +1308,10 @@ export class Options {
       />
       <span class="toggle-btn"></span>
     `;
+    const label = wrapper.querySelector('.enemy-stats-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'enemyStatsLabel');
     // Make the toggle button clickable and sync with checkbox
     toggleBtn.addEventListener('click', () => {
       checkbox.checked = !checkbox.checked;
