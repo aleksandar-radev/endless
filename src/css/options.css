@@ -323,7 +323,8 @@
 .max-btn {
   margin-left: 0.25em;
   padding: 6px 12px;
-  background: #10b981; /* emerald */
+  background: #10b981;
+  /* emerald */
   color: #0b1b1f;
   border: none;
   border-radius: 4px;
@@ -435,4 +436,21 @@
   border-radius: 4px;
   font-size: medium;
   z-index: 10001;
+}
+
+#inline-stage-controls input[type=number] {
+  background: #232b3a;
+  color: #fff;
+  border: 1px solid #3b82f6;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 1.1em;
+  width: 100px;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+#inline-stage-controls input[type=number]:focus {
+  border: 1.5px solid #60a5fa;
+  box-shadow: 0 0 0 2px #3b82f633;
+  outline: none;
 }

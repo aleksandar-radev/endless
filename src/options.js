@@ -257,7 +257,6 @@ export class Options {
     gameContent.appendChild(this._createAdvancedTooltipsOption());
     gameContent.appendChild(this._createAdvancedAttributeTooltipsOption());
     gameContent.appendChild(this._createEnemyStatsToggleOption());
-    gameContent.appendChild(this._createStageControlsInlineOption());
     gameContent.appendChild(this._createShowAllStatsOption());
     gameContent.appendChild(this._createShortElementalNamesOption());
     gameContent.appendChild(this._createQuickTrainingOption());
@@ -265,6 +264,7 @@ export class Options {
     gameContent.appendChild(this._createQuickSoulShopOption());
     gameContent.appendChild(this._createNumericInputOption());
     gameContent.appendChild(this._createAutoSortInventoryOption());
+    gameContent.appendChild(this._createStageControlsInlineOption());
     gameContent.appendChild(this._createStartingStageOption());
     gameContent.appendChild(this._createStageSkipOption());
     gameContent.appendChild(this._createResetStageSkipOption());
@@ -618,6 +618,23 @@ export class Options {
     } else {
       this._stageSkipInput.value = val;
     }
+
+    // Update inline input if present
+    const inlineInput = document.querySelector('#inline-stage-controls .stage-skip-input');
+    if (inlineInput) {
+      const oldInlineMax = parseInt(inlineInput.max, 10) || 0;
+      inlineInput.max = max;
+      let v = parseInt(inlineInput.value, 10);
+      if (isNaN(v) || v < 0) v = 0;
+      if (v > max) v = max;
+      if ((v === 0 || isNaN(v)) && this.stageSkip > 0) {
+        inlineInput.value = this.stageSkip;
+      } else if (oldInlineMax > 0 && v === oldInlineMax) {
+        inlineInput.value = max;
+      } else {
+        inlineInput.value = v;
+      }
+    }
   }
 
   _createResetStageSkipOption() {
@@ -690,6 +707,13 @@ export class Options {
     this._resetStageSkipInput.disabled = !purchased;
     const btns = this._resetStageSkipWrapper?.querySelectorAll('.apply-btn, .max-btn');
     if (btns) btns.forEach((b) => (b.disabled = !purchased));
+
+    // Update inline input/button if present
+    const inlineInput = document.querySelector('#inline-stage-controls .reset-stage-skip-input');
+    if (inlineInput) inlineInput.disabled = !purchased;
+    const inlineRow = inlineInput?.closest('.option-row');
+    const inlineBtn = inlineRow?.querySelector('.apply-btn');
+    if (inlineBtn) inlineBtn.disabled = !purchased;
   }
 
   /**
@@ -1084,6 +1108,23 @@ export class Options {
       this._startingStageInput.value = max;
     } else {
       this._startingStageInput.value = val;
+    }
+
+    // Update inline input if present
+    const inlineInput = document.querySelector('#inline-stage-controls .starting-stage-input');
+    if (inlineInput) {
+      const oldInlineMax = parseInt(inlineInput.max, 10) || 0;
+      inlineInput.max = max;
+      let v = parseInt(inlineInput.value, 10);
+      if (isNaN(v) || v < 0) v = 0;
+      if (v > max) v = max;
+      if ((v === 0 || isNaN(v)) && this.startingStage > 0) {
+        inlineInput.value = this.startingStage;
+      } else if (oldInlineMax > 0 && v === oldInlineMax) {
+        inlineInput.value = max;
+      } else {
+        inlineInput.value = v;
+      }
     }
   }
 

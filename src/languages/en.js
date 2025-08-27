@@ -225,6 +225,8 @@ export default {
   'options.suggestionsPrompt': 'Please add your suggestions for changes in the game in the discord channel :)',
   'options.desktopDownload': 'You can download desktop application (Windows only!) from',
   'options.here': 'HERE',
+  'options.stageControlsInline': 'Show Stage Controls Under Enemy',
+  'options.stageControlsInline.tooltip': 'Show starting stage, stage skip, and reset options under the enemy in Explore',
   'options.startingStage': 'Starting Stage',
   'options.toast.startingStageApplied': 'Starting stage option applied!',
   'options.shortElementalNames': 'Use Short Elemental Stat Names',

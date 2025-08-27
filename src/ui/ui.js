@@ -152,6 +152,11 @@ export function initializeUI() {
   renderRegionPanel(game.fightMode);
   const regionSelector = document.getElementById('region-selector');
   regionSelector.style.display = game.fightMode === 'arena' ? 'none' : '';
+
+  // Listen for option toggle to update inline stage controls
+  document.addEventListener('updateInlineStageControls', () => {
+    updateStageControlsInlineVisibility();
+  });
 }
 
 export function switchTab(tabName) {
@@ -640,6 +645,9 @@ function renderRegionPanel(region) {
     // Initialize enemy UI values
     updateEnemyStats();
     updateResources();
+
+    // Render inline stage controls if enabled
+    updateStageControlsInlineVisibility();
   }
   // Set the active class on the correct region tab based on the region prop
   document.querySelectorAll('.region-tab').forEach((b) => {
@@ -650,4 +658,166 @@ function renderRegionPanel(region) {
     }
   });
   dataManager.saveGame();
+}
+
+/**
+ * Show or hide stage controls inline below the enemy in Explore panel
+ */
+export function updateStageControlsInlineVisibility() {
+  const panel = document.getElementById('explore-panel');
+  const existing = document.getElementById('inline-stage-controls');
+  const shouldShow = !!options?.showStageControlsInline && game.fightMode === 'explore' && !!panel;
+  if (!shouldShow) {
+    if (existing) existing.remove();
+    return;
+  }
+  if (existing) existing.remove();
+
+  const container = document.createElement('div');
+  container.id = 'inline-stage-controls';
+  container.style.marginTop = '8px';
+
+  // 1) Starting Stage
+  const startMax = 1 + (crystalShop?.crystalUpgrades?.startingStage || 0);
+  const startVal = options?.startingStage != null ? options.startingStage : 0;
+  const startRow = document.createElement('div');
+  startRow.className = 'option-row';
+  startRow.innerHTML = html`
+    <label class="starting-stage-label">${t('options.startingStage')}:</label>
+    <input type="number" class="starting-stage-input" min="0" max="${startMax}" value="${startVal}" />
+    <button class="max-btn" type="button" data-i18n="common.max">${t('common.max')}</button>
+    <button class="apply-btn" type="button" data-i18n="common.apply">${t('common.apply')}</button>
+  `;
+  const startInput = startRow.querySelector('input');
+  const startMaxBtn = startRow.querySelector('.max-btn');
+  const startApply = startRow.querySelector('.apply-btn');
+  startApply.onmouseenter = () => startApply.classList.add('hover');
+  startApply.onmouseleave = () => startApply.classList.remove('hover');
+  if (startMaxBtn) {
+    startMaxBtn.onmouseenter = () => startMaxBtn.classList.add('hover');
+    startMaxBtn.onmouseleave = () => startMaxBtn.classList.remove('hover');
+    startMaxBtn.onclick = () => {
+      const max = 1 + (crystalShop?.crystalUpgrades?.startingStage || 0);
+      startInput.value = max;
+      startInput.dispatchEvent(new Event('input'));
+    };
+  }
+  startInput.addEventListener('input', () => {
+    let v = parseInt(startInput.value, 10);
+    const m = 1 + (crystalShop?.crystalUpgrades?.startingStage || 0);
+    if (isNaN(v) || v < 0) v = 0;
+    if (v > m) v = m;
+    startInput.value = v;
+  });
+  startApply.onclick = () => {
+    let v = parseInt(startInput.value, 10);
+    const m = 1 + (crystalShop?.crystalUpgrades?.startingStage || 0);
+    if (isNaN(v) || v < 0) v = 0;
+    if (v > m) v = m;
+    options.startingStage = v;
+    if (game.fightMode === 'explore') {
+      game.stage = game.getStartingStage();
+      game.currentEnemy = new Enemy(game.stage);
+      updateStageUI();
+      game.resetAllLife();
+    }
+    dataManager.saveGame();
+    showToast(t('options.toast.startingStageApplied'), 'success');
+  };
+
+  // 2) Stage Skip per Kill
+  const skipMax = crystalShop?.crystalUpgrades?.stageSkip || 0;
+  const skipVal = options?.stageSkip != null ? options.stageSkip : 0;
+  const skipRow = document.createElement('div');
+  skipRow.className = 'option-row';
+  skipRow.innerHTML = html`
+    <label class="stage-skip-label">${t('options.stageSkipPerKill')}:</label>
+    <input type="number" class="stage-skip-input" min="0" max="${skipMax}" value="${skipVal}" />
+    <button class="max-btn" type="button" data-i18n="common.max">${t('common.max')}</button>
+    <button class="apply-btn" type="button" data-i18n="common.apply">${t('common.apply')}</button>
+  `;
+  const skipInput = skipRow.querySelector('input');
+  const skipMaxBtn = skipRow.querySelector('.max-btn');
+  const skipApply = skipRow.querySelector('.apply-btn');
+  skipApply.onmouseenter = () => skipApply.classList.add('hover');
+  skipApply.onmouseleave = () => skipApply.classList.remove('hover');
+  if (skipMaxBtn) {
+    skipMaxBtn.onmouseenter = () => skipMaxBtn.classList.add('hover');
+    skipMaxBtn.onmouseleave = () => skipMaxBtn.classList.remove('hover');
+    skipMaxBtn.onclick = () => {
+      const max = crystalShop?.crystalUpgrades?.stageSkip || 0;
+      skipInput.value = max;
+      skipInput.dispatchEvent(new Event('input'));
+    };
+  }
+  skipInput.addEventListener('input', () => {
+    let v = parseInt(skipInput.value, 10);
+    const m = crystalShop?.crystalUpgrades?.stageSkip || 0;
+    if (isNaN(v) || v < 0) v = 0;
+    if (v > m) v = m;
+    skipInput.value = v;
+  });
+  skipApply.onclick = () => {
+    let v = parseInt(skipInput.value, 10);
+    const m = crystalShop?.crystalUpgrades?.stageSkip || 0;
+    if (isNaN(v) || v < 0) v = 0;
+    if (v > m) v = m;
+    options.stageSkip = v;
+    dataManager.saveGame();
+    showToast(t('options.toast.stageSkipApplied'), 'success');
+  };
+
+  // 3) Reset Stage Skip At
+  const resetPurchased = !!crystalShop?.crystalUpgrades?.resetStageSkip;
+  const resetVal = options?.resetStageSkip != null ? options.resetStageSkip : 0;
+  const resetRow = document.createElement('div');
+  resetRow.className = 'option-row';
+  resetRow.innerHTML = html`
+    <label class="reset-stage-skip-label">${t('options.resetStageSkipAt')}:</label>
+    <input type="number" class="reset-stage-skip-input" min="0" value="${resetVal}" ${resetPurchased ? '' : 'disabled'} />
+    <button class="max-btn" type="button" ${resetPurchased ? '' : 'disabled'} data-i18n="common.max">${t('common.max')}</button>
+    <button class="apply-btn" type="button" ${resetPurchased ? '' : 'disabled'} data-i18n="common.apply">${t('common.apply')}</button>
+  `;
+  const resetInput = resetRow.querySelector('input');
+  const resetMaxBtn = resetRow.querySelector('.max-btn');
+  const resetApply = resetRow.querySelector('.apply-btn');
+  resetApply.onmouseenter = () => resetApply.classList.add('hover');
+  resetApply.onmouseleave = () => resetApply.classList.remove('hover');
+  if (resetMaxBtn) {
+    resetMaxBtn.onmouseenter = () => resetMaxBtn.classList.add('hover');
+    resetMaxBtn.onmouseleave = () => resetMaxBtn.classList.remove('hover');
+    resetMaxBtn.onclick = () => {
+      if (resetMaxBtn.disabled) return;
+      const highest = Math.max(
+        ...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0),
+      );
+      resetInput.value = highest || 0;
+      resetInput.dispatchEvent(new Event('input'));
+    };
+  }
+  resetInput.addEventListener('input', () => {
+    let v = parseInt(resetInput.value, 10);
+    if (isNaN(v) || v < 0) v = 0;
+    resetInput.value = v;
+  });
+  resetApply.onclick = () => {
+    if (resetInput.disabled) return;
+    let v = parseInt(resetInput.value, 10);
+    if (isNaN(v) || v < 0) v = 0;
+    options.resetStageSkip = v;
+    dataManager.saveGame();
+    showToast(t('options.toast.resetStageSkipApplied'), 'success');
+  };
+
+  container.appendChild(startRow);
+  container.appendChild(skipRow);
+  container.appendChild(resetRow);
+
+  // Insert after enemy section inside explore panel
+  const enemySection = panel.querySelector('.enemy-section');
+  if (enemySection && enemySection.parentNode) {
+    enemySection.parentNode.insertBefore(container, enemySection.nextSibling);
+  } else {
+    panel.appendChild(container);
+  }
 }

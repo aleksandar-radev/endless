@@ -225,6 +225,8 @@ export default {
   'options.suggestionsPrompt': 'Por favor añade tus sugerencias de cambios en el canal de Discord :)',
   'options.desktopDownload': 'Puedes descargar la aplicación de escritorio (solo Windows) desde',
   'options.here': 'AQUÍ',
+  'options.stageControlsInline': 'Mostrar controles de etapa bajo el enemigo',
+  'options.stageControlsInline.tooltip': 'Muestra etapa inicial, salto de etapa y reinicio debajo del enemigo en Explorar',
   'options.startingStage': 'Etapa inicial',
   'options.toast.startingStageApplied': '¡Opción de etapa inicial aplicada!',
   'options.shortElementalNames': 'Usar nombres elementales cortos',
