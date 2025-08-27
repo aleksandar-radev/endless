@@ -205,7 +205,14 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
         rerenderModal();
         const newInput = modal.querySelector('.upgrade-amt-input');
         newInput.focus();
-        newInput.setSelectionRange(newInput.value.length, newInput.value.length);
+        try {
+          newInput.setSelectionRange(newInput.value.length, newInput.value.length);
+        } catch {
+          // setSelectionRange isn't supported on number inputs in some browsers
+          const val = newInput.value;
+          newInput.value = '';
+          newInput.value = val;
+        }
       });
     } else {
       modal.querySelectorAll('.upgrade-amt-btn').forEach((btn) => {
