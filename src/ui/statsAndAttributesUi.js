@@ -9,6 +9,7 @@ import { getAttributeTooltip, ATTRIBUTES } from '../constants/stats/attributes.j
 import { calculateArmorReduction, calculateEvasionChance, calculateHitChance, calculateResistanceReduction } from '../combat.js';
 import { createModal } from './modal.js';
 import { t } from '../i18n.js';
+import { updateInventoryGrid } from './inventoryUi.js';
 
 const html = String.raw;
 
@@ -628,6 +629,7 @@ function openSplitView() {
       restorePanel('stats');
       if (splitState.currentRight) restorePanel(splitState.currentRight);
       switchTab('stats');
+      updateInventoryGrid();
     },
   });
 
@@ -645,6 +647,9 @@ function openSplitView() {
     switchTab(tab);
     statsEl.classList.add('active');
     movePanel(tab, rightPanel);
+    if (tab === 'inventory') {
+      updateInventoryGrid();
+    }
     splitState.currentRight = tab;
     rightTabs.querySelectorAll('button').forEach((b) => {
       b.classList.toggle('active', b.dataset.tab === tab);

@@ -16,7 +16,7 @@ export default function run() {
 
     <span style="color:#FF0000;"> Fixes</span>
     <ul>
-      <li></li>
+      <li>Equipped items no longer disappear in split view.</li>
     </ul>
   `;
 }
