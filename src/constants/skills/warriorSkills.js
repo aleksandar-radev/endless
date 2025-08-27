@@ -188,7 +188,7 @@ export const WARRIOR_SKILLS = {
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'warlord',
-    description: () => t('skill.warlord'),
+    description: () => t('skill.warlordWarrior'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifePercent: scaleDownFlat(level, 1),
