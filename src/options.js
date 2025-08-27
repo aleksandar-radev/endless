@@ -19,6 +19,12 @@ import upcommingChanges from './upcoming.js';
 import { audioManager } from './audio.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { setLanguage, t } from './i18n.js';
+import {
+  SOUL_SHOP_MAX_QTY,
+  CRYSTAL_SHOP_MAX_QTY,
+  TRAINING_MAX_QTY,
+  BUILDING_MAX_QTY,
+} from './constants/limits.js';
 
 const html = String.raw;
 
@@ -100,15 +106,30 @@ export class Options {
     // Use numeric inputs for bulk purchases
     this.useNumericInputs = data.useNumericInputs ?? false;
     // Default quantities for bulk purchases
-    this.soulShopQty = typeof data.soulShopQty === 'number' ? Math.min(data.soulShopQty, 10000) : 1;
+    this.soulShopQty =
+      typeof data.soulShopQty === 'number'
+        ? Math.min(data.soulShopQty, SOUL_SHOP_MAX_QTY)
+        : 1;
     this.soulShopQuickQty =
-      typeof data.soulShopQuickQty === 'number' ? Math.min(data.soulShopQuickQty, 10000) : 1;
+      typeof data.soulShopQuickQty === 'number'
+        ? Math.min(data.soulShopQuickQty, SOUL_SHOP_MAX_QTY)
+        : 1;
     this.crystalShopQty =
-      typeof data.crystalShopQty === 'number' ? Math.min(data.crystalShopQty, 10000) : 1;
-    this.trainingQty = typeof data.trainingQty === 'number' ? Math.min(data.trainingQty, 10000) : 1;
+      typeof data.crystalShopQty === 'number'
+        ? Math.min(data.crystalShopQty, CRYSTAL_SHOP_MAX_QTY)
+        : 1;
+    this.trainingQty =
+      typeof data.trainingQty === 'number'
+        ? Math.min(data.trainingQty, TRAINING_MAX_QTY)
+        : 1;
     this.trainingQuickQty =
-      typeof data.trainingQuickQty === 'number' ? Math.min(data.trainingQuickQty, 10000) : 1;
-    this.buildingQty = typeof data.buildingQty === 'number' ? Math.min(data.buildingQty, 10000) : 1;
+      typeof data.trainingQuickQty === 'number'
+        ? Math.min(data.trainingQuickQty, TRAINING_MAX_QTY)
+        : 1;
+    this.buildingQty =
+      typeof data.buildingQty === 'number'
+        ? Math.min(data.buildingQty, BUILDING_MAX_QTY)
+        : 1;
     // Preferred language, default to English
     this.language = data.language || 'en';
     // Use short elemental stat names

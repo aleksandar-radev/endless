@@ -8,6 +8,7 @@ import { createModal, closeModal } from './modal.js';
 import { showConfirmDialog, updateResources, formatNumber, showToast } from './ui.js';
 import { getTimeNow } from '../common.js';
 import { t, tp } from '../i18n.js';
+import { BUILDING_MAX_QTY } from '../constants/limits.js';
 
 // Countdown timer state (single updater for all visible cards)
 let buildingCountdownInterval = null;
@@ -115,11 +116,13 @@ function createBuildingCard(building) {
 function showBuildingInfoModal(building, onUpgrade, placementOptions) {
   const canUpgrade = building.level < building.maxLevel;
 
-  let upgradeAmount = options.useNumericInputs ? Math.min(options.buildingQty || 1, 10000) : 1;
+  let upgradeAmount = options.useNumericInputs
+    ? Math.min(options.buildingQty || 1, BUILDING_MAX_QTY)
+    : 1;
   let modal;
 
   function getMaxUpgradeAmount() {
-    return Math.min(building.getMaxUpgradeAmount(hero), 10000);
+    return Math.min(building.getMaxUpgradeAmount(hero), BUILDING_MAX_QTY);
   }
 
   function getTotalBonus(amount) {
@@ -143,7 +146,7 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
     const totalBonus = getTotalBonus(upgradeAmount);
     const refundAmount = building.getRefund();
     const upgradeControls = options.useNumericInputs
-      ? `<input type="number" class="upgrade-amt-input input-number" min="1" max="10000" value="${upgradeAmount}" />
+      ? `<input type="number" class="upgrade-amt-input input-number" min="1" max="${BUILDING_MAX_QTY}" value="${upgradeAmount}" />
           <button data-amt="max" class="upgrade-amt-btn${upgradeAmount === maxAffordableAmt ? ' selected-upgrade-amt' : ''}">${t('options.max')}</button>`
       : `<button data-amt="1" class="upgrade-amt-btn${upgradeAmount === 1 ? ' selected-upgrade-amt' : ''}">+1</button>
           <button data-amt="10" class="upgrade-amt-btn${upgradeAmount === 10 ? ' selected-upgrade-amt' : ''}" ${maxAffordableAmt < 10 ? 'disabled' : ''}>+10</button>
@@ -195,7 +198,7 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
       input.addEventListener('input', () => {
         let amt = parseInt(input.value, 10);
         if (isNaN(amt) || amt < 1) amt = 1;
-        if (amt > 10000) amt = 10000;
+        if (amt > BUILDING_MAX_QTY) amt = BUILDING_MAX_QTY;
         upgradeAmount = Math.max(1, Math.min(getMaxUpgradeAmount(), amt));
         options.buildingQty = upgradeAmount;
         dataManager.saveGame();
