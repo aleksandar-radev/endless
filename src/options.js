@@ -1,5 +1,5 @@
 
-import { crystalShop, dataManager, game, setGlobals, training, soulShop } from './globals.js';
+import { crystalShop, dataManager, game, setGlobals, training, soulShop, statistics } from './globals.js';
 import { initializeBuildingsUI } from './ui/buildingUi.js';
 import {
   showConfirmDialog,
@@ -60,6 +60,7 @@ const OPTION_TOOLTIPS = {
   autoSortInventoryToggle: (isPurchased) =>
     html`${isPurchased() ? '' : t('options.autoSortInventory.disabledTooltip')}`,
   enemyStatsLabel: () => html`Display enemy statistics during combat`,
+  stageControlsInlineLabel: () => html`Show stage controls under enemy in Explore`,
 };
 
 function attachTooltip(el, key, ...params) {
@@ -142,6 +143,8 @@ export class Options {
     this.showNotifications = data.showNotifications ?? true;
     // Show combat texts (damage numbers, level up text)
     this.showCombatText = data.showCombatText ?? true;
+    // Show stage controls under enemy in Explore panel
+    this.showStageControlsInline = data.showStageControlsInline ?? false;
   }
 
   /**
@@ -254,6 +257,7 @@ export class Options {
     gameContent.appendChild(this._createAdvancedTooltipsOption());
     gameContent.appendChild(this._createAdvancedAttributeTooltipsOption());
     gameContent.appendChild(this._createEnemyStatsToggleOption());
+    gameContent.appendChild(this._createStageControlsInlineOption());
     gameContent.appendChild(this._createShowAllStatsOption());
     gameContent.appendChild(this._createShortElementalNamesOption());
     gameContent.appendChild(this._createQuickTrainingOption());
@@ -540,12 +544,14 @@ export class Options {
         max="${max}"
         value="${value}"
       />
+      <button class="max-btn" type="button" data-i18n="common.max">Max</button>
       <button class="apply-btn" type="button" data-i18n="common.apply">Apply</button>
     `;
 
     const label = wrapper.querySelector('.stage-skip-label');
     const input = wrapper.querySelector('input');
-    const applyBtn = wrapper.querySelector('button');
+    const maxBtn = wrapper.querySelector('.max-btn');
+    const applyBtn = wrapper.querySelector('.apply-btn');
     attachTooltip(label, 'stageSkipLabel');
     attachTooltip(input, 'stageSkipInput', () => crystalShop.crystalUpgrades?.stageSkip || 0);
 
@@ -555,6 +561,15 @@ export class Options {
 
     applyBtn.onmouseenter = () => applyBtn.classList.add('hover');
     applyBtn.onmouseleave = () => applyBtn.classList.remove('hover');
+    if (maxBtn) {
+      maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
+      maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
+      maxBtn.onclick = () => {
+        const max = crystalShop.crystalUpgrades?.stageSkip || 0;
+        input.value = max;
+        input.dispatchEvent(new Event('input'));
+      };
+    }
 
     input.addEventListener('input', () => {
       let val = parseInt(input.value, 10);
@@ -587,13 +602,22 @@ export class Options {
    */
   updateStageSkipOption() {
     if (!this._stageSkipInput) return;
+    const oldMax = parseInt(this._stageSkipInput.max, 10) || 0;
     const max = crystalShop.crystalUpgrades?.stageSkip || 0;
     this._stageSkipInput.max = max;
 
     let val = parseInt(this._stageSkipInput.value, 10);
     if (isNaN(val) || val < 0) val = 0;
     if (val > max) val = max;
-    this._stageSkipInput.value = val;
+    // If user hadn't set a custom value (0/default), bump to current option (which may be newly synced)
+    // Also, if user value was exactly the previous max, follow the new max.
+    if ((val === 0 || isNaN(val)) && this.stageSkip > 0) {
+      this._stageSkipInput.value = this.stageSkip;
+    } else if (oldMax > 0 && val === oldMax) {
+      this._stageSkipInput.value = max;
+    } else {
+      this._stageSkipInput.value = val;
+    }
   }
 
   _createResetStageSkipOption() {
@@ -612,12 +636,14 @@ export class Options {
         value="${value}"
         ${purchased ? '' : 'disabled'}
       />
+      <button class="max-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.max">Max</button>
       <button class="apply-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.apply">Apply</button>
     `;
 
     const label = wrapper.querySelector('.reset-stage-skip-label');
     const input = wrapper.querySelector('input');
-    const applyBtn = wrapper.querySelector('button');
+    const maxBtn = wrapper.querySelector('.max-btn');
+    const applyBtn = wrapper.querySelector('.apply-btn');
     attachTooltip(label, 'resetStageSkipLabel');
     attachTooltip(input, 'resetStageSkipInput', () => !!crystalShop.crystalUpgrades?.resetStageSkip);
 
@@ -626,6 +652,18 @@ export class Options {
 
     applyBtn.onmouseenter = () => applyBtn.classList.add('hover');
     applyBtn.onmouseleave = () => applyBtn.classList.remove('hover');
+    if (maxBtn) {
+      maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
+      maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
+      maxBtn.onclick = () => {
+        // Use highest stage reached across all tiers as a sensible maximum
+        const highest = Math.max(
+          ...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0),
+        );
+        input.value = highest || 0;
+        input.dispatchEvent(new Event('input'));
+      };
+    }
 
     input.addEventListener('input', () => {
       let val = parseInt(input.value, 10);
@@ -650,8 +688,8 @@ export class Options {
     if (!this._resetStageSkipInput) return;
     const purchased = !!crystalShop.crystalUpgrades?.resetStageSkip;
     this._resetStageSkipInput.disabled = !purchased;
-    const btn = this._resetStageSkipWrapper?.querySelector('button');
-    if (btn) btn.disabled = !purchased;
+    const btns = this._resetStageSkipWrapper?.querySelectorAll('.apply-btn, .max-btn');
+    if (btns) btns.forEach((b) => (b.disabled = !purchased));
   }
 
   /**
@@ -967,12 +1005,14 @@ export class Options {
         max="${max}"
         value="${value}"
       />
+      <button class="max-btn" type="button" data-i18n="common.max">Max</button>
       <button class="apply-btn" type="button" data-i18n="common.apply">Apply</button>
     `;
 
     const label = wrapper.querySelector('.starting-stage-label');
     const input = wrapper.querySelector('input');
-    const applyBtn = wrapper.querySelector('button');
+    const maxBtn = wrapper.querySelector('.max-btn');
+    const applyBtn = wrapper.querySelector('.apply-btn');
     attachTooltip(label, 'startingStageLabel');
     attachTooltip(input, 'startingStageInput', () => 1 + (crystalShop.crystalUpgrades?.startingStage || 0));
 
@@ -982,6 +1022,15 @@ export class Options {
 
     applyBtn.onmouseenter = () => applyBtn.classList.add('hover');
     applyBtn.onmouseleave = () => applyBtn.classList.remove('hover');
+    if (maxBtn) {
+      maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
+      maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
+      maxBtn.onclick = () => {
+        const max = 1 + (crystalShop.crystalUpgrades?.startingStage || 0);
+        input.value = max;
+        input.dispatchEvent(new Event('input'));
+      };
+    }
 
     input.addEventListener('input', () => {
       let val = parseInt(input.value, 10);
@@ -1020,13 +1069,22 @@ export class Options {
    */
   updateStartingStageOption() {
     if (!this._startingStageInput) return;
+    const oldMax = parseInt(this._startingStageInput.max, 10) || 0;
     const max = 1 + (crystalShop.crystalUpgrades?.startingStage || 0);
     this._startingStageInput.max = max;
 
     let val = parseInt(this._startingStageInput.value, 10);
     if (isNaN(val) || val < 0) val = 0;
     if (val > max) val = max;
-    this._startingStageInput.value = val;
+    // If input was at default/0, reflect the current option value (possibly updated after purchase)
+    // Also, if value matched previous max, follow to new max.
+    if ((val === 0 || isNaN(val)) && this.startingStage > 0) {
+      this._startingStageInput.value = this.startingStage;
+    } else if (oldMax > 0 && val === oldMax) {
+      this._startingStageInput.value = max;
+    } else {
+      this._startingStageInput.value = val;
+    }
   }
 
   /**
@@ -1351,6 +1409,42 @@ export class Options {
       const stats = document.querySelector('.enemy-stats');
       if (stats) stats.style.display = this.showEnemyStats ? '' : 'none';
     }, 0);
+    return wrapper;
+  }
+
+  /**
+   * Creates a toggle to show stage-related controls below the enemy in Explore panel.
+   */
+  _createStageControlsInlineOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="stage-controls-inline-toggle" class="stage-controls-inline-toggle-label" data-i18n="options.stageControlsInline">Show Stage Controls Under Enemy:</label>
+      <input
+        type="checkbox"
+        id="stage-controls-inline-toggle"
+        class="stage-controls-inline-toggle"
+        ${this.showStageControlsInline ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const label = wrapper.querySelector('.stage-controls-inline-toggle-label');
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'stageControlsInlineLabel');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.showStageControlsInline = checkbox.checked;
+      dataManager.saveGame();
+      // Ask UI to update inline controls visibility
+      try {
+        const evt = new CustomEvent('updateInlineStageControls');
+        document.dispatchEvent(evt);
+      } catch (e) {}
+    });
     return wrapper;
   }
 }

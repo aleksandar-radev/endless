@@ -319,6 +319,36 @@
   background: #1d4ed8;
 }
 
+/* Max buttons in options rows */
+.max-btn {
+  margin-left: 0.25em;
+  padding: 6px 12px;
+  background: #10b981; /* emerald */
+  color: #0b1b1f;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.02s;
+}
+
+.max-btn.hover,
+.max-btn:focus,
+.max-btn:hover {
+  background: #0ea371;
+}
+
+.max-btn:active {
+  transform: translateY(1px);
+}
+
+.max-btn:disabled {
+  background: #374151;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
 .migration-modal .modal-content {
   width: unset;
 }

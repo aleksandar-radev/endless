@@ -589,6 +589,7 @@ export default class CrystalShop {
   async _bulkPurchase(stat, config, qty) {
     const { baseCost, costIncrement = 0, label } = config;
     let level = this.crystalUpgrades[stat] || 0;
+    const prevLevel = level;
     let count = 0,
       totalCost = 0;
     const nextCost = (lvl) => Math.floor(baseCost + costIncrement * lvl);
@@ -613,6 +614,29 @@ export default class CrystalShop {
     }
 
     this.crystalUpgrades[stat] = level;
+
+    // If player hasn't customized related options yet, set them to newly unlocked max
+    try {
+      if (stat === 'stageSkip') {
+        const oldMax = prevLevel;
+        const newMax = this.crystalUpgrades.stageSkip || 0;
+        if (options.stageSkip == null || options.stageSkip === 0 || options.stageSkip === oldMax) {
+          options.stageSkip = newMax;
+        }
+        options.updateStageSkipOption?.();
+      }
+      if (stat === 'startingStage') {
+        const oldMax = 1 + prevLevel;
+        const newMax = 1 + (this.crystalUpgrades.startingStage || 0);
+        if (options.startingStage == null || options.startingStage === 0 || options.startingStage === oldMax) {
+          options.startingStage = newMax;
+        }
+        options.updateStartingStageOption?.();
+      }
+    } catch (e) {
+      // Non-fatal: keep purchase flow even if UI update fails
+      console.warn('Failed to sync options after crystal purchase:', e);
+    }
     this._commitChanges(false);
     this.updateModalDetails();
     showToast(`Upgraded ${label} by ${count} level${count !== 1 ? 's' : ''}!`, count > 0 ? 'success' : 'error');
