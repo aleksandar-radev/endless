@@ -1,5 +1,4 @@
 import { t } from '../../i18n.js';
-import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 4;
 
@@ -10,23 +9,22 @@ export const DESERT_ENEMIES = [
     image: '/enemies/dunewraith.jpg',
     tier: tier,
 
-    life: 26 * getEnemyStatMultiplier(tier),
-    damage: 1.5 * getEnemyStatMultiplier(tier),
-    attackRating: 12 * getEnemyStatMultiplier(tier),
-    armor: 7 * getEnemyStatMultiplier(tier),
-    evasion: 9 * getEnemyStatMultiplier(tier),
-
-    xp: 9 * getEnemyStatMultiplier(tier),
-    gold: 7 * getEnemyStatMultiplier(tier),
-
-    earthDamage: 1.5 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 3 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    earthResistance: 4 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.3,
+      damage: 0.5,
+      attackRating: 2.4,
+      armor: 1,
+      evasion: 1.5,
+      xp: 1.5,
+      gold: 1.17,
+      earthDamage: 0.5,
+      fireResistance: 0.67,
+      coldResistance: 1,
+      airResistance: 0.67,
+      earthResistance: 1.33,
+      lightningResistance: 0.67,
+      waterResistance: 0.67,
+    },
 
     materialDropWeights: {},
     tags: ['scorching_desert'],
@@ -37,24 +35,24 @@ export const DESERT_ENEMIES = [
     image: '/enemies/sandstalker.jpg',
     tier: tier,
 
-    life: 24 * getEnemyStatMultiplier(tier),
-    damage: 1 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.1,
-    attackRating: 12 * getEnemyStatMultiplier(tier),
-    armor: 6 * getEnemyStatMultiplier(tier),
-    evasion: 13 * getEnemyStatMultiplier(tier),
 
-    xp: 8 * getEnemyStatMultiplier(tier),
-    gold: 7 * getEnemyStatMultiplier(tier),
-
-    earthDamage: 2 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 2 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.2,
+      damage: 0.33,
+      attackRating: 2.4,
+      armor: 0.86,
+      evasion: 2.17,
+      xp: 1.33,
+      gold: 1.17,
+      earthDamage: 0.67,
+      fireResistance: 0.67,
+      coldResistance: 0.67,
+      airResistance: 0.67,
+      earthResistance: 1,
+      lightningResistance: 0.67,
+      waterResistance: 0.67,
+    },
 
     materialDropWeights: {},
     tags: ['scorching_desert'],
@@ -65,23 +63,23 @@ export const DESERT_ENEMIES = [
     image: '/enemies/scorching-salamander.jpg',
     tier: tier,
 
-    life: 28 * getEnemyStatMultiplier(tier),
-    damage: 0 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.0,
-    attackRating: 12 * getEnemyStatMultiplier(tier),
-    armor: 8 * getEnemyStatMultiplier(tier),
 
-    xp: 10 * getEnemyStatMultiplier(tier),
-    gold: 8 * getEnemyStatMultiplier(tier),
-
-    fireDamage: 4 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 5 * getEnemyStatMultiplier(tier),
-    coldResistance: 4 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    earthResistance: 2 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 3 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.4,
+      damage: 0,
+      attackRating: 2.4,
+      armor: 1.14,
+      xp: 1.67,
+      gold: 1.33,
+      fireDamage: 1.33,
+      fireResistance: 1.67,
+      coldResistance: 1.33,
+      airResistance: 0.67,
+      earthResistance: 0.67,
+      lightningResistance: 0.67,
+      waterResistance: 1,
+    },
 
     materialDropWeights: {},
     tags: ['scorching_desert'],
@@ -93,24 +91,24 @@ export const DESERT_ENEMIES = [
     image: '/enemies/dune-blazer.jpg',
     tier: tier,
 
-    life: 26 * getEnemyStatMultiplier(tier),
-    damage: 2 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.1,
-    attackRating: 12 * getEnemyStatMultiplier(tier),
-    armor: 7 * getEnemyStatMultiplier(tier),
-    evasion: 8 * getEnemyStatMultiplier(tier),
 
-    xp: 9 * getEnemyStatMultiplier(tier),
-    gold: 9 * getEnemyStatMultiplier(tier),
-
-    fireDamage: 1.5 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 4 * getEnemyStatMultiplier(tier),
-    coldResistance: 2 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.3,
+      damage: 0.67,
+      attackRating: 2.4,
+      armor: 1,
+      evasion: 1.33,
+      xp: 1.5,
+      gold: 1.5,
+      fireDamage: 0.5,
+      fireResistance: 1.33,
+      coldResistance: 0.67,
+      airResistance: 0.67,
+      earthResistance: 1,
+      lightningResistance: 0.67,
+      waterResistance: 0.67,
+    },
 
     materialDropWeights: {},
     tags: ['scorching_desert'],

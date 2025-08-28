@@ -1,5 +1,4 @@
 import { t } from '../../i18n.js';
-import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 2;
 
@@ -10,21 +9,22 @@ export const CRYSTAL_CAVE_ENEMIES = [
     image: '/enemies/crystal-golem.jpg',
     tier: tier,
 
-    life: 32 * getEnemyStatMultiplier(tier),
-    damage: 1 * getEnemyStatMultiplier(tier),
     attackSpeed: 0.9,
-    attackRating: 4 * getEnemyStatMultiplier(tier),
-    armor: 16 * getEnemyStatMultiplier(tier),
-    evasion: 3 * getEnemyStatMultiplier(tier),
 
-    earthDamage: 3 * getEnemyStatMultiplier(tier),
-
-    earthResistance: 5 * getEnemyStatMultiplier(tier),
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 3 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    lightningResistance: 3 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.6,
+      damage: 0.33,
+      attackRating: 0.8,
+      armor: 2.29,
+      evasion: 0.5,
+      earthDamage: 1,
+      earthResistance: 1.67,
+      fireResistance: 0.67,
+      coldResistance: 1,
+      airResistance: 0.67,
+      lightningResistance: 1,
+      waterResistance: 0.67,
+    },
 
     materialDropWeights: {
       crystalized_rock: 4,
@@ -37,19 +37,19 @@ export const CRYSTAL_CAVE_ENEMIES = [
     image: '/enemies/gem-guardian.jpg',
     tier: tier,
 
-    armor: 12 * getEnemyStatMultiplier(tier),
-    damage: 0,
-    evasion: 4 * getEnemyStatMultiplier(tier),
-
-    earthDamage: 1.5 * getEnemyStatMultiplier(tier),
-    waterDamage: 1.5 * getEnemyStatMultiplier(tier),
-
-    earthResistance: 4 * getEnemyStatMultiplier(tier),
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 2 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    lightningResistance: 3 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      armor: 1.71,
+      damage: 0,
+      evasion: 0.67,
+      earthDamage: 0.5,
+      waterDamage: 0.5,
+      earthResistance: 1.33,
+      fireResistance: 0.67,
+      coldResistance: 0.67,
+      airResistance: 0.67,
+      lightningResistance: 1,
+      waterResistance: 0.67,
+    },
 
     materialDropWeights: {},
     tags: ['crystal_cave'],
@@ -62,15 +62,16 @@ export const CRYSTAL_CAVE_ENEMIES = [
 
     attackSpeed: 1.2,
 
-    damage: 1.5 * getEnemyStatMultiplier(tier),
-    airDamage: 1.5 * getEnemyStatMultiplier(tier),
-
-    airResistance: 3 * getEnemyStatMultiplier(tier),
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 2 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      damage: 0.5,
+      airDamage: 0.5,
+      airResistance: 1,
+      fireResistance: 0.67,
+      coldResistance: 0.67,
+      earthResistance: 1,
+      lightningResistance: 0.67,
+      waterResistance: 0.67,
+    },
 
     materialDropWeights: {},
     tags: ['crystal_cave'],
@@ -81,17 +82,18 @@ export const CRYSTAL_CAVE_ENEMIES = [
     image: '/enemies/shardling.jpg',
     tier: tier,
 
-    damage: 1 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.2,
 
-    earthDamage: 2 * getEnemyStatMultiplier(tier),
-
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 2 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      damage: 0.33,
+      earthDamage: 0.67,
+      earthResistance: 1,
+      fireResistance: 0.67,
+      coldResistance: 0.67,
+      airResistance: 0.67,
+      lightningResistance: 0.67,
+      waterResistance: 0.67,
+    },
 
     materialDropWeights: {},
     tags: ['crystal_cave'],

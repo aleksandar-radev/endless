@@ -1,5 +1,4 @@
 import { t } from '../../i18n.js';
-import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 6;
 
@@ -10,24 +9,24 @@ export const SKYREALM_ENEMIES = [
     image: '/enemies/cloudstrider.jpg',
     tier: tier,
 
-    life: 24 * getEnemyStatMultiplier(tier),
-    damage: 1 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.2,
-    attackRating: 12 * getEnemyStatMultiplier(tier),
-    armor: 6 * getEnemyStatMultiplier(tier),
-    evasion: 11 * getEnemyStatMultiplier(tier),
 
-    xp: 9 * getEnemyStatMultiplier(tier),
-    gold: 8 * getEnemyStatMultiplier(tier),
-
-    airDamage: 3 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 2 * getEnemyStatMultiplier(tier),
-    airResistance: 4 * getEnemyStatMultiplier(tier),
-    earthResistance: 2 * getEnemyStatMultiplier(tier),
-    lightningResistance: 3 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.2,
+      damage: 0.33,
+      attackRating: 2.4,
+      armor: 0.86,
+      evasion: 1.83,
+      xp: 1.5,
+      gold: 1.33,
+      airDamage: 1,
+      fireResistance: 0.67,
+      coldResistance: 0.67,
+      airResistance: 1.33,
+      earthResistance: 0.67,
+      lightningResistance: 1,
+      waterResistance: 0.67,
+    },
 
     materialDropWeights: {},
     tags: ['skyrealm_peaks'],
@@ -38,24 +37,24 @@ export const SKYREALM_ENEMIES = [
     image: '/enemies/stormbringer.jpg',
     tier: tier,
 
-    life: 28 * getEnemyStatMultiplier(tier),
-    damage: 2.5 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.1,
-    attackRating: 14 * getEnemyStatMultiplier(tier),
-    armor: 7 * getEnemyStatMultiplier(tier),
-    evasion: 8 * getEnemyStatMultiplier(tier),
 
-    xp: 10 * getEnemyStatMultiplier(tier),
-    gold: 10 * getEnemyStatMultiplier(tier),
-
-    airDamage: 1 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 2 * getEnemyStatMultiplier(tier),
-    airResistance: 3 * getEnemyStatMultiplier(tier),
-    earthResistance: 2 * getEnemyStatMultiplier(tier),
-    lightningResistance: 3 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.4,
+      damage: 0.83,
+      attackRating: 2.8,
+      armor: 1,
+      evasion: 1.33,
+      xp: 1.67,
+      gold: 1.67,
+      airDamage: 0.33,
+      fireResistance: 0.67,
+      coldResistance: 0.67,
+      airResistance: 1,
+      earthResistance: 0.67,
+      lightningResistance: 1,
+      waterResistance: 0.67,
+    },
 
     materialDropWeights: {},
     tags: ['skyrealm_peaks'],
@@ -66,25 +65,25 @@ export const SKYREALM_ENEMIES = [
     image: '/enemies/stormsoul.jpg',
     tier: tier,
 
-    life: 26 * getEnemyStatMultiplier(tier),
-    damage: 0 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.1,
-    attackRating: 13 * getEnemyStatMultiplier(tier),
-    armor: 6 * getEnemyStatMultiplier(tier),
-    evasion: 9 * getEnemyStatMultiplier(tier),
 
-    xp: 9 * getEnemyStatMultiplier(tier),
-    gold: 9 * getEnemyStatMultiplier(tier),
-
-    airDamage: 2.5 * getEnemyStatMultiplier(tier),
-    earthDamage: 0.5 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 3 * getEnemyStatMultiplier(tier),
-    airResistance: 5 * getEnemyStatMultiplier(tier),
-    earthResistance: 2 * getEnemyStatMultiplier(tier),
-    lightningResistance: 3 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.3,
+      damage: 0,
+      attackRating: 2.6,
+      armor: 0.86,
+      evasion: 1.5,
+      xp: 1.5,
+      gold: 1.5,
+      airDamage: 0.83,
+      earthDamage: 0.17,
+      fireResistance: 0.67,
+      coldResistance: 1,
+      airResistance: 1.67,
+      earthResistance: 0.67,
+      lightningResistance: 1,
+      waterResistance: 0.67,
+    },
 
     materialDropWeights: {},
     tags: ['skyrealm_peaks'],
@@ -95,24 +94,24 @@ export const SKYREALM_ENEMIES = [
     image: '/enemies/midas-beast.jpg',
     tier: tier,
 
-    life: 30 * getEnemyStatMultiplier(tier),
-    damage: 2 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.2,
-    attackRating: 14 * getEnemyStatMultiplier(tier),
-    armor: 15 * getEnemyStatMultiplier(tier),
-    evasion: 7 * getEnemyStatMultiplier(tier),
 
-    xp: 11 * getEnemyStatMultiplier(tier),
-    gold: 13 * getEnemyStatMultiplier(tier),
-
-    airDamage: 1 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 2 * getEnemyStatMultiplier(tier),
-    airResistance: 3 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    lightningResistance: 3 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.5,
+      damage: 0.67,
+      attackRating: 2.8,
+      armor: 2.14,
+      evasion: 1.17,
+      xp: 1.83,
+      gold: 2.17,
+      airDamage: 0.33,
+      fireResistance: 0.67,
+      coldResistance: 0.67,
+      airResistance: 1,
+      earthResistance: 1,
+      lightningResistance: 1,
+      waterResistance: 0.67,
+    },
 
     materialDropWeights: {},
     tags: ['skyrealm_peaks'],

@@ -169,7 +169,7 @@ class Enemy {
   }
 
   generateRarity() {
-    const random = Math.random() * 100;
+    const random = Math.random() * 1000; // 0 to 1000
     if (random < ENEMY_RARITY.NORMAL.threshold) return ENEMY_RARITY.NORMAL.type;
     if (random < ENEMY_RARITY.RARE.threshold) return ENEMY_RARITY.RARE.type;
     if (random < ENEMY_RARITY.EPIC.threshold) return ENEMY_RARITY.EPIC.type;

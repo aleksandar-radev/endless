@@ -1,5 +1,4 @@
 import { t } from '../../i18n.js';
-import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 5;
 
@@ -10,23 +9,22 @@ export const SWAMP_ENEMIES = [
     image: '/enemies/boglurker.jpg',
     tier: tier,
 
-    life: 24 * getEnemyStatMultiplier(tier),
-    damage: 1.5 * getEnemyStatMultiplier(tier),
-    attackRating: 12 * getEnemyStatMultiplier(tier),
-    armor: 8 * getEnemyStatMultiplier(tier),
-    evasion: 6 * getEnemyStatMultiplier(tier),
-
-    xp: 8 * getEnemyStatMultiplier(tier),
-    gold: 7 * getEnemyStatMultiplier(tier),
-
-    earthDamage: 1.5 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 2 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 4 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.2,
+      damage: 0.5,
+      attackRating: 2.4,
+      armor: 1.14,
+      evasion: 1,
+      xp: 1.33,
+      gold: 1.17,
+      earthDamage: 0.5,
+      fireResistance: 0.67,
+      coldResistance: 0.67,
+      airResistance: 0.67,
+      earthResistance: 1,
+      lightningResistance: 0.67,
+      waterResistance: 1.33,
+    },
 
     materialDropWeights: {},
     tags: ['murky_swamp'],
@@ -37,24 +35,24 @@ export const SWAMP_ENEMIES = [
     image: '/enemies/toxictoad.jpg',
     tier: tier,
 
-    life: 22 * getEnemyStatMultiplier(tier),
-    damage: 2 * getEnemyStatMultiplier(tier),
     attackSpeed: 0.9,
-    attackRating: 11 * getEnemyStatMultiplier(tier),
-    armor: 7 * getEnemyStatMultiplier(tier),
-    evasion: 7 * getEnemyStatMultiplier(tier),
 
-    xp: 7 * getEnemyStatMultiplier(tier),
-    gold: 6 * getEnemyStatMultiplier(tier),
-
-    earthDamage: 2 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 3 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 4 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.1,
+      damage: 0.67,
+      attackRating: 2.2,
+      armor: 1,
+      evasion: 1.17,
+      xp: 1.17,
+      gold: 1,
+      earthDamage: 0.67,
+      fireResistance: 0.67,
+      coldResistance: 1,
+      airResistance: 0.67,
+      earthResistance: 1,
+      lightningResistance: 0.67,
+      waterResistance: 1.33,
+    },
 
     materialDropWeights: {},
     tags: ['murky_swamp'],
@@ -65,24 +63,24 @@ export const SWAMP_ENEMIES = [
     image: '/enemies/venomspitter.jpg',
     tier: tier,
 
-    life: 20 * getEnemyStatMultiplier(tier),
-    damage: 1 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.2,
-    attackRating: 12 * getEnemyStatMultiplier(tier),
-    armor: 6 * getEnemyStatMultiplier(tier),
-    evasion: 8 * getEnemyStatMultiplier(tier),
 
-    xp: 8 * getEnemyStatMultiplier(tier),
-    gold: 7 * getEnemyStatMultiplier(tier),
-
-    earthDamage: 2 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 2 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    earthResistance: 2 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 3 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1,
+      damage: 0.33,
+      attackRating: 2.4,
+      armor: 0.86,
+      evasion: 1.33,
+      xp: 1.33,
+      gold: 1.17,
+      earthDamage: 0.67,
+      fireResistance: 0.67,
+      coldResistance: 0.67,
+      airResistance: 0.67,
+      earthResistance: 0.67,
+      lightningResistance: 0.67,
+      waterResistance: 1,
+    },
 
     materialDropWeights: {},
     tags: ['murky_swamp'],
@@ -93,24 +91,24 @@ export const SWAMP_ENEMIES = [
     image: '/enemies/frostweaver.jpg',
     tier: tier,
 
-    life: 22 * getEnemyStatMultiplier(tier),
-    damage: 1.2 * getEnemyStatMultiplier(tier),
     attackSpeed: 0.9,
-    attackRating: 10 * getEnemyStatMultiplier(tier),
-    armor: 7 * getEnemyStatMultiplier(tier),
-    evasion: 7 * getEnemyStatMultiplier(tier),
 
-    xp: 9 * getEnemyStatMultiplier(tier),
-    gold: 8 * getEnemyStatMultiplier(tier),
-
-    coldDamage: 2 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 4 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 3 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.1,
+      damage: 0.4,
+      attackRating: 2,
+      armor: 1,
+      evasion: 1.17,
+      xp: 1.5,
+      gold: 1.33,
+      coldDamage: 0.67,
+      fireResistance: 0.67,
+      coldResistance: 1.33,
+      airResistance: 0.67,
+      earthResistance: 1,
+      lightningResistance: 0.67,
+      waterResistance: 1,
+    },
 
     materialDropWeights: {},
     tags: ['murky_swamp'],

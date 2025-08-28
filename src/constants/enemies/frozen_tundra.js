@@ -1,5 +1,4 @@
 import { t } from '../../i18n.js';
-import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 3;
 
@@ -10,25 +9,25 @@ export const TUNDRA_ENEMIES = [
     image: '/enemies/frostbite.jpg',
     tier: tier,
 
-    life: 26 * getEnemyStatMultiplier(tier),
-    damage: 1 * getEnemyStatMultiplier(tier),
     attackSpeed: 0.9,
-    attackRating: 10 * getEnemyStatMultiplier(tier),
-    armor: 9 * getEnemyStatMultiplier(tier),
-    evasion: 6 * getEnemyStatMultiplier(tier),
 
-    xp: 9 * getEnemyStatMultiplier(tier),
-    gold: 7 * getEnemyStatMultiplier(tier),
-
-    airDamage: 1 * getEnemyStatMultiplier(tier),
-    coldDamage: 1 * getEnemyStatMultiplier(tier),
-
-    coldResistance: 4 * getEnemyStatMultiplier(tier),
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 3 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.3,
+      damage: 0.33,
+      attackRating: 2,
+      armor: 1.29,
+      evasion: 1,
+      xp: 1.5,
+      gold: 1.17,
+      airDamage: 0.33,
+      coldDamage: 0.33,
+      coldResistance: 1.33,
+      fireResistance: 0.67,
+      earthResistance: 1,
+      airResistance: 0.67,
+      lightningResistance: 0.67,
+      waterResistance: 1,
+    },
 
     materialDropWeights: {},
     tags: ['frozen_tundra'],
@@ -39,22 +38,21 @@ export const TUNDRA_ENEMIES = [
     image: '/enemies/frostfury.jpg',
     tier: tier,
 
-    life: 24 * getEnemyStatMultiplier(tier),
-    damage: 2 * getEnemyStatMultiplier(tier),
-    attackRating: 11 * getEnemyStatMultiplier(tier),
-    armor: 7 * getEnemyStatMultiplier(tier),
-    evasion: 8 * getEnemyStatMultiplier(tier),
-
-    xp: 8 * getEnemyStatMultiplier(tier),
-
-    coldDamage: 1 * getEnemyStatMultiplier(tier),
-
-    coldResistance: 4 * getEnemyStatMultiplier(tier),
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 3 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.2,
+      damage: 0.67,
+      attackRating: 2.2,
+      armor: 1,
+      evasion: 1.33,
+      xp: 1.33,
+      coldDamage: 0.33,
+      coldResistance: 1.33,
+      fireResistance: 0.67,
+      earthResistance: 1,
+      airResistance: 0.67,
+      lightningResistance: 0.67,
+      waterResistance: 1,
+    },
 
     materialDropWeights: {},
     tags: ['frozen_tundra'],
@@ -65,26 +63,23 @@ export const TUNDRA_ENEMIES = [
     image: '/enemies/frost-giant.jpg',
     tier: tier,
 
-    life: 32 * getEnemyStatMultiplier(tier),
-    damage: 2 * getEnemyStatMultiplier(tier),
     attackSpeed: 0.95,
-    attackRating: 15 * getEnemyStatMultiplier(tier),
-    armor: 11 * getEnemyStatMultiplier(tier),
-    evasion: 5 * getEnemyStatMultiplier(tier),
-
-    xp: 10 * getEnemyStatMultiplier(tier),
-    gold: 10 * getEnemyStatMultiplier(tier),
-
-    coldDamage: 1.2 * getEnemyStatMultiplier(tier),
-
-    coldResistance: 4 * getEnemyStatMultiplier(tier),
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 3 * getEnemyStatMultiplier(tier),
 
     multiplier: {
+      life: 1.6,
+      damage: 0.67,
+      attackRating: 3,
+      armor: 1.57,
+      evasion: 0.83,
+      xp: 1.67,
+      gold: 1.67,
+      coldDamage: 0.4,
+      coldResistance: 1.33,
+      fireResistance: 0.67,
+      earthResistance: 1,
+      airResistance: 0.67,
+      lightningResistance: 0.67,
+      waterResistance: 1,
       materialDrop: 1.1,
     },
     materialDropWeights: {},
@@ -96,24 +91,24 @@ export const TUNDRA_ENEMIES = [
     image: '/enemies/ice-wraith.jpg',
     tier: tier,
 
-    life: 22 * getEnemyStatMultiplier(tier),
-    damage: 0 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.1,
-    attackRating: 9 * getEnemyStatMultiplier(tier),
-    armor: 6 * getEnemyStatMultiplier(tier),
-    evasion: 13 * getEnemyStatMultiplier(tier),
 
-    xp: 8 * getEnemyStatMultiplier(tier),
-    gold: 6 * getEnemyStatMultiplier(tier),
-
-    coldDamage: 3 * getEnemyStatMultiplier(tier),
-
-    coldResistance: 5 * getEnemyStatMultiplier(tier),
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    earthResistance: 2 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 3 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.1,
+      damage: 0,
+      attackRating: 1.8,
+      armor: 0.86,
+      evasion: 2.17,
+      xp: 1.33,
+      gold: 1,
+      coldDamage: 1,
+      coldResistance: 1.67,
+      fireResistance: 0.67,
+      earthResistance: 0.67,
+      airResistance: 0.67,
+      lightningResistance: 0.67,
+      waterResistance: 1,
+    },
 
     materialDropWeights: {},
     tags: ['frozen_tundra'],

@@ -1,5 +1,4 @@
 import { t } from '../../i18n.js';
-import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 1;
 
@@ -10,21 +9,20 @@ export const FOREST_ENEMIES = [
     image: '/enemies/mossback.jpg',
     tier: tier,
 
-    life: 26 * getEnemyStatMultiplier(tier),
-    damage: 1.8 * getEnemyStatMultiplier(tier),
-    armor: 7 * getEnemyStatMultiplier(tier),
-
-    xp: 8 * getEnemyStatMultiplier(tier),
-    gold: 6 * getEnemyStatMultiplier(tier),
-
-    earthDamage: 1.2 * getEnemyStatMultiplier(tier),
-
-    earthResistance: 6 * getEnemyStatMultiplier(tier),
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 3 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.3,
+      damage: 0.6,
+      armor: 1,
+      xp: 1.33,
+      gold: 1,
+      earthDamage: 0.4,
+      earthResistance: 2,
+      fireResistance: 0.67,
+      coldResistance: 1,
+      airResistance: 0.67,
+      lightningResistance: 0.67,
+      waterResistance: 0.67,
+    },
 
     materialDropWeights: {},
     tags: [ 'enchanted_forest' ],
@@ -35,22 +33,18 @@ export const FOREST_ENEMIES = [
     image: '/enemies/thornling.jpg',
     tier: tier,
 
-    life: 28 * getEnemyStatMultiplier(tier),
-    damage: 1.5 * getEnemyStatMultiplier(tier),
-    armor: 6 * getEnemyStatMultiplier(tier),
-
-    gold: 8 * getEnemyStatMultiplier(tier),
-
-    earthDamage: 1.35 * getEnemyStatMultiplier(tier),
-
-    earthResistance: 4 * getEnemyStatMultiplier(tier),
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 3 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
-
     multiplier: {
+      life: 1.4,
+      damage: 0.5,
+      armor: 0.86,
+      gold: 1.33,
+      earthDamage: 0.45,
+      earthResistance: 1.33,
+      fireResistance: 0.67,
+      coldResistance: 1,
+      airResistance: 0.67,
+      lightningResistance: 0.67,
+      waterResistance: 0.67,
       itemDrop: 1.1,
     },
     materialDropWeights: {},
@@ -62,21 +56,18 @@ export const FOREST_ENEMIES = [
     image: '/enemies/barkhide.jpg',
     tier: tier,
 
-    life: 34 * getEnemyStatMultiplier(tier),
-    damage: 1.7 * getEnemyStatMultiplier(tier),
-    attackRating: 7 * getEnemyStatMultiplier(tier),
-    armor: 9 * getEnemyStatMultiplier(tier),
-
-    earthDamage: 1 * getEnemyStatMultiplier(tier),
-
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 2 * getEnemyStatMultiplier(tier),
-    airResistance: 4 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
-
     multiplier: {
+      life: 1.7,
+      damage: 0.57,
+      attackRating: 0,
+      armor: 1.29,
+      earthDamage: 0.33,
+      earthResistance: 1,
+      fireResistance: 0.67,
+      coldResistance: 0.67,
+      airResistance: 1.33,
+      lightningResistance: 0.67,
+      waterResistance: 0.67,
       materialDrop: 1.1,
     },
     materialDropWeights: {},
@@ -88,23 +79,23 @@ export const FOREST_ENEMIES = [
     image: '/enemies/sylvan-wisp.jpg',
     tier: tier,
 
-    life: 16 * getEnemyStatMultiplier(tier),
-    damage: 0 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.2,
-    attackRating: 8 * getEnemyStatMultiplier(tier),
-    armor: 4 * getEnemyStatMultiplier(tier),
-    evasion: 12 * getEnemyStatMultiplier(tier),
 
-    gold: 8 * getEnemyStatMultiplier(tier),
-
-    airDamage: 3 * getEnemyStatMultiplier(tier),
-
-    airResistance: 4 * getEnemyStatMultiplier(tier),
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 3 * getEnemyStatMultiplier(tier),
-    earthResistance: 2 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 3 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 0.8,
+      damage: 0,
+      attackRating: 1.6,
+      armor: 0.57,
+      evasion: 2,
+      gold: 1.33,
+      airDamage: 1,
+      airResistance: 1.33,
+      fireResistance: 0.67,
+      coldResistance: 1,
+      earthResistance: 0.67,
+      lightningResistance: 0.67,
+      waterResistance: 1,
+    },
 
     materialDropWeights: {},
     tags: [ 'enchanted_forest' ],

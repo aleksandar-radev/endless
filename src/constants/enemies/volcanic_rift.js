@@ -1,5 +1,4 @@
 import { t } from '../../i18n.js';
-import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 8;
 
@@ -9,25 +8,22 @@ export const VOLCANIC_RIFT_ENEMIES = [
     image: '/enemies/magma-titan.jpg',
     tier: tier,
 
-    life: 31 * getEnemyStatMultiplier(tier),
-    damage: 1 * getEnemyStatMultiplier(tier),
     attackSpeed: 0.9,
-    armor: 13 * getEnemyStatMultiplier(tier),
-    evasion: 9 * getEnemyStatMultiplier(tier),
-
-    xp: 13 * getEnemyStatMultiplier(tier),
-
-    fireDamage: 1.3 * getEnemyStatMultiplier(tier),
-    earthDamage: 1.12 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 8 * getEnemyStatMultiplier(tier),
-    coldResistance: 0 * getEnemyStatMultiplier(tier),
-    airResistance: 4 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    lightningResistance: 4 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     multiplier: {
+      life: 1.55,
+      damage: 0.33,
+      armor: 1.86,
+      evasion: 1.5,
+      xp: 2.17,
+      fireDamage: 0.43,
+      earthDamage: 0.37,
+      fireResistance: 2.67,
+      coldResistance: 0,
+      airResistance: 1.33,
+      earthResistance: 1,
+      lightningResistance: 1.33,
+      waterResistance: 0.67,
       materialDrop: 1.2,
     },
     materialDropWeights: {},
@@ -38,24 +34,21 @@ export const VOLCANIC_RIFT_ENEMIES = [
     image: '/enemies/lava-elemental.jpg',
     tier: tier,
 
-    life: 32 * getEnemyStatMultiplier(tier),
-    damage: 0.4 * getEnemyStatMultiplier(tier),
     attackSpeed: 0.9,
-    armor: 9 * getEnemyStatMultiplier(tier),
-
-    xp: 13 * getEnemyStatMultiplier(tier),
-
-    fireDamage: 2 * getEnemyStatMultiplier(tier),
-    earthDamage: 0.8 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 8 * getEnemyStatMultiplier(tier),
-    coldResistance: 2 * getEnemyStatMultiplier(tier),
-    airResistance: 5 * getEnemyStatMultiplier(tier),
-    earthResistance: 5 * getEnemyStatMultiplier(tier),
-    lightningResistance: 4 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
 
     multiplier: {
+      life: 1.6,
+      damage: 0.13,
+      armor: 1.29,
+      xp: 2.17,
+      fireDamage: 0.67,
+      earthDamage: 0.27,
+      fireResistance: 2.67,
+      coldResistance: 0.67,
+      airResistance: 1.67,
+      earthResistance: 1.67,
+      lightningResistance: 1.33,
+      waterResistance: 0.67,
       materialDrop: 1.1,
     },
     materialDropWeights: {},
@@ -66,18 +59,19 @@ export const VOLCANIC_RIFT_ENEMIES = [
     image: '/enemies/wildfire-spirit.jpg',
     tier: tier,
 
-    life: 14 * getEnemyStatMultiplier(tier),
-    damage: 0 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.4,
 
-    fireDamage: 3.3 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 7 * getEnemyStatMultiplier(tier),
-    coldResistance: 2 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    lightningResistance: 2 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 0.7,
+      damage: 0,
+      fireDamage: 1.1,
+      fireResistance: 2.33,
+      coldResistance: 0.67,
+      airResistance: 0.67,
+      earthResistance: 1,
+      lightningResistance: 0.67,
+      waterResistance: 0.67,
+    },
 
     materialDropWeights: {},
     tags: ['volcanic_rift'],
@@ -87,21 +81,18 @@ export const VOLCANIC_RIFT_ENEMIES = [
     image: '/enemies/molten-wyrm.jpg',
     tier: tier,
 
-    life: 18 * getEnemyStatMultiplier(tier),
-    damage: 0.8 * getEnemyStatMultiplier(tier),
-    armor: 11 * getEnemyStatMultiplier(tier),
-
-    fireDamage: 1.9 * getEnemyStatMultiplier(tier),
-    earthDamage: 0.6 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 7 * getEnemyStatMultiplier(tier),
-    coldResistance: 3 * getEnemyStatMultiplier(tier),
-    airResistance: 4 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    lightningResistance: 4 * getEnemyStatMultiplier(tier),
-    waterResistance: 4 * getEnemyStatMultiplier(tier),
-
     multiplier: {
+      life: 0.9,
+      damage: 0.27,
+      armor: 1.57,
+      fireDamage: 0.63,
+      earthDamage: 0.2,
+      fireResistance: 2.33,
+      coldResistance: 1,
+      airResistance: 1.33,
+      earthResistance: 1,
+      lightningResistance: 1.33,
+      waterResistance: 1.33,
       materialDrop: 1.3,
     },
     materialDropWeights: {},
@@ -112,23 +103,23 @@ export const VOLCANIC_RIFT_ENEMIES = [
     image: '/enemies/thunderwing.jpg',
     tier: tier,
 
-    life: 16 * getEnemyStatMultiplier(tier),
-    damage: 0.8 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.3,
-    attackRating: 14 * getEnemyStatMultiplier(tier),
-    evasion: 9 * getEnemyStatMultiplier(tier),
 
-    xp: 9 * getEnemyStatMultiplier(tier),
-    gold: 9 * getEnemyStatMultiplier(tier),
-
-    airDamage: 2.12 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 0 * getEnemyStatMultiplier(tier),
-    coldResistance: 3 * getEnemyStatMultiplier(tier),
-    airResistance: 8 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    lightningResistance: 3 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 0.8,
+      damage: 0.27,
+      attackRating: 2.8,
+      evasion: 1.5,
+      xp: 1.5,
+      gold: 1.5,
+      airDamage: 0.71,
+      fireResistance: 0,
+      coldResistance: 1,
+      airResistance: 2.67,
+      earthResistance: 1,
+      lightningResistance: 1,
+      waterResistance: 0.67,
+    },
 
     materialDropWeights: {},
     tags: ['volcanic_rift'],

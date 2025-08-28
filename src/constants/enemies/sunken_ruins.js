@@ -1,5 +1,4 @@
 import { t } from '../../i18n.js';
-import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 9;
 
@@ -10,27 +9,24 @@ export const SUNKEN_RUINS_ENEMIES = [
     image: '/enemies/tide-guardian.jpg',
     tier: tier,
 
-    life: 33 * getEnemyStatMultiplier(tier),
-    damage: 0.7 * getEnemyStatMultiplier(tier),
     attackSpeed: 0.95,
-    attackRating: 7 * getEnemyStatMultiplier(tier),
-    armor: 12 * getEnemyStatMultiplier(tier),
-    evasion: 4 * getEnemyStatMultiplier(tier),
-
-    xp: 9 * getEnemyStatMultiplier(tier),
-    gold: 6 * getEnemyStatMultiplier(tier),
-
-    coldDamage: 2.2 * getEnemyStatMultiplier(tier),
-    waterDamage: 1.1 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 4 * getEnemyStatMultiplier(tier),
-    coldResistance: 8 * getEnemyStatMultiplier(tier),
-    airResistance: 4 * getEnemyStatMultiplier(tier),
-    earthResistance: 4 * getEnemyStatMultiplier(tier),
-    lightningResistance: 3 * getEnemyStatMultiplier(tier),
-    waterResistance: 4 * getEnemyStatMultiplier(tier),
 
     multiplier: {
+      life: 1.65,
+      damage: 0.23,
+      attackRating: 1.4,
+      armor: 1.71,
+      evasion: 0.67,
+      xp: 1.5,
+      gold: 1,
+      coldDamage: 0.73,
+      waterDamage: 0.37,
+      fireResistance: 1.33,
+      coldResistance: 2.67,
+      airResistance: 1.33,
+      earthResistance: 1.33,
+      lightningResistance: 1,
+      waterResistance: 1.33,
       materialDrop: 1.2,
     },
     materialDropWeights: {},
@@ -42,22 +38,21 @@ export const SUNKEN_RUINS_ENEMIES = [
     image: '/enemies/coral-sentinel.jpg',
     tier: tier,
 
-    life: 25 * getEnemyStatMultiplier(tier),
-    damage: 1.7 * getEnemyStatMultiplier(tier),
-    attackRating: 6.5 * getEnemyStatMultiplier(tier),
-    armor: 4.8 * getEnemyStatMultiplier(tier),
-    evasion: 6 * getEnemyStatMultiplier(tier),
-
-    gold: 8 * getEnemyStatMultiplier(tier),
-
-    earthDamage: 2 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 7 * getEnemyStatMultiplier(tier),
-    airResistance: 2 * getEnemyStatMultiplier(tier),
-    earthResistance: 10 * getEnemyStatMultiplier(tier),
-    lightningResistance: 3 * getEnemyStatMultiplier(tier),
-    waterResistance: 3 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.25,
+      damage: 0.57,
+      attackRating: 1.3,
+      armor: 0.69,
+      evasion: 1,
+      gold: 1.33,
+      earthDamage: 0.67,
+      fireResistance: 0.67,
+      coldResistance: 2.33,
+      airResistance: 0.67,
+      earthResistance: 3.33,
+      lightningResistance: 1,
+      waterResistance: 1,
+    },
 
     materialDropWeights: {},
     tags: ['sunken_ruins'],
@@ -68,23 +63,20 @@ export const SUNKEN_RUINS_ENEMIES = [
     image: '/enemies/depths-leviathan.jpg',
     tier: tier,
 
-    life: 32 * getEnemyStatMultiplier(tier),
-    damage: 3.3 * getEnemyStatMultiplier(tier),
     attackSpeed: 0.8,
-    armor: 12 * getEnemyStatMultiplier(tier),
-
-    xp: 11 * getEnemyStatMultiplier(tier),
-
-    coldDamage: 0.4 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 6 * getEnemyStatMultiplier(tier),
-    airResistance: 3 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    lightningResistance: 3 * getEnemyStatMultiplier(tier),
-    waterResistance: 4 * getEnemyStatMultiplier(tier),
 
     multiplier: {
+      life: 1.6,
+      damage: 1.1,
+      armor: 1.71,
+      xp: 1.83,
+      coldDamage: 0.13,
+      fireResistance: 0.67,
+      coldResistance: 2,
+      airResistance: 1,
+      earthResistance: 1,
+      lightningResistance: 1,
+      waterResistance: 1.33,
       itemDrop: 1.1,
     },
     materialDropWeights: {},
@@ -96,18 +88,19 @@ export const SUNKEN_RUINS_ENEMIES = [
     image: '/enemies/arcane-construct.jpg',
     tier: tier,
 
-    life: 22 * getEnemyStatMultiplier(tier),
-    damage: 0 * getEnemyStatMultiplier(tier),
     attackSpeed: 1.1,
 
-    airDamage: 3 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 4 * getEnemyStatMultiplier(tier),
-    coldResistance: 4 * getEnemyStatMultiplier(tier),
-    airResistance: 7 * getEnemyStatMultiplier(tier),
-    earthResistance: 4 * getEnemyStatMultiplier(tier),
-    lightningResistance: 3 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.1,
+      damage: 0,
+      airDamage: 1,
+      fireResistance: 1.33,
+      coldResistance: 1.33,
+      airResistance: 2.33,
+      earthResistance: 1.33,
+      lightningResistance: 1,
+      waterResistance: 0.67,
+    },
 
     materialDropWeights: {},
     tags: ['sunken_ruins'],

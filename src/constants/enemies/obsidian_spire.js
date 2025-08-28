@@ -1,5 +1,4 @@
 import { t } from '../../i18n.js';
-import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 12;
 
@@ -10,21 +9,18 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
     image: '/enemies/void-sentinel.jpg',
     tier: tier,
 
-    life: 18 * getEnemyStatMultiplier(tier),
-    damage: 1 * getEnemyStatMultiplier(tier),
-    attackRating: 10 * getEnemyStatMultiplier(tier),
-    evasion: 10 * getEnemyStatMultiplier(tier),
-
-    coldDamage: 3 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 2 * getEnemyStatMultiplier(tier),
-    coldResistance: 8 * getEnemyStatMultiplier(tier),
-    airResistance: 5 * getEnemyStatMultiplier(tier),
-    earthResistance: 5 * getEnemyStatMultiplier(tier),
-    lightningResistance: 4 * getEnemyStatMultiplier(tier),
-    waterResistance: 7 * getEnemyStatMultiplier(tier),
-
     multiplier: {
+      life: 0.9,
+      damage: 0.33,
+      attackRating: 2,
+      evasion: 1.67,
+      coldDamage: 1,
+      fireResistance: 0.67,
+      coldResistance: 2.67,
+      airResistance: 1.67,
+      earthResistance: 1.67,
+      lightningResistance: 1.33,
+      waterResistance: 2.33,
       itemDrop: 1.1,
       materialDrop: 1.2,
     },
@@ -37,22 +33,20 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
     image: '/enemies/obsidian-golem.jpg',
     tier: tier,
 
-    life: 28 * getEnemyStatMultiplier(tier),
-    damage: 2 * getEnemyStatMultiplier(tier),
     attackSpeed: 0.7,
-    attackRating: 4.5 * getEnemyStatMultiplier(tier),
-    armor: 15 * getEnemyStatMultiplier(tier),
-
-    earthDamage: 2 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 4 * getEnemyStatMultiplier(tier),
-    coldResistance: 4 * getEnemyStatMultiplier(tier),
-    airResistance: 3 * getEnemyStatMultiplier(tier),
-    earthResistance: 9 * getEnemyStatMultiplier(tier),
-    lightningResistance: 4 * getEnemyStatMultiplier(tier),
-    waterResistance: 4 * getEnemyStatMultiplier(tier),
 
     multiplier: {
+      life: 1.4,
+      damage: 0.67,
+      attackRating: 0.9,
+      armor: 2.14,
+      earthDamage: 0.67,
+      fireResistance: 1.33,
+      coldResistance: 1.33,
+      airResistance: 1,
+      earthResistance: 3,
+      lightningResistance: 1.33,
+      waterResistance: 1.33,
       materialDrop: 1.4,
     },
     materialDropWeights: {},
@@ -64,22 +58,19 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
     image: '/enemies/crimson-wisp.jpg',
     tier: tier,
 
-    life: 16 * getEnemyStatMultiplier(tier),
-    damage: 0 * getEnemyStatMultiplier(tier),
-    attackRating: 8 * getEnemyStatMultiplier(tier),
-    evasion: 8 * getEnemyStatMultiplier(tier),
-
-    fireDamage: 2 * getEnemyStatMultiplier(tier),
-    airDamage: 1 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 7 * getEnemyStatMultiplier(tier),
-    coldResistance: 4 * getEnemyStatMultiplier(tier),
-    airResistance: 5 * getEnemyStatMultiplier(tier),
-    earthResistance: 4 * getEnemyStatMultiplier(tier),
-    lightningResistance: 4 * getEnemyStatMultiplier(tier),
-    waterResistance: 4 * getEnemyStatMultiplier(tier),
-
     multiplier: {
+      life: 0.8,
+      damage: 0,
+      attackRating: 1.6,
+      evasion: 1.33,
+      fireDamage: 0.67,
+      airDamage: 0.33,
+      fireResistance: 2.33,
+      coldResistance: 1.33,
+      airResistance: 1.67,
+      earthResistance: 1.33,
+      lightningResistance: 1.33,
+      waterResistance: 1.33,
       itemDrop: 1.2,
     },
     materialDropWeights: {},
@@ -92,20 +83,18 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
     image: '/enemies/flame-djinn.jpg',
     tier: tier,
 
-    life: 24 * getEnemyStatMultiplier(tier),
-    damage: 1.2 * getEnemyStatMultiplier(tier),
     attackSpeed: 0.9,
 
-    fireDamage: 1.8 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 9 * getEnemyStatMultiplier(tier),
-    coldResistance: 5 * getEnemyStatMultiplier(tier),
-    airResistance: 5 * getEnemyStatMultiplier(tier),
-    earthResistance: 4 * getEnemyStatMultiplier(tier),
-    lightningResistance: 4 * getEnemyStatMultiplier(tier),
-    waterResistance: 0 * getEnemyStatMultiplier(tier),
-
     multiplier: {
+      life: 1.2,
+      damage: 0.4,
+      fireDamage: 0.6,
+      fireResistance: 3,
+      coldResistance: 1.67,
+      airResistance: 1.67,
+      earthResistance: 1.33,
+      lightningResistance: 1.33,
+      waterResistance: 0,
       materialDrop: 1.5,
     },
     materialDropWeights: {},

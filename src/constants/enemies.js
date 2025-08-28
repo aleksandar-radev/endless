@@ -10,13 +10,18 @@ import { SUNKEN_RUINS_ENEMIES } from './enemies/sunken_ruins.js';
 import { HAUNTED_MOOR_ENEMIES } from './enemies/haunted_moor.js';
 import { GOLDEN_STEPPE_ENEMIES } from './enemies/golden_steppe.js';
 import { OBSIDIAN_SPIRE_ENEMIES } from './enemies/obsidian_spire.js';
+import { ELEMENTS } from './common.js';
+
+const ELEMENTAL_DAMAGE_STATS = Object.keys(ELEMENTS).map(
+  (el) => `${el}Damage`,
+);
 
 export const ENEMY_RARITY = {
   NORMAL: {
     type: 'NORMAL',
     itemDropChance: 2.5,
     color: 'gray',
-    threshold: 80,
+    threshold: 800,
     multiplier: {
       life: 1,
       damage: 1,
@@ -46,10 +51,10 @@ export const ENEMY_RARITY = {
     type: 'RARE',
     itemDropChance: 3,
     color: 'blue',
-    threshold: 90,
+    threshold: 900,
     multiplier: {
-      life: 2,
-      damage: 1.3,
+      life: 2.5,
+      damage: 1.2,
       attackSpeed: 0.95,
       xp: 1.8,
       gold: 1.8,
@@ -64,22 +69,22 @@ export const ENEMY_RARITY = {
       lightningResistance: 1.4,
       waterResistance: 1.4,
       evasion: 1.4,
-      fireDamage: 1.3,
-      coldDamage: 1.3,
-      airDamage: 1.3,
-      earthDamage: 1.3,
-      lightningDamage: 1.3,
-      waterDamage: 1.3,
+      fireDamage: 1.2,
+      coldDamage: 1.2,
+      airDamage: 1.2,
+      earthDamage: 1.2,
+      lightningDamage: 1.2,
+      waterDamage: 1.2,
     },
   },
   EPIC: {
     type: 'EPIC',
     itemDropChance: 3.5,
     color: 'purple',
-    threshold: 96,
+    threshold: 960,
     multiplier: {
-      life: 3,
-      damage: 1.6,
+      life: 3.5,
+      damage: 1.5,
       attackSpeed: 0.9,
       xp: 2.8,
       gold: 2.8,
@@ -94,22 +99,22 @@ export const ENEMY_RARITY = {
       lightningResistance: 1.7,
       waterResistance: 1.7,
       evasion: 1.7,
-      fireDamage: 1.6,
-      coldDamage: 1.6,
-      airDamage: 1.6,
-      earthDamage: 1.6,
-      lightningDamage: 1.6,
-      waterDamage: 1.6,
+      fireDamage: 1.5,
+      coldDamage: 1.5,
+      airDamage: 1.5,
+      earthDamage: 1.5,
+      lightningDamage: 1.5,
+      waterDamage: 1.5,
     },
   },
   LEGENDARY: {
     type: 'LEGENDARY',
     itemDropChance: 4,
     color: 'orange',
-    threshold: 99.5,
+    threshold: 990,
     multiplier: {
-      life: 4,
-      damage: 2.2,
+      life: 5,
+      damage: 1.8,
       attackSpeed: 0.9,
       xp: 3.8,
       gold: 3.8,
@@ -124,22 +129,22 @@ export const ENEMY_RARITY = {
       lightningResistance: 2.5,
       waterResistance: 2.5,
       evasion: 2.5,
-      fireDamage: 2.2,
-      coldDamage: 2.2,
-      airDamage: 2.2,
-      earthDamage: 2.2,
-      lightningDamage: 2.2,
-      waterDamage: 2.2,
+      fireDamage: 1.8,
+      coldDamage: 1.8,
+      airDamage: 1.8,
+      earthDamage: 1.8,
+      lightningDamage: 1.8,
+      waterDamage: 1.8,
     },
   },
   MYTHIC: {
     type: 'MYTHIC',
     itemDropChance: 5,
     color: 'red',
-    threshold: 100,
+    threshold: 1000,
     multiplier: {
-      life: 5,
-      damage: 2.8,
+      life: 7,
+      damage: 2,
       attackSpeed: 0.85,
       xp: 6,
       gold: 6,
@@ -154,12 +159,12 @@ export const ENEMY_RARITY = {
       lightningResistance: 3.4,
       waterResistance: 3.4,
       evasion: 3.4,
-      fireDamage: 2.8,
-      coldDamage: 2.8,
-      airDamage: 2.8,
-      earthDamage: 2.8,
-      lightningDamage: 2.8,
-      waterDamage: 2.8,
+      fireDamage: 2,
+      coldDamage: 2,
+      airDamage: 2,
+      earthDamage: 2,
+      lightningDamage: 2,
+      waterDamage: 2,
     },
   },
 };
@@ -176,11 +181,11 @@ export function applyDefaultEnemyStats(enemy) {
   const defaults = {
     tier: tier,
     life: 20 * multiplier,
-    damage: 3 * multiplier,
+    damage: 1.5 * multiplier,
     attackSpeed: 1,
     attackRating: 5 * multiplier,
     armor: 7 * multiplier,
-    evasion: 6 * multiplier,
+    evasion: 5 * multiplier,
 
     xp: 6 * multiplier,
     gold: 6 * multiplier,
@@ -203,32 +208,61 @@ export function applyDefaultEnemyStats(enemy) {
     // example is the damage/ele dmg
     multiplier: {
       life: 1.8,
-      damage: 0.4,
+      damage: 0,
       xp: 1.0,
       gold: 1.0,
       itemDrop: 1.0,
       materialDrop: 1.0,
       attackRating: 1.0,
-      armor: 1.2,
-      fireResistance: 1.2,
-      coldResistance: 1.2,
-      airResistance: 1.2,
-      earthResistance: 1.2,
-      lightningResistance: 1.2,
-      waterResistance: 1.2,
+      armor: 1,
+      fireResistance: 1,
+      coldResistance: 1,
+      airResistance: 1,
+      earthResistance: 1,
+      lightningResistance: 1,
+      waterResistance: 1,
       evasion: 1.0,
-      fireDamage: 0.4,
-      coldDamage: 0.4,
-      airDamage: 0.4,
-      earthDamage: 0.4,
-      lightningDamage: 0.4,
-      waterDamage: 0.4,
+      fireDamage: 0,
+      coldDamage: 0,
+      airDamage: 0,
+      earthDamage: 0,
+      lightningDamage: 0,
+      waterDamage: 0,
     },
   };
 
   const merged = { ...defaults, ...enemy };
-  if (enemy.multiplier) {
-    merged.multiplier = { ...defaults.multiplier, ...enemy.multiplier };
+  // Merge multipliers by adding values instead of replacing
+  const incomingMult = enemy.multiplier || {};
+  merged.multiplier = { ...defaults.multiplier };
+  Object.keys(incomingMult).forEach((key) => {
+    const a = merged.multiplier[key] ?? 0;
+    const b = incomingMult[key] ?? 0;
+    merged.multiplier[key] = a + b;
+  });
+
+  const statsToConvert = Object.keys(defaults).filter(
+    (stat) => stat !== 'tier' && stat !== 'multiplier',
+  );
+
+  for (const stat of statsToConvert) {
+    if (enemy[stat] !== undefined) {
+      const baseStat = ELEMENTAL_DAMAGE_STATS.includes(stat) ? 'damage' : stat;
+      const baseValue = defaults[baseStat] / multiplier; // default base without tier scaling
+      const defaultMult = defaults.multiplier[baseStat] ?? 1;
+      const rawValue = enemy[stat] / multiplier; // value before tier scaling
+      merged.multiplier[stat] = (defaultMult * rawValue) / baseValue;
+      delete merged[stat];
+    }
+  }
+
+  for (const stat of ELEMENTAL_DAMAGE_STATS) {
+    if (
+      (enemy.multiplier && enemy.multiplier[stat] !== undefined) ||
+      enemy[stat] !== undefined
+    ) {
+      merged[stat] = merged.damage;
+    }
   }
 
   return merged;

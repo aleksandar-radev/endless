@@ -1,5 +1,4 @@
 import { t } from '../../i18n.js';
-import { getEnemyStatMultiplier } from '../enemies.js';
 
 const tier = 7;
 
@@ -9,20 +8,19 @@ export const ABYSS_ENEMIES = [
     image: '/enemies/abyssal-wraith.jpg',
     tier: tier,
 
-    damage: 1.6 * getEnemyStatMultiplier(tier),
-    attackRating: 8 * getEnemyStatMultiplier(tier),
-    evasion: 8 * getEnemyStatMultiplier(tier),
-
-    gold: 9 * getEnemyStatMultiplier(tier),
-
-    coldDamage: 1.4 * getEnemyStatMultiplier(tier),
-
-    coldResistance: 5 * getEnemyStatMultiplier(tier),
-    fireResistance: 4 * getEnemyStatMultiplier(tier),
-    airResistance: 3 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    lightningResistance: 3 * getEnemyStatMultiplier(tier),
-    waterResistance: 3 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      damage: 0.53,
+      attackRating: 1.6,
+      evasion: 1.33,
+      gold: 1.5,
+      coldDamage: 0.47,
+      coldResistance: 1.67,
+      fireResistance: 1.33,
+      airResistance: 1,
+      earthResistance: 1,
+      lightningResistance: 1,
+      waterResistance: 1,
+    },
 
     materialDropWeights: {},
     tags: ['abyssal_depths'],
@@ -32,18 +30,18 @@ export const ABYSS_ENEMIES = [
     image: '/enemies/shadowclaw.jpg',
     tier: tier,
 
-    damage: 0.4 * getEnemyStatMultiplier(tier),
-    attackRating: 13 * getEnemyStatMultiplier(tier),
-    evasion: 8 * getEnemyStatMultiplier(tier),
-
-    airDamage: 2.2 * getEnemyStatMultiplier(tier),
-
-    airResistance: 7 * getEnemyStatMultiplier(tier),
-    fireResistance: 4 * getEnemyStatMultiplier(tier),
-    coldResistance: 3 * getEnemyStatMultiplier(tier),
-    earthResistance: 4 * getEnemyStatMultiplier(tier),
-    lightningResistance: 3 * getEnemyStatMultiplier(tier),
-    waterResistance: 3 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      damage: 0.13,
+      attackRating: 2.6,
+      evasion: 1.33,
+      airDamage: 0.73,
+      airResistance: 2.33,
+      fireResistance: 1.33,
+      coldResistance: 1,
+      earthResistance: 1.33,
+      lightningResistance: 1,
+      waterResistance: 1,
+    },
 
     materialDropWeights: {},
     tags: ['abyssal_depths'],
@@ -53,19 +51,19 @@ export const ABYSS_ENEMIES = [
     image: '/enemies/hellhound.jpg',
     tier: tier,
 
-    life: 30 * getEnemyStatMultiplier(tier),
-    damage: 1.8 * getEnemyStatMultiplier(tier),
-    armor: 9 * getEnemyStatMultiplier(tier),
-    evasion: 3 * getEnemyStatMultiplier(tier),
-
-    fireDamage: 1.1 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 7 * getEnemyStatMultiplier(tier),
-    airResistance: 3 * getEnemyStatMultiplier(tier),
-    coldResistance: 4 * getEnemyStatMultiplier(tier),
-    earthResistance: 3 * getEnemyStatMultiplier(tier),
-    lightningResistance: 8 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
+    multiplier: {
+      life: 1.5,
+      damage: 0.6,
+      armor: 1.29,
+      evasion: 0.5,
+      fireDamage: 0.37,
+      fireResistance: 2.33,
+      airResistance: 1,
+      coldResistance: 1.33,
+      earthResistance: 1,
+      lightningResistance: 2.67,
+      waterResistance: 0.67,
+    },
 
     materialDropWeights: {},
     tags: ['abyssal_depths'],
@@ -76,19 +74,16 @@ export const ABYSS_ENEMIES = [
     image: '/enemies/infernal-knight.jpg',
     tier: tier,
 
-    life: 27 * getEnemyStatMultiplier(tier),
-    damage: 2 * getEnemyStatMultiplier(tier),
-
-    fireDamage: 1 * getEnemyStatMultiplier(tier),
-
-    fireResistance: 7 * getEnemyStatMultiplier(tier),
-    coldResistance: 2 * getEnemyStatMultiplier(tier),
-    airResistance: 3 * getEnemyStatMultiplier(tier),
-    earthResistance: 4 * getEnemyStatMultiplier(tier),
-    lightningResistance: 4 * getEnemyStatMultiplier(tier),
-    waterResistance: 2 * getEnemyStatMultiplier(tier),
-
     multiplier: {
+      life: 1.35,
+      damage: 0.67,
+      fireDamage: 0.33,
+      fireResistance: 2.33,
+      coldResistance: 0.67,
+      airResistance: 1,
+      earthResistance: 1.33,
+      lightningResistance: 1.33,
+      waterResistance: 0.67,
       materialDrop: 1.1,
     },
     materialDropWeights: {},
