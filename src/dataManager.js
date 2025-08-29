@@ -4,6 +4,7 @@ import { crypt } from './functions.js';
 import { getGlobals } from './globals.js';
 import { createModal } from './ui/modal.js';
 import { showToast } from './ui/ui.js';
+import { getTimeNow } from './common.js';
 
 const MAX_SLOTS = 5;
 
@@ -12,6 +13,8 @@ export class DataManager {
     this.session = null;
     this.sessionInterval = null;
     this.currentSlot = parseInt(localStorage.getItem('gameCurrentSlot'), 10) || 0;
+    // Delay updating last combat time until offline rewards have been processed
+    this.enableLastFightTime = false;
   }
 
   getSession() {
@@ -59,7 +62,9 @@ export class DataManager {
 
   async saveGame({ cloud = false } = {}) {
     const saveData = getGlobals();
-
+    if (this.enableLastFightTime) {
+      saveData.statistics.lastFightActive = await getTimeNow();
+    }
     const encrypted = crypt.encrypt(JSON.stringify(saveData));
     const slotKey = `gameProgress_${this.currentSlot}`;
     localStorage.setItem(slotKey, encrypted);

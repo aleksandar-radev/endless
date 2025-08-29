@@ -33,6 +33,7 @@ import Boss from './boss.js';
 import { applyTranslations, setLanguage, t } from './i18n.js';
 import { getGameInfo } from './api.js';
 import { createModal } from './ui/modal.js';
+import { collectOfflineFightRewards } from './offlineFight.js';
 
 window.qwe = console.log;
 window.qw = console.log;
@@ -219,7 +220,17 @@ window.setLanguage = setLanguage;
   })();
 
   // Collect offline bonuses on load (show modal if any)
-  buildings.collectBonuses({ showOfflineModal: true });
+  const fightRewards = await collectOfflineFightRewards();
+  buildings.collectBonuses({
+    showOfflineModal: true,
+    extraBonuses: fightRewards?.bonuses || [],
+    extraCollectFn: fightRewards?.apply,
+  });
+
+  // Keep combat activity timestamp up to date while the game is open
+  setInterval(() => {
+    statistics.lastFightActive = Date.now();
+  }, 1000);
 
   // Periodically collect building bonuses (every 30 seconds, no modal)
   setInterval(async () => {

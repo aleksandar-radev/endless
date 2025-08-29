@@ -41,6 +41,8 @@ export default class Statistics {
     this.totalTimeInFights = 0;
     this.deaths = 0;
     this.heroLevel = 1;
+    this.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
+    this.lastFightActive = Date.now();
 
     handleSavedData(savedData, this);
     if (this.enemiesKilled?.total != null) {
@@ -82,6 +84,8 @@ export default class Statistics {
     this.totalTimeInFights = 0;
     this.deaths = 0;
     this.heroLevel = 1;
+    this.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
+    this.lastFightActive = Date.now();
     this.updateStatisticsUI();
   }
 

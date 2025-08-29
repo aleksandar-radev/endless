@@ -66,6 +66,7 @@ function updateRateCounters() {
   itemsEls.forEach((el) => (el.textContent = `Items/${periodLabel}: ${formatNumber((itemRate * ratePeriod).toFixed(1))}`));
   const matRate = (statistics.totalMaterialsDropped - startMaterialsDropped) / elapsed;
   matEls.forEach((el) => (el.textContent = `Materials/${periodLabel}: ${formatNumber((matRate * ratePeriod).toFixed(1))}`));
+  statistics.offlineRates = { xp: xpRate, gold: goldRate, items: itemRate, materials: matRate };
 }
 
 function resetRateCounters() {

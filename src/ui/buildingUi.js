@@ -426,7 +426,7 @@ export function showOfflineBonusesModal(bonuses, onCollect) {
         }
       }
       const intervalKey = `time.${times > 1 ? intName + 's' : intName}`;
-      return tp('buildings.offlineBonusItem', {
+      const line = tp('buildings.offlineBonusItem', {
         icon: b.icon || '',
         name: b.name,
         amount: formatNumber(b.amount),
@@ -434,6 +434,8 @@ export function showOfflineBonusesModal(bonuses, onCollect) {
         times: formatNumber(times),
         interval: t(intervalKey),
       });
+      // Ensure each bonus is on its own line (wrap if translation didn't supply an <li>)
+      return line.includes('<li') ? line : `<li class="offline-bonus-line" style="margin:4px 0;">${line}</li>`;
     })
     .join('')}
       </ul>

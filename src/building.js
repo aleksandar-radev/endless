@@ -260,7 +260,7 @@ export class BuildingManager {
   }
 
   // --- Bonus collection logic ---
-  async collectBonuses({ showOfflineModal = false } = {}) {
+  async collectBonuses({ showOfflineModal = false, extraBonuses = [], extraCollectFn } = {}) {
     const now = await getTimeNow();
     let offlineBonuses = [];
     const isFirstCollect = showOfflineModal;
@@ -317,9 +317,9 @@ export class BuildingManager {
         }
       }
     }
-    if (isFirstCollect && offlineBonuses.length > 0) {
+    if (isFirstCollect && (offlineBonuses.length > 0 || extraBonuses.length > 0)) {
       // Only show modal if there are actual bonuses to collect
-      showOfflineBonusesModal(offlineBonuses, async () => {
+      showOfflineBonusesModal([...offlineBonuses, ...extraBonuses], async () => {
         // On collect: actually add the bonuses and update lastBonusTime
         for (const b of offlineBonuses) {
           if (b.type === 'gold') hero.gainGold(b.amount);
@@ -357,6 +357,7 @@ export class BuildingManager {
           b.building.totalEarned += b.amount;
           b.building.lastBonusTime += b.timesRaw * b.intervalMs;
         }
+        if (typeof extraCollectFn === 'function') await extraCollectFn();
         this.lastActive = await fetchTrustedUtcTime();
         updateResources();
         dataManager.saveGame(); // Save after collecting bonuses
