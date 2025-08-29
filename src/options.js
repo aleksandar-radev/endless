@@ -763,7 +763,8 @@ export class Options {
     const summaries = dataManager.getSlotSummaries();
     const optionsHtml = summaries
       .map((s, i) => {
-        const pathName = s ? CLASS_PATHS[s.path]?.name() ?? s.path : null;
+        let pathName = s ? CLASS_PATHS[s.path]?.name() ?? s.path : null;
+        if (pathName === null) pathName = 'Peasant';
         let text = s
           ? `Slot ${i + 1} - ${pathName} Lv ${s.level}`
           : `Slot ${i + 1} - Empty`;

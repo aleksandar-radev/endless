@@ -741,13 +741,30 @@ export function createModifyUI() {
   copyDecryptedBtn.title = 'Decrypts your current save and copies the JSON to clipboard.';
   copyDecryptedBtn.addEventListener('click', async () => {
     try {
-      const encrypted = localStorage.getItem('gameProgress');
-      if (!encrypted) {
+      const slots = {};
+      for (let i = 0; i < 5; i++) {
+        const raw = localStorage.getItem(`gameProgress_${i}`);
+        if (raw) {
+          try {
+            let dec = crypt.decrypt(raw);
+            if (typeof dec === 'string') dec = JSON.parse(dec);
+            slots[i] = dec;
+          } catch {
+            slots[i] = null;
+          }
+        }
+      }
+      const slotKeys = Object.keys(slots);
+      if (slotKeys.length === 0) {
         showToast('No save found in localStorage', 'error');
         return;
       }
-      const decrypted = crypt.decrypt(encrypted);
-      await navigator.clipboard.writeText(JSON.stringify(decrypted, null, 2));
+      const currentSlot = dataManager.getCurrentSlot();
+      const toCopy =
+        slotKeys.length > 1
+          ? { slots, currentSlot }
+          : slots[currentSlot] || slots[slotKeys[0]];
+      await navigator.clipboard.writeText(JSON.stringify(toCopy, null, 2));
       showToast('Decrypted save copied to clipboard!');
     } catch (e) {
       showToast('Failed to copy decrypted save', 'error');
@@ -774,9 +791,23 @@ export function createModifyUI() {
         showToast('Clipboard does not contain valid JSON', 'error');
         return;
       }
-      const encrypted = crypt.encrypt(JSON.stringify(parsed));
-      localStorage.setItem('gameProgress', encrypted);
-      localStorage.setItem(`gameProgress_${dataManager.getCurrentSlot()}`, encrypted);
+      if (parsed && parsed.slots) {
+        const currentSlot = parsed.currentSlot ?? 0;
+        for (const [slot, data] of Object.entries(parsed.slots)) {
+          if (!data) continue;
+          const enc = crypt.encrypt(JSON.stringify(data));
+          localStorage.setItem(`gameProgress_${slot}`, enc);
+          if (parseInt(slot, 10) === currentSlot) {
+            localStorage.setItem('gameProgress', enc);
+          }
+        }
+        localStorage.setItem('gameCurrentSlot', currentSlot);
+      } else {
+        const encrypted = crypt.encrypt(JSON.stringify(parsed));
+        const slot = dataManager.getCurrentSlot();
+        localStorage.setItem('gameProgress', encrypted);
+        localStorage.setItem(`gameProgress_${slot}`, encrypted);
+      }
       window.location.reload();
       showToast('Decrypted save encrypted and saved to localStorage!');
     } catch (e) {
@@ -792,12 +823,25 @@ export function createModifyUI() {
   copyEncryptedWithQuotesBtn.title = 'Copies the encrypted save from localStorage to clipboard, wrapped in quotes.';
   copyEncryptedWithQuotesBtn.addEventListener('click', async () => {
     try {
-      const encrypted = localStorage.getItem('gameProgress');
-      if (!encrypted) {
+      const slots = {};
+      for (let i = 0; i < 5; i++) {
+        const raw = localStorage.getItem(`gameProgress_${i}`);
+        if (raw) slots[i] = raw;
+      }
+      const slotKeys = Object.keys(slots);
+      if (slotKeys.length === 0) {
         showToast('No save found in localStorage', 'error');
         return;
       }
-      await navigator.clipboard.writeText('"' + encrypted + '"');
+      const currentSlot = dataManager.getCurrentSlot();
+      if (slotKeys.length > 1) {
+        await navigator.clipboard.writeText(
+          JSON.stringify({ slots, currentSlot }, null, 2),
+        );
+      } else {
+        const enc = slots[currentSlot] || slots[slotKeys[0]];
+        await navigator.clipboard.writeText('"' + enc + '"');
+      }
       showToast('Encrypted save (with quotes) copied to clipboard!');
     } catch (e) {
       showToast('Failed to copy encrypted save', 'error');
@@ -817,12 +861,30 @@ export function createModifyUI() {
         showToast('Clipboard is empty', 'error');
         return;
       }
-      // Remove quotes if present at start and end
-      if (encrypted.length > 1 && encrypted.startsWith('"') && encrypted.endsWith('"')) {
-        encrypted = encrypted.slice(1, -1);
+      let parsed;
+      try {
+        parsed = JSON.parse(encrypted);
+      } catch {
+        parsed = null;
       }
-      localStorage.setItem('gameProgress', encrypted);
-      localStorage.setItem(`gameProgress_${dataManager.getCurrentSlot()}`, encrypted);
+      if (parsed && parsed.slots) {
+        const currentSlot = parsed.currentSlot ?? 0;
+        for (const [slot, enc] of Object.entries(parsed.slots)) {
+          if (!enc) continue;
+          localStorage.setItem(`gameProgress_${slot}`, enc);
+          if (parseInt(slot, 10) === currentSlot) {
+            localStorage.setItem('gameProgress', enc);
+          }
+        }
+        localStorage.setItem('gameCurrentSlot', currentSlot);
+      } else {
+        // Remove quotes if present at start and end
+        if (encrypted.length > 1 && encrypted.startsWith('"') && encrypted.endsWith('"')) {
+          encrypted = encrypted.slice(1, -1);
+        }
+        localStorage.setItem('gameProgress', encrypted);
+        localStorage.setItem(`gameProgress_${dataManager.getCurrentSlot()}`, encrypted);
+      }
       window.location.reload();
       showToast('Encrypted save pasted to localStorage!');
     } catch (e) {

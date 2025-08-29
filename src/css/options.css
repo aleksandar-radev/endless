@@ -133,6 +133,11 @@
 }
 
 /* Option states (override existing simple coloring with subtle variants) */
+#save-slot-select option {
+  background: #1f2937;
+  color: #f1f5f9;
+}
+
 #save-slot-select option.used-slot {
   background: #1f2937;
   color: #f1f5f9;
