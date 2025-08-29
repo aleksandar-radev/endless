@@ -1,34 +1,55 @@
 import { hero, dataManager, setGlobals, prestige, ascension as ascensionState } from './globals.js';
 import { handleSavedData } from './functions.js';
 import { showToast } from './ui/ui.js';
-
+import { t } from './i18n.js';
 export const ASCENSION_UPGRADES = {
-  strengthDamage: {
-    label: 'Strength Damage %',
-    bonus: 0.05, // 5% more damage per Strength
-    effect: 'strengthDamagePercent',
+  strengthEffectiveness: {
+    label: t('ascension.upgrade.strengthEffectiveness'),
+    bonus: 0.1,
+    effect: 'strengthEffectPercent',
+    maxLevel: 10,
   },
-  vitalityLife: {
-    label: 'Vitality Life %',
-    bonus: 0.05, // 5% more life per Vitality
-    effect: 'vitalityLifePercent',
+  agilityEffectiveness: {
+    label: t('ascension.upgrade.agilityEffectiveness'),
+    bonus: 0.1,
+    effect: 'agilityEffectPercent',
+    maxLevel: 10,
   },
-  bonusExperience: {
-    label: 'Bonus Experience %',
-    bonus: 0.5, // 50% more experience
-    stat: 'bonusExperiencePercent',
+  vitalityEffectiveness: {
+    label: t('ascension.upgrade.vitalityEffectiveness'),
+    bonus: 0.1,
+    effect: 'vitalityEffectPercent',
+    maxLevel: 10,
   },
-  bonusGold: {
-    label: 'Bonus Gold %',
-    bonus: 0.5, // 50% more gold
-    stat: 'bonusGoldPercent',
+  wisdomEffectiveness: {
+    label: t('ascension.upgrade.wisdomEffectiveness'),
+    bonus: 0.1,
+    effect: 'wisdomEffectPercent',
+    maxLevel: 10,
   },
-  attackNeverMiss: {
-    label: 'Attacks Never Miss',
-    bonus: 1,
-    cost: 50,
-    stat: 'attackNeverMiss',
-    maxLevel: 1,
+  enduranceEffectiveness: {
+    label: t('ascension.upgrade.enduranceEffectiveness'),
+    bonus: 0.1,
+    effect: 'enduranceEffectPercent',
+    maxLevel: 10,
+  },
+  dexterityEffectiveness: {
+    label: t('ascension.upgrade.dexterityEffectiveness'),
+    bonus: 0.1,
+    effect: 'dexterityEffectPercent',
+    maxLevel: 10,
+  },
+  intelligenceEffectiveness: {
+    label: t('ascension.upgrade.intelligenceEffectiveness'),
+    bonus: 0.1,
+    effect: 'intelligenceEffectPercent',
+    maxLevel: 10,
+  },
+  perseveranceEffectiveness: {
+    label: t('ascension.upgrade.perseveranceEffectiveness'),
+    bonus: 0.1,
+    effect: 'perseveranceEffectPercent',
+    maxLevel: 10,
   },
 };
 

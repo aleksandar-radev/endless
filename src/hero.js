@@ -312,25 +312,21 @@ export default class Hero {
       // Check each attribute for contributions to this stat
       for (const attr of ATTRIBUTE_KEYS) {
         const attrEffects = ATTRIBUTES[attr].effects;
+        const attrMultiplier = 1 + (ascensionBonuses[`${attr}EffectPercent`] || 0);
 
         // Flat per-point bonus (e.g., damagePerPoint, lifePerPoint, etc.)
         const flatKey = stat + 'PerPoint';
         if (flatKey in attrEffects) {
-          let perPoint = attrEffects[flatKey];
-          if (attr === 'strength' && flatKey === 'damagePerPoint') {
-            perPoint *= 1 + (ascensionBonuses.strengthDamagePercent || 0);
-          }
-          if (attr === 'vitality' && flatKey === 'lifePerPoint') {
-            perPoint *= 1 + (ascensionBonuses.vitalityLifePercent || 0);
-          }
+          let perPoint = attrEffects[flatKey] * attrMultiplier;
           flatBonus += (this.stats[attr] || 0) * perPoint;
         }
 
         // Percent per N points bonus (e.g., damagePercentPer, lifePercentPer, etc.)
         const percentKey = stat + 'PercentPer';
         if (percentKey in attrEffects && attrEffects[percentKey].enabled) {
+          const value = attrEffects[percentKey].value * attrMultiplier;
           percentBonus +=
-            Math.floor((this.stats[attr] || 0) / attrEffects[percentKey].points) * attrEffects[percentKey].value;
+            Math.floor((this.stats[attr] || 0) / attrEffects[percentKey].points) * value;
         }
       }
 
