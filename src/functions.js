@@ -776,6 +776,7 @@ export function createModifyUI() {
       }
       const encrypted = crypt.encrypt(JSON.stringify(parsed));
       localStorage.setItem('gameProgress', encrypted);
+      localStorage.setItem(`gameProgress_${dataManager.getCurrentSlot()}`, encrypted);
       window.location.reload();
       showToast('Decrypted save encrypted and saved to localStorage!');
     } catch (e) {
@@ -821,6 +822,7 @@ export function createModifyUI() {
         encrypted = encrypted.slice(1, -1);
       }
       localStorage.setItem('gameProgress', encrypted);
+      localStorage.setItem(`gameProgress_${dataManager.getCurrentSlot()}`, encrypted);
       window.location.reload();
       showToast('Encrypted save pasted to localStorage!');
     } catch (e) {

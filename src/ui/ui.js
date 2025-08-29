@@ -192,6 +192,10 @@ export function switchTab(tabName) {
     soulShop.updateSoulShopAffordability();
   }
 
+  if (tabName === 'options') {
+    options.refreshSaveSlotSelect();
+  }
+
   // Update indicators after tab switch
   updateTabIndicators(previousTab);
   dataManager.saveGame();

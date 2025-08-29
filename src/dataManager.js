@@ -5,10 +5,13 @@ import { getGlobals } from './globals.js';
 import { createModal } from './ui/modal.js';
 import { showToast } from './ui/ui.js';
 
+const MAX_SLOTS = 5;
+
 export class DataManager {
   constructor() {
     this.session = null;
     this.sessionInterval = null;
+    this.currentSlot = parseInt(localStorage.getItem('gameCurrentSlot'), 10) || 0;
   }
 
   getSession() {
@@ -23,16 +26,72 @@ export class DataManager {
     this.session = null;
   }
 
+  getCurrentSlot() {
+    return this.currentSlot;
+  }
+
+  setCurrentSlot(slot) {
+    this.currentSlot = Math.min(Math.max(slot, 0), MAX_SLOTS - 1);
+    localStorage.setItem('gameCurrentSlot', this.currentSlot);
+  }
+
+  getSlotSummaries() {
+    const summaries = [];
+    for (let i = 0; i < MAX_SLOTS; i++) {
+      const raw = localStorage.getItem(`gameProgress_${i}`);
+      if (!raw) {
+        summaries[i] = null;
+        continue;
+      }
+      try {
+        let data = crypt.decrypt(raw);
+        if (typeof data === 'string') data = JSON.parse(data);
+        summaries[i] = {
+          level: data?.hero?.level ?? 0,
+          path: data?.skillTree?.selectedPath?.name || null,
+        };
+      } catch {
+        summaries[i] = null;
+      }
+    }
+    return summaries;
+  }
+
   async saveGame({ cloud = false } = {}) {
     const saveData = getGlobals();
 
-    localStorage.setItem('gameProgress', crypt.encrypt(JSON.stringify(saveData)));
+    const encrypted = crypt.encrypt(JSON.stringify(saveData));
+    const slotKey = `gameProgress_${this.currentSlot}`;
+    localStorage.setItem(slotKey, encrypted);
+    // Maintain legacy key for debug tools
+    localStorage.setItem('gameProgress', encrypted);
 
     if (cloud) {
       try {
-        // Encrypt data for cloud save, match previous structure
+        const slots = [];
+        for (let i = 0; i < MAX_SLOTS; i++) {
+          if (i === this.currentSlot) {
+            slots[i] = saveData;
+          } else {
+            const other = localStorage.getItem(`gameProgress_${i}`);
+            if (other) {
+              try {
+                const decryptedData = (crypt.decrypt(other));
+                slots[i] = decryptedData;
+              } catch {
+                slots[i] = null;
+              }
+            } else {
+              slots[i] = null;
+            }
+          }
+        }
+
         await saveGameData(this.session.id, {
-          data_json: saveData,
+          data_json: {
+            slots,
+            currentSlot: this.currentSlot,
+          },
           game_name: import.meta.env.VITE_GAME_NAME,
         });
       } catch (e) {
@@ -56,9 +115,27 @@ export class DataManager {
         } else {
           const result = await loadGameData(this.session.id, premium);
           if (result.data) {
-            data = result.data;
-            updated_at = result.updated_at;
             source = 'cloud';
+            updated_at = result.updated_at;
+            if (result.data.slots) {
+              const slot = result.data.currentSlot || 0;
+              if (!statusCheck) {
+                this.currentSlot = slot;
+                localStorage.setItem('gameCurrentSlot', this.currentSlot);
+                for (let i = 0; i < MAX_SLOTS; i++) {
+                  const slotData = result.data.slots[i];
+                  if (slotData) {
+                    localStorage.setItem(
+                      `gameProgress_${i}`,
+                      crypt.encrypt(JSON.stringify(slotData)),
+                    );
+                  }
+                }
+              }
+              data = result.data.slots[slot];
+            } else {
+              data = result.data;
+            }
           }
         }
       }
@@ -68,21 +145,31 @@ export class DataManager {
 
     // if no cloud data, try local storage
     if (!data) {
-      data = localStorage.getItem('gameProgress');
-      if (!data) {
+      this.currentSlot = parseInt(localStorage.getItem('gameCurrentSlot'), 10) || 0;
+      let dataStr = localStorage.getItem(`gameProgress_${this.currentSlot}`);
+
+      if (!dataStr && this.currentSlot === 0) {
+        const legacy = localStorage.getItem('gameProgress');
+        if (legacy) {
+          dataStr = legacy;
+          localStorage.setItem('gameProgress_0', legacy);
+        }
+      }
+
+      if (!dataStr) {
         console.warn('No game data found in local storage');
         return null;
       }
 
       try {
-        data = crypt.decrypt(data);
+        data = crypt.decrypt(dataStr);
       } catch (e) {
         console.warn('Failed to decrypt game data:', e);
 
         try {
-          data = JSON.parse(data);
+          data = JSON.parse(dataStr);
         } catch (e) {
-          console.warn('Failed to parse game data:', data);
+          console.warn('Failed to parse game data:', dataStr);
           return null;
         }
       }

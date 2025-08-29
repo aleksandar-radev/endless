@@ -1,5 +1,6 @@
 
 import { crystalShop, dataManager, game, setGlobals, training, soulShop, statistics } from './globals.js';
+import { CLASS_PATHS } from './constants/skills.js';
 import { initializeBuildingsUI } from './ui/buildingUi.js';
 import {
   showConfirmDialog,
@@ -278,6 +279,7 @@ export class Options {
     const generalContent = document.createElement('div');
     generalContent.className = 'options-content';
     generalContent.appendChild(this._createCloudSaveBar());
+    generalContent.appendChild(this._createSaveSlotOption());
     generalContent.appendChild(this._createLanguageOption());
     generalContent.appendChild(this._createSoundVolumeOption());
 
@@ -729,6 +731,51 @@ export class Options {
       <button id="logout-btn" style="display:none;" data-i18n="options.cloud.logout">Log out</button>
     `;
     return bar;
+  }
+
+  _createSaveSlotOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = `
+      <label for="save-slot-select">Save Slot:</label>
+      <select id="save-slot-select"></select>
+      <button id="save-slot-apply">${t('common.apply')}</button>
+    `;
+    const select = wrapper.querySelector('#save-slot-select');
+    const apply = wrapper.querySelector('#save-slot-apply');
+    this.refreshSaveSlotSelect(select);
+    apply.addEventListener('click', async () => {
+      const slot = parseInt(select.value, 10);
+      if (slot === dataManager.getCurrentSlot()) return;
+      await dataManager.saveGame();
+      dataManager.setCurrentSlot(slot);
+      window.location.reload();
+    });
+    return wrapper;
+  }
+
+  /**
+   * Refreshes the save slot dropdown with latest summaries.
+   * @param {HTMLSelectElement} [selectEl]
+   */
+  refreshSaveSlotSelect(selectEl = document.getElementById('save-slot-select')) {
+    if (!selectEl) return;
+    const summaries = dataManager.getSlotSummaries();
+    const optionsHtml = summaries
+      .map((s, i) => {
+        const pathName = s ? CLASS_PATHS[s.path]?.name() ?? s.path : null;
+        let text = s
+          ? `Slot ${i + 1} - ${pathName} Lv ${s.level}`
+          : `Slot ${i + 1} - Empty`;
+        const classes = [];
+        if (s) classes.push('used-slot');
+        if (i === dataManager.getCurrentSlot()) classes.push('current-slot');
+        if (i === dataManager.getCurrentSlot()) text += ' (Current)';
+        return `<option value="${i}" class="${classes.join(' ')}">${text}</option>`;
+      })
+      .join('');
+    selectEl.innerHTML = optionsHtml;
+    selectEl.value = dataManager.getCurrentSlot();
   }
 
   /**
