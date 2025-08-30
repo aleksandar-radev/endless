@@ -15,6 +15,7 @@ export default function run() {
       <li>Scaling logic for enemies reworked.</li>
       <li>Added offline progress.</li>
       <li>Added 5 slots for characters.</li>
+      <li>Reworked item scaling.</li>
 
     </ul>
 
