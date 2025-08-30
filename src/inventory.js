@@ -219,7 +219,7 @@ export default class Inventory {
           <span style="font-size:1.5em;">${item.getIcon()}</span>
           <span><b>${item.type}</b> (Lvl ${item.level})</span>
           <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
-          <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${Math.min(maxLevels, INVENTORY_MAX_QTY)}" value="1" aria-label="Upgrade quantity" />
+          <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${Math.min(maxLevels, INVENTORY_MAX_QTY)}" value="1" aria-label="${t('inventory.upgradeQuantity')}" />
           <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">Upgrade</button>
           <span class="upgrade-cost" data-idx="${idx}"></span>
         </div>`;

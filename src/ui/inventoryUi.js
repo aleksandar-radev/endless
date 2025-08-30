@@ -66,7 +66,7 @@ export function initializeInventoryUI(inv) {
         <div class="equipment-slot" data-slot="ring2"><div class="slot-indicator">${ITEM_ICONS.RING}</div></div>
         <div class="equipment-slot" data-slot="boots"><div class="slot-indicator">${ITEM_ICONS.BOOTS}</div></div>
       </div>
-      <div class="character-preview"><img src="${BASE}/icons/account.svg" class="icon" alt="avatar"/></div>
+      <div class="character-preview"><img src="${BASE}/icons/account.svg" class="icon" alt="${t('icon.avatar')}"/></div>
     </div>
     <div class="salvage-container">
       <div class="inventory-tabs">
@@ -74,12 +74,12 @@ export function initializeInventoryUI(inv) {
         <button id="materials-tab" class="inventory-btn" data-i18n="inventory.materials">${t('inventory.materials')}</button>
       </div>
       <div class="sort-row">
-        <div id="sort-inventory" class="inventory-btn sort-btn" aria-label="${t('inventory.sort')}"><span role="img" aria-label="Sort"><img src="${BASE}/icons/refresh.svg" class="icon" alt="sort"/></span></div>
+        <div id="sort-inventory" class="inventory-btn sort-btn" aria-label="${t('inventory.sort')}"><span role="img" aria-label="${t('inventory.sort')}"><img src="${BASE}/icons/refresh.svg" class="icon" alt="${t('inventory.sort')}"/></span></div>
       </div>
       <button id="open-salvage-modal" class="inventory-btn" data-i18n="inventory.options">${t('inventory.options')}</button>
       <div class="search-container">
         <input type="text" id="inventory-filter" class="inventory-btn filter-input" data-i18n-placeholder="inventory.searchItems" placeholder="${t('inventory.searchItems')}" />
-        <span class="search-icon"><img src="${BASE}/icons/search.svg" class="icon" alt="search"/></span>
+        <span class="search-icon"><img src="${BASE}/icons/search.svg" class="icon" alt="${t('icon.search')}"/></span>
         <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn" style="display: none" data-i18n="inventory.equip">${t('inventory.equip')}</button>
       </div>
     </div>
@@ -256,7 +256,7 @@ export function showSalvageModal(inv) {
   const selectedRarities = inv.autoSalvageRarities || [];
   const modalContent = html`
     <div class="inventory-salvage-modal-content">
-      <button class="modal-close" aria-label="Close">&times;</button>
+      <button class="modal-close" aria-label="${t('common.close')}">&times;</button>
       <div class="salvage-modal-sidebar">
         <h3>${t('inventory.salvage')}</h3>
         <div class="salvage-options-modal">
@@ -280,7 +280,7 @@ export function showSalvageModal(inv) {
         </div>
         <div class="inventory-trash-row">
           <div class="inventory-trash">
-            <span class="inventory-trash-icon"><img src="${BASE}/icons/delete.svg" class="icon" alt="delete"/></span>
+            <span class="inventory-trash-icon"><img src="${BASE}/icons/delete.svg" class="icon" alt="${t('icon.delete')}"/></span>
             <div class="inventory-trash-label">${t('inventory.dragItemHere')}</div>
           </div>
           <button id="salvage-selected-btn" class="inventory-btn" style="display: none;">${t('inventory.salvage')}</button>
@@ -519,7 +519,7 @@ export function showSalvageModal(inv) {
   trash.addEventListener('mouseenter', (e) => {
     const tooltipContent = html`
       <div class="item-tooltip tooltip-center">
-        <div class="tooltip-trash-icon"><img src="${BASE}/icons/delete.svg" class="icon" alt="delete"/></div>
+        <div class="tooltip-trash-icon"><img src="${BASE}/icons/delete.svg" class="icon" alt="${t('icon.delete')}"/></div>
         <b>${t('inventory.salvageItem')}</b>
         <div class="tooltip-trash-desc">${t('inventory.dragDropToSalvage')}</div>
       </div>
@@ -717,7 +717,7 @@ export function setupDragAndDrop() {
     trash.addEventListener('mouseenter', (e) => {
       const tooltipContent = html`
         <div class="item-tooltip" style="text-align:center;">
-          <div style="font-size:2em;"><img src="${BASE}/icons/delete.svg" class="icon" alt="delete"/></div>
+          <div style="font-size:2em;"><img src="${BASE}/icons/delete.svg" class="icon" alt="${t('icon.delete')}"/></div>
           <b>${t('inventory.salvageItem')}</b>
           <div style="margin-top:4px;font-size:0.95em;">${t('inventory.dragDropToSalvage')}</div>
         </div>
@@ -1004,7 +1004,7 @@ export function updateMaterialsGrid(inv) {
   materialsContainer.innerHTML = '';
   for (let i = 0; i < MATERIALS_SLOTS; i++) {
     const mat = inv.materials[i];
-    const icon = MATERIALS[mat?.id]?.icon || `<img src="${BASE}/icons/crystal.svg" class="icon" alt="mat"/>`;
+    const icon = MATERIALS[mat?.id]?.icon || `<img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('inventory.materials')}"/>`;
     const cell = document.createElement('div');
     cell.classList.add('materials-cell');
     if (mat) {

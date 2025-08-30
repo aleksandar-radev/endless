@@ -281,7 +281,7 @@ export default class CrystalShop {
   createUpgradeModal() {
     const content = html`
       <div class="crystalShop-modal-content">
-        <button class="modal-close" aria-label="Close">&times;</button>
+        <button class="modal-close" aria-label="${t('common.close')}">&times;</button>
         <h2 class="modal-title"></h2>
         <div class="modal-fields"></div>
         <div class="modal-controls" style="display:none;"></div>
@@ -305,14 +305,13 @@ export default class CrystalShop {
   async confirmReset(stat) {
     const cost = CRYSTAL_UPGRADE_CONFIG[stat].baseCost;
     if (hero.crystals < cost) {
-      showToast(`Need ${cost} crystals for this upgrade`, 'error');
+      showToast(tp('crystalShop.needCrystals', { count: cost }), 'error');
       return;
     }
     let confirmed;
     if (stat === 'resetSkillTree') {
       confirmed = await showConfirmDialog(
-        'Are you sure you want to reset your class and refund all skill points?<br>' +
-          `This will cost <strong>${cost} crystals</strong> and cannot be undone.`,
+        tp('crystalShop.confirm.resetClass', { count: cost }),
       );
       if (!confirmed) return;
       hero.crystals -= cost;
@@ -323,8 +322,7 @@ export default class CrystalShop {
       showToast(t('crystalShop.resetClassSuccess'), 'success');
     } else if (stat === 'resetAttributes') {
       confirmed = await showConfirmDialog(
-        'Are you sure you want to reset all allocated attribute points?<br>' +
-          `This will cost <strong>${cost} crystals</strong> and cannot be undone.`,
+        tp('crystalShop.confirm.resetAttributes', { count: cost }),
       );
       if (!confirmed) return;
       hero.crystals -= cost;
@@ -333,8 +331,7 @@ export default class CrystalShop {
       showToast(t('crystalShop.resetAttributesSuccess'), 'success');
     } else if (stat === 'resetArenaLevel') {
       confirmed = await showConfirmDialog(
-        'Are you sure you want to reset your boss level to 1?<br>' +
-          `This will cost <strong>${cost} crystals</strong> and cannot be undone.`,
+        tp('crystalShop.confirm.resetBossLevel', { count: cost }),
       );
       if (!confirmed) return;
       hero.crystals -= cost;
@@ -346,8 +343,7 @@ export default class CrystalShop {
       showToast(t('crystalShop.resetBossLevelSuccess'), 'success');
     } else if (stat === 'resetTraining') {
       confirmed = await showConfirmDialog(
-        'Are you sure you want to reset all training upgrades and refund the gold spent?<br>' +
-          `This will cost <strong>${cost} crystals</strong> and cannot be undone.`,
+        tp('crystalShop.confirm.resetTraining', { count: cost }),
       );
       if (!confirmed) return;
       hero.crystals -= cost;
@@ -360,7 +356,7 @@ export default class CrystalShop {
       hero.recalculateFromAttributes();
       updateStatsAndAttributesUI();
       showToast(
-        `All training upgrades have been reset. Refunded ${formatNumber(refund)} Gold.`,
+        tp('crystalShop.resetTrainingSuccess', { amount: formatNumber(refund) }),
         'success',
       );
     }

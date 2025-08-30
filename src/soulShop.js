@@ -288,7 +288,7 @@ export default class SoulShop {
       if (costEl) {
         costEl.innerHTML = alreadyPurchased
           ? t('common.purchased')
-          : `${cost} ${t('resource.souls.name')}<img style="width: 20px; height: 20px;" src="${BASE}/icons/soul.svg" alt="Soul Icon">(${qty})`;
+          : `${cost} ${t('resource.souls.name')}<img style="width: 20px; height: 20px;" src="${BASE}/icons/soul.svg" alt="${t('resource.souls.name')}">(${qty})`;
         costEl.classList.toggle('unaffordable', unaffordable);
       }
       if (bonusEl) bonusEl.classList.toggle('unaffordable', unaffordable);
@@ -360,7 +360,7 @@ export default class SoulShop {
       <button class="soul-upgrade-btn ${alreadyPurchased ? 'purchased' : ''}" data-stat="${stat}" ${disabled ? 'disabled' : ''}>
         <span class="upgrade-name">${label} ${isOneTime ? '' : isMultiple ? '' : `(${t('common.lvl')} ${level})`}</span>
         <span class="upgrade-bonus ${bonusClass}">${bonus}</span>
-        <span class="upgrade-cost ${bonusClass}">${alreadyPurchased ? t('common.purchased') : `${cost} ${t('resource.souls.name')}`}<img style="width: 20px; height: 20px;" src="${BASE}/icons/soul.svg" alt="Soul Icon">(${qty})</span>
+        <span class="upgrade-cost ${bonusClass}">${alreadyPurchased ? t('common.purchased') : `${cost} ${t('resource.souls.name')}`}<img style="width: 20px; height: 20px;" src="${BASE}/icons/soul.svg" alt="${t('resource.souls.name')}">(${qty})</span>
       </button>
     `;
   }
@@ -433,7 +433,7 @@ export default class SoulShop {
   createUpgradeModal() {
     const content = html`
       <div class="soulShop-modal-content">
-        <button class="modal-close" aria-label="Close">&times;</button>
+        <button class="modal-close" aria-label="${t('common.close')}">&times;</button>
         <h2 class="modal-title"></h2>
         <div class="modal-fields"></div>
         <div class="modal-controls" style="display:none;"></div>

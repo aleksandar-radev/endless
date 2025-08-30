@@ -64,7 +64,7 @@ export function initializeUI() {
     {
       selector: '.resource-gold',
       tooltip: () => html`
-        <div class="tooltip-header">${t('resource.gold.name')} <img src="${BASE}/icons/gold.svg" class="icon" alt="gold"/></div>
+        <div class="tooltip-header">${t('resource.gold.name')} <img src="${BASE}/icons/gold.svg" class="icon" alt="${t('resource.gold.name')}"/></div>
         <div class="tooltip-desc">${t('resource.gold.desc')}</div>
         <div class="tooltip-note"></div>
       `,
@@ -72,7 +72,7 @@ export function initializeUI() {
     {
       selector: '.resource-crystal',
       tooltip: () => html`
-        <div class="tooltip-header">${t('resource.crystal.name')} <img src="${BASE}/icons/crystal.svg" class="icon" alt="crystal"/></div>
+        <div class="tooltip-header">${t('resource.crystal.name')} <img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('resource.crystal.name')}"/></div>
         <div class="tooltip-desc">${t('resource.crystal.desc')}</div>
         <div class="tooltip-note"></div>
       `,
@@ -80,7 +80,7 @@ export function initializeUI() {
     {
       selector: '.resource-souls',
       tooltip: () => html`
-        <div class="tooltip-header">${t('resource.souls.name')} <img src="${BASE}/icons/soul.svg" class="icon" alt="soul"/></div>
+        <div class="tooltip-header">${t('resource.souls.name')} <img src="${BASE}/icons/soul.svg" class="icon" alt="${t('resource.souls.name')}"/></div>
         <div class="tooltip-desc">${t('resource.souls.desc')}</div>
         <div class="tooltip-note"></div>
       `,

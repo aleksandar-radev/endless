@@ -475,7 +475,7 @@ export function createDamageNumber({ text = '', isPlayer = false, isCritical = f
 
   const damageEl = document.createElement('div');
   damageEl.className = isCritical ? 'damage-number critical' : 'damage-number';
-  damageEl.innerHTML = isCritical ? `<img src="${BASE}/icons/critical.svg" class="icon" alt="crit"/> ` + text : text;
+  damageEl.innerHTML = isCritical ? `<img src="${BASE}/icons/critical.svg" class="icon" alt="${t('icon.critical')}"/> ` + text : text;
   if (color) {
     damageEl.style.color = color;
   }

@@ -115,7 +115,7 @@ export default class SkillTree {
     if (!pathData || !pathData.enabled()) return false;
     const reqLevel = pathData.requiredLevel();
     if (hero.level < reqLevel) {
-      showToast(`Requires Level ${reqLevel}`, 'warning');
+      showToast(tp('skillTree.requiresLevel', { level: reqLevel }), 'warning');
       return false;
     }
     // Handle crystal cost and unlocking once
@@ -123,7 +123,8 @@ export default class SkillTree {
     const alreadyUnlocked = this.unlockedPaths.includes(pathName);
     if (!alreadyUnlocked) {
       if (hero.crystals < cost) {
-        showToast(`Requires ${cost} Crystal${cost !== 1 ? 's' : ''}`, 'warning');
+        const key = cost === 1 ? 'skillTree.requiresCrystal' : 'skillTree.requiresCrystals';
+        showToast(tp(key, { count: cost }), 'warning');
         return false;
       }
       hero.crystals -= cost;
@@ -164,7 +165,7 @@ export default class SkillTree {
     // Prevent leveling skill above hero level
     if (currentLevel >= hero.level) {
       if (showWarning) {
-        showToast(`You cannot level up ${skill.name()} above your current level!`, 'warning');
+        showToast(tp('skillTree.cannotLevelAbove', { skill: skill.name() }), 'warning');
       }
       return false;
     }
