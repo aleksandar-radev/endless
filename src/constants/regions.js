@@ -1,24 +1,6 @@
 import { t } from '../i18n.js';
 import { ENEMY_LIST } from './enemies.js';
 
-// Calculate item base bonus by tier.
-// Interpretation: start at 0.5 for tier 1. Each zone adds a base increment of 0.4,
-// and the per-zone increment grows by 0.05 for each subsequent step.
-// So increments between zones are: 0.4, 0.45, 0.5, ...
-// Formula: value = 0.5 + sum_{k=1..tier-1} (0.4 + (k-1)*0.05)
-export function calculateItemBaseBonus(tier) {
-  const base = 0.5;
-  if (!tier || tier <= 1) return base;
-  const steps = tier - 1; // number of increments to apply
-  // sum of constant part
-  const constPart = steps * 0.4;
-  // sum of growing 0.05*(k-1) for k=1..steps -> 0.05 * sum_{i=0..steps-1} i
-  const growingPart = 0.05 * ((steps - 1) * steps / 2);
-  const value = base + constPart + growingPart;
-  // round to 3 decimals to keep numbers tidy
-  return Number(value.toFixed(3));
-}
-
 export const REGIONS = [
   {
     tier: 1,
@@ -60,7 +42,6 @@ export const REGIONS = [
     materialDropWeights: {
       crystalized_rock: 1.1,
     },
-    itemBaseBonus: calculateItemBaseBonus(1),
   },
   {
     tier: 2,
@@ -102,7 +83,6 @@ export const REGIONS = [
     materialDropWeights: {
       crystalized_rock: 5,
     },
-    itemBaseBonus: calculateItemBaseBonus(2),
   },
   {
     tier: 3,
@@ -151,7 +131,6 @@ export const REGIONS = [
       potion_of_intelligence: 3,
       potion_of_perseverance: 3,
     },
-    itemBaseBonus: calculateItemBaseBonus(3),
   },
   {
     tier: 4,
@@ -194,7 +173,6 @@ export const REGIONS = [
       elixir: 5,
     },
     canDrop: ['elixir'],
-    itemBaseBonus: calculateItemBaseBonus(4),
   },
   {
     tier: 5,
@@ -239,7 +217,6 @@ export const REGIONS = [
       enormous_gold_coins: 6,
       FREAKY_GOLD_COINS: 4,
     },
-    itemBaseBonus: calculateItemBaseBonus(5),
   },
   {
     tier: 6,
@@ -288,7 +265,6 @@ export const REGIONS = [
       potion_of_intelligence: 3,
       potion_of_perseverance: 3,
     },
-    itemBaseBonus: calculateItemBaseBonus(6),
   },
   {
     tier: 7,
@@ -331,7 +307,6 @@ export const REGIONS = [
       enormous_gold_coins: 6,
       freaky_gold_coins: 20,
     },
-    itemBaseBonus: calculateItemBaseBonus(7),
   },
   {
     tier: 8,
@@ -377,7 +352,6 @@ export const REGIONS = [
       armor_upgrade_stone: 3,
       weapon_upgrade_core: 6,
     },
-    itemBaseBonus: calculateItemBaseBonus(8),
   },
   {
     tier: 9,
@@ -423,7 +397,6 @@ export const REGIONS = [
       elixir: 3.5,
       crystalized_rock: 6,
     },
-    itemBaseBonus: calculateItemBaseBonus(9),
   },
   {
     tier: 10,
@@ -468,7 +441,6 @@ export const REGIONS = [
       greater_experience_potion: 6,
       huge_experience_potion: 10,
     },
-    itemBaseBonus: calculateItemBaseBonus(10),
   },
   {
     tier: 11,
@@ -511,7 +483,6 @@ export const REGIONS = [
     },
     materialDropWeights: {
     },
-    itemBaseBonus: calculateItemBaseBonus(11),
   },
   {
     tier: 12,
@@ -557,7 +528,6 @@ export const REGIONS = [
       alternation_orb: 5,
       transmutation_orb: 5,
     },
-    itemBaseBonus: calculateItemBaseBonus(12),
   },
 ];
 

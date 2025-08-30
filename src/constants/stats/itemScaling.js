@@ -44,7 +44,8 @@ function scaleDownFlat(
  * @param {number} [config.end=0.01] - Final flat bonus after maxLevel.
  * @param {number} [config.interval=1] - Levels per flat bonus step.
  * @param {number} [config.maxLevel=2000] - Levels over which start to end transition occurs.
- * @param {number} [config.tierMultiplier=0.1] - Additional multiplier per tier above 1.
+ * @param {number} [config.tierStart=0.1] - Multiplier applied to `start` per tier above 1.
+ * @param {number} [config.tierEnd=0.1] - Multiplier applied to `end` per tier above 1.
  * @returns {number} Scaling factor to multiply base stat values by.
  */
 export function itemLevelScaling(
@@ -55,15 +56,15 @@ export function itemLevelScaling(
     end = 0.01,
     interval = 1,
     maxLevel = 2000,
-    tierMultiplier = 0.1,
+    tierStart = 0.1,
+    tierEnd = 0.1,
   } = {},
 ) {
   if (level <= 0) return 1;
 
-  // Adjust starting and ending values based on tier.
-  const tierMod = 1 + (tier - 1) * tierMultiplier;
-  const s = start * tierMod;
-  const e = end * tierMod;
+  // Adjust starting and ending values based on tier with separate scaling.
+  const s = start * (1 + (tier - 1) * tierStart);
+  const e = end * (1 + (tier - 1) * tierEnd);
 
   // Accumulate diminishing increases from `s` to `e`.
   const total = scaleDownFlat(level, s, interval, maxLevel, e / s);

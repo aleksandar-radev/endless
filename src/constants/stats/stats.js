@@ -9,6 +9,41 @@ export const STATS = {
   ...MISC_STATS,
 };
 
+// Base tier bonus configuration by stat bonus type.
+// Higher tiers receive significantly larger multipliers.
+const ITEM_BASE_BONUS = {
+  flat: { base: 1, step: 1, growth: 0.2 },
+  percent: { base: 0.4, step: 0.2, growth: 0.06 },
+  chance: { base: 0.6, step: 0.6, growth: 0.12 },
+};
+
+/**
+ * Calculate base item bonus for a given tier and bonus type.
+ * Uses an increasing arithmetic series with a small growth factor
+ * so higher tiers get disproportionately larger bonuses.
+ */
+export function calculateItemBaseBonus(tier, type = 'flat') {
+  const cfg = ITEM_BASE_BONUS[type] || ITEM_BASE_BONUS.flat;
+  const { base, step, growth } = cfg;
+  if (!tier || tier <= 1) return base;
+  const steps = tier - 1;
+  const constPart = steps * step;
+  const growingPart = growth * ((steps - 1) * steps) / 2;
+  return Number((base + constPart + growingPart).toFixed(3));
+}
+
+function getBonusType(stat) {
+  const s = stat.toLowerCase();
+  if (s.includes('percent')) return 'percent';
+  if (s.includes('chance') || s.includes('steal')) return 'chance';
+  return 'flat';
+}
+
+// Public helper to fetch tier bonus for a given stat
+export function getItemTierBonus(stat, tier) {
+  return calculateItemBaseBonus(tier, getBonusType(stat));
+}
+
 // Linear decay parameters
 const MAX_LEVEL = 50000;
 const FINAL_PERCENT = 0.05; // 5% of original multiplier at MAX_LEVEL

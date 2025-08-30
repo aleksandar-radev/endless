@@ -2,9 +2,24 @@ import { itemLevelScaling } from './itemScaling.js';
 
 // Misc stat scaling values. These follow the same diminishing pattern used for
 // other item stats, starting higher and slowly tapering off.
-const FLAT_SCALING = { start: 0.0012 * 2, end: 0.0012 * 0.5 };
-const PERCENT_SCALING = { start: 0.00025 * 2, end: 0.00025 * 0.5 };
-const STAT_SCALING = { start: 0.0075 * 2, end: 0.005 * 0.5 };
+const FLAT_SCALING = {
+  start: 0.0012 * 2,
+  end: 0.0012 * 0.5,
+  tierStart: 0.1,
+  tierEnd: 0.05,
+};
+const PERCENT_SCALING = {
+  start: 0.00025 * 2,
+  end: 0.00025 * 0.5,
+  tierStart: 0.1,
+  tierEnd: 0.05,
+};
+const STAT_SCALING = {
+  start: 0.0075 * 2,
+  end: 0.005 * 0.5,
+  tierStart: 0.1,
+  tierEnd: 0.05,
+};
 
 const STATS_MIN = 8;
 const STATS_MAX = 15;

@@ -3,9 +3,19 @@ import { itemLevelScaling } from './itemScaling.js';
 // Scaling configuration shared across offensive stats.
 // Values gradually reduce from `start` to `end` over the first 2000 levels with
 // slight boosts for higher tier items.
-const FLAT_SCALING = { start: 0.04, end: 0.01 };
-const PERCENT_SCALING = { start: 0.002, end: 0.0005 };
-const CHANCE_SCALING = { start: 0.0012, end: 0.0003 };
+const FLAT_SCALING = { start: 0.04, end: 0.01, tierStart: 0.1, tierEnd: 0.05 };
+const PERCENT_SCALING = {
+  start: 0.002,
+  end: 0.0005,
+  tierStart: 0.1,
+  tierEnd: 0.05,
+};
+const CHANCE_SCALING = {
+  start: 0.0012,
+  end: 0.0003,
+  tierStart: 0.1,
+  tierEnd: 0.05,
+};
 
 const ELEMENTAL_DAMAGE_MIN = 8;
 const ELEMENTAL_DAMAGE_MAX = 20;

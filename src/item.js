@@ -1,6 +1,5 @@
 import { ITEM_ICONS, ITEM_RARITY, ITEM_STAT_POOLS } from './constants/items.js';
-import { getRegionByTier } from './constants/regions.js';
-import { STATS } from './constants/stats/stats.js';
+import { STATS, getItemTierBonus } from './constants/stats/stats.js';
 import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
 import { MISC_STATS } from './constants/stats/miscStats.js';
@@ -75,8 +74,8 @@ export default class Item {
     return typeof scalingFn === 'function' ? scalingFn(level, this.tier) : 1;
   }
 
-  getTierBonus() {
-    return getRegionByTier(this.tier).itemBaseBonus;
+  getTierBonus(stat) {
+    return getItemTierBonus(stat, this.tier);
   }
 
   getMultiplier() {
@@ -104,7 +103,7 @@ export default class Item {
   getStatMinMax(stat) {
     const statConfig = AVAILABLE_STATS[stat];
     if (!statConfig) return { min: 0, max: 0 };
-    const tierBonus = this.getTierBonus();
+    const tierBonus = this.getTierBonus(stat);
     const multiplier = this.getMultiplier();
     const scale = this.getLevelScale(stat, this.level);
     const decimals = STATS[stat].decimalPlaces || 0;
@@ -134,9 +133,9 @@ export default class Item {
     const itemPool = ITEM_STAT_POOLS[this.type];
     const totalStatsNeeded = ITEM_RARITY[this.rarity].totalStats;
     const multiplier = this.getMultiplier();
-    const tierBonus = this.getTierBonus();
     const calculateStatValue = (stat, baseValue) => {
       const scale = this.getLevelScale(stat, this.level);
+      const tierBonus = this.getTierBonus(stat);
       return this.calculateStatValue({ baseValue, tierBonus, multiplier, scale, stat });
     };
 
@@ -255,10 +254,10 @@ export default class Item {
       return Object.fromEntries(Object.entries(this.metaData).map(([stat, data]) => [stat, data.baseValue]));
     }
     const baseValues = {};
-    const tierBonus = this.getTierBonus();
     const multiplier = this.getMultiplier();
     for (const stat of Object.keys(this.stats)) {
       const scaling = this.getLevelScale(stat, this.level);
+      const tierBonus = this.getTierBonus(stat);
       const value = this.stats[stat];
       baseValues[stat] = value / (multiplier * scaling * tierBonus);
     }
@@ -272,10 +271,10 @@ export default class Item {
    */
   applyLevelToStats(newLevel) {
     const baseValues = this.getBaseStatValues();
-    const tierBonus = this.getTierBonus();
     const multiplier = this.getMultiplier();
     for (const stat of Object.keys(this.stats)) {
       const scale = this.getLevelScale(stat, newLevel);
+      const tierBonus = this.getTierBonus(stat);
       this.stats[stat] = this.calculateStatValue({ baseValue: baseValues[stat], tierBonus, multiplier, scale, stat });
     }
     this.level = newLevel;
@@ -299,9 +298,9 @@ export default class Item {
     const stat = eligibleStats[Math.floor(Math.random() * eligibleStats.length)];
     const range = AVAILABLE_STATS[stat];
     const baseValue = Math.random() * (range.max - range.min) + range.min;
-    const tierBonus = this.getTierBonus();
     const multiplier = this.getMultiplier();
     const scale = this.getLevelScale(stat, this.level);
+    const tierBonus = this.getTierBonus(stat);
     this.stats[stat] = this.calculateStatValue({
       baseValue,
       tierBonus,
