@@ -639,7 +639,7 @@ export default class CrystalShop {
     }
     this._commitChanges(false);
     this.updateModalDetails();
-    showToast(`Upgraded ${label} by ${count} level${count !== 1 ? 's' : ''}!`, count > 0 ? 'success' : 'error');
+    showToast(tp('crystalShop.upgraded', { label, count }), count > 0 ? 'success' : 'error');
   }
 
   /**

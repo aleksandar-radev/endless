@@ -5,7 +5,7 @@ import {
   updateResources,
   formatStatName,
 } from './ui/ui.js';
-import { t } from './i18n.js';
+import { t, tp } from './i18n.js';
 import { createModal, closeModal } from './ui/modal.js';
 import {
   initializeInventoryUI,
@@ -833,7 +833,8 @@ export default class Inventory {
       updateMaterialsGrid();
       updateResources(); // <-- update the UI after using a material
     } else {
-      showToast(`No ${rarity.toLowerCase()} items to salvage`, 'info');
+      const rarityKey = `rarity.${rarity.toLowerCase()}`;
+      showToast(tp('inventory.noRarityItemsToSalvage', { rarity: t(rarityKey).toLowerCase() }), 'info');
     }
   }
 
