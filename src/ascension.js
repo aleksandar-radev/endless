@@ -100,7 +100,7 @@ export default class Ascension {
 
   async ascend() {
     if (!this.canAscend()) {
-      showToast('You need at least 10 prestiges to ascend.');
+      showToast(t('ascension.needPrestiges'));
       return;
     }
     const earned = prestige.prestigeCount;

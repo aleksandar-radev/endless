@@ -9,7 +9,7 @@ import {
   updateStageUI,
   formatNumber,
 } from './ui/ui.js';
-import { t } from './i18n.js';
+import { t, tp } from './i18n.js';
 import { selectBoss } from './ui/bossUi.js';
 import { handleSavedData } from './functions.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
@@ -320,7 +320,7 @@ export default class CrystalShop {
       updateSkillTreeValues();
       updateActionBar();
       initializeSkillTreeUI();
-      showToast('Class has been reset and all points refunded.', 'success');
+      showToast(t('crystalShop.resetClassSuccess'), 'success');
     } else if (stat === 'resetAttributes') {
       confirmed = await showConfirmDialog(
         'Are you sure you want to reset all allocated attribute points?<br>' +
@@ -330,7 +330,7 @@ export default class CrystalShop {
       hero.crystals -= cost;
       hero.resetAttributes();
       updateStatsAndAttributesUI();
-      showToast('All attribute points have been refunded.', 'success');
+      showToast(t('crystalShop.resetAttributesSuccess'), 'success');
     } else if (stat === 'resetArenaLevel') {
       confirmed = await showConfirmDialog(
         'Are you sure you want to reset your boss level to 1?<br>' +
@@ -343,7 +343,7 @@ export default class CrystalShop {
         selectBoss();
       }
       updateStageUI();
-      showToast('Boss level has been reset to 1.', 'success');
+      showToast(t('crystalShop.resetBossLevelSuccess'), 'success');
     } else if (stat === 'resetTraining') {
       confirmed = await showConfirmDialog(
         'Are you sure you want to reset all training upgrades and refund the gold spent?<br>' +
@@ -652,14 +652,14 @@ export default class CrystalShop {
     const { baseCost, label } = config;
     if (this.crystalUpgrades[stat]) return;
     if (hero.crystals < baseCost) {
-      showToast('Not enough crystals!', 'error');
+      showToast(t('crystalShop.notEnoughCrystals'), 'error');
       return;
     }
 
     hero.crystals -= baseCost;
     this.crystalUpgrades[stat] = true;
     this._commitChanges();
-    showToast(`Purchased ${label}!`, 'success');
+    showToast(tp('crystalShop.purchased', { label }), 'success');
 
     if (stat === 'autoSpellCast') {
       skillTree.enableAutoCastForAllSkills();
@@ -688,14 +688,14 @@ export default class CrystalShop {
   async _handleMultiplePurchase(stat, config) {
     const { baseCost, label } = config;
     if (hero.crystals < baseCost) {
-      showToast('Not enough crystals!', 'error');
+      showToast(t('crystalShop.notEnoughCrystals'), 'error');
       return;
     }
 
     hero.crystals -= baseCost;
     this.crystalUpgrades[stat] = (this.crystalUpgrades[stat] || 0) + 1;
     this._commitChanges();
-    showToast(`Purchased ${label}!`, 'success');
+    showToast(tp('crystalShop.purchased', { label }), 'success');
   }
 
   /**
@@ -711,7 +711,7 @@ export default class CrystalShop {
       if (close) this.closeModal();
     } catch (err) {
       console.error(err);
-      showToast('Error updating shop. Please try again.', 'error');
+      showToast(t('crystalShop.updateError'), 'error');
     }
   }
 

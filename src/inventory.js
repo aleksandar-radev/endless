@@ -239,7 +239,7 @@ export default class Inventory {
           const maxUpgrade = Math.min(maxLevelsByStage, maxLevelsByMats);
           if (useQty > maxUpgrade) useQty = maxUpgrade;
           if (useQty < 1) {
-            showToast('Not enough materials or item at max stage', 'error');
+            showToast(t('inventory.notEnoughMaterialsOrMaxStage'), 'error');
             return; // Prevent upgrading if already at or above highest stage or lacking materials
           }
           const oldLevel = item.level;
@@ -892,7 +892,7 @@ export default class Inventory {
       updateMaterialsGrid();
       updateResources();
     } else {
-      showToast('No items to salvage', 'info');
+      showToast(t('inventory.noItemsToSalvage'), 'info');
     }
   }
 

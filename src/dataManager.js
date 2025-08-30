@@ -4,6 +4,7 @@ import { crypt } from './functions.js';
 import { getGlobals } from './globals.js';
 import { createModal } from './ui/modal.js';
 import { showToast } from './ui/ui.js';
+import { t } from './i18n.js';
 import { getTimeNow } from './common.js';
 
 const MAX_SLOTS = 5;
@@ -100,7 +101,7 @@ export class DataManager {
           game_name: import.meta.env.VITE_GAME_NAME,
         });
       } catch (e) {
-        showToast('Cloud save failed!');
+        showToast(t('dataManager.cloudSaveFailed'));
         console.error('Cloud save failed:', e);
       }
     }

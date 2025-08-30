@@ -536,7 +536,7 @@ export default class Training {
     const { totalCost, purchases, affordable } = this.calculateBulkCostAndPurchases(this.quickQty);
     if (purchases.length === 0) return;
     if (!affordable) {
-      showToast('Not enough gold to bulk buy!', 'error');
+      showToast(t('training.notEnoughGoldBulk'), 'error');
       return;
     }
     hero.gold -= totalCost;
@@ -544,7 +544,7 @@ export default class Training {
     purchases.forEach((p) => {
       this.upgradeLevels[p.stat] += p.qty;
     });
-    showToast('Bulk purchase successful!');
+    showToast(t('training.bulkPurchaseSuccess'));
     this.updateTrainingUI('gold-upgrades');
     hero.recalculateFromAttributes();
     updateStatsAndAttributesUI();

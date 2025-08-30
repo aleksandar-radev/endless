@@ -3,6 +3,7 @@ import { CLASS_PATHS, SKILL_TREES } from '../constants/skills.js';
 import { SKILL_LEVEL_TIERS } from '../skillTree.js';
 import { skillTree, hero, crystalShop, options } from '../globals.js';
 import { formatStatName, hideTooltip, positionTooltip, showToast, showTooltip, updateResources } from './ui.js';
+import { t } from '../i18n.js';
 import { createModal } from './modal.js';
 
 const html = String.raw;
@@ -214,7 +215,7 @@ function renderAutoCastToggles() {
         skillTree.setAutoCast(skill.id, e.target.checked);
       } else {
         e.preventDefault();
-        showToast('Purchase Auto Spell Cast upgrade to enable auto-casting.', 'warning');
+        showToast(t('skillTree.purchaseAutoCastWarning'), 'warning');
         toggle.checked = false;
       }
     });
@@ -841,5 +842,5 @@ export function updateBuffIndicators() {
 }
 
 export function showManaWarning() {
-  showToast('Not enough mana!', 'warning', 1500);
+  showToast(t('skillTree.notEnoughMana'), 'warning', 1500);
 }
