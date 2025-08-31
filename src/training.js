@@ -640,21 +640,14 @@ export default class Training {
       ({ qty: levelsToBuy, totalCost } = this.getMaxPurchasable(qty, currentLevel, maxLevel, config));
     } else {
       qty = Math.min(qty, TRAINING_MAX_QTY);
-      levelsToBuy = Math.min(qty, levelsLeft);
-      // Calculate total cost for levelsToBuy upgrades
-      totalCost = this.calculateTotalCost(config, levelsToBuy, currentLevel);
-      if (totalCost > gold) {
-        // If not enough gold for all, reduce levelsToBuy
-        // Find max affordable
-        let affordable = 0;
-        for (let i = 1; i <= levelsToBuy; i++) {
-          let cost = this.calculateTotalCost(config, i, currentLevel);
-          if (cost > gold) break;
-          affordable = i;
-        }
-        levelsToBuy = affordable;
-        totalCost = this.calculateTotalCost(config, levelsToBuy, currentLevel);
-      }
+      const desiredLevels = Math.min(qty, levelsLeft);
+      ({ qty: levelsToBuy, totalCost } = this.getMaxPurchasable(
+        'max',
+        currentLevel,
+        currentLevel + desiredLevels,
+        config,
+        gold
+      ));
     }
 
     if (levelsToBuy > 0) {
