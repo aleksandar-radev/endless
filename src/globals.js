@@ -12,6 +12,7 @@ import Training from './training.js';
 import { BuildingManager } from './building.js';
 import Prestige from './prestige.js';
 import Ascension from './ascension.js';
+import Runes from './runes.js';
 
 // Global singletons for the game
 export let game = null;
@@ -28,6 +29,7 @@ export let dataManager = null;
 export let buildings = null;
 export let prestige = null;
 export let ascension = null;
+export let runes = null;
 
 // Runtime state that persists during resets
 export const runtime = {
@@ -62,6 +64,7 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
   const _buildings = await BuildingManager.create(savedData?.buildings);
   const _prestige = new Prestige(savedData?.prestige);
   const _ascension = new Ascension(savedData?.ascension);
+  const _runes = new Runes(savedData?.runes);
 
   inventory = _inventory;
   training = _training;
@@ -73,6 +76,7 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
   buildings = _buildings;
   prestige = _prestige;
   ascension = _ascension;
+  runes = _runes;
   dataManager = _dataManager;
 
   // useful when loading from cloud
@@ -94,6 +98,7 @@ export function getGlobals() {
     options,
     prestige,
     ascension,
+    runes,
     dataManager,
   };
 }

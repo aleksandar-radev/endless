@@ -27,9 +27,11 @@ import { initializeBuildingsUI, renderPurchasedBuildings } from './ui/buildingUi
 import { initializePrestigeUI } from './ui/prestigeUi.js';
 import { initializeBattleLogUI } from './ui/battleLogUi.js';
 import { initializeAscensionUI } from './ui/ascensionUi.js';
+import { initializeRunesUI } from './ui/runesUi.js';
 import Enemy from './enemy.js';
 import { setupLeaderboardTabLazyLoad } from './ui/leaderboardUi.js';
 import Boss from './boss.js';
+import { RockyFieldEnemy } from './rockyField.js';
 import { applyTranslations, setLanguage, t } from './i18n.js';
 import { getGameInfo } from './api.js';
 import { createModal } from './ui/modal.js';
@@ -56,6 +58,8 @@ window.setLanguage = setLanguage;
     game.currentEnemy = new Enemy(game.stage);
   } else if (game.fightMode === 'arena') {
     game.currentEnemy = new Boss();
+  } else if (game.fightMode === 'rockyField') {
+    game.currentEnemy = new RockyFieldEnemy(game.rockyFieldZone, game.rockyFieldStage);
   }
 
 
@@ -70,6 +74,7 @@ window.setLanguage = setLanguage;
   initializePrestigeUI();
   initializeAscensionUI();
   initializeBattleLogUI();
+  initializeRunesUI();
 
   // Apply translations after UI components are initialized
   applyTranslations();

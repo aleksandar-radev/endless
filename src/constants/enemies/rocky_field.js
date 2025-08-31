@@ -1,0 +1,111 @@
+import { t } from '../../i18n.js';
+import { RUNES } from '../runes.js';
+
+const ALL_RUNES = RUNES.map((r) => r.id);
+
+export const ROCKY_FIELD_ENEMIES = [
+  {
+    get name() { return t('Stone Beetle'); },
+    image: '/enemies/stone-beetle.jpg',
+    zone: 'outskirts',
+    baseStats: {
+      life: 80,
+      damage: 6,
+      armor: 5,
+      attackSpeed: 1,
+      attackRating: 10,
+      evasion: 5,
+      xp: 8,
+      gold: 5,
+    },
+    special: ['alwaysHit'],
+    runeDrop: ALL_RUNES,
+  },
+  {
+    get name() { return t('Pebble Golem'); },
+    image: '/enemies/pebble-golem.jpg',
+    zone: 'boulders',
+    baseStats: {
+      life: 120,
+      damage: 8,
+      armor: 10,
+      attackSpeed: 0.8,
+      attackRating: 8,
+      evasion: 3,
+      xp: 10,
+      gold: 8,
+    },
+    special: ['noLeech'],
+    runeDrop: ALL_RUNES,
+  },
+  {
+    get name() { return t('Cave Stalker'); },
+    image: '/enemies/cave-stalker.jpg',
+    zone: 'caves',
+    baseStats: {
+      life: 140,
+      damage: 9,
+      armor: 9,
+      attackSpeed: 1,
+      attackRating: 11,
+      evasion: 6,
+      xp: 12,
+      gold: 9,
+    },
+    special: ['alwaysHit'],
+    runeDrop: ALL_RUNES,
+  },
+  {
+    get name() { return t('Cliff Gargoyle'); },
+    image: '/enemies/cliff-gargoyle.jpg',
+    zone: 'cliffs',
+    baseStats: {
+      life: 160,
+      damage: 11,
+      armor: 12,
+      attackSpeed: 0.9,
+      attackRating: 13,
+      evasion: 8,
+      xp: 14,
+      gold: 12,
+    },
+    special: ['noLeech'],
+    runeDrop: ALL_RUNES,
+  },
+  {
+    get name() { return t('Valley Sentinel'); },
+    image: '/enemies/valley-sentinel.jpg',
+    zone: 'valley',
+    baseStats: {
+      life: 180,
+      damage: 13,
+      armor: 14,
+      attackSpeed: 1,
+      attackRating: 15,
+      evasion: 9,
+      xp: 16,
+      gold: 14,
+    },
+    special: [],
+    runeDrop: ALL_RUNES,
+  },
+  {
+    get name() { return t('Rock Spirit'); },
+    image: '/enemies/rock-spirit.jpg',
+    zone: 'summit',
+    baseStats: {
+      life: 100,
+      damage: 10,
+      armor: 8,
+      attackSpeed: 1.2,
+      attackRating: 12,
+      evasion: 7,
+      xp: 12,
+      gold: 10,
+    },
+    special: [],
+    runeDrop: ALL_RUNES,
+  },
+];
+
+export default ROCKY_FIELD_ENEMIES;

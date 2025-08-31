@@ -3,13 +3,14 @@ import {
   updateEnemyStats,
   updateResources,
   updateStageUI,
+  updateRockyFieldZoneSelector,
   updateBuffIndicators,
   updateTabIndicators,
   showToast,
   showDeathScreen,
 } from './ui/ui.js';
 import Enemy from './enemy.js';
-import { hero, game, inventory, crystalShop, statistics, skillTree, dataManager, runtime, options } from './globals.js';
+import { hero, game, inventory, crystalShop, statistics, skillTree, dataManager, runtime, options, runes } from './globals.js';
 import { ITEM_RARITY } from './constants/items.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateQuestsUI } from './ui/questUi.js';
@@ -18,6 +19,9 @@ import { selectBoss, updateBossUI } from './ui/bossUi.js';
 import { audioManager } from './audio.js';
 import { battleLog } from './battleLog.js';
 import { t, tp } from './i18n.js';
+import { RockyFieldEnemy } from './rockyField.js';
+import { renderRunesUI } from './ui/runesUi.js';
+import { getRuneName } from './runes.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 import { ELEMENTS } from './constants/common.js';
@@ -29,8 +33,13 @@ export function enemyAttack(currentTime) {
   if (game.currentEnemy.canAttack(currentTime)) {
     // Check for evasion first
 
-    const hitChance = calculateHitChance(game.currentEnemy.attackRating, hero.stats.evasion);
-    const isEvaded = Math.random() * 100 > hitChance;
+    const alwaysHit = game.currentEnemy.special?.includes('alwaysHit');
+    const hitChance = calculateHitChance(
+      game.currentEnemy.attackRating,
+      hero.stats.evasion,
+      alwaysHit ? 1 : undefined,
+    );
+    const isEvaded = !alwaysHit && Math.random() * 100 > hitChance;
 
     if (isEvaded) {
       // Show "EVADED" text
@@ -109,22 +118,25 @@ export function playerAttack(currentTime) {
       // Calculate if attack hits
       const heroAttackRating = hero.stats.attackRating;
 
-      const hitChance = calculateHitChance(
-        heroAttackRating,
-        game.currentEnemy.evasion,
-        undefined,
-        hero.stats.chanceToHitPercent || 0,
-      );
+      const alwaysEvade = game.currentEnemy.special?.includes('alwaysEvade');
+      const hitChance = alwaysEvade
+        ? 0
+        : calculateHitChance(
+          heroAttackRating,
+          game.currentEnemy.evasion,
+          undefined,
+          hero.stats.chanceToHitPercent || 0,
+        );
 
       const roll = Math.random() * 100;
-      const neverMiss = hero.stats.attackNeverMiss > 0;
+      const neverMiss = hero.stats.attackNeverMiss > 0 && !alwaysEvade;
 
       const manaPerHit = (hero.stats.manaPerHit || 0) * (1 + (hero.stats.manaPerHitPercent || 0) / 100);
       if (manaPerHit < 0) {
         game.restoreMana(manaPerHit);
       }
 
-      if (!neverMiss && roll > hitChance) {
+      if (!neverMiss && (alwaysEvade || roll > hitChance)) {
         createDamageNumber({ text: 'MISS', color: '#888888' });
         battleLog.addBattle(t('battleLog.missedAttack'));
       } else {
@@ -194,6 +206,12 @@ export function playerDeath() {
       updateStageUI();
       game.currentEnemy = new Enemy(game.stage);
       game.resetAllLife();
+    } else if (game.fightMode === 'rockyField') {
+      // Reset rocky field stage and enemy, restore player resources
+      game.rockyFieldStage = 1;
+      game.currentEnemy = new RockyFieldEnemy(game.rockyFieldZone, game.rockyFieldStage);
+      game.resetAllLife();
+      updateRockyFieldZoneSelector();
     }
 
     // reset ressurect counts
@@ -364,8 +382,31 @@ export async function defeatEnemy() {
     statistics.increment('totalEnemiesKilled');
     statistics.increment('enemiesKilled', enemy.rarity.toLowerCase());
     statistics.increment('enemiesKilledByZone', enemy.region.tier);
+  } else if (initialFightMode === 'rockyField') {
+    baseExpGained = enemy.xp;
+    baseGoldGained = enemy.gold;
+
+    if (enemy.runeDrop && Math.random() * 100 < 5) {
+      const runeId = enemy.runeDrop[Math.floor(Math.random() * enemy.runeDrop.length)];
+      const weak = enemy.zoneId === 'outskirts';
+      const rune = runes.addRune(runeId, weak ? 5 : undefined);
+      if (rune) {
+        const name = getRuneName(rune, options.shortElementalNames);
+        battleLog.addDrop(tp('battleLog.droppedRune', { name }));
+        showRuneNotification(rune);
+        renderRunesUI();
+        dataManager.saveGame();
+      }
+    }
+
+    if (game.gameStarted) {
+      game.incrementRockyFieldStage();
+      updateRockyFieldZoneSelector();
+    }
+
+    statistics.increment('totalEnemiesKilled');
   }
-  // END EXPLORE REGION
+  // END REGION HANDLING
 
   const expGained = Math.floor(baseExpGained * (1 + hero.stats.bonusExperiencePercent));
   const goldGained = Math.floor(baseGoldGained * (1 + hero.stats.bonusGoldPercent));
@@ -402,6 +443,9 @@ export async function defeatEnemy() {
   } else if (game.fightMode === 'explore') {
     game.currentEnemy = new Enemy(game.stage);
     updateEnemyStats();
+  } else if (game.fightMode === 'rockyField') {
+    game.currentEnemy = new RockyFieldEnemy(game.rockyFieldZone, game.rockyFieldStage);
+    updateEnemyStats();
   }
 
   if (game.currentEnemy) {
@@ -411,6 +455,17 @@ export async function defeatEnemy() {
 
   // clear defeat guard so next enemy can be damaged
   game._justDefeated = false;
+}
+
+function showRuneNotification(rune) {
+  if (!options?.showNotifications) return;
+  const notification = document.createElement('div');
+  notification.className = 'loot-notification';
+  notification.style.color = '#4db34d';
+  notification.textContent = `Found: ${getRuneName(rune, options.shortElementalNames)}`;
+  document.body.appendChild(notification);
+
+  setTimeout(() => notification.remove(), 3000);
 }
 
 function showMaterialNotification(mat) {

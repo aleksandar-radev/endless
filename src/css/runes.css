@@ -1,0 +1,82 @@
+.rune-equip-slots,
+.rune-inventory {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+}
+
+.rune-slot {
+  width: 60px;
+  height: 60px;
+  border: 1px solid #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.rune-slot.selected {
+  outline: 2px solid #4e9aff;
+}
+
+.rune-slot.drag-over {
+  border-color: #fff;
+}
+
+.rune-equip-slots .rune-slot {
+  border-color: #aaa;
+}
+
+.rune-inventory .rune-slot {
+  border-color: #666;
+}
+
+.rune-equip-slots {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #888;
+  margin-bottom: 8px;
+}
+
+.rune-inventory {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid #444;
+  margin-bottom: 8px;
+}
+
+.rune-section {
+  margin-bottom: 12px;
+}
+
+.rune-section-title {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.rune-controls {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.rune-controls .inventory-btn {
+  cursor: pointer;
+}
+
+.rune-controls .salvage-btn {
+  background: #b34d4d;
+  border: 1px solid #d06060;
+  color: #fff;
+}
+
+.rune-controls .equip-btn {
+  background: #4db34d;
+  border: 1px solid #60d060;
+  color: #fff;
+}
+
+.rune-slot img {
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+}

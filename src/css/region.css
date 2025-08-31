@@ -6,6 +6,14 @@
   margin-top: 8px;
 }
 
+#rocky-field-zone-selector {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  margin-bottom: 16px;
+  margin-top: 8px;
+}
+
 .region-btn {
   background: linear-gradient(90deg, #232b38 60%, #1a202c 100%);
   color: #fff;

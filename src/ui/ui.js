@@ -1,4 +1,8 @@
 import Enemy from '../enemy.js';
+import { ROCKY_FIELD_ZONES, RockyFieldEnemy, getRockyFieldEnemies } from '../rockyField.js';
+import { RUNES } from '../constants/runes.js';
+import { getRuneName } from '../runes.js';
+import { formatStatName as formatStatNameBase } from '../format.js';
 import {
   game,
   hero,
@@ -29,9 +33,6 @@ export {
 } from './skillTreeUi.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
-const ELEMENT_REGEX = new RegExp(
-  `^(${ELEMENT_IDS.join('|')})(Damage|DamagePercent|Resistance|ResistancePercent|Penetration|PenetrationPercent)$`,
-);
 
 // Tab indicator manager instance
 let tabIndicatorManager = null;
@@ -120,6 +121,8 @@ export function initializeUI() {
         game.currentEnemy = new Enemy(game.stage);
       } else if (game.fightMode === 'arena') {
         selectBoss(); // Select boss based on current level
+      } else if (game.fightMode === 'rockyField') {
+        game.currentEnemy = new RockyFieldEnemy(game.rockyFieldZone, game.rockyFieldStage);
       }
       // Toggle active tab class
       document.querySelectorAll('.region-tab').forEach((b) => b.classList.toggle('active', b === btn));
@@ -142,16 +145,22 @@ export function initializeUI() {
           if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
         }
         if (value) value.textContent = hero.bossLevel;
+      } else if (region === 'rockyField') {
+        if (label) {
+          const val = t('combat.stage');
+          if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
+        }
+        if (value) value.textContent = game.rockyFieldStage;
       }
       // Hide or show region-selector based on region
       const regionSelector = document.getElementById('region-selector');
-      regionSelector.style.display = region === 'arena' ? 'none' : '';
+      regionSelector.style.display = region === 'arena' || region === 'rockyField' ? 'none' : '';
     });
   });
   // Render initial region panel and set region-selector visibility
   renderRegionPanel(game.fightMode);
   const regionSelector = document.getElementById('region-selector');
-  regionSelector.style.display = game.fightMode === 'arena' ? 'none' : '';
+  regionSelector.style.display = game.fightMode === 'arena' || game.fightMode === 'rockyField' ? 'none' : '';
 
   // Listen for option toggle to update inline stage controls
   document.addEventListener('updateInlineStageControls', () => {
@@ -261,19 +270,28 @@ export function updateEnemyStats() {
 
   const armor = document.getElementById('enemy-armor-value');
   if (armor) {
-  // Use PoE2 formula: reduction = armor / (armor + 10 * damage)
+    // Use PoE2 formula: reduction = armor / (armor + 10 * damage)
     const reduction = calculateArmorReduction(enemy.armor, hero.stats.damage);
     armor.textContent = `${formatNumber(Math.floor(enemy.armor || 0))} (${Math.floor(reduction)}%)`;
   }
   const evasion = document.getElementById('enemy-evasion-value');
   if (evasion) {
-    const reduction = calculateEvasionChance(enemy.evasion, hero.stats.attackRating, undefined, hero.stats.chanceToHitPercent || 0);
+    const alwaysEvade = enemy.special?.includes('alwaysEvade');
+    const reduction = alwaysEvade
+      ? 100
+      : calculateEvasionChance(
+        enemy.evasion,
+        hero.stats.attackRating,
+        undefined,
+        hero.stats.chanceToHitPercent || 0,
+      );
     evasion.textContent = `${formatNumber(Math.floor(enemy.evasion || 0))} (${Math.floor(reduction)}%)`;
   }
   const atkRating = document.getElementById('enemy-attack-rating-value');
   if (atkRating) {
     // Show enemy attack rating and their hit chance against the player
-    const hitChance = calculateHitChance(enemy.attackRating, hero.stats.evasion);
+    const alwaysHit = enemy.special?.includes('alwaysHit');
+    const hitChance = alwaysHit ? 100 : calculateHitChance(enemy.attackRating, hero.stats.evasion);
     atkRating.textContent = `${formatNumber(Math.floor(enemy.attackRating || 0))} (${Math.floor(hitChance)}%)`;
   }
   const atkSpeed = document.getElementById('enemy-attack-speed-value');
@@ -344,7 +362,6 @@ export async function toggleGame() {
 }
 
 export function updateStageUI() {
-  const stage = game.stage;
   const stageDisplay = document.getElementById('stage-display');
   const label = stageDisplay?.querySelector('.stage-label');
   const value = stageDisplay?.querySelector('.stage-value');
@@ -356,12 +373,20 @@ export function updateStageUI() {
     if (value) value.textContent = hero.bossLevel;
     return;
   }
+  if (stageDisplay && game.fightMode === 'rockyField') {
+    if (label) {
+      const val = t('combat.stage');
+      if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
+    }
+    if (value) value.textContent = game.rockyFieldStage;
+    return;
+  }
   if (stageDisplay) {
     if (label) {
       const val = t('combat.stage');
       if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
     }
-    if (value) value.textContent = stage;
+    if (value) value.textContent = game.stage;
   }
 }
 
@@ -533,37 +558,8 @@ export function showConfirmDialog(message, options = {}) {
 }
 
 // Helper function to convert camelCase to Title Case with spaces and translate stat names
-export const formatStatName = (stat) => {
-  const match = stat.match(ELEMENT_REGEX);
-  if (match) {
-    const [, element, suffix] = match;
-    const icon = ELEMENTS[element]?.icon || '';
-    const translation = t(stat);
-    const baseMap = {
-      Damage: 'Damage',
-      DamagePercent: 'Damage %',
-      Resistance: 'Res',
-      ResistancePercent: 'Res %',
-      Penetration: 'Penetration',
-      PenetrationPercent: 'Penetration %',
-    };
-    let base = translation !== stat ? translation.replace(icon, '').trim() : baseMap[suffix];
-    if (options?.shortElementalNames) {
-      return `${icon} ${base}`.trim();
-    }
-    const elementName = t(element);
-    return `${icon} ${elementName} ${base}`.trim();
-  }
-
-  const translation = t(stat);
-  if (translation !== stat) return translation;
-
-  return stat
-    .replace(/([A-Z])/g, ' $1')
-    .replace(/^./, (str) => str.toUpperCase())
-    .replace(/Percent$/, '%')
-    .trim();
-};
+export const formatStatName = (stat) =>
+  formatStatNameBase(stat, options?.shortElementalNames);
 
 /**
  * Update tab indicators based on current game state.
@@ -596,6 +592,64 @@ export function updateTabIndicators(previousTab = null) {
   };
 
   tabIndicatorManager.updateAll(state);
+}
+
+/**
+ * Render the Rocky Field zone selector and handle zone changes.
+ */
+function getRockyFieldZoneTooltip(zone) {
+  const html = String.raw;
+  const enemies = getRockyFieldEnemies(zone.id);
+  const runeIds = [...new Set(enemies.flatMap((e) => e.runeDrop || []))];
+  const runeNames = runeIds
+    .map((id) => {
+      const rune = RUNES.find((r) => r.id === id);
+      return rune ? getRuneName(rune, options.shortElementalNames) : null;
+    })
+    .filter(Boolean);
+
+  return html`
+    <div class="tooltip-header">${zone.name}</div>
+    ${zone.description ? `<div class="tooltip-content">${zone.description}</div>` : ''}
+    ${zone.unlockStage ? `<div><strong>${t('rockyField.unlockStage')}:</strong> ${zone.unlockStage}</div>` : ''}
+    ${runeNames.length ? `<div><strong>${t('rockyField.availableRunes')}:</strong> ${runeNames.join(', ')}</div>` : ''}
+  `;
+}
+
+export function updateRockyFieldZoneSelector() {
+  const container = document.getElementById('rocky-field-zone-selector');
+  if (!container) return;
+  container.innerHTML = '';
+
+  ROCKY_FIELD_ZONES.forEach((zone) => {
+    const hasEnemies = getRockyFieldEnemies(zone.id).length > 0;
+    const unlocked = !zone.unlockStage || game.rockyFieldHighestStage >= zone.unlockStage;
+    const btn = document.createElement('button');
+    btn.className = 'region-btn' + (zone.id === game.rockyFieldZone ? ' selected' : '');
+    btn.textContent = zone.name;
+    btn.disabled = !hasEnemies || !unlocked;
+
+    btn.addEventListener('mouseenter', (e) => showTooltip(getRockyFieldZoneTooltip(zone), e));
+    btn.addEventListener('mousemove', positionTooltip);
+    btn.addEventListener('mouseleave', hideTooltip);
+
+    if (hasEnemies && unlocked) {
+      btn.onclick = async () => {
+        const confirmed = await showConfirmDialog(
+          `Are you sure you want to change to ${zone.name}? That will reset your stage progress and will find you a new enemy`,
+        );
+        if (!confirmed) return;
+        game.rockyFieldZone = zone.id;
+        game.rockyFieldStage = 1;
+        game.currentEnemy = new RockyFieldEnemy(game.rockyFieldZone, game.rockyFieldStage);
+        updateEnemyStats();
+        updateStageUI();
+        updateRockyFieldZoneSelector();
+      };
+    }
+
+    container.appendChild(btn);
+  });
 }
 
 /**
@@ -642,6 +696,16 @@ function renderRegionPanel(region) {
     panel.innerHTML = baseHtml;
     container.appendChild(panel);
     updateBossUI();
+  } else if (region === 'rockyField') {
+    const panel = document.createElement('div');
+    panel.id = 'rocky-field-panel';
+    panel.classList.add('region-panel');
+    panel.innerHTML = `<div id="rocky-field-zone-selector"></div>${baseHtml}`;
+    container.appendChild(panel);
+
+    updateRockyFieldZoneSelector();
+    updateEnemyStats();
+    updateResources();
   } else {
     const panel = document.createElement('div');
     panel.id = 'explore-panel';

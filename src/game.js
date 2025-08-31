@@ -2,6 +2,7 @@ import { updatePlayerLife, updateEnemyStats, updateStageUI, updateResources, upd
 import { playerAttack, enemyAttack, playerDeath, defeatEnemy, createDamageNumber } from './combat.js';
 import { game, hero, crystalShop, skillTree, statistics, dataManager, setGlobals, options } from './globals.js';
 import Enemy from './enemy.js';
+import { RockyFieldEnemy } from './rockyField.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateBossUI, selectBoss } from './ui/bossUi.js';
 import { getCurrentRegion } from './region.js';
@@ -25,6 +26,9 @@ class Game {
     this.currentEnemy = null;
     this.currentRegionId = savedData.currentRegionId || null;
     this.stage = savedData.stage || 1; // Default to stage 1 if not provided
+    this.rockyFieldStage = savedData.rockyFieldStage || 1;
+    this.rockyFieldHighestStage = savedData.rockyFieldHighestStage || this.rockyFieldStage;
+    this.rockyFieldZone = savedData.rockyFieldZone || 'outskirts';
     this.resurrectCount = 0; // Track number of resurrections
     this.soulShopResurrectCount = 0; // Track number of resurrections from SoulShop
     this.lastPlayerAttack = Date.now();
@@ -51,6 +55,14 @@ class Game {
 
     updateStageUI();
     updateResources(); // Update resources to reflect new crystal count
+  }
+
+  incrementRockyFieldStage() {
+    this.rockyFieldStage += 1;
+    if (this.rockyFieldStage > this.rockyFieldHighestStage) {
+      this.rockyFieldHighestStage = this.rockyFieldStage;
+    }
+    updateStageUI();
   }
 
   getStartingStage() {
@@ -242,6 +254,8 @@ class Game {
       if (!this.currentEnemy) {
         if (this.fightMode === 'arena') {
           selectBoss();
+        } else if (this.fightMode === 'rockyField') {
+          this.currentEnemy = new RockyFieldEnemy(this.rockyFieldZone, this.rockyFieldStage);
         } else {
           this.currentEnemy = new Enemy(this.stage);
         }
@@ -264,6 +278,13 @@ class Game {
           this.currentEnemy.resetLife();
           updateBossUI();
         }
+      } else if (this.fightMode === 'rockyField') {
+        if (!this.currentEnemy) {
+          this.currentEnemy = new RockyFieldEnemy(this.rockyFieldZone, this.rockyFieldStage);
+        } else {
+          this.currentEnemy.resetLife();
+        }
+        updateEnemyStats();
       } else {
         // Explore mode: keep existing enemy or generate one if missing
         if (!this.currentEnemy) {

@@ -10,6 +10,7 @@ import {
   prestige,
   ascension,
   crystalShop,
+  runes,
 } from './globals.js';
 import { calculateArmorReduction, calculateResistanceReduction, createCombatText, createDamageNumber } from './combat.js';
 import { handleSavedData } from './functions.js';
@@ -227,7 +228,15 @@ export default class Hero {
     const attributeEffects = this.calculateAttributeEffects();
 
     // 5) Normal flat+% pass
-    const flatValues = this.calculateFlatValues(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses);
+    const flatValues = this.calculateFlatValues(
+      attributeEffects,
+      skillTreeBonuses,
+      equipmentBonuses,
+      trainingBonuses,
+    );
+    if (runes) {
+      runes.applyBonuses(flatValues);
+    }
     const percentBonuses = this.calculatePercentBonuses(
       attributeEffects,
       skillTreeBonuses,
