@@ -646,7 +646,7 @@ export default class Training {
         currentLevel,
         currentLevel + desiredLevels,
         config,
-        gold
+        gold,
       ));
     }
 
