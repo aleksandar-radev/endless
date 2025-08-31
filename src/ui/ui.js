@@ -168,7 +168,11 @@ export function switchTab(tabName) {
   if (!tabElement) tabElement = document.getElementById('stats');
   tabElement.classList.add('active');
 
-  document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+  let tab = document.querySelector(`[data-tab="${tabName}"]`);
+  if (!tab) {
+    tab = document.querySelector('[data-tab="stats"]');
+  }
+  tab.classList.add('active');
 
   if (tabName === 'stats') {
     updateStatsAndAttributesUI();
