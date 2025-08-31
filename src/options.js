@@ -280,6 +280,7 @@ export class Options {
     generalContent.className = 'options-content';
     generalContent.appendChild(this._createCloudSaveBar());
     generalContent.appendChild(this._createSaveSlotOption());
+    generalContent.appendChild(this._createSaveTextButtons());
     generalContent.appendChild(this._createLanguageOption());
     generalContent.appendChild(this._createSoundVolumeOption());
 
@@ -751,6 +752,57 @@ export class Options {
       dataManager.setCurrentSlot(slot);
       window.location.reload();
     });
+    return wrapper;
+  }
+
+  _createSaveTextButtons() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+
+    const copyBtn = document.createElement('button');
+    copyBtn.id = 'copy-save-text-btn';
+    copyBtn.setAttribute('data-i18n', 'options.saveText.copy');
+    copyBtn.textContent = t('options.saveText.copy');
+    copyBtn.addEventListener('click', async () => {
+      try {
+        const slot = dataManager.getCurrentSlot();
+        const encrypted = localStorage.getItem(`gameProgress_${slot}`);
+        if (!encrypted) {
+          showToast(t('options.toast.saveTextNotFound'), 'error');
+          return;
+        }
+        await navigator.clipboard.writeText(encrypted);
+        showToast(t('options.toast.saveTextCopied'), 'success');
+      } catch (e) {
+        showToast(t('options.toast.saveTextCopyFailed'), 'error');
+        console.error(e);
+      }
+    });
+
+    const pasteBtn = document.createElement('button');
+    pasteBtn.id = 'paste-save-text-btn';
+    pasteBtn.setAttribute('data-i18n', 'options.saveText.paste');
+    pasteBtn.textContent = t('options.saveText.paste');
+    pasteBtn.addEventListener('click', async () => {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (!text) {
+          showToast(t('options.toast.clipboardEmpty'), 'error');
+          return;
+        }
+        const slot = dataManager.getCurrentSlot();
+        localStorage.setItem(`gameProgress_${slot}`, text);
+        localStorage.setItem('gameProgress', text);
+        window.location.reload();
+        showToast(t('options.toast.saveTextPasted'), 'success');
+      } catch (e) {
+        showToast(t('options.toast.saveTextPasteFailed'), 'error');
+        console.error(e);
+      }
+    });
+
+    wrapper.appendChild(copyBtn);
+    wrapper.appendChild(pasteBtn);
     return wrapper;
   }
 

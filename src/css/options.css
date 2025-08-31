@@ -221,6 +221,8 @@
 
 #cloud-save-btn,
 #cloud-load-btn,
+#copy-save-text-btn,
+#paste-save-text-btn,
 .login-link,
 #logout-btn {
   background: linear-gradient(90deg, #3b82f6 60%, #2563eb 100%);
@@ -235,6 +237,8 @@
 
 #cloud-save-btn:hover,
 #cloud-load-btn:hover,
+#copy-save-text-btn:hover,
+#paste-save-text-btn:hover,
 .login-link:hover,
 #logout-btn:hover {
   background: linear-gradient(90deg, #186aee 60%, #0f52e4 100%);
@@ -242,6 +246,8 @@
 
 #cloud-save-btn:disabled,
 #cloud-load-btn:disabled,
+#copy-save-text-btn:disabled,
+#paste-save-text-btn:disabled,
 #logout-btn:disabled {
   background: #a1a1aa;
   color: #e5e7eb;
