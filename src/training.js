@@ -303,8 +303,9 @@ export default class Training {
     let rate = Number(config.costIncreaseMultiplier ?? 1);
     const thresholds = (config.costThresholds || []).slice().sort((a, b) => a.level - b.level);
     let idx = 0;
+    let level = 0;
 
-    const applyThresholds = (level) => {
+    const applyThresholds = () => {
       while (idx < thresholds.length && level >= thresholds[idx].level) {
         const t = thresholds[idx];
         if (t.cost !== undefined) cost = Number(t.cost);
@@ -315,23 +316,64 @@ export default class Training {
       }
     };
 
-    applyThresholds(0);
-    for (let lvl = 0; lvl < baseLevel; lvl++) {
-      cost += increase;
-      increase *= rate;
-      applyThresholds(lvl + 1);
+    applyThresholds();
+
+    const advance = (n) => {
+      if (n <= 0) return;
+      if (!isFinite(cost) || !isFinite(increase) || !isFinite(rate)) {
+        cost = Infinity;
+        increase = Infinity;
+        return;
+      }
+      if (Math.abs(rate - 1) < 1e-9) {
+        cost += increase * n;
+      } else {
+        const rPow = Math.pow(rate, n);
+        cost += increase * (rPow - 1) / (rate - 1);
+        increase *= rPow;
+      }
+      level += n;
+    };
+
+    const sumAndAdvance = (n) => {
+      if (n <= 0) return 0;
+      if (!isFinite(cost) || !isFinite(increase) || !isFinite(rate)) return Infinity;
+      let total;
+      if (Math.abs(rate - 1) < 1e-9) {
+        total = n * cost + (increase * n * (n - 1)) / 2;
+        cost += increase * n;
+      } else {
+        const rPow = Math.pow(rate, n);
+        total = n * cost + increase * ((rPow - 1) / (rate - 1) ** 2 - n / (rate - 1));
+        cost += increase * (rPow - 1) / (rate - 1);
+        increase *= rPow;
+      }
+      level += n;
+      return total;
+    };
+
+    while (baseLevel > 0 && isFinite(cost)) {
+      const nextLevel = idx < thresholds.length ? thresholds[idx].level : Infinity;
+      const step = Math.min(baseLevel, nextLevel - level);
+      advance(step);
+      baseLevel -= step;
+      if (level === nextLevel) applyThresholds();
     }
 
-    let total = 0;
-    for (let i = 0; i < qty; i++) {
-      if (!isFinite(cost)) return Infinity;
-      total += cost;
-      cost += increase;
-      increase *= rate;
-      baseLevel++;
-      applyThresholds(baseLevel);
+    if (!isFinite(cost)) return Infinity;
+
+    let totalCost = 0;
+    let remaining = qty;
+    while (remaining > 0 && isFinite(cost)) {
+      const nextLevel = idx < thresholds.length ? thresholds[idx].level : Infinity;
+      const step = Math.min(remaining, nextLevel - level);
+      totalCost += sumAndAdvance(step);
+      remaining -= step;
+      if (level === nextLevel) applyThresholds();
     }
-    return Math.floor(total);
+
+    if (!isFinite(totalCost)) return Infinity;
+    return Math.floor(totalCost + 1e-9);
   }
 
   getMaxPurchasable(selectedQty, baseLevel, maxLevel, config, availableGold = hero.gold) {
