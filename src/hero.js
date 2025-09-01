@@ -1,4 +1,4 @@
-import { initializeSkillTreeStructure, updatePlayerLife, updateTabIndicators } from './ui/ui.js';
+import { initializeSkillTreeStructure, updatePlayerLife, updateResources, updateTabIndicators } from './ui/ui.js';
 import {
   game,
   inventory,
@@ -130,6 +130,7 @@ export default class Hero {
     if (game.activeTab === 'training') {
       training.updateTrainingAffordability('gold-upgrades');
     }
+    updateResources();
   }
 
   gainCrystals(amount) {
@@ -141,6 +142,7 @@ export default class Hero {
     if (game.activeTab === 'training') {
       training.updateTrainingAffordability('crystal-upgrades');
     }
+    updateResources();
   }
 
   gainSouls(amount) {
@@ -149,14 +151,18 @@ export default class Hero {
     if (game.activeTab === 'soulShop') {
       soulShop.updateSoulShopAffordability();
     }
+    updateResources();
   }
+
   levelUp(levels) {
     this.exp = 0;
     this.level += levels;
     this.statPoints += STATS_ON_LEVEL_UP * levels;
     statistics.heroLevel = this.level;
 
-    skillTree.addSkillPoints(levels * 1); // Add 1 skill points per level
+    const ascBonuses = ascension?.getBonuses() || {};
+    const skillPointsPerLevel = 1 + (ascBonuses.skillPointsPerLevel || 0);
+    skillTree.addSkillPoints(levels * skillPointsPerLevel);
 
     // Dispatch a custom event for UI updates (e.g., prestige tab)
     document.dispatchEvent(new CustomEvent('heroLevelUp', { detail: { level: this.level } }));
@@ -418,6 +424,13 @@ export default class Hero {
       if (stat.endsWith('Percent')) {
         let percentValue = percentBonuses[stat] || 0;
         percentValue += soulBonuses[stat] || 0;
+        if (
+          stat === 'reduceEnemyHpPercent' ||
+          stat === 'reduceEnemyAttackSpeedPercent' ||
+          stat === 'reduceEnemyDamagePercent'
+        ) {
+          percentValue = Math.min(percentValue, 0.5);
+        }
         this.stats[stat] = percentValue;
         percentBonuses[stat] = percentValue;
       }
@@ -530,11 +543,17 @@ export default class Hero {
 
     // Store flat-only values for later damage calculations
     this.baseDamages.physical = Math.floor(
-      flatValues.damage + (this.stats.damagePerLevel || 0) * this.level,
+      flatValues.damage +
+        (ascensionBonuses.damage || 0) +
+        (this.stats.damagePerLevel || 0) * this.level,
     );
-    this.baseDamages.elemental = Math.floor(flatValues.elementalDamage);
+    this.baseDamages.elemental = Math.floor(
+      flatValues.elementalDamage + (ascensionBonuses.elementalDamage || 0),
+    );
     ELEMENT_IDS.forEach((id) => {
-      this.baseDamages[id] = Math.floor(flatValues[`${id}Damage`] || 0);
+      this.baseDamages[id] = Math.floor(
+        (flatValues[`${id}Damage`] || 0) + (ascensionBonuses[`${id}Damage`] || 0),
+      );
     });
 
     this.stats.damage = Math.floor(

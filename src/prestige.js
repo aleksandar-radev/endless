@@ -7,6 +7,7 @@ import {
   statistics,
   game,
   runtime,
+  ascension,
 } from './globals.js';
 import { PRESTIGE_BONUSES, STARTING_CRYSTALS_BONUS } from './constants/prestigeBonuses.js';
 import { formatStatName } from './ui/ui.js';
@@ -349,6 +350,10 @@ export default class Prestige {
     if (combined.startingCrystals) {
       hero.crystals = combined.startingCrystals;
     }
+    const ascBonuses = ascension.getBonuses();
+    hero.gold += ascBonuses.startingGold || 0;
+    hero.crystals += ascBonuses.startingCrystals || 0;
+    hero.souls += ascBonuses.startingSouls || 0;
 
     dataManager.saveGame();
     window.location.reload();

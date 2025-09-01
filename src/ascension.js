@@ -24,12 +24,12 @@ export const ASCENSION_CATEGORIES = {
       },
       totalDamagePercent: {
         label: t('ascension.upgrade.totalDamagePercent'),
-        bonus: 25,
+        bonus: 0.25,
         stat: 'totalDamagePercent',
       },
       elementalDamagePercent: {
         label: t('ascension.upgrade.elementalDamagePercent'),
-        bonus: 30,
+        bonus: 0.3,
         stat: 'elementalDamagePercent',
       },
     },
@@ -67,6 +67,30 @@ export const ASCENSION_CATEGORIES = {
         bonus: 50,
         stats: ELEMENT_RESISTANCE_PERCENT_STATS,
       },
+      life: {
+        label: t('ascension.upgrade.life'),
+        bonus: 1000,
+        stat: 'life',
+        cost: (lvl) => 1 + lvl,
+      },
+      mana: {
+        label: t('ascension.upgrade.mana'),
+        bonus: 500,
+        stat: 'mana',
+        cost: (lvl) => 1 + lvl,
+      },
+      lifePercent: {
+        label: t('ascension.upgrade.lifePercent'),
+        bonus: 0.2,
+        stat: 'lifePercent',
+        cost: (lvl) => 1 + lvl,
+      },
+      manaPercent: {
+        label: t('ascension.upgrade.manaPercent'),
+        bonus: 0.25,
+        stat: 'manaPercent',
+        cost: (lvl) => 1 + lvl,
+      },
     },
   },
   misc: {
@@ -76,47 +100,90 @@ export const ASCENSION_CATEGORIES = {
         label: t('ascension.upgrade.strengthEffectiveness'),
         bonus: 0.1,
         effect: 'strengthEffectPercent',
+        cost: (lvl) => 3 + lvl,
       },
       agilityEffectiveness: {
         label: t('ascension.upgrade.agilityEffectiveness'),
         bonus: 0.1,
         effect: 'agilityEffectPercent',
+        cost: (lvl) => 3 + lvl,
       },
       vitalityEffectiveness: {
         label: t('ascension.upgrade.vitalityEffectiveness'),
         bonus: 0.1,
         effect: 'vitalityEffectPercent',
+        cost: (lvl) => 3 + lvl,
       },
       wisdomEffectiveness: {
         label: t('ascension.upgrade.wisdomEffectiveness'),
         bonus: 0.1,
         effect: 'wisdomEffectPercent',
+        cost: (lvl) => 3 + lvl,
       },
       enduranceEffectiveness: {
         label: t('ascension.upgrade.enduranceEffectiveness'),
         bonus: 0.1,
         effect: 'enduranceEffectPercent',
+        cost: (lvl) => 3 + lvl,
       },
       dexterityEffectiveness: {
         label: t('ascension.upgrade.dexterityEffectiveness'),
         bonus: 0.1,
         effect: 'dexterityEffectPercent',
+        cost: (lvl) => 3 + lvl,
       },
       intelligenceEffectiveness: {
         label: t('ascension.upgrade.intelligenceEffectiveness'),
         bonus: 0.1,
         effect: 'intelligenceEffectPercent',
+        cost: (lvl) => 3 + lvl,
       },
       perseveranceEffectiveness: {
         label: t('ascension.upgrade.perseveranceEffectiveness'),
         bonus: 0.1,
         effect: 'perseveranceEffectPercent',
+        cost: (lvl) => 3 + lvl,
       },
       arenaBossSkip: {
         label: t('ascension.upgrade.arenaBossSkip'),
         bonus: 1,
         effect: 'arenaBossSkip',
+        cost: (lvl) => 50 + 25 * lvl,
+      },
+      skillPointsPerLevel: {
+        label: t('ascension.upgrade.skillPointsPerLevel'),
+        bonus: 1,
+        effect: 'skillPointsPerLevel',
+        cost: (lvl) => 100 + 10 * lvl,
+      },
+      startingGold: {
+        label: t('ascension.upgrade.startingGold'),
+        bonus: 100000,
+        stat: 'startingGold',
+      },
+      startingCrystals: {
+        label: t('ascension.upgrade.startingCrystals'),
+        bonus: 100,
+        stat: 'startingCrystals',
+      },
+      startingSouls: {
+        label: t('ascension.upgrade.startingSouls'),
+        bonus: 100,
+        stat: 'startingSouls',
+      },
+      reduceEnemyDamagePercent: {
+        label: t('ascension.upgrade.reduceEnemyDamagePercent'),
+        bonus: 0.01,
+        stat: 'reduceEnemyDamagePercent',
         cost: (lvl) => 5 + lvl,
+        maxLevel: 50,
+      },
+      reduceEnemyHpPercent: {
+        label: t('ascension.upgrade.reduceEnemyHpPercent'),
+        bonus: 0.01,
+        stat: 'reduceEnemyHpPercent',
+        cost: (lvl) => 5 + lvl,
+        maxLevel: 50,
       },
     },
   },
@@ -180,6 +247,15 @@ export default class Ascension {
     this.points -= cost;
     this.upgrades[key] = current + 1;
     hero.recalculateFromAttributes();
+    if (cfg.stat === 'startingGold') {
+      hero.gainGold(cfg.bonus);
+    }
+    if (cfg.stat === 'startingCrystals') {
+      hero.gainCrystals(cfg.bonus);
+    }
+    if (cfg.stat === 'startingSouls') {
+      hero.gainSouls(cfg.bonus);
+    }
     dataManager.saveGame();
     if (key === 'arenaBossSkip') {
       options.updateArenaBossSkipOption();
@@ -201,7 +277,10 @@ export default class Ascension {
     // after reset, ascensionState refers to the new instance
     ascensionState.points = saved.points;
     ascensionState.upgrades = saved.upgrades;
-    hero.crystals = (hero.crystals || 0) + 100;
+    const ascBonuses = ascensionState.getBonuses();
+    hero.gold += ascBonuses.startingGold || 0;
+    hero.crystals = (hero.crystals || 0) + 100 + (ascBonuses.startingCrystals || 0);
+    hero.souls += ascBonuses.startingSouls || 0;
     hero.recalculateFromAttributes();
     dataManager.saveGame();
     window.location.reload();

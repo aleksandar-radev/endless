@@ -368,7 +368,6 @@ export function createModifyUI() {
     const crystalsAmount = parseInt(crystalsInput.value, 10);
     if (!isNaN(crystalsAmount) && crystalsAmount > 0) {
       hero.gainCrystals(crystalsAmount);
-      updateResources();
       showToast(`Added ${crystalsAmount} crystals!`);
     } else {
       showToast('Invalid crystals value', 'error');
