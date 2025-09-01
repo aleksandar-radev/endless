@@ -211,7 +211,8 @@ export function playerDeath() {
       game.resetAllLife();
     } else if (game.fightMode === 'rockyField') {
       // Reset rocky field stage and enemy, restore player resources
-      game.rockyFieldStage = 1;
+      game.rockyFieldStage = game.getStartingStage();
+      updateStageUI();
       game.currentEnemy = new RockyFieldEnemy(game.rockyFieldZone, game.rockyFieldStage);
       game.resetAllLife();
       updateRockyFieldZoneSelector();
