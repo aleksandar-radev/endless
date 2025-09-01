@@ -23,6 +23,7 @@ export default function run() {
       <li>Reduced initial rewards from prestige and increased % scaling from arena.</li>
       <li>Reduced experience building scaling and increased cost scaling.</li>
       <li>Added class preview dialog.</li>
+      <li>Added crystal shop upgrade to reset soul shop for 300 crystals.</li>
     </ul>
 
     <span style="color:#FF0000;"> Fixes</span>

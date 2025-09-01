@@ -1,4 +1,14 @@
-import { dataManager, hero, options, skillTree, statistics, inventory, game, training } from './globals.js';
+import {
+  dataManager,
+  hero,
+  options,
+  skillTree,
+  statistics,
+  inventory,
+  game,
+  training,
+  soulShop,
+} from './globals.js';
 import {
   updateResources,
   initializeSkillTreeUI,
@@ -8,6 +18,7 @@ import {
   showToast,
   updateStageUI,
   formatNumber,
+  updatePlayerLife,
 } from './ui/ui.js';
 import { t, tp } from './i18n.js';
 import { selectBoss } from './ui/bossUi.js';
@@ -15,6 +26,7 @@ import { handleSavedData } from './functions.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { createModal } from './ui/modal.js';
 import { CRYSTAL_SHOP_MAX_QTY } from './constants/limits.js';
+import { SOUL_UPGRADE_CONFIG } from './soulShop.js';
 
 const html = String.raw;
 
@@ -129,6 +141,14 @@ const CRYSTAL_UPGRADE_CONFIG = {
     bonus: 'crystalShop.upgrade.resetTraining.bonus',
     bonusLabel: 'crystalShop.upgrade.resetTraining.bonusLabel',
     baseCost: 150,
+    multiple: true,
+    category: 'reset',
+  },
+  resetSoulShop: {
+    label: 'crystalShop.upgrade.resetSoulShop.label',
+    bonus: 'crystalShop.upgrade.resetSoulShop.bonus',
+    bonusLabel: 'crystalShop.upgrade.resetSoulShop.bonusLabel',
+    baseCost: 300,
     multiple: true,
     category: 'reset',
   },
@@ -359,6 +379,41 @@ export default class CrystalShop {
         tp('crystalShop.resetTrainingSuccess', { amount: formatNumber(refund) }),
         'success',
       );
+    } else if (stat === 'resetSoulShop') {
+      confirmed = await showConfirmDialog(
+        tp('crystalShop.confirm.resetSoulShop', { count: cost }),
+      );
+      if (!confirmed) return;
+      hero.crystals -= cost;
+      const refund = Object.entries(soulShop.soulUpgrades || {}).reduce(
+        (total, [key, value]) => {
+          const config = SOUL_UPGRADE_CONFIG[key];
+          if (!config) return total;
+          if (config.oneTime) return total + Math.round(config.baseCost);
+          if (config.multiple)
+            return total + Math.round(config.baseCost) * (value || 0);
+          let c = 0;
+          for (let i = 0; i < (value || 0); i++) {
+            c += soulShop.getSoulUpgradeCost(config, i);
+          }
+          return total + c;
+        },
+        0,
+      );
+      const prevSelectedQty = soulShop.selectedQty;
+      const prevQuickQty = soulShop.quickQty;
+      soulShop.resetSoulShop();
+      soulShop.selectedQty = prevSelectedQty;
+      soulShop.quickQty = prevQuickQty;
+      hero.souls += refund;
+      soulShop.updateSoulShopUI();
+      hero.recalculateFromAttributes();
+      updateStatsAndAttributesUI();
+      updatePlayerLife();
+      showToast(
+        tp('crystalShop.resetSoulShopSuccess', { amount: formatNumber(refund) }),
+        'success',
+      );
     }
     updateResources();
     dataManager.saveGame();
@@ -369,7 +424,9 @@ export default class CrystalShop {
    * Opens the upgrade modal or, for reset buttons, shows confirmation dialogs.
    */
   async openUpgradeModal(stat) {
-    if (['resetSkillTree', 'resetAttributes', 'resetArenaLevel', 'resetTraining'].includes(stat)) {
+    if (
+      ['resetSkillTree', 'resetAttributes', 'resetArenaLevel', 'resetTraining', 'resetSoulShop'].includes(stat)
+    ) {
       await this.confirmReset(stat);
       return;
     }
@@ -723,7 +780,9 @@ export default class CrystalShop {
     if (qty !== 'max') qty = Math.min(qty, CRYSTAL_SHOP_MAX_QTY);
 
     // special resets use confirm dialog
-    if (['resetSkillTree', 'resetAttributes', 'resetArenaLevel', 'resetTraining'].includes(stat)) {
+    if (
+      ['resetSkillTree', 'resetAttributes', 'resetArenaLevel', 'resetTraining', 'resetSoulShop'].includes(stat)
+    ) {
       await this.confirmReset(stat);
       return;
     }
