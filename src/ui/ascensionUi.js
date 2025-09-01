@@ -2,6 +2,7 @@ import { ascension, prestige } from '../globals.js';
 import { showToast, showTooltip, hideTooltip, positionTooltip } from './ui.js';
 import { createModal, closeModal } from './modal.js';
 import { t, tp } from '../i18n.js';
+import { renderRunesUI } from './runesUi.js';
 
 let activeCategory = null;
 
@@ -96,6 +97,9 @@ function renderAscension() {
       btn.onclick = () => {
         if (ascension.spendPoint(key)) {
           updateAscensionUI();
+          if (key === 'runeSlots') {
+            renderRunesUI();
+          }
         }
       };
     }

@@ -135,8 +135,6 @@ export function renderRunesUI() {
   });
   invSection.append(invTitle, inv);
 
-  const controls = document.createElement('div');
-  controls.className = 'rune-controls';
   const sortBtn = document.createElement('button');
   sortBtn.className = 'inventory-btn sort-btn';
   sortBtn.textContent = t('inventory.sort');
@@ -156,6 +154,9 @@ export function renderRunesUI() {
     renderRunesUI();
     dataManager.saveGame();
   };
+  const topControls = document.createElement('div');
+  topControls.className = 'rune-controls';
+  topControls.append(sortBtn, salvageBtn);
   equipBtn = document.createElement('button');
   equipBtn.className = 'inventory-btn equip-btn';
   equipBtn.textContent = t('inventory.equip');
@@ -165,9 +166,11 @@ export function renderRunesUI() {
     if (!selectedRune || selectedRune.source !== 'inventory') return;
     equipSelectedRune();
   };
-  controls.append(sortBtn, salvageBtn, equipBtn);
+  const bottomControls = document.createElement('div');
+  bottomControls.className = 'rune-controls';
+  bottomControls.append(equipBtn);
 
-  container.append(equipSection, invSection, controls);
+  container.append(equipSection, topControls, invSection, bottomControls);
 }
 
 let selectedRune = null;

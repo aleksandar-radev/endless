@@ -1,8 +1,17 @@
-import { hero, dataManager, setGlobals, prestige, ascension as ascensionState, options } from './globals.js';
+import {
+  hero,
+  dataManager,
+  setGlobals,
+  prestige,
+  ascension as ascensionState,
+  options,
+  runes,
+} from './globals.js';
 import { handleSavedData } from './functions.js';
 import { showToast } from './ui/ui.js';
 import { t } from './i18n.js';
 import { ELEMENTS } from './constants/common.js';
+import { BASE_RUNE_SLOTS } from './runes.js';
 
 const ELEMENT_DAMAGE_STATS = Object.keys(ELEMENTS).map((id) => `${id}Damage`);
 const ELEMENT_RESISTANCE_STATS = Object.keys(ELEMENTS).map((id) => `${id}Resistance`);
@@ -156,6 +165,13 @@ export const ASCENSION_CATEGORIES = {
         effect: 'skillPointsPerLevel',
         cost: (lvl) => 100 + 10 * lvl,
       },
+      runeSlots: {
+        label: t('ascension.upgrade.runeSlots'),
+        bonus: 1,
+        effect: 'runeSlots',
+        cost: (lvl) => 20 * (lvl + 1),
+        maxLevel: 9,
+      },
       startingGold: {
         label: t('ascension.upgrade.startingGold'),
         bonus: 100000,
@@ -259,6 +275,9 @@ export default class Ascension {
     dataManager.saveGame();
     if (key === 'arenaBossSkip') {
       options.updateArenaBossSkipOption();
+    }
+    if (key === 'runeSlots') {
+      runes.ensureEquipSlots(BASE_RUNE_SLOTS + this.getBonuses().runeSlots);
     }
     return true;
   }

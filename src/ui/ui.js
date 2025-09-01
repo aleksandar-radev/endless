@@ -23,6 +23,7 @@ import { TabIndicatorManager } from './tabIndicatorManager.js';
 import { selectBoss, updateBossUI } from './bossUi.js';
 import { ELEMENTS } from '../constants/common.js';
 import { calculateArmorReduction, calculateEvasionChance, calculateHitChance, calculateResistanceReduction } from '../combat.js';
+import { renderRunesUI } from './runesUi.js';
 export {
   initializeSkillTreeUI,
   initializeSkillTreeStructure,
@@ -207,6 +208,9 @@ export function switchTab(tabName) {
   if (tabName === 'inventory') {
     // Clear new items flag when visiting inventory.
     inventory?.clearNewItemsFlag();
+  }
+  if (tabName === 'runes') {
+    renderRunesUI();
   }
 
   game.activeTab = tabName;

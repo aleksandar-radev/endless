@@ -5,8 +5,8 @@ import { MISC_STATS } from './constants/stats/miscStats.js';
 import { tp } from './i18n.js';
 import { formatStatName } from './format.js';
 
-const EQUIP_SLOTS = 5;
-const INVENTORY_SLOTS = 30;
+export const BASE_RUNE_SLOTS = 1;
+const INVENTORY_SLOTS = 100;
 
 const OFFENSE_SET = new Set(Object.keys(OFFENSE_STATS));
 const DEFENSE_SET = new Set(Object.keys(DEFENSE_STATS));
@@ -15,8 +15,35 @@ const ALL_STATS = new Set([...OFFENSE_SET, ...DEFENSE_SET, ...MISC_SET]);
 
 export default class Runes {
   constructor(savedData = {}) {
-    this.equipped = savedData.equipped || new Array(EQUIP_SLOTS).fill(null);
-    this.inventory = savedData.inventory || new Array(INVENTORY_SLOTS).fill(null);
+    this.equipped = savedData.equipped || [];
+    this.inventory = savedData.inventory || [];
+    this.ensureEquipSlots(BASE_RUNE_SLOTS);
+    if (this.inventory.length < INVENTORY_SLOTS) {
+      this.inventory = [
+        ...this.inventory,
+        ...new Array(INVENTORY_SLOTS - this.inventory.length).fill(null),
+      ];
+    } else if (this.inventory.length > INVENTORY_SLOTS) {
+      this.inventory.length = INVENTORY_SLOTS;
+    }
+  }
+
+  ensureEquipSlots(count) {
+    if (this.equipped.length > count) {
+      for (let i = count; i < this.equipped.length; i++) {
+        const rune = this.equipped[i];
+        if (rune) {
+          const idx = this.inventory.findIndex((r) => r === null);
+          if (idx !== -1) this.inventory[idx] = rune;
+        }
+      }
+      this.equipped.length = count;
+    } else if (this.equipped.length < count) {
+      this.equipped = [
+        ...this.equipped,
+        ...new Array(count - this.equipped.length).fill(null),
+      ];
+    }
   }
 
   addRune(id, percentOverride) {

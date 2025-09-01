@@ -12,7 +12,7 @@ import Training from './training.js';
 import { BuildingManager } from './building.js';
 import Prestige from './prestige.js';
 import Ascension from './ascension.js';
-import Runes from './runes.js';
+import Runes, { BASE_RUNE_SLOTS } from './runes.js';
 
 // Global singletons for the game
 export let game = null;
@@ -65,6 +65,8 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
   const _prestige = new Prestige(savedData?.prestige);
   const _ascension = new Ascension(savedData?.ascension);
   const _runes = new Runes(savedData?.runes);
+  const ascRuneSlots = _ascension.getBonuses()?.runeSlots || 0;
+  _runes.ensureEquipSlots(BASE_RUNE_SLOTS + ascRuneSlots);
 
   inventory = _inventory;
   training = _training;
