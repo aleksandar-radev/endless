@@ -2,7 +2,7 @@ import { RUNES } from './constants/runes.js';
 import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
 import { MISC_STATS } from './constants/stats/miscStats.js';
-import { tp } from './i18n.js';
+import { tp, t } from './i18n.js';
 import { formatStatName } from './format.js';
 
 export const BASE_RUNE_SLOTS = 1;
@@ -51,8 +51,14 @@ export default class Runes {
     if (!rune) return null;
     const idx = this.inventory.findIndex((r) => r === null);
     if (idx === -1) return null;
-    const inst = { ...rune, conversion: { ...rune.conversion } };
-    if (percentOverride !== undefined) inst.conversion.percent = percentOverride;
+    const inst = { ...rune };
+    if (rune.conversion) {
+      inst.conversion = { ...rune.conversion };
+      if (percentOverride !== undefined) inst.conversion.percent = percentOverride;
+    }
+    if (rune.bonus) {
+      inst.bonus = { ...rune.bonus };
+    }
     this.inventory[idx] = inst;
     return inst;
   }
@@ -123,15 +129,28 @@ export default class Runes {
       flatValues[to] = (flatValues[to] || 0) + amount;
     });
   }
+
+  getBonusEffects() {
+    const bonuses = {};
+    this.equipped.forEach((rune) => {
+      if (!rune?.bonus) return;
+      Object.entries(rune.bonus).forEach(([stat, value]) => {
+        bonuses[stat] = (bonuses[stat] || 0) + value;
+      });
+    });
+    return bonuses;
+  }
 }
 
 export function getRuneName(rune, shortElementalNames = false) {
+  if (rune.nameKey) return t(rune.nameKey);
   const from = formatStatName(rune.fromKey, shortElementalNames);
   const to = formatStatName(rune.toKey, shortElementalNames);
   return tp('rune.convertName', { from, to });
 }
 
 export function getRuneDescription(rune, shortElementalNames = false) {
+  if (rune.descKey) return t(rune.descKey);
   const from = formatStatName(rune.fromKey, shortElementalNames);
   const to = formatStatName(rune.toKey, shortElementalNames);
   return tp('rune.convertDesc', {

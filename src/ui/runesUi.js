@@ -1,4 +1,4 @@
-import { runes, dataManager, hero, options } from '../globals.js';
+import { runes, dataManager, hero, options, training, soulShop } from '../globals.js';
 import { t } from '../i18n.js';
 import { getRuneName, getRuneDescription } from '../runes.js';
 import { showTooltip, positionTooltip, hideTooltip } from './ui.js';
@@ -59,6 +59,8 @@ export function renderRunesUI() {
       slot.addEventListener('dblclick', () => {
         runes.unequip(i);
         hero.recalculateFromAttributes();
+        training.updateTrainingAffordability('gold-upgrades');
+        soulShop.updateSoulShopAffordability();
         selectedRune = null;
         renderRunesUI();
         dataManager.saveGame();
@@ -182,6 +184,8 @@ function equipSelectedRune() {
   if (slot === -1) return;
   runes.equip(slot, inventoryIndex);
   hero.recalculateFromAttributes();
+  training.updateTrainingAffordability('gold-upgrades');
+  soulShop.updateSoulShopAffordability();
   selectedRune = null;
   renderRunesUI();
   dataManager.saveGame();
@@ -206,6 +210,8 @@ function handleDrop(e) {
     runes.moveEquipped(fromIndex, targetIndex);
   }
   hero.recalculateFromAttributes();
+  training.updateTrainingAffordability('gold-upgrades');
+  soulShop.updateSoulShopAffordability();
   selectedRune = null;
   renderRunesUI();
   dataManager.saveGame();
@@ -253,6 +259,8 @@ function openRuneContextMenu(source, index, rune, x, y) {
     } else {
       runes.equipped[index] = null;
       hero.recalculateFromAttributes();
+      training.updateTrainingAffordability('gold-upgrades');
+      soulShop.updateSoulShopAffordability();
     }
     selectedRune = null;
     renderRunesUI();

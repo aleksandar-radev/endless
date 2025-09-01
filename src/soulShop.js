@@ -1,4 +1,4 @@
-import { dataManager, hero, options } from './globals.js';
+import { dataManager, hero, options, runes } from './globals.js';
 import { updateResources, showToast, updatePlayerLife, formatNumber } from './ui/ui.js';
 import { handleSavedData } from './functions.js';
 import { closeModal, createModal } from './ui/modal.js';
@@ -133,7 +133,10 @@ export default class SoulShop {
    * @returns {number} Integer cost
    */
   getSoulUpgradeCost(config, level = 0) {
-    return Math.round(config.baseCost + (config.costIncrement || 0) * level);
+    const base = config.baseCost + (config.costIncrement || 0) * level;
+    const bonus = runes?.getBonusEffects?.() || {};
+    const reduction = bonus.soulShopCostReduction || 0;
+    return Math.round(base * (1 - reduction / 100));
   }
 
   async initializeSoulShopUI() {

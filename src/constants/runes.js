@@ -18,7 +18,7 @@ Object.values(ELEMENTS).forEach(({ id }) => {
   };
 });
 
-export const RUNES = Object.keys(TYPE_DATA)
+const CONVERSION_RUNES = Object.keys(TYPE_DATA)
   .flatMap((from) =>
     Object.keys(TYPE_DATA)
       .filter((to) => to !== from)
@@ -34,5 +34,50 @@ export const RUNES = Object.keys(TYPE_DATA)
         };
       }),
   );
+
+const UNIQUE_RUNES = [
+  {
+    id: 'skill_points',
+    nameKey: 'rune.skillPoints.name',
+    descKey: 'rune.skillPoints.desc',
+    bonus: { skillPointsPerLevel: 1 },
+    icon: `${BASE}/icons/star.svg`,
+    unique: true,
+  },
+  {
+    id: 'training_cost',
+    nameKey: 'rune.trainingCost.name',
+    descKey: 'rune.trainingCost.desc',
+    bonus: { trainingCostReduction: 25 },
+    icon: `${BASE}/icons/gold.svg`,
+    unique: true,
+  },
+  {
+    id: 'soul_shop_cost',
+    nameKey: 'rune.soulShopCost.name',
+    descKey: 'rune.soulShopCost.desc',
+    bonus: { soulShopCostReduction: 25 },
+    icon: `${BASE}/icons/soul.svg`,
+    unique: true,
+  },
+  {
+    id: 'arena_boss_skip',
+    nameKey: 'rune.bossSkip.name',
+    descKey: 'rune.bossSkip.desc',
+    bonus: { arenaBossSkip: 1 },
+    icon: `${BASE}/icons/skull.svg`,
+    unique: true,
+  },
+  {
+    id: 'crystal_gain',
+    nameKey: 'rune.crystalGain.name',
+    descKey: 'rune.crystalGain.desc',
+    bonus: { crystalGainPercent: 100 },
+    icon: `${BASE}/icons/crystal.svg`,
+    unique: true,
+  },
+];
+
+export const RUNES = [...CONVERSION_RUNES, ...UNIQUE_RUNES];
 
 export default RUNES;

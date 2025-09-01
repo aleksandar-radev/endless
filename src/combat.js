@@ -20,14 +20,16 @@ import { selectBoss, updateBossUI } from './ui/bossUi.js';
 import { audioManager } from './audio.js';
 import { battleLog } from './battleLog.js';
 import { t, tp } from './i18n.js';
-import { RockyFieldEnemy } from './rockyField.js';
+import { RockyFieldEnemy, getRockyFieldRunePercent } from './rockyField.js';
 import { renderRunesUI } from './ui/runesUi.js';
 import { getRuneName } from './runes.js';
+import { RUNES } from './constants/runes.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 import { ELEMENTS } from './constants/common.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
+const UNIQUE_RUNE_SET = new Set(RUNES.filter((r) => r.unique).map((r) => r.id));
 
 export function enemyAttack(currentTime) {
   if (!game || !hero || !game.currentEnemy) return;
@@ -292,7 +294,8 @@ export async function defeatEnemy() {
     }
     showToast(text, 'success');
     statistics.increment('bossesKilled', null, 1);
-    const skipMax = ascension.getBonuses()?.arenaBossSkip || 0;
+    const runeBonuses = runes.getBonusEffects();
+    const skipMax = (ascension.getBonuses()?.arenaBossSkip || 0) + (runeBonuses.arenaBossSkip || 0);
     const skips = Math.min(options.arenaBossSkip || 0, skipMax);
     hero.bossLevel += 1 + skips;
     // should update highestBossLevel only if the value is higher
@@ -393,16 +396,26 @@ export async function defeatEnemy() {
     baseExpGained = enemy.xp;
     baseGoldGained = enemy.gold;
 
-    if (enemy.runeDrop && Math.random() * 100 < 5) {
-      const runeId = enemy.runeDrop[Math.floor(Math.random() * enemy.runeDrop.length)];
-      const weak = enemy.zoneId === 'outskirts';
-      const rune = runes.addRune(runeId, weak ? 5 : undefined);
-      if (rune) {
-        const name = getRuneName(rune, options.shortElementalNames);
-        battleLog.addDrop(tp('battleLog.droppedRune', { name }));
-        showRuneNotification(rune);
-        renderRunesUI();
-        dataManager.saveGame();
+    if (enemy.runeDrop) {
+      const uniquePool = enemy.runeDrop.filter((id) => UNIQUE_RUNE_SET.has(id));
+      const commonPool = enemy.runeDrop.filter((id) => !UNIQUE_RUNE_SET.has(id));
+      let runeId;
+      let percent;
+      if (commonPool.length && Math.random() < 1 / 500) {
+        runeId = commonPool[Math.floor(Math.random() * commonPool.length)];
+        percent = getRockyFieldRunePercent(enemy.zoneId, game.rockyFieldStage);
+      } else if (uniquePool.length && Math.random() < 1 / 50000) {
+        runeId = uniquePool[Math.floor(Math.random() * uniquePool.length)];
+      }
+      if (runeId) {
+        const rune = runes.addRune(runeId, percent);
+        if (rune) {
+          const name = getRuneName(rune, options.shortElementalNames);
+          battleLog.addDrop(tp('battleLog.droppedRune', { name }));
+          showRuneNotification(rune);
+          renderRunesUI();
+          dataManager.saveGame();
+        }
       }
     }
 

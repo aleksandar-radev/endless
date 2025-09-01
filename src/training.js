@@ -1,7 +1,7 @@
 import { formatStatName, updateResources, formatNumber } from './ui/ui.js';
 
 import { showToast } from './ui/ui.js';
-import { hero, dataManager, options } from './globals.js';
+import { hero, dataManager, options, runes } from './globals.js';
 import { TRAINING_MAX_QTY } from './constants/limits.js';
 import { handleSavedData } from './functions.js';
 import { STATS } from './constants/stats/stats.js';
@@ -373,7 +373,9 @@ export default class Training {
     }
 
     if (!isFinite(totalCost)) return Infinity;
-    return Math.floor(totalCost + 1e-9);
+    const bonus = runes?.getBonusEffects?.() || {};
+    const reduction = bonus.trainingCostReduction || 0;
+    return Math.floor(totalCost * (1 - reduction / 100) + 1e-9);
   }
 
   getMaxPurchasable(selectedQty, baseLevel, maxLevel, config, availableGold = hero.gold) {

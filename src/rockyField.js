@@ -6,11 +6,11 @@ import { ELEMENTS } from './constants/common.js';
 
 export const ROCKY_FIELD_ZONES = [
   { id: 'outskirts', name: 'Outskirts', description: 'The edge of the rocky expanse.', unlockStage: 1 },
-  { id: 'boulders', name: 'Boulder Basin', description: 'Boulders scatter this wide basin.', unlockStage: 10 },
-  { id: 'caves', name: 'Hidden Caves', description: 'Dark caverns hide unseen threats.', unlockStage: 25 },
-  { id: 'cliffs', name: 'Sheer Cliffs', description: 'Treacherous cliffs tower above.', unlockStage: 50 },
-  { id: 'valley', name: 'Silent Valley', description: 'A quiet valley with lurking danger.', unlockStage: 75 },
-  { id: 'summit', name: 'Windy Summit', description: 'Blistering winds dominate the peak.', unlockStage: 100 },
+  { id: 'boulders', name: 'Boulder Basin', description: 'Boulders scatter this wide basin.', unlockStage: 500 },
+  { id: 'caves', name: 'Hidden Caves', description: 'Dark caverns hide unseen threats.', unlockStage: 1000 },
+  { id: 'cliffs', name: 'Sheer Cliffs', description: 'Treacherous cliffs tower above.', unlockStage: 2000 },
+  { id: 'valley', name: 'Silent Valley', description: 'A quiet valley with lurking danger.', unlockStage: 4000 },
+  { id: 'summit', name: 'Windy Summit', description: 'Blistering winds dominate the peak.', unlockStage: 5000 },
 ];
 
 export function getRockyFieldEnemies(zoneId) {
@@ -18,6 +18,22 @@ export function getRockyFieldEnemies(zoneId) {
 }
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
+
+const ZONE_RUNE_MAX = {
+  outskirts: 5,
+  boulders: 10,
+  caves: 20,
+  cliffs: 40,
+  valley: 60,
+  summit: 80,
+};
+
+export function getRockyFieldRunePercent(zoneId, stage) {
+  const max = ZONE_RUNE_MAX[zoneId] || 5;
+  const capped = Math.min(stage, 5000);
+  const maxPercent = 1 + Math.floor((capped / 5000) * (max - 1));
+  return Math.floor(Math.random() * maxPercent) + 1;
+}
 
 export class RockyFieldEnemy {
   constructor(zoneId, level) {

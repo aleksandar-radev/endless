@@ -1,7 +1,5 @@
 import Enemy from '../enemy.js';
 import { ROCKY_FIELD_ZONES, RockyFieldEnemy, getRockyFieldEnemies } from '../rockyField.js';
-import { RUNES } from '../constants/runes.js';
-import { getRuneName } from '../runes.js';
 import { formatStatName as formatStatNameBase } from '../format.js';
 import {
   game,
@@ -618,20 +616,11 @@ export function updateTabIndicators(previousTab = null) {
  */
 function getRockyFieldZoneTooltip(zone) {
   const html = String.raw;
-  const enemies = getRockyFieldEnemies(zone.id);
-  const runeIds = [...new Set(enemies.flatMap((e) => e.runeDrop || []))];
-  const runeNames = runeIds
-    .map((id) => {
-      const rune = RUNES.find((r) => r.id === id);
-      return rune ? getRuneName(rune, options.shortElementalNames) : null;
-    })
-    .filter(Boolean);
 
   return html`
     <div class="tooltip-header">${zone.name}</div>
     ${zone.description ? `<div class="tooltip-content">${zone.description}</div>` : ''}
     ${zone.unlockStage ? `<div><strong>${t('rockyField.unlockStage')}:</strong> ${zone.unlockStage}</div>` : ''}
-    ${runeNames.length ? `<div><strong>${t('rockyField.availableRunes')}:</strong> ${runeNames.join(', ')}</div>` : ''}
   `;
 }
 

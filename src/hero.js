@@ -134,8 +134,10 @@ export default class Hero {
   }
 
   gainCrystals(amount) {
-    statistics.increment('totalCrystalsEarned', null, amount);
-    this.crystals += amount;
+    const bonuses = runes?.getBonusEffects?.() || {};
+    const finalAmount = Math.floor(amount * (1 + (bonuses.crystalGainPercent || 0) / 100));
+    statistics.increment('totalCrystalsEarned', null, finalAmount);
+    this.crystals += finalAmount;
     if (game.activeTab === 'crystalShop') {
       crystalShop.updateCrystalShopAffordability();
     }
@@ -161,7 +163,9 @@ export default class Hero {
     statistics.heroLevel = this.level;
 
     const ascBonuses = ascension?.getBonuses() || {};
-    const skillPointsPerLevel = 1 + (ascBonuses.skillPointsPerLevel || 0);
+    const runeBonuses = runes?.getBonusEffects?.() || {};
+    const skillPointsPerLevel =
+      1 + (ascBonuses.skillPointsPerLevel || 0) + (runeBonuses.skillPointsPerLevel || 0);
     skillTree.addSkillPoints(levels * skillPointsPerLevel);
 
     // Dispatch a custom event for UI updates (e.g., prestige tab)
