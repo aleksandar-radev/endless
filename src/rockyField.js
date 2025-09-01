@@ -1,8 +1,13 @@
 import { ROCKY_FIELD_ENEMIES } from './constants/enemies/rocky_field.js';
-import { scaleStat } from './common.js';
+import {
+  percentIncreasedByLevel,
+  percentReducedByLevel,
+  scaleStat,
+} from './common.js';
 import { battleLog } from './battleLog.js';
 import { t, tp } from './i18n.js';
 import { ELEMENTS } from './constants/common.js';
+import { hero } from './globals.js';
 
 export const ROCKY_FIELD_ZONES = [
   { id: 'outskirts', name: 'Outskirts', description: 'The edge of the rocky expanse.', unlockStage: 1 },
@@ -19,8 +24,67 @@ export function getRockyFieldEnemies(zoneId) {
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 
-export function getRockyFieldRunePercent() {
-  return Math.floor(Math.random() * 80) + 1;
+const ZONE_STAT_SCALE = {
+  outskirts: (level) => percentIncreasedByLevel(0.65, level, 25, 0.025, 3.2),
+  boulders: (level) => percentIncreasedByLevel(0.6, level, 30, 0.02, 2.9),
+  caves: (level) => percentIncreasedByLevel(0.55, level, 35, 0.015, 2.5),
+  cliffs: (level) => percentIncreasedByLevel(0.5, level, 40, 0.01, 2.2),
+  valley: (level) => percentIncreasedByLevel(0.45, level, 45, 0.01, 2),
+  summit: (level) => percentIncreasedByLevel(0.4, level, 50, 0.01, 1.8),
+};
+
+const ZONE_EXP_GOLD_SCALE = {
+  outskirts: (level) => percentReducedByLevel(1, level, 40, 0.01, 0.1),
+  boulders: (level) => percentReducedByLevel(1, level, 41, 0.009, 0.1),
+  caves: (level) => percentReducedByLevel(1, level, 42, 0.008, 0.1),
+  cliffs: (level) => percentReducedByLevel(1, level, 43, 0.007, 0.1),
+  valley: (level) => percentReducedByLevel(0.95, level, 44, 0.006, 0.1),
+  summit: (level) => percentReducedByLevel(0.9, level, 45, 0.005, 0.1),
+};
+
+const BASE_SCALE_PER_ZONE_AND_LEVEL = {
+  outskirts: {
+    tierScale: 0.6,
+    levelScale: 0.01,
+  },
+  boulders: {
+    tierScale: 1,
+    levelScale: 0.01,
+  },
+  caves: {
+    tierScale: 2,
+    levelScale: 0.01,
+  },
+  cliffs: {
+    tierScale: 2,
+    levelScale: 0.01,
+  },
+  valley: {
+    tierScale: 3,
+    levelScale: 0.01,
+  },
+  summit: {
+    tierScale: 3,
+    levelScale: 0.01,
+  },
+};
+
+const attackRatingAndEvasionScale = 0.6;
+
+const ZONE_RUNE_MAX = {
+  outskirts: 5,
+  boulders: 10,
+  caves: 20,
+  cliffs: 40,
+  valley: 60,
+  summit: 80,
+};
+
+export function getRockyFieldRunePercent(zoneId, stage) {
+  const max = ZONE_RUNE_MAX[zoneId] || 5;
+  const capped = Math.min(stage, 5000);
+  const maxPercent = 1 + Math.floor((capped / 5000) * (max - 1));
+  return Math.floor(Math.random() * maxPercent) + 1;
 }
 
 export class RockyFieldEnemy {
@@ -41,19 +105,52 @@ export class RockyFieldEnemy {
     this.runeDrop = baseData.runeDrop || [];
 
     const stats = baseData.baseStats || {};
+    const baseScale = BASE_SCALE_PER_ZONE_AND_LEVEL[zoneId] || { tierScale: 1, levelScale: 0 };
+    const levelBonus = 1 + Math.floor(level / 20) * baseScale.levelScale;
+    const statMultiplier = baseScale.tierScale * levelBonus;
 
-    this.attackSpeed = stats.attackSpeed || 1;
-    this.life = scaleStat(stats.life || 0, level);
-    this.damage = scaleStat(stats.damage || 0, level);
-    this.armor = scaleStat(stats.armor || 0, level);
-    this.evasion = scaleStat(stats.evasion || 0, level);
-    this.attackRating = scaleStat(stats.attackRating || 0, level);
-    this.xp = scaleStat(stats.xp || 0, level);
-    this.gold = scaleStat(stats.gold || 0, level);
+    this.baseScale = ZONE_STAT_SCALE[zoneId](level);
+    const xpGoldScale = ZONE_EXP_GOLD_SCALE[zoneId](level);
+
+    const speedRed = hero.stats.reduceEnemyAttackSpeedPercent || 0;
+    const hpRed = hero.stats.reduceEnemyHpPercent || 0;
+    const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
+
+    this.attackSpeed = (stats.attackSpeed || 1) * (1 - speedRed);
+    this.life = scaleStat((stats.life || 0) * statMultiplier, level, 0, 0, 0, this.baseScale) * (1 - hpRed);
+    this.damage = Math.max(
+      scaleStat((stats.damage || 0) * statMultiplier, level, 0, 0, 0, this.baseScale) * (1 - dmgRed),
+      1,
+    );
+    this.armor = scaleStat((stats.armor || 0) * statMultiplier, level, 0, 0, 0, this.baseScale);
+    this.evasion =
+      scaleStat((stats.evasion || 0) * statMultiplier, level, 0, 0, 0, this.baseScale) *
+      attackRatingAndEvasionScale;
+    this.attackRating =
+      scaleStat((stats.attackRating || 0) * statMultiplier, level, 0, 0, 0, this.baseScale) *
+      attackRatingAndEvasionScale;
+    this.xp = scaleStat((stats.xp || 0) * statMultiplier, level, 0, 0, 0, this.baseScale) * xpGoldScale;
+    this.gold = scaleStat((stats.gold || 0) * statMultiplier, level, 0, 0, 0, this.baseScale) * xpGoldScale;
 
     ELEMENT_IDS.forEach((id) => {
-      this[`${id}Damage`] = scaleStat(stats[`${id}Damage`] || 0, level);
-      this[`${id}Resistance`] = scaleStat(stats[`${id}Resistance`] || 0, level);
+      const dmgBase = scaleStat(
+        (stats[`${id}Damage`] || 0) * statMultiplier,
+        level,
+        0,
+        0,
+        0,
+        this.baseScale,
+      );
+      this[`${id}Damage`] = dmgBase > 0 ? Math.max(dmgBase * (1 - dmgRed), 1) : 0;
+
+      this[`${id}Resistance`] = scaleStat(
+        (stats[`${id}Resistance`] || 0) * statMultiplier,
+        level,
+        0,
+        0,
+        0,
+        this.baseScale,
+      );
     });
 
     this.currentLife = this.life;
