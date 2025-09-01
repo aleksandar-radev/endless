@@ -2,6 +2,7 @@
 import { crystalShop, dataManager, game, setGlobals, training, soulShop, statistics, ascension } from './globals.js';
 import { CLASS_PATHS } from './constants/skills.js';
 import { initializeBuildingsUI } from './ui/buildingUi.js';
+import { crypt } from './functions.js';
 import {
   showConfirmDialog,
   showToast,
@@ -872,11 +873,28 @@ export class Options {
     pasteBtn.textContent = t('options.saveText.paste');
     pasteBtn.addEventListener('click', async () => {
       try {
-        const text = await navigator.clipboard.readText();
+        const confirmed = await showConfirmDialog(t('options.saveText.confirm'));
+        if (!confirmed) return;
+
+        let text = await navigator.clipboard.readText();
         if (!text) {
           showToast(t('options.toast.clipboardEmpty'), 'error');
           return;
         }
+
+        if (text.length > 1 && text.startsWith('"') && text.endsWith('"')) {
+          text = text.slice(1, -1);
+        }
+
+        try {
+          let data = crypt.decrypt(text);
+          if (typeof data === 'string') data = JSON.parse(data);
+          if (!data || typeof data !== 'object') throw new Error('Invalid save');
+        } catch {
+          showToast(t('options.toast.saveTextInvalid'), 'error');
+          return;
+        }
+
         const slot = dataManager.getCurrentSlot();
         localStorage.setItem(`gameProgress_${slot}`, text);
         localStorage.setItem('gameProgress', text);
