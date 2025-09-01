@@ -54,7 +54,7 @@ export default {
   'ascension.needPrestiges': '需要至少 20 次转生才能飞升。',
   'ascension.upgrade.lvl': '等级',
   'ascension.upgrade.cost': '成本',
-  'ascension.upgrade.buy': '购买',
+  'ascension.upgrade.buy': '获取',
   'ascension.upgrade.none': '暂时没有升级。',
   'ascension.upgrade.strengthEffectiveness': '力量基础加成 %',
   'ascension.upgrade.agilityEffectiveness': '敏捷基础加成 %',

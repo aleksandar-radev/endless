@@ -52,7 +52,7 @@ function renderAscension() {
       const max = cfg.maxLevel || Infinity;
       const disabled = ascension.points < cost || level >= max ? 'disabled' : '';
       const levelText = cfg.maxLevel ? `${level}/${cfg.maxLevel}` : level;
-      return `<li data-key="${key}">${cfg.label} (${t('ascension.upgrade.lvl')} ${levelText}) - ${t('ascension.upgrade.cost')} ${cost} <button class="ascension-upgrade-btn" ${disabled}>${t('ascension.upgrade.buy')}</button></li>`;
+      return `<li data-key="${key}">${t('ascension.upgrade.lvl')} ${levelText} - ${cfg.label} <button class="ascension-upgrade-btn" ${disabled}>${t('ascension.upgrade.buy')} (${t('ascension.upgrade.cost')}: <span class="ascension-cost">${cost}</span>)</button></li>`;
     })
     .join('');
   list.innerHTML = items || `<li>${t('ascension.upgrade.none')}</li>`;

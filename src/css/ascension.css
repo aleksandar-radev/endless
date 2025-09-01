@@ -103,6 +103,10 @@
   cursor: not-allowed;
 }
 
+.ascension-upgrade-btn .ascension-cost {
+  color: #ffd47f;
+}
+
 /* Ascension confirmation modal */
 .ascension-modal-content {
   position: relative;

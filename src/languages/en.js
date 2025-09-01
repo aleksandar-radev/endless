@@ -54,7 +54,7 @@ export default {
   'ascension.needPrestiges': 'Need at least 20 prestiges to ascend.',
   'ascension.upgrade.lvl': 'Lvl',
   'ascension.upgrade.cost': 'Cost',
-  'ascension.upgrade.buy': 'Buy',
+  'ascension.upgrade.buy': 'Get',
   'ascension.upgrade.none': 'No upgrades yet.',
   'ascension.upgrade.strengthEffectiveness': 'Strength Base Bonus %',
   'ascension.upgrade.agilityEffectiveness': 'Agility Base Bonus %',

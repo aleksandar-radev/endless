@@ -54,7 +54,7 @@ export default {
   'ascension.needPrestiges': 'Necesitas al menos 20 prestigios para ascender.',
   'ascension.upgrade.lvl': 'Nvl',
   'ascension.upgrade.cost': 'Costo',
-  'ascension.upgrade.buy': 'Comprar',
+  'ascension.upgrade.buy': 'Obtener',
   'ascension.upgrade.none': 'Aún no hay mejoras.',
   'ascension.upgrade.strengthEffectiveness': 'Bonificación Base de Fuerza %',
   'ascension.upgrade.agilityEffectiveness': 'Bonificación Base de Agilidad %',
