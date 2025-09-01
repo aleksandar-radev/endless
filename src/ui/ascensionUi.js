@@ -1,7 +1,7 @@
 import { ascension, prestige } from '../globals.js';
 import { showToast } from './ui.js';
 import { createModal, closeModal } from './modal.js';
-import { t } from '../i18n.js';
+import { t, tp } from '../i18n.js';
 
 export function initializeAscensionUI() {
   const tab = document.getElementById('ascension');
@@ -25,9 +25,11 @@ export function updateAscensionUI() {
 function renderAscension() {
   const tab = document.getElementById('ascension');
   const container = tab.querySelector('.ascension-container');
+  const disabled = ascension.canAscend() ? '' : 'disabled';
   container.innerHTML = `
     <div class="ascension-header">
-      <button id="ascend-now-btn">${t('ascension.ascendNow')}</button>
+      <button id="ascend-now-btn" ${disabled}>${t('ascension.ascendNow')}</button>
+      <button id="ascension-info-btn" class="ascension-info-btn">?</button>
       <div class="ascension-points">${t('ascension.points')}: ${ascension.points}</div>
     </div>
     <ul class="ascension-upgrades-list"></ul>
@@ -40,6 +42,8 @@ function renderAscension() {
     }
     openAscensionModal();
   };
+  const infoBtn = container.querySelector('#ascension-info-btn');
+  infoBtn.onclick = openAscensionInfoModal;
   const list = container.querySelector('.ascension-upgrades-list');
   const items = Object.entries(ascension.config)
     .map(([key, cfg]) => {
@@ -63,7 +67,7 @@ function renderAscension() {
 }
 
 function openAscensionModal() {
-  const earned = prestige.prestigeCount;
+  const earned = ascension.getEarnedPoints();
   const content = `
     <div class="ascension-modal-content">
       <button class="modal-close" aria-label="${t('common.close')}">&times;</button>
@@ -80,4 +84,20 @@ function openAscensionModal() {
     await ascension.ascend();
   };
   modal.querySelector('#ascension-cancel-btn').onclick = () => closeModal('ascension-modal');
+}
+
+function openAscensionInfoModal() {
+  const totalCrystals = prestige.bonuses?.startingCrystals || 0;
+  const earned = ascension.getEarnedPoints();
+  const content = `
+    <div class="ascension-modal-content">
+      <button class="modal-close" aria-label="${t('common.close')}">&times;</button>
+      <h2>${t('ascension.info.title')}</h2>
+      <p>${t('ascension.info.requirement')}</p>
+      <p>${t('ascension.info.points')}</p>
+      <p>${tp('ascension.info.current', { prestiges: prestige.prestigeCount, crystals: totalCrystals, points: earned })}</p>
+    </div>
+  `;
+  const modal = createModal({ id: 'ascension-info-modal', className: 'ascension-modal', content });
+  modal.querySelector('.modal-close').onclick = () => closeModal('ascension-info-modal');
 }

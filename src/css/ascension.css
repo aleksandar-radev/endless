@@ -32,6 +32,32 @@
   transform: translateY(-2px) scale(1.04);
 }
 
+.ascension-header #ascend-now-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.ascension-header #ascend-now-btn:disabled:hover {
+  background: linear-gradient(#f59e0b, #d97706);
+}
+
+.ascension-header .ascension-info-btn {
+  background: rgba(217, 119, 6, 0.2);
+  color: #ffe9b0;
+  border: none;
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ascension-header .ascension-info-btn:hover {
+  background: rgba(217, 119, 6, 0.3);
+}
+
 .ascension-points {
   background: rgba(217, 119, 6, 0.2);
   padding: 0.45rem 0.9rem;

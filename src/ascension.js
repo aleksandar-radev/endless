@@ -78,7 +78,12 @@ export default class Ascension {
   }
 
   canAscend() {
-    return prestige.prestigeCount >= 10;
+    return prestige.prestigeCount >= 20;
+  }
+
+  getEarnedPoints() {
+    const totalCrystals = prestige.bonuses?.startingCrystals || 0;
+    return Math.floor(totalCrystals / 100);
   }
 
   spendPoint(key) {
@@ -103,7 +108,7 @@ export default class Ascension {
       showToast(t('ascension.needPrestiges'));
       return;
     }
-    const earned = prestige.prestigeCount;
+    const earned = this.getEarnedPoints();
     const saved = {
       points: this.points + earned,
       upgrades: this.upgrades,

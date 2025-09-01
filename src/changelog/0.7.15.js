@@ -7,6 +7,7 @@ export default function run() {
     <span style="color:#FF8A00;"> Improvements</span>
     <ul>
       <li>Added ascension. It removes all progress, apart from ascension bonuses. </li>
+      <li>Ascension now requires 20 prestiges and grants points based on starting crystals, with in-game info and disabled button until requirements are met.</li>
       <li>Going to any shop tab now immediately updates it, showing what is affordable. </li>
       <li>Percent health and mana regen now increases the % of total bonus.</li>
       <li>Add tooltips for all options, to provide more information about their effects.</li>
