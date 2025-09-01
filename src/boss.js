@@ -9,7 +9,15 @@ import { ELEMENTS } from './constants/common.js';
 import { t, tp } from './i18n.js';
 
 const INCREASE_PER_LEVEL = 0.01;
-const stat_increase = (level) => percentIncreasedByLevel(0.1, level, 50, 0.015, 1);
+// Base scaling increases slowly at first, but after higher levels bosses scale faster.
+// Above level 500, apply an extra percentage that ramps up every 1,000 levels, capped
+// so that bosses grow stronger at high tiers without becoming impossible.
+const stat_increase = (level) => {
+  const base = percentIncreasedByLevel(0.1, level, 50, 0.015, 1);
+  if (level <= 500) return base;
+  const extra = percentIncreasedByLevel(0, level - 500, 1000, 0.1, 5);
+  return base + extra;
+};
 const xp_gold_scale = (level) => percentReducedByLevel(1, level, 20, 0.01, 0.025);
 const attackRatingAndEvasionScale = 0.7;
 
