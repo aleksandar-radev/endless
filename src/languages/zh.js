@@ -133,6 +133,7 @@ export default {
   'inventory.searchItems': '搜索物品...',
   'inventory.equip': '装备',
   'inventory.inspect': '查看',
+  'inventory.use': '使用',
   'inventory.sortItemsBy': '物品排序依据',
   'inventory.sortMaterials': '材料排序',
   'inventory.sortedMaterials': '已排序材料',

@@ -1033,6 +1033,21 @@ export function updateMaterialsGrid(inv) {
       materialItem.addEventListener('click', () => {
         inventory.openMaterialDialog(mat);
       });
+      // Right click / long press context menu
+      let pressTimer;
+      materialItem.addEventListener('touchstart', (e) => {
+        pressTimer = setTimeout(() => {
+          const touch = e.touches[0];
+          openMaterialContextMenu(mat, touch.clientX, touch.clientY);
+        }, 600);
+      });
+      materialItem.addEventListener('touchend', () => {
+        clearTimeout(pressTimer);
+      });
+      materialItem.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        openMaterialContextMenu(mat, e.clientX, e.clientY);
+      });
       // Drag events for materials
       materialItem.addEventListener('dragstart', (e) => {
         e.target.classList.add('dragging');
@@ -1188,6 +1203,7 @@ function clearMobileSelection() {
   showEquipButton(false);
   showSalvageButton(false);
   closeItemContextMenu();
+  closeMaterialContextMenu();
 }
 
 function highlightEligibleSlots(itemData) {
@@ -1203,6 +1219,7 @@ function highlightEligibleSlots(itemData) {
 
 function openItemContextMenu(itemEl, x, y) {
   closeItemContextMenu();
+  closeMaterialContextMenu();
   const itemData = inventory.getItemById(itemEl.dataset.itemId);
   const menu = document.createElement('div');
   menu.id = 'item-context-menu';
@@ -1282,5 +1299,57 @@ function closeItemContextMenu() {
   if (menu) {
     menu.remove();
     document.removeEventListener('click', handleContextOutside);
+  }
+}
+
+function openMaterialContextMenu(mat, x, y) {
+  closeMaterialContextMenu();
+  closeItemContextMenu();
+  const matDef = Object.values(MATERIALS).find((m) => m.id === mat.id) || {};
+  const menu = document.createElement('div');
+  menu.id = 'material-context-menu';
+  menu.className = 'item-context-menu';
+  menu.style.left = `${x}px`;
+  menu.style.top = `${y}px`;
+  menu.innerHTML = `<button data-action="use">${t('inventory.use')}</button>`;
+  document.body.appendChild(menu);
+
+  menu.querySelector('[data-action="use"]').onclick = () => {
+    if (matDef.isCustom) {
+      inventory.openMaterialDialog(mat);
+    } else {
+      const qty = mat.qty;
+      if (typeof matDef.onUse === 'function') {
+        matDef.onUse(hero, qty);
+      }
+      inventory.handleMaterialUsed(
+        inventory,
+        mat,
+        matDef,
+        qty,
+        'material-context-menu',
+        `Used ${qty} ${t(matDef.name || mat.name || '')}${qty > 1 ? 's' : ''}`,
+        false,
+      );
+    }
+    closeMaterialContextMenu();
+  };
+
+  setTimeout(() => {
+    document.addEventListener('click', handleMaterialContextOutside);
+  });
+}
+
+function handleMaterialContextOutside(e) {
+  if (!e.target.closest('#material-context-menu')) {
+    closeMaterialContextMenu();
+  }
+}
+
+function closeMaterialContextMenu() {
+  const menu = document.getElementById('material-context-menu');
+  if (menu) {
+    menu.remove();
+    document.removeEventListener('click', handleMaterialContextOutside);
   }
 }

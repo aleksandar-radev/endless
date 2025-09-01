@@ -133,6 +133,7 @@ export default {
   'inventory.searchItems': 'Buscar objetos...',
   'inventory.equip': 'Equipar',
   'inventory.inspect': 'Inspeccionar',
+  'inventory.use': 'Usar',
   'inventory.sortItemsBy': 'Ordenar objetos por',
   'inventory.sortMaterials': 'Ordenar materiales',
   'inventory.sortedMaterials': 'Materiales ordenados',
