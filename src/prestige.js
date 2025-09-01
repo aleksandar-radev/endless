@@ -20,16 +20,16 @@ const LEVEL_REQUIREMENT_INCREASE = 25;
 // Compute scaling factor based on highest boss level:
 // - 5% bonus for the first 20 levels (interval 1)
 // - for each subsequent 20-level interval the per-interval bonus linearly
-//   diminishes from 5% down to 1% at level 500
-// - after level 500 each 20-level interval gives 1%
+//   diminishes from 5% down to 1% at level 2500
+// - after level 2500 each 20-level interval gives 1%
 export function getBossScalingFactor(highestBossLevel) {
   const levelsPerInterval = 20;
   if (!highestBossLevel || highestBossLevel <= 0) return 1;
 
   const intervals = Math.ceil(highestBossLevel / levelsPerInterval); // 1..n, 1 means levels 1-20
-  const firstPercent = 0.05; // 5%
-  const finalPercent = 0.01; // 1% at level 500
-  const finalInterval = Math.ceil(500 / levelsPerInterval); // 25
+  const firstPercent = 0.08; // 8%
+  const finalPercent = 0.01; // 1% at level 2500
+  const finalInterval = Math.ceil(2500 / levelsPerInterval); // 50
 
   let totalPercent = 0;
   for (let i = 1; i <= intervals; i++) {
@@ -42,7 +42,7 @@ export function getBossScalingFactor(highestBossLevel) {
         perInterval = firstPercent - (i - 1) * (firstPercent - finalPercent) / (finalInterval - 1);
       }
     } else {
-      perInterval = finalPercent; // beyond level 500, fixed 1% per interval
+      perInterval = finalPercent; // beyond level 2500, fixed 1% per interval
     }
     totalPercent += perInterval;
   }

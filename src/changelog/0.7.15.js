@@ -19,6 +19,7 @@ export default function run() {
       <li>Improved performance of bulk buying. (also increased limit to 1m, which when you try to bulk buy max will still cause lagging, after clicking the "max" button. Adviced not to. For big numbers, use input field)</li>
       <li>Added a new fighting mode: Rocky Field.</li>
       <li>Added runes.</li>
+      <li>Reduced initial rewards from prestige and increased % scaling from arena.</li>
 
     </ul>
 

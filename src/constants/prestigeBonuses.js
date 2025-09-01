@@ -1,78 +1,78 @@
 export const PRESTIGE_BONUSES = [
   {
     stat: 'totalDamagePercent',
-    min: 0.1,
-    max: 0.2,
-  },
-  {
-    stat: 'lifePercent',
-    min: 0.1,
-    max: 0.25,
-  },
-  {
-    stat: 'manaPercent',
-    min: 0.15,
-    max: 0.4,
-  },
-  {
-    stat: 'bonusExperiencePercent',
-    min: 0.08,
-    max: 0.25,
-  },
-  {
-    stat: 'bonusGoldPercent',
-    min: 0.08,
-    max: 0.25,
-  },
-  {
-    stat: 'allAttributes',
-    min: 40,
-    max: 75,
-  },
-  {
-    stat: 'allAttributesPercent',
     min: 0.05,
-    max: 0.15,
-  },
-  {
-    stat: 'cooldownReductionPercent',
-    min: 0.04,
-    max: 0.10,
-  },
-  {
-    stat: 'buffDurationPercent',
-    min: 0.04,
     max: 0.1,
   },
   {
-    stat: 'itemQuantityPercent',
+    stat: 'lifePercent',
     min: 0.05,
-    max: 0.15,
+    max: 0.125,
+  },
+  {
+    stat: 'manaPercent',
+    min: 0.075,
+    max: 0.2,
+  },
+  {
+    stat: 'bonusExperiencePercent',
+    min: 0.04,
+    max: 0.125,
+  },
+  {
+    stat: 'bonusGoldPercent',
+    min: 0.04,
+    max: 0.125,
+  },
+  {
+    stat: 'allAttributes',
+    min: 20,
+    max: 38,
+  },
+  {
+    stat: 'allAttributesPercent',
+    min: 0.025,
+    max: 0.075,
+  },
+  {
+    stat: 'cooldownReductionPercent',
+    min: 0.02,
+    max: 0.05,
+  },
+  {
+    stat: 'buffDurationPercent',
+    min: 0.02,
+    max: 0.05,
+  },
+  {
+    stat: 'itemQuantityPercent',
+    min: 0.025,
+    max: 0.075,
   },
   {
     stat: 'itemRarityPercent',
-    min: 0.05,
-    max: 0.15,
+    min: 0.025,
+    max: 0.075,
   },
   {
     stat: 'lifeRegenPercent',
-    min: 0.3,
-    max: 0.75,
+    min: 0.15,
+    max: 0.375,
   },
   {
     stat: 'evasionPercent',
-    min: 0.3,
-    max: 0.6,
+    min: 0.15,
+    max: 0.3,
   },
   {
     stat: 'armorPercent',
-    min: 0.4,
-    max: 0.8,
+    min: 0.2,
+    max: 0.4,
   },
   {
     stat: 'attackRatingPercent',
-    min: 0.4,
-    max: 0.8,
+    min: 0.2,
+    max: 0.4,
   },
   // {
   //   stat: 'manaCostReductionPercent',
@@ -83,6 +83,6 @@ export const PRESTIGE_BONUSES = [
 
 export const STARTING_CRYSTALS_BONUS = {
   stat: 'startingCrystals',
-  min: 40,
-  max: 150,
+  min: 20,
+  max: 75,
 };
