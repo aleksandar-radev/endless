@@ -1,5 +1,6 @@
-import { game, hero, inventory, training, skillTree, dataManager, statistics } from './globals.js';
+import { game, hero, inventory, training, skillTree, dataManager, statistics, runes } from './globals.js';
 import { MATERIALS } from './constants/materials.js';
+import { RUNES } from './constants/runes.js';
 import SimpleCrypto from 'simple-crypto-js';
 import { initializeSkillTreeStructure, showToast, updatePlayerLife, updateResources, updateStageUI, updateTabIndicators } from './ui/ui.js';
 import { createImageDropdownFromData } from './ui/imageDropdown.js';
@@ -7,6 +8,8 @@ import { ITEM_RARITY, ITEM_TYPES } from './constants/items.js';
 import { updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { createCombatText } from './combat.js';
+import { renderRunesUI } from './ui/runesUi.js';
+import { getRuneName } from './runes.js';
 
 export const crypt = new SimpleCrypto(import.meta.env.VITE_ENCRYPT_KEY);
 
@@ -430,6 +433,35 @@ export function createModifyUI() {
   highestStageDiv.appendChild(setHighestStageBtn);
   heroSection.appendChild(highestStageDiv);
 
+  // Highest Runes Stage input and button
+  const highestRunesStageDiv = document.createElement('div');
+  highestRunesStageDiv.className = 'input-row';
+  const highestRunesStageInput = document.createElement('input');
+  highestRunesStageInput.type = 'number';
+  highestRunesStageInput.min = '1';
+  highestRunesStageInput.value = game.rockyFieldHighestStage || 1;
+  highestRunesStageInput.title = 'Set the highest Rocky Field stage';
+  highestRunesStageInput.className = 'input-number';
+  const setHighestRunesStageBtn = document.createElement('button');
+  setHighestRunesStageBtn.textContent = 'Set Highest Runes Stage';
+  setHighestRunesStageBtn.addEventListener('click', () => {
+    const val = parseInt(highestRunesStageInput.value, 10);
+    if (!isNaN(val) && val > 0) {
+      game.rockyFieldHighestStage = val;
+      if (game.rockyFieldStage < val) {
+        game.rockyFieldStage = val;
+      }
+      updateStageUI();
+      dataManager.saveGame();
+      showToast(`Set highest runes stage to ${val}!`);
+    } else {
+      showToast('Invalid stage value', 'error');
+    }
+  });
+  highestRunesStageDiv.appendChild(highestRunesStageInput);
+  highestRunesStageDiv.appendChild(setHighestRunesStageBtn);
+  heroSection.appendChild(highestRunesStageDiv);
+
   // Boss Level input and button
   const bossLevelDiv = document.createElement('div');
   bossLevelDiv.className = 'input-row';
@@ -692,6 +724,42 @@ export function createModifyUI() {
       showToast('Invalid material ID', 'error');
     }
   };
+
+  // Add Rune by Dropdown
+  const addRuneDiv = document.createElement('div');
+  addRuneDiv.style.marginTop = '8px';
+
+  const runeItems = RUNES.map((r) => {
+    let iconUrl = '';
+    try {
+      if (typeof r.icon === 'string') {
+        iconUrl = r.icon;
+      } else if (r.icon && r.icon.src) {
+        iconUrl = r.icon.src;
+      }
+    } catch {
+      iconUrl = '';
+    }
+    return { id: r.id, text: getRuneName(r), icon: iconUrl };
+  });
+
+  const runeDd = createImageDropdownFromData(runeItems, runeItems[0] && runeItems[0].id);
+  const addRuneBtn = document.createElement('button');
+  addRuneBtn.textContent = 'Add Rune';
+  addRuneBtn.addEventListener('click', () => {
+    const id = runeDd.getValue();
+    const percent = Math.floor(Math.random() * 80) + 1;
+    const rune = runes.addRune(id, percent);
+    if (rune) {
+      renderRunesUI();
+      showToast(`Added ${getRuneName(rune)} rune to inventory`);
+    } else {
+      showToast('Invalid rune ID', 'error');
+    }
+  });
+  addRuneDiv.appendChild(runeDd.container);
+  addRuneDiv.appendChild(addRuneBtn);
+  inventorySection.appendChild(addRuneDiv);
 
   // Example: Add buttons to modify skill tree
   const skillTreeSection = document.createElement('div');

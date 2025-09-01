@@ -29,7 +29,7 @@ function createOptionNode(text, iconUrl, disabled) {
     el.appendChild(img);
   }
   const span = document.createElement('span');
-  span.textContent = text;
+  span.innerHTML = text;
   el.appendChild(span);
   return el;
 }
@@ -93,7 +93,7 @@ export function createImageDropdownFromData(items, initialId = null, onChange = 
       selected.appendChild(img);
     }
     const span = document.createElement('span');
-    span.textContent = cur.text;
+    span.innerHTML = cur.text;
     selected.appendChild(span);
 
     const optionNodes = optionsPane.querySelectorAll('.img-dd-option');

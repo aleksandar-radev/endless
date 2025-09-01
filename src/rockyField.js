@@ -19,20 +19,8 @@ export function getRockyFieldEnemies(zoneId) {
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 
-const ZONE_RUNE_MAX = {
-  outskirts: 5,
-  boulders: 10,
-  caves: 20,
-  cliffs: 40,
-  valley: 60,
-  summit: 80,
-};
-
-export function getRockyFieldRunePercent(zoneId, stage) {
-  const max = ZONE_RUNE_MAX[zoneId] || 5;
-  const capped = Math.min(stage, 5000);
-  const maxPercent = 1 + Math.floor((capped / 5000) * (max - 1));
-  return Math.floor(Math.random() * maxPercent) + 1;
+export function getRockyFieldRunePercent() {
+  return Math.floor(Math.random() * 80) + 1;
 }
 
 export class RockyFieldEnemy {

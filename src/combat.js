@@ -403,9 +403,10 @@ export async function defeatEnemy() {
       let percent;
       if (commonPool.length && Math.random() < 1 / 500) {
         runeId = commonPool[Math.floor(Math.random() * commonPool.length)];
-        percent = getRockyFieldRunePercent(enemy.zoneId, game.rockyFieldStage);
+        percent = getRockyFieldRunePercent();
       } else if (uniquePool.length && Math.random() < 1 / 50000) {
         runeId = uniquePool[Math.floor(Math.random() * uniquePool.length)];
+        percent = getRockyFieldRunePercent();
       }
       if (runeId) {
         const rune = runes.addRune(runeId, percent);
