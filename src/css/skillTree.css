@@ -170,12 +170,22 @@
   border-color: #fff;
 }
 
-.skill-node.active {
-  border-color: #ff4444;
+/* Skill type color coding */
+.skill-node.unlocked[data-skill-type='passive'] {
+  border-color: #4caf50;
+}
+.skill-node.unlocked[data-skill-type='instant'] {
+  border-color: #ff9800;
+}
+.skill-node.unlocked[data-skill-type='buff'] {
+  border-color: #2196f3;
+}
+.skill-node.unlocked[data-skill-type='summon'] {
+  border-color: #ab47bc;
 }
 
-.skill-node.passive {
-  border-color: #44ff44;
+.skill-node.active {
+  border-color: #ff4444;
 }
 
 .skill-icon {

@@ -737,7 +737,7 @@ function createSkillElement(baseSkill) {
   const skillElement = document.createElement('div');
   skillElement.className = 'skill-node';
   skillElement.dataset.skillId = skill.id;
-  skillElement.dataset.skillType = skill.type;
+  skillElement.dataset.skillType = skill.type();
 
   skillElement.innerHTML = html`
     <div
