@@ -1,11 +1,16 @@
 import { ascension, prestige } from '../globals.js';
-import { showToast } from './ui.js';
+import { showToast, showTooltip, hideTooltip, positionTooltip } from './ui.js';
 import { createModal, closeModal } from './modal.js';
 import { t, tp } from '../i18n.js';
+
+let activeCategory = null;
 
 export function initializeAscensionUI() {
   const tab = document.getElementById('ascension');
   if (!tab) return;
+  if (!activeCategory && ascension?.categories) {
+    activeCategory = Object.keys(ascension.categories)[0];
+  }
   let container = tab.querySelector('.ascension-container');
   if (!container) {
     container = document.createElement('div');
@@ -26,12 +31,16 @@ function renderAscension() {
   const tab = document.getElementById('ascension');
   const container = tab.querySelector('.ascension-container');
   const disabled = ascension.canAscend() ? '' : 'disabled';
+  if (!activeCategory) {
+    activeCategory = Object.keys(ascension.categories)[0];
+  }
   container.innerHTML = `
     <div class="ascension-header">
       <button id="ascend-now-btn" ${disabled}>${t('ascension.ascendNow')}</button>
       <button id="ascension-info-btn" class="ascension-info-btn">?</button>
       <div class="ascension-points">${t('ascension.points')}: ${ascension.points}</div>
     </div>
+    <div class="ascension-tabs"></div>
     <ul class="ascension-upgrades-list"></ul>
   `;
   const btn = container.querySelector('#ascend-now-btn');
@@ -44,25 +53,52 @@ function renderAscension() {
   };
   const infoBtn = container.querySelector('#ascension-info-btn');
   infoBtn.onclick = openAscensionInfoModal;
+
+  const tabs = container.querySelector('.ascension-tabs');
+  tabs.innerHTML = Object.entries(ascension.categories)
+    .map(
+      ([key, cat]) =>
+        `<button class="ascension-tab ${key === activeCategory ? 'active' : ''}" data-cat="${key}">${cat.label}</button>`,
+    )
+    .join('');
+  tabs.querySelectorAll('.ascension-tab').forEach((b) => {
+    b.onclick = () => {
+      activeCategory = b.dataset.cat;
+      renderAscension();
+    };
+  });
+
   const list = container.querySelector('.ascension-upgrades-list');
-  const items = Object.entries(ascension.config)
+  const cat = ascension.categories[activeCategory];
+  const upgrades = Object.entries(cat.upgrades)
     .map(([key, cfg]) => {
       const level = ascension.upgrades[key] || 0;
-      const cost = cfg.cost || 1;
+      const cost = typeof cfg.cost === 'function' ? cfg.cost(level) : cfg.cost || 1;
       const max = cfg.maxLevel || Infinity;
-      const disabled = ascension.points < cost || level >= max ? 'disabled' : '';
+      const disabledBtn = ascension.points < cost || level >= max ? 'disabled' : '';
       const levelText = cfg.maxLevel ? `${level}/${cfg.maxLevel}` : level;
-      return `<li data-key="${key}">${t('ascension.upgrade.lvl')} ${levelText} - ${cfg.label} <button class="ascension-upgrade-btn" ${disabled}>${t('ascension.upgrade.buy')} (${t('ascension.upgrade.cost')}: <span class="ascension-cost">${cost}</span>)</button></li>`;
+      return `<li data-key="${key}"><span class="ascension-upgrade-label">${t('ascension.upgrade.lvl')} ${levelText} - ${cfg.label}</span> <button class="ascension-upgrade-btn" ${disabledBtn}>${t('ascension.upgrade.buy')} (<span class="ascension-cost">${t('ascension.upgrade.cost')}: ${cost}</span>)</button></li>`;
     })
     .join('');
-  list.innerHTML = items || `<li>${t('ascension.upgrade.none')}</li>`;
-  list.querySelectorAll('.ascension-upgrade-btn').forEach((b) => {
-    b.onclick = () => {
-      const key = b.parentElement.dataset.key;
-      if (ascension.spendPoint(key)) {
-        updateAscensionUI();
-      }
-    };
+  list.innerHTML = upgrades || `<li>${t('ascension.upgrade.none')}</li>`;
+  list.querySelectorAll('li').forEach((li) => {
+    const key = li.dataset.key;
+    const lbl = li.querySelector('.ascension-upgrade-label');
+    const tip = t(`ascension.tooltip.${key}`);
+    if (lbl) {
+      lbl.addEventListener('mouseenter', (e) => showTooltip(tip, e));
+      lbl.addEventListener('mousemove', positionTooltip);
+      lbl.addEventListener('mouseleave', hideTooltip);
+      lbl.addEventListener('click', () => openUpgradeInfoModal(key));
+    }
+    const btn = li.querySelector('.ascension-upgrade-btn');
+    if (btn) {
+      btn.onclick = () => {
+        if (ascension.spendPoint(key)) {
+          updateAscensionUI();
+        }
+      };
+    }
   });
 }
 
@@ -100,4 +136,18 @@ function openAscensionInfoModal() {
   `;
   const modal = createModal({ id: 'ascension-info-modal', className: 'ascension-modal', content });
   modal.querySelector('.modal-close').onclick = () => closeModal('ascension-info-modal');
+}
+
+function openUpgradeInfoModal(key) {
+  const cfg = ascension.config[key];
+  const tip = t(`ascension.tooltip.${key}`);
+  const content = `
+    <div class="ascension-modal-content">
+      <button class="modal-close" aria-label="${t('common.close')}">&times;</button>
+      <h2>${cfg.label}</h2>
+      <p>${tip}</p>
+    </div>
+  `;
+  const modal = createModal({ id: 'ascension-upgrade-modal', className: 'ascension-modal', content });
+  modal.querySelector('.modal-close').onclick = () => closeModal('ascension-upgrade-modal');
 }
