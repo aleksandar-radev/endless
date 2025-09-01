@@ -16,6 +16,7 @@ let serverTimeOffsetMs = 0; // getTimeNow() - Date.now()
 
 function intervalToMs(interval) {
   if (!interval) return 0;
+  if (typeof interval === 'number') return interval * 1000;
   if (interval === 'minute') return 60 * 1000;
   if (interval === 'hour') return 60 * 60 * 1000;
   if (typeof interval === 'string' && interval.endsWith('min')) return parseInt(interval) * 60 * 1000;
@@ -408,9 +409,22 @@ export function showOfflineBonusesModal(bonuses, onCollect) {
       <ul style="list-style:none;padding:0;">
         ${bonuses
     .map((b) => {
-      let intName = b.interval;
       let times = b.times;
-      if (typeof b.interval === 'string') {
+      let intervalKey = '';
+      if (typeof b.interval === 'number') {
+        const totalSec = b.interval * b.times;
+        if (totalSec % 3600 === 0) {
+          times = totalSec / 3600;
+          intervalKey = `time.${times > 1 ? 'hours' : 'hour'}`;
+        } else if (totalSec % 60 === 0) {
+          times = totalSec / 60;
+          intervalKey = `time.${times > 1 ? 'minutes' : 'minute'}`;
+        } else {
+          times = totalSec;
+          intervalKey = `time.${times > 1 ? 'seconds' : 'second'}`;
+        }
+      } else if (typeof b.interval === 'string') {
+        let intName = b.interval;
         if (b.interval === 'min') {
           intName = 'minute';
         } else if (b.interval === 'sec') {
@@ -424,15 +438,15 @@ export function showOfflineBonusesModal(bonuses, onCollect) {
           times *= val;
           intName = 'second';
         }
+        intervalKey = `time.${times > 1 ? intName + 's' : intName}`;
       }
-      const intervalKey = `time.${times > 1 ? intName + 's' : intName}`;
       const line = tp('buildings.offlineBonusItem', {
         icon: b.icon || '',
         name: b.name,
         amount: formatNumber(b.amount),
         type: b.type,
         times: formatNumber(times),
-        interval: t(intervalKey),
+        interval: intervalKey ? t(intervalKey) : '',
       });
       // Ensure each bonus is on its own line (wrap if translation didn't supply an <li>)
       return line.includes('<li') ? line : `<li class="offline-bonus-line" style="margin:4px 0;">${line}</li>`;

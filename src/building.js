@@ -67,23 +67,7 @@ export class Building {
   // Returns a formatted string for the effect at a given level
   formatEffect(level = this.level) {
     if (!this.effect || typeof this.effect !== 'object') return '';
-    let interval = '';
-    const int = this.effect.interval;
-    if (int) {
-      if (int === 'minute' || int === 'hour') {
-        interval = ` per ${t('time.' + int)}`;
-      } else if (int.endsWith('min')) {
-        const val = parseInt(int);
-        const key = 'time.' + (val === 1 ? 'minute' : 'minutes');
-        interval = ` per ${val} ${t(key)}`;
-      } else if (int.endsWith('sec')) {
-        const val = parseInt(int);
-        const key = 'time.' + (val === 1 ? 'second' : 'seconds');
-        interval = ` per ${val} ${t(key)}`;
-      } else {
-        interval = ` per ${int}`;
-      }
-    }
+    const interval = formatInterval(this.effect.interval);
     const typeName = this.effect.displayName || this.effect.type;
     return `+${this.effect.amount * level} ${typeName}${interval}`;
   }
@@ -177,14 +161,45 @@ export class Building {
   }
 }
 
-// Helper to convert interval string to ms
+// Helper to convert interval to milliseconds
 function intervalToMs(interval) {
   if (!interval) return 0;
+  if (typeof interval === 'number') return interval * 1000;
   if (interval === 'minute') return 60 * 1000;
   if (interval === 'hour') return 60 * 60 * 1000;
-  if (interval.endsWith('min')) return parseInt(interval) * 60 * 1000;
-  if (interval.endsWith('sec')) return parseInt(interval) * 1000;
+  if (typeof interval === 'string' && interval.endsWith('min')) return parseInt(interval) * 60 * 1000;
+  if (typeof interval === 'string' && interval.endsWith('sec')) return parseInt(interval) * 1000;
   return 0;
+}
+
+// Format an interval in seconds into a human-readable string (e.g. " per 2 hours")
+function formatInterval(interval) {
+  if (!interval) return '';
+  if (typeof interval === 'number') {
+    if (interval % 3600 === 0) {
+      const hours = interval / 3600;
+      return ` per ${hours} ${t('time.' + (hours === 1 ? 'hour' : 'hours'))}`;
+    }
+    if (interval % 60 === 0) {
+      const minutes = interval / 60;
+      return ` per ${minutes} ${t('time.' + (minutes === 1 ? 'minute' : 'minutes'))}`;
+    }
+    return ` per ${interval} ${t('time.' + (interval === 1 ? 'second' : 'seconds'))}`;
+  }
+  if (interval === 'minute' || interval === 'hour') {
+    return ` per ${t('time.' + interval)}`;
+  }
+  if (typeof interval === 'string' && interval.endsWith('min')) {
+    const val = parseInt(interval);
+    const key = 'time.' + (val === 1 ? 'minute' : 'minutes');
+    return ` per ${val} ${t(key)}`;
+  }
+  if (typeof interval === 'string' && interval.endsWith('sec')) {
+    const val = parseInt(interval);
+    const key = 'time.' + (val === 1 ? 'second' : 'seconds');
+    return ` per ${val} ${t(key)}`;
+  }
+  return ` per ${interval}`;
 }
 
 export class BuildingManager {

@@ -20,6 +20,7 @@ export default function run() {
       <li>Added a new fighting mode: Rocky Field.</li>
       <li>Added runes.</li>
       <li>Reduced initial rewards from prestige and increased % scaling from arena.</li>
+      <li>Reduced experience building scaling and increased cost scaling.</li>
 
     </ul>
 
