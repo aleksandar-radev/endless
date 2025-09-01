@@ -37,6 +37,9 @@ function scaleDownFlat(
  * Compute a scaling multiplier for item stats by accumulating diminishing
  * flat bonuses from `start` toward `end`, adjusted by item tier.
  *
+ * Higher tier items receive a small additional overall multiplier so they
+ * scale slightly faster, while tier 1 items scale a bit slower.
+ *
  * @param {number} level - Item level.
  * @param {number} [tier=1] - Item tier (1-based).
  * @param {object} [config]
@@ -69,6 +72,10 @@ export function itemLevelScaling(
   // Accumulate diminishing increases from `s` to `e`.
   const total = scaleDownFlat(level, s, interval, maxLevel, e / s);
 
-  // Base multiplier is 1; add accumulated increases.
-  return 1 + total;
+  // Apply a small overall multiplier based on tier. Tier 2 is treated as the
+  // baseline, tier 1 is slightly slower and higher tiers scale a bit faster.
+  const tierMult = 1 + (Math.max(tier, 1) - 2) * 0.05;
+
+  // Base multiplier is 1; add accumulated increases adjusted by tier.
+  return 1 + total * tierMult;
 }
