@@ -4,7 +4,7 @@ import { SKILL_LEVEL_TIERS } from '../skillTree.js';
 import { skillTree, hero, crystalShop, options } from '../globals.js';
 import { formatStatName, hideTooltip, positionTooltip, showToast, showTooltip, updateResources } from './ui.js';
 import { t } from '../i18n.js';
-import { createModal } from './modal.js';
+import { createModal, closeModal } from './modal.js';
 
 const html = String.raw;
 
@@ -93,10 +93,34 @@ function showClassSelection() {
       btnText = cost > 0 ? `Select Class (Cost: ${cost} Crystal${cost !== 1 ? 's' : ''})` : 'Select Class';
     }
     button.textContent = btnText;
-    button.addEventListener('click', () => selectClassPath(pathId));
+    button.addEventListener('click', () => openClassPreview(pathId));
     pathElement.appendChild(button);
 
     classSelection.appendChild(pathElement);
+  });
+}
+
+function openClassPreview(pathId) {
+  const pathData = CLASS_PATHS[pathId];
+  const content = html`
+    <div class="class-preview-wrapper">
+      <button class="modal-close">&times;</button>
+      <div class="class-preview-header">
+        <h2>${pathData.name()}</h2>
+      </div>
+      <div class="class-preview-tree"></div>
+      <div class="class-preview-footer">
+        <button class="select-class-btn">Select Class</button>
+      </div>
+    </div>
+  `;
+  const modal = createModal({ id: 'class-preview-modal', className: 'class-preview-modal', content });
+  buildClassPreviewTree(pathId, modal.querySelector('.class-preview-tree'));
+  modal.querySelectorAll('.select-class-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      closeModal('class-preview-modal');
+      selectClassPath(pathId);
+    });
   });
 }
 
@@ -109,6 +133,132 @@ function selectClassPath(pathId) {
     showSkillTree();
     initializeSkillTreeUI();
   }
+}
+
+function buildClassPreviewTree(pathId, container) {
+  container.innerHTML = '';
+  const skills = SKILL_TREES[pathId];
+  const levelGroups = SKILL_LEVEL_TIERS.reduce((acc, level) => {
+    acc[level] = [];
+    return acc;
+  }, {});
+
+  Object.values(skills).forEach((skill) => {
+    const reqLevel = skill.requiredLevel();
+    if (!levelGroups[reqLevel]) levelGroups[reqLevel] = [];
+    levelGroups[reqLevel].push(skill);
+  });
+
+  Object.entries(levelGroups).forEach(([reqLevel, groupSkills]) => {
+    if (groupSkills.length === 0) return;
+    const levelLabel = document.createElement('div');
+    levelLabel.className = 'level-requirement';
+    levelLabel.textContent = `Level ${reqLevel}`;
+    container.appendChild(levelLabel);
+
+    const rowElement = document.createElement('div');
+    rowElement.className = 'skill-row';
+    groupSkills.forEach((skill) => {
+      const skillElement = createPreviewSkillElement(skill);
+      rowElement.appendChild(skillElement);
+    });
+    container.appendChild(rowElement);
+  });
+}
+
+function createPreviewSkillElement(skill) {
+  const skillElement = document.createElement('div');
+  skillElement.className = 'skill-node';
+  skillElement.dataset.skillId = skill.id;
+  skillElement.dataset.skillType = skill.type();
+
+  skillElement.innerHTML = html`
+    <div
+      class="skill-icon"
+      style="background-image: url('${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg')"
+    ></div>
+    <div class="skill-level">0${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}</div>
+  `;
+
+  skillElement.addEventListener('mouseenter', (e) => showTooltip(createPreviewTooltip(skill), e));
+  skillElement.addEventListener('mousemove', positionTooltip);
+  skillElement.addEventListener('mouseleave', hideTooltip);
+
+  return skillElement;
+}
+
+function createPreviewTooltip(skill) {
+  const currentLevel = 0;
+  const effectsCurrent = skill.effect(currentLevel);
+  const nextLevel = currentLevel + 1;
+  const effectsNext = skill.effect(nextLevel);
+
+  let skillDescription = `
+      <strong>${skill.name()} [${skill.type().toUpperCase()}]</strong><br>
+      ${skill
+    .description()
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line)
+    .join('<br>')}
+      <br>
+      Level: ${currentLevel}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
+    `;
+
+  if (skill.manaCost) {
+    const manaCost = skill.manaCost(currentLevel);
+    const manaCostNextLevel = skill.manaCost(nextLevel);
+    if (manaCost) {
+      skillDescription += `<br />Mana Cost: ${manaCost} (+${manaCostNextLevel - manaCost})`;
+    }
+  }
+  if (skill.cooldown) {
+    const cooldown = skill.cooldown(currentLevel);
+    const cooldownNextLevel = skill.cooldown(nextLevel);
+    if (cooldown) {
+      skillDescription += `<br />Cooldown: ${(cooldown / 1000).toFixed(2)}s (${(cooldownNextLevel - cooldown) / 1000}s)`;
+    }
+  }
+  if (skill.duration) {
+    const duration = skill.duration(currentLevel);
+    const durationNextLevel = skill.duration(nextLevel);
+    if (duration) {
+      skillDescription += `<br />Duration: ${(duration / 1000).toFixed(2)}s (+${(durationNextLevel - duration) / 1000}s)`;
+    }
+  }
+
+  if (effectsCurrent && Object.keys(effectsCurrent).length > 0) {
+    skillDescription += '<br /><u>Current Effects:</u><br />';
+    Object.entries(effectsCurrent).forEach(([stat, value]) => {
+      const decimals = STATS[stat].decimalPlaces || 0;
+      const formattedValue = value.toFixed(decimals);
+      const prefix = value > 0 ? '+' : '';
+      skillDescription += `${formatStatName(stat)}: ${prefix}${formattedValue}<br />`;
+    });
+  }
+
+  if (skill.type() === 'summon') {
+    const summonStats = skill.summonStats(currentLevel);
+    skillDescription += '<br /><u>Summon Stats:</u><br />';
+    Object.entries(summonStats).forEach(([stat, value]) => {
+      const decimals = STATS[stat].decimalPlaces || 0;
+      skillDescription += `${formatStatName(stat)}: ${value.toFixed(decimals)}<br />`;
+    });
+  } else if (currentLevel < skill.maxLevel() || skill.maxLevel() === Infinity) {
+    skillDescription += '<br /><u>Next Level Effects:</u><br />';
+    Object.entries(effectsNext).forEach(([stat, value]) => {
+      const decimals = STATS[stat].decimalPlaces || 0;
+      const currentValue = effectsCurrent[stat] || 0;
+      const difference = value - currentValue;
+      const valuePrefix = value >= 0 ? '+' : '';
+      const diffPrefix = difference >= 0 ? '+' : '';
+      skillDescription += `${formatStatName(stat)}: ${valuePrefix}${value.toFixed(
+        decimals,
+      )} <span class="bonus">(${diffPrefix}${difference.toFixed(decimals)})</span><br />`;
+    });
+  }
+
+  return skillDescription;
 }
 
 export function initializeSkillTreeStructure() {

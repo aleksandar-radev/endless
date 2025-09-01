@@ -77,6 +77,67 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
+/* Class Preview Modal */
+.class-preview-modal .class-preview-wrapper {
+  background: var(--bg-panel);
+  padding: 20px;
+  border-radius: 8px;
+  width: min(90vw, 800px);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.class-preview-modal .class-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.class-preview-modal .class-preview-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.class-preview-modal h2 {
+  margin: 0;
+  color: var(--accent);
+}
+
+.class-preview-modal .class-preview-tree {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.class-preview-modal .select-class-btn {
+  background-color: var(--accent);
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.class-preview-modal .select-class-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  background-color: var(--accent-hover);
+}
+
+.class-preview-modal .select-class-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
 .level-requirement {
   color: var(--accent);
   font-weight: bold;

@@ -22,6 +22,7 @@ export default function run() {
       <li>Added runes.</li>
       <li>Reduced initial rewards from prestige and increased % scaling from arena.</li>
       <li>Reduced experience building scaling and increased cost scaling.</li>
+      <li>Added class preview dialog.</li>
     </ul>
 
     <span style="color:#FF0000;"> Fixes</span>
