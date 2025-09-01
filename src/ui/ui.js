@@ -41,11 +41,26 @@ let autoClaiming = false;
 const html = String.raw;
 const BASE = import.meta.env.VITE_BASE_PATH;
 
-// Format numbers with thousands separators.
-// Accepts numbers or numeric strings and returns a string with the given
-// separator (default comma) applied to the integer part.
+// Format numbers with thousands separators or shorthand notation.
+// When options.shortNumbers is enabled, large numbers are abbreviated
+// using suffixes (e.g., 1.2M for 1,200,000). Otherwise, a thousands
+// separator (default comma) is applied to the integer part.
 export function formatNumber(value, separator = ',') {
   if (value === null || value === undefined) return value;
+
+  const num = Number(value);
+  if (options?.shortNumbers && !Number.isNaN(num)) {
+    const abs = Math.abs(num);
+    if (abs >= 1000) {
+      const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc'];
+      const tier = Math.floor(Math.log10(abs) / 3);
+      const suffix = suffixes[tier] || `e${tier * 3}`;
+      const scaled = num / Math.pow(10, tier * 3);
+      const digits = scaled >= 100 ? 0 : scaled >= 10 ? 1 : 2;
+      return `${parseFloat(scaled.toFixed(digits))}${suffix}`;
+    }
+  }
+
   const parts = value.toString().split('.');
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, separator);
   return parts.join('.');
@@ -370,7 +385,7 @@ export function updateStageUI() {
       const val = t('combat.bossLevel');
       if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
     }
-    if (value) value.textContent = hero.bossLevel;
+    if (value) value.textContent = formatNumber(hero.bossLevel);
     return;
   }
   if (stageDisplay && game.fightMode === 'rockyField') {
@@ -378,7 +393,7 @@ export function updateStageUI() {
       const val = t('combat.stage');
       if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
     }
-    if (value) value.textContent = game.rockyFieldStage;
+    if (value) value.textContent = formatNumber(game.rockyFieldStage);
     return;
   }
   if (stageDisplay) {
@@ -386,7 +401,7 @@ export function updateStageUI() {
       const val = t('combat.stage');
       if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
     }
-    if (value) value.textContent = game.stage;
+    if (value) value.textContent = formatNumber(game.stage);
   }
 }
 

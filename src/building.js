@@ -69,7 +69,7 @@ export class Building {
     if (!this.effect || typeof this.effect !== 'object') return '';
     const interval = formatInterval(this.effect.interval);
     const typeName = this.effect.displayName || this.effect.type;
-    return `+${this.effect.amount * level} ${typeName}${interval}`;
+    return `+${formatNumber(this.effect.amount * level)} ${typeName}${interval}`;
   }
 
   // Returns a formatted string for a cost object

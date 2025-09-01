@@ -14,6 +14,7 @@ export default function run() {
       <li>Add mana steal and omni steal stats.</li>
       <li>Added "max" button for stage options and now they are automatically set to their maximum value on upgrade. (if set to 0 or max).</li>
       <li>Added quick access option for stage options below enemy.</li>
+      <li>Added option to show large numbers with abbreviations (e.g., 1M for 1,000,000).</li>
       <li>Scaling logic for enemies reworked.</li>
       <li>Added offline progress.</li>
       <li>Added 5 slots for characters.</li>

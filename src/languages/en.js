@@ -262,6 +262,7 @@ export default {
   'options.startingStage': 'Starting Stage',
   'options.toast.startingStageApplied': 'Starting stage option applied!',
   'options.shortElementalNames': 'Use Short Elemental Stat Names',
+  'options.shortNumbers': 'Use Short Number Notation',
   'options.showSkillCooldowns': 'Show Skill Cooldown Numbers',
   'options.showAllStats': 'Show All Stats',
   'options.quickTraining': 'Enable Quick Training',

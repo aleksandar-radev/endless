@@ -7,6 +7,8 @@ import {
   showConfirmDialog,
   showToast,
   updateStageUI,
+  updateResources,
+  updatePlayerLife,
   updateEnemyStatLabels,
   showTooltip,
   positionTooltip,
@@ -65,6 +67,7 @@ const OPTION_TOOLTIPS = {
     html`${isPurchased() ? '' : t('options.autoSortInventory.disabledTooltip')}`,
   enemyStatsLabel: () => html`Display enemy statistics during combat`,
   stageControlsInlineLabel: () => html`Show stage controls under enemy in Explore`,
+  shortNumbersLabel: () => html`Display large numbers using abbreviations`,
 };
 
 function attachTooltip(el, key, ...params) {
@@ -141,6 +144,8 @@ export class Options {
     this.language = data.language || 'en';
     // Use short elemental stat names
     this.shortElementalNames = data.shortElementalNames ?? false;
+    // Use shortened number notation
+    this.shortNumbers = data.shortNumbers ?? false;
     // Show cooldown numbers on skill slots
     this.showSkillCooldowns = data.showSkillCooldowns ?? false;
     // Show informational toast messages
@@ -265,6 +270,7 @@ export class Options {
     gameContent.appendChild(this._createEnemyStatsToggleOption());
     gameContent.appendChild(this._createShowAllStatsOption());
     gameContent.appendChild(this._createShortElementalNamesOption());
+    gameContent.appendChild(this._createShortNumbersOption());
     gameContent.appendChild(this._createQuickTrainingOption());
     gameContent.appendChild(this._createBulkTrainingOption());
     gameContent.appendChild(this._createQuickSoulShopOption());
@@ -1362,6 +1368,42 @@ export class Options {
       dataManager.saveGame();
       updateStatsAndAttributesUI(true);
       updateEnemyStatLabels();
+    });
+    return wrapper;
+  }
+
+  _createShortNumbersOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="short-numbers-toggle" class="short-numbers-toggle-label" data-i18n="options.shortNumbers">Use Short Number Notation:</label>
+      <input
+        type="checkbox"
+        id="short-numbers-toggle"
+        class="short-numbers-toggle"
+        ${this.shortNumbers ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const label = wrapper.querySelector('.short-numbers-toggle-label');
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'shortNumbersLabel');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.shortNumbers = checkbox.checked;
+      dataManager.saveGame();
+      updateResources();
+      updateStatsAndAttributesUI(true);
+      updateStageUI();
+      updatePlayerLife();
+      training.updateTrainingUI('gold-upgrades');
+      crystalShop.updateCrystalShopUI();
+      soulShop.updateSoulShopUI();
+      initializeBuildingsUI();
     });
     return wrapper;
   }

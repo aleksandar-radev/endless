@@ -8,6 +8,7 @@ import {
   updateTabIndicators,
   showToast,
   showDeathScreen,
+  formatNumber,
 } from './ui/ui.js';
 import Enemy from './enemy.js';
 import { hero, game, inventory, crystalShop, statistics, skillTree, dataManager, runtime, options, runes, ascension } from './globals.js';
@@ -536,7 +537,18 @@ export function createDamageNumber({ text = '', isPlayer = false, isCritical = f
 
   const damageEl = document.createElement('div');
   damageEl.className = isCritical ? 'damage-number critical' : 'damage-number';
-  damageEl.innerHTML = isCritical ? `<img src="${BASE}/icons/critical.svg" class="icon" alt="${t('icon.critical')}"/> ` + text : text;
+  let displayText = text;
+  if (options?.shortNumbers) {
+    const num = Number(text);
+    if (!Number.isNaN(num)) {
+      const str = String(text).trim();
+      const sign = str.startsWith('-') ? '-' : str.startsWith('+') ? '+' : '';
+      displayText = `${sign}${formatNumber(Math.abs(num))}`;
+    }
+  }
+  damageEl.innerHTML = isCritical
+    ? `<img src="${BASE}/icons/critical.svg" class="icon" alt="${t('icon.critical')}"/> ` + displayText
+    : displayText;
   if (color) {
     damageEl.style.color = color;
   }

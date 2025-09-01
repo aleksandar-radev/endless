@@ -252,7 +252,7 @@ export default class CrystalShop {
           ? t('common.purchased')
           : isMaxed
             ? t('common.max')
-            : `${cost} ${t('resource.crystal.name')}`;
+            : `${formatNumber(cost)} ${t('resource.crystal.name')}`;
         costEl.classList.toggle('unaffordable', unaffordable);
       }
       if (bonusEl) bonusEl.classList.toggle('unaffordable', unaffordable);
@@ -271,14 +271,14 @@ export default class CrystalShop {
     const label = t(config.label);
     const bonusLabel = t(config.bonusLabel);
     const levelText = config.showLevel
-      ? `(${t('common.lvl')} ${level}${isMaxed ? ' / ' + t('common.max') : ''})`
+      ? `(${t('common.lvl')} ${formatNumber(level)}${isMaxed ? ' / ' + t('common.max') : ''})`
       : '';
     const bonusText = `${bonusLabel}${isMaxed ? ' <strong>' + t('common.max') + '</strong>' : ''}`;
     const costText = alreadyPurchased
       ? t('common.purchased')
       : isMaxed
         ? t('common.max')
-        : `${cost} ${t('resource.crystal.name')}`;
+        : `${formatNumber(cost)} ${t('resource.crystal.name')}`;
     return `
       <button class="crystal-upgrade-btn ${config.category} ${alreadyPurchased || isMaxed ? 'purchased' : ''}" data-stat="${stat}" ${alreadyPurchased || isMaxed ? 'disabled' : ''}>
         <span class="upgrade-name">${label} ${levelText}</span>

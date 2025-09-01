@@ -5,7 +5,7 @@ import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
 import { MISC_STATS } from './constants/stats/miscStats.js';
 import { ATTRIBUTES } from './constants/stats/attributes.js';
 import { options } from './globals.js';
-import { formatStatName } from './ui/ui.js';
+import { formatStatName, formatNumber } from './ui/ui.js';
 import { t } from './i18n.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
@@ -213,7 +213,7 @@ export default class Item {
         <div class="item-name" style="color: ${ITEM_RARITY[this.rarity].color};">
           ${isEquipped ? '(Equipped) ' : ''}${this.getDisplayName()}
         </div>
-        <div class="item-level">${t('item.level')}: ${this.level}, ${t('item.tier')}: ${this.tier}</div>
+        <div class="item-level">${t('item.level')}: ${formatNumber(this.level)}, ${t('item.tier')}: ${formatNumber(this.tier)}</div>
         <div class="item-stats">
           ${STAT_GROUPS.map((group) => {
     const stats = group.order.filter((s) => this.stats[s] !== undefined);
@@ -222,11 +222,11 @@ export default class Item {
       .map((stat) => {
         const value = this.stats[stat];
         const decimals = STATS[stat].decimalPlaces || 0;
-        const formattedValue = value.toFixed(decimals);
+        const formattedValue = formatNumber(value.toFixed(decimals));
         let adv = '';
         if (showAdvanced && statMinMax[stat]) {
-          const min = statMinMax[stat].min.toFixed(decimals);
-          const max = statMinMax[stat].max.toFixed(decimals);
+          const min = formatNumber(statMinMax[stat].min.toFixed(decimals));
+          const max = formatNumber(statMinMax[stat].max.toFixed(decimals));
           adv = `<span class="item-ref-range" style="float:right; color:#aaa; text-align:right; min-width:60px;">${min} - ${max}</span>`;
         }
         return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">

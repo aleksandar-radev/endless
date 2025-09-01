@@ -472,7 +472,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     attributesContainer.className = 'attributes-container';
     attributesContainer.innerHTML = html`
       <div class="attributes-header">
-        <h3 id="attributes">${t('attributes')} (+${hero.statPoints})</h3>
+        <h3 id="attributes">${t('attributes')} (+${formatNumber(hero.statPoints)})</h3>
         <div class="allocate-modes" style="margin-bottom:8px;">
           <button class="mode-btn" data-amount="1">+1</button>
           <button class="mode-btn" data-amount="30">+30</button>
@@ -566,7 +566,9 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     // Add attributes container to the grid
     statsGrid.appendChild(attributesContainer);
   } else {
-    document.getElementById('attributes').textContent = `${t('attributes')} (+${hero.statPoints})`;
+    document.getElementById('attributes').textContent = `${t('attributes')} (+${formatNumber(
+      hero.statPoints,
+    )})`;
     // Update all attribute values dynamically (works with showAllStats)
     Object.keys(hero.stats).forEach((stat) => {
       if (!ATTRIBUTES[stat]) return;

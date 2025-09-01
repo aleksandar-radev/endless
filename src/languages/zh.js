@@ -262,6 +262,7 @@ export default {
   'options.startingStage': '起始阶段',
   'options.toast.startingStageApplied': '起始阶段选项已应用！',
   'options.shortElementalNames': '使用元素属性简称',
+  'options.shortNumbers': '使用数字缩写',
   'options.showSkillCooldowns': '显示技能冷却时间',
   'options.showAllStats': '显示所有统计',
   'options.quickTraining': '启用快速训练',

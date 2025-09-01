@@ -1,5 +1,5 @@
 import { dataManager, hero, options } from './globals.js';
-import { updateResources, showToast, updatePlayerLife } from './ui/ui.js';
+import { updateResources, showToast, updatePlayerLife, formatNumber } from './ui/ui.js';
 import { handleSavedData } from './functions.js';
 import { closeModal, createModal } from './ui/modal.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
@@ -288,7 +288,7 @@ export default class SoulShop {
       if (costEl) {
         costEl.innerHTML = alreadyPurchased
           ? t('common.purchased')
-          : `${cost} ${t('resource.souls.name')}<img style="width: 20px; height: 20px;" src="${BASE}/icons/soul.svg" alt="${t('resource.souls.name')}">(${qty})`;
+          : `${formatNumber(cost)} ${t('resource.souls.name')}<img style="width: 20px; height: 20px;" src="${BASE}/icons/soul.svg" alt="${t('resource.souls.name')}">(${formatNumber(qty)})`;
         costEl.classList.toggle('unaffordable', unaffordable);
       }
       if (bonusEl) bonusEl.classList.toggle('unaffordable', unaffordable);
@@ -314,12 +314,15 @@ export default class SoulShop {
     const label = t(config.label);
     let bonus;
     if (isOneTime || isMultiple) {
-      bonus = typeof config.bonus === 'string' ? t(config.bonus) : config.bonus;
+      bonus =
+        typeof config.bonus === 'string'
+          ? t(config.bonus)
+          : `+${formatNumber(config.bonus * (isPercent ? 100 : 1))}${config.suffix || ''} ${label}`;
     } else if (isMultiLevel) {
       const value = Math.floor(config.bonus * (this.soulUpgrades[stat] || 0) * (isPercent ? 100 : 1));
-      bonus = `+${value}${config.suffix || ''} ${label}`;
+      bonus = `+${formatNumber(value)}${config.suffix || ''} ${label}`;
     } else {
-      bonus = `+${config.bonus * (this.soulUpgrades[stat] || 0)} ${label}`;
+      bonus = `+${formatNumber(config.bonus * (this.soulUpgrades[stat] || 0))} ${label}`;
     }
     let cost =
       isOneTime || isMultiple
@@ -358,9 +361,9 @@ export default class SoulShop {
 
     return `
       <button class="soul-upgrade-btn ${alreadyPurchased ? 'purchased' : ''}" data-stat="${stat}" ${disabled ? 'disabled' : ''}>
-        <span class="upgrade-name">${label} ${isOneTime ? '' : isMultiple ? '' : `(${t('common.lvl')} ${level})`}</span>
+        <span class="upgrade-name">${label} ${isOneTime ? '' : isMultiple ? '' : `(${t('common.lvl')} ${formatNumber(level)})`}</span>
         <span class="upgrade-bonus ${bonusClass}">${bonus}</span>
-        <span class="upgrade-cost ${bonusClass}">${alreadyPurchased ? t('common.purchased') : `${cost} ${t('resource.souls.name')}`}<img style="width: 20px; height: 20px;" src="${BASE}/icons/soul.svg" alt="${t('resource.souls.name')}">(${qty})</span>
+        <span class="upgrade-cost ${bonusClass}">${alreadyPurchased ? t('common.purchased') : `${formatNumber(cost)} ${t('resource.souls.name')}<img style="width: 20px; height: 20px;" src="${BASE}/icons/soul.svg" alt="${t('resource.souls.name')}">(${formatNumber(qty)})`}</span>
       </button>
     `;
   }

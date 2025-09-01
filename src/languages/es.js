@@ -262,6 +262,7 @@ export default {
   'options.startingStage': 'Etapa inicial',
   'options.toast.startingStageApplied': '¡Opción de etapa inicial aplicada!',
   'options.shortElementalNames': 'Usar nombres elementales cortos',
+  'options.shortNumbers': 'Usar notación corta de números',
   'options.showSkillCooldowns': 'Mostrar números de enfriamiento de habilidades',
   'options.showAllStats': 'Mostrar todas las estadísticas',
   'options.quickTraining': 'Habilitar entrenamiento rápido',
