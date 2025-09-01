@@ -1,5 +1,5 @@
 
-import { crystalShop, dataManager, game, setGlobals, training, soulShop, statistics } from './globals.js';
+import { crystalShop, dataManager, game, setGlobals, training, soulShop, statistics, ascension } from './globals.js';
 import { CLASS_PATHS } from './constants/skills.js';
 import { initializeBuildingsUI } from './ui/buildingUi.js';
 import {
@@ -43,6 +43,8 @@ const OPTION_TOOLTIPS = {
   showCombatTextLabel: () => html`Show damage numbers and other combat text`,
   stageSkipLabel: () => html`Skip ahead by this many stages after each kill`,
   stageSkipInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnCrystal')}`,
+  arenaBossSkipLabel: () => html`${t('options.arenaBossSkip.tooltip')}`,
+  arenaBossSkipInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnAscension')}`,
   resetStageSkipLabel: () => html`Stage where stage skip resets to zero`,
   resetStageSkipInput: (isPurchased) =>
     html`${isPurchased()
@@ -83,6 +85,8 @@ export class Options {
     this.resetRequired = data.resetRequired ?? null;
     // Add stageSkip option, default to 0
     this.stageSkip = data.stageSkip || 0;
+    // Add arena boss skip option, default to 0
+    this.arenaBossSkip = data.arenaBossSkip || 0;
     // Add resetStageSkip option, default to 0 (disabled)
     this.resetStageSkip = data.resetStageSkip || 0;
     // Add soundVolume option, default to 0
@@ -268,6 +272,7 @@ export class Options {
     gameContent.appendChild(this._createStageControlsInlineOption());
     gameContent.appendChild(this._createStartingStageOption());
     gameContent.appendChild(this._createStageSkipOption());
+    gameContent.appendChild(this._createArenaBossSkipOption());
     gameContent.appendChild(this._createResetStageSkipOption());
     gameContent.appendChild(this._createRateCountersOption());
     gameContent.appendChild(this._createRateCountersPeriodOption());
@@ -599,6 +604,70 @@ export class Options {
     return wrapper;
   }
 
+  _createArenaBossSkipOption() {
+    let max = ascension.getBonuses()?.arenaBossSkip || 0;
+    const value = this.arenaBossSkip != null ? this.arenaBossSkip : 0;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="boss-skip-input" class="boss-skip-label" data-i18n="options.arenaBossSkipPerKill">Boss Skip per Kill:</label>
+      <input
+        type="number"
+        id="boss-skip-input"
+        class="boss-skip-input"
+        min="0"
+        max="${max}"
+        value="${value}"
+      />
+      <button class="max-btn" type="button" data-i18n="common.max">Max</button>
+      <button class="apply-btn" type="button" data-i18n="common.apply">Apply</button>
+    `;
+
+    const label = wrapper.querySelector('.boss-skip-label');
+    const input = wrapper.querySelector('input');
+    const maxBtn = wrapper.querySelector('.max-btn');
+    const applyBtn = wrapper.querySelector('.apply-btn');
+    attachTooltip(label, 'arenaBossSkipLabel');
+    attachTooltip(input, 'arenaBossSkipInput', () => ascension.getBonuses()?.arenaBossSkip || 0);
+
+    this._bossSkipInput = input;
+
+    applyBtn.onmouseenter = () => applyBtn.classList.add('hover');
+    applyBtn.onmouseleave = () => applyBtn.classList.remove('hover');
+    if (maxBtn) {
+      maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
+      maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
+      maxBtn.onclick = () => {
+        const m = ascension.getBonuses()?.arenaBossSkip || 0;
+        input.value = m;
+        input.dispatchEvent(new Event('input'));
+      };
+    }
+
+    input.addEventListener('input', () => {
+      let val = parseInt(input.value, 10);
+      let m = ascension.getBonuses()?.arenaBossSkip || 0;
+      if (isNaN(val) || val < 0) val = 0;
+      if (val > m) val = m;
+      input.value = val;
+    });
+
+    applyBtn.onclick = () => {
+      let val = parseInt(input.value, 10);
+      let m = ascension.getBonuses()?.arenaBossSkip || 0;
+      if (isNaN(val) || val < 0) val = 0;
+      if (val > m) val = m;
+      this.arenaBossSkip = val;
+      dataManager.saveGame();
+      showToast(t('options.toast.arenaBossSkipApplied'), 'success');
+    };
+
+    this.updateArenaBossSkipOption();
+
+    return wrapper;
+  }
+
   /**
    * Updates the stage skip input's max, title, and value if needed.
    * Call this whenever crystalShop.crystalUpgrades.stageSkip changes.
@@ -637,6 +706,24 @@ export class Options {
       } else {
         inlineInput.value = v;
       }
+    }
+  }
+
+  updateArenaBossSkipOption() {
+    if (!this._bossSkipInput) return;
+    const oldMax = parseInt(this._bossSkipInput.max, 10) || 0;
+    const max = ascension.getBonuses()?.arenaBossSkip || 0;
+    this._bossSkipInput.max = max;
+
+    let val = parseInt(this._bossSkipInput.value, 10);
+    if (isNaN(val) || val < 0) val = 0;
+    if (val > max) val = max;
+    if ((val === 0 || isNaN(val)) && this.arenaBossSkip > 0) {
+      this._bossSkipInput.value = this.arenaBossSkip;
+    } else if (oldMax > 0 && val === oldMax) {
+      this._bossSkipInput.value = max;
+    } else {
+      this._bossSkipInput.value = val;
     }
   }
 

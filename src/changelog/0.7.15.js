@@ -6,6 +6,7 @@ export default function run() {
 
     <span style="color:#FF8A00;"> Improvements</span>
     <ul>
+      <li>Added ascension. It removes all progress, apart from ascension bonuses. </li>
       <li>Going to any shop tab now immediately updates it, showing what is affordable. </li>
       <li>Percent health and mana regen now increases the % of total bonus.</li>
       <li>Add tooltips for all options, to provide more information about their effects.</li>
@@ -21,7 +22,6 @@ export default function run() {
       <li>Added runes.</li>
       <li>Reduced initial rewards from prestige and increased % scaling from arena.</li>
       <li>Reduced experience building scaling and increased cost scaling.</li>
-
     </ul>
 
     <span style="color:#FF0000;"> Fixes</span>

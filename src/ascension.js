@@ -1,4 +1,4 @@
-import { hero, dataManager, setGlobals, prestige, ascension as ascensionState } from './globals.js';
+import { hero, dataManager, setGlobals, prestige, ascension as ascensionState, options } from './globals.js';
 import { handleSavedData } from './functions.js';
 import { showToast } from './ui/ui.js';
 import { t } from './i18n.js';
@@ -7,49 +7,46 @@ export const ASCENSION_UPGRADES = {
     label: t('ascension.upgrade.strengthEffectiveness'),
     bonus: 0.1,
     effect: 'strengthEffectPercent',
-    maxLevel: 10,
   },
   agilityEffectiveness: {
     label: t('ascension.upgrade.agilityEffectiveness'),
     bonus: 0.1,
     effect: 'agilityEffectPercent',
-    maxLevel: 10,
   },
   vitalityEffectiveness: {
     label: t('ascension.upgrade.vitalityEffectiveness'),
     bonus: 0.1,
     effect: 'vitalityEffectPercent',
-    maxLevel: 10,
   },
   wisdomEffectiveness: {
     label: t('ascension.upgrade.wisdomEffectiveness'),
     bonus: 0.1,
     effect: 'wisdomEffectPercent',
-    maxLevel: 10,
   },
   enduranceEffectiveness: {
     label: t('ascension.upgrade.enduranceEffectiveness'),
     bonus: 0.1,
     effect: 'enduranceEffectPercent',
-    maxLevel: 10,
   },
   dexterityEffectiveness: {
     label: t('ascension.upgrade.dexterityEffectiveness'),
     bonus: 0.1,
     effect: 'dexterityEffectPercent',
-    maxLevel: 10,
   },
   intelligenceEffectiveness: {
     label: t('ascension.upgrade.intelligenceEffectiveness'),
     bonus: 0.1,
     effect: 'intelligenceEffectPercent',
-    maxLevel: 10,
   },
   perseveranceEffectiveness: {
     label: t('ascension.upgrade.perseveranceEffectiveness'),
     bonus: 0.1,
     effect: 'perseveranceEffectPercent',
-    maxLevel: 10,
+  },
+  arenaBossSkip: {
+    label: t('ascension.upgrade.arenaBossSkip'),
+    bonus: 1,
+    effect: 'arenaBossSkip',
   },
 };
 
@@ -95,6 +92,9 @@ export default class Ascension {
     this.upgrades[key] = current + 1;
     hero.recalculateFromAttributes();
     dataManager.saveGame();
+    if (key === 'arenaBossSkip') {
+      options.updateArenaBossSkipOption();
+    }
     return true;
   }
 

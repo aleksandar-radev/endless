@@ -10,7 +10,7 @@ import {
   showDeathScreen,
 } from './ui/ui.js';
 import Enemy from './enemy.js';
-import { hero, game, inventory, crystalShop, statistics, skillTree, dataManager, runtime, options, runes } from './globals.js';
+import { hero, game, inventory, crystalShop, statistics, skillTree, dataManager, runtime, options, runes, ascension } from './globals.js';
 import { ITEM_RARITY } from './constants/items.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateQuestsUI } from './ui/questUi.js';
@@ -291,12 +291,18 @@ export async function defeatEnemy() {
     }
     showToast(text, 'success');
     statistics.increment('bossesKilled', null, 1);
-    hero.bossLevel++;
+    const skipMax = ascension.getBonuses()?.arenaBossSkip || 0;
+    const skips = Math.min(options.arenaBossSkip || 0, skipMax);
+    hero.bossLevel += 1 + skips;
     // should update highestBossLevel only if the value is higher
     if (hero.bossLevel > statistics.get('highestBossLevel')) {
       statistics.set('highestBossLevel', null, hero.bossLevel);
     }
-    document.dispatchEvent(new CustomEvent('bossKilled', { detail: { level: hero.bossLevel } }));
+    document.dispatchEvent(
+      new CustomEvent('bossKilled', {
+        detail: { level: hero.bossLevel },
+      }),
+    );
   } else if (initialFightMode === 'explore') {
     baseExpGained = enemy.xp;
     baseGoldGained = enemy.gold;
