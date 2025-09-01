@@ -1210,9 +1210,9 @@ function openItemContextMenu(itemEl, x, y) {
   menu.style.left = `${x}px`;
   menu.style.top = `${y}px`;
   menu.innerHTML = `
-    <button data-action="equip">Equip</button>
-    <button data-action="inspect">Inspect</button>
-    <button data-action="salvage">Salvage</button>
+    <button data-action="equip">${t('inventory.equip')}</button>
+    <button data-action="inspect">${t('inventory.inspect')}</button>
+    <button data-action="salvage">${t('inventory.salvage')}</button>
   `;
   document.body.appendChild(menu);
 

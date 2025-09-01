@@ -128,6 +128,7 @@ export default {
   'inventory.options': 'Options',
   'inventory.searchItems': 'Search items...',
   'inventory.equip': 'Equip',
+  'inventory.inspect': 'Inspect',
   'inventory.sortItemsBy': 'Sort items by',
   'inventory.sortMaterials': 'Sort materials',
   'inventory.sortedMaterials': 'Sorted materials',
