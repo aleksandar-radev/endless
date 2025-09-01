@@ -4,6 +4,7 @@ import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
 import { MISC_STATS } from './constants/stats/miscStats.js';
 import { tp, t } from './i18n.js';
 import { formatStatName } from './format.js';
+import { hero } from './globals.js';
 
 export const BASE_RUNE_SLOTS = 1;
 const INVENTORY_SLOTS = 100;
@@ -99,9 +100,24 @@ export default class Runes {
   }
 
   salvage(index) {
-    if (this.inventory[index]) {
-      this.inventory[index] = null;
+    const rune = this.inventory[index];
+    if (!rune) return 0;
+
+    let crystals = 0;
+    if (rune.unique) {
+      crystals = 200;
+    } else if (rune.conversion) {
+      crystals = Math.max(1, Math.floor(rune.conversion.percent / 2));
+    } else if (rune.bonus) {
+      const maxBonus = Math.max(...Object.values(rune.bonus));
+      crystals = Math.max(1, Math.floor(maxBonus / 2));
+    } else {
+      crystals = 1;
     }
+
+    this.inventory[index] = null;
+    hero.gainCrystals(crystals);
+    return crystals;
   }
 
   sortInventory(shortElementalNames = false) {

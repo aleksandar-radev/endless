@@ -2,6 +2,7 @@ import { t } from '../../i18n.js';
 import { RUNES } from '../runes.js';
 
 const ALL_RUNES = RUNES.map((r) => r.id);
+const COMMON_RUNES = RUNES.filter((r) => !r.unique).map((r) => r.id);
 
 export const ROCKY_FIELD_ENEMIES = [
   {
@@ -19,7 +20,7 @@ export const ROCKY_FIELD_ENEMIES = [
       gold: 313,
     },
     special: ['alwaysHit'],
-    runeDrop: ALL_RUNES,
+    runeDrop: COMMON_RUNES,
   },
   {
     get name() { return t('Pebble Golem'); },
@@ -36,7 +37,7 @@ export const ROCKY_FIELD_ENEMIES = [
       gold: 938,
     },
     special: ['noLeech'],
-    runeDrop: ALL_RUNES,
+    runeDrop: COMMON_RUNES,
   },
   {
     get name() { return t('Cave Stalker'); },

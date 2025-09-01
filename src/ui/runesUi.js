@@ -1,7 +1,7 @@
 import { runes, dataManager, hero, options, training, soulShop } from '../globals.js';
 import { t } from '../i18n.js';
 import { getRuneName, getRuneDescription } from '../runes.js';
-import { showTooltip, positionTooltip, hideTooltip } from './ui.js';
+import { showTooltip, positionTooltip, hideTooltip, showToast } from './ui.js';
 import { createModal, closeModal } from './modal.js';
 
 export function initializeRunesUI() {
@@ -149,10 +149,14 @@ export function renderRunesUI() {
   salvageBtn.className = 'inventory-btn salvage-btn';
   salvageBtn.textContent = t('inventory.salvage');
   salvageBtn.onclick = () => {
+    let crystals = 0;
     runes.inventory.forEach((r, i) => {
       if (!r) return;
-      runes.salvage(i);
+      crystals += runes.salvage(i);
     });
+    if (crystals > 0) {
+      showToast(`Salvaged runes for ${crystals} crystal${crystals > 1 ? 's' : ''}`,'success');
+    }
     renderRunesUI();
     dataManager.saveGame();
   };
@@ -254,13 +258,17 @@ function openRuneContextMenu(source, index, rune, x, y) {
     closeRuneContextMenu();
   };
   menu.querySelector('[data-action="salvage"]').onclick = () => {
+    let crystals = 0;
     if (source === 'inventory') {
-      runes.salvage(index);
+      crystals = runes.salvage(index);
     } else {
       runes.equipped[index] = null;
       hero.recalculateFromAttributes();
       training.updateTrainingAffordability('gold-upgrades');
       soulShop.updateSoulShopAffordability();
+    }
+    if (crystals > 0) {
+      showToast(`Salvaged rune for ${crystals} crystal${crystals > 1 ? 's' : ''}`,'success');
     }
     selectedRune = null;
     renderRunesUI();
