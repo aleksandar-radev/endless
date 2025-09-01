@@ -30,7 +30,7 @@ const CONVERSION_RUNES = Object.keys(TYPE_DATA)
           fromKey: fromInfo.labelKey,
           toKey: toInfo.labelKey,
           conversion: { from: fromInfo.stat, to: toInfo.stat, percent: 10 },
-          icon: toInfo.icon,
+          icon: `${BASE}/icons/runes/${from}_to_${to}.svg`,
         };
       }),
   );
