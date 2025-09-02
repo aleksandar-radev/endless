@@ -404,10 +404,10 @@ export async function defeatEnemy() {
       let percent;
       if (commonPool.length && Math.random() < 1 / 500) {
         runeId = commonPool[Math.floor(Math.random() * commonPool.length)];
-        percent = getRockyFieldRunePercent();
+        percent = getRockyFieldRunePercent(game.rockyFieldZone, game.rockyFieldStage);
       } else if (uniquePool.length && Math.random() < 1 / 50000) {
         runeId = uniquePool[Math.floor(Math.random() * uniquePool.length)];
-        percent = getRockyFieldRunePercent();
+        percent = getRockyFieldRunePercent(game.rockyFieldZone, game.rockyFieldStage);
       }
       if (runeId) {
         const rune = runes.addRune(runeId, percent);
@@ -484,7 +484,8 @@ function showRuneNotification(rune) {
   const notification = document.createElement('div');
   notification.className = 'loot-notification';
   notification.style.color = '#4db34d';
-  notification.textContent = `Found: ${getRuneName(rune, options.shortElementalNames)}`;
+  const name = getRuneName(rune, options.shortElementalNames);
+  notification.innerHTML = `Found: <img src="${rune.icon}" class="icon" alt="rune"/> ${name}`;
   document.body.appendChild(notification);
 
   setTimeout(() => notification.remove(), 3000);

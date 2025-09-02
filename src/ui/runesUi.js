@@ -162,7 +162,6 @@ export function renderRunesUI() {
   };
   const topControls = document.createElement('div');
   topControls.className = 'rune-controls';
-  topControls.append(sortBtn, salvageBtn);
   equipBtn = document.createElement('button');
   equipBtn.className = 'inventory-btn equip-btn';
   equipBtn.textContent = t('inventory.equip');
@@ -172,11 +171,9 @@ export function renderRunesUI() {
     if (!selectedRune || selectedRune.source !== 'inventory') return;
     equipSelectedRune();
   };
-  const bottomControls = document.createElement('div');
-  bottomControls.className = 'rune-controls';
-  bottomControls.append(equipBtn);
+  topControls.append(sortBtn, salvageBtn, equipBtn);
 
-  container.append(equipSection, topControls, invSection, bottomControls);
+  container.append(equipSection, topControls, invSection);
 }
 
 let selectedRune = null;
