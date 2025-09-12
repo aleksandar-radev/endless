@@ -284,8 +284,8 @@ export async function defeatEnemy() {
       text += `+${crystals} crystals, `;
     }
     if (souls) {
-      hero.gainSouls(souls + Math.floor(hero.bossLevel * 0.003)); // +0.03% per boss level
-      text += `+${souls + Math.floor(hero.bossLevel * 0.003)} souls, `;
+      hero.gainSouls(souls + Math.floor(hero.bossLevel * 0.001)); // +0.01% per boss level
+      text += `+${souls + Math.floor(hero.bossLevel * 0.001)} souls, `;
     }
     if (materials && materials.length) {
       materials.forEach(({ id, qty }) => {
