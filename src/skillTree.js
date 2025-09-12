@@ -113,7 +113,7 @@ export default class SkillTree {
       }
     });
     if (changed) {
-      hero.recalculateFromAttributes();
+      hero.queueRecalculateFromAttributes();
     }
   }
 
@@ -149,7 +149,7 @@ export default class SkillTree {
       this.unlockedPaths.push(pathName);
     }
     this.selectedPath = { name: pathName };
-    hero.recalculateFromAttributes();
+    hero.queueRecalculateFromAttributes();
     dataManager.saveGame();
 
     // Google Analytics event: class path chosen
@@ -286,7 +286,7 @@ export default class SkillTree {
     }
 
     this.skillPoints -= totalCost;
-    hero.recalculateFromAttributes();
+    hero.queueRecalculateFromAttributes();
     if (skill.type() !== 'passive') {
       updateActionBar();
     }
@@ -312,7 +312,7 @@ export default class SkillTree {
         this.skills[skillId].affordable = this.skills[skillId].active
           ? hero.stats.currentMana >= this.getSkillManaCost(skill)
           : false;
-        hero.recalculateFromAttributes();
+        hero.queueRecalculateFromAttributes();
         break;
       case 'instant':
         this.useInstantSkill(skillId);
@@ -524,7 +524,7 @@ export default class SkillTree {
     }
 
     // Apply buff effects
-    hero.recalculateFromAttributes();
+    hero.queueRecalculateFromAttributes();
     updateActionBar();
 
     return true;
@@ -537,7 +537,7 @@ export default class SkillTree {
       if (this.skills[skillId]) {
         this.skills[skillId].active = false;
       }
-      hero.recalculateFromAttributes();
+      hero.queueRecalculateFromAttributes();
       updateActionBar(); // Update UI to reflect deactivated state
     }
   }
@@ -568,7 +568,7 @@ export default class SkillTree {
       // }
       if (skill.type() !== 'toggle') skill.active = false; // Reset active state except for toggles
     });
-    hero.recalculateFromAttributes();
+    hero.queueRecalculateFromAttributes();
     updateActionBar(); // Update UI to reset all visual states
   }
 
@@ -624,7 +624,7 @@ export default class SkillTree {
     this.autoCastSettings = {};
     this.displaySettings = {};
     this.activeBuffs.clear();
-    hero.recalculateFromAttributes();
+    hero.queueRecalculateFromAttributes();
     updateActionBar();
     updateSkillTreeValues();
     dataManager.saveGame();

@@ -311,7 +311,7 @@ export class BuildingManager {
           else if (b.effect.type === 'level') {
             hero.levelUp(totalBonus);
 
-            hero.recalculateFromAttributes();
+            hero.queueRecalculateFromAttributes();
             updatePlayerLife();
             createCombatText(`LEVEL UP! (${hero.level})`);
             updateStatsAndAttributesUI();
@@ -354,7 +354,7 @@ export class BuildingManager {
             hero.levelUp(b.amount);
 
             updateStatsAndAttributesUI();
-            hero.recalculateFromAttributes();
+            hero.queueRecalculateFromAttributes();
             updatePlayerLife();
             initializeSkillTreeStructure();
             dataManager.saveGame();

@@ -159,7 +159,7 @@ window.setLanguage = setLanguage;
   })();
 
   updateResources();
-  hero.recalculateFromAttributes();
+  hero.queueRecalculateFromAttributes();
   game.healPlayer(hero.stats.life);
   game.restoreMana(hero.stats.mana);
 

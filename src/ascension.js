@@ -262,7 +262,7 @@ export default class Ascension {
     if (this.points < cost || current >= max) return false;
     this.points -= cost;
     this.upgrades[key] = current + 1;
-    hero.recalculateFromAttributes();
+    hero.queueRecalculateFromAttributes();
     if (cfg.stat === 'startingGold') {
       hero.gainGold(cfg.bonus);
     }
@@ -300,7 +300,7 @@ export default class Ascension {
     hero.gold += ascBonuses.startingGold || 0;
     hero.crystals = (hero.crystals || 0) + 100 + (ascBonuses.startingCrystals || 0);
     hero.souls += ascBonuses.startingSouls || 0;
-    hero.recalculateFromAttributes();
+    hero.queueRecalculateFromAttributes();
     dataManager.saveGame();
     window.location.reload();
   }

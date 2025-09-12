@@ -58,7 +58,7 @@ export function renderRunesUI() {
       });
       slot.addEventListener('dblclick', () => {
         runes.unequip(i);
-        hero.recalculateFromAttributes();
+        hero.queueRecalculateFromAttributes();
         training.updateTrainingAffordability('gold-upgrades');
         soulShop.updateSoulShopAffordability();
         selectedRune = null;
@@ -184,7 +184,7 @@ function equipSelectedRune() {
   const slot = runes.equipped.findIndex((r) => r === null);
   if (slot === -1) return;
   runes.equip(slot, inventoryIndex);
-  hero.recalculateFromAttributes();
+  hero.queueRecalculateFromAttributes();
   training.updateTrainingAffordability('gold-upgrades');
   soulShop.updateSoulShopAffordability();
   selectedRune = null;
@@ -210,7 +210,7 @@ function handleDrop(e) {
   } else if (source === 'equipped' && targetSource === 'equipped') {
     runes.moveEquipped(fromIndex, targetIndex);
   }
-  hero.recalculateFromAttributes();
+  hero.queueRecalculateFromAttributes();
   training.updateTrainingAffordability('gold-upgrades');
   soulShop.updateSoulShopAffordability();
   selectedRune = null;
@@ -260,7 +260,7 @@ function openRuneContextMenu(source, index, rune, x, y) {
       crystals = runes.salvage(index);
     } else {
       runes.equipped[index] = null;
-      hero.recalculateFromAttributes();
+      hero.queueRecalculateFromAttributes();
       training.updateTrainingAffordability('gold-upgrades');
       soulShop.updateSoulShopAffordability();
     }

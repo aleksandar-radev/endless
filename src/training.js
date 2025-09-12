@@ -590,7 +590,7 @@ export default class Training {
     });
     showToast(t('training.bulkPurchaseSuccess'));
     this.updateTrainingUI('gold-upgrades');
-    hero.recalculateFromAttributes();
+    hero.queueRecalculateFromAttributes();
     updateStatsAndAttributesUI();
     updateResources();
     dataManager.saveGame();
@@ -704,7 +704,7 @@ export default class Training {
       showToast(tp('training.notEnoughGold', { stat: formatStatName(stat) }), 'error');
     }
     this.updateTrainingUI('gold-upgrades');
-    hero.recalculateFromAttributes();
+    hero.queueRecalculateFromAttributes();
     updateStatsAndAttributesUI();
     updateResources();
     dataManager.saveGame();

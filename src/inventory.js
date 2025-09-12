@@ -181,7 +181,7 @@ export default class Inventory {
       const idx = inventory.materials.findIndex((m) => m && m.id === mat.id);
       if (idx !== -1) inventory.materials[idx] = null;
     }
-    hero.recalculateFromAttributes();
+    hero.queueRecalculateFromAttributes();
     updateMaterialsGrid();
     updateInventoryGrid();
     dataManager.saveGame();
@@ -952,7 +952,7 @@ export default class Inventory {
       }
     }
 
-    hero.recalculateFromAttributes();
+    hero.queueRecalculateFromAttributes();
     dataManager.saveGame();
   }
 
@@ -982,7 +982,7 @@ export default class Inventory {
       }
     }
     updateInventoryGrid();
-    hero.recalculateFromAttributes();
+    hero.queueRecalculateFromAttributes();
     dataManager.saveGame();
   }
 

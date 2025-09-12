@@ -321,7 +321,7 @@ export function createModifyUI() {
     const val = parseInt(attrInput.value, 10);
     if (!isNaN(val) && val > 0) {
       hero.statPoints += val;
-      hero.recalculateFromAttributes();
+      hero.queueRecalculateFromAttributes();
       showToast(`Gave ${val} attribute point${val > 1 ? 's' : ''}!`);
     } else {
       showToast('Invalid attribute value', 'error');
@@ -507,7 +507,7 @@ export function createModifyUI() {
       hero.levelUp(val);
 
       updateStatsAndAttributesUI();
-      hero.recalculateFromAttributes();
+      hero.queueRecalculateFromAttributes();
       createCombatText(`LEVEL UP! (${hero.level})`);
       updateStatsAndAttributesUI();
       initializeSkillTreeStructure();
@@ -784,7 +784,7 @@ export function createModifyUI() {
     training.reset();
     training.updateTrainingUI('gold-upgrades');
     training.updateTrainingUI('crystal-upgrades');
-    hero.recalculateFromAttributes();
+    hero.queueRecalculateFromAttributes();
     updatePlayerLife();
   });
   trainingSection.appendChild(resetTrainingBtn);

@@ -24,7 +24,7 @@ export async function setCurrentRegion(regionId) {
   game.stage = game.getStartingStage();
   game.currentEnemy = new Enemy(game.stage);
   game.resetAllLife();
-  hero.recalculateFromAttributes(); // in order to apply region changes to hero stats (elemental resistances)
+  hero.queueRecalculateFromAttributes(); // in order to apply region changes to hero stats (elemental resistances)
   updateStatsAndAttributesUI();
   updateStageUI();
   updateRegionUI();

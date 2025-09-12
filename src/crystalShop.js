@@ -373,7 +373,7 @@ export default class CrystalShop {
       training.quickQty = prevQty;
       hero.gold += refund;
       training.updateTrainingUI('gold-upgrades');
-      hero.recalculateFromAttributes();
+      hero.queueRecalculateFromAttributes();
       updateStatsAndAttributesUI();
       showToast(
         tp('crystalShop.resetTrainingSuccess', { amount: formatNumber(refund) }),
@@ -407,7 +407,7 @@ export default class CrystalShop {
       soulShop.quickQty = prevQuickQty;
       hero.souls += refund;
       soulShop.updateSoulShopUI();
-      hero.recalculateFromAttributes();
+      hero.queueRecalculateFromAttributes();
       updateStatsAndAttributesUI();
       updatePlayerLife();
       showToast(

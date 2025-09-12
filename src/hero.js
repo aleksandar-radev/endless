@@ -39,6 +39,7 @@ export const STATS_ON_LEVEL_UP = 3;
 
 export default class Hero {
   constructor(savedData = null) {
+    this._recalcScheduled = false;
     this.setBaseStats(savedData);
   }
 
@@ -199,6 +200,15 @@ export default class Hero {
     updateTabIndicators();
 
     return pointsToAllocate;
+  }
+
+  queueRecalculateFromAttributes() {
+    if (this._recalcScheduled) return;
+    this._recalcScheduled = true;
+    requestAnimationFrame(() => {
+      this._recalcScheduled = false;
+      this.recalculateFromAttributes();
+    });
   }
 
   recalculateFromAttributes() {

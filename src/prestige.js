@@ -359,7 +359,7 @@ export default class Prestige {
     window.location.reload();
 
     // game.currentEnemy = new Enemy(game.stage);
-    // hero.recalculateFromAttributes();
+    // hero.queueRecalculateFromAttributes();
     // updateResources();
     // updateStageUI();
     // updateRegionUI();

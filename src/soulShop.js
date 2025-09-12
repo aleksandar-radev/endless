@@ -696,7 +696,7 @@ export default class SoulShop {
 
     dataManager.saveGame();
     updateResources();
-    hero.recalculateFromAttributes();
+    hero.queueRecalculateFromAttributes();
     this.updateModalDetails();
     updateStatsAndAttributesUI();
     updatePlayerLife();

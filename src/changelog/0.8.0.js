@@ -36,6 +36,7 @@ export default function run() {
       <li>Added limit on attack speed on items</li>
       <li>Added strength/agility bonuses on axe/mace</li>
       <li>Added crit and double damage modifiers on wands/staves.</li>
+      <li>Optimized attribute recalculation by batching requests into animation frames, greatly improving responsiveness.</li>
     </ul>
 
     <span style="color:#FF0000;"> Fixes</span>
