@@ -265,6 +265,9 @@ export function applyDefaultEnemyStats(enemy) {
     }
   }
 
+  // ensure attack speed is always set
+  merged.attackSpeed = defaults.attackSpeed;
+
   return merged;
 }
 
