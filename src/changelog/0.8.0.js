@@ -29,12 +29,20 @@ export default function run() {
       <li>Added context menu options for materials in inventory.</li>
       <li>Added colors for different types of skills in skill tree.</li>
       <li>Added short number notation option for large numbers display.</li>
+      <li>Added level limits to soul shop upgrades.</li>
+      <li>Reduced soul gain by arena bosses by 3x.</li>
+      <li>added limit to the % bonuses on items. (which would be possibly surpassed with some upgrades)</li>
+      <li>Regeneration of both life and mana is now working outside of combat.</li>
+      <li>Added limit on attack speed on items</li>
+      <li>Added strength/agility bonuses on axe/mace</li>
+      <li>Added crit and double damage modifiers on wands/staves.</li>
     </ul>
 
     <span style="color:#FF0000;"> Fixes</span>
     <ul>
       <li>Equipped items no longer disappear in split view.</li>
       <li>Re-rolling or transmuting a modifier on item now properly shows the updated values (previously sometimes showed html).</li>
+      <li>Fixed bug where some enemies will not have attack speed</li>
     </ul>
   `;
 }
