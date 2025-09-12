@@ -211,6 +211,14 @@ class Game {
 
   // Add auto-save functionality to gameLoop
   gameLoop() {
+    const currentTime = Date.now();
+
+    // Regenerate life and mana every 100 ms, even outside combat
+    if (currentTime - this.lastRegen >= 100) {
+      hero.regenerate();
+      this.lastRegen = currentTime;
+    }
+
     if (!this.gameStarted) return;
 
     // Update buff timers and effects
@@ -218,18 +226,11 @@ class Game {
     skillTree.processSummons();
     updateBuffIndicators();
 
-    const currentTime = Date.now();
     playerAttack(currentTime);
     enemyAttack(currentTime);
 
     const deltaSeconds = 0.1; // gameLoop runs every 100ms
     statistics.addFightTime(deltaSeconds);
-
-    // Regenerate life and mana every 100 ms
-    if (currentTime - this.lastRegen >= 100) {
-      hero.regenerate();
-      this.lastRegen = currentTime;
-    }
 
     // Only update CrystalShop UI after stage progression
     if (this.stageChanged) {
