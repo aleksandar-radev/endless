@@ -109,14 +109,7 @@ class Game {
 
     updatePlayerLife();
 
-    let color;
-    if (heal > 0) {
-      color = 'green';
-    } else {
-      color = 'red';
-    }
     if (heal >= 1) {
-      createDamageNumber({ text: '+' + Math.floor(heal), isPlayer: true, isCritical: false, color });
       battleLog.addBattle(tp('battleLog.healedLife', { value: Math.floor(heal) }));
     }
   }
@@ -126,15 +119,13 @@ class Game {
     if (hero.stats.currentMana > hero.stats.mana) {
       hero.stats.currentMana = hero.stats.mana;
     }
-    updatePlayerLife();
-
-    let color;
-    if (mana > 0) {
-      color = 'blue';
+    if (hero.stats.currentMana < 0) {
+      hero.stats.currentMana = 0;
     }
+    updatePlayerLife();
+    skillTree.updateToggleStates();
 
     if (mana >= 1) {
-      createDamageNumber({ text: '+' + Math.floor(mana), isPlayer: true, isCritical: false, color });
       battleLog.addBattle(tp('battleLog.restoredMana', { value: Math.floor(mana) }));
     }
   }

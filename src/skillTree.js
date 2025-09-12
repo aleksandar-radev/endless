@@ -32,6 +32,7 @@ export default class SkillTree {
       this.skills[skillId] = {
         ...skill,
         ...skillData,
+        affordable: true,
       };
     });
     // always empty at start
@@ -85,18 +86,35 @@ export default class SkillTree {
     const bonuses = {};
     Object.entries(this.skills).forEach(([skillId, skillData]) => {
       const skill = this.getSkill(skillId);
-      if (skill.type() === 'toggle' && skillData.active) {
+      if (skill.type() === 'toggle' && skillData.active && skillData.affordable) {
+        const manaCost = this.getSkillManaCost(skill);
         const effects = this.getSkillEffect(skillId, skillData.level);
         Object.entries(effects).forEach(([stat, value]) => {
           bonuses[stat] = (bonuses[stat] || 0) + value;
         });
-        const manaCost = this.getSkillManaCost(skill);
         if (manaCost) {
           bonuses.manaPerHit = (bonuses.manaPerHit || 0) - manaCost;
         }
       }
     });
     return bonuses;
+  }
+
+  updateToggleStates() {
+    let changed = false;
+    Object.entries(this.skills).forEach(([skillId, skillData]) => {
+      const skill = this.getSkill(skillId);
+      if (skill.type() === 'toggle' && skillData.active) {
+        const affordable = hero.stats.currentMana >= this.getSkillManaCost(skill);
+        if (skillData.affordable !== affordable) {
+          skillData.affordable = affordable;
+          changed = true;
+        }
+      }
+    });
+    if (changed) {
+      hero.recalculateFromAttributes();
+    }
   }
 
   isSkillActive(skillId) {
@@ -291,6 +309,9 @@ export default class SkillTree {
         break;
       case 'toggle':
         this.skills[skillId].active = !this.skills[skillId].active;
+        this.skills[skillId].affordable = this.skills[skillId].active
+          ? hero.stats.currentMana >= this.getSkillManaCost(skill)
+          : false;
         hero.recalculateFromAttributes();
         break;
       case 'instant':
@@ -350,20 +371,16 @@ export default class SkillTree {
 
     const skill = this.getSkill(skillId);
     const baseEffects = this.getSkillEffect(skillId);
+    const manaCost = this.getSkillManaCost(skill);
 
-    if (!isAutoCast && hero.stats.currentMana < this.getSkillManaCost(skill)) {
+    if (!isAutoCast && hero.stats.currentMana < manaCost) {
       showManaWarning();
       return false;
     }
 
     if (skill.cooldownEndTime && skill.cooldownEndTime > Date.now()) return false;
 
-    hero.stats.currentMana -= this.getSkillManaCost(skill);
-
     const manaPerHit = (hero.stats.manaPerHit || 0) * (1 + (hero.stats.manaPerHitPercent || 0) / 100);
-    if (manaPerHit < 0) {
-      game.restoreMana(manaPerHit);
-    }
 
     const { damage, isCritical, breakdown } = hero.calculateDamageAgainst(game.currentEnemy, baseEffects);
 
@@ -412,6 +429,12 @@ export default class SkillTree {
       game.damageEnemy(damage, isCritical, breakdown, skill.name());
     }
 
+    hero.stats.currentMana -= manaCost;
+    this.updateToggleStates();
+    if (manaPerHit < 0) {
+      game.restoreMana(manaPerHit);
+    }
+
     // Set cooldown
     this.skills[skill.id].cooldownEndTime = Date.now() + this.getSkillCooldown(skill);
 
@@ -449,7 +472,8 @@ export default class SkillTree {
     const skill = this.getSkill(skillId);
 
     if (skill.type() !== 'buff' && skill.type() !== 'summon') return false;
-    if (!isAutoCast && hero.stats.currentMana < this.getSkillManaCost(skill)) {
+    const manaCost = this.getSkillManaCost(skill);
+    if (!isAutoCast && hero.stats.currentMana < manaCost) {
       showManaWarning();
       return false;
     }
@@ -458,7 +482,8 @@ export default class SkillTree {
     if (skill.cooldownEndTime && skill.cooldownEndTime > Date.now()) return false;
 
     // Apply buff
-    hero.stats.currentMana -= this.getSkillManaCost(skill);
+    hero.stats.currentMana -= manaCost;
+    this.updateToggleStates();
     const buffEndTime = Date.now() + this.getSkillDuration(skill);
     const cooldownEndTime = Date.now() + this.getSkillCooldown(skill);
 

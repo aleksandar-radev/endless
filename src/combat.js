@@ -135,9 +135,6 @@ export function playerAttack(currentTime) {
       const neverMiss = hero.stats.attackNeverMiss > 0 && !alwaysEvade;
 
       const manaPerHit = (hero.stats.manaPerHit || 0) * (1 + (hero.stats.manaPerHitPercent || 0) / 100);
-      if (manaPerHit < 0) {
-        game.restoreMana(manaPerHit);
-      }
 
       if (!neverMiss && (alwaysEvade || roll > hitChance)) {
         createDamageNumber({ text: 'MISS', color: '#888888' });
@@ -157,6 +154,9 @@ export function playerAttack(currentTime) {
         }
 
         game.damageEnemy(damage, isCritical, breakdown);
+      }
+      if (manaPerHit < 0) {
+        game.restoreMana(manaPerHit);
       }
       if (game.fightMode === 'arena') {
         updateBossUI();
