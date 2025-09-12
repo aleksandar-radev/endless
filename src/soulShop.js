@@ -14,6 +14,7 @@ export const SOUL_UPGRADE_CONFIG = {
     label: 'soulShop.upgrade.extraLife.label',
     bonus: 'soulShop.upgrade.extraLife.bonus',
     baseCost: 1000,
+    maxLevel: 5000,
     oneTime: true,
   },
   bonusGold: {
@@ -22,6 +23,7 @@ export const SOUL_UPGRADE_CONFIG = {
     baseCost: 4,
     costIncrement: 0.2,
     stat: 'bonusGoldPercent',
+    maxLevel: 2000,
   },
   bonusExperience: {
     label: 'soulShop.upgrade.bonusExperience.label',
@@ -29,6 +31,7 @@ export const SOUL_UPGRADE_CONFIG = {
     baseCost: 4,
     costIncrement: 0.2,
     stat: 'bonusExperiencePercent',
+    maxLevel: 2000,
   },
   damageBoost: {
     label: 'soulShop.upgrade.damageBoost.label',
@@ -36,6 +39,7 @@ export const SOUL_UPGRADE_CONFIG = {
     baseCost: 3,
     costIncrement: 0.2,
     stat: 'totalDamagePercent',
+    maxLevel: 6000,
   },
   attackRatingBoost: {
     label: 'soulShop.upgrade.attackRatingBoost.label',
@@ -43,6 +47,7 @@ export const SOUL_UPGRADE_CONFIG = {
     baseCost: 3,
     costIncrement: 0.2,
     stat: 'attackRatingPercent',
+    maxLevel: 5000,
   },
   lifeBoost: {
     label: 'soulShop.upgrade.lifeBoost.label',
@@ -50,6 +55,7 @@ export const SOUL_UPGRADE_CONFIG = {
     baseCost: 3,
     costIncrement: 0.2,
     stat: 'lifePercent',
+    maxLevel: 4000,
   },
   manaBoost: {
     label: 'soulShop.upgrade.manaBoost.label',
@@ -57,6 +63,7 @@ export const SOUL_UPGRADE_CONFIG = {
     baseCost: 3,
     costIncrement: 0.15,
     stat: 'manaPercent',
+    maxLevel: 5000,
   },
   armorBoost: {
     label: 'soulShop.upgrade.armorBoost.label',
@@ -64,6 +71,7 @@ export const SOUL_UPGRADE_CONFIG = {
     baseCost: 4,
     costIncrement: 0.25,
     stat: 'armorPercent',
+    maxLevel: 5000,
   },
   evasionBoost: {
     label: 'soulShop.upgrade.evasionBoost.label',
@@ -71,13 +79,15 @@ export const SOUL_UPGRADE_CONFIG = {
     baseCost: 4,
     costIncrement: 0.25,
     stat: 'evasionPercent',
+    maxLevel: 5000,
   },
   lifeRegenBoost: {
     label: 'soulShop.upgrade.lifeRegenBoost.label',
-    bonus: 0.05,
+    bonus: 0.025,
     baseCost: 4,
     costIncrement: 0.3,
     stat: 'lifeRegenPercent',
+    maxLevel: 2000,
   },
   allResistanceBoost: {
     label: 'soulShop.upgrade.allResistanceBoost.label',
@@ -85,6 +95,7 @@ export const SOUL_UPGRADE_CONFIG = {
     baseCost: 3,
     costIncrement: 0.3,
     stat: 'allResistancePercent',
+    maxLevel: 5000,
   },
   /**
    * Extra Material Drop Chance
@@ -96,7 +107,7 @@ export const SOUL_UPGRADE_CONFIG = {
     baseCost: 50,
     costIncrement: 50,
     stat: 'extraMaterialDropPercent',
-    maxLevel: 10, // Added maximum level
+    maxLevel: 10,
   },
   /**
    * Extra Material Drop Max
@@ -108,7 +119,7 @@ export const SOUL_UPGRADE_CONFIG = {
     baseCost: 300,
     costIncrement: 200,
     stat: 'extraMaterialDropMax',
-    maxLevel: 100, // Added maximum level
+    maxLevel: 100,
   },
 };
 
