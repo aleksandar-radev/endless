@@ -86,7 +86,7 @@ export const MISC_STATS = {
     base: 0,
     decimalPlaces: 0,
     item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
-    itemTags: ['misc', 'stat'],
+    itemTags: ['misc', 'stat', 'axe', 'mace'],
   },
   strengthPercent: {
     base: 0,
@@ -96,13 +96,13 @@ export const MISC_STATS = {
       max: STATS_MAX_PERCENT,
       scaling: (level, tier) => miscScaling(level, tier, PERCENT_SCALING),
     },
-    itemTags: ['misc'],
+    itemTags: ['misc', 'axe', 'mace'],
   },
   agility: {
     base: 0,
     decimalPlaces: 0,
     item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
-    itemTags: ['misc', 'stat'],
+    itemTags: ['misc', 'stat', 'axe', 'mace'],
   },
   agilityPercent: {
     base: 0,
@@ -112,7 +112,7 @@ export const MISC_STATS = {
       max: STATS_MAX_PERCENT,
       scaling: (level, tier) => miscScaling(level, tier, PERCENT_SCALING),
     },
-    itemTags: ['misc'],
+    itemTags: ['misc', 'axe', 'mace'],
   },
   vitality: {
     base: 0,

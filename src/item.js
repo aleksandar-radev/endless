@@ -86,7 +86,13 @@ export default class Item {
     const decimals = STATS[stat].decimalPlaces || 0;
     let val = Number((baseValue * tierBonus * multiplier * scale).toFixed(decimals));
 
-    const baseLimit = STATS[stat].item?.limit || Infinity;
+    const limitConfig = STATS[stat].item?.limit;
+    let baseLimit = Infinity;
+    if (typeof limitConfig === 'number') {
+      baseLimit = limitConfig;
+    } else if (limitConfig && typeof limitConfig === 'object') {
+      baseLimit = limitConfig[this.type] ?? limitConfig.default ?? Infinity;
+    }
     const percentCap = this.tier * 100;
     const limit = stat.toLowerCase().includes('percent')
       ? Math.min(baseLimit, percentCap)
@@ -111,7 +117,13 @@ export default class Item {
     const multiplier = this.getMultiplier();
     const scale = this.getLevelScale(stat, this.level);
     const decimals = STATS[stat].decimalPlaces || 0;
-    const baseLimit = STATS[stat].item?.limit || Infinity;
+    const limitConfig = STATS[stat].item?.limit;
+    let baseLimit = Infinity;
+    if (typeof limitConfig === 'number') {
+      baseLimit = limitConfig;
+    } else if (limitConfig && typeof limitConfig === 'object') {
+      baseLimit = limitConfig[this.type] ?? limitConfig.default ?? Infinity;
+    }
     const percentCap = this.tier * 100;
     const limit = stat.toLowerCase().includes('percent')
       ? Math.min(baseLimit, percentCap)
