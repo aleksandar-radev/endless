@@ -66,7 +66,7 @@ export const VAMPIRE_SKILLS = {
       lifeSteal: Math.min(scaleDownFlat(level, 0.02), 10),
       attackRating: scaleUpFlat(level, 5),
       attackRatingPercent: scaleDownFlat(level, 2),
-      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.005), 0.5),
+      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.005), 0.4),
     }),
   },
 
@@ -155,7 +155,7 @@ export const VAMPIRE_SKILLS = {
     effect: (level) => ({
       life: scaleUpFlat(level, 10, 6),
       lifePercent: scaleDownFlat(level),
-      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.005), 0.5),
+      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.005), 0.4),
     }),
   },
 
@@ -186,7 +186,6 @@ export const VAMPIRE_SKILLS = {
       lifePercent: scaleDownFlat(level, 0.34),
       strengthPercent: scaleDownFlat(level, 1.3),
       vitalityPercent: scaleDownFlat(level, 1.5),
-      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.005), 0.5),
     }),
   },
 
@@ -202,7 +201,7 @@ export const VAMPIRE_SKILLS = {
     effect: (level) => ({
       strengthPercent: scaleDownFlat(level, 1.5),
       vitalityPercent: scaleDownFlat(level, 1.4),
-      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.0075), 0.8),
+      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.0075), 0.6),
       resurrectionChance: Math.min(scaleDownFlat(level, 0.1, 5, 400), 20),
       perseverancePercent: scaleDownFlat(level),
       perseverance: scaleUpFlat(level, 2, 3, 0.1),
