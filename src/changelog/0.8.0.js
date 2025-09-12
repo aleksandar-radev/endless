@@ -44,6 +44,7 @@ export default function run() {
       <li>Equipped items no longer disappear in split view.</li>
       <li>Re-rolling or transmuting a modifier on item now properly shows the updated values (previously sometimes showed html).</li>
       <li>Fixed bug where some enemies will not have attack speed</li>
+      <li>Fixed alternation orb bug</li>
     </ul>
   `;
 }
