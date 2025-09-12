@@ -86,7 +86,11 @@ export default class Item {
     const decimals = STATS[stat].decimalPlaces || 0;
     let val = Number((baseValue * tierBonus * multiplier * scale).toFixed(decimals));
 
-    const limit = STATS[stat].item?.limit || Infinity;
+    const baseLimit = STATS[stat].item?.limit || Infinity;
+    const percentCap = this.tier * 100;
+    const limit = stat.toLowerCase().includes('percent')
+      ? Math.min(baseLimit, percentCap)
+      : baseLimit;
     val = Math.min(val, limit);
 
     this.metaData = this.metaData || {};
@@ -107,7 +111,11 @@ export default class Item {
     const multiplier = this.getMultiplier();
     const scale = this.getLevelScale(stat, this.level);
     const decimals = STATS[stat].decimalPlaces || 0;
-    const limit = STATS[stat].item?.limit || Infinity;
+    const baseLimit = STATS[stat].item?.limit || Infinity;
+    const percentCap = this.tier * 100;
+    const limit = stat.toLowerCase().includes('percent')
+      ? Math.min(baseLimit, percentCap)
+      : baseLimit;
     // Min value
     let minVal = Number((statConfig.min * tierBonus * multiplier * scale).toFixed(decimals));
     let maxVal = Number((statConfig.max * tierBonus * multiplier * scale).toFixed(decimals));
