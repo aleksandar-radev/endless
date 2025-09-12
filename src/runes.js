@@ -67,6 +67,12 @@ export default class Runes {
   equip(slotIndex, inventoryIndex) {
     const rune = this.inventory[inventoryIndex];
     if (!rune) return;
+    if (rune.unique) {
+      const existingIndex = this.equipped.findIndex((r) => r?.id === rune.id);
+      if (existingIndex !== -1 && existingIndex !== slotIndex) {
+        return;
+      }
+    }
     const previous = this.equipped[slotIndex];
     this.equipped[slotIndex] = rune;
     this.inventory[inventoryIndex] = previous || null;
