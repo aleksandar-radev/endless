@@ -1,4 +1,4 @@
-import { game, hero, inventory, training, skillTree, dataManager, statistics, runes } from './globals.js';
+import { game, hero, inventory, training, skillTree, dataManager, statistics, runes, ascension } from './globals.js';
 import { MATERIALS } from './constants/materials.js';
 import { RUNES } from './constants/runes.js';
 import SimpleCrypto from 'simple-crypto-js';
@@ -9,6 +9,7 @@ import { updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { createCombatText } from './combat.js';
 import { renderRunesUI } from './ui/runesUi.js';
+import { updateAscensionUI } from './ui/ascensionUi.js';
 import { getRuneName } from './runes.js';
 
 export const crypt = new SimpleCrypto(import.meta.env.VITE_ENCRYPT_KEY);
@@ -772,6 +773,20 @@ export function createModifyUI() {
     skillTree.addSkillPoints(100);
   });
   skillTreeSection.appendChild(addSkillPointBtn);
+
+  // Example: Add buttons to modify ascension
+  const ascensionSection = document.createElement('div');
+  ascensionSection.innerHTML = '<h3>Ascension</h3>';
+  modifyDiv.appendChild(ascensionSection);
+
+  const addAscensionPointBtn = document.createElement('button');
+  addAscensionPointBtn.textContent = 'Add 100 Ascension Points';
+  addAscensionPointBtn.addEventListener('click', () => {
+    ascension.points += 100;
+    updateAscensionUI();
+    showToast('Added 100 ascension points!');
+  });
+  ascensionSection.appendChild(addAscensionPointBtn);
 
   // Example: Add buttons to modify training
   const trainingSection = document.createElement('div');
