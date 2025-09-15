@@ -9,7 +9,7 @@ import { t, tp } from './i18n.js';
 import { ELEMENTS } from './constants/common.js';
 import { hero } from './globals.js';
 
-export const ROCKY_FIELD_ZONES = [
+export const ROCKY_FIELD_REGIONS = [
   { id: 'outskirts', name: 'Outskirts', description: 'The edge of the rocky expanse.', unlockStage: 1 },
   { id: 'boulders', name: 'Boulder Basin', description: 'Boulders scatter this wide basin.', unlockStage: 500 },
   { id: 'caves', name: 'Hidden Caves', description: 'Dark caverns hide unseen threats.', unlockStage: 1000 },
@@ -18,13 +18,13 @@ export const ROCKY_FIELD_ZONES = [
   { id: 'summit', name: 'Windy Summit', description: 'Blistering winds dominate the peak.', unlockStage: 5000 },
 ];
 
-export function getRockyFieldEnemies(zoneId) {
-  return ROCKY_FIELD_ENEMIES.filter((e) => e.zone === zoneId);
+export function getRockyFieldEnemies(regionId) {
+  return ROCKY_FIELD_ENEMIES.filter((e) => e.region === regionId);
 }
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 
-const ZONE_STAT_SCALE = {
+const REGION_STAT_SCALE = {
   outskirts: (level) => percentIncreasedByLevel(0.65, level, 25, 0.025, 3.2),
   boulders: (level) => percentIncreasedByLevel(0.6, level, 30, 0.02, 2.9),
   caves: (level) => percentIncreasedByLevel(0.55, level, 35, 0.015, 2.5),
@@ -33,7 +33,7 @@ const ZONE_STAT_SCALE = {
   summit: (level) => percentIncreasedByLevel(0.4, level, 50, 0.01, 1.8),
 };
 
-const ZONE_EXP_GOLD_SCALE = {
+const REGION_EXP_GOLD_SCALE = {
   outskirts: (level) => percentReducedByLevel(1, level, 40, 0.01, 0.1),
   boulders: (level) => percentReducedByLevel(1, level, 41, 0.009, 0.1),
   caves: (level) => percentReducedByLevel(1, level, 42, 0.008, 0.1),
@@ -42,7 +42,7 @@ const ZONE_EXP_GOLD_SCALE = {
   summit: (level) => percentReducedByLevel(0.9, level, 45, 0.005, 0.1),
 };
 
-const BASE_SCALE_PER_ZONE_AND_LEVEL = {
+const BASE_SCALE_PER_REGION_AND_LEVEL = {
   outskirts: {
     tierScale: 0.6,
     levelScale: 0.01,
@@ -71,7 +71,7 @@ const BASE_SCALE_PER_ZONE_AND_LEVEL = {
 
 const attackRatingAndEvasionScale = 0.6;
 
-const ZONE_RUNE_MAX = {
+const REGION_RUNE_MAX = {
   outskirts: 5,
   boulders: 10,
   caves: 20,
@@ -80,22 +80,22 @@ const ZONE_RUNE_MAX = {
   summit: 80,
 };
 
-export function getRockyFieldRunePercent(zoneId, stage) {
-  const max = ZONE_RUNE_MAX[zoneId] || 5;
+export function getRockyFieldRunePercent(regionId, stage) {
+  const max = REGION_RUNE_MAX[regionId] || 5;
   const capped = Math.min(stage, 5000);
   const maxPercent = 1 + Math.floor((capped / 5000) * (max - 1));
   return Math.floor(Math.random() * maxPercent) + 1;
 }
 
 export class RockyFieldEnemy {
-  constructor(zoneId, level) {
-    this.zoneId = zoneId;
+  constructor(regionId, level) {
+    this.regionId = regionId;
     this.level = level;
 
-    const zoneEnemies = getRockyFieldEnemies(zoneId);
-    const baseData = zoneEnemies[Math.floor(Math.random() * zoneEnemies.length)];
+    const regionEnemies = getRockyFieldEnemies(regionId);
+    const baseData = regionEnemies[Math.floor(Math.random() * regionEnemies.length)];
     if (!baseData) {
-      throw new Error(`No enemies defined for zone "${zoneId}"`);
+      throw new Error(`No enemies defined for region "${regionId}"`);
     }
     this.baseData = baseData;
 
@@ -105,12 +105,12 @@ export class RockyFieldEnemy {
     this.runeDrop = baseData.runeDrop || [];
 
     const stats = baseData.baseStats || {};
-    const baseScale = BASE_SCALE_PER_ZONE_AND_LEVEL[zoneId] || { tierScale: 1, levelScale: 0 };
+    const baseScale = BASE_SCALE_PER_REGION_AND_LEVEL[regionId] || { tierScale: 1, levelScale: 0 };
     const levelBonus = 1 + Math.floor(level / 20) * baseScale.levelScale;
     const statMultiplier = baseScale.tierScale * levelBonus;
 
-    this.baseScale = ZONE_STAT_SCALE[zoneId](level);
-    const xpGoldScale = ZONE_EXP_GOLD_SCALE[zoneId](level);
+    this.baseScale = REGION_STAT_SCALE[regionId](level);
+    const xpGoldScale = REGION_EXP_GOLD_SCALE[regionId](level);
 
     const speedRed = hero.stats.reduceEnemyAttackSpeedPercent || 0;
     const hpRed = hero.stats.reduceEnemyHpPercent || 0;
@@ -177,6 +177,6 @@ export class RockyFieldEnemy {
 }
 
 export default {
-  zones: ROCKY_FIELD_ZONES,
+  regions: ROCKY_FIELD_REGIONS,
   getEnemies: getRockyFieldEnemies,
 };

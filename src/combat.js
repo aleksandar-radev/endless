@@ -3,7 +3,7 @@ import {
   updateEnemyStats,
   updateResources,
   updateStageUI,
-  updateRockyFieldZoneSelector,
+  updateRockyFieldRegionSelector,
   updateBuffIndicators,
   updateTabIndicators,
   showToast,
@@ -215,7 +215,7 @@ export function playerDeath() {
       updateStageUI();
       game.currentEnemy = new RockyFieldEnemy(game.rockyFieldZone, game.rockyFieldStage);
       game.resetAllLife();
-      updateRockyFieldZoneSelector();
+      updateRockyFieldRegionSelector();
     }
 
     // reset ressurect counts
@@ -423,7 +423,7 @@ export async function defeatEnemy() {
 
     if (game.gameStarted) {
       game.incrementRockyFieldStage();
-      updateRockyFieldZoneSelector();
+      updateRockyFieldRegionSelector();
     }
 
     statistics.increment('totalEnemiesKilled');

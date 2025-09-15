@@ -10,6 +10,7 @@ import { showTooltip, positionTooltip, hideTooltip } from './ui/ui.js';
 import { REGIONS } from './constants/regions.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { ENEMY_LIST } from './constants/enemies.js';
+import { formatNamedType } from './format.js';
 
 export async function setCurrentRegion(regionId) {
   if (regionId === game.currentRegionId) return;
@@ -53,9 +54,10 @@ export function getUnlockedRegions(hero) {
 
 function getRegionTooltip(region) {
   const html = String.raw;
+  const displayName = formatNamedType(region.name, 'combatMode.subAreaType.region');
   return html`
-    <div class="tooltip-header">${t(region.name)}</div>
-    <div class="tooltip-content">${t(region.description)}</div>
+    <div class="tooltip-header">${displayName}</div>
+    <div class="tooltip-content">${region.description}</div>
     <div><strong>${t('region.unlockLevel')}:</strong> ${region.unlockLevel}</div>
     ${region.multiplier.xp != 1
     ? `<div><strong>${t('region.xpBonus')}:</strong> ${((region.multiplier.xp - 1) * 100).toFixed(0)}%</div>`

@@ -8,7 +8,7 @@ export const ROCKY_FIELD_ENEMIES = [
   {
     get name() { return t('Stone Beetle'); },
     image: '/enemies/stone-beetle.jpg',
-    zone: 'outskirts',
+    region: 'outskirts',
     baseStats: {
       life: 5000,
       damage: 375,
@@ -25,7 +25,7 @@ export const ROCKY_FIELD_ENEMIES = [
   {
     get name() { return t('Pebble Golem'); },
     image: '/enemies/pebble-golem.jpg',
-    zone: 'boulders',
+    region: 'boulders',
     baseStats: {
       life: 15000,
       damage: 1125,
@@ -42,7 +42,7 @@ export const ROCKY_FIELD_ENEMIES = [
   {
     get name() { return t('Cave Stalker'); },
     image: '/enemies/cave-stalker.jpg',
-    zone: 'caves',
+    region: 'caves',
     baseStats: {
       life: 60000,
       damage: 4500,
@@ -59,7 +59,7 @@ export const ROCKY_FIELD_ENEMIES = [
   {
     get name() { return t('Cliff Gargoyle'); },
     image: '/enemies/cliff-gargoyle.jpg',
-    zone: 'cliffs',
+    region: 'cliffs',
     baseStats: {
       life: 240000,
       damage: 18000,
@@ -76,7 +76,7 @@ export const ROCKY_FIELD_ENEMIES = [
   {
     get name() { return t('Valley Sentinel'); },
     image: '/enemies/valley-sentinel.jpg',
-    zone: 'valley',
+    region: 'valley',
     baseStats: {
       life: 1440000,
       damage: 108000,
@@ -93,7 +93,7 @@ export const ROCKY_FIELD_ENEMIES = [
   {
     get name() { return t('Rock Spirit'); },
     image: '/enemies/rock-spirit.jpg',
-    zone: 'summit',
+    region: 'summit',
     baseStats: {
       life: 14400000,
       damage: 1080000,

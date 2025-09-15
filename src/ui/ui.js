@@ -1,6 +1,6 @@
 import Enemy from '../enemy.js';
-import { ROCKY_FIELD_ZONES, RockyFieldEnemy, getRockyFieldEnemies } from '../rockyField.js';
-import { formatStatName as formatStatNameBase } from '../format.js';
+import { ROCKY_FIELD_REGIONS, RockyFieldEnemy, getRockyFieldEnemies } from '../rockyField.js';
+import { formatNamedType, formatStatName as formatStatNameBase } from '../format.js';
 import {
   game,
   hero,
@@ -612,47 +612,48 @@ export function updateTabIndicators(previousTab = null) {
 }
 
 /**
- * Render the Rocky Field zone selector and handle zone changes.
+ * Render the Rocky Field region selector and handle region changes.
  */
-function getRockyFieldZoneTooltip(zone) {
+function getRockyFieldRegionTooltip(region) {
   const html = String.raw;
+  const displayName = formatNamedType(region.name, 'combatMode.subAreaType.region');
 
   return html`
-    <div class="tooltip-header">${zone.name}</div>
-    ${zone.description ? `<div class="tooltip-content">${zone.description}</div>` : ''}
-    ${zone.unlockStage ? `<div><strong>${t('rockyField.unlockStage')}:</strong> ${zone.unlockStage}</div>` : ''}
+    <div class="tooltip-header">${displayName}</div>
+    ${region.description ? `<div class="tooltip-content">${region.description}</div>` : ''}
+    ${region.unlockStage ? `<div><strong>${t('rockyField.unlockStage')}:</strong> ${region.unlockStage}</div>` : ''}
   `;
 }
 
-export function updateRockyFieldZoneSelector() {
-  const container = document.getElementById('rocky-field-zone-selector');
+export function updateRockyFieldRegionSelector() {
+  const container = document.getElementById('rocky-field-region-selector');
   if (!container) return;
   container.innerHTML = '';
 
-  ROCKY_FIELD_ZONES.forEach((zone) => {
-    const hasEnemies = getRockyFieldEnemies(zone.id).length > 0;
-    const unlocked = !zone.unlockStage || game.rockyFieldHighestStage >= zone.unlockStage;
+  ROCKY_FIELD_REGIONS.forEach((region) => {
+    const hasEnemies = getRockyFieldEnemies(region.id).length > 0;
+    const unlocked = !region.unlockStage || game.rockyFieldHighestStage >= region.unlockStage;
     const btn = document.createElement('button');
-    btn.className = 'region-btn' + (zone.id === game.rockyFieldZone ? ' selected' : '');
-    btn.textContent = zone.name;
+    btn.className = 'region-btn' + (region.id === game.rockyFieldZone ? ' selected' : '');
+    btn.textContent = region.name;
     btn.disabled = !hasEnemies || !unlocked;
 
-    btn.addEventListener('mouseenter', (e) => showTooltip(getRockyFieldZoneTooltip(zone), e));
+    btn.addEventListener('mouseenter', (e) => showTooltip(getRockyFieldRegionTooltip(region), e));
     btn.addEventListener('mousemove', positionTooltip);
     btn.addEventListener('mouseleave', hideTooltip);
 
     if (hasEnemies && unlocked) {
       btn.onclick = async () => {
         const confirmed = await showConfirmDialog(
-          `Are you sure you want to change to ${zone.name}? That will reset your stage progress and will find you a new enemy`,
+          `Are you sure you want to change to ${region.name}? That will reset your stage progress and will find you a new enemy`,
         );
         if (!confirmed) return;
-        game.rockyFieldZone = zone.id;
+        game.rockyFieldZone = region.id;
         game.rockyFieldStage = 1;
         game.currentEnemy = new RockyFieldEnemy(game.rockyFieldZone, game.rockyFieldStage);
         updateEnemyStats();
         updateStageUI();
-        updateRockyFieldZoneSelector();
+        updateRockyFieldRegionSelector();
       };
     }
 
@@ -708,10 +709,10 @@ function renderRegionPanel(region) {
     const panel = document.createElement('div');
     panel.id = 'rocky-field-panel';
     panel.classList.add('region-panel');
-    panel.innerHTML = `<div id="rocky-field-zone-selector"></div>${baseHtml}`;
+    panel.innerHTML = `<div id="rocky-field-region-selector"></div>${baseHtml}`;
     container.appendChild(panel);
 
-    updateRockyFieldZoneSelector();
+    updateRockyFieldRegionSelector();
     updateEnemyStats();
     updateResources();
   } else {

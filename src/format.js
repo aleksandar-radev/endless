@@ -1,4 +1,4 @@
-import { t } from './i18n.js';
+import { t, tp } from './i18n.js';
 import { ELEMENTS } from './constants/common.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
@@ -36,4 +36,8 @@ export function formatStatName(stat, shortElementalNames = false) {
     .replace(/^./, (str) => str.toUpperCase())
     .replace(/Percent$/, '%')
     .trim();
+}
+
+export function formatNamedType(name, typeKey) {
+  return tp('combatMode.subAreaFormat', { name, type: t(typeKey) });
 }

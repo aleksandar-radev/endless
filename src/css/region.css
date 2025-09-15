@@ -6,7 +6,7 @@
   margin-top: 8px;
 }
 
-#rocky-field-zone-selector {
+#rocky-field-region-selector {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 6px;
@@ -51,9 +51,19 @@
 
 .region-tabs {
   display: flex;
-  gap: 0.5rem;
-  height: 30px;
+  align-items: center;
+  gap: 0.75rem;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.region-tabs-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  white-space: nowrap;
 }
 
 .region-panel {
