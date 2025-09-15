@@ -46,6 +46,12 @@ const OPTION_TOOLTIPS = {
   showCombatTextLabel: () => html`Show damage numbers and other combat text`,
   stageSkipLabel: () => html`Skip ahead by this many stages after each kill`,
   stageSkipInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnCrystal')}`,
+  stageLockToggleLabel: () => html`Enable or disable locking stage progression`,
+  stageLockToggle: (isPurchased) =>
+    html`${isPurchased() ? '' : t('options.stageLock.disabledTooltip')}`,
+  stageLockStageLabel: () => html`Stage at which progression will lock`,
+  stageLockStageInput: (isPurchased) =>
+    html`${isPurchased() ? '' : t('options.stageLock.disabledTooltip')}`,
   arenaBossSkipLabel: () => html`${t('options.arenaBossSkip.tooltip')}`,
   arenaBossSkipInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnAscension')}`,
   resetStageSkipLabel: () => html`Stage where stage skip resets to zero`,
@@ -93,6 +99,9 @@ export class Options {
     this.arenaBossSkip = data.arenaBossSkip || 0;
     // Add resetStageSkip option, default to 0 (disabled)
     this.resetStageSkip = data.resetStageSkip || 0;
+    // Option to lock stage progression at a chosen stage
+    this.stageLockEnabled = data.stageLockEnabled ?? false;
+    this.stageLock = data.stageLock || 0;
     // Add soundVolume option, default to 0
     this.soundVolume = typeof data.soundVolume === 'number' ? data.soundVolume : 0;
     // Remember salvage preference across prestiges
@@ -279,6 +288,8 @@ export class Options {
     gameContent.appendChild(this._createStageControlsInlineOption());
     gameContent.appendChild(this._createStartingStageOption());
     gameContent.appendChild(this._createStageSkipOption());
+    gameContent.appendChild(this._createStageLockToggleOption());
+    gameContent.appendChild(this._createStageLockInputOption());
     gameContent.appendChild(this._createArenaBossSkipOption());
     gameContent.appendChild(this._createResetStageSkipOption());
     gameContent.appendChild(this._createRateCountersOption());
@@ -611,6 +622,102 @@ export class Options {
     return wrapper;
   }
 
+  _createStageLockToggleOption() {
+    const purchased = !!crystalShop.crystalUpgrades?.stageLock;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="stage-lock-toggle" class="stage-lock-toggle-label" data-i18n="options.stageLock">Stage Lock:</label>
+      <input
+        type="checkbox"
+        id="stage-lock-toggle"
+        class="stage-lock-toggle"
+        ${this.stageLockEnabled ? 'checked' : ''}
+        ${purchased ? '' : 'disabled'}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const label = wrapper.querySelector('.stage-lock-toggle-label');
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'stageLockToggleLabel');
+    attachTooltip(checkbox, 'stageLockToggle', () => !!crystalShop.crystalUpgrades?.stageLock);
+    toggleBtn.addEventListener('click', () => {
+      if (checkbox.disabled) return;
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.stageLockEnabled = checkbox.checked;
+      dataManager.saveGame();
+    });
+    this._stageLockToggle = checkbox;
+    this._stageLockToggleWrapper = wrapper;
+    this.updateStageLockOption();
+    return wrapper;
+  }
+
+  _createStageLockInputOption() {
+    const purchased = !!crystalShop.crystalUpgrades?.stageLock;
+    const value = this.stageLock || 0;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="stage-lock-input" class="stage-lock-label" data-i18n="options.stageLockStage">Lock at Stage:</label>
+      <input
+        type="number"
+        id="stage-lock-input"
+        class="stage-lock-input"
+        min="0"
+        value="${value}"
+        ${purchased ? '' : 'disabled'}
+      />
+      <button class="max-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.max">Max</button>
+      <button class="apply-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.apply">Apply</button>
+    `;
+    const label = wrapper.querySelector('.stage-lock-label');
+    const input = wrapper.querySelector('input');
+    const maxBtn = wrapper.querySelector('.max-btn');
+    const applyBtn = wrapper.querySelector('.apply-btn');
+    attachTooltip(label, 'stageLockStageLabel');
+    attachTooltip(input, 'stageLockStageInput', () => !!crystalShop.crystalUpgrades?.stageLock);
+
+    this._stageLockInput = input;
+    this._stageLockWrapper = wrapper;
+
+    applyBtn.onmouseenter = () => applyBtn.classList.add('hover');
+    applyBtn.onmouseleave = () => applyBtn.classList.remove('hover');
+    if (maxBtn) {
+      maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
+      maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
+      maxBtn.onclick = () => {
+        const highest = Math.max(
+          ...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0),
+        );
+        input.value = highest || 0;
+        input.dispatchEvent(new Event('input'));
+      };
+    }
+
+    input.addEventListener('input', () => {
+      let val = parseInt(input.value, 10);
+      if (isNaN(val) || val < 0) val = 0;
+      input.value = val;
+    });
+
+    applyBtn.onclick = () => {
+      let val = parseInt(input.value, 10);
+      if (isNaN(val) || val < 0) val = 0;
+      this.stageLock = val;
+      dataManager.saveGame();
+      showToast(t('options.toast.stageLockApplied'), 'success');
+    };
+
+    this.updateStageLockOption();
+
+    return wrapper;
+  }
+
   _createArenaBossSkipOption() {
     let max = ascension.getBonuses()?.arenaBossSkip || 0;
     const value = this.arenaBossSkip != null ? this.arenaBossSkip : 0;
@@ -713,6 +820,22 @@ export class Options {
       } else {
         inlineInput.value = v;
       }
+    }
+  }
+
+  updateStageLockOption() {
+    const purchased = !!crystalShop.crystalUpgrades?.stageLock;
+    if (this._stageLockToggle) {
+      this._stageLockToggle.disabled = !purchased;
+      const toggleBtn = this._stageLockToggleWrapper?.querySelector('.toggle-btn');
+      if (toggleBtn) toggleBtn.classList.toggle('disabled', !purchased);
+    }
+    if (this._stageLockInput) {
+      this._stageLockInput.disabled = !purchased;
+      const applyBtn = this._stageLockWrapper?.querySelector('.apply-btn');
+      const maxBtn = this._stageLockWrapper?.querySelector('.max-btn');
+      if (applyBtn) applyBtn.disabled = !purchased;
+      if (maxBtn) maxBtn.disabled = !purchased;
     }
   }
 

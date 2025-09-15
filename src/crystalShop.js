@@ -104,6 +104,14 @@ const CRYSTAL_UPGRADE_CONFIG = {
     bulkModal: true,
     category: 'stage',
   },
+  stageLock: {
+    label: 'crystalShop.upgrade.stageLock.label',
+    bonus: 'crystalShop.upgrade.stageLock.bonus',
+    bonusLabel: 'crystalShop.upgrade.stageLock.bonusLabel',
+    baseCost: 1000,
+    oneTime: true,
+    category: 'stage',
+  },
   resetStageSkip: {
     label: 'crystalShop.upgrade.resetStageSkip.label',
     bonus: 'crystalShop.upgrade.resetStageSkip.bonus',
@@ -729,6 +737,10 @@ export default class CrystalShop {
 
     if (stat === 'autoSortInventory') {
       options.updateAutoSortInventoryOption();
+    }
+
+    if (stat === 'stageLock') {
+      options.updateStageLockOption();
     }
   }
 

@@ -44,13 +44,24 @@ class Game {
     if (stageSkip > 0 && resetAt > 0 && this.stage >= resetAt) {
       stageSkip = 0;
     }
-    this.stage += 1 + stageSkip;
+    let newStage = this.stage + 1 + stageSkip;
 
-    const region = getCurrentRegion();
-    const tier = region.tier || 1;
-    const current = statistics.highestStages?.[tier] || 0;
-    if (this.stage > current) {
-      statistics.set('highestStages', tier, this.stage);
+    if (options.stageLockEnabled && options.stageLock > 0) {
+      if (this.stage >= options.stageLock) {
+        newStage = this.stage;
+      } else if (newStage > options.stageLock) {
+        newStage = options.stageLock;
+      }
+    }
+
+    if (newStage !== this.stage) {
+      this.stage = newStage;
+      const region = getCurrentRegion();
+      const tier = region.tier || 1;
+      const current = statistics.highestStages?.[tier] || 0;
+      if (this.stage > current) {
+        statistics.set('highestStages', tier, this.stage);
+      }
     }
 
     updateStageUI();
