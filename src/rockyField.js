@@ -1,4 +1,4 @@
-import { ROCKY_FIELD_ENEMIES } from './constants/enemies/rocky_field.js';
+import { ROCKY_FIELD_ENEMIES, ROCKY_FIELD_REGION_BASE_STATS } from './constants/rocky_field.js';
 import {
   percentIncreasedByLevel,
   percentReducedByLevel,
@@ -19,7 +19,7 @@ export const ROCKY_FIELD_REGIONS = [
 ];
 
 export function getRockyFieldEnemies(regionId) {
-  return ROCKY_FIELD_ENEMIES.filter((e) => e.region === regionId);
+  return ROCKY_FIELD_ENEMIES.filter((e) => Array.isArray(e.tags) && e.tags.includes(regionId));
 }
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
@@ -104,7 +104,18 @@ export class RockyFieldEnemy {
     this.special = baseData.special || [];
     this.runeDrop = baseData.runeDrop || [];
 
-    const stats = baseData.baseStats || {};
+    const regionBaseStats = ROCKY_FIELD_REGION_BASE_STATS[regionId];
+    if (!regionBaseStats) {
+      throw new Error(`No base stats defined for region "${regionId}"`);
+    }
+    const multipliers = baseData.multiplier || {};
+    const getStatValue = (stat, defaultValue = 0) => {
+      const base = regionBaseStats[stat];
+      const baseValue = base === undefined ? defaultValue : base;
+      const mult = multipliers[stat];
+      const multiplier = mult === undefined ? 1 : mult;
+      return baseValue * multiplier;
+    };
     const baseScale = BASE_SCALE_PER_REGION_AND_LEVEL[regionId] || { tierScale: 1, levelScale: 0 };
     const levelBonus = 1 + Math.floor(level / 20) * baseScale.levelScale;
     const statMultiplier = baseScale.tierScale * levelBonus;
@@ -116,35 +127,36 @@ export class RockyFieldEnemy {
     const hpRed = hero.stats.reduceEnemyHpPercent || 0;
     const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
 
-    this.attackSpeed = (stats.attackSpeed || 1) * (1 - speedRed);
-    this.life = scaleStat((stats.life || 0) * statMultiplier, level, 0, 0, 0, this.baseScale) * (1 - hpRed);
+    this.attackSpeed = getStatValue('attackSpeed', 1) * (1 - speedRed);
+    this.life = scaleStat(getStatValue('life') * statMultiplier, level, 0, 0, 0, this.baseScale) * (1 - hpRed);
     this.damage = Math.max(
-      scaleStat((stats.damage || 0) * statMultiplier, level, 0, 0, 0, this.baseScale) * (1 - dmgRed),
+      scaleStat(getStatValue('damage') * statMultiplier, level, 0, 0, 0, this.baseScale) * (1 - dmgRed),
       1,
     );
-    this.armor = scaleStat((stats.armor || 0) * statMultiplier, level, 0, 0, 0, this.baseScale);
+    this.armor = scaleStat(getStatValue('armor') * statMultiplier, level, 0, 0, 0, this.baseScale);
     this.evasion =
-      scaleStat((stats.evasion || 0) * statMultiplier, level, 0, 0, 0, this.baseScale) *
+      scaleStat(getStatValue('evasion') * statMultiplier, level, 0, 0, 0, this.baseScale) *
       attackRatingAndEvasionScale;
     this.attackRating =
-      scaleStat((stats.attackRating || 0) * statMultiplier, level, 0, 0, 0, this.baseScale) *
+      scaleStat(getStatValue('attackRating') * statMultiplier, level, 0, 0, 0, this.baseScale) *
       attackRatingAndEvasionScale;
-    this.xp = scaleStat((stats.xp || 0) * statMultiplier, level, 0, 0, 0, this.baseScale) * xpGoldScale;
-    this.gold = scaleStat((stats.gold || 0) * statMultiplier, level, 0, 0, 0, this.baseScale) * xpGoldScale;
+    this.xp = scaleStat(getStatValue('xp') * statMultiplier, level, 0, 0, 0, this.baseScale) * xpGoldScale;
+    this.gold = scaleStat(getStatValue('gold') * statMultiplier, level, 0, 0, 0, this.baseScale) * xpGoldScale;
 
     ELEMENT_IDS.forEach((id) => {
+      const elementDamage = getStatValue(`${id}Damage`);
       const dmgBase = scaleStat(
-        (stats[`${id}Damage`] || 0) * statMultiplier,
+        elementDamage * statMultiplier,
         level,
         0,
         0,
         0,
         this.baseScale,
       );
-      this[`${id}Damage`] = dmgBase > 0 ? Math.max(dmgBase * (1 - dmgRed), 1) : 0;
+      this[`${id}Damage`] = elementDamage > 0 ? Math.max(dmgBase * (1 - dmgRed), 1) : 0;
 
       this[`${id}Resistance`] = scaleStat(
-        (stats[`${id}Resistance`] || 0) * statMultiplier,
+        getStatValue(`${id}Resistance`) * statMultiplier,
         level,
         0,
         0,
