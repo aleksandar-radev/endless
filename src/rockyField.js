@@ -1,4 +1,4 @@
-import { ROCKY_FIELD_ENEMIES } from './constants/rocky_field.js';
+import { ROCKY_FIELD_BASE_STATS, ROCKY_FIELD_ENEMIES } from './constants/rocky_field.js';
 import {
   percentIncreasedByLevel,
   percentReducedByLevel,
@@ -10,76 +10,103 @@ import { ELEMENTS } from './constants/common.js';
 import { hero } from './globals.js';
 
 export const ROCKY_FIELD_REGIONS = [
-  { id: 'outskirts', name: 'Outskirts', description: 'The edge of the rocky expanse.', unlockStage: 1 },
-  { id: 'boulders', name: 'Boulder Basin', description: 'Boulders scatter this wide basin.', unlockStage: 500 },
-  { id: 'caves', name: 'Hidden Caves', description: 'Dark caverns hide unseen threats.', unlockStage: 1000 },
-  { id: 'cliffs', name: 'Sheer Cliffs', description: 'Treacherous cliffs tower above.', unlockStage: 2000 },
-  { id: 'valley', name: 'Silent Valley', description: 'A quiet valley with lurking danger.', unlockStage: 4000 },
-  { id: 'summit', name: 'Windy Summit', description: 'Blistering winds dominate the peak.', unlockStage: 5000 },
+  {
+    id: 'outskirts',
+    name: 'Outskirts',
+    description: 'The edge of the rocky expanse.',
+    unlockStage: 1,
+    multiplier: {
+      life: 1,
+      damage: 1,
+      armor: 1,
+      attackSpeed: 1,
+      attackRating: 1,
+      evasion: 1,
+      xp: 1,
+      gold: 1,
+    },
+  },
+  {
+    id: 'boulders',
+    name: 'Boulder Basin',
+    description: 'Boulders scatter this wide basin.',
+    unlockStage: 500,
+    multiplier: {
+      life: 3,
+      damage: 3,
+      armor: 3,
+      attackSpeed: 0.8,
+      attackRating: 3,
+      evasion: 3,
+      xp: 3,
+      gold: 3,
+    },
+  },
+  {
+    id: 'caves',
+    name: 'Hidden Caves',
+    description: 'Dark caverns hide unseen threats.',
+    unlockStage: 1000,
+    multiplier: {
+      life: 12,
+      damage: 12,
+      armor: 12,
+      attackSpeed: 1,
+      attackRating: 12,
+      evasion: 12,
+      xp: 12,
+      gold: 12,
+    },
+  },
+  {
+    id: 'cliffs',
+    name: 'Sheer Cliffs',
+    description: 'Treacherous cliffs tower above.',
+    unlockStage: 2000,
+    multiplier: {
+      life: 48,
+      damage: 48,
+      armor: 48,
+      attackSpeed: 0.9,
+      attackRating: 48,
+      evasion: 48,
+      xp: 48,
+      gold: 48,
+    },
+  },
+  {
+    id: 'valley',
+    name: 'Silent Valley',
+    description: 'A quiet valley with lurking danger.',
+    unlockStage: 4000,
+    multiplier: {
+      life: 288,
+      damage: 288,
+      armor: 288,
+      attackSpeed: 1,
+      attackRating: 288,
+      evasion: 288,
+      xp: 288,
+      gold: 288,
+    },
+  },
+  {
+    id: 'summit',
+    name: 'Windy Summit',
+    description: 'Blistering winds dominate the peak.',
+    unlockStage: 5000,
+    multiplier: {
+      life: 2880,
+      damage: 2880,
+      armor: 2880,
+      attackSpeed: 1.2,
+      attackRating: 2880,
+      evasion: 2880,
+      xp: 2880,
+      gold: 2880,
+    },
+  },
 ];
-
-const ROCKY_FIELD_REGION_BASE_STATS = {
-  outskirts: {
-    life: 5000,
-    damage: 375,
-    armor: 313,
-    attackSpeed: 1,
-    attackRating: 625,
-    evasion: 313,
-    xp: 500,
-    gold: 313,
-  },
-  boulders: {
-    life: 15000,
-    damage: 1125,
-    armor: 938,
-    attackSpeed: 0.8,
-    attackRating: 1875,
-    evasion: 938,
-    xp: 1500,
-    gold: 938,
-  },
-  caves: {
-    life: 60000,
-    damage: 4500,
-    armor: 3750,
-    attackSpeed: 1,
-    attackRating: 7500,
-    evasion: 3750,
-    xp: 6000,
-    gold: 3750,
-  },
-  cliffs: {
-    life: 240000,
-    damage: 18000,
-    armor: 15000,
-    attackSpeed: 0.9,
-    attackRating: 30000,
-    evasion: 15000,
-    xp: 24000,
-    gold: 15000,
-  },
-  valley: {
-    life: 1440000,
-    damage: 108000,
-    armor: 90000,
-    attackSpeed: 1,
-    attackRating: 180000,
-    evasion: 90000,
-    xp: 144000,
-    gold: 90000,
-  },
-  summit: {
-    life: 14400000,
-    damage: 1080000,
-    armor: 900000,
-    attackSpeed: 1.2,
-    attackRating: 1800000,
-    evasion: 900000,
-    xp: 1440000,
-    gold: 900000,
-  },
-};
 
 export function getRockyFieldEnemies(regionId) {
   return ROCKY_FIELD_ENEMIES.filter((e) => Array.isArray(e.tags) && e.tags.includes(regionId));
@@ -167,17 +194,25 @@ export class RockyFieldEnemy {
     this.special = baseData.special || [];
     this.runeDrop = baseData.runeDrop || [];
 
-    const regionBaseStats = ROCKY_FIELD_REGION_BASE_STATS[regionId];
-    if (!regionBaseStats) {
-      throw new Error(`No base stats defined for region "${regionId}"`);
+    const region = ROCKY_FIELD_REGIONS.find((r) => r.id === regionId);
+    if (!region) {
+      throw new Error(`No region defined for "${regionId}"`);
     }
-    const multipliers = baseData.multiplier || {};
+    const regionMultipliers = region.multiplier;
+    if (!regionMultipliers) {
+      throw new Error(`No multipliers defined for region "${regionId}"`);
+    }
+    const enemyMultipliers = baseData.multiplier || {};
+    const getMultiplierValue = (source, stat) => {
+      const value = source[stat];
+      return value === undefined ? 1 : value;
+    };
     const getStatValue = (stat, defaultValue = 0) => {
-      const base = regionBaseStats[stat];
+      const base = ROCKY_FIELD_BASE_STATS[stat];
       const baseValue = base === undefined ? defaultValue : base;
-      const mult = multipliers[stat];
-      const multiplier = mult === undefined ? 1 : mult;
-      return baseValue * multiplier;
+      const regionMultiplier = getMultiplierValue(regionMultipliers, stat);
+      const enemyMultiplier = getMultiplierValue(enemyMultipliers, stat);
+      return baseValue * regionMultiplier * enemyMultiplier;
     };
     const baseScale = BASE_SCALE_PER_REGION_AND_LEVEL[regionId] || { tierScale: 1, levelScale: 0 };
     const levelBonus = 1 + Math.floor(level / 20) * baseScale.levelScale;
