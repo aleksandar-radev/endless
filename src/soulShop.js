@@ -1,4 +1,4 @@
-import { dataManager, hero, options, runes } from './globals.js';
+import { dataManager, hero, options, runes, ascension } from './globals.js';
 import { updateResources, showToast, updatePlayerLife, formatNumber } from './ui/ui.js';
 import { handleSavedData } from './functions.js';
 import { closeModal, createModal } from './ui/modal.js';
@@ -146,7 +146,9 @@ export default class SoulShop {
   getSoulUpgradeCost(config, level = 0) {
     const base = config.baseCost + (config.costIncrement || 0) * level;
     const bonus = runes?.getBonusEffects?.() || {};
-    const reduction = bonus.soulShopCostReduction || 0;
+    const runeReduction = bonus.soulShopCostReduction || 0;
+    const ascRed = ascension?.getBonuses?.()?.soulShopCostReduction || 0;
+    const reduction = runeReduction + ascRed;
     return Math.round(base * (1 - reduction / 100));
   }
 
@@ -684,7 +686,11 @@ export default class SoulShop {
         showToast(t('common.alreadyPurchased') || 'Already purchased!', 'error');
         return;
       }
-      const cost = config.baseCost;
+      let cost = config.baseCost;
+      {
+        const ascRed = ascension?.getBonuses?.()?.soulShopCostReduction || 0;
+        cost = Math.round(cost * (1 - ascRed / 100));
+      }
       if (hero.souls < cost) {
         showToast(t('common.notEnoughSouls') || 'Not enough souls!', 'error');
         return;

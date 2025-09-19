@@ -1,11 +1,15 @@
 import {
   hero,
+  game,
   dataManager,
   setGlobals,
   prestige,
   ascension as ascensionState,
   options,
   runes,
+  training,
+  crystalShop,
+  soulShop,
 } from './globals.js';
 import { handleSavedData } from './functions.js';
 import { showToast } from './ui/ui.js';
@@ -40,6 +44,37 @@ export const ASCENSION_CATEGORIES = {
         label: t('ascension.upgrade.elementalDamagePercent'),
         bonus: 0.3,
         stat: 'elementalDamagePercent',
+      },
+      // New offensive upgrades
+      critChance: {
+        label: t('ascension.upgrade.critChance'),
+        bonus: 0.5,
+        stat: 'critChance',
+      },
+      critDamage: {
+        label: t('ascension.upgrade.critDamage'),
+        bonus: 0.02,
+        stat: 'critDamage',
+      },
+      attackRating: {
+        label: t('ascension.upgrade.attackRating'),
+        bonus: 200,
+        stat: 'attackRating',
+      },
+      chanceToHitPercent: {
+        label: t('ascension.upgrade.chanceToHitPercent'),
+        bonus: 0.01,
+        stat: 'chanceToHitPercent',
+      },
+      armorPenetration: {
+        label: t('ascension.upgrade.armorPenetration'),
+        bonus: 25,
+        stat: 'armorPenetration',
+      },
+      elementalPenetration: {
+        label: t('ascension.upgrade.elementalPenetration'),
+        bonus: 10,
+        stat: 'elementalPenetration',
       },
     },
   },
@@ -99,6 +134,27 @@ export const ASCENSION_CATEGORIES = {
         bonus: 0.25,
         stat: 'manaPercent',
         cost: (lvl) => 1 + lvl,
+      },
+      // New defensive upgrades
+      blockChance: {
+        label: t('ascension.upgrade.blockChance'),
+        bonus: 0.25,
+        stat: 'blockChance',
+      },
+      lifeRegen: {
+        label: t('ascension.upgrade.lifeRegen'),
+        bonus: 2.5,
+        stat: 'lifeRegen',
+      },
+      lifeRegenPercent: {
+        label: t('ascension.upgrade.lifeRegenPercent'),
+        bonus: 0.01,
+        stat: 'lifeRegenPercent',
+      },
+      allResistancePercent: {
+        label: t('ascension.upgrade.allResistancePercent'),
+        bonus: 0.01,
+        stat: 'allResistancePercent',
       },
     },
   },
@@ -201,6 +257,79 @@ export const ASCENSION_CATEGORIES = {
         cost: (lvl) => 5 + lvl,
         maxLevel: 50,
       },
+      reduceEnemyAttackSpeedPercent: {
+        label: t('ascension.upgrade.reduceEnemyAttackSpeedPercent'),
+        bonus: 0.01,
+        stat: 'reduceEnemyAttackSpeedPercent',
+        cost: (lvl) => 5 + lvl,
+        maxLevel: 50,
+      },
+      // Cost reduction upgrades (percent values; combined additively with rune bonuses)
+      trainingCostReduction: {
+        label: t('ascension.upgrade.trainingCostReduction'),
+        bonus: 1,
+        effect: 'trainingCostReduction',
+        cost: (lvl) => 10 + 2 * lvl,
+        maxLevel: 50,
+      },
+      buildingCostReduction: {
+        label: t('ascension.upgrade.buildingCostReduction'),
+        bonus: 2,
+        effect: 'buildingCostReduction',
+        cost: (lvl) => 10 + 2 * lvl,
+        maxLevel: 50,
+      },
+      crystalShopCostReduction: {
+        label: t('ascension.upgrade.crystalShopCostReduction'),
+        bonus: 1,
+        effect: 'crystalShopCostReduction',
+        cost: (lvl) => 12 + 3 * lvl,
+        maxLevel: 50,
+      },
+      soulShopCostReduction: {
+        label: t('ascension.upgrade.soulShopCostReduction'),
+        bonus: 1,
+        effect: 'soulShopCostReduction',
+        cost: (lvl) => 12 + 3 * lvl,
+        maxLevel: 50,
+      },
+      // Cap extension upgrades
+      attackSpeedCap: {
+        label: t('ascension.upgrade.attackSpeedCap'),
+        bonus: 0.1,
+        effect: 'attackSpeedCap',
+        cost: (lvl) => 20 + 5 * lvl,
+        maxLevel: 20,
+      },
+      critChanceCap: {
+        label: t('ascension.upgrade.critChanceCap'),
+        bonus: 2,
+        effect: 'critChanceCap',
+        cost: (lvl) => 20 + 5 * lvl,
+        maxLevel: 25,
+      },
+      blockChanceCap: {
+        label: t('ascension.upgrade.blockChanceCap'),
+        bonus: 2,
+        effect: 'blockChanceCap',
+        cost: (lvl) => 20 + 5 * lvl,
+        maxLevel: 25,
+      },
+      resurrectionChanceCap: {
+        label: t('ascension.upgrade.resurrectionChanceCap'),
+        bonus: 5,
+        effect: 'resurrectionChanceCap',
+        cost: (lvl) => 20 + 5 * lvl,
+        maxLevel: 10,
+      },
+      // Resource gain
+      crystalGainPercent: {
+        label: t('ascension.upgrade.crystalGainPercent'),
+        bonus: 1,
+        effect: 'crystalGainPercent',
+        cost: (lvl) => 10 + lvl,
+        maxLevel: 100,
+      },
     },
   },
 };
@@ -260,9 +389,12 @@ export default class Ascension {
     const cost = typeof cfg.cost === 'function' ? cfg.cost(current) : cfg.cost || 1;
     const max = cfg.maxLevel || Infinity;
     if (this.points < cost || current >= max) return false;
+    const prevLife = hero?.stats?.life || 0;
+    const prevMana = hero?.stats?.mana || 0;
     this.points -= cost;
     this.upgrades[key] = current + 1;
-    hero.queueRecalculateFromAttributes();
+    // Recalculate immediately so effects apply right away
+    hero.recalculateFromAttributes();
     if (cfg.stat === 'startingGold') {
       hero.gainGold(cfg.bonus);
     }
@@ -272,6 +404,15 @@ export default class Ascension {
     if (cfg.stat === 'startingSouls') {
       hero.gainSouls(cfg.bonus);
     }
+    // If max life/mana increased due to this purchase, heal/restore the delta immediately
+    if (cfg.stat === 'life' || cfg.stat === 'lifePercent') {
+      const delta = Math.max(0, (hero?.stats?.life || 0) - prevLife);
+      if (delta > 0) game.healPlayer(delta);
+    }
+    if (cfg.stat === 'mana' || cfg.stat === 'manaPercent') {
+      const deltaM = Math.max(0, (hero?.stats?.mana || 0) - prevMana);
+      if (deltaM > 0) game.restoreMana(deltaM);
+    }
     dataManager.saveGame();
     if (key === 'arenaBossSkip') {
       options.updateArenaBossSkipOption();
@@ -279,6 +420,12 @@ export default class Ascension {
     if (key === 'runeSlots') {
       runes.ensureEquipSlots(BASE_RUNE_SLOTS + this.getBonuses().runeSlots);
     }
+    // Update shop/training UIs to reflect new cost reductions immediately
+    try {
+      training?.updateTrainingAffordability?.('gold-upgrades');
+      crystalShop?.initializeCrystalShopUI?.();
+      soulShop?.updateSoulShopUI?.();
+    } catch {}
     return true;
   }
 

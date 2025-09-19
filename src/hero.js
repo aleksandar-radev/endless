@@ -136,7 +136,9 @@ export default class Hero {
 
   gainCrystals(amount) {
     const bonuses = runes?.getBonusEffects?.() || {};
-    const finalAmount = Math.floor(amount * (1 + (bonuses.crystalGainPercent || 0) / 100));
+    const ascBonuses = ascension?.getBonuses?.() || {};
+    const gainPct = (bonuses.crystalGainPercent || 0) + (ascBonuses.crystalGainPercent || 0);
+    const finalAmount = Math.floor(amount * (1 + gainPct / 100));
     statistics.increment('totalCrystalsEarned', null, finalAmount);
     this.crystals += finalAmount;
     if (game.activeTab === 'crystalShop') {
@@ -486,10 +488,22 @@ export default class Hero {
         value = decimals > 0 ? Number(value.toFixed(decimals)) : Math.floor(value);
 
         // Apply caps
-        if (stat === 'blockChance') value = Math.min(value, 75);
-        if (stat === 'critChance') value = Math.min(value, 100);
-        if (stat === 'attackSpeed') value = Math.min(value, 5);
-        if (stat === 'resurrectionChance') value = Math.min(value, 50);
+        if (stat === 'blockChance') {
+          const cap = 75 + ((ascensionBonuses.blockChanceCap || 0) | 0);
+          value = Math.min(value, cap);
+        }
+        if (stat === 'critChance') {
+          const cap = 100 + ((ascensionBonuses.critChanceCap || 0) | 0);
+          value = Math.min(value, cap);
+        }
+        if (stat === 'attackSpeed') {
+          const cap = 5 + (ascensionBonuses.attackSpeedCap || 0);
+          value = Math.min(value, cap);
+        }
+        if (stat === 'resurrectionChance') {
+          const cap = 50 + ((ascensionBonuses.resurrectionChanceCap || 0) | 0);
+          value = Math.min(value, cap);
+        }
         if (stat === 'extraMaterialDropMax') value = Math.max(value, 1); // Always at least 1
         if (stat === 'extraDamageFromLifePercent') value = Math.min(value, 5);
         if (stat === 'extraDamageFromArmorPercent') value = Math.min(value, 10);

@@ -8,6 +8,7 @@ import {
   game,
   training,
   soulShop,
+  ascension,
 } from './globals.js';
 import {
   updateResources,
@@ -249,7 +250,10 @@ export default class CrystalShop {
       const config = CRYSTAL_UPGRADE_CONFIG[stat];
       if (!config) return;
       const level = this.crystalUpgrades[stat] || 0;
-      const cost = Math.floor(config.baseCost + (config.costIncrement || 0) * level);
+      const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
+      const cost = Math.round(
+        Math.floor(config.baseCost + (config.costIncrement || 0) * level) * (1 - ascRed / 100),
+      );
       const alreadyPurchased = config.oneTime && this.crystalUpgrades[stat];
       const isMaxed = config.maxLevel ? level >= config.maxLevel : false;
       const costEl = button.querySelector('.upgrade-cost');
@@ -271,7 +275,10 @@ export default class CrystalShop {
   createCrystalUpgradeButton(stat, config) {
     let alreadyPurchased = config.oneTime && this.crystalUpgrades[stat];
     const level = this.crystalUpgrades[stat] || 0;
-    const cost = Math.floor(config.baseCost + (config.costIncrement || 0) * level);
+    const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
+    const cost = Math.round(
+      Math.floor(config.baseCost + (config.costIncrement || 0) * level) * (1 - ascRed / 100),
+    );
     let isMaxed = false;
     if (config.maxLevel) {
       isMaxed = level >= config.maxLevel;
@@ -331,7 +338,11 @@ export default class CrystalShop {
    * instead of opening the bulk‐buy modal.
    */
   async confirmReset(stat) {
-    const cost = CRYSTAL_UPGRADE_CONFIG[stat].baseCost;
+    let cost = CRYSTAL_UPGRADE_CONFIG[stat].baseCost;
+    {
+      const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
+      cost = Math.round(cost * (1 - ascRed / 100));
+    }
     if (hero.crystals < cost) {
       showToast(tp('crystalShop.needCrystals', { count: cost }), 'error');
       return;
@@ -501,9 +512,11 @@ export default class CrystalShop {
       controls.style.display = 'none';
       const purchased = !!this.crystalUpgrades[stat];
       const oneTimeBonusText = typeof config.bonus === 'string' ? t(config.bonus) : (config.bonus || '');
+      const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
+      const reduced = Math.round(config.baseCost * (1 - ascRed / 100));
       fields.innerHTML = `
         <p>${oneTimeBonusText}</p>
-        <p>Cost: <span class="modal-total-cost">${config.baseCost}</span> Crystals</p>
+        <p>Cost: <span class="modal-total-cost">${reduced}</span> Crystals</p>
         <div class="modal-status">${
   purchased ? '<span style="color:#10b981;font-weight:bold;">' + t('common.purchased') + '</span>' : ''
 }</div>
@@ -516,7 +529,8 @@ export default class CrystalShop {
       if (stat === 'autoSalvage') {
         const level = this.crystalUpgrades[stat] || 0;
         const cap = config.maxLevel || 6;
-        const nextCost = config.baseCost + (config.costIncrement || 0) * level;
+        const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
+        const nextCost = Math.round((config.baseCost + (config.costIncrement || 0) * level) * (1 - ascRed / 100));
         const isMaxed = level >= cap;
         const autoSalvageBonus = typeof config.bonus === 'string' ? t(config.bonus) : (config.bonus || '');
         fields.innerHTML = `
@@ -528,9 +542,11 @@ export default class CrystalShop {
         buyBtn.style.display = isMaxed ? 'none' : '';
       } else {
         const multipleBonus = typeof config.bonus === 'string' ? t(config.bonus) : (config.bonus || '');
+        const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
+        const reduced = Math.round(config.baseCost * (1 - ascRed / 100));
         fields.innerHTML = `
             <p>${multipleBonus}</p>
-            <p>Cost: <span class="modal-total-cost">${config.baseCost}</span> Crystals</p>
+            <p>Cost: <span class="modal-total-cost">${reduced}</span> Crystals</p>
           `;
         buyBtn.style.display = '';
         buyBtn.disabled = false;
@@ -561,8 +577,9 @@ export default class CrystalShop {
         let lvl = baseLevel;
         let crystals = crystalsAvailable;
         qty = 0;
+        const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
         while (lvl < cap && qty < CRYSTAL_SHOP_MAX_QTY) {
-          const cost = Math.floor(config.baseCost + (config.costIncrement || 0) * lvl);
+          const cost = Math.round(Math.floor(config.baseCost + (config.costIncrement || 0) * lvl) * (1 - ascRed / 100));
           if (crystals < cost) break;
           crystals -= cost;
           totalCost += cost;
@@ -570,8 +587,9 @@ export default class CrystalShop {
           qty++;
         }
       } else {
+        const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
         for (let i = 0; i < qty; i++) {
-          const cost = Math.floor(config.baseCost + (config.costIncrement || 0) * (baseLevel + i));
+          const cost = Math.round(Math.floor(config.baseCost + (config.costIncrement || 0) * (baseLevel + i)) * (1 - ascRed / 100));
           totalCost += cost;
         }
       }
@@ -604,14 +622,18 @@ export default class CrystalShop {
     } else if (stat === 'autoSalvage') {
       const level = this.crystalUpgrades[stat] || 0;
       const cap = config.maxLevel || 6;
-      const nextCost = Math.floor(config.baseCost + (config.costIncrement || 0) * level);
+      const ascRedLocal = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
+      const nextCostVal = Math.round(
+        Math.floor(config.baseCost + (config.costIncrement || 0) * level) * (1 - ascRedLocal / 100),
+      );
+      if (q('.modal-total-cost')) q('.modal-total-cost').textContent = nextCostVal;
       const isMaxed = level >= cap;
       if (q('.modal-level')) q('.modal-level').textContent = level;
       if (q('.modal-max-level')) q('.modal-max-level').textContent = cap;
-      if (q('.modal-total-cost')) q('.modal-total-cost').textContent = nextCost;
+      if (q('.modal-total-cost')) q('.modal-total-cost').textContent = nextCostVal;
       const buyBtn = q('.modal-buy');
       if (buyBtn) {
-        buyBtn.disabled = isMaxed || hero.crystals < nextCost;
+        buyBtn.disabled = isMaxed || hero.crystals < nextCostVal;
         buyBtn.style.display = isMaxed ? 'none' : '';
       }
       // Hide cost if maxed
@@ -619,8 +641,12 @@ export default class CrystalShop {
       if (costP) costP.style.display = isMaxed ? 'none' : '';
     } else if (config.multiple) {
       // For other multiples, show floored cost
-      const cost = Math.floor(config.baseCost + (config.costIncrement || 0) * (this.crystalUpgrades[stat] || 0));
-      if (q('.modal-total-cost')) q('.modal-total-cost').textContent = cost;
+      const ascRedLocal = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
+      const costVal = Math.round(
+        Math.floor(config.baseCost + (config.costIncrement || 0) * (this.crystalUpgrades[stat] || 0)) *
+          (1 - ascRedLocal / 100),
+      );
+      if (q('.modal-total-cost')) q('.modal-total-cost').textContent = costVal;
     }
   }
 
@@ -653,7 +679,10 @@ export default class CrystalShop {
     const prevLevel = level;
     let count = 0,
       totalCost = 0;
-    const nextCost = (lvl) => Math.floor(baseCost + costIncrement * lvl);
+    const nextCost = (lvl) => {
+      const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
+      return Math.round(Math.floor(baseCost + costIncrement * lvl) * (1 - ascRed / 100));
+    };
 
     if (qty === 'max') {
       while (hero.crystals >= nextCost(level) && count < CRYSTAL_SHOP_MAX_QTY) {
@@ -712,12 +741,14 @@ export default class CrystalShop {
   async _handleOneTimePurchase(stat, config) {
     const { baseCost, label } = config;
     if (this.crystalUpgrades[stat]) return;
-    if (hero.crystals < baseCost) {
+      const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
+    const cost = Math.round(baseCost * (1 - ascRed / 100));
+    if (hero.crystals < cost) {
       showToast(t('crystalShop.notEnoughCrystals'), 'error');
       return;
     }
 
-    hero.crystals -= baseCost;
+    hero.crystals -= cost;
     this.crystalUpgrades[stat] = true;
     this._commitChanges();
     showToast(tp('crystalShop.purchased', { label }), 'success');
@@ -752,12 +783,14 @@ export default class CrystalShop {
    */
   async _handleMultiplePurchase(stat, config) {
     const { baseCost, label } = config;
-    if (hero.crystals < baseCost) {
+    const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
+    const cost = Math.round(baseCost * (1 - ascRed / 100));
+    if (hero.crystals < cost) {
       showToast(t('crystalShop.notEnoughCrystals'), 'error');
       return;
     }
 
-    hero.crystals -= baseCost;
+    hero.crystals -= cost;
     this.crystalUpgrades[stat] = (this.crystalUpgrades[stat] || 0) + 1;
     this._commitChanges();
     showToast(tp('crystalShop.purchased', { label }), 'success');

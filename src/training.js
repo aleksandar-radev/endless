@@ -1,7 +1,7 @@
 import { formatStatName, updateResources, formatNumber } from './ui/ui.js';
 
 import { showToast } from './ui/ui.js';
-import { hero, dataManager, options, runes } from './globals.js';
+import { hero, dataManager, options, runes, ascension } from './globals.js';
 import { TRAINING_MAX_QTY } from './constants/limits.js';
 import { handleSavedData } from './functions.js';
 import { STATS } from './constants/stats/stats.js';
@@ -374,7 +374,9 @@ export default class Training {
 
     if (!isFinite(totalCost)) return Infinity;
     const bonus = runes?.getBonusEffects?.() || {};
-    const reduction = bonus.trainingCostReduction || 0;
+    const runeReduction = bonus.trainingCostReduction || 0;
+    const ascRed = ascension?.getBonuses?.()?.trainingCostReduction || 0;
+    const reduction = runeReduction + ascRed;
     return Math.floor(totalCost * (1 - reduction / 100) + 1e-9);
   }
 

@@ -25,3 +25,6 @@
 - Performance is important. Always consider performance when making changes.
 - Use memoization where appropriate.
 - Always identify expensive calculations or re-renders of html elements and optimize them.
+
+# Code
+- never use (await import('./globals.js')), instead use import { ... } from './globals.js'

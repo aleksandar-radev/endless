@@ -1,6 +1,6 @@
 // Game logic and persistent state for buildings
 import { buildingsData } from './constants/buildings.js';
-import { dataManager, hero, inventory, statistics } from './globals.js';
+import { dataManager, hero, inventory, statistics, ascension } from './globals.js';
 import { updateResources, formatNumber, updatePlayerLife, initializeSkillTreeStructure, updateTabIndicators } from './ui/ui.js';
 import { showOfflineBonusesModal } from './ui/buildingUi.js';
 import { fetchTrustedUtcTime } from './api.js';
@@ -92,7 +92,10 @@ export class Building {
         // Cap applies per level, so max cost for this upgrade is cap * amount
         total = Math.min(total, cap * amount);
       }
-      costs[type] = Math.ceil(total);
+      // Apply ascension building cost reduction (percent)
+      const ascRed = ascension?.getBonuses?.()?.buildingCostReduction || 0;
+      const reduced = Math.ceil(total * (1 - ascRed / 100));
+      costs[type] = Math.max(0, reduced);
     }
     return costs;
   }

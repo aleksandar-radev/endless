@@ -6,6 +6,8 @@ export default function run() {
 
     <span style="color:#FF8A00;"> Improvements</span>
     <ul>
+      <li>Added many new Ascension upgrades: enemy attack speed reduction, cost reductions (training/buildings/crystal shop/soul shop), cap increases (attack speed, crit chance, block chance, resurrection), crystal gain %, and several combat stats (crit chance/damage, attack rating, hit chance, armor/elemental penetration, block, life regen, all res %).</li>
+      <li>Ascension purchase effects now apply immediately where applicable (life/mana upgrades heal/restore instantly; shop/training UIs refresh to reflect new cost reductions).</li>
       <li>Added ascension. It removes all progress, apart from ascension bonuses. </li>
       <li>Ascension now requires 20 prestiges and grants points based on starting crystals, with in-game info and disabled button until requirements are met.</li>
       <li>Going to any shop tab now immediately updates it, showing what is affordable. </li>
@@ -42,6 +44,7 @@ export default function run() {
 
     <span style="color:#FF0000;"> Fixes</span>
     <ul>
+      <li>Fixed Ascension Life upgrade not granting life immediately after purchase; it now recalculates stats and heals for the gained amount.</li>
       <li>Equipped items no longer disappear in split view.</li>
       <li>Re-rolling or transmuting a modifier on item now properly shows the updated values (previously sometimes showed html).</li>
       <li>Fixed bug where some enemies will not have attack speed</li>
