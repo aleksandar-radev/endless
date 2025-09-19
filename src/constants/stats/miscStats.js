@@ -232,6 +232,8 @@ export const MISC_STATS = {
   cooldownReductionPercent: {
     base: 0,
     decimalPlaces: 1,
+    showInUI: true,
+    subcategory: 'misc',
   },
   // MANA COST REDUCTION
   manaCostReductionPercent: {
@@ -242,6 +244,8 @@ export const MISC_STATS = {
   buffDurationPercent: {
     base: 0,
     decimalPlaces: 1,
+    showInUI: true,
+    subcategory: 'misc',
   },
   // ITEM BONUSES
   itemBonusesPercent: {

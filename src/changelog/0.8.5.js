@@ -10,6 +10,8 @@ export default function run() {
       <li>Added new Ascension upgrade: <b>Item % Bonus Cap +</b> — increases the maximum percentage bonuses on items by 5% per level (cost: 1 point per level).</li>
       <li>Rocky Field enemies now have elemental damages and resistances.</li>
       <li>Battle Log now shows summon damage with the specific summon name.</li>
+      <li>Stats panel: added <b>Cooldown Reduction %</b> and <b>Buff Duration %</b> to the default (non-extended) view.</li>
+      <li>Updated <b>Cooldown Reduction %</b> tooltip to remove the obsolete 400 cap reference; it now clearly states max 80%.</li>
     </ul>
 
     <!-- <span style="color:#FF8A00;">Fixes</span>
