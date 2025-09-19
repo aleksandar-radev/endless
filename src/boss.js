@@ -15,7 +15,7 @@ const INCREASE_PER_LEVEL = 0.01;
 const stat_increase = (level) => {
   const base = percentIncreasedByLevel(0.1, level, 50, 0.015, 1);
   if (level <= 500) return base;
-  const extra = percentIncreasedByLevel(0, level - 500, 1000, 0.1, 5);
+  const extra = percentIncreasedByLevel(0, level - 500, 1000, 0.2, 10);
   return base + extra;
 };
 const xp_gold_scale = (level) => percentReducedByLevel(1, level, 20, 0.01, 0.025);
