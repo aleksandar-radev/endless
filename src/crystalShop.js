@@ -22,12 +22,15 @@ import {
   updatePlayerLife,
 } from './ui/ui.js';
 import { t, tp } from './i18n.js';
+import { updateAscensionUI } from './ui/ascensionUi.js';
 import { selectBoss } from './ui/bossUi.js';
 import { handleSavedData } from './functions.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { createModal } from './ui/modal.js';
 import { CRYSTAL_SHOP_MAX_QTY } from './constants/limits.js';
 import { SOUL_UPGRADE_CONFIG } from './soulShop.js';
+import { runes } from './globals.js';
+import { BASE_RUNE_SLOTS } from './runes.js';
 
 const html = String.raw;
 
@@ -158,6 +161,14 @@ const CRYSTAL_UPGRADE_CONFIG = {
     bonus: 'crystalShop.upgrade.resetSoulShop.bonus',
     bonusLabel: 'crystalShop.upgrade.resetSoulShop.bonusLabel',
     baseCost: 300,
+    multiple: true,
+    category: 'reset',
+  },
+  resetAscension: {
+    label: 'crystalShop.upgrade.resetAscension.label',
+    bonus: 'crystalShop.upgrade.resetAscension.bonus',
+    bonusLabel: 'crystalShop.upgrade.resetAscension.bonusLabel',
+    baseCost: 100000,
     multiple: true,
     category: 'reset',
   },
@@ -433,6 +444,38 @@ export default class CrystalShop {
         tp('crystalShop.resetSoulShopSuccess', { amount: formatNumber(refund) }),
         'success',
       );
+    } else if (stat === 'resetAscension') {
+      confirmed = await showConfirmDialog(
+        tp('crystalShop.confirm.resetAscension', { count: cost }),
+      );
+      if (!confirmed) return;
+      hero.crystals -= cost;
+      // Calculate total points spent so far and refund them
+      const refundPts = Object.entries(ascension.upgrades || {}).reduce((total, [key, lvl]) => {
+        const cfg = ascension.config[key];
+        if (!cfg || !lvl) return total;
+        let spent = 0;
+        for (let i = 0; i < lvl; i++) {
+          const c = typeof cfg.cost === 'function' ? cfg.cost(i) : cfg.cost || 1;
+          spent += c;
+        }
+        return total + spent;
+      }, 0);
+      ascension.upgrades = {};
+      ascension.points = (ascension.points || 0) + refundPts;
+      // Ensure rune slots reflect current ascension bonuses
+      try {
+        const ascRuneSlots = ascension.getBonuses()?.runeSlots || 0;
+        runes?.ensureEquipSlots?.(BASE_RUNE_SLOTS + ascRuneSlots);
+      } catch {}
+      hero.queueRecalculateFromAttributes();
+      updateStatsAndAttributesUI();
+      updatePlayerLife();
+      updateAscensionUI?.();
+      showToast(
+        tp('crystalShop.resetAscensionSuccess', { amount: formatNumber(refundPts) }),
+        'success',
+      );
     }
     updateResources();
     dataManager.saveGame();
@@ -444,7 +487,7 @@ export default class CrystalShop {
    */
   async openUpgradeModal(stat) {
     if (
-      ['resetSkillTree', 'resetAttributes', 'resetArenaLevel', 'resetTraining', 'resetSoulShop'].includes(stat)
+      ['resetSkillTree', 'resetAttributes', 'resetArenaLevel', 'resetTraining', 'resetSoulShop', 'resetAscension'].includes(stat)
     ) {
       await this.confirmReset(stat);
       return;
@@ -826,7 +869,7 @@ export default class CrystalShop {
 
     // special resets use confirm dialog
     if (
-      ['resetSkillTree', 'resetAttributes', 'resetArenaLevel', 'resetTraining', 'resetSoulShop'].includes(stat)
+      ['resetSkillTree', 'resetAttributes', 'resetArenaLevel', 'resetTraining', 'resetSoulShop', 'resetAscension'].includes(stat)
     ) {
       await this.confirmReset(stat);
       return;
