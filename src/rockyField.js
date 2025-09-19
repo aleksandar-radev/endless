@@ -70,8 +70,8 @@ export const ROCKY_FIELD_REGIONS = [
       attackSpeed: 0.9,
       attackRating: 48,
       evasion: 48,
-      xp: 48,
-      gold: 48,
+      xp: 40,
+      gold: 40,
     },
   },
   {
@@ -86,8 +86,8 @@ export const ROCKY_FIELD_REGIONS = [
       attackSpeed: 1,
       attackRating: 288,
       evasion: 288,
-      xp: 288,
-      gold: 288,
+      xp: 250,
+      gold: 250,
     },
   },
   {
@@ -102,8 +102,8 @@ export const ROCKY_FIELD_REGIONS = [
       attackSpeed: 1.2,
       attackRating: 2880,
       evasion: 2880,
-      xp: 2880,
-      gold: 2880,
+      xp: 500,
+      gold: 500,
     },
   },
 ];
