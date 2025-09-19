@@ -11,18 +11,18 @@ import { t, tp } from './i18n.js';
 // for tier 1 enemy level 1 50 life, level 2 is 50 + 25 = 75 (e.g. 50% increase for base value per level)
 // tier 12 enemy gets 8% increase per level on the base value
 const TIER_STAT_SCALE = {
-  1: (level) => percentIncreasedByLevel(0.65, level, 25, 0.025, 3.2),
-  2: (level) => percentIncreasedByLevel(0.6, level, 30, 0.02, 2.9),
-  3: (level) => percentIncreasedByLevel(0.55, level, 35, 0.015, 2.5),
-  4: (level) => percentIncreasedByLevel(0.5, level, 40, 0.01, 2.2),
-  5: (level) => percentIncreasedByLevel(0.45, level, 45, 0.01, 2),
-  6: (level) => percentIncreasedByLevel(0.4, level, 50, 0.01, 1.8),
-  7: (level) => percentIncreasedByLevel(0.32, level, 55, 0.01, 1.5),
-  8: (level) => percentIncreasedByLevel(0.24, level, 60, 0.01, 1.25),
-  9: (level) => percentIncreasedByLevel(0.2, level, 65, 0.01, 1),
-  10: (level) => percentIncreasedByLevel(0.15, level, 70, 0.01, 0.75),
-  11: (level) => percentIncreasedByLevel(0.1, level, 75, 0.01, 0.5),
-  12: (level) => percentIncreasedByLevel(0.08, level, 80, 0.01, 0.3),
+  1: (level) => percentIncreasedByLevel(0.65, level, 25, 0.025, 6),
+  2: (level) => percentIncreasedByLevel(0.6, level, 30, 0.02, 5.5),
+  3: (level) => percentIncreasedByLevel(0.55, level, 35, 0.015, 5),
+  4: (level) => percentIncreasedByLevel(0.5, level, 40, 0.01, 4.5),
+  5: (level) => percentIncreasedByLevel(0.45, level, 45, 0.01, 4),
+  6: (level) => percentIncreasedByLevel(0.4, level, 50, 0.01, 3.6),
+  7: (level) => percentIncreasedByLevel(0.32, level, 55, 0.01, 3),
+  8: (level) => percentIncreasedByLevel(0.24, level, 60, 0.01, 2.5),
+  9: (level) => percentIncreasedByLevel(0.2, level, 65, 0.01, 2),
+  10: (level) => percentIncreasedByLevel(0.15, level, 70, 0.01, 1.5),
+  11: (level) => percentIncreasedByLevel(0.1, level, 75, 0.01, 1),
+  12: (level) => percentIncreasedByLevel(0.08, level, 80, 0.01, 0.75),
 };
 
 const TIER_EXP_GOLD_SCALE = {
