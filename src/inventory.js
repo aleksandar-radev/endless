@@ -126,6 +126,65 @@ export default class Inventory {
     }
   }
 
+  /**
+   * Add multiple materials in bulk with a single UI/save update.
+   * counts: Record<materialId, qty>
+   */
+  bulkAddMaterials(counts) {
+    if (!counts || typeof counts !== 'object') return;
+    let totalFound = 0;
+    const entries = Object.entries(counts).filter(([_, qty]) => (qty || 0) > 0);
+    if (!entries.length) return;
+
+    // Process auto-consume first to avoid filling inventory with consumables
+    for (const [id, qtyRaw] of entries) {
+      const qty = Math.floor(qtyRaw);
+      if (qty <= 0) continue;
+      const matDef = Object.values(MATERIALS).find((m) => m.id === id);
+      const hasAutoConsume = crystalShop.crystalUpgrades.autoConsumeMaterials;
+      if (
+        hasAutoConsume &&
+        matDef &&
+        (!matDef.isCustom || matDef.isCustom === false) &&
+        typeof matDef.onUse === 'function'
+      ) {
+        matDef.onUse(hero, qty);
+        totalFound += qty;
+        counts[id] = 0; // consumed, don't add to inventory map below
+      }
+    }
+
+    // Add remaining materials to inventory slots
+    for (const [id, qtyRaw] of entries) {
+      const qty = Math.floor(qtyRaw);
+      if (qty <= 0) continue;
+      let slot = this.materials.findIndex((m) => m && m.id === id);
+      if (slot !== -1) {
+        this.materials[slot].qty += qty;
+        totalFound += qty;
+      } else {
+        const empty = this.materials.findIndex((m) => m === null);
+        if (empty !== -1) {
+          this.materials[empty] = { id, qty };
+          totalFound += qty;
+        }
+        // If no slot available, silently drop overflow (consistent with single addMaterial behavior)
+      }
+    }
+
+    if (totalFound > 0) {
+      this.hasNewItems = true;
+      statistics.increment('totalMaterialsFound', null, totalFound);
+    }
+
+    if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
+      sortMaterials();
+    } else {
+      updateMaterialsGrid();
+      dataManager.saveGame();
+    }
+  }
+
   showEquippedItemsModal({
     id,
     matDef,

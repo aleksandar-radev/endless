@@ -1,51 +1,11 @@
 import { hero, inventory, statistics, game, dataManager } from './globals.js';
 import { getTimeNow } from './common.js';
-import { ITEM_TYPES } from './constants/items.js';
-import { MATERIALS } from './constants/materials.js';
+import { ITEM_TYPES, ITEM_RARITY, RARITY_ORDER } from './constants/items.js';
 import { getCurrentRegion } from './region.js';
 import { t } from './i18n.js';
-
-function distributeMaterials(total) {
-  const region = getCurrentRegion();
-  const enemy = game.currentEnemy;
-  const allowedExclusive = [...(enemy?.canDrop || []), ...(region.canDrop || [])];
-  const mats = Object.values(MATERIALS)
-    .filter((m) => m.dropChance > 0)
-    .filter((m) => !m.exclusive || allowedExclusive.includes(m.id));
-  const regionMultiplier = region.multiplier.materialDrop || 1;
-  const enemyMultiplier = enemy?.baseData?.multiplier.materialDrop || 1;
-  const multiplier = regionMultiplier * enemyMultiplier;
-  const regionWeights = region.materialDropWeights || {};
-  const enemyWeights = enemy?.baseData?.materialDropWeights || {};
-  const weights = mats.map((m) => {
-    const w = (regionWeights[m.id] || 0) + (enemyWeights[m.id] || 0);
-    return m.dropChance * multiplier * (w > 0 ? w : 1);
-  });
-  const totalWeight = weights.reduce((sum, w) => sum + w, 0);
-  const counts = {};
-  let allocated = 0;
-  mats.forEach((m, idx) => {
-    const count = Math.floor((weights[idx] / totalWeight) * total);
-    if (count > 0) {
-      counts[m.id] = count;
-      allocated += count;
-    }
-  });
-  let remaining = total - allocated;
-  while (remaining > 0) {
-    let roll = Math.random() * totalWeight;
-    for (let i = 0; i < mats.length; i++) {
-      roll -= weights[i];
-      if (roll <= 0) {
-        const id = mats[i].id;
-        counts[id] = (counts[id] || 0) + 1;
-        break;
-      }
-    }
-    remaining--;
-  }
-  return counts;
-}
+import { distributeMaterials } from './materialsUtil.js';
+import { ENEMY_RARITY } from './constants/enemies.js';
+import { MATERIALS } from './constants/materials.js';
 
 export async function collectOfflineFightRewards() {
   const now = await getTimeNow();
@@ -102,12 +62,97 @@ export async function collectOfflineFightRewards() {
       const item = inventory.createItem(type, level, null, region.tier);
       inventory.addItemToInventory(item);
     }
+    // Salvage overflow offline items in aggregate if auto-salvage is configured; otherwise ignore
+    const overflow = Math.max(0, items - itemCount);
+    if (overflow > 0 && Array.isArray(inventory.autoSalvageRarities) && inventory.autoSalvageRarities.length > 0) {
+      // Build rarity weights identical to inventory.generateRarity(), restricted to auto-salvage rarities
+      const ENEMY_RARITY_ORDER = Object.keys(ENEMY_RARITY);
+      const enemy = game.currentEnemy;
+      const enemyRank = enemy?.rarity ? ENEMY_RARITY_ORDER.indexOf(enemy.rarity) : 0;
+      const maxRank = ENEMY_RARITY_ORDER.length - 1;
+      const boostFactor = maxRank > 0 ? enemyRank / maxRank : 0;
+      const rarityBonus = hero.stats.itemRarityPercent || 0;
+
+      const included = new Set(inventory.autoSalvageRarities);
+      const rarityEntries = Object.entries(ITEM_RARITY)
+        .filter(([key]) => included.has(ITEM_RARITY[key].name))
+        .map(([key, config]) => {
+          const rarityIndex = RARITY_ORDER.indexOf(config.name);
+          const weight = config.chance * (1 + boostFactor * rarityIndex) * (1 + rarityBonus * rarityIndex);
+          return { name: config.name, index: rarityIndex, weight };
+        });
+      const weightSum = rarityEntries.reduce((s, e) => s + e.weight, 0);
+      if (weightSum > 0 && rarityEntries.length) {
+        // Allocate counts per rarity using floor + remainder distribution
+        const rarityCounts = new Map();
+        let allocated = 0;
+        for (const e of rarityEntries) {
+          const c = Math.floor((e.weight / weightSum) * overflow);
+          if (c > 0) {
+            rarityCounts.set(e.name, c);
+            allocated += c;
+          }
+        }
+        let rem = overflow - allocated;
+        while (rem > 0) {
+          let roll = Math.random() * weightSum;
+          for (const e of rarityEntries) {
+            roll -= e.weight;
+            if (roll <= 0) {
+              rarityCounts.set(e.name, (rarityCounts.get(e.name) || 0) + 1);
+              break;
+            }
+          }
+          rem--;
+        }
+
+        // Aggregate salvage outputs
+        let totalGold = 0;
+        let crystals = 0;
+        const matsAgg = { [MATERIALS.armor_upgrade_stone.id]: 0, [MATERIALS.weapon_upgrade_core.id]: 0, [MATERIALS.jewelry_upgrade_gem.id]: 0 };
+        const armorTypes = 7; // HELMET, ARMOR, BELT, PANTS, BOOTS, SHIELD, GLOVES
+        const weaponTypes = 5; // SWORD, AXE, MACE, WAND, STAFF
+        const jewelryTypes = 2; // AMULET, RING
+        const totalTypes = armorTypes + weaponTypes + jewelryTypes;
+
+        for (const [rarityName, count] of rarityCounts.entries()) {
+          if (rarityName === ITEM_RARITY.MYTHIC.name) crystals += count;
+          if (count <= 0) continue;
+
+          if (!inventory.salvageUpgradeMaterials) {
+            // Gold salvage per item for this rarity
+            const rarityIndex = Math.max(0, RARITY_ORDER.indexOf(rarityName));
+            const goldPer = Math.floor(25 * level * (Math.max(rarityIndex / 2 + 1, 1)) * Math.max(region.tier * 3, 1));
+            totalGold += goldPer * count;
+          } else {
+            // Materials salvage: split by category proportions and apply qty formula per item
+            const rarityAmounts = { NORMAL: 1, MAGIC: 1.5, RARE: 2, EPIC: 2.5, LEGENDARY: 3, MYTHIC: 3.5 };
+            const qtyPer = Math.floor((rarityAmounts[rarityName] || 1) * Math.max(level / 200, 1) * Math.max(region.tier, 1));
+            if (qtyPer > 0) {
+              const armorCount = Math.floor((armorTypes / totalTypes) * count);
+              const weaponCount = Math.floor((weaponTypes / totalTypes) * count);
+              const jewelryCount = Math.max(0, count - armorCount - weaponCount);
+              matsAgg[MATERIALS.armor_upgrade_stone.id] += armorCount * qtyPer;
+              matsAgg[MATERIALS.weapon_upgrade_core.id] += weaponCount * qtyPer;
+              matsAgg[MATERIALS.jewelry_upgrade_gem.id] += jewelryCount * qtyPer;
+            }
+          }
+        }
+
+        if (crystals > 0) hero.gainCrystals(crystals);
+        if (!inventory.salvageUpgradeMaterials && totalGold > 0) hero.gainGold(totalGold);
+        if (inventory.salvageUpgradeMaterials) {
+          // Remove zero entries
+          Object.keys(matsAgg).forEach((k) => { if (!matsAgg[k]) delete matsAgg[k]; });
+          inventory.bulkAddMaterials(matsAgg);
+        }
+      }
+    }
     if (matsQty > 0) {
       const distrib = distributeMaterials(matsQty);
-      for (const [id, qty] of Object.entries(distrib)) {
-        inventory.addMaterial({ id, qty });
-        statistics.increment('totalMaterialsDropped', null, qty);
-      }
+      const droppedTotal = Object.values(distrib).reduce((a, b) => a + b, 0);
+      if (droppedTotal > 0) statistics.increment('totalMaterialsDropped', null, droppedTotal);
+      inventory.bulkAddMaterials(distrib);
     }
     statistics.lastFightActive = await getTimeNow();
   };

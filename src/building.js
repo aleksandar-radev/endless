@@ -7,6 +7,7 @@ import { fetchTrustedUtcTime } from './api.js';
 import { getTimeNow } from './common.js';
 import { t, tp } from './i18n.js';
 import { MATERIALS } from './constants/materials.js';
+import { distributeMaterials } from './materialsUtil.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { createCombatText } from './combat.js';
 import { updateRegionUI } from './region.js';
@@ -283,6 +284,8 @@ export class BuildingManager {
     let offlineBonuses = [];
     const isFirstCollect = showOfflineModal;
     let changed = false;
+    // Aggregate materials across buildings to minimize UI updates
+    const materialAggregateOnline = {};
     for (const b of this.getPlacedBuildings()) {
       if (!b || b.level <= 0) continue;
       const intervalMs = intervalToMs(b.effect?.interval);
@@ -324,18 +327,23 @@ export class BuildingManager {
             statistics.updateStatisticsUI();
           } else if (b.effect.type === 'material') {
             if (b.effect.materialIds) {
+              // Restrict to given IDs; keep behavior (single pick) for this case
               const ids = b.effect.materialIds;
               const randId = ids[Math.floor(Math.random() * ids.length)];
-              inventory.addMaterial({ id: randId, qty: totalBonus });
+              materialAggregateOnline[randId] = (materialAggregateOnline[randId] || 0) + totalBonus;
             } else if (b.effect.random && b.effect.weighted) {
-              const mat = inventory.getRandomMaterial();
-              inventory.addMaterial({ id: mat.id, qty: totalBonus });
+              // Distribute across eligible materials using weighted shares
+              const distr = distributeMaterials(totalBonus);
+              for (const [id, qty] of Object.entries(distr)) {
+                materialAggregateOnline[id] = (materialAggregateOnline[id] || 0) + qty;
+              }
             } else if (b.effect.random) {
+              // Uniform random across all materials
               const ids = Object.keys(MATERIALS);
               const randId = ids[Math.floor(Math.random() * ids.length)];
-              inventory.addMaterial({ id: randId, qty: totalBonus });
+              materialAggregateOnline[randId] = (materialAggregateOnline[randId] || 0) + totalBonus;
             } else if (b.effect.materialId) {
-              inventory.addMaterial({ id: b.effect.materialId, qty: totalBonus });
+              materialAggregateOnline[b.effect.materialId] = (materialAggregateOnline[b.effect.materialId] || 0) + totalBonus;
             }
           }
           // Increment total earned for this building
@@ -345,10 +353,18 @@ export class BuildingManager {
         }
       }
     }
+    if (!isFirstCollect) {
+      const totalMatOnline = Object.values(materialAggregateOnline).reduce((a, b) => a + b, 0);
+      if (totalMatOnline > 0) {
+        inventory.bulkAddMaterials(materialAggregateOnline);
+      }
+    }
     if (isFirstCollect && (offlineBonuses.length > 0 || extraBonuses.length > 0)) {
       // Only show modal if there are actual bonuses to collect
       showOfflineBonusesModal([...offlineBonuses, ...extraBonuses], async () => {
         // On collect: actually add the bonuses and update lastBonusTime
+        const materialAggregateOffline = {};
+        let materialDroppedTotal = 0;
         for (const b of offlineBonuses) {
           if (b.type === 'gold') hero.gainGold(b.amount);
           else if (b.type === 'crystal') hero.gainCrystals(b.amount);
@@ -364,26 +380,35 @@ export class BuildingManager {
             updateRegionUI();
             updateTabIndicators();
             statistics.updateStatisticsUI();
-
           } else if (b.building.effect.type === 'material') {
             if (b.materialIds) {
               const ids = b.materialIds;
               const randId = ids[Math.floor(Math.random() * ids.length)];
-              inventory.addMaterial({ id: randId, qty: b.amount });
+              materialAggregateOffline[randId] = (materialAggregateOffline[randId] || 0) + b.amount;
+              materialDroppedTotal += b.amount;
             } else if (b.random && b.weighted) {
-              const mat = inventory.getRandomMaterial();
-              inventory.addMaterial({ id: mat.id, qty: b.amount });
+              const distr = distributeMaterials(b.amount);
+              for (const [id, qty] of Object.entries(distr)) {
+                materialAggregateOffline[id] = (materialAggregateOffline[id] || 0) + qty;
+                materialDroppedTotal += qty;
+              }
             } else if (b.random) {
               const ids = Object.keys(MATERIALS);
               const randId = ids[Math.floor(Math.random() * ids.length)];
-              inventory.addMaterial({ id: randId, qty: b.amount });
+              materialAggregateOffline[randId] = (materialAggregateOffline[randId] || 0) + b.amount;
+              materialDroppedTotal += b.amount;
             } else if (b.materialId) {
-              inventory.addMaterial({ id: b.materialId, qty: b.amount });
+              materialAggregateOffline[b.materialId] = (materialAggregateOffline[b.materialId] || 0) + b.amount;
+              materialDroppedTotal += b.amount;
             }
           }
           // Increment total earned for this building
           b.building.totalEarned += b.amount;
           b.building.lastBonusTime += b.timesRaw * b.intervalMs;
+        }
+        if (materialDroppedTotal > 0) {
+          // Count as found via buildings; we keep dropped stat for combat elsewhere
+          inventory.bulkAddMaterials(materialAggregateOffline);
         }
         if (typeof extraCollectFn === 'function') await extraCollectFn();
         this.lastActive = await fetchTrustedUtcTime();
