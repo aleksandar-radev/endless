@@ -540,33 +540,48 @@ export default class Training {
   calculateBulkCostAndPurchases(qty) {
     const section = SECTION_DEFS.find((s) => s.key === this.activeSection);
     if (qty !== 'max') qty = Math.min(qty, TRAINING_MAX_QTY);
-    let availableGold = hero.gold;
     let totalCost = 0;
     const purchases = [];
-    section.stats.forEach((stat) => {
-      const config = STATS[stat].training;
-      if (!config) return;
-      const level = this.upgradeLevels[stat] || 0;
-      const maxLevel = config?.maxLevel ?? Infinity;
-      const levelsLeft = maxLevel - level;
-      if (levelsLeft <= 0) return;
-      let qtyToBuy = 0;
-      let cost = 0;
-      if (qty === 'max') {
-        const res = this.getMaxPurchasable('max', level, maxLevel, config, availableGold);
-        qtyToBuy = res.qty;
-        cost = res.totalCost;
-        availableGold -= cost;
-      } else {
-        qtyToBuy = Math.min(qty, levelsLeft);
-        cost = this.calculateTotalCost(config, qtyToBuy, level);
-      }
-      if (qtyToBuy > 0 && cost > 0) {
-        totalCost += cost;
-        purchases.push({ stat, qty: qtyToBuy, cost });
-      }
-    });
-    const affordable = hero.gold >= totalCost;
+
+    // Collect eligible stats in the active section
+    const eligible = section.stats
+      .map((stat) => ({ stat, config: STATS[stat].training }))
+      .filter((x) => !!x.config)
+      .map(({ stat, config }) => {
+        const level = this.upgradeLevels[stat] || 0;
+        const maxLevel = config?.maxLevel ?? Infinity;
+        const levelsLeft = maxLevel - level;
+        return { stat, config, level, maxLevel, levelsLeft };
+      })
+      .filter(({ levelsLeft }) => levelsLeft > 0);
+
+    if (eligible.length === 0) return { totalCost: 0, purchases: [], affordable: true };
+
+    if (qty === 'max') {
+      // Divide available gold into equal chunks across eligible stats
+      const perChunk = Math.floor((hero.gold || 0) / eligible.length);
+      if (perChunk <= 0) return { totalCost: 0, purchases: [], affordable: false };
+      eligible.forEach(({ stat, config, level, maxLevel }) => {
+        const res = this.getMaxPurchasable('max', level, maxLevel, config, perChunk);
+        if (res.qty > 0 && res.totalCost > 0) {
+          totalCost += res.totalCost;
+          purchases.push({ stat, qty: res.qty, cost: res.totalCost });
+        }
+      });
+    } else {
+      // Fixed quantity per stat
+      eligible.forEach(({ stat, config, level, levelsLeft }) => {
+        const qtyToBuy = Math.min(qty, levelsLeft);
+        if (qtyToBuy <= 0) return;
+        const cost = this.calculateTotalCost(config, qtyToBuy, level);
+        if (cost > 0) {
+          totalCost += cost;
+          purchases.push({ stat, qty: qtyToBuy, cost });
+        }
+      });
+    }
+
+    const affordable = (hero.gold || 0) >= totalCost && totalCost > 0;
     return { totalCost, purchases, affordable };
   }
 
