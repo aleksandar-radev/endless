@@ -19,7 +19,6 @@ import { BASE_RUNE_SLOTS } from './runes.js';
 
 const ELEMENT_DAMAGE_STATS = Object.keys(ELEMENTS).map((id) => `${id}Damage`);
 const ELEMENT_RESISTANCE_STATS = Object.keys(ELEMENTS).map((id) => `${id}Resistance`);
-const ELEMENT_RESISTANCE_PERCENT_STATS = ELEMENT_RESISTANCE_STATS.map((s) => `${s}Percent`);
 
 export const ASCENSION_CATEGORIES = {
   offense: {

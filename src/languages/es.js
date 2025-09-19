@@ -857,6 +857,7 @@ export default {
   'battleLog.castDamage': 'Lanzó {skill} por {value} de daño{breakdown}{critical}',
   'battleLog.dealtDamage': 'Infligió {value} de daño{breakdown}{critical}',
   'battleLog.critical': ' (crítico)',
+  'battleLog.autoAttack': ' (ataque automático)',
   'battleLog.evadedAttack': 'Evadió el ataque',
   'battleLog.blockedAttack': 'Bloqueó el ataque',
   'battleLog.missedAttack': 'Ataque fallado',

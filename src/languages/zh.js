@@ -857,6 +857,7 @@ export default {
   'battleLog.castDamage': '施放 {skill} 造成 {value} 点伤害{breakdown}{critical}',
   'battleLog.dealtDamage': '造成 {value} 点伤害{breakdown}{critical}',
   'battleLog.critical': ' (暴击)',
+  'battleLog.autoAttack': '（普通攻击）',
   'battleLog.evadedAttack': '闪避了攻击',
   'battleLog.blockedAttack': '格挡了攻击',
   'battleLog.missedAttack': '攻击未命中',

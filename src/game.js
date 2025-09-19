@@ -95,7 +95,12 @@ class Game {
     if (damage < 1) return;
 
     hero.stats.currentLife -= damage;
-    battleLog.addBattle(tp('battleLog.receivedDamage', { value: Math.floor(damage), breakdown: formatDamageBreakdown(breakdown) }));
+    battleLog.addBattle(
+      tp('battleLog.receivedDamage', {
+        value: Math.floor(damage),
+        breakdown: formatDamageBreakdown(breakdown),
+      }) + t('battleLog.autoAttack'),
+    );
     if (hero.stats.currentLife <= 0) {
       // check if ressurection will proc
       if (!hero.willRessurect()) {
@@ -158,7 +163,7 @@ class Game {
         value: damage,
         breakdown: formatDamageBreakdown(breakdown),
         critical: isCritical ? t('battleLog.critical') : '',
-      });
+      }) + t('battleLog.autoAttack');
     }
     battleLog.addBattle(message);
 

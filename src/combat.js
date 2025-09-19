@@ -87,7 +87,7 @@ export function enemyAttack(currentTime) {
         const thornsDamage = hero.calculateTotalThornsDamage(totalDamage);
         // only if there is some thorns damage to deal, only paladin
         if (thornsDamage - totalDamage > 1) {
-          game.damageEnemy(thornsDamage);
+          game.damageEnemy(thornsDamage, false, null, 'thornsDamage');
         }
 
 
@@ -96,7 +96,7 @@ export function enemyAttack(currentTime) {
           hero.stats[`reflect${fireId.charAt(0).toUpperCase()}${fireId.slice(1)}Damage`] || 0,
         );
         if (fireReflect > 1) {
-          game.damageEnemy(fireReflect);
+          game.damageEnemy(fireReflect, false, null, 'reflectFireDamage');
           updateEnemyStats();
         }
 

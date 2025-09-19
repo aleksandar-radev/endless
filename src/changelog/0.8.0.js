@@ -6,6 +6,7 @@ export default function run() {
 
     <span style="color:#FF8A00;"> Improvements</span>
     <ul>
+      <li>Battle log now shows the cause of damage (auto attack or skill).</li>
       <li>Added many new Ascension upgrades: enemy attack speed reduction, cost reductions (training/buildings/crystal shop/soul shop), cap increases (attack speed, crit chance, block chance, resurrection), crystal gain %, and several combat stats (crit chance/damage, attack rating, hit chance, armor/elemental penetration, block, life regen, all res %).</li>
       <li>Ascension purchase effects now apply immediately where applicable (life/mana upgrades heal/restore instantly; shop/training UIs refresh to reflect new cost reductions).</li>
       <li>Added ascension. It removes all progress, apart from ascension bonuses. </li>
