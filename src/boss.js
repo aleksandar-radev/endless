@@ -13,9 +13,9 @@ const INCREASE_PER_LEVEL = 0.01;
 // Above level 500, apply an extra percentage that ramps up every 1,000 levels, capped
 // so that bosses grow stronger at high tiers without becoming impossible.
 const stat_increase = (level) => {
-  const base = percentIncreasedByLevel(0.1, level, 50, 0.015, 1);
+  const base = percentIncreasedByLevel(0.1, level, 50, 0.1, 2);
   if (level <= 500) return base;
-  const extra = percentIncreasedByLevel(0, level - 500, 1000, 0.2, 10);
+  const extra = percentIncreasedByLevel(0, level - 500, 1000, 0.5, 20);
   return base + extra;
 };
 const xp_gold_scale = (level) => percentReducedByLevel(1, level, 20, 0.01, 0.025);

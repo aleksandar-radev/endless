@@ -22,7 +22,15 @@
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
   position: relative;
   width: min(640px, 92vw);
-  max-height: 90vh;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Ensure any modal content container respects viewport height */
+.modal > * {
+  max-height: 80vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal-close {
