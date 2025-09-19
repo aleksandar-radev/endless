@@ -104,10 +104,10 @@ export const ASCENSION_CATEGORIES = {
         bonus: 0.25,
         stat: 'evasionPercent',
       },
-      elementalResistances: {
-        label: t('ascension.upgrade.elementalResistances'),
+      allResistance: {
+        label: t('ascension.upgrade.allResistance'),
         bonus: 500,
-        stats: ELEMENT_RESISTANCE_STATS,
+        stat: 'allResistance',
       },
       allResistancePercent: {
         label: t('ascension.upgrade.allResistancePercent'),
