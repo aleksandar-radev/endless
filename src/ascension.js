@@ -432,10 +432,20 @@ export default class Ascension {
       points: this.points + earned,
       upgrades: this.upgrades,
     };
+    // Preserve options just like prestige (except crystal-shop-tied ones)
+    const preservedOptions = { ...options };
+    ['startingStage', 'stageSkip', 'resetStageSkip'].forEach((k) => {
+      delete preservedOptions[k];
+    });
+
     await setGlobals({ reset: true });
+    // Reapply preserved options after reset
+    Object.assign(options, preservedOptions);
     // after reset, ascensionState refers to the new instance
     ascensionState.points = saved.points;
     ascensionState.upgrades = saved.upgrades;
+    // Ensure rune slot bonuses from ascension are applied after restore
+    try { runes.ensureEquipSlots(BASE_RUNE_SLOTS + (ascensionState.getBonuses().runeSlots || 0)); } catch {}
     const ascBonuses = ascensionState.getBonuses();
     hero.gold += ascBonuses.startingGold || 0;
     hero.crystals = (hero.crystals || 0) + 100 + (ascBonuses.startingCrystals || 0);

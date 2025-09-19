@@ -8,7 +8,9 @@ import {
   game,
   runtime,
   ascension,
+  runes,
 } from './globals.js';
+import { BASE_RUNE_SLOTS } from './runes.js';
 import { PRESTIGE_BONUSES, STARTING_CRYSTALS_BONUS } from './constants/prestigeBonuses.js';
 import { formatStatName } from './ui/ui.js';
 import { t, tp } from './i18n.js';
@@ -336,10 +338,27 @@ export default class Prestige {
       delete preservedOptions[k];
     });
 
+    // Preserve ascension state across prestige (points and upgrades only)
+    const preservedAscension = {
+      points: ascension?.points || 0,
+      upgrades: ascension?.upgrades || {},
+    };
+
     await setGlobals({ reset: true });
 
     // Reapply preserved options onto the new options instance
     Object.assign(options, preservedOptions);
+
+    // Restore ascension points and upgrades after reset
+    if (preservedAscension) {
+      ascension.points = preservedAscension.points;
+      ascension.upgrades = preservedAscension.upgrades;
+      // Ensure rune slot bonuses from ascension are applied
+      try {
+        const ascBonusesNow = ascension.getBonuses();
+        runes.ensureEquipSlots(BASE_RUNE_SLOTS + (ascBonusesNow.runeSlots || 0));
+      } catch {}
+    }
 
     prestigeState.bonuses = combined;
     prestigeState.prestigeCount = newCount;
@@ -354,6 +373,9 @@ export default class Prestige {
     hero.gold += ascBonuses.startingGold || 0;
     hero.crystals += ascBonuses.startingCrystals || 0;
     hero.souls += ascBonuses.startingSouls || 0;
+
+    // Recalculate attributes to reflect ascension bonuses applied
+    try { hero.queueRecalculateFromAttributes(); } catch {}
 
     dataManager.saveGame();
     window.location.reload();
