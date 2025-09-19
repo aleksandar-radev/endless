@@ -58,7 +58,7 @@ export const ASCENSION_CATEGORIES = {
       },
       attackRating: {
         label: t('ascension.upgrade.attackRating'),
-        bonus: 200,
+        bonus: 1000,
         stat: 'attackRating',
       },
       chanceToHitPercent: {
@@ -97,12 +97,12 @@ export const ASCENSION_CATEGORIES = {
       },
       armorPercent: {
         label: t('ascension.upgrade.armorPercent'),
-        bonus: 50,
+        bonus: 0.25,
         stat: 'armorPercent',
       },
       evasionPercent: {
         label: t('ascension.upgrade.evasionPercent'),
-        bonus: 50,
+        bonus: 0.25,
         stat: 'evasionPercent',
       },
       elementalResistances: {
@@ -110,10 +110,10 @@ export const ASCENSION_CATEGORIES = {
         bonus: 500,
         stats: ELEMENT_RESISTANCE_STATS,
       },
-      elementalResistancesPercent: {
-        label: t('ascension.upgrade.elementalResistancesPercent'),
-        bonus: 50,
-        stats: ELEMENT_RESISTANCE_PERCENT_STATS,
+      allResistancePercent: {
+        label: t('ascension.upgrade.allResistancePercent'),
+        bonus: 0.25,
+        stat: 'allResistancePercent',
       },
       life: {
         label: t('ascension.upgrade.life'),
@@ -154,11 +154,6 @@ export const ASCENSION_CATEGORIES = {
         label: t('ascension.upgrade.lifeRegenPercent'),
         bonus: 0.01,
         stat: 'lifeRegenPercent',
-      },
-      allResistancePercent: {
-        label: t('ascension.upgrade.allResistancePercent'),
-        bonus: 0.01,
-        stat: 'allResistancePercent',
       },
     },
   },
@@ -251,21 +246,21 @@ export const ASCENSION_CATEGORIES = {
         label: t('ascension.upgrade.reduceEnemyDamagePercent'),
         bonus: 0.01,
         stat: 'reduceEnemyDamagePercent',
-        cost: (lvl) => 5 + lvl,
+        cost: (lvl) => 5 + lvl * 5,
         maxLevel: 50,
       },
       reduceEnemyHpPercent: {
         label: t('ascension.upgrade.reduceEnemyHpPercent'),
         bonus: 0.01,
         stat: 'reduceEnemyHpPercent',
-        cost: (lvl) => 5 + lvl,
+        cost: (lvl) => 5 + lvl * 5,
         maxLevel: 50,
       },
       reduceEnemyAttackSpeedPercent: {
         label: t('ascension.upgrade.reduceEnemyAttackSpeedPercent'),
         bonus: 0.01,
         stat: 'reduceEnemyAttackSpeedPercent',
-        cost: (lvl) => 5 + lvl,
+        cost: (lvl) => 5 + lvl * 5,
         maxLevel: 50,
       },
       // Cost reduction upgrades (percent values; combined additively with rune bonuses)
@@ -322,7 +317,7 @@ export const ASCENSION_CATEGORIES = {
       // Resource gain
       crystalGainPercent: {
         label: t('ascension.upgrade.crystalGainPercent'),
-        bonus: 1,
+        bonus: 0.1,
         effect: 'crystalGainPercent',
         cost: (lvl) => 10 + lvl,
         maxLevel: 100,
@@ -390,8 +385,6 @@ export default class Ascension {
     const prevMana = hero?.stats?.mana || 0;
     this.points -= cost;
     this.upgrades[key] = current + 1;
-    // Recalculate immediately so effects apply right away
-    hero.recalculateFromAttributes();
     if (cfg.stat === 'startingGold') {
       hero.gainGold(cfg.bonus);
     }
@@ -417,6 +410,10 @@ export default class Ascension {
     if (key === 'runeSlots') {
       runes.ensureEquipSlots(BASE_RUNE_SLOTS + this.getBonuses().runeSlots);
     }
+
+    // Recalculate immediately so effects apply right away
+    hero.recalculateFromAttributes();
+
     // Update shop/training UIs to reflect new cost reductions immediately
     try {
       training?.updateTrainingAffordability?.('gold-upgrades');
