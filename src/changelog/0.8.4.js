@@ -8,6 +8,11 @@ export default function run() {
     <ul>
       <li>Reduced xp and gold gains for enemies in the Rocky Field.</li>
     </ul>
+
+    <span style="color:#FF8A00;">Fixes</span>
+    <ul>
+      <li>Fixed re-calculation bug when initially loading game.</li>
+    </ul>
   `;
 }
 

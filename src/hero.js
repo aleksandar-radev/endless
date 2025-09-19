@@ -286,6 +286,7 @@ export default class Hero {
       const trainingPercent = (trainingBonuses[`${attr}Percent`] || 0) / 100;
       const soulFlat = soulBonuses[attr] || 0;
       const soulPercent = soulBonuses[`${attr}Percent`] || 0;
+
       this.statBreakdown[attr] = {
         base,
         allocated,
@@ -498,10 +499,6 @@ export default class Hero {
         }
         if (stat === 'attackSpeed') {
           const cap = 5 + (ascensionBonuses.attackSpeedCap || 0);
-          value = Math.min(value, cap);
-        }
-        if (stat === 'resurrectionChance') {
-          const cap = 50 + ((ascensionBonuses.resurrectionChanceCap || 0) | 0);
           value = Math.min(value, cap);
         }
         if (stat === 'extraMaterialDropMax') value = Math.max(value, 1); // Always at least 1
