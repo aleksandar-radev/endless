@@ -489,11 +489,11 @@ export default class Hero {
 
         // Apply caps
         if (stat === 'blockChance') {
-          const cap = 75 + ((ascensionBonuses.blockChanceCap || 0) | 0);
+          const cap = 50 + ((ascensionBonuses.blockChanceCap || 0) | 0);
           value = Math.min(value, cap);
         }
         if (stat === 'critChance') {
-          const cap = 100 + ((ascensionBonuses.critChanceCap || 0) | 0);
+          const cap = 50 + ((ascensionBonuses.critChanceCap || 0) | 0);
           value = Math.min(value, cap);
         }
         if (stat === 'attackSpeed') {

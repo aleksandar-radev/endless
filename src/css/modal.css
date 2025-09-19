@@ -4,7 +4,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(10, 12, 16, 0.6);
+  backdrop-filter: blur(6px) saturate(1.1);
+  -webkit-backdrop-filter: blur(6px) saturate(1.1);
   z-index: 1000;
 }
 
@@ -13,12 +15,13 @@
 }
 
 .modal-content {
-  background: var(--bg-element);
-  border-radius: 0.75rem;
+  background: linear-gradient(180deg, rgba(34,38,45,0.95), rgba(22,24,28,0.95));
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
   padding: 1.5rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
   position: relative;
-  width: 400px;
+  width: min(640px, 92vw);
   max-height: 90vh;
 }
 
@@ -29,8 +32,14 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--text, #fff);
+  color: #cbd5e1;
   font-size: 1.5rem;
+  transition: color 0.15s ease, transform 0.1s ease;
+}
+
+.modal-close:hover {
+  color: #ffffff;
+  transform: scale(1.06);
 }
 
 .migration-info {

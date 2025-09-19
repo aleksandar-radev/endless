@@ -129,24 +129,25 @@
 /* Ascension confirmation modal */
 .ascension-modal-content {
   position: relative;
-  background: var(--bg-element);
+  background: linear-gradient(180deg, rgba(82, 96, 121, 0.96), rgba(14, 35, 77, 0.96));
   padding: 2rem;
-  border-radius: 1rem;
-  text-align: center;
-  color: #fff;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+  color: #e5e7eb;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.45);
 }
 
 .ascension-modal-content h2 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
+  margin: 0 0 1rem;
+  font-size: 1.6rem;
   color: #ffd47f;
+  font-weight: 800;
+  letter-spacing: 0.3px;
 }
 
 .ascension-modal-content p {
-  margin-bottom: 1.25rem;
-  line-height: 1.4;
+  margin-bottom: 0.9rem;
+  line-height: 1.6;
+  color: #cbd5e1;
 }
 
 .ascension-modal-content .ascension-earned {
@@ -157,21 +158,30 @@
 .ascension-modal-content .modal-controls {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
 
 .ascension-modal-content .modal-controls button {
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
+  border: 1px solid rgba(253, 186, 116, 0.35);
+  padding: 0.55rem 1.1rem;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: 600;
-  color: #fff;
-  transition: background 0.2s;
+  font-weight: 700;
+  color: #1f1305;
+  background: linear-gradient(180deg, #ffd47f, #f59e0b);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+  transition: transform 0.08s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.ascension-modal-content .modal-controls button:hover:not(:disabled) {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
 }
 
 .ascension-modal-content #ascension-confirm-btn {
-  background: linear-gradient(#f59e0b, #d97706);
+  background: linear-gradient(180deg, #f59e0b, #d97706);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
 }
 
 .ascension-modal-content #ascension-confirm-btn:hover {
@@ -179,7 +189,45 @@
 }
 
 .ascension-modal-content #ascension-cancel-btn {
-  background: #555;
+  background: #4b5563;
+}
+
+/* Qty Controls */
+.ascension-modal-content .ascension-qty-controls {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5rem 0 0.5rem;
+}
+
+.ascension-modal-content .ascension-qty-controls .qty-btn {
+  border: 1px solid rgba(253, 186, 116, 0.35);
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  color: #1f1305;
+  background: linear-gradient(180deg, #ffc95d, #db8c03);
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25);
+}
+
+.ascension-modal-content .ascension-qty-controls .qty-btn:hover {
+  filter: brightness(1.05);
+}
+
+.ascension-modal-content .ascension-qty-controls .qty-btn.active {
+  background: linear-gradient(180deg, #ffffff, #ffa200);
+  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.45);
+  border-color: rgba(245, 158, 11, 0.65);
+}
+
+.ascension-modal-content .ascension-qty-controls .modal-qty-input.input-number {
+  width: 120px;
+  padding: 0.4rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(253, 186, 116, 0.35);
+  background: rgba(255, 212, 127, 0.08);
+  color: #ffe8bf;
 }
 
 .ascension-modal-content #ascension-cancel-btn:hover {
@@ -193,7 +241,7 @@
   background: transparent;
   border: none;
   font-size: 1.5rem;
-  color: #ffd47f;
+  color: #cbd5e1;
   cursor: pointer;
 }
 

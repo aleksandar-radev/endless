@@ -65,16 +65,20 @@ export const ASCENSION_CATEGORIES = {
         label: t('ascension.upgrade.chanceToHitPercent'),
         bonus: 0.01,
         stat: 'chanceToHitPercent',
+        maxLevel: 50,
+        cost: (lvl) => 5 + lvl * 2,
       },
       armorPenetration: {
         label: t('ascension.upgrade.armorPenetration'),
-        bonus: 25,
-        stat: 'armorPenetration',
+        bonus: 1, // +1% armor penetration per level
+        stat: 'armorPenetrationPercent',
+        maxLevel: 50,
       },
       elementalPenetration: {
         label: t('ascension.upgrade.elementalPenetration'),
-        bonus: 10,
-        stat: 'elementalPenetration',
+        bonus: 0.01, // +1% elemental penetration per level
+        stat: 'elementalPenetrationPercent',
+        maxLevel: 50,
       },
     },
   },
@@ -240,7 +244,7 @@ export const ASCENSION_CATEGORIES = {
       },
       startingSouls: {
         label: t('ascension.upgrade.startingSouls'),
-        bonus: 100,
+        bonus: 300,
         stat: 'startingSouls',
       },
       reduceEnemyDamagePercent: {
@@ -274,7 +278,7 @@ export const ASCENSION_CATEGORIES = {
       },
       buildingCostReduction: {
         label: t('ascension.upgrade.buildingCostReduction'),
-        bonus: 2,
+        bonus: 1,
         effect: 'buildingCostReduction',
         cost: (lvl) => 10 + 2 * lvl,
         maxLevel: 50,
@@ -313,14 +317,7 @@ export const ASCENSION_CATEGORIES = {
         bonus: 2,
         effect: 'blockChanceCap',
         cost: (lvl) => 20 + 5 * lvl,
-        maxLevel: 25,
-      },
-      resurrectionChanceCap: {
-        label: t('ascension.upgrade.resurrectionChanceCap'),
-        bonus: 5,
-        effect: 'resurrectionChanceCap',
-        cost: (lvl) => 20 + 5 * lvl,
-        maxLevel: 10,
+        maxLevel: 15,
       },
       // Resource gain
       crystalGainPercent: {
@@ -452,4 +449,3 @@ export default class Ascension {
     window.location.reload();
   }
 }
-
