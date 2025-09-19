@@ -299,8 +299,6 @@ export const MISC_STATS = {
   allAttributes: {
     base: 0,
     decimalPlaces: 0,
-    item: { min: 4, max: 8, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
-    itemTags: ['misc', 'stat', 'jewelry', 'gloves'],
   },
   allAttributesPercent: {
     base: 0,

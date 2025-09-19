@@ -146,12 +146,19 @@ class Game {
     }
   }
 
-  damageEnemy(damage, isCritical = false, breakdown = null, skillName = null) {
+  damageEnemy(damage, isCritical = false, breakdown = null, skillName = null, summonName = null) {
     // bail out if we've already defeated this enemy this tick
     if (this._justDefeated) return;
     damage = Math.floor(damage); // Ensure damage is an integer
     let message;
-    if (skillName) {
+    if (summonName) {
+      message = tp('battleLog.summonDamage', {
+        summon: summonName,
+        value: damage,
+        breakdown: formatDamageBreakdown(breakdown),
+        critical: isCritical ? t('battleLog.critical') : '',
+      });
+    } else if (skillName) {
       message = tp('battleLog.castDamage', {
         skill: t(skillName),
         value: damage,

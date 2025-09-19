@@ -861,6 +861,7 @@ export default {
   'battleLog.dealtDamage': '造成 {value} 点伤害{breakdown}{critical}',
   'battleLog.critical': ' (暴击)',
   'battleLog.autoAttack': '（普通攻击）',
+  'battleLog.summonDamage': '召唤物 {summon} 造成了 {value} 点伤害{breakdown}{critical}',
   'battleLog.evadedAttack': '闪避了攻击',
   'battleLog.blockedAttack': '格挡了攻击',
   'battleLog.missedAttack': '攻击未命中',

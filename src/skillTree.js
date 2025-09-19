@@ -604,7 +604,9 @@ export default class SkillTree {
           game.restoreMana(buffData.summonStats.manaPerHit);
         }
 
-        game.damageEnemy(damage, false);
+        const skill = this.getSkill(skillId);
+        const summonName = typeof skill?.name === 'function' ? skill.name() : null;
+        game.damageEnemy(damage, false, null, null, summonName);
         // Schedule next attack
         buffData.nextAttackTime = now + 1000 / buffData.summonStats.attackSpeed;
       }
