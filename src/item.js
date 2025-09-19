@@ -4,7 +4,7 @@ import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
 import { MISC_STATS } from './constants/stats/miscStats.js';
 import { ATTRIBUTES } from './constants/stats/attributes.js';
-import { options } from './globals.js';
+import { options, ascension } from './globals.js';
 import { formatStatName, formatNumber } from './ui/ui.js';
 import { t } from './i18n.js';
 
@@ -93,7 +93,9 @@ export default class Item {
     } else if (limitConfig && typeof limitConfig === 'object') {
       baseLimit = limitConfig[this.type] ?? limitConfig.default ?? Infinity;
     }
-    const percentCap = this.tier * 100;
+    const ascBonuses = ascension?.getBonuses?.() || {};
+    const percentCapMultiplier = 1 + (ascBonuses.itemPercentCapPercent || 0);
+    const percentCap = this.tier * 100 * percentCapMultiplier;
     const limit = stat.toLowerCase().includes('percent')
       ? Math.min(baseLimit, percentCap)
       : baseLimit;
@@ -124,7 +126,9 @@ export default class Item {
     } else if (limitConfig && typeof limitConfig === 'object') {
       baseLimit = limitConfig[this.type] ?? limitConfig.default ?? Infinity;
     }
-    const percentCap = this.tier * 100;
+    const ascBonuses = ascension?.getBonuses?.() || {};
+    const percentCapMultiplier = 1 + (ascBonuses.itemPercentCapPercent || 0);
+    const percentCap = this.tier * 100 * percentCapMultiplier;
     const limit = stat.toLowerCase().includes('percent')
       ? Math.min(baseLimit, percentCap)
       : baseLimit;

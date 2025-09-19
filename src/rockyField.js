@@ -242,7 +242,20 @@ export class RockyFieldEnemy {
     this.gold = scaleStat(getStatValue('gold') * statMultiplier, level, 0, 0, 0, this.baseScale) * xpGoldScale;
 
     ELEMENT_IDS.forEach((id) => {
-      const elementDamage = getStatValue(`${id}Damage`);
+      const enemyElMult = getMultiplierValue(enemyMultipliers, `${id}Damage`);
+      const regionElMult = getMultiplierValue(regionMultipliers, `${id}Damage`);
+      const hasElementalDamage =
+        enemyElMult !== 1 || regionElMult !== 1 || getStatValue(`${id}Damage`) > 0;
+
+      // If an elemental multiplier is present but no explicit base value,
+      // use the physical damage base as the template for elemental damage.
+      const baseDamageForElement = hasElementalDamage
+        ? getStatValue('damage') * enemyElMult * regionElMult
+        : 0;
+
+      const configuredElementDamage = getStatValue(`${id}Damage`);
+      const elementDamage = Math.max(baseDamageForElement, configuredElementDamage);
+
       const dmgBase = scaleStat(
         elementDamage * statMultiplier,
         level,

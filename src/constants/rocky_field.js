@@ -15,6 +15,13 @@ export const ROCKY_FIELD_BASE_STATS = {
   evasion: 313,
   xp: 80,
   gold: 100,
+
+  fireResistance: 100,
+  coldResistance: 100,
+  airResistance: 100,
+  earthResistance: 120,
+  lightningResistance: 100,
+  waterResistance: 100,
 };
 
 

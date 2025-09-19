@@ -15,6 +15,10 @@ export const ROCKY_FIELD_CAVES_ENEMIES = [
       evasion: 1.2,
       xp: 1.1,
       gold: 1,
+      // Elemental flavor
+      coldDamage: 0.25,
+      earthResistance: 1.2,
+      coldResistance: 1.2,
     },
     special: ['alwaysHit'],
     runeDrop: ROCKY_FIELD_ALL_RUNES,

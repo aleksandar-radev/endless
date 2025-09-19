@@ -25,11 +25,6 @@ export const PRESTIGE_BONUSES = [
     max: 0.125,
   },
   {
-    stat: 'allAttributes',
-    min: 20,
-    max: 38,
-  },
-  {
     stat: 'allAttributesPercent',
     min: 0.025,
     max: 0.075,

@@ -15,6 +15,11 @@ export const ROCKY_FIELD_SUMMIT_ENEMIES = [
       evasion: 1.1,
       xp: 1.3,
       gold: 1.3,
+      // Elemental flavor
+      earthDamage: 0.55,
+      fireDamage: 0.15,
+      earthResistance: 2.0,
+      fireResistance: 1.2,
     },
     special: [],
     runeDrop: ROCKY_FIELD_ALL_RUNES,

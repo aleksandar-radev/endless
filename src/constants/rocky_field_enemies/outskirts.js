@@ -15,6 +15,9 @@ export const ROCKY_FIELD_OUTSKIRTS_ENEMIES = [
       evasion: 0.8,
       xp: 1,
       gold: 1,
+      // Elemental flavor
+      earthDamage: 0.2,
+      earthResistance: 1.2,
     },
     special: ['alwaysHit'],
     runeDrop: ROCKY_FIELD_COMMON_RUNES,

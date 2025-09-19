@@ -15,6 +15,10 @@ export const ROCKY_FIELD_CLIFFS_ENEMIES = [
       evasion: 1.3,
       xp: 1.2,
       gold: 1.2,
+      // Elemental flavor
+      airDamage: 0.3,
+      airResistance: 1.3,
+      earthResistance: 1.1,
     },
     special: ['noLeech'],
     runeDrop: ROCKY_FIELD_ALL_RUNES,

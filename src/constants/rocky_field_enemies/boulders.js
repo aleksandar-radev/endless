@@ -15,6 +15,9 @@ export const ROCKY_FIELD_BOULDERS_ENEMIES = [
       evasion: 0.8,
       xp: 1.1,
       gold: 1.1,
+      // Elemental flavor
+      earthDamage: 0.35,
+      earthResistance: 1.5,
     },
     special: ['noLeech'],
     runeDrop: ROCKY_FIELD_COMMON_RUNES,

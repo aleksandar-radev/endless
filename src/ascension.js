@@ -313,6 +313,13 @@ export const ASCENSION_CATEGORIES = {
         cost: (lvl) => 20 + 5 * lvl,
         maxLevel: 15,
       },
+      // Item % bonus cap extension (affects all percentage bonuses on items)
+      itemPercentCapPercent: {
+        label: t('ascension.upgrade.itemPercentCapPercent'),
+        bonus: 0.01, // +1% to item % caps per level
+        effect: 'itemPercentCapPercent',
+        // Always costs 1 ascension point per level (no scaling)
+      },
       // Resource gain
       crystalGainPercent: {
         label: t('ascension.upgrade.crystalGainPercent'),

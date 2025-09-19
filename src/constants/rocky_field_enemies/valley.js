@@ -15,6 +15,10 @@ export const ROCKY_FIELD_VALLEY_ENEMIES = [
       evasion: 1,
       xp: 1.2,
       gold: 1.2,
+      // Elemental flavor
+      earthDamage: 0.4,
+      earthResistance: 1.6,
+      lightningResistance: 1.1,
     },
     special: [],
     runeDrop: ROCKY_FIELD_ALL_RUNES,
