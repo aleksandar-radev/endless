@@ -1,4 +1,4 @@
-import { game, hero, inventory, training, skillTree, dataManager, statistics, runes, ascension } from './globals.js';
+import { game, hero, inventory, training, skillTree, dataManager, statistics, runes, ascension, prestige } from './globals.js';
 import { MATERIALS } from './constants/materials.js';
 import { RUNES } from './constants/runes.js';
 import SimpleCrypto from 'simple-crypto-js';
@@ -787,6 +787,25 @@ export function createModifyUI() {
     showToast('Added 100 ascension points!');
   });
   ascensionSection.appendChild(addAscensionPointBtn);
+
+  // Enable Ascension by setting prestiges to 20
+  const enableAscensionBtn = document.createElement('button');
+  enableAscensionBtn.textContent = 'Enable Ascension (20 Prestiges)';
+  enableAscensionBtn.title = 'Sets prestige count to 20 so Ascend can be used immediately.';
+  enableAscensionBtn.addEventListener('click', () => {
+    const before = prestige.prestigeCount || 0;
+    if (before < 20) {
+      prestige.prestigeCount = 20;
+      dataManager.saveGame();
+      updateAscensionUI();
+      updateTabIndicators();
+      showToast('Prestige count set to 20 for Ascension.');
+    } else {
+      updateAscensionUI();
+      showToast('Already eligible to Ascend (>= 20 prestiges).');
+    }
+  });
+  ascensionSection.appendChild(enableAscensionBtn);
 
   // Example: Add buttons to modify training
   const trainingSection = document.createElement('div');
