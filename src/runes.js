@@ -1,4 +1,5 @@
 import { RUNES } from './constants/runes.js';
+const RUNES_BY_ID = new Map(RUNES.map((r) => [r.id, r]));
 import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
 import { MISC_STATS } from './constants/stats/miscStats.js';
@@ -16,8 +17,22 @@ const ALL_STATS = new Set([...OFFENSE_SET, ...DEFENSE_SET, ...MISC_SET]);
 
 export default class Runes {
   constructor(savedData = {}) {
-    this.equipped = savedData.equipped || [];
-    this.inventory = savedData.inventory || [];
+    // Normalize saved data to minimal representation: only id and conversion.percent
+    const normalize = (arr = []) =>
+      (arr || []).map((r) => {
+        if (!r) return null;
+        const minimal = { id: r.id };
+        if (r.conversion) {
+          const percent = typeof r.conversion.percent === 'number'
+            ? r.conversion.percent
+            : (RUNES_BY_ID.get(r.id)?.conversion?.percent ?? undefined);
+          minimal.conversion = typeof percent === 'number' ? { percent } : undefined;
+        }
+        return minimal;
+      });
+
+    this.equipped = normalize(savedData.equipped || []);
+    this.inventory = normalize(savedData.inventory || []);
     this.ensureEquipSlots(BASE_RUNE_SLOTS);
     if (this.inventory.length < INVENTORY_SLOTS) {
       this.inventory = [
@@ -48,17 +63,15 @@ export default class Runes {
   }
 
   addRune(id, percentOverride) {
-    const rune = RUNES.find((r) => r.id === id);
+    const rune = RUNES_BY_ID.get(id);
     if (!rune) return null;
     const idx = this.inventory.findIndex((r) => r === null);
     if (idx === -1) return null;
-    const inst = { ...rune };
+    const inst = { id: rune.id };
     if (rune.conversion) {
-      inst.conversion = { ...rune.conversion };
-      if (percentOverride !== undefined) inst.conversion.percent = percentOverride;
-    }
-    if (rune.bonus) {
-      inst.bonus = { ...rune.bonus };
+      const percent =
+        typeof percentOverride === 'number' ? percentOverride : rune.conversion.percent;
+      inst.conversion = { percent };
     }
     this.inventory[idx] = inst;
     return inst;
@@ -67,7 +80,8 @@ export default class Runes {
   equip(slotIndex, inventoryIndex) {
     const rune = this.inventory[inventoryIndex];
     if (!rune) return;
-    if (rune.unique) {
+    const base = RUNES_BY_ID.get(rune.id);
+    if (base?.unique) {
       const existingIndex = this.equipped.findIndex((r) => r?.id === rune.id);
       if (existingIndex !== -1 && existingIndex !== slotIndex) {
         return;
@@ -108,14 +122,16 @@ export default class Runes {
   salvage(index) {
     const rune = this.inventory[index];
     if (!rune) return 0;
+    const base = RUNES.find((r) => r.id === rune.id);
 
     let crystals = 0;
-    if (rune.unique) {
+    if (base?.unique) {
       crystals = 200;
-    } else if (rune.conversion) {
-      crystals = Math.max(1, Math.floor(rune.conversion.percent / 2));
-    } else if (rune.bonus) {
-      const maxBonus = Math.max(...Object.values(rune.bonus));
+    } else if (base?.conversion) {
+      const percent = rune.conversion?.percent ?? base.conversion.percent;
+      crystals = Math.max(1, Math.floor(percent / 2));
+    } else if (base?.bonus) {
+      const maxBonus = Math.max(...Object.values(base.bonus));
       crystals = Math.max(1, Math.floor(maxBonus / 2));
     } else {
       crystals = 1;
@@ -143,8 +159,12 @@ export default class Runes {
   applyBonuses(flatValues) {
     if (!flatValues) return;
     this.equipped.forEach((rune) => {
-      if (!rune?.conversion) return;
-      const { from, to, percent } = rune.conversion;
+      if (!rune) return;
+      const base = RUNES_BY_ID.get(rune.id);
+      if (!base?.conversion) return;
+      const from = base.conversion.from;
+      const to = base.conversion.to;
+      const percent = rune.conversion?.percent ?? base.conversion.percent;
       if (!ALL_STATS.has(from) || !ALL_STATS.has(to)) return;
       const amount = (flatValues[from] || 0) * (percent / 100);
       flatValues[from] = (flatValues[from] || 0) - amount;
@@ -155,8 +175,10 @@ export default class Runes {
   getBonusEffects() {
     const bonuses = {};
     this.equipped.forEach((rune) => {
-      if (!rune?.bonus) return;
-      Object.entries(rune.bonus).forEach(([stat, value]) => {
+      if (!rune) return;
+      const base = RUNES_BY_ID.get(rune.id);
+      if (!base?.bonus) return;
+      Object.entries(base.bonus).forEach(([stat, value]) => {
         bonuses[stat] = (bonuses[stat] || 0) + value;
       });
     });
@@ -165,19 +187,26 @@ export default class Runes {
 }
 
 export function getRuneName(rune, shortElementalNames = false) {
-  if (rune.nameKey) return t(rune.nameKey);
-  const from = formatStatName(rune.fromKey, shortElementalNames);
-  const to = formatStatName(rune.toKey, shortElementalNames);
+  const base = RUNES_BY_ID.get(rune.id);
+  if (base?.nameKey) return t(base.nameKey);
+  const from = formatStatName(base?.fromKey, shortElementalNames);
+  const to = formatStatName(base?.toKey, shortElementalNames);
   return tp('rune.convertName', { from, to });
 }
 
 export function getRuneDescription(rune, shortElementalNames = false) {
-  if (rune.descKey) return t(rune.descKey);
-  const from = formatStatName(rune.fromKey, shortElementalNames);
-  const to = formatStatName(rune.toKey, shortElementalNames);
+  const base = RUNES_BY_ID.get(rune.id);
+  if (base?.descKey) return t(base.descKey);
+  const from = formatStatName(base?.fromKey, shortElementalNames);
+  const to = formatStatName(base?.toKey, shortElementalNames);
   return tp('rune.convertDesc', {
-    percent: rune.conversion.percent,
+    percent: rune.conversion?.percent ?? base?.conversion?.percent,
     from,
     to,
   });
+}
+
+export function getRuneIcon(rune) {
+  const base = RUNES_BY_ID.get(rune.id);
+  return base?.icon || '';
 }

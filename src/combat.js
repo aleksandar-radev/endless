@@ -22,7 +22,7 @@ import { battleLog } from './battleLog.js';
 import { t, tp } from './i18n.js';
 import { RockyFieldEnemy, getRockyFieldRunePercent } from './rockyField.js';
 import { renderRunesUI } from './ui/runesUi.js';
-import { getRuneName } from './runes.js';
+import { getRuneName, getRuneIcon } from './runes.js';
 import { RUNES } from './constants/runes.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
@@ -485,7 +485,7 @@ function showRuneNotification(rune) {
   notification.className = 'loot-notification';
   notification.style.color = '#4db34d';
   const name = getRuneName(rune, options.shortElementalNames);
-  notification.innerHTML = `Found: <img src="${rune.icon}" class="icon" alt="rune"/> ${name}`;
+  notification.innerHTML = `Found: <img src="${getRuneIcon(rune)}" class="icon" alt="rune"/> ${name}`;
   document.body.appendChild(notification);
 
   setTimeout(() => notification.remove(), 3000);

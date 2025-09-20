@@ -1,6 +1,6 @@
 import { runes, dataManager, hero, options, training, soulShop } from '../globals.js';
 import { t } from '../i18n.js';
-import { getRuneName, getRuneDescription } from '../runes.js';
+import { getRuneName, getRuneDescription, getRuneIcon } from '../runes.js';
 import { showTooltip, positionTooltip, hideTooltip, showToast } from './ui.js';
 import { createModal, closeModal } from './modal.js';
 
@@ -36,7 +36,7 @@ export function renderRunesUI() {
       slot.classList.add('selected');
     }
     if (rune) {
-      slot.appendChild(createRuneIcon(rune.icon));
+      slot.appendChild(createRuneIcon(getRuneIcon(rune)));
       slot.draggable = true;
       slot.addEventListener('dragstart', (e) => {
         e.dataTransfer.setData('text/plain', `equipped-${i}`);
@@ -99,7 +99,7 @@ export function renderRunesUI() {
       slot.classList.add('selected');
     }
     if (rune) {
-      slot.appendChild(createRuneIcon(rune.icon));
+      slot.appendChild(createRuneIcon(getRuneIcon(rune)));
       slot.draggable = true;
       slot.addEventListener('dragstart', (e) => {
         e.dataTransfer.setData('text/plain', `inventory-${i}`);
