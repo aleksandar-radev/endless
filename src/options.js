@@ -1,5 +1,5 @@
 
-import { crystalShop, dataManager, game, setGlobals, training, soulShop, statistics, ascension } from './globals.js';
+import { crystalShop, dataManager, game, setGlobals, training, soulShop, statistics, ascension, runes } from './globals.js';
 import { CLASS_PATHS } from './constants/skills.js';
 import { initializeBuildingsUI } from './ui/buildingUi.js';
 import { crypt } from './functions.js';
@@ -53,7 +53,7 @@ const OPTION_TOOLTIPS = {
   stageLockStageInput: (isPurchased) =>
     html`${isPurchased() ? '' : t('options.stageLock.disabledTooltip')}`,
   arenaBossSkipLabel: () => html`${t('options.arenaBossSkip.tooltip')}`,
-  arenaBossSkipInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnAscension')}`,
+  arenaBossSkipInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnAscensionAndRunes')}`,
   resetStageSkipLabel: () => html`Stage where stage skip resets to zero`,
   resetStageSkipInput: (isPurchased) =>
     html`${isPurchased()
@@ -719,7 +719,8 @@ export class Options {
   }
 
   _createArenaBossSkipOption() {
-    let max = ascension.getBonuses()?.arenaBossSkip || 0;
+    const runeBonuses = runes?.getBonusEffects?.() || {};
+    let max = (ascension.getBonuses()?.arenaBossSkip || 0) + (runeBonuses.arenaBossSkip || 0);
     const value = this.arenaBossSkip != null ? this.arenaBossSkip : 0;
 
     const wrapper = document.createElement('div');
@@ -743,7 +744,10 @@ export class Options {
     const maxBtn = wrapper.querySelector('.max-btn');
     const applyBtn = wrapper.querySelector('.apply-btn');
     attachTooltip(label, 'arenaBossSkipLabel');
-    attachTooltip(input, 'arenaBossSkipInput', () => ascension.getBonuses()?.arenaBossSkip || 0);
+    attachTooltip(input, 'arenaBossSkipInput', () => {
+      const rb = runes?.getBonusEffects?.() || {};
+      return (ascension.getBonuses()?.arenaBossSkip || 0) + (rb.arenaBossSkip || 0);
+    });
 
     this._bossSkipInput = input;
 
@@ -753,7 +757,8 @@ export class Options {
       maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
       maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
       maxBtn.onclick = () => {
-        const m = ascension.getBonuses()?.arenaBossSkip || 0;
+        const rb = runes?.getBonusEffects?.() || {};
+        const m = (ascension.getBonuses()?.arenaBossSkip || 0) + (rb.arenaBossSkip || 0);
         input.value = m;
         input.dispatchEvent(new Event('input'));
       };
@@ -761,7 +766,8 @@ export class Options {
 
     input.addEventListener('input', () => {
       let val = parseInt(input.value, 10);
-      let m = ascension.getBonuses()?.arenaBossSkip || 0;
+      const rb = runes?.getBonusEffects?.() || {};
+      let m = (ascension.getBonuses()?.arenaBossSkip || 0) + (rb.arenaBossSkip || 0);
       if (isNaN(val) || val < 0) val = 0;
       if (val > m) val = m;
       input.value = val;
@@ -769,7 +775,8 @@ export class Options {
 
     applyBtn.onclick = () => {
       let val = parseInt(input.value, 10);
-      let m = ascension.getBonuses()?.arenaBossSkip || 0;
+      const rb = runes?.getBonusEffects?.() || {};
+      let m = (ascension.getBonuses()?.arenaBossSkip || 0) + (rb.arenaBossSkip || 0);
       if (isNaN(val) || val < 0) val = 0;
       if (val > m) val = m;
       this.arenaBossSkip = val;
@@ -842,7 +849,8 @@ export class Options {
   updateArenaBossSkipOption() {
     if (!this._bossSkipInput) return;
     const oldMax = parseInt(this._bossSkipInput.max, 10) || 0;
-    const max = ascension.getBonuses()?.arenaBossSkip || 0;
+    const rb = runes?.getBonusEffects?.() || {};
+    const max = (ascension.getBonuses()?.arenaBossSkip || 0) + (rb.arenaBossSkip || 0);
     this._bossSkipInput.max = max;
 
     let val = parseInt(this._bossSkipInput.value, 10);

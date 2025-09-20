@@ -19,6 +19,7 @@ export default function run() {
       <li>Skill modal now shows the correct SP cost for the selected quantity even when you don't have enough points.</li>
       <li>Fix ascension armor penetration bonus.</li>
       <li>Stage display keeps thousands separators after re-render.</li>
+      <li>Arena Boss Skip unique rune now applies correctly: the option's max includes both Ascension bonuses and equipped rune bonuses, and updates immediately when runes are equipped/unequipped. Boss skipping on kill honors the combined cap.</li>
     </ul>
   `;
 }

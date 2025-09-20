@@ -61,6 +61,8 @@ export function renderRunesUI() {
         hero.queueRecalculateFromAttributes();
         training.updateTrainingAffordability('gold-upgrades');
         soulShop.updateSoulShopAffordability();
+        // Update Arena Boss Skip option max when unique rune effects change
+        try { options.updateArenaBossSkipOption?.(); } catch {}
         selectedRune = null;
         renderRunesUI();
         dataManager.saveGame();
@@ -187,6 +189,7 @@ function equipSelectedRune() {
   hero.queueRecalculateFromAttributes();
   training.updateTrainingAffordability('gold-upgrades');
   soulShop.updateSoulShopAffordability();
+  try { options.updateArenaBossSkipOption?.(); } catch {}
   selectedRune = null;
   renderRunesUI();
   dataManager.saveGame();
@@ -213,6 +216,7 @@ function handleDrop(e) {
   hero.queueRecalculateFromAttributes();
   training.updateTrainingAffordability('gold-upgrades');
   soulShop.updateSoulShopAffordability();
+  try { options.updateArenaBossSkipOption?.(); } catch {}
   selectedRune = null;
   renderRunesUI();
   dataManager.saveGame();
@@ -267,6 +271,7 @@ function openRuneContextMenu(source, index, rune, x, y) {
     if (crystals > 0) {
       showToast(`Salvaged rune for ${crystals} crystal${crystals > 1 ? 's' : ''}`,'success');
     }
+    try { options.updateArenaBossSkipOption?.(); } catch {}
     selectedRune = null;
     renderRunesUI();
     dataManager.saveGame();
