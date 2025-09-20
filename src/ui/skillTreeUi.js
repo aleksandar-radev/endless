@@ -632,6 +632,9 @@ function updateSkillModalDetails() {
   const maxQty = skillTree.calculateMaxPurchasable(skill);
   const actualQty = selectedSkillQty === 'max' ? maxQty : Math.min(qty, maxQty);
   const futureLevel = currentLevel + actualQty;
+  // Quantity used for displaying cost should reflect the selected amount,
+  // even if unaffordable (except 'max', which depends on affordability).
+  const displayQty = selectedSkillQty === 'max' ? maxQty : (isNaN(qty) ? 0 : qty);
 
   // Update modal fields
   skillModal.querySelector('.modal-level').textContent = currentLevel;
@@ -639,14 +642,14 @@ function updateSkillModalDetails() {
   skillModal.querySelector('.modal-available-points').textContent = skillTree.skillPoints;
 
   // Update SP cost display and button labels
+  // Show true cost for the selected quantity (not clamped by affordability)
+  const displayCost = skillTree.calculateSkillPointCost(currentLevel, displayQty);
   const totalCost = skillTree.calculateSkillPointCost(currentLevel, actualQty);
-  skillModal.querySelector('.modal-sp-cost').textContent = totalCost + ' SP';
+  skillModal.querySelector('.modal-sp-cost').textContent = displayCost + ' SP';
   skillModal.querySelectorAll('.modal-controls button').forEach((btn) => {
     const v = btn.dataset.qty;
-    let btnQty;
-    if (v === 'max') btnQty = maxQty;
-    else btnQty = Math.min(parseInt(v, 10), maxQty);
-    const btnCost = skillTree.calculateSkillPointCost(currentLevel, btnQty);
+    const rawQty = v === 'max' ? maxQty : parseInt(v, 10);
+    const btnCost = skillTree.calculateSkillPointCost(currentLevel, isNaN(rawQty) ? 0 : rawQty);
     btn.textContent = (v === 'max' ? 'Max' : '+' + v) + ' (' + btnCost + ' SP)';
   });
 
@@ -710,7 +713,8 @@ function updateSkillModalDetails() {
   // Update buy button
   const buyBtn = skillModal.querySelector('.modal-buy');
   buyBtn.disabled = actualQty <= 0;
-  buyBtn.textContent = `Buy ${actualQty} for ${totalCost} SP`;
+  // Show intended purchase amount and its true cost even if unaffordable
+  buyBtn.textContent = `Buy ${displayQty} for ${displayCost} SP`;
 }
 
 function buySkillBulk() {

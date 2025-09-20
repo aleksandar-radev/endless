@@ -14,9 +14,9 @@ export default function run() {
       <li>Updated <b>Cooldown Reduction %</b> tooltip to remove the obsolete 400 cap reference; it now clearly states max 80%.</li>
     </ul>
 
-    <!-- <span style="color:#FF8A00;">Fixes</span>
+    <span style="color:#FF8A00;">Fixes</span>
     <ul>
-      <li>Fixed re-calculation bug when initially loading game.</li>
-    </ul> -->
+      <li>Skill modal now shows the correct SP cost for the selected quantity even when you don't have enough points.</li>
+    </ul>
   `;
 }
