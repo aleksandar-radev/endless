@@ -69,7 +69,7 @@ export const ASCENSION_CATEGORIES = {
       },
       armorPenetration: {
         label: t('ascension.upgrade.armorPenetration'),
-        bonus: 1, // +1% armor penetration per level
+        bonus: 0.01, // +1% armor penetration per level
         stat: 'armorPenetrationPercent',
         maxLevel: 50,
       },

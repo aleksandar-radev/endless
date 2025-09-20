@@ -156,8 +156,8 @@ function openUpgradeInfoModal(key) {
   const title = perLevel ? `${perLevel} ${cfg.label}` : cfg.label;
 
   const controlsMarkup = options?.useNumericInputs
-    ? `<div class="ascension-qty-controls"><input type="number" class="modal-qty-input input-number" min="1" value="1" /></div>`
-    : `<div class="ascension-qty-controls"><button class="qty-btn" data-qty="1">+1</button><button class="qty-btn" data-qty="10">+10</button><button class="qty-btn" data-qty="50">+50</button></div>`;
+    ? '<div class="ascension-qty-controls"><input type="number" class="modal-qty-input input-number" min="1" value="1" /></div>'
+    : '<div class="ascension-qty-controls"><button class="qty-btn" data-qty="1">+1</button><button class="qty-btn" data-qty="10">+10</button><button class="qty-btn" data-qty="50">+50</button></div>';
 
   const content = `
     <div class="ascension-modal-content">
@@ -165,18 +165,18 @@ function openUpgradeInfoModal(key) {
       <h2>${title}</h2>
       <p>${tip}</p>
       <p>${t('ascension.upgrade.currentLevel')}: <span class="modal-level">${formatNumber(level)}</span>${
-        max !== Infinity ? `/<span class=\"modal-max\">${formatNumber(max)}</span>` : ''
-      }</p>
+  max !== Infinity ? `/<span class=\"modal-max\">${formatNumber(max)}</span>` : ''
+}</p>
       <p>${t('ascension.upgrade.currentBonus')}: <span class="modal-bonus">${getAscensionBonusText(
-        key,
-        cfg,
-        level,
-      )}</span></p>
+  key,
+  cfg,
+  level,
+)}</span></p>
       <p>${t('ascension.upgrade.nextLevelBonus')}: <span class="modal-next-bonus">${getAscensionBonusText(
-        key,
-        cfg,
-        level + 1,
-      )}</span></p>
+  key,
+  cfg,
+  level + 1,
+)}</span></p>
       <p>${t('ascension.upgrade.totalCost')}: <span class="modal-total-cost"></span> ${t('ascension.points')} (<span class="modal-qty">1</span>)</p>
       ${controlsMarkup}
       <div class="modal-controls">
@@ -276,8 +276,7 @@ function getAscensionPerLevelBonusText(key, cfg) {
   const target = cfg.stat || cfg.effect || (Array.isArray(cfg.stats) ? cfg.stats[0] : null);
   const isPercent = (s) => (s && /Percent$/i.test(s)) || false;
   // Stats that store percent as raw integer points (not fraction 0..1)
-  const RAW_PERCENT_STATS = new Set(['armorPenetrationPercent']);
-  const useFractional = isPercent(target) && !RAW_PERCENT_STATS.has(target);
+  const useFractional = isPercent(target);
   const decimals =
     (target && STATS[target]?.decimalPlaces !== undefined)
       ? STATS[target].decimalPlaces
@@ -293,8 +292,7 @@ function getAscensionBonusText(key, cfg, level) {
   const total = valPerLevel * lvl;
   const target = cfg.stat || cfg.effect || (Array.isArray(cfg.stats) ? cfg.stats[0] : null);
   const isPercent = (s) => (s && /Percent$/i.test(s)) || false;
-  const RAW_PERCENT_STATS = new Set(['armorPenetrationPercent']);
-  const useFractional = isPercent(target) && !RAW_PERCENT_STATS.has(target);
+  const useFractional = isPercent(target);
   const decimals =
     (target && STATS[target]?.decimalPlaces !== undefined)
       ? STATS[target].decimalPlaces

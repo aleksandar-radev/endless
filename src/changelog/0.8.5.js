@@ -17,6 +17,7 @@ export default function run() {
     <span style="color:#FF8A00;">Fixes</span>
     <ul>
       <li>Skill modal now shows the correct SP cost for the selected quantity even when you don't have enough points.</li>
+      <li>Fix ascension armor penetration bonus.</li>
     </ul>
   `;
 }
