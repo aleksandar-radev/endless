@@ -1,7 +1,7 @@
 import { STATS } from '../constants/stats/stats.js';
 import { CLASS_PATHS, SKILL_TREES } from '../constants/skills.js';
 import { SKILL_LEVEL_TIERS } from '../skillTree.js';
-import { skillTree, hero, crystalShop, options } from '../globals.js';
+import { skillTree, hero, crystalShop, options, dataManager } from '../globals.js';
 import { formatStatName, hideTooltip, positionTooltip, showToast, showTooltip, updateResources } from './ui.js';
 import { t } from '../i18n.js';
 import { createModal, closeModal } from './modal.js';
@@ -460,8 +460,63 @@ export function updateSkillTreeValues() {
   const container = document.getElementById('skill-tree-container');
 
   const skillPointsHeader = container.querySelector('.skill-points-header');
+  // Rebuild header with optional quick allocation controls
+  let rightControls = '';
+  if (options?.quickSkills) {
+    if (options.useNumericInputs) {
+      const val = skillTree.quickQty === 'max' ? (options.skillQuickQty || 1) : skillTree.quickQty;
+      rightControls = `
+        <div class="skill-qty-controls">
+          <input type="number" class="skill-qty-input input-number" min="1" value="${val}" />
+          <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">Max</button>
+        </div>`;
+    } else {
+      rightControls = `
+        <div class="skill-qty-controls">
+          <button data-qty="1" class="${skillTree.quickQty === 1 ? 'active' : ''}">1</button>
+          <button data-qty="5" class="${skillTree.quickQty === 5 ? 'active' : ''}">5</button>
+          <button data-qty="25" class="${skillTree.quickQty === 25 ? 'active' : ''}">25</button>
+          <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">Max</button>
+        </div>`;
+    }
+  }
   skillPointsHeader.innerHTML = `
-    <span class="skill-path-name">${characterName}</span> Available Skill Points: ${skillTree.skillPoints}`;
+    <div class="skill-header-left">
+      <span class="skill-path-name">${characterName}</span>
+      <span class="skill-points">Available Skill Points: ${skillTree.skillPoints}</span>
+    </div>
+    ${rightControls}
+  `;
+  const qtyControls = skillPointsHeader.querySelector('.skill-qty-controls');
+  if (qtyControls) {
+    if (options.useNumericInputs) {
+      const input = qtyControls.querySelector('.skill-qty-input');
+      const maxBtn = qtyControls.querySelector('button[data-qty="max"]');
+      input.oninput = () => {
+        let v = parseInt(input.value, 10);
+        if (isNaN(v) || v < 1) v = 1;
+        skillTree.quickQty = v;
+        options.skillQuickQty = v;
+        maxBtn.classList.remove('active');
+        dataManager.saveGame();
+        updateSkillTreeValues();
+      };
+      maxBtn.onclick = () => {
+        skillTree.quickQty = 'max';
+        maxBtn.classList.add('active');
+        dataManager.saveGame();
+        updateSkillTreeValues();
+      };
+    } else {
+      qtyControls.querySelectorAll('button').forEach((btn) => {
+        btn.onclick = () => {
+          skillTree.quickQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+          qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+        };
+      });
+    }
+  }
 
   container.querySelectorAll('.skill-node').forEach((node) => {
     const skillId = node.dataset.skillId;
@@ -760,7 +815,23 @@ function createSkillElement(baseSkill) {
   skillElement.addEventListener('mouseleave', hideTooltip);
 
   skillElement.addEventListener('click', (e) => {
-    openSkillModal(skill.id);
+    if (options?.quickSkills) {
+      const count = skillTree.quickQty === 'max' ? Infinity : parseInt(skillTree.quickQty, 10) || 1;
+      const currentLevel = skillTree.skills[skill.id]?.level || 0;
+      const unlocked = skillTree.unlockSkillBulk(skill.id, count);
+      if (typeof gtag === 'function' && unlocked > 0) {
+        gtag('event', 'skill_leveled_up_bulk', {
+          event_category: 'SkillTree',
+          event_label: skill.id,
+          value: unlocked,
+          final_level: currentLevel + unlocked,
+        });
+      }
+      updateSkillTreeValues();
+      updateActionBar();
+    } else {
+      openSkillModal(skill.id);
+    }
   });
 
   return skillElement;

@@ -1,5 +1,5 @@
 
-import { crystalShop, dataManager, game, setGlobals, training, soulShop, statistics, ascension, runes } from './globals.js';
+import { crystalShop, dataManager, game, setGlobals, training, soulShop, statistics, ascension, runes, skillTree } from './globals.js';
 import { CLASS_PATHS } from './constants/skills.js';
 import { initializeBuildingsUI } from './ui/buildingUi.js';
 import { crypt } from './functions.js';
@@ -13,6 +13,7 @@ import {
   showTooltip,
   positionTooltip,
   hideTooltip,
+  initializeSkillTreeStructure,
 } from './ui/ui.js';
 import { updateBuffIndicators } from './ui/skillTreeUi.js';
 import { closeModal, createModal } from './ui/modal.js';
@@ -28,6 +29,7 @@ import {
   CRYSTAL_SHOP_MAX_QTY,
   TRAINING_MAX_QTY,
   BUILDING_MAX_QTY,
+  GLOBAL_MAX_QTY,
 } from './constants/limits.js';
 
 const html = String.raw;
@@ -67,6 +69,7 @@ const OPTION_TOOLTIPS = {
   quickTrainingLabel: () => html`Enable quick buy buttons for training`,
   bulkTrainingLabel: () => html`Allow purchasing multiple training levels at once`,
   quickSoulShopLabel: () => html`Enable quick purchase buttons in the soul shop`,
+  quickSkillsLabel: () => html`Enable quick allocation in the skill tree`,
   numericInputLabel: () => html`Use numeric fields to specify purchase quantities`,
   autoSortInventoryLabel: () => html`Automatically sort inventory items`,
   autoSortInventoryToggle: (isPurchased) =>
@@ -122,6 +125,8 @@ export class Options {
     this.bulkTraining = data.bulkTraining ?? false;
     // Enable quick soul shop purchases
     this.quickSoulShop = data.quickSoulShop ?? false;
+    // Enable quick skill allocations
+    this.quickSkills = data.quickSkills ?? false;
     // Use numeric inputs for bulk purchases
     this.useNumericInputs = data.useNumericInputs ?? false;
     // Default quantities for bulk purchases
@@ -144,6 +149,10 @@ export class Options {
     this.trainingQuickQty =
       typeof data.trainingQuickQty === 'number'
         ? Math.min(data.trainingQuickQty, TRAINING_MAX_QTY)
+        : 1;
+    this.skillQuickQty =
+      typeof data.skillQuickQty === 'number'
+        ? Math.max(1, Math.min(data.skillQuickQty, GLOBAL_MAX_QTY))
         : 1;
     this.buildingQty =
       typeof data.buildingQty === 'number'
@@ -283,6 +292,7 @@ export class Options {
     gameContent.appendChild(this._createQuickTrainingOption());
     gameContent.appendChild(this._createBulkTrainingOption());
     gameContent.appendChild(this._createQuickSoulShopOption());
+    gameContent.appendChild(this._createQuickSkillsOption());
     gameContent.appendChild(this._createNumericInputOption());
     gameContent.appendChild(this._createAutoSortInventoryOption());
     gameContent.appendChild(this._createStageControlsInlineOption());
@@ -1700,6 +1710,38 @@ export class Options {
   }
 
   /**
+   * Creates the quick skills toggle option UI.
+   */
+  _createQuickSkillsOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="quick-skills-toggle" class="quick-skills-toggle-label" data-i18n="options.quickSkills">Enable Quick Skill Allocation:</label>
+      <input
+        type="checkbox"
+        id="quick-skills-toggle"
+        class="quick-skills-toggle"
+        ${this.quickSkills ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const label = wrapper.querySelector('.quick-skills-toggle-label');
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'quickSkillsLabel');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.quickSkills = checkbox.checked;
+      dataManager.saveGame();
+      initializeSkillTreeStructure();
+    });
+    return wrapper;
+  }
+
+  /**
    * Toggle numeric input fields for bulk purchases.
    */
   _createNumericInputOption() {
@@ -1728,6 +1770,7 @@ export class Options {
       if (!this.useNumericInputs) {
         if (training) training.quickQty = 1;
         if (soulShop) soulShop.quickQty = 1;
+        if (skillTree) skillTree.quickQty = 1;
       }
       dataManager.saveGame();
       if (training) {
@@ -1742,6 +1785,7 @@ export class Options {
         crystalShop.modal = null;
         crystalShop.initializeCrystalShopUI();
       }
+      initializeSkillTreeStructure();
       initializeBuildingsUI();
     });
     return wrapper;

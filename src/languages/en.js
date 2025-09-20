@@ -377,6 +377,7 @@ export default {
   'options.quickTraining': 'Enable Quick Training',
   'options.bulkTraining': 'Enable Training Bulk Buy',
   'options.quickSoulShop': 'Enable Quick Soul Shop',
+  'options.quickSkills': 'Enable Quick Skill Allocation',
   'options.numericPurchaseInputs': 'Enable Numeric Purchase Inputs',
   'options.autoSortInventory': 'Enable Auto Sort Inventory',
   'options.autoSortInventory.disabledTooltip': 'Purchase in crystal shop to enable',

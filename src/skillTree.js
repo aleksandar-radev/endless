@@ -1,5 +1,6 @@
 import { handleSavedData } from './functions.js';
-import { dataManager, game, hero, crystalShop } from './globals.js';
+import { dataManager, game, hero, crystalShop, options } from './globals.js';
+import { SKILLS_MAX_QTY } from './constants/limits.js';
 import { CLASS_PATHS, SKILL_TREES } from './constants/skills.js';
 import {
   showManaWarning,
@@ -37,6 +38,11 @@ export default class SkillTree {
     });
     // always empty at start
     this.activeBuffs = new Map();
+
+    // Quick allocation quantity for skills (used by quick skill allocation UI)
+    this.quickQty = options.useNumericInputs
+      ? Math.min(options.skillQuickQty || 1, SKILLS_MAX_QTY)
+      : 1;
   }
 
   getPathBonuses() {

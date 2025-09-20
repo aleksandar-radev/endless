@@ -39,6 +39,63 @@
   border-radius: 8px;
 }
 
+/* Header above the skill tree with class name, points, and quick controls */
+.skill-points-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.skill-header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.skill-points {
+  color: var(--text, #fff);
+  opacity: 0.9;
+}
+
+/* Quick allocation controls — mirror training look */
+.skill-qty-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.skill-qty-controls button {
+  background: var(--bg-element, #23272f);
+  color: var(--text, #fff);
+  border: 2px solid var(--accent, #3b82f6);
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+  outline: none;
+}
+
+.skill-qty-controls button.active,
+.skill-qty-controls button:focus {
+  background: var(--accent, #3b82f6);
+  color: #fff;
+  border-color: var(--accent, #3b82f6);
+}
+
+.skill-qty-controls button:hover:not(.active) {
+  background: #2d3340;
+  color: var(--accent, #3b82f6);
+  border-color: var(--accent, #3b82f6);
+}
+
+.skill-qty-controls .skill-qty-input.input-number {
+  width: 90px;
+  text-align: center;
+}
+
 .skill-row {
   display: flex;
   justify-content: center;

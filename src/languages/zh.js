@@ -377,6 +377,7 @@ export default {
   'options.quickTraining': '启用快速训练',
   'options.bulkTraining': '启用批量训练',
   'options.quickSoulShop': '启用快速灵魂商店',
+  'options.quickSkills': '启用快速技能分配',
   'options.numericPurchaseInputs': '启用数字购买输入',
   'options.autoSortInventory': '启用自动整理库存',
   'options.autoSortInventory.disabledTooltip': '在水晶商店购买以启用',

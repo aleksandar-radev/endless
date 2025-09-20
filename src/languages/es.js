@@ -377,6 +377,7 @@ export default {
   'options.quickTraining': 'Habilitar entrenamiento rápido',
   'options.bulkTraining': 'Habilitar compras masivas de entrenamiento',
   'options.quickSoulShop': 'Habilitar tienda de almas rápida',
+  'options.quickSkills': 'Habilitar asignación rápida de habilidades',
   'options.numericPurchaseInputs': 'Habilitar entradas numéricas de compra',
   'options.autoSortInventory': 'Habilitar auto ordenar inventario',
   'options.autoSortInventory.disabledTooltip': 'Compra en la tienda de cristales para habilitar',
