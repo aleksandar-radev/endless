@@ -152,19 +152,19 @@ export function initializeUI() {
           const val = t('combat.stage');
           if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
         }
-        if (value) value.textContent = game.stage;
+        if (value) value.textContent = formatNumber(game.stage);
       } else if (region === 'arena') {
         if (label) {
           const val = t('combat.bossLevel');
           if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
         }
-        if (value) value.textContent = hero.bossLevel;
+        if (value) value.textContent = formatNumber(hero.bossLevel);
       } else if (region === 'rockyField') {
         if (label) {
           const val = t('combat.stage');
           if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
         }
-        if (value) value.textContent = game.rockyFieldStage;
+        if (value) value.textContent = formatNumber(game.rockyFieldStage);
       }
       // Hide or show region-selector based on region
       const regionSelector = document.getElementById('region-selector');

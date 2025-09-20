@@ -18,6 +18,7 @@ export default function run() {
     <ul>
       <li>Skill modal now shows the correct SP cost for the selected quantity even when you don't have enough points.</li>
       <li>Fix ascension armor penetration bonus.</li>
+      <li>Stage display keeps thousands separators after re-render.</li>
     </ul>
   `;
 }
