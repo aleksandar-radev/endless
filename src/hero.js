@@ -609,6 +609,21 @@ export default class Hero {
         );
       }
     });
+
+    // Apply rune conversions on final displayed stats so the UI reflects
+    // the same post-percent distribution as combat.
+    if (runes && typeof runes.applyFinalConversions === 'function') {
+      const pools = { damage: this.stats.damage };
+      ELEMENT_IDS.forEach((id) => {
+        pools[`${id}Damage`] = this.stats[`${id}Damage`];
+      });
+      runes.applyFinalConversions(pools);
+      // Write back (floored like above)
+      this.stats.damage = Math.floor(pools.damage || 0);
+      ELEMENT_IDS.forEach((id) => {
+        this.stats[`${id}Damage`] = Math.floor(pools[`${id}Damage`] || 0);
+      });
+    }
   }
 
   regenerate() {
@@ -659,7 +674,13 @@ export default class Hero {
           (this.stats[`${e}DamagePercent`] || 0));
     });
 
-    // 3) Double-damage and criticals (after percent multipliers)
+    // Apply rune damage conversions on final pools (post-percent),
+    // so conversions reflect total effective values rather than flats.
+    if (runes && typeof runes.applyFinalConversions === 'function') {
+      runes.applyFinalConversions(finalPools);
+    }
+
+    // 3) Double-damage and criticals (after percent multipliers and conversions)
     const isCritical = Math.random() * 100 < this.stats.critChance;
     if (this.stats.doubleDamageChance && Math.random() * 100 < this.stats.doubleDamageChance) {
       Object.keys(finalPools).forEach((k) => (finalPools[k] *= 2));

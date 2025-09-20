@@ -166,9 +166,70 @@ export default class Runes {
       const to = base.conversion.to;
       const percent = rune.conversion?.percent ?? base.conversion.percent;
       if (!ALL_STATS.has(from) || !ALL_STATS.has(to)) return;
+
+      // IMPORTANT: Conversions for damage and elemental damages should occur on
+      // final values (after percents), not on flats. Applying here would lead
+      // to very small shifts when most of the value comes from % scalars.
+      // Therefore, skip converting any of the damage-family stats at the flat stage.
+      const isDamageFamily =
+        from === 'damage' || to === 'damage' || /Damage$/.test(from) || /Damage$/.test(to);
+      if (isDamageFamily) return;
+
       const amount = (flatValues[from] || 0) * (percent / 100);
       flatValues[from] = (flatValues[from] || 0) - amount;
       flatValues[to] = (flatValues[to] || 0) + amount;
+    });
+  }
+
+  /**
+   * Apply equipped rune damage conversions to a pool of final damages.
+   * Mutates the provided object.
+   * Accepts either combat pools ({ physical, fire, ... }) or stat pools
+   * ({ damage, fireDamage, ... }).
+   * @param {Record<string, number>} finalPools
+   */
+  applyFinalConversions(finalPools) {
+    if (!finalPools) return;
+
+    // Snapshot originals so sequential conversions don't compound mid-iteration
+    const original = { ...finalPools };
+    const deltas = {};
+
+    const hasKey = (k) => Object.prototype.hasOwnProperty.call(finalPools, k);
+    const mapStatToPoolKey = (stat) => {
+      if (stat === 'damage') {
+        if (hasKey('physical')) return 'physical';
+        if (hasKey('damage')) return 'damage';
+        return null;
+      }
+      if (stat.endsWith('Damage')) {
+        const id = stat.slice(0, -6); // remove 'Damage'
+        if (hasKey(id)) return id; // combat pool key
+        if (hasKey(stat)) return stat; // stats key, e.g. 'fireDamage'
+        return null;
+      }
+      // Not a damage stat
+      return null;
+    };
+
+    this.equipped.forEach((rune) => {
+      if (!rune) return;
+      const base = RUNES_BY_ID.get(rune.id);
+      if (!base?.conversion) return;
+      const percent = rune.conversion?.percent ?? base.conversion.percent;
+      if (!percent) return;
+      const fromKey = mapStatToPoolKey(base.conversion.from);
+      const toKey = mapStatToPoolKey(base.conversion.to);
+      if (!fromKey || !toKey) return;
+      const fromVal = original[fromKey] || 0;
+      if (!fromVal) return;
+      const move = fromVal * (percent / 100);
+      deltas[fromKey] = (deltas[fromKey] || 0) - move;
+      deltas[toKey] = (deltas[toKey] || 0) + move;
+    });
+
+    Object.entries(deltas).forEach(([k, dv]) => {
+      finalPools[k] = Math.max(0, (finalPools[k] || 0) + dv);
     });
   }
 
