@@ -209,7 +209,8 @@ function createPreviewTooltip(skill) {
     const manaCost = skill.manaCost(currentLevel);
     const manaCostNextLevel = skill.manaCost(nextLevel);
     if (manaCost) {
-      skillDescription += `<br />Mana Cost: ${manaCost} (+${manaCostNextLevel - manaCost})`;
+      const diff = manaCostNextLevel - manaCost;
+      skillDescription += `<br />Mana Cost: ${manaCost.toFixed(2)} (+${diff.toFixed(2)})`;
     }
   }
   if (skill.cooldown) {
@@ -566,8 +567,9 @@ function openSkillModal(skillId) {
   skillModal.querySelector('.modal-available-points').textContent = skillTree.skillPoints;
   const currMana = skillTree.getSkillManaCost(skill, currentLevel);
   const nextMana = skillTree.getSkillManaCost(skill, nextLevel);
-  skillModal.querySelector('.modal-current-mana-cost').textContent = currMana;
-  skillModal.querySelector('.modal-next-mana-cost').textContent = nextMana;
+  const manaDiff = nextMana - currMana;
+  skillModal.querySelector('.modal-current-mana-cost').textContent = currMana.toFixed(2);
+  skillModal.querySelector('.modal-next-mana-cost').textContent = `${manaDiff >= 0 ? '+' : ''}${manaDiff.toFixed(2)}`;
   const currCd = skillTree.getSkillCooldown(skill, currentLevel);
   const nextCd = skillTree.getSkillCooldown(skill, nextLevel);
   skillModal.querySelector('.modal-current-cooldown').textContent = (currCd / 1000).toFixed(2) + 's';
@@ -915,7 +917,7 @@ function createSkillTooltip(skillId) {
       <div class="tooltip-header">${skill.name()}</div>
       <div class="tooltip-type">${skill.type().toUpperCase()}</div>
       <div class="tooltip-level">Level: ${level}</div>
-      <div class="tooltip-mana">Mana Cost: ${skillTree.getSkillManaCost(skill)}</div>
+      <div class="tooltip-mana">Mana Cost: ${skillTree.getSkillManaCost(skill, level).toFixed(2)} (+${(skillTree.getSkillManaCost(skill, level + 1) - skillTree.getSkillManaCost(skill, level)).toFixed(2)})</div>
   `;
 
   // Add effects
