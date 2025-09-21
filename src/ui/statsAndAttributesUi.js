@@ -135,6 +135,8 @@ export function setRateCountersVisibility(show) {
 }
 
 document.addEventListener('toggleRateCounters', (e) => setRateCountersVisibility(e.detail));
+// Allow other systems (e.g., offline reward collection) to request a counters reset
+document.addEventListener('resetRateCounters', () => resetRateCounters());
 
 export function updateStatsAndAttributesUI(forceRebuild = false) {
   // Create .stats-grid if it doesn't exist

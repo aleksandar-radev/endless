@@ -414,6 +414,8 @@ export class BuildingManager {
         this.lastActive = await fetchTrustedUtcTime();
         updateResources();
         dataManager.saveGame(); // Save after collecting bonuses
+        // Reset rate counters so offline rewards don't inflate per-period metrics
+        try { document.dispatchEvent(new Event('resetRateCounters')); } catch {}
       });
       changed = true; // Modal will result in a change
     } else if (!isFirstCollect && changed) {
