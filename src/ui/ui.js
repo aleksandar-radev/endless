@@ -39,6 +39,7 @@ let autoClaiming = false;
 
 const html = String.raw;
 const BASE = import.meta.env.VITE_BASE_PATH;
+let offlineEligibilityStart = null;
 
 // Format numbers with thousands separators or shorthand notation.
 // When options.shortNumbers is enabled, large numbers are abbreviated
@@ -175,6 +176,42 @@ export function initializeUI() {
   renderRegionPanel(game.fightMode);
   const regionSelector = document.getElementById('region-selector');
   regionSelector.style.display = game.fightMode === 'arena' || game.fightMode === 'rockyField' ? 'none' : '';
+
+  // Add offline eligibility indicator at right end of region tabs
+  try {
+    const tabs = document.querySelector('.region-tabs');
+    if (tabs && !tabs.querySelector('.offline-eligibility-indicator')) {
+      const indicator = document.createElement('span');
+      indicator.className = 'offline-eligibility-indicator offline-not-eligible';
+      indicator.innerHTML = '<span class="icon">✖</span>';
+      indicator.classList.add('tooltip-target');
+      indicator.style.marginLeft = 'auto';
+      tabs.appendChild(indicator);
+
+      // Baseline for session eligibility (independent from counters reset)
+      offlineEligibilityStart = statistics.totalTimeInFights || 0;
+
+      const tooltip = () => html`
+        <div class="tooltip-header">${t('counters.offlineProgress')}</div>
+        <div class="tooltip-desc">${indicator.classList.contains('offline-eligible')
+          ? t('counters.offline.tooltipEligible')
+          : t('counters.offline.tooltipNotEligible')}</div>
+        <div class="tooltip-note">${t('counters.offline.tooltipCondition')}</div>
+      `;
+      indicator.addEventListener('mouseenter', (e) => showTooltip(tooltip(), e));
+      indicator.addEventListener('mousemove', positionTooltip);
+      indicator.addEventListener('mouseleave', hideTooltip);
+
+      // Update icon/color every second
+      setInterval(() => {
+        const elapsed = (statistics.totalTimeInFights || 0) - (offlineEligibilityStart || 0);
+        const eligible = elapsed >= 60;
+        indicator.querySelector('.icon').textContent = eligible ? '✔' : '✖';
+        indicator.classList.toggle('offline-eligible', eligible);
+        indicator.classList.toggle('offline-not-eligible', !eligible);
+      }, 1000);
+    }
+  } catch {}
 
   // Listen for option toggle to update inline stage controls
   document.addEventListener('updateInlineStageControls', () => {

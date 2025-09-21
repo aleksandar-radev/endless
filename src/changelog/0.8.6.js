@@ -1,0 +1,21 @@
+const html = String.raw;
+export default function run() {
+  return html`
+    <span style="color:#4F8A10;"> 2025-09-21</span>
+    <hr>
+
+    <span style="color:#FF8A00;">Improvements</span>
+    <ul>
+      <li>Counters Bar: added an offline eligibility indicator (red ✖ until you have at least 1 minute in fights, then green ✔).</li>
+      <li>Combat Modes: added a compact offline eligibility icon at the far right with tooltip explaining eligibility and conditions.</li>
+      <li>All attributes flat removed from prestige bonuses (in earlier version).</li>
+    </ul>
+
+    <span style="color:#FF8A00;">Fixes</span>
+    <ul>
+      <li>Offline progress rates are now recorded only after at least 60 seconds of fight time; before that, offline rates remain zero to prevent unintended offline rewards.</li>
+      <li>Rate counters (Damage/XP/Gold/Items/Materials per period) now reset immediately after collecting offline rewards to prevent inflated initial values and compounding growth when going offline repeatedly.</li>
+      <li>Fix materials from building are not being auto-consumed when crystal upgrade is purchased.</li>
+    </ul>
+  `;
+}

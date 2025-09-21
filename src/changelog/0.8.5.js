@@ -22,8 +22,6 @@ export default function run() {
       <li>Stage display keeps thousands separators after re-render.</li>
       <li>Arena Boss Skip unique rune now applies correctly: the option's max includes both Ascension bonuses and equipped rune bonuses, and updates immediately when runes are equipped/unequipped. Boss skipping on kill honors the combined cap.</li>
       <li>Rune damage conversions now apply to final damage values (post-percent), producing expected large shifts (e.g., 50% Fire → Water moves half of final Fire to Water) and consistent UI/combat breakdowns.</li>
-      <li>Fix materials from building are not being auto-consumed when crystal upgrade is purchased.</li>
-      <li>Rate counters (Damage/XP/Gold/Items/Materials per period) now reset immediately after collecting offline rewards to prevent inflated initial values and compounding growth when going offline repeatedly.</li>
     </ul>
   `;
 }

@@ -48,12 +48,28 @@ function updateRateCounters() {
   const goldEls = document.querySelectorAll('.counter-gold');
   const itemsEls = document.querySelectorAll('.counter-items');
   const matEls = document.querySelectorAll('.counter-materials');
+  const offlineEl = document.querySelector('.counter-offline');
+  // Compute session fight time (since last resetRateCounters call)
+  const eligible = (elapsed || 0) >= 60;
+  if (offlineEl) {
+    const icon = offlineEl.querySelector('.offline-icon');
+    const status = offlineEl.querySelector('.offline-status');
+    if (icon) icon.textContent = eligible ? '✔' : '✖';
+    if (status) {
+      status.dataset.i18n = eligible ? 'counters.eligible' : 'counters.notEligible';
+      status.textContent = eligible ? t('counters.eligible') : t('counters.notEligible');
+    }
+    offlineEl.classList.toggle('offline-eligible', eligible);
+    offlineEl.classList.toggle('offline-not-eligible', !eligible);
+  }
   if (!elapsed || elapsed <= 0) {
     dmgEls.forEach((el) => (el.textContent = `Damage/${periodLabel}: 0`));
     xpEls.forEach((el) => (el.textContent = `XP/${periodLabel}: 0`));
     goldEls.forEach((el) => (el.textContent = `Gold/${periodLabel}: 0`));
     itemsEls.forEach((el) => (el.textContent = `Items/${periodLabel}: 0`));
     matEls.forEach((el) => (el.textContent = `Materials/${periodLabel}: 0`));
+    // Ensure offline rates are zeroed until eligible
+    statistics.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
     return;
   }
   const damageRate = sessionDamage / elapsed;
@@ -66,7 +82,12 @@ function updateRateCounters() {
   itemsEls.forEach((el) => (el.textContent = `Items/${periodLabel}: ${formatNumber((itemRate * ratePeriod).toFixed(1))}`));
   const matRate = (statistics.totalMaterialsDropped - startMaterialsDropped) / elapsed;
   matEls.forEach((el) => (el.textContent = `Materials/${periodLabel}: ${formatNumber((matRate * ratePeriod).toFixed(1))}`));
-  statistics.offlineRates = { xp: xpRate, gold: goldRate, items: itemRate, materials: matRate };
+  // Only expose offlineRates after at least 60s spent in fights (eligibility)
+  if (eligible) {
+    statistics.offlineRates = { xp: xpRate, gold: goldRate, items: itemRate, materials: matRate };
+  } else {
+    statistics.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
+  }
 }
 
 function resetRateCounters() {
@@ -117,6 +138,11 @@ export function setRateCountersVisibility(show) {
       bottomBar = document.createElement('div');
       bottomBar.className = 'rate-counters-bar';
       bottomBar.innerHTML = html`
+        <div class="counter counter-offline offline-not-eligible">
+          <span class="offline-icon">✖</span>
+          <span data-i18n="counters.offline">${t('counters.offline')}</span>:
+          <span class="offline-status" data-i18n="counters.notEligible">${t('counters.notEligible')}</span>
+        </div>
         <div class="counter counter-damage"></div>
         <div class="counter counter-xp"></div>
         <div class="counter counter-gold"></div>

@@ -57,6 +57,21 @@
   flex-wrap: wrap;
 }
 
+/* Offline eligibility indicator placed at the far right of the region tabs */
+.offline-eligibility-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-weight: 700;
+  user-select: none;
+}
+.offline-eligibility-indicator .icon { line-height: 1; font-size: 14px; }
+.offline-eligibility-indicator.offline-eligible { color: #10b981; }
+.offline-eligibility-indicator.offline-not-eligible { color: #ef4444; }
+
 .region-tabs-label {
   font-weight: 600;
   font-size: 0.85rem;

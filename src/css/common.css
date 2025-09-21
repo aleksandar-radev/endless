@@ -116,6 +116,14 @@ body.dev-active .game-container {
   cursor: pointer;
 }
 
+/* Offline eligibility indicator colors */
+.rate-counters-bar .counter-offline.offline-eligible {
+  color: #10b981; /* emerald-500 */
+}
+.rate-counters-bar .counter-offline.offline-not-eligible {
+  color: #ef4444; /* red-500 */
+}
+
 #custom-confirm-dialog .confirm-content {
   position: relative;
   background: #222;
