@@ -150,12 +150,14 @@ export default class Inventory {
       ) {
         matDef.onUse(hero, qty);
         totalFound += qty;
-        counts[id] = 0; // consumed, don't add to inventory map below
+        counts[id] = 0; // consumed, don't add to inventory below
       }
     }
 
     // Add remaining materials to inventory slots
-    for (const [id, qtyRaw] of entries) {
+    // IMPORTANT: iterate over the updated counts so auto-consumed entries (set to 0)
+    // are not added to inventory.
+    for (const [id, qtyRaw] of Object.entries(counts)) {
       const qty = Math.floor(qtyRaw);
       if (qty <= 0) continue;
       let slot = this.materials.findIndex((m) => m && m.id === id);
