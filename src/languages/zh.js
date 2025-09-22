@@ -952,6 +952,7 @@ export default {
   'prestige.itemsFoundByRarity': '按稀有度获得的物品',
   'prestige.requirement.level': '达到 {level} 级（还需 {needed} 级）才能声望。',
   'prestige.requirement.unmet': '你未满足声望条件。',
+  'prestige.totalCrystals': '水晶总数：{count}',
   'time.second': '秒',
   'time.seconds': '秒',
   'time.minute': '分钟',

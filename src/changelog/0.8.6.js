@@ -9,6 +9,7 @@ export default function run() {
       <li>Counters Bar: added an offline eligibility indicator (red ✖ until you have at least 1 minute in fights, then green ✔).</li>
       <li>Combat Modes: added a compact offline eligibility icon at the far right with tooltip explaining eligibility and conditions.</li>
       <li>All attributes flat removed from prestige bonuses (in earlier version).</li>
+      <li>Prestige: show total crystals in the prestige modal.</li>
     </ul>
 
     <span style="color:#FF8A00;">Fixes</span>

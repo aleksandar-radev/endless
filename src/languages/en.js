@@ -951,6 +951,7 @@ export default {
   'prestige.itemsFoundByRarity': 'Items Found by Rarity',
   'prestige.requirement.level': 'Reach level {level} (need {needed} more) to prestige.',
   'prestige.requirement.unmet': 'You do not meet the requirements to prestige.',
+  'prestige.totalCrystals': 'Total Crystals: {count}',
   'time.second': 'second',
   'time.seconds': 'seconds',
   'time.minute': 'minute',

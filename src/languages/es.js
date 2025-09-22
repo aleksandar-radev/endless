@@ -952,6 +952,7 @@ export default {
   'prestige.itemsFoundByRarity': 'Objetos encontrados por rareza',
   'prestige.requirement.level': 'Alcanza el nivel {level} (faltan {needed}) para prestigiar.',
   'prestige.requirement.unmet': 'No cumples con los requisitos para prestigiar.',
+  'prestige.totalCrystals': 'Cristales totales: {count}',
   'time.second': 'segundo',
   'time.seconds': 'segundos',
   'time.minute': 'minuto',

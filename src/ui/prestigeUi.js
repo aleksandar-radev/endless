@@ -108,6 +108,7 @@ function openPrestigeModal() {
       <div class="prestige-cards"></div>
       <div class="modal-controls">
         <button id="prestige-reroll-btn">${t('prestige.reroll')} (60<img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('resource.crystal.name')}"/>)</button>
+        <span id="prestige-crystals-total" class="prestige-crystals-total" style="margin-left:10px;"></span>
       </div>
       <div class="prestige-info-message" style="margin-top: 10px; color: #9ac7fcff; font-size: 1.05em;">
       <p class="prestige-info prestige-bonus-info">${tp('prestige.bonusInfo', { bonus: bonusPercent })}</p>
@@ -124,6 +125,11 @@ function openPrestigeModal() {
   const modal = createModal({ id: 'prestige-modal', className: 'prestige-modal', content });
   const cardsContainer = modal.querySelector('.prestige-cards');
   const performBtn = modal.querySelector('#prestige-perform-btn');
+  const crystalsTotalEl = modal.querySelector('#prestige-crystals-total');
+  const updateModalCrystals = () => {
+    if (!crystalsTotalEl) return;
+    crystalsTotalEl.innerHTML = `${tp('prestige.totalCrystals', { count: formatNumber(hero.crystals || 0) })} <img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('resource.crystal.name')}"/>`;
+  };
   let selectedIdx = null;
 
   const renderCards = () => {
@@ -168,6 +174,7 @@ function openPrestigeModal() {
           }
           hero.crystals -= 20;
           updateResources();
+          updateModalCrystals();
           card.locked = true;
           btn.innerHTML = `<img src="${BASE}/icons/lock.svg" class="icon" alt="${t('prestige.lock')}"/>`;
           cardEl.classList.add('locked');
@@ -177,6 +184,7 @@ function openPrestigeModal() {
   };
 
   renderCards();
+  updateModalCrystals();
 
   const rerollBtn = modal.querySelector('#prestige-reroll-btn');
   rerollBtn.onclick = () => {
@@ -186,6 +194,7 @@ function openPrestigeModal() {
     }
     hero.crystals -= 60;
     updateResources();
+    updateModalCrystals();
     cards = prestige.rerollCards(3);
     selectedIdx = null;
     performBtn.classList.add('disabled');
