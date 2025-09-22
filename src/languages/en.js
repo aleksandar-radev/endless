@@ -320,6 +320,8 @@ export default {
   'options.tab.general': 'General',
   'options.advancedTooltips': 'Show Advanced Item Tooltips',
   'options.advancedAttributeTooltips': 'Show Advanced Attribute Tooltips',
+  'options.rollPercentiles': 'Show Roll Percentiles',
+  'options.rollPercentiles.tooltip': 'Display roll quality (0–100%) instead of min/max ranges on items and prestige cards.',
   'options.showRateCounters': 'Show Counters Bar',
   'options.rateCountersPeriod': 'Counters Period (sec)',
   'options.stageSkipPerKill': 'Stage Skip per Kill',

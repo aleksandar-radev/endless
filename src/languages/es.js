@@ -312,6 +312,8 @@ export default {
   'options.tab.general': 'General',
   'options.advancedTooltips': 'Mostrar descripciones avanzadas de objetos',
   'options.advancedAttributeTooltips': 'Mostrar descripciones avanzadas de atributos',
+  'options.rollPercentiles': 'Mostrar percentil de tiradas',
+  'options.rollPercentiles.tooltip': 'Mostrar la calidad de la tirada (0–100%) en lugar de los rangos mín/máx en objetos y cartas de prestigio.',
   'options.showRateCounters': 'Mostrar barra de contadores',
   'options.rateCountersPeriod': 'Periodo de contadores (seg)',
   'options.stageSkipPerKill': 'Salto de etapa por muerte',

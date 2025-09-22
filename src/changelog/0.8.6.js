@@ -10,6 +10,8 @@ export default function run() {
       <li>Combat Modes: added a compact offline eligibility icon at the far right with tooltip explaining eligibility and conditions.</li>
       <li>All attributes flat removed from prestige bonuses (in earlier version).</li>
       <li>Prestige: show total crystals in the prestige modal.</li>
+      <li>Skills bar: abilities in <b>skill slots</b> are now sorted deterministically by class skill order, not by unlock order.</li>
+      <li>Options: added <b>Show Roll Percentiles</b>. When enabled, item tooltips and prestige cards display roll quality (0–100%) instead of min/max ranges.</li>
     </ul>
 
     <span style="color:#FF8A00;">Fixes</span>

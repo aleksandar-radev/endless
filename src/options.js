@@ -77,6 +77,7 @@ const OPTION_TOOLTIPS = {
   enemyStatsLabel: () => html`Display enemy statistics during combat`,
   stageControlsInlineLabel: () => html`Show stage controls under enemy in Explore`,
   shortNumbersLabel: () => html`Display large numbers using abbreviations`,
+  rollPercentilesLabel: () => html`${t('options.rollPercentiles.tooltip')}`,
 };
 
 function attachTooltip(el, key, ...params) {
@@ -174,6 +175,8 @@ export class Options {
     this.showCombatText = data.showCombatText ?? true;
     // Show stage controls under enemy in Explore panel
     this.showStageControlsInline = data.showStageControlsInline ?? false;
+    // Show roll quality percentiles instead of min/max ranges
+    this.showRollPercentiles = data.showRollPercentiles ?? false;
   }
 
   /**
@@ -285,6 +288,7 @@ export class Options {
     gameContent.className = 'options-content active';
     gameContent.appendChild(this._createAdvancedTooltipsOption());
     gameContent.appendChild(this._createAdvancedAttributeTooltipsOption());
+    gameContent.appendChild(this._createRollPercentilesOption());
     gameContent.appendChild(this._createEnemyStatsToggleOption());
     gameContent.appendChild(this._createShowAllStatsOption());
     gameContent.appendChild(this._createShortElementalNamesOption());
@@ -418,6 +422,34 @@ export class Options {
       this.showAdvancedAttributeTooltips = checkbox.checked;
       dataManager.saveGame();
       updateStatsAndAttributesUI(true);
+    });
+    return wrapper;
+  }
+
+  _createRollPercentilesOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = `
+      <label for="roll-percentiles-toggle" class="roll-percentiles-toggle-label" data-i18n="options.rollPercentiles">Show Roll Percentiles:</label>
+      <input
+        type="checkbox"
+        id="roll-percentiles-toggle"
+        class="roll-percentiles-toggle"
+        ${this.showRollPercentiles ? 'checked' : ''}
+      />
+      <span class="toggle-btn"></span>
+    `;
+    const label = wrapper.querySelector('.roll-percentiles-toggle-label');
+    const checkbox = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.toggle-btn');
+    attachTooltip(label, 'rollPercentilesLabel');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      this.showRollPercentiles = checkbox.checked;
+      dataManager.saveGame();
     });
     return wrapper;
   }

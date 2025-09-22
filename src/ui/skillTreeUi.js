@@ -928,7 +928,13 @@ export function updateActionBar() {
   skillSlotsContainer.innerHTML = '';
   let slotNumber = 1;
 
-  Object.entries(skillTree.skills).forEach(([skillId, skill]) => {
+  // Render skills in a deterministic order based on the class skill constants
+  const orderedIds = Object.keys(SKILL_TREES[skillTree.selectedPath?.name] || {});
+  orderedIds.forEach((skillId) => {
+    const unlocked = !!skillTree.skills[skillId];
+    if (!unlocked) return;
+
+    const skill = skillTree.getSkill(skillId);
     if (skill.type() === 'passive' || !skillTree.isDisplayEnabled(skillId)) return;
 
     const skillSlot = document.createElement('div');

@@ -84,11 +84,15 @@ export default class Prestige {
       let desc;
       if (b.stat.endsWith('Percent')) {
         const main = `${formatStatName(b.stat)}: +${(value * 100).toFixed(1)}%`;
-        const right = `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
+        const right = options?.showRollPercentiles
+          ? `${Math.round((refMax > refMin) ? ((value - refMin) / (refMax - refMin)) * 100 : 100)}%`
+          : `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
         desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
       } else {
         const main = `${formatStatName(b.stat)}: +${Math.round(value)}`;
-        const right = `${Math.round(refMin)} - ${Math.round(refMax)}`;
+        const right = options?.showRollPercentiles
+          ? `${Math.round((refMax > refMin) ? ((value - refMin) / (refMax - refMin)) * 100 : 100)}%`
+          : `${Math.round(refMin)} - ${Math.round(refMax)}`;
         desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
       }
       card.descriptions.push(desc);
@@ -98,7 +102,11 @@ export default class Prestige {
     const refStartMin = STARTING_CRYSTALS_BONUS.min;
     const refStartMax = STARTING_CRYSTALS_BONUS.max;
     const main = `${formatStatName(STARTING_CRYSTALS_BONUS.stat)}: +${startingCrystals}`;
-    const right = `${Math.floor(refStartMin * scalingFactor)} - ${Math.floor(refStartMax * scalingFactor)}`;
+    const startMinScaled = Math.floor(refStartMin * scalingFactor);
+    const startMaxScaled = Math.floor(refStartMax * scalingFactor);
+    const right = options?.showRollPercentiles
+      ? `${Math.round(startMaxScaled > startMinScaled ? ((startingCrystals - startMinScaled) / (startMaxScaled - startMinScaled)) * 100 : 100)}%`
+      : `${startMinScaled} - ${startMaxScaled}`;
     card.descriptions.push(`<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`);
     return card;
   }
@@ -181,7 +189,9 @@ export default class Prestige {
             const scaledPct = (scaledValue * 100).toFixed(1);
             if (refMin != null && refMax != null) {
               const main = `${formatStatName(stat)}: +${scaledPct}%`;
-              const right = `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
+              const right = options?.showRollPercentiles
+                ? `${Math.round((refMax > refMin) ? ((scaledValue - refMin) / (refMax - refMin)) * 100 : 100)}%`
+                : `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
               desc = `<span class="prestige-main"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
             } else {
               desc = `${formatStatName(stat)}: +${scaledPct}%`;
@@ -189,7 +199,9 @@ export default class Prestige {
           } else {
             if (refMin != null && refMax != null) {
               const main = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
-              const right = `${Math.round(refMin)} - ${Math.round(refMax)}`;
+              const right = options?.showRollPercentiles
+                ? `${Math.round((refMax > refMin) ? ((scaledValue - refMin) / (refMax - refMin)) * 100 : 100)}%`
+                : `${Math.round(refMin)} - ${Math.round(refMax)}`;
               desc = `<span class="prestige-main"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
             } else {
               desc = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
@@ -240,8 +252,12 @@ export default class Prestige {
       const refStartMax = STARTING_CRYSTALS_BONUS.max;
       {
         const main = `${formatStatName(STARTING_CRYSTALS_BONUS.stat)}: +${startingCrystals}`;
-        const right = `${Math.floor(refStartMin * scalingFactor)} - ${Math.floor(refStartMax * scalingFactor)}`;
-        card.descriptions.push(`<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`);
+        const startMinScaled = Math.floor(refStartMin * scalingFactor);
+        const startMaxScaled = Math.floor(refStartMax * scalingFactor);
+        const right = options?.showRollPercentiles
+          ? `${Math.round(startMaxScaled > startMinScaled ? ((startingCrystals - startMinScaled) / (startMaxScaled - startMinScaled)) * 100 : 100)}%`
+          : `${startMinScaled} - ${startMaxScaled}`;
+        card.descriptions.push(`<span class=\"prestige-main\"><img src=\"${BASE}/icons/star.svg\" class=\"icon\" alt=\"\"/>${main}</span><span class=\"prestige-ref\">(${right})</span>`);
       }
       cards.push(card);
     }
@@ -287,7 +303,9 @@ export default class Prestige {
             const scaledPct = (scaledValue * 100).toFixed(1);
             if (refMin != null && refMax != null) {
               const main = `${formatStatName(stat)}: +${scaledPct}%`;
-              const right = `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
+              const right = options?.showRollPercentiles
+                ? `${Math.round((refMax > refMin) ? ((scaledValue - refMin) / (refMax - refMin)) * 100 : 100)}%`
+                : `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
               desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
             } else {
               desc = `${formatStatName(stat)}: +${scaledPct}%`;
@@ -295,7 +313,9 @@ export default class Prestige {
           } else {
             if (refMin != null && refMax != null) {
               const main = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
-              const right = `${Math.round(refMin)} - ${Math.round(refMax)}`;
+              const right = options?.showRollPercentiles
+                ? `${Math.round((refMax > refMin) ? ((scaledValue - refMin) / (refMax - refMin)) * 100 : 100)}%`
+                : `${Math.round(refMin)} - ${Math.round(refMax)}`;
               desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
             } else {
               desc = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;

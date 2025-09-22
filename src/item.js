@@ -249,9 +249,20 @@ export default class Item {
         const formattedValue = formatNumber(value.toFixed(decimals));
         let adv = '';
         if (showAdvanced && statMinMax[stat]) {
-          const min = formatNumber(statMinMax[stat].min.toFixed(decimals));
-          const max = formatNumber(statMinMax[stat].max.toFixed(decimals));
-          adv = `<span class="item-ref-range" style="float:right; color:#aaa; text-align:right; min-width:60px;">${min} - ${max}</span>`;
+          const minRaw = statMinMax[stat].min;
+          const maxRaw = statMinMax[stat].max;
+          if (options?.showRollPercentiles) {
+            let pct = 100;
+            if (maxRaw > minRaw) {
+              pct = Math.max(0, Math.min(1, (value - minRaw) / (maxRaw - minRaw))) * 100;
+            }
+            const pctStr = `${Math.round(pct)}%`;
+            adv = `<span class="item-ref-range" style="float:right; color:#aaa; text-align:right; min-width:60px;">${pctStr}</span>`;
+          } else {
+            const min = formatNumber(minRaw.toFixed(decimals));
+            const max = formatNumber(maxRaw.toFixed(decimals));
+            adv = `<span class="item-ref-range" style="float:right; color:#aaa; text-align:right; min-width:60px;">${min} - ${max}</span>`;
+          }
         }
         return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
           <span>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}</span>

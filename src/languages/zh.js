@@ -320,6 +320,8 @@ export default {
   'options.tab.general': '通用',
   'options.advancedTooltips': '显示高级物品提示',
   'options.advancedAttributeTooltips': '显示高级属性提示',
+  'options.rollPercentiles': '显示属性掷值百分位',
+  'options.rollPercentiles.tooltip': '在物品与声望卡上用掷值质量（0–100%）替代最小/最大范围。',
   'options.showRateCounters': '显示计数器栏',
   'options.rateCountersPeriod': '计数器周期（秒）',
   'options.stageSkipPerKill': '每击杀跳过阶段数',
