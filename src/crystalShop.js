@@ -124,6 +124,25 @@ const CRYSTAL_UPGRADE_CONFIG = {
     oneTime: true,
     category: 'stage',
   },
+  deathTimerReduction: {
+    label: 'crystalShop.upgrade.deathTimerReduction.label',
+    bonus: 0.5,
+    bonusLabel: 'crystalShop.upgrade.deathTimerReduction.bonusLabel',
+    showLevel: true,
+    baseCost: 50,
+    costIncrement: 0,
+    multiple: true,
+    bulkModal: true,
+    category: 'misc',
+  },
+  salvageMaterials: {
+    label: 'crystalShop.upgrade.salvageMaterials.label',
+    bonus: 'crystalShop.upgrade.salvageMaterials.bonus',
+    bonusLabel: 'crystalShop.upgrade.salvageMaterials.bonusLabel',
+    baseCost: 200,
+    oneTime: true,
+    category: 'misc',
+  },
   resetSkillTree: {
     label: 'crystalShop.upgrade.resetSkillTree.label',
     bonus: 'crystalShop.upgrade.resetSkillTree.bonus',
@@ -171,25 +190,6 @@ const CRYSTAL_UPGRADE_CONFIG = {
     baseCost: 100000,
     multiple: true,
     category: 'reset',
-  },
-  deathTimerReduction: {
-    label: 'crystalShop.upgrade.deathTimerReduction.label',
-    bonus: 0.5,
-    bonusLabel: 'crystalShop.upgrade.deathTimerReduction.bonusLabel',
-    showLevel: true,
-    baseCost: 50,
-    costIncrement: 0,
-    multiple: true,
-    bulkModal: true,
-    category: 'misc',
-  },
-  salvageMaterials: {
-    label: 'crystalShop.upgrade.salvageMaterials.label',
-    bonus: 'crystalShop.upgrade.salvageMaterials.bonus',
-    bonusLabel: 'crystalShop.upgrade.salvageMaterials.bonusLabel',
-    baseCost: 200,
-    oneTime: true,
-    category: 'misc',
   },
 };
 
@@ -784,7 +784,7 @@ export default class CrystalShop {
   async _handleOneTimePurchase(stat, config) {
     const { baseCost, label } = config;
     if (this.crystalUpgrades[stat]) return;
-      const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
+    const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
     const cost = Math.round(baseCost * (1 - ascRed / 100));
     if (hero.crystals < cost) {
       showToast(t('crystalShop.notEnoughCrystals'), 'error');
