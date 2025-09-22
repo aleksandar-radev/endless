@@ -9,16 +9,21 @@ export const MAGE_SKILLS = {
     id: 'magicMissile',
     name: () => t('Magic Missile'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 2 + level * 0.25,
     cooldown: () => 5000,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'missile',
     description: () => t('skill.magicMissile'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      waterDamage: scaleUpFlat(level, 3, 6),
-      waterDamagePercent: scaleDownFlat(level, 4),
-    }),
+    effect: (level) => {
+      const waterDamage = scaleUpFlat(level, 3, 6);
+      const waterDamagePercent = scaleDownFlat(level, 4);
+      return {
+        waterDamage: waterDamage * 4,
+        waterDamagePercent: waterDamagePercent * 4,
+      };
+    },
   },
   arcaneIntellect: {
     id: 'arcaneIntellect',
@@ -42,31 +47,41 @@ export const MAGE_SKILLS = {
     id: 'frostBolt',
     name: () => t('Frost Bolt'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 3 + level * 0.25,
     cooldown: () => 5700,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'frost-bolt',
     description: () => t('skill.frostBolt'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      coldDamage: scaleUpFlat(level, 2),
-      coldDamagePercent: scaleDownFlat(level, 6),
-    }),
+    effect: (level) => {
+      const coldDamage = scaleUpFlat(level, 2);
+      const coldDamagePercent = scaleDownFlat(level, 6);
+      return {
+        coldDamage: coldDamage * 4,
+        coldDamagePercent: coldDamagePercent * 4,
+      };
+    },
   },
   fireBlast: {
     id: 'fireBlast',
     name: () => t('Fire Blast'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 4 + level * 0.25,
     cooldown: () => 7600,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'fire-blast',
     description: () => t('skill.fireBlast'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      fireDamagePercent: scaleDownFlat(level, 5),
-      fireDamage: scaleUpFlat(level, 6),
-    }),
+    effect: (level) => {
+      const fireDamagePercent = scaleDownFlat(level, 5);
+      const fireDamage = scaleUpFlat(level, 6);
+      return {
+        fireDamagePercent: fireDamagePercent * 4,
+        fireDamage: fireDamage * 4,
+      };
+    },
   },
 
   // Tier 25 Skills
@@ -255,16 +270,20 @@ export const MAGE_SKILLS = {
     id: 'voidBlast',
     name: () => t('Void Blast'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 25 + level * 1.25,
     cooldown: () => 17000,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'void-blast',
     description: () => t('skill.voidBlast'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      damage: scaleUpFlat(level, 15),
-      elementalPenetrationPercent: scaleDownFlat(level, 3),
-    }),
+    effect: (level) => {
+      const damage = scaleUpFlat(level, 15);
+      return {
+        damage: damage * 4,
+        elementalPenetrationPercent: scaleDownFlat(level, 3),
+      };
+    },
   },
 
   // Tier 2000 Skills
@@ -288,17 +307,23 @@ export const MAGE_SKILLS = {
     id: 'starFire',
     name: () => t('Star Fire'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 30 + level * 1.25,
     cooldown: () => 23000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'star-fire',
     description: () => t('skill.starFire'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      fireDamagePercent: scaleDownFlat(level, 4),
-      airDamagePercent: scaleDownFlat(level, 3),
-      damage: scaleUpFlat(level, 18),
-    }),
+    effect: (level) => {
+      const fireDamagePercent = scaleDownFlat(level, 4);
+      const airDamagePercent = scaleDownFlat(level, 3);
+      const damage = scaleUpFlat(level, 18);
+      return {
+        fireDamagePercent: fireDamagePercent * 4,
+        airDamagePercent: airDamagePercent * 4,
+        damage: damage * 4,
+      };
+    },
   },
 
 
@@ -321,17 +346,22 @@ export const MAGE_SKILLS = {
     id: 'dimensionalRift',
     name: () => t('Dimensional Rift'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 45 + level * 1.25,
     cooldown: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'dimensional-rift',
     description: () => t('skill.dimensionalRift'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      damage: scaleUpFlat(level, 25),
-      lightningDamagePercent: scaleDownFlat(level, 5),
-      ignoreAllEnemyResistances: 1,
-    }),
+    effect: (level) => {
+      const damage = scaleUpFlat(level, 25);
+      const lightningDamagePercent = scaleDownFlat(level, 5);
+      return {
+        damage: damage * 4,
+        lightningDamagePercent: lightningDamagePercent * 4,
+        ignoreAllEnemyResistances: 1,
+      };
+    },
   },
 
   // Tier 5000 Skills
@@ -353,16 +383,22 @@ export const MAGE_SKILLS = {
     id: 'apocalypse',
     name: () => t('Apocalypse'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 60 + level * 1.25,
     cooldown: () => 27000,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'apocalypse',
     description: () => t('skill.apocalypse'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      fireDamagePercent: scaleDownFlat(level, 6),
-      coldDamagePercent: scaleDownFlat(level, 6),
-      lightningDamagePercent: scaleDownFlat(level, 6),
-    }),
+    effect: (level) => {
+      const fireDamagePercent = scaleDownFlat(level, 6);
+      const coldDamagePercent = scaleDownFlat(level, 6);
+      const lightningDamagePercent = scaleDownFlat(level, 6);
+      return {
+        fireDamagePercent: fireDamagePercent * 4,
+        coldDamagePercent: coldDamagePercent * 4,
+        lightningDamagePercent: lightningDamagePercent * 4,
+      };
+    },
   },
 };

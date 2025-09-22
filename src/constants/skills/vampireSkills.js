@@ -39,6 +39,7 @@ export const VAMPIRE_SKILLS = {
     id: 'vampiricStrike',
     name: () => t('Vampiric Strike'),
     type: () => 'instant',
+    skill_type: 'attack',
     manaCost: (level) => 2 + level * 0.25,
     cooldown: () => 9500,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
@@ -75,17 +76,22 @@ export const VAMPIRE_SKILLS = {
     id: 'drainingTouch',
     name: () => t('Draining Touch'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 0 + level * 0,
     cooldown: () => 12200,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'drain',
     description: () => t('skill.drainingTouch'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      earthDamage: scaleUpFlat(level, 4, 3, 0.1),
-      earthDamagePercent: scaleDownFlat(level, 5),
-      manaPerHit: scaleUpFlat(level, 0.5),
-    }),
+    effect: (level) => {
+      const earthDamage = scaleUpFlat(level, 4, 3, 0.1);
+      const earthDamagePercent = scaleDownFlat(level, 5);
+      return {
+        earthDamage: earthDamage * 4,
+        earthDamagePercent: earthDamagePercent * 4,
+        manaPerHit: scaleUpFlat(level, 0.5),
+      };
+    },
   },
   greaterBloodHunger: {
     id: 'greaterBloodHunger',
@@ -106,6 +112,7 @@ export const VAMPIRE_SKILLS = {
     id: 'crimsonBurst',
     name: () => t('Crimson Burst'),
     type: () => 'instant',
+    skill_type: 'attack',
     manaCost: (level) => 3 + level * 0.625,
     cooldown: () => 5000,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],

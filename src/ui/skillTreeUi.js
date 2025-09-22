@@ -8,6 +8,35 @@ import { createModal, closeModal } from './modal.js';
 
 const html = String.raw;
 
+const SKILL_CATEGORY_TRANSLATIONS = {
+  attack: 'skillTree.skillCategory.attack',
+  spell: 'skillTree.skillCategory.spell',
+};
+
+function resolveSkillCategoryLabel(skill) {
+  if (!skill) return '';
+  const categorySource = skill.skill_type ?? skill.skillType;
+  const resolvedCategory =
+    typeof categorySource === 'function' ? categorySource() : categorySource;
+  if (!resolvedCategory) return '';
+  const normalized = `${resolvedCategory}`.toLowerCase();
+  const translationKey = SKILL_CATEGORY_TRANSLATIONS[normalized];
+  if (translationKey) {
+    return t(translationKey);
+  }
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+}
+
+function formatSkillTypeBadge(skill) {
+  if (!skill?.type) return '';
+  const primaryType = `${skill.type().toUpperCase()}`;
+  const categoryLabel = resolveSkillCategoryLabel(skill);
+  if (categoryLabel) {
+    return `${primaryType} - ${categoryLabel}`;
+  }
+  return primaryType;
+}
+
 export function initializeSkillTreeUI() {
   const container = document.getElementById('skilltree');
   // Ensure class-selection and skill-tree-container exist
@@ -193,8 +222,10 @@ function createPreviewTooltip(skill) {
   const nextLevel = currentLevel + 1;
   const effectsNext = skill.effect(nextLevel);
 
+  const typeBadge = formatSkillTypeBadge(skill);
+
   let skillDescription = `
-      <strong>${skill.name()} [${skill.type().toUpperCase()}]</strong><br>
+      <strong>${skill.name()} [${typeBadge}]</strong><br>
       ${skill
     .description()
     .split('\n')
@@ -849,8 +880,10 @@ const updateTooltipContent = (skillId) => {
   const nextLevel = currentLevel < skill.maxLevel() ? currentLevel + 1 : currentLevel;
   const effectsNext = skillTree.getSkillEffect(skill.id, nextLevel);
 
+  const typeBadge = formatSkillTypeBadge(skill);
+
   let skillDescription = `
-      <strong>${skill.name()} [${skill.type().toUpperCase()}]</strong><br>
+      <strong>${skill.name()} [${typeBadge}]</strong><br>
       ${skill
     .description()
     .split('\n')
@@ -990,9 +1023,11 @@ function createSkillTooltip(skillId) {
   const level = skill?.level || 0;
   const effects = skillTree.getSkillEffect(skillId, level);
 
+  const typeBadge = formatSkillTypeBadge(skill);
+
   let tooltip = `
       <div class="tooltip-header">${skill.name()}</div>
-      <div class="tooltip-type">${skill.type().toUpperCase()}</div>
+      <div class="tooltip-type">${typeBadge}</div>
       <div class="tooltip-level">Level: ${level}</div>
       <div class="tooltip-mana">Mana Cost: ${skillTree.getSkillManaCost(skill, level).toFixed(2)} (+${(skillTree.getSkillManaCost(skill, level + 1) - skillTree.getSkillManaCost(skill, level)).toFixed(2)})</div>
   `;

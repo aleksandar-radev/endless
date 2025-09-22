@@ -2,6 +2,10 @@ import { handleSavedData } from './functions.js';
 import { dataManager, game, hero, crystalShop, options } from './globals.js';
 import { SKILLS_MAX_QTY } from './constants/limits.js';
 import { CLASS_PATHS, SKILL_TREES } from './constants/skills.js';
+import { ELEMENTS } from './constants/common.js';
+import { calculateHitChance, createDamageNumber } from './combat.js';
+import { battleLog } from './battleLog.js';
+import { t } from './i18n.js';
 import {
   showManaWarning,
   showToast,
@@ -13,6 +17,23 @@ import {
 
 export const SKILL_LEVEL_TIERS = [1, 10, 25, 60, 150, 400, 750, 1200, 2000, 3000, 5000];
 export const DEFAULT_MAX_SKILL_LEVEL = Infinity;
+
+const ELEMENT_IDS = Object.keys(ELEMENTS);
+function getSpellDamageTypes(effects) {
+  const types = new Set();
+  if ('damage' in effects || 'damagePercent' in effects) {
+    types.add('physical');
+  }
+  if ('elementalDamage' in effects || 'elementalDamagePercent' in effects) {
+    ELEMENT_IDS.forEach((id) => types.add(id));
+  }
+  ELEMENT_IDS.forEach((id) => {
+    if (`${id}Damage` in effects || `${id}DamagePercent` in effects) {
+      types.add(id);
+    }
+  });
+  return Array.from(types);
+}
 
 export default class SkillTree {
   constructor(savedData = null) {
@@ -376,7 +397,7 @@ export default class SkillTree {
     if (!game.currentEnemy || game.currentEnemy.currentLife <= 0) return false;
 
     const skill = this.getSkill(skillId);
-    const baseEffects = this.getSkillEffect(skillId);
+    const baseEffects = { ...this.getSkillEffect(skillId) };
     const manaCost = this.getSkillManaCost(skill);
 
     if (!isAutoCast && hero.stats.currentMana < manaCost) {
@@ -387,24 +408,48 @@ export default class SkillTree {
     if (skill.cooldownEndTime && skill.cooldownEndTime > Date.now()) return false;
 
     const manaPerHit = (hero.stats.manaPerHit || 0) * (1 + (hero.stats.manaPerHitPercent || 0) / 100);
+    const skillTypeSource = skill?.skill_type ?? skill?.skillType;
+    const resolvedSkillType =
+      typeof skillTypeSource === 'function' ? skillTypeSource() : skillTypeSource;
+    const skillType = (resolvedSkillType || 'attack').toLowerCase();
+    const isSpell = skillType === 'spell';
+    const dealsDamage = this.isDamageSkill(baseEffects);
 
-    const { damage, isCritical, breakdown } = hero.calculateDamageAgainst(game.currentEnemy, baseEffects);
+    let damageEffects = baseEffects;
+    if (dealsDamage && isSpell) {
+      const allowedDamageTypes = getSpellDamageTypes(baseEffects);
+      damageEffects = {
+        ...baseEffects,
+        ...(allowedDamageTypes.length ? { allowedDamageTypes } : {}),
+      };
+    }
 
-    if (baseEffects.lifeSteal) {
-      const lifeStealAmount = damage * (baseEffects.lifeSteal / 100);
-      game.healPlayer(lifeStealAmount);
-    }
-    if (baseEffects.manaSteal) {
-      const manaStealAmount = damage * (baseEffects.manaSteal / 100);
-      game.restoreMana(manaStealAmount);
-    }
-    if (baseEffects.omniSteal) {
-      const omniStealAmount = damage * (baseEffects.omniSteal / 100);
-      game.healPlayer(omniStealAmount);
-      game.restoreMana(omniStealAmount);
-    }
-    if (baseEffects.lifePerHit) {
-      game.healPlayer(baseEffects.lifePerHit);
+    let didHit = true;
+    let damageResult = null;
+
+    if (dealsDamage) {
+      if (!isSpell) {
+        const alwaysEvade = game.currentEnemy.special?.includes('alwaysEvade');
+        const hitChance = alwaysEvade
+          ? 0
+          : calculateHitChance(
+            hero.stats.attackRating,
+            game.currentEnemy.evasion,
+            undefined,
+            hero.stats.chanceToHitPercent || 0,
+          );
+        const roll = Math.random() * 100;
+        const neverMiss = hero.stats.attackNeverMiss > 0 && !alwaysEvade;
+
+        if (!neverMiss && (alwaysEvade || roll > hitChance)) {
+          createDamageNumber({ text: 'MISS', color: '#888888' });
+          battleLog.addBattle(t('battleLog.missedAttack'));
+          didHit = false;
+        }
+      }
+      if (didHit) {
+        damageResult = hero.calculateDamageAgainst(game.currentEnemy, damageEffects);
+      }
     }
 
     if (baseEffects.life) {
@@ -415,15 +460,6 @@ export default class SkillTree {
       game.healPlayer((hero.stats.life * baseEffects.lifePercent) / 100);
     }
 
-    if (this.isDamageSkill(baseEffects)) {
-      if (manaPerHit > 0) {
-        game.restoreMana(manaPerHit);
-      }
-      if (baseEffects.manaPerHit) {
-        game.restoreMana(baseEffects.manaPerHit);
-      }
-    }
-
     if (baseEffects.reduceEnemyDamagePercent) {
       hero.stats.reduceEnemyDamagePercent += baseEffects.reduceEnemyDamagePercent / 100;
       game.currentEnemy.damage = game.currentEnemy.calculateDamage();
@@ -431,7 +467,47 @@ export default class SkillTree {
       hero.stats.reduceEnemyDamagePercent -= baseEffects.reduceEnemyDamagePercent / 100;
     }
 
-    if (this.isDamageSkill(baseEffects)) {
+    if (dealsDamage && didHit && damageResult) {
+      const { damage, isCritical, breakdown } = damageResult;
+
+      let lifeStealPercent = 0;
+      let manaStealPercent = 0;
+      let omniStealPercent = hero.stats.omniSteal || 0;
+
+      if (isSpell) {
+        omniStealPercent += baseEffects.omniSteal || 0;
+      } else {
+        lifeStealPercent += (hero.stats.lifeSteal || 0) + (baseEffects.lifeSteal || 0);
+        manaStealPercent += (hero.stats.manaSteal || 0) + (baseEffects.manaSteal || 0);
+        omniStealPercent += baseEffects.omniSteal || 0;
+      }
+
+      if (lifeStealPercent) {
+        game.healPlayer(damage * (lifeStealPercent / 100));
+      }
+
+      if (manaStealPercent) {
+        game.restoreMana(damage * (manaStealPercent / 100));
+      }
+
+      if (omniStealPercent) {
+        const omniStealAmount = damage * (omniStealPercent / 100);
+        game.healPlayer(omniStealAmount);
+        game.restoreMana(omniStealAmount);
+      }
+
+      if (baseEffects.lifePerHit) {
+        game.healPlayer(baseEffects.lifePerHit);
+      }
+
+      if (manaPerHit > 0) {
+        game.restoreMana(manaPerHit);
+      }
+
+      if (baseEffects.manaPerHit) {
+        game.restoreMana(baseEffects.manaPerHit);
+      }
+
       game.damageEnemy(damage, isCritical, breakdown, skill.name());
     }
 

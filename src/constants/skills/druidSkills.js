@@ -81,16 +81,21 @@ export const DRUID_SKILLS = {
     id: 'entanglingRoots',
     name: () => t('Entangling Roots'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 4 + level * 0.375,
     cooldown: () => 15200,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'roots',
     description: () => t('skill.entanglingRoots'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      earthDamage: scaleUpFlat(level, 5),
-      earthDamagePercent: scaleDownFlat(level, 5),
-    }),
+    effect: (level) => {
+      const earthDamage = scaleUpFlat(level, 5);
+      const earthDamagePercent = scaleDownFlat(level, 5);
+      return {
+        earthDamage: earthDamage * 4,
+        earthDamagePercent: earthDamagePercent * 4,
+      };
+    },
   },
 
   sproutling: {
@@ -158,18 +163,25 @@ export const DRUID_SKILLS = {
     id: 'hurricane',
     name: () => t('Hurricane'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 8 + level * 0.5,
     cooldown: () => 11400,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'hurricane',
     description: () => t('skill.hurricane'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      airDamage: scaleUpFlat(level, 4),
-      airDamagePercent: scaleDownFlat(level, 6),
-      coldDamage: scaleUpFlat(level, 4),
-      coldDamagePercent: scaleDownFlat(level, 6),
-    }),
+    effect: (level) => {
+      const airDamage = scaleUpFlat(level, 4);
+      const airDamagePercent = scaleDownFlat(level, 6);
+      const coldDamage = scaleUpFlat(level, 4);
+      const coldDamagePercent = scaleDownFlat(level, 6);
+      return {
+        airDamage: airDamage * 4,
+        airDamagePercent: airDamagePercent * 4,
+        coldDamage: coldDamage * 4,
+        coldDamagePercent: coldDamagePercent * 4,
+      };
+    },
   },
 
   spiritBear: {
@@ -352,17 +364,23 @@ export const DRUID_SKILLS = {
     id: 'furyOfTheWilds',
     name: () => t('Fury of the Wilds'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 30 + level * 1.25,
     cooldown: () => 20000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'fury-of-the-wilds',
     description: () => t('skill.furyOfTheWilds'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      damage: scaleUpFlat(level, 14, 4, 0.2),
-      coldDamagePercent: scaleDownFlat(level, 3),
-      lightningDamagePercent: scaleDownFlat(level, 3),
-    }),
+    effect: (level) => {
+      const damage = scaleUpFlat(level, 14, 4, 0.2);
+      const coldDamagePercent = scaleDownFlat(level, 3);
+      const lightningDamagePercent = scaleDownFlat(level, 3);
+      return {
+        damage: damage * 4,
+        coldDamagePercent: coldDamagePercent * 4,
+        lightningDamagePercent: lightningDamagePercent * 4,
+      };
+    },
   },
 
   // Tier 3000 Skills

@@ -635,43 +635,63 @@ export default class Hero {
   // calculated when hit is successful
   calculateTotalDamage(instantSkillBaseEffects = {}) {
     const elements = ELEMENT_IDS;
+    const allowedDamageTypes = Array.isArray(instantSkillBaseEffects.allowedDamageTypes)
+      ? instantSkillBaseEffects.allowedDamageTypes
+      : null;
+    const allowAllDamage = !allowedDamageTypes || allowedDamageTypes.length === 0;
+    const includePhysical = allowAllDamage || allowedDamageTypes?.includes('physical');
+    const allowedElements = allowAllDamage
+      ? new Set(elements)
+      : new Set(allowedDamageTypes.filter((type) => elements.includes(type)));
 
     // 1) Flat phase: build flat pools from stored flat-only values
     const flatPools = {
-      physical: (this.baseDamages?.physical || 0) + (instantSkillBaseEffects.damage || 0),
+      physical:
+        (includePhysical ? (this.baseDamages?.physical || 0) : 0) +
+        (includePhysical ? (instantSkillBaseEffects.damage || 0) : 0),
     };
     elements.forEach((e) => {
       const key = `${e}Damage`;
-      flatPools[e] = (this.baseDamages?.[e] || 0) + (instantSkillBaseEffects[key] || 0);
+      flatPools[e] =
+        (allowedElements.has(e) ? (this.baseDamages?.[e] || 0) : 0) +
+        (allowedElements.has(e) ? (instantSkillBaseEffects[key] || 0) : 0);
     });
 
     // flat elementalDamage applies to every elemental pool
-    const flatElementalDamage =
-      (this.baseDamages?.elemental || 0) + (instantSkillBaseEffects.elementalDamage || 0);
-    if (flatElementalDamage) elements.forEach((e) => (flatPools[e] += flatElementalDamage));
+    const baseElemental = this.baseDamages?.elemental || 0;
+    const flatElementalDamage = instantSkillBaseEffects.elementalDamage || 0;
+    if (baseElemental || flatElementalDamage) {
+      elements.forEach((e) => {
+        if (allowedElements.has(e)) {
+          flatPools[e] += baseElemental + flatElementalDamage;
+        }
+      });
+    }
 
     // 2) Percent phase: apply percent bonuses (physical + per-elemental + global elemental)
     const finalPools = {};
     const physicalPct = (instantSkillBaseEffects.damagePercent || 0) / 100;
-    finalPools.physical =
-      flatPools.physical *
-      (1 +
-        physicalPct +
-        (this.stats.totalDamagePercent || 0) +
-        (this.stats.damagePercent || 0));
+    finalPools.physical = includePhysical
+      ? flatPools.physical *
+        (1 +
+          physicalPct +
+          (this.stats.totalDamagePercent || 0) +
+          (this.stats.damagePercent || 0))
+      : 0;
 
     // elemental global percent from both sources
     const elementalGlobalPct = (instantSkillBaseEffects.elementalDamagePercent || 0) / 100;
     elements.forEach((e) => {
       const specificPct = (instantSkillBaseEffects[`${e}DamagePercent`] || 0) / 100;
-      finalPools[e] =
-        flatPools[e] *
-        (1 +
-          specificPct +
-          elementalGlobalPct +
-          (this.stats.totalDamagePercent || 0) +
-          (this.stats.elementalDamagePercent || 0) +
-          (this.stats[`${e}DamagePercent`] || 0));
+      finalPools[e] = allowedElements.has(e)
+        ? flatPools[e] *
+          (1 +
+            specificPct +
+            elementalGlobalPct +
+            (this.stats.totalDamagePercent || 0) +
+            (this.stats.elementalDamagePercent || 0) +
+            (this.stats[`${e}DamagePercent`] || 0))
+        : 0;
     });
 
     // Apply rune damage conversions on final pools (post-percent),

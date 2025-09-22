@@ -1064,6 +1064,8 @@ export default {
   'startingCrystals': 'Starting Crystals',
   'skillTree.purchaseAutoCastWarning': 'Purchase Auto Spell Cast upgrade to enable auto-casting.',
   'skillTree.notEnoughMana': 'Not enough mana!',
+  'skillTree.skillCategory.attack': 'Attack Skill',
+  'skillTree.skillCategory.spell': 'Spell',
   'skillTree.requiresLevel': 'Requires Level {level}',
   'skillTree.requiresCrystal': 'Requires {count} Crystal',
   'skillTree.requiresCrystals': 'Requires {count} Crystals',

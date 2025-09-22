@@ -9,6 +9,7 @@ export const PALADIN_SKILLS = {
     id: 'holyLight',
     name: () => t('Holy Light'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 3 + level * 0.25,
     cooldown: () => 6000,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
@@ -40,6 +41,7 @@ export const PALADIN_SKILLS = {
     id: 'shieldBash',
     name: () => t('Shield Bash'),
     type: () => 'instant',
+    skill_type: 'attack',
     manaCost: (level) => 3 + level * 0.125,
     cooldown: () => 4500,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
@@ -89,6 +91,7 @@ export const PALADIN_SKILLS = {
     id: 'greaterHealing',
     name: () => t('Greater Healing'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 8 + level * 0.375,
     cooldown: () => 18000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
@@ -140,18 +143,25 @@ export const PALADIN_SKILLS = {
     id: 'wrathOfTheHeavens',
     name: () => t('Wrath of the Heavens'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 10 + level * 1,
     cooldown: () => 12400,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'wrath',
     description: () => t('skill.wrathOfTheHeavens'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      damagePercent: scaleDownFlat(level, 2),
-      lightningDamage: scaleUpFlat(level, 8),
-      lightningDamagePercent: scaleDownFlat(level, 5),
-      airDamagePercent: scaleDownFlat(level, 3),
-    }),
+    effect: (level) => {
+      const damagePercent = scaleDownFlat(level, 2);
+      const lightningDamage = scaleUpFlat(level, 8);
+      const lightningDamagePercent = scaleDownFlat(level, 5);
+      const airDamagePercent = scaleDownFlat(level, 3);
+      return {
+        damagePercent: damagePercent * 4,
+        lightningDamage: lightningDamage * 4,
+        lightningDamagePercent: lightningDamagePercent * 4,
+        airDamagePercent: airDamagePercent * 4,
+      };
+    },
   },
   beaconOfFaith: {
     id: 'beaconOfFaith',
@@ -312,17 +322,23 @@ export const PALADIN_SKILLS = {
     id: 'divineJudgment',
     name: () => t('Divine Judgment'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 20 + level * 1,
     cooldown: () => 30000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'divine-judgment',
     description: () => t('skill.divineJudgment'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      damage: scaleUpFlat(level, 15),
-      lightningDamagePercent: scaleDownFlat(level, 3),
-      fireDamagePercent: scaleDownFlat(level, 3),
-    }),
+    effect: (level) => {
+      const damage = scaleUpFlat(level, 15);
+      const lightningDamagePercent = scaleDownFlat(level, 3);
+      const fireDamagePercent = scaleDownFlat(level, 3);
+      return {
+        damage: damage * 4,
+        lightningDamagePercent: lightningDamagePercent * 4,
+        fireDamagePercent: fireDamagePercent * 4,
+      };
+    },
   },
 
   // Tier 3000 Skills

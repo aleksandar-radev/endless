@@ -9,16 +9,21 @@ export const ELEMENTALIST_SKILLS = {
     id: 'fireball',
     name: () => t('Fireball'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 2 + level * 0.25,
     cooldown: () => 5200,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'fireball',
     description: () => t('skill.fireball'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      fireDamage: scaleUpFlat(level, 2, 6),
-      fireDamagePercent: scaleDownFlat(level, 4),
-    }),
+    effect: (level) => {
+      const fireDamage = scaleUpFlat(level, 2, 6);
+      const fireDamagePercent = scaleDownFlat(level, 4);
+      return {
+        fireDamage: fireDamage * 4,
+        fireDamagePercent: fireDamagePercent * 4,
+      };
+    },
   },
   frostArmor: {
     id: 'frostArmor',
@@ -60,17 +65,23 @@ export const ELEMENTALIST_SKILLS = {
     id: 'lightningStrike',
     name: () => t('Lightning Strike'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 4 + level * 0.375,
     cooldown: () => 3000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'lightning',
     description: () => t('skill.lightningStrike'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      lightningDamage: scaleUpFlat(level, 5, 7),
-      lightningDamagePercent: scaleDownFlat(level, 4),
-      airDamagePercent: scaleDownFlat(level, 2),
-    }),
+    effect: (level) => {
+      const lightningDamage = scaleUpFlat(level, 5, 7);
+      const lightningDamagePercent = scaleDownFlat(level, 4);
+      const airDamagePercent = scaleDownFlat(level, 2);
+      return {
+        lightningDamage: lightningDamage * 4,
+        lightningDamagePercent: lightningDamagePercent * 4,
+        airDamagePercent: airDamagePercent * 4,
+      };
+    },
   },
   elementalMastery: {
     id: 'elementalMastery',
@@ -147,16 +158,21 @@ export const ELEMENTALIST_SKILLS = {
     id: 'elementalStorm',
     name: () => t('Elemental Storm'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 50,
     cooldown: () => 4500,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'storm',
     description: () => t('skill.elementalStorm'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      elementalDamage: scaleUpFlat(level, 2),
-      elementalDamagePercent: scaleDownFlat(level),
-    }),
+    effect: (level) => {
+      const elementalDamage = scaleUpFlat(level, 2);
+      const elementalDamagePercent = scaleDownFlat(level);
+      return {
+        elementalDamage: elementalDamage * 4,
+        elementalDamagePercent: elementalDamagePercent * 4,
+      };
+    },
   },
   elementalAffinity: {
     id: 'elementalAffinity',
@@ -264,17 +280,23 @@ export const ELEMENTALIST_SKILLS = {
     id: 'volcanicWrath',
     name: () => t('Volcanic Wrath'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 25 + level * 1.25,
     cooldown: () => 100000,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'volcanic-wrath',
     description: () => t('skill.volcanicWrath'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      fireDamagePercent: scaleDownFlat(level, 4),
-      damage: scaleUpFlat(level, 8, 4),
-      fireDamage: scaleUpFlat(level, 6, 6, 0.15),
-    }),
+    effect: (level) => {
+      const fireDamagePercent = scaleDownFlat(level, 4);
+      const damage = scaleUpFlat(level, 8, 4);
+      const fireDamage = scaleUpFlat(level, 6, 6, 0.15);
+      return {
+        fireDamagePercent: fireDamagePercent * 4,
+        damage: damage * 4,
+        fireDamage: fireDamage * 4,
+      };
+    },
   },
 
   // Tier 2000 Skills
@@ -282,34 +304,46 @@ export const ELEMENTALIST_SKILLS = {
     id: 'tempestNova',
     name: () => t('Tempest Nova'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 35 + level * 1.25,
     cooldown: () => 40000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'tempest-nova',
     description: () => t('skill.tempestNova'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      lightningDamage: scaleUpFlat(level, 10, 4),
-      lightningDamagePercent: scaleDownFlat(level, 4),
-      coldDamage: scaleUpFlat(level, 10, 4),
-      coldDamagePercent: scaleDownFlat(level, 4),
-    }),
+    effect: (level) => {
+      const lightningDamage = scaleUpFlat(level, 10, 4);
+      const lightningDamagePercent = scaleDownFlat(level, 4);
+      const coldDamage = scaleUpFlat(level, 10, 4);
+      const coldDamagePercent = scaleDownFlat(level, 4);
+      return {
+        lightningDamage: lightningDamage * 4,
+        lightningDamagePercent: lightningDamagePercent * 4,
+        coldDamage: coldDamage * 4,
+        coldDamagePercent: coldDamagePercent * 4,
+      };
+    },
   },
   earthShatter: {
     id: 'earthShatter',
     name: () => t('Earth Shatter'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 30 + level * 1.25,
     cooldown: () => 25000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'earth-shatter',
     description: () => t('skill.earthShatter'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      earthDamagePercent: scaleDownFlat(level, 4),
-      damage: scaleUpFlat(level, 30, 4, 0.2),
-      armorPenetrationPercent: Math.min(scaleDownFlat(level, 0.5), 60),
-    }),
+    effect: (level) => {
+      const earthDamagePercent = scaleDownFlat(level, 4);
+      const damage = scaleUpFlat(level, 30, 4, 0.2);
+      return {
+        earthDamagePercent: earthDamagePercent * 4,
+        damage: damage * 4,
+        armorPenetrationPercent: Math.min(scaleDownFlat(level, 0.5), 60),
+      };
+    },
   },
 
   // Tier 3000 Skills
@@ -364,17 +398,24 @@ export const ELEMENTALIST_SKILLS = {
     id: 'natureCataclysm',
     name: () => t('Nature Cataclysm'),
     type: () => 'instant',
+    skill_type: 'spell',
     manaCost: (level) => 50 + level * 1.25,
     cooldown: () => 28000,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'nature-cataclysm',
     description: () => t('skill.natureCataclysm'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      fireDamagePercent: scaleDownFlat(level, 5),
-      coldDamagePercent: scaleDownFlat(level, 5),
-      lightningDamagePercent: scaleDownFlat(level, 5),
-      elementalDamage: scaleUpFlat(level, 8, 4),
-    }),
+    effect: (level) => {
+      const fireDamagePercent = scaleDownFlat(level, 5);
+      const coldDamagePercent = scaleDownFlat(level, 5);
+      const lightningDamagePercent = scaleDownFlat(level, 5);
+      const elementalDamage = scaleUpFlat(level, 8, 4);
+      return {
+        fireDamagePercent: fireDamagePercent * 4,
+        coldDamagePercent: coldDamagePercent * 4,
+        lightningDamagePercent: lightningDamagePercent * 4,
+        elementalDamage: elementalDamage * 4,
+      };
+    },
   },
 };
