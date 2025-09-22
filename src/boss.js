@@ -1,7 +1,7 @@
 /**
  * Manages boss properties and state.
  */
-import { percentIncreasedByLevel, percentReducedByLevel, scaleStat } from './common.js';
+import { percentIncreasedByLevel, scaleStat, computeXPAdjustedMonotonic, xpDiminishingFactor } from './common.js';
 import { BOSSES } from './constants/bosses.js';
 import { hero } from './globals.js';
 import { battleLog } from './battleLog.js';
@@ -18,7 +18,6 @@ const stat_increase = (level) => {
   const extra = percentIncreasedByLevel(0, level - 500, 1000, 0.5, 20);
   return base + extra;
 };
-const xp_gold_scale = (level) => percentReducedByLevel(1, level, 20, 0.01, 0.025);
 const attackRatingAndEvasionScale = 0.7;
 
 class Boss {
@@ -84,19 +83,29 @@ class Boss {
     const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
     base *= levelBonus;
 
-    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
-    const tierXpGoldScale = xp_gold_scale(this.level);
-    return val * (this.baseData.multiplier?.xp || 1) * tierXpGoldScale;
+    // Monotonic XP: accumulate per-level increments with diminishing applied to increments only
+    const val = computeXPAdjustedMonotonic(
+      this.baseData.xp || 0,
+      this.level,
+      (lvl) => stat_increase(lvl),
+      (lvl) => 1 + Math.floor(lvl / 20) * INCREASE_PER_LEVEL,
+      (lvl) => xpDiminishingFactor(lvl),
+      'boss-xp',
+    );
+    return val * (this.baseData.multiplier?.xp || 1);
   }
 
   calculateGold() {
-    let base = this.baseData.gold || 0;
-    const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
-    base *= levelBonus;
-
-    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
-    const tierXpGoldScale = xp_gold_scale(this.level);
-    return val * (this.baseData.multiplier?.gold || 1) * tierXpGoldScale;
+    // Gold uses same monotonic adjusted scaling as XP
+    const val = computeXPAdjustedMonotonic(
+      this.baseData.gold || 0,
+      this.level,
+      (lvl) => stat_increase(lvl),
+      (lvl) => 1 + Math.floor(lvl / 20) * INCREASE_PER_LEVEL,
+      (lvl) => xpDiminishingFactor(lvl),
+      'boss-gold',
+    );
+    return val * (this.baseData.multiplier?.gold || 1);
   }
 
 

@@ -1,8 +1,9 @@
 import { ROCKY_FIELD_BASE_STATS, ROCKY_FIELD_ENEMIES } from './constants/rocky_field.js';
 import {
   percentIncreasedByLevel,
-  percentReducedByLevel,
   scaleStat,
+  computeXPAdjustedMonotonic,
+  xpDiminishingFactor,
 } from './common.js';
 import { battleLog } from './battleLog.js';
 import { t, tp } from './i18n.js';
@@ -123,14 +124,7 @@ const REGION_STAT_SCALE = {
   summit: (level) => percentIncreasedByLevel(0.4, level, 50, 0.01, 1.8),
 };
 
-const REGION_EXP_GOLD_SCALE = {
-  outskirts: (level) => percentReducedByLevel(1, level, 40, 0.01, 0.1),
-  boulders: (level) => percentReducedByLevel(1, level, 41, 0.009, 0.1),
-  caves: (level) => percentReducedByLevel(1, level, 42, 0.008, 0.1),
-  cliffs: (level) => percentReducedByLevel(1, level, 43, 0.007, 0.1),
-  valley: (level) => percentReducedByLevel(0.95, level, 44, 0.006, 0.1),
-  summit: (level) => percentReducedByLevel(0.9, level, 45, 0.005, 0.1),
-};
+// Removed region-specific diminishing. XP/Gold now use global xpDiminishingFactor.
 
 const BASE_SCALE_PER_REGION_AND_LEVEL = {
   outskirts: {
@@ -219,7 +213,7 @@ export class RockyFieldEnemy {
     const statMultiplier = baseScale.tierScale * levelBonus;
 
     this.baseScale = REGION_STAT_SCALE[regionId](level);
-    const xpGoldScale = REGION_EXP_GOLD_SCALE[regionId](level);
+    // Diminishing is applied inside the monotonic computation below when needed
 
     const speedRed = hero.stats.reduceEnemyAttackSpeedPercent || 0;
     const hpRed = hero.stats.reduceEnemyHpPercent || 0;
@@ -238,8 +232,26 @@ export class RockyFieldEnemy {
     this.attackRating =
       scaleStat(getStatValue('attackRating') * statMultiplier, level, 0, 0, 0, this.baseScale) *
       attackRatingAndEvasionScale;
-    this.xp = scaleStat(getStatValue('xp') * statMultiplier, level, 0, 0, 0, this.baseScale) * xpGoldScale;
-    this.gold = scaleStat(getStatValue('gold') * statMultiplier, level, 0, 0, 0, this.baseScale) * xpGoldScale;
+    // Monotonic XP in Rocky Field: accumulate per-level increments only
+    const baseAtL1 = getStatValue('xp') * baseScale.tierScale; // levelBonus handled in series
+    const levelBonusFn = (lvl) => 1 + Math.floor(lvl / 20) * baseScale.levelScale;
+    this.xp = computeXPAdjustedMonotonic(
+      baseAtL1,
+      level,
+      (lvl) => REGION_STAT_SCALE[regionId](lvl),
+      levelBonusFn,
+      (lvl) => xpDiminishingFactor(lvl),
+      `rocky-${regionId}`,
+    );
+    const baseGoldAtL1 = getStatValue('gold') * baseScale.tierScale;
+    this.gold = computeXPAdjustedMonotonic(
+      baseGoldAtL1,
+      level,
+      (lvl) => REGION_STAT_SCALE[regionId](lvl),
+      (lvl) => 1 + Math.floor(lvl / 20) * baseScale.levelScale,
+      (lvl) => xpDiminishingFactor(lvl),
+      `rocky-gold-${regionId}`,
+    );
 
     ELEMENT_IDS.forEach((id) => {
       const enemyElMult = getMultiplierValue(enemyMultipliers, `${id}Damage`);
