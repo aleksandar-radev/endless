@@ -850,6 +850,7 @@ function createSkillElement(baseSkill) {
       const count = skillTree.quickQty === 'max' ? Infinity : parseInt(skillTree.quickQty, 10) || 1;
       const currentLevel = skillTree.skills[skill.id]?.level || 0;
       const unlocked = skillTree.unlockSkillBulk(skill.id, count);
+      skill = skillTree.getSkill(skill.id);
       if (typeof gtag === 'function' && unlocked > 0) {
         gtag('event', 'skill_leveled_up_bulk', {
           event_category: 'SkillTree',
@@ -860,6 +861,10 @@ function createSkillElement(baseSkill) {
       }
       updateSkillTreeValues();
       updateActionBar();
+      const tooltip = document.getElementById('tooltip');
+      if (tooltip?.classList.contains('show')) {
+        showTooltip(updateTooltipContent(skill.id), e);
+      }
     } else {
       openSkillModal(skill.id);
     }

@@ -191,11 +191,13 @@ export function initializeUI() {
       // Baseline for session eligibility (independent from counters reset)
       offlineEligibilityStart = statistics.totalTimeInFights || 0;
 
+      const tooltipDescription = indicator.classList.contains('offline-eligible')
+        ? t('counters.offline.tooltipEligible')
+        : t('counters.offline.tooltipNotEligible');
+
       const tooltip = () => html`
         <div class="tooltip-header">${t('counters.offlineProgress')}</div>
-        <div class="tooltip-desc">${indicator.classList.contains('offline-eligible')
-          ? t('counters.offline.tooltipEligible')
-          : t('counters.offline.tooltipNotEligible')}</div>
+        <div class="tooltip-desc">${tooltipDescription}</div>
         <div class="tooltip-note">${t('counters.offline.tooltipCondition')}</div>
       `;
       indicator.addEventListener('mouseenter', (e) => showTooltip(tooltip(), e));
