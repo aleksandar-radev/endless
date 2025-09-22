@@ -1,5 +1,6 @@
 import { ELEMENTS } from '../common.js';
 import { t, tp } from '../../i18n.js';
+import { ascension } from '../../globals.js';
 
 const html = String.raw;
 
@@ -141,9 +142,25 @@ const CUSTOM_DESCRIPTIONS = {
     }),
   elementalDamage: () => t('tooltip.elementalDamage'),
   damage: () => t('tooltip.damage'),
-  attackSpeed: () => t('tooltip.attackSpeed'),
+  attackSpeed: () => {
+    const asc = ascension?.getBonuses?.() || {};
+    const baseCap = 5;
+    const ascCap = Number((asc.attackSpeedCap || 0).toFixed(2));
+    const currentCap = Number((baseCap + ascCap).toFixed(2));
+    return tp('tooltip.attackSpeed', {
+      baseCap,
+      ascCap,
+      currentCap,
+    });
+  },
   attackRating: () => t('tooltip.attackRating'),
-  critChance: () => t('tooltip.critChance'),
+  critChance: () => {
+    const asc = ascension?.getBonuses?.() || {};
+    const baseCap = 50;
+    const ascCap = Math.floor(asc.critChanceCap || 0);
+    const currentCap = baseCap + ascCap;
+    return tp('tooltip.critChance', { baseCap, ascCap, currentCap });
+  },
   critDamage: () => t('tooltip.critDamage'),
   lifeSteal: () => t('tooltip.lifeSteal'),
   manaSteal: () => t('tooltip.manaSteal'),
@@ -153,7 +170,13 @@ const CUSTOM_DESCRIPTIONS = {
   mana: () => t('tooltip.mana'),
   manaRegen: () => t('tooltip.manaRegen'),
   armor: () => t('tooltip.armor'),
-  blockChance: () => t('tooltip.blockChance'),
+  blockChance: () => {
+    const asc = ascension?.getBonuses?.() || {};
+    const baseCap = 50;
+    const ascCap = Math.floor(asc.blockChanceCap || 0);
+    const currentCap = baseCap + ascCap;
+    return tp('tooltip.blockChance', { baseCap, ascCap, currentCap });
+  },
   evasion: () => t('tooltip.evasion'),
   fireResistance: () => tp('tooltip.fireResistance', { icon: ELEMENTS.fire.icon }),
   coldResistance: () => tp('tooltip.coldResistance', { icon: ELEMENTS.cold.icon }),
