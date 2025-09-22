@@ -12,6 +12,7 @@ export default function run() {
       <li>Prestige: show total crystals in the prestige modal.</li>
       <li>Skills bar: abilities in <b>skill slots</b> are now sorted deterministically by class skill order, not by unlock order.</li>
       <li>Options: added <b>Show Roll Percentiles</b>. When enabled, item tooltips and prestige cards display roll quality (0–100%) instead of min/max ranges.</li>
+      <li>Changed xp and gold calculation rewards for all enemies and bosses. Higher stages now are always better.</li>
     </ul>
 
     <span style="color:#FF8A00;">Fixes</span>
