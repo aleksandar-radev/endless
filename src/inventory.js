@@ -322,7 +322,7 @@ export default class Inventory {
           }
         },
         emptyMsg: 'No eligible equipped items.',
-        titleExtra: '<div style="margin-bottom:10px;">Select an equipped item to upgrade: <div style="font-size:0.9em;color:#ddd;margin-top:6px;">You can upgrade items up to the number of levels available based on the highest stage reached in this zone.</div></div>',
+        titleExtra: '<div style="margin-bottom:10px;">Select an equipped item to upgrade: <div style="font-size:0.9em;color:#ddd;margin-top:6px;">You can upgrade items up to the number of levels available based on the highest stage reached in this region.</div></div>',
       });
 
       equipped.forEach(({ item }, idx) => {

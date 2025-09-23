@@ -137,7 +137,7 @@ export function initializeUI() {
       } else if (game.fightMode === 'arena') {
         selectBoss(); // Select boss based on current level
       } else if (game.fightMode === 'rockyField') {
-        game.currentEnemy = new RockyFieldEnemy(game.rockyFieldZone, game.rockyFieldStage);
+        game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);
       }
       // Toggle active tab class
       document.querySelectorAll('.region-tab').forEach((b) => b.classList.toggle('active', b === btn));
@@ -673,7 +673,7 @@ export function updateRockyFieldRegionSelector() {
     const hasEnemies = getRockyFieldEnemies(region.id).length > 0;
     const unlocked = !region.unlockStage || game.rockyFieldHighestStage >= region.unlockStage;
     const btn = document.createElement('button');
-    btn.className = 'region-btn' + (region.id === game.rockyFieldZone ? ' selected' : '');
+    btn.className = 'region-btn' + (region.id === game.rockyFieldRegion ? ' selected' : '');
     btn.textContent = region.name;
     btn.disabled = !hasEnemies || !unlocked;
 
@@ -687,9 +687,9 @@ export function updateRockyFieldRegionSelector() {
           `Are you sure you want to change to ${region.name}? That will reset your stage progress and will find you a new enemy`,
         );
         if (!confirmed) return;
-        game.rockyFieldZone = region.id;
+        game.rockyFieldRegion = region.id;
         game.rockyFieldStage = 1;
-        game.currentEnemy = new RockyFieldEnemy(game.rockyFieldZone, game.rockyFieldStage);
+        game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);
         updateEnemyStats();
         updateStageUI();
         updateRockyFieldRegionSelector();

@@ -213,7 +213,7 @@ export function playerDeath() {
       // Reset rocky field stage and enemy, restore player resources
       game.rockyFieldStage = game.getStartingStage();
       updateStageUI();
-      game.currentEnemy = new RockyFieldEnemy(game.rockyFieldZone, game.rockyFieldStage);
+      game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);
       game.resetAllLife();
       updateRockyFieldRegionSelector();
     }
@@ -404,10 +404,10 @@ export async function defeatEnemy() {
       let percent;
       if (commonPool.length && Math.random() < 1 / 500) {
         runeId = commonPool[Math.floor(Math.random() * commonPool.length)];
-        percent = getRockyFieldRunePercent(game.rockyFieldZone, game.rockyFieldStage);
+        percent = getRockyFieldRunePercent(game.rockyFieldRegion, game.rockyFieldStage);
       } else if (uniquePool.length && Math.random() < 1 / 50000) {
         runeId = uniquePool[Math.floor(Math.random() * uniquePool.length)];
-        percent = getRockyFieldRunePercent(game.rockyFieldZone, game.rockyFieldStage);
+        percent = getRockyFieldRunePercent(game.rockyFieldRegion, game.rockyFieldStage);
       }
       if (runeId) {
         const rune = runes.addRune(runeId, percent);
@@ -466,7 +466,7 @@ export async function defeatEnemy() {
     game.currentEnemy = new Enemy(game.stage);
     updateEnemyStats();
   } else if (game.fightMode === 'rockyField') {
-    game.currentEnemy = new RockyFieldEnemy(game.rockyFieldZone, game.rockyFieldStage);
+    game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);
     updateEnemyStats();
   }
 

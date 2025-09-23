@@ -59,7 +59,7 @@ window.setLanguage = setLanguage;
   } else if (game.fightMode === 'arena') {
     game.currentEnemy = new Boss();
   } else if (game.fightMode === 'rockyField') {
-    game.currentEnemy = new RockyFieldEnemy(game.rockyFieldZone, game.rockyFieldStage);
+    game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);
   }
 
 

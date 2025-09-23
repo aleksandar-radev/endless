@@ -28,7 +28,7 @@ class Game {
     this.stage = savedData.stage || 1; // Default to stage 1 if not provided
     this.rockyFieldStage = savedData.rockyFieldStage || 1;
     this.rockyFieldHighestStage = savedData.rockyFieldHighestStage || this.rockyFieldStage;
-    this.rockyFieldZone = savedData.rockyFieldZone || 'outskirts';
+    this.rockyFieldRegion = savedData.rockyFieldRegion || 'outskirts';
     this.resurrectCount = 0; // Track number of resurrections
     this.soulShopResurrectCount = 0; // Track number of resurrections from SoulShop
     this.lastPlayerAttack = Date.now();
@@ -270,7 +270,7 @@ class Game {
         if (this.fightMode === 'arena') {
           selectBoss();
         } else if (this.fightMode === 'rockyField') {
-          this.currentEnemy = new RockyFieldEnemy(this.rockyFieldZone, this.rockyFieldStage);
+          this.currentEnemy = new RockyFieldEnemy(this.rockyFieldRegion, this.rockyFieldStage);
         } else {
           this.currentEnemy = new Enemy(this.stage);
         }
@@ -295,7 +295,7 @@ class Game {
         }
       } else if (this.fightMode === 'rockyField') {
         if (!this.currentEnemy) {
-          this.currentEnemy = new RockyFieldEnemy(this.rockyFieldZone, this.rockyFieldStage);
+          this.currentEnemy = new RockyFieldEnemy(this.rockyFieldRegion, this.rockyFieldStage);
         } else {
           this.currentEnemy.resetLife();
         }
