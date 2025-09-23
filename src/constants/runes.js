@@ -2,6 +2,9 @@ import { ELEMENTS } from './common.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 
+export const MIN_CONVERSION_PERCENT = 10;
+export const MAX_CONVERSION_PERCENT = 150;
+
 const TYPE_DATA = {
   damage: {
     stat: 'damage',
@@ -29,7 +32,7 @@ const CONVERSION_RUNES = Object.keys(TYPE_DATA)
           id: `${from}_to_${to}`,
           fromKey: fromInfo.labelKey,
           toKey: toInfo.labelKey,
-          conversion: { from: fromInfo.stat, to: toInfo.stat, percent: 10 },
+          conversion: { from: fromInfo.stat, to: toInfo.stat, percent: MIN_CONVERSION_PERCENT },
           icon: `${BASE}/icons/runes/${from}_to_${to}.svg`,
         };
       }),

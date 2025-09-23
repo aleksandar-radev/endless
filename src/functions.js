@@ -1,6 +1,6 @@
 import { game, hero, inventory, training, skillTree, dataManager, statistics, runes, ascension, prestige } from './globals.js';
 import { MATERIALS } from './constants/materials.js';
-import { RUNES } from './constants/runes.js';
+import { RUNES, MAX_CONVERSION_PERCENT, MIN_CONVERSION_PERCENT } from './constants/runes.js';
 import SimpleCrypto from 'simple-crypto-js';
 import { initializeSkillTreeStructure, showToast, updatePlayerLife, updateResources, updateStageUI, updateTabIndicators } from './ui/ui.js';
 import { createImageDropdownFromData } from './ui/imageDropdown.js';
@@ -749,7 +749,9 @@ export function createModifyUI() {
   addRuneBtn.textContent = 'Add Rune';
   addRuneBtn.addEventListener('click', () => {
     const id = runeDd.getValue();
-    const percent = Math.floor(Math.random() * 80) + 1;
+    const percent =
+      Math.floor(Math.random() * (MAX_CONVERSION_PERCENT - MIN_CONVERSION_PERCENT + 1)) +
+      MIN_CONVERSION_PERCENT;
     const rune = runes.addRune(id, percent);
     if (rune) {
       renderRunesUI();

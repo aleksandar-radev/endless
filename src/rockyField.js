@@ -8,6 +8,7 @@ import {
 import { battleLog } from './battleLog.js';
 import { t, tp } from './i18n.js';
 import { ELEMENTS } from './constants/common.js';
+import { MAX_CONVERSION_PERCENT, MIN_CONVERSION_PERCENT } from './constants/runes.js';
 import { hero } from './globals.js';
 
 export const ROCKY_FIELD_REGIONS = [
@@ -164,11 +165,35 @@ const REGION_RUNE_MAX = {
   summit: 80,
 };
 
+// Bias values tuned so that:
+//  • Stage 1, Outskirts ≈ 1/5,000 chance to roll the maximum conversion
+//  • Stage 5,000, Summit ≈ 1/3,600 chance to roll the maximum conversion
+const MIN_CONVERSION_BIAS = 26;
+const MAX_CONVERSION_BIAS = 36;
+const STAGE_WEIGHT = 0.6;
+const REGION_WEIGHT = 0.2;
+const SYNERGY_WEIGHT = 0.2;
+
+const REGION_RUNE_VALUES = Object.values(REGION_RUNE_MAX);
+const REGION_RUNE_MIN = Math.min(...REGION_RUNE_VALUES);
+const REGION_RUNE_RANGE = Math.max(1, Math.max(...REGION_RUNE_VALUES) - REGION_RUNE_MIN);
+
 export function getRockyFieldRunePercent(regionId, stage) {
-  const max = REGION_RUNE_MAX[regionId] || 5;
-  const capped = Math.min(stage, 5000);
-  const maxPercent = 1 + Math.floor((capped / 5000) * (max - 1));
-  return Math.floor(Math.random() * maxPercent) + 1;
+  const stageNorm = Math.min(Math.max(stage || 0, 0), 5000) / 5000;
+  const regionBase = REGION_RUNE_MAX[regionId] ?? REGION_RUNE_MIN;
+  const regionNorm = (regionBase - REGION_RUNE_MIN) / REGION_RUNE_RANGE;
+  const synergy = stageNorm * regionNorm;
+  const difficulty = Math.min(
+    1,
+    STAGE_WEIGHT * stageNorm + REGION_WEIGHT * regionNorm + SYNERGY_WEIGHT * synergy,
+  );
+
+  const bias = MAX_CONVERSION_BIAS - difficulty * (MAX_CONVERSION_BIAS - MIN_CONVERSION_BIAS);
+  const roll = Math.pow(Math.random(), bias);
+  const range = MAX_CONVERSION_PERCENT - MIN_CONVERSION_PERCENT + 1;
+
+  const percent = Math.floor(roll * range) + MIN_CONVERSION_PERCENT;
+  return Math.max(MIN_CONVERSION_PERCENT, Math.min(MAX_CONVERSION_PERCENT, percent));
 }
 
 export class RockyFieldEnemy {
