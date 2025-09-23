@@ -204,7 +204,7 @@ export default class Inventory {
       <button class="modal-close">&times;</button>
       <h2>${t(matDef.name || mat.name || '')}</h2>
       <p>${t(matDef.description || '')}</p>
-      <p>You have <b class="material-qty">${mat.qty}</b></p>
+      <p>${tp('inventory.youHaveAmount', { amount: `<b class="material-qty">${mat.qty}</b>` })}</p>
       ${titleExtra}
       <div>
         ${equipped.length === 0
@@ -212,7 +212,7 @@ export default class Inventory {
     : equipped.map(itemRowHtml).join('')}
       </div>
       <div class="modal-controls">
-        <button id="material-use-cancel">Cancel</button>
+        <button id="material-use-cancel">${t('common.cancel')}</button>
       </div>
     </div>
   `;
@@ -281,7 +281,7 @@ export default class Inventory {
           <span><b>${item.type}</b> (Lvl ${item.level})</span>
           <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
           <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${Math.min(maxLevels, INVENTORY_MAX_QTY)}" value="1" aria-label="${t('inventory.upgradeQuantity')}" />
-          <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">Upgrade</button>
+          <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">${t('inventory.upgradeAction')}</button>
           <span class="upgrade-cost" data-idx="${idx}"></span>
         </div>`;
         },
@@ -306,13 +306,18 @@ export default class Inventory {
           const oldLevel = item.level;
           item.applyLevelToStats(oldLevel + useQty);
           const matsUsed = useQty * item.tier;
+          const toastMsg = tp('inventory.upgradedItemToast', {
+            item: item.type,
+            from: oldLevel,
+            to: item.level,
+          });
           this.handleMaterialUsed(
             this,
             mat,
             matDef,
             matsUsed,
             'material-upgrade-dialog',
-            `Upgraded ${item.type} (Lvl ${oldLevel} → ${item.level})`,
+            toastMsg,
             false,
           );
           if (mat.qty > 0) {
@@ -321,8 +326,8 @@ export default class Inventory {
             closeModal('material-upgrade-dialog');
           }
         },
-        emptyMsg: 'No eligible equipped items.',
-        titleExtra: '<div style="margin-bottom:10px;">Select an equipped item to upgrade: <div style="font-size:0.9em;color:#ddd;margin-top:6px;">You can upgrade items up to the number of levels available based on the highest stage reached in this region.</div></div>',
+        emptyMsg: t('inventory.noEligibleEquippedItems'),
+        titleExtra: `<div style="margin-bottom:10px;">${t('inventory.selectItemToUpgrade')} <div style="font-size:0.9em;color:#ddd;margin-top:6px;">${t('inventory.upgradeInfo')}</div></div>`,
       });
 
       equipped.forEach(({ item }, idx) => {
@@ -343,7 +348,7 @@ export default class Inventory {
             val = maxUpgrade;
             input.value = val;
           }
-          costEl.textContent = `Cost: ${val * item.tier}`;
+          costEl.textContent = tp('inventory.costValue', { cost: val * item.tier });
         };
         updateCost();
         input.addEventListener('input', updateCost);
@@ -367,7 +372,7 @@ export default class Inventory {
           <span style="font-size:1.5em;">${item.getIcon()}</span>
           <span><b>${item.type}</b> (Lvl ${item.level})</span>
           <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
-          <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">Enchant</button>
+          <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">${t('inventory.enchantAction')}</button>
         </div>`,
         buttonClass: 'upgrade-btn',
         buttonHandler: (e) => {
@@ -384,10 +389,15 @@ export default class Inventory {
               item.addRandomStat();
             }
           }
-          this.handleMaterialUsed(this, mat, matDef, 1, 'material-enchant-dialog', `Enchanted ${item.type} to ${item.rarity}`);
+          const rarityName = t(`rarity.${item.rarity.toLowerCase()}`);
+          const toastMsg = tp('inventory.enchantedItemToast', {
+            item: item.type,
+            rarity: rarityName,
+          });
+          this.handleMaterialUsed(this, mat, matDef, 1, 'material-enchant-dialog', toastMsg);
         },
-        emptyMsg: 'No eligible equipped items.',
-        titleExtra: '<div style="margin-bottom:10px;">Select an equipped item to enchant (increase rarity):</div>',
+        emptyMsg: t('inventory.noEligibleEquippedItems'),
+        titleExtra: `<div style="margin-bottom:10px;">${t('inventory.selectItemToEnchant')}</div>`,
       });
       return;
     }
@@ -415,15 +425,15 @@ export default class Inventory {
           <button class="modal-close">&times;</button>
           <h2>${t(matDef.name || mat.name || '')}</h2>
           <p>${t(matDef.description || '')}</p>
-          <p>You have <b class="material-qty">${mat.qty}</b></p>
-          <p>Select an item and stat to transmute.</p>
-          <p>Selected item: <span id="transmutation-selected-name">None</span></p>
+          <p>${tp('inventory.youHaveAmount', { amount: `<b class="material-qty">${mat.qty}</b>` })}</p>
+          <p>${t('inventory.selectItemAndStatTransmute')}</p>
+          <p>${tp('inventory.selectedItemLabel', { item: `<span id="transmutation-selected-name">${t('common.none')}</span>` })}</p>
           <div id="transmutation-item-list">
-            ${equipped.length === 0 ? '<div style="color:#f55;">No equipped items.</div>' : itemRows}
+            ${equipped.length === 0 ? `<div style="color:#f55;">${t('inventory.noEquippedItems')}</div>` : itemRows}
           </div>
           <div id="transmutation-selected-item" style="margin-top:10px;"></div>
           <div class="modal-controls">
-            <button id="material-use-cancel">Cancel</button>
+            <button id="material-use-cancel">${t('common.cancel')}</button>
           </div>
         </div>`;
 
@@ -462,7 +472,7 @@ export default class Inventory {
         }
         let statsHtml;
         if (statsKeys.length === 0) {
-          statsHtml = '<div>No stats to transmute.</div>';
+          statsHtml = `<div>${t('inventory.noStatsToTransmute')}</div>`;
         } else {
           statsHtml = statOrder
             .filter((stat) => statsKeys.includes(stat))
@@ -481,7 +491,7 @@ export default class Inventory {
                   <span>${formatStatName(stat)}: <b>${formattedValue}${isPercentStat(stat) ? '%' : ''}</b></span>
                   ${adv}
                 </div>
-                <button class="reroll-btn" data-idx="${idx}" data-stat="${stat}">Transmute</button>
+                <button class="reroll-btn" data-idx="${idx}" data-stat="${stat}">${t('inventory.transmuteAction')}</button>
               </div>`;
             })
             .join('');
@@ -507,9 +517,19 @@ export default class Inventory {
             } else {
               statOrder.splice(orderIndex, 1);
             }
-            const msg = newStat
-              ? `Transmuted ${formatStatName(statToChange)} into ${formatStatName(newStat)} on ${item.type}`
-              : `Transmuted ${formatStatName(statToChange)} on ${item.type}`;
+            let msg;
+            if (newStat) {
+              msg = tp('inventory.transmutedStatToast', {
+                oldStat: formatStatName(statToChange),
+                newStat: formatStatName(newStat),
+                item: item.type,
+              });
+            } else {
+              msg = tp('inventory.transmutedStatRemovedToast', {
+                stat: formatStatName(statToChange),
+                item: item.type,
+              });
+            }
             this.handleMaterialUsed(
               this,
               mat,
@@ -568,15 +588,15 @@ export default class Inventory {
           <button class="modal-close">&times;</button>
           <h2>${t(matDef.name || mat.name || '')}</h2>
           <p>${t(matDef.description || '')}</p>
-          <p>You have <b class="material-qty">${mat.qty}</b></p>
-          <p>Select an item and stat to re-roll.</p>
-          <p>Selected item: <span id="alternation-selected-name">None</span></p>
+          <p>${tp('inventory.youHaveAmount', { amount: `<b class="material-qty">${mat.qty}</b>` })}</p>
+          <p>${t('inventory.selectItemAndStatReroll')}</p>
+          <p>${tp('inventory.selectedItemLabel', { item: `<span id="alternation-selected-name">${t('common.none')}</span>` })}</p>
           <div id="alternation-item-list">
-            ${equipped.length === 0 ? '<div style="color:#f55;">No equipped items.</div>' : itemRows}
+            ${equipped.length === 0 ? `<div style="color:#f55;">${t('inventory.noEquippedItems')}</div>` : itemRows}
           </div>
           <div id="alternation-selected-item" style="margin-top:10px;"></div>
           <div class="modal-controls">
-            <button id="material-use-cancel">Cancel</button>
+            <button id="material-use-cancel">${t('common.cancel')}</button>
           </div>
         </div>`;
 
@@ -608,7 +628,7 @@ export default class Inventory {
         }
         let statsHtml;
         if (statsEntries.length === 0) {
-          statsHtml = '<div>No stats to re-roll.</div>';
+          statsHtml = `<div>${t('inventory.noStatsToReroll')}</div>`;
         } else {
           statsHtml = statsEntries
             .map(([stat, value]) => {
@@ -625,7 +645,7 @@ export default class Inventory {
                   <span>${formatStatName(stat)}: <b>${formattedValue}${isPercentStat(stat) ? '%' : ''}</b></span>
                   ${adv}
                 </div>
-                <button class="reroll-btn" data-idx="${idx}" data-stat="${stat}">Re-roll</button>
+                <button class="reroll-btn" data-idx="${idx}" data-stat="${stat}">${t('inventory.rerollAction')}</button>
               </div>`;
             })
             .join('');
@@ -656,13 +676,17 @@ export default class Inventory {
             });
             if (!item.metaData) item.metaData = {};
             item.metaData[statToReroll] = { baseValue };
+            const toastMsg = tp('inventory.rerolledStatToast', {
+              stat: formatStatName(statToReroll),
+              item: item.type,
+            });
             this.handleMaterialUsed(
               this,
               mat,
               matDef,
               1,
               'material-reroll-dialog',
-              `Re-rolled ${formatStatName(statToReroll)} on ${item.type}`,
+              toastMsg,
               false,
             );
             dialog.querySelector('.material-qty').textContent = mat.qty;
@@ -698,8 +722,8 @@ export default class Inventory {
       <button class="modal-close">&times;</button>
       <h2>${t(matDef.name || mat.name || '')}</h2>
       <p>${t(matDef.description || '')}</p>
-      <p>You have <b>${mat.qty}</b></p>
-      <label for="material-use-qty">Quantity:</label>
+      <p>${tp('inventory.youHaveAmount', { amount: `<b>${mat.qty}</b>` })}</p>
+      <label for="material-use-qty">${t('inventory.quantityLabel')}</label>
       <input
         id="material-use-qty"
         style="padding: 5px; border-radius: 10px;"
@@ -709,8 +733,8 @@ export default class Inventory {
         value="${Math.min(mat.qty, INVENTORY_MAX_QTY)}"
       />
       <div class="modal-controls">
-        <button class="modal-buy" id="material-use-btn">Use</button>
-        <button id="material-use-cancel">Cancel</button>
+        <button class="modal-buy" id="material-use-btn">${t('inventory.use')}</button>
+        <button id="material-use-cancel">${t('common.cancel')}</button>
       </div>
     </div>
   `;
@@ -731,13 +755,18 @@ export default class Inventory {
       if (matDef && typeof matDef.onUse === 'function') {
         matDef.onUse(hero, useQty);
       }
+      const materialName = t(matDef.name || mat.name || '');
+      const toastMsg = tp('inventory.usedMaterialsToast', {
+        quantity: useQty,
+        item: materialName,
+      });
       this.handleMaterialUsed(
         this,
         mat,
         matDef,
         useQty,
         'material-use-dialog',
-        `Used ${useQty} ${t(matDef.name || mat.name || '')}${useQty > 1 ? 's' : ''}`,
+        toastMsg,
       );
     };
     useBtn.onclick = useHandler;
@@ -802,23 +831,29 @@ export default class Inventory {
     if (!removed) return;
 
     let crystalsGained = item.rarity === 'MYTHIC' ? 1 : 0;
-    let msg = `Salvaged 1 ${item.rarity.toLowerCase()} item`;
+    const rarityName = t(`rarity.${item.rarity.toLowerCase()}`);
+    const messages = [tp('inventory.salvagedItemsOfRarity', { count: 1, rarity: rarityName })];
     if (this.salvageUpgradeMaterials) {
       const { id, qty } = this.getItemSalvageMaterial(item);
       this.addMaterial({ id, qty });
-      msg += `, gained ${qty} ${t(MATERIALS[id].name)}`;
+      messages.push(tp('inventory.gainedResource', { amount: qty, resource: t(MATERIALS[id].name) }));
     } else {
       const goldGained = this.getItemSalvageValue(item);
       if (goldGained > 0) {
         hero.gainGold(goldGained);
-        msg += `, gained ${goldGained} gold`;
+        messages.push(tp('inventory.gainedResource', { amount: goldGained, resource: t('inventory.gold') }));
       }
     }
     if (crystalsGained > 0) {
       hero.gainCrystals(crystalsGained);
-      msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
+      messages.push(
+        tp('inventory.gainedResource', {
+          amount: crystalsGained,
+          resource: t('resource.crystal.name'),
+        }),
+      );
     }
-    showToast(msg, 'success');
+    showToast(messages.join(', '), 'success');
     if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
       const sortMode =
         (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) ||
@@ -860,28 +895,27 @@ export default class Inventory {
     });
 
     if (salvagedItems > 0) {
+      const rarityName = t(`rarity.${rarity.toLowerCase()}`);
+      const messages = [tp('inventory.salvagedItemsOfRarity', { count: salvagedItems, rarity: rarityName })];
       if (this.salvageUpgradeMaterials) {
         Object.entries(matsGained).forEach(([id, qty]) => {
           this.addMaterial({ id, qty });
+          messages.push(tp('inventory.gainedResource', { amount: qty, resource: t(MATERIALS[id].name) }));
         });
       } else if (goldGained > 0) {
         hero.gainGold(goldGained);
+        messages.push(tp('inventory.gainedResource', { amount: goldGained, resource: t('inventory.gold') }));
       }
-      if (crystalsGained > 0) hero.gainCrystals(crystalsGained);
-      let msg = `Salvaged ${salvagedItems} ${rarity.toLowerCase()} items`;
-      if (this.salvageUpgradeMaterials) {
-        const parts = Object.entries(matsGained).map(
-          ([id, qty]) => {
-            return `${qty} ${t(MATERIALS[id].name)}`;
-          },
+      if (crystalsGained > 0) {
+        hero.gainCrystals(crystalsGained);
+        messages.push(
+          tp('inventory.gainedResource', {
+            amount: crystalsGained,
+            resource: t('resource.crystal.name'),
+          }),
         );
-        if (parts.length) msg += `, gained ${parts.join(', ')}`;
-      } else if (goldGained > 0) {
-        msg += `, gained ${goldGained} gold`;
       }
-      if (crystalsGained > 0)
-        msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
-      showToast(msg, 'success');
+      showToast(messages.join(', '), 'success');
       if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
         const sortMode =
           (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) ||
@@ -922,26 +956,26 @@ export default class Inventory {
     });
 
     if (salvagedItems > 0) {
+      const messages = [tp('inventory.salvagedItems', { count: salvagedItems })];
       if (this.salvageUpgradeMaterials) {
         Object.entries(matsGained).forEach(([id, qty]) => {
           this.addMaterial({ id, qty });
+          messages.push(tp('inventory.gainedResource', { amount: qty, resource: t(MATERIALS[id].name) }));
         });
       } else if (goldGained > 0) {
         hero.gainGold(goldGained);
+        messages.push(tp('inventory.gainedResource', { amount: goldGained, resource: t('inventory.gold') }));
       }
-      if (crystalsGained > 0) hero.gainCrystals(crystalsGained);
-      let msg = `Salvaged ${salvagedItems} items`;
-      if (this.salvageUpgradeMaterials) {
-        const parts = Object.entries(matsGained).map(
-          ([id, qty]) => `${qty} ${t(MATERIALS[id].name)}`,
+      if (crystalsGained > 0) {
+        hero.gainCrystals(crystalsGained);
+        messages.push(
+          tp('inventory.gainedResource', {
+            amount: crystalsGained,
+            resource: t('resource.crystal.name'),
+          }),
         );
-        if (parts.length) msg += `, gained ${parts.join(', ')}`;
-      } else if (goldGained > 0) {
-        msg += `, gained ${goldGained} gold`;
       }
-      if (crystalsGained > 0)
-        msg += `, gained ${crystalsGained} crystal${crystalsGained > 1 ? 's' : ''}`;
-      showToast(msg, 'success');
+      showToast(messages.join(', '), 'success');
       if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
         const sortMode =
           (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) ||
