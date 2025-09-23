@@ -882,6 +882,18 @@ export default {
   'region.goldBonus': 'Bonificación de oro',
   'region.itemDropBonus': 'Bonificación de botín de objetos',
   'region.materialDropBonus': 'Bonificación de botín de materiales',
+  'bossRegion.unlockHint': 'Se desbloquea en el nivel {level}',
+  'bossRegion.balancedGrounds.name': 'Tierras Equilibradas',
+  'bossRegion.balancedGrounds.desc': 'Condiciones estándar de la arena sin modificadores regionales.',
+  'bossRegion.shatteredBulwark.name': 'Baluarte Destrozado',
+  'bossRegion.shatteredBulwark.desc':
+    'Defensas en ruinas dejan a los jefes frágiles pero agresivos, reduciendo armadura y resistencias mientras aumentan las recompensas.',
+  'bossRegion.ironVanguard.name': 'Vanguardia de Hierro',
+  'bossRegion.ironVanguard.desc':
+    'Una arena fortificada donde los jefes refuerzan sus defensas y aguante a costa del daño bruto.',
+  'bossRegion.elementalNexus.name': 'Nexo Elemental',
+  'bossRegion.elementalNexus.desc':
+    'Un conducto caótico que altera las fortalezas elementales, reduciendo algunas resistencias mientras amplifica otras.',
   'rockyField.unlockStage': 'Etapa de desbloqueo',
   'rockyField.availableRunes': 'Runas disponibles',
   'item.level': 'Nivel',

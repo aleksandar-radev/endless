@@ -18,7 +18,7 @@ import { t } from '../i18n.js';
 import { updateQuestsUI } from './questUi.js';
 import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
 import { TabIndicatorManager } from './tabIndicatorManager.js';
-import { selectBoss, updateBossUI } from './bossUi.js';
+import { initializeBossRegionUI, selectBoss, updateBossUI } from './bossUi.js';
 import { ELEMENTS } from '../constants/common.js';
 import { calculateArmorReduction, calculateEvasionChance, calculateHitChance, calculateResistanceReduction } from '../combat.js';
 import { renderRunesUI } from './runesUi.js';
@@ -741,8 +741,12 @@ function renderRegionPanel(region) {
     const panel = document.createElement('div');
     panel.id = 'arena-panel';
     panel.classList.add('region-panel');
-    panel.innerHTML = baseHtml;
+    panel.innerHTML = `
+      <div id="boss-region-selector"></div>
+      ${baseHtml}
+    `;
     container.appendChild(panel);
+    initializeBossRegionUI();
     updateBossUI();
   } else if (region === 'rockyField') {
     const panel = document.createElement('div');

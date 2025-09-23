@@ -10,6 +10,7 @@ export default function run() {
       <li>Skill tooltips now label instant abilities as attack skills or spells right next to their type badge for quicker identification.</li>
       <li>Training elemental damage upgrades have been merged into a single <b>Elemental Damage</b> option that costs 90 gold per level and unlocks distribution sliders accessible from Training and the Stats tab for fine-tuning how both training and intelligence elemental damage are split.</li>
       <li>Rocky Field conversion runes now roll between 10% and 150% everywhere. And can drop on any stage and region (lower chance on lower stages or weaker regions)</li>
+      <li>The arena now features multiple boss regions.</li>
     </ul>
   `;
 }

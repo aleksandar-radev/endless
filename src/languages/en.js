@@ -889,6 +889,18 @@ export default {
   'region.goldBonus': 'Gold bonus',
   'region.itemDropBonus': 'Item Drop bonus',
   'region.materialDropBonus': 'Material Drop bonus',
+  'bossRegion.unlockHint': 'Unlocks at level {level}',
+  'bossRegion.balancedGrounds.name': 'Balanced Grounds',
+  'bossRegion.balancedGrounds.desc': 'Standard arena conditions with no regional modifiers.',
+  'bossRegion.shatteredBulwark.name': 'Shattered Bulwark',
+  'bossRegion.shatteredBulwark.desc':
+    'Ruined defenses leave bosses fragile but aggressive, reducing armor and resistances while boosting their rewards.',
+  'bossRegion.ironVanguard.name': 'Iron Vanguard',
+  'bossRegion.ironVanguard.desc':
+    'A fortified arena where bosses bolster their defenses and endurance at the expense of raw damage.',
+  'bossRegion.elementalNexus.name': 'Elemental Nexus',
+  'bossRegion.elementalNexus.desc':
+    'A chaotic conduit that warps elemental strengths, lowering some resistances while amplifying others.',
   'rockyField.unlockStage': 'Unlock Stage',
   'rockyField.availableRunes': 'Possible Runes',
   'item.level': 'Level',

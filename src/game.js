@@ -25,6 +25,7 @@ class Game {
     this.gameStarted = false;
     this.currentEnemy = null;
     this.currentRegionId = savedData.currentRegionId || null;
+    this.currentBossRegionId = savedData.currentBossRegionId || null;
     this.stage = savedData.stage || 1; // Default to stage 1 if not provided
     this.rockyFieldStage = savedData.rockyFieldStage || 1;
     this.rockyFieldHighestStage = savedData.rockyFieldHighestStage || this.rockyFieldStage;

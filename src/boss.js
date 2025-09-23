@@ -7,6 +7,7 @@ import { hero } from './globals.js';
 import { battleLog } from './battleLog.js';
 import { ELEMENTS } from './constants/common.js';
 import { t, tp } from './i18n.js';
+import { getCurrentBossRegion } from './bossRegion.js';
 
 const INCREASE_PER_LEVEL = 0.01;
 // Base scaling increases slowly at first, but after higher levels bosses scale faster.
@@ -29,7 +30,18 @@ class Boss {
     if (!BOSSES.length) {
       throw new Error('No bosses defined in BOSSES array.');
     }
-    const baseData = BOSSES[Math.floor(Math.random() * BOSSES.length)];
+    this.region = getCurrentBossRegion();
+    const regionBossIds = this.region?.bosses;
+    let availableBosses =
+      Array.isArray(regionBossIds) && regionBossIds.length
+        ? BOSSES.filter((boss) => regionBossIds.includes(boss.id))
+        : BOSSES;
+
+    if (!availableBosses.length) {
+      availableBosses = BOSSES;
+    }
+
+    const baseData = availableBosses[Math.floor(Math.random() * availableBosses.length)];
     this.baseData = baseData;
     this.id = baseData.id;
     this.name = baseData.name;
@@ -92,7 +104,7 @@ class Boss {
       (lvl) => xpDiminishingFactor(lvl),
       'boss-xp',
     );
-    return val * (this.baseData.multiplier?.xp || 1);
+    return val * (this.baseData.multiplier?.xp || 1) * (this.region?.multiplier?.xp || 1);
   }
 
   calculateGold() {
@@ -105,12 +117,15 @@ class Boss {
       (lvl) => xpDiminishingFactor(lvl),
       'boss-gold',
     );
-    return val * (this.baseData.multiplier?.gold || 1);
+    return val * (this.baseData.multiplier?.gold || 1) * (this.region?.multiplier?.gold || 1);
   }
 
 
   calculateAttackSpeed() {
-    const baseSpeed = this.baseData.attackSpeed || 1;
+    const baseSpeed =
+      (this.baseData.attackSpeed || 1) *
+      (this.baseData.multiplier?.attackSpeed || 1) *
+      (this.region?.multiplier?.attackSpeed || 1);
     const speedRed = hero.stats.reduceEnemyAttackSpeedPercent || 0;
     return baseSpeed * (1 - speedRed);
   }
@@ -122,7 +137,7 @@ class Boss {
 
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const hpRed = hero.stats.reduceEnemyHpPercent || 0;
-    return val * (this.baseData.multiplier?.life || 1) * (1 - hpRed);
+    return val * (this.baseData.multiplier?.life || 1) * (this.region?.multiplier?.life || 1) * (1 - hpRed);
   }
 
   calculateDamage() {
@@ -132,7 +147,7 @@ class Boss {
 
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
-    return val * (this.baseData.multiplier?.damage || 1) * (1 - dmgRed);
+    return val * (this.baseData.multiplier?.damage || 1) * (this.region?.multiplier?.damage || 1) * (1 - dmgRed);
   }
 
   calculateArmor() {
@@ -141,7 +156,7 @@ class Boss {
     base *= levelBonus;
 
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
-    return val * (this.baseData.multiplier?.armor || 1);
+    return val * (this.baseData.multiplier?.armor || 1) * (this.region?.multiplier?.armor || 1);
   }
 
   calculateEvasion() {
@@ -150,7 +165,12 @@ class Boss {
     base *= levelBonus;
 
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
-    return val * (this.baseData.multiplier?.evasion || 1) * attackRatingAndEvasionScale;
+    return (
+      val *
+      (this.baseData.multiplier?.evasion || 1) *
+      (this.region?.multiplier?.evasion || 1) *
+      attackRatingAndEvasionScale
+    );
   }
 
   calculateAttackRating() {
@@ -159,7 +179,12 @@ class Boss {
     base *= levelBonus;
 
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
-    return val * (this.baseData.multiplier?.attackRating || 1) * attackRatingAndEvasionScale;
+    return (
+      val *
+      (this.baseData.multiplier?.attackRating || 1) *
+      (this.region?.multiplier?.attackRating || 1) *
+      attackRatingAndEvasionScale
+    );
   }
 
   calculateElementalDamage(type) {
@@ -171,7 +196,12 @@ class Boss {
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
 
     const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
-    return val * (this.baseData.multiplier?.[`${type}Damage`] || 1) * (1 - dmgRed);
+    return (
+      val *
+      (this.baseData.multiplier?.[`${type}Damage`] || 1) *
+      (this.region?.multiplier?.[`${type}Damage`] || 1) *
+      (1 - dmgRed)
+    );
   }
 
   calculateElementalResistance(type) {
@@ -181,7 +211,7 @@ class Boss {
 
     if (base === 0) return 0;
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
-    return val * (this.baseData.multiplier?.[`${type}Resistance`] || 1);
+    return val * (this.baseData.multiplier?.[`${type}Resistance`] || 1) * (this.region?.multiplier?.[`${type}Resistance`] || 1);
   }
 
   /**
