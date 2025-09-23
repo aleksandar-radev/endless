@@ -87,6 +87,8 @@ export default class Hero {
       this.baseDamages[id] = 0;
     });
 
+    this.attributeElementalDamageFromIntelligence = 0;
+
     handleSavedData(savedData, this);
   }
 
@@ -335,6 +337,8 @@ export default class Hero {
     const effects = {};
     const ascensionBonuses = ascension?.getBonuses() || {};
 
+    let intelligenceElementalDamage = 0;
+
     // Loop through all stats in STATS
     for (const stat of STAT_KEYS) {
       // Flat bonuses: look for {stat}Flat in attribute effects
@@ -344,13 +348,19 @@ export default class Hero {
       // Check each attribute for contributions to this stat
       for (const attr of ATTRIBUTE_KEYS) {
         const attrEffects = ATTRIBUTES[attr].effects;
+        if (!attrEffects) continue;
         const attrMultiplier = 1 + (ascensionBonuses[`${attr}EffectPercent`] || 0);
 
         // Flat per-point bonus (e.g., damagePerPoint, lifePerPoint, etc.)
         const flatKey = stat + 'PerPoint';
         if (flatKey in attrEffects) {
-          let perPoint = attrEffects[flatKey] * attrMultiplier;
-          flatBonus += (this.stats[attr] || 0) * perPoint;
+          const perPoint = attrEffects[flatKey] * attrMultiplier;
+          const points = this.stats[attr] || 0;
+          const amount = points * perPoint;
+          flatBonus += amount;
+          if (stat === 'elementalDamage' && attr === 'intelligence') {
+            intelligenceElementalDamage += amount;
+          }
         }
 
         // Percent per N points bonus (e.g., damagePercentPer, lifePercentPer, etc.)
@@ -365,6 +375,49 @@ export default class Hero {
       // Assign to effects object
       if (flatBonus !== 0) effects[stat] = flatBonus;
       if (percentBonus !== 0) effects[stat + 'Percent'] = percentBonus;
+    }
+
+    const elementCount = ELEMENT_IDS.length || 1;
+    const distributedIntelligenceElementalDamage = intelligenceElementalDamage * elementCount;
+    this.attributeElementalDamageFromIntelligence = distributedIntelligenceElementalDamage;
+
+    if (distributedIntelligenceElementalDamage > 0) {
+      let shareMap = null;
+      if (typeof training?.getElementalDistributionShares === 'function') {
+        shareMap = training.getElementalDistributionShares();
+      }
+      if (!shareMap || typeof shareMap !== 'object') {
+        const equalShare = ELEMENT_IDS.length > 0 ? 1 / ELEMENT_IDS.length : 0;
+        shareMap = {};
+        ELEMENT_IDS.forEach((elementId) => {
+          shareMap[`${elementId}Damage`] = equalShare;
+        });
+      }
+
+      let distributed = 0;
+      ELEMENT_IDS.forEach((elementId) => {
+        const statKey = `${elementId}Damage`;
+        const share = Number(shareMap[statKey]) || 0;
+        if (share <= 0) return;
+        const amount = distributedIntelligenceElementalDamage * share;
+        distributed += amount;
+        effects[statKey] = (effects[statKey] || 0) + amount;
+      });
+
+      const remainder = distributedIntelligenceElementalDamage - distributed;
+      if (remainder > 1e-6 && ELEMENT_IDS.length > 0) {
+        const fallbackKey = `${ELEMENT_IDS[0]}Damage`;
+        effects[fallbackKey] = (effects[fallbackKey] || 0) + remainder;
+      }
+
+      if (effects.elementalDamage !== undefined) {
+        const remaining = effects.elementalDamage - intelligenceElementalDamage;
+        if (remaining > 1e-6) {
+          effects.elementalDamage = remaining;
+        } else {
+          delete effects.elementalDamage;
+        }
+      }
     }
 
     return effects;

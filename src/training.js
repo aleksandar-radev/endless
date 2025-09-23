@@ -20,11 +20,21 @@ const SECTION_DEFS = [
   { key: 'misc', labelKey: 'stats.misc', stats: Object.keys(MISC_STATS) },
 ];
 
+const ELEMENTAL_TRAINING_STATS = [
+  'fireDamage',
+  'coldDamage',
+  'airDamage',
+  'earthDamage',
+  'lightningDamage',
+  'waterDamage',
+];
+
 export default class Training {
   constructor(savedData = null) {
     this.upgradeLevels = {};
     this.trainingBonuses = {};
     this.goldSpent = 0;
+    this.elementalDistribution = {};
     Object.entries(STATS).forEach(([stat, config]) => {
       if (config.training) {
         this.upgradeLevels[stat] = 0;
@@ -33,6 +43,10 @@ export default class Training {
     });
 
     handleSavedData(savedData, this);
+    this.elementalModal = null;
+    const hadSavedDistribution = !!savedData?.elementalDistribution;
+    this._migrateLegacyElementalTraining(hadSavedDistribution);
+    this._ensureElementalDistributionStructure();
     if (savedData && savedData.goldSpent === undefined) {
       this.goldSpent = 0;
       Object.entries(this.upgradeLevels).forEach(([stat, lvl]) => {
@@ -481,6 +495,17 @@ export default class Training {
       .filter(([stat, config]) => config.training && section.stats.includes(stat))
       .map(([stat, config]) => this.createUpgradeButton(stat, config))
       .join('');
+    if (section.key === 'offense') {
+      const control = document.createElement('div');
+      control.className = 'elemental-allocation-control';
+      const btn = document.createElement('button');
+      btn.className = 'elemental-allocation-btn';
+      btn.dataset.i18n = 'training.elementalDistributionButton';
+      btn.textContent = t('training.elementalDistributionButton');
+      btn.onclick = () => this.openElementalDistributionModal();
+      control.appendChild(btn);
+      trainingGrid.appendChild(control);
+    }
     if (options?.bulkTraining) this.updateBulkCost();
   }
 
@@ -680,10 +705,246 @@ export default class Training {
 
     // Only calculate bonuses for upgrades defined in UPGRADE_CONFIG
     Object.keys(STATS).forEach((upg) => {
-      if (this.trainingBonuses[upg] !== undefined && this.upgradeLevels[upg] !== undefined) {
-        this.trainingBonuses[upg] += this.upgradeLevels[upg] * STATS[upg].training?.bonus;
+      const trainingConfig = STATS[upg]?.training;
+      if (
+        this.trainingBonuses[upg] !== undefined &&
+        this.upgradeLevels[upg] !== undefined &&
+        trainingConfig &&
+        typeof trainingConfig.bonus === 'number'
+      ) {
+        this.trainingBonuses[upg] += this.upgradeLevels[upg] * trainingConfig.bonus;
       }
     });
+    this._applyElementalTrainingDistribution();
+    this.updateElementalDistributionUI();
+  }
+
+  _ensureElementalDistributionStructure() {
+    if (!this.elementalDistribution || typeof this.elementalDistribution !== 'object') {
+      this.elementalDistribution = {};
+    }
+    if (this.upgradeLevels.elementalDamage === undefined) {
+      this.upgradeLevels.elementalDamage = 0;
+    }
+    ELEMENTAL_TRAINING_STATS.forEach((stat) => {
+      const value = Number(this.elementalDistribution[stat]);
+      const sanitized = Number.isFinite(value) ? Math.max(0, Math.min(100, value)) : 0;
+      this.elementalDistribution[stat] = sanitized;
+      if (this.trainingBonuses[stat] === undefined) {
+        this.trainingBonuses[stat] = 0;
+      }
+    });
+  }
+
+  _migrateLegacyElementalTraining(hadSavedDistribution) {
+    let totalLegacy = 0;
+    const legacyLevels = {};
+    ELEMENTAL_TRAINING_STATS.forEach((stat) => {
+      const lvl = Number(this.upgradeLevels[stat] || 0);
+      if (lvl > 0) {
+        legacyLevels[stat] = lvl;
+        totalLegacy += lvl;
+      }
+      delete this.upgradeLevels[stat];
+    });
+    if (totalLegacy > 0) {
+      this.upgradeLevels.elementalDamage = (this.upgradeLevels.elementalDamage || 0) + totalLegacy;
+      if (!hadSavedDistribution) {
+        this.elementalDistribution = {};
+        ELEMENTAL_TRAINING_STATS.forEach((stat) => {
+          if (legacyLevels[stat]) {
+            this.elementalDistribution[stat] = (legacyLevels[stat] / totalLegacy) * 100;
+          }
+        });
+      }
+    }
+  }
+
+  _getElementalTrainingTotal() {
+    const config = STATS.elementalDamage?.training;
+    if (!config || typeof config.bonus !== 'number') return 0;
+    return (this.upgradeLevels.elementalDamage || 0) * config.bonus;
+  }
+
+  _getElementalIntelligenceTotal() {
+    if (hero?.attributeElementalDamageFromIntelligence === undefined) return 0;
+    const value = Number(hero.attributeElementalDamageFromIntelligence);
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  _getElementalDistributionShares() {
+    const shares = {};
+    let total = 0;
+    ELEMENTAL_TRAINING_STATS.forEach((stat) => {
+      const raw = Number(this.elementalDistribution[stat]);
+      if (Number.isFinite(raw) && raw > 0) {
+        shares[stat] = raw;
+        total += raw;
+      } else {
+        shares[stat] = 0;
+      }
+    });
+    if (total <= 0) {
+      const equal = 1 / ELEMENTAL_TRAINING_STATS.length;
+      ELEMENTAL_TRAINING_STATS.forEach((stat) => {
+        shares[stat] = equal;
+      });
+      return shares;
+    }
+    ELEMENTAL_TRAINING_STATS.forEach((stat) => {
+      shares[stat] = shares[stat] / total;
+    });
+    return shares;
+  }
+
+  getElementalDistributionShares() {
+    const shares = this._getElementalDistributionShares();
+    return { ...shares };
+  }
+
+  _applyElementalTrainingDistribution() {
+    if (this.trainingBonuses.elementalDamage === undefined) return;
+    const total = this._getElementalTrainingTotal();
+    const shares = this._getElementalDistributionShares();
+    ELEMENTAL_TRAINING_STATS.forEach((stat) => {
+      this.trainingBonuses[stat] = total * (shares[stat] || 0);
+    });
+    this.trainingBonuses.elementalDamage = 0;
+  }
+
+  openElementalDistributionModal() {
+    if (!this.elementalModal || typeof this.elementalModal.querySelector !== 'function') {
+      const rowsMarkup = ELEMENTAL_TRAINING_STATS.map(
+        (stat) => `
+          <div class="elemental-distribution-row" data-stat="${stat}">
+            <div class="elemental-row-header">
+              <span class="elemental-label">${formatStatName(stat)}</span>
+              <span class="elemental-share"></span>
+            </div>
+            <input type="range" min="0" max="100" step="1" />
+            <div class="elemental-row-footer">
+              <span class="elemental-allocation"></span>
+            </div>
+          </div>
+        `,
+      ).join('');
+      const content = html`
+        <div class="elemental-distribution-modal-content">
+          <button class="modal-close">&times;</button>
+          <h2 data-i18n="training.elementalDistributionTitle">${t('training.elementalDistributionTitle')}</h2>
+          <p
+            class="elemental-distribution-description"
+            data-i18n="training.elementalDistributionDescription"
+          >
+            ${t('training.elementalDistributionDescription')}
+          </p>
+          <div class="elemental-distribution-totals">
+            <p
+              class="elemental-total"
+              data-i18n="training.elementalDistributionTrainingTotal"
+            >
+              ${tp('training.elementalDistributionTrainingTotal', { amount: formatNumber(0) })}
+            </p>
+            <p
+              class="elemental-intelligence-total"
+              data-i18n="training.elementalDistributionIntelligenceTotal"
+            >
+              ${tp('training.elementalDistributionIntelligenceTotal', { amount: formatNumber(0) })}
+            </p>
+          </div>
+          <div class="elemental-distribution-rows">
+            ${rowsMarkup}
+          </div>
+          <div class="elemental-distribution-actions">
+            <button class="elemental-distribution-even" data-i18n="training.elementalDistributionReset">
+              ${t('training.elementalDistributionReset')}
+            </button>
+          </div>
+        </div>
+      `;
+      this.elementalModal = createModal({
+        id: 'elemental-distribution-modal',
+        className: 'elemental-distribution-modal hidden',
+        content,
+      });
+      const resetBtn = this.elementalModal.querySelector('.elemental-distribution-even');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          this.resetElementalDistribution();
+        });
+      }
+      this.elementalModal
+        .querySelectorAll('.elemental-distribution-row input[type="range"]')
+        .forEach((input) => {
+          const row = input.closest('.elemental-distribution-row');
+          const stat = row?.dataset.stat;
+          input.addEventListener('input', () => {
+            if (!stat) return;
+            this.elementalDistribution[stat] = Number(input.value);
+            this.updateTrainingBonuses();
+            hero?.queueRecalculateFromAttributes?.();
+            dataManager.saveGame();
+            this.updateElementalDistributionUI();
+          });
+        });
+    }
+    this.updateElementalDistributionUI();
+    if (this.elementalModal) {
+      this.elementalModal.classList.remove('hidden');
+    }
+  }
+
+  updateElementalDistributionUI() {
+    const modal = this.elementalModal;
+    if (!modal || typeof modal.querySelector !== 'function') return;
+    const trainingTotal = this._getElementalTrainingTotal();
+    const intelligenceTotal = this._getElementalIntelligenceTotal();
+    const combinedTotal = trainingTotal + intelligenceTotal;
+    const shares = this._getElementalDistributionShares();
+    const totalEl = modal.querySelector('.elemental-total');
+    if (totalEl) {
+      totalEl.textContent = tp('training.elementalDistributionTrainingTotal', {
+        amount: formatNumber(Number(trainingTotal.toFixed(2))),
+      });
+    }
+    const intelligenceEl = modal.querySelector('.elemental-intelligence-total');
+    if (intelligenceEl) {
+      intelligenceEl.textContent = tp('training.elementalDistributionIntelligenceTotal', {
+        amount: formatNumber(Number(intelligenceTotal.toFixed(2))),
+      });
+    }
+    modal.querySelectorAll('.elemental-distribution-row').forEach((row) => {
+      const stat = row.dataset.stat;
+      const slider = row.querySelector('input[type="range"]');
+      const shareEl = row.querySelector('.elemental-share');
+      const amountEl = row.querySelector('.elemental-allocation');
+      const weight = Number(this.elementalDistribution[stat]) || 0;
+      if (slider) slider.value = weight;
+      if (shareEl) {
+        const sharePercent = (shares[stat] || 0) * 100;
+        shareEl.textContent = tp('training.elementalDistributionShare', {
+          percent: formatNumber(sharePercent.toFixed(1)),
+        });
+      }
+      if (amountEl) {
+        const decimals = STATS[stat]?.decimalPlaces || 0;
+        const displayDecimals = decimals > 0 ? decimals : 2;
+        const allocation = combinedTotal * (shares[stat] || 0);
+        amountEl.textContent = tp('training.elementalDistributionAmount', {
+          amount: formatNumber(Number(allocation.toFixed(displayDecimals))),
+        });
+      }
+    });
+  }
+
+  resetElementalDistribution() {
+    ELEMENTAL_TRAINING_STATS.forEach((stat) => {
+      this.elementalDistribution[stat] = 0;
+    });
+    this.updateTrainingBonuses();
+    hero?.queueRecalculateFromAttributes?.();
+    dataManager.saveGame();
+    this.updateElementalDistributionUI();
   }
 
   buyBulk(stat, qty) {

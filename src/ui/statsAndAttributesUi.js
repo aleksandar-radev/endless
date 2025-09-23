@@ -1,4 +1,4 @@
-import { game, hero, statistics, options } from '../globals.js';
+import { game, hero, statistics, options, training } from '../globals.js';
 import { STATS } from '../constants/stats/stats.js';
 import { hideTooltip, positionTooltip, showTooltip, updateEnemyStats, formatNumber, switchTab } from '../ui/ui.js';
 import { OFFENSE_STATS } from '../constants/stats/offenseStats.js';
@@ -228,6 +228,12 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
         <button class="subtab-btn active" data-subtab="offense">${t('stats.offense')}</button>
         <button class="subtab-btn" data-subtab="defense">${t('stats.defense')}</button>
         <button class="subtab-btn" data-subtab="misc">${t('stats.misc')}</button>
+        <button
+          class="elemental-allocation-btn stats-elemental-btn"
+          data-i18n="training.elementalDistributionButton"
+        >
+          ${t('training.elementalDistributionButton')}
+        </button>
         <button class="split-view-btn" id="split-view-btn">${t('stats.splitView')}</button>
       </div>
     `;
@@ -236,6 +242,10 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     const splitBtn = statsContainer.querySelector('#split-view-btn');
     if (splitBtn) {
       splitBtn.addEventListener('click', openSplitView);
+    }
+    const allocationBtn = statsContainer.querySelector('.stats-elemental-btn');
+    if (allocationBtn) {
+      allocationBtn.addEventListener('click', () => training?.openElementalDistributionModal?.());
     }
     // Create panels
     const createPanel = (name) => {

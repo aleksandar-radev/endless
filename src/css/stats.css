@@ -131,6 +131,21 @@
   background-color: #6b7280;
 }
 
+.stats-tabs .elemental-allocation-btn {
+  padding: 5px 10px;
+  background-color: #4b5563;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-left: auto;
+}
+
+.stats-tabs .elemental-allocation-btn:hover {
+  background-color: #6b7280;
+}
+
 .subtab-btn {
   padding: 5px 10px;
   background-color: #4b5563;
@@ -149,9 +164,7 @@
   background-color: #6b7280;
 }
 
-.split-view-btn {
-  margin-left: auto;
-}
+
 
 .split-view-modal #split-view-btn {
   display: none;
