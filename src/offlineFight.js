@@ -13,7 +13,7 @@ export async function collectOfflineFightRewards() {
   const elapsed = Math.floor((now - last) / 1000);
   // Allow future saves to update last combat timestamp
   dataManager.enableLastFightTime = true;
-  if (elapsed < 60) {
+  if (elapsed < 1) {
     statistics.lastFightActive = now;
     dataManager.saveGame();
     return null;
