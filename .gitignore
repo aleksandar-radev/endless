@@ -19,3 +19,6 @@ pnpm-debug.log*
 .DS_Store
 
 .git/
+
+package-lock.json
+yarn.lock
