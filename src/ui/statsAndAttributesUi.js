@@ -68,7 +68,7 @@ function updateRateCounters() {
     goldEls.forEach((el) => (el.textContent = `Gold/${periodLabel}: 0`));
     itemsEls.forEach((el) => (el.textContent = `Items/${periodLabel}: 0`));
     matEls.forEach((el) => (el.textContent = `Materials/${periodLabel}: 0`));
-    // Ensure offline rates are zeroed until eligible, but preserve them if offline rewards are being collected
+    // Only reset offline rates if we're not preserving them during offline collection
     if (!statistics.preserveOfflineRates) {
       statistics.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
     }

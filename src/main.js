@@ -165,6 +165,8 @@ window.setLanguage = setLanguage;
   game.restoreMana(hero.stats.mana);
 
   updatePlayerLife();
+  // Preserve offline rates before any UI initialization that might reset them
+  statistics.preserveOfflineRates = true;
   updateStatsAndAttributesUI();
   updateStageUI();
   updateEnemyStats();
@@ -226,8 +228,6 @@ window.setLanguage = setLanguage;
   })();
 
   // Collect offline bonuses on load (show modal if any)
-  // Preserve offline rates during collection to prevent them being reset before fight rewards are applied
-  statistics.preserveOfflineRates = true;
   const fightRewards = await collectOfflineFightRewards();
   buildings.collectBonuses({
     showOfflineModal: true,
