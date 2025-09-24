@@ -238,7 +238,7 @@ window.setLanguage = setLanguage;
       statistics.preserveOfflineRates = false;
     },
   });
-  
+
   // Safety: ensure preserve flag is cleared even if collection didn't happen
   statistics.preserveOfflineRates = false;
 
