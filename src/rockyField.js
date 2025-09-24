@@ -213,104 +213,22 @@ export class RockyFieldEnemy {
     this.special = baseData.special || [];
     this.runeDrop = baseData.runeDrop || [];
 
-    const region = ROCKY_FIELD_REGIONS.find((r) => r.id === regionId);
-    if (!region) {
-      throw new Error(`No region defined for "${regionId}"`);
-    }
-    const regionMultipliers = region.multiplier;
-    if (!regionMultipliers) {
-      throw new Error(`No multipliers defined for region "${regionId}"`);
-    }
-    const enemyMultipliers = baseData.multiplier || {};
-    const getMultiplierValue = (source, stat) => {
-      const value = source[stat];
-      return value === undefined ? 1 : value;
-    };
-    const getStatValue = (stat, defaultValue = 0) => {
-      const base = ROCKY_FIELD_BASE_STATS[stat];
-      const baseValue = base === undefined ? defaultValue : base;
-      const regionMultiplier = getMultiplierValue(regionMultipliers, stat);
-      const enemyMultiplier = getMultiplierValue(enemyMultipliers, stat);
-      return baseValue * regionMultiplier * enemyMultiplier;
-    };
-    const baseScale = BASE_SCALE_PER_REGION_AND_LEVEL[regionId] || { tierScale: 1, levelScale: 0 };
-    const levelBonus = 1 + Math.floor(level / 20) * baseScale.levelScale;
-    const statMultiplier = baseScale.tierScale * levelBonus;
-
     this.baseScale = REGION_STAT_SCALE[regionId](level);
-    // Diminishing is applied inside the monotonic computation below when needed
 
-    const speedRed = hero.stats.reduceEnemyAttackSpeedPercent || 0;
-    const hpRed = hero.stats.reduceEnemyHpPercent || 0;
-    const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
+    // Calculate all stats using dedicated methods
+    this.attackSpeed = this.calculateAttackSpeed();
+    this.life = this.calculateLife();
+    this.damage = this.calculateDamage();
+    this.armor = this.calculateArmor();
+    this.evasion = this.calculateEvasion();
+    this.attackRating = this.calculateAttackRating();
+    this.xp = this.calculateXP();
+    this.gold = this.calculateGold();
 
-    this.attackSpeed = getStatValue('attackSpeed', 1) * (1 - speedRed);
-    this.life = scaleStat(getStatValue('life') * statMultiplier, level, 0, 0, 0, this.baseScale) * (1 - hpRed);
-    this.damage = Math.max(
-      scaleStat(getStatValue('damage') * statMultiplier, level, 0, 0, 0, this.baseScale) * (1 - dmgRed),
-      1,
-    );
-    this.armor = scaleStat(getStatValue('armor') * statMultiplier, level, 0, 0, 0, this.baseScale);
-    this.evasion =
-      scaleStat(getStatValue('evasion') * statMultiplier, level, 0, 0, 0, this.baseScale) *
-      attackRatingAndEvasionScale;
-    this.attackRating =
-      scaleStat(getStatValue('attackRating') * statMultiplier, level, 0, 0, 0, this.baseScale) *
-      attackRatingAndEvasionScale;
-    // Monotonic XP in Rocky Field: accumulate per-level increments only
-    const baseAtL1 = getStatValue('xp') * baseScale.tierScale; // levelBonus handled in series
-    const levelBonusFn = (lvl) => 1 + Math.floor(lvl / 20) * baseScale.levelScale;
-    this.xp = computeXPAdjustedMonotonic(
-      baseAtL1,
-      level,
-      (lvl) => REGION_STAT_SCALE[regionId](lvl),
-      levelBonusFn,
-      (lvl) => xpDiminishingFactor(lvl),
-      `rocky-${regionId}`,
-    );
-    const baseGoldAtL1 = getStatValue('gold') * baseScale.tierScale;
-    this.gold = computeXPAdjustedMonotonic(
-      baseGoldAtL1,
-      level,
-      (lvl) => REGION_STAT_SCALE[regionId](lvl),
-      (lvl) => 1 + Math.floor(lvl / 20) * baseScale.levelScale,
-      (lvl) => xpDiminishingFactor(lvl),
-      `rocky-gold-${regionId}`,
-    );
-
+    // Calculate elemental damages and resistances
     ELEMENT_IDS.forEach((id) => {
-      const enemyElMult = getMultiplierValue(enemyMultipliers, `${id}Damage`);
-      const regionElMult = getMultiplierValue(regionMultipliers, `${id}Damage`);
-      const hasElementalDamage =
-        enemyElMult !== 1 || regionElMult !== 1 || getStatValue(`${id}Damage`) > 0;
-
-      // If an elemental multiplier is present but no explicit base value,
-      // use the physical damage base as the template for elemental damage.
-      const baseDamageForElement = hasElementalDamage
-        ? getStatValue('damage') * enemyElMult * regionElMult
-        : 0;
-
-      const configuredElementDamage = getStatValue(`${id}Damage`);
-      const elementDamage = Math.max(baseDamageForElement, configuredElementDamage);
-
-      const dmgBase = scaleStat(
-        elementDamage * statMultiplier,
-        level,
-        0,
-        0,
-        0,
-        this.baseScale,
-      );
-      this[`${id}Damage`] = elementDamage > 0 ? Math.max(dmgBase * (1 - dmgRed), 1) : 0;
-
-      this[`${id}Resistance`] = scaleStat(
-        getStatValue(`${id}Resistance`) * statMultiplier,
-        level,
-        0,
-        0,
-        0,
-        this.baseScale,
-      );
+      this[`${id}Damage`] = this.calculateElementalDamage(id);
+      this[`${id}Resistance`] = this.calculateElementalResistance(id);
     });
 
     this.currentLife = this.life;
@@ -318,6 +236,155 @@ export class RockyFieldEnemy {
 
     const rarityName = t('rarity.normal');
     battleLog.addBattle(tp('battleLog.encounteredEnemy', { rarity: rarityName, level: this.level, name: t(this.name) }));
+  }
+
+  // Helper methods for stat calculations
+  getRegion() {
+    const region = ROCKY_FIELD_REGIONS.find((r) => r.id === this.regionId);
+    if (!region) {
+      throw new Error(`No region defined for "${this.regionId}"`);
+    }
+    return region;
+  }
+
+  getMultiplierValue(source, stat) {
+    const value = source[stat];
+    return value === undefined ? 1 : value;
+  }
+
+  getStatValue(stat, defaultValue = 0) {
+    const region = this.getRegion();
+    const regionMultipliers = region.multiplier;
+    const enemyMultipliers = this.baseData.multiplier || {};
+
+    const base = ROCKY_FIELD_BASE_STATS[stat];
+    const baseValue = base === undefined ? defaultValue : base;
+    const regionMultiplier = this.getMultiplierValue(regionMultipliers, stat);
+    const enemyMultiplier = this.getMultiplierValue(enemyMultipliers, stat);
+    return baseValue * regionMultiplier * enemyMultiplier;
+  }
+
+  getStatMultiplier() {
+    const baseScale = BASE_SCALE_PER_REGION_AND_LEVEL[this.regionId] || { tierScale: 1, levelScale: 0 };
+    const levelBonus = 1 + Math.floor(this.level / 20) * baseScale.levelScale;
+    return baseScale.tierScale * levelBonus;
+  }
+
+  // Calculate methods (consistent with Enemy and Boss classes)
+  calculateAttackSpeed() {
+    const speedRed = hero.stats.reduceEnemyAttackSpeedPercent || 0;
+    return this.getStatValue('attackSpeed', 1) * (1 - speedRed);
+  }
+
+  calculateLife() {
+    const hpRed = hero.stats.reduceEnemyHpPercent || 0;
+    const statMultiplier = this.getStatMultiplier();
+    return scaleStat(this.getStatValue('life') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * (1 - hpRed);
+  }
+
+  calculateDamage() {
+    const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
+    const statMultiplier = this.getStatMultiplier();
+    return Math.max(
+      scaleStat(this.getStatValue('damage') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * (1 - dmgRed),
+      1,
+    );
+  }
+
+  calculateArmor() {
+    const statMultiplier = this.getStatMultiplier();
+    return scaleStat(this.getStatValue('armor') * statMultiplier, this.level, 0, 0, 0, this.baseScale);
+  }
+
+  calculateEvasion() {
+    const statMultiplier = this.getStatMultiplier();
+    return scaleStat(this.getStatValue('evasion') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * attackRatingAndEvasionScale;
+  }
+
+  calculateAttackRating() {
+    const statMultiplier = this.getStatMultiplier();
+    return scaleStat(this.getStatValue('attackRating') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * attackRatingAndEvasionScale;
+  }
+
+  calculateXP() {
+    const baseScale = BASE_SCALE_PER_REGION_AND_LEVEL[this.regionId] || { tierScale: 1, levelScale: 0 };
+    const baseAtL1 = this.getStatValue('xp') * baseScale.tierScale;
+    const levelBonusFn = (lvl) => 1 + Math.floor(lvl / 20) * baseScale.levelScale;
+    return computeXPAdjustedMonotonic(
+      baseAtL1,
+      this.level,
+      (lvl) => REGION_STAT_SCALE[this.regionId](lvl),
+      levelBonusFn,
+      (lvl) => xpDiminishingFactor(lvl),
+      `rocky-${this.regionId}`,
+    );
+  }
+
+  calculateGold() {
+    const baseScale = BASE_SCALE_PER_REGION_AND_LEVEL[this.regionId] || { tierScale: 1, levelScale: 0 };
+    const baseGoldAtL1 = this.getStatValue('gold') * baseScale.tierScale;
+    return computeXPAdjustedMonotonic(
+      baseGoldAtL1,
+      this.level,
+      (lvl) => REGION_STAT_SCALE[this.regionId](lvl),
+      (lvl) => 1 + Math.floor(lvl / 20) * baseScale.levelScale,
+      (lvl) => xpDiminishingFactor(lvl),
+      `rocky-gold-${this.regionId}`,
+    );
+  }
+
+  calculateElementalDamage(id) {
+    const region = this.getRegion();
+    const regionMultipliers = region.multiplier;
+    const enemyMultipliers = this.baseData.multiplier || {};
+    const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
+    const statMultiplier = this.getStatMultiplier();
+
+    const enemyElMult = this.getMultiplierValue(enemyMultipliers, `${id}Damage`);
+    const regionElMult = this.getMultiplierValue(regionMultipliers, `${id}Damage`);
+    const hasElementalDamage =
+      enemyElMult !== 1 || regionElMult !== 1 || this.getStatValue(`${id}Damage`) > 0;
+
+    // If an elemental multiplier is present but no explicit base value,
+    // use the physical damage base as the template for elemental damage.
+    const baseDamageForElement = hasElementalDamage
+      ? this.getStatValue('damage') * enemyElMult * regionElMult
+      : 0;
+
+    const configuredElementDamage = this.getStatValue(`${id}Damage`);
+    const elementDamage = Math.max(baseDamageForElement, configuredElementDamage);
+
+    const dmgBase = scaleStat(
+      elementDamage * statMultiplier,
+      this.level,
+      0,
+      0,
+      0,
+      this.baseScale,
+    );
+    return elementDamage > 0 ? Math.max(dmgBase * (1 - dmgRed), 1) : 0;
+  }
+
+  calculateElementalResistance(id) {
+    const statMultiplier = this.getStatMultiplier();
+    return scaleStat(
+      this.getStatValue(`${id}Resistance`) * statMultiplier,
+      this.level,
+      0,
+      0,
+      0,
+      this.baseScale,
+    );
+  }
+
+  // used when reductions are applied from skills usually buff, but can be instant too
+  recalculateStats() {
+    this.attackSpeed = this.calculateAttackSpeed();
+    this.life = this.calculateLife();
+    this.damage = this.calculateDamage();
+    ELEMENT_IDS.forEach((id) => {
+      this[`${id}Damage`] = this.calculateElementalDamage(id);
+    });
   }
 
   canAttack(currentTime) {
