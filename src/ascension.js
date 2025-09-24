@@ -441,7 +441,7 @@ export default class Ascension {
     };
     // Preserve options just like prestige (except crystal-shop-tied ones)
     const preservedOptions = { ...options };
-    ['startingStage', 'stageSkip', 'resetStageSkip'].forEach((k) => {
+    ['startingStage', 'stageSkip', 'resetStageSkip', 'stageLockEnabled', 'stageLock'].forEach((k) => {
       delete preservedOptions[k];
     });
 
