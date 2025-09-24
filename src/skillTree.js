@@ -375,9 +375,9 @@ export default class SkillTree {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.cooldown) return 0;
     const baseCooldown = skill.cooldown(effectiveLevel);
-    const abilityHaste = hero.stats.cooldownReductionPercent * 100;
-    // Apply diminishing returns similar to League of Legends ability haste
-    const reducedCooldown = baseCooldown * (100 / (100 + abilityHaste));
+    const cooldownReduction = Math.min(hero.stats.cooldownReductionPercent, 0.8); // Max 80% reduction
+    // Apply direct percentage reduction
+    const reducedCooldown = baseCooldown * (1 - cooldownReduction);
     // Prevent cooldown from dropping below 20% of the base cooldown
     const minCooldown = baseCooldown * 0.2;
     return Math.floor(Math.max(minCooldown, reducedCooldown));
