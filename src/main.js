@@ -165,6 +165,8 @@ window.setLanguage = setLanguage;
   game.restoreMana(hero.stats.mana);
 
   updatePlayerLife();
+  // Preserve offline rates before any UI initialization that might reset them
+  statistics.preserveOfflineRates = true;
   updateStatsAndAttributesUI();
   updateStageUI();
   updateEnemyStats();
@@ -230,8 +232,15 @@ window.setLanguage = setLanguage;
   buildings.collectBonuses({
     showOfflineModal: true,
     extraBonuses: fightRewards?.bonuses || [],
-    extraCollectFn: fightRewards?.apply,
+    extraCollectFn: async () => {
+      if (fightRewards?.apply) await fightRewards.apply();
+      // Clear the preserve flag after offline rewards have been applied
+      statistics.preserveOfflineRates = false;
+    },
   });
+
+  // Safety: ensure preserve flag is cleared even if collection didn't happen
+  statistics.preserveOfflineRates = false;
 
   // Keep combat activity timestamp up to date while the game is open
   setInterval(() => {

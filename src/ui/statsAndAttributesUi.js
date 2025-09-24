@@ -68,8 +68,10 @@ function updateRateCounters() {
     goldEls.forEach((el) => (el.textContent = `Gold/${periodLabel}: 0`));
     itemsEls.forEach((el) => (el.textContent = `Items/${periodLabel}: 0`));
     matEls.forEach((el) => (el.textContent = `Materials/${periodLabel}: 0`));
-    // Ensure offline rates are zeroed until eligible
-    statistics.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
+    // Only reset offline rates if we're not preserving them during offline collection
+    if (!statistics.preserveOfflineRates) {
+      statistics.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
+    }
     return;
   }
   const damageRate = sessionDamage / elapsed;
@@ -83,10 +85,13 @@ function updateRateCounters() {
   const matRate = (statistics.totalMaterialsDropped - startMaterialsDropped) / elapsed;
   matEls.forEach((el) => (el.textContent = `Materials/${periodLabel}: ${formatNumber((matRate * ratePeriod).toFixed(1))}`));
   // Only expose offlineRates after at least 60s spent in fights (eligibility)
-  if (eligible) {
-    statistics.offlineRates = { xp: xpRate, gold: goldRate, items: itemRate, materials: matRate };
-  } else {
-    statistics.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
+  // But preserve existing rates if offline rewards are being collected
+  if (!statistics.preserveOfflineRates) {
+    if (eligible) {
+      statistics.offlineRates = { xp: xpRate, gold: goldRate, items: itemRate, materials: matRate };
+    } else {
+      statistics.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
+    }
   }
 }
 
