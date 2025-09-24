@@ -226,12 +226,21 @@ window.setLanguage = setLanguage;
   })();
 
   // Collect offline bonuses on load (show modal if any)
+  // Preserve offline rates during collection to prevent them being reset before fight rewards are applied
+  statistics.preserveOfflineRates = true;
   const fightRewards = await collectOfflineFightRewards();
   buildings.collectBonuses({
     showOfflineModal: true,
     extraBonuses: fightRewards?.bonuses || [],
-    extraCollectFn: fightRewards?.apply,
+    extraCollectFn: async () => {
+      if (fightRewards?.apply) await fightRewards.apply();
+      // Clear the preserve flag after offline rewards have been applied
+      statistics.preserveOfflineRates = false;
+    },
   });
+  
+  // Safety: ensure preserve flag is cleared even if collection didn't happen
+  statistics.preserveOfflineRates = false;
 
   // Keep combat activity timestamp up to date while the game is open
   setInterval(() => {
