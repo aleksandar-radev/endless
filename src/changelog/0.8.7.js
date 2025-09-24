@@ -12,5 +12,11 @@ export default function run() {
       <li>Rocky Field conversion runes now roll between 10% and 150% everywhere. And can drop on any stage and region (lower chance on lower stages or weaker regions)</li>
       <li>The arena now features multiple boss regions.</li>
     </ul>
+
+    
+    <span style="color:#FF8A00;">Bug Fixes</span>
+    <ul>
+      <li>Fixed stage lock bug where the stage lock setting would remain enabled and locked at a specific value after prestige, even when the stage lock crystal shop upgrade was not repurchased. Stage lock options are now properly reset to their default disabled state after each prestige.</li>
+    </ul>
   `;
 }
