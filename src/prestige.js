@@ -354,7 +354,7 @@ export default class Prestige {
     // Preserve all user options and restore them after reset, except those tied
     // to crystal-shop purchases which should revert to defaults.
     const preservedOptions = { ...options };
-    ['startingStage', 'stageSkip', 'resetStageSkip'].forEach((k) => {
+    ['startingStage', 'stageSkip', 'resetStageSkip', 'stageLock', 'stageLockEnabled'].forEach((k) => {
       delete preservedOptions[k];
     });
 
