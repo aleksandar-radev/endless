@@ -320,6 +320,64 @@ export class RockyFieldEnemy {
     battleLog.addBattle(tp('battleLog.encounteredEnemy', { rarity: rarityName, level: this.level, name: t(this.name) }));
   }
 
+  // used when reductions are applied from skills usually buff, but can be instant too
+  recalculateStats() {
+    const region = ROCKY_FIELD_REGIONS.find((r) => r.id === this.regionId);
+    const regionMultipliers = region.multiplier;
+    const enemyMultipliers = this.baseData.multiplier || {};
+    const getMultiplierValue = (source, stat) => {
+      const value = source[stat];
+      return value === undefined ? 1 : value;
+    };
+    const getStatValue = (stat, defaultValue = 0) => {
+      const base = ROCKY_FIELD_BASE_STATS[stat];
+      const baseValue = base === undefined ? defaultValue : base;
+      const regionMultiplier = getMultiplierValue(regionMultipliers, stat);
+      const enemyMultiplier = getMultiplierValue(enemyMultipliers, stat);
+      return baseValue * regionMultiplier * enemyMultiplier;
+    };
+    const baseScale = BASE_SCALE_PER_REGION_AND_LEVEL[this.regionId] || { tierScale: 1, levelScale: 0 };
+    const levelBonus = 1 + Math.floor(this.level / 20) * baseScale.levelScale;
+    const statMultiplier = baseScale.tierScale * levelBonus;
+
+    const speedRed = hero.stats.reduceEnemyAttackSpeedPercent || 0;
+    const hpRed = hero.stats.reduceEnemyHpPercent || 0;
+    const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
+
+    this.attackSpeed = getStatValue('attackSpeed', 1) * (1 - speedRed);
+    this.life = scaleStat(getStatValue('life') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * (1 - hpRed);
+    this.damage = Math.max(
+      scaleStat(getStatValue('damage') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * (1 - dmgRed),
+      1,
+    );
+
+    ELEMENT_IDS.forEach((id) => {
+      const enemyElMult = getMultiplierValue(enemyMultipliers, `${id}Damage`);
+      const regionElMult = getMultiplierValue(regionMultipliers, `${id}Damage`);
+      const hasElementalDamage =
+        enemyElMult !== 1 || regionElMult !== 1 || getStatValue(`${id}Damage`) > 0;
+
+      // If an elemental multiplier is present but no explicit base value,
+      // use the physical damage base as the template for elemental damage.
+      const baseDamageForElement = hasElementalDamage
+        ? getStatValue('damage') * enemyElMult * regionElMult
+        : 0;
+
+      const configuredElementDamage = getStatValue(`${id}Damage`);
+      const elementDamage = Math.max(baseDamageForElement, configuredElementDamage);
+
+      const dmgBase = scaleStat(
+        elementDamage * statMultiplier,
+        this.level,
+        0,
+        0,
+        0,
+        this.baseScale,
+      );
+      this[`${id}Damage`] = elementDamage > 0 ? Math.max(dmgBase * (1 - dmgRed), 1) : 0;
+    });
+  }
+
   canAttack(currentTime) {
     const timeBetweenAttacks = 1000 / this.attackSpeed;
     return currentTime - this.lastAttack >= timeBetweenAttacks;
