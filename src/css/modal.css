@@ -15,8 +15,8 @@
 }
 
 .modal-content {
-  background: linear-gradient(180deg, rgba(34,38,45,0.95), rgba(22,24,28,0.95));
-  border: 1px solid rgba(255,255,255,0.08);
+  background: linear-gradient(180deg, rgba(34, 38, 45, 0.95), rgba(22, 24, 28, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
   padding: 1.5rem;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
@@ -27,7 +27,7 @@
 }
 
 /* Ensure any modal content container respects viewport height */
-.modal > * {
+.modal>* {
   max-height: 80vh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
