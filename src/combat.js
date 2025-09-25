@@ -277,6 +277,7 @@ export async function defeatEnemy() {
     let text = 'Boss defeated! ';
     if (gold) {
       hero.gainGold(gold);
+      statistics.increment('totalGoldFromCombat', null, gold);
       text += `+${gold} gold, `;
     }
     if (crystals) {
@@ -435,6 +436,10 @@ export async function defeatEnemy() {
 
   hero.gainGold(goldGained);
   hero.gainExp(expGained);
+
+  // Track combat-specific XP and gold for rate calculations
+  statistics.increment('totalGoldFromCombat', null, goldGained);
+  statistics.increment('totalExpFromCombat', null, expGained);
 
   updateQuestsUI();
 

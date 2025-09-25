@@ -150,8 +150,6 @@ export async function collectOfflineFightRewards() {
     }
     if (matsQty > 0) {
       const distrib = distributeMaterials(matsQty);
-      const droppedTotal = Object.values(distrib).reduce((a, b) => a + b, 0);
-      if (droppedTotal > 0) statistics.increment('totalMaterialsDropped', null, droppedTotal);
       inventory.bulkAddMaterials(distrib);
     }
     statistics.lastFightActive = await getTimeNow();

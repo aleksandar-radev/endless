@@ -21,6 +21,7 @@ let allocationMode = 1;
 let rateIntervalId = null;
 let startTimeInFights = 0;
 let startGold = 0;
+let startExp = 0;
 let startItems = 0;
 let startMaterialsDropped = 0;
 let sessionXp = 0;
@@ -79,9 +80,9 @@ function updateRateCounters() {
   }
   const damageRate = sessionDamage / elapsed;
   dmgEls.forEach((el) => (el.textContent = `Damage/${periodLabel}: ${formatNumber((damageRate * ratePeriod).toFixed(1))}`));
-  const xpRate = sessionXp / elapsed;
+  const xpRate = (statistics.totalExpFromCombat - startExp) / elapsed;
   xpEls.forEach((el) => (el.textContent = `XP/${periodLabel}: ${formatNumber((xpRate * ratePeriod).toFixed(1))}`));
-  const goldRate = (statistics.totalGoldEarned - startGold) / elapsed;
+  const goldRate = (statistics.totalGoldFromCombat - startGold) / elapsed;
   goldEls.forEach((el) => (el.textContent = `Gold/${periodLabel}: ${formatNumber((goldRate * ratePeriod).toFixed(1))}`));
   const itemRate = (statistics.totalItemsFound - startItems) / elapsed;
   itemsEls.forEach((el) => (el.textContent = `Items/${periodLabel}: ${formatNumber((itemRate * ratePeriod).toFixed(1))}`));
@@ -100,7 +101,8 @@ function updateRateCounters() {
 
 function resetRateCounters() {
   startTimeInFights = statistics.totalTimeInFights;
-  startGold = statistics.totalGoldEarned;
+  startGold = statistics.totalGoldFromCombat;
+  startExp = statistics.totalExpFromCombat;
   startItems = statistics.totalItemsFound;
   startMaterialsDropped = statistics.totalMaterialsDropped;
   sessionXp = 0;
@@ -696,10 +698,10 @@ function openSplitView() {
     switchTab(tab);
     statsEl.classList.add('active');
     movePanel(tab, rightPanel);
-    
+
     // Update inventory grid for all tabs to ensure equipped items are displayed correctly
     updateInventoryGrid();
-    
+
     // Call specific UI update functions for each tab
     if (tab === 'runes') {
       renderRunesUI();
@@ -710,7 +712,7 @@ function openSplitView() {
     } else if (tab === 'soulShop') {
       soulShop?.updateSoulShopAffordability();
     }
-    
+
     splitState.currentRight = tab;
     rightTabs.querySelectorAll('button').forEach((b) => {
       b.classList.toggle('active', b.dataset.tab === tab);
