@@ -530,13 +530,15 @@ export function updateSkillTreeValues() {
         options.skillQuickQty = v;
         maxBtn.classList.remove('active');
         dataManager.saveGame();
-        updateSkillTreeValues();
+        // Don't call updateSkillTreeValues() here as it rebuilds the input and loses focus
       };
       maxBtn.onclick = () => {
         skillTree.quickQty = 'max';
         maxBtn.classList.add('active');
+        // Update the input field to show the max value without rebuilding the entire UI
+        const maxValue = options.skillQuickQty || 1;
+        input.value = maxValue;
         dataManager.saveGame();
-        updateSkillTreeValues();
       };
     } else {
       qtyControls.querySelectorAll('button').forEach((btn) => {
