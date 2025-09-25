@@ -175,13 +175,19 @@
   max-width: 1200px;
   display: flex;
   gap: 10px;
+  border: 1px solid rgb(97, 85, 85);
 }
 
 .split-view-modal .split-left,
 .split-view-modal .split-right {
   flex: 1;
-  max-height: 80vh;
-  overflow-y: hidden;
+}
+
+.split-left .tab-panel,
+.split-right .tab-panel {
+  height: unset;
+  overflow-y: hidden !important;
+  max-height: unset;
 }
 
 .split-view-modal .split-right-tabs {
