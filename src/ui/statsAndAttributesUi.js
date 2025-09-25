@@ -1,4 +1,4 @@
-import { game, hero, statistics, options, training } from '../globals.js';
+import { game, hero, statistics, options, training, soulShop, ascension } from '../globals.js';
 import { STATS } from '../constants/stats/stats.js';
 import { hideTooltip, positionTooltip, showTooltip, updateEnemyStats, formatNumber, switchTab } from '../ui/ui.js';
 import { OFFENSE_STATS } from '../constants/stats/offenseStats.js';
@@ -10,6 +10,9 @@ import { calculateArmorReduction, calculateEvasionChance, calculateHitChance, ca
 import { createModal } from './modal.js';
 import { t } from '../i18n.js';
 import { updateInventoryGrid } from './inventoryUi.js';
+import { renderRunesUI } from './runesUi.js';
+import { updateAscensionUI } from './ascensionUi.js';
+import { updateSkillTreeValues } from './skillTreeUi.js';
 
 const html = String.raw;
 
@@ -693,9 +696,21 @@ function openSplitView() {
     switchTab(tab);
     statsEl.classList.add('active');
     movePanel(tab, rightPanel);
-    if (tab === 'inventory') {
-      updateInventoryGrid();
+    
+    // Update inventory grid for all tabs to ensure equipped items are displayed correctly
+    updateInventoryGrid();
+    
+    // Call specific UI update functions for each tab
+    if (tab === 'runes') {
+      renderRunesUI();
+    } else if (tab === 'ascension') {
+      updateAscensionUI();
+    } else if (tab === 'skilltree') {
+      updateSkillTreeValues();
+    } else if (tab === 'soulShop') {
+      soulShop?.updateSoulShopAffordability();
     }
+    
     splitState.currentRight = tab;
     rightTabs.querySelectorAll('button').forEach((b) => {
       b.classList.toggle('active', b.dataset.tab === tab);
@@ -705,7 +720,8 @@ function openSplitView() {
   document.querySelectorAll('.tab-buttons .tab-btn').forEach((btn) => {
 
     const tab = btn.dataset.tab;
-    if (tab !== 'inventory') return;
+    // Allow inventory, runes, skill tree, ascension and soul shop in split view
+    if (!['inventory', 'runes', 'skilltree', 'ascension', 'soulShop'].includes(tab)) return;
     const clone = document.createElement('button');
     clone.className = 'subtab-btn';
     clone.dataset.tab = tab;
