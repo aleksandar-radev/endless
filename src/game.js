@@ -180,7 +180,7 @@ class Game {
       statistics.set('highestDamageDealt', null, damage);
     }
     document.dispatchEvent(new CustomEvent('damageDealt', { detail: damage }));
-    createDamageNumber({ text: damage, isPlayer: false, isCritical: isCritical, color: 'red' });
+    createDamageNumber({ text: damage, isPlayer: false, isCritical: isCritical, breakdown: breakdown });
 
     if (this.fightMode === 'arena' && this.currentEnemy) {
       const isDead = this.currentEnemy.takeDamage(damage);

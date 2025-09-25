@@ -270,6 +270,35 @@
   font-size: 1.5rem;
 }
 
+/* Damage number colors based on damage type */
+.damage-number.physical {
+  color: var(--item-normal);
+}
+
+.damage-number.fire {
+  color: var(--fire);
+}
+
+.damage-number.cold {
+  color: var(--cold);
+}
+
+.damage-number.air {
+  color: var(--air);
+}
+
+.damage-number.earth {
+  color: var(--earth);
+}
+
+.damage-number.lightning {
+  color: var(--lightning);
+}
+
+.damage-number.water {
+  color: var(--water);
+}
+
 @keyframes damage-popup {
   0% {
     opacity: 1;
