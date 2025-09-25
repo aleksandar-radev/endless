@@ -698,10 +698,10 @@ function openSplitView() {
     switchTab(tab);
     statsEl.classList.add('active');
     movePanel(tab, rightPanel);
-    
+
     // Update inventory grid for all tabs to ensure equipped items are displayed correctly
     updateInventoryGrid();
-    
+
     // Call specific UI update functions for each tab
     if (tab === 'runes') {
       renderRunesUI();
@@ -712,7 +712,7 @@ function openSplitView() {
     } else if (tab === 'soulShop') {
       soulShop?.updateSoulShopAffordability();
     }
-    
+
     splitState.currentRight = tab;
     rightTabs.querySelectorAll('button').forEach((b) => {
       b.classList.toggle('active', b.dataset.tab === tab);
