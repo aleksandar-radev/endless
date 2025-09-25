@@ -28,6 +28,8 @@ export default class Statistics {
     };
     this.highestDamageDealt = 0;
     this.totalGoldEarned = 0;
+    this.totalGoldFromCombat = 0;
+    this.totalExpFromCombat = 0;
     this.totalCrystalsEarned = 0;
     this.totalSoulsEarned = 0;
     this.totalItemsFound = 0;
@@ -73,6 +75,8 @@ export default class Statistics {
     };
     this.highestDamageDealt = 0;
     this.totalGoldEarned = 0;
+    this.totalGoldFromCombat = 0;
+    this.totalExpFromCombat = 0;
     this.totalCrystalsEarned = 0;
     this.totalSoulsEarned = 0;
     this.totalItemsFound = 0;
