@@ -541,24 +541,13 @@ export function calculateResistanceReduction(resistance, damage, cap = 0.9) {
 }
 
 /**
- * Determines the color for a damage number based on the damage breakdown.
- * Returns the color of the damage type with the highest value.
+ * Determines the CSS class for a damage number based on the damage breakdown.
+ * Returns the class name of the damage type with the highest value.
  * @param {Object} breakdown - The damage breakdown object
- * @returns {string} The color for the damage number
+ * @returns {string} The CSS class name for the damage number
  */
-export function getDamageColor(breakdown) {
-  if (!breakdown) return 'white'; // Default color for physical damage
-  
-  // Element color mapping based on CSS variables
-  const colorMap = {
-    physical: 'white',
-    fire: 'rgb(228, 85, 85)',
-    cold: 'rgb(85, 170, 228)', 
-    air: 'rgb(138, 170, 190)',
-    earth: 'rgb(96, 163, 40)',
-    lightning: 'rgb(255, 204, 0)',
-    water: 'rgb(0, 128, 255)'
-  };
+export function getDamageTypeClass(breakdown) {
+  if (!breakdown) return 'physical'; // Default class for physical damage
   
   // Find the damage type with the highest value
   let maxDamage = 0;
@@ -572,7 +561,7 @@ export function getDamageColor(breakdown) {
     }
   });
   
-  return colorMap[dominantType] || 'white';
+  return dominantType;
 }
 
 export function createDamageNumber({ text = '', isPlayer = false, isCritical = false, color = '', breakdown = null } = {}) {
@@ -587,7 +576,21 @@ export function createDamageNumber({ text = '', isPlayer = false, isCritical = f
   }
 
   const damageEl = document.createElement('div');
-  damageEl.className = isCritical ? 'damage-number critical' : 'damage-number';
+  
+  // Build CSS classes
+  let className = 'damage-number';
+  if (isCritical) {
+    className += ' critical';
+  }
+  
+  // Add damage type class if no explicit color provided and breakdown exists
+  if (!color && breakdown) {
+    const damageTypeClass = getDamageTypeClass(breakdown);
+    className += ` ${damageTypeClass}`;
+  }
+  
+  damageEl.className = className;
+  
   let displayText = text;
   if (options?.shortNumbers) {
     const num = Number(text);
@@ -601,10 +604,9 @@ export function createDamageNumber({ text = '', isPlayer = false, isCritical = f
     ? `<img src="${BASE}/icons/critical.svg" class="icon" alt="${t('icon.critical')}"/> ` + displayText
     : displayText;
   
-  // Determine color based on breakdown if no explicit color provided
-  const finalColor = color || getDamageColor(breakdown);
-  if (finalColor) {
-    damageEl.style.color = finalColor;
+  // Apply explicit color if provided (for special cases like MISS, EVADED, etc.)
+  if (color) {
+    damageEl.style.color = color;
   }
 
   // Get avatar's position relative to parent
