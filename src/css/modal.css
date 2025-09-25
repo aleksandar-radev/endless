@@ -28,7 +28,7 @@
 
 /* Ensure any modal content container respects viewport height */
 .modal>* {
-  max-height: 90vh;
+  max-height: 80vh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
