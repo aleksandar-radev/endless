@@ -180,13 +180,8 @@
 .split-view-modal .split-left,
 .split-view-modal .split-right {
   flex: 1;
-}
-
-.split-left .tab-panel,
-.split-right .tab-panel {
-  height: unset;
-  overflow-y: hidden !important;
-  max-height: unset;
+  max-height: 80vh;
+  overflow-y: hidden;
 }
 
 .split-view-modal .split-right-tabs {

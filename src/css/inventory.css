@@ -562,7 +562,7 @@
   align-items: center;
   justify-content: flex-start;
   z-index: 1100;
-  max-height: 80vh;
+  max-height: 90vh;
   overflow-y: auto;
 }
 

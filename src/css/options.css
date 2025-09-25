@@ -348,7 +348,7 @@
   padding: 32px 24px 24px 24px;
   min-width: 340px;
   max-width: 90vw;
-  max-height: 80vh;
+  max-height: 90vh;
   overflow-y: auto;
   position: relative;
   z-index: 1100;
