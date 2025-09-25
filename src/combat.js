@@ -540,7 +540,42 @@ export function calculateResistanceReduction(resistance, damage, cap = 0.9) {
   return Math.max(0, Math.min(reduction, cap)) * 100;
 }
 
-export function createDamageNumber({ text = '', isPlayer = false, isCritical = false, color = '' } = {}) {
+/**
+ * Determines the color for a damage number based on the damage breakdown.
+ * Returns the color of the damage type with the highest value.
+ * @param {Object} breakdown - The damage breakdown object
+ * @returns {string} The color for the damage number
+ */
+export function getDamageColor(breakdown) {
+  if (!breakdown) return 'white'; // Default color for physical damage
+  
+  // Element color mapping based on CSS variables
+  const colorMap = {
+    physical: 'white',
+    fire: 'rgb(228, 85, 85)',
+    cold: 'rgb(85, 170, 228)', 
+    air: 'rgb(138, 170, 190)',
+    earth: 'rgb(96, 163, 40)',
+    lightning: 'rgb(255, 204, 0)',
+    water: 'rgb(0, 128, 255)'
+  };
+  
+  // Find the damage type with the highest value
+  let maxDamage = 0;
+  let dominantType = 'physical';
+  
+  Object.entries(breakdown).forEach(([type, damage]) => {
+    const damageValue = Math.floor(damage || 0);
+    if (damageValue > maxDamage) {
+      maxDamage = damageValue;
+      dominantType = type;
+    }
+  });
+  
+  return colorMap[dominantType] || 'white';
+}
+
+export function createDamageNumber({ text = '', isPlayer = false, isCritical = false, color = '', breakdown = null } = {}) {
   if (!options?.showCombatText) return;
   const target = isPlayer ? '#character-avatar' : '.enemy-avatar';
   const avatar = document.querySelector(target);
@@ -565,8 +600,11 @@ export function createDamageNumber({ text = '', isPlayer = false, isCritical = f
   damageEl.innerHTML = isCritical
     ? `<img src="${BASE}/icons/critical.svg" class="icon" alt="${t('icon.critical')}"/> ` + displayText
     : displayText;
-  if (color) {
-    damageEl.style.color = color;
+  
+  // Determine color based on breakdown if no explicit color provided
+  const finalColor = color || getDamageColor(breakdown);
+  if (finalColor) {
+    damageEl.style.color = finalColor;
   }
 
   // Get avatar's position relative to parent
