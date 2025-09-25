@@ -25,12 +25,18 @@ export async function getTimeNow() {
   pendingPromise = (async () => {
     try {
       const apiTime = await fetchTrustedUtcTime();
-      lastApiTime = apiTime;
-      lastApiTimestamp = Date.now();
+      // Validate API response
+      if (typeof apiTime === 'number' && apiTime > 0) {
+        lastApiTime = apiTime;
+        lastApiTimestamp = Date.now();
+      } else {
+        throw new Error('Invalid API response: ' + apiTime);
+      }
     } catch (e) {
+      console.warn('Failed to fetch server time, using local time:', e.message);
       // Fallback to local time if API fails
       lastApiTime = Date.now();
-      lastApiTimestamp = lastApiTime;
+      lastApiTimestamp = Date.now();
     } finally {
       pendingPromise = null;
     }

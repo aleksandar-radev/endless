@@ -16,12 +16,31 @@ let serverTimeOffsetMs = 0; // getTimeNow() - Date.now()
 
 function intervalToMs(interval) {
   if (!interval) return 0;
-  if (typeof interval === 'number') return interval * 1000;
+  if (typeof interval === 'number') {
+    // Ensure positive number
+    return interval > 0 ? interval * 1000 : 0;
+  }
   if (interval === 'minute') return 60 * 1000;
   if (interval === 'hour') return 60 * 60 * 1000;
-  if (typeof interval === 'string' && interval.endsWith('min')) return parseInt(interval) * 60 * 1000;
-  if (typeof interval === 'string' && interval.endsWith('sec')) return parseInt(interval) * 1000;
+  if (typeof interval === 'string' && interval.endsWith('min')) {
+    const value = parseInt(interval);
+    return (!isNaN(value) && value > 0) ? value * 60 * 1000 : 0;
+  }
+  if (typeof interval === 'string' && interval.endsWith('sec')) {
+    const value = parseInt(interval);
+    return (!isNaN(value) && value > 0) ? value * 1000 : 0;
+  }
   return 0;
+}
+
+// Helper function to validate building state for timer display
+function isBuildingReadyForTimer(building) {
+  return building &&
+         typeof building.placedAt === 'number' &&
+         building.level > 0 &&
+         building.effect &&
+         building.effect.interval &&
+         intervalToMs(building.effect.interval) > 0;
 }
 
 function fmtDuration(ms) {
@@ -39,8 +58,9 @@ async function ensureTimeOffsetInitialized() {
   try {
     const now = await getTimeNow();
     serverTimeOffsetMs = now - Date.now();
-  } catch {
-    // Fallback to local time only
+  } catch (error) {
+    console.warn('Failed to get server time, using local time:', error);
+    // Fallback to local time only - this is still valid for countdown calculations
     serverTimeOffsetMs = 0;
   }
 }
@@ -50,22 +70,31 @@ function updateBuildingCountdowns() {
   if (document.getElementById('offline-bonuses-modal')) return;
   const nodes = document.querySelectorAll('.building-next-bonus');
   if (!nodes.length) return;
+  
+  // Use current time with server offset, fallback to local time if offset failed
   const now = Date.now() + serverTimeOffsetMs;
   let needsCollect = false;
+  
   nodes.forEach((el) => {
     const id = el.dataset.buildingId;
     const b = buildings?.buildings?.[id];
-    if (!b || b.placedAt == null || b.level <= 0 || !b.effect?.interval) {
+    
+    // Use helper function for validation
+    if (!isBuildingReadyForTimer(b)) {
       el.textContent = tp('buildings.nextBonus', { time: '—' });
       return;
     }
+    
     const intervalMs = intervalToMs(b.effect.interval);
-    if (!intervalMs) {
-      el.textContent = tp('buildings.nextBonus', { time: '—' });
-      return;
-    }
-    const nextAt = (b.lastBonusTime || now) + intervalMs;
+    
+    // Ensure lastBonusTime is valid, use current time as fallback
+    const lastBonusTime = (typeof b.lastBonusTime === 'number' && b.lastBonusTime > 0) 
+      ? b.lastBonusTime 
+      : now;
+    
+    const nextAt = lastBonusTime + intervalMs;
     const msLeft = nextAt - now;
+    
     if (msLeft <= 0) {
       // Mark for collection; UI will refresh after collect
       needsCollect = true;
@@ -74,6 +103,7 @@ function updateBuildingCountdowns() {
       el.textContent = tp('buildings.nextBonus', { time: fmtDuration(msLeft) });
     }
   });
+  
   if (needsCollect && buildings?.collectBonuses) {
     // Run once for all buildings; then refresh resources and allow timers to reset
     buildings
@@ -81,20 +111,53 @@ function updateBuildingCountdowns() {
       .then(() => {
         updateResources();
       })
-      .catch(() => {});
+      .catch((error) => {
+        console.warn('Failed to collect building bonuses:', error);
+      });
   }
 }
 
 function startBuildingCountdowns() {
   if (buildingCountdownInterval != null) return;
-  // Initialize server time offset once then start ticking
-  ensureTimeOffsetInitialized().finally(() => {
+  
+  // Initialize server time offset with retry logic
+  const initializeWithRetry = async (retryCount = 0) => {
+    const maxRetries = 3;
+    const retryDelay = 1000; // 1 second
+    
+    try {
+      await ensureTimeOffsetInitialized();
+    } catch (error) {
+      if (retryCount < maxRetries) {
+        console.warn(`Time initialization failed, retrying in ${retryDelay}ms... (${retryCount + 1}/${maxRetries})`);
+        setTimeout(() => initializeWithRetry(retryCount + 1), retryDelay);
+        return;
+      } else {
+        console.warn('Failed to initialize server time after retries, using local time');
+        serverTimeOffsetMs = 0;
+      }
+    }
+    
+    // Start the countdown timer after successful initialization (or final fallback)
     // Small delay to avoid racing the initial offline collection flow in main.js
     setTimeout(() => {
-      updateBuildingCountdowns();
-      buildingCountdownInterval = setInterval(updateBuildingCountdowns, 1000);
+      // Validate that buildings are available before starting
+      if (buildings?.buildings && Object.keys(buildings.buildings).length > 0) {
+        updateBuildingCountdowns();
+        buildingCountdownInterval = setInterval(updateBuildingCountdowns, 1000);
+      } else {
+        // If no buildings yet, retry after a short delay
+        setTimeout(() => {
+          if (buildings?.buildings && Object.keys(buildings.buildings).length > 0) {
+            updateBuildingCountdowns();
+            buildingCountdownInterval = setInterval(updateBuildingCountdowns, 1000);
+          }
+        }, 2000);
+      }
     }, 1200);
-  });
+  };
+  
+  initializeWithRetry();
 }
 
 function createBuildingCard(building) {
