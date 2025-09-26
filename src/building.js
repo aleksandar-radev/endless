@@ -95,7 +95,7 @@ export class Building {
       }
       // Apply ascension building cost reduction (percent)
       const ascRed = ascension?.getBonuses?.()?.buildingCostReduction || 0;
-      const reduced = Math.ceil(total * (1 - ascRed / 100));
+      const reduced = Math.ceil(total * (1 - ascRed));
       costs[type] = Math.max(0, reduced);
     }
     return costs;

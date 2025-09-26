@@ -391,7 +391,7 @@ export default class Training {
     const runeReduction = bonus.trainingCostReduction || 0;
     const ascRed = ascension?.getBonuses?.()?.trainingCostReduction || 0;
     const reduction = runeReduction + ascRed;
-    return Math.floor(totalCost * (1 - reduction / 100) + 1e-9);
+    return Math.floor(totalCost * (1 - reduction) + 1e-9);
   }
 
   getMaxPurchasable(selectedQty, baseLevel, maxLevel, config, availableGold = hero.gold) {

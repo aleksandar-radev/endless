@@ -265,28 +265,28 @@ export const ASCENSION_CATEGORIES = {
       // Cost reduction upgrades (percent values; combined additively with rune bonuses)
       trainingCostReduction: {
         label: t('ascension.upgrade.trainingCostReduction'),
-        bonus: 1,
+        bonus: 0.01,
         effect: 'trainingCostReduction',
         cost: (lvl) => 10 + 2 * lvl,
         maxLevel: 50,
       },
       buildingCostReduction: {
         label: t('ascension.upgrade.buildingCostReduction'),
-        bonus: 1,
+        bonus: 0.01,
         effect: 'buildingCostReduction',
         cost: (lvl) => 10 + 2 * lvl,
         maxLevel: 50,
       },
       crystalShopCostReduction: {
         label: t('ascension.upgrade.crystalShopCostReduction'),
-        bonus: 1,
+        bonus: 0.01,
         effect: 'crystalShopCostReduction',
         cost: (lvl) => 12 + 3 * lvl,
         maxLevel: 50,
       },
       soulShopCostReduction: {
         label: t('ascension.upgrade.soulShopCostReduction'),
-        bonus: 1,
+        bonus: 0.01,
         effect: 'soulShopCostReduction',
         cost: (lvl) => 12 + 3 * lvl,
         maxLevel: 50,

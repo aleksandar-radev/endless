@@ -139,8 +139,9 @@ export default class Hero {
   gainCrystals(amount) {
     const bonuses = runes?.getBonusEffects?.() || {};
     const ascBonuses = ascension?.getBonuses?.() || {};
-    const gainPct = (bonuses.crystalGainPercent || 0) + (ascBonuses.crystalGainPercent || 0);
-    const finalAmount = Math.floor(amount * (1 + gainPct / 100));
+    const runeBonus = bonuses.crystalGainPercent || 0;
+    const ascensionBonus = ascBonuses.crystalGainPercent || 0;
+    const finalAmount = Math.floor(amount * (1 + runeBonus + ascensionBonus));
     statistics.increment('totalCrystalsEarned', null, finalAmount);
     this.crystals += finalAmount;
     if (game.activeTab === 'crystalShop') {

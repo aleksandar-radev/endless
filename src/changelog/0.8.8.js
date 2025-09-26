@@ -16,6 +16,7 @@ export default function run() {
       <li>Fixed input getting out of focus in skill tree.</li>
       <li>Corrected Battlecry skill description to mention only the damage boost.</li>
       <li>Battle log now respects the short number notation option.</li>
+      <li>Fixed ascension Crystal Gain % bonus not increasing crystal rewards from all sources.</li>
     </ul>
   `;
 }

@@ -149,7 +149,7 @@ export default class SoulShop {
     const runeReduction = bonus.soulShopCostReduction || 0;
     const ascRed = ascension?.getBonuses?.()?.soulShopCostReduction || 0;
     const reduction = runeReduction + ascRed;
-    return Math.round(base * (1 - reduction / 100));
+    return Math.round(base * (1 - reduction));
   }
 
   async initializeSoulShopUI() {
@@ -689,7 +689,7 @@ export default class SoulShop {
       let cost = config.baseCost;
       {
         const ascRed = ascension?.getBonuses?.()?.soulShopCostReduction || 0;
-        cost = Math.round(cost * (1 - ascRed / 100));
+        cost = Math.round(cost * (1 - ascRed));
       }
       if (hero.souls < cost) {
         showToast(t('common.notEnoughSouls') || 'Not enough souls!', 'error');
