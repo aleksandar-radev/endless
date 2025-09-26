@@ -18,6 +18,8 @@ export default function run() {
       <li>Raised rocky field common rune drop chance, reshaped conversion rolls to produce a broader spread with rare 100%+ highs, and reduced rune salvage crystal yields.</li>
       <li>Added a rune search filter that highlights matching slots and tabs and updated sorting to surface unique runes and the highest conversion rates first.</li>
       <li>Crystal shop stage options now apply to Rocky Field enemies just like Explore combat.</li>
+      <li>Elementalist's lightning strike cooldown increased to 3500ms and % damages reduced.</li>
+      <li>Slightly reduced hp on enemies and increase gold gains (on Explore).</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

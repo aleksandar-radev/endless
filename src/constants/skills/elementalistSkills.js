@@ -67,14 +67,14 @@ export const ELEMENTALIST_SKILLS = {
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 4 + level * 0.375,
-    cooldown: () => 3000,
+    cooldown: () => 3500,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'lightning',
     description: () => t('skill.lightningStrike'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => {
       const lightningDamage = scaleUpFlat(level, 5, 7);
-      const lightningDamagePercent = scaleDownFlat(level, 4);
+      const lightningDamagePercent = scaleDownFlat(level, 3);
       const airDamagePercent = scaleDownFlat(level, 2);
       return {
         lightningDamage: lightningDamage * 4,
