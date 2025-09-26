@@ -294,6 +294,7 @@ export default {
   'inventory.selectItemToUpgrade': 'Selecciona un objeto equipado para mejorar:',
   'inventory.upgradeInfo': 'Puedes mejorar objetos hasta el número de niveles disponible según la etapa más alta alcanzada en esta región.',
   'inventory.upgradeAction': 'Mejorar',
+  'inventory.upgradeAllToMax': 'Mejorar todo al máximo',
   'inventory.costValue': 'Costo: {cost}',
   'inventory.upgradedItemToast': 'Mejoraste {item} (Nvl {from} → {to})',
   'inventory.enchantAction': 'Encantar',

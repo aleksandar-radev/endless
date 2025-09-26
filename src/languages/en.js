@@ -302,6 +302,7 @@ export default {
   'inventory.selectItemToUpgrade': 'Select an equipped item to upgrade:',
   'inventory.upgradeInfo': 'You can upgrade items up to the number of levels available based on the highest stage reached in this region.',
   'inventory.upgradeAction': 'Upgrade',
+  'inventory.upgradeAllToMax': 'Upgrade All to Max',
   'inventory.costValue': 'Cost: {cost}',
   'inventory.upgradedItemToast': 'Upgraded {item} (Lvl {from} → {to})',
   'inventory.enchantAction': 'Enchant',

@@ -264,23 +264,26 @@ export default class Inventory {
         .filter(([slot, item]) => eligibleSlots.includes(slot) && item && eligibleTypes.includes(item.type))
         .map(([slot, item]) => ({ slot, item }));
 
+      const getMaxUpgradeForItem = (item) => {
+        const maxStage = statistics.highestStages[item.tier] || 0;
+        const maxLevelsByStage = Math.max(0, maxStage - item.level);
+        const maxLevelsByMats = Math.floor(mat.qty / item.tier);
+        return Math.min(maxLevelsByStage, maxLevelsByMats, INVENTORY_MAX_QTY);
+      };
+
       const dialog = this.showEquippedItemsModal({
         id: 'material-upgrade-dialog',
         matDef,
         mat,
         equipped,
         itemRowHtml: ({ slot, item }, idx) => {
-          const maxStage = statistics.highestStages[item.tier] || 0;
-          const maxLevels = Math.min(
-            Math.floor(mat.qty / item.tier),
-            Math.max(0, maxStage - item.level),
-          );
           return `
         <div class="upgrade-item-row" data-slot="${slot}" data-idx="${idx}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
           <span style="font-size:1.5em;">${item.getIcon()}</span>
           <span><b>${item.type}</b> (Lvl ${item.level})</span>
           <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
-          <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${Math.min(maxLevels, INVENTORY_MAX_QTY)}" value="1" aria-label="${t('inventory.upgradeQuantity')}" />
+          <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${getMaxUpgradeForItem(item)}" value="1" aria-label="${t('inventory.upgradeQuantity')}" />
+          <button class="upgrade-max-btn" data-slot="${slot}" data-idx="${idx}">${t('options.max')}</button>
           <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">${t('inventory.upgradeAction')}</button>
           <span class="upgrade-cost" data-idx="${idx}"></span>
         </div>`;
@@ -294,10 +297,7 @@ export default class Inventory {
           if (isNaN(useQty) || useQty < 1) useQty = 1;
           if (useQty > INVENTORY_MAX_QTY) useQty = INVENTORY_MAX_QTY;
           // Limit useQty to not exceed highest stage reached or available materials
-          const maxStage = statistics.highestStages[item.tier] || 0;
-          const maxLevelsByStage = Math.max(0, maxStage - item.level);
-          const maxLevelsByMats = Math.floor(mat.qty / item.tier);
-          const maxUpgrade = Math.min(maxLevelsByStage, maxLevelsByMats);
+          const maxUpgrade = getMaxUpgradeForItem(item);
           if (useQty > maxUpgrade) useQty = maxUpgrade;
           if (useQty < 1) {
             showToast(t('inventory.notEnoughMaterialsOrMaxStage'), 'error');
@@ -340,10 +340,7 @@ export default class Inventory {
             val = INVENTORY_MAX_QTY;
             input.value = val;
           }
-          const maxStage = statistics.highestStages[item.tier] || 0;
-          const maxLevelsByStage = Math.max(0, maxStage - item.level);
-          const maxLevelsByMats = Math.floor(mat.qty / item.tier);
-          const maxUpgrade = Math.min(maxLevelsByStage, maxLevelsByMats);
+          const maxUpgrade = getMaxUpgradeForItem(item);
           if (val > maxUpgrade) {
             val = maxUpgrade;
             input.value = val;
@@ -352,7 +349,62 @@ export default class Inventory {
         };
         updateCost();
         input.addEventListener('input', updateCost);
+        const maxBtn = dialog.querySelector(`.upgrade-max-btn[data-idx='${idx}']`);
+        if (maxBtn) {
+          maxBtn.addEventListener('click', () => {
+            const maxUpgrade = getMaxUpgradeForItem(item);
+            const targetValue = Math.max(0, Math.min(maxUpgrade, INVENTORY_MAX_QTY));
+            input.value = targetValue;
+            updateCost();
+          });
+        }
       });
+
+      const controls = dialog.querySelector('.modal-controls');
+      if (controls) {
+        const upgradeAllBtn = document.createElement('button');
+        upgradeAllBtn.id = 'material-upgrade-all';
+        upgradeAllBtn.textContent = t('inventory.upgradeAllToMax');
+        controls.appendChild(upgradeAllBtn);
+        upgradeAllBtn.onclick = () => {
+          let upgradedAny = false;
+          for (const { item } of equipped) {
+            const maxUpgrade = getMaxUpgradeForItem(item);
+            if (maxUpgrade > 0 && mat.qty >= item.tier) {
+              const oldLevel = item.level;
+              item.applyLevelToStats(oldLevel + maxUpgrade);
+              const matsUsed = maxUpgrade * item.tier;
+              const toastMsg = tp('inventory.upgradedItemToast', {
+                item: item.type,
+                from: oldLevel,
+                to: item.level,
+              });
+              this.handleMaterialUsed(
+                this,
+                mat,
+                matDef,
+                matsUsed,
+                'material-upgrade-dialog',
+                toastMsg,
+                false,
+              );
+              upgradedAny = true;
+              if (mat.qty <= 0) break;
+            }
+          }
+
+          if (!upgradedAny) {
+            showToast(t('inventory.notEnoughMaterialsOrMaxStage'), 'error');
+            return;
+          }
+
+          if (mat.qty > 0) {
+            this.openMaterialDialog(mat);
+          } else {
+            closeModal('material-upgrade-dialog');
+          }
+        };
+      }
       return;
     }
 

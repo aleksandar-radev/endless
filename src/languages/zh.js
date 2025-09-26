@@ -302,6 +302,7 @@ export default {
   'inventory.selectItemToUpgrade': '选择一个已装备的物品进行升级：',
   'inventory.upgradeInfo': '你可以根据在该区域达到的最高关卡来升级对应的等级次数。',
   'inventory.upgradeAction': '升级',
+  'inventory.upgradeAllToMax': '全部升至最高',
   'inventory.costValue': '花费：{cost}',
   'inventory.upgradedItemToast': '已将 {item} 升级（等级 {from} → {to}）',
   'inventory.enchantAction': '附魔',

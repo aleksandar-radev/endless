@@ -6,6 +6,7 @@ export default function run() {
 
     <span style="color:#FF8A00;">Improvements</span>
     <ul>
+      <li>Added upgrade-all and max controls to equipment material upgrade dialogs.</li>
       <li>Add different colors for damages based on highest.</li>
       <li>Limit passive life and mana regeneration updates to 5 times per second and hide their battle log entries.</li>
     </ul>
