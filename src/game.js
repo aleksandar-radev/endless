@@ -34,6 +34,8 @@ class Game {
     this.soulShopResurrectCount = 0; // Track number of resurrections from SoulShop
     this.lastPlayerAttack = Date.now();
     this.lastRegen = Date.now();
+    this.regenIntervalMs = 200;
+    this.regenTicksPerSecond = 1000 / this.regenIntervalMs;
     // guard to prevent multiple kills in same tick
     this._justDefeated = false;
   }
@@ -131,7 +133,7 @@ class Game {
     }
   }
 
-  restoreMana(mana) {
+  restoreMana(mana, { log = true } = {}) {
     hero.stats.currentMana += mana;
     if (hero.stats.currentMana > hero.stats.mana) {
       hero.stats.currentMana = hero.stats.mana;
@@ -142,7 +144,7 @@ class Game {
     updatePlayerLife();
     skillTree.updateToggleStates();
 
-    if (mana >= 1) {
+    if (log && mana >= 1) {
       battleLog.addBattle(tp('battleLog.restoredMana', { value: Math.floor(mana) }));
     }
   }
@@ -228,9 +230,9 @@ class Game {
   gameLoop() {
     const currentTime = Date.now();
 
-    // Regenerate life and mana every 100 ms, even outside combat
-    if (currentTime - this.lastRegen >= 100) {
-      hero.regenerate();
+    // Regenerate life and mana every 200 ms, even outside combat
+    if (currentTime - this.lastRegen >= this.regenIntervalMs) {
+      hero.regenerate(this.regenTicksPerSecond);
       this.lastRegen = currentTime;
     }
 

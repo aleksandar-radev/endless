@@ -679,10 +679,13 @@ export default class Hero {
     }
   }
 
-  regenerate() {
-    this.stats.currentLife = Math.min(this.stats.life, this.stats.currentLife + this.stats.lifeRegen / 10);
+  regenerate(ticksPerSecond = 10) {
+    const normalizedTicks = ticksPerSecond > 0 ? ticksPerSecond : 1;
+    const lifePerTick = this.stats.lifeRegen / normalizedTicks;
+    this.stats.currentLife = Math.min(this.stats.life, this.stats.currentLife + lifePerTick);
     if (this.stats.currentLife < 0) this.stats.currentLife = 0;
-    game.restoreMana(this.stats.manaRegen / 10);
+    const manaPerTick = this.stats.manaRegen / normalizedTicks;
+    game.restoreMana(manaPerTick, { log: false });
   }
 
   // calculated when hit is successful
