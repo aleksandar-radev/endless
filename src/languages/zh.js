@@ -992,6 +992,8 @@ export default {
   'prestige.lock': '锁定',
   'prestige.notEnoughCrystalsLock': '水晶不足，无法锁定。',
   'prestige.notEnoughCrystalsReroll': '水晶不足，无法重掷。',
+  'prestige.rerollValues': '重掷数值',
+  'prestige.notEnoughCrystalsValueReroll': '水晶不足，无法重掷数值。',
   'prestige.historyTitle': '声望历史',
   'prestige.noPrestiges': '尚无声望记录。',
   'prestige.entryTitle': '第 {number} 次声望',

@@ -994,6 +994,8 @@ export default {
   'prestige.lock': 'Lock',
   'prestige.notEnoughCrystalsLock': 'Not enough crystals to lock.',
   'prestige.notEnoughCrystalsReroll': 'Not enough crystals to reroll.',
+  'prestige.rerollValues': 'Reroll Values',
+  'prestige.notEnoughCrystalsValueReroll': 'Not enough crystals to reroll values.',
   'prestige.historyTitle': 'Prestige History',
   'prestige.noPrestiges': 'No prestiges yet.',
   'prestige.entryTitle': 'Prestige #{number}',

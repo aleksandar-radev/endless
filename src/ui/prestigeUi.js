@@ -138,12 +138,17 @@ function openPrestigeModal() {
         const lockLabel = c.locked
           ? `<img src="${BASE}/icons/lock.svg" class="icon" alt="${t('prestige.lock')}"/>`
           : `${t('prestige.lock')} (20<img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('resource.crystal.name')}"/>)`;
+        const rerollCost = formatNumber(prestige.getCardValueRerollCost(c));
+        const rerollLabel = `${t('prestige.rerollValues')} (${rerollCost}<img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('resource.crystal.name')}"/>)`;
         return html`
           <div class="prestige-card-wrapper" data-idx="${i}">
             <div class="prestige-card ${c.locked ? 'locked' : ''} ${selectedIdx === i ? 'selected' : ''}">
               <ul>${c.descriptions.map((d) => `<li>${d}</li>`).join('')}</ul>
             </div>
-            <button class="prestige-lock-btn">${lockLabel}</button>
+            <div class="prestige-card-actions">
+              <button class="prestige-lock-btn">${lockLabel}</button>
+              <button class="prestige-reroll-values-btn">${rerollLabel}</button>
+            </div>
           </div>
         `;
       })
@@ -160,9 +165,10 @@ function openPrestigeModal() {
     cardsContainer.querySelectorAll('.prestige-lock-btn').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const idx = parseInt(btn.parentElement.dataset.idx, 10);
+        const wrapper = btn.closest('.prestige-card-wrapper');
+        const idx = parseInt(wrapper.dataset.idx, 10);
         const card = cards[idx];
-        const cardEl = btn.parentElement.querySelector('.prestige-card');
+        const cardEl = wrapper.querySelector('.prestige-card');
         if (card.locked) {
           card.locked = false;
           btn.innerHTML = `${t('prestige.lock')} (20<img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('resource.crystal.name')}"/>)`;
@@ -179,6 +185,24 @@ function openPrestigeModal() {
           btn.innerHTML = `<img src="${BASE}/icons/lock.svg" class="icon" alt="${t('prestige.lock')}"/>`;
           cardEl.classList.add('locked');
         }
+      });
+    });
+    cardsContainer.querySelectorAll('.prestige-reroll-values-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const wrapper = btn.closest('.prestige-card-wrapper');
+        const idx = parseInt(wrapper.dataset.idx, 10);
+        const card = cards[idx];
+        const cost = prestige.getCardValueRerollCost(card);
+        if (hero.crystals < cost) {
+          showToast(t('prestige.notEnoughCrystalsValueReroll'));
+          return;
+        }
+        hero.crystals -= cost;
+        updateResources();
+        updateModalCrystals();
+        cards = prestige.rerollCardValues(idx) || cards;
+        renderCards();
       });
     });
   };

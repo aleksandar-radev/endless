@@ -302,7 +302,28 @@
   padding: 0.25rem 0.5rem;
   cursor: pointer;
   font-size: 0.9rem;
+}
+
+.prestige-card-actions {
+  display: flex;
+  gap: 0.5rem;
   margin-top: 0.25rem;
+}
+
+.prestige-card-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.prestige-reroll-values-btn {
+  background: #e7e6aa;
+  border: 1px solid var(--accent, #4e8cff);
+  color: var(--accent, #4e8cff);
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
 }
 
 .prestige-card::after {

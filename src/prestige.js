@@ -19,6 +19,8 @@ const BASE = import.meta.env.VITE_BASE_PATH;
 
 const LEVEL_REQUIREMENT = 100;
 const LEVEL_REQUIREMENT_INCREASE = 25;
+const CARD_VALUE_REROLL_BASE_COST = 100;
+const CARD_VALUE_REROLL_INCREMENT = 50;
 
 // Compute scaling factor based on highest boss level:
 // - 5% bonus for the first 20 levels (interval 1)
@@ -73,7 +75,7 @@ export default class Prestige {
     const startingCrystals = Math.floor(startingCrystalsBase * scalingFactor);
     const shuffled = [...PRESTIGE_BONUSES].sort(() => 0.5 - Math.random());
     const picked = shuffled.slice(0, bonusesPerCard);
-    const card = { bonuses: {}, baseBonuses: {}, descriptions: [], locked: false };
+    const card = { bonuses: {}, baseBonuses: {}, descriptions: [], locked: false, valueRerolls: 0 };
     picked.forEach((b) => {
       const baseValue = +(Math.random() * (b.max - b.min) + b.min).toFixed(4);
       const value = +(baseValue * scalingFactor).toFixed(4);
@@ -109,6 +111,107 @@ export default class Prestige {
       : `${startMinScaled} - ${startMaxScaled}`;
     card.descriptions.push(`<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`);
     return card;
+  }
+
+  _refreshCardFromBase(card, scalingFactor) {
+    if (!card) return card;
+    if (typeof card.valueRerolls !== 'number') {
+      card.valueRerolls = 0;
+    }
+    if (!card.baseBonuses) {
+      card.baseBonuses = { ...card.bonuses };
+    }
+    card.bonuses = {};
+    card.descriptions = [];
+
+    Object.entries(card.baseBonuses).forEach(([stat, baseValue]) => {
+      let scaledValue;
+      if (stat === STARTING_CRYSTALS_BONUS.stat) {
+        scaledValue = Math.floor(baseValue * scalingFactor);
+      } else {
+        scaledValue = +(baseValue * scalingFactor).toFixed(4);
+      }
+      card.bonuses[stat] = scaledValue;
+
+      let refMin = null;
+      let refMax = null;
+      if (stat === STARTING_CRYSTALS_BONUS.stat) {
+        refMin = Math.floor(STARTING_CRYSTALS_BONUS.min * scalingFactor);
+        refMax = Math.floor(STARTING_CRYSTALS_BONUS.max * scalingFactor);
+      } else {
+        const def = PRESTIGE_BONUSES.find((p) => p.stat === stat);
+        if (def) {
+          refMin = +(def.min * scalingFactor).toFixed(4);
+          refMax = +(def.max * scalingFactor).toFixed(4);
+        }
+      }
+
+      let desc;
+      if (stat.endsWith('Percent')) {
+        const scaledPct = (scaledValue * 100).toFixed(1);
+        if (refMin != null && refMax != null) {
+          const main = `${formatStatName(stat)}: +${scaledPct}%`;
+          const right = options?.showRollPercentiles
+            ? `${Math.round((refMax > refMin) ? ((scaledValue - refMin) / (refMax - refMin)) * 100 : 100)}%`
+            : `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
+          desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+        } else {
+          desc = `${formatStatName(stat)}: +${scaledPct}%`;
+        }
+      } else {
+        if (refMin != null && refMax != null) {
+          const main = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
+          const right = options?.showRollPercentiles
+            ? `${Math.round((refMax > refMin) ? ((scaledValue - refMin) / (refMax - refMin)) * 100 : 100)}%`
+            : `${Math.round(refMin)} - ${Math.round(refMax)}`;
+          desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+        } else {
+          desc = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
+        }
+      }
+      card.descriptions.push(desc);
+    });
+
+    return card;
+  }
+
+  getCardValueRerollCost(card) {
+    const rerolls = card?.valueRerolls || 0;
+    return CARD_VALUE_REROLL_BASE_COST + (rerolls * CARD_VALUE_REROLL_INCREMENT);
+  }
+
+  rerollCardValues(index) {
+    if (!this.pendingCards || !this.pendingCards[index]) {
+      return this.pendingCards;
+    }
+
+    const highestBossLevel = statistics?.highestBossLevel || 0;
+    const scalingFactor = getBossScalingFactor(highestBossLevel);
+    const card = this.pendingCards[index];
+
+    if (!card.baseBonuses) {
+      card.baseBonuses = { ...card.bonuses };
+    }
+
+    Object.keys(card.baseBonuses).forEach((stat) => {
+      if (stat === STARTING_CRYSTALS_BONUS.stat) {
+        const baseValue = Math.floor(
+          Math.random() * (STARTING_CRYSTALS_BONUS.max - STARTING_CRYSTALS_BONUS.min + 1),
+        ) + STARTING_CRYSTALS_BONUS.min;
+        card.baseBonuses[stat] = baseValue;
+      } else {
+        const def = PRESTIGE_BONUSES.find((p) => p.stat === stat);
+        if (!def) {
+          return;
+        }
+        const baseValue = +(Math.random() * (def.max - def.min) + def.min).toFixed(4);
+        card.baseBonuses[stat] = baseValue;
+      }
+    });
+
+    card.valueRerolls = (card.valueRerolls || 0) + 1;
+    this._refreshCardFromBase(card, scalingFactor);
+    return this.pendingCards;
   }
 
   getCurrentLevelRequirement() {
@@ -153,62 +256,7 @@ export default class Prestige {
       this.pendingCards.length === count
     ) {
       this.pendingCards.forEach((card) => {
-        // Initialize baseBonuses if missing (cards generated before scaling existed)
-        if (!card.baseBonuses) {
-          card.baseBonuses = { ...card.bonuses };
-        }
-
-        card.bonuses = {};
-        card.descriptions = [];
-        Object.entries(card.baseBonuses).forEach(([stat, baseValue]) => {
-          let scaledValue;
-          if (stat === STARTING_CRYSTALS_BONUS.stat) {
-            scaledValue = Math.floor(baseValue * scalingFactor);
-          } else {
-            scaledValue = +(baseValue * scalingFactor).toFixed(4);
-          }
-          card.bonuses[stat] = scaledValue;
-
-          // Compute scaled reference min/max for this stat so the player can
-          // see whether the current roll is a highroll or lowroll.
-          let refMin = null;
-          let refMax = null;
-          if (stat === STARTING_CRYSTALS_BONUS.stat) {
-            refMin = Math.floor(STARTING_CRYSTALS_BONUS.min * scalingFactor);
-            refMax = Math.floor(STARTING_CRYSTALS_BONUS.max * scalingFactor);
-          } else {
-            const def = PRESTIGE_BONUSES.find((p) => p.stat === stat);
-            if (def) {
-              refMin = +(def.min * scalingFactor).toFixed(4);
-              refMax = +(def.max * scalingFactor).toFixed(4);
-            }
-          }
-
-          let desc;
-          if (stat.endsWith('Percent')) {
-            const scaledPct = (scaledValue * 100).toFixed(1);
-            if (refMin != null && refMax != null) {
-              const main = `${formatStatName(stat)}: +${scaledPct}%`;
-              const right = options?.showRollPercentiles
-                ? `${Math.round((refMax > refMin) ? ((scaledValue - refMin) / (refMax - refMin)) * 100 : 100)}%`
-                : `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
-              desc = `<span class="prestige-main"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
-            } else {
-              desc = `${formatStatName(stat)}: +${scaledPct}%`;
-            }
-          } else {
-            if (refMin != null && refMax != null) {
-              const main = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
-              const right = options?.showRollPercentiles
-                ? `${Math.round((refMax > refMin) ? ((scaledValue - refMin) / (refMax - refMin)) * 100 : 100)}%`
-                : `${Math.round(refMin)} - ${Math.round(refMax)}`;
-              desc = `<span class="prestige-main"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
-            } else {
-              desc = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
-            }
-          }
-          card.descriptions.push(desc);
-        });
+        this._refreshCardFromBase(card, scalingFactor);
       });
       return this.pendingCards;
     }
@@ -222,7 +270,7 @@ export default class Prestige {
       const startingCrystals = Math.floor(startingCrystalsBase * scalingFactor);
       const shuffled = [...PRESTIGE_BONUSES].sort(() => 0.5 - Math.random());
       const picked = shuffled.slice(0, bonusesPerCard);
-      const card = { bonuses: {}, baseBonuses: {}, descriptions: [] };
+      const card = { bonuses: {}, baseBonuses: {}, descriptions: [], valueRerolls: 0 };
       picked.forEach((b) => {
         // Pick a random value between min and max (inclusive)
         const baseValue = +(Math.random() * (b.max - b.min) + b.min).toFixed(4);
@@ -273,57 +321,7 @@ export default class Prestige {
     for (let i = 0; i < count; i++) {
       const card = current[i];
       if (card && card.locked) {
-        if (!card.baseBonuses) {
-          card.baseBonuses = { ...card.bonuses };
-        }
-        card.bonuses = {};
-        card.descriptions = [];
-        Object.entries(card.baseBonuses).forEach(([stat, baseValue]) => {
-          let scaledValue;
-          if (stat === STARTING_CRYSTALS_BONUS.stat) {
-            scaledValue = Math.floor(baseValue * scalingFactor);
-          } else {
-            scaledValue = +(baseValue * scalingFactor).toFixed(4);
-          }
-          card.bonuses[stat] = scaledValue;
-          let refMin = null;
-          let refMax = null;
-          if (stat === STARTING_CRYSTALS_BONUS.stat) {
-            refMin = Math.floor(STARTING_CRYSTALS_BONUS.min * scalingFactor);
-            refMax = Math.floor(STARTING_CRYSTALS_BONUS.max * scalingFactor);
-          } else {
-            const def = PRESTIGE_BONUSES.find((p) => p.stat === stat);
-            if (def) {
-              refMin = +(def.min * scalingFactor).toFixed(4);
-              refMax = +(def.max * scalingFactor).toFixed(4);
-            }
-          }
-          let desc;
-          if (stat.endsWith('Percent')) {
-            const scaledPct = (scaledValue * 100).toFixed(1);
-            if (refMin != null && refMax != null) {
-              const main = `${formatStatName(stat)}: +${scaledPct}%`;
-              const right = options?.showRollPercentiles
-                ? `${Math.round((refMax > refMin) ? ((scaledValue - refMin) / (refMax - refMin)) * 100 : 100)}%`
-                : `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
-              desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
-            } else {
-              desc = `${formatStatName(stat)}: +${scaledPct}%`;
-            }
-          } else {
-            if (refMin != null && refMax != null) {
-              const main = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
-              const right = options?.showRollPercentiles
-                ? `${Math.round((refMax > refMin) ? ((scaledValue - refMin) / (refMax - refMin)) * 100 : 100)}%`
-                : `${Math.round(refMin)} - ${Math.round(refMax)}`;
-              desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
-            } else {
-              desc = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
-            }
-          }
-          card.descriptions.push(desc);
-        });
-        cards[i] = card;
+        cards[i] = this._refreshCardFromBase(card, scalingFactor);
       } else {
         cards[i] = this._createCard(bonusesPerCard, scalingFactor);
       }

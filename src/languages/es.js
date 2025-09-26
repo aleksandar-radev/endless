@@ -995,6 +995,8 @@ export default {
   'prestige.lock': 'Bloquear',
   'prestige.notEnoughCrystalsLock': 'No hay suficientes cristales para bloquear.',
   'prestige.notEnoughCrystalsReroll': 'No hay suficientes cristales para volver a tirar.',
+  'prestige.rerollValues': 'Volver a tirar valores',
+  'prestige.notEnoughCrystalsValueReroll': 'No hay suficientes cristales para volver a tirar los valores.',
   'prestige.historyTitle': 'Historial de Prestigio',
   'prestige.noPrestiges': 'Aún no hay prestigios.',
   'prestige.entryTitle': 'Prestigio #{number}',
