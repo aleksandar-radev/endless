@@ -14,9 +14,9 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.shadowDance'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: scaleDownFlat(level, 0.75, 20, 400),
+      damagePercent: scaleDownFlat(level, 1, 20, 400, 0.5),
       critChance: Math.min(scaleDownFlat(level, 0.07), 20),
-      agility: scaleUpFlat(level, 3),
+      agility: scaleUpFlat(level, 4),
     }),
   },
   evasion: {
@@ -35,13 +35,27 @@ export const ROGUE_SKILLS = {
   },
 
   // Tier 1 Skills
+  poisonAffinity: {
+    id: 'poisonAffinity',
+    name: () => t('Poison Affinity'),
+    type: () => 'passive',
+    manaCost: (level) => 1 + level * 0.125,
+    requiredLevel: () => SKILL_LEVEL_TIERS[0],
+    icon: () => 'poison-affinity',
+    description: () => t('skill.poisonAffinity'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      earthDamage: scaleUpFlat(level, 2, 6, 0.2),
+      earthDamagePercent: scaleDownFlat(level, 1.5),
+    }),
+  },
   poisonDagger: {
     id: 'poisonDagger',
     name: () => t('Poison Dagger'),
     type: () => 'toggle',
-    manaCost: (level) => 2 + level * 0.125,
+    manaCost: (level) => 1 + level * 0.125,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
-    icon: () => 'poison',
+    icon: () => 'poison-dagger',
     description: () => t('skill.poisonDagger'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
