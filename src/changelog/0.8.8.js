@@ -12,6 +12,7 @@ export default function run() {
       <li>Limit passive life and mana regeneration updates to 5 times per second and hide their battle log entries.</li>
       <li>Add % bonuses after the flat values on simple stats view (when show all stats option is disabled).</li>
       <li>Renamed Soul Shop upgrades to match their bonuses and doubled the Total Damage % upgrade cost while increasing its value to 1% per level.</li>
+      <li>Display life and mana steal or per-hit gains above the hero as floating combat text.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

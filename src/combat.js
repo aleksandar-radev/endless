@@ -146,16 +146,31 @@ export function playerAttack(currentTime) {
         const lifeStealAmount = damage * (hero.stats.lifeSteal || 0) / 100;
         const manaStealAmount = damage * (hero.stats.manaSteal || 0) / 100;
         const omniStealAmount = damage * (hero.stats.omniSteal || 0) / 100;
-        game.healPlayer(lifeStealAmount + lifePerHit + omniStealAmount);
+        const totalLifeChange = lifeStealAmount + lifePerHit + omniStealAmount;
+        const lifeDisplayAmount = Math.floor(Math.abs(totalLifeChange));
+        if (lifeDisplayAmount >= 1) {
+          const lifeColor = totalLifeChange >= 0 ? '#4CAF50' : '#FF5252';
+          const lifeSign = totalLifeChange >= 0 ? '+' : '-';
+          createDamageNumber({ text: `${lifeSign}${lifeDisplayAmount}`, isPlayer: true, color: lifeColor });
+        }
+        game.healPlayer(totalLifeChange);
 
         const manaRestore = (manaPerHit > 0 ? manaPerHit : 0) + manaStealAmount + omniStealAmount;
-        if (manaRestore > 0) {
+        const manaDisplayAmount = Math.floor(Math.abs(manaRestore));
+        if (manaRestore > 0 && manaDisplayAmount >= 1) {
+          createDamageNumber({ text: `+${manaDisplayAmount}`, isPlayer: true, color: '#1E90FF' });
+        }
+        if (manaRestore !== 0) {
           game.restoreMana(manaRestore);
         }
 
         game.damageEnemy(damage, isCritical, breakdown);
       }
       if (manaPerHit < 0) {
+        const manaCostDisplay = Math.floor(Math.abs(manaPerHit));
+        if (manaCostDisplay >= 1) {
+          createDamageNumber({ text: `-${manaCostDisplay}`, isPlayer: true, color: '#1E90FF' });
+        }
         game.restoreMana(manaPerHit);
       }
       if (game.fightMode === 'arena') {
