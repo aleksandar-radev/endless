@@ -10,6 +10,7 @@ export default function run() {
       <li>Added a prestige card reroll option to randomize bonus values on a chosen card with an increasing crystal cost.</li>
       <li>Add different colors for damages based on highest.</li>
       <li>Limit passive life and mana regeneration updates to 5 times per second and hide their battle log entries.</li>
+      <li>Add % bonuses after the flat values on simple stats view (when show all stats option is disabled).</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

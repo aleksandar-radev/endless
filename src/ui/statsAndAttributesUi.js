@@ -13,6 +13,7 @@ import { updateInventoryGrid } from './inventoryUi.js';
 import { renderRunesUI } from './runesUi.js';
 import { updateAscensionUI } from './ascensionUi.js';
 import { updateSkillTreeValues } from './skillTreeUi.js';
+import { ELEMENTS } from '../constants/common.js';
 
 const html = String.raw;
 
@@ -36,6 +37,41 @@ const SUBCATEGORIES = {
   defense: ['defense', 'elemental', 'misc'],
   misc: ['resources', 'rewards', 'misc'],
 };
+
+const ELEMENT_IDS = Object.keys(ELEMENTS);
+
+const DAMAGE_PERCENT_SOURCES = {
+  damage: ['totalDamagePercent', 'damagePercent'],
+  elementalDamage: ['totalDamagePercent', 'elementalDamagePercent'],
+};
+
+ELEMENT_IDS.forEach((id) => {
+  DAMAGE_PERCENT_SOURCES[`${id}Damage`] = [
+    'totalDamagePercent',
+    'elementalDamagePercent',
+    `${id}DamagePercent`,
+  ];
+});
+
+function appendDamagePercentBonus(el, key) {
+  const percentKeys = DAMAGE_PERCENT_SOURCES[key];
+  if (!percentKeys || !el) return;
+
+  const totalPercent = percentKeys.reduce(
+    (sum, statKey) => sum + (hero.stats?.[statKey] || 0),
+    0,
+  );
+
+  if (!Number.isFinite(totalPercent)) return;
+
+  const normalized = Math.abs(totalPercent) < 1e-6 ? 0 : totalPercent;
+  const decimals = percentKeys.reduce(
+    (max, statKey) => Math.max(max, STATS[statKey]?.decimalPlaces ?? 1),
+    1,
+  );
+  const formattedPercent = (normalized * 100).toFixed(decimals);
+  el.textContent = `${el.textContent} (${formattedPercent}%)`;
+}
 
 function formatPeriod(seconds) {
   if (seconds % 3600 === 0) return `${seconds / 3600}h`;
@@ -325,6 +361,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
             val = formatNumber(val);
           }
           span.textContent = val;
+          appendDamagePercentBonus(span, key);
           row.appendChild(lbl);
           row.appendChild(document.createTextNode(' '));
           row.appendChild(span);
@@ -373,6 +410,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
             val = formatNumber(val);
           }
           span.textContent = val;
+          appendDamagePercentBonus(span, key);
           row.appendChild(lbl);
           row.appendChild(document.createTextNode(' '));
           row.appendChild(span);
@@ -444,6 +482,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
             el.textContent += '%';
           }
         }
+        appendDamagePercentBonus(el, key);
       }
     });
 
