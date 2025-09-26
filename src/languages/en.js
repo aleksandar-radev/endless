@@ -735,6 +735,8 @@ export default {
   'skill.championOfFaith': 'Greatly increases damage and fire damage.',
   'skill.shadowDance': 'A quick dance from the shadows, boosting damage, crit chance, and agility.',
   'skill.evasion': 'Raises dexterity and adds damage based on evasion.',
+  'Poison Affinity': 'Poison Affinity',
+  'skill.poisonAffinity': 'Deepens your bond with toxins, increasing earth damage and earth damage percent.',
   'skill.poisonDagger': 'Adds damage and attack speed to attacks.',
   'skill.shadowForm': 'Increases crit chance, crit damage, and agility. (Crit chance capped at 20%, crit damage capped at 3)',
   'skill.flurry': 'Unleash a series of rapid attacks, dealing bonus damage.',

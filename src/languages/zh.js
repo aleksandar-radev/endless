@@ -736,6 +736,8 @@ export default {
   'skill.championOfFaith': '大幅提升伤害和火焰伤害。',
   'skill.shadowDance': '于暗影中迅捷舞动，提升伤害、暴击几率和敏捷。',
   'skill.evasion': '提高灵巧，并根据闪避增加伤害。',
+  'Poison Affinity': '剧毒亲和',
+  'skill.poisonAffinity': '强化对剧毒的掌控，提升土系伤害与土系伤害百分比。',
   'skill.poisonDagger': '攻击附加伤害和攻速。',
   'skill.shadowForm': '提升暴击几率、暴击伤害和敏捷。（暴击几率上限20%，暴击伤害上限3）',
   'skill.flurry': '发动一连串快速攻击，造成额外伤害。',

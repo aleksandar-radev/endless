@@ -727,6 +727,8 @@ export default {
   'skill.championOfFaith': 'Aumenta enormemente daño y fuego.',
   'skill.shadowDance': 'Un rápido baile desde las sombras que aumenta daño, crítico y agilidad.',
   'skill.evasion': 'Aumenta la destreza y añade daño desde la evasión.',
+  'Poison Affinity': 'Afinidad con el veneno',
+  'skill.poisonAffinity': 'Profundiza tu afinidad con el veneno, aumentando el daño de tierra y su porcentaje.',
   'skill.poisonDagger': 'Añade daño y velocidad de ataque a los ataques.',
   'skill.shadowForm': 'Aumenta probabilidad de crítico, daño crítico y agilidad. (cap de crítico 20%, daño crítico x3).',
   'skill.flurry': 'Desata una serie de ataques rápidos con daño extra.',
