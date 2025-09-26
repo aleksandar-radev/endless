@@ -1,6 +1,7 @@
 import Enemy from '../enemy.js';
 import { ROCKY_FIELD_REGIONS, RockyFieldEnemy, getRockyFieldEnemies } from '../rockyField.js';
 import { formatNamedType, formatStatName as formatStatNameBase } from '../format.js';
+import { formatNumber as formatNumberInternal } from '../utils/numberFormatter.js';
 import {
   game,
   hero,
@@ -46,24 +47,7 @@ let offlineEligibilityStart = null;
 // using suffixes (e.g., 1.2M for 1,200,000). Otherwise, a thousands
 // separator (default comma) is applied to the integer part.
 export function formatNumber(value, separator = ',') {
-  if (value === null || value === undefined) return value;
-
-  const num = Number(value);
-  if (options?.shortNumbers && !Number.isNaN(num)) {
-    const abs = Math.abs(num);
-    if (abs >= 1000) {
-      const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc'];
-      const tier = Math.floor(Math.log10(abs) / 3);
-      const suffix = suffixes[tier] || `e${tier * 3}`;
-      const scaled = num / Math.pow(10, tier * 3);
-      const digits = scaled >= 100 ? 0 : scaled >= 10 ? 1 : 2;
-      return `${parseFloat(scaled.toFixed(digits))}${suffix}`;
-    }
-  }
-
-  const parts = value.toString().split('.');
-  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, separator);
-  return parts.join('.');
+  return formatNumberInternal(value, options?.shortNumbers, separator);
 }
 
 export function initializeUI() {

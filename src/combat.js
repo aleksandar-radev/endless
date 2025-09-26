@@ -60,7 +60,7 @@ export function enemyAttack(currentTime) {
         battleLog.addBattle(t('battleLog.blockedAttack'));
         if (healAmount > 0) {
           createDamageNumber({ text: `+${Math.floor(healAmount)}`, isPlayer: true, color: '#4CAF50' });
-          battleLog.addBattle(tp('battleLog.healedLife', { value: Math.floor(healAmount) }));
+          battleLog.addBattle(tp('battleLog.healedLife', { value: formatNumber(Math.floor(healAmount)) }));
         }
       } else {
         // Use PoE2 armor formula for physical damage reduction
@@ -338,7 +338,7 @@ export async function defeatEnemy() {
       }
       inventory.addMaterial({ id: mat.id, qty });
       statistics.increment('totalMaterialsDropped', null, qty);
-      battleLog.addDrop(tp('battleLog.droppedMaterial', { name: mat.name, qty }));
+      battleLog.addDrop(tp('battleLog.droppedMaterial', { name: mat.name, qty: formatNumber(qty) }));
       showMaterialNotification(mat);
 
       // Calculate extra drops in a single calculation instead of performing many RNG loops.
@@ -381,7 +381,7 @@ export async function defeatEnemy() {
         for (const { mat: aMat, qty: totalQty } of aggregate.values()) {
           inventory.addMaterial({ id: aMat.id, qty: totalQty });
           statistics.increment('totalMaterialsDropped', null, totalQty);
-          battleLog.addDrop(tp('battleLog.droppedMaterial', { name: aMat.name, qty: totalQty }));
+          battleLog.addDrop(tp('battleLog.droppedMaterial', { name: aMat.name, qty: formatNumber(totalQty) }));
         }
       }
     }

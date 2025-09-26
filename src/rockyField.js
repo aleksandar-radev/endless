@@ -9,7 +9,8 @@ import { battleLog } from './battleLog.js';
 import { t, tp } from './i18n.js';
 import { ELEMENTS } from './constants/common.js';
 import { MAX_CONVERSION_PERCENT, MIN_CONVERSION_PERCENT } from './constants/runes.js';
-import { hero } from './globals.js';
+import { hero, options } from './globals.js';
+import { formatNumber as formatNumberValue } from './utils/numberFormatter.js';
 
 export const ROCKY_FIELD_REGIONS = [
   {
@@ -235,7 +236,13 @@ export class RockyFieldEnemy {
     this.lastAttack = Date.now();
 
     const rarityName = t('rarity.normal');
-    battleLog.addBattle(tp('battleLog.encounteredEnemy', { rarity: rarityName, level: this.level, name: t(this.name) }));
+    battleLog.addBattle(
+      tp('battleLog.encounteredEnemy', {
+        rarity: rarityName,
+        level: formatNumberValue(this.level, options?.shortNumbers),
+        name: t(this.name),
+      }),
+    );
   }
 
   // Helper methods for stat calculations

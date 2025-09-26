@@ -1,4 +1,11 @@
-import { updatePlayerLife, updateEnemyStats, updateStageUI, updateResources, updateBuffIndicators } from './ui/ui.js';
+import {
+  updatePlayerLife,
+  updateEnemyStats,
+  updateStageUI,
+  updateResources,
+  updateBuffIndicators,
+  formatNumber,
+} from './ui/ui.js';
 import { playerAttack, enemyAttack, playerDeath, defeatEnemy, createDamageNumber } from './combat.js';
 import { game, hero, crystalShop, skillTree, statistics, dataManager, setGlobals, options } from './globals.js';
 import Enemy from './enemy.js';
@@ -13,7 +20,7 @@ function formatDamageBreakdown(breakdown) {
   if (!breakdown) return '';
   const parts = Object.entries(breakdown)
     .filter(([, val]) => Math.floor(val) > 0)
-    .map(([type, val]) => `${t(type)} ${Math.floor(val)}`)
+    .map(([type, val]) => `${t(type)} ${formatNumber(Math.floor(val))}`)
     .join(', ');
   return parts ? ` (${parts})` : '';
 }
@@ -100,7 +107,7 @@ class Game {
     hero.stats.currentLife -= damage;
     battleLog.addBattle(
       tp('battleLog.receivedDamage', {
-        value: Math.floor(damage),
+        value: formatNumber(Math.floor(damage)),
         breakdown: formatDamageBreakdown(breakdown),
       }) + t('battleLog.autoAttack'),
     );
@@ -129,7 +136,7 @@ class Game {
     updatePlayerLife();
 
     if (heal >= 1) {
-      battleLog.addBattle(tp('battleLog.healedLife', { value: Math.floor(heal) }));
+      battleLog.addBattle(tp('battleLog.healedLife', { value: formatNumber(Math.floor(heal)) }));
     }
   }
 
@@ -145,7 +152,7 @@ class Game {
     skillTree.updateToggleStates();
 
     if (log && mana >= 1) {
-      battleLog.addBattle(tp('battleLog.restoredMana', { value: Math.floor(mana) }));
+      battleLog.addBattle(tp('battleLog.restoredMana', { value: formatNumber(Math.floor(mana)) }));
     }
   }
 
@@ -157,20 +164,20 @@ class Game {
     if (summonName) {
       message = tp('battleLog.summonDamage', {
         summon: summonName,
-        value: damage,
+        value: formatNumber(damage),
         breakdown: formatDamageBreakdown(breakdown),
         critical: isCritical ? t('battleLog.critical') : '',
       });
     } else if (skillName) {
       message = tp('battleLog.castDamage', {
         skill: t(skillName),
-        value: damage,
+        value: formatNumber(damage),
         breakdown: formatDamageBreakdown(breakdown),
         critical: isCritical ? t('battleLog.critical') : '',
       });
     } else {
       message = tp('battleLog.dealtDamage', {
-        value: damage,
+        value: formatNumber(damage),
         breakdown: formatDamageBreakdown(breakdown),
         critical: isCritical ? t('battleLog.critical') : '',
       }) + t('battleLog.autoAttack');

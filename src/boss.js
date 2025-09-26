@@ -3,11 +3,12 @@
  */
 import { percentIncreasedByLevel, scaleStat, computeXPAdjustedMonotonic, xpDiminishingFactor } from './common.js';
 import { BOSSES } from './constants/bosses.js';
-import { hero } from './globals.js';
+import { hero, options } from './globals.js';
 import { battleLog } from './battleLog.js';
 import { ELEMENTS } from './constants/common.js';
 import { t, tp } from './i18n.js';
 import { getCurrentBossRegion } from './bossRegion.js';
+import { formatNumber as formatNumberValue } from './utils/numberFormatter.js';
 
 const INCREASE_PER_LEVEL = 0.01;
 // Base scaling increases slowly at first, but after higher levels bosses scale faster.
@@ -76,7 +77,12 @@ class Boss {
 
     this.reward = this.baseData.reward;
     this.lastAttack = Date.now();
-    battleLog.addBattle(tp('battleLog.encounteredBoss', { level: this.level, name: t(this.name) }));
+    battleLog.addBattle(
+      tp('battleLog.encounteredBoss', {
+        level: formatNumberValue(this.level, options?.shortNumbers),
+        name: t(this.name),
+      }),
+    );
   }
 
   // used when reductions are applied from skills usually buff, but can be instant too
