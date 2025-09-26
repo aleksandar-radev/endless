@@ -35,9 +35,9 @@ export const SOUL_UPGRADE_CONFIG = {
   },
   damageBoost: {
     label: 'soulShop.upgrade.damageBoost.label',
-    bonus: 0.005,
-    baseCost: 3,
-    costIncrement: 0.2,
+    bonus: 0.01,
+    baseCost: 6,
+    costIncrement: 0.4,
     stat: 'totalDamagePercent',
     maxLevel: 6000,
   },
