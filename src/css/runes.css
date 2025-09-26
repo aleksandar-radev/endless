@@ -7,8 +7,8 @@
 }
 
 .rune-slot {
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   border: 1px solid #666;
   display: flex;
   align-items: center;
@@ -53,6 +53,105 @@
   margin-bottom: 4px;
 }
 
+.rune-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding: 6px;
+  border-radius: 10px;
+  border: 1px solid rgba(60, 72, 102, 0.8);
+  background: linear-gradient(180deg, rgba(17, 22, 33, 0.85), rgba(12, 15, 24, 0.65));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 16px rgba(0, 0, 0, 0.35);
+}
+
+.rune-tabs .rune-tab-button {
+  position: relative;
+  flex: 1 1 70px;
+  min-width: 60px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: linear-gradient(180deg, rgba(66, 90, 138, 0.45), rgba(35, 45, 69, 0.9));
+  color: #dfe8ff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+  transition: transform 0.16s ease, box-shadow 0.2s ease, border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.rune-tabs .rune-tab-button .rune-tab-number {
+  font-size: 1rem;
+  line-height: 1.1;
+}
+
+.rune-tabs .rune-tab-button .rune-tab-count {
+  font-size: 0.7rem;
+  opacity: 0.75;
+  letter-spacing: 0.04em;
+}
+
+.rune-tabs .rune-tab-button.empty .rune-tab-count {
+  opacity: 0.45;
+}
+
+.rune-tabs .rune-tab-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(122, 160, 255, 0.6);
+  background: linear-gradient(180deg, rgba(96, 126, 186, 0.55), rgba(39, 52, 83, 0.95));
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.3);
+}
+
+.rune-tabs .rune-tab-button.active {
+  border-color: #89aaff;
+  background: linear-gradient(180deg, rgba(124, 154, 230, 0.7), rgba(48, 72, 138, 0.95));
+  box-shadow: 0 0 0 1px rgba(180, 204, 255, 0.45), 0 10px 20px rgba(36, 58, 112, 0.55);
+}
+
+.rune-tabs .rune-tab-button.locked {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background: linear-gradient(180deg, rgba(38, 46, 68, 0.8), rgba(20, 26, 38, 0.9));
+  border-color: rgba(60, 72, 102, 0.75);
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.rune-tabs .rune-tab-button.locked .rune-tab-count {
+  opacity: 0.4;
+}
+
+.rune-tabs .rune-tab-button.locked:hover {
+  transform: none;
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.rune-tabs .rune-tab-button:focus-visible {
+  outline: 2px solid #a4c6ff;
+  outline-offset: 2px;
+}
+
+.rune-tabs .rune-tab-button.drag-over {
+  border-color: #d5e1ff;
+  box-shadow: 0 0 0 1px rgba(213, 225, 255, 0.6);
+  background: linear-gradient(180deg, rgba(137, 171, 255, 0.65), rgba(63, 90, 162, 0.95));
+}
+
+.rune-frozen-slots {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid #665c3a;
+}
+
+.rune-slot.frozen {
+  border-color: #c8b56a;
+}
+
 .rune-controls {
   margin-top: 8px;
   display: flex;
@@ -75,8 +174,27 @@
   color: #fff;
 }
 
-.rune-slot img {
-  width: 40px;
-  height: 40px;
+.rune-slot .rune-icon {
+  width: 54px;
+  height: 54px;
   pointer-events: none;
+}
+
+.rune-controls .salvage-all-btn {
+  background: #9c3c3c;
+  border-color: #c65a5a;
+}
+
+.rune-move-row {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rune-move-select {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid #555;
+  color: #fff;
+  padding: 4px;
 }

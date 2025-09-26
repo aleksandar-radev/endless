@@ -87,6 +87,8 @@ export default class Hero {
       this.baseDamages[id] = 0;
     });
 
+    this.damageConversionDeltas = {};
+
     this.attributeElementalDamageFromIntelligence = 0;
 
     handleSavedData(savedData, this);
@@ -490,6 +492,7 @@ export default class Hero {
   applyFinalCalculations(flatValues, percentBonuses, soulBonuses) {
     // Apply percent bonuses to all stats that have them
     const ascensionBonuses = ascension?.getBonuses() || {};
+    this.damageConversionDeltas = {};
 
     for (const stat of STAT_KEYS) {
       if (stat.endsWith('Percent')) {
@@ -570,17 +573,25 @@ export default class Hero {
       }
     }
 
-    let allRes = this.stats.allResistance || 0;
-    if (allRes) {
-      allRes *= 1 + (this.stats.allResistancePercent || 0);
-    }
+    const baseElementResistances = {};
+    ELEMENT_IDS.forEach((id) => {
+      const key = `${id}Resistance`;
+      baseElementResistances[key] = this.stats[key] || 0;
+    });
 
-    this.stats.fireResistance = Math.max(this.stats.fireResistance + allRes, 0);
-    this.stats.coldResistance = Math.max(this.stats.coldResistance + allRes, 0);
-    this.stats.airResistance = Math.max(this.stats.airResistance + allRes, 0);
-    this.stats.earthResistance = Math.max(this.stats.earthResistance + allRes, 0);
-    this.stats.lightningResistance = Math.max(this.stats.lightningResistance + allRes, 0);
-    this.stats.waterResistance = Math.max(this.stats.waterResistance + allRes, 0);
+    const initialAllRes = this.stats.allResistance || 0;
+    const initialAllResPercent = this.stats.allResistancePercent || 0;
+    const initialAllResBonus = initialAllRes * (1 + initialAllResPercent);
+
+    ELEMENT_IDS.forEach((id) => {
+      const key = `${id}Resistance`;
+      this.stats[key] = Math.max((this.stats[key] || 0) + initialAllResBonus, 0);
+    });
+
+    let pendingDamageAdditions = {};
+    if (runes && typeof runes.applyPreDamageConversions === 'function') {
+      pendingDamageAdditions = runes.applyPreDamageConversions(this.stats) || {};
+    }
 
     this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * this.stats.mana * (1 + this.stats.manaRegenPercent);
     this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.life * (1 + this.stats.lifeRegenPercent);
@@ -664,20 +675,67 @@ export default class Hero {
       }
     });
 
-    // Apply rune conversions on final displayed stats so the UI reflects
-    // the same post-percent distribution as combat.
-    if (runes && typeof runes.applyFinalConversions === 'function') {
-      const pools = { damage: this.stats.damage };
+    const preConversionDamage = {
+      damage: this.stats.damage,
+    };
+    ELEMENT_IDS.forEach((id) => {
+      preConversionDamage[`${id}Damage`] = this.stats[`${id}Damage`];
+    });
+
+    Object.entries(pendingDamageAdditions).forEach(([stat, amount]) => {
+      if (!amount) return;
+      const baseValue = this.stats[stat] || 0;
+      const next = baseValue + amount;
+      this.stats[stat] = next > 0 ? next : 0;
+    });
+
+    if (runes && typeof runes.applyPostDamageConversions === 'function') {
+      runes.applyPostDamageConversions(this.stats);
+    }
+
+    const updatedAllRes = this.stats.allResistance || 0;
+    const updatedAllResPercent = this.stats.allResistancePercent || 0;
+    const updatedAllResBonus = updatedAllRes * (1 + updatedAllResPercent);
+
+    if (Math.abs(updatedAllResBonus - initialAllResBonus) > 1e-9) {
       ELEMENT_IDS.forEach((id) => {
-        pools[`${id}Damage`] = this.stats[`${id}Damage`];
-      });
-      runes.applyFinalConversions(pools);
-      // Write back (floored like above)
-      this.stats.damage = Math.floor(pools.damage || 0);
-      ELEMENT_IDS.forEach((id) => {
-        this.stats[`${id}Damage`] = Math.floor(pools[`${id}Damage`] || 0);
+        const key = `${id}Resistance`;
+        const originalFinal = (baseElementResistances[key] || 0) + initialAllResBonus;
+        const currentFinal = this.stats[key] || 0;
+        const delta = currentFinal - originalFinal;
+        const adjustedBase = Math.max(0, (baseElementResistances[key] || 0) + delta);
+        this.stats[key] = Math.max(0, adjustedBase + updatedAllResBonus);
       });
     }
+    if (initialAllResBonus === 0 && updatedAllResBonus === 0) {
+      // No shared resistance bonus applied; ensure any conversions on individual elements are clamped.
+      ELEMENT_IDS.forEach((id) => {
+        const key = `${id}Resistance`;
+        this.stats[key] = Math.max(0, this.stats[key] || 0);
+      });
+    }
+
+    this.stats.damage = Math.floor(Math.max(0, this.stats.damage || 0));
+    ELEMENT_IDS.forEach((id) => {
+      const key = `${id}Damage`;
+      this.stats[key] = Math.floor(Math.max(0, this.stats[key] || 0));
+    });
+
+    const conversionDeltas = {};
+    const physicalDelta = (this.stats.damage || 0) - (preConversionDamage.damage || 0);
+    if (Math.abs(physicalDelta) > 1e-6) {
+      conversionDeltas.physical = physicalDelta;
+    }
+    ELEMENT_IDS.forEach((id) => {
+      const statKey = `${id}Damage`;
+      const before = preConversionDamage[statKey] || 0;
+      const after = this.stats[statKey] || 0;
+      const delta = after - before;
+      if (Math.abs(delta) > 1e-6) {
+        conversionDeltas[id] = delta;
+      }
+    });
+    this.damageConversionDeltas = conversionDeltas;
   }
 
   regenerate(ticksPerSecond = 10) {
@@ -751,10 +809,13 @@ export default class Hero {
         : 0;
     });
 
-    // Apply rune damage conversions on final pools (post-percent),
-    // so conversions reflect total effective values rather than flats.
-    if (runes && typeof runes.applyFinalConversions === 'function') {
-      runes.applyFinalConversions(finalPools);
+    // Apply post-stat conversion adjustments so combat output matches the UI totals.
+    if (this.damageConversionDeltas && Object.keys(this.damageConversionDeltas).length > 0) {
+      Object.entries(this.damageConversionDeltas).forEach(([type, delta]) => {
+        if (!delta) return;
+        const current = finalPools[type] || 0;
+        finalPools[type] = Math.max(0, current + delta);
+      });
     }
 
     // 3) Double-damage and criticals (after percent multipliers and conversions)

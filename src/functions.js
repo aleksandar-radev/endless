@@ -11,6 +11,7 @@ import { createCombatText } from './combat.js';
 import { renderRunesUI } from './ui/runesUi.js';
 import { updateAscensionUI } from './ui/ascensionUi.js';
 import { getRuneName } from './runes.js';
+import { t } from './i18n.js';
 
 export const crypt = new SimpleCrypto(import.meta.env.VITE_ENCRYPT_KEY);
 
@@ -745,10 +746,38 @@ export function createModifyUI() {
   });
 
   const runeDd = createImageDropdownFromData(runeItems, runeItems[0] && runeItems[0].id);
+
+  const runeSearch = document.createElement('input');
+  runeSearch.type = 'search';
+  runeSearch.className = 'debug-rune-search';
+  runeSearch.placeholder = t('runes.tabSearchPlaceholder');
+  runeSearch.style.marginRight = '8px';
+  runeSearch.style.padding = '4px 6px';
+  runeSearch.style.borderRadius = '4px';
+  runeSearch.style.border = '1px solid #555';
+  runeSearch.style.background = 'rgba(0, 0, 0, 0.4)';
+  runeSearch.style.color = '#fff';
+  runeSearch.addEventListener('input', () => {
+    const query = runeSearch.value.trim().toLowerCase();
+    if (!query) {
+      runeDd.setFilter();
+      return;
+    }
+    runeDd.setFilter((item) => {
+      const idMatch = item.id?.toLowerCase().includes(query);
+      const textMatch = item.text?.toLowerCase().includes(query);
+      return Boolean(idMatch || textMatch);
+    });
+  });
+
   const addRuneBtn = document.createElement('button');
   addRuneBtn.textContent = 'Add Rune';
   addRuneBtn.addEventListener('click', () => {
     const id = runeDd.getValue();
+    if (!id) {
+      showToast(t('debug.selectRuneFirst'), 'error');
+      return;
+    }
     const percent =
       Math.floor(Math.random() * (MAX_CONVERSION_PERCENT - MIN_CONVERSION_PERCENT + 1)) +
       MIN_CONVERSION_PERCENT;
@@ -760,6 +789,7 @@ export function createModifyUI() {
       showToast('Invalid rune ID', 'error');
     }
   });
+  addRuneDiv.appendChild(runeSearch);
   addRuneDiv.appendChild(runeDd.container);
   addRuneDiv.appendChild(addRuneBtn);
   inventorySection.appendChild(addRuneDiv);

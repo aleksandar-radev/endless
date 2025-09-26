@@ -11,6 +11,7 @@ function ensureStyles() {
   .img-dd-option[aria-selected="true"], .img-dd-option:hover { background:#f3f4f6; }
   .img-dd-option img { width:20px; height:20px; object-fit:cover; border-radius:3px; }
   .img-dd-hidden-native { position:absolute !important; left:-9999px !important; }
+  .img-dd-placeholder { opacity:0.6; font-style:italic; }
   `;
   const s = document.createElement('style');
   s.textContent = css;
@@ -48,7 +49,7 @@ function closeAll(except) {
  * items: [{ id, text, icon }]
  * initialId: optional selected id
  * onChange: function(id) called when selection changes
- * Returns { container, getValue, setValue }
+ * Returns { container, getValue, setValue, setFilter }
  */
 export function createImageDropdownFromData(items, initialId = null, onChange = null) {
   ensureStyles();
@@ -66,11 +67,16 @@ export function createImageDropdownFromData(items, initialId = null, onChange = 
   optionsPane.setAttribute('role', 'listbox');
   optionsPane.style.display = 'none';
 
-  let currentId = initialId !== null ? initialId : (items[0] && items[0].id) || null;
+  const originalItems = Array.isArray(items) ? [...items] : [];
+  let visibleItems = [...originalItems];
+  let currentId = initialId !== null ? initialId : (visibleItems[0] && visibleItems[0].id) || null;
+  if (!originalItems.some((it) => it.id === currentId)) {
+    currentId = (visibleItems[0] && visibleItems[0].id) || null;
+  }
 
   function buildOptions() {
     optionsPane.innerHTML = '';
-    items.forEach((it, idx) => {
+    visibleItems.forEach((it) => {
       const node = createOptionNode(it.text, it.icon, it.disabled);
       if (it.id === currentId) node.setAttribute('aria-selected', 'true');
       node.addEventListener('click', () => {
@@ -84,26 +90,53 @@ export function createImageDropdownFromData(items, initialId = null, onChange = 
 
   function updateSelected() {
     selected.innerHTML = '';
-    const cur = items.find(i => i.id === currentId);
-    if (!cur) return;
-    if (cur.icon) {
-      const img = document.createElement('img');
-      img.src = cur.icon;
-      img.alt = '';
-      selected.appendChild(img);
+    const cur = originalItems.find((i) => i.id === currentId);
+    if (!cur) {
+      const placeholder = document.createElement('span');
+      placeholder.className = 'img-dd-placeholder';
+      placeholder.textContent = '—';
+      selected.appendChild(placeholder);
+    } else {
+      if (cur.icon) {
+        const img = document.createElement('img');
+        img.src = cur.icon;
+        img.alt = '';
+        selected.appendChild(img);
+      }
+      const span = document.createElement('span');
+      span.innerHTML = cur.text;
+      selected.appendChild(span);
     }
-    const span = document.createElement('span');
-    span.innerHTML = cur.text;
-    selected.appendChild(span);
 
     const optionNodes = optionsPane.querySelectorAll('.img-dd-option');
-    optionNodes.forEach((n,i) => n.setAttribute('aria-selected', (items[i].id === currentId).toString()));
+    optionNodes.forEach((node, index) => {
+      const item = visibleItems[index];
+      if (!item) return;
+      node.setAttribute('aria-selected', (item.id === currentId).toString());
+    });
   }
 
   function setValue(id) {
+    const match = originalItems.find((it) => it.id === id);
+    if (!match) return;
     currentId = id;
     updateSelected();
     onChange && onChange(id);
+  }
+
+  function setFilter(predicate) {
+    if (typeof predicate === 'function') {
+      visibleItems = originalItems.filter((item) => predicate(item));
+    } else {
+      visibleItems = [...originalItems];
+    }
+    if (!visibleItems.length) {
+      currentId = null;
+    } else if (!visibleItems.some((item) => item.id === currentId)) {
+      currentId = visibleItems[0].id;
+    }
+    buildOptions();
+    updateSelected();
   }
 
   selected.addEventListener('click', () => {
@@ -117,11 +150,13 @@ export function createImageDropdownFromData(items, initialId = null, onChange = 
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
       if (!open) { selected.click(); return; }
-      const idx = items.findIndex(i => i.id === currentId);
+      if (!visibleItems.length) return;
+      const idx = visibleItems.findIndex((i) => i.id === currentId);
       let next = idx;
-      if (e.key === 'ArrowDown') next = Math.min(items.length - 1, idx + 1);
-      else next = Math.max(0, idx - 1);
-      setValue(items[next].id);
+      if (e.key === 'ArrowDown') next = idx < visibleItems.length - 1 ? idx + 1 : visibleItems.length - 1;
+      else next = idx > 0 ? idx - 1 : 0;
+      if (next === -1) next = 0;
+      setValue(visibleItems[next].id);
       const opts = optionsPane.querySelectorAll('.img-dd-option');
       opts[next] && opts[next].scrollIntoView({ block: 'nearest' });
     } else if (e.key === 'Enter') {
@@ -149,5 +184,6 @@ export function createImageDropdownFromData(items, initialId = null, onChange = 
     container,
     getValue: () => currentId,
     setValue,
+    setFilter,
   };
 }

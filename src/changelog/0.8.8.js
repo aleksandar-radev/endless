@@ -14,6 +14,8 @@ export default function run() {
       <li>Renamed Soul Shop upgrades to match their bonuses and doubled the Total Damage % upgrade cost while increasing its value to 1% per level.</li>
       <li>Display life and mana steal or per-hit gains above the hero as floating combat text.</li>
       <li>Reduced vitality bonuses on vampire a little.</li>
+      <li>Expanded rune conversions to cover defensive, mana, evasion and resistance stats, and upgraded the rune inventory with 10 tabs plus shared frozen slots that are ignored by bulk salvage.</li>
+      <li>Raised rocky field common rune drop chance, reshaped conversion rolls to produce a broader spread with rare 100%+ highs, and reduced rune salvage crystal yields.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
@@ -23,6 +25,9 @@ export default function run() {
       <li>Corrected Battlecry skill description to mention only the damage boost.</li>
       <li>Battle log now respects the short number notation option.</li>
       <li>Fixed ascension Crystal Gain % bonus not increasing crystal rewards from all sources.</li>
+      <li>Rune conversions now operate on fully modified totals, so resource and resistance swaps transfer the expected amounts.</li>
+      <li>Ensured conversion runes that touch damage stats also add their values to the destination stat instead of removing the source without a gain.</li>
+      <li>Resolved equipped runes being shifted into frozen inventory slots after reloading.</li>
     </ul>
   `;
 }

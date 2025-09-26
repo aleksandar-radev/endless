@@ -1,19 +1,42 @@
-import { RUNES } from './constants/runes.js';
+import { RUNES, MIN_CONVERSION_PERCENT, MAX_CONVERSION_PERCENT } from './constants/runes.js';
 const RUNES_BY_ID = new Map(RUNES.map((r) => [r.id, r]));
-import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
-import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
-import { MISC_STATS } from './constants/stats/miscStats.js';
+const isDamageStat = (stat) => stat === 'damage' || /Damage$/.test(stat);
 import { tp, t } from './i18n.js';
 import { formatStatName } from './format.js';
-import { hero } from './globals.js';
+import { hero, ascension } from './globals.js';
 
 export const BASE_RUNE_SLOTS = 1;
-const INVENTORY_SLOTS = 100;
+export const FROZEN_RUNE_SLOTS = 20;
+export const INVENTORY_TAB_COUNT = 10;
+export const INVENTORY_TAB_SIZE = 80;
+export const BASE_UNLOCKED_RUNE_TABS = 2;
+const INVENTORY_SLOTS = FROZEN_RUNE_SLOTS + INVENTORY_TAB_COUNT * INVENTORY_TAB_SIZE;
 
-const OFFENSE_SET = new Set(Object.keys(OFFENSE_STATS));
-const DEFENSE_SET = new Set(Object.keys(DEFENSE_STATS));
-const MISC_SET = new Set(Object.keys(MISC_STATS));
-const ALL_STATS = new Set([...OFFENSE_SET, ...DEFENSE_SET, ...MISC_SET]);
+const getConversionMaxPercent = (base) => {
+  if (!base?.conversion) return MAX_CONVERSION_PERCENT;
+  const { maxPercent } = base.conversion;
+  return typeof maxPercent === 'number' ? maxPercent : MAX_CONVERSION_PERCENT;
+};
+
+const clampConversionPercent = (base, percent) => {
+  if (!base?.conversion) return undefined;
+  const max = getConversionMaxPercent(base);
+  const min = MIN_CONVERSION_PERCENT;
+  if (typeof percent !== 'number') {
+    const fallback = typeof base.conversion.percent === 'number'
+      ? base.conversion.percent
+      : min;
+    return Math.min(max, Math.max(min, fallback));
+  }
+  if (percent > max) return max;
+  if (percent < min) return min;
+  return percent;
+};
+
+const resolveRunePercent = (rune, base) => {
+  if (!base?.conversion) return undefined;
+  return clampConversionPercent(base, rune?.conversion?.percent);
+};
 
 export default class Runes {
   constructor(savedData = {}) {
@@ -22,26 +45,28 @@ export default class Runes {
       (arr || []).map((r) => {
         if (!r) return null;
         const minimal = { id: r.id };
-        if (r.conversion) {
-          const percent = typeof r.conversion.percent === 'number'
-            ? r.conversion.percent
-            : (RUNES_BY_ID.get(r.id)?.conversion?.percent ?? undefined);
-          minimal.conversion = typeof percent === 'number' ? { percent } : undefined;
+        const base = RUNES_BY_ID.get(r.id);
+        if (base?.conversion) {
+          const percent = resolveRunePercent(r, base);
+          if (typeof percent === 'number') {
+            minimal.conversion = { percent };
+          }
         }
         return minimal;
       });
 
     this.equipped = normalize(savedData.equipped || []);
-    this.inventory = normalize(savedData.inventory || []);
-    this.ensureEquipSlots(BASE_RUNE_SLOTS);
-    if (this.inventory.length < INVENTORY_SLOTS) {
-      this.inventory = [
-        ...this.inventory,
-        ...new Array(INVENTORY_SLOTS - this.inventory.length).fill(null),
+    if (this.equipped.length < BASE_RUNE_SLOTS) {
+      this.equipped = [
+        ...this.equipped,
+        ...new Array(BASE_RUNE_SLOTS - this.equipped.length).fill(null),
       ];
-    } else if (this.inventory.length > INVENTORY_SLOTS) {
-      this.inventory.length = INVENTORY_SLOTS;
     }
+    const normalizedInventory = normalize(savedData.inventory || []);
+    this.inventory = new Array(INVENTORY_SLOTS).fill(null);
+    normalizedInventory.slice(0, INVENTORY_SLOTS).forEach((rune, idx) => {
+      this.inventory[idx] = rune;
+    });
   }
 
   ensureEquipSlots(count) {
@@ -62,19 +87,68 @@ export default class Runes {
     }
   }
 
+  getUnlockedTabCount() {
+    const bonus = ascension?.getBonuses?.()?.runeTabUnlocks || 0;
+    const unlocked = BASE_UNLOCKED_RUNE_TABS + bonus;
+    return Math.min(INVENTORY_TAB_COUNT, Math.max(BASE_UNLOCKED_RUNE_TABS, unlocked));
+  }
+
+  isTabUnlocked(tabIndex) {
+    return tabIndex >= 0 && tabIndex < this.getUnlockedTabCount();
+  }
+
   addRune(id, percentOverride) {
     const rune = RUNES_BY_ID.get(id);
     if (!rune) return null;
-    const idx = this.inventory.findIndex((r) => r === null);
+    const limit = FROZEN_RUNE_SLOTS + this.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
+    let idx = this.inventory.findIndex(
+      (r, slotIdx) => slotIdx >= FROZEN_RUNE_SLOTS && slotIdx < limit && r === null,
+    );
+    if (idx === -1) {
+      idx = this.inventory.findIndex((r) => r === null);
+    }
     if (idx === -1) return null;
     const inst = { id: rune.id };
     if (rune.conversion) {
-      const percent =
-        typeof percentOverride === 'number' ? percentOverride : rune.conversion.percent;
-      inst.conversion = { percent };
+      const percent = clampConversionPercent(
+        rune,
+        typeof percentOverride === 'number' ? percentOverride : rune.conversion.percent,
+      );
+      if (typeof percent === 'number') {
+        inst.conversion = { percent };
+      }
     }
     this.inventory[idx] = inst;
     return inst;
+  }
+
+  isValidInventoryIndex(index) {
+    return typeof index === 'number' && index >= 0 && index < this.inventory.length;
+  }
+
+  isFrozenIndex(index) {
+    return this.isValidInventoryIndex(index) && index < FROZEN_RUNE_SLOTS;
+  }
+
+  getTabBounds(tabIndex) {
+    const safeIndex = Math.min(Math.max(tabIndex, 0), INVENTORY_TAB_COUNT - 1);
+    const start = FROZEN_RUNE_SLOTS + safeIndex * INVENTORY_TAB_SIZE;
+    const end = Math.min(start + INVENTORY_TAB_SIZE, this.inventory.length);
+    return { start, end };
+  }
+
+  getTabIndexForSlot(index) {
+    if (!this.isValidInventoryIndex(index) || this.isFrozenIndex(index)) return null;
+    const normalized = index - FROZEN_RUNE_SLOTS;
+    if (normalized < 0 || normalized >= INVENTORY_TAB_COUNT * INVENTORY_TAB_SIZE) return null;
+    const tab = Math.floor(normalized / INVENTORY_TAB_SIZE);
+    return this.isTabUnlocked(tab) ? tab : null;
+  }
+
+  getInventoryIndexForTabSlot(tabIndex, slotIndex) {
+    const { start, end } = this.getTabBounds(tabIndex);
+    const offset = Math.min(Math.max(slotIndex, 0), end - start - 1);
+    return start + offset;
   }
 
   equip(slotIndex, inventoryIndex) {
@@ -105,10 +179,28 @@ export default class Runes {
 
   moveInventory(fromIndex, toIndex) {
     if (fromIndex === toIndex) return;
+    if (!this.isValidInventoryIndex(fromIndex) || !this.isValidInventoryIndex(toIndex)) return;
+    const targetTab = this.getTabIndexForSlot(toIndex);
+    if (targetTab === null && !this.isFrozenIndex(toIndex)) return;
     [this.inventory[fromIndex], this.inventory[toIndex]] = [
       this.inventory[toIndex],
       this.inventory[fromIndex],
     ];
+  }
+
+  moveRuneToTab(fromIndex, tabIndex) {
+    if (!this.isValidInventoryIndex(fromIndex)) return false;
+    if (!this.isTabUnlocked(tabIndex)) return false;
+    const { start, end } = this.getTabBounds(tabIndex);
+    for (let i = start; i < end; i++) {
+      if (this.inventory[i] === null) {
+        if (i === fromIndex) return true;
+        this.inventory[i] = this.inventory[fromIndex];
+        this.inventory[fromIndex] = null;
+        return true;
+      }
+    }
+    return false;
   }
 
   moveEquipped(fromIndex, toIndex) {
@@ -122,20 +214,22 @@ export default class Runes {
   salvage(index) {
     const rune = this.inventory[index];
     if (!rune) return 0;
-    const base = RUNES.find((r) => r.id === rune.id);
+    const base = RUNES_BY_ID.get(rune.id);
 
-    let crystals = 0;
+    let baseValue = 0;
     if (base?.unique) {
-      crystals = 200;
+      baseValue = 200;
     } else if (base?.conversion) {
-      const percent = rune.conversion?.percent ?? base.conversion.percent;
-      crystals = Math.max(1, Math.floor(percent / 2));
+      const percent = resolveRunePercent(rune, base) ?? base.conversion.percent;
+      baseValue = Math.max(1, Math.floor(percent / 2));
     } else if (base?.bonus) {
       const maxBonus = Math.max(...Object.values(base.bonus));
-      crystals = Math.max(1, Math.floor(maxBonus / 2));
+      baseValue = Math.max(1, Math.floor(maxBonus / 2));
     } else {
-      crystals = 1;
+      baseValue = 1;
     }
+
+    const crystals = Math.max(1, Math.floor(baseValue * 0.25));
 
     this.inventory[index] = null;
     hero.gainCrystals(crystals);
@@ -143,13 +237,23 @@ export default class Runes {
   }
 
   sortInventory(shortElementalNames = false) {
-    this.inventory.sort((a, b) => {
+    this.sortTab(0, shortElementalNames);
+  }
+
+  sortTab(tabIndex, shortElementalNames = false) {
+    if (!this.isTabUnlocked(tabIndex)) return;
+    const { start, end } = this.getTabBounds(tabIndex);
+    const slice = this.inventory.slice(start, end);
+    slice.sort((a, b) => {
       if (!a) return 1;
       if (!b) return -1;
       return getRuneName(a, shortElementalNames).localeCompare(
         getRuneName(b, shortElementalNames),
       );
     });
+    for (let i = start; i < end; i++) {
+      this.inventory[i] = slice[i - start] || null;
+    }
   }
 
   /**
@@ -158,79 +262,103 @@ export default class Runes {
    */
   applyBonuses(flatValues) {
     if (!flatValues) return;
-    this.equipped.forEach((rune) => {
-      if (!rune) return;
-      const base = RUNES_BY_ID.get(rune.id);
-      if (!base?.conversion) return;
-      const from = base.conversion.from;
-      const to = base.conversion.to;
-      const percent = rune.conversion?.percent ?? base.conversion.percent;
-      if (!ALL_STATS.has(from) || !ALL_STATS.has(to)) return;
-
-      // IMPORTANT: Conversions for damage and elemental damages should occur on
-      // final values (after percents), not on flats. Applying here would lead
-      // to very small shifts when most of the value comes from % scalars.
-      // Therefore, skip converting any of the damage-family stats at the flat stage.
-      const isDamageFamily =
-        from === 'damage' || to === 'damage' || /Damage$/.test(from) || /Damage$/.test(to);
-      if (isDamageFamily) return;
-
-      const amount = (flatValues[from] || 0) * (percent / 100);
-      flatValues[from] = (flatValues[from] || 0) - amount;
-      flatValues[to] = (flatValues[to] || 0) + amount;
-    });
   }
 
   /**
-   * Apply equipped rune damage conversions to a pool of final damages.
-   * Mutates the provided object.
-   * Accepts either combat pools ({ physical, fire, ... }) or stat pools
-   * ({ damage, fireDamage, ... }).
-   * @param {Record<string, number>} finalPools
+   * Apply conversions that draw from non-damage stats. Returns a map of
+   * damage stat names (e.g. damage, fireDamage) to amounts that should be
+   * added later once damage totals are available.
+   * @param {Record<string, number>} stats
+   * @returns {Record<string, number>}
    */
-  applyFinalConversions(finalPools) {
-    if (!finalPools) return;
+  applyPreDamageConversions(stats) {
+    if (!stats) return {};
 
-    // Snapshot originals so sequential conversions don't compound mid-iteration
-    const original = { ...finalPools };
     const deltas = {};
+    const pendingDamageAdditions = {};
 
-    const hasKey = (k) => Object.prototype.hasOwnProperty.call(finalPools, k);
-    const mapStatToPoolKey = (stat) => {
-      if (stat === 'damage') {
-        if (hasKey('physical')) return 'physical';
-        if (hasKey('damage')) return 'damage';
-        return null;
-      }
-      if (stat.endsWith('Damage')) {
-        const id = stat.slice(0, -6); // remove 'Damage'
-        if (hasKey(id)) return id; // combat pool key
-        if (hasKey(stat)) return stat; // stats key, e.g. 'fireDamage'
-        return null;
-      }
-      // Not a damage stat
-      return null;
-    };
+    const getValue = (stat) => (stats[stat] ?? 0) + (deltas[stat] || 0);
 
     this.equipped.forEach((rune) => {
       if (!rune) return;
       const base = RUNES_BY_ID.get(rune.id);
       if (!base?.conversion) return;
-      const percent = rune.conversion?.percent ?? base.conversion.percent;
+      const { from, to } = base.conversion;
+      if (isDamageStat(from)) return;
+      const percent = resolveRunePercent(rune, base);
       if (!percent) return;
-      const fromKey = mapStatToPoolKey(base.conversion.from);
-      const toKey = mapStatToPoolKey(base.conversion.to);
-      if (!fromKey || !toKey) return;
-      const fromVal = original[fromKey] || 0;
-      if (!fromVal) return;
-      const move = fromVal * (percent / 100);
-      deltas[fromKey] = (deltas[fromKey] || 0) - move;
-      deltas[toKey] = (deltas[toKey] || 0) + move;
+
+      const available = Math.max(0, getValue(from));
+      if (!available) return;
+      const move = Math.min(available, available * (percent / 100));
+      if (!move) return;
+
+      deltas[from] = (deltas[from] || 0) - move;
+      if (isDamageStat(to)) {
+        pendingDamageAdditions[to] = (pendingDamageAdditions[to] || 0) + move;
+      } else {
+        deltas[to] = (deltas[to] || 0) + move;
+      }
     });
 
-    Object.entries(deltas).forEach(([k, dv]) => {
-      finalPools[k] = Math.max(0, (finalPools[k] || 0) + dv);
+    Object.entries(deltas).forEach(([stat, delta]) => {
+      if (!delta) return;
+      const baseValue = stats[stat] ?? 0;
+      const next = baseValue + delta;
+      stats[stat] = next > 0 ? next : 0;
     });
+
+    return pendingDamageAdditions;
+  }
+
+  /**
+   * Apply conversions that draw from damage stats (damage and *Damage).
+   * Mutates the stats object directly and returns a map of damage stat deltas.
+   * @param {Record<string, number>} stats
+   * @returns {Record<string, number>}
+   */
+  applyPostDamageConversions(stats) {
+    if (!stats) return {};
+
+    const deltas = {};
+    const damageDeltas = {};
+
+    const getValue = (stat) => (stats[stat] ?? 0) + (deltas[stat] || 0);
+
+    this.equipped.forEach((rune) => {
+      if (!rune) return;
+      const base = RUNES_BY_ID.get(rune.id);
+      if (!base?.conversion) return;
+      const { from, to } = base.conversion;
+      if (!isDamageStat(from)) return;
+      const percent = resolveRunePercent(rune, base);
+      if (!percent) return;
+
+      const available = Math.max(0, getValue(from));
+      if (!available) return;
+      const move = Math.min(available, available * (percent / 100));
+      if (!move) return;
+
+      deltas[from] = (deltas[from] || 0) - move;
+      damageDeltas[from] = (damageDeltas[from] || 0) - move;
+
+      if (isDamageStat(to)) {
+        deltas[to] = (deltas[to] || 0) + move;
+        damageDeltas[to] = (damageDeltas[to] || 0) + move;
+      } else {
+        const baseValue = stats[to] ?? 0;
+        stats[to] = Math.max(0, baseValue + move);
+      }
+    });
+
+    Object.entries(deltas).forEach(([stat, delta]) => {
+      if (!delta) return;
+      const baseValue = stats[stat] ?? 0;
+      const next = baseValue + delta;
+      stats[stat] = next > 0 ? next : 0;
+    });
+
+    return damageDeltas;
   }
 
   getBonusEffects() {
@@ -260,8 +388,9 @@ export function getRuneDescription(rune, shortElementalNames = false) {
   if (base?.descKey) return t(base.descKey);
   const from = formatStatName(base?.fromKey, shortElementalNames);
   const to = formatStatName(base?.toKey, shortElementalNames);
+  const percent = base?.conversion ? resolveRunePercent(rune, base) : undefined;
   return tp('rune.convertDesc', {
-    percent: rune.conversion?.percent ?? base?.conversion?.percent,
+    percent: percent ?? base?.conversion?.percent,
     from,
     to,
   });

@@ -16,6 +16,7 @@ import { showToast } from './ui/ui.js';
 import { t } from './i18n.js';
 import { ELEMENTS } from './constants/common.js';
 import { BASE_RUNE_SLOTS } from './runes.js';
+import { renderRunesUI } from './ui/runesUi.js';
 
 const ELEMENT_DAMAGE_STATS = Object.keys(ELEMENTS).map((id) => `${id}Damage`);
 const ELEMENT_RESISTANCE_STATS = Object.keys(ELEMENTS).map((id) => `${id}Resistance`);
@@ -226,6 +227,13 @@ export const ASCENSION_CATEGORIES = {
         cost: (lvl) => 20 * (lvl + 1),
         maxLevel: 9,
       },
+      runeTabs: {
+        label: t('ascension.upgrade.runeTabs'),
+        bonus: 1,
+        effect: 'runeTabUnlocks',
+        cost: (lvl) => 2 + lvl,
+        maxLevel: 8,
+      },
       startingGold: {
         label: t('ascension.upgrade.startingGold'),
         bonus: 100000,
@@ -415,6 +423,11 @@ export default class Ascension {
     }
     if (key === 'runeSlots') {
       runes.ensureEquipSlots(BASE_RUNE_SLOTS + this.getBonuses().runeSlots);
+    }
+    if (key === 'runeTabs') {
+      try {
+        renderRunesUI();
+      } catch {}
     }
 
     // Recalculate immediately so effects apply right away

@@ -1,6 +1,12 @@
 import { runes, dataManager, hero, options, training, soulShop } from '../globals.js';
-import { t } from '../i18n.js';
-import { getRuneName, getRuneDescription, getRuneIcon } from '../runes.js';
+import { t, tp } from '../i18n.js';
+import {
+  getRuneName,
+  getRuneDescription,
+  getRuneIcon,
+  FROZEN_RUNE_SLOTS,
+  INVENTORY_TAB_COUNT,
+} from '../runes.js';
 import { showTooltip, positionTooltip, hideTooltip, showToast } from './ui.js';
 import { createModal, closeModal } from './modal.js';
 
@@ -19,6 +25,34 @@ export function renderRunesUI() {
   const container = document.getElementById('runes');
   if (!container) return;
   container.innerHTML = '';
+
+  const unlockedTabs =
+    typeof runes.getUnlockedTabCount === 'function'
+      ? runes.getUnlockedTabCount()
+      : INVENTORY_TAB_COUNT;
+  if (activeTab >= unlockedTabs) {
+    activeTab = Math.max(0, unlockedTabs - 1);
+  }
+
+  if (selectedRune?.source === 'inventory') {
+    const index = selectedRune.index;
+    const isValid =
+      typeof runes.isValidInventoryIndex === 'function'
+        ? runes.isValidInventoryIndex(index)
+        : index >= 0 && index < runes.inventory.length;
+    if (!isValid) {
+      selectedRune = null;
+    } else if (
+      typeof runes.isFrozenIndex === 'function'
+      && typeof runes.getTabIndexForSlot === 'function'
+      && !runes.isFrozenIndex(index)
+    ) {
+      const tabIndex = runes.getTabIndexForSlot(index);
+      if (tabIndex !== null && tabIndex !== activeTab) {
+        selectedRune = null;
+      }
+    }
+  }
 
   const equipSection = document.createElement('div');
   equipSection.className = 'rune-section';
@@ -83,84 +117,59 @@ export function renderRunesUI() {
   });
   equipSection.append(equipTitle, equip);
 
-  const invSection = document.createElement('div');
-  invSection.className = 'rune-section';
-  const invTitle = document.createElement('div');
-  invTitle.className = 'rune-section-title';
-  invTitle.textContent = t('runes.inventory');
-  const inv = document.createElement('div');
-  inv.className = 'rune-inventory';
-  runes.inventory.forEach((rune, i) => {
-    const slot = document.createElement('div');
-    slot.className = 'rune-slot';
-    slot.dataset.index = i;
-    slot.dataset.source = 'inventory';
-    if (selectedRune && selectedRune.source === 'inventory' && selectedRune.index === i) {
-      slot.classList.add('selected');
-    }
-    if (rune) {
-      slot.appendChild(createRuneIcon(getRuneIcon(rune)));
-      slot.draggable = true;
-      slot.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text/plain', `inventory-${i}`);
-      });
-      slot.addEventListener('mouseenter', (e) => {
-        showTooltip(getRuneTooltip(rune), e);
-      });
-      slot.addEventListener('mousemove', positionTooltip);
-      slot.addEventListener('mouseleave', hideTooltip);
-      slot.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        openRuneContextMenu('inventory', i, rune, e.clientX, e.clientY);
-      });
-      slot.addEventListener('click', () => {
-        selectedRune = { source: 'inventory', index: i };
-        document.querySelectorAll('.rune-slot').forEach((s) => s.classList.remove('selected'));
-        slot.classList.add('selected');
-        if (equipBtn) equipBtn.style.display = 'inline-block';
-      });
-      slot.addEventListener('dblclick', () => {
-        selectedRune = { source: 'inventory', index: i };
-        equipSelectedRune();
-      });
-    }
-    slot.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      slot.classList.add('drag-over');
-    });
-    slot.addEventListener('dragleave', () => {
-      slot.classList.remove('drag-over');
-    });
-    slot.addEventListener('drop', (e) => {
-      slot.classList.remove('drag-over');
-      handleDrop(e);
-    });
-    inv.appendChild(slot);
-  });
-  invSection.append(invTitle, inv);
+  const tabsBar = createTabsBar();
+  const frozenSection = createFrozenSection();
+  const invSection = createInventorySection();
 
   const sortBtn = document.createElement('button');
   sortBtn.className = 'inventory-btn sort-btn';
   sortBtn.textContent = t('inventory.sort');
   sortBtn.onclick = () => {
-    runes.sortInventory(options.shortElementalNames);
-    renderRunesUI();
-    dataManager.saveGame();
-  };
-  const salvageBtn = document.createElement('button');
-  salvageBtn.className = 'inventory-btn salvage-btn';
-  salvageBtn.textContent = t('inventory.salvage');
-  salvageBtn.onclick = () => {
-    let crystals = 0;
-    runes.inventory.forEach((r, i) => {
-      if (!r) return;
-      crystals += runes.salvage(i);
-    });
-    if (crystals > 0) {
-      showToast(`Salvaged runes for ${crystals} crystal${crystals > 1 ? 's' : ''}`,'success');
+    if (typeof runes.sortTab === 'function') {
+      runes.sortTab(activeTab, options.shortElementalNames);
+    } else {
+      runes.sortInventory(options.shortElementalNames);
     }
     renderRunesUI();
     dataManager.saveGame();
+  };
+
+  const salvageRunesInRange = (start, end) => {
+    let crystals = 0;
+    for (let i = start; i < end; i++) {
+      if (!runes.inventory[i]) continue;
+      if (typeof runes.isFrozenIndex === 'function' && runes.isFrozenIndex(i)) continue;
+      crystals += runes.salvage(i);
+    }
+    return crystals;
+  };
+
+  const finalizeSalvage = (crystals) => {
+    if (crystals > 0) {
+      showToast(`Salvaged runes for ${crystals} crystal${crystals > 1 ? 's' : ''}`, 'success');
+    }
+    selectedRune = null;
+    renderRunesUI();
+    dataManager.saveGame();
+  };
+
+  const salvageTabBtn = document.createElement('button');
+  salvageTabBtn.className = 'inventory-btn salvage-btn';
+  salvageTabBtn.textContent = t('runes.salvageTab');
+  salvageTabBtn.onclick = () => {
+    if (typeof runes.getTabBounds !== 'function') {
+      finalizeSalvage(salvageRunesInRange(0, runes.inventory.length));
+      return;
+    }
+    const { start, end } = runes.getTabBounds(activeTab);
+    finalizeSalvage(salvageRunesInRange(start, end));
+  };
+
+  const salvageAllBtn = document.createElement('button');
+  salvageAllBtn.className = 'inventory-btn salvage-btn salvage-all-btn';
+  salvageAllBtn.textContent = t('runes.salvageAllTabs');
+  salvageAllBtn.onclick = () => {
+    finalizeSalvage(salvageRunesInRange(0, runes.inventory.length));
   };
   const topControls = document.createElement('div');
   topControls.className = 'rune-controls';
@@ -173,13 +182,193 @@ export function renderRunesUI() {
     if (!selectedRune || selectedRune.source !== 'inventory') return;
     equipSelectedRune();
   };
-  topControls.append(sortBtn, salvageBtn, equipBtn);
+  topControls.append(sortBtn, salvageTabBtn, salvageAllBtn, equipBtn);
 
-  container.append(equipSection, topControls, invSection);
+  container.append(equipSection, tabsBar, frozenSection, topControls, invSection);
 }
 
 let selectedRune = null;
 let equipBtn;
+let activeTab = 0;
+let draggedRuneIndex = null;
+
+function createTabsBar() {
+  const tabs = document.createElement('div');
+  tabs.className = 'rune-tabs';
+  const unlockedTabs =
+    typeof runes.getUnlockedTabCount === 'function'
+      ? runes.getUnlockedTabCount()
+      : INVENTORY_TAB_COUNT;
+  for (let i = 0; i < INVENTORY_TAB_COUNT; i++) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.dataset.tab = i;
+    btn.className = 'rune-tab-button';
+
+    const { start, end } = runes.getTabBounds(i);
+    let filled = 0;
+    for (let slot = start; slot < end; slot++) {
+      if (runes.inventory[slot]) filled++;
+    }
+    const capacity = end - start;
+
+    const isUnlocked = typeof runes.isTabUnlocked === 'function' ? runes.isTabUnlocked(i) : i < unlockedTabs;
+
+    if (i === activeTab) btn.classList.add('active');
+    if (filled === 0) btn.classList.add('empty');
+    if (!isUnlocked) {
+      btn.classList.add('locked');
+      btn.disabled = true;
+      btn.setAttribute('aria-disabled', 'true');
+    }
+
+    const number = document.createElement('span');
+    number.className = 'rune-tab-number';
+    number.textContent = `${i + 1}`;
+    btn.appendChild(number);
+
+    const count = document.createElement('span');
+    count.className = 'rune-tab-count';
+    count.textContent = `${filled}/${capacity}`;
+    count.setAttribute('aria-hidden', 'true');
+    btn.appendChild(count);
+
+    const tabLabel = isUnlocked
+      ? tp('runes.tabTooltip', { tab: i + 1, used: filled, capacity })
+      : t('runes.tabLockedTooltip');
+    btn.setAttribute('aria-label', tabLabel);
+    btn.setAttribute('title', tabLabel);
+    btn.setAttribute('aria-pressed', i === activeTab ? 'true' : 'false');
+    if (isUnlocked) {
+      btn.onclick = () => {
+        if (activeTab === i) return;
+        activeTab = i;
+        if (selectedRune?.source === 'inventory' && typeof runes.isFrozenIndex === 'function') {
+          const idx = selectedRune.index;
+          if (!runes.isFrozenIndex(idx)) {
+            selectedRune = null;
+          }
+        }
+        renderRunesUI();
+      };
+      btn.addEventListener('dragover', (e) => {
+        if (draggedRuneIndex === null) return;
+        e.preventDefault();
+        btn.classList.add('drag-over');
+      });
+      btn.addEventListener('dragleave', () => {
+        btn.classList.remove('drag-over');
+      });
+      btn.addEventListener('drop', (e) => {
+        if (draggedRuneIndex === null) return;
+        e.preventDefault();
+        btn.classList.remove('drag-over');
+        if (runes.moveRuneToTab?.(draggedRuneIndex, i)) {
+          selectedRune = null;
+          renderRunesUI();
+          dataManager.saveGame();
+        }
+        draggedRuneIndex = null;
+      });
+    }
+    tabs.appendChild(btn);
+  }
+  return tabs;
+}
+
+function createFrozenSection() {
+  const section = document.createElement('div');
+  section.className = 'rune-section';
+  const title = document.createElement('div');
+  title.className = 'rune-section-title';
+  title.textContent = t('runes.frozenSlots');
+  const slots = document.createElement('div');
+  slots.className = 'rune-inventory rune-frozen-slots';
+  for (let i = 0; i < FROZEN_RUNE_SLOTS; i++) {
+    slots.appendChild(createInventorySlot(runes.inventory[i], i, true));
+  }
+  section.append(title, slots);
+  return section;
+}
+
+function createInventorySection() {
+  const section = document.createElement('div');
+  section.className = 'rune-section';
+  const title = document.createElement('div');
+  title.className = 'rune-section-title';
+  title.textContent = t('runes.inventory');
+  const slots = document.createElement('div');
+  slots.className = 'rune-inventory';
+  if (typeof runes.getTabBounds === 'function') {
+    const { start, end } = runes.getTabBounds(activeTab);
+    for (let i = start; i < end; i++) {
+      slots.appendChild(createInventorySlot(runes.inventory[i], i, false));
+    }
+  } else {
+    runes.inventory.forEach((rune, index) => {
+      slots.appendChild(createInventorySlot(rune, index, false));
+    });
+  }
+  section.append(title, slots);
+  return section;
+}
+
+function createInventorySlot(rune, index, isFrozen) {
+  const slot = document.createElement('div');
+  slot.className = 'rune-slot';
+  slot.dataset.index = index;
+  slot.dataset.source = 'inventory';
+  if (isFrozen) {
+    slot.dataset.frozen = 'true';
+    slot.classList.add('frozen');
+  }
+  if (selectedRune && selectedRune.source === 'inventory' && selectedRune.index === index) {
+    slot.classList.add('selected');
+  }
+  if (rune) {
+    slot.appendChild(createRuneIcon(getRuneIcon(rune)));
+    slot.draggable = true;
+    slot.addEventListener('dragstart', (e) => {
+      draggedRuneIndex = index;
+      e.dataTransfer.setData('text/plain', `inventory-${index}`);
+    });
+    slot.addEventListener('dragend', () => {
+      draggedRuneIndex = null;
+    });
+    slot.addEventListener('mouseenter', (e) => {
+      showTooltip(getRuneTooltip(rune), e);
+    });
+    slot.addEventListener('mousemove', positionTooltip);
+    slot.addEventListener('mouseleave', hideTooltip);
+    slot.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      openRuneContextMenu('inventory', index, rune, e.clientX, e.clientY);
+    });
+    slot.addEventListener('click', () => {
+      selectedRune = { source: 'inventory', index };
+      document.querySelectorAll('.rune-slot').forEach((s) => s.classList.remove('selected'));
+      slot.classList.add('selected');
+      if (equipBtn) equipBtn.style.display = 'inline-block';
+    });
+    slot.addEventListener('dblclick', () => {
+      selectedRune = { source: 'inventory', index };
+      equipSelectedRune();
+    });
+  }
+  slot.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    slot.classList.add('drag-over');
+  });
+  slot.addEventListener('dragleave', () => {
+    slot.classList.remove('drag-over');
+  });
+  slot.addEventListener('drop', (e) => {
+    slot.classList.remove('drag-over');
+    handleDrop(e);
+    draggedRuneIndex = null;
+  });
+  return slot;
+}
 
 function equipSelectedRune() {
   const inventoryIndex = selectedRune.index;
@@ -239,6 +428,48 @@ function openRuneContextMenu(source, index, rune, x, y) {
     <button data-action="salvage">${t('inventory.salvage')}</button>
   `;
   document.body.appendChild(menu);
+
+  if (source === 'inventory') {
+    const moveRow = document.createElement('div');
+    moveRow.className = 'rune-move-row';
+    const label = document.createElement('label');
+    label.textContent = t('runes.moveToTab');
+    const select = document.createElement('select');
+    select.className = 'rune-move-select';
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = t('runes.moveToTab');
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    select.appendChild(placeholder);
+    const unlockedTabs =
+      typeof runes.getUnlockedTabCount === 'function'
+        ? runes.getUnlockedTabCount()
+        : INVENTORY_TAB_COUNT;
+    for (let tab = 0; tab < INVENTORY_TAB_COUNT; tab++) {
+      const option = document.createElement('option');
+      option.value = tab;
+      const isUnlocked =
+        typeof runes.isTabUnlocked === 'function' ? runes.isTabUnlocked(tab) : tab < unlockedTabs;
+      option.textContent = isUnlocked
+        ? `${tab + 1}`
+        : tp('runes.lockedTabOption', { tab: tab + 1 });
+      option.disabled = !isUnlocked;
+      select.appendChild(option);
+    }
+    select.onchange = (e) => {
+      const tabIndex = Number(e.target.value);
+      if (Number.isNaN(tabIndex)) return;
+      if (runes.moveRuneToTab?.(index, tabIndex)) {
+        selectedRune = null;
+        renderRunesUI();
+        dataManager.saveGame();
+      }
+      closeRuneContextMenu();
+    };
+    moveRow.append(label, select);
+    menu.appendChild(moveRow);
+  }
 
   menu.querySelector('[data-action="equip"]').onclick = () => {
     if (source === 'inventory') {

@@ -166,11 +166,16 @@ const REGION_RUNE_MAX = {
   summit: 80,
 };
 
-// Bias values tuned so that:
-//  • Stage 1, Outskirts ≈ 1/5,000 chance to roll the maximum conversion
-//  • Stage 5,000, Summit ≈ 1/3,600 chance to roll the maximum conversion
-const MIN_CONVERSION_BIAS = 26;
-const MAX_CONVERSION_BIAS = 36;
+// Conversion rolls use a low-percent band, a truncated normal mid-band, and a rare
+// high-percent tail so that:
+//  • Early regions still surface a couple of 10-20% runes in a typical batch
+//  • Mid tiers average around the mid-50s with a healthy spread up to ~90%
+//  • 100%+ conversions remain extremely rare no matter the stage
+const HIGH_CONVERSION_START = 100;
+const HIGH_CONVERSION_CHANCE = 1 / 2000;
+const LOW_BAND_MAX = 20;
+const LOW_BAND_WEIGHT_MAX = 0.24;
+const LOW_BAND_WEIGHT_MIN = 0.12;
 const STAGE_WEIGHT = 0.6;
 const REGION_WEIGHT = 0.2;
 const SYNERGY_WEIGHT = 0.2;
@@ -178,6 +183,27 @@ const SYNERGY_WEIGHT = 0.2;
 const REGION_RUNE_VALUES = Object.values(REGION_RUNE_MAX);
 const REGION_RUNE_MIN = Math.min(...REGION_RUNE_VALUES);
 const REGION_RUNE_RANGE = Math.max(1, Math.max(...REGION_RUNE_VALUES) - REGION_RUNE_MIN);
+
+function sampleTruncatedNormal(mean, std) {
+  for (let attempt = 0; attempt < 6; attempt += 1) {
+    const u1 = Math.random();
+    const u2 = Math.random();
+    const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+    const value = mean + std * z;
+    if (value >= 0 && value <= 1) {
+      return value;
+    }
+  }
+  return Math.min(1, Math.max(0, mean));
+}
+
+function rollLowBandPercent() {
+  const span = LOW_BAND_MAX - MIN_CONVERSION_PERCENT + 1;
+  const bias = 0.25;
+  const roll = 1 - Math.pow(Math.random(), bias);
+  const raw = MIN_CONVERSION_PERCENT + Math.floor(roll * span);
+  return Math.max(MIN_CONVERSION_PERCENT, Math.min(LOW_BAND_MAX, raw));
+}
 
 export function getRockyFieldRunePercent(regionId, stage) {
   const stageNorm = Math.min(Math.max(stage || 0, 0), 5000) / 5000;
@@ -189,12 +215,27 @@ export function getRockyFieldRunePercent(regionId, stage) {
     STAGE_WEIGHT * stageNorm + REGION_WEIGHT * regionNorm + SYNERGY_WEIGHT * synergy,
   );
 
-  const bias = MAX_CONVERSION_BIAS - difficulty * (MAX_CONVERSION_BIAS - MIN_CONVERSION_BIAS);
-  const roll = Math.pow(Math.random(), bias);
-  const range = MAX_CONVERSION_PERCENT - MIN_CONVERSION_PERCENT + 1;
+  if (Math.random() < HIGH_CONVERSION_CHANCE) {
+    const highRange = Math.max(1, MAX_CONVERSION_PERCENT - HIGH_CONVERSION_START + 1);
+    const highRoll = HIGH_CONVERSION_START + Math.floor(Math.random() * highRange);
+    return Math.max(HIGH_CONVERSION_START, Math.min(MAX_CONVERSION_PERCENT, highRoll));
+  }
 
-  const percent = Math.floor(roll * range) + MIN_CONVERSION_PERCENT;
-  return Math.max(MIN_CONVERSION_PERCENT, Math.min(MAX_CONVERSION_PERCENT, percent));
+  const lowBandWeight = Math.max(
+    LOW_BAND_WEIGHT_MIN,
+    Math.min(LOW_BAND_WEIGHT_MAX, LOW_BAND_WEIGHT_MAX - difficulty * 0.1),
+  );
+  if (Math.random() < lowBandWeight) {
+    return rollLowBandPercent();
+  }
+
+  const meanNorm = 0.38 + difficulty * 0.32;
+  const stdNorm = Math.max(0.18, 0.42 - difficulty * 0.18);
+  const roll = sampleTruncatedNormal(meanNorm, stdNorm);
+  const cappedRange = HIGH_CONVERSION_START - MIN_CONVERSION_PERCENT + 1;
+  const scaled = MIN_CONVERSION_PERCENT + Math.floor(roll * cappedRange);
+
+  return Math.max(MIN_CONVERSION_PERCENT, Math.min(HIGH_CONVERSION_START - 1, scaled));
 }
 
 export class RockyFieldEnemy {

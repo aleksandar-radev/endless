@@ -241,7 +241,7 @@ function openUpgradeInfoModal(key) {
       if (!ascension.spendPoint(key)) break;
     }
     updateAscensionUI();
-    if (key === 'runeSlots') renderRunesUI();
+    if (key === 'runeSlots' || key === 'runeTabs') renderRunesUI();
     update();
   };
   modal.querySelector('.ascension-upgrade-buy').onclick = doBuy;

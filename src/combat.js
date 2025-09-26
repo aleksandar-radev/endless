@@ -30,6 +30,9 @@ import { ELEMENTS } from './constants/common.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 const UNIQUE_RUNE_SET = new Set(RUNES.filter((r) => r.unique).map((r) => r.id));
+const COMMON_RUNE_DROP_CHANCE = 1 / 125;
+const UNIQUE_RUNE_DROP_CHANCE = 1 / 50000;
+const RUNE_DROP_RATE_MULTIPLIER = 1.5;
 
 export function enemyAttack(currentTime) {
   if (!game || !hero || !game.currentEnemy) return;
@@ -418,10 +421,12 @@ export async function defeatEnemy() {
       const commonPool = enemy.runeDrop.filter((id) => !UNIQUE_RUNE_SET.has(id));
       let runeId;
       let percent;
-      if (commonPool.length && Math.random() < 1 / 500) {
+      const boostedCommonChance = Math.min(1, COMMON_RUNE_DROP_CHANCE * RUNE_DROP_RATE_MULTIPLIER);
+      const boostedUniqueChance = Math.min(1, UNIQUE_RUNE_DROP_CHANCE * RUNE_DROP_RATE_MULTIPLIER);
+      if (commonPool.length && Math.random() < boostedCommonChance) {
         runeId = commonPool[Math.floor(Math.random() * commonPool.length)];
         percent = getRockyFieldRunePercent(game.rockyFieldRegion, game.rockyFieldStage);
-      } else if (uniquePool.length && Math.random() < 1 / 50000) {
+      } else if (uniquePool.length && Math.random() < boostedUniqueChance) {
         runeId = uniquePool[Math.floor(Math.random() * uniquePool.length)];
         percent = getRockyFieldRunePercent(game.rockyFieldRegion, game.rockyFieldStage);
       }
