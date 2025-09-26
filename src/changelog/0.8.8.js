@@ -13,6 +13,7 @@ export default function run() {
     <ul>
       <li>Fixed building reward timers when network conditions are poor.</li>
       <li>Fixed input getting out of focus in skill tree.</li>
+      <li>Corrected Battlecry skill description to mention only the damage boost.</li>
     </ul>
   `;
 }

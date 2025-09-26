@@ -616,7 +616,7 @@ export default {
   'skill.frenzy': 'Aumenta el daño pero drena vida por golpe mientras está activo.',
   'skill.toughSkin': 'Aumenta la armadura, el porcentaje de armadura y todas las resistencias para reducir el daño recibido.',
   'skill.recklessSwing': 'Lanza un golpe poderoso que aumenta el daño a costa de vida por golpe.',
-  'skill.battleCry': 'Lanza un grito de batalla que aumenta temporalmente el daño, la velocidad de ataque y el robo de vida.',
+  'skill.battleCry': 'Lanza un grito de batalla que aumenta temporalmente el daño.',
   'skill.berserkersRage': 'Aumenta enormemente el daño de fuego y aire con posibilidad de infligir doble daño.',
   'skill.greaterFrenzy': 'Otorga pasivamente velocidad de ataque extra y vida por golpe.',
   'skill.earthquake': 'Golpea el suelo, aumentando el daño y el daño de tierra.',

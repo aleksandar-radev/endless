@@ -624,7 +624,7 @@ export default {
   'skill.frenzy': 'Boosts damage but drains life per hit while active.',
   'skill.toughSkin': 'Raises armor, armor percent, and all resistance to reduce damage taken.',
   'skill.recklessSwing': 'Delivers a powerful strike that boosts damage at the cost of life per hit.',
-  'skill.battleCry': 'Let out a battle cry that temporarily boosts damage, attack speed, and life steal.',
+  'skill.battleCry': 'Let out a battle cry that temporarily boosts damage.',
   'skill.berserkersRage': 'Greatly boosts fire and air damage with a chance to deal double damage.',
   'skill.greaterFrenzy': 'Passively grants extra attack speed and life per hit.',
   'skill.earthquake': 'Smashes the ground, increasing damage and earth damage.',
