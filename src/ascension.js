@@ -55,6 +55,7 @@ export const ASCENSION_CATEGORIES = {
         label: t('ascension.upgrade.critDamage'),
         bonus: 0.02,
         stat: 'critDamage',
+        cost: (lvl) => Math.floor(1 + lvl * 0.1),
       },
       attackRating: {
         label: t('ascension.upgrade.attackRating'),
@@ -73,12 +74,14 @@ export const ASCENSION_CATEGORIES = {
         bonus: 0.01, // +1% armor penetration per level
         stat: 'armorPenetrationPercent',
         maxLevel: 50,
+        cost: (lvl) => Math.floor(1 + lvl * 0.2),
       },
       elementalPenetration: {
         label: t('ascension.upgrade.elementalPenetration'),
         bonus: 0.01, // +1% elemental penetration per level
         stat: 'elementalPenetrationPercent',
         maxLevel: 50,
+        cost: (lvl) => Math.floor(1 + lvl * 0.2),
       },
     },
   },
