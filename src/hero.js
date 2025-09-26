@@ -588,13 +588,13 @@ export default class Hero {
       this.stats[key] = Math.max((this.stats[key] || 0) + initialAllResBonus, 0);
     });
 
+    this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * this.stats.mana * (1 + this.stats.manaRegenPercent);
+    this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.life * (1 + this.stats.lifeRegenPercent);
+
     let pendingDamageAdditions = {};
     if (runes && typeof runes.applyPreDamageConversions === 'function') {
       pendingDamageAdditions = runes.applyPreDamageConversions(this.stats) || {};
     }
-
-    this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * this.stats.mana * (1 + this.stats.manaRegenPercent);
-    this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.life * (1 + this.stats.lifeRegenPercent);
 
     // Extra damage based on hero resources, split between physical and elemental
     const extraFromLife = (this.stats.extraDamageFromLifePercent || 0) * this.stats.life;

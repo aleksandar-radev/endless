@@ -155,11 +155,9 @@ export default class Runes {
     const rune = this.inventory[inventoryIndex];
     if (!rune) return;
     const base = RUNES_BY_ID.get(rune.id);
-    if (base?.unique) {
+    if (base) {
       const existingIndex = this.equipped.findIndex((r) => r?.id === rune.id);
-      if (existingIndex !== -1 && existingIndex !== slotIndex) {
-        return;
-      }
+      if (existingIndex !== -1 && existingIndex !== slotIndex) return;
     }
     const previous = this.equipped[slotIndex];
     this.equipped[slotIndex] = rune;
@@ -247,6 +245,19 @@ export default class Runes {
     slice.sort((a, b) => {
       if (!a) return 1;
       if (!b) return -1;
+      const baseA = RUNES_BY_ID.get(a.id);
+      const baseB = RUNES_BY_ID.get(b.id);
+      const isUniqueA = !!baseA?.unique;
+      const isUniqueB = !!baseB?.unique;
+      if (isUniqueA && !isUniqueB) return -1;
+      if (!isUniqueA && isUniqueB) return 1;
+      if (!isUniqueA && !isUniqueB) {
+        const percentA = baseA?.conversion ? resolveRunePercent(a, baseA) ?? 0 : 0;
+        const percentB = baseB?.conversion ? resolveRunePercent(b, baseB) ?? 0 : 0;
+        if (percentA !== percentB) {
+          return percentB - percentA;
+        }
+      }
       return getRuneName(a, shortElementalNames).localeCompare(
         getRuneName(b, shortElementalNames),
       );
@@ -276,8 +287,21 @@ export default class Runes {
 
     const deltas = {};
     const pendingDamageAdditions = {};
+    const consumedFromSource = {};
+    const baseValues = {};
 
-    const getValue = (stat) => (stats[stat] ?? 0) + (deltas[stat] || 0);
+    const getBaseValue = (stat) => {
+      if (!Object.prototype.hasOwnProperty.call(baseValues, stat)) {
+        baseValues[stat] = stats[stat] ?? 0;
+      }
+      return baseValues[stat];
+    };
+
+    const getAvailableFromSource = (stat) => {
+      const base = getBaseValue(stat);
+      const consumed = consumedFromSource[stat] || 0;
+      return Math.max(0, base - consumed);
+    };
 
     this.equipped.forEach((rune) => {
       if (!rune) return;
@@ -288,11 +312,16 @@ export default class Runes {
       const percent = resolveRunePercent(rune, base);
       if (!percent) return;
 
-      const available = Math.max(0, getValue(from));
+      const baseValue = getBaseValue(from);
+      if (!baseValue) return;
+      const targetAmount = Math.max(0, baseValue * (percent / 100));
+      if (!targetAmount) return;
+      const available = getAvailableFromSource(from);
       if (!available) return;
-      const move = Math.min(available, available * (percent / 100));
+      const move = Math.min(available, targetAmount);
       if (!move) return;
 
+      consumedFromSource[from] = (consumedFromSource[from] || 0) + move;
       deltas[from] = (deltas[from] || 0) - move;
       if (isDamageStat(to)) {
         pendingDamageAdditions[to] = (pendingDamageAdditions[to] || 0) + move;
@@ -322,8 +351,21 @@ export default class Runes {
 
     const deltas = {};
     const damageDeltas = {};
+    const consumedFromSource = {};
+    const baseValues = {};
 
-    const getValue = (stat) => (stats[stat] ?? 0) + (deltas[stat] || 0);
+    const getBaseValue = (stat) => {
+      if (!Object.prototype.hasOwnProperty.call(baseValues, stat)) {
+        baseValues[stat] = stats[stat] ?? 0;
+      }
+      return baseValues[stat];
+    };
+
+    const getAvailableFromSource = (stat) => {
+      const base = getBaseValue(stat);
+      const consumed = consumedFromSource[stat] || 0;
+      return Math.max(0, base - consumed);
+    };
 
     this.equipped.forEach((rune) => {
       if (!rune) return;
@@ -334,11 +376,16 @@ export default class Runes {
       const percent = resolveRunePercent(rune, base);
       if (!percent) return;
 
-      const available = Math.max(0, getValue(from));
+      const baseValue = getBaseValue(from);
+      if (!baseValue) return;
+      const targetAmount = Math.max(0, baseValue * (percent / 100));
+      if (!targetAmount) return;
+      const available = getAvailableFromSource(from);
       if (!available) return;
-      const move = Math.min(available, available * (percent / 100));
+      const move = Math.min(available, targetAmount);
       if (!move) return;
 
+      consumedFromSource[from] = (consumedFromSource[from] || 0) + move;
       deltas[from] = (deltas[from] || 0) - move;
       damageDeltas[from] = (damageDeltas[from] || 0) - move;
 

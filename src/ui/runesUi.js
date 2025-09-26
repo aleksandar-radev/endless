@@ -25,6 +25,7 @@ export function renderRunesUI() {
   const container = document.getElementById('runes');
   if (!container) return;
   container.innerHTML = '';
+  runeFilterCache.clear();
 
   const unlockedTabs =
     typeof runes.getUnlockedTabCount === 'function'
@@ -134,6 +135,19 @@ export function renderRunesUI() {
     dataManager.saveGame();
   };
 
+  const filterWrapper = document.createElement('div');
+  filterWrapper.className = 'rune-filter';
+  const filterInput = document.createElement('input');
+  filterInput.type = 'text';
+  filterInput.className = 'rune-filter-input';
+  filterInput.placeholder = t('runes.tabSearchPlaceholder');
+  filterInput.value = runeFilterText;
+  filterInput.addEventListener('input', (e) => {
+    runeFilterText = e.target.value;
+    updateRuneFilterHighlights(container);
+  });
+  filterWrapper.appendChild(filterInput);
+
   const salvageRunesInRange = (start, end) => {
     let crystals = 0;
     for (let i = start; i < end; i++) {
@@ -182,15 +196,98 @@ export function renderRunesUI() {
     if (!selectedRune || selectedRune.source !== 'inventory') return;
     equipSelectedRune();
   };
-  topControls.append(sortBtn, salvageTabBtn, salvageAllBtn, equipBtn);
+  topControls.append(filterWrapper, sortBtn, salvageTabBtn, salvageAllBtn, equipBtn);
 
   container.append(equipSection, tabsBar, frozenSection, topControls, invSection);
+  updateRuneFilterHighlights(container);
 }
 
 let selectedRune = null;
 let equipBtn;
 let activeTab = 0;
 let draggedRuneIndex = null;
+let runeFilterText = '';
+const runeFilterCache = new Map();
+
+function getRuneFilterKey(rune) {
+  if (!rune) return '';
+  const percent = typeof rune.conversion?.percent === 'number' ? rune.conversion.percent : '';
+  const mode = options?.shortElementalNames ? 'short' : 'long';
+  return `${rune.id}:${percent}:${mode}`;
+}
+
+function getRuneFilterStrings(rune) {
+  const key = getRuneFilterKey(rune);
+  if (!key) return null;
+  if (!runeFilterCache.has(key)) {
+    const name = getRuneName(rune, options.shortElementalNames).toLowerCase();
+    const desc = getRuneDescription(rune, options.shortElementalNames).toLowerCase();
+    runeFilterCache.set(key, { name, desc });
+  }
+  return runeFilterCache.get(key);
+}
+
+function runeMatchesFilter(rune, filter) {
+  if (!rune || !filter) return false;
+  const strings = getRuneFilterStrings(rune);
+  if (!strings) return false;
+  return strings.name.includes(filter) || strings.desc.includes(filter);
+}
+
+function updateRuneFilterHighlights(root = document) {
+  if (!root) return;
+  const filter = (runeFilterText || '').trim().toLowerCase();
+  const filterActive = filter.length > 0;
+
+  const slots = root.querySelectorAll('.rune-slot');
+  slots.forEach((slot) => {
+    slot.classList.remove('filter-match', 'filter-dim');
+    if (!filterActive) return;
+    const source = slot.dataset.source;
+    const index = Number(slot.dataset.index);
+    if (Number.isNaN(index)) return;
+    const rune = source === 'equipped' ? runes.equipped[index] : runes.inventory[index];
+    if (rune && runeMatchesFilter(rune, filter)) {
+      slot.classList.add('filter-match');
+    } else if (rune) {
+      slot.classList.add('filter-dim');
+    }
+  });
+
+  const tabButtons = root.querySelectorAll('.rune-tab-button');
+  const hasTabBounds = typeof runes.getTabBounds === 'function';
+  const fallbackTabSize = hasTabBounds
+    ? 0
+    : Math.ceil(runes.inventory.length / INVENTORY_TAB_COUNT);
+  tabButtons.forEach((btn) => {
+    btn.classList.remove('filter-match');
+    if (!filterActive) return;
+    const tabIndex = Number(btn.dataset.tab);
+    if (Number.isNaN(tabIndex)) return;
+    let start = 0;
+    let end = 0;
+    if (hasTabBounds) {
+      const bounds = runes.getTabBounds(tabIndex);
+      start = bounds.start;
+      end = bounds.end;
+    } else {
+      const size = fallbackTabSize || 0;
+      start = FROZEN_RUNE_SLOTS + tabIndex * size;
+      end = Math.min(start + size, runes.inventory.length);
+    }
+    let hasMatch = false;
+    for (let i = start; i < end; i++) {
+      const rune = runes.inventory[i];
+      if (rune && runeMatchesFilter(rune, filter)) {
+        hasMatch = true;
+        break;
+      }
+    }
+    if (hasMatch) {
+      btn.classList.add('filter-match');
+    }
+  });
+}
 
 function createTabsBar() {
   const tabs = document.createElement('div');
