@@ -17,6 +17,7 @@ export default function run() {
       <li>Expanded rune conversions to cover defensive, mana, evasion and resistance stats, and upgraded the rune inventory with 10 tabs plus shared frozen slots that are ignored by bulk salvage.</li>
       <li>Raised rocky field common rune drop chance, reshaped conversion rolls to produce a broader spread with rare 100%+ highs, and reduced rune salvage crystal yields.</li>
       <li>Added a rune search filter that highlights matching slots and tabs and updated sorting to surface unique runes and the highest conversion rates first.</li>
+      <li>Crystal shop stage options now apply to Rocky Field enemies just like Explore combat.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

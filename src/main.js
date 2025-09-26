@@ -54,6 +54,14 @@ window.setLanguage = setLanguage;
     game.stage = game.getStartingStage() || 1;
   }
 
+  if (!game.rockyFieldStage || game.rockyFieldStage == null) {
+    game.rockyFieldStage = game.getStartingStage() || 1;
+  }
+
+  if (!game.rockyFieldHighestStage || game.rockyFieldHighestStage < game.rockyFieldStage) {
+    game.rockyFieldHighestStage = game.rockyFieldStage;
+  }
+
   if (game.fightMode === 'explore') {
     game.currentEnemy = new Enemy(game.stage);
   } else if (game.fightMode === 'arena') {

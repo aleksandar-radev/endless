@@ -79,10 +79,29 @@ class Game {
   }
 
   incrementRockyFieldStage() {
-    this.rockyFieldStage += 1;
-    if (this.rockyFieldStage > this.rockyFieldHighestStage) {
-      this.rockyFieldHighestStage = this.rockyFieldStage;
+    let stageSkip = options.stageSkip || 0;
+    const resetAt = options.resetStageSkip || 0;
+    if (stageSkip > 0 && resetAt > 0 && this.rockyFieldStage >= resetAt) {
+      stageSkip = 0;
     }
+
+    let newStage = this.rockyFieldStage + 1 + stageSkip;
+
+    if (options.stageLockEnabled && options.stageLock > 0) {
+      if (this.rockyFieldStage >= options.stageLock) {
+        newStage = this.rockyFieldStage;
+      } else if (newStage > options.stageLock) {
+        newStage = options.stageLock;
+      }
+    }
+
+    if (newStage !== this.rockyFieldStage) {
+      this.rockyFieldStage = newStage;
+      if (this.rockyFieldStage > this.rockyFieldHighestStage) {
+        this.rockyFieldHighestStage = this.rockyFieldStage;
+      }
+    }
+
     updateStageUI();
   }
 
