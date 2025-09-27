@@ -82,13 +82,16 @@ export const BERSERKER_SKILLS = {
     icon: () => 'berserker-rage',
     description: () => t('skill.berserkersRage'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      fireDamage: scaleUpFlat(level, 4, 6),
-      fireDamagePercent: scaleDownFlat(level, 3),
-      airDamage: scaleUpFlat(level, 4, 6),
-      airDamagePercent: scaleDownFlat(level, 3),
-      doubleDamageChance: Math.min(scaleDownFlat(level, 0.35), 25),
-    }),
+    effect: (level) => {
+      const coldDamage = scaleUpFlat(level, 4, 6) * 2;
+      const coldDamagePercent = scaleDownFlat(level, 3) * 2;
+
+      return {
+        coldDamage,
+        coldDamagePercent,
+        doubleDamageChance: Math.min(scaleDownFlat(level, 0.35), 25),
+      };
+    },
   },
   greaterFrenzy: {
     id: 'greaterFrenzy',

@@ -84,11 +84,11 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.drainingTouch'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => {
-      const earthDamage = scaleUpFlat(level, 4, 3, 0.1);
-      const earthDamagePercent = scaleDownFlat(level, 5);
+      const airDamage = scaleUpFlat(level, 4, 3, 0.1);
+      const airDamagePercent = scaleDownFlat(level, 5);
       return {
-        earthDamage: earthDamage * 4,
-        earthDamagePercent: earthDamagePercent * 4,
+        airDamage: airDamage * 4,
+        airDamagePercent: airDamagePercent * 4,
         manaPerHit: scaleUpFlat(level, 0.5),
       };
     },
@@ -337,8 +337,8 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.immortalSovereign'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamage: scaleUpFlat(level, 26, 4, 0.15),
-      fireDamagePercent: scaleDownFlat(level, 5),
+      airDamage: scaleUpFlat(level, 26, 4, 0.15),
+      airDamagePercent: scaleDownFlat(level, 5),
       damagePercent: scaleDownFlat(level, 3.8),
     }),
   },

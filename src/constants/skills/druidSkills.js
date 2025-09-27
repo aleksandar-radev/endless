@@ -171,13 +171,13 @@ export const DRUID_SKILLS = {
     description: () => t('skill.hurricane'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => {
-      const airDamage = scaleUpFlat(level, 4);
-      const airDamagePercent = scaleDownFlat(level, 6);
+      const waterDamage = scaleUpFlat(level, 4);
+      const waterDamagePercent = scaleDownFlat(level, 6);
       const coldDamage = scaleUpFlat(level, 4);
       const coldDamagePercent = scaleDownFlat(level, 6);
       return {
-        airDamage: airDamage * 4,
-        airDamagePercent: airDamagePercent * 4,
+        waterDamage: waterDamage * 4,
+        waterDamagePercent: waterDamagePercent * 4,
         coldDamage: coldDamage * 4,
         coldDamagePercent: coldDamagePercent * 4,
       };
@@ -253,8 +253,8 @@ export const DRUID_SKILLS = {
     effect: (level) => ({
       coldDamagePercent: scaleDownFlat(level, 2),
       coldDamage: scaleUpFlat(level, 4),
-      airDamagePercent: scaleDownFlat(level, 2),
-      airDamage: scaleUpFlat(level, 4),
+      waterDamagePercent: scaleDownFlat(level, 2),
+      waterDamage: scaleUpFlat(level, 4),
     }),
   },
 
@@ -374,11 +374,11 @@ export const DRUID_SKILLS = {
     effect: (level) => {
       const damage = scaleUpFlat(level, 14, 4, 0.2);
       const coldDamagePercent = scaleDownFlat(level, 3);
-      const lightningDamagePercent = scaleDownFlat(level, 3);
+      const waterDamagePercent = scaleDownFlat(level, 3);
       return {
         damage: damage * 4,
         coldDamagePercent: coldDamagePercent * 4,
-        lightningDamagePercent: lightningDamagePercent * 4,
+        waterDamagePercent: waterDamagePercent * 4,
       };
     },
   },

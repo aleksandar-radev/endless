@@ -278,9 +278,9 @@ export const MAGE_SKILLS = {
     description: () => t('skill.voidBlast'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => {
-      const damage = scaleUpFlat(level, 15);
+      const waterDamage = scaleUpFlat(level, 15);
       return {
-        damage: damage * 4,
+        waterDamage: waterDamage * 4,
         elementalPenetrationPercent: scaleDownFlat(level, 3),
       };
     },
@@ -309,7 +309,7 @@ export const MAGE_SKILLS = {
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 30 + level * 1.25,
-    cooldown: () => 23000,
+    cooldown: () => 18000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'star-fire',
     description: () => t('skill.starFire'),
@@ -317,11 +317,9 @@ export const MAGE_SKILLS = {
     effect: (level) => {
       const fireDamagePercent = scaleDownFlat(level, 4);
       const airDamagePercent = scaleDownFlat(level, 3);
-      const damage = scaleUpFlat(level, 18);
       return {
         fireDamagePercent: fireDamagePercent * 4,
         airDamagePercent: airDamagePercent * 4,
-        damage: damage * 4,
       };
     },
   },
@@ -348,16 +346,14 @@ export const MAGE_SKILLS = {
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 45 + level * 1.25,
-    cooldown: () => 30000,
+    cooldown: () => 20000,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'dimensional-rift',
     description: () => t('skill.dimensionalRift'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => {
-      const damage = scaleUpFlat(level, 25);
       const lightningDamagePercent = scaleDownFlat(level, 5);
       return {
-        damage: damage * 4,
         lightningDamagePercent: lightningDamagePercent * 4,
         ignoreAllEnemyResistances: 1,
       };

@@ -289,11 +289,11 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => {
       const fireDamagePercent = scaleDownFlat(level, 4);
-      const damage = scaleUpFlat(level, 8, 4);
+      const earthDamage = scaleUpFlat(level, 8, 4);
       const fireDamage = scaleUpFlat(level, 6, 6, 0.15);
       return {
         fireDamagePercent: fireDamagePercent * 4,
-        damage: damage * 4,
+        earthDamage: earthDamage * 4,
         fireDamage: fireDamage * 4,
       };
     },
@@ -330,18 +330,17 @@ export const ELEMENTALIST_SKILLS = {
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 30 + level * 1.25,
-    cooldown: () => 25000,
+    cooldown: () => 17000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'earth-shatter',
     description: () => t('skill.earthShatter'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => {
       const earthDamagePercent = scaleDownFlat(level, 4);
-      const damage = scaleUpFlat(level, 30, 4, 0.2);
+      const earthDamage = scaleUpFlat(level, 30, 4, 0.2);
       return {
-        earthDamagePercent: earthDamagePercent * 4,
-        damage: damage * 4,
-        armorPenetrationPercent: Math.min(scaleDownFlat(level, 0.5), 60),
+        earthDamagePercent: earthDamagePercent * 8,
+        earthDamage: earthDamage * 8,
       };
     },
   },
