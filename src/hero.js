@@ -517,6 +517,13 @@ export default class Hero {
           percent += this.stats.allResistancePercent || 0;
         }
 
+        if (
+          (stat === 'armorPenetration' || stat === 'elementalPenetration') &&
+          this.stats.flatPenetrationPercent
+        ) {
+          percent += this.stats.flatPenetrationPercent;
+        }
+
         // Use Math.floor for integer stats, Number.toFixed for decimals
         let value = flatValues[stat] + (ascensionBonuses[stat] || 0);
         if (percent) value *= 1 + percent;
@@ -838,13 +845,15 @@ export default class Hero {
     if (!enemy) return result;
     // Calculate effective enemy armor after hero's armor penetration
     let effectiveArmor = enemy.armor;
+    const flatPenMultiplier = 1 + (this.stats.flatPenetrationPercent || 0);
     if (this.stats.ignoreEnemyArmor > 0 || instantSkillBaseEffects.ignoreEnemyArmor > 0) {
       effectiveArmor = 0;
     } else {
       // Apply percent armor penetration first
       effectiveArmor *= 1 - ((this.stats.armorPenetrationPercent || 0) + (instantSkillBaseEffects.armorPenetrationPercent || 0)) / 100;
       // Then apply flat armor penetration
-      effectiveArmor -= (this.stats.armorPenetration || 0) + (instantSkillBaseEffects.armorPenetration || 0);
+      const armorPenFromSkill = (instantSkillBaseEffects.armorPenetration || 0) * flatPenMultiplier;
+      effectiveArmor -= (this.stats.armorPenetration || 0) + armorPenFromSkill;
       // Armor cannot go below zero
       effectiveArmor = Math.max(0, effectiveArmor);
     }
@@ -862,7 +871,8 @@ export default class Hero {
 
       effectiveRes *= 1 - totalPercentPen / 100;
       // Then apply flat penetration (elementalPenetration + specific flat)
-      const totalFlatPen = (flatPen || 0) + (this.stats.elementalPenetration || 0) + (instantSkillBaseEffects.elementalPenetration || 0);
+      const skillFlatPen = (instantSkillBaseEffects.elementalPenetration || 0) * flatPenMultiplier;
+      const totalFlatPen = (flatPen || 0) + (this.stats.elementalPenetration || 0) + skillFlatPen;
       effectiveRes -= totalFlatPen;
       // Resistance cannot go below zero
       return Math.max(0, effectiveRes);

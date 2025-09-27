@@ -485,6 +485,12 @@ export const OFFENSE_STATS = {
     decimalPlaces: 0,
     subcategory: 'elemental',
   },
+  flatPenetrationPercent: {
+    base: 0,
+    decimalPlaces: 1,
+    showInUI: true,
+    subcategory: 'attack',
+  },
   elementalPenetrationPercent: {
     base: 0,
     decimalPlaces: 1,

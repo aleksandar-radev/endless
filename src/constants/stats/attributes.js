@@ -235,6 +235,7 @@ const CUSTOM_DESCRIPTIONS = {
     tp('tooltip.lightningPenetrationPercent', { icon: ELEMENTS.lightning.icon }),
   waterPenetrationPercent: () =>
     tp('tooltip.waterPenetrationPercent', { icon: ELEMENTS.water.icon }),
+  flatPenetrationPercent: () => t('tooltip.flatPenetrationPercent'),
   elementalPenetrationPercent: () => t('tooltip.elementalPenetrationPercent'),
   extraDamageFromLifePercent: () => t('tooltip.extraDamageFromLifePercent'),
   extraDamageFromArmorPercent: () => t('tooltip.extraDamageFromArmorPercent'),

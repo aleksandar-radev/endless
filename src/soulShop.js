@@ -49,6 +49,13 @@ export const SOUL_UPGRADE_CONFIG = {
     stat: 'attackRatingPercent',
     maxLevel: 5000,
   },
+  flatPenetrationBoost: {
+    label: 'soulShop.upgrade.flatPenetrationBoost.label',
+    bonus: 0.05,
+    baseCost: 1,
+    costIncrement: 0.1,
+    stat: 'flatPenetrationPercent',
+  },
   lifeBoost: {
     label: 'soulShop.upgrade.lifeBoost.label',
     bonus: 0.01,

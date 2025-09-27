@@ -12,6 +12,7 @@ export default function run() {
       <li>Limit passive life and mana regeneration updates to 5 times per second and hide their battle log entries.</li>
       <li>Add % bonuses after the flat values on simple stats view (when show all stats option is disabled).</li>
       <li>Renamed Soul Shop upgrades to match their bonuses and doubled the Total Damage % upgrade cost while increasing its value to 1% per level.</li>
+      <li>Added a Flat Penetration % stat and Soul Shop upgrade that boosts flat armor and elemental penetration by 5% per level.</li>
       <li>Display life and mana steal or per-hit gains above the hero as floating combat text.</li>
       <li>Reduced vitality bonuses on vampire a little.</li>
       <li>Expanded rune conversions to cover defensive, mana, evasion and resistance stats, and upgraded the rune inventory with 10 tabs plus shared frozen slots that are ignored by bulk salvage.</li>
