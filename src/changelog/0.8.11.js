@@ -11,8 +11,6 @@ export default function run() {
 
     <span style="color:#FF8A00;">Bug Fixes</span>
     <ul>
-      <li>Fixed Soul Shop Max quick buys showing shared allocations instead of each upgrade's true maximum.</li>
-      <li>Restored building upgrade cost display even when the selected upgrade is currently unaffordable.</li>
       <li>Corrected Rocky Field elemental resistance scaling so high-tier enemies gain resistances alongside their armor.</li>
     </ul>
   `;

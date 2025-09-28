@@ -30,7 +30,7 @@ import { ELEMENTS } from './constants/common.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 const UNIQUE_RUNE_SET = new Set(RUNES.filter((r) => r.unique).map((r) => r.id));
-const COMMON_RUNE_DROP_CHANCE = 1 / 125;
+const COMMON_RUNE_DROP_CHANCE = 1 / 175;
 const UNIQUE_RUNE_DROP_CHANCE = 1 / 50000;
 const RUNE_DROP_RATE_MULTIPLIER = 1.5;
 
@@ -573,11 +573,11 @@ export function calculateResistanceReduction(resistance, damage, cap = 0.9) {
  */
 export function getDamageTypeClass(breakdown) {
   if (!breakdown) return 'physical'; // Default class for physical damage
-  
+
   // Find the damage type with the highest value
   let maxDamage = 0;
   let dominantType = 'physical';
-  
+
   Object.entries(breakdown).forEach(([type, damage]) => {
     const damageValue = Math.floor(damage || 0);
     if (damageValue > maxDamage) {
@@ -585,7 +585,7 @@ export function getDamageTypeClass(breakdown) {
       dominantType = type;
     }
   });
-  
+
   return dominantType;
 }
 
@@ -601,21 +601,21 @@ export function createDamageNumber({ text = '', isPlayer = false, isCritical = f
   }
 
   const damageEl = document.createElement('div');
-  
+
   // Build CSS classes
   let className = 'damage-number';
   if (isCritical) {
     className += ' critical';
   }
-  
+
   // Add damage type class if no explicit color provided and breakdown exists
   if (!color && breakdown) {
     const damageTypeClass = getDamageTypeClass(breakdown);
     className += ` ${damageTypeClass}`;
   }
-  
+
   damageEl.className = className;
-  
+
   let displayText = text;
   if (options?.shortNumbers) {
     const num = Number(text);
@@ -628,7 +628,7 @@ export function createDamageNumber({ text = '', isPlayer = false, isCritical = f
   damageEl.innerHTML = isCritical
     ? `<img src="${BASE}/icons/critical.svg" class="icon" alt="${t('icon.critical')}"/> ` + displayText
     : displayText;
-  
+
   // Apply explicit color if provided (for special cases like MISS, EVADED, etc.)
   if (color) {
     damageEl.style.color = color;

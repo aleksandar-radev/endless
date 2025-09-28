@@ -9,19 +9,19 @@ import { ROCKY_FIELD_SUMMIT_ENEMIES } from './rocky_field_enemies/summit.js';
 export const ROCKY_FIELD_BASE_STATS = {
   life: 5000,
   damage: 375,
-  armor: 313,
+  armor: 300,
   attackSpeed: 1,
-  attackRating: 625,
-  evasion: 313,
+  attackRating: 300,
+  evasion: 300,
   xp: 80,
   gold: 100,
 
-  fireResistance: 100,
-  coldResistance: 100,
-  airResistance: 100,
-  earthResistance: 120,
-  lightningResistance: 100,
-  waterResistance: 100,
+  fireResistance: 300,
+  coldResistance: 300,
+  airResistance: 300,
+  earthResistance: 300,
+  lightningResistance: 300,
+  waterResistance: 300,
 };
 
 

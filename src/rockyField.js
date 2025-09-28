@@ -26,6 +26,12 @@ export const ROCKY_FIELD_REGIONS = [
       life: 1,
       damage: 1,
       armor: 1,
+      fireResistance: 1,
+      coldResistance: 1,
+      airResistance: 1,
+      earthResistance: 1,
+      lightningResistance: 1,
+      waterResistance: 1,
       attackSpeed: 1,
       attackRating: 1,
       evasion: 1,
@@ -46,6 +52,12 @@ export const ROCKY_FIELD_REGIONS = [
       life: 3,
       damage: 3,
       armor: 3,
+      fireResistance: 3,
+      coldResistance: 3,
+      airResistance: 3,
+      earthResistance: 3,
+      lightningResistance: 3,
+      waterResistance: 3,
       attackSpeed: 0.8,
       attackRating: 3,
       evasion: 3,
@@ -66,6 +78,12 @@ export const ROCKY_FIELD_REGIONS = [
       life: 12,
       damage: 12,
       armor: 12,
+      fireResistance: 12,
+      coldResistance: 12,
+      airResistance: 12,
+      earthResistance: 12,
+      lightningResistance: 12,
+      waterResistance: 12,
       attackSpeed: 1,
       attackRating: 12,
       evasion: 12,
@@ -86,6 +104,12 @@ export const ROCKY_FIELD_REGIONS = [
       life: 48,
       damage: 48,
       armor: 48,
+      fireResistance: 48,
+      coldResistance: 48,
+      airResistance: 48,
+      earthResistance: 48,
+      lightningResistance: 48,
+      waterResistance: 48,
       attackSpeed: 0.9,
       attackRating: 48,
       evasion: 48,
@@ -106,6 +130,12 @@ export const ROCKY_FIELD_REGIONS = [
       life: 288,
       damage: 288,
       armor: 288,
+      fireResistance: 288,
+      coldResistance: 288,
+      airResistance: 288,
+      earthResistance: 288,
+      lightningResistance: 288,
+      waterResistance: 288,
       attackSpeed: 1,
       attackRating: 288,
       evasion: 288,
@@ -126,6 +156,12 @@ export const ROCKY_FIELD_REGIONS = [
       life: 2880,
       damage: 2880,
       armor: 2880,
+      fireResistance: 2880,
+      coldResistance: 2880,
+      airResistance: 2880,
+      earthResistance: 2880,
+      lightningResistance: 2880,
+      waterResistance: 2880,
       attackSpeed: 1.2,
       attackRating: 2880,
       evasion: 2880,
@@ -178,8 +214,6 @@ const BASE_SCALE_PER_REGION_AND_LEVEL = {
     levelScale: 0.01,
   },
 };
-
-const attackRatingAndEvasionScale = 0.6;
 
 const REGION_RUNE_MAX = {
   outskirts: 5,
@@ -370,12 +404,12 @@ export class RockyFieldEnemy {
 
   calculateEvasion() {
     const statMultiplier = this.getStatMultiplier();
-    return scaleStat(this.getStatValue('evasion') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * attackRatingAndEvasionScale;
+    return scaleStat(this.getStatValue('evasion') * statMultiplier, this.level, 0, 0, 0, this.baseScale);
   }
 
   calculateAttackRating() {
     const statMultiplier = this.getStatMultiplier();
-    return scaleStat(this.getStatValue('attackRating') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * attackRatingAndEvasionScale;
+    return scaleStat(this.getStatValue('attackRating') * statMultiplier, this.level, 0, 0, 0, this.baseScale);
   }
 
   calculateXP() {
