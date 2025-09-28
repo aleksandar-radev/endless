@@ -317,9 +317,9 @@
 }
 
 .prestige-reroll-values-btn {
-  background: #e7e6aa;
+  background: rgba(124, 123, 84, 0.5);
   border: 1px solid var(--accent, #4e8cff);
-  color: var(--accent, #4e8cff);
+  color: #b2f8f5;
   border-radius: 0.5rem;
   padding: 0.25rem 0.5rem;
   cursor: pointer;
