@@ -277,7 +277,9 @@ export default class SoulShop {
       if (options?.quickSoulShop && !alreadyPurchased) {
         if (isMultiLevel || isMultiple) {
           if (this.quickQty === 'max') {
-            const { qty: affordableQty, totalCost } = this.getBulkCost(stat, 'max');
+            const { qty: affordableQty, totalCost } = this.getBulkCost(stat, 'max', hero.souls, {
+              distribute: false,
+            });
             qty =
               affordableQty > 0
                 ? Math.min(affordableQty, SOUL_SHOP_MAX_QTY)
@@ -387,7 +389,9 @@ export default class SoulShop {
       const baseLevel = this.soulUpgrades[stat] || 0;
       const levelsLeft = isMultiLevel ? this.getLevelsLeft(config, baseLevel) : Infinity;
       if (this.quickQty === 'max') {
-        const { qty: affordableQty, totalCost } = this.getBulkCost(stat, 'max');
+        const { qty: affordableQty, totalCost } = this.getBulkCost(stat, 'max', hero.souls, {
+          distribute: false,
+        });
         qty =
           affordableQty > 0
             ? Math.min(affordableQty, SOUL_SHOP_MAX_QTY)
@@ -472,17 +476,20 @@ export default class SoulShop {
     return allocations;
   }
 
-  getBulkCost(stat, desiredQty, availableSouls = hero.souls) {
+  getBulkCost(stat, desiredQty, availableSouls = hero.souls, { distribute = true } = {}) {
     const config = SOUL_UPGRADE_CONFIG[stat];
     if (!config) return { qty: 0, totalCost: 0 };
     const isMultiLevel = typeof config.bonus === 'number' && !config.oneTime;
     const baseLevel = this.soulUpgrades[stat] || 0;
     if (isMultiLevel && desiredQty === 'max') {
-      const distributed = this.getDistributedMaxAllocations(availableSouls);
-      if (distributed.has(stat)) {
-        const entry = distributed.get(stat);
-        return { qty: entry.qty, totalCost: entry.totalCost };
+      if (distribute) {
+        const distributed = this.getDistributedMaxAllocations(availableSouls);
+        if (distributed.has(stat)) {
+          const entry = distributed.get(stat);
+          return { qty: entry.qty, totalCost: entry.totalCost };
+        }
       }
+      return this.getMaxPurchasable(stat, desiredQty, baseLevel, availableSouls);
     }
     if (isMultiLevel) {
       return this.getMaxPurchasable(stat, desiredQty, baseLevel, availableSouls);
