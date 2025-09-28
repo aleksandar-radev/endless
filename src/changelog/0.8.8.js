@@ -22,6 +22,7 @@ export default function run() {
       <li>Elementalist's lightning strike cooldown increased to 3500ms and % damages reduced.</li>
       <li>Slightly reduced hp on enemies and increase gold gains (on Explore).</li>
       <li>Reworked all combat modes and regions, to have much more variety.</li>
+      <li>Allow partial sell of buildings. Managed by the same system as upgrades.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

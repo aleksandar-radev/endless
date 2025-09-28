@@ -125,32 +125,45 @@ export class Building {
     return affordable;
   }
 
-  // Returns the refund object for the current level
-  getRefund() {
-    // Returns the refund for the current level
+  // Returns the refund object for selling a specific number of levels
+  getRefundForAmount(amount = this.level) {
+    const levelsToRefund = Math.max(0, Math.min(amount, this.level));
+    if (levelsToRefund <= 0) return {};
+    const currentLevel = this.level;
+    const remainingLevel = currentLevel - levelsToRefund;
     const refund = {};
-    const n = this.level;
     for (const [type, { base, increment, cap }] of Object.entries(this.costStructure)) {
-      // Total spent across all upgrades up to level n
-      let totalSpent = base * n + increment * (n * (n - 1) / 2);
+      let totalAtCurrent = base * currentLevel + increment * (currentLevel * (currentLevel - 1) / 2);
+      let totalAtRemaining = base * remainingLevel + increment * (remainingLevel * (remainingLevel - 1) / 2);
       if (cap !== null && cap !== undefined) {
-        // Cap applies per level, so max spent is cap * n
-        totalSpent = Math.min(totalSpent, cap * n);
+        totalAtCurrent = Math.min(totalAtCurrent, cap * currentLevel);
+        totalAtRemaining = Math.min(totalAtRemaining, cap * remainingLevel);
       }
-      refund[type] = Math.floor(refundPercent * totalSpent);
+      const spentForLevels = Math.max(0, totalAtCurrent - totalAtRemaining);
+      refund[type] = Math.floor(refundPercent * spentForLevels);
     }
     return refund;
   }
 
+  // Returns the refund object for the current level
+  getRefund() {
+    return this.getRefundForAmount(this.level);
+  }
+
   // Refunds resources to the hero for this building (used when selling)
-  refundToHero() {
-    const refund = this.getRefund();
+  refundToHero(amount = this.level) {
+    const levelsToRefund = Math.max(0, Math.min(amount, this.level));
+    if (levelsToRefund <= 0) return {};
+    const refund = this.getRefundForAmount(levelsToRefund);
     for (const [type, value] of Object.entries(refund)) {
       if (hero[type + 's'] !== undefined) hero[type + 's'] += value;
       else if (hero[type] !== undefined) hero[type] += value;
     }
+    this.level -= levelsToRefund;
+    if (this.level < 0) this.level = 0;
     updateResources(); // Update UI after refund
     dataManager.saveGame(); // Save after refund
+    return refund;
   }
 
   // Returns a serializable object

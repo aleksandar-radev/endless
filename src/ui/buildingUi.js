@@ -70,31 +70,31 @@ function updateBuildingCountdowns() {
   if (document.getElementById('offline-bonuses-modal')) return;
   const nodes = document.querySelectorAll('.building-next-bonus');
   if (!nodes.length) return;
-  
+
   // Use current time with server offset, fallback to local time if offset failed
   const now = Date.now() + serverTimeOffsetMs;
   let needsCollect = false;
-  
+
   nodes.forEach((el) => {
     const id = el.dataset.buildingId;
     const b = buildings?.buildings?.[id];
-    
+
     // Use helper function for validation
     if (!isBuildingReadyForTimer(b)) {
       el.textContent = tp('buildings.nextBonus', { time: '—' });
       return;
     }
-    
+
     const intervalMs = intervalToMs(b.effect.interval);
-    
+
     // Ensure lastBonusTime is valid, use current time as fallback
-    const lastBonusTime = (typeof b.lastBonusTime === 'number' && b.lastBonusTime > 0) 
-      ? b.lastBonusTime 
+    const lastBonusTime = (typeof b.lastBonusTime === 'number' && b.lastBonusTime > 0)
+      ? b.lastBonusTime
       : now;
-    
+
     const nextAt = lastBonusTime + intervalMs;
     const msLeft = nextAt - now;
-    
+
     if (msLeft <= 0) {
       // Mark for collection; UI will refresh after collect
       needsCollect = true;
@@ -103,7 +103,7 @@ function updateBuildingCountdowns() {
       el.textContent = tp('buildings.nextBonus', { time: fmtDuration(msLeft) });
     }
   });
-  
+
   if (needsCollect && buildings?.collectBonuses) {
     // Run once for all buildings; then refresh resources and allow timers to reset
     buildings
@@ -119,12 +119,12 @@ function updateBuildingCountdowns() {
 
 function startBuildingCountdowns() {
   if (buildingCountdownInterval != null) return;
-  
+
   // Initialize server time offset with retry logic
   const initializeWithRetry = async (retryCount = 0) => {
     const maxRetries = 3;
     const retryDelay = 1000; // 1 second
-    
+
     try {
       await ensureTimeOffsetInitialized();
     } catch (error) {
@@ -137,7 +137,7 @@ function startBuildingCountdowns() {
         serverTimeOffsetMs = 0;
       }
     }
-    
+
     // Start the countdown timer after successful initialization (or final fallback)
     // Small delay to avoid racing the initial offline collection flow in main.js
     setTimeout(() => {
@@ -156,7 +156,7 @@ function startBuildingCountdowns() {
       }
     }, 1200);
   };
-  
+
   initializeWithRetry();
 }
 
@@ -180,13 +180,33 @@ function createBuildingCard(building) {
 function showBuildingInfoModal(building, onUpgrade, placementOptions) {
   const canUpgrade = building.level < building.maxLevel;
 
-  let upgradeAmount = options.useNumericInputs
-    ? Math.min(options.buildingQty || 1, BUILDING_MAX_QTY)
+  let selectedAmount = options.useNumericInputs
+    ? Math.min(Math.max(options.buildingQty || 1, 1), BUILDING_MAX_QTY)
     : 1;
   let modal;
 
   function getMaxUpgradeAmount() {
     return Math.min(building.getMaxUpgradeAmount(hero), BUILDING_MAX_QTY);
+  }
+
+  function getSelectedAmount() {
+    return Math.max(1, Math.min(selectedAmount, BUILDING_MAX_QTY));
+  }
+
+  function getMaxInteractionAmount() {
+    return Math.min(BUILDING_MAX_QTY, Math.max(getMaxUpgradeAmount(), building.level));
+  }
+
+  function getUpgradeAmount() {
+    const raw = getSelectedAmount();
+    const maxUpgradable = Math.min(Math.max(building.maxLevel - building.level, 0), BUILDING_MAX_QTY);
+    if (maxUpgradable <= 0) return 0;
+    return Math.min(raw, maxUpgradable);
+  }
+
+  function getSellAmount() {
+    const raw = getSelectedAmount();
+    return Math.min(raw, building.level);
   }
 
   function getTotalBonus(amount) {
@@ -204,18 +224,20 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
   }
 
   function renderModalContent() {
-    const maxAffordableAmt = getMaxUpgradeAmount();
-    upgradeAmount = Math.max(1, Math.min(upgradeAmount, maxAffordableAmt));
+    const rawAmount = getSelectedAmount();
+    const upgradeAmount = getUpgradeAmount();
+    const sellAmount = getSellAmount();
+    const maxInteractionAmount = Math.max(1, getMaxInteractionAmount());
     const totalCost = building.getUpgradeCost(upgradeAmount);
     const totalBonus = getTotalBonus(upgradeAmount);
-    const refundAmount = building.getRefund();
+    const refundAmount = building.getRefundForAmount(sellAmount);
     const upgradeControls = options.useNumericInputs
-      ? `<input type="number" class="upgrade-amt-input input-number" min="1" max="${BUILDING_MAX_QTY}" value="${upgradeAmount}" />
-          <button data-amt="max" class="upgrade-amt-btn${upgradeAmount === maxAffordableAmt ? ' selected-upgrade-amt' : ''}">${t('options.max')}</button>`
-      : `<button data-amt="1" class="upgrade-amt-btn${upgradeAmount === 1 ? ' selected-upgrade-amt' : ''}">+1</button>
-          <button data-amt="10" class="upgrade-amt-btn${upgradeAmount === 10 ? ' selected-upgrade-amt' : ''}" ${maxAffordableAmt < 10 ? 'disabled' : ''}>+10</button>
-          <button data-amt="50" class="upgrade-amt-btn${upgradeAmount === 50 ? ' selected-upgrade-amt' : ''}" ${maxAffordableAmt < 50 ? 'disabled' : ''}>+50</button>
-          <button data-amt="max" class="upgrade-amt-btn${upgradeAmount === maxAffordableAmt ? ' selected-upgrade-amt' : ''}">${t('options.max')}</button>`;
+      ? `<input type="number" class="upgrade-amt-input input-number" min="1" max="${BUILDING_MAX_QTY}" value="${rawAmount}" />
+          <button data-amt="max" class="upgrade-amt-btn${rawAmount === maxInteractionAmount ? ' selected-upgrade-amt' : ''}">${t('options.max')}</button>`
+      : `<button data-amt="1" class="upgrade-amt-btn${rawAmount === 1 ? ' selected-upgrade-amt' : ''}">+1</button>
+          <button data-amt="10" class="upgrade-amt-btn${rawAmount === 10 ? ' selected-upgrade-amt' : ''}" ${maxInteractionAmount < 10 ? 'disabled' : ''}>+10</button>
+          <button data-amt="50" class="upgrade-amt-btn${rawAmount === 50 ? ' selected-upgrade-amt' : ''}" ${maxInteractionAmount < 50 ? 'disabled' : ''}>+50</button>
+          <button data-amt="max" class="upgrade-amt-btn${rawAmount === maxInteractionAmount ? ' selected-upgrade-amt' : ''}">${t('options.max')}</button>`;
     return html`
       <div class="building-modal-content">
         <button class="modal-close">×</button>
@@ -242,11 +264,11 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
         <div class="building-info-modal-upgrade">
           <div style="margin: 10px 0 6px 0;" data-i18n="buildings.upgradeAmountLabel">${t('buildings.upgradeAmountLabel')}</div>
           <div class="building-upgrade-amounts">${upgradeControls}</div>
-          <button class="building-upgrade-btn" ${canUpgrade && canAffordUpgrade(upgradeAmount) ? '' : 'disabled'}>
+          <button class="building-upgrade-btn" ${canUpgrade && upgradeAmount > 0 && canAffordUpgrade(upgradeAmount) ? '' : 'disabled'}>
             ${t('buildings.upgrade')}
           </button>
           ${!placementOptions
-    ? `<button class="building-sell-btn">${tp('buildings.sellRefund', { refund: Building.formatCost(refundAmount) })}</button>`
+    ? `<button class="building-sell-btn" ${sellAmount > 0 ? '' : 'disabled'}>${tp('buildings.sellRefund', { refund: Building.formatCost(refundAmount) })}</button>`
     : ''}
         </div>
       </div>
@@ -263,8 +285,8 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
         let amt = parseInt(input.value, 10);
         if (isNaN(amt) || amt < 1) amt = 1;
         if (amt > BUILDING_MAX_QTY) amt = BUILDING_MAX_QTY;
-        upgradeAmount = Math.max(1, Math.min(getMaxUpgradeAmount(), amt));
-        options.buildingQty = upgradeAmount;
+        selectedAmount = Math.max(1, Math.min(amt, BUILDING_MAX_QTY));
+        options.buildingQty = selectedAmount;
         dataManager.saveGame();
         rerenderModal();
         const newInput = modal.querySelector('.upgrade-amt-input');
@@ -283,25 +305,27 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
         btn.onclick = () => {
           let amt;
           if (btn.dataset.amt === 'max') {
-            amt = getMaxUpgradeAmount();
+            amt = Math.max(1, getMaxInteractionAmount());
           } else {
-            amt = parseInt(btn.dataset.amt);
+            amt = parseInt(btn.dataset.amt, 10);
           }
-          upgradeAmount = Math.max(1, Math.min(getMaxUpgradeAmount(), amt));
+          if (isNaN(amt) || amt < 1) amt = 1;
+          selectedAmount = Math.min(amt, BUILDING_MAX_QTY);
           rerenderModal();
         };
       });
     }
     if (maxBtn && input) {
       maxBtn.onclick = () => {
-        upgradeAmount = getMaxUpgradeAmount();
-        options.buildingQty = upgradeAmount;
+        selectedAmount = Math.max(1, getMaxInteractionAmount());
+        options.buildingQty = selectedAmount;
         dataManager.saveGame();
         rerenderModal();
       };
     }
     modal.querySelector('.building-upgrade-btn').onclick = () => {
-      let amt = Math.min(upgradeAmount, getMaxUpgradeAmount());
+      let amt = Math.min(getUpgradeAmount(), getMaxUpgradeAmount());
+      if (amt <= 0) return;
       let upgraded = false;
       // Check if player can afford all resources for the upgrade
       const totalCost = building.getUpgradeCost(amt);
@@ -350,13 +374,23 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
     };
     if (!placementOptions) {
       modal.querySelector('.building-sell-btn').onclick = () => {
+        const sellAmount = getSellAmount();
+        if (sellAmount <= 0) return;
         showConfirmDialog(tp('buildings.removeConfirm', { name: building.name })).then((confirmed) => {
           if (confirmed) {
-            building.refundToHero();
-            buildings.unplaceBuilding(building.id);
+            building.refundToHero(sellAmount);
+            if (building.level <= 0) {
+              buildings.unplaceBuilding(building.id);
+              closeModal('building-info-modal');
+            } else {
+              selectedAmount = Math.max(1, Math.min(selectedAmount, building.level));
+              if (options.useNumericInputs) {
+                options.buildingQty = selectedAmount;
+              }
+              rerenderModal();
+            }
             if (typeof onUpgrade === 'function') onUpgrade();
             if (dataManager) dataManager.saveGame();
-            closeModal('building-info-modal');
             renderPurchasedBuildings();
           }
         });
