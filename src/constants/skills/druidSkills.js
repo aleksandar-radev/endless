@@ -302,11 +302,10 @@ export const DRUID_SKILLS = {
     description: () => t('skill.avatarOfNature'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      vitality: scaleUpFlat(level, 3, 6),
-      vitalityPercent: scaleDownFlat(level, 3),
-      strength: scaleUpFlat(level, 4, 6),
+      vitality: scaleUpFlat(level, 3, 8),
+      vitalityPercent: scaleDownFlat(level, 1.5),
+      strength: scaleUpFlat(level, 4, 8),
       damagePercent: scaleDownFlat(level, 2),
-      lifePercent: scaleDownFlat(level, 2),
     }),
   },
 
