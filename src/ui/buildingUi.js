@@ -199,9 +199,11 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
 
   function getUpgradeAmount() {
     const raw = getSelectedAmount();
-    const maxUpgradable = Math.min(Math.max(building.maxLevel - building.level, 0), BUILDING_MAX_QTY);
-    if (maxUpgradable <= 0) return 0;
-    return Math.min(raw, maxUpgradable);
+    const maxLevelGain = Math.min(Math.max(building.maxLevel - building.level, 0), BUILDING_MAX_QTY);
+    if (maxLevelGain <= 0) return 0;
+    const maxAffordable = Math.min(getMaxUpgradeAmount(), maxLevelGain);
+    if (maxAffordable <= 0) return 0;
+    return Math.min(raw, maxAffordable);
   }
 
   function getSellAmount() {

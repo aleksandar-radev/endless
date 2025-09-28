@@ -13,7 +13,8 @@ export default function run() {
 
         <span style="color:#FF8A00;">Bug Fixes</span>
     <ul>
-      <li>Fixed building buttons counting towards selling instead of buying.</li>
+      <li>Fixed building buttons counting towards selling instead of buying.</li>3
+      <li>Fixed building modal max controls so the buy amount still respects resource limits while showing the sell maximum.</li>
     </ul>
   `;
 }
