@@ -34,9 +34,15 @@
 
 /* Skill Tree Styling */
 .skill-tree-container {
-  padding: 20px;
+  --skill-tree-base-padding: 20px;
+  --skill-tree-header-fixed-offset: 12px;
+  --skill-tree-header-gap: 12px;
+  --skill-tree-floating-header-space: 0px;
+  padding: var(--skill-tree-base-padding);
+  padding-top: calc(var(--skill-tree-base-padding) + var(--skill-tree-floating-header-space));
   background: var(--bg-panel);
   border-radius: 8px;
+  position: relative;
 }
 
 /* Header above the skill tree with class name, points, and quick controls */
@@ -46,6 +52,20 @@
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding-block: 12px;
+  background: var(--bg-panel);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.skill-points-header--fixed {
+  position: fixed;
+  top: var(--skill-tree-header-fixed-offset);
+  left: var(--skill-tree-header-fixed-left, 0px);
+  width: var(--skill-tree-header-fixed-width, auto);
+  z-index: 900;
 }
 
 .skill-header-left {

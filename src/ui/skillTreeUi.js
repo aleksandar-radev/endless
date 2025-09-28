@@ -13,6 +13,9 @@ const SKILL_CATEGORY_TRANSLATIONS = {
   spell: 'skillTree.skillCategory.spell',
 };
 
+let cleanupSkillTreeHeaderFloating = null;
+let updateSkillTreeHeaderFloating = null;
+
 function resolveSkillCategoryLabel(skill) {
   if (!skill) return '';
   const categorySource = skill.skill_type ?? skill.skillType;
@@ -294,7 +297,10 @@ function createPreviewTooltip(skill) {
 }
 
 export function initializeSkillTreeStructure() {
-  if (!skillTree.selectedPath) return;
+  if (!skillTree.selectedPath) {
+    cleanupSkillTreeHeaderFloating?.();
+    return;
+  }
   const container = document.getElementById('skill-tree-container');
   container.innerHTML = '';
 
@@ -341,6 +347,7 @@ export function initializeSkillTreeStructure() {
   renderAutoCastToggles();
   // --- Slot Display Toggles ---
   renderDisplayToggles();
+  setupSkillTreeFloatingHeader(container, skillPointsHeader);
 }
 
 function renderAutoCastToggles() {
@@ -454,6 +461,94 @@ function renderDisplayToggles() {
   container.appendChild(displaySection);
 }
 
+function setupSkillTreeFloatingHeader(container, header) {
+  cleanupSkillTreeHeaderFloating?.();
+  updateSkillTreeHeaderFloating = null;
+
+  if (!container || !header) {
+    cleanupSkillTreeHeaderFloating = null;
+    updateSkillTreeHeaderFloating = null;
+    return;
+  }
+
+  const tabPanel = container.closest('.tab-panel');
+  const scrollTargets = [window];
+  if (tabPanel) scrollTargets.push(tabPanel);
+
+  const getNumericVar = (styles, property, fallback = 0) => {
+    const raw = styles.getPropertyValue(property);
+    const parsed = parseFloat(raw);
+    return Number.isNaN(parsed) ? fallback : parsed;
+  };
+
+  const updateFloatingHeader = () => {
+    if (!document.body.contains(container) || !document.body.contains(header)) {
+      cleanupSkillTreeHeaderFloating?.();
+      return;
+    }
+
+    const containerRect = container.getBoundingClientRect();
+    const containerStyles = window.getComputedStyle(container);
+    const headerStyles = window.getComputedStyle(header);
+
+    const basePadding = getNumericVar(containerStyles, '--skill-tree-base-padding', 0);
+    const headerGap = getNumericVar(
+      containerStyles,
+      '--skill-tree-header-gap',
+      parseFloat(headerStyles.marginBottom) || 0,
+    );
+    const fixedOffset = getNumericVar(containerStyles, '--skill-tree-header-fixed-offset', 0);
+    const headerHeight = header.offsetHeight;
+
+    const headerTopInFlow = containerRect.top + basePadding;
+    const contentBottom = containerRect.bottom - basePadding;
+    const shouldFix = headerTopInFlow <= fixedOffset && contentBottom > fixedOffset + headerHeight;
+
+    if (shouldFix) {
+      const contentLeft = containerRect.left + basePadding;
+      const contentWidth = Math.max(containerRect.width - basePadding * 2, 0);
+      const totalSpace = headerHeight + headerGap;
+
+      header.classList.add('skill-points-header--fixed');
+      header.style.setProperty('--skill-tree-header-fixed-left', `${contentLeft}px`);
+      header.style.setProperty('--skill-tree-header-fixed-width', `${contentWidth}px`);
+      container.style.setProperty('--skill-tree-floating-header-space', `${totalSpace}px`);
+    } else {
+      header.classList.remove('skill-points-header--fixed');
+      header.style.removeProperty('--skill-tree-header-fixed-left');
+      header.style.removeProperty('--skill-tree-header-fixed-width');
+      container.style.setProperty('--skill-tree-floating-header-space', '0px');
+    }
+  };
+
+  const scrollListener = { passive: true };
+  scrollTargets.forEach((target) => target.addEventListener('scroll', updateFloatingHeader, scrollListener));
+  window.addEventListener('resize', updateFloatingHeader);
+
+  const resizeObservers = [];
+  if (typeof ResizeObserver === 'function') {
+    const observer = new ResizeObserver(updateFloatingHeader);
+    observer.observe(container);
+    observer.observe(header);
+    resizeObservers.push(observer);
+  }
+
+  updateSkillTreeHeaderFloating = updateFloatingHeader;
+  updateFloatingHeader();
+
+  cleanupSkillTreeHeaderFloating = () => {
+    scrollTargets.forEach((target) => target.removeEventListener('scroll', updateFloatingHeader));
+    window.removeEventListener('resize', updateFloatingHeader);
+    resizeObservers.forEach((observer) => observer.disconnect());
+    container.style.setProperty('--skill-tree-floating-header-space', '0px');
+    header.classList.remove('skill-points-header--fixed');
+    header.style.removeProperty('--skill-tree-header-fixed-left');
+    header.style.removeProperty('--skill-tree-header-fixed-width');
+    cleanupSkillTreeHeaderFloating = null;
+    updateSkillTreeHeaderFloating = null;
+  };
+}
+
 export function updateSkillTreeValues() {
   const characterAvatarEl = document.getElementById('character-avatar');
   const characterNameEl = document.getElementById('character-name');
@@ -550,6 +645,8 @@ export function updateSkillTreeValues() {
       });
     }
   }
+
+  updateSkillTreeHeaderFloating?.();
 
   container.querySelectorAll('.skill-node').forEach((node) => {
     const skillId = node.dataset.skillId;
