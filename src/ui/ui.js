@@ -924,9 +924,11 @@ export function updateStageControlsInlineVisibility() {
   const stageLockRow = document.createElement('div');
   stageLockRow.className = 'option-row';
   stageLockRow.innerHTML = html`
-    <label for="inline-stage-lock-input" class="stage-lock-label" data-i18n="options.stageLockStage">${t(
-      'options.stageLockStage',
-    )}:</label>
+    <label
+      for="inline-stage-lock-input"
+      class="stage-lock-label"
+      data-i18n="options.stageLockStage"
+    >${t('options.stageLockStage')}:</label>
     <input
       type="number"
       id="inline-stage-lock-input"
@@ -935,12 +937,18 @@ export function updateStageControlsInlineVisibility() {
       value="${stageLockValue}"
       ${stageLockPurchased ? '' : 'disabled'}
     />
-    <button class="max-btn" type="button" ${stageLockPurchased ? '' : 'disabled'} data-i18n="common.max">${t(
-      'common.max',
-    )}</button>
-    <button class="apply-btn" type="button" ${stageLockPurchased ? '' : 'disabled'} data-i18n="common.apply">${t(
-      'common.apply',
-    )}</button>
+    <button
+      class="max-btn"
+      type="button"
+      ${stageLockPurchased ? '' : 'disabled'}
+      data-i18n="common.max"
+    >${t('common.max')}</button>
+    <button
+      class="apply-btn"
+      type="button"
+      ${stageLockPurchased ? '' : 'disabled'}
+      data-i18n="common.apply"
+    >${t('common.apply')}</button>
   `;
   const stageLockInput = stageLockRow.querySelector('.stage-lock-input');
   const stageLockMaxBtn = stageLockRow.querySelector('.max-btn');

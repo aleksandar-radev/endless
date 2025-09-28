@@ -12,6 +12,7 @@ export default function run() {
     <span style="color:#FF8A00;">Bug Fixes</span>
     <ul>
       <li>Corrected Rocky Field elemental resistance scaling so high-tier enemies gain resistances alongside their armor.</li>
+      <li>Ensured thorns damage triggers even when the hero blocks an attack.</li>
     </ul>
   `;
 }

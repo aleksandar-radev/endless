@@ -52,6 +52,33 @@ export function enemyAttack(currentTime) {
       createDamageNumber({ text: 'EVADED', isPlayer: true, color: '#FFD700' });
       battleLog.addBattle(t('battleLog.evadedAttack'));
     } else {
+      // Use PoE2 armor formula for physical damage reduction
+      const physicalDamageRaw = game.currentEnemy.damage;
+      const armorReduction = calculateArmorReduction(hero.stats.armor, physicalDamageRaw) / 100;
+      const physicalDamage = Math.floor(physicalDamageRaw * (1 - armorReduction));
+
+      const elementalDamage = {};
+      ELEMENT_IDS.forEach((id) => {
+        const reduction =
+          calculateResistanceReduction(
+            hero.stats[`${id}Resistance`],
+            game.currentEnemy[`${id}Damage`],
+          ) / 100;
+        elementalDamage[id] = game.currentEnemy[`${id}Damage`] * (1 - reduction);
+      });
+
+      const totalDamage =
+        physicalDamage + ELEMENT_IDS.reduce((sum, id) => sum + elementalDamage[id], 0);
+
+      const breakdown = { physical: physicalDamage, ...elementalDamage };
+
+      // Calculate thorns damage based on the final damage taken
+      const thornsDamage = hero.calculateTotalThornsDamage(totalDamage);
+      // only if there is some thorns damage to deal, only paladin
+      if (thornsDamage - totalDamage > 1) {
+        game.damageEnemy(thornsDamage, false, null, 'thornsDamage');
+      }
+
       const isBlocked = Math.random() * 100 < hero.stats.blockChance;
 
       if (isBlocked) {
@@ -66,34 +93,6 @@ export function enemyAttack(currentTime) {
           battleLog.addBattle(tp('battleLog.healedLife', { value: formatNumber(Math.floor(healAmount)) }));
         }
       } else {
-        // Use PoE2 armor formula for physical damage reduction
-        const physicalDamageRaw = game.currentEnemy.damage;
-        const armorReduction = calculateArmorReduction(hero.stats.armor, physicalDamageRaw) / 100;
-        const physicalDamage = Math.floor(physicalDamageRaw * (1 - armorReduction));
-
-        const elementalDamage = {};
-        ELEMENT_IDS.forEach((id) => {
-          const reduction =
-            calculateResistanceReduction(
-              hero.stats[`${id}Resistance`],
-              game.currentEnemy[`${id}Damage`],
-            ) / 100;
-          elementalDamage[id] = game.currentEnemy[`${id}Damage`] * (1 - reduction);
-        });
-
-        let totalDamage =
-          physicalDamage + ELEMENT_IDS.reduce((sum, id) => sum + elementalDamage[id], 0);
-
-        const breakdown = { physical: physicalDamage, ...elementalDamage };
-
-        // Calculate thorns damage based on the final damage taken
-        const thornsDamage = hero.calculateTotalThornsDamage(totalDamage);
-        // only if there is some thorns damage to deal, only paladin
-        if (thornsDamage - totalDamage > 1) {
-          game.damageEnemy(thornsDamage, false, null, 'thornsDamage');
-        }
-
-
         const fireId = ELEMENTS.fire.id;
         const fireReflect = Math.floor(
           hero.stats[`reflect${fireId.charAt(0).toUpperCase()}${fireId.slice(1)}Damage`] || 0,
