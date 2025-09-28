@@ -23,6 +23,8 @@ export default function run() {
       <li>Slightly reduced hp on enemies and increase gold gains (on Explore).</li>
       <li>Reworked all combat modes and regions, to have much more variety.</li>
       <li>Allow partial sell of buildings. Managed by the same system as upgrades.</li>
+      <li>Optimized Soul Shop max purchase calculations to keep large-soul upgrades responsive.</li>
+      <li>Distribute Soul Shop max quick buys evenly across eligible upgrades instead of pouring all souls into the first picks.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
