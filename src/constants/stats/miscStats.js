@@ -214,7 +214,7 @@ export const MISC_STATS = {
   bonusGoldPercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 5, max: 20, limit: 100, scaling: (level, tier) => miscScaling(level, tier) },
+    item: { min: 5, max: 20, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry'],
     showInUI: true,
     subcategory: 'rewards',
@@ -223,7 +223,7 @@ export const MISC_STATS = {
   bonusExperiencePercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 5, max: 15, limit: 100, scaling: (level, tier) => miscScaling(level, tier) },
+    item: { min: 5, max: 15, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry'],
     showInUI: true,
     subcategory: 'rewards',
@@ -256,7 +256,7 @@ export const MISC_STATS = {
   itemQuantityPercent: {
     base: 0,
     decimalPlaces: 0,
-    item: { min: 4, max: 13, limit: 100, scaling: (level, tier) => miscScaling(level, tier) },
+    item: { min: 4, max: 13, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry', 'gloves'],
     showInUI: true,
     subcategory: 'rewards',
@@ -265,7 +265,7 @@ export const MISC_STATS = {
   itemRarityPercent: {
     base: 0,
     decimalPlaces: 0,
-    item: { min: 4, max: 13, limit: 100, scaling: (level, tier) => miscScaling(level, tier) },
+    item: { min: 4, max: 13, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry', 'gloves'],
     showInUI: true,
     subcategory: 'rewards',
