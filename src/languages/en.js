@@ -233,29 +233,41 @@ export default {
   'combatMode.subAreaFormat': '{name} [{type}]',
   'combatMode.subAreaType.region': 'Region',
   'Enchanted Forest': 'Enchanted Forest',
-  'A mystical forest teeming with elemental creatures.': 'A mystical forest teeming with elemental creatures.',
+  'Earthbound spirits guard these woods, resisting earthcraft yet burning beneath fire or lightning while their light armor lashes out with twisting roots.':
+    'Earthbound spirits guard these woods, resisting earthcraft yet burning beneath fire or lightning while their light armor lashes out with twisting roots.',
   'Crystal Cave': 'Crystal Cave',
-  'A shimmering cave filled with rocks. Has a high chance of dropping crystalized rocks.': 'A shimmering cave filled with rocks. Has a high chance of dropping crystalized rocks.',
+  'Shardbound guardians channel crackling energy, shrugging off lightning while water or earth can shatter their heavy crystal plating and brutish melee swings.':
+    'Shardbound guardians channel crackling energy, shrugging off lightning while water or earth can shatter their heavy crystal plating and brutish melee swings.',
   'Frozen Tundra': 'Frozen Tundra',
-  'A land of ice and snow, home to cold and air enemies. Has increased chance of dropping potions.': 'A land of ice and snow, home to cold and air enemies. Has increased chance of dropping potions.',
+  'Blizzards harden these wastes against cold assaults, yet fire or lightning can pierce their steady armor while chilling strikes bite deep.':
+    'Blizzards harden these wastes against cold assaults, yet fire or lightning can pierce their steady armor while chilling strikes bite deep.',
   'Scorching Desert': 'Scorching Desert',
-  'A vast desert with relentless heat and dangerous creatures. Has a chance to drop elixirs.': 'A vast desert with relentless heat and dangerous creatures. Has a chance to drop elixirs.',
+  'Relentless heat tempers fireproof raiders whose midweight armor melts under water or frost while they unleash searing bursts.':
+    'Relentless heat tempers fireproof raiders whose midweight armor melts under water or frost while they unleash searing bursts.',
   'Murky Swamp': 'Murky Swamp',
-  'A dark and damp swamp filled with poisonous creatures. Has increased chance of dropping gold coins.': 'A dark and damp swamp filled with poisonous creatures. Has increased chance of dropping gold coins.',
+  'Toxic mire dwellers soak up water magic but sputter when shocked or aired out, relying on slick, low-armored bodies to fling corrosive torrents.':
+    'Toxic mire dwellers soak up water magic but sputter when shocked or aired out, relying on slick, low-armored bodies to fling corrosive torrents.',
   'Skyrealm Peaks': 'Skyrealm Peaks',
-  'A floating realm high above the clouds, home to air and lightning creatures. Has a higher chance to drop potions.': 'A floating realm high above the clouds, home to air and lightning creatures. Has a higher chance to drop potions.',
+  'Skyborne zealots twist the air, resisting windcraft while earth or water drags them down; their light mail fuels razor gust assaults.':
+    'Skyborne zealots twist the air, resisting windcraft while earth or water drags them down; their light mail fuels razor gust assaults.',
   'Abyssal Depths': 'Abyssal Depths',
-  'A dark and mysterious region filled with ancient horrors. Has a chance to drop high value gold coins.': 'A dark and mysterious region filled with ancient horrors. Has a chance to drop high value gold coins.',
+  'Ancient horrors wrap themselves in crushing cold wards that falter before fire or stone, striking back through hulking armor with glacial barrages.':
+    'Ancient horrors wrap themselves in crushing cold wards that falter before fire or stone, striking back through hulking armor with glacial barrages.',
   'Volcanic Rift': 'Volcanic Rift',
-  'A searing landscape of molten rock and fire elementals. Has a higher chance to drop item upgrade materials.': 'A searing landscape of molten rock and fire elementals. Has a higher chance to drop item upgrade materials.',
+  'Molten titans thrive in firestorms, though water or frost can cool their tempered mail as they hurl relentless eruptions.':
+    'Molten titans thrive in firestorms, though water or frost can cool their tempered mail as they hurl relentless eruptions.',
   'Sunken Ruins': 'Sunken Ruins',
-  'Ancient ruins submerged beneath the waves, teeming with aquatic mysteries. Has a chance to drop elixirs and higher chance to drop crystalized rocks.': 'Ancient ruins submerged beneath the waves, teeming with aquatic mysteries. Has a chance to drop elixirs and higher chance to drop crystalized rocks.',
+  'Drowned guardians flow with the tides, resisting watercraft while lightning or fire boil their plated bulwarks and tidal blasts.':
+    'Drowned guardians flow with the tides, resisting watercraft while lightning or fire boil their plated bulwarks and tidal blasts.',
   'Haunted Moor': 'Haunted Moor',
-  'A fog-laden moor haunted by restless spirits and lost souls. Has a higher chance to drop experience potions.': 'A fog-laden moor haunted by restless spirits and lost souls. Has a higher chance to drop experience potions.',
+  'Restless spirits ride howling winds, deflecting airy sorcery yet fading before consecrated flame or earth while spectral gusts rake through scant defenses.':
+    'Restless spirits ride howling winds, deflecting airy sorcery yet fading before consecrated flame or earth while spectral gusts rake through scant defenses.',
   'Golden Steppe': 'Golden Steppe',
-  'Vast golden grasslands where fortune favors the bold.': 'Vast golden grasslands where fortune favors the bold.',
+  'Steppe warbands root themselves in the land, shrugging off earthcraft but faltering against water or frost as balanced armor powers crushing charges.':
+    'Steppe warbands root themselves in the land, shrugging off earthcraft but faltering against water or frost as balanced armor powers crushing charges.',
   'Obsidian Spire': 'Obsidian Spire',
-  'A towering spire of black glass, pulsing with arcane energy. Has a higher chance of dropping crafting materials.': 'A towering spire of black glass, pulsing with arcane energy. Has a higher chance of dropping crafting materials.',
+  'Arcane sentinels channel storms through the spire, resisting lightning while water or earth ground their basalt carapaces and crackling volleys.':
+    'Arcane sentinels channel storms through the spire, resisting lightning while water or earth ground their basalt carapaces and crackling volleys.',
   'battleLog.battle': 'Battle',
   'battleLog.drops': 'Drops',
   'battleLog.reset': 'Reset',
@@ -907,16 +919,35 @@ export default {
   'region.materialDropBonus': 'Material Drop bonus',
   'bossRegion.unlockHint': 'Unlocks at level {level}',
   'bossRegion.balancedGrounds.name': 'Balanced Grounds',
-  'bossRegion.balancedGrounds.desc': 'Standard arena conditions with no regional modifiers.',
+  'bossRegion.balancedGrounds.desc':
+    'Fissures of magma fortify fire and earth resistance while softening every other element.',
   'bossRegion.shatteredBulwark.name': 'Shattered Bulwark',
   'bossRegion.shatteredBulwark.desc':
-    'Ruined defenses leave bosses fragile but aggressive, reducing armor and resistances while boosting their rewards.',
+    'Tempest winds and crackling arcs bolster air and lightning resistance but leave other elements vulnerable.',
   'bossRegion.ironVanguard.name': 'Iron Vanguard',
   'bossRegion.ironVanguard.desc':
-    'A fortified arena where bosses bolster their defenses and endurance at the expense of raw damage.',
+    'A bastion of plated barricades that piles on armor while elemental resistances drop across the board.',
   'bossRegion.elementalNexus.name': 'Elemental Nexus',
   'bossRegion.elementalNexus.desc':
-    'A chaotic conduit that warps elemental strengths, lowering some resistances while amplifying others.',
+    'Glacial currents reinforce cold and water resistance, draining strength from the remaining elements.',
+  'rockyField.region.outskirts.name': 'Outskirts',
+  'rockyField.region.outskirts.desc':
+    'Loose-earth beasts shrug off earth and water assaults yet crack under fire or lightning, wearing modest armor while their lunging strikes never miss.',
+  'rockyField.region.boulders.name': 'Boulder Basin',
+  'rockyField.region.boulders.desc':
+    'Molten boulderkin fortify fire and earth resistance but hate cold or water, swinging slow bruisers that ignore life leech.',
+  'rockyField.region.caves.name': 'Hidden Caves',
+  'rockyField.region.caves.desc':
+    'Frostbitten lurkers drench you in cold and water damage, resisting both while their always-accurate ambushes punish the unwary.',
+  'rockyField.region.cliffs.name': 'Sheer Cliffs',
+  'rockyField.region.cliffs.desc':
+    'Tempest sentries thrive on air and lightning wards, leech-proof and evasive yet brittle against earth or water retaliation.',
+  'rockyField.region.valley.name': 'Silent Valley',
+  'rockyField.region.valley.desc':
+    'Eroded guardians steeped in water and earth magic bring steady armor but falter versus fire or lightning bursts.',
+  'rockyField.region.summit.name': 'Windy Summit',
+  'rockyField.region.summit.desc':
+    'Storm-forged spirits unleash lightning barrages behind gusting air shields, with only scant defense against earth or water.',
   'rockyField.unlockStage': 'Unlock Stage',
   'rockyField.availableRunes': 'Possible Runes',
   'item.level': 'Level',

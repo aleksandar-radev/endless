@@ -225,29 +225,41 @@ export default {
   'combatMode.subAreaFormat': '{name} [{type}]',
   'combatMode.subAreaType.region': 'Región',
   'Enchanted Forest': 'Bosque Encantado',
-  'A mystical forest teeming with elemental creatures.': 'Un bosque místico lleno de criaturas elementales.',
+  'Earthbound spirits guard these woods, resisting earthcraft yet burning beneath fire or lightning while their light armor lashes out with twisting roots.':
+    'Espíritus ligados a la tierra protegen este bosque; resisten la magia telúrica, pero arden ante el fuego o el rayo mientras su armadura ligera azota con raíces retorcidas.',
   'Crystal Cave': 'Cueva de Cristal',
-  'A shimmering cave filled with rocks. Has a high chance of dropping crystalized rocks.': 'Una cueva reluciente llena de rocas. Tiene una alta probabilidad de soltar rocas cristalizadas.',
+  'Shardbound guardians channel crackling energy, shrugging off lightning while water or earth can shatter their heavy crystal plating and brutish melee swings.':
+    'Guardianes hechos de fragmentos canalizan energía chispeante; resisten el rayo, pero el agua o la tierra pueden quebrar su pesada coraza cristalina y sus brutales golpes cuerpo a cuerpo.',
   'Frozen Tundra': 'Tundra Helada',
-  'A land of ice and snow, home to cold and air enemies. Has increased chance of dropping potions.': 'Una tierra de hielo y nieve, hogar de enemigos de frío y aire. Tiene una mayor probabilidad de soltar pociones.',
+  'Blizzards harden these wastes against cold assaults, yet fire or lightning can pierce their steady armor while chilling strikes bite deep.':
+    'Las ventiscas endurecen estos páramos contra los asaltos de frío, aunque el fuego o el rayo pueden atravesar su armadura firme mientras sus golpes helados muerden profundo.',
   'Scorching Desert': 'Desierto Abrasador',
-  'A vast desert with relentless heat and dangerous creatures. Has a chance to drop elixirs.': 'Un vasto desierto con calor implacable y criaturas peligrosas. Tiene una probabilidad de soltar elixires.',
+  'Relentless heat tempers fireproof raiders whose midweight armor melts under water or frost while they unleash searing bursts.':
+    'El calor implacable templa a los saqueadores ignífugos, cuya armadura media se derrite ante el agua o la escarcha mientras desatan ráfagas abrasadoras.',
   'Murky Swamp': 'Pantano Turbio',
-  'A dark and damp swamp filled with poisonous creatures. Has increased chance of dropping gold coins.': 'Un pantano oscuro y húmedo lleno de criaturas venenosas. Tiene mayor probabilidad de soltar monedas de oro.',
+  'Toxic mire dwellers soak up water magic but sputter when shocked or aired out, relying on slick, low-armored bodies to fling corrosive torrents.':
+    'Habitantes del cieno tóxico absorben la magia del agua, pero se ahogan cuando son sacudidos o ventilados; confían en cuerpos resbaladizos y poco blindados para lanzar torrentes corrosivos.',
   'Skyrealm Peaks': 'Picos del Reino Celeste',
-  'A floating realm high above the clouds, home to air and lightning creatures. Has a higher chance to drop potions.': 'Un reino flotante sobre las nubes, hogar de criaturas de aire y rayo. Tiene una mayor probabilidad de soltar pociones.',
+  'Skyborne zealots twist the air, resisting windcraft while earth or water drags them down; their light mail fuels razor gust assaults.':
+    'Fanáticos del cielo retuercen el aire, resisten la hechicería del viento mientras la tierra o el agua los arrastran hacia abajo; su malla ligera impulsa ataques de filos cortantes.',
   'Abyssal Depths': 'Profundidades Abisales',
-  'A dark and mysterious region filled with ancient horrors. Has a chance to drop high value gold coins.': 'Una región oscura y misteriosa llena de horrores antiguos. Tiene una probabilidad de soltar monedas de oro de alto valor.',
+  'Ancient horrors wrap themselves in crushing cold wards that falter before fire or stone, striking back through hulking armor with glacial barrages.':
+    'Horrores antiguos se envuelven en barreras aplastantes de frío que ceden ante el fuego o la piedra, contraatacando desde armaduras colosales con andanadas glaciares.',
   'Volcanic Rift': 'Grieta Volcánica',
-  'A searing landscape of molten rock and fire elementals. Has a higher chance to drop item upgrade materials.': 'Un paisaje abrasador de roca fundida y elementales de fuego. Tiene una mayor probabilidad de soltar materiales de mejora de objetos.',
+  'Molten titans thrive in firestorms, though water or frost can cool their tempered mail as they hurl relentless eruptions.':
+    'Titanes fundidos prosperan entre tormentas de fuego, aunque el agua o la escarcha pueden enfriar su coraza templada mientras arrojan erupciones implacables.',
   'Sunken Ruins': 'Ruinas Sumergidas',
-  'Ancient ruins submerged beneath the waves, teeming with aquatic mysteries. Has a chance to drop elixirs and higher chance to drop crystalized rocks.': 'Antiguas ruinas sumergidas bajo las olas, repletas de misterios acuáticos. Tiene una probabilidad de soltar elixires y una mayor probabilidad de soltar rocas cristalizadas.',
+  'Drowned guardians flow with the tides, resisting watercraft while lightning or fire boil their plated bulwarks and tidal blasts.':
+    'Guardianes ahogados fluyen con las mareas, resisten la magia acuática mientras el rayo o el fuego hierven sus baluartes acorazados y estallidos de marea.',
   'Haunted Moor': 'Páramo Embrujado',
-  'A fog-laden moor haunted by restless spirits and lost souls. Has a higher chance to drop experience potions.': 'Un páramo cubierto de niebla, habitado por espíritus inquietos y almas perdidas. Tiene una mayor probabilidad de soltar pociones de experiencia.',
+  'Restless spirits ride howling winds, deflecting airy sorcery yet fading before consecrated flame or earth while spectral gusts rake through scant defenses.':
+    'Espíritus inquietos cabalgan vientos aullantes, desvían la brujería aérea pero se desvanecen ante la llama consagrada o la tierra mientras ráfagas espectrales desgarran defensas endebles.',
   'Golden Steppe': 'Estepa Dorada',
-  'Vast golden grasslands where fortune favors the bold.': 'Vastas praderas doradas donde la fortuna favorece a los audaces.',
+  'Steppe warbands root themselves in the land, shrugging off earthcraft but faltering against water or frost as balanced armor powers crushing charges.':
+    'Hordas de la estepa se arraigan en la tierra, resisten la magia telúrica pero desfallecen ante el agua o la escarcha mientras una armadura equilibrada impulsa cargas demoledoras.',
   'Obsidian Spire': 'Aguja de Obsidiana',
-  'A towering spire of black glass, pulsing with arcane energy. Has a higher chance of dropping crafting materials.': 'Una torre de vidrio negro que palpita con energía arcana. Tiene una mayor probabilidad de soltar materiales de fabricación.',
+  'Arcane sentinels channel storms through the spire, resisting lightning while water or earth ground their basalt carapaces and crackling volleys.':
+    'Centinelas arcanos canalizan tormentas a través de la aguja, resisten el rayo mientras el agua o la tierra ponen a tierra sus corazas de basalto y sus descargas crepitantes.',
   'battleLog.battle': 'Batalla',
   'battleLog.drops': 'Botín',
   'battleLog.reset': 'Reiniciar',
@@ -900,16 +912,35 @@ export default {
   'region.materialDropBonus': 'Bonificación de botín de materiales',
   'bossRegion.unlockHint': 'Se desbloquea en el nivel {level}',
   'bossRegion.balancedGrounds.name': 'Tierras Equilibradas',
-  'bossRegion.balancedGrounds.desc': 'Condiciones estándar de la arena sin modificadores regionales.',
+  'bossRegion.balancedGrounds.desc':
+    'Fisuras de magma refuerzan las resistencias de fuego y tierra mientras debilitan los demás elementos.',
   'bossRegion.shatteredBulwark.name': 'Baluarte Destrozado',
   'bossRegion.shatteredBulwark.desc':
-    'Defensas en ruinas dejan a los jefes frágiles pero agresivos, reduciendo armadura y resistencias mientras aumentan las recompensas.',
+    'Vientos tempestuosos y chispas crepitantes refuerzan las resistencias de aire y rayo, pero vuelven vulnerables a los otros elementos.',
   'bossRegion.ironVanguard.name': 'Vanguardia de Hierro',
   'bossRegion.ironVanguard.desc':
-    'Una arena fortificada donde los jefes refuerzan sus defensas y aguante a costa del daño bruto.',
+    'Un bastión de barricadas acorazadas que acumula armadura mientras las resistencias elementales caen por igual.',
   'bossRegion.elementalNexus.name': 'Nexo Elemental',
   'bossRegion.elementalNexus.desc':
-    'Un conducto caótico que altera las fortalezas elementales, reduciendo algunas resistencias mientras amplifica otras.',
+    'Corrientes glaciales refuerzan las resistencias de frío y agua, drenando la fuerza de los elementos restantes.',
+  'rockyField.region.outskirts.name': 'Afueras',
+  'rockyField.region.outskirts.desc':
+    'Bestias de tierra suelta resisten tierra y agua, pero ceden ante fuego o rayo; llevan armadura modesta y sus embestidas nunca fallan.',
+  'rockyField.region.boulders.name': 'Cuenca de Rocas',
+  'rockyField.region.boulders.desc':
+    'Los kin de roca fundida refuerzan las resistencias de fuego y tierra, pero detestan el frío o el agua; sus golpes lentos ignoran el robo de vida.',
+  'rockyField.region.caves.name': 'Cuevas Ocultas',
+  'rockyField.region.caves.desc':
+    'Merodeadores helados te empapan con daño de frío y agua, resisten ambos y sus emboscadas siempre precisas castigan a los incautos.',
+  'rockyField.region.cliffs.name': 'Acantilados Escarpados',
+  'rockyField.region.cliffs.desc':
+    'Centinelas de la tempestad prosperan con defensas de aire y rayo, inmunes al robo de vida y evasivos, pero frágiles ante represalias de tierra o agua.',
+  'rockyField.region.valley.name': 'Valle Silencioso',
+  'rockyField.region.valley.desc':
+    'Guardianes erosionados imbuidos de magia de agua y tierra aportan armadura constante, pero flaquean frente a estallidos de fuego o rayo.',
+  'rockyField.region.summit.name': 'Cima Ventosa',
+  'rockyField.region.summit.desc':
+    'Espíritus forjados por la tormenta descargan ráfagas de rayo tras escudos de aire arremolinado, con escasa defensa contra tierra o agua.',
   'rockyField.unlockStage': 'Etapa de desbloqueo',
   'rockyField.availableRunes': 'Runas disponibles',
   'item.level': 'Nivel',

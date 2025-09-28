@@ -21,6 +21,7 @@ export default function run() {
       <li>Crystal shop stage options now apply to Rocky Field enemies just like Explore combat.</li>
       <li>Elementalist's lightning strike cooldown increased to 3500ms and % damages reduced.</li>
       <li>Slightly reduced hp on enemies and increase gold gains (on Explore).</li>
+      <li>Reworked all combat modes and regions, to have much more variety.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

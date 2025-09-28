@@ -233,29 +233,41 @@ export default {
   'combatMode.subAreaFormat': '{name} [{type}]',
   'combatMode.subAreaType.region': '区域',
   'Enchanted Forest': '魔法森林',
-  'A mystical forest teeming with elemental creatures.': '充满元素生物的神秘森林。',
+  'Earthbound spirits guard these woods, resisting earthcraft yet burning beneath fire or lightning while their light armor lashes out with twisting roots.':
+    '大地之灵守护这片森林，能抵御土系术法，却会在火焰或闪电下燃烧，轻甲之身挥舞盘旋的根须。',
   'Crystal Cave': '水晶洞穴',
-  'A shimmering cave filled with rocks. Has a high chance of dropping crystalized rocks.': '一个闪耀着光芒的洞穴，充满岩石。掉落结晶岩石的概率很高。',
+  'Shardbound guardians channel crackling energy, shrugging off lightning while water or earth can shatter their heavy crystal plating and brutish melee swings.':
+    '碎晶守卫导引噼啪能量，能够抵挡闪电，但水流或岩土会粉碎他们厚重的晶甲与粗暴的近战攻势。',
   'Frozen Tundra': '冰封苔原',
-  'A land of ice and snow, home to cold and air enemies. Has increased chance of dropping potions.': '冰雪之地，寒冷和空气敌人的家。掉落药水的几率更高。',
+  'Blizzards harden these wastes against cold assaults, yet fire or lightning can pierce their steady armor while chilling strikes bite deep.':
+    '暴风雪锤炼了这片荒原，足以抵御寒冰攻势，但火焰或雷电仍能穿透其稳固的护甲，而冰冷打击同样极为凶狠。',
   'Scorching Desert': '灼热沙漠',
-  'A vast desert with relentless heat and dangerous creatures. Has a chance to drop elixirs.': '广袤的沙漠，炙热无比，充满危险生物。有机会掉落灵药。',
+  'Relentless heat tempers fireproof raiders whose midweight armor melts under water or frost while they unleash searing bursts.':
+    '无尽酷热淬炼出耐火的掠夺者，他们的中型甲胄在水流或霜寒下会融化，同时倾泻灼烈爆发。',
   'Murky Swamp': '阴暗沼泽',
-  'A dark and damp swamp filled with poisonous creatures. Has increased chance of dropping gold coins.': '黑暗潮湿的沼泽，充满毒性生物。掉落金币的概率更高。',
+  'Toxic mire dwellers soak up water magic but sputter when shocked or aired out, relying on slick, low-armored bodies to fling corrosive torrents.':
+    '毒沼居民能够吸收水系魔法，却会在雷击或气流中枯竭，滑腻而薄弱的甲胄用来抛洒腐蚀洪流。',
   'Skyrealm Peaks': '天界群峰',
-  'A floating realm high above the clouds, home to air and lightning creatures. Has a higher chance to drop potions.': '漂浮在云上的领域，居住着空气和闪电生物。掉落药水的概率更高。',
+  'Skyborne zealots twist the air, resisting windcraft while earth or water drags them down; their light mail fuels razor gust assaults.':
+    '天空狂信者扭曲气流，能抵御风系术法，却会被大地或水流拉坠，轻盈锁甲驱动锋利的风刃攻击。',
   'Abyssal Depths': '深渊深处',
-  'A dark and mysterious region filled with ancient horrors. Has a chance to drop high value gold coins.': '黑暗神秘的区域，充满古老的恐怖。有机会掉落高价值金币。',
+  'Ancient horrors wrap themselves in crushing cold wards that falter before fire or stone, striking back through hulking armor with glacial barrages.':
+    '远古恐魔披上压迫性的寒霜结界，唯有火焰或岩石能将其撕裂，它们以厚重甲壳回敬冰霜弹幕。',
   'Volcanic Rift': '火山裂谷',
-  'A searing landscape of molten rock and fire elementals. Has a higher chance to drop item upgrade materials.': '炽热的熔岩与火元素构成的地貌。更高几率掉落装备升级材料。',
+  'Molten titans thrive in firestorms, though water or frost can cool their tempered mail as they hurl relentless eruptions.':
+    '熔火巨人栖息在火海风暴中，水雾或霜寒能暂缓其淬火甲胄，却难阻他们接连不断的喷发。',
   'Sunken Ruins': '沉没遗迹',
-  'Ancient ruins submerged beneath the waves, teeming with aquatic mysteries. Has a chance to drop elixirs and higher chance to drop crystalized rocks.': '埋于波浪之下的古老遗迹，充满水域谜团。有机会掉落灵药，并更易掉落结晶岩石。',
+  'Drowned guardians flow with the tides, resisting watercraft while lightning or fire boil their plated bulwarks and tidal blasts.':
+    '溺亡守卫随潮汐流动，能抵御水系术法，但雷霆或火焰会将其披甲的潮汐冲击煮沸。',
   'Haunted Moor': '闹鬼荒原',
-  'A fog-laden moor haunted by restless spirits and lost souls. Has a higher chance to drop experience potions.': '被浓雾笼罩的荒原，游荡着不安的亡灵。更高几率掉落经验药水。',
+  'Restless spirits ride howling winds, deflecting airy sorcery yet fading before consecrated flame or earth while spectral gusts rake through scant defenses.':
+    '不安灵魂乘着嚎啕之风，能偏转风系咒术，却在圣火或大地前逐渐消散，幽灵劲风撕裂薄弱防线。',
   'Golden Steppe': '黄金草原',
-  'Vast golden grasslands where fortune favors the bold.': '广袤的金色草原，幸运垂青勇者。',
+  'Steppe warbands root themselves in the land, shrugging off earthcraft but faltering against water or frost as balanced armor powers crushing charges.':
+    '草原战团扎根大地，能抵御土系术法，却在水与霜前失势，均衡的甲胄推动毁灭性的冲锋。',
   'Obsidian Spire': '黑曜尖塔',
-  'A towering spire of black glass, pulsing with arcane energy. Has a higher chance of dropping crafting materials.': '高耸的黑曜石尖塔，涌动着奥术能量。更高几率掉落制作材料。',
+  'Arcane sentinels channel storms through the spire, resisting lightning while water or earth ground their basalt carapaces and crackling volleys.':
+    '奥术哨兵让风暴穿透尖塔，抵抗闪电，但水流或岩土会将其玄武岩甲壳与噼啪箭雨束缚在地。',
   'battleLog.battle': '战斗',
   'battleLog.drops': '掉落',
   'battleLog.reset': '重置',
@@ -908,13 +920,31 @@ export default {
   'region.materialDropBonus': '材料掉落加成',
   'bossRegion.unlockHint': '在{level}级解锁',
   'bossRegion.balancedGrounds.name': '平衡之地',
-  'bossRegion.balancedGrounds.desc': '标准的竞技场环境，没有额外的区域加成。',
+  'bossRegion.balancedGrounds.desc': '熔岩裂隙强化火与土抗性，而其他元素抗性随之减弱。',
   'bossRegion.shatteredBulwark.name': '破碎壁垒',
-  'bossRegion.shatteredBulwark.desc': '残破的防御使首领脆弱却更具攻击性，降低护甲与抗性，同时提升奖励。',
+  'bossRegion.shatteredBulwark.desc': '风暴与闪电的能量强化空气与闪电抗性，却让其他元素更加脆弱。',
   'bossRegion.ironVanguard.name': '钢铁先锋',
-  'bossRegion.ironVanguard.desc': '加固的竞技场，让首领提升防御与耐久，但牺牲部分伤害。',
+  'bossRegion.ironVanguard.desc': '装甲壁垒堆叠护甲，却使所有元素抗性整体下降。',
   'bossRegion.elementalNexus.name': '元素枢纽',
-  'bossRegion.elementalNexus.desc': '混乱的能量通道扭曲元素力量，削弱部分抗性并强化另外一些。',
+  'bossRegion.elementalNexus.desc': '冰寒水流强化寒霜与水系抗性，抽离其余元素的力量。',
+  'rockyField.region.outskirts.name': '外围荒地',
+  'rockyField.region.outskirts.desc':
+    '松散岩兽能抵御土与水的攻击，却惧怕火焰与闪电，披着适中护甲且扑击永不落空。',
+  'rockyField.region.boulders.name': '巨岩盆地',
+  'rockyField.region.boulders.desc':
+    '熔岩巨石族强化火与土抗性，却畏惧寒冷或水流；缓慢重击并无视生命汲取。',
+  'rockyField.region.caves.name': '隐蔽洞窟',
+  'rockyField.region.caves.desc':
+    '霜寒潜伏者倾泻寒霜与水流伤害，坚守两者抗性，其伏击命中百发百中，惩戒粗心者。',
+  'rockyField.region.cliffs.name': '峭壁悬崖',
+  'rockyField.region.cliffs.desc':
+    '风暴哨卫依靠空气与闪电护幕生存，免疫吸血且身法灵动，但对土或水的反击十分脆弱。',
+  'rockyField.region.valley.name': '寂静山谷',
+  'rockyField.region.valley.desc':
+    '被侵蚀的守卫浸染水与土之术，护甲稳固，却会在火焰或闪电爆发前溃散。',
+  'rockyField.region.summit.name': '疾风峰顶',
+  'rockyField.region.summit.desc':
+    '风暴铸成的灵体在疾风护盾下释放雷霆弹幕，对土与水的防护却相当薄弱。',
   'rockyField.unlockStage': '解锁阶段',
   'rockyField.availableRunes': '可能的符文',
   'item.level': '等级',

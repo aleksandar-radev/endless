@@ -15,8 +15,12 @@ import { formatNumber as formatNumberValue } from './utils/numberFormatter.js';
 export const ROCKY_FIELD_REGIONS = [
   {
     id: 'outskirts',
-    name: 'Outskirts',
-    description: 'The edge of the rocky expanse.',
+    get name() {
+      return t('rockyField.region.outskirts.name');
+    },
+    get description() {
+      return t('rockyField.region.outskirts.desc');
+    },
     unlockStage: 1,
     multiplier: {
       life: 1,
@@ -31,8 +35,12 @@ export const ROCKY_FIELD_REGIONS = [
   },
   {
     id: 'boulders',
-    name: 'Boulder Basin',
-    description: 'Boulders scatter this wide basin.',
+    get name() {
+      return t('rockyField.region.boulders.name');
+    },
+    get description() {
+      return t('rockyField.region.boulders.desc');
+    },
     unlockStage: 500,
     multiplier: {
       life: 3,
@@ -47,8 +55,12 @@ export const ROCKY_FIELD_REGIONS = [
   },
   {
     id: 'caves',
-    name: 'Hidden Caves',
-    description: 'Dark caverns hide unseen threats.',
+    get name() {
+      return t('rockyField.region.caves.name');
+    },
+    get description() {
+      return t('rockyField.region.caves.desc');
+    },
     unlockStage: 1000,
     multiplier: {
       life: 12,
@@ -63,8 +75,12 @@ export const ROCKY_FIELD_REGIONS = [
   },
   {
     id: 'cliffs',
-    name: 'Sheer Cliffs',
-    description: 'Treacherous cliffs tower above.',
+    get name() {
+      return t('rockyField.region.cliffs.name');
+    },
+    get description() {
+      return t('rockyField.region.cliffs.desc');
+    },
     unlockStage: 2000,
     multiplier: {
       life: 48,
@@ -79,8 +95,12 @@ export const ROCKY_FIELD_REGIONS = [
   },
   {
     id: 'valley',
-    name: 'Silent Valley',
-    description: 'A quiet valley with lurking danger.',
+    get name() {
+      return t('rockyField.region.valley.name');
+    },
+    get description() {
+      return t('rockyField.region.valley.desc');
+    },
     unlockStage: 4000,
     multiplier: {
       life: 288,
@@ -95,8 +115,12 @@ export const ROCKY_FIELD_REGIONS = [
   },
   {
     id: 'summit',
-    name: 'Windy Summit',
-    description: 'Blistering winds dominate the peak.',
+    get name() {
+      return t('rockyField.region.summit.name');
+    },
+    get description() {
+      return t('rockyField.region.summit.desc');
+    },
     unlockStage: 5000,
     multiplier: {
       life: 2880,

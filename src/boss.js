@@ -22,6 +22,64 @@ const stat_increase = (level) => {
 };
 const attackRatingAndEvasionScale = 0.7;
 
+function randomInRange(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+const REGION_VARIANCE_CONFIG = {
+  balanced_grounds: { type: 'elemental', boosted: ['fire', 'earth'] },
+  shattered_bulwark: { type: 'elemental', boosted: ['air', 'lightning'] },
+  elemental_nexus: { type: 'elemental', boosted: ['cold', 'water'] },
+  iron_vanguard: { type: 'armor' },
+};
+
+function applyRegionVariance(region, multipliers = {}) {
+  if (!region) {
+    return { ...multipliers };
+  }
+
+  const config = REGION_VARIANCE_CONFIG[region.id];
+  if (!config) {
+    return { ...multipliers };
+  }
+
+  const result = { ...multipliers };
+  const scaleStatWithVariance = (stat, min, max) => {
+    const base = Number.isFinite(result[stat]) ? result[stat] : 1;
+    result[stat] = base * randomInRange(min, max);
+  };
+
+  if (config.type === 'elemental') {
+    scaleStatWithVariance('life', 0.95, 1.1);
+    scaleStatWithVariance('damage', 0.95, 1.15);
+    scaleStatWithVariance('attackRating', 1.05, 1.2);
+    scaleStatWithVariance('evasion', 1.05, 1.2);
+    scaleStatWithVariance('armor', 0.9, 1.05);
+
+    const boosted = new Set(config.boosted);
+    Object.values(ELEMENTS).forEach(({ id }) => {
+      if (boosted.has(id)) {
+        scaleStatWithVariance(`${id}Damage`, 0.95, 1.1);
+        scaleStatWithVariance(`${id}Resistance`, 0.9, 1.1);
+      } else {
+        scaleStatWithVariance(`${id}Resistance`, 0.4, 0.7);
+      }
+    });
+  } else if (config.type === 'armor') {
+    scaleStatWithVariance('life', 0.95, 1.1);
+    scaleStatWithVariance('damage', 0.95, 1.05);
+    scaleStatWithVariance('attackRating', 0.95, 1.05);
+    scaleStatWithVariance('evasion', 0.9, 1.05);
+    scaleStatWithVariance('armor', 1.05, 1.25);
+
+    Object.values(ELEMENTS).forEach(({ id }) => {
+      scaleStatWithVariance(`${id}Resistance`, 0.6, 0.9);
+    });
+  }
+
+  return result;
+}
+
 class Boss {
   /**
    * Create a new Boss instance with a random boss definition.
@@ -32,6 +90,10 @@ class Boss {
       throw new Error('No bosses defined in BOSSES array.');
     }
     this.region = getCurrentBossRegion();
+    const multiplier = this.region?.multiplier;
+    const baseRegionMultiplier =
+      typeof multiplier === 'function' ? multiplier() : multiplier ? { ...multiplier } : {};
+    this.regionMultiplier = applyRegionVariance(this.region, baseRegionMultiplier);
     const regionBossIds = this.region?.bosses;
     let availableBosses =
       Array.isArray(regionBossIds) && regionBossIds.length
@@ -110,7 +172,8 @@ class Boss {
       (lvl) => xpDiminishingFactor(lvl),
       'boss-xp',
     );
-    return val * (this.baseData.multiplier?.xp || 1) * (this.region?.multiplier?.xp || 1);
+    const regionMultiplier = Number.isFinite(this.regionMultiplier?.xp) ? this.regionMultiplier.xp : 1;
+    return val * (this.baseData.multiplier?.xp || 1) * regionMultiplier;
   }
 
   calculateGold() {
@@ -123,7 +186,8 @@ class Boss {
       (lvl) => xpDiminishingFactor(lvl),
       'boss-gold',
     );
-    return val * (this.baseData.multiplier?.gold || 1) * (this.region?.multiplier?.gold || 1);
+    const regionMultiplier = Number.isFinite(this.regionMultiplier?.gold) ? this.regionMultiplier.gold : 1;
+    return val * (this.baseData.multiplier?.gold || 1) * regionMultiplier;
   }
 
 
@@ -131,7 +195,7 @@ class Boss {
     const baseSpeed =
       (this.baseData.attackSpeed || 1) *
       (this.baseData.multiplier?.attackSpeed || 1) *
-      (this.region?.multiplier?.attackSpeed || 1);
+      (Number.isFinite(this.regionMultiplier?.attackSpeed) ? this.regionMultiplier.attackSpeed : 1);
     const speedRed = hero.stats.reduceEnemyAttackSpeedPercent || 0;
     return baseSpeed * (1 - speedRed);
   }
@@ -143,7 +207,8 @@ class Boss {
 
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const hpRed = hero.stats.reduceEnemyHpPercent || 0;
-    return val * (this.baseData.multiplier?.life || 1) * (this.region?.multiplier?.life || 1) * (1 - hpRed);
+    const regionMultiplier = Number.isFinite(this.regionMultiplier?.life) ? this.regionMultiplier.life : 1;
+    return val * (this.baseData.multiplier?.life || 1) * regionMultiplier * (1 - hpRed);
   }
 
   calculateDamage() {
@@ -153,7 +218,8 @@ class Boss {
 
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
-    return val * (this.baseData.multiplier?.damage || 1) * (this.region?.multiplier?.damage || 1) * (1 - dmgRed);
+    const regionMultiplier = Number.isFinite(this.regionMultiplier?.damage) ? this.regionMultiplier.damage : 1;
+    return val * (this.baseData.multiplier?.damage || 1) * regionMultiplier * (1 - dmgRed);
   }
 
   calculateArmor() {
@@ -162,7 +228,8 @@ class Boss {
     base *= levelBonus;
 
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
-    return val * (this.baseData.multiplier?.armor || 1) * (this.region?.multiplier?.armor || 1);
+    const regionMultiplier = Number.isFinite(this.regionMultiplier?.armor) ? this.regionMultiplier.armor : 1;
+    return val * (this.baseData.multiplier?.armor || 1) * regionMultiplier;
   }
 
   calculateEvasion() {
@@ -174,7 +241,7 @@ class Boss {
     return (
       val *
       (this.baseData.multiplier?.evasion || 1) *
-      (this.region?.multiplier?.evasion || 1) *
+      (Number.isFinite(this.regionMultiplier?.evasion) ? this.regionMultiplier.evasion : 1) *
       attackRatingAndEvasionScale
     );
   }
@@ -188,7 +255,7 @@ class Boss {
     return (
       val *
       (this.baseData.multiplier?.attackRating || 1) *
-      (this.region?.multiplier?.attackRating || 1) *
+      (Number.isFinite(this.regionMultiplier?.attackRating) ? this.regionMultiplier.attackRating : 1) *
       attackRatingAndEvasionScale
     );
   }
@@ -205,7 +272,7 @@ class Boss {
     return (
       val *
       (this.baseData.multiplier?.[`${type}Damage`] || 1) *
-      (this.region?.multiplier?.[`${type}Damage`] || 1) *
+      (Number.isFinite(this.regionMultiplier?.[`${type}Damage`]) ? this.regionMultiplier[`${type}Damage`] : 1) *
       (1 - dmgRed)
     );
   }
@@ -217,7 +284,13 @@ class Boss {
 
     if (base === 0) return 0;
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
-    return val * (this.baseData.multiplier?.[`${type}Resistance`] || 1) * (this.region?.multiplier?.[`${type}Resistance`] || 1);
+    return (
+      val *
+      (this.baseData.multiplier?.[`${type}Resistance`] || 1) *
+      (Number.isFinite(this.regionMultiplier?.[`${type}Resistance`])
+        ? this.regionMultiplier[`${type}Resistance`]
+        : 1)
+    );
   }
 
   /**

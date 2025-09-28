@@ -10,7 +10,9 @@ export const REGIONS = [
       return t('Enchanted Forest');
     },
     get description() {
-      return t('A mystical forest teeming with elemental creatures.');
+      return t(
+        'Earthbound spirits guard these woods, resisting earthcraft yet burning beneath fire or lightning while their light armor lashes out with twisting roots.',
+      );
     },
     allowedTags: ['enchanted_forest'],
     get enemyNames() {
@@ -42,6 +44,13 @@ export const REGIONS = [
     materialDropWeights: {
       crystalized_rock: 1.1,
     },
+    combatProfile: {
+      primaryElement: 'earth',
+      averageElements: ['air', 'water', 'cold'],
+      weakElements: ['fire', 'lightning'],
+      armorBias: 'weak',
+      primaryDamage: 'earth',
+    },
   },
   {
     tier: 2,
@@ -51,7 +60,9 @@ export const REGIONS = [
       return t('Crystal Cave');
     },
     get description() {
-      return t('A shimmering cave filled with rocks. Has a high chance of dropping crystalized rocks.');
+      return t(
+        'Shardbound guardians channel crackling energy, shrugging off lightning while water or earth can shatter their heavy crystal plating and brutish melee swings.',
+      );
     },
     allowedTags: ['crystal_cave'],
     get enemyNames() {
@@ -83,6 +94,13 @@ export const REGIONS = [
     materialDropWeights: {
       crystalized_rock: 5,
     },
+    combatProfile: {
+      primaryElement: 'lightning',
+      averageElements: ['fire', 'cold', 'air'],
+      weakElements: ['water', 'earth'],
+      armorBias: 'strong',
+      primaryDamage: 'physical',
+    },
   },
   {
     tier: 3,
@@ -92,7 +110,9 @@ export const REGIONS = [
       return t('Frozen Tundra');
     },
     get description() {
-      return t('A land of ice and snow, home to cold and air enemies. Has increased chance of dropping potions.');
+      return t(
+        'Blizzards harden these wastes against cold assaults, yet fire or lightning can pierce their steady armor while chilling strikes bite deep.',
+      );
     },
     allowedTags: ['frozen_tundra'],
     get enemyNames() {
@@ -131,6 +151,13 @@ export const REGIONS = [
       potion_of_intelligence: 3,
       potion_of_perseverance: 3,
     },
+    combatProfile: {
+      primaryElement: 'cold',
+      averageElements: ['water', 'air', 'earth'],
+      weakElements: ['fire', 'lightning'],
+      armorBias: 'average',
+      primaryDamage: 'cold',
+    },
   },
   {
     tier: 4,
@@ -140,7 +167,9 @@ export const REGIONS = [
       return t('Scorching Desert');
     },
     get description() {
-      return t('A vast desert with relentless heat and dangerous creatures. Has a chance to drop elixirs.');
+      return t(
+        'Relentless heat tempers fireproof raiders whose midweight armor melts under water or frost while they unleash searing bursts.',
+      );
     },
     allowedTags: ['scorching_desert'],
     get enemyNames() {
@@ -182,7 +211,9 @@ export const REGIONS = [
       return t('Murky Swamp');
     },
     get description() {
-      return t('A dark and damp swamp filled with poisonous creatures. Has increased chance of dropping gold coins.');
+      return t(
+        'Toxic mire dwellers soak up water magic but sputter when shocked or aired out, relying on slick, low-armored bodies to fling corrosive torrents.',
+      );
     },
     allowedTags: ['murky_swamp'],
     get enemyNames() {
@@ -217,6 +248,20 @@ export const REGIONS = [
       enormous_gold_coins: 6,
       FREAKY_GOLD_COINS: 4,
     },
+    combatProfile: {
+      primaryElement: 'fire',
+      averageElements: ['earth', 'air', 'lightning'],
+      weakElements: ['water', 'cold'],
+      armorBias: 'average',
+      primaryDamage: 'fire',
+    },
+    combatProfile: {
+      primaryElement: 'water',
+      averageElements: ['earth', 'cold', 'fire'],
+      weakElements: ['lightning', 'air'],
+      armorBias: 'weak',
+      primaryDamage: 'water',
+    },
   },
   {
     tier: 6,
@@ -226,7 +271,9 @@ export const REGIONS = [
       return t('Skyrealm Peaks');
     },
     get description() {
-      return t('A floating realm high above the clouds, home to air and lightning creatures. Has a higher chance to drop potions.');
+      return t(
+        'Skyborne zealots twist the air, resisting windcraft while earth or water drags them down; their light mail fuels razor gust assaults.',
+      );
     },
     allowedTags: ['skyrealm_peaks'],
     get enemyNames() {
@@ -265,6 +312,13 @@ export const REGIONS = [
       potion_of_intelligence: 3,
       potion_of_perseverance: 3,
     },
+    combatProfile: {
+      primaryElement: 'air',
+      averageElements: ['fire', 'lightning', 'cold'],
+      weakElements: ['earth', 'water'],
+      armorBias: 'weak',
+      primaryDamage: 'air',
+    },
   },
   {
     tier: 7,
@@ -274,7 +328,9 @@ export const REGIONS = [
       return t('Abyssal Depths');
     },
     get description() {
-      return t('A dark and mysterious region filled with ancient horrors. Has a chance to drop high value gold coins.');
+      return t(
+        'Ancient horrors wrap themselves in crushing cold wards that falter before fire or stone, striking back through hulking armor with glacial barrages.',
+      );
     },
     allowedTags: ['abyssal_depths'],
     get enemyNames() {
@@ -307,6 +363,13 @@ export const REGIONS = [
       enormous_gold_coins: 6,
       freaky_gold_coins: 20,
     },
+    combatProfile: {
+      primaryElement: 'cold',
+      averageElements: ['water', 'air', 'lightning'],
+      weakElements: ['fire', 'earth'],
+      armorBias: 'strong',
+      primaryDamage: 'cold',
+    },
   },
   {
     tier: 8,
@@ -316,7 +379,9 @@ export const REGIONS = [
       return t('Volcanic Rift');
     },
     get description() {
-      return t('A searing landscape of molten rock and fire elementals. Has a higher chance to drop item upgrade materials.');
+      return t(
+        'Molten titans thrive in firestorms, though water or frost can cool their tempered mail as they hurl relentless eruptions.',
+      );
     },
     allowedTags: ['volcanic_rift'],
     get enemyNames() {
@@ -352,6 +417,13 @@ export const REGIONS = [
       armor_upgrade_stone: 3,
       weapon_upgrade_core: 6,
     },
+    combatProfile: {
+      primaryElement: 'fire',
+      averageElements: ['earth', 'lightning', 'air'],
+      weakElements: ['water', 'cold'],
+      armorBias: 'average',
+      primaryDamage: 'fire',
+    },
   },
   {
     tier: 9,
@@ -361,7 +433,9 @@ export const REGIONS = [
       return t('Sunken Ruins');
     },
     get description() {
-      return t('Ancient ruins submerged beneath the waves, teeming with aquatic mysteries. Has a chance to drop elixirs and higher chance to drop crystalized rocks.');
+      return t(
+        'Drowned guardians flow with the tides, resisting watercraft while lightning or fire boil their plated bulwarks and tidal blasts.',
+      );
     },
     allowedTags: ['sunken_ruins'],
     get enemyNames() {
@@ -397,6 +471,13 @@ export const REGIONS = [
       elixir: 3.5,
       crystalized_rock: 6,
     },
+    combatProfile: {
+      primaryElement: 'water',
+      averageElements: ['earth', 'cold', 'air'],
+      weakElements: ['lightning', 'fire'],
+      armorBias: 'strong',
+      primaryDamage: 'water',
+    },
   },
   {
     tier: 10,
@@ -406,7 +487,9 @@ export const REGIONS = [
       return t('Haunted Moor');
     },
     get description() {
-      return t('A fog-laden moor haunted by restless spirits and lost souls. Has a higher chance to drop experience potions.');
+      return t(
+        'Restless spirits ride howling winds, deflecting airy sorcery yet fading before consecrated flame or earth while spectral gusts rake through scant defenses.',
+      );
     },
     allowedTags: ['haunted_moor'],
     get enemyNames() {
@@ -441,6 +524,13 @@ export const REGIONS = [
       greater_experience_potion: 6,
       huge_experience_potion: 10,
     },
+    combatProfile: {
+      primaryElement: 'air',
+      averageElements: ['cold', 'water', 'lightning'],
+      weakElements: ['fire', 'earth'],
+      armorBias: 'weak',
+      primaryDamage: 'air',
+    },
   },
   {
     tier: 11,
@@ -450,7 +540,9 @@ export const REGIONS = [
       return t('Golden Steppe');
     },
     get description() {
-      return t('Vast golden grasslands where fortune favors the bold.');
+      return t(
+        'Steppe warbands root themselves in the land, shrugging off earthcraft but faltering against water or frost as balanced armor powers crushing charges.',
+      );
     },
     allowedTags: ['golden_steppe'],
     get enemyNames() {
@@ -483,6 +575,13 @@ export const REGIONS = [
     },
     materialDropWeights: {
     },
+    combatProfile: {
+      primaryElement: 'earth',
+      averageElements: ['fire', 'air', 'lightning'],
+      weakElements: ['water', 'cold'],
+      armorBias: 'average',
+      primaryDamage: 'physical',
+    },
   },
   {
     tier: 12,
@@ -492,7 +591,9 @@ export const REGIONS = [
       return t('Obsidian Spire');
     },
     get description() {
-      return t('A towering spire of black glass, pulsing with arcane energy. Has a higher chance of dropping crafting materials.');
+      return t(
+        'Arcane sentinels channel storms through the spire, resisting lightning while water or earth ground their basalt carapaces and crackling volleys.',
+      );
     },
     allowedTags: ['obsidian_spire'],
     get enemyNames() {
@@ -527,6 +628,13 @@ export const REGIONS = [
       enchantment_scroll: 5,
       alternation_orb: 5,
       transmutation_orb: 5,
+    },
+    combatProfile: {
+      primaryElement: 'lightning',
+      averageElements: ['fire', 'cold', 'air'],
+      weakElements: ['water', 'earth'],
+      armorBias: 'strong',
+      primaryDamage: 'lightning',
     },
   },
 ];
