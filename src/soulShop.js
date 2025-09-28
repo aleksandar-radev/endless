@@ -266,8 +266,8 @@ export default class SoulShop {
       const isMultiLevel = typeof config.bonus === 'number' && !isOneTime;
       const alreadyPurchased = isOneTime && this.soulUpgrades[stat];
       const baseLevel = this.soulUpgrades[stat] || 0;
-      const maxLevel = isMultiLevel ? config.maxLevel || Infinity : Infinity;
-      const levelsLeft = maxLevel - baseLevel;
+      const maxLevel = isMultiLevel ? this.getUpgradeMaxLevel(config) : Infinity;
+      const levelsLeft = Math.max(0, maxLevel - baseLevel);
       let qty = 1;
       let cost = isOneTime || isMultiple
         ? Math.round(config.baseCost)
@@ -339,6 +339,23 @@ export default class SoulShop {
     this.updateSoulShopUI();
   }
 
+  getAscensionLevelCapBonus() {
+    return ascension?.getBonuses?.()?.soulShopLevelCap || 0;
+  }
+
+  getUpgradeMaxLevel(config) {
+    if (!config || typeof config.maxLevel !== 'number') {
+      return Infinity;
+    }
+    return config.maxLevel + this.getAscensionLevelCapBonus();
+  }
+
+  getLevelsLeft(config, baseLevel) {
+    const maxLevel = this.getUpgradeMaxLevel(config);
+    if (!Number.isFinite(maxLevel)) return Infinity;
+    return Math.max(0, maxLevel - baseLevel);
+  }
+
   createSoulUpgradeButton(stat, config) {
     const isOneTime = config.oneTime;
     const isMultiple = config.multiple;
@@ -368,7 +385,7 @@ export default class SoulShop {
     let qty = 1;
     if (options?.quickSoulShop && !alreadyPurchased) {
       const baseLevel = this.soulUpgrades[stat] || 0;
-      const levelsLeft = isMultiLevel ? (config.maxLevel || Infinity) - baseLevel : Infinity;
+      const levelsLeft = isMultiLevel ? this.getLevelsLeft(config, baseLevel) : Infinity;
       if (this.quickQty === 'max') {
         const { qty: affordableQty, totalCost } = this.getBulkCost(stat, 'max');
         qty =
@@ -410,8 +427,8 @@ export default class SoulShop {
       .filter(([, config]) => typeof config.bonus === 'number' && !config.oneTime)
       .map(([stat, config]) => {
         const baseLevel = this.soulUpgrades[stat] || 0;
-        const maxLevel = config.maxLevel || Infinity;
-        const levelsLeft = Math.max(0, maxLevel - baseLevel);
+        const maxLevel = this.getUpgradeMaxLevel(config);
+        const levelsLeft = this.getLevelsLeft(config, baseLevel);
         return { stat, config, baseLevel, levelsLeft };
       })
       .filter(({ levelsLeft }) => levelsLeft > 0);
@@ -420,7 +437,8 @@ export default class SoulShop {
     const levelsKey = multiLevelEntries
       .map(({ stat, baseLevel }) => `${stat}:${baseLevel}`)
       .join('|');
-    const cacheKey = `${souls}|${multiplier}|${levelsKey}`;
+    const capBonus = this.getAscensionLevelCapBonus();
+    const cacheKey = `${souls}|${multiplier}|${capBonus}|${levelsKey}`;
     if (this._distributedMaxCache?.key === cacheKey) {
       return this._distributedMaxCache.allocations;
     }
@@ -491,8 +509,8 @@ export default class SoulShop {
     const isMultiLevel = typeof config.bonus === 'number' && !config.oneTime;
     if (!isMultiLevel) return { qty: 0, totalCost: 0 };
 
-    const maxLevel = config.maxLevel || Infinity;
-    const levelsLeft = Math.max(0, maxLevel - baseLevel);
+    const maxLevel = this.getUpgradeMaxLevel(config);
+    const levelsLeft = this.getLevelsLeft(config, baseLevel);
     if (levelsLeft <= 0) return { qty: 0, totalCost: 0 };
     const maxQty = Math.min(levelsLeft, SOUL_SHOP_MAX_QTY);
     const targetQty =
@@ -709,8 +727,8 @@ export default class SoulShop {
     const isMultiLevel = typeof config.bonus === 'number' && !config.oneTime;
     if (isMultiLevel) {
       const baseLevel = this.soulUpgrades[stat] || 0;
-      const maxLevel = config.maxLevel || Infinity;
-      const levelsLeft = maxLevel - baseLevel;
+      const maxLevel = this.getUpgradeMaxLevel(config);
+      const levelsLeft = this.getLevelsLeft(config, baseLevel);
       const { qty: affordableQty, totalCost: maxCost } = this.getMaxPurchasable(
         stat,
         'max',
@@ -797,7 +815,7 @@ export default class SoulShop {
       } else if (qty === 'max') {
         ({ qty: levelsToBuy, totalCost } = this.getMaxPurchasable(stat, qty, baseLevel, hero.souls));
       } else {
-        const levelsLeft = (config.maxLevel || Infinity) - baseLevel;
+        const levelsLeft = this.getLevelsLeft(config, baseLevel);
         const numericQty = Number(qty);
         const safeQty = Number.isFinite(numericQty) ? numericQty : 0;
         const desired = Math.min(Math.min(safeQty, SOUL_SHOP_MAX_QTY), levelsLeft);

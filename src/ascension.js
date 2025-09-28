@@ -302,6 +302,11 @@ export const ASCENSION_CATEGORIES = {
         cost: (lvl) => 12 + 3 * lvl,
         maxLevel: 50,
       },
+      soulShopLevelCap: {
+        label: t('ascension.upgrade.soulShopLevelCap'),
+        bonus: 50,
+        effect: 'soulShopLevelCap',
+      },
       // Cap extension upgrades
       attackSpeedCap: {
         label: t('ascension.upgrade.attackSpeedCap'),
@@ -440,6 +445,7 @@ export default class Ascension {
     try {
       training?.updateTrainingAffordability?.('gold-upgrades');
       crystalShop?.initializeCrystalShopUI?.();
+      soulShop?.invalidateDistributedMaxCache?.();
       soulShop?.updateSoulShopUI?.();
     } catch {}
     return true;

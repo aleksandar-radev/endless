@@ -25,6 +25,7 @@ export default function run() {
       <li>Allow partial sell of buildings. Managed by the same system as upgrades.</li>
       <li>Optimized Soul Shop max purchase calculations to keep large-soul upgrades responsive.</li>
       <li>Distribute Soul Shop max quick buys evenly across eligible upgrades instead of pouring all souls into the first picks.</li>
+      <li>Added an ascension upgrade that raises all Soul Shop level caps by 50 per point.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
