@@ -441,6 +441,11 @@
   font-size: 1.1em;
 }
 
+.stage-lock-label {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
 .apply-btn {
   margin-left: 0.5em;
   padding: 6px 18px;

@@ -692,6 +692,7 @@ export class Options {
     checkbox.addEventListener('change', () => {
       this.stageLockEnabled = checkbox.checked;
       dataManager.saveGame();
+      this.updateStageLockOption();
     });
     this._stageLockToggle = checkbox;
     this._stageLockToggleWrapper = wrapper;
@@ -753,6 +754,7 @@ export class Options {
       this.stageLock = val;
       dataManager.saveGame();
       showToast(t('options.toast.stageLockApplied'), 'success');
+      this.updateStageLockOption();
     };
 
     this.updateStageLockOption();
@@ -874,17 +876,43 @@ export class Options {
 
   updateStageLockOption() {
     const purchased = !!crystalShop.crystalUpgrades?.stageLock;
+    const tooltip = t('options.stageLock.disabledTooltip');
     if (this._stageLockToggle) {
       this._stageLockToggle.disabled = !purchased;
+      this._stageLockToggle.checked = !!this.stageLockEnabled;
       const toggleBtn = this._stageLockToggleWrapper?.querySelector('.toggle-btn');
       if (toggleBtn) toggleBtn.classList.toggle('disabled', !purchased);
     }
     if (this._stageLockInput) {
       this._stageLockInput.disabled = !purchased;
+      this._stageLockInput.value = this.stageLock || 0;
       const applyBtn = this._stageLockWrapper?.querySelector('.apply-btn');
       const maxBtn = this._stageLockWrapper?.querySelector('.max-btn');
       if (applyBtn) applyBtn.disabled = !purchased;
       if (maxBtn) maxBtn.disabled = !purchased;
+    }
+    const inlineInput = document.querySelector('#inline-stage-controls .stage-lock-input');
+    if (inlineInput) {
+      inlineInput.disabled = !purchased;
+      inlineInput.value = this.stageLock || 0;
+      if (!purchased) inlineInput.title = tooltip;
+      else inlineInput.removeAttribute('title');
+      const row = inlineInput.closest('.option-row');
+      if (row) {
+        row.style.display = this.stageLockEnabled ? '' : 'none';
+        const applyBtn = row.querySelector('.apply-btn');
+        const maxBtn = row.querySelector('.max-btn');
+        if (applyBtn) {
+          applyBtn.disabled = !purchased;
+          if (!purchased) applyBtn.title = tooltip;
+          else applyBtn.removeAttribute('title');
+        }
+        if (maxBtn) {
+          maxBtn.disabled = !purchased;
+          if (!purchased) maxBtn.title = tooltip;
+          else maxBtn.removeAttribute('title');
+        }
+      }
     }
   }
 

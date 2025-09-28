@@ -917,9 +917,82 @@ export function updateStageControlsInlineVisibility() {
     showToast(t('options.toast.resetStageSkipApplied'), 'success');
   };
 
+  // 4) Stage Lock Value
+  const stageLockPurchased = !!crystalShop?.crystalUpgrades?.stageLock;
+  const stageLockEnabled = !!options?.stageLockEnabled;
+  const stageLockValue = options?.stageLock || 0;
+  const stageLockRow = document.createElement('div');
+  stageLockRow.className = 'option-row';
+  stageLockRow.innerHTML = html`
+    <label for="inline-stage-lock-input" class="stage-lock-label" data-i18n="options.stageLockStage">${t(
+      'options.stageLockStage',
+    )}:</label>
+    <input
+      type="number"
+      id="inline-stage-lock-input"
+      class="stage-lock-input"
+      min="0"
+      value="${stageLockValue}"
+      ${stageLockPurchased ? '' : 'disabled'}
+    />
+    <button class="max-btn" type="button" ${stageLockPurchased ? '' : 'disabled'} data-i18n="common.max">${t(
+      'common.max',
+    )}</button>
+    <button class="apply-btn" type="button" ${stageLockPurchased ? '' : 'disabled'} data-i18n="common.apply">${t(
+      'common.apply',
+    )}</button>
+  `;
+  const stageLockInput = stageLockRow.querySelector('.stage-lock-input');
+  const stageLockMaxBtn = stageLockRow.querySelector('.max-btn');
+  const stageLockApply = stageLockRow.querySelector('.apply-btn');
+  if (stageLockApply) {
+    stageLockApply.onmouseenter = () => stageLockApply.classList.add('hover');
+    stageLockApply.onmouseleave = () => stageLockApply.classList.remove('hover');
+  }
+  if (stageLockMaxBtn) {
+    stageLockMaxBtn.onmouseenter = () => stageLockMaxBtn.classList.add('hover');
+    stageLockMaxBtn.onmouseleave = () => stageLockMaxBtn.classList.remove('hover');
+    stageLockMaxBtn.onclick = () => {
+      if (stageLockMaxBtn.disabled || !stageLockInput) return;
+      const highest = Math.max(
+        ...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0),
+      );
+      stageLockInput.value = highest || 0;
+      stageLockInput.dispatchEvent(new Event('input'));
+    };
+  }
+  if (stageLockInput) {
+    if (!stageLockPurchased) {
+      const tooltip = t('options.stageLock.disabledTooltip');
+      stageLockInput.title = tooltip;
+      if (stageLockApply) stageLockApply.title = tooltip;
+      if (stageLockMaxBtn) stageLockMaxBtn.title = tooltip;
+    }
+    stageLockInput.addEventListener('input', () => {
+      let v = parseInt(stageLockInput.value, 10);
+      if (isNaN(v) || v < 0) v = 0;
+      stageLockInput.value = v;
+    });
+  }
+  if (stageLockApply) {
+    stageLockApply.onclick = () => {
+      if (stageLockApply.disabled || !stageLockInput) return;
+      let v = parseInt(stageLockInput.value, 10);
+      if (isNaN(v) || v < 0) v = 0;
+      options.stageLock = v;
+      dataManager.saveGame();
+      if (typeof options.updateStageLockOption === 'function') {
+        options.updateStageLockOption();
+      }
+      showToast(t('options.toast.stageLockApplied'), 'success');
+    };
+  }
+
   container.appendChild(startRow);
   container.appendChild(skipRow);
   container.appendChild(resetRow);
+  container.appendChild(stageLockRow);
+  stageLockRow.style.display = stageLockEnabled ? '' : 'none';
 
   // Insert after enemy section inside explore panel
   const enemySection = panel.querySelector('.enemy-section');
@@ -927,5 +1000,9 @@ export function updateStageControlsInlineVisibility() {
     enemySection.parentNode.insertBefore(container, enemySection.nextSibling);
   } else {
     panel.appendChild(container);
+  }
+
+  if (typeof options.updateStageLockOption === 'function') {
+    options.updateStageLockOption();
   }
 }
