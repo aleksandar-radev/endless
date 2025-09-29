@@ -115,6 +115,7 @@ export const SOUL_UPGRADE_CONFIG = {
     costIncrement: 50,
     stat: 'extraMaterialDropPercent',
     maxLevel: 10,
+    ignoreAscensionCap: true,
   },
   /**
    * Extra Material Drop Max
@@ -127,6 +128,7 @@ export const SOUL_UPGRADE_CONFIG = {
     costIncrement: 200,
     stat: 'extraMaterialDropMax',
     maxLevel: 100,
+    ignoreAscensionCap: true,
   },
 };
 
@@ -373,6 +375,9 @@ export default class SoulShop {
   getUpgradeMaxLevel(config) {
     if (!config || typeof config.maxLevel !== 'number') {
       return Infinity;
+    }
+    if (config.ignoreAscensionCap) {
+      return config.maxLevel;
     }
     return config.maxLevel + this.getAscensionLevelCapBonus();
   }

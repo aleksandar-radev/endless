@@ -12,6 +12,7 @@ export default function run() {
     <span style="color:#FF8A00;">Bug Fixes</span>
     <ul>
       <li>Skill tree reset now refunds all skill points earned from ascension bonuses and runes.</li>
+      <li>Stopped ascension soul shop cap increases from affecting extra material drop chance and drop cap upgrades.</li>
     </ul>
   `;
 }
