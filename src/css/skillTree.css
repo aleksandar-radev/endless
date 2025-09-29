@@ -74,7 +74,7 @@
   gap: 12px;
 }
 
-.skill-points { 
+.skill-points {
   color: var(--text, #fff);
   opacity: 0.9;
 }
@@ -84,7 +84,6 @@
   align-items: center;
   justify-content: flex-end;
   gap: 0.75rem;
-  flex-wrap: wrap;
 }
 
 /* Quick allocation controls — mirror training look */
@@ -297,12 +296,15 @@
 .skill-node.unlocked[data-skill-type='passive'] {
   border-color: #4caf50;
 }
+
 .skill-node.unlocked[data-skill-type='instant'] {
   border-color: #ff9800;
 }
+
 .skill-node.unlocked[data-skill-type='buff'] {
   border-color: #2196f3;
 }
+
 .skill-node.unlocked[data-skill-type='summon'] {
   border-color: #ab47bc;
 }
