@@ -8,6 +8,8 @@ export default function run() {
     <ul>
       <li>XP, gold, item quantity, and item rarity bonuses on gear scale with tier-based percentage caps instead of being limited to 100% (making them cap at 1200% for tier 12 gear).</li>
       <li>Removed quick buy separate options, and made it just 1 (you should probably go adjust your options). Quick buy and bulk buy available for training, skills and soul shop.</li>
+      <li>Added Armor Penetration and Elemental Penetration training along with new item rolls for weapons, gloves, and jewelry.</li>
+      <li>Enabled All Attributes rolls on all non-weapon equipment.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

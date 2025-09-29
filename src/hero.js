@@ -283,14 +283,21 @@ export default class Hero {
         (this.permaStats[`${attr}Percent`] || 0) +
         (this.permaStats.allAttributesPercent || 0) -
         prestigePercent;
-      const itemsFlat = equipmentBonuses[attr] || 0;
-      const itemsPercent = (equipmentBonuses[`${attr}Percent`] || 0) / 100;
-      const skillsFlat = skillTreeBonuses[attr] || 0;
-      const skillsPercent = (skillTreeBonuses[`${attr}Percent`] || 0) / 100;
-      const trainingFlat = trainingBonuses[attr] || 0;
-      const trainingPercent = (trainingBonuses[`${attr}Percent`] || 0) / 100;
-      const soulFlat = soulBonuses[attr] || 0;
-      const soulPercent = soulBonuses[`${attr}Percent`] || 0;
+      const itemsFlat = (equipmentBonuses[attr] || 0) + (equipmentBonuses.allAttributes || 0);
+      const itemsPercent =
+        (equipmentBonuses[`${attr}Percent`] || 0) / 100 +
+        (equipmentBonuses.allAttributesPercent || 0) / 100;
+      const skillsFlat = (skillTreeBonuses[attr] || 0) + (skillTreeBonuses.allAttributes || 0);
+      const skillsPercent =
+        (skillTreeBonuses[`${attr}Percent`] || 0) / 100 +
+        (skillTreeBonuses.allAttributesPercent || 0) / 100;
+      const trainingFlat = (trainingBonuses[attr] || 0) + (trainingBonuses.allAttributes || 0);
+      const trainingPercent =
+        (trainingBonuses[`${attr}Percent`] || 0) / 100 +
+        (trainingBonuses.allAttributesPercent || 0) / 100;
+      const soulFlat = (soulBonuses[attr] || 0) + (soulBonuses.allAttributes || 0);
+      const soulPercent =
+        (soulBonuses[`${attr}Percent`] || 0) + (soulBonuses.allAttributesPercent || 0);
 
       this.statBreakdown[attr] = {
         base,
@@ -326,13 +333,20 @@ export default class Hero {
   }
 
   calculatePrimaryStats(skillTreeBonuses, equipmentBonuses, trainingBonuses) {
+    const sharedFlatAttributes =
+      (this.permaStats.allAttributes || 0) +
+      (equipmentBonuses.allAttributes || 0) +
+      (skillTreeBonuses.allAttributes || 0) +
+      (trainingBonuses.allAttributes || 0);
+
     ATTRIBUTE_KEYS.forEach((attr) => {
       this.stats[attr] =
         (this.primaryStats[attr] || 0) +
         (this.permaStats[attr] || 0) +
         (equipmentBonuses[attr] || 0) +
         (skillTreeBonuses[attr] || 0) +
-        (trainingBonuses[attr] || 0);
+        (trainingBonuses[attr] || 0) +
+        sharedFlatAttributes;
     });
   }
 
@@ -428,8 +442,14 @@ export default class Hero {
 
   calculateFlatValues(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses) {
     const flatValues = {};
+    const sharedFlatAttributes =
+      (this.permaStats.allAttributes || 0) +
+      (equipmentBonuses.allAttributes || 0) +
+      (skillTreeBonuses.allAttributes || 0) +
+      (trainingBonuses.allAttributes || 0);
+
     for (const stat of STAT_KEYS) {
-      flatValues[stat] =
+      let value =
         (this.primaryStats[stat] ?? 0) +
         (this.permaStats[stat] ?? 0) +
         (STATS[stat].base ?? 0) +
@@ -437,9 +457,17 @@ export default class Hero {
         (STATS[stat].levelUpBonus ?? 0) * (this.level - 1) +
         (trainingBonuses[stat] ?? 0) +
         (equipmentBonuses[stat] ?? 0) +
-        (skillTreeBonuses[stat] ?? 0) +
-        (ATTRIBUTE_SET.has(stat) ? this.permaStats['allAttributes'] : 0) +
-        (RESISTANCE_SET.has(stat) ? this.permaStats['allResistance'] : 0);
+        (skillTreeBonuses[stat] ?? 0);
+
+      if (ATTRIBUTE_SET.has(stat)) {
+        value += sharedFlatAttributes;
+      }
+
+      if (RESISTANCE_SET.has(stat)) {
+        value += this.permaStats.allResistance || 0;
+      }
+
+      flatValues[stat] = value;
     }
     return flatValues;
   }
@@ -447,6 +475,11 @@ export default class Hero {
   calculatePercentBonuses(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses) {
     const percentBonuses = {};
     const ascensionBonuses = ascension?.getBonuses() || {};
+    const sharedPercentAttributes =
+      (this.permaStats.allAttributesPercent || 0) +
+      (equipmentBonuses.allAttributesPercent || 0) / 100 +
+      (skillTreeBonuses.allAttributesPercent || 0) / 100 +
+      (trainingBonuses.allAttributesPercent || 0) / 100;
     for (const stat of STAT_KEYS) {
       if (stat.endsWith('Percent')) {
         const statName = stat.replace('Percent', '');
@@ -455,8 +488,10 @@ export default class Hero {
           (this.permaStats[stat] || 0) +
           (skillTreeBonuses[stat] || 0) / 100 +
           (equipmentBonuses[stat] || 0) / 100 +
-          (trainingBonuses[stat] || 0) / 100 +
-          (ATTRIBUTE_SET.has(statName) ? this.permaStats['allAttributesPercent'] : 0);
+          (trainingBonuses[stat] || 0) / 100;
+        if (ATTRIBUTE_SET.has(statName)) {
+          value += sharedPercentAttributes;
+        }
         value += ascensionBonuses[stat] || 0;
         percentBonuses[stat] = value;
       }

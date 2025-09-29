@@ -413,6 +413,14 @@ export const OFFENSE_STATS = {
   armorPenetration: {
     base: 0,
     decimalPlaces: 0,
+    training: { cost: 50, bonus: 10, maxLevel: Infinity },
+    item: {
+      min: 10,
+      max: 25,
+      limit: Infinity,
+      scaling: (level, tier) => offenseScaling(level, tier),
+    },
+    itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
     subcategory: 'attack',
   },
   armorPenetrationPercent: {
@@ -483,6 +491,14 @@ export const OFFENSE_STATS = {
   elementalPenetration: {
     base: 0,
     decimalPlaces: 0,
+    training: { cost: 50, bonus: 10, maxLevel: Infinity },
+    item: {
+      min: 10,
+      max: 25,
+      limit: Infinity,
+      scaling: (level, tier) => offenseScaling(level, tier),
+    },
+    itemTags: ['offense', 'jewelry', 'gloves', 'magic', 'elemental'],
     subcategory: 'elemental',
   },
   flatPenetrationPercent: {
