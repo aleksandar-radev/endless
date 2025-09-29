@@ -113,7 +113,7 @@ export default class Training {
       </button>
     `,
     ).join('');
-    if (options?.quickTraining) {
+    if (options?.quickBuy) {
       const qtyControls = document.createElement('div');
       qtyControls.className = 'training-qty-controls';
       if (options.useNumericInputs) {
@@ -159,7 +159,7 @@ export default class Training {
       }
     }
 
-    if (options?.bulkTraining) {
+    if (options?.bulkBuy) {
       const bulkControls = document.createElement('div');
       bulkControls.className = 'training-bulk-controls';
       bulkControls.innerHTML = `
@@ -269,7 +269,7 @@ export default class Training {
       const button = e.target.closest('button[data-stat]');
       if (!button) return;
       const stat = button.dataset.stat;
-      if (options?.quickTraining) {
+      if (options?.quickBuy) {
         this.buyBulk(stat, this.quickQty);
       } else {
         this.openModal(stat);
@@ -506,7 +506,7 @@ export default class Training {
       control.appendChild(btn);
       trainingGrid.appendChild(control);
     }
-    if (options?.bulkTraining) this.updateBulkCost();
+    if (options?.bulkBuy) this.updateBulkCost();
   }
 
   updateTrainingAffordability(subTab) {
@@ -524,7 +524,7 @@ export default class Training {
       let totalCost = this.calculateTotalCost(config.training, qty, level);
       let unaffordable = hero.gold < totalCost;
 
-      if (options?.quickTraining && !isMaxed) {
+    if (options?.quickBuy && !isMaxed) {
         const levelsLeft = maxLevel - level;
         if (this.quickQty === 'max') {
           const { qty: affordableQty } = this.getMaxPurchasable('max', level, maxLevel, config.training);
@@ -559,7 +559,7 @@ export default class Training {
 
       button.disabled = disabled;
     });
-    if (options?.bulkTraining) this.updateBulkCost();
+    if (options?.bulkBuy) this.updateBulkCost();
   }
 
   calculateBulkCostAndPurchases(qty) {
@@ -647,7 +647,7 @@ export default class Training {
     let costLine = '';
     let bonusClass = '';
 
-    if (options?.quickTraining && !isMaxed) {
+    if (options?.quickBuy && !isMaxed) {
       const levelsLeft = maxLevel - level;
       let desiredQty;
       let totalCost;

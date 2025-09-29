@@ -74,9 +74,17 @@
   gap: 12px;
 }
 
-.skill-points {
+.skill-points { 
   color: var(--text, #fff);
   opacity: 0.9;
+}
+
+.skill-header-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
 /* Quick allocation controls — mirror training look */
@@ -114,6 +122,44 @@
 .skill-qty-controls .skill-qty-input.input-number {
   width: 90px;
   text-align: center;
+}
+
+.skill-bulk-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.skill-bulk-controls button {
+  background: var(--bg-element, #23272f);
+  color: var(--text, #fff);
+  border: 2px solid var(--accent, #3b82f6);
+  border-radius: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.skill-bulk-controls button:hover:not(:disabled) {
+  background: #2d3340;
+  color: var(--accent, #3b82f6);
+  border-color: var(--accent, #3b82f6);
+}
+
+.skill-bulk-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.skill-bulk-cost {
+  color: #fbbf24;
+  font-size: 0.9rem;
+}
+
+.skill-bulk-cost.unaffordable {
+  color: #a0a7b4;
 }
 
 .skill-row {

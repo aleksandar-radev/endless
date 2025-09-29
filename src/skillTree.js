@@ -275,11 +275,13 @@ export default class SkillTree {
    * Unlocks exactly qty levels of a skill, if the player can afford the total cost.
    * Returns the number of levels actually unlocked (qty or 0).
    */
-  unlockSkillBulk(skillId, count) {
+  unlockSkillBulk(skillId, count, opts = {}) {
     if (!this.selectedPath) return 0;
 
     const skill = this.getSkill(skillId);
     if (!skill) return 0;
+
+    const { skipUpdates = false } = opts;
 
     // Calculate max possible to buy
     let maxLevel = skill.maxLevel() || DEFAULT_MAX_SKILL_LEVEL;
@@ -313,14 +315,117 @@ export default class SkillTree {
     }
 
     this.skillPoints -= totalCost;
+    if (!skipUpdates) {
+      hero.queueRecalculateFromAttributes();
+      if (skill.type() !== 'passive') {
+        updateActionBar();
+      }
+      updateSkillTreeValues();
+      dataManager.saveGame();
+      updateTabIndicators();
+    }
+    return allowedQty;
+  }
+
+  calculateBulkAllocation(qtySetting) {
+    if (!this.selectedPath) {
+      return { totalCost: 0, allocations: [], affordable: false };
+    }
+
+    const entries = Object.entries(this.skills || {})
+      .map(([skillId, skillData]) => {
+        const skill = this.getSkill(skillId);
+        if (!skill) return null;
+        const currentLevel = skillData?.level || 0;
+        const rawMax = typeof skill.maxLevel === 'function' ? skill.maxLevel() : DEFAULT_MAX_SKILL_LEVEL;
+        const maxLevel = Number.isFinite(rawMax) ? rawMax : DEFAULT_MAX_SKILL_LEVEL;
+        const levelCap = Math.min(maxLevel, hero.level);
+        const levelsLeft = Math.max(0, levelCap - currentLevel);
+        if (levelsLeft <= 0) return null;
+        const affectsActionBar = typeof skill.type === 'function' && skill.type() !== 'passive';
+        return { skillId, currentLevel, levelsLeft, affectsActionBar };
+      })
+      .filter(Boolean);
+
+    if (entries.length === 0) {
+      return { totalCost: 0, allocations: [], affordable: false };
+    }
+
+    let totalCost = 0;
+    const allocations = [];
+
+    if (qtySetting === 'max') {
+      const perChunk = Math.floor(this.skillPoints / entries.length);
+      if (perChunk <= 0) {
+        return { totalCost: 0, allocations: [], affordable: false };
+      }
+      entries.forEach(({ skillId, currentLevel, levelsLeft, affectsActionBar }) => {
+        const cap = Math.min(levelsLeft, SKILLS_MAX_QTY);
+        if (cap <= 0) return;
+        let low = 0;
+        let high = cap;
+        let bestQty = 0;
+        while (low <= high) {
+          const mid = Math.floor((low + high) / 2);
+          const cost = this.calculateSkillPointCost(currentLevel, mid);
+          if (cost <= perChunk) {
+            bestQty = mid;
+            low = mid + 1;
+          } else {
+            high = mid - 1;
+          }
+        }
+        if (bestQty > 0) {
+          const cost = this.calculateSkillPointCost(currentLevel, bestQty);
+          if (Number.isFinite(cost) && cost > 0) {
+            totalCost += cost;
+            allocations.push({ skillId, qty: bestQty, cost, affectsActionBar });
+          }
+        }
+      });
+    } else {
+      const desiredRaw = Number(qtySetting);
+      const desired = Number.isFinite(desiredRaw) ? Math.max(0, Math.min(desiredRaw, SKILLS_MAX_QTY)) : 0;
+      if (desired <= 0) {
+        return { totalCost: 0, allocations: [], affordable: false };
+      }
+      entries.forEach(({ skillId, currentLevel, levelsLeft, affectsActionBar }) => {
+        const qty = Math.min(desired, levelsLeft);
+        if (qty <= 0) return;
+        const cost = this.calculateSkillPointCost(currentLevel, qty);
+        if (!Number.isFinite(cost) || cost <= 0) return;
+        totalCost += cost;
+        allocations.push({ skillId, qty, cost, affectsActionBar });
+      });
+    }
+
+    const affordable = this.skillPoints >= totalCost && totalCost > 0;
+    return { totalCost, allocations, affordable };
+  }
+
+  bulkAllocateSkills(qtySetting) {
+    const { totalCost, allocations, affordable } = this.calculateBulkAllocation(qtySetting);
+    if (allocations.length === 0) return 0;
+    if (!affordable) {
+      showToast(t('skillTree.notEnoughSkillPointsBulk'), 'error');
+      return 0;
+    }
+
+    let requiresActionBarUpdate = false;
+    allocations.forEach(({ skillId, qty, affectsActionBar }) => {
+      if (affectsActionBar) requiresActionBarUpdate = true;
+      this.unlockSkillBulk(skillId, qty, { skipUpdates: true });
+    });
+
     hero.queueRecalculateFromAttributes();
-    if (skill.type() !== 'passive') {
+    if (requiresActionBarUpdate) {
       updateActionBar();
     }
     updateSkillTreeValues();
-    dataManager.saveGame();
     updateTabIndicators();
-    return allowedQty;
+    dataManager.saveGame();
+    showToast(t('skillTree.bulkAllocateSuccess'), 'success');
+    return allocations.reduce((sum, { qty }) => sum + qty, 0);
   }
 
   toggleSkill(skillId) {

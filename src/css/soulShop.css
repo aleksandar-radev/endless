@@ -11,8 +11,17 @@
   margin: 0 auto;
 }
 
-.soulShop-qty-controls {
+
+.soulShop-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
   margin-bottom: 1rem;
+}
+
+.soulShop-qty-controls {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
@@ -42,6 +51,44 @@
   background: #2d3340;
   color: var(--accent, #3b82f6);
   border-color: var(--accent, #3b82f6);
+}
+
+.soulShop-bulk-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.soulShop-bulk-controls button {
+  background: var(--bg-element, #23272f);
+  color: var(--text, #fff);
+  border: 2px solid var(--accent, #3b82f6);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.8rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.soulShop-bulk-controls button:hover:not(:disabled) {
+  background: #2d3340;
+  color: var(--accent, #3b82f6);
+  border-color: var(--accent, #3b82f6);
+}
+
+.soulShop-bulk-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.soulShop-bulk-cost {
+  color: #fbbf24;
+  font-size: 0.95rem;
+}
+
+.soulShop-bulk-cost.unaffordable {
+  color: #a0a7b4;
 }
 
 .soul-upgrades-grid {

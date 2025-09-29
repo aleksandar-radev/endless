@@ -142,7 +142,8 @@ export default class SoulShop {
     this.quickQty = options.useNumericInputs
       ? Math.min(options.soulShopQuickQty || 1, SOUL_SHOP_MAX_QTY)
       : 1;
-    this._distributedMaxCache = null;
+    this.bulkBuyBtn = null;
+    this.bulkCostEl = null;
   }
 
   /**
@@ -183,54 +184,83 @@ export default class SoulShop {
       upgradesContainer.className = 'soulShop-upgrades-container';
       shopContainer.appendChild(upgradesContainer);
     }
-    let qtyControls = shopContainer.querySelector('.soulShop-qty-controls');
-    if (qtyControls) qtyControls.remove();
-    if (options?.quickSoulShop) {
-      qtyControls = document.createElement('div');
-      qtyControls.className = 'soulShop-qty-controls';
-      if (options.useNumericInputs) {
-        qtyControls.innerHTML = `
-          <input type="number" class="soul-qty-input input-number" min="1" max="${SOUL_SHOP_MAX_QTY}" value="${this.quickQty === 'max' ? options.soulShopQuickQty || 1 : this.quickQty}" />
-          <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">Max</button>
-        `;
-        shopContainer.insertBefore(qtyControls, upgradesContainer);
-        const input = qtyControls.querySelector('.soul-qty-input');
-        const maxBtn = qtyControls.querySelector('button[data-qty="max"]');
-        input.oninput = () => {
-          let val = parseInt(input.value, 10);
-          if (isNaN(val) || val < 1) val = 1;
-          if (val > SOUL_SHOP_MAX_QTY) val = SOUL_SHOP_MAX_QTY;
-          this.quickQty = val;
-          options.soulShopQuickQty = val;
-          maxBtn.classList.remove('active');
-          this.updateSoulShopUI();
-          dataManager.saveGame();
-        };
-        maxBtn.onclick = () => {
-          this.quickQty = 'max';
-          maxBtn.classList.add('active');
-          this.updateSoulShopUI();
-          dataManager.saveGame();
-        };
-      } else {
-        qtyControls.innerHTML = `
-          <button data-qty="1" class="${this.quickQty === 1 ? 'active' : ''}">1</button>
-          <button data-qty="10" class="${this.quickQty === 10 ? 'active' : ''}">10</button>
-          <button data-qty="50" class="${this.quickQty === 50 ? 'active' : ''}">50</button>
-          <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">Max</button>
-        `;
-        shopContainer.insertBefore(qtyControls, upgradesContainer);
-        qtyControls.querySelectorAll('button').forEach((btn) => {
-          btn.onclick = () => {
-            this.quickQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
-            qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
-            btn.classList.add('active');
+    const existingControls = shopContainer.querySelector('.soulShop-controls');
+    if (existingControls) existingControls.remove();
+    if (options?.quickBuy || options?.bulkBuy) {
+      const controlBar = document.createElement('div');
+      controlBar.className = 'soulShop-controls';
+      shopContainer.insertBefore(controlBar, upgradesContainer);
+
+      if (options?.quickBuy) {
+        const qtyControls = document.createElement('div');
+        qtyControls.className = 'soulShop-qty-controls';
+        if (options.useNumericInputs) {
+          qtyControls.innerHTML = `
+            <input type="number" class="soul-qty-input input-number" min="1" max="${SOUL_SHOP_MAX_QTY}" value="${this.quickQty === 'max' ? options.soulShopQuickQty || 1 : this.quickQty}" />
+            <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">Max</button>
+          `;
+          controlBar.appendChild(qtyControls);
+          const input = qtyControls.querySelector('.soul-qty-input');
+          const maxBtn = qtyControls.querySelector('button[data-qty="max"]');
+          input.oninput = () => {
+            let val = parseInt(input.value, 10);
+            if (Number.isNaN(val) || val < 1) val = 1;
+            if (val > SOUL_SHOP_MAX_QTY) val = SOUL_SHOP_MAX_QTY;
+            this.quickQty = val;
+            options.soulShopQuickQty = val;
+            maxBtn.classList.remove('active');
             this.updateSoulShopUI();
+            if (options?.bulkBuy) this.updateBulkCost();
+            dataManager.saveGame();
           };
-        });
+          maxBtn.onclick = () => {
+            this.quickQty = 'max';
+            maxBtn.classList.add('active');
+            this.updateSoulShopUI();
+            if (options?.bulkBuy) this.updateBulkCost();
+            dataManager.saveGame();
+          };
+        } else {
+          qtyControls.innerHTML = `
+            <button data-qty="1" class="${this.quickQty === 1 ? 'active' : ''}">1</button>
+            <button data-qty="10" class="${this.quickQty === 10 ? 'active' : ''}">10</button>
+            <button data-qty="50" class="${this.quickQty === 50 ? 'active' : ''}">50</button>
+            <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">Max</button>
+          `;
+          controlBar.appendChild(qtyControls);
+          qtyControls.querySelectorAll('button').forEach((btn) => {
+            btn.onclick = () => {
+              this.quickQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+              qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+              btn.classList.add('active');
+              this.updateSoulShopUI();
+              if (options?.bulkBuy) this.updateBulkCost();
+            };
+          });
+        }
       }
+
+      if (options?.bulkBuy) {
+        const bulkControls = document.createElement('div');
+        bulkControls.className = 'soulShop-bulk-controls';
+        bulkControls.innerHTML = `
+          <button class="bulk-buy">Bulk Buy</button>
+          <span class="soulShop-bulk-cost"></span>
+        `;
+        controlBar.appendChild(bulkControls);
+        this.bulkBuyBtn = bulkControls.querySelector('.bulk-buy');
+        this.bulkCostEl = bulkControls.querySelector('.soulShop-bulk-cost');
+        this.bulkBuyBtn.onclick = () => this.bulkBuyAll();
+      } else {
+        this.bulkBuyBtn = null;
+        this.bulkCostEl = null;
+      }
+    } else {
+      this.bulkBuyBtn = null;
+      this.bulkCostEl = null;
     }
     this.updateSoulShopUI();
+    if (options?.bulkBuy) this.updateBulkCost();
   }
 
   updateSoulShopUI() {
@@ -251,6 +281,7 @@ export default class SoulShop {
       </div>
     `;
     this.setupSoulUpgradeHandlers();
+    if (options?.bulkBuy) this.updateBulkCost();
   }
 
   updateSoulShopAffordability() {
@@ -274,12 +305,10 @@ export default class SoulShop {
         : this.getSoulUpgradeCost(config, baseLevel);
       let disabled = alreadyPurchased;
       let unaffordable = false;
-      if (options?.quickSoulShop && !alreadyPurchased) {
+      if (options?.quickBuy && !alreadyPurchased) {
         if (isMultiLevel || isMultiple) {
           if (this.quickQty === 'max') {
-            const { qty: affordableQty, totalCost } = this.getBulkCost(stat, 'max', hero.souls, {
-              distribute: false,
-            });
+            const { qty: affordableQty, totalCost } = this.getBulkCost(stat, 'max', hero.souls);
             qty =
               affordableQty > 0
                 ? Math.min(affordableQty, SOUL_SHOP_MAX_QTY)
@@ -325,10 +354,7 @@ export default class SoulShop {
       }
       if (bonusEl) bonusEl.classList.toggle('unaffordable', unaffordable);
     });
-  }
-
-  invalidateDistributedMaxCache() {
-    this._distributedMaxCache = null;
+    if (options?.bulkBuy) this.updateBulkCost();
   }
 
   resetSoulShop() {
@@ -337,7 +363,6 @@ export default class SoulShop {
     this.currentStat = null;
     this.selectedQty = Math.min(options.soulShopQty || 1, SOUL_SHOP_MAX_QTY);
     this.quickQty = Math.min(options.soulShopQuickQty || 1, SOUL_SHOP_MAX_QTY);
-    this.invalidateDistributedMaxCache();
     this.updateSoulShopUI();
   }
 
@@ -385,13 +410,11 @@ export default class SoulShop {
     let bonusClass = '';
     let disabled = alreadyPurchased;
     let qty = 1;
-    if (options?.quickSoulShop && !alreadyPurchased) {
+        if (options?.quickBuy && !alreadyPurchased) {
       const baseLevel = this.soulUpgrades[stat] || 0;
       const levelsLeft = isMultiLevel ? this.getLevelsLeft(config, baseLevel) : Infinity;
       if (this.quickQty === 'max') {
-        const { qty: affordableQty, totalCost } = this.getBulkCost(stat, 'max', hero.souls, {
-          distribute: false,
-        });
+        const { qty: affordableQty, totalCost } = this.getBulkCost(stat, 'max', hero.souls);
         qty =
           affordableQty > 0
             ? Math.min(affordableQty, SOUL_SHOP_MAX_QTY)
@@ -424,73 +447,11 @@ export default class SoulShop {
     `;
   }
 
-  getDistributedMaxAllocations(availableSouls = hero.souls) {
-    const numericSouls = Number(availableSouls);
-    const souls = Number.isFinite(numericSouls) ? Math.max(0, Math.floor(numericSouls)) : 0;
-    const multiLevelEntries = Object.entries(SOUL_UPGRADE_CONFIG)
-      .filter(([, config]) => typeof config.bonus === 'number' && !config.oneTime)
-      .map(([stat, config]) => {
-        const baseLevel = this.soulUpgrades[stat] || 0;
-        const maxLevel = this.getUpgradeMaxLevel(config);
-        const levelsLeft = this.getLevelsLeft(config, baseLevel);
-        return { stat, config, baseLevel, levelsLeft };
-      })
-      .filter(({ levelsLeft }) => levelsLeft > 0);
-
-    const multiplier = this.getCostMultiplier();
-    const levelsKey = multiLevelEntries
-      .map(({ stat, baseLevel }) => `${stat}:${baseLevel}`)
-      .join('|');
-    const capBonus = this.getAscensionLevelCapBonus();
-    const cacheKey = `${souls}|${multiplier}|${capBonus}|${levelsKey}`;
-    if (this._distributedMaxCache?.key === cacheKey) {
-      return this._distributedMaxCache.allocations;
-    }
-
-    const allocations = new Map();
-    if (multiLevelEntries.length === 0) {
-      this._distributedMaxCache = { key: cacheKey, allocations };
-      return allocations;
-    }
-
-    const unlimitedBudget = multiplier === 0;
-    const budget = unlimitedBudget
-      ? Number.MAX_SAFE_INTEGER
-      : Math.floor(souls / multiLevelEntries.length);
-
-    multiLevelEntries.forEach(({ stat, baseLevel }) => {
-      if (!unlimitedBudget && budget <= 0) {
-        allocations.set(stat, { qty: 0, totalCost: 0 });
-        return;
-      }
-      const { qty, totalCost } = this.getMaxPurchasable(
-        stat,
-        'max',
-        baseLevel,
-        unlimitedBudget ? Number.MAX_SAFE_INTEGER : budget,
-      );
-      allocations.set(stat, { qty, totalCost });
-    });
-
-    this._distributedMaxCache = { key: cacheKey, allocations };
-    return allocations;
-  }
-
-  getBulkCost(stat, desiredQty, availableSouls = hero.souls, { distribute = true } = {}) {
+  getBulkCost(stat, desiredQty, availableSouls = hero.souls) {
     const config = SOUL_UPGRADE_CONFIG[stat];
     if (!config) return { qty: 0, totalCost: 0 };
     const isMultiLevel = typeof config.bonus === 'number' && !config.oneTime;
     const baseLevel = this.soulUpgrades[stat] || 0;
-    if (isMultiLevel && desiredQty === 'max') {
-      if (distribute) {
-        const distributed = this.getDistributedMaxAllocations(availableSouls);
-        if (distributed.has(stat)) {
-          const entry = distributed.get(stat);
-          return { qty: entry.qty, totalCost: entry.totalCost };
-        }
-      }
-      return this.getMaxPurchasable(stat, desiredQty, baseLevel, availableSouls);
-    }
     if (isMultiLevel) {
       return this.getMaxPurchasable(stat, desiredQty, baseLevel, availableSouls);
     }
@@ -501,13 +462,94 @@ export default class SoulShop {
         return { qty, totalCost: 0 };
       }
       const maxQty = Math.floor(availableSouls / unitCost);
+      const parsedDesired =
+        typeof desiredQty === 'number' ? desiredQty : parseInt(desiredQty, 10);
       const qty =
         desiredQty === 'max'
           ? Math.min(maxQty, SOUL_SHOP_MAX_QTY)
-          : Math.min(desiredQty, maxQty, SOUL_SHOP_MAX_QTY);
+          : Math.min(Number.isFinite(parsedDesired) ? parsedDesired : 0, maxQty, SOUL_SHOP_MAX_QTY);
       return { qty, totalCost: qty * unitCost };
     }
     return { qty: 1, totalCost: Math.round(config.baseCost) };
+  }
+
+  calculateBulkCostAndPurchases(qtySetting) {
+    const entries = Object.entries(SOUL_UPGRADE_CONFIG)
+      .filter(([, config]) => typeof config.bonus === 'number' && !config.oneTime)
+      .map(([stat, config]) => {
+        const baseLevel = this.soulUpgrades[stat] || 0;
+        const levelsLeft = this.getLevelsLeft(config, baseLevel);
+        return { stat, config, baseLevel, levelsLeft };
+      })
+      .filter(({ levelsLeft }) => levelsLeft > 0);
+
+    if (entries.length === 0) {
+      return { totalCost: 0, purchases: [], affordable: false };
+    }
+
+    let totalCost = 0;
+    const purchases = [];
+
+    if (qtySetting === 'max') {
+      const rawSouls = Number(hero.souls);
+      const availableSouls = Number.isFinite(rawSouls) ? Math.max(0, Math.floor(rawSouls)) : Number.MAX_SAFE_INTEGER;
+      const perChunk = entries.length > 0 ? Math.floor(availableSouls / entries.length) : 0;
+      if (perChunk <= 0) {
+        return { totalCost: 0, purchases: [], affordable: false };
+      }
+      entries.forEach(({ stat, baseLevel }) => {
+        const { qty, totalCost: cost } = this.getMaxPurchasable(stat, 'max', baseLevel, perChunk);
+        if (qty > 0 && Number.isFinite(cost)) {
+          totalCost += cost;
+          purchases.push({ stat, qty, cost, baseLevel });
+        }
+      });
+    } else {
+      const numericQty = Number(qtySetting);
+      const desired = Number.isFinite(numericQty) ? Math.max(0, numericQty) : 0;
+      entries.forEach(({ stat, baseLevel, levelsLeft }) => {
+        const qty = Math.min(desired, levelsLeft, SOUL_SHOP_MAX_QTY);
+        if (qty <= 0) return;
+        const cost = this.calculateTotalCost(stat, qty, baseLevel);
+        if (!Number.isFinite(cost)) return;
+        totalCost += cost;
+        purchases.push({ stat, qty, cost, baseLevel });
+      });
+    }
+
+    const affordable = hero.souls >= totalCost && purchases.length > 0;
+    return { totalCost, purchases, affordable };
+  }
+
+  updateBulkCost() {
+    if (!this.bulkBuyBtn || !this.bulkCostEl) return;
+    const { totalCost, purchases, affordable } = this.calculateBulkCostAndPurchases(this.quickQty);
+    const costValue = purchases.length > 0 ? totalCost : 0;
+    this.bulkCostEl.textContent = `${t('soulShop.cost')}: ${formatNumber(costValue)} ${t('resource.souls.name')}`;
+    this.bulkCostEl.classList.toggle('unaffordable', !affordable);
+    this.bulkBuyBtn.disabled = purchases.length === 0 || !affordable;
+  }
+
+  bulkBuyAll() {
+    const { totalCost, purchases, affordable } = this.calculateBulkCostAndPurchases(this.quickQty);
+    if (purchases.length === 0) return;
+    if (!affordable) {
+      showToast(t('soulShop.notEnoughSoulsBulk'), 'error');
+      return;
+    }
+    if (totalCost > 0) hero.souls -= totalCost;
+    purchases.forEach(({ stat, qty, baseLevel }) => {
+      const startingLevel = baseLevel ?? (this.soulUpgrades[stat] || 0);
+      this.soulUpgrades[stat] = startingLevel + qty;
+    });
+    showToast(t('soulShop.bulkPurchaseSuccess'), 'success');
+    dataManager.saveGame();
+    updateResources();
+    hero.queueRecalculateFromAttributes();
+    this.updateModalDetails();
+    updateStatsAndAttributesUI();
+    updatePlayerLife();
+    this.initializeSoulShopUI();
   }
 
   getMaxPurchasable(stat, desiredQty, baseLevel = this.soulUpgrades[stat] || 0, availableSouls = hero.souls) {
@@ -587,7 +629,7 @@ export default class SoulShop {
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
         const stat = button.dataset.stat;
-        if (options?.quickSoulShop) {
+        if (options?.quickBuy) {
           this.buyBulk(stat, this.quickQty);
         } else {
           this.openUpgradeModal(stat);
@@ -615,7 +657,7 @@ export default class SoulShop {
     });
     this.modal.querySelector('.modal-close').onclick = () => closeModal('#soulShop-modal');
     this.modal.querySelector('.modal-buy').onclick = () =>
-      this.buyBulk(this.currentStat, this.selectedQty, { distribute: false });
+      this.buyBulk(this.currentStat, this.selectedQty);
     const slider = this.modal.querySelector('.modal-slider');
     slider.addEventListener('input', (e) => {
       this.selectedQty = Math.min(
@@ -804,7 +846,7 @@ export default class SoulShop {
     return `+${bonusValue.toFixed(decimals)} ${label}`;
   }
 
-  async buyBulk(stat, qty, { distribute = true } = {}) {
+  async buyBulk(stat, qty) {
     const config = SOUL_UPGRADE_CONFIG[stat];
     if (!config) return;
     const isMultiLevel = typeof config.bonus === 'number' && !config.oneTime;
@@ -812,14 +854,7 @@ export default class SoulShop {
       const baseLevel = this.soulUpgrades[stat] || 0;
       let levelsToBuy = 0;
       let totalCost = 0;
-      if (qty === 'max' && distribute) {
-        const distributed = this.getDistributedMaxAllocations(hero.souls);
-        if (distributed.has(stat)) {
-          ({ qty: levelsToBuy, totalCost } = distributed.get(stat));
-        } else {
-          ({ qty: levelsToBuy, totalCost } = this.getMaxPurchasable(stat, qty, baseLevel, hero.souls));
-        }
-      } else if (qty === 'max') {
+      if (qty === 'max') {
         ({ qty: levelsToBuy, totalCost } = this.getMaxPurchasable(stat, qty, baseLevel, hero.souls));
       } else {
         const levelsLeft = this.getLevelsLeft(config, baseLevel);
@@ -855,7 +890,6 @@ export default class SoulShop {
     dataManager.saveGame();
     updateResources();
     hero.queueRecalculateFromAttributes();
-    this.invalidateDistributedMaxCache();
     this.updateModalDetails();
     updateStatsAndAttributesUI();
     updatePlayerLife();

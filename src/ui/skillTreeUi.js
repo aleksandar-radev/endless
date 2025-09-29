@@ -1,8 +1,9 @@
 import { STATS } from '../constants/stats/stats.js';
 import { CLASS_PATHS, SKILL_TREES } from '../constants/skills.js';
 import { SKILL_LEVEL_TIERS } from '../skillTree.js';
+import { SKILLS_MAX_QTY } from '../constants/limits.js';
 import { skillTree, hero, crystalShop, options, dataManager } from '../globals.js';
-import { formatStatName, hideTooltip, positionTooltip, showToast, showTooltip, updateResources } from './ui.js';
+import { formatNumber, formatStatName, hideTooltip, positionTooltip, showToast, showTooltip, updateResources } from './ui.js';
 import { t } from '../i18n.js';
 import { createModal, closeModal } from './modal.js';
 
@@ -15,6 +16,16 @@ const SKILL_CATEGORY_TRANSLATIONS = {
 
 let cleanupSkillTreeHeaderFloating = null;
 let updateSkillTreeHeaderFloating = null;
+let skillBulkButton = null;
+let skillBulkCostEl = null;
+
+function updateSkillBulkCostDisplay() {
+  if (!options?.bulkBuy || !skillBulkButton || !skillBulkCostEl) return;
+  const { totalCost, affordable } = skillTree.calculateBulkAllocation(skillTree.quickQty);
+  skillBulkCostEl.textContent = `${t('skillTree.cost')}: ${formatNumber(totalCost)} ${t('skillTree.skillPointsLabel')}`;
+  skillBulkCostEl.classList.toggle('unaffordable', !affordable);
+  skillBulkButton.disabled = totalCost === 0 || !affordable;
+}
 
 function resolveSkillCategoryLabel(skill) {
   if (!skill) return '';
@@ -586,18 +597,17 @@ export function updateSkillTreeValues() {
   const container = document.getElementById('skill-tree-container');
 
   const skillPointsHeader = container.querySelector('.skill-points-header');
-  // Rebuild header with optional quick allocation controls
-  let rightControls = '';
-  if (options?.quickSkills) {
+  let quickControls = '';
+  if (options?.quickBuy) {
     if (options.useNumericInputs) {
       const val = skillTree.quickQty === 'max' ? (options.skillQuickQty || 1) : skillTree.quickQty;
-      rightControls = `
+      quickControls = `
         <div class="skill-qty-controls">
           <input type="number" class="skill-qty-input input-number" min="1" value="${val}" />
           <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">Max</button>
         </div>`;
     } else {
-      rightControls = `
+      quickControls = `
         <div class="skill-qty-controls">
           <button data-qty="1" class="${skillTree.quickQty === 1 ? 'active' : ''}">1</button>
           <button data-qty="5" class="${skillTree.quickQty === 5 ? 'active' : ''}">5</button>
@@ -606,13 +616,26 @@ export function updateSkillTreeValues() {
         </div>`;
     }
   }
+
+  let bulkControls = '';
+  if (options?.bulkBuy) {
+    bulkControls = `
+      <div class="skill-bulk-controls">
+        <button class="bulk-buy">${t('skillTree.bulkAllocate')}</button>
+        <span class="skill-bulk-cost"></span>
+      </div>`;
+  }
+
+  const controlsMarkup = quickControls || bulkControls ? `<div class="skill-header-controls">${quickControls}${bulkControls}</div>` : '';
+
   skillPointsHeader.innerHTML = `
     <div class="skill-header-left">
       <span class="skill-path-name">${characterName}</span>
       <span class="skill-points">Available Skill Points: ${skillTree.skillPoints}</span>
     </div>
-    ${rightControls}
+    ${controlsMarkup}
   `;
+
   const qtyControls = skillPointsHeader.querySelector('.skill-qty-controls');
   if (qtyControls) {
     if (options.useNumericInputs) {
@@ -621,9 +644,12 @@ export function updateSkillTreeValues() {
       input.oninput = () => {
         let v = parseInt(input.value, 10);
         if (isNaN(v) || v < 1) v = 1;
+        if (v > SKILLS_MAX_QTY) v = SKILLS_MAX_QTY;
+        input.value = v;
         skillTree.quickQty = v;
         options.skillQuickQty = v;
         maxBtn.classList.remove('active');
+        updateSkillBulkCostDisplay();
         dataManager.saveGame();
         // Don't call updateSkillTreeValues() here as it rebuilds the input and loses focus
       };
@@ -631,8 +657,9 @@ export function updateSkillTreeValues() {
         skillTree.quickQty = 'max';
         maxBtn.classList.add('active');
         // Update the input field to show the max value without rebuilding the entire UI
-        const maxValue = options.skillQuickQty || 1;
+        const maxValue = Math.min(options.skillQuickQty || 1, SKILLS_MAX_QTY);
         input.value = maxValue;
+        updateSkillBulkCostDisplay();
         dataManager.saveGame();
       };
     } else {
@@ -641,10 +668,21 @@ export function updateSkillTreeValues() {
           skillTree.quickQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
           qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
           btn.classList.add('active');
+          updateSkillBulkCostDisplay();
         };
       });
     }
   }
+
+  skillBulkButton = skillPointsHeader.querySelector('.skill-bulk-controls .bulk-buy');
+  skillBulkCostEl = skillPointsHeader.querySelector('.skill-bulk-cost');
+  if (skillBulkButton) {
+    skillBulkButton.onclick = () => {
+      skillTree.bulkAllocateSkills(skillTree.quickQty);
+    };
+  }
+
+  updateSkillBulkCostDisplay();
 
   updateSkillTreeHeaderFloating?.();
 
@@ -945,7 +983,7 @@ function createSkillElement(baseSkill) {
   skillElement.addEventListener('mouseleave', hideTooltip);
 
   skillElement.addEventListener('click', (e) => {
-    if (options?.quickSkills) {
+    if (options?.quickBuy) {
       const count = skillTree.quickQty === 'max' ? Infinity : parseInt(skillTree.quickQty, 10) || 1;
       const currentLevel = skillTree.skills[skill.id]?.level || 0;
       const unlocked = skillTree.unlockSkillBulk(skill.id, count);

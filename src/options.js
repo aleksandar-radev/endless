@@ -66,10 +66,9 @@ const OPTION_TOOLTIPS = {
   shortElementalNamesLabel: () => html`Use abbreviated elemental stat names`,
   showSkillCooldownsLabel: () => html`Display numeric cooldown timers on skills`,
   showAllStatsLabel: () => html`Display every available statistic`,
-  quickTrainingLabel: () => html`Enable quick buy buttons for training`,
-  bulkTrainingLabel: () => html`Allow purchasing multiple training levels at once`,
-  quickSoulShopLabel: () => html`Enable quick purchase buttons in the soul shop`,
-  quickSkillsLabel: () => html`Enable quick allocation in the skill tree`,
+  quickBuyLabel: () =>
+    html`Enable quick buy controls for training, the soul shop, and the skill tree`,
+  bulkBuyLabel: () => html`Allow bulk purchases in training and the soul shop`,
   numericInputLabel: () => html`Use numeric fields to specify purchase quantities`,
   autoSortInventoryLabel: () => html`Automatically sort inventory items`,
   autoSortInventoryToggle: (isPurchased) =>
@@ -120,14 +119,12 @@ export class Options {
     this.showRateCounters = data.showRateCounters ?? false;
     // Period for rate counters in seconds
     this.rateCountersPeriod = data.rateCountersPeriod || 1;
-    // Enable quick training purchases
-    this.quickTraining = data.quickTraining ?? false;
-    // Enable bulk training purchases
-    this.bulkTraining = data.bulkTraining ?? false;
-    // Enable quick soul shop purchases
-    this.quickSoulShop = data.quickSoulShop ?? false;
-    // Enable quick skill allocations
-    this.quickSkills = data.quickSkills ?? false;
+    // Unified quick purchase toggle
+    const quickFlags = [data.quickBuy, data.quickTraining, data.quickSoulShop, data.quickSkills];
+    this.quickBuy = quickFlags.some((value) => value === true || value === 'true');
+    // Unified bulk purchase toggle
+    const bulkValue = data.bulkBuy ?? data.bulkTraining ?? false;
+    this.bulkBuy = typeof bulkValue === 'boolean' ? bulkValue : bulkValue === 'true';
     // Use numeric inputs for bulk purchases
     this.useNumericInputs = data.useNumericInputs ?? false;
     // Default quantities for bulk purchases
@@ -293,10 +290,8 @@ export class Options {
     gameContent.appendChild(this._createShowAllStatsOption());
     gameContent.appendChild(this._createShortElementalNamesOption());
     gameContent.appendChild(this._createShortNumbersOption());
-    gameContent.appendChild(this._createQuickTrainingOption());
-    gameContent.appendChild(this._createBulkTrainingOption());
-    gameContent.appendChild(this._createQuickSoulShopOption());
-    gameContent.appendChild(this._createQuickSkillsOption());
+    gameContent.appendChild(this._createQuickBuyOption());
+    gameContent.appendChild(this._createBulkBuyOption());
     gameContent.appendChild(this._createNumericInputOption());
     gameContent.appendChild(this._createAutoSortInventoryOption());
     gameContent.appendChild(this._createStageControlsInlineOption());
@@ -1674,129 +1669,68 @@ export class Options {
   }
 
   /**
-   * Creates the quick training toggle option UI.
+   * Creates the unified quick buy toggle option UI.
    */
-  _createQuickTrainingOption() {
+  _createQuickBuyOption() {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="quick-training-toggle" class="quick-training-toggle-label" data-i18n="options.quickTraining">Enable Quick Training:</label>
+      <label for="quick-buy-toggle" class="quick-buy-toggle-label" data-i18n="options.quickBuy">Enable Quick Buy:</label>
       <input
         type="checkbox"
-        id="quick-training-toggle"
-        class="quick-training-toggle"
-        ${this.quickTraining ? 'checked' : ''}
+        id="quick-buy-toggle"
+        class="quick-buy-toggle"
+        ${this.quickBuy ? 'checked' : ''}
       />
       <span class="toggle-btn"></span>
     `;
-    const label = wrapper.querySelector('.quick-training-toggle-label');
+    const label = wrapper.querySelector('.quick-buy-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'quickTrainingLabel');
+    attachTooltip(label, 'quickBuyLabel');
     toggleBtn.addEventListener('click', () => {
       checkbox.checked = !checkbox.checked;
       checkbox.dispatchEvent(new Event('change'));
     });
     checkbox.addEventListener('change', () => {
-      this.quickTraining = checkbox.checked;
+      this.quickBuy = checkbox.checked;
       dataManager.saveGame();
       if (training) training.initializeTrainingUI();
-    });
-    return wrapper;
-  }
-
-  /**
-   * Creates the bulk training toggle option UI.
-   */
-  _createBulkTrainingOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label for="bulk-training-toggle" class="bulk-training-toggle-label" data-i18n="options.bulkTraining">Enable Training Bulk Buy:</label>
-      <input
-        type="checkbox"
-        id="bulk-training-toggle"
-        class="bulk-training-toggle"
-        ${this.bulkTraining ? 'checked' : ''}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.bulk-training-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'bulkTrainingLabel');
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.bulkTraining = checkbox.checked;
-      dataManager.saveGame();
-      if (training) training.initializeTrainingUI();
-    });
-    return wrapper;
-  }
-
-  /**
-   * Creates the quick soul shop toggle option UI.
-   */
-  _createQuickSoulShopOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label for="quick-soulshop-toggle" class="quick-soulshop-toggle-label" data-i18n="options.quickSoulShop">Enable Quick Soul Shop:</label>
-      <input
-        type="checkbox"
-        id="quick-soulshop-toggle"
-        class="quick-soulshop-toggle"
-        ${this.quickSoulShop ? 'checked' : ''}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.quick-soulshop-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'quickSoulShopLabel');
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.quickSoulShop = checkbox.checked;
-      dataManager.saveGame();
       if (soulShop) soulShop.initializeSoulShopUI();
+      initializeSkillTreeStructure();
     });
     return wrapper;
   }
 
   /**
-   * Creates the quick skills toggle option UI.
+   * Creates the unified bulk buy toggle option UI.
    */
-  _createQuickSkillsOption() {
+  _createBulkBuyOption() {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="quick-skills-toggle" class="quick-skills-toggle-label" data-i18n="options.quickSkills">Enable Quick Skill Allocation:</label>
+      <label for="bulk-buy-toggle" class="bulk-buy-toggle-label" data-i18n="options.bulkBuy">Enable Bulk Buy:</label>
       <input
         type="checkbox"
-        id="quick-skills-toggle"
-        class="quick-skills-toggle"
-        ${this.quickSkills ? 'checked' : ''}
+        id="bulk-buy-toggle"
+        class="bulk-buy-toggle"
+        ${this.bulkBuy ? 'checked' : ''}
       />
       <span class="toggle-btn"></span>
     `;
-    const label = wrapper.querySelector('.quick-skills-toggle-label');
+    const label = wrapper.querySelector('.bulk-buy-toggle-label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'quickSkillsLabel');
+    attachTooltip(label, 'bulkBuyLabel');
     toggleBtn.addEventListener('click', () => {
       checkbox.checked = !checkbox.checked;
       checkbox.dispatchEvent(new Event('change'));
     });
     checkbox.addEventListener('change', () => {
-      this.quickSkills = checkbox.checked;
+      this.bulkBuy = checkbox.checked;
       dataManager.saveGame();
-      initializeSkillTreeStructure();
+      if (training) training.initializeTrainingUI();
+      if (soulShop) soulShop.initializeSoulShopUI();
     });
     return wrapper;
   }
