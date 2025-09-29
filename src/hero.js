@@ -638,40 +638,43 @@ export default class Hero {
       pendingDamageAdditions = runes.applyPreDamageConversions(this.stats) || {};
     }
 
-    // Extra damage based on hero resources, split between physical and elemental
-    const extraFromLife = (this.stats.extraDamageFromLifePercent || 0) * this.stats.life;
-    const extraFromArmor = (this.stats.extraDamageFromArmorPercent || 0) * this.stats.armor;
-    const extraFromMana = (this.stats.extraDamageFromManaPercent || 0) * this.stats.mana;
-    const extraFromLifeRegen = (this.stats.extraDamageFromLifeRegenPercent || 0) * this.stats.lifeRegen;
-    const extraFromEvasion = (this.stats.extraDamageFromEvasionPercent || 0) * this.stats.evasion;
-    const extraFromAttackRating = (this.stats.extraDamageFromAttackRatingPercent || 0) * this.stats.attackRating;
+    const computeResourceExtraDamage = (statsSnapshot) => {
+      if (!statsSnapshot) return { physical: 0, elemental: 0 };
 
-    // Split: 50% to physical, 50% distributed equally among elements
-    const elements = ELEMENT_IDS;
+      const life = statsSnapshot.life || 0;
+      const armor = statsSnapshot.armor || 0;
+      const mana = statsSnapshot.mana || 0;
+      const lifeRegen = statsSnapshot.lifeRegen || 0;
+      const evasion = statsSnapshot.evasion || 0;
+      const attackRating = statsSnapshot.attackRating || 0;
 
-    const splitLife = extraFromLife / 2;
-    const splitMana = extraFromMana / 2;
-    const splitLifeRegen = extraFromLifeRegen / 2;
-    const splitArmor = extraFromArmor / 2;
-    const splitEvasion = extraFromEvasion / 2;
-    const splitAttackRating = extraFromAttackRating / 2;
+      const totalExtra =
+        (statsSnapshot.extraDamageFromLifePercent || 0) * life +
+        (statsSnapshot.extraDamageFromArmorPercent || 0) * armor +
+        (statsSnapshot.extraDamageFromManaPercent || 0) * mana +
+        (statsSnapshot.extraDamageFromLifeRegenPercent || 0) * lifeRegen +
+        (statsSnapshot.extraDamageFromEvasionPercent || 0) * evasion +
+        (statsSnapshot.extraDamageFromAttackRatingPercent || 0) * attackRating;
 
-    flatValues.damage += splitLife + splitMana + splitLifeRegen + splitArmor + splitEvasion + splitAttackRating;
+      if (!totalExtra) return { physical: 0, elemental: 0 };
 
-    const eleShareLife = splitLife / elements.length;
-    const eleShareMana = splitMana / elements.length;
-    const eleShareLifeRegen = splitLifeRegen / elements.length;
-    const eleShareArmor = splitArmor / elements.length;
-    const eleShareEvasion = splitEvasion / elements.length;
-    const eleShareAttackRating = splitAttackRating / elements.length;
+      const physical = totalExtra / 2;
+      const elemental = ELEMENT_IDS.length > 0 ? physical / ELEMENT_IDS.length : 0;
 
-    flatValues.elementalDamage +=
-      eleShareLife +
-      eleShareMana +
-      eleShareLifeRegen +
-      eleShareArmor +
-      eleShareEvasion +
-      eleShareAttackRating;
+      return { physical, elemental };
+    };
+
+    const baseFlatDamageBeforeResources = flatValues.damage;
+    const baseFlatElementalBeforeResources = flatValues.elementalDamage;
+
+    const initialResourceExtraDamage = computeResourceExtraDamage(this.stats);
+
+    if (initialResourceExtraDamage.physical) {
+      flatValues.damage += initialResourceExtraDamage.physical;
+    }
+    if (initialResourceExtraDamage.elemental) {
+      flatValues.elementalDamage += initialResourceExtraDamage.elemental;
+    }
 
     // Store flat-only values for later damage calculations
     this.baseDamages.physical = Math.floor(
@@ -733,6 +736,48 @@ export default class Hero {
 
     if (runes && typeof runes.applyPostDamageConversions === 'function') {
       runes.applyPostDamageConversions(this.stats);
+    }
+
+    const finalResourceExtraDamage = computeResourceExtraDamage(this.stats);
+    const basePhysicalFlatWithoutResources =
+      baseFlatDamageBeforeResources +
+      (ascensionBonuses.damage || 0) +
+      (this.stats.damagePerLevel || 0) * this.level;
+    const baseElementalFlatWithoutResources =
+      baseFlatElementalBeforeResources + (ascensionBonuses.elementalDamage || 0);
+
+    this.baseDamages.physical = Math.floor(
+      Math.max(0, basePhysicalFlatWithoutResources + finalResourceExtraDamage.physical),
+    );
+    this.baseDamages.elemental = Math.floor(
+      Math.max(0, baseElementalFlatWithoutResources + finalResourceExtraDamage.elemental),
+    );
+
+    const deltaPhysicalFlat =
+      finalResourceExtraDamage.physical - initialResourceExtraDamage.physical;
+    const deltaElementalFlat =
+      finalResourceExtraDamage.elemental - initialResourceExtraDamage.elemental;
+
+    if (Math.abs(deltaPhysicalFlat) > 1e-9) {
+      const physicalMultiplier =
+        1 + (this.stats.totalDamagePercent || 0) + (this.stats.damagePercent || 0);
+      const deltaPhysicalFinal = deltaPhysicalFlat * physicalMultiplier;
+      this.stats.damage = (this.stats.damage || 0) + deltaPhysicalFinal;
+      preConversionDamage.damage = (preConversionDamage.damage || 0) + deltaPhysicalFinal;
+    }
+
+    if (Math.abs(deltaElementalFlat) > 1e-9) {
+      ELEMENT_IDS.forEach((id) => {
+        const multiplier =
+          1 +
+          (this.stats.totalDamagePercent || 0) +
+          (this.stats.elementalDamagePercent || 0) +
+          (this.stats[`${id}DamagePercent`] || 0);
+        const deltaFinal = deltaElementalFlat * multiplier;
+        const statKey = `${id}Damage`;
+        this.stats[statKey] = (this.stats[statKey] || 0) + deltaFinal;
+        preConversionDamage[statKey] = (preConversionDamage[statKey] || 0) + deltaFinal;
+      });
     }
 
     const updatedAllRes = this.stats.allResistance || 0;
