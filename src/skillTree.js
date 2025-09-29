@@ -38,6 +38,7 @@ function getSpellDamageTypes(effects) {
 export default class SkillTree {
   constructor(savedData = null) {
     this.skillPoints = 0;
+    this.totalEarnedSkillPoints = 0;
     this.selectedPath = null;
     this.skills = {};
     this.autoCastSettings = {};
@@ -59,6 +60,8 @@ export default class SkillTree {
     });
     // always empty at start
     this.activeBuffs = new Map();
+
+    this.ensureTotalEarnedSkillPointsConsistency();
 
     // Quick allocation quantity for skills (used by quick skill allocation UI)
     this.quickQty = options.useNumericInputs
@@ -150,7 +153,13 @@ export default class SkillTree {
   }
 
   addSkillPoints(points) {
+    if (!Number.isFinite(points) || points === 0) return;
+
     this.skillPoints += points;
+    if (points > 0) {
+      this.totalEarnedSkillPoints += points;
+    }
+    this.ensureTotalEarnedSkillPointsConsistency();
     updateSkillTreeValues();
   }
 
@@ -245,6 +254,24 @@ export default class SkillTree {
       remaining -= bandLevels;
     }
     return cost;
+  }
+
+  calculateTotalSpentSkillPoints() {
+    return Object.values(this.skills).reduce((total, skillData) => {
+      const level = skillData?.level || 0;
+      if (level <= 0) return total;
+      return total + this.calculateSkillPointCost(0, level);
+    }, 0);
+  }
+
+  ensureTotalEarnedSkillPointsConsistency() {
+    const currentPoints = Number.isFinite(this.skillPoints) ? this.skillPoints : 0;
+    const spentPoints = this.calculateTotalSpentSkillPoints();
+    const minimumTotal = currentPoints + spentPoints;
+
+    if (!Number.isFinite(this.totalEarnedSkillPoints) || this.totalEarnedSkillPoints < minimumTotal) {
+      this.totalEarnedSkillPoints = minimumTotal;
+    }
   }
 
   // Calculate max levels you can afford given SP and maxLevel
@@ -807,12 +834,13 @@ export default class SkillTree {
     if (container) container.innerHTML = '';
 
     // Refund all skill points
-    this.skillPoints = (hero.level - 1) * 1 + hero.permaStats.skillPoints;
+    this.skillPoints = this.totalEarnedSkillPoints;
     this.selectedPath = null;
     this.skills = {};
     this.autoCastSettings = {};
     this.displaySettings = {};
     this.activeBuffs.clear();
+    this.ensureTotalEarnedSkillPointsConsistency();
     hero.queueRecalculateFromAttributes();
     updateActionBar();
     updateSkillTreeValues();
