@@ -25,6 +25,7 @@ export default function run() {
       <li>Resource-scaling damage bonuses now include stats granted by runes that convert other attributes into life or mana. (e.g. res to mana conversion now applies before extra damage from mana is added. Same with life.)</li>
       <li>Bulk skill allocation now distributes points to every available skill, not just ones already leveled.</li>
       <li>Fixed the offline eligibility icons so they return to the red ✖ whenever offline progress is no longer available.</li>
+      <li>Corrected the building modal max control so upgrade amount, total cost, and bonus reflect the levels being purchased instead of the current building level.</li>
     </ul>
   `;
 }
