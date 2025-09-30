@@ -22,6 +22,7 @@ export default function run() {
       <li>Skill tree reset now refunds all skill points earned from ascension bonuses and runes.</li>
       <li>Stopped ascension soul shop cap increases from affecting extra material drop chance and drop cap upgrades.</li>
       <li>Resource-scaling damage bonuses now include stats granted by runes that convert other attributes into life or mana. (e.g. res to mana conversion now applies before extra damage from mana is added. Same with life.)</li>
+      <li>Fixed the offline eligibility icons so they return to the red ✖ whenever offline progress is no longer available.</li>
     </ul>
   `;
 }
