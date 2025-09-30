@@ -23,13 +23,16 @@ export const SLOT_REQUIREMENTS = {
   belt: ['BELT'],
   legs: ['PANTS'],
   boots: ['BOOTS'],
-  weapon: ['SWORD', 'AXE', 'MACE', 'WAND', 'STAFF'],
-  offhand: ['SHIELD'],
+  weapon: ['SWORD', 'AXE', 'MACE', 'WAND', 'STAFF', 'SHIELD'],
+  offhand: ['SWORD', 'AXE', 'WAND', 'SHIELD'],
   gloves: ['GLOVES'],
   amulet: ['AMULET'],
   ring1: ['RING'],
   ring2: ['RING'],
 };
+
+export const TWO_HANDED_TYPES = ['MACE', 'STAFF'];
+export const DUAL_WIELD_TYPES = ['SWORD', 'AXE', 'WAND', 'SHIELD'];
 
 export const ITEM_TYPES = {
   HELMET: 'HELMET',
@@ -162,7 +165,9 @@ export function getSlotsByCategory(category) {
         .map(([slot]) => slot);
     case 'weapon':
       return Object.entries(SLOT_REQUIREMENTS)
-        .filter(([slot, types]) => types.some((type) => ['SWORD', 'AXE', 'MACE'].includes(type)))
+        .filter(([slot, types]) =>
+          types.some((type) => ['SWORD', 'AXE', 'MACE', 'WAND', 'STAFF', 'SHIELD'].includes(type)),
+        )
         .map(([slot]) => slot);
     default:
       return [];
@@ -181,7 +186,7 @@ export function getTypesByCategory(category) {
     case 'jewelry':
       return ['AMULET', 'RING'];
     case 'weapon':
-      return ['SWORD', 'AXE', 'MACE', 'WAND', 'STAFF'];
+      return ['SWORD', 'AXE', 'MACE', 'WAND', 'STAFF', 'SHIELD'];
     default:
       return [];
   }

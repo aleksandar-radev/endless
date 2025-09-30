@@ -1,4 +1,10 @@
-import { ITEM_ICONS, ITEM_RARITY, ITEM_STAT_POOLS } from './constants/items.js';
+import {
+  ITEM_ICONS,
+  ITEM_RARITY,
+  ITEM_STAT_POOLS,
+  SLOT_REQUIREMENTS,
+  TWO_HANDED_TYPES,
+} from './constants/items.js';
 import { STATS, getItemTierBonus } from './constants/stats/stats.js';
 import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
@@ -57,6 +63,11 @@ const STAT_GROUPS = [
   { name: 'misc', order: MISC_ORDER },
 ];
 
+const HANDED_ITEM_TYPES = new Set([
+  ...SLOT_REQUIREMENTS.weapon,
+  ...SLOT_REQUIREMENTS.offhand,
+]);
+
 export default class Item {
   constructor(type, level, rarity, tier = 1, existingStats = null, metaData = {}) {
     this.type = type;
@@ -67,6 +78,15 @@ export default class Item {
     this.metaData = metaData;
     this.stats = existingStats || this.generateStats();
     this.id = crypto.randomUUID();
+  }
+
+  isTwoHanded() {
+    return TWO_HANDED_TYPES.includes(this.type);
+  }
+
+  getHandedLabel() {
+    if (!HANDED_ITEM_TYPES.has(this.type)) return null;
+    return this.isTwoHanded() ? t('item.twoHanded') : t('item.oneHanded');
   }
 
   getLevelScale(stat, level) {
@@ -84,7 +104,8 @@ export default class Item {
 
   calculateStatValue({ baseValue, tierBonus, multiplier, scale, stat }) {
     const decimals = STATS[stat].decimalPlaces || 0;
-    let val = Number((baseValue * tierBonus * multiplier * scale).toFixed(decimals));
+    const handedMultiplier = this.isTwoHanded() ? 2 : 1;
+    let val = Number((baseValue * tierBonus * multiplier * scale * handedMultiplier).toFixed(decimals));
 
     const limitConfig = STATS[stat].item?.limit;
     let baseLimit = Infinity;
@@ -93,9 +114,12 @@ export default class Item {
     } else if (limitConfig && typeof limitConfig === 'object') {
       baseLimit = limitConfig[this.type] ?? limitConfig.default ?? Infinity;
     }
+    if (Number.isFinite(baseLimit)) {
+      baseLimit *= handedMultiplier;
+    }
     const ascBonuses = ascension?.getBonuses?.() || {};
     const percentCapMultiplier = 1 + (ascBonuses.itemPercentCapPercent || 0);
-    const percentCap = this.tier * 100 * percentCapMultiplier;
+    const percentCap = this.tier * 100 * percentCapMultiplier * handedMultiplier;
     const limit = stat.toLowerCase().includes('percent')
       ? Math.min(baseLimit, percentCap)
       : baseLimit;
@@ -118,6 +142,7 @@ export default class Item {
     const tierBonus = this.getTierBonus(stat);
     const multiplier = this.getMultiplier();
     const scale = this.getLevelScale(stat, this.level);
+    const handedMultiplier = this.isTwoHanded() ? 2 : 1;
     const decimals = STATS[stat].decimalPlaces || 0;
     const limitConfig = STATS[stat].item?.limit;
     let baseLimit = Infinity;
@@ -126,15 +151,18 @@ export default class Item {
     } else if (limitConfig && typeof limitConfig === 'object') {
       baseLimit = limitConfig[this.type] ?? limitConfig.default ?? Infinity;
     }
+    if (Number.isFinite(baseLimit)) {
+      baseLimit *= handedMultiplier;
+    }
     const ascBonuses = ascension?.getBonuses?.() || {};
     const percentCapMultiplier = 1 + (ascBonuses.itemPercentCapPercent || 0);
-    const percentCap = this.tier * 100 * percentCapMultiplier;
+    const percentCap = this.tier * 100 * percentCapMultiplier * handedMultiplier;
     const limit = stat.toLowerCase().includes('percent')
       ? Math.min(baseLimit, percentCap)
       : baseLimit;
     // Min value
-    let minVal = Number((statConfig.min * tierBonus * multiplier * scale).toFixed(decimals));
-    let maxVal = Number((statConfig.max * tierBonus * multiplier * scale).toFixed(decimals));
+    let minVal = Number((statConfig.min * tierBonus * multiplier * scale * handedMultiplier).toFixed(decimals));
+    let maxVal = Number((statConfig.max * tierBonus * multiplier * scale * handedMultiplier).toFixed(decimals));
     minVal = Math.min(minVal, limit);
     maxVal = Math.min(maxVal, limit);
     return { min: minVal, max: maxVal };
@@ -232,12 +260,15 @@ export default class Item {
       statMinMax = this.getAllStatsMinMax();
     }
 
+    const handedLabel = this.getHandedLabel();
+    const levelDetails = `${t('item.level')}: ${formatNumber(this.level)}, ${t('item.tier')}: ${formatNumber(this.tier)}${handedLabel ? `, ${handedLabel}` : ''}`;
+
     return html`
       <div class="item-tooltip">
         <div class="item-name" style="color: ${ITEM_RARITY[this.rarity].color};">
           ${isEquipped ? '(Equipped) ' : ''}${this.getDisplayName()}
         </div>
-        <div class="item-level">${t('item.level')}: ${formatNumber(this.level)}, ${t('item.tier')}: ${formatNumber(this.tier)}</div>
+        <div class="item-level">${levelDetails}</div>
         <div class="item-stats">
           ${STAT_GROUPS.map((group) => {
     const stats = group.order.filter((s) => this.stats[s] !== undefined);
@@ -294,7 +325,8 @@ export default class Item {
       const scaling = this.getLevelScale(stat, this.level);
       const tierBonus = this.getTierBonus(stat);
       const value = this.stats[stat];
-      baseValues[stat] = value / (multiplier * scaling * tierBonus);
+      const handedMultiplier = this.isTwoHanded() ? 2 : 1;
+      baseValues[stat] = value / (multiplier * scaling * tierBonus * handedMultiplier);
     }
     return baseValues;
   }

@@ -415,7 +415,7 @@ export default class SoulShop {
     let bonusClass = '';
     let disabled = alreadyPurchased;
     let qty = 1;
-        if (options?.quickBuy && !alreadyPurchased) {
+    if (options?.quickBuy && !alreadyPurchased) {
       const baseLevel = this.soulUpgrades[stat] || 0;
       const levelsLeft = isMultiLevel ? this.getLevelsLeft(config, baseLevel) : Infinity;
       if (this.quickQty === 'max') {

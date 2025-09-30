@@ -42,6 +42,19 @@ const sortModeFullText = {
   'level-tier-rarity': t('inventory.levelTierRarityFull'),
 };
 
+function getPreferredSlotForItem(itemData) {
+  if (!itemData) return null;
+  const eligibleSlots = Object.keys(SLOT_REQUIREMENTS).filter((s) =>
+    SLOT_REQUIREMENTS[s].includes(itemData.type),
+  );
+  if (eligibleSlots.length === 0) return null;
+  const emptyValid = eligibleSlots.find(
+    (slot) => !inventory.equippedItems[slot] && inventory.canEquipInSlot(itemData, slot),
+  );
+  if (emptyValid) return emptyValid;
+  return eligibleSlots.find((slot) => inventory.canEquipInSlot(itemData, slot)) || null;
+}
+
 export function initializeInventoryUI(inv) {
   // Create all inventory UI structure dynamically
   const inventoryTab = document.getElementById('inventory');
@@ -200,9 +213,7 @@ export function initializeInventoryUI(inv) {
       updateInventoryGrid();
       clearMobileSelection();
     } else {
-      const slot = Object.keys(SLOT_REQUIREMENTS).find((s) =>
-        SLOT_REQUIREMENTS[s].includes(itemData.type),
-      );
+      const slot = getPreferredSlotForItem(itemData);
       if (slot) {
         inventory.equipItem(itemData, slot);
         hero.queueRecalculateFromAttributes();
@@ -542,6 +553,12 @@ export function updateInventoryGrid(inv) {
   const items = document.querySelectorAll('.inventory-item');
   items.forEach((item) => item.remove());
 
+  document.querySelectorAll('.equipment-slot').forEach((slot) => {
+    slot.classList.remove('has-item');
+    const ghost = slot.querySelector('.two-handed-ghost');
+    if (ghost) ghost.remove();
+  });
+
   inv.inventoryItems.forEach((item, index) => {
     const cell = document.querySelector(`.grid-cell:nth-child(${index + 1})`);
     const html = String.raw;
@@ -570,8 +587,27 @@ export function updateInventoryGrid(inv) {
       } else {
         slotElement.appendChild(newItem);
       }
+      slotElement.classList.add('has-item');
     }
   });
+
+  const offhandSlot = document.querySelector('[data-slot="offhand"]');
+  const weaponItem = inv.equippedItems.weapon;
+  if (
+    offhandSlot &&
+    weaponItem &&
+    typeof weaponItem.isTwoHanded === 'function' &&
+    weaponItem.isTwoHanded() &&
+    !inv.equippedItems.offhand
+  ) {
+    const ghost = document.createElement('div');
+    ghost.className = 'two-handed-ghost';
+    const icon = typeof weaponItem.getIcon === 'function' ? weaponItem.getIcon() : '';
+    ghost.innerHTML = `<div class="item-icon">${icon}</div>`;
+    ghost.style.borderColor = ITEM_RARITY[weaponItem.rarity].color;
+    offhandSlot.appendChild(ghost);
+    offhandSlot.classList.add('has-item');
+  }
 
   setupDragAndDrop();
   applyFilter(inv);
@@ -865,15 +901,11 @@ export function setupItemDragAndTooltip() {
         return;
       }
 
-      for (const [slot, requirements] of Object.entries(SLOT_REQUIREMENTS)) {
-        if (requirements.includes(itemData.type)) {
-          if (!inventory.equippedItems[slot] || inventory.canEquipInSlot(itemData, slot)) {
-            inventory.equipItem(itemData, slot);
-            hero.queueRecalculateFromAttributes();
-            updateInventoryGrid();
-            return;
-          }
-        }
+      const slot = getPreferredSlotForItem(itemData);
+      if (slot) {
+        inventory.equipItem(itemData, slot);
+        hero.queueRecalculateFromAttributes();
+        updateInventoryGrid();
       }
     });
 
@@ -1255,9 +1287,7 @@ function openItemContextMenu(itemEl, x, y) {
       updateInventoryGrid();
       clearMobileSelection();
     } else {
-      const slot = Object.keys(SLOT_REQUIREMENTS).find((s) =>
-        SLOT_REQUIREMENTS[s].includes(itemData.type),
-      );
+      const slot = getPreferredSlotForItem(itemData);
       if (slot) {
         inventory.equipItem(itemData, slot);
         hero.queueRecalculateFromAttributes();

@@ -66,7 +66,7 @@ export const ASCENSION_CATEGORIES = {
         label: t('ascension.upgrade.chanceToHitPercent'),
         bonus: 0.01,
         stat: 'chanceToHitPercent',
-        maxLevel: 50,
+        maxLevel: 20,
         cost: (lvl) => 5 + lvl * 2,
       },
       armorPenetration: {

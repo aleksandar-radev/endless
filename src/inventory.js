@@ -21,6 +21,7 @@ import {
   ITEM_RARITY,
   RARITY_ORDER,
   SLOT_REQUIREMENTS,
+  TWO_HANDED_TYPES,
   getSlotsByCategory,
   getTypesByCategory,
 } from './constants/items.js';
@@ -549,10 +550,13 @@ export default class Inventory {
             .join('');
         }
 
+        const handedLabel = item.getHandedLabel();
+        const levelDetails = `${t('item.level')}: ${item.level}, ${t('item.tier')}: ${item.tier}${handedLabel ? `, ${handedLabel}` : ''}`;
+
         dialog.querySelector('#transmutation-selected-item').innerHTML = `
           <div class="item-preview">
             <div class="item-name" style="color:${ITEM_RARITY[item.rarity].color};">${item.getDisplayName()}</div>
-            <div class="item-level">${t('item.level')}: ${item.level}, ${t('item.tier')}: ${item.tier}</div>
+            <div class="item-level">${levelDetails}</div>
             <div class="item-stats">${statsHtml}</div>
           </div>`;
 
@@ -703,10 +707,13 @@ export default class Inventory {
             .join('');
         }
 
+        const handedLabel = item.getHandedLabel();
+        const levelDetails = `${t('item.level')}: ${item.level}, ${t('item.tier')}: ${item.tier}${handedLabel ? `, ${handedLabel}` : ''}`;
+
         dialog.querySelector('#alternation-selected-item').innerHTML = `
           <div class="item-preview">
             <div class="item-name" style="color:${ITEM_RARITY[item.rarity].color};">${item.getDisplayName()}</div>
-            <div class="item-level">${t('item.level')}: ${item.level}, ${t('item.tier')}: ${item.tier}</div>
+            <div class="item-level">${levelDetails}</div>
             <div class="item-stats">${statsHtml}</div>
           </div>`;
 
@@ -1230,8 +1237,19 @@ export default class Inventory {
     tooltips.forEach((tooltip) => tooltip.remove());
   }
 
+  isTwoHanded(item) {
+    return !!item && TWO_HANDED_TYPES.includes(item.type);
+  }
+
   canEquipInSlot(item, slotName) {
-    return SLOT_REQUIREMENTS[slotName].includes(item.type);
+    if (!item || !SLOT_REQUIREMENTS[slotName]?.includes(item.type)) {
+      return false;
+    }
+    if (slotName === 'offhand') {
+      if (this.isTwoHanded(item)) return false;
+      if (this.isTwoHanded(this.equippedItems.weapon)) return false;
+    }
+    return true;
   }
 
   getItemById(id) {
@@ -1247,9 +1265,7 @@ export default class Inventory {
   }
 
   equipItem(item, slot) {
-    if (!this.canEquipInSlot(item, slot)) {
-      return;
-    }
+    if (!item) return false;
     const currentPosition = this.inventoryItems.findIndex((i) => i && i.id === item.id);
 
     // If equipping to the slot it's already in, treat as unequip
@@ -1258,32 +1274,77 @@ export default class Inventory {
       if (emptySlot !== -1) {
         this.inventoryItems[emptySlot] = item;
         delete this.equippedItems[slot];
+        dataManager.saveGame();
+        return true;
       }
-      dataManager.saveGame();
-      return;
+      return false;
     }
 
-    // Handle existing equipped item
-    if (this.equippedItems[slot]) {
-      const oldItem = this.equippedItems[slot];
-      if (currentPosition !== -1) {
-        // Put old item where new item was
-        this.inventoryItems[currentPosition] = oldItem;
-      } else {
-        // Find first empty slot
-        const emptySlot = this.inventoryItems.findIndex((slot) => slot === null);
-        if (emptySlot !== -1) {
-          this.inventoryItems[emptySlot] = oldItem;
-        }
+    if (!this.canEquipInSlot(item, slot)) {
+      if (slot === 'offhand' && this.isTwoHanded(this.equippedItems.weapon)) {
+        showToast(t('inventory.cannotEquipOffhandTwoHanded'), 'error');
       }
-    } else if (currentPosition !== -1) {
-      // Clear the inventory slot the item came from
+      return false;
+    }
+
+    const sourceSlot = Object.entries(this.equippedItems).find(
+      ([slotName, equipped]) => equipped && equipped.id === item.id,
+    )?.[0];
+    const movingBetweenSlots = sourceSlot && sourceSlot !== slot;
+    const isTwoHandedWeapon = slot === 'weapon' && this.isTwoHanded(item);
+
+    const itemsToReturn = [];
+    if (isTwoHandedWeapon && this.equippedItems.offhand) {
+      itemsToReturn.push({ item: this.equippedItems.offhand, sourceSlot: 'offhand' });
+    }
+    if (this.equippedItems[slot] && this.equippedItems[slot].id !== item.id) {
+      itemsToReturn.push({ item: this.equippedItems[slot], sourceSlot: slot });
+    }
+
+    const availableSlotsQueue = [];
+    if (currentPosition !== -1) {
+      availableSlotsQueue.push(currentPosition);
+    }
+    for (let i = 0; i < this.inventoryItems.length; i++) {
+      if (i === currentPosition) continue;
+      if (this.inventoryItems[i] === null) {
+        availableSlotsQueue.push(i);
+      }
+    }
+
+    if (itemsToReturn.length > availableSlotsQueue.length) {
+      showToast(t('inventory.notEnoughInventorySpace'), 'error');
+      return false;
+    }
+
+    if (currentPosition !== -1) {
       this.inventoryItems[currentPosition] = null;
+    }
+
+    if (movingBetweenSlots) {
+      delete this.equippedItems[sourceSlot];
+    }
+
+    itemsToReturn.forEach(({ sourceSlot: slotName }) => {
+      delete this.equippedItems[slotName];
+    });
+
+    itemsToReturn.forEach(({ item: oldItem }) => {
+      const index = availableSlotsQueue.shift();
+      if (index !== undefined) {
+        this.inventoryItems[index] = oldItem;
+      }
+    });
+
+    const removedOffhand = isTwoHandedWeapon && itemsToReturn.some((entry) => entry.sourceSlot === 'offhand');
+    if (removedOffhand) {
+      showToast(t('inventory.offhandUnequippedTwoHanded'), 'info');
     }
 
     // Equip the new item
     this.equippedItems[slot] = item;
     dataManager.saveGame();
+    return true;
   }
 
   updateItemBonuses() {

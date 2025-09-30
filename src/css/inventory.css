@@ -234,6 +234,19 @@
   height: 100%;
 }
 
+.two-handed-ghost {
+  background: rgba(114, 113, 119, 0.25);
+  border: 2px solid transparent;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
 .item-icon {
   width: 100%;
   height: 100%;

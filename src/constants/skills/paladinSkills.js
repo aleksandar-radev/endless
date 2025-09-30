@@ -65,7 +65,7 @@ export const PALADIN_SKILLS = {
       armor: scaleUpFlat(level, 2),
       armorPercent: scaleDownFlat(level, 2),
       thornsDamage: scaleUpFlat(level, 2, 4),
-      thornsDamagePercent: Math.min(scaleDownFlat(level, 1), 250),
+      thornsDamagePercent: scaleDownFlat(level, 4),
     }),
   },
 

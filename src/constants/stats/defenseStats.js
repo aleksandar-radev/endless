@@ -104,10 +104,18 @@ export const DEFENSE_STATS = {
   thornsDamage: {
     base: 0,
     decimalPlaces: 1,
+    item: { min: 15, max: 40, scaling: (level, tier) => defenseScaling(level, tier) },
+    itemTags: ['shield', 'armor'],
+    showInUI: true,
+    subcategory: 'defense',
   },
   thornsDamagePercent: {
     base: 0,
     decimalPlaces: 1,
+    item: { min: 8, max: 18, scaling: (level, tier) => defenseScaling(level, tier, PERCENT_SCALING) },
+    itemTags: ['shield', 'armor'],
+    showInUI: true,
+    subcategory: 'defense',
   },
   // RESURRECTION
   resurrectionChance: {
