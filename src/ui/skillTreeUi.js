@@ -597,8 +597,9 @@ export function updateSkillTreeValues() {
   const container = document.getElementById('skill-tree-container');
 
   const skillPointsHeader = container.querySelector('.skill-points-header');
+  const showQtyControls = options?.quickBuy || options?.bulkBuy;
   let quickControls = '';
-  if (options?.quickBuy) {
+  if (showQtyControls) {
     if (options.useNumericInputs) {
       const val = skillTree.quickQty === 'max' ? (options.skillQuickQty || 1) : skillTree.quickQty;
       quickControls = `
@@ -669,6 +670,7 @@ export function updateSkillTreeValues() {
           qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
           btn.classList.add('active');
           updateSkillBulkCostDisplay();
+          dataManager.saveGame();
         };
       });
     }

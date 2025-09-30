@@ -451,7 +451,7 @@ export default {
   'options.showSkillCooldowns': '显示技能冷却时间',
   'options.showAllStats': '显示所有统计',
   'options.quickBuy': '启用快速购买',
-  'options.bulkBuy': '启用批量购买',
+  'options.bulkBuy': '启用批量模式（训练、技能、灵魂商店）',
   'options.numericPurchaseInputs': '启用数字购买输入',
   'options.autoSortInventory': '启用自动整理库存',
   'options.autoSortInventory.disabledTooltip': '在水晶商店购买以启用',

@@ -68,7 +68,7 @@ const OPTION_TOOLTIPS = {
   showAllStatsLabel: () => html`Display every available statistic`,
   quickBuyLabel: () =>
     html`Enable quick buy controls for training, the soul shop, and the skill tree`,
-  bulkBuyLabel: () => html`Allow bulk purchases in training and the soul shop`,
+  bulkBuyLabel: () => html`Enable bulk actions across training, the skill tree, and the soul shop`,
   numericInputLabel: () => html`Use numeric fields to specify purchase quantities`,
   autoSortInventoryLabel: () => html`Automatically sort inventory items`,
   autoSortInventoryToggle: (isPurchased) =>
@@ -1731,6 +1731,7 @@ export class Options {
       dataManager.saveGame();
       if (training) training.initializeTrainingUI();
       if (soulShop) soulShop.initializeSoulShopUI();
+      initializeSkillTreeStructure();
     });
     return wrapper;
   }

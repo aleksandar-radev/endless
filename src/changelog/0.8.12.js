@@ -15,6 +15,7 @@ export default function run() {
       <li>Increase xp and gold gain from rocky field.</li>
       <li>Optimized offline reward distribution for building materials and salvaged items to avoid long stalls when massive quantities are generated.</li>
       <li>Greatly accelerated offline fight reward application even when only experience and gold are collected by batching level-up calculations.</li>
+      <li>Bulk buy option now adds a skill tree bulk allocate control that splits skill points evenly across every eligible skill.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

@@ -451,7 +451,7 @@ export default {
   'options.showSkillCooldowns': 'Show Skill Cooldown Numbers',
   'options.showAllStats': 'Show All Stats',
   'options.quickBuy': 'Enable Quick Buy',
-  'options.bulkBuy': 'Enable Bulk Buy',
+  'options.bulkBuy': 'Enable Bulk Mode (Training, Skills, Soul Shop)',
   'options.numericPurchaseInputs': 'Enable Numeric Purchase Inputs',
   'options.autoSortInventory': 'Enable Auto Sort Inventory',
   'options.autoSortInventory.disabledTooltip': 'Purchase in crystal shop to enable',

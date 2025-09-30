@@ -443,7 +443,7 @@ export default {
   'options.showSkillCooldowns': 'Mostrar números de enfriamiento de habilidades',
   'options.showAllStats': 'Mostrar todas las estadísticas',
   'options.quickBuy': 'Habilitar compra rápida',
-  'options.bulkBuy': 'Habilitar compra masiva',
+  'options.bulkBuy': 'Habilitar modo masivo (Entrenamiento, Habilidades, Tienda de almas)',
   'options.numericPurchaseInputs': 'Habilitar entradas numéricas de compra',
   'options.autoSortInventory': 'Habilitar auto ordenar inventario',
   'options.autoSortInventory.disabledTooltip': 'Compra en la tienda de cristales para habilitar',
