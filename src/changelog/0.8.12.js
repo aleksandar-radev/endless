@@ -9,6 +9,7 @@ export default function run() {
       <li>Enabled dual wielding for swords, axes, wands, and shields with smarter slot selection.</li>
       <li>Converted maces and staves into two-handed weapons with doubled stat rolls and proper off-hand restrictions.</li>
       <li>Added flat and percent thorns damage as possible shield affixes.</li>
+      <li>Improved thorns damage scaling with new training options and global damage bonuses.</li>
       <li>Reduce max level of ascension bonus for chance to hit.</li>
     </ul>
 

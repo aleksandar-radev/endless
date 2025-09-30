@@ -104,6 +104,7 @@ export const DEFENSE_STATS = {
   thornsDamage: {
     base: 0,
     decimalPlaces: 1,
+    training: { cost: 100, bonus: 2, maxLevel: Infinity },
     item: { min: 15, max: 40, scaling: (level, tier) => defenseScaling(level, tier) },
     itemTags: ['shield', 'armor'],
     showInUI: true,

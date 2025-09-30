@@ -72,10 +72,9 @@ export function enemyAttack(currentTime) {
 
       const breakdown = { physical: physicalDamage, ...elementalDamage };
 
-      // Calculate thorns damage based on the final damage taken
+      // Calculate thorns damage based on the hero's thorns stats
       const thornsDamage = hero.calculateTotalThornsDamage(totalDamage);
-      // only if there is some thorns damage to deal, only paladin
-      if (thornsDamage - totalDamage > 1) {
+      if (thornsDamage > 0) {
         game.damageEnemy(thornsDamage, false, null, 'thornsDamage');
       }
 
