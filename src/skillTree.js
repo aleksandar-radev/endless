@@ -359,11 +359,18 @@ export default class SkillTree {
       return { totalCost: 0, allocations: [], affordable: false };
     }
 
-    const entries = Object.entries(this.skills || {})
-      .map(([skillId, skillData]) => {
+    const skillDefinitions = SKILL_TREES[this.selectedPath?.name] || {};
+
+    const entries = Object.keys(skillDefinitions)
+      .map((skillId) => {
         const skill = this.getSkill(skillId);
         if (!skill) return null;
-        const currentLevel = skillData?.level || 0;
+        const prerequisitesMet =
+          !Array.isArray(skill.prerequisites) || skill.prerequisites.length === 0 || this.arePrerequisitesMet(skill);
+        if (!prerequisitesMet) return null;
+        const requiredLevel = typeof skill.requiredLevel === 'function' ? skill.requiredLevel() : 0;
+        if (hero.level < requiredLevel) return null;
+        const currentLevel = this.skills[skillId]?.level || 0;
         const rawMax = typeof skill.maxLevel === 'function' ? skill.maxLevel() : DEFAULT_MAX_SKILL_LEVEL;
         const maxLevel = Number.isFinite(rawMax) ? rawMax : DEFAULT_MAX_SKILL_LEVEL;
         const levelCap = Math.min(maxLevel, hero.level);
