@@ -172,30 +172,41 @@ export function initializeUI() {
       indicator.style.marginLeft = 'auto';
       tabs.appendChild(indicator);
 
-      // Baseline for session eligibility (independent from counters reset)
-      offlineEligibilityStart = statistics.totalTimeInFights || 0;
+      const updateIndicator = () => {
+        const elapsed = (statistics.totalTimeInFights || 0) - (offlineEligibilityStart || 0);
+        const eligible = elapsed >= 60;
+        const iconEl = indicator.querySelector('.icon');
+        if (iconEl) iconEl.textContent = eligible ? '✔' : '✖';
+        indicator.classList.toggle('offline-eligible', eligible);
+        indicator.classList.toggle('offline-not-eligible', !eligible);
+      };
 
-      const tooltipDescription = indicator.classList.contains('offline-eligible')
-        ? t('counters.offline.tooltipEligible')
-        : t('counters.offline.tooltipNotEligible');
-
-      const tooltip = () => html`
-        <div class="tooltip-header">${t('counters.offlineProgress')}</div>
-        <div class="tooltip-desc">${tooltipDescription}</div>
-        <div class="tooltip-note">${t('counters.offline.tooltipCondition')}</div>
-      `;
+      const tooltip = () => {
+        const eligible = indicator.classList.contains('offline-eligible');
+        const tooltipDescription = eligible
+          ? t('counters.offline.tooltipEligible')
+          : t('counters.offline.tooltipNotEligible');
+        return html`
+          <div class="tooltip-header">${t('counters.offlineProgress')}</div>
+          <div class="tooltip-desc">${tooltipDescription}</div>
+          <div class="tooltip-note">${t('counters.offline.tooltipCondition')}</div>
+        `;
+      };
       indicator.addEventListener('mouseenter', (e) => showTooltip(tooltip(), e));
       indicator.addEventListener('mousemove', positionTooltip);
       indicator.addEventListener('mouseleave', hideTooltip);
 
+      // Baseline for session eligibility (independent from counters reset)
+      offlineEligibilityStart = statistics.totalTimeInFights || 0;
+      updateIndicator();
+
       // Update icon/color every second
-      setInterval(() => {
-        const elapsed = (statistics.totalTimeInFights || 0) - (offlineEligibilityStart || 0);
-        const eligible = elapsed >= 60;
-        indicator.querySelector('.icon').textContent = eligible ? '✔' : '✖';
-        indicator.classList.toggle('offline-eligible', eligible);
-        indicator.classList.toggle('offline-not-eligible', !eligible);
-      }, 1000);
+      setInterval(updateIndicator, 1000);
+
+      document.addEventListener('resetRateCounters', () => {
+        offlineEligibilityStart = statistics.totalTimeInFights || 0;
+        updateIndicator();
+      });
     }
   } catch {}
 
