@@ -55,7 +55,9 @@
   position: sticky;
   top: 0;
   z-index: 5;
-  padding-block: 12px;
+  padding: 12px;
+  border: 1px solid var(--border, #5fb1fd);
+  border-radius: 8px;
   background: var(--bg-panel);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
