@@ -204,7 +204,7 @@ export default {
   'ascension.modal.cancel': '取消',
   'ascension.info.title': '飞升信息',
   'ascension.info.requirement': '需要至少 20 次转生才能飞升。',
-  'ascension.info.points': '每 100 个来自转生奖励的初始水晶获得 1 个飞升点。因此，20 次飞升并拥有总共 3000 个初始水晶将获得 30 个飞升点。',
+  'ascension.info.points': '每 100 个来自转生奖励的初始水晶获得 1 个飞升点。因此，20 次转生并拥有总共 3000 个初始水晶将获得 30 个飞升点。',
   'ascension.info.current': '你目前有 {prestiges} 次转生和 {crystals} 个初始水晶，因此将获得 {points} 点。',
   'common.close': '关闭',
   'common.apply': '应用',

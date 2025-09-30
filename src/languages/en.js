@@ -204,7 +204,7 @@ export default {
   'ascension.modal.cancel': 'Cancel',
   'ascension.info.title': 'Ascension Info',
   'ascension.info.requirement': 'Requires at least 20 prestiges to ascend.',
-  'ascension.info.points': 'Gain one ascension point for every 100 starting crystals from prestige bonuses. So 20 ascensions with total of 3000 starting crystals will get you 30 points total.',
+  'ascension.info.points': 'Gain one ascension point for every 100 starting crystals from prestige bonuses. So 20 prestiges with total of 3000 starting crystals will get you 30 points total.',
   'ascension.info.current': 'You currently have {prestiges} prestiges and {crystals} starting crystals, so you would earn {points} points.',
   'common.close': 'Close',
   'common.apply': 'Apply',

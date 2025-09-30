@@ -196,7 +196,7 @@ export default {
   'ascension.modal.cancel': 'Cancelar',
   'ascension.info.title': 'Información de Ascensión',
   'ascension.info.requirement': 'Requiere al menos 20 prestigios para ascender.',
-  'ascension.info.points': 'Obtén un punto de ascensión por cada 100 cristales iniciales de las bonificaciones de prestigio. Así, 20 ascensiones con un total de 3000 cristales iniciales te darán 30 puntos en total.',
+  'ascension.info.points': 'Obtén un punto de ascensión por cada 100 cristales iniciales de las bonificaciones de prestigio. Así, 20 prestigios con un total de 3000 cristales iniciales te darán 30 puntos en total.',
   'ascension.info.current': 'Actualmente tienes {prestiges} prestigios y {crystals} cristales iniciales, por lo que obtendrías {points} puntos.',
   'common.close': 'Cerrar',
   'common.apply': 'Aplicar',
