@@ -210,6 +210,11 @@ export const MISC_STATS = {
     },
     itemTags: ['misc', 'jewelry'],
   },
+  enduranceThornsDamagePerPoint: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'defense',
+  },
   // BONUS GOLD
   bonusGoldPercent: {
     base: 0,

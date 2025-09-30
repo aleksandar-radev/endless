@@ -1,6 +1,6 @@
 import { ELEMENTS } from '../common.js';
 import { t, tp } from '../../i18n.js';
-import { ascension } from '../../globals.js';
+import { ascension, skillTree } from '../../globals.js';
 
 const html = String.raw;
 
@@ -30,6 +30,7 @@ export const ATTRIBUTES = {
   endurance: {
     effects: {
       armorPerPoint: 5,
+      thornsDamagePerPoint: 0,
     },
   },
   dexterity: {
@@ -126,8 +127,21 @@ const CUSTOM_DESCRIPTIONS = {
       mana: ATTRIBUTES.wisdom.effects.manaPerPoint,
       manaRegen: ATTRIBUTES.wisdom.effects.manaRegenPerPoint,
     }),
-  endurance: () =>
-    tp('tooltip.endurance', { armor: ATTRIBUTES.endurance.effects.armorPerPoint }),
+  endurance: () => {
+    const armor = ATTRIBUTES.endurance.effects.armorPerPoint;
+    const bonuses = skillTree?.getAllSkillTreeBonuses?.() || {};
+    const baseThorns = ATTRIBUTES.endurance.effects.thornsDamagePerPoint || 0;
+    const totalThornsPerPoint = baseThorns + (bonuses.enduranceThornsDamagePerPoint || 0);
+    let thornsBonus = '';
+
+    if (totalThornsPerPoint > 0) {
+      thornsBonus = tp('tooltip.endurance.thornsBonus', {
+        thornsDamage: Number(totalThornsPerPoint.toFixed(1)),
+      });
+    }
+
+    return tp('tooltip.endurance', { armor, thornsBonus });
+  },
   dexterity: () =>
     tp('tooltip.dexterity', { evasion: ATTRIBUTES.dexterity.effects.evasionPerPoint }),
   intelligence: () =>

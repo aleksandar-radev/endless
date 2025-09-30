@@ -252,7 +252,7 @@ export default class Hero {
     });
 
     // 4) Now calculate all attributeEffects off those updated attribute stats
-    const attributeEffects = this.calculateAttributeEffects();
+    const attributeEffects = this.calculateAttributeEffects(skillTreeBonuses);
 
     // 5) Normal flat+% pass
     const flatValues = this.calculateFlatValues(
@@ -350,7 +350,7 @@ export default class Hero {
     });
   }
 
-  calculateAttributeEffects() {
+  calculateAttributeEffects(skillTreeBonuses = {}) {
     const effects = {};
     const ascensionBonuses = ascension?.getBonuses() || {};
 
@@ -370,12 +370,18 @@ export default class Hero {
 
         // Flat per-point bonus (e.g., damagePerPoint, lifePerPoint, etc.)
         const flatKey = stat + 'PerPoint';
-        if (flatKey in attrEffects) {
-          const perPoint = attrEffects[flatKey] * attrMultiplier;
+        const hasFlatKey = flatKey in attrEffects;
+        const extraPerPoint =
+          attr === 'endurance' && stat === 'thornsDamage'
+            ? skillTreeBonuses.enduranceThornsDamagePerPoint || 0
+            : 0;
+        if (hasFlatKey || extraPerPoint !== 0) {
+          const basePerPoint = hasFlatKey ? attrEffects[flatKey] : 0;
+          const perPoint = (basePerPoint + extraPerPoint) * attrMultiplier;
           const points = this.stats[attr] || 0;
           const amount = points * perPoint;
           flatBonus += amount;
-          if (stat === 'elementalDamage' && attr === 'intelligence') {
+          if (stat === 'elementalDamage' && attr === 'intelligence' && hasFlatKey) {
             intelligenceElementalDamage += amount;
           }
         }
@@ -993,18 +999,39 @@ export default class Hero {
    *
    * @param {number} incomingDamage - The damage taken from the enemy. Retained
    * for compatibility but does not influence the reflected amount.
-   * @returns {number} The damage to reflect back to the attacker.
+   * @returns {{ damage: number, isCritical: boolean, wasDoubleDamage: boolean } | null}
+   * The damage info to reflect back to the attacker, or null if no thorns damage.
    */
   calculateTotalThornsDamage(_incomingDamage) {
     const baseThorns = this.stats.thornsDamage || 0;
-    if (!baseThorns) return 0;
+    if (!baseThorns) return null;
 
     const thornsMultiplier = 1 + (this.stats.thornsDamagePercent || 0) / 100;
     const damageScaling =
       1 + (this.stats.totalDamagePercent || 0) + (this.stats.damagePercent || 0);
 
-    const total = baseThorns * thornsMultiplier * damageScaling;
-    return Math.floor(Math.max(0, total));
+    let total = baseThorns * thornsMultiplier * damageScaling;
+
+    const didDoubleDamage =
+      this.stats.doubleDamageChance &&
+      Math.random() * 100 < this.stats.doubleDamageChance;
+    if (didDoubleDamage) {
+      total *= 2;
+    }
+
+    const critChance = this.stats.critChance || 0;
+    const isCritical = Math.random() * 100 < critChance;
+    if (isCritical) {
+      const critMultiplier = this.stats.critDamage || 1;
+      total *= critMultiplier;
+    }
+
+    const damage = Math.floor(Math.max(0, total));
+    return {
+      damage,
+      isCritical,
+      wasDoubleDamage: Boolean(didDoubleDamage),
+    };
   }
 
   willRessurect() {

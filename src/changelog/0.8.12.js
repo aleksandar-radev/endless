@@ -10,6 +10,7 @@ export default function run() {
       <li>Converted maces and staves into two-handed weapons with doubled stat rolls and proper off-hand restrictions.</li>
       <li>Added flat and percent thorns damage as possible shield affixes.</li>
       <li>Improved thorns damage scaling with new training options and global damage bonuses.</li>
+      <li>Introduced the Paladin's Thorned Bulwark passive at level 25, letting endurance grant thorns damage and clarifying how thorns scale.</li>
       <li>Reduce max level of ascension bonus for chance to hit.</li>
       <li>Increase xp and gold gain from rocky field.</li>
     </ul>

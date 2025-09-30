@@ -300,6 +300,28 @@
   color: var(--water);
 }
 
+.damage-number.source-thornsDamage {
+  color: #fff;
+}
+
+.damage-number .damage-icon {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.25rem;
+  vertical-align: middle;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.damage-number .damage-icon-thorns {
+  border: 1px solid #fff;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.15);
+  /* TODO: replace placeholder styling with the final thorns SVG icon. */
+}
+
 @keyframes damage-popup {
   0% {
     opacity: 1;

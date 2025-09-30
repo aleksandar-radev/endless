@@ -115,7 +115,7 @@ export const PALADIN_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'holy-shield',
     description: () => t('skill.divineShield'),
-    maxLevel: () => 200,
+    maxLevel: () => Infinity,
     effect: (level) => ({
       armor: scaleUpFlat(level, 4),
       armorPercent: scaleDownFlat(level, 6),
@@ -129,12 +129,23 @@ export const PALADIN_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'holy-aura',
     description: () => t('skill.auraOfLight'),
-    maxLevel: () => 500,
+    maxLevel: () => Infinity,
     effect: (level) => ({
       life: scaleUpFlat(level, 15),
       lifePercent: scaleDownFlat(level, 1.2),
-      armorPercent: scaleDownFlat(level),
       allResistance: Math.min(scaleUpFlat(level, 0.25), 30),
+    }),
+  },
+  thornedBulwark: {
+    id: 'thornedBulwark',
+    name: () => t('Thorned Bulwark'),
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[2],
+    icon: () => 'thorned-bulwark',
+    description: () => t('skill.thornedBulwark'),
+    maxLevel: () => 1,
+    effect: (level) => ({
+      enduranceThornsDamagePerPoint: level > 0 ? 0.3 : 0,
     }),
   },
 
@@ -315,7 +326,7 @@ export const PALADIN_SKILLS = {
     effect: (level) => ({
       armor: scaleUpFlat(level, 15, 4, 0.1),
       allResistance: scaleUpFlat(level, 12.25, 4, 0.1),
-      reflectFireDamage: scaleUpFlat(level, 30, 3, 1),
+      thornsDamage: scaleUpFlat(level, 20, 4, 1),
     }),
   },
   divineJudgment: {

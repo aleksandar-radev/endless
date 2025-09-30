@@ -73,9 +73,12 @@ export function enemyAttack(currentTime) {
       const breakdown = { physical: physicalDamage, ...elementalDamage };
 
       // Calculate thorns damage based on the hero's thorns stats
-      const thornsDamage = hero.calculateTotalThornsDamage(totalDamage);
-      if (thornsDamage > 0) {
-        game.damageEnemy(thornsDamage, false, null, 'thornsDamage');
+      const thornsResult = hero.calculateTotalThornsDamage(totalDamage);
+      if (thornsResult && thornsResult.damage > 0) {
+        game.damageEnemy(thornsResult.damage, thornsResult.isCritical, null, 'thornsDamage', null, {
+          color: '#FFFFFF',
+          source: 'thornsDamage',
+        });
       }
 
       const isBlocked = Math.random() * 100 < hero.stats.blockChance;
@@ -587,7 +590,15 @@ export function getDamageTypeClass(breakdown) {
   return dominantType;
 }
 
-export function createDamageNumber({ text = '', isPlayer = false, isCritical = false, color = '', breakdown = null } = {}) {
+export function createDamageNumber({
+  text = '',
+  isPlayer = false,
+  isCritical = false,
+  color = '',
+  breakdown = null,
+  source = null,
+  icon = null,
+} = {}) {
   if (!options?.showCombatText) return;
   const target = isPlayer ? '#character-avatar' : '.enemy-avatar';
   const avatar = document.querySelector(target);
@@ -612,6 +623,10 @@ export function createDamageNumber({ text = '', isPlayer = false, isCritical = f
     className += ` ${damageTypeClass}`;
   }
 
+  if (source) {
+    className += ` source-${source}`;
+  }
+
   damageEl.className = className;
 
   let displayText = text;
@@ -623,9 +638,24 @@ export function createDamageNumber({ text = '', isPlayer = false, isCritical = f
       displayText = `${sign}${formatNumber(Math.abs(num))}`;
     }
   }
-  damageEl.innerHTML = isCritical
-    ? `<img src="${BASE}/icons/critical.svg" class="icon" alt="${t('icon.critical')}"/> ` + displayText
-    : displayText;
+  let resolvedIcon = icon;
+  if (!resolvedIcon && source === 'thornsDamage') {
+    resolvedIcon = 'thorns';
+  }
+
+  const iconMarkup = resolvedIcon
+    ? `<span class="damage-icon damage-icon-${resolvedIcon}" aria-hidden="true"></span>`
+    : '';
+
+  const criticalMarkup = isCritical
+    ? `<img src="${BASE}/icons/critical.svg" class="icon" alt="${t('icon.critical')}"/>`
+    : '';
+
+  const contentParts = [];
+  if (iconMarkup) contentParts.push(iconMarkup);
+  if (criticalMarkup) contentParts.push(criticalMarkup);
+  contentParts.push(displayText);
+  damageEl.innerHTML = contentParts.join(' ');
 
   // Apply explicit color if provided (for special cases like MISS, EVADED, etc.)
   if (color) {

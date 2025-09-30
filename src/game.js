@@ -175,7 +175,14 @@ class Game {
     }
   }
 
-  damageEnemy(damage, isCritical = false, breakdown = null, skillName = null, summonName = null) {
+  damageEnemy(
+    damage,
+    isCritical = false,
+    breakdown = null,
+    skillName = null,
+    summonName = null,
+    extraOptions = {},
+  ) {
     // bail out if we've already defeated this enemy this tick
     if (this._justDefeated) return;
     damage = Math.floor(damage); // Ensure damage is an integer
@@ -208,7 +215,13 @@ class Game {
       statistics.set('highestDamageDealt', null, damage);
     }
     document.dispatchEvent(new CustomEvent('damageDealt', { detail: damage }));
-    createDamageNumber({ text: damage, isPlayer: false, isCritical: isCritical, breakdown: breakdown });
+    createDamageNumber({
+      text: damage,
+      isPlayer: false,
+      isCritical,
+      breakdown,
+      ...extraOptions,
+    });
 
     if (this.fightMode === 'arena' && this.currentEnemy) {
       const isDead = this.currentEnemy.takeDamage(damage);
