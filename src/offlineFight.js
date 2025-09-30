@@ -83,27 +83,40 @@ export async function collectOfflineFightRewards() {
         });
       const weightSum = rarityEntries.reduce((s, e) => s + e.weight, 0);
       if (weightSum > 0 && rarityEntries.length) {
-        // Allocate counts per rarity using floor + remainder distribution
+        // Allocate counts per rarity using floor + fractional ordering for remainders
         const rarityCounts = new Map();
         let allocated = 0;
+        const fractional = [];
         for (const e of rarityEntries) {
-          const c = Math.floor((e.weight / weightSum) * overflow);
-          if (c > 0) {
-            rarityCounts.set(e.name, c);
-            allocated += c;
+          const exact = (e.weight / weightSum) * overflow;
+          const base = Math.floor(exact);
+          if (base > 0) {
+            rarityCounts.set(e.name, base);
+            allocated += base;
+          }
+          const fraction = exact - base;
+          if (fraction > 0) {
+            fractional.push({ entry: e, fraction, jitter: Math.random() });
           }
         }
         let rem = overflow - allocated;
-        while (rem > 0) {
-          let roll = Math.random() * weightSum;
-          for (const e of rarityEntries) {
-            roll -= e.weight;
-            if (roll <= 0) {
-              rarityCounts.set(e.name, (rarityCounts.get(e.name) || 0) + 1);
-              break;
-            }
+        if (rem > 0 && fractional.length > 0) {
+          fractional.sort((a, b) => (b.fraction - a.fraction) || (a.jitter - b.jitter));
+          const assignCount = Math.min(rem, fractional.length);
+          for (let i = 0; i < assignCount; i++) {
+            const { entry } = fractional[i];
+            rarityCounts.set(entry.name, (rarityCounts.get(entry.name) || 0) + 1);
           }
-          rem--;
+          rem -= assignCount;
+        }
+        // Fallback for any residual due to floating point drift (bounded by available rarities)
+        if (rem > 0) {
+          const fallback = Math.min(rem, rarityEntries.length);
+          for (let i = 0; i < fallback; i++) {
+            const pick = rarityEntries[Math.floor(Math.random() * rarityEntries.length)];
+            if (!pick) break;
+            rarityCounts.set(pick.name, (rarityCounts.get(pick.name) || 0) + 1);
+          }
         }
 
         // Aggregate salvage outputs

@@ -54,30 +54,42 @@ export function distributeMaterials(total, opts = {}) {
     totalWeight = mats.length;
   }
 
-  // First pass: deterministic floor allocation
+  // First pass: deterministic floor allocation while tracking fractional remainder
   const counts = {};
   let allocated = 0;
+  const fractional = [];
   for (let i = 0; i < mats.length; i++) {
-    const share = Math.floor((weights[i] / totalWeight) * qty);
-    if (share > 0) {
-      counts[mats[i].id] = share;
-      allocated += share;
+    const exact = (weights[i] / totalWeight) * qty;
+    const base = Math.floor(exact);
+    if (base > 0) {
+      counts[mats[i].id] = base;
+      allocated += base;
+    }
+    const fraction = exact - base;
+    if (fraction > 0) {
+      fractional.push({ id: mats[i].id, fraction, jitter: Math.random() });
     }
   }
 
-  // Distribute remainder via weighted picks; remainder is bounded by mats.length
   let remaining = qty - allocated;
-  while (remaining > 0) {
-    let roll = Math.random() * totalWeight;
-    for (let i = 0; i < mats.length; i++) {
-      roll -= weights[i];
-      if (roll <= 0) {
-        const id = mats[i].id;
-        counts[id] = (counts[id] || 0) + 1;
-        break;
-      }
+  if (remaining > 0 && fractional.length > 0) {
+    fractional.sort((a, b) => (b.fraction - a.fraction) || (a.jitter - b.jitter));
+    const assignCount = Math.min(remaining, fractional.length);
+    for (let i = 0; i < assignCount; i++) {
+      const { id } = fractional[i];
+      counts[id] = (counts[id] || 0) + 1;
     }
-    remaining--;
+    remaining -= assignCount;
+  }
+
+  // Fallback for any residual remainder caused by floating point imprecision (bounded by unique materials)
+  if (remaining > 0) {
+    const fallback = Math.min(remaining, mats.length);
+    for (let i = 0; i < fallback; i++) {
+      const pick = mats[Math.floor(Math.random() * mats.length)]?.id;
+      if (!pick) break;
+      counts[pick] = (counts[pick] || 0) + 1;
+    }
   }
 
   return counts;

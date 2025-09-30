@@ -13,6 +13,8 @@ export default function run() {
       <li>Introduced the Paladin's Thorned Bulwark passive at level 25, letting endurance grant thorns damage and clarifying how thorns scale.</li>
       <li>Reduce max level of ascension bonus for chance to hit.</li>
       <li>Increase xp and gold gain from rocky field.</li>
+      <li>Optimized offline reward distribution for building materials and salvaged items to avoid long stalls when massive quantities are generated.</li>
+      <li>Greatly accelerated offline fight reward application even when only experience and gold are collected by batching level-up calculations.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

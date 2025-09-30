@@ -37,6 +37,57 @@ const STAT_KEYS = Object.keys(STATS);
 
 export const STATS_ON_LEVEL_UP = 3;
 
+function xpRequiredForLevels(startLevel, levels) {
+  if (levels <= 0) return 0;
+
+  const n = levels;
+  const baseLevel = startLevel;
+  const nMinus1 = n - 1;
+
+  const linearSum = n * baseLevel + (nMinus1 * n) / 2;
+  const squaresSum =
+    n * baseLevel * baseLevel +
+    baseLevel * n * nMinus1 +
+    (nMinus1 * n * (2 * n - 1)) / 6;
+
+  const total = 10 * n + 30 * linearSum + 2 * squaresSum;
+  if (!Number.isFinite(total)) return Number.POSITIVE_INFINITY;
+  return Math.round(total);
+}
+
+function levelsAffordable(startLevel, availableExp) {
+  if (availableExp <= 0) return 0;
+  const firstLevelCost = xpRequiredForLevels(startLevel, 1);
+  if (availableExp < firstLevelCost) return 0;
+
+  let low = 0;
+  let high = 1;
+  while (true) {
+    const needed = xpRequiredForLevels(startLevel, high);
+    if (!Number.isFinite(needed) || needed > availableExp) break;
+    low = high;
+    if (high >= Number.MAX_SAFE_INTEGER / 2) {
+      high = Number.MAX_SAFE_INTEGER;
+      break;
+    }
+    high *= 2;
+  }
+
+  let left = low;
+  let right = high;
+  while (left < right) {
+    const mid = Math.floor((left + right + 1) / 2);
+    const needed = xpRequiredForLevels(startLevel, mid);
+    if (Number.isFinite(needed) && needed <= availableExp) {
+      left = mid;
+    } else {
+      right = mid - 1;
+    }
+  }
+
+  return left;
+}
+
 export default class Hero {
   constructor(savedData = null) {
     this._recalcScheduled = false;
@@ -109,10 +160,15 @@ export default class Hero {
     this.exp += amount;
     let didLevelUp = false;
     document.dispatchEvent(new CustomEvent('xpGained', { detail: amount }));
-    while (this.exp >= this.getExpToNextLevel()) {
-      const xpOverflow = this.exp - this.getExpToNextLevel();
-      this.levelUp(1);
-      this.exp = xpOverflow; // Carry over excess experience to next level
+    const totalExp = this.exp;
+    const currentLevel = this.level;
+    const levelsGained = levelsAffordable(currentLevel, totalExp);
+
+    if (levelsGained > 0) {
+      const xpConsumed = xpRequiredForLevels(currentLevel, levelsGained);
+      const remainder = Math.max(0, totalExp - xpConsumed);
+      this.levelUp(levelsGained);
+      this.exp = remainder;
       didLevelUp = true;
     }
 
