@@ -11,6 +11,7 @@ export default function run() {
       <li>Added flat and percent thorns damage as possible shield affixes.</li>
       <li>Improved thorns damage scaling with new training options and global damage bonuses.</li>
       <li>Reduce max level of ascension bonus for chance to hit.</li>
+      <li>Increase xp and gold gain from rocky field.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
