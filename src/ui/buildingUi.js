@@ -67,7 +67,8 @@ async function ensureTimeOffsetInitialized() {
 
 function updateBuildingCountdowns() {
   // If the offline bonuses modal is open, do not auto-collect; let that flow handle it
-  if (document.getElementById('offline-bonuses-modal')) return;
+  const offlineModal = document.getElementById('offline-bonuses-modal');
+  if (offlineModal && !offlineModal.classList.contains('hidden')) return;
   const nodes = document.querySelectorAll('.building-next-bonus');
   if (!nodes.length) return;
 
