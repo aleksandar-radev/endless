@@ -235,41 +235,41 @@ export default {
   'combatMode.subAreaFormat': '{name} [{type}]',
   'combatMode.subAreaType.region': '区域',
   'Enchanted Forest': '魔法森林',
-  'Earthbound spirits guard these woods, resisting earthcraft yet burning beneath fire or lightning while their light armor lashes out with twisting roots.':
-    '大地之灵守护这片森林，能抵御土系术法，却会在火焰或闪电下燃烧，轻甲之身挥舞盘旋的根须。',
+  'Enemies resist earth but are weak to fire and lightning. Crystalized Rock drops most often here.':
+    '敌人抗土，但怕火与雷。这里最常掉落结晶岩石。',
   'Crystal Cave': '水晶洞穴',
-  'Shardbound guardians channel crackling energy, shrugging off lightning while water or earth can shatter their heavy crystal plating and brutish melee swings.':
-    '碎晶守卫导引噼啪能量，能够抵挡闪电，但水流或岩土会粉碎他们厚重的晶甲与粗暴的近战攻势。',
+  'Enemies resist lightning but are weak to water and earth. Crystalized Rock is the common reward.':
+    '敌人抗雷，但怕水与土。结晶岩石是常见奖励。',
   'Frozen Tundra': '冰封苔原',
-  'Blizzards harden these wastes against cold assaults, yet fire or lightning can pierce their steady armor while chilling strikes bite deep.':
-    '暴风雪锤炼了这片荒原，足以抵御寒冰攻势，但火焰或雷电仍能穿透其稳固的护甲，而冰冷打击同样极为凶狠。',
+  'Enemies resist cold but are weak to fire and lightning. Stat potions of every type drop frequently.':
+    '敌人抗寒，但怕火与雷。各类属性药水常常掉落。',
   'Scorching Desert': '灼热沙漠',
-  'Relentless heat tempers fireproof raiders whose midweight armor melts under water or frost while they unleash searing bursts.':
-    '无尽酷热淬炼出耐火的掠夺者，他们的中型甲胄在水流或霜寒下会融化，同时倾泻灼烈爆发。',
+  'Enemies resist fire but are weak to water and cold. Elixirs are the standout loot.':
+    '敌人抗火，但怕水与寒。灵药是这里的特色战利品。',
   'Murky Swamp': '阴暗沼泽',
-  'Toxic mire dwellers soak up water magic but sputter when shocked or aired out, relying on slick, low-armored bodies to fling corrosive torrents.':
-    '毒沼居民能够吸收水系魔法，却会在雷击或气流中枯竭，滑腻而薄弱的甲胄用来抛洒腐蚀洪流。',
+  'Enemies resist water but are weak to lightning and air. Gold Coins up to Freaky Gold Coins are common finds.':
+    '敌人抗水，但怕雷与风。从金币到奇异金币都很常见。',
   'Skyrealm Peaks': '天界群峰',
-  'Skyborne zealots twist the air, resisting windcraft while earth or water drags them down; their light mail fuels razor gust assaults.':
-    '天空狂信者扭曲气流，能抵御风系术法，却会被大地或水流拉坠，轻盈锁甲驱动锋利的风刃攻击。',
+  'Enemies resist air but are weak to earth and water. All stat potions drop regularly.':
+    '敌人抗风，但怕土与水。各类属性药水会频繁掉落。',
   'Abyssal Depths': '深渊深处',
-  'Ancient horrors wrap themselves in crushing cold wards that falter before fire or stone, striking back through hulking armor with glacial barrages.':
-    '远古恐魔披上压迫性的寒霜结界，唯有火焰或岩石能将其撕裂，它们以厚重甲壳回敬冰霜弹幕。',
+  'Enemies resist cold but are weak to fire and earth. Enormous and Freaky Gold Coins pile up here.':
+    '敌人抗寒，但怕火与土。巨额金币和奇异金币在此堆积。',
   'Volcanic Rift': '火山裂谷',
-  'Molten titans thrive in firestorms, though water or frost can cool their tempered mail as they hurl relentless eruptions.':
-    '熔火巨人栖息在火海风暴中，水雾或霜寒能暂缓其淬火甲胄，却难阻他们接连不断的喷发。',
+  'Enemies resist fire but are weak to water and cold. Weapon Upgrade Cores, Armor Upgrade Stones, and Jewelry Upgrade Gems drop often.':
+    '敌人抗火，但怕水与寒。武器升级核心、护甲升级石和饰品升级宝石经常掉落。',
   'Sunken Ruins': '沉没遗迹',
-  'Drowned guardians flow with the tides, resisting watercraft while lightning or fire boil their plated bulwarks and tidal blasts.':
-    '溺亡守卫随潮汐流动，能抵御水系术法，但雷霆或火焰会将其披甲的潮汐冲击煮沸。',
+  'Enemies resist water but are weak to lightning and fire. Elixirs and Crystalized Rock wash ashore.':
+    '敌人抗水，但怕雷与火。灵药和结晶岩石会被潮水冲上岸。',
   'Haunted Moor': '闹鬼荒原',
-  'Restless spirits ride howling winds, deflecting airy sorcery yet fading before consecrated flame or earth while spectral gusts rake through scant defenses.':
-    '不安灵魂乘着嚎啕之风，能偏转风系咒术，却在圣火或大地前逐渐消散，幽灵劲风撕裂薄弱防线。',
+  'Enemies resist air but are weak to fire and earth. Greater and Huge Experience Potions are plentiful.':
+    '敌人抗风，但怕火与土。大量高级和巨型经验药水随处可见。',
   'Golden Steppe': '黄金草原',
-  'Steppe warbands root themselves in the land, shrugging off earthcraft but faltering against water or frost as balanced armor powers crushing charges.':
-    '草原战团扎根大地，能抵御土系术法，却在水与霜前失势，均衡的甲胄推动毁灭性的冲锋。',
+  'Enemies resist earth but are weak to water and cold. Expect lots of bonus gold and material drops.':
+    '敌人抗土，但怕水与寒。额外的金币和材料掉落非常多。',
   'Obsidian Spire': '黑曜尖塔',
-  'Arcane sentinels channel storms through the spire, resisting lightning while water or earth ground their basalt carapaces and crackling volleys.':
-    '奥术哨兵让风暴穿透尖塔，抵抗闪电，但水流或岩土会将其玄武岩甲壳与噼啪箭雨束缚在地。',
+  'Enemies resist lightning but are weak to water and earth. Enchantment Scrolls plus Alternation and Transmutation Orbs drop here.':
+    '敌人抗雷，但怕水与土。附魔卷轴以及变换之球与转化之球都会掉落。',
   'battleLog.battle': '战斗',
   'battleLog.drops': '掉落',
   'battleLog.reset': '重置',

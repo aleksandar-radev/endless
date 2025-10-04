@@ -227,41 +227,41 @@ export default {
   'combatMode.subAreaFormat': '{name} [{type}]',
   'combatMode.subAreaType.region': 'Región',
   'Enchanted Forest': 'Bosque Encantado',
-  'Earthbound spirits guard these woods, resisting earthcraft yet burning beneath fire or lightning while their light armor lashes out with twisting roots.':
-    'Espíritus ligados a la tierra protegen este bosque; resisten la magia telúrica, pero arden ante el fuego o el rayo mientras su armadura ligera azota con raíces retorcidas.',
+  'Enemies resist earth but are weak to fire and lightning. Crystalized Rock drops most often here.':
+    'Los enemigos resisten la tierra pero son débiles al fuego y al rayo. La Roca cristalizada cae aquí con más frecuencia.',
   'Crystal Cave': 'Cueva de Cristal',
-  'Shardbound guardians channel crackling energy, shrugging off lightning while water or earth can shatter their heavy crystal plating and brutish melee swings.':
-    'Guardianes hechos de fragmentos canalizan energía chispeante; resisten el rayo, pero el agua o la tierra pueden quebrar su pesada coraza cristalina y sus brutales golpes cuerpo a cuerpo.',
+  'Enemies resist lightning but are weak to water and earth. Crystalized Rock is the common reward.':
+    'Los enemigos resisten el rayo pero son débiles al agua y a la tierra. La Roca cristalizada es la recompensa habitual.',
   'Frozen Tundra': 'Tundra Helada',
-  'Blizzards harden these wastes against cold assaults, yet fire or lightning can pierce their steady armor while chilling strikes bite deep.':
-    'Las ventiscas endurecen estos páramos contra los asaltos de frío, aunque el fuego o el rayo pueden atravesar su armadura firme mientras sus golpes helados muerden profundo.',
+  'Enemies resist cold but are weak to fire and lightning. Stat potions of every type drop frequently.':
+    'Los enemigos resisten el frío pero son débiles al fuego y al rayo. Las pociones de estadísticas de todo tipo caen a menudo.',
   'Scorching Desert': 'Desierto Abrasador',
-  'Relentless heat tempers fireproof raiders whose midweight armor melts under water or frost while they unleash searing bursts.':
-    'El calor implacable templa a los saqueadores ignífugos, cuya armadura media se derrite ante el agua o la escarcha mientras desatan ráfagas abrasadoras.',
+  'Enemies resist fire but are weak to water and cold. Elixirs are the standout loot.':
+    'Los enemigos resisten el fuego pero son débiles al agua y al frío. Los Elixires son el botín destacado.',
   'Murky Swamp': 'Pantano Turbio',
-  'Toxic mire dwellers soak up water magic but sputter when shocked or aired out, relying on slick, low-armored bodies to fling corrosive torrents.':
-    'Habitantes del cieno tóxico absorben la magia del agua, pero se ahogan cuando son sacudidos o ventilados; confían en cuerpos resbaladizos y poco blindados para lanzar torrentes corrosivos.',
+  'Enemies resist water but are weak to lightning and air. Gold Coins up to Freaky Gold Coins are common finds.':
+    'Los enemigos resisten el agua pero son débiles al rayo y al aire. Las Monedas de oro hasta Monedas de oro monstruosas son hallazgos comunes.',
   'Skyrealm Peaks': 'Picos del Reino Celeste',
-  'Skyborne zealots twist the air, resisting windcraft while earth or water drags them down; their light mail fuels razor gust assaults.':
-    'Fanáticos del cielo retuercen el aire, resisten la hechicería del viento mientras la tierra o el agua los arrastran hacia abajo; su malla ligera impulsa ataques de filos cortantes.',
+  'Enemies resist air but are weak to earth and water. All stat potions drop regularly.':
+    'Los enemigos resisten el aire pero son débiles a la tierra y al agua. Todas las pociones de atributo caen con regularidad.',
   'Abyssal Depths': 'Profundidades Abisales',
-  'Ancient horrors wrap themselves in crushing cold wards that falter before fire or stone, striking back through hulking armor with glacial barrages.':
-    'Horrores antiguos se envuelven en barreras aplastantes de frío que ceden ante el fuego o la piedra, contraatacando desde armaduras colosales con andanadas glaciares.',
+  'Enemies resist cold but are weak to fire and earth. Enormous and Freaky Gold Coins pile up here.':
+    'Los enemigos resisten el frío pero son débiles al fuego y a la tierra. Aquí se acumulan Monedas de oro enormes y Monedas de oro monstruosas.',
   'Volcanic Rift': 'Grieta Volcánica',
-  'Molten titans thrive in firestorms, though water or frost can cool their tempered mail as they hurl relentless eruptions.':
-    'Titanes fundidos prosperan entre tormentas de fuego, aunque el agua o la escarcha pueden enfriar su coraza templada mientras arrojan erupciones implacables.',
+  'Enemies resist fire but are weak to water and cold. Weapon Upgrade Cores, Armor Upgrade Stones, and Jewelry Upgrade Gems drop often.':
+    'Los enemigos resisten el fuego pero son débiles al agua y al frío. Caen a menudo Núcleos de mejora de arma, Piedras de mejora de armadura y Gemas de mejora de joyería.',
   'Sunken Ruins': 'Ruinas Sumergidas',
-  'Drowned guardians flow with the tides, resisting watercraft while lightning or fire boil their plated bulwarks and tidal blasts.':
-    'Guardianes ahogados fluyen con las mareas, resisten la magia acuática mientras el rayo o el fuego hierven sus baluartes acorazados y estallidos de marea.',
+  'Enemies resist water but are weak to lightning and fire. Elixirs and Crystalized Rock wash ashore.':
+    'Los enemigos resisten el agua pero son débiles al rayo y al fuego. Los Elixires y la Roca cristalizada llegan arrastrados por la marea.',
   'Haunted Moor': 'Páramo Embrujado',
-  'Restless spirits ride howling winds, deflecting airy sorcery yet fading before consecrated flame or earth while spectral gusts rake through scant defenses.':
-    'Espíritus inquietos cabalgan vientos aullantes, desvían la brujería aérea pero se desvanecen ante la llama consagrada o la tierra mientras ráfagas espectrales desgarran defensas endebles.',
+  'Enemies resist air but are weak to fire and earth. Greater and Huge Experience Potions are plentiful.':
+    'Los enemigos resisten el aire pero son débiles al fuego y a la tierra. Abundan las Pociones de experiencia mayor y enorme.',
   'Golden Steppe': 'Estepa Dorada',
-  'Steppe warbands root themselves in the land, shrugging off earthcraft but faltering against water or frost as balanced armor powers crushing charges.':
-    'Hordas de la estepa se arraigan en la tierra, resisten la magia telúrica pero desfallecen ante el agua o la escarcha mientras una armadura equilibrada impulsa cargas demoledoras.',
+  'Enemies resist earth but are weak to water and cold. Expect lots of bonus gold and material drops.':
+    'Los enemigos resisten la tierra pero son débiles al agua y al frío. Espera muchas bonificaciones de oro y materiales.',
   'Obsidian Spire': 'Aguja de Obsidiana',
-  'Arcane sentinels channel storms through the spire, resisting lightning while water or earth ground their basalt carapaces and crackling volleys.':
-    'Centinelas arcanos canalizan tormentas a través de la aguja, resisten el rayo mientras el agua o la tierra ponen a tierra sus corazas de basalto y sus descargas crepitantes.',
+  'Enemies resist lightning but are weak to water and earth. Enchantment Scrolls plus Alternation and Transmutation Orbs drop here.':
+    'Los enemigos resisten el rayo pero son débiles al agua y a la tierra. Aquí caen Pergaminos de encantamiento más Orbes de alteración y transmutación.',
   'battleLog.battle': 'Batalla',
   'battleLog.drops': 'Botín',
   'battleLog.reset': 'Reiniciar',

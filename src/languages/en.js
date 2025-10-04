@@ -235,41 +235,41 @@ export default {
   'combatMode.subAreaFormat': '{name} [{type}]',
   'combatMode.subAreaType.region': 'Region',
   'Enchanted Forest': 'Enchanted Forest',
-  'Earthbound spirits guard these woods, resisting earthcraft yet burning beneath fire or lightning while their light armor lashes out with twisting roots.':
-    'Earthbound spirits guard these woods, resisting earthcraft yet burning beneath fire or lightning while their light armor lashes out with twisting roots.',
+  'Enemies resist earth but are weak to fire and lightning. Crystalized Rock drops most often here.':
+    'Enemies resist earth but are weak to fire and lightning. Crystalized Rock drops most often here.',
   'Crystal Cave': 'Crystal Cave',
-  'Shardbound guardians channel crackling energy, shrugging off lightning while water or earth can shatter their heavy crystal plating and brutish melee swings.':
-    'Shardbound guardians channel crackling energy, shrugging off lightning while water or earth can shatter their heavy crystal plating and brutish melee swings.',
+  'Enemies resist lightning but are weak to water and earth. Crystalized Rock is the common reward.':
+    'Enemies resist lightning but are weak to water and earth. Crystalized Rock is the common reward.',
   'Frozen Tundra': 'Frozen Tundra',
-  'Blizzards harden these wastes against cold assaults, yet fire or lightning can pierce their steady armor while chilling strikes bite deep.':
-    'Blizzards harden these wastes against cold assaults, yet fire or lightning can pierce their steady armor while chilling strikes bite deep.',
+  'Enemies resist cold but are weak to fire and lightning. Stat potions of every type drop frequently.':
+    'Enemies resist cold but are weak to fire and lightning. Stat potions of every type drop frequently.',
   'Scorching Desert': 'Scorching Desert',
-  'Relentless heat tempers fireproof raiders whose midweight armor melts under water or frost while they unleash searing bursts.':
-    'Relentless heat tempers fireproof raiders whose midweight armor melts under water or frost while they unleash searing bursts.',
+  'Enemies resist fire but are weak to water and cold. Elixirs are the standout loot.':
+    'Enemies resist fire but are weak to water and cold. Elixirs are the standout loot.',
   'Murky Swamp': 'Murky Swamp',
-  'Toxic mire dwellers soak up water magic but sputter when shocked or aired out, relying on slick, low-armored bodies to fling corrosive torrents.':
-    'Toxic mire dwellers soak up water magic but sputter when shocked or aired out, relying on slick, low-armored bodies to fling corrosive torrents.',
+  'Enemies resist water but are weak to lightning and air. Gold Coins up to Freaky Gold Coins are common finds.':
+    'Enemies resist water but are weak to lightning and air. Gold Coins up to Freaky Gold Coins are common finds.',
   'Skyrealm Peaks': 'Skyrealm Peaks',
-  'Skyborne zealots twist the air, resisting windcraft while earth or water drags them down; their light mail fuels razor gust assaults.':
-    'Skyborne zealots twist the air, resisting windcraft while earth or water drags them down; their light mail fuels razor gust assaults.',
+  'Enemies resist air but are weak to earth and water. All stat potions drop regularly.':
+    'Enemies resist air but are weak to earth and water. All stat potions drop regularly.',
   'Abyssal Depths': 'Abyssal Depths',
-  'Ancient horrors wrap themselves in crushing cold wards that falter before fire or stone, striking back through hulking armor with glacial barrages.':
-    'Ancient horrors wrap themselves in crushing cold wards that falter before fire or stone, striking back through hulking armor with glacial barrages.',
+  'Enemies resist cold but are weak to fire and earth. Enormous and Freaky Gold Coins pile up here.':
+    'Enemies resist cold but are weak to fire and earth. Enormous and Freaky Gold Coins pile up here.',
   'Volcanic Rift': 'Volcanic Rift',
-  'Molten titans thrive in firestorms, though water or frost can cool their tempered mail as they hurl relentless eruptions.':
-    'Molten titans thrive in firestorms, though water or frost can cool their tempered mail as they hurl relentless eruptions.',
+  'Enemies resist fire but are weak to water and cold. Weapon Upgrade Cores, Armor Upgrade Stones, and Jewelry Upgrade Gems drop often.':
+    'Enemies resist fire but are weak to water and cold. Weapon Upgrade Cores, Armor Upgrade Stones, and Jewelry Upgrade Gems drop often.',
   'Sunken Ruins': 'Sunken Ruins',
-  'Drowned guardians flow with the tides, resisting watercraft while lightning or fire boil their plated bulwarks and tidal blasts.':
-    'Drowned guardians flow with the tides, resisting watercraft while lightning or fire boil their plated bulwarks and tidal blasts.',
+  'Enemies resist water but are weak to lightning and fire. Elixirs and Crystalized Rock wash ashore.':
+    'Enemies resist water but are weak to lightning and fire. Elixirs and Crystalized Rock wash ashore.',
   'Haunted Moor': 'Haunted Moor',
-  'Restless spirits ride howling winds, deflecting airy sorcery yet fading before consecrated flame or earth while spectral gusts rake through scant defenses.':
-    'Restless spirits ride howling winds, deflecting airy sorcery yet fading before consecrated flame or earth while spectral gusts rake through scant defenses.',
+  'Enemies resist air but are weak to fire and earth. Greater and Huge Experience Potions are plentiful.':
+    'Enemies resist air but are weak to fire and earth. Greater and Huge Experience Potions are plentiful.',
   'Golden Steppe': 'Golden Steppe',
-  'Steppe warbands root themselves in the land, shrugging off earthcraft but faltering against water or frost as balanced armor powers crushing charges.':
-    'Steppe warbands root themselves in the land, shrugging off earthcraft but faltering against water or frost as balanced armor powers crushing charges.',
+  'Enemies resist earth but are weak to water and cold. Expect lots of bonus gold and material drops.':
+    'Enemies resist earth but are weak to water and cold. Expect lots of bonus gold and material drops.',
   'Obsidian Spire': 'Obsidian Spire',
-  'Arcane sentinels channel storms through the spire, resisting lightning while water or earth ground their basalt carapaces and crackling volleys.':
-    'Arcane sentinels channel storms through the spire, resisting lightning while water or earth ground their basalt carapaces and crackling volleys.',
+  'Enemies resist lightning but are weak to water and earth. Enchantment Scrolls plus Alternation and Transmutation Orbs drop here.':
+    'Enemies resist lightning but are weak to water and earth. Enchantment Scrolls plus Alternation and Transmutation Orbs drop here.',
   'battleLog.battle': 'Battle',
   'battleLog.drops': 'Drops',
   'battleLog.reset': 'Reset',
