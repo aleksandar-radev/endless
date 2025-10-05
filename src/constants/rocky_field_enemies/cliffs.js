@@ -28,7 +28,11 @@ export const ROCKY_FIELD_CLIFFS_ENEMIES = [
       lightningResistance: 1.7,
       waterResistance: 0.65,
     },
-    special: ['noLeech'],
+    special: ['percentLifeOnHit', 'lifeSteal'],
+    specialData: {
+      percentLifeOnHit: 10,
+      lifeStealPercent: 20,
+    },
     runeDrop: ROCKY_FIELD_ALL_RUNES,
     tags: ['cliffs'],
   },

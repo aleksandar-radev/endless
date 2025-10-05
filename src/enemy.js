@@ -202,6 +202,8 @@ class Enemy {
 
     this.name = `${baseData.name}`;
     this.image = baseData.image;
+    this.special = Array.isArray(baseData.special) ? [...baseData.special] : [];
+    this.specialData = { ...(baseData.specialData || {}) };
 
     this.baseScale = TIER_STAT_SCALE[baseData.tier](this.level);
 
@@ -476,6 +478,15 @@ class Enemy {
 
   resetLife() {
     this.currentLife = this.life;
+  }
+
+  heal(amount) {
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return 0;
+    }
+    const previousLife = this.currentLife;
+    this.currentLife = Math.min(this.life, this.currentLife + amount);
+    return this.currentLife - previousLife;
   }
 
   calculateDropChance() {

@@ -28,7 +28,11 @@ export const ROCKY_FIELD_VALLEY_ENEMIES = [
       lightningResistance: 0.65,
       waterResistance: 1.8,
     },
-    special: [],
+    special: ['fortified', 'alwaysHit', 'noLeech'],
+    specialData: {
+      armorMultiplier: 2,
+      resistanceMultiplier: 2,
+    },
     runeDrop: ROCKY_FIELD_ALL_RUNES,
     tags: ['valley'],
   },

@@ -28,7 +28,11 @@ export const ROCKY_FIELD_BOULDERS_ENEMIES = [
       lightningResistance: 0.8,
       waterResistance: 0.5,
     },
-    special: ['noLeech'],
+    special: ['fortified'],
+    specialData: {
+      armorMultiplier: 4,
+      resistanceMultiplier: 4,
+    },
     runeDrop: ROCKY_FIELD_COMMON_RUNES,
     tags: ['boulders'],
   },

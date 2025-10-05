@@ -40,6 +40,8 @@ export function enemyAttack(currentTime) {
     // Check for evasion first
 
     const alwaysHit = game.currentEnemy.special?.includes('alwaysHit');
+    const enemySpecials = game.currentEnemy.special || [];
+    const enemySpecialData = game.currentEnemy.specialData || {};
     const hitChance = calculateHitChance(
       game.currentEnemy.attackRating,
       hero.stats.evasion,
@@ -67,10 +69,19 @@ export function enemyAttack(currentTime) {
         elementalDamage[id] = game.currentEnemy[`${id}Damage`] * (1 - reduction);
       });
 
-      const totalDamage =
-        physicalDamage + ELEMENT_IDS.reduce((sum, id) => sum + elementalDamage[id], 0);
+      let totalDamage = physicalDamage + ELEMENT_IDS.reduce((sum, id) => sum + elementalDamage[id], 0);
 
       const breakdown = { physical: physicalDamage, ...elementalDamage };
+
+      if (enemySpecials.includes('percentLifeOnHit')) {
+        const percentLife = Number.isFinite(enemySpecialData.percentLifeOnHit)
+          ? enemySpecialData.percentLifeOnHit
+          : 5;
+        const extraDamage = Math.floor((hero.stats.life || 0) * percentLife / 100);
+        if (extraDamage > 0) {
+          totalDamage += extraDamage;
+        }
+      }
 
       // Calculate thorns damage based on the hero's thorns stats
       const thornsResult = hero.calculateTotalThornsDamage(totalDamage);
@@ -105,6 +116,18 @@ export function enemyAttack(currentTime) {
         }
 
         game.damagePlayer(totalDamage, breakdown);
+
+        if (enemySpecials.includes('lifeSteal')) {
+          const lifeStealPercent = Number.isFinite(enemySpecialData.lifeStealPercent)
+            ? enemySpecialData.lifeStealPercent
+            : 20;
+          const healAmount = Math.floor(totalDamage * lifeStealPercent / 100);
+          const healed = game.currentEnemy.heal(healAmount);
+          if (healed > 0) {
+            createDamageNumber({ text: `+${Math.floor(healed)}`, isPlayer: false, color: '#4CAF50' });
+            updateEnemyStats();
+          }
+        }
       }
     }
 
@@ -145,12 +168,21 @@ export function playerAttack(currentTime) {
         battleLog.addBattle(t('battleLog.missedAttack'));
       } else {
         const { damage, isCritical, breakdown } = hero.calculateDamageAgainst(game.currentEnemy, {});
+        const enemyRef = game.currentEnemy;
+        const enemySpecials = enemyRef?.special || [];
+        const enemySpecialData = enemyRef?.specialData || {};
 
         const lifePerHit = (hero.stats.lifePerHit || 0) * (1 + (hero.stats.lifePerHitPercent || 0) / 100);
         const lifeStealAmount = damage * (hero.stats.lifeSteal || 0) / 100;
         const manaStealAmount = damage * (hero.stats.manaSteal || 0) / 100;
         const omniStealAmount = damage * (hero.stats.omniSteal || 0) / 100;
-        const totalLifeChange = lifeStealAmount + lifePerHit + omniStealAmount;
+
+        const disallowLeech = enemySpecials.includes('noLeech');
+        const adjustedLifePerHit = disallowLeech ? Math.min(lifePerHit, 0) : lifePerHit;
+        const adjustedLifeStealAmount = disallowLeech ? Math.min(lifeStealAmount, 0) : lifeStealAmount;
+        const adjustedOmniStealAmount = disallowLeech ? Math.min(omniStealAmount, 0) : omniStealAmount;
+
+        const totalLifeChange = adjustedLifeStealAmount + adjustedLifePerHit + adjustedOmniStealAmount;
         const lifeDisplayAmount = Math.floor(Math.abs(totalLifeChange));
         if (lifeDisplayAmount >= 1) {
           const lifeColor = totalLifeChange >= 0 ? '#4CAF50' : '#FF5252';
@@ -169,6 +201,16 @@ export function playerAttack(currentTime) {
         }
 
         game.damageEnemy(damage, isCritical, breakdown);
+
+        if (enemyRef && enemySpecials.includes('thornsAura')) {
+          const thornsPercent = Number.isFinite(enemySpecialData.thornsPercent)
+            ? enemySpecialData.thornsPercent
+            : 10;
+          const thornsDamage = Math.floor(damage * thornsPercent / 100);
+          if (thornsDamage > 0) {
+            game.damagePlayer(thornsDamage, { thornsDamage });
+          }
+        }
       }
       if (manaPerHit < 0) {
         const manaCostDisplay = Math.floor(Math.abs(manaPerHit));

@@ -332,7 +332,8 @@ export class RockyFieldEnemy {
 
     this.name = baseData.name;
     this.image = baseData.image;
-    this.special = baseData.special || [];
+    this.special = Array.isArray(baseData.special) ? [...baseData.special] : [];
+    this.specialData = { ...(baseData.specialData || {}) };
     this.runeDrop = baseData.runeDrop || [];
 
     this.baseScale = REGION_STAT_SCALE[regionId](level);
@@ -380,6 +381,11 @@ export class RockyFieldEnemy {
     return value === undefined ? 1 : value;
   }
 
+  getSpecialMultiplier(key) {
+    const value = this.specialData?.[key];
+    return Number.isFinite(value) ? value : 1;
+  }
+
   getStatValue(stat, defaultValue = 0) {
     const region = this.getRegion();
     const regionMultipliers = region.multiplier;
@@ -401,7 +407,8 @@ export class RockyFieldEnemy {
   // Calculate methods (consistent with Enemy and Boss classes)
   calculateAttackSpeed() {
     const speedRed = hero.stats.reduceEnemyAttackSpeedPercent || 0;
-    return this.getStatValue('attackSpeed', 1) * (1 - speedRed);
+    const attackSpeedBoost = this.getSpecialMultiplier('attackSpeedMultiplier');
+    return this.getStatValue('attackSpeed', 1) * attackSpeedBoost * (1 - speedRed);
   }
 
   calculateLife() {
@@ -421,7 +428,10 @@ export class RockyFieldEnemy {
 
   calculateArmor() {
     const statMultiplier = this.getStatMultiplier();
-    return scaleStat(this.getStatValue('armor') * statMultiplier, this.level, 0, 0, 0, this.baseScale);
+    const armorMult = this.getSpecialMultiplier('armorMultiplier');
+    return (
+      scaleStat(this.getStatValue('armor') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * armorMult
+    );
   }
 
   calculateEvasion() {
@@ -495,13 +505,16 @@ export class RockyFieldEnemy {
 
   calculateElementalResistance(id) {
     const statMultiplier = this.getStatMultiplier();
-    return scaleStat(
-      this.getStatValue(`${id}Resistance`) * statMultiplier,
-      this.level,
-      0,
-      0,
-      0,
-      this.baseScale,
+    const resistanceMult = this.getSpecialMultiplier('resistanceMultiplier');
+    return (
+      scaleStat(
+        this.getStatValue(`${id}Resistance`) * statMultiplier,
+        this.level,
+        0,
+        0,
+        0,
+        this.baseScale,
+      ) * resistanceMult
     );
   }
 
@@ -528,6 +541,15 @@ export class RockyFieldEnemy {
     this.currentLife -= damage;
     if (this.currentLife < 0) this.currentLife = 0;
     return this.currentLife <= 0;
+  }
+
+  heal(amount) {
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return 0;
+    }
+    const previousLife = this.currentLife;
+    this.currentLife = Math.min(this.life, this.currentLife + amount);
+    return this.currentLife - previousLife;
   }
 }
 

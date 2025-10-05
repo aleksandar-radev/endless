@@ -937,22 +937,22 @@ export default {
   'bossRegion.elementalNexus.desc': '冰寒水流强化寒霜与水系抗性，抽离其余元素的力量。',
   'rockyField.region.outskirts.name': '外围荒地',
   'rockyField.region.outskirts.desc':
-    '松散岩兽能抵御土与水的攻击，却惧怕火焰与闪电，披着适中护甲且扑击永不落空。',
+    '松散岩兽能抵御土与水的攻击，却惧怕火焰与闪电；它们以快 40% 的速度扑击且永不落空。',
   'rockyField.region.boulders.name': '巨岩盆地',
   'rockyField.region.boulders.desc':
-    '熔岩巨石族强化火与土抗性，却畏惧寒冷或水流；缓慢重击并无视生命汲取。',
+    '熔岩巨石族强化火与土抗性，却畏惧寒冷或水流；它们蜷缩在四倍护甲与抗性之后。',
   'rockyField.region.caves.name': '隐蔽洞窟',
   'rockyField.region.caves.desc':
-    '霜寒潜伏者倾泻寒霜与水流伤害，坚守两者抗性，其伏击命中百发百中，惩戒粗心者。',
+    '霜寒潜伏者倾泻寒霜与水流伤害，坚守两者抗性，并反弹每次攻击的 1.5%。',
   'rockyField.region.cliffs.name': '峭壁悬崖',
   'rockyField.region.cliffs.desc':
-    '风暴哨卫依靠空气与闪电护幕生存，免疫吸血且身法灵动，但对土或水的反击十分脆弱。',
+    '风暴哨卫依靠空气与闪电护幕生存，仍畏惧土或水的反击；每次命中都会撕走你 10% 的生命并吸收 20% 的伤害回复。',
   'rockyField.region.valley.name': '寂静山谷',
   'rockyField.region.valley.desc':
-    '被侵蚀的守卫浸染水与土之术，护甲稳固，却会在火焰或闪电爆发前溃散。',
+    '被侵蚀的守卫浸染水与土之术，护甲与抗性翻倍，攻击永不落空且无法被吸取生命。',
   'rockyField.region.summit.name': '疾风峰顶',
   'rockyField.region.summit.desc':
-    '风暴铸成的灵体在疾风护盾下释放雷霆弹幕，对土与水的防护却相当薄弱。',
+    '风暴铸成的灵体在疾风护盾下释放雷霆弹幕；它们永不落空、攻速翻倍、汲取 5% 生命并反弹 0.7% 的伤害。',
   'rockyField.unlockStage': '解锁阶段',
   'rockyField.availableRunes': '可能的符文',
   'item.level': '等级',

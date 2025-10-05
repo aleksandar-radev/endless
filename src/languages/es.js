@@ -934,22 +934,22 @@ export default {
     'Corrientes glaciales refuerzan las resistencias de frío y agua, drenando la fuerza de los elementos restantes.',
   'rockyField.region.outskirts.name': 'Afueras',
   'rockyField.region.outskirts.desc':
-    'Bestias de tierra suelta resisten tierra y agua, pero ceden ante fuego o rayo; llevan armadura modesta y sus embestidas nunca fallan.',
+    'Bestias de tierra suelta resisten tierra y agua, pero ceden ante fuego o rayo; se lanzan un 40% más rápido y nunca fallan.',
   'rockyField.region.boulders.name': 'Cuenca de Rocas',
   'rockyField.region.boulders.desc':
-    'Los kin de roca fundida refuerzan las resistencias de fuego y tierra, pero detestan el frío o el agua; sus golpes lentos ignoran el robo de vida.',
+    'Los kin de roca fundida refuerzan las resistencias de fuego y tierra, pero detestan el frío o el agua; se protegen tras armadura y resistencias cuadruplicadas.',
   'rockyField.region.caves.name': 'Cuevas Ocultas',
   'rockyField.region.caves.desc':
-    'Merodeadores helados te empapan con daño de frío y agua, resisten ambos y sus emboscadas siempre precisas castigan a los incautos.',
+    'Merodeadores helados te empapan con daño de frío y agua, resisten ambos y reflejan un 1.5% de cada golpe.',
   'rockyField.region.cliffs.name': 'Acantilados Escarpados',
   'rockyField.region.cliffs.desc':
-    'Centinelas de la tempestad prosperan con defensas de aire y rayo, inmunes al robo de vida y evasivos, pero frágiles ante represalias de tierra o agua.',
+    'Centinelas de la tempestad prosperan con defensas de aire y rayo pero siguen frágiles ante tierra o agua; arrancan un 10% de tu vida por golpe y roban un 20%.',
   'rockyField.region.valley.name': 'Valle Silencioso',
   'rockyField.region.valley.desc':
-    'Guardianes erosionados imbuidos de magia de agua y tierra aportan armadura constante, pero flaquean frente a estallidos de fuego o rayo.',
+    'Guardianes erosionados imbuidos de magia de agua y tierra duplican su armadura y resistencias, nunca fallan y no se les puede robar vida.',
   'rockyField.region.summit.name': 'Cima Ventosa',
   'rockyField.region.summit.desc':
-    'Espíritus forjados por la tormenta descargan ráfagas de rayo tras escudos de aire arremolinado, con escasa defensa contra tierra o agua.',
+    'Espíritus forjados por la tormenta descargan ráfagas de rayo tras escudos de aire arremolinado; nunca fallan, atacan el doble de rápido, roban un 5% y reflejan 0.7% del daño.',
   'rockyField.unlockStage': 'Etapa de desbloqueo',
   'rockyField.availableRunes': 'Runas disponibles',
   'item.level': 'Nivel',

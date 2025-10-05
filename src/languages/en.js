@@ -941,22 +941,22 @@ export default {
     'Glacial currents reinforce cold and water resistance, draining strength from the remaining elements.',
   'rockyField.region.outskirts.name': 'Outskirts',
   'rockyField.region.outskirts.desc':
-    'Loose-earth beasts shrug off earth and water assaults yet crack under fire or lightning, wearing modest armor while their lunging strikes never miss.',
+    'Loose-earth beasts shrug off earth and water assaults yet crack under fire or lightning, lunging 40% faster with blows that never miss.',
   'rockyField.region.boulders.name': 'Boulder Basin',
   'rockyField.region.boulders.desc':
-    'Molten boulderkin fortify fire and earth resistance but hate cold or water, swinging slow bruisers that ignore life leech.',
+    'Molten boulderkin fortify fire and earth resistance but hate cold or water, crouching behind quadrupled armor and resistances.',
   'rockyField.region.caves.name': 'Hidden Caves',
   'rockyField.region.caves.desc':
-    'Frostbitten lurkers drench you in cold and water damage, resisting both while their always-accurate ambushes punish the unwary.',
+    'Frostbitten lurkers drench you in cold and water damage, resisting both while reflecting 1.5% of every strike.',
   'rockyField.region.cliffs.name': 'Sheer Cliffs',
   'rockyField.region.cliffs.desc':
-    'Tempest sentries thrive on air and lightning wards, leech-proof and evasive yet brittle against earth or water retaliation.',
+    'Tempest sentries thrive on air and lightning wards yet stay brittle to earth or water, ripping 10% of your life each hit and stealing 20% back.',
   'rockyField.region.valley.name': 'Silent Valley',
   'rockyField.region.valley.desc':
-    'Eroded guardians steeped in water and earth magic bring steady armor but falter versus fire or lightning bursts.',
+    'Eroded guardians steeped in water and earth magic double their armor and resistances, never miss, and cannot be leeched.',
   'rockyField.region.summit.name': 'Windy Summit',
   'rockyField.region.summit.desc':
-    'Storm-forged spirits unleash lightning barrages behind gusting air shields, with only scant defense against earth or water.',
+    'Storm-forged spirits unleash lightning barrages behind gusting air shields, never miss, strike twice as fast, leech 5%, and reflect 0.7% of damage.',
   'rockyField.unlockStage': 'Unlock Stage',
   'rockyField.availableRunes': 'Possible Runes',
   'item.level': 'Level',

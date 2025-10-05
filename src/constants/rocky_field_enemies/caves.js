@@ -28,7 +28,10 @@ export const ROCKY_FIELD_CAVES_ENEMIES = [
       lightningResistance: 0.65,
       waterResistance: 1.7,
     },
-    special: ['alwaysHit'],
+    special: ['thornsAura'],
+    specialData: {
+      thornsPercent: 1.5,
+    },
     runeDrop: ROCKY_FIELD_ALL_RUNES,
     tags: ['caves'],
   },
