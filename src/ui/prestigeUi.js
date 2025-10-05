@@ -3,6 +3,7 @@ import { createModal, closeModal } from './modal.js';
 import { formatStatName, showToast, formatNumber, updateResources } from './ui.js';
 import { getBossScalingFactor } from '../prestige.js';
 import { t, tp } from '../i18n.js';
+import { buildStatisticsDisplayEntries, formatSeparatedStat } from '../statistics.js';
 
 const html = String.raw;
 const BASE = import.meta.env.VITE_BASE_PATH;
@@ -243,23 +244,6 @@ export function formatPrestigeBonus(stat, value) {
   return `+${formatNumber(Math.round(value))}`;
 }
 
-function formatDuration(ms) {
-  const sec = Math.floor(ms / 1000);
-  const h = Math.floor(sec / 3600);
-  const m = Math.floor((sec % 3600) / 60);
-  const s = sec % 60;
-  return `${h}h ${m}m ${s}s`;
-}
-
-// Format a duration given in seconds into "Hh Mm Ss"
-function formatDurationSeconds(seconds) {
-  const sec = Math.floor(seconds || 0);
-  const h = Math.floor(sec / 3600);
-  const m = Math.floor((sec % 3600) / 60);
-  const s = sec % 60;
-  return `${h}h ${m}m ${s}s`;
-}
-
 function openPrestigeHistoryModal() {
   const history = prestige.history || [];
   const items = history
@@ -290,57 +274,15 @@ function openPrestigeHistoryModal() {
   });
 }
 
-function formatObjectStat(name, obj) {
-  if (name === 'highestStages') {
-    const parts = [];
-    for (let i = 1; i <= 12; i++) {
-      const span = `<span class="stage-value">T${i}: ${formatNumber(obj[i] || 0)}</span>`;
-      parts.push(span);
-      if (i < 12) {
-        parts.push('<span class="stage-separator breakable-separator">|||</span>');
-      }
-    }
-    return `<li>${formatStatName(name)}: ${parts.join('')}</li>`;
-  }
-  if (name === 'enemiesKilledByZone') {
-    const parts = [];
-    for (let i = 1; i <= 12; i++) {
-      const span = `<span class="stage-value">T${i}: ${formatNumber(obj[i] || 0)}</span>`;
-      parts.push(span);
-      if (i < 12) {
-        parts.push('<span class="stage-separator breakable-separator">|||</span>');
-      }
-    }
-    return `<li>${t('prestige.enemiesKilledByZone')}: ${parts.join('')}</li>`;
-  }
-  const entries = Object.entries(obj);
-  const parts = entries
-    .map(
-      ([key, val]) =>
-        `<span class="stage-value">${formatStatName(key)}: ${formatNumber(val || 0)}</span>`,
-    )
-    .join('<span class="stage-separator breakable-separator">|||</span>');
-  const label =
-    name === 'enemiesKilled'
-      ? t('prestige.enemiesKilledByRarity')
-      : name === 'itemsFound'
-        ? t('prestige.itemsFoundByRarity')
-        : formatStatName(name);
-  return `<li>${label}: ${parts}</li>`;
-}
-
 function openPrestigeDetailModal(entry) {
   if (!entry) return;
-  const stats = Object.entries(entry.statistics || {})
-    .filter(([k]) => k !== 'lastUpdate')
-    .map(([k, v]) => {
-      if (typeof v === 'object') {
-        return formatObjectStat(k, v);
+  const statsEntries = buildStatisticsDisplayEntries(entry.statistics || {});
+  const stats = statsEntries
+    .map((statEntry) => {
+      if (statEntry.type === 'segments') {
+        return `<li>${formatSeparatedStat(statEntry.label, statEntry.segments)}</li>`;
       }
-      if (k === 'totalTimePlayed' || k === 'totalTimeInFights') {
-        return `<li>${formatStatName(k)}: ${formatDurationSeconds(Math.round(v))}</li>`;
-      }
-      return `<li>${formatStatName(k)}: ${formatNumber(Math.round(v))}</li>`;
+      return `<li>${statEntry.text}</li>`;
     })
     .join('');
   const content = html`

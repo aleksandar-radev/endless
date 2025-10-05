@@ -13,22 +13,197 @@ function createRockyFieldRegionMap(source = {}) {
   return result;
 }
 
+export function formatSeparatedStat(labelText, segments) {
+  const separator = '<span class="stage-separator breakable-separator">|||</span>';
+  const formattedSegments = segments
+    .map((segment) => `<span class="stage-value">${segment}</span>`)
+    .join(separator);
+  return `${labelText} ${formattedSegments}`;
+}
+
 function renderSeparatedStat(element, labelText, segments) {
   if (!element) return;
-  element.textContent = `${labelText} `;
-  segments.forEach((segment, index) => {
-    const valueNode = document.createElement('span');
-    valueNode.className = 'stage-value';
-    valueNode.textContent = segment;
-    element.appendChild(valueNode);
+  element.innerHTML = formatSeparatedStat(labelText, segments);
+}
 
-    if (index < segments.length - 1) {
-      const separator = document.createElement('span');
-      separator.className = 'stage-separator breakable-separator';
-      separator.textContent = '|||';
-      element.appendChild(separator);
-    }
+export function buildStatisticsDisplayEntries(source = {}) {
+  const stats = source || {};
+
+  const clampSeconds = (value) => {
+    const numericValue = Number(value);
+    const seconds = Number.isFinite(numericValue) ? Math.floor(Math.max(0, numericValue)) : 0;
+    return seconds;
+  };
+
+  const totalTimePlayedSeconds = clampSeconds(stats.totalTimePlayed);
+  const totalTimePlayedHours = Math.floor(totalTimePlayedSeconds / 3600);
+  const totalTimePlayedMinutes = Math.floor((totalTimePlayedSeconds % 3600) / 60);
+
+  const totalTimeInFightsSeconds = clampSeconds(stats.totalTimeInFights);
+  const totalTimeInFightsHours = Math.floor(totalTimeInFightsSeconds / 3600);
+  const totalTimeInFightsMinutes = Math.floor((totalTimeInFightsSeconds % 3600) / 60);
+
+  const highestStages = stats.highestStages || {};
+  const enemiesKilledByZone = stats.enemiesKilledByZone || {};
+  const itemsFound = stats.itemsFound || {};
+  const enemiesKilled = stats.enemiesKilled || {};
+  const rockyFieldHighestStages = stats.rockyFieldHighestStages || {};
+  const rockyFieldEnemiesKilledByRegion = stats.rockyFieldEnemiesKilledByRegion || {};
+
+  const highestStageSegments = Array.from({ length: 12 }, (_, idx) => {
+    const tier = idx + 1;
+    const value = formatNumber(highestStages[tier] || 0);
+    return `${t('statistics.tierAbbr')}${tier}: ${value}`;
   });
+
+  const enemiesByZoneSegments = Array.from({ length: 12 }, (_, idx) => {
+    const tier = idx + 1;
+    const value = formatNumber(enemiesKilledByZone[tier] || 0);
+    return `${t('statistics.tierAbbr')}${tier}: ${value}`;
+  });
+
+  const rockyFieldHighestSegments = ROCKY_FIELD_REGIONS.map((region) => {
+    const value = formatNumber(rockyFieldHighestStages?.[region.id] || 0);
+    return `${region.name}: ${value}`;
+  });
+
+  const rockyFieldEnemiesSegments = ROCKY_FIELD_REGIONS.map((region) => {
+    const value = formatNumber(rockyFieldEnemiesKilledByRegion?.[region.id] || 0);
+    return `${region.name}: ${value}`;
+  });
+
+  const rarityOrderItems = ['normal', 'magic', 'rare', 'epic', 'legendary', 'mythic'];
+  const itemsByRaritySegments = rarityOrderItems.map((rarity) => {
+    const value = formatNumber(itemsFound?.[rarity] || 0);
+    return `${formatStatName(rarity)}: ${value}`;
+  });
+
+  const rarityOrderEnemies = ['normal', 'rare', 'epic', 'legendary', 'mythic'];
+  const enemiesByRaritySegments = rarityOrderEnemies.map((rarity) => {
+    const value = formatNumber(enemiesKilled?.[rarity] || 0);
+    return `${formatStatName(rarity)}: ${value}`;
+  });
+
+  return [
+    {
+      id: 'stat-total-time-played',
+      type: 'text',
+      text: tp('statistics.totalTimePlayed', {
+        hours: totalTimePlayedHours,
+        minutes: totalTimePlayedMinutes,
+      }),
+    },
+    {
+      id: 'stat-total-time-in-fights',
+      type: 'text',
+      text: tp('statistics.totalTimeInFights', {
+        hours: totalTimeInFightsHours,
+        minutes: totalTimeInFightsMinutes,
+        seconds: totalTimeInFightsSeconds % 60,
+      }),
+    },
+    {
+      id: 'stat-hero-level',
+      type: 'text',
+      text: tp('statistics.heroLevel', { value: formatNumber(stats.heroLevel || 0) }),
+    },
+    {
+      id: 'stat-total-gold',
+      type: 'text',
+      text: tp('statistics.totalGoldEarned', { value: formatNumber(stats.totalGoldEarned || 0) }),
+    },
+    {
+      id: 'stat-total-crystals',
+      type: 'text',
+      text: tp('statistics.totalCrystalsEarned', {
+        value: formatNumber(stats.totalCrystalsEarned || 0),
+      }),
+    },
+    {
+      id: 'stat-total-souls',
+      type: 'text',
+      text: tp('statistics.totalSoulsEarned', { value: formatNumber(stats.totalSoulsEarned || 0) }),
+    },
+    {
+      id: 'stat-total-items-found',
+      type: 'text',
+      text: tp('statistics.totalItemsFound', { value: formatNumber(stats.totalItemsFound || 0) }),
+    },
+    {
+      id: 'stat-items-found-by-rarity',
+      type: 'segments',
+      label: t('statistics.itemsFoundByRarity'),
+      segments: itemsByRaritySegments,
+    },
+    {
+      id: 'stat-total-materials-found',
+      type: 'text',
+      text: tp('statistics.totalMaterialsFound', {
+        value: formatNumber(stats.totalMaterialsFound || 0),
+      }),
+    },
+    {
+      id: 'stat-highest-stage',
+      type: 'segments',
+      label: t('statistics.highestStages'),
+      segments: highestStageSegments,
+    },
+    {
+      id: 'stat-rocky-field-highest-stages',
+      type: 'segments',
+      label: t('statistics.rockyFieldHighestStages'),
+      segments: rockyFieldHighestSegments,
+    },
+    {
+      id: 'stat-total-enemies-killed',
+      type: 'text',
+      text: tp('statistics.totalEnemiesKilled', {
+        value: formatNumber(stats.totalEnemiesKilled || 0),
+      }),
+    },
+    {
+      id: 'stat-enemies-killed-by-region',
+      type: 'segments',
+      label: t('statistics.enemiesKilledByZone'),
+      segments: enemiesByZoneSegments,
+    },
+    {
+      id: 'stat-rocky-field-enemies-killed-by-region',
+      type: 'segments',
+      label: t('statistics.rockyFieldEnemiesKilledByRegion'),
+      segments: rockyFieldEnemiesSegments,
+    },
+    {
+      id: 'stat-enemies-killed-by-rarity',
+      type: 'segments',
+      label: t('statistics.enemiesKilledByRarity'),
+      segments: enemiesByRaritySegments,
+    },
+    {
+      id: 'stat-highest-boss-level',
+      type: 'text',
+      text: tp('statistics.highestBossLevel', {
+        value: formatNumber(stats.highestBossLevel || 0),
+      }),
+    },
+    {
+      id: 'stat-bosses-killed',
+      type: 'text',
+      text: tp('statistics.bossesDefeated', { value: formatNumber(stats.bossesKilled || 0) }),
+    },
+    {
+      id: 'stat-deaths',
+      type: 'text',
+      text: tp('statistics.deaths', { value: formatNumber(stats.deaths || 0) }),
+    },
+    {
+      id: 'stat-highest-damage',
+      type: 'text',
+      text: tp('statistics.highestDamageDealt', {
+        value: formatNumber(Math.floor(stats.highestDamageDealt || 0)),
+      }),
+    },
+  ];
 }
 
 /**
@@ -184,143 +359,16 @@ export default class Statistics {
   }
 
   updateStatisticsUI() {
-    const totalTime = document.getElementById('stat-total-time-played');
-    if (totalTime) {
-      const seconds = Math.floor(this.totalTimePlayed);
-      const hours = Math.floor(seconds / 3600);
-      const minutes = Math.floor((seconds % 3600) / 60);
-      totalTime.textContent = tp('statistics.totalTimePlayed', { hours, minutes });
-    }
-
-    const timeInFights = document.getElementById('stat-total-time-in-fights');
-    if (timeInFights) {
-      const seconds = Math.floor(this.totalTimeInFights);
-      const hours = Math.floor(seconds / 3600);
-      const minutes = Math.floor((seconds % 3600) / 60);
-      timeInFights.textContent = tp('statistics.totalTimeInFights', {
-        hours,
-        minutes,
-        seconds: seconds % 60,
-      });
-    }
-
-    const heroLevelElem = document.getElementById('stat-hero-level');
-    if (heroLevelElem) {
-      heroLevelElem.textContent = tp('statistics.heroLevel', { value: formatNumber(this.heroLevel || 0) });
-    }
-
-    const totalGold = document.getElementById('stat-total-gold');
-    if (totalGold) {
-      totalGold.textContent = tp('statistics.totalGoldEarned', { value: formatNumber(this.totalGoldEarned || 0) });
-    }
-
-    const totalCrystals = document.getElementById('stat-total-crystals');
-    if (totalCrystals) {
-      totalCrystals.textContent = tp('statistics.totalCrystalsEarned', {
-        value: formatNumber(this.totalCrystalsEarned || 0),
-      });
-    }
-
-    const totalSouls = document.getElementById('stat-total-souls');
-    if (totalSouls) {
-      totalSouls.textContent = tp('statistics.totalSoulsEarned', { value: formatNumber(this.totalSoulsEarned || 0) });
-    }
-
-    const itemsFound = document.getElementById('stat-total-items-found');
-    if (itemsFound) {
-      itemsFound.textContent = tp('statistics.totalItemsFound', { value: formatNumber(this.totalItemsFound || 0) });
-    }
-
-    const itemsByRarity = document.getElementById('stat-items-found-by-rarity');
-    if (itemsByRarity) {
-      const segments = Object.entries(this.itemsFound).map(
-        ([rarity, count]) => `${formatStatName(rarity)}: ${formatNumber(count || 0)}`,
-      );
-      renderSeparatedStat(itemsByRarity, t('statistics.itemsFoundByRarity'), segments);
-    }
-
-    const materialsFound = document.getElementById('stat-total-materials-found');
-    if (materialsFound) {
-      materialsFound.textContent = tp('statistics.totalMaterialsFound', {
-        value: formatNumber(this.totalMaterialsFound || 0),
-      });
-    }
-
-    const highestStageElem = document.getElementById('stat-highest-stage');
-    if (highestStageElem) {
-      const segments = Array.from({ length: 12 }, (_, idx) => {
-        const tier = idx + 1;
-        return `${t('statistics.tierAbbr')}${tier}: ${formatNumber(this.highestStages[tier] || 0)}`;
-      });
-      renderSeparatedStat(highestStageElem, t('statistics.highestStages'), segments);
-    }
-
-    const rockyFieldHighestStagesElem = document.getElementById('stat-rocky-field-highest-stages');
-    if (rockyFieldHighestStagesElem) {
-      const segments = ROCKY_FIELD_REGIONS.map((region) => {
-        const stage = this.rockyFieldHighestStages?.[region.id] || 0;
-        return `${region.name}: ${formatNumber(stage)}`;
-      });
-      renderSeparatedStat(rockyFieldHighestStagesElem, t('statistics.rockyFieldHighestStages'), segments);
-    }
-
-    const totalEnemies = document.getElementById('stat-total-enemies-killed');
-    if (totalEnemies) {
-      totalEnemies.textContent = tp('statistics.totalEnemiesKilled', {
-        value: formatNumber(this.totalEnemiesKilled || 0),
-      });
-    }
-
-    const enemiesByRegionElem = document.getElementById('stat-enemies-killed-by-region');
-    if (enemiesByRegionElem) {
-      const segments = Array.from({ length: 12 }, (_, idx) => {
-        const tier = idx + 1;
-        return `${t('statistics.tierAbbr')}${tier}: ${formatNumber(this.enemiesKilledByZone[tier] || 0)}`;
-      });
-      renderSeparatedStat(enemiesByRegionElem, t('statistics.enemiesKilledByZone'), segments);
-    }
-
-    const rockyFieldEnemiesKilledElem = document.getElementById('stat-rocky-field-enemies-killed-by-region');
-    if (rockyFieldEnemiesKilledElem) {
-      const segments = ROCKY_FIELD_REGIONS.map((region) => {
-        const kills = this.rockyFieldEnemiesKilledByRegion?.[region.id] || 0;
-        return `${region.name}: ${formatNumber(kills)}`;
-      });
-      renderSeparatedStat(rockyFieldEnemiesKilledElem, t('statistics.rockyFieldEnemiesKilledByRegion'), segments);
-    }
-
-    const enemiesByRarity = document.getElementById('stat-enemies-killed-by-rarity');
-    if (enemiesByRarity) {
-      const segments = Object.entries(this.enemiesKilled).map(
-        ([rarity, count]) => `${formatStatName(rarity)}: ${formatNumber(count || 0)}`,
-      );
-      renderSeparatedStat(enemiesByRarity, t('statistics.enemiesKilledByRarity'), segments);
-    }
-
-    const highestBossLevelElem = document.getElementById('stat-highest-boss-level');
-    if (highestBossLevelElem) {
-      highestBossLevelElem.textContent = tp('statistics.highestBossLevel', {
-        value: formatNumber(this.highestBossLevel || 0),
-      });
-    }
-
-    const bossesKilledElem = document.getElementById('stat-bosses-killed');
-    if (bossesKilledElem) {
-      bossesKilledElem.textContent = tp('statistics.bossesDefeated', { value: formatNumber(this.bossesKilled) });
-    }
-
-    const deathsElem = document.getElementById('stat-deaths');
-    if (deathsElem) {
-      deathsElem.textContent = tp('statistics.deaths', { value: formatNumber(this.deaths || 0) });
-    }
-
-    const highestDamageElem = document.getElementById('stat-highest-damage');
-    if (highestDamageElem) {
-      highestDamageElem.textContent = tp('statistics.highestDamageDealt', {
-        value: formatNumber(Math.floor(this.highestDamageDealt) || 0),
-      });
-    }
-
+    const entries = buildStatisticsDisplayEntries(this);
+    entries.forEach((entry) => {
+      const element = document.getElementById(entry.id);
+      if (!element) return;
+      if (entry.type === 'segments') {
+        renderSeparatedStat(element, entry.label, entry.segments);
+      } else {
+        element.textContent = entry.text;
+      }
+    });
   }
 
   increment(category, subcategory = null, amount = 1) {
