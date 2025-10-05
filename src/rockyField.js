@@ -215,13 +215,13 @@ const BASE_SCALE_PER_REGION_AND_LEVEL = {
   },
 };
 
-const REGION_RUNE_MAX = {
-  outskirts: 5,
-  boulders: 10,
-  caves: 20,
-  cliffs: 40,
-  valley: 60,
-  summit: 80,
+const REGION_RUNE_RANGES = {
+  outskirts: { min: 10, max: 30 },
+  boulders: { min: 30, max: 50 },
+  caves: { min: 50, max: 70 },
+  cliffs: { min: 70, max: 90 },
+  valley: { min: 90, max: 120 },
+  summit: { min: 120, max: 150 },
 };
 
 // Conversion rolls use a low-percent band, a truncated normal mid-band, and a rare
@@ -238,9 +238,11 @@ const STAGE_WEIGHT = 0.6;
 const REGION_WEIGHT = 0.2;
 const SYNERGY_WEIGHT = 0.2;
 
-const REGION_RUNE_VALUES = Object.values(REGION_RUNE_MAX);
-const REGION_RUNE_MIN = Math.min(...REGION_RUNE_VALUES);
-const REGION_RUNE_RANGE = Math.max(1, Math.max(...REGION_RUNE_VALUES) - REGION_RUNE_MIN);
+const DEFAULT_REGION_RUNE_RANGE = { min: MIN_CONVERSION_PERCENT, max: MAX_CONVERSION_PERCENT };
+const REGION_MAX_VALUES = Object.values(REGION_RUNE_RANGES).map((range) => range.max);
+const REGION_DIFFICULTY_MIN = Math.min(...REGION_MAX_VALUES);
+const REGION_DIFFICULTY_RANGE = Math.max(1, Math.max(...REGION_MAX_VALUES) - REGION_DIFFICULTY_MIN);
+const LOW_BAND_FRACTION = (LOW_BAND_MAX - MIN_CONVERSION_PERCENT) / (MAX_CONVERSION_PERCENT - MIN_CONVERSION_PERCENT);
 
 function sampleTruncatedNormal(mean, std) {
   for (let attempt = 0; attempt < 6; attempt += 1) {
@@ -255,28 +257,46 @@ function sampleTruncatedNormal(mean, std) {
   return Math.min(1, Math.max(0, mean));
 }
 
-function rollLowBandPercent() {
-  const span = LOW_BAND_MAX - MIN_CONVERSION_PERCENT + 1;
+function getRegionRuneRange(regionId) {
+  return REGION_RUNE_RANGES[regionId] ?? DEFAULT_REGION_RUNE_RANGE;
+}
+
+function scaleNormalizedToRange(value, range) {
+  const clamped = Math.min(1, Math.max(0, value));
+  const span = Math.max(0, range.max - range.min);
+  if (span === 0) {
+    return range.min;
+  }
+  return Math.max(range.min, Math.min(range.max, range.min + Math.round(clamped * span)));
+}
+
+function rollLowBandPercent(regionRange) {
+  const span = Math.max(0, regionRange.max - regionRange.min);
+  const width = Math.max(1, Math.round(span * LOW_BAND_FRACTION));
+  const lowMax = Math.min(regionRange.max, regionRange.min + width);
+  const options = lowMax - regionRange.min + 1;
   const bias = 0.25;
   const roll = 1 - Math.pow(Math.random(), bias);
-  const raw = MIN_CONVERSION_PERCENT + Math.floor(roll * span);
-  return Math.max(MIN_CONVERSION_PERCENT, Math.min(LOW_BAND_MAX, raw));
+  const offset = Math.floor(roll * options);
+  return Math.min(lowMax, regionRange.min + offset);
 }
 
 export function getRockyFieldRunePercent(regionId, stage) {
   const stageNorm = Math.min(Math.max(stage || 0, 0), 5000) / 5000;
-  const regionBase = REGION_RUNE_MAX[regionId] ?? REGION_RUNE_MIN;
-  const regionNorm = (regionBase - REGION_RUNE_MIN) / REGION_RUNE_RANGE;
+  const regionRange = getRegionRuneRange(regionId);
+  const regionBase = regionRange.max;
+  const regionNorm = (regionBase - REGION_DIFFICULTY_MIN) / REGION_DIFFICULTY_RANGE;
   const synergy = stageNorm * regionNorm;
   const difficulty = Math.min(
     1,
     STAGE_WEIGHT * stageNorm + REGION_WEIGHT * regionNorm + SYNERGY_WEIGHT * synergy,
   );
 
-  if (Math.random() < HIGH_CONVERSION_CHANCE) {
-    const highRange = Math.max(1, MAX_CONVERSION_PERCENT - HIGH_CONVERSION_START + 1);
-    const highRoll = HIGH_CONVERSION_START + Math.floor(Math.random() * highRange);
-    return Math.max(HIGH_CONVERSION_START, Math.min(MAX_CONVERSION_PERCENT, highRoll));
+  const highStart = Math.max(regionRange.min, HIGH_CONVERSION_START);
+  if (regionRange.max >= highStart && Math.random() < HIGH_CONVERSION_CHANCE) {
+    const highRange = Math.max(1, regionRange.max - highStart + 1);
+    const highRoll = highStart + Math.floor(Math.random() * highRange);
+    return Math.max(highStart, Math.min(regionRange.max, highRoll));
   }
 
   const lowBandWeight = Math.max(
@@ -284,16 +304,18 @@ export function getRockyFieldRunePercent(regionId, stage) {
     Math.min(LOW_BAND_WEIGHT_MAX, LOW_BAND_WEIGHT_MAX - difficulty * 0.1),
   );
   if (Math.random() < lowBandWeight) {
-    return rollLowBandPercent();
+    return rollLowBandPercent(regionRange);
   }
 
   const meanNorm = 0.38 + difficulty * 0.32;
   const stdNorm = Math.max(0.18, 0.42 - difficulty * 0.18);
   const roll = sampleTruncatedNormal(meanNorm, stdNorm);
-  const cappedRange = HIGH_CONVERSION_START - MIN_CONVERSION_PERCENT + 1;
-  const scaled = MIN_CONVERSION_PERCENT + Math.floor(roll * cappedRange);
+  const scaled = scaleNormalizedToRange(roll, {
+    min: regionRange.min,
+    max: Math.min(regionRange.max, HIGH_CONVERSION_START - 1),
+  });
 
-  return Math.max(MIN_CONVERSION_PERCENT, Math.min(HIGH_CONVERSION_START - 1, scaled));
+  return Math.max(regionRange.min, Math.min(regionRange.max, scaled));
 }
 
 export class RockyFieldEnemy {
