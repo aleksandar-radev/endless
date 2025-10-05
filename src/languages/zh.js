@@ -43,10 +43,11 @@ export default {
   'training.elementalDistributionButton': '元素分配',
   'training.elementalDistributionTitle': '元素训练分配',
   'training.elementalDistributionDescription':
-    '调整来自训练和智力的元素伤害分配。滑块决定权重；当所有滑块相等或为 0 时，伤害会平均分配。',
+    '调整来自训练、智力以及基于资源的额外伤害的元素伤害分配。滑块决定权重；当所有滑块相等或为 0 时，伤害会平均分配。',
   'training.elementalDistributionReset': '重置为平均',
   'training.elementalDistributionTrainingTotal': '训练总元素伤害：{amount}',
   'training.elementalDistributionIntelligenceTotal': '智力总元素伤害：{amount}',
+  'training.elementalDistributionResourceTotal': '额外伤害总计（元素）：{amount}',
   'training.elementalDistributionShare': '份额：{percent}%',
   'training.elementalDistributionAmount': '≈ {amount}',
   'stats.offense': '进攻',

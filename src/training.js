@@ -772,6 +772,12 @@ export default class Training {
     return Number.isFinite(value) ? value : 0;
   }
 
+  _getElementalResourceExtraTotal() {
+    if (hero?.elementalDamageFromResources === undefined) return 0;
+    const value = Number(hero.elementalDamageFromResources);
+    return Number.isFinite(value) ? value : 0;
+  }
+
   _getElementalDistributionShares() {
     const shares = {};
     let total = 0;
@@ -851,6 +857,12 @@ export default class Training {
             >
               ${tp('training.elementalDistributionIntelligenceTotal', { amount: formatNumber(0) })}
             </p>
+            <p
+              class="elemental-extra-total"
+              data-i18n="training.elementalDistributionResourceTotal"
+            >
+              ${tp('training.elementalDistributionResourceTotal', { amount: formatNumber(0) })}
+            </p>
           </div>
           <div class="elemental-distribution-rows">
             ${rowsMarkup}
@@ -899,7 +911,8 @@ export default class Training {
     if (!modal || typeof modal.querySelector !== 'function') return;
     const trainingTotal = this._getElementalTrainingTotal();
     const intelligenceTotal = this._getElementalIntelligenceTotal();
-    const combinedTotal = trainingTotal + intelligenceTotal;
+    const resourceTotal = this._getElementalResourceExtraTotal();
+    const combinedTotal = trainingTotal + intelligenceTotal + resourceTotal;
     const shares = this._getElementalDistributionShares();
     const totalEl = modal.querySelector('.elemental-total');
     if (totalEl) {
@@ -911,6 +924,12 @@ export default class Training {
     if (intelligenceEl) {
       intelligenceEl.textContent = tp('training.elementalDistributionIntelligenceTotal', {
         amount: formatNumber(Number(intelligenceTotal.toFixed(2))),
+      });
+    }
+    const resourceEl = modal.querySelector('.elemental-extra-total');
+    if (resourceEl) {
+      resourceEl.textContent = tp('training.elementalDistributionResourceTotal', {
+        amount: formatNumber(Number(resourceTotal.toFixed(2))),
       });
     }
     modal.querySelectorAll('.elemental-distribution-row').forEach((row) => {

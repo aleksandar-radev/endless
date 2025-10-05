@@ -35,10 +35,11 @@ export default {
   'training.elementalDistributionButton': 'Elemental Allocation',
   'training.elementalDistributionTitle': 'Elemental Training Allocation',
   'training.elementalDistributionDescription':
-    'Adjust how elemental damage from training and intelligence is distributed. Sliders set weighting; if all sliders are equal or zero, damage is split evenly.',
+    'Adjust how elemental damage from training, intelligence, and resource-based extra damage is distributed. Sliders set weighting; if all sliders are equal or zero, damage is split evenly.',
   'training.elementalDistributionReset': 'Reset to Even',
   'training.elementalDistributionTrainingTotal': 'Total Training Damage: {amount}',
   'training.elementalDistributionIntelligenceTotal': 'Total Intelligence Damage: {amount}',
+  'training.elementalDistributionResourceTotal': 'Total Extra Damage (Elemental): {amount}',
   'training.elementalDistributionShare': '{percent}% share',
   'training.elementalDistributionAmount': '≈ {amount}',
   'stats.offense': 'Offense',

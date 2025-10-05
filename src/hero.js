@@ -37,6 +37,42 @@ const STAT_KEYS = Object.keys(STATS);
 
 export const STATS_ON_LEVEL_UP = 3;
 
+function getElementalShareMap() {
+  let shareMap = null;
+  if (typeof training?.getElementalDistributionShares === 'function') {
+    shareMap = training.getElementalDistributionShares();
+  }
+  if (!shareMap || typeof shareMap !== 'object') {
+    const equalShare = ELEMENT_IDS.length > 0 ? 1 / ELEMENT_IDS.length : 0;
+    shareMap = {};
+    ELEMENT_IDS.forEach((elementId) => {
+      shareMap[`${elementId}Damage`] = equalShare;
+    });
+  }
+  return shareMap;
+}
+
+function distributeElementalAmount(total, shareMap = null) {
+  const distribution = {};
+  if (total <= 0) return distribution;
+  const shares = shareMap && typeof shareMap === 'object' ? shareMap : getElementalShareMap();
+  let distributed = 0;
+  ELEMENT_IDS.forEach((elementId) => {
+    const statKey = `${elementId}Damage`;
+    const share = Number(shares[statKey]) || 0;
+    if (share <= 0) return;
+    const amount = total * share;
+    distributed += amount;
+    distribution[statKey] = amount;
+  });
+  const remainder = total - distributed;
+  if (remainder > 1e-6 && ELEMENT_IDS.length > 0) {
+    const fallbackKey = `${ELEMENT_IDS[0]}Damage`;
+    distribution[fallbackKey] = (distribution[fallbackKey] || 0) + remainder;
+  }
+  return distribution;
+}
+
 function xpRequiredForLevels(startLevel, levels) {
   if (levels <= 0) return 0;
 
@@ -137,6 +173,7 @@ export default class Hero {
     ELEMENT_IDS.forEach((id) => {
       this.baseDamages[id] = 0;
     });
+    this.elementalDamageFromResources = 0;
 
     this.damageConversionDeltas = {};
 
@@ -461,33 +498,14 @@ export default class Hero {
     this.attributeElementalDamageFromIntelligence = distributedIntelligenceElementalDamage;
 
     if (distributedIntelligenceElementalDamage > 0) {
-      let shareMap = null;
-      if (typeof training?.getElementalDistributionShares === 'function') {
-        shareMap = training.getElementalDistributionShares();
-      }
-      if (!shareMap || typeof shareMap !== 'object') {
-        const equalShare = ELEMENT_IDS.length > 0 ? 1 / ELEMENT_IDS.length : 0;
-        shareMap = {};
-        ELEMENT_IDS.forEach((elementId) => {
-          shareMap[`${elementId}Damage`] = equalShare;
-        });
-      }
-
-      let distributed = 0;
-      ELEMENT_IDS.forEach((elementId) => {
-        const statKey = `${elementId}Damage`;
-        const share = Number(shareMap[statKey]) || 0;
-        if (share <= 0) return;
-        const amount = distributedIntelligenceElementalDamage * share;
-        distributed += amount;
+      const shareMap = getElementalShareMap();
+      const distribution = distributeElementalAmount(
+        distributedIntelligenceElementalDamage,
+        shareMap,
+      );
+      Object.entries(distribution).forEach(([statKey, amount]) => {
         effects[statKey] = (effects[statKey] || 0) + amount;
       });
-
-      const remainder = distributedIntelligenceElementalDamage - distributed;
-      if (remainder > 1e-6 && ELEMENT_IDS.length > 0) {
-        const fallbackKey = `${ELEMENT_IDS[0]}Damage`;
-        effects[fallbackKey] = (effects[fallbackKey] || 0) + remainder;
-      }
 
       if (effects.elementalDamage !== undefined) {
         const remaining = effects.elementalDamage - intelligenceElementalDamage;
@@ -700,8 +718,8 @@ export default class Hero {
       pendingDamageAdditions = runes.applyPreDamageConversions(this.stats) || {};
     }
 
-    const computeResourceExtraDamage = (statsSnapshot) => {
-      if (!statsSnapshot) return { physical: 0, elemental: 0 };
+    const computeResourceExtraDamage = (statsSnapshot, shareMap) => {
+      if (!statsSnapshot) return { physical: 0, elemental: 0, perElement: {} };
 
       const life = statsSnapshot.life || 0;
       const armor = statsSnapshot.armor || 0;
@@ -718,25 +736,28 @@ export default class Hero {
         (statsSnapshot.extraDamageFromEvasionPercent || 0) * evasion +
         (statsSnapshot.extraDamageFromAttackRatingPercent || 0) * attackRating;
 
-      if (!totalExtra) return { physical: 0, elemental: 0 };
+      if (!totalExtra) return { physical: 0, elemental: 0, perElement: {} };
 
       const physical = totalExtra / 2;
-      const elemental = ELEMENT_IDS.length > 0 ? physical / ELEMENT_IDS.length : 0;
+      const totalElemental = totalExtra / 2;
+      const perElement = distributeElementalAmount(totalElemental, shareMap);
 
-      return { physical, elemental };
+      return { physical, elemental: totalElemental, perElement };
     };
 
     const baseFlatDamageBeforeResources = flatValues.damage;
     const baseFlatElementalBeforeResources = flatValues.elementalDamage;
 
-    const initialResourceExtraDamage = computeResourceExtraDamage(this.stats);
+    const elementalShareMap = getElementalShareMap();
+    const initialResourceExtraDamage = computeResourceExtraDamage(this.stats, elementalShareMap);
 
     if (initialResourceExtraDamage.physical) {
       flatValues.damage += initialResourceExtraDamage.physical;
     }
-    if (initialResourceExtraDamage.elemental) {
-      flatValues.elementalDamage += initialResourceExtraDamage.elemental;
-    }
+    Object.entries(initialResourceExtraDamage.perElement).forEach(([statKey, amount]) => {
+      if (!amount) return;
+      flatValues[statKey] = (flatValues[statKey] || 0) + amount;
+    });
 
     // Store flat-only values for later damage calculations
     this.baseDamages.physical = Math.floor(
@@ -800,7 +821,7 @@ export default class Hero {
       runes.applyPostDamageConversions(this.stats);
     }
 
-    const finalResourceExtraDamage = computeResourceExtraDamage(this.stats);
+    const finalResourceExtraDamage = computeResourceExtraDamage(this.stats, elementalShareMap);
     const basePhysicalFlatWithoutResources =
       baseFlatDamageBeforeResources +
       (ascensionBonuses.damage || 0) +
@@ -811,14 +832,11 @@ export default class Hero {
     this.baseDamages.physical = Math.floor(
       Math.max(0, basePhysicalFlatWithoutResources + finalResourceExtraDamage.physical),
     );
-    this.baseDamages.elemental = Math.floor(
-      Math.max(0, baseElementalFlatWithoutResources + finalResourceExtraDamage.elemental),
-    );
+    this.baseDamages.elemental = Math.floor(Math.max(0, baseElementalFlatWithoutResources));
+    this.elementalDamageFromResources = finalResourceExtraDamage.elemental;
 
     const deltaPhysicalFlat =
       finalResourceExtraDamage.physical - initialResourceExtraDamage.physical;
-    const deltaElementalFlat =
-      finalResourceExtraDamage.elemental - initialResourceExtraDamage.elemental;
 
     if (Math.abs(deltaPhysicalFlat) > 1e-9) {
       const physicalMultiplier =
@@ -828,19 +846,21 @@ export default class Hero {
       preConversionDamage.damage = (preConversionDamage.damage || 0) + deltaPhysicalFinal;
     }
 
-    if (Math.abs(deltaElementalFlat) > 1e-9) {
-      ELEMENT_IDS.forEach((id) => {
-        const multiplier =
-          1 +
-          (this.stats.totalDamagePercent || 0) +
-          (this.stats.elementalDamagePercent || 0) +
-          (this.stats[`${id}DamagePercent`] || 0);
-        const deltaFinal = deltaElementalFlat * multiplier;
-        const statKey = `${id}Damage`;
-        this.stats[statKey] = (this.stats[statKey] || 0) + deltaFinal;
-        preConversionDamage[statKey] = (preConversionDamage[statKey] || 0) + deltaFinal;
-      });
-    }
+    ELEMENT_IDS.forEach((id) => {
+      const statKey = `${id}Damage`;
+      const initialFlat = initialResourceExtraDamage.perElement[statKey] || 0;
+      const finalFlat = finalResourceExtraDamage.perElement[statKey] || 0;
+      const deltaElementalFlat = finalFlat - initialFlat;
+      if (Math.abs(deltaElementalFlat) <= 1e-9) return;
+      const multiplier =
+        1 +
+        (this.stats.totalDamagePercent || 0) +
+        (this.stats.elementalDamagePercent || 0) +
+        (this.stats[`${id}DamagePercent`] || 0);
+      const deltaFinal = deltaElementalFlat * multiplier;
+      this.stats[statKey] = (this.stats[statKey] || 0) + deltaFinal;
+      preConversionDamage[statKey] = (preConversionDamage[statKey] || 0) + deltaFinal;
+    });
 
     const updatedAllRes = this.stats.allResistance || 0;
     const updatedAllResPercent = this.stats.allResistancePercent || 0;

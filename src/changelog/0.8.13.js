@@ -11,6 +11,7 @@ export default function run() {
       <li>Rebalanced rocky field rune conversion ranges so each region steps up in roughly even full-number tiers, topping out at 150% in the summit.</li>
       <li>Gave every Rocky Field region a signature threat&mdash;from 40% faster always-hit lunges and quadruple bulwarks to reflective thorns, percent-life strikes with draining lifesteal, anti-leech sentinels, and relentless summit spirits&mdash;and updated their descriptions to spell out the danger.</li>
       <li>Refined Rocky Field statistics with per-region highest stages, accurate kill tracking, and a reorganized statistics tab layout.</li>
+      <li>Elemental allocation sliders now include the elemental portion of extra damage from life, mana, armor, and other resource-based bonuses so you can redistribute it freely.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

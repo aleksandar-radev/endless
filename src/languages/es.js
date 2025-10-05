@@ -35,10 +35,11 @@ export default {
   'training.elementalDistributionButton': 'Asignación elemental',
   'training.elementalDistributionTitle': 'Asignación de entrenamiento elemental',
   'training.elementalDistributionDescription':
-    'Ajusta cómo se distribuye el daño elemental de entrenamiento e inteligencia. Los deslizadores establecen el peso; si todos son iguales o cero, el daño se reparte por igual.',
+    'Ajusta cómo se distribuye el daño elemental del entrenamiento, la inteligencia y el daño extra basado en recursos. Los deslizadores establecen el peso; si todos son iguales o cero, el daño se reparte por igual.',
   'training.elementalDistributionReset': 'Restablecer reparto uniforme',
   'training.elementalDistributionTrainingTotal': 'Daño total de entrenamiento: {amount}',
   'training.elementalDistributionIntelligenceTotal': 'Daño total de inteligencia: {amount}',
+  'training.elementalDistributionResourceTotal': 'Daño extra total (elemental): {amount}',
   'training.elementalDistributionShare': 'Participación: {percent}%',
   'training.elementalDistributionAmount': '≈ {amount}',
   'stats.offense': 'Ofensiva',
