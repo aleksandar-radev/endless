@@ -220,6 +220,11 @@
   border-radius: 0.25rem;
 }
 
+.grid-cell.move-target {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
 .inventory-item {
   background: rgba(114, 113, 119, 0.5);
   border: 2px solid var(--accent);

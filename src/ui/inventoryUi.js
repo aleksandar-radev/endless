@@ -10,6 +10,7 @@ import { t, tp } from '../i18n.js';
 let selectedItemEl = null;
 let awaitingSlot = false;
 let currentFilter = '';
+let showingInventoryTargets = false;
 
 const html = String.raw;
 const BASE = import.meta.env.VITE_BASE_PATH;
@@ -815,6 +816,10 @@ export function setupGridCells() {
   cells.forEach((cell) => {
     cell.addEventListener('dragover', handleDragOver.bind(inventory));
     cell.addEventListener('drop', handleDrop.bind(inventory));
+    cell.addEventListener('click', (e) => {
+      if (e.target.closest('.inventory-item')) return;
+      handleCellTap(cell);
+    });
   });
 }
 
@@ -1210,6 +1215,11 @@ export function handleItemTap(itemEl) {
     itemEl.classList.add('selected');
     showEquipButton(true);
     showSalvageButton(true);
+    if (itemEl.closest('.grid-container')) {
+      highlightInventoryMoveTargets();
+    } else {
+      clearInventoryMoveHighlights();
+    }
   }
 }
 
@@ -1227,11 +1237,48 @@ export function handleSlotTap(slotEl) {
   }
 }
 
+function getCellIndex(cellEl) {
+  const parent = cellEl?.parentNode;
+  if (!parent) return -1;
+  return Array.from(parent.children).indexOf(cellEl);
+}
+
+function isSelectedItemInInventory() {
+  return Boolean(selectedItemEl?.closest('.grid-container'));
+}
+
+function handleCellTap(cellEl) {
+  if (!selectedItemEl || awaitingSlot) return;
+  if (!isSelectedItemInInventory()) return;
+  if (cellEl.querySelector('.inventory-item')) return;
+
+  const itemData = inventory.getItemById(selectedItemEl.dataset.itemId);
+  if (!itemData) {
+    clearMobileSelection();
+    return;
+  }
+
+  const targetIndex = getCellIndex(cellEl);
+  if (targetIndex === -1) return;
+
+  const currentIndex = inventory.inventoryItems.findIndex((i) => i && i.id === itemData.id);
+  if (currentIndex === targetIndex) {
+    clearMobileSelection();
+    return;
+  }
+
+  if (inventory.inventoryItems[targetIndex]) return;
+
+  inventory.moveItemToPosition(itemData, targetIndex);
+  clearMobileSelection();
+}
+
 function clearMobileSelection() {
   if (selectedItemEl) selectedItemEl.classList.remove('selected');
   selectedItemEl = null;
   awaitingSlot = false;
   clearSlotHighlights();
+  clearInventoryMoveHighlights();
   showEquipButton(false);
   showSalvageButton(false);
   closeItemContextMenu();
@@ -1247,6 +1294,25 @@ function highlightEligibleSlots(itemData) {
       slot.classList.add('ineligible-slot');
     }
   });
+}
+
+function highlightInventoryMoveTargets() {
+  showingInventoryTargets = true;
+  document.querySelectorAll('.grid-cell').forEach((cell) => {
+    if (!cell.querySelector('.inventory-item')) {
+      cell.classList.add('move-target');
+    } else {
+      cell.classList.remove('move-target');
+    }
+  });
+}
+
+function clearInventoryMoveHighlights() {
+  if (!showingInventoryTargets) return;
+  document.querySelectorAll('.grid-cell').forEach((cell) => {
+    cell.classList.remove('move-target');
+  });
+  showingInventoryTargets = false;
 }
 
 function openItemContextMenu(itemEl, x, y) {
