@@ -453,6 +453,7 @@ export async function defeatEnemy() {
     }
 
     statistics.increment('totalEnemiesKilled');
+    statistics.increment('rockyFieldEnemiesKilledByRegion', game.rockyFieldRegion);
     statistics.increment('enemiesKilled', enemy.rarity.toLowerCase());
     statistics.increment('enemiesKilledByZone', enemy.region.tier);
   } else if (initialFightMode === 'rockyField') {
@@ -491,6 +492,7 @@ export async function defeatEnemy() {
     }
 
     statistics.increment('totalEnemiesKilled');
+    statistics.increment('rockyFieldEnemiesKilledByRegion', game.rockyFieldRegion);
   }
   // END REGION HANDLING
 

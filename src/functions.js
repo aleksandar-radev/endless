@@ -453,6 +453,8 @@ export function createModifyUI() {
       if (game.rockyFieldStage < val) {
         game.rockyFieldStage = val;
       }
+      const currentHighest = statistics.get('rockyFieldHighestStages', game.rockyFieldRegion);
+      statistics.set('rockyFieldHighestStages', game.rockyFieldRegion, Math.max(val, currentHighest));
       updateStageUI();
       dataManager.saveGame();
       showToast(`Set highest runes stage to ${val}!`);

@@ -97,6 +97,9 @@ class Game {
 
     if (newStage !== this.rockyFieldStage) {
       this.rockyFieldStage = newStage;
+      if (this.rockyFieldStage > statistics.get('rockyFieldHighestStages', this.rockyFieldRegion)) {
+        statistics.set('rockyFieldHighestStages', this.rockyFieldRegion, this.rockyFieldStage);
+      }
       if (this.rockyFieldStage > this.rockyFieldHighestStage) {
         this.rockyFieldHighestStage = this.rockyFieldStage;
       }

@@ -524,7 +524,7 @@ export default class Training {
       let totalCost = this.calculateTotalCost(config.training, qty, level);
       let unaffordable = hero.gold < totalCost;
 
-    if (options?.quickBuy && !isMaxed) {
+      if (options?.quickBuy && !isMaxed) {
         const levelsLeft = maxLevel - level;
         if (this.quickQty === 'max') {
           const { qty: affordableQty } = this.getMaxPurchasable('max', level, maxLevel, config.training);

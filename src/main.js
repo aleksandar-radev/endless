@@ -62,6 +62,13 @@ window.setLanguage = setLanguage;
     game.rockyFieldHighestStage = game.rockyFieldStage;
   }
 
+  const rockyFieldRegion = game.rockyFieldRegion || 'outskirts';
+  const recordedRegionalHighest = statistics.get('rockyFieldHighestStages', rockyFieldRegion);
+  const regionStageFloor = Math.max(game.rockyFieldStage || 1, 1);
+  if (recordedRegionalHighest < regionStageFloor) {
+    statistics.set('rockyFieldHighestStages', rockyFieldRegion, regionStageFloor);
+  }
+
   if (game.fightMode === 'explore') {
     game.currentEnemy = new Enemy(game.stage);
   } else if (game.fightMode === 'arena') {

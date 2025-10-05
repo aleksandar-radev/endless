@@ -1,12 +1,18 @@
 .stats-display {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
   color: #fff;
   margin-bottom: 20px;
 }
 
-.stats-display div {
+.stats-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stat-entry {
   padding: 8px;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 4px;
