@@ -207,7 +207,7 @@ export default class Inventory {
       <p>${t(matDef.description || '')}</p>
       <p>${tp('inventory.youHaveAmount', { amount: `<b class="material-qty">${mat.qty}</b>` })}</p>
       ${titleExtra}
-      <div>
+      <div class="equipped-item-list">
         ${equipped.length === 0
     ? `<div style="color:#f55;">${emptyMsg}</div>`
     : equipped.map(itemRowHtml).join('')}
@@ -424,11 +424,11 @@ export default class Inventory {
         <div class="upgrade-item-row" data-slot="${slot}" data-idx="${idx}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
           <span style="font-size:1.5em;">${item.getIcon()}</span>
           <span><b>${item.type}</b> (Lvl ${item.level})</span>
-          <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
+          <span class="item-rarity" data-rarity="${item.rarity}" style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
           <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">${t('inventory.enchantAction')}</button>
         </div>`,
         buttonClass: 'upgrade-btn',
-        buttonHandler: (e) => {
+        buttonHandler: (e, dialog) => {
           const idx = parseInt(e.currentTarget.dataset.idx, 10);
           const { item } = equipped[idx];
           const rarities = Object.keys(ITEM_RARITY);
@@ -447,7 +447,42 @@ export default class Inventory {
             item: item.type,
             rarity: rarityName,
           });
-          this.handleMaterialUsed(this, mat, matDef, 1, 'material-enchant-dialog', toastMsg);
+          this.handleMaterialUsed(
+            this,
+            mat,
+            matDef,
+            1,
+            'material-enchant-dialog',
+            toastMsg,
+            false,
+          );
+
+          const qtyEl = dialog.querySelector('.material-qty');
+          if (qtyEl) qtyEl.textContent = mat.qty;
+
+          if (mat.qty <= 0) {
+            closeModal('material-enchant-dialog');
+            return;
+          }
+
+          const row = dialog.querySelector(`.upgrade-item-row[data-idx='${idx}']`);
+          if (row) {
+            const raritySpan = row.querySelector('.item-rarity');
+            if (raritySpan) {
+              raritySpan.textContent = item.rarity;
+              raritySpan.dataset.rarity = item.rarity;
+              raritySpan.style.color = ITEM_RARITY[item.rarity].color;
+            }
+
+            if (item.rarity === 'MYTHIC') {
+              row.remove();
+            }
+          }
+
+          const listContainer = dialog.querySelector('.equipped-item-list');
+          if (listContainer && !listContainer.querySelector('.upgrade-item-row')) {
+            listContainer.innerHTML = `<div style="color:#f55;">${t('inventory.noEligibleEquippedItems')}</div>`;
+          }
         },
         emptyMsg: t('inventory.noEligibleEquippedItems'),
         titleExtra: `<div style="margin-bottom:10px;">${t('inventory.selectItemToEnchant')}</div>`,

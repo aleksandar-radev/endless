@@ -7,6 +7,7 @@ export default function run() {
     <span style="color:#FF8A00;">Improvements</span>
     <ul>
       <li>Allow moving of items on mobile by clicking to select an item and clicking on slot you want to move it to.</li>
+      <li>Enchantment scroll dialog now stays open so multiple items can be enchanted back-to-back.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
