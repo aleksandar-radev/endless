@@ -43,6 +43,17 @@ const sortModeFullText = {
   'level-tier-rarity': t('inventory.levelTierRarityFull'),
 };
 
+function getInventoryTab() {
+  if (typeof document === 'undefined') return null;
+  return document.getElementById('inventory');
+}
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('inventory:refresh', () => {
+    updateInventoryGrid();
+  });
+}
+
 function getPreferredSlotForItem(itemData) {
   if (!itemData) return null;
   const eligibleSlots = Object.keys(SLOT_REQUIREMENTS).filter((s) =>
@@ -129,7 +140,7 @@ export function initializeInventoryUI(inv) {
   const sortBtn = document.getElementById('sort-inventory');
   const itemsTab = document.getElementById('items-tab');
   const materialsTab = document.getElementById('materials-tab');
-  const materialsGrid = document.querySelector('.materials-grid');
+  const materialsGrid = inventoryTab.querySelector('.materials-grid');
   const openSalvageModalBtn = document.getElementById('open-salvage-modal');
   const filterInput = document.getElementById('inventory-filter');
   function updateSortBtnText() {}
@@ -142,21 +153,21 @@ export function initializeInventoryUI(inv) {
       gridContainer.style.display = '';
       materialsGrid.style.display = 'none';
       updateSortBtnText();
-      applyFilter(inv);
+      applyFilter(inv, inventoryTab);
     });
     materialsTab.addEventListener('click', () => {
       materialsTab.classList.add('active');
       itemsTab.classList.remove('active');
       gridContainer.style.display = 'none';
       materialsGrid.style.display = '';
-      updateMaterialsGrid(inv);
+      updateMaterialsGrid(inv, inventoryTab);
       updateSortBtnText();
     });
   }
 
   filterInput.addEventListener('input', () => {
     currentFilter = filterInput.value.toLowerCase();
-    applyFilter(inv);
+    applyFilter(inv, inventoryTab);
   });
 
   // Sort button sorts only the visible tab
@@ -238,11 +249,14 @@ export function initializeInventoryUI(inv) {
 
 // Salvage Modal Implementation
 export function showSalvageModal(inv) {
+  const inventoryTab = getInventoryTab();
+  if (!inventoryTab) return;
+
   // Always switch to Items tab before showing the modal
   const itemsTab = document.getElementById('items-tab');
   const materialsTab = document.getElementById('materials-tab');
-  const gridContainer = document.querySelector('.grid-container');
-  const materialsGrid = document.querySelector('.materials-grid');
+  const gridContainer = inventoryTab.querySelector('.grid-container');
+  const materialsGrid = inventoryTab.querySelector('.materials-grid');
   if (itemsTab && materialsTab && gridContainer && materialsGrid) {
     itemsTab.classList.add('active');
     materialsTab.classList.remove('active');
@@ -252,10 +266,6 @@ export function showSalvageModal(inv) {
 
   // Clear any previous selection and hide salvage button
   clearMobileSelection();
-
-  // Get the inventory tab DOM node
-  const inventoryTab = document.getElementById('inventory');
-  if (!inventoryTab) return;
 
   // Create a placeholder to restore the tab later
   const placeholder = document.createElement('div');
@@ -546,53 +556,56 @@ export function updateInventoryGrid(inv) {
   if (!inv) {
     inv = inventory;
   }
+  const inventoryTab = getInventoryTab();
+  if (!inventoryTab) return;
+
+  const gridContainer = inventoryTab.querySelector('.grid-container');
+  if (!gridContainer) return;
+
   cleanupTooltips();
 
-  const cells = document.querySelectorAll('.grid-cell');
-  cells.forEach((cell) => (cell.innerHTML = ''));
+  const cells = Array.from(gridContainer.querySelectorAll('.grid-cell'));
+  cells.forEach((cell) => {
+    cell.innerHTML = '';
+    cell.classList.remove('drag-over');
+  });
 
-  const items = document.querySelectorAll('.inventory-item');
-  items.forEach((item) => item.remove());
-
-  document.querySelectorAll('.equipment-slot').forEach((slot) => {
+  inventoryTab.querySelectorAll('.equipment-slot').forEach((slot) => {
     slot.classList.remove('has-item');
+    const existingItem = slot.querySelector('.inventory-item');
+    if (existingItem) existingItem.remove();
     const ghost = slot.querySelector('.two-handed-ghost');
     if (ghost) ghost.remove();
   });
 
   inv.inventoryItems.forEach((item, index) => {
-    const cell = document.querySelector(`.grid-cell:nth-child(${index + 1})`);
-    const html = String.raw;
-    if (cell && item) {
-      cell.innerHTML = html`
-        <div class="inventory-item rarity-${item.rarity.toLowerCase()}" draggable="true" data-item-id="${item.id}">
-          <div class="item-icon">${item.getIcon()}</div>
-        </div>
-      `;
-    }
+    if (!item) return;
+    const cell = cells[index];
+    if (!cell) return;
+    const wrapper = document.createElement('div');
+    wrapper.className = `inventory-item rarity-${item.rarity.toLowerCase()}`;
+    wrapper.draggable = true;
+    wrapper.dataset.itemId = item.id;
+    wrapper.innerHTML = `<div class="item-icon">${item.getIcon()}</div>`;
+    cell.innerHTML = '';
+    cell.appendChild(wrapper);
   });
 
   Object.entries(inv.equippedItems).forEach(([slot, item]) => {
-    const slotElement = document.querySelector(`[data-slot="${slot}"]`);
-    if (slotElement && item) {
-      const newItem = document.createElement('div');
-      newItem.className = 'inventory-item';
-      newItem.draggable = true;
-      newItem.dataset.itemId = item.id;
-      newItem.style.borderColor = ITEM_RARITY[item.rarity].color;
-      newItem.innerHTML = `<div class="item-icon">${item.getIcon()}</div>`;
-
-      const existingItem = slotElement.querySelector('.inventory-item');
-      if (existingItem) {
-        slotElement.replaceChild(newItem, existingItem);
-      } else {
-        slotElement.appendChild(newItem);
-      }
-      slotElement.classList.add('has-item');
-    }
+    if (!item) return;
+    const slotElement = inventoryTab.querySelector(`[data-slot="${slot}"]`);
+    if (!slotElement) return;
+    const newItem = document.createElement('div');
+    newItem.className = 'inventory-item';
+    newItem.draggable = true;
+    newItem.dataset.itemId = item.id;
+    newItem.style.borderColor = ITEM_RARITY[item.rarity].color;
+    newItem.innerHTML = `<div class="item-icon">${item.getIcon()}</div>`;
+    slotElement.appendChild(newItem);
+    slotElement.classList.add('has-item');
   });
 
-  const offhandSlot = document.querySelector('[data-slot="offhand"]');
+  const offhandSlot = inventoryTab.querySelector('[data-slot="offhand"]');
   const weaponItem = inv.equippedItems.weapon;
   if (
     offhandSlot &&
@@ -610,15 +623,15 @@ export function updateInventoryGrid(inv) {
     offhandSlot.classList.add('has-item');
   }
 
-  setupDragAndDrop();
-  applyFilter(inv);
-  updateMaterialsGrid(inv);
+  setupDragAndDrop(inventoryTab);
+  applyFilter(inv, inventoryTab);
+  updateMaterialsGrid(inv, inventoryTab);
 }
 
-function applyFilter(inv) {
+function applyFilter(inv, root = getInventoryTab()) {
+  if (!inv || !root) return;
   const filter = currentFilter.trim();
-  const items = document.querySelectorAll('.grid-container .inventory-item');
-  if (!inv) return;
+  const items = root.querySelectorAll('.grid-container .inventory-item');
 
   // Parse filter into tokens (split by space, ignore empty)
   const tokens = filter
@@ -685,17 +698,22 @@ export function cleanupTooltips() {
   tooltips.forEach((tooltip) => tooltip.remove());
 }
 
-export function setupDragAndDrop() {
+export function setupDragAndDrop(root = getInventoryTab()) {
+  if (!root) return;
+
   // Remove existing listeners first
-  removeExistingListeners();
+  removeExistingListeners(root);
 
   // Setup new listeners
-  setupGridCells();
-  setupEquipmentSlots();
-  setupItemDragAndTooltip();
+  setupGridCells(root);
+  setupEquipmentSlots(root);
+  setupItemDragAndTooltip(root);
 
-  // Add trash drop logic
-  const trash = document.querySelector('.inventory-trash');
+  const modalContainer = root.closest('.inventory-salvage-modal-content');
+  const trash =
+    root.querySelector('.inventory-trash') ||
+    modalContainer?.querySelector('.inventory-trash') ||
+    document.querySelector('.inventory-salvage-modal-content .inventory-trash');
   if (trash) {
     trash.addEventListener('dragover', (e) => {
       e.preventDefault();
@@ -766,7 +784,7 @@ export function setupDragAndDrop() {
   }
 
   // Add drop logic for material cells
-  const materialCells = document.querySelectorAll('.materials-cell');
+  const materialCells = root.querySelectorAll('.materials-cell');
   materialCells.forEach((cell, targetIdx) => {
     cell.addEventListener('dragover', (e) => {
       // Only allow material drag
@@ -795,24 +813,27 @@ export function setupDragAndDrop() {
   });
 }
 
-export function removeExistingListeners() {
+export function removeExistingListeners(root = getInventoryTab()) {
+  if (!root) return;
+
   // Remove grid cell listeners
-  const cells = document.querySelectorAll('.grid-cell');
+  const cells = root.querySelectorAll('.grid-cell');
   cells.forEach((cell) => {
     const newCell = cell.cloneNode(true);
     cell.parentNode.replaceChild(newCell, cell);
   });
 
   // Remove equipment slot listeners
-  const slots = document.querySelectorAll('.equipment-slot');
+  const slots = root.querySelectorAll('.equipment-slot');
   slots.forEach((slot) => {
     const newSlot = slot.cloneNode(true);
     slot.parentNode.replaceChild(newSlot, slot);
   });
 }
 
-export function setupGridCells() {
-  const cells = document.querySelectorAll('.grid-cell');
+export function setupGridCells(root = getInventoryTab()) {
+  if (!root) return;
+  const cells = root.querySelectorAll('.grid-cell');
   cells.forEach((cell) => {
     cell.addEventListener('dragover', handleDragOver.bind(inventory));
     cell.addEventListener('drop', handleDrop.bind(inventory));
@@ -866,8 +887,9 @@ export function handleDrop(e) {
   updateInventoryGrid();
 }
 
-export function setupEquipmentSlots() {
-  const slots = document.querySelectorAll('.equipment-slot');
+export function setupEquipmentSlots(root = getInventoryTab()) {
+  if (!root) return;
+  const slots = root.querySelectorAll('.equipment-slot');
   slots.forEach((slot) => {
     slot.addEventListener('dragover', handleDragOver.bind(inventory));
     slot.addEventListener('drop', handleDrop.bind(inventory));
@@ -877,8 +899,9 @@ export function setupEquipmentSlots() {
   });
 }
 
-export function setupItemDragAndTooltip() {
-  const items = document.querySelectorAll('.inventory-item');
+export function setupItemDragAndTooltip(root = getInventoryTab()) {
+  if (!root) return;
+  const items = root.querySelectorAll('.inventory-item');
 
   items.forEach((item) => {
     // Add double-click handler
@@ -923,7 +946,7 @@ export function setupItemDragAndTooltip() {
 
     item.addEventListener('dragend', (e) => {
       e.target.classList.remove('dragging');
-      document.querySelectorAll('.equipment-slot').forEach((slot) => {
+      root.querySelectorAll('.equipment-slot').forEach((slot) => {
         slot.classList.remove('valid-target', 'invalid-target');
       });
     });
@@ -1032,11 +1055,11 @@ export function sortMaterials() {
   dataManager.saveGame();
 }
 
-export function updateMaterialsGrid(inv) {
+export function updateMaterialsGrid(inv, root = getInventoryTab()) {
   if (!inv) {
     inv = inventory;
   }
-  const materialsContainer = document.querySelector('.materials-container');
+  const materialsContainer = root?.querySelector('.materials-container');
   if (!materialsContainer) return;
   materialsContainer.innerHTML = '';
   for (let i = 0; i < MATERIALS_SLOTS; i++) {
@@ -1182,8 +1205,9 @@ export function sortInventory(mode = 'type-rarity-level') {
   dataManager.saveGame();
 }
 
-function clearSlotHighlights() {
-  document.querySelectorAll('.equipment-slot').forEach((slot) => {
+function clearSlotHighlights(root = getInventoryTab()) {
+  if (!root) return;
+  root.querySelectorAll('.equipment-slot').forEach((slot) => {
     slot.classList.remove('eligible-slot', 'ineligible-slot');
   });
 }
@@ -1286,8 +1310,10 @@ function clearMobileSelection() {
 }
 
 function highlightEligibleSlots(itemData) {
-  clearSlotHighlights();
-  document.querySelectorAll('.equipment-slot').forEach((slot) => {
+  const root = getInventoryTab();
+  if (!root) return;
+  clearSlotHighlights(root);
+  root.querySelectorAll('.equipment-slot').forEach((slot) => {
     if (inventory.canEquipInSlot(itemData, slot.dataset.slot)) {
       slot.classList.add('eligible-slot');
     } else {

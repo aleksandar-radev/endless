@@ -9,9 +9,9 @@ export default function run() {
       <li>Allow moving of items on mobile by clicking to select an item and clicking on slot you want to move it to.</li>
     </ul>
 
-    <!-- <span style="color:#FF8A00;">Bug Fixes</span>
-    <ul>
-      <li>Skill tree reset now refunds all skill points earned from ascension bonuses and runes.</li>
-    </ul> -->
+    <span style="color:#FF8A00;">Bug Fixes</span>
+    <ul>      
+      <li>Stopped inventory items from disappearing in split view by scoping inventory refreshes to the active panel.</li>
+    </ul>
   `;
 }

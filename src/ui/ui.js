@@ -240,6 +240,9 @@ export function switchTab(tabName) {
   if (tabName === 'inventory') {
     // Clear new items flag when visiting inventory.
     inventory?.clearNewItemsFlag();
+    if (typeof document !== 'undefined') {
+      document.dispatchEvent(new Event('inventory:refresh'));
+    }
   }
   if (tabName === 'runes') {
     renderRunesUI();
