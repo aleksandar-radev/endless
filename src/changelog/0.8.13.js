@@ -15,8 +15,9 @@ export default function run() {
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
-    <ul>      
+    <ul>
       <li>Stopped inventory items from disappearing in split view by scoping inventory refreshes to the active panel.</li>
+      <li>Made building upgrade dialogs always display the actual resource cost even when you cannot afford the purchase.</li>
     </ul>
   `;
 }

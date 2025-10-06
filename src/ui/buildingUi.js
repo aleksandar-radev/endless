@@ -231,8 +231,11 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
     const upgradeAmount = getUpgradeAmount();
     const sellAmount = getSellAmount();
     const maxInteractionAmount = Math.max(1, getMaxInteractionAmount());
-    const totalCost = building.getUpgradeCost(upgradeAmount);
-    const totalBonus = getTotalBonus(upgradeAmount);
+    const maxLevelGain = Math.min(Math.max(building.maxLevel - building.level, 0), BUILDING_MAX_QTY);
+    const requestedAmount = Math.min(rawAmount, maxLevelGain);
+    const previewAmount = upgradeAmount > 0 ? upgradeAmount : requestedAmount;
+    const totalCost = building.getUpgradeCost(previewAmount);
+    const totalBonus = getTotalBonus(previewAmount);
     const refundAmount = building.getRefundForAmount(sellAmount);
     const upgradeControls = options.useNumericInputs
       ? `<input type="number" class="upgrade-amt-input input-number" min="1" max="${BUILDING_MAX_QTY}" value="${rawAmount}" />
@@ -258,10 +261,10 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
         <div class="building-info-modal-body">
           <div>${tp('buildings.levelInfo', { level: formatNumber(building.level), max: formatNumber(building.maxLevel) })}</div>
           <div>${tp('buildings.currentBonus', { bonus: building.formatEffect() })}</div>
-          <div>${tp('buildings.upgradeAmountLine', { amount: formatNumber(upgradeAmount) })}</div>
+          <div>${tp('buildings.upgradeAmountLine', { amount: formatNumber(previewAmount) })}</div>
           <div>${tp('buildings.totalUpgradeCost', { cost: Building.formatCost(totalCost) })}</div>
           <div>
-            ${tp('buildings.bonusAfterUpgrade', { bonus: building.formatEffect(building.level + upgradeAmount), extra: formatNumber(totalBonus), type: t(building.effect.displayName || building.effect.type) })}
+            ${tp('buildings.bonusAfterUpgrade', { bonus: building.formatEffect(building.level + previewAmount), extra: formatNumber(totalBonus), type: t(building.effect.displayName || building.effect.type) })}
           </div>
         </div>
         <div class="building-info-modal-upgrade">
