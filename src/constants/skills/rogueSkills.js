@@ -39,7 +39,6 @@ export const ROGUE_SKILLS = {
     id: 'poisonAffinity',
     name: () => t('Poison Affinity'),
     type: () => 'passive',
-    manaCost: (level) => 1 + level * 0.125,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'poison-affinity',
     description: () => t('skill.poisonAffinity'),
