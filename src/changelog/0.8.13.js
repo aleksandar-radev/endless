@@ -19,6 +19,8 @@ export default function run() {
     <ul>
       <li>Stopped inventory items from disappearing in split view by scoping inventory refreshes to the active panel.</li>
       <li>Made building upgrade dialogs always display the actual resource cost even when you cannot afford the purchase.</li>
+      <li>Ensured damage conversions respect each skill's allowed damage types so off-element bonuses no longer bleed into abil
+ity breakdowns.</li>
     </ul>
   `;
 }

@@ -978,10 +978,17 @@ export default class Hero {
         : 0;
     });
 
+    const isDamageTypeAllowed = (type) => {
+      if (type === 'physical') {
+        return includePhysical;
+      }
+      return allowedElements.has(type);
+    };
+
     // Apply post-stat conversion adjustments so combat output matches the UI totals.
     if (this.damageConversionDeltas && Object.keys(this.damageConversionDeltas).length > 0) {
       Object.entries(this.damageConversionDeltas).forEach(([type, delta]) => {
-        if (!delta) return;
+        if (!delta || !isDamageTypeAllowed(type)) return;
         const current = finalPools[type] || 0;
         finalPools[type] = Math.max(0, current + delta);
       });
