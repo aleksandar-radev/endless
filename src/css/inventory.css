@@ -229,6 +229,9 @@
   background: rgba(114, 113, 119, 0.5);
   border: 2px solid var(--accent);
   border-radius: 0.25rem;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
   font-size: 0.8em;
   /* Smaller font for items */
   display: flex;
@@ -237,6 +240,11 @@
   justify-content: center;
   width: 100%;
   height: 100%;
+}
+
+.inventory-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 
 .two-handed-ghost {

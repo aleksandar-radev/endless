@@ -582,10 +582,17 @@ export function updateInventoryGrid(inv) {
     if (!item) return;
     const cell = cells[index];
     if (!cell) return;
-    const wrapper = document.createElement('div');
+    const wrapper = document.createElement('button');
+    wrapper.type = 'button';
     wrapper.className = `inventory-item rarity-${item.rarity.toLowerCase()}`;
     wrapper.draggable = true;
     wrapper.dataset.itemId = item.id;
+    const displayName =
+      typeof item.getDisplayName === 'function' ? item.getDisplayName() : item.name || '';
+    if (displayName) {
+      wrapper.setAttribute('aria-label', displayName);
+      wrapper.title = displayName;
+    }
     wrapper.innerHTML = `<div class="item-icon">${item.getIcon()}</div>`;
     cell.innerHTML = '';
     cell.appendChild(wrapper);
@@ -595,10 +602,17 @@ export function updateInventoryGrid(inv) {
     if (!item) return;
     const slotElement = inventoryTab.querySelector(`[data-slot="${slot}"]`);
     if (!slotElement) return;
-    const newItem = document.createElement('div');
+    const newItem = document.createElement('button');
+    newItem.type = 'button';
     newItem.className = 'inventory-item';
     newItem.draggable = true;
     newItem.dataset.itemId = item.id;
+    const equippedDisplayName =
+      typeof item.getDisplayName === 'function' ? item.getDisplayName() : item.name || '';
+    if (equippedDisplayName) {
+      newItem.setAttribute('aria-label', equippedDisplayName);
+      newItem.title = equippedDisplayName;
+    }
     newItem.style.borderColor = ITEM_RARITY[item.rarity].color;
     newItem.innerHTML = `<div class="item-icon">${item.getIcon()}</div>`;
     slotElement.appendChild(newItem);
