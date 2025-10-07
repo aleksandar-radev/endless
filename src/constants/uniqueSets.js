@@ -5,6 +5,8 @@ import { OFFENSE_STATS } from './stats/offenseStats.js';
 
 const STATS = { ...OFFENSE_STATS, ...DEFENSE_STATS, ...MISC_STATS };
 
+export const UNIQUE_PERCENT_CAP_MULTIPLIER = 2;
+
 export const UNIQUE_ITEMS = [
   {
     id: 'stormlash',

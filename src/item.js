@@ -10,6 +10,7 @@ import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
 import { MISC_STATS } from './constants/stats/miscStats.js';
 import { ATTRIBUTES } from './constants/stats/attributes.js';
+import { UNIQUE_PERCENT_CAP_MULTIPLIER } from './constants/uniqueSets.js';
 import { options, ascension } from './globals.js';
 import { formatStatName, formatNumber } from './ui/ui.js';
 import { t } from './i18n.js';
@@ -124,7 +125,9 @@ export default class Item {
     }
     const ascBonuses = ascension?.getBonuses?.() || {};
     const percentCapMultiplier = 1 + (ascBonuses.itemPercentCapPercent || 0);
-    const percentCap = this.tier * 100 * percentCapMultiplier * handedMultiplier;
+    const uniquePercentCapMultiplier = this.metaData?.unique ? UNIQUE_PERCENT_CAP_MULTIPLIER : 1;
+    const percentCap =
+      this.tier * 100 * percentCapMultiplier * handedMultiplier * uniquePercentCapMultiplier;
     const limit = stat.toLowerCase().includes('percent')
       ? Math.min(baseLimit, percentCap)
       : baseLimit;
@@ -175,7 +178,9 @@ export default class Item {
     }
     const ascBonuses = ascension?.getBonuses?.() || {};
     const percentCapMultiplier = 1 + (ascBonuses.itemPercentCapPercent || 0);
-    const percentCap = this.tier * 100 * percentCapMultiplier * handedMultiplier;
+    const uniquePercentCapMultiplier = this.metaData?.unique ? UNIQUE_PERCENT_CAP_MULTIPLIER : 1;
+    const percentCap =
+      this.tier * 100 * percentCapMultiplier * handedMultiplier * uniquePercentCapMultiplier;
     const limit = stat.toLowerCase().includes('percent')
       ? Math.min(baseLimit, percentCap)
       : baseLimit;
