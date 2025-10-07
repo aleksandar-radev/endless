@@ -568,6 +568,16 @@
   border-left: 4px solid var(--item-mythic);
 }
 
+.salvage-options div[data-rarity='UNIQUE'] {
+  color: var(--item-unique);
+  border-left: 4px solid var(--item-unique);
+}
+
+.salvage-options div[data-rarity='SET'] {
+  color: var(--item-set);
+  border-left: 4px solid var(--item-set);
+}
+
 .grid-cell.persistent {
   border: 1px solid var(--persistent-storage-slot);
   background: rgba(255, 255, 255, 0.05);
@@ -934,6 +944,16 @@
 .salvage-btn-modal[data-rarity='MYTHIC'] {
   color: var(--item-mythic);
   box-shadow: 0 4px var(--item-mythic);
+}
+
+.salvage-btn-modal[data-rarity='UNIQUE'] {
+  color: var(--item-unique);
+  box-shadow: 0 4px var(--item-unique);
+}
+
+.salvage-btn-modal[data-rarity='SET'] {
+  color: var(--item-set);
+  box-shadow: 0 4px var(--item-set);
 }
 
 .salvage-btn-modal:hover,
