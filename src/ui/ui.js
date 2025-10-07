@@ -40,7 +40,6 @@ let autoClaiming = false;
 
 const html = String.raw;
 const BASE = import.meta.env.VITE_BASE_PATH;
-let offlineEligibilityStart = null;
 
 // Format numbers with thousands separators or shorthand notation.
 // When options.shortNumbers is enabled, large numbers are abbreviated
@@ -172,8 +171,16 @@ export function initializeUI() {
       indicator.style.marginLeft = 'auto';
       tabs.appendChild(indicator);
 
+      const ensureBaseline = () => {
+        if (statistics.offlineEligibilityStart == null) {
+          statistics.offlineEligibilityStart = statistics.totalTimeInFights || 0;
+        }
+      };
+
       const updateIndicator = () => {
-        const elapsed = (statistics.totalTimeInFights || 0) - (offlineEligibilityStart || 0);
+        ensureBaseline();
+        const baseline = statistics.offlineEligibilityStart || 0;
+        const elapsed = (statistics.totalTimeInFights || 0) - baseline;
         const eligible = elapsed >= 60;
         const iconEl = indicator.querySelector('.icon');
         if (iconEl) iconEl.textContent = eligible ? '✔' : '✖';
@@ -197,14 +204,14 @@ export function initializeUI() {
       indicator.addEventListener('mouseleave', hideTooltip);
 
       // Baseline for session eligibility (independent from counters reset)
-      offlineEligibilityStart = statistics.totalTimeInFights || 0;
+      ensureBaseline();
       updateIndicator();
 
       // Update icon/color every second
       setInterval(updateIndicator, 1000);
 
       document.addEventListener('resetRateCounters', () => {
-        offlineEligibilityStart = statistics.totalTimeInFights || 0;
+        statistics.offlineEligibilityStart = statistics.totalTimeInFights || 0;
         updateIndicator();
       });
     }

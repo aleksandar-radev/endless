@@ -81,7 +81,10 @@ function formatPeriod(seconds) {
 
 function updateRateCounters() {
   let ratePeriod = options.rateCountersPeriod || 1;
+  const eligibilityBaseline =
+    statistics.offlineEligibilityStart ?? startTimeInFights ?? statistics.totalTimeInFights ?? 0;
   const elapsed = statistics.totalTimeInFights - startTimeInFights;
+  const eligibilityElapsed = (statistics.totalTimeInFights || 0) - eligibilityBaseline;
   const periodLabel = formatPeriod(ratePeriod);
   const dmgEls = document.querySelectorAll('.counter-damage');
   const xpEls = document.querySelectorAll('.counter-xp');
@@ -90,7 +93,7 @@ function updateRateCounters() {
   const matEls = document.querySelectorAll('.counter-materials');
   const offlineEl = document.querySelector('.counter-offline');
   // Compute session fight time (since last resetRateCounters call)
-  const eligible = (elapsed || 0) >= 60;
+  const eligible = (eligibilityElapsed || 0) >= 60;
   if (offlineEl) {
     const icon = offlineEl.querySelector('.offline-icon');
     const status = offlineEl.querySelector('.offline-status');
@@ -136,7 +139,9 @@ function updateRateCounters() {
 }
 
 function resetRateCounters() {
-  startTimeInFights = statistics.totalTimeInFights;
+  const baseline = statistics.totalTimeInFights || 0;
+  startTimeInFights = baseline;
+  statistics.offlineEligibilityStart = baseline;
   startGold = statistics.totalGoldFromCombat;
   startExp = statistics.totalExpFromCombat;
   startItems = statistics.totalItemsFound;
