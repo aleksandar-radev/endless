@@ -320,7 +320,11 @@ class Game {
           this.currentEnemy = new Enemy(this.stage);
         }
       }
-      this.currentEnemy.lastAttack = Date.now();
+      const currentTime = Date.now();
+      this.lastPlayerAttack = currentTime;
+      if (this.currentEnemy) {
+        this.currentEnemy.lastAttack = currentTime;
+      }
       // Reset life and update resources
       // this.resetAllLife();
       updateResources();

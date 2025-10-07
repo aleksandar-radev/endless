@@ -22,6 +22,7 @@ export default function run() {
       <li>Made building upgrade dialogs always display the actual resource cost even when you cannot afford the purchase.</li>
       <li>Ensured damage conversions respect each skill's allowed damage types so off-element bonuses no longer bleed into ability breakdowns.</li>
       <li>Synchronized the offline eligibility counter and combat region indicator so both reset correctly after eligibility is lost.</li>
+      <li>Fixed hero and enemy attack timers so attack speed bonuses scale smoothly instead of being rounded to 100&nbsp;ms breakpoints.</li>
     </ul>
   `;
 }

@@ -36,15 +36,28 @@ const UNIQUE_RUNE_DROP_CHANCE = 1 / 50000;
 const RUNE_DROP_RATE_MULTIPLIER = 1.5;
 
 export function enemyAttack(currentTime) {
-  if (!game || !hero || !game.currentEnemy) return;
-  if (game.currentEnemy.canAttack(currentTime)) {
-    // Check for evasion first
+  if (!game || !hero) return;
 
-    const alwaysHit = game.currentEnemy.special?.includes('alwaysHit');
-    const enemySpecials = game.currentEnemy.special || [];
-    const enemySpecialData = game.currentEnemy.specialData || {};
+  while (game.currentEnemy) {
+    const enemy = game.currentEnemy;
+    const attackSpeed = enemy?.attackSpeed || 0;
+    if (!Number.isFinite(attackSpeed) || attackSpeed <= 0) break;
+
+    const timeBetweenAttacks = 1000 / attackSpeed;
+    if (currentTime - enemy.lastAttack < timeBetweenAttacks) {
+      break;
+    }
+
+    // advance the internal timer by the scheduled attack interval so any extra delay is
+    // carried over to future ticks instead of being rounded to the 100 ms game loop
+    enemy.lastAttack += timeBetweenAttacks;
+
+    // Check for evasion first
+    const alwaysHit = enemy.special?.includes('alwaysHit');
+    const enemySpecials = enemy.special || [];
+    const enemySpecialData = enemy.specialData || {};
     const hitChance = calculateHitChance(
-      game.currentEnemy.attackRating,
+      enemy.attackRating,
       hero.stats.evasion,
       alwaysHit ? 1 : undefined,
     );
@@ -56,7 +69,7 @@ export function enemyAttack(currentTime) {
       battleLog.addBattle(t('battleLog.evadedAttack'));
     } else {
       // Use PoE2 armor formula for physical damage reduction
-      const physicalDamageRaw = game.currentEnemy.damage;
+      const physicalDamageRaw = enemy.damage;
       const armorReduction = calculateArmorReduction(hero.stats.armor, physicalDamageRaw) / 100;
       const physicalDamage = Math.floor(physicalDamageRaw * (1 - armorReduction));
 
@@ -65,9 +78,9 @@ export function enemyAttack(currentTime) {
         const reduction =
           calculateResistanceReduction(
             hero.stats[`${id}Resistance`],
-            game.currentEnemy[`${id}Damage`],
+            enemy[`${id}Damage`],
           ) / 100;
-        elementalDamage[id] = game.currentEnemy[`${id}Damage`] * (1 - reduction);
+        elementalDamage[id] = enemy[`${id}Damage`] * (1 - reduction);
       });
 
       let totalDamage = physicalDamage + ELEMENT_IDS.reduce((sum, id) => sum + elementalDamage[id], 0);
@@ -123,7 +136,7 @@ export function enemyAttack(currentTime) {
             ? enemySpecialData.lifeStealPercent
             : 20;
           const healAmount = Math.floor(totalDamage * lifeStealPercent / 100);
-          const healed = game.currentEnemy.heal(healAmount);
+          const healed = enemy.heal(healAmount);
           if (healed > 0) {
             createDamageNumber({ text: `+${Math.floor(healed)}`, isPlayer: false, color: '#4CAF50' });
             updateEnemyStats();
@@ -132,99 +145,115 @@ export function enemyAttack(currentTime) {
       }
     }
 
-    // Record the enemy's last attack time
-    if(game.currentEnemy) {
-      game.currentEnemy.lastAttack = currentTime;
+    if (!game.gameStarted || hero.stats.currentLife <= 0) {
+      break;
+    }
+
+    // If the enemy was defeated (or swapped) during this attack, stop processing further
+    if (!game.currentEnemy || game.currentEnemy !== enemy) {
+      break;
     }
   }
 }
 
 export function playerAttack(currentTime) {
   if (!game || !game.currentEnemy) return;
-  const timeBetweenAttacks = 1000 / hero.stats.attackSpeed;
 
-  if (currentTime - game.lastPlayerAttack >= timeBetweenAttacks) {
-    if (game.currentEnemy.currentLife > 0) {
+  const attackSpeed = hero.stats.attackSpeed;
+  if (!Number.isFinite(attackSpeed) || attackSpeed <= 0) {
+    return;
+  }
 
-      // Calculate if attack hits
-      const heroAttackRating = hero.stats.attackRating;
+  const timeBetweenAttacks = 1000 / attackSpeed;
 
-      const alwaysEvade = game.currentEnemy.special?.includes('alwaysEvade');
-      const hitChance = alwaysEvade
-        ? 0
-        : calculateHitChance(
-          heroAttackRating,
-          game.currentEnemy.evasion,
-          undefined,
-          hero.stats.chanceToHitPercent || 0,
-        );
+  while (game.currentEnemy && currentTime - game.lastPlayerAttack >= timeBetweenAttacks) {
+    game.lastPlayerAttack += timeBetweenAttacks;
 
-      const roll = Math.random() * 100;
-      const neverMiss = hero.stats.attackNeverMiss > 0 && !alwaysEvade;
+    const enemy = game.currentEnemy;
+    if (!enemy || enemy.currentLife <= 0) {
+      break;
+    }
 
-      const manaPerHit = (hero.stats.manaPerHit || 0) * (1 + (hero.stats.manaPerHitPercent || 0) / 100);
+    // Calculate if attack hits
+    const heroAttackRating = hero.stats.attackRating;
 
-      if (!neverMiss && (alwaysEvade || roll > hitChance)) {
-        createDamageNumber({ text: 'MISS', color: '#888888' });
-        battleLog.addBattle(t('battleLog.missedAttack'));
-      } else {
-        const { damage, isCritical, breakdown } = hero.calculateDamageAgainst(game.currentEnemy, {});
-        const enemyRef = game.currentEnemy;
-        const enemySpecials = enemyRef?.special || [];
-        const enemySpecialData = enemyRef?.specialData || {};
+    const alwaysEvade = enemy.special?.includes('alwaysEvade');
+    const hitChance = alwaysEvade
+      ? 0
+      : calculateHitChance(
+        heroAttackRating,
+        enemy.evasion,
+        undefined,
+        hero.stats.chanceToHitPercent || 0,
+      );
 
-        const lifePerHit = (hero.stats.lifePerHit || 0) * (1 + (hero.stats.lifePerHitPercent || 0) / 100);
-        const lifeStealAmount = damage * (hero.stats.lifeSteal || 0) / 100;
-        const manaStealAmount = damage * (hero.stats.manaSteal || 0) / 100;
-        const omniStealAmount = damage * (hero.stats.omniSteal || 0) / 100;
+    const roll = Math.random() * 100;
+    const neverMiss = hero.stats.attackNeverMiss > 0 && !alwaysEvade;
 
-        const disallowLeech = enemySpecials.includes('noLeech');
-        const adjustedLifePerHit = disallowLeech ? Math.min(lifePerHit, 0) : lifePerHit;
-        const adjustedLifeStealAmount = disallowLeech ? Math.min(lifeStealAmount, 0) : lifeStealAmount;
-        const adjustedOmniStealAmount = disallowLeech ? Math.min(omniStealAmount, 0) : omniStealAmount;
+    const manaPerHit = (hero.stats.manaPerHit || 0) * (1 + (hero.stats.manaPerHitPercent || 0) / 100);
 
-        const totalLifeChange = adjustedLifeStealAmount + adjustedLifePerHit + adjustedOmniStealAmount;
-        const lifeDisplayAmount = Math.floor(Math.abs(totalLifeChange));
-        if (lifeDisplayAmount >= 1) {
-          const lifeColor = totalLifeChange >= 0 ? '#4CAF50' : '#FF5252';
-          const lifeSign = totalLifeChange >= 0 ? '+' : '-';
-          createDamageNumber({ text: `${lifeSign}${lifeDisplayAmount}`, isPlayer: true, color: lifeColor });
-        }
-        game.healPlayer(totalLifeChange);
+    if (!neverMiss && (alwaysEvade || roll > hitChance)) {
+      createDamageNumber({ text: 'MISS', color: '#888888' });
+      battleLog.addBattle(t('battleLog.missedAttack'));
+    } else {
+      const { damage, isCritical, breakdown } = hero.calculateDamageAgainst(enemy, {});
+      const enemySpecials = enemy.special || [];
+      const enemySpecialData = enemy.specialData || {};
 
-        const manaRestore = (manaPerHit > 0 ? manaPerHit : 0) + manaStealAmount + omniStealAmount;
-        const manaDisplayAmount = Math.floor(Math.abs(manaRestore));
-        if (manaRestore > 0 && manaDisplayAmount >= 1) {
-          createDamageNumber({ text: `+${manaDisplayAmount}`, isPlayer: true, color: '#1E90FF' });
-        }
-        if (manaRestore !== 0) {
-          game.restoreMana(manaRestore);
-        }
+      const lifePerHit = (hero.stats.lifePerHit || 0) * (1 + (hero.stats.lifePerHitPercent || 0) / 100);
+      const lifeStealAmount = damage * (hero.stats.lifeSteal || 0) / 100;
+      const manaStealAmount = damage * (hero.stats.manaSteal || 0) / 100;
+      const omniStealAmount = damage * (hero.stats.omniSteal || 0) / 100;
 
-        game.damageEnemy(damage, isCritical, breakdown);
+      const disallowLeech = enemySpecials.includes('noLeech');
+      const adjustedLifePerHit = disallowLeech ? Math.min(lifePerHit, 0) : lifePerHit;
+      const adjustedLifeStealAmount = disallowLeech ? Math.min(lifeStealAmount, 0) : lifeStealAmount;
+      const adjustedOmniStealAmount = disallowLeech ? Math.min(omniStealAmount, 0) : omniStealAmount;
 
-        if (enemyRef && enemySpecials.includes('thornsAura')) {
-          const thornsPercent = Number.isFinite(enemySpecialData.thornsPercent)
-            ? enemySpecialData.thornsPercent
-            : 10;
-          const thornsDamage = Math.floor(damage * thornsPercent / 100);
-          if (thornsDamage > 0) {
-            game.damagePlayer(thornsDamage, { thornsDamage });
-          }
-        }
+      const totalLifeChange = adjustedLifeStealAmount + adjustedLifePerHit + adjustedOmniStealAmount;
+      const lifeDisplayAmount = Math.floor(Math.abs(totalLifeChange));
+      if (lifeDisplayAmount >= 1) {
+        const lifeColor = totalLifeChange >= 0 ? '#4CAF50' : '#FF5252';
+        const lifeSign = totalLifeChange >= 0 ? '+' : '-';
+        createDamageNumber({ text: `${lifeSign}${lifeDisplayAmount}`, isPlayer: true, color: lifeColor });
       }
-      if (manaPerHit < 0) {
-        const manaCostDisplay = Math.floor(Math.abs(manaPerHit));
-        if (manaCostDisplay >= 1) {
-          createDamageNumber({ text: `-${manaCostDisplay}`, isPlayer: true, color: '#1E90FF' });
-        }
-        game.restoreMana(manaPerHit);
+      game.healPlayer(totalLifeChange);
+
+      const manaRestore = (manaPerHit > 0 ? manaPerHit : 0) + manaStealAmount + omniStealAmount;
+      const manaDisplayAmount = Math.floor(Math.abs(manaRestore));
+      if (manaRestore > 0 && manaDisplayAmount >= 1) {
+        createDamageNumber({ text: `+${manaDisplayAmount}`, isPlayer: true, color: '#1E90FF' });
       }
-      if (game.fightMode === 'arena') {
-        updateBossUI();
+      if (manaRestore !== 0) {
+        game.restoreMana(manaRestore);
+      }
+
+      game.damageEnemy(damage, isCritical, breakdown);
+
+      if (enemySpecials.includes('thornsAura')) {
+        const thornsPercent = Number.isFinite(enemySpecialData.thornsPercent)
+          ? enemySpecialData.thornsPercent
+          : 10;
+        const thornsDamage = Math.floor(damage * thornsPercent / 100);
+        if (thornsDamage > 0) {
+          game.damagePlayer(thornsDamage, { thornsDamage });
+        }
       }
     }
-    game.lastPlayerAttack = currentTime;
+    if (manaPerHit < 0) {
+      const manaCostDisplay = Math.floor(Math.abs(manaPerHit));
+      if (manaCostDisplay >= 1) {
+        createDamageNumber({ text: `-${manaCostDisplay}`, isPlayer: true, color: '#1E90FF' });
+      }
+      game.restoreMana(manaPerHit);
+    }
+    if (game.fightMode === 'arena') {
+      updateBossUI();
+    }
+
+    if (!game.gameStarted || game._justDefeated || !game.currentEnemy) {
+      break;
+    }
   }
 }
 
@@ -300,9 +329,10 @@ export function playerDeath() {
     // If continuing, restart the game state
     if (shouldContinue) {
       game.gameStarted = true;
-      game.lastPlayerAttack = Date.now();
+      const currentTime = Date.now();
+      game.lastPlayerAttack = currentTime;
       if (game.currentEnemy) {
-        game.currentEnemy.lastAttack = Date.now();
+        game.currentEnemy.lastAttack = currentTime;
       }
     }
 
@@ -548,7 +578,9 @@ export async function defeatEnemy() {
 
   if (game.currentEnemy) {
     updateStatsAndAttributesUI();
-    game.currentEnemy.lastAttack = Date.now();
+    const currentTime = Date.now();
+    game.lastPlayerAttack = currentTime;
+    game.currentEnemy.lastAttack = currentTime;
   }
 
   // clear defeat guard so next enemy can be damaged
