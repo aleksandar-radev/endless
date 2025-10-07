@@ -812,6 +812,9 @@ export function createModifyUI() {
 
   const uniqueDiv = document.createElement('div');
   uniqueDiv.style.marginTop = '8px';
+  uniqueDiv.style.display = 'flex';
+  uniqueDiv.style.alignItems = 'center';
+  uniqueDiv.style.flexWrap = 'wrap';
 
   const uniqueDefs = getUniqueItemDefinitions();
   const uniqueMap = new Map(uniqueDefs.map((def) => [def.id, def]));
@@ -851,16 +854,17 @@ export function createModifyUI() {
   const uniqueTierInput = document.createElement('input');
   uniqueTierInput.type = 'number';
   uniqueTierInput.min = '1';
+  uniqueTierInput.max = '12';
   uniqueTierInput.value = '1';
   uniqueTierInput.style.width = '55px';
-  uniqueTierInput.style.marginLeft = '8px';
+  const uniqueTierControl = makeControl('Tier', uniqueTierInput);
 
   const uniqueLevelInput = document.createElement('input');
   uniqueLevelInput.type = 'number';
   uniqueLevelInput.min = '0';
   uniqueLevelInput.value = '1';
   uniqueLevelInput.style.width = '55px';
-  uniqueLevelInput.style.marginLeft = '8px';
+  const uniqueLevelControl = makeControl('Level', uniqueLevelInput);
 
   const addUniqueBtn = document.createElement('button');
   addUniqueBtn.textContent = t('debug.addUniqueItem');
@@ -870,7 +874,7 @@ export function createModifyUI() {
       showToast(t('debug.selectUniqueFirst'), 'error');
       return;
     }
-    const tier = Math.max(1, Math.round(parseInt(uniqueTierInput.value, 10) || 1));
+    const tier = Math.min(12, Math.max(1, Math.round(parseInt(uniqueTierInput.value, 10) || 1)));
     const level = Math.max(0, Math.round(parseInt(uniqueLevelInput.value, 10) || 1));
     const uniqueDef = uniqueMap.get(id);
     const item = createUniqueItemById(id, tier, level);
@@ -884,13 +888,16 @@ export function createModifyUI() {
 
   uniqueDiv.appendChild(uniqueSearch);
   uniqueDiv.appendChild(uniqueDd.container);
-  uniqueDiv.appendChild(uniqueTierInput);
-  uniqueDiv.appendChild(uniqueLevelInput);
+  uniqueDiv.appendChild(uniqueTierControl);
+  uniqueDiv.appendChild(uniqueLevelControl);
   uniqueDiv.appendChild(addUniqueBtn);
   inventorySection.appendChild(uniqueDiv);
 
   const setDiv = document.createElement('div');
   setDiv.style.marginTop = '8px';
+  setDiv.style.display = 'flex';
+  setDiv.style.alignItems = 'center';
+  setDiv.style.flexWrap = 'wrap';
 
   const setDefs = getItemSetDefinitions();
   const setMap = new Map(setDefs.map((set) => [set.id, set]));
@@ -926,16 +933,17 @@ export function createModifyUI() {
   const setTierInput = document.createElement('input');
   setTierInput.type = 'number';
   setTierInput.min = '1';
+  setTierInput.max = '12';
   setTierInput.value = '1';
   setTierInput.style.width = '55px';
-  setTierInput.style.marginLeft = '8px';
+  const setTierControl = makeControl('Tier', setTierInput);
 
   const setLevelInput = document.createElement('input');
   setLevelInput.type = 'number';
   setLevelInput.min = '0';
   setLevelInput.value = '1';
   setLevelInput.style.width = '55px';
-  setLevelInput.style.marginLeft = '8px';
+  const setLevelControl = makeControl('Level', setLevelInput);
 
   const addSetBtn = document.createElement('button');
   addSetBtn.textContent = t('debug.addSetItems');
@@ -945,7 +953,7 @@ export function createModifyUI() {
       showToast(t('debug.selectSetFirst'), 'error');
       return;
     }
-    const tier = Math.max(1, Math.round(parseInt(setTierInput.value, 10) || 1));
+    const tier = Math.min(12, Math.max(1, Math.round(parseInt(setTierInput.value, 10) || 1)));
     const level = Math.max(0, Math.round(parseInt(setLevelInput.value, 10) || 1));
     const setDef = setMap.get(id);
     const items = createSetItemsById(id, tier, level);
@@ -959,8 +967,8 @@ export function createModifyUI() {
 
   setDiv.appendChild(setSearch);
   setDiv.appendChild(setDd.container);
-  setDiv.appendChild(setTierInput);
-  setDiv.appendChild(setLevelInput);
+  setDiv.appendChild(setTierControl);
+  setDiv.appendChild(setLevelControl);
   setDiv.appendChild(addSetBtn);
   inventorySection.appendChild(setDiv);
 
