@@ -229,6 +229,8 @@ export default class Statistics {
       epic: 0,
       legendary: 0,
       mythic: 0,
+      unique: 0,
+      set: 0,
     };
     this.highestDamageDealt = 0;
     this.totalGoldEarned = 0;
@@ -273,6 +275,11 @@ export default class Statistics {
       this.totalEnemiesKilled = this.enemiesKilled.total;
       delete this.enemiesKilled.total;
     }
+    const rarityKeys = ['normal', 'magic', 'rare', 'epic', 'legendary', 'mythic', 'unique', 'set'];
+    rarityKeys.forEach((key) => {
+      if (this.itemsFound[key] == null) this.itemsFound[key] = 0;
+      if (this.enemiesKilled[key] == null) this.enemiesKilled[key] = 0;
+    });
     this.lastUpdate = Date.now();
   }
 
@@ -286,6 +293,8 @@ export default class Statistics {
       epic: 0,
       legendary: 0,
       mythic: 0,
+      unique: 0,
+      set: 0,
     };
     this.itemsFound = {
       normal: 0,
@@ -294,6 +303,8 @@ export default class Statistics {
       epic: 0,
       legendary: 0,
       mythic: 0,
+      unique: 0,
+      set: 0,
     };
     this.highestDamageDealt = 0;
     this.totalGoldEarned = 0;

@@ -6,6 +6,7 @@ import { t } from './i18n.js';
 import { distributeMaterials } from './materialsUtil.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
 import { MATERIALS } from './constants/materials.js';
+import { rollSpecialItemDrop } from './uniqueItems.js';
 
 export async function collectOfflineFightRewards() {
   const now = await getTimeNow();
@@ -59,7 +60,12 @@ export async function collectOfflineFightRewards() {
     const itemCount = Math.min(items, maxItems);
     for (let i = 0; i < itemCount; i++) {
       const type = types[Math.floor(Math.random() * types.length)];
-      const item = inventory.createItem(type, level, null, region.tier);
+      const specialDrop = rollSpecialItemDrop({
+        tier: region.tier,
+        level,
+        preferredType: type,
+      });
+      const item = specialDrop?.item || inventory.createItem(type, level, null, region.tier);
       inventory.addItemToInventory(item);
     }
     // Salvage overflow offline items in aggregate if auto-salvage is configured; otherwise ignore

@@ -558,5 +558,11 @@ export const OFFENSE_STATS = {
   extraDamageFromAttackRatingPercent: {
     base: 0,
     decimalPlaces: 2,
+    item: {
+      min: 0.1,
+      max: 0.3,
+      limit: 0.5,
+      scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING),
+    },
   },
 };

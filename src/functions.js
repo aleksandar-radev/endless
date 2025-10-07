@@ -4,14 +4,20 @@ import { RUNES, MAX_CONVERSION_PERCENT, MIN_CONVERSION_PERCENT } from './constan
 import SimpleCrypto from 'simple-crypto-js';
 import { initializeSkillTreeStructure, showToast, updatePlayerLife, updateResources, updateStageUI, updateTabIndicators } from './ui/ui.js';
 import { createImageDropdownFromData } from './ui/imageDropdown.js';
-import { ITEM_RARITY, ITEM_TYPES } from './constants/items.js';
+import { ITEM_ICONS, ITEM_RARITY, ITEM_TYPES } from './constants/items.js';
 import { updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { createCombatText } from './combat.js';
 import { renderRunesUI } from './ui/runesUi.js';
 import { updateAscensionUI } from './ui/ascensionUi.js';
 import { getRuneName } from './runes.js';
-import { t } from './i18n.js';
+import { t, tp } from './i18n.js';
+import {
+  createSetItemsById,
+  createUniqueItemById,
+  getItemSetDefinitions,
+  getUniqueItemDefinitions,
+} from './uniqueItems.js';
 
 export const crypt = new SimpleCrypto(import.meta.env.VITE_ENCRYPT_KEY);
 
@@ -795,6 +801,168 @@ export function createModifyUI() {
   addRuneDiv.appendChild(runeDd.container);
   addRuneDiv.appendChild(addRuneBtn);
   inventorySection.appendChild(addRuneDiv);
+
+  const extractIconSrc = (iconHtml) => {
+    if (!iconHtml || typeof iconHtml !== 'string') return '';
+    const tmp = document.createElement('div');
+    tmp.innerHTML = iconHtml;
+    const img = tmp.querySelector('img');
+    return img ? img.getAttribute('src') || img.src || '' : '';
+  };
+
+  const uniqueDiv = document.createElement('div');
+  uniqueDiv.style.marginTop = '8px';
+
+  const uniqueDefs = getUniqueItemDefinitions();
+  const uniqueMap = new Map(uniqueDefs.map((def) => [def.id, def]));
+  const uniqueItems = uniqueDefs
+    .map((def) => ({
+      id: def.id,
+      text: t(def.nameKey),
+      icon: extractIconSrc(ITEM_ICONS[def.type]),
+    }))
+    .sort((a, b) => a.text.localeCompare(b.text));
+
+  const uniqueDd = createImageDropdownFromData(uniqueItems, uniqueItems[0] && uniqueItems[0].id);
+
+  const uniqueSearch = document.createElement('input');
+  uniqueSearch.type = 'search';
+  uniqueSearch.className = 'debug-unique-search';
+  uniqueSearch.placeholder = t('debug.searchUniquePlaceholder');
+  uniqueSearch.style.marginRight = '8px';
+  uniqueSearch.style.padding = '4px 6px';
+  uniqueSearch.style.borderRadius = '4px';
+  uniqueSearch.style.border = '1px solid #555';
+  uniqueSearch.style.background = 'rgba(0, 0, 0, 0.4)';
+  uniqueSearch.style.color = '#fff';
+  uniqueSearch.addEventListener('input', () => {
+    const query = uniqueSearch.value.trim().toLowerCase();
+    if (!query) {
+      uniqueDd.setFilter();
+      return;
+    }
+    uniqueDd.setFilter((item) => {
+      const idMatch = item.id?.toLowerCase().includes(query);
+      const textMatch = item.text?.toLowerCase().includes(query);
+      return Boolean(idMatch || textMatch);
+    });
+  });
+
+  const uniqueTierInput = document.createElement('input');
+  uniqueTierInput.type = 'number';
+  uniqueTierInput.min = '1';
+  uniqueTierInput.value = '1';
+  uniqueTierInput.style.width = '55px';
+  uniqueTierInput.style.marginLeft = '8px';
+
+  const uniqueLevelInput = document.createElement('input');
+  uniqueLevelInput.type = 'number';
+  uniqueLevelInput.min = '0';
+  uniqueLevelInput.value = '1';
+  uniqueLevelInput.style.width = '55px';
+  uniqueLevelInput.style.marginLeft = '8px';
+
+  const addUniqueBtn = document.createElement('button');
+  addUniqueBtn.textContent = t('debug.addUniqueItem');
+  addUniqueBtn.addEventListener('click', () => {
+    const id = uniqueDd.getValue();
+    if (!id) {
+      showToast(t('debug.selectUniqueFirst'), 'error');
+      return;
+    }
+    const tier = Math.max(1, Math.round(parseInt(uniqueTierInput.value, 10) || 1));
+    const level = Math.max(0, Math.round(parseInt(uniqueLevelInput.value, 10) || 1));
+    const uniqueDef = uniqueMap.get(id);
+    const item = createUniqueItemById(id, tier, level);
+    if (!item) {
+      showToast(t('debug.invalidUnique'), 'error');
+      return;
+    }
+    inventory.addItemToInventory(item);
+    showToast(tp('debug.addedUniqueItem', { name: t(uniqueDef.nameKey), tier }));
+  });
+
+  uniqueDiv.appendChild(uniqueSearch);
+  uniqueDiv.appendChild(uniqueDd.container);
+  uniqueDiv.appendChild(uniqueTierInput);
+  uniqueDiv.appendChild(uniqueLevelInput);
+  uniqueDiv.appendChild(addUniqueBtn);
+  inventorySection.appendChild(uniqueDiv);
+
+  const setDiv = document.createElement('div');
+  setDiv.style.marginTop = '8px';
+
+  const setDefs = getItemSetDefinitions();
+  const setMap = new Map(setDefs.map((set) => [set.id, set]));
+  const setItems = setDefs
+    .map((set) => ({ id: set.id, text: t(set.nameKey) }))
+    .sort((a, b) => a.text.localeCompare(b.text));
+
+  const setDd = createImageDropdownFromData(setItems, setItems[0] && setItems[0].id);
+
+  const setSearch = document.createElement('input');
+  setSearch.type = 'search';
+  setSearch.className = 'debug-set-search';
+  setSearch.placeholder = t('debug.searchSetPlaceholder');
+  setSearch.style.marginRight = '8px';
+  setSearch.style.padding = '4px 6px';
+  setSearch.style.borderRadius = '4px';
+  setSearch.style.border = '1px solid #555';
+  setSearch.style.background = 'rgba(0, 0, 0, 0.4)';
+  setSearch.style.color = '#fff';
+  setSearch.addEventListener('input', () => {
+    const query = setSearch.value.trim().toLowerCase();
+    if (!query) {
+      setDd.setFilter();
+      return;
+    }
+    setDd.setFilter((item) => {
+      const idMatch = item.id?.toLowerCase().includes(query);
+      const textMatch = item.text?.toLowerCase().includes(query);
+      return Boolean(idMatch || textMatch);
+    });
+  });
+
+  const setTierInput = document.createElement('input');
+  setTierInput.type = 'number';
+  setTierInput.min = '1';
+  setTierInput.value = '1';
+  setTierInput.style.width = '55px';
+  setTierInput.style.marginLeft = '8px';
+
+  const setLevelInput = document.createElement('input');
+  setLevelInput.type = 'number';
+  setLevelInput.min = '0';
+  setLevelInput.value = '1';
+  setLevelInput.style.width = '55px';
+  setLevelInput.style.marginLeft = '8px';
+
+  const addSetBtn = document.createElement('button');
+  addSetBtn.textContent = t('debug.addSetItems');
+  addSetBtn.addEventListener('click', () => {
+    const id = setDd.getValue();
+    if (!id) {
+      showToast(t('debug.selectSetFirst'), 'error');
+      return;
+    }
+    const tier = Math.max(1, Math.round(parseInt(setTierInput.value, 10) || 1));
+    const level = Math.max(0, Math.round(parseInt(setLevelInput.value, 10) || 1));
+    const setDef = setMap.get(id);
+    const items = createSetItemsById(id, tier, level);
+    if (!items.length) {
+      showToast(t('debug.invalidSet'), 'error');
+      return;
+    }
+    items.forEach((item) => inventory.addItemToInventory(item));
+    showToast(tp('debug.addedSetItems', { name: t(setDef.nameKey), count: items.length, tier }));
+  });
+
+  setDiv.appendChild(setSearch);
+  setDiv.appendChild(setDd.container);
+  setDiv.appendChild(setTierInput);
+  setDiv.appendChild(setLevelInput);
+  setDiv.appendChild(addSetBtn);
+  inventorySection.appendChild(setDiv);
 
   // Example: Add buttons to modify skill tree
   const skillTreeSection = document.createElement('div');

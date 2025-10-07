@@ -15,6 +15,7 @@ import {
   sortMaterials,
 } from './ui/inventoryUi.js';
 import { getCurrentRegion } from './region.js';
+import { computeSetBonuses } from './uniqueItems.js';
 import { MATERIALS } from './constants/materials.js';
 import { STATS } from './constants/stats/stats.js';
 import {
@@ -412,7 +413,7 @@ export default class Inventory {
     // Enchantment Scroll
     if (matDef.isCustom && matDef.id === 'enchantment_scroll') {
       const equipped = Object.entries(this.equippedItems)
-        .filter(([slot, item]) => item && item.rarity !== 'MYTHIC')
+        .filter(([slot, item]) => item && !['MYTHIC', 'SET', 'UNIQUE'].includes(item.rarity))
         .map(([slot, item]) => ({ slot, item }));
 
       this.showEquippedItemsModal({
@@ -493,7 +494,7 @@ export default class Inventory {
     // Transmutation Orb
     if (matDef.isCustom && matDef.id === 'transmutation_orb') {
       const equipped = Object.entries(this.equippedItems)
-        .filter(([slot, item]) => item)
+        .filter(([slot, item]) => item && !['SET', 'UNIQUE'].includes(item.rarity))
         .map(([slot, item]) => ({ slot, item }));
 
       const html = String.raw;
@@ -601,7 +602,13 @@ export default class Inventory {
             const statToChange = e.currentTarget.dataset.stat;
             const orderIndex = statOrder.indexOf(statToChange);
             delete item.stats[statToChange];
-            if (item.metaData) delete item.metaData[statToChange];
+            if (item.metaData) {
+              if (item.metaData.statRolls) {
+                delete item.metaData.statRolls[statToChange];
+              } else {
+                delete item.metaData[statToChange];
+              }
+            }
             const newStat = item.addRandomStat(statToChange);
             if (newStat) {
               statOrder[orderIndex] = newStat;
@@ -769,7 +776,11 @@ export default class Inventory {
               stat: statToReroll,
             });
             if (!item.metaData) item.metaData = {};
-            item.metaData[statToReroll] = { baseValue };
+            if (!item.metaData.statRolls) item.metaData.statRolls = {};
+            item.metaData.statRolls[statToReroll] = {
+              ...(item.metaData.statRolls[statToReroll] || {}),
+              baseValue,
+            };
             const toastMsg = tp('inventory.rerolledStatToast', {
               stat: formatStatName(statToReroll),
               item: item.type,
@@ -1309,6 +1320,7 @@ export default class Inventory {
       if (emptySlot !== -1) {
         this.inventoryItems[emptySlot] = item;
         delete this.equippedItems[slot];
+        this.updateItemBonuses();
         dataManager.saveGame();
         return true;
       }
@@ -1378,6 +1390,7 @@ export default class Inventory {
 
     // Equip the new item
     this.equippedItems[slot] = item;
+    this.updateItemBonuses();
     dataManager.saveGame();
     return true;
   }
@@ -1388,13 +1401,22 @@ export default class Inventory {
       this.equipmentBonuses[stat] = 0;
     });
 
+    const equippedItems = Object.values(this.equippedItems).filter(Boolean);
+
     // Calculate bonuses from all equipped items
-    Object.values(this.equippedItems).forEach((item) => {
+    equippedItems.forEach((item) => {
       Object.entries(item.stats).forEach(([stat, value]) => {
         if (this.equipmentBonuses[stat] !== undefined) {
           this.equipmentBonuses[stat] += value;
         }
       });
+    });
+
+    const setBonuses = computeSetBonuses(equippedItems);
+    Object.entries(setBonuses).forEach(([stat, value]) => {
+      if (this.equipmentBonuses[stat] !== undefined) {
+        this.equipmentBonuses[stat] += value;
+      }
     });
   }
 

@@ -75,6 +75,8 @@ export const ITEM_RARITY = {
   EPIC: { get name() { return t('EPIC'); }, color: 'var(--item-epic)', chance: 6, statMultiplier: 1, totalStats: 6 },
   LEGENDARY: { get name() { return t('LEGENDARY'); }, color: 'var(--item-legendary)', chance: 2, statMultiplier: 1, totalStats: 7 },
   MYTHIC: { get name() { return t('MYTHIC'); }, color: 'var(--item-mythic)', chance: 1, statMultiplier: 1, totalStats: 8 },
+  UNIQUE: { get name() { return t('UNIQUE'); }, color: 'var(--item-unique)', chance: 0, statMultiplier: 1, totalStats: 0 },
+  SET: { get name() { return t('SET'); }, color: 'var(--item-set)', chance: 0, statMultiplier: 1, totalStats: 0 },
 };
 
 export const RARITY_ORDER = [
@@ -84,6 +86,8 @@ export const RARITY_ORDER = [
   ITEM_RARITY.EPIC.name,
   ITEM_RARITY.LEGENDARY.name,
   ITEM_RARITY.MYTHIC.name,
+  ITEM_RARITY.UNIQUE.name,
+  ITEM_RARITY.SET.name,
 ];
 
 export const ITEM_STAT_POOLS = {

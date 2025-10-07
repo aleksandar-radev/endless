@@ -344,6 +344,14 @@
   border-color: var(--item-mythic);
 }
 
+.rarity-unique {
+  border-color: var(--item-unique);
+}
+
+.rarity-set {
+  border-color: var(--item-set);
+}
+
 .item-color-normal {
   color: #ffffff;
 }
@@ -366,6 +374,111 @@
 
 .item-color-mythic {
   color: var(--item-mythic);
+}
+
+.item-color-unique {
+  color: var(--item-unique);
+}
+
+.item-color-set {
+  color: var(--item-set);
+}
+
+.item-tags {
+  display: flex;
+  gap: 6px;
+  margin: 4px 0;
+  flex-wrap: wrap;
+}
+
+.item-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid currentColor;
+}
+
+.item-tag-unique {
+  color: var(--item-unique);
+}
+
+.item-tag-set {
+  color: var(--item-set);
+}
+
+.item-description {
+  margin: 6px 0;
+  font-style: italic;
+  color: #ddd;
+}
+
+.item-set-section {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.item-set-name {
+  font-weight: 600;
+  color: var(--item-set);
+  margin-bottom: 4px;
+}
+
+.set-bonus {
+  margin-bottom: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.set-bonus.active {
+  border-color: var(--item-set);
+  box-shadow: inset 0 0 10px rgba(9, 217, 224, 0.35);
+  background: rgba(9, 217, 224, 0.15);
+  transform: translateX(2px);
+}
+
+.set-bonus-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+}
+
+.set-bonus.active .set-bonus-name {
+  color: var(--item-set);
+  font-size: 0.95rem;
+}
+
+.set-bonus-stat {
+  font-size: 0.85rem;
+  color: #f0f0f0;
+}
+
+.set-bonus.active .set-bonus-stat {
+  color: #ffffff;
+  font-size: 0.88rem;
+}
+
+.set-bonus-indicator {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-shadow: none;
+}
+
+.set-bonus-indicator.active {
+  color: var(--item-set);
+  text-shadow: 0 0 6px rgba(9, 217, 224, 0.6);
 }
 
 .salvage-container {

@@ -24,6 +24,7 @@ import { RockyFieldEnemy, getRockyFieldRunePercent } from './rockyField.js';
 import { renderRunesUI } from './ui/runesUi.js';
 import { getRuneName, getRuneIcon } from './runes.js';
 import { RUNES } from './constants/runes.js';
+import { rollSpecialItemDrop } from './uniqueItems.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 import { ELEMENTS } from './constants/common.js';
@@ -379,7 +380,12 @@ export async function defeatEnemy() {
       const itemLevel = enemy.calculateItemLevel(game.stage);
       const itemType = enemy.getRandomItemType();
       const region = enemy.region;
-      const newItem = inventory.createItem(itemType, itemLevel, undefined, region.tier);
+      const specialDrop = rollSpecialItemDrop({
+        tier: region.tier,
+        level: itemLevel,
+        preferredType: itemType,
+      });
+      const newItem = specialDrop?.item || inventory.createItem(itemType, itemLevel, undefined, region.tier);
       inventory.addItemToInventory(newItem);
       const rarityName = ITEM_RARITY[newItem.rarity]?.name || newItem.rarity;
       battleLog.addDrop(tp('battleLog.droppedItem', { rarity: rarityName, type: t(newItem.type) }));

@@ -75,7 +75,12 @@ export default class Item {
     this.rarity = rarity.toUpperCase();
     this.tier = tier;
     // Only generate new stats if no existing stats provided
-    this.metaData = metaData;
+    this.metaData = metaData || {};
+    this.nameKey = this.metaData.nameKey || null;
+    this.descriptionKey = this.metaData.descriptionKey || null;
+    this.uniqueId = this.metaData.uniqueId || null;
+    this.setId = this.metaData.setId || null;
+    this.setNameKey = this.metaData.setNameKey || null;
     this.stats = existingStats || this.generateStats();
     this.id = crypto.randomUUID();
   }
@@ -126,7 +131,13 @@ export default class Item {
     val = Math.min(val, limit);
 
     this.metaData = this.metaData || {};
-    this.metaData[stat] = { baseValue };
+    if (!this.metaData.statRolls) {
+      this.metaData.statRolls = {};
+    }
+    this.metaData.statRolls[stat] = {
+      ...(this.metaData.statRolls[stat] || {}),
+      baseValue,
+    };
 
     return val;
   }
@@ -137,13 +148,21 @@ export default class Item {
    * @returns {{min: number, max: number}}
    */
   getStatMinMax(stat) {
+    const decimals = STATS[stat]?.decimalPlaces || 0;
+    const storedRoll = this.metaData?.statRolls?.[stat];
+    if (storedRoll && typeof storedRoll.min === 'number' && typeof storedRoll.max === 'number') {
+      return {
+        min: Number(storedRoll.min.toFixed(decimals)),
+        max: Number(storedRoll.max.toFixed(decimals)),
+      };
+    }
     const statConfig = AVAILABLE_STATS[stat];
     if (!statConfig) return { min: 0, max: 0 };
     const tierBonus = this.getTierBonus(stat);
     const multiplier = this.getMultiplier();
     const scale = this.getLevelScale(stat, this.level);
     const handedMultiplier = this.isTwoHanded() ? 2 : 1;
-    const decimals = STATS[stat].decimalPlaces || 0;
+    const decimalsFromConfig = STATS[stat]?.decimalPlaces || 0;
     const limitConfig = STATS[stat].item?.limit;
     let baseLimit = Infinity;
     if (typeof limitConfig === 'number') {
@@ -161,8 +180,8 @@ export default class Item {
       ? Math.min(baseLimit, percentCap)
       : baseLimit;
     // Min value
-    let minVal = Number((statConfig.min * tierBonus * multiplier * scale * handedMultiplier).toFixed(decimals));
-    let maxVal = Number((statConfig.max * tierBonus * multiplier * scale * handedMultiplier).toFixed(decimals));
+    let minVal = Number((statConfig.min * tierBonus * multiplier * scale * handedMultiplier).toFixed(decimalsFromConfig));
+    let maxVal = Number((statConfig.max * tierBonus * multiplier * scale * handedMultiplier).toFixed(decimalsFromConfig));
     minVal = Math.min(minVal, limit);
     maxVal = Math.min(maxVal, limit);
     return { min: minVal, max: maxVal };
@@ -229,7 +248,10 @@ export default class Item {
   }
 
   getDisplayName() {
-    return `${ITEM_RARITY[this.rarity].name} ${this.type}`;
+    if (this.metaData?.customName) return this.metaData.customName;
+    if (this.nameKey) return t(this.nameKey);
+    const rarityName = ITEM_RARITY[this.rarity]?.name || this.rarity;
+    return `${rarityName} ${this.type}`;
   }
 
   getTooltipHTML(isEquipped = false) {
@@ -263,12 +285,61 @@ export default class Item {
     const handedLabel = this.getHandedLabel();
     const levelDetails = `${t('item.level')}: ${formatNumber(this.level)}, ${t('item.tier')}: ${formatNumber(this.tier)}${handedLabel ? `, ${handedLabel}` : ''}`;
 
+    const tags = [];
+    if (this.rarity === 'UNIQUE') {
+      tags.push(`<span class="item-tag item-tag-unique">${t('item.tag.unique')}</span>`);
+    } else if (this.rarity === 'SET') {
+      tags.push(`<span class="item-tag item-tag-set">${t('item.tag.set')}</span>`);
+    }
+
+    const descriptionLine = this.descriptionKey
+      ? `<div class="item-description">${t(this.descriptionKey)}</div>`
+      : '';
+
+    let setSection = '';
+    if (this.setId) {
+      const piecesEquipped = this.metaData?.setPiecesEquipped || 0;
+      const totalPieces = this.metaData?.setTotalPieces || 0;
+      const setName = this.setNameKey ? t(this.setNameKey) : '';
+      const bonuses = Array.isArray(this.metaData?.setBonuses)
+        ? [...this.metaData.setBonuses].sort((a, b) => (a.pieces || 0) - (b.pieces || 0))
+        : [];
+      const bonusHtml = bonuses
+        .map((bonus) => {
+          const activeClass = bonus.active ? ' active' : '';
+          const bonusName = bonus.nameKey
+            ? t(bonus.nameKey)
+            : t('item.setBonusPieces', { pieces: bonus.pieces });
+          const indicator = bonus.active
+            ? '<span class="set-bonus-indicator active">★</span>'
+            : '<span class="set-bonus-indicator">☆</span>';
+          const statsHtml = Object.entries(bonus.stats || {})
+            .map(([stat, value]) => {
+              const decimals = STATS[stat]?.decimalPlaces || 0;
+              const formattedValue = formatNumber(Number(value).toFixed(decimals));
+              const percentSuffix = isPercentStat(stat) ? '%' : '';
+              return `<div class="set-bonus-stat">${formatStatName(stat)}: ${formattedValue}${percentSuffix}</div>`;
+            })
+            .join('');
+          return `<div class="set-bonus${activeClass}"><div class="set-bonus-name">${indicator}<span>${bonusName}</span></div>${statsHtml}</div>`;
+        })
+        .join('');
+      setSection = `
+        <div class="item-set-section">
+          <div class="item-set-name">${setName} (${piecesEquipped}/${totalPieces})</div>
+          ${bonusHtml}
+        </div>
+      `;
+    }
+
     return html`
       <div class="item-tooltip">
         <div class="item-name" style="color: ${ITEM_RARITY[this.rarity].color};">
           ${isEquipped ? '(Equipped) ' : ''}${this.getDisplayName()}
         </div>
+        ${tags.length ? `<div class="item-tags">${tags.join('')}</div>` : ''}
         <div class="item-level">${levelDetails}</div>
+        ${descriptionLine}
         <div class="item-stats">
           ${STAT_GROUPS.map((group) => {
     const stats = group.order.filter((s) => this.stats[s] !== undefined);
@@ -306,6 +377,7 @@ export default class Item {
     .filter(Boolean)
     .join('<hr class="item-tooltip-separator" />')}
         </div>
+        ${setSection}
       </div>
     `;
   }
@@ -315,9 +387,21 @@ export default class Item {
    * @returns {Object} base stat values keyed by stat name
    */
   getBaseStatValues() {
-    if (this.metaData && Object.keys(this.metaData).length > 0) {
-      // If metaData exists, use it to get base values directly
-      return Object.fromEntries(Object.entries(this.metaData).map(([stat, data]) => [stat, data.baseValue]));
+    if (this.metaData) {
+      if (this.metaData.statRolls && Object.keys(this.metaData.statRolls).length > 0) {
+        const entries = Object.entries(this.metaData.statRolls).filter(
+          ([, data]) => data && typeof data.baseValue === 'number',
+        );
+        if (entries.length) {
+          return Object.fromEntries(entries.map(([stat, data]) => [stat, data.baseValue]));
+        }
+      }
+      const legacyEntries = Object.entries(this.metaData).filter(
+        ([key, data]) => key !== 'statRolls' && data && typeof data.baseValue === 'number',
+      );
+      if (legacyEntries.length) {
+        return Object.fromEntries(legacyEntries.map(([stat, data]) => [stat, data.baseValue]));
+      }
     }
     const baseValues = {};
     const multiplier = this.getMultiplier();
@@ -345,6 +429,25 @@ export default class Item {
       this.stats[stat] = this.calculateStatValue({ baseValue: baseValues[stat], tierBonus, multiplier, scale, stat });
     }
     this.level = newLevel;
+    if (Array.isArray(this.metaData?.setBonuses)) {
+      const bonuses = this.metaData.setBonuses.map((bonus) => {
+        if (!bonus || !bonus.baseValues) return bonus;
+        const updatedStats = {};
+        for (const [stat, baseValue] of Object.entries(bonus.baseValues)) {
+          const scale = this.getLevelScale(stat, newLevel);
+          const tierBonus = this.getTierBonus(stat);
+          updatedStats[stat] = this.calculateStatValue({
+            baseValue,
+            tierBonus,
+            multiplier,
+            scale,
+            stat,
+          });
+        }
+        return { ...bonus, stats: updatedStats };
+      });
+      this.metaData.setBonuses = bonuses;
+    }
   }
 
   addRandomStat(excludeStat = null) {
@@ -376,7 +479,11 @@ export default class Item {
       stat,
     });
     if (!this.metaData) this.metaData = {};
-    this.metaData[stat] = { baseValue };
+    if (!this.metaData.statRolls) this.metaData.statRolls = {};
+    this.metaData.statRolls[stat] = {
+      ...(this.metaData.statRolls[stat] || {}),
+      baseValue,
+    };
     return stat;
   }
 }

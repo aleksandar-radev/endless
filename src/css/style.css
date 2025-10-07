@@ -11,6 +11,8 @@
   --item-epic: #9b59b6;
   --item-legendary: #0aa80a;
   --item-mythic: #ff0033;
+  --item-unique: #ff9f00;
+  --item-set: #09d9e0;
 }
 
 .game-container {
