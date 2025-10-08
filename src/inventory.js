@@ -571,9 +571,20 @@ export default class Inventory {
               const formattedValue = value.toFixed(decimals);
               let adv = '';
               if (showAdvanced && statMinMax[stat]) {
-                const min = statMinMax[stat].min.toFixed(decimals);
-                const max = statMinMax[stat].max.toFixed(decimals);
-                adv = `<span class="item-ref-range" style="color:#aaa;">${min} - ${max}</span>`;
+                const minRaw = statMinMax[stat].min;
+                const maxRaw = statMinMax[stat].max;
+                if (options?.showRollPercentiles) {
+                  let pct = 100;
+                  if (maxRaw > minRaw) {
+                    pct = Math.max(0, Math.min(1, (value - minRaw) / (maxRaw - minRaw))) * 100;
+                  }
+                  const pctStr = `${Math.round(pct)}%`;
+                  adv = `<span class="item-ref-range" style="color:#aaa;">${pctStr}</span>`;
+                } else {
+                  const min = minRaw.toFixed(decimals);
+                  const max = maxRaw.toFixed(decimals);
+                  adv = `<span class="item-ref-range" style="color:#aaa;">${min} - ${max}</span>`;
+                }
               }
               return `<div class="stat-row" data-stat="${stat}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
                 <div style="flex:1;display:flex;justify-content:space-between;align-items:center;gap:8px;">
@@ -734,9 +745,20 @@ export default class Inventory {
               const formattedValue = value.toFixed(decimals);
               let adv = '';
               if (showAdvanced && statMinMax[stat]) {
-                const min = statMinMax[stat].min.toFixed(decimals);
-                const max = statMinMax[stat].max.toFixed(decimals);
-                adv = `<span class="item-ref-range" style="color:#aaa;">${min} - ${max}</span>`;
+                const minRaw = statMinMax[stat].min;
+                const maxRaw = statMinMax[stat].max;
+                if (options?.showRollPercentiles) {
+                  let pct = 100;
+                  if (maxRaw > minRaw) {
+                    pct = Math.max(0, Math.min(1, (value - minRaw) / (maxRaw - minRaw))) * 100;
+                  }
+                  const pctStr = `${Math.round(pct)}%`;
+                  adv = `<span class="item-ref-range" style="color:#aaa;">${pctStr}</span>`;
+                } else {
+                  const min = minRaw.toFixed(decimals);
+                  const max = maxRaw.toFixed(decimals);
+                  adv = `<span class="item-ref-range" style="color:#aaa;">${min} - ${max}</span>`;
+                }
               }
               return `<div class="stat-row" data-stat="${stat}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
                 <div style="flex:1;display:flex;justify-content:space-between;align-items:center;gap:8px;">

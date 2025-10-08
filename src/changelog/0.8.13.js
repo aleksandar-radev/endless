@@ -13,6 +13,7 @@ export default function run() {
       <li>Refined Rocky Field statistics with per-region highest stages, accurate kill tracking, and a reorganized statistics tab layout.</li>
       <li>Elemental allocation sliders now include the elemental portion of extra damage from life, mana, armor, and other resource-based bonuses so you can redistribute it freely.</li>
       <li>Updated the thorns damage indicator with a dedicated spiked badge icon to match the reflected damage theme.</li>
+      <li>Alternation and Transmutation Orb dialogs now display roll percentiles when advanced tooltips are enabled.</li>
       <li>Added <span style="color:#4F8A10;">Set</span> and <span style="color:#8B5C2A;">Unique</span> items.</li>
     </ul>
 
