@@ -34,6 +34,8 @@ import { BASE_RUNE_SLOTS } from './runes.js';
 
 const html = String.raw;
 
+const AUTO_SALVAGE_MAX_LEVEL = 8;
+
 const CRYSTAL_UPGRADE_CONFIG = {
   continuousPlay: {
     label: 'crystalShop.upgrade.continuousPlay.label',
@@ -59,7 +61,7 @@ const CRYSTAL_UPGRADE_CONFIG = {
     costIncrement: 10,
     showLevel: true,
     multiple: true,
-    maxLevel: 6,
+    maxLevel: AUTO_SALVAGE_MAX_LEVEL,
     category: 'auto',
   },
   autoConsumeMaterials: {
@@ -571,7 +573,7 @@ export default class CrystalShop {
       // Show current level and next cost for autoSalvage
       if (stat === 'autoSalvage') {
         const level = this.crystalUpgrades[stat] || 0;
-        const cap = config.maxLevel || 6;
+        const cap = config.maxLevel ?? AUTO_SALVAGE_MAX_LEVEL;
         const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
         const nextCost = Math.round((config.baseCost + (config.costIncrement || 0) * level) * (1 - ascRed));
         const isMaxed = level >= cap;
@@ -664,7 +666,7 @@ export default class CrystalShop {
       if (buyBtn) buyBtn.disabled = isMaxed || qty <= 0 || totalCost > crystalsAvailable;
     } else if (stat === 'autoSalvage') {
       const level = this.crystalUpgrades[stat] || 0;
-      const cap = config.maxLevel || 6;
+      const cap = config.maxLevel ?? AUTO_SALVAGE_MAX_LEVEL;
       const ascRedLocal = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
       const nextCostVal = Math.round(
         Math.floor(config.baseCost + (config.costIncrement || 0) * level) * (1 - ascRedLocal),
