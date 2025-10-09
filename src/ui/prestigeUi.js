@@ -115,6 +115,8 @@ function openPrestigeModal() {
       <p class="prestige-info prestige-bonus-info">${tp('prestige.bonusInfo', { bonus: bonusPercent })}</p>
       <p class="prestige-info">${t('prestige.resetInfo')}</p>
       <p class="prestige-info">${t('prestige.optionsInfo')}</p>
+      <p class="prestige-info">${t('prestige.levelRequirementIncreaseInfo')}</p>
+      <p class="prestige-info">${t('prestige.selectionRequirementInfo')}</p>
       <div class="prestige-info-cta">${t('prestige.historyRecord')}</div>
       </div>
       <div class="modal-footer" style="margin-top: 12px; text-align: center;">

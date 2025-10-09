@@ -1089,6 +1089,8 @@ export default {
   'prestige.bonusInfo': '击败竞技场首领以提升声望加成。当前加成：{bonus}%。',
   'prestige.resetInfo': '声望会开始新的进程：等级、装备、背包、建筑、任务和大部分进度都会重置。仅保留所选的声望加成。',
   'prestige.optionsInfo': '除了在水晶商店解锁的选项外，所有设置在声望后都会保留。',
+  'prestige.levelRequirementIncreaseInfo': '每次声望都会让下一次声望的等级需求提高25级。',
+  'prestige.selectionRequirementInfo': '必须从三个声望选项中选择一个才能执行声望。',
   'prestige.historyRecord': '会保存一条记录到声望历史，以便查看过去的声望。',
   'prestige.perform': '执行声望',
   'prestige.lock': '锁定',

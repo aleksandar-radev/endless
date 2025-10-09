@@ -1093,6 +1093,8 @@ export default {
   'prestige.bonusInfo': 'Defeat arena bosses to boost prestige bonuses. Current bonus: {bonus}%.',
   'prestige.resetInfo': 'Prestige starts a fresh run: level, equipment, inventory, buildings, quests and most progress are reset. Only chosen Prestige bonus is kept.',
   'prestige.optionsInfo': 'All options apart from ones that are unlocked from crystal shop are preserved after a prestige.',
+  'prestige.levelRequirementIncreaseInfo': 'Each prestige increases the level requirement for the next prestige by 25 levels.',
+  'prestige.selectionRequirementInfo': 'Select one of the three prestige options to perform the prestige.',
   'prestige.historyRecord': 'A record is saved to Prestige History so you can review past prestiges.',
   'prestige.perform': 'Perform Prestige',
   'prestige.lock': 'Lock',

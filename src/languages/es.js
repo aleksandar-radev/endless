@@ -1094,6 +1094,8 @@ export default {
   'prestige.bonusInfo': 'Derrota a los jefes de arena para aumentar las bonificaciones de prestigio. Bonificación actual: {bonus}%.',
   'prestige.resetInfo': 'El prestigio inicia una nueva partida: nivel, equipo, inventario, edificios, misiones y la mayor parte del progreso se reinician. Solo se mantiene la bonificación de prestigio elegida.',
   'prestige.optionsInfo': 'Todas las opciones, excepto las desbloqueadas en la tienda de cristales, se conservan después de prestigiar.',
+  'prestige.levelRequirementIncreaseInfo': 'Cada prestigio aumenta en 25 niveles el requisito para el siguiente prestigio.',
+  'prestige.selectionRequirementInfo': 'Debes seleccionar una de las tres opciones de prestigio para realizar el prestigio.',
   'prestige.historyRecord': 'Se guarda un registro en el Historial de Prestigio para que puedas revisar prestigios pasados.',
   'prestige.perform': 'Realizar Prestigio',
   'prestige.lock': 'Bloquear',
