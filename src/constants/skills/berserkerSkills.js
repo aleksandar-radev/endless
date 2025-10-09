@@ -49,7 +49,7 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.recklessSwing'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 3),
+      damage: scaleUpFlat(level, 3, 3),
       damagePercent: scaleDownFlat(level, 4),
       lifePerHit: scaleUpFlat(level, -1),
     }),
@@ -136,7 +136,7 @@ export const BERSERKER_SKILLS = {
       critChance: Math.min(scaleDownFlat(level, 0.05), 25),
       critDamage: Math.min(scaleDownFlat(level, 0.005), 2),
       attackRatingPercent: scaleDownFlat(level, 7),
-      lifePercent: Math.max(-scaleDownFlat(level, 0.15), -10),
+      lifePercent: scaleDownFlat(level, 1),
     }),
   },
 
@@ -212,7 +212,7 @@ export const BERSERKER_SKILLS = {
     id: 'rageOverflow',
     name: () => t('Rage Overflow'),
     type: () => 'toggle',
-    manaCost: (level) => 10 + level * 1.25,
+    manaCost: (level) => 10 + level * 0.25,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'rage-overflow',
     description: () => t('skill.rageOverflow'),
