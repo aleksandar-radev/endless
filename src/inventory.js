@@ -993,7 +993,7 @@ export default class Inventory {
     updateMaterialsGrid();
   }
 
-  salvageItemsByRarity(rarity) {
+  salvageItemsByRarity(rarity, { skipInventoryUpdates = false } = {}) {
     let salvagedItems = 0;
     let goldGained = 0;
     let crystalsGained = 0;
@@ -1043,14 +1043,16 @@ export default class Inventory {
         );
       }
       showToast(messages.join(', '), 'success');
-      if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
-        const sortMode =
-          (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) ||
-          'type-rarity-level';
-        sortInventory(sortMode);
-      } else {
-        updateInventoryGrid();
-        dataManager.saveGame();
+      if (!skipInventoryUpdates) {
+        if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
+          const sortMode =
+            (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) ||
+            'type-rarity-level';
+          sortInventory(sortMode);
+        } else {
+          updateInventoryGrid();
+          dataManager.saveGame();
+        }
       }
       updateMaterialsGrid();
       updateResources(); // <-- update the UI after using a material
@@ -1274,7 +1276,7 @@ export default class Inventory {
       this.autoSalvageRarities.length > 0 &&
       this.autoSalvageRarities.includes(item.rarity)
     ) {
-      this.salvageItemsByRarity(item.rarity);
+      this.salvageItemsByRarity(item.rarity, { skipInventoryUpdates: true });
       return;
     }
     this.hasNewItems = true; // Set flag when new item is added and kept

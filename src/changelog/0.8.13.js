@@ -15,6 +15,7 @@ export default function run() {
       <li>Updated the thorns damage indicator with a dedicated spiked badge icon to match the reflected damage theme.</li>
       <li>Alternation and Transmutation Orb dialogs now display roll percentiles when advanced tooltips are enabled.</li>
       <li>Added <span style="color:#4F8A10;">Set</span> and <span style="color:#8B5C2A;">Unique</span> items.</li>
+      <li>Skipped inventory refreshes when items are auto-salvaged to avoid unnecessary overhead.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
