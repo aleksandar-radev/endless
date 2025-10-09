@@ -861,7 +861,8 @@ export default {
   'tooltip.perseverance': '每点增加：<br />• 法力回复 {manaRegen}<br />• 生命回复 {lifeRegen}<br />• 全部抗性 {allResistance}<br />',
   'tooltip.elementalDamage': '包含在基础命中伤害中。受敌人抗性减免。',
   'tooltip.damage': '对敌人的基础物理伤害。<br />受力量和装备提升。',
-  'tooltip.attackSpeed': '每秒攻击次数。<br />最大：{currentCap} 次/秒（基础 {baseCap} + 来自飞升 {ascCap}）',
+  'tooltip.attackSpeed':
+    '每秒攻击次数。<br />基础攻速为 1.00 次/秒。百分比加成会先作用于该基础值，然后再叠加平坦加成。<br />最大：{currentCap} 次/秒（基础 {baseCap} + 来自飞升 {ascCap}）',
   'tooltip.attackRating': '决定对敌人的命中率。<br />更高阶段需要更高的攻击评分。',
   'tooltip.critChance': '造成暴击伤害的几率。<br />上限：{currentCap}%（基础 {baseCap}% + 来自飞升 {ascCap}%）',
   'tooltip.critDamage': '暴击伤害倍率。<br />基础：1.33 倍伤害',

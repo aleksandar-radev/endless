@@ -67,7 +67,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 0.5),
-      attackSpeed: Math.min(scaleDownFlat(level, 0.01), 1.5),
+      attackSpeedPercent: Math.min(scaleDownFlat(level, 0.5), 75),
       lifeSteal: Math.min(scaleDownFlat(level, 0.01), 4),
     }),
   },
@@ -102,7 +102,7 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.greaterFrenzy'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeed: Math.min(scaleDownFlat(level, 0.0075), 1.5),
+      attackSpeedPercent: Math.min(scaleDownFlat(level, 0.375), 75),
       lifePerHit: scaleUpFlat(level, 0.75),
     }),
   },
@@ -153,7 +153,7 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.bloodLust'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeed: Math.min(scaleDownFlat(level, 0.002), 1.5),
+      attackSpeedPercent: Math.min(scaleDownFlat(level, 0.1), 75),
       lifeSteal: Math.min(scaleDownFlat(level, 0.01), 4),
       lifePercent: scaleDownFlat(level, 1),
     }),
@@ -185,7 +185,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       resurrectionChance: Math.min(scaleDownFlat(level, 0.25), 50),
-      attackSpeed: Math.min(scaleDownFlat(level, 0.0085), 1.5),
+      attackSpeedPercent: Math.min(scaleDownFlat(level, 0.425), 75),
       armorPenetration: scaleUpFlat(level, 20, 7, 0.4),
     }),
   },
@@ -202,7 +202,7 @@ export const BERSERKER_SKILLS = {
     effect: (level) => ({
       strengthPercent: scaleDownFlat(level, 2.5),
       critChance: Math.min(scaleDownFlat(level, 0.05), 20),
-      attackSpeed: Math.min(scaleDownFlat(level, 0.002), 1.5),
+      attackSpeedPercent: Math.min(scaleDownFlat(level, 0.1), 75),
       damagePercent: scaleDownFlat(level),
     }),
   },
@@ -250,7 +250,7 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.bloodFrenzy'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeed: Math.min(scaleDownFlat(level, 0.02), 3),
+      attackSpeedPercent: Math.min(scaleDownFlat(level, 1), 150),
       damagePercent: scaleDownFlat(level, 2),
       lifePerHit: scaleUpFlat(level, 5, 2, 1),
     }),
@@ -312,7 +312,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 3),
-      attackSpeed: Math.min(scaleDownFlat(level, 0.013), 3),
+      attackSpeedPercent: Math.min(scaleDownFlat(level, 0.65), 150),
       lifeSteal: Math.min(scaleDownFlat(level, 0.01), 3),
     }),
   },

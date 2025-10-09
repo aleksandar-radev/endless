@@ -57,27 +57,27 @@ export const OFFENSE_STATS = {
   attackSpeed: {
     base: 1,
     decimalPlaces: 2,
-    training: {
-      cost: 400,
-      costIncrease: 600,
-      costIncreaseMultiplier: 1.08,
-      costThresholds: [{ level: 50, costIncreaseMultiplier: 1.05 }],
-      bonus: 0.01,
-      maxLevel: 100,
-    }, // max bonus: 25
-    item: {
-      min: 0.08,
-      max: 0.14,
-      limit: { SWORD: 3, AXE: 2, MACE: 2, GLOVES: 2 },
-      scaling: (level, tier) => offenseScaling(level, tier, PERCENT_SCALING),
-    },
-    itemTags: ['offense', 'gloves'],
     showInUI: true,
     subcategory: 'attack',
   },
   attackSpeedPercent: {
     base: 0,
-    decimalPlaces: 1,
+    decimalPlaces: 2,
+    training: {
+      cost: 400,
+      costIncrease: 600,
+      costIncreaseMultiplier: 1.08,
+      costThresholds: [{ level: 50, costIncreaseMultiplier: 1.05 }],
+      bonus: 0.5,
+      maxLevel: 100,
+    }, // max bonus: 50% -> +0.5 attacks/s on the 1.0 base before other flats
+    item: {
+      min: 0.05,
+      max: 0.25,
+      limit: { SWORD: 1, AXE: 0.8, MACE: 0.75, GLOVES: 0.5 },
+      scaling: (level, tier) => offenseScaling(level, tier, PERCENT_SCALING),
+    },
+    itemTags: ['offense', 'gloves'],
     forceNotShow: true,
   },
   // CRIT CHANCE

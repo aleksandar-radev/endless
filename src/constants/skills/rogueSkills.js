@@ -60,7 +60,7 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       damage: scaleUpFlat(level, 2, 6, 0.2),
       damagePercent: scaleDownFlat(level, 1.5),
-      attackSpeed: Math.min(scaleDownFlat(level, 0.0075), 2),
+      attackSpeedPercent: Math.min(scaleDownFlat(level, 0.375), 100),
     }),
   },
   shadowForm: {
@@ -160,7 +160,7 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critDamage: Math.min(scaleDownFlat(level, 0.0065), 5),
-      attackSpeed: Math.min(scaleDownFlat(level, 0.005), 2),
+      attackSpeedPercent: Math.min(scaleDownFlat(level, 0.25), 100),
     }),
   },
 
@@ -276,7 +276,7 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       critDamage: Math.min(scaleDownFlat(level, 0.01), 3),
       doubleDamageChance: Math.min(scaleDownFlat(level, 0.1, 10, 300, 0.5), 20),
-      attackSpeed: Math.min(scaleDownFlat(level, 0.0075), 1.5),
+      attackSpeedPercent: Math.min(scaleDownFlat(level, 0.375), 75),
     }),
   },
 

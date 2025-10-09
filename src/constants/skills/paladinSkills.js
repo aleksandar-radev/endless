@@ -254,7 +254,7 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.guardianAngel'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeed: scaleDownFlat(level, 0.01),
+      attackSpeedPercent: scaleDownFlat(level, 0.5),
       resurrectionChance: Math.min(scaleDownFlat(level, 0.1), 50),
       lifeRegen: scaleUpFlat(level, 2, 5, 0.2),
       lifeRegenPercent: scaleDownFlat(level, 0.5),
@@ -364,7 +364,7 @@ export const PALADIN_SKILLS = {
     effect: (level) => ({
       resurrectionChance: Math.min(scaleDownFlat(level, 0.1), 50),
       lifePercent: scaleDownFlat(level, 1.5),
-      attackSpeed: scaleDownFlat(level, 0.01),
+      attackSpeedPercent: scaleDownFlat(level, 0.5),
     }),
   },
   sacredGround: {

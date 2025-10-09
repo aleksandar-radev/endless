@@ -77,7 +77,7 @@ export const ITEM_SETS = [
         nameKey: 'items.set.arcanistRegalia.gloves',
         type: ITEM_TYPES.GLOVES,
         stats: [
-          { stat: 'attackSpeed', min: STATS.attackSpeed.item.min, max: STATS.attackSpeed.item.max * 0.7 },
+          { stat: 'attackSpeedPercent', min: STATS.attackSpeedPercent.item.min, max: STATS.attackSpeedPercent.item.max * 0.7 },
           { stat: 'elementalDamagePercent', min: STATS.elementalDamagePercent.item.min * 6, max: STATS.elementalDamagePercent.item.max * 2.6 },
           { stat: 'dexterity', min: STATS.dexterity.item.min * 1.5, max: STATS.dexterity.item.max * 1.2 },
           { stat: 'critChance', min: STATS.critChance.item.min * 2, max: STATS.critChance.item.max * 0.6 },

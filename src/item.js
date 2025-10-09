@@ -111,7 +111,13 @@ export default class Item {
   calculateStatValue({ baseValue, tierBonus, multiplier, scale, stat }) {
     const decimals = STATS[stat].decimalPlaces || 0;
     const handedMultiplier = this.isTwoHanded() ? 2 : 1;
-    let val = Number((baseValue * tierBonus * multiplier * scale * handedMultiplier).toFixed(decimals));
+    let val = baseValue * tierBonus * multiplier * scale * handedMultiplier;
+
+    if (stat === 'attackSpeedPercent') {
+      val *= 100;
+    }
+
+    val = Number(val.toFixed(decimals));
 
     const limitConfig = STATS[stat].item?.limit;
     let baseLimit = Infinity;
@@ -119,6 +125,9 @@ export default class Item {
       baseLimit = limitConfig;
     } else if (limitConfig && typeof limitConfig === 'object') {
       baseLimit = limitConfig[this.type] ?? limitConfig.default ?? Infinity;
+    }
+    if (stat === 'attackSpeedPercent') {
+      baseLimit *= 100;
     }
     if (Number.isFinite(baseLimit)) {
       baseLimit *= handedMultiplier;
@@ -173,6 +182,9 @@ export default class Item {
     } else if (limitConfig && typeof limitConfig === 'object') {
       baseLimit = limitConfig[this.type] ?? limitConfig.default ?? Infinity;
     }
+    if (stat === 'attackSpeedPercent') {
+      baseLimit *= 100;
+    }
     if (Number.isFinite(baseLimit)) {
       baseLimit *= handedMultiplier;
     }
@@ -185,8 +197,14 @@ export default class Item {
       ? Math.min(baseLimit, percentCap)
       : baseLimit;
     // Min value
-    let minVal = Number((statConfig.min * tierBonus * multiplier * scale * handedMultiplier).toFixed(decimalsFromConfig));
-    let maxVal = Number((statConfig.max * tierBonus * multiplier * scale * handedMultiplier).toFixed(decimalsFromConfig));
+    let minVal = statConfig.min * tierBonus * multiplier * scale * handedMultiplier;
+    let maxVal = statConfig.max * tierBonus * multiplier * scale * handedMultiplier;
+    if (stat === 'attackSpeedPercent') {
+      minVal *= 100;
+      maxVal *= 100;
+    }
+    minVal = Number(minVal.toFixed(decimalsFromConfig));
+    maxVal = Number(maxVal.toFixed(decimalsFromConfig));
     minVal = Math.min(minVal, limit);
     maxVal = Math.min(maxVal, limit);
     return { min: minVal, max: maxVal };
@@ -415,7 +433,11 @@ export default class Item {
       const tierBonus = this.getTierBonus(stat);
       const value = this.stats[stat];
       const handedMultiplier = this.isTwoHanded() ? 2 : 1;
-      baseValues[stat] = value / (multiplier * scaling * tierBonus * handedMultiplier);
+      let baseValue = value / (multiplier * scaling * tierBonus * handedMultiplier);
+      if (stat === 'attackSpeedPercent') {
+        baseValue /= 100;
+      }
+      baseValues[stat] = baseValue;
     }
     return baseValues;
   }

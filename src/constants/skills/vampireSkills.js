@@ -230,7 +230,7 @@ export const VAMPIRE_SKILLS = {
     effect: (level) => ({
       lifeSteal: Math.min(scaleDownFlat(level, 0.024), 3),
       damagePercent: scaleDownFlat(level, 2),
-      attackSpeed: scaleDownFlat(level, 0.01),
+      attackSpeedPercent: scaleDownFlat(level, 0.5),
     }),
   },
   sanguineFury: {
@@ -307,7 +307,7 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 2.5),
-      attackSpeed: scaleDownFlat(level, 0.015),
+      attackSpeedPercent: scaleDownFlat(level, 0.75),
       lifePercent: scaleDownFlat(level, 1.5),
     }),
   },

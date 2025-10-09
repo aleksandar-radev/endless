@@ -627,30 +627,28 @@ export default class Hero {
 
     for (const stat of STAT_KEYS) {
       if (!stat.endsWith('Percent')) {
-        let percent = percentBonuses[stat + 'Percent'] || 0;
-        if (RESISTANCE_SET.has(stat)) {
-          percent += this.stats.allResistancePercent || 0;
-        }
-
-        if (
-          (stat === 'armorPenetration' || stat === 'elementalPenetration') &&
-          this.stats.flatPenetrationPercent
-        ) {
-          percent += this.stats.flatPenetrationPercent;
-        }
-
         // Use Math.floor for integer stats, Number.toFixed for decimals
-        let value = flatValues[stat] + (ascensionBonuses[stat] || 0);
-        if (percent) value *= 1 + percent;
-
-        // Diminishing returns for attackSpeed
+        let value;
         if (stat === 'attackSpeed') {
-          const flatAttackSpeedBonus = flatValues.attackSpeed - STATS.attackSpeed.base;
-          const maxBonus = 4;
-          const scale = 9;
-          value =
-            STATS.attackSpeed.base +
-            (flatAttackSpeedBonus > 0 ? maxBonus * (1 - Math.exp(-flatAttackSpeedBonus / scale)) : 0);
+          // Attack speed percent bonuses scale the pre-percent total (base 1.0 plus flat additions).
+          const flatBase = flatValues.attackSpeed + (ascensionBonuses.attackSpeed || 0);
+          const attackSpeedPercent = percentBonuses.attackSpeedPercent || 0;
+          value = flatBase * (1 + attackSpeedPercent);
+        } else {
+          let percent = percentBonuses[stat + 'Percent'] || 0;
+          if (RESISTANCE_SET.has(stat)) {
+            percent += this.stats.allResistancePercent || 0;
+          }
+
+          if (
+            (stat === 'armorPenetration' || stat === 'elementalPenetration') &&
+            this.stats.flatPenetrationPercent
+          ) {
+            percent += this.stats.flatPenetrationPercent;
+          }
+
+          value = flatValues[stat] + (ascensionBonuses[stat] || 0);
+          if (percent) value *= 1 + percent;
         }
         if (stat === 'mana') {
           value += (this.stats.manaPerLevel || 0) * (this.level - 1);

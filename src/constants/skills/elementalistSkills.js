@@ -206,7 +206,7 @@ export const ELEMENTALIST_SKILLS = {
       attackRatingPercent: scaleDownFlat(level, 1.9),
       lifePerHit: scaleUpFlat(level, 4),
       manaPerHit: scaleUpFlat(level, 0.5),
-      attackSpeed: Math.min(scaleDownFlat(level, 0.0075), 1),
+      attackSpeedPercent: Math.min(scaleDownFlat(level, 0.375), 50),
     }),
   },
 

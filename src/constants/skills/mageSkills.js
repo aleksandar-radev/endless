@@ -191,7 +191,7 @@ export const MAGE_SKILLS = {
     description: () => t('skill.timeWarp'),
     maxLevel: () => 300,
     effect: (level) => ({
-      attackSpeed: Math.min(scaleDownFlat(level, 0.02), 2),
+      attackSpeedPercent: Math.min(scaleDownFlat(level, 1), 100),
     }),
   },
 
@@ -299,7 +299,7 @@ export const MAGE_SKILLS = {
     description: () => t('skill.chronomancerSurge'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeed: Math.min(scaleDownFlat(level, 0.02), 3),
+      attackSpeedPercent: Math.min(scaleDownFlat(level, 1), 150),
       cooldownReductionPercent: Math.min(scaleDownFlat(level, 0.1), 50),
     }),
   },

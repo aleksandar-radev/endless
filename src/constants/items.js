@@ -112,7 +112,7 @@ export const ITEM_STAT_POOLS = {
     possible: [...getStatsByTags(['defense', 'stat', 'boots'])],
   },
   SWORD: {
-    mandatory: ['attackSpeed'],
+    mandatory: [],
     possible: [...getStatsByTags(['offense', 'sword'])],
   },
   AXE: {

@@ -854,7 +854,8 @@ export default {
   'tooltip.perseverance': 'Cada punto incrementa:<br />• Regeneración de Maná en {manaRegen}<br />• Regeneración de Vida en {lifeRegen}<br />• Todas las Resistencias en {allResistance}<br />',
   'tooltip.elementalDamage': 'Incluido en el daño base del golpe. Reducido por las resistencias enemigas.',
   'tooltip.damage': 'Daño físico base infligido a los enemigos.<br />Aumentado por Fuerza y el equipo.',
-  'tooltip.attackSpeed': 'Número de ataques por segundo.<br />Máximo: {currentCap} ataques/s (base {baseCap} + {ascCap} de Ascensión)',
+  'tooltip.attackSpeed':
+    'Número de ataques por segundo.<br />La velocidad de ataque base es 1,00 ataques/s. Las bonificaciones porcentuales escalan esa base antes de sumar las bonificaciones planas.<br />Máximo: {currentCap} ataques/s (base {baseCap} + {ascCap} de Ascensión)',
   'tooltip.attackRating': 'Determina la probabilidad de golpe contra los enemigos.<br />Etapas más altas requieren más Puntuación de Ataque.',
   'tooltip.critChance': 'Probabilidad de infligir daño crítico.<br />Máximo: {currentCap}% (base {baseCap}% + {ascCap}% de Ascensión)',
   'tooltip.critDamage': 'Multiplicador de daño en golpes críticos.<br />Base: 1.33x daño',

@@ -44,7 +44,6 @@ export const CLASS_PATHS = {
     baseStats: () => ({
       lifeSteal: 1,
       lifePercent: 20,
-      attackSpeed: 0.2,
       damagePercent: 10,
     }),
     description: () => t('class.vampireDesc'),

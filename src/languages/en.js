@@ -861,7 +861,8 @@ export default {
   'tooltip.perseverance': 'Each point increases:<br />• Mana Regeneration by {manaRegen}<br />• Life Regeneration by {lifeRegen}<br />• All Resistances by {allResistance}<br />',
   'tooltip.elementalDamage': 'Included in base hit damage. Reduced by enemy resistances.',
   'tooltip.damage': 'Base physical damage dealt to enemies.<br />Increased by Strength and equipment.',
-  'tooltip.attackSpeed': 'Number of attacks per second.<br />Max: {currentCap} attacks/s (base {baseCap} + {ascCap} from Ascension)',
+  'tooltip.attackSpeed':
+    'Number of attacks per second.<br />Base attack speed is 1.00 attacks/s. Percentage bonuses scale that base before flat bonuses are added.<br />Max: {currentCap} attacks/s (base {baseCap} + {ascCap} from Ascension)',
   'tooltip.attackRating': 'Determines hit chance against enemies.<br />Higher stages require more Attack Rating.',
   'tooltip.critChance': 'Chance to deal critical damage.<br />Max: {currentCap}% (base {baseCap}% + {ascCap}% from Ascension)',
   'tooltip.critDamage': 'Damage multiplier on critical hits.<br />Base: 1.33x damage',
