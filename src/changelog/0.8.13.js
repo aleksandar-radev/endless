@@ -18,6 +18,7 @@ export default function run() {
       <li>Skipped inventory refreshes when items are auto-salvaged to avoid unnecessary overhead.</li>
       <li>Reduced mana cost of Rage overflow (Berserker skill). Made Rage Mastery give life, instead of take life. Increased scaling of reckless swing.</li>
       <li>Reworked attack speed into a base-plus-percent model so percentage bonuses clearly scale the base while flat bonuses add afterward.</li>
+      <li>Added a new quest for "first blood" that rewards player with a unique item.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

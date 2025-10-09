@@ -3,6 +3,23 @@ const BASE = import.meta.env.VITE_BASE_PATH;
 // Kill quests
 export const KILL_QUESTS = [
   {
+    id: 'kill1_unique_reward',
+    category: 'kills',
+    get title() {
+      return tp('quests.kills.firstBlood.title');
+    },
+    get description() {
+      return tp('quests.kills.firstBlood.description');
+    },
+    type: 'kill',
+    target: 1,
+    reward: {
+      gold: 150,
+      item: { uniqueId: 'ribbonweave_vestments', rarity: 'unique', tier: 1, level: 1 },
+    },
+    icon: `<img src="${BASE}/icons/sword.svg" class="icon" alt="kills"/>`,
+  },
+  {
     id: 'kill10',
     category: 'kills',
     get title() { return tp('Defeat {count} enemies.', { count: 10 }); },

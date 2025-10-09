@@ -3,6 +3,8 @@ import { QUEST_DEFINITIONS } from './constants/quests.js';
 import { hero, statistics, dataManager, inventory } from './globals.js';
 import { showToast, updateResources, updateTabIndicators } from './ui/ui.js';
 import { MATERIALS } from './constants/materials.js';
+import { createUniqueItemById } from './uniqueItems.js';
+import { t } from './i18n.js';
 
 export class Quest {
   constructor(def, claimed = false) {
@@ -69,16 +71,28 @@ export class Quest {
     if (this.reward.exp) hero.gainExp(this.reward.exp);
     if (this.reward.crystals) hero.gainCrystals(this.reward.crystals);
     if (this.reward.item) {
-      // Generate a random item of the correct rarity, tier, and player level
-      const rarity = this.reward.item.rarity.toUpperCase();
-      const tier = this.reward.item.tier || 1;
-      const level = statistics.highestStages?.[tier] || 1;
-      // Pick a random item type
-      const itemTypes = Object.keys(ITEM_TYPES);
-      const type = itemTypes[Math.floor(Math.random() * itemTypes.length)];
-      const newItem = inventory.createItem(type, level, rarity, tier);
-      inventory.addItemToInventory(newItem);
-      showToast(`You received a ${rarity} ${type} (Tier ${tier})!`, 'normal');
+      const rewardItem = this.reward.item;
+      if (rewardItem.uniqueId) {
+        const tier = rewardItem.tier || 1;
+        const level = rewardItem.level || statistics.highestStages?.[tier] || hero.level || 1;
+        const uniqueItem = createUniqueItemById(rewardItem.uniqueId, tier, level);
+        if (uniqueItem) {
+          inventory.addItemToInventory(uniqueItem);
+          const itemName = uniqueItem.nameKey ? t(uniqueItem.nameKey) : uniqueItem.type;
+          showToast(`You received ${itemName}!`, 'normal');
+        }
+      } else if (rewardItem.rarity) {
+        // Generate a random item of the correct rarity, tier, and player level
+        const rarity = rewardItem.rarity.toUpperCase();
+        const tier = rewardItem.tier || 1;
+        const level = statistics.highestStages?.[tier] || 1;
+        // Pick a random item type
+        const itemTypes = Object.keys(ITEM_TYPES);
+        const type = itemTypes[Math.floor(Math.random() * itemTypes.length)];
+        const newItem = inventory.createItem(type, level, rarity, tier);
+        inventory.addItemToInventory(newItem);
+        showToast(`You received a ${rarity} ${type} (Tier ${tier})!`, 'normal');
+      }
     }
     if (this.reward.materials && Array.isArray(this.reward.materials)) {
       this.reward.materials.forEach(({ id, qty }) => {
