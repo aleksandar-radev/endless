@@ -6,10 +6,10 @@ const SET_MAP = new Map(ITEM_SETS.map((set) => [set.id, set]));
 
 const MIN_SPECIAL_TIER = 1;
 const MAX_SPECIAL_TIER = 12;
-const SET_MIN_DENOMINATOR = 500;
-const SET_MAX_DENOMINATOR = 10000;
-const UNIQUE_MIN_DENOMINATOR = 1000;
-const UNIQUE_MAX_DENOMINATOR = 20000;
+const SET_MIN_DENOMINATOR = 220;
+const SET_MAX_DENOMINATOR = 500;
+const UNIQUE_MIN_DENOMINATOR = 250;
+const UNIQUE_MAX_DENOMINATOR = 400;
 
 function rollInRange(min, max) {
   if (min === max) return min;

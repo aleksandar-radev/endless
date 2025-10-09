@@ -591,7 +591,6 @@ export function updateInventoryGrid(inv) {
       typeof item.getDisplayName === 'function' ? item.getDisplayName() : item.name || '';
     if (displayName) {
       wrapper.setAttribute('aria-label', displayName);
-      wrapper.title = displayName;
     }
     wrapper.innerHTML = `<div class="item-icon">${item.getIcon()}</div>`;
     cell.innerHTML = '';
@@ -611,7 +610,6 @@ export function updateInventoryGrid(inv) {
       typeof item.getDisplayName === 'function' ? item.getDisplayName() : item.name || '';
     if (equippedDisplayName) {
       newItem.setAttribute('aria-label', equippedDisplayName);
-      newItem.title = equippedDisplayName;
     }
     newItem.style.borderColor = ITEM_RARITY[item.rarity].color;
     newItem.innerHTML = `<div class="item-icon">${item.getIcon()}</div>`;
