@@ -712,7 +712,7 @@ export default {
   'skill.warmth': 'Increases mana, mana regeneration, and wisdom',
   'skill.lightningStrike': 'Strikes an enemy with lightning, increasing lightning and air damage.',
   'skill.elementalMastery': 'Increases elemental damage and penetration.',
-  'skill.blizzard': 'Summons a blizzard that boosts all elemental damages.',
+  'skill.blizzard': 'Summons a blizzard that boosts cold, air, water, and lightning damage.',
   'skill.fireShield': 'Surrounds the caster with a fiery shield that reflects and increases fire damage.',
   'skill.arcaneWisdom': 'Raises mana and various mana regeneration rates.',
   'skill.elementalStorm': 'Unleashes a storm that adds elemental damage and damage percent.',

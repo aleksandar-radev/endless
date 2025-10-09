@@ -704,7 +704,7 @@ export default {
   'skill.warmth': 'Incrementa maná, regeneración de maná y sabiduría.',
   'skill.lightningStrike': 'Golpea a un enemigo con rayo, aumentando daño de rayo y aire.',
   'skill.elementalMastery': 'Aumenta daño y penetración elemental.',
-  'skill.blizzard': 'Invoca una ventisca que potencia todos los daños elementales.',
+  'skill.blizzard': 'Invoca una ventisca que potencia los daños de frío, aire, agua y rayo.',
   'skill.fireShield': 'Crea un escudo ígneo que refleja y aumenta el daño de fuego.',
   'skill.arcaneWisdom': 'Aumenta maná y varias tasas de regeneración de maná.',
   'skill.elementalStorm': 'Desata una tormenta que añade daño elemental y porcentaje de daño.',

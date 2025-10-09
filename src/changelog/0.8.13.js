@@ -27,6 +27,7 @@ export default function run() {
       <li>Ensured damage conversions respect each skill's allowed damage types so off-element bonuses no longer bleed into ability breakdowns.</li>
       <li>Synchronized the offline eligibility counter and combat region indicator so both reset correctly after eligibility is lost.</li>
       <li>Fixed hero and enemy attack timers so attack speed bonuses scale smoothly instead of being rounded to 100&nbsp;ms breakpoints.</li>
+      <li>Clarified Blizzard's description to list the elemental damage types it actually boosts.</li>
     </ul>
   `;
 }

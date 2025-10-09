@@ -713,7 +713,7 @@ export default {
   'skill.warmth': '提高法力、法力回复与智慧',
   'skill.lightningStrike': '以雷霆打击敌人，提升雷与风伤害。',
   'skill.elementalMastery': '增加元素伤害与穿透。',
-  'skill.blizzard': '召唤暴雪，提升所有元素伤害。',
+  'skill.blizzard': '召唤暴雪，提升寒冷、空气、水和闪电伤害。',
   'skill.fireShield': '以火焰护盾环绕施法者，反射并增加火焰伤害。',
   'skill.arcaneWisdom': '提高法力及多种法力回复率。',
   'skill.elementalStorm': '释放风暴，增加元素伤害及伤害百分比。',
