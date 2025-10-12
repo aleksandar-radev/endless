@@ -127,13 +127,16 @@ window.setLanguage = setLanguage;
 
         if (!notified && compareVersions(serverVersion, localVersion) > 0) {
           notified = true;
+          const isDesktopApp = navigator.userAgent.includes('Electron');
+          const promptKey = isDesktopApp ? 'versionModal.desktopPrompt' : 'versionModal.refreshPrompt';
+          const actionKey = isDesktopApp ? 'versionModal.closeApp' : 'versionModal.refreshNow';
           const contentHtml = `
             <div class="modal-content">
               <span class="modal-close">&times;</span>
               <h2>${t('versionModal.title')}</h2>
               <p>${t('versionModal.serverVersion')}: ${serverVersion} &nbsp; — &nbsp; ${t('versionModal.yourVersion')}: v${localVersion}</p>
-              ${t('versionModal.refreshPrompt')}<div style="text-align:center; margin-top: 24px; display:flex; gap:12px; justify-content:center;">
-                    <button id="new-version-modal-refresh" style="padding: 8px 24px; font-size: 1.1em;">${t('versionModal.refreshNow')}</button>
+              ${t(promptKey)}<div style="text-align:center; margin-top: 24px; display:flex; gap:12px; justify-content:center;">
+                    <button id="new-version-modal-action" style="padding: 8px 24px; font-size: 1.1em;">${t(actionKey)}</button>
                     <button id="new-version-modal-ok" style="padding: 8px 24px; font-size: 1.1em;">${t('versionModal.ok')}</button>
                   </div>
             </div>
@@ -141,18 +144,26 @@ window.setLanguage = setLanguage;
           createModal({ id: 'new-version-modal', className: 'new-version-modal', content: contentHtml, onClose: () => {} });
           setTimeout(() => {
             const okBtn = document.getElementById('new-version-modal-ok');
-            const refreshBtn = document.getElementById('new-version-modal-refresh');
+            const actionBtn = document.getElementById('new-version-modal-action');
             if (okBtn) okBtn.addEventListener('click', () => {
               const modal = document.getElementById('new-version-modal');
               if (modal) modal.remove();
             });
-            if (refreshBtn) refreshBtn.addEventListener('click', () => {
-              // Try to perform a normal reload; this will refresh the page and pick up the new version
-              try {
-                window.location.reload();
-              } catch (e) {
-                // Fallback: set href to force navigation
-                window.location.href = window.location.href;
+            if (actionBtn) actionBtn.addEventListener('click', () => {
+              if (isDesktopApp) {
+                try {
+                  window.close();
+                } catch (e) {
+                  // ignore; user can close manually
+                }
+              } else {
+                // Try to perform a normal reload; this will refresh the page and pick up the new version
+                try {
+                  window.location.reload();
+                } catch (e) {
+                  // Fallback: set href to force navigation
+                  window.location.href = window.location.href;
+                }
               }
             });
           }, 0);

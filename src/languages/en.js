@@ -231,6 +231,8 @@ export default {
   'versionModal.yourVersion': 'Your version',
   'versionModal.refreshPrompt': 'Refresh the page for the changes to take effect',
   'versionModal.refreshNow': 'Refresh now',
+  'versionModal.desktopPrompt': 'Close the app to apply the update. It will update automatically. After about 10 seconds you can open it again.',
+  'versionModal.closeApp': 'Close the app',
   'versionModal.ok': 'OK',
   'aria.openMenu': 'Open menu',
   'icon.menu': 'Menu',

@@ -223,6 +223,8 @@ export default {
   'versionModal.yourVersion': 'Tu versión',
   'versionModal.refreshPrompt': 'Actualiza la página para que los cambios surtan efecto',
   'versionModal.refreshNow': 'Actualizar ahora',
+  'versionModal.desktopPrompt': 'Cierra la aplicación para aplicar la actualización. Se actualizará automáticamente. Después de unos 10 segundos puedes abrirla de nuevo.',
+  'versionModal.closeApp': 'Cerrar la aplicación',
   'versionModal.ok': 'Aceptar',
   'aria.openMenu': 'Abrir menú',
   'icon.menu': 'Menú',

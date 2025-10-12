@@ -231,6 +231,8 @@ export default {
   'versionModal.yourVersion': '你的版本',
   'versionModal.refreshPrompt': '刷新页面以使更改生效',
   'versionModal.refreshNow': '立即刷新',
+  'versionModal.desktopPrompt': '关闭应用程序以应用更新。它会自动更新，等待大约 10 秒后再重新打开。',
+  'versionModal.closeApp': '关闭应用程序',
   'versionModal.ok': '确定',
   'aria.openMenu': '打开菜单',
   'icon.menu': '菜单',
