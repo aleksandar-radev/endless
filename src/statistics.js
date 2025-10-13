@@ -2,8 +2,10 @@ import { handleSavedData } from './functions.js';
 import { formatNumber, formatStatName } from './ui/ui.js';
 import { t, tp } from './i18n.js';
 import { ROCKY_FIELD_REGIONS } from './rockyField.js';
+import { createDeferredRunner } from './utils/debounce.js';
 
 const ROCKY_FIELD_REGION_IDS = ROCKY_FIELD_REGIONS.map((region) => region.id);
+const STATISTICS_UPDATE_DEBOUNCE_MS = 1000;
 
 function createRockyFieldRegionMap(source = {}) {
   const result = {};
@@ -281,6 +283,25 @@ export default class Statistics {
       if (this.enemiesKilled[key] == null) this.enemiesKilled[key] = 0;
     });
     this.lastUpdate = Date.now();
+    this._statsUiRefresh = createDeferredRunner(
+      () => this.updateStatisticsUI(),
+      STATISTICS_UPDATE_DEBOUNCE_MS,
+    );
+    this._queueUiUpdate(true);
+  }
+
+  _queueUiUpdate(immediate = false) {
+    if (!this._statsUiRefresh) {
+      this._statsUiRefresh = createDeferredRunner(
+        () => this.updateStatisticsUI(),
+        STATISTICS_UPDATE_DEBOUNCE_MS,
+      );
+    }
+    if (immediate) {
+      this._statsUiRefresh.flush();
+    } else {
+      this._statsUiRefresh.trigger();
+    }
   }
 
   resetStatistics() {
@@ -325,7 +346,7 @@ export default class Statistics {
     this.rockyFieldEnemiesKilledByRegion = createRockyFieldRegionMap();
     this.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
     this.lastFightActive = Date.now();
-    this.updateStatisticsUI();
+    this._queueUiUpdate(true);
   }
 
   /**
@@ -366,7 +387,7 @@ export default class Statistics {
         </div>
     `;
     statisticsTab.appendChild(container);
-    this.updateStatisticsUI();
+    this._queueUiUpdate(true);
   }
 
   updateStatisticsUI() {
@@ -394,7 +415,7 @@ export default class Statistics {
       }
       this[category] += amount;
     }
-    this.updateStatisticsUI();
+    this._queueUiUpdate();
   }
 
   set(category, subcategory = null, value) {
@@ -405,7 +426,7 @@ export default class Statistics {
     } else {
       this[category] = value;
     }
-    this.updateStatisticsUI();
+    this._queueUiUpdate();
   }
 
   // getter function
@@ -421,13 +442,13 @@ export default class Statistics {
     const deltaSeconds = (now - this.lastUpdate) / 1000;
     this.totalTimePlayed += deltaSeconds;
     this.lastUpdate = now;
-    this.updateStatisticsUI();
+    this._queueUiUpdate();
   }
 
   // Add a method to increment totalTimeInFights
   addFightTime(seconds) {
     this.totalTimeInFights += seconds;
-    this.updateStatisticsUI();
+    this._queueUiUpdate();
   }
 }
 

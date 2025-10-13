@@ -29,6 +29,22 @@ import {
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
 import { INVENTORY_MAX_QTY } from './constants/limits.js';
+import { createDeferredRunner } from './utils/debounce.js';
+
+const MATERIALS_UPDATE_DEBOUNCE_MS = 1000;
+
+const materialsUiRefresh = createDeferredRunner(() => {
+  updateMaterialsGrid();
+  dataManager.saveGame();
+}, MATERIALS_UPDATE_DEBOUNCE_MS);
+
+export function requestMaterialsUiRefresh({ immediate = false } = {}) {
+  if (immediate) {
+    materialsUiRefresh.flush();
+  } else {
+    materialsUiRefresh.trigger();
+  }
+}
 
 export const ITEM_SLOTS = 200;
 export const PERSISTENT_SLOTS = 30;
@@ -103,8 +119,7 @@ export default class Inventory {
     ) {
       matDef.onUse(hero, material.qty || 1);
       statistics.increment('totalMaterialsFound', null, material.qty);
-      dataManager.saveGame();
-      updateMaterialsGrid();
+      requestMaterialsUiRefresh();
       return;
     }
 
@@ -123,8 +138,7 @@ export default class Inventory {
     if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
       sortMaterials();
     } else {
-      updateMaterialsGrid();
-      dataManager.saveGame();
+      requestMaterialsUiRefresh();
     }
   }
 
@@ -184,8 +198,7 @@ export default class Inventory {
     if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
       sortMaterials();
     } else {
-      updateMaterialsGrid();
-      dataManager.saveGame();
+      requestMaterialsUiRefresh();
     }
   }
 

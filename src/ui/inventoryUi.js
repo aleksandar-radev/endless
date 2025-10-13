@@ -1,5 +1,5 @@
 import { hero, inventory, dataManager, crystalShop } from '../globals.js';
-import { ITEM_SLOTS, MATERIALS_SLOTS, PERSISTENT_SLOTS } from '../inventory.js';
+import { ITEM_SLOTS, MATERIALS_SLOTS, PERSISTENT_SLOTS, requestMaterialsUiRefresh } from '../inventory.js';
 import { MATERIALS } from '../constants/materials.js';
 import { hideTooltip, positionTooltip, showToast, showTooltip } from '../ui/ui.js';
 import { ITEM_RARITY, RARITY_ORDER, SLOT_REQUIREMENTS, ITEM_TYPES, ITEM_ICONS } from '../constants/items.js';
@@ -176,7 +176,7 @@ export function initializeInventoryUI(inv) {
       sortInventory(sortMode);
       showToast(`${t('inventory.sortedItemsBy')} ${sortModeShortText[sortMode]}`, 'success');
     } else {
-      sortMaterials();
+      sortMaterials({ immediate: true });
       showToast(t('inventory.sortedMaterials'), 'success');
     }
   });
@@ -1051,7 +1051,7 @@ export function setupItemDragAndTooltip(root = getInventoryTab()) {
   });
 }
 
-export function sortMaterials() {
+export function sortMaterials({ immediate = false } = {}) {
   // Sort by MATERIALS[mat.id]?.sort ascending, then by id ascending
   const nonNullMaterials = inventory.materials.filter((mat) => mat !== null);
   nonNullMaterials.sort((a, b) => {
@@ -1063,8 +1063,7 @@ export function sortMaterials() {
   });
   // Fill up to MATERIALS_SLOTS with nulls
   inventory.materials = [...nonNullMaterials, ...new Array(MATERIALS_SLOTS - nonNullMaterials.length).fill(null)];
-  updateMaterialsGrid();
-  dataManager.saveGame();
+  requestMaterialsUiRefresh({ immediate });
 }
 
 export function updateMaterialsGrid(inv, root = getInventoryTab()) {
