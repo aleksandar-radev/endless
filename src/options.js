@@ -74,7 +74,7 @@ const OPTION_TOOLTIPS = {
   autoSortInventoryToggle: (isPurchased) =>
     html`${isPurchased() ? '' : t('options.autoSortInventory.disabledTooltip')}`,
   enemyStatsLabel: () => html`Display enemy statistics during combat`,
-  stageControlsInlineLabel: () => html`Show stage controls under enemy in Explore`,
+  stageControlsInlineLabel: () => html`Show stage controls under enemy in Explore and Rocky Field`,
   shortNumbersLabel: () => html`Display large numbers using abbreviations`,
   rollPercentilesLabel: () => html`${t('options.rollPercentiles.tooltip')}`,
 };
@@ -170,7 +170,7 @@ export class Options {
     this.showNotifications = data.showNotifications ?? true;
     // Show combat texts (damage numbers, level up text)
     this.showCombatText = data.showCombatText ?? true;
-    // Show stage controls under enemy in Explore panel
+    // Show stage controls under enemy in Explore and Rocky Field panels
     this.showStageControlsInline = data.showStageControlsInline ?? false;
     // Show roll quality percentiles instead of min/max ranges
     this.showRollPercentiles = data.showRollPercentiles ?? false;
@@ -1871,7 +1871,7 @@ export class Options {
   }
 
   /**
-   * Creates a toggle to show stage-related controls below the enemy in Explore panel.
+   * Creates a toggle to show stage-related controls below the enemy in Explore and Rocky Field panels.
    */
   _createStageControlsInlineOption() {
     const wrapper = document.createElement('div');

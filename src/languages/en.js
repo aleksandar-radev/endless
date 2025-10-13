@@ -464,7 +464,7 @@ export default {
   'options.desktopDownload': 'You can download desktop application (Windows only!) from',
   'options.here': 'HERE',
   'options.stageControlsInline': 'Show Stage Controls Under Enemy',
-  'options.stageControlsInline.tooltip': 'Show starting stage, stage skip, and reset options under the enemy in Explore',
+  'options.stageControlsInline.tooltip': 'Show starting stage, stage skip, and reset options under the enemy in Explore and Rocky Field',
   'options.startingStage': 'Starting Stage',
   'options.toast.startingStageApplied': 'Starting stage option applied!',
   'options.shortElementalNames': 'Use Short Elemental Stat Names',

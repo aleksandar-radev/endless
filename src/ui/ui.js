@@ -812,6 +812,7 @@ function renderRegionPanel(region) {
     updateRockyFieldRegionSelector();
     updateEnemyStats();
     updateResources();
+    updateStageControlsInlineVisibility();
   } else {
     const panel = document.createElement('div');
     panel.id = 'explore-panel';
@@ -839,12 +840,14 @@ function renderRegionPanel(region) {
 }
 
 /**
- * Show or hide stage controls inline below the enemy in Explore panel
+ * Show or hide stage controls inline below the enemy for supported regions
  */
 export function updateStageControlsInlineVisibility() {
-  const panel = document.getElementById('explore-panel');
+  const isSupportedMode = game.fightMode === 'explore' || game.fightMode === 'rockyField';
+  const panelId = game.fightMode === 'rockyField' ? 'rocky-field-panel' : 'explore-panel';
+  const panel = isSupportedMode ? document.getElementById(panelId) : null;
   const existing = document.getElementById('inline-stage-controls');
-  const shouldShow = !!options?.showStageControlsInline && game.fightMode === 'explore' && !!panel;
+  const shouldShow = !!options?.showStageControlsInline && isSupportedMode && !!panel;
   if (!shouldShow) {
     if (existing) existing.remove();
     return;

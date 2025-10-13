@@ -464,7 +464,7 @@ export default {
   'options.desktopDownload': '你可以在此下载桌面应用程序（仅限 Windows！）',
   'options.here': '这里',
   'options.stageControlsInline': '在敌人下方显示阶段控制',
-  'options.stageControlsInline.tooltip': '在探索面板的敌人下方显示起始阶段、每次击杀跳过阶段和重置选项',
+  'options.stageControlsInline.tooltip': '在探索和岩石场面板的敌人下方显示起始阶段、每次击杀跳过阶段和重置选项',
   'options.startingStage': '起始阶段',
   'options.toast.startingStageApplied': '起始阶段选项已应用！',
   'options.shortElementalNames': '使用元素属性简称',
