@@ -43,6 +43,10 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
   _dataManager.startSessionMonitor();
   let savedData = await _dataManager.loadGame({ cloud });
 
+  if (savedData?.dataManager && typeof savedData.dataManager.lastLocalSaveAt === 'number') {
+    _dataManager.lastLocalSaveAt = savedData.dataManager.lastLocalSaveAt;
+  }
+
   if (reset) {
     savedData = null;
   }
@@ -82,7 +86,7 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
   dataManager = _dataManager;
 
   // useful when loading from cloud
-  dataManager.saveGame();
+  dataManager.saveGame({ force: true });
 }
 
 export function getGlobals() {

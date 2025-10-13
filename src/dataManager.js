@@ -7,6 +7,8 @@ import { showToast } from './ui/ui.js';
 import { t } from './i18n.js';
 import { getTimeNow } from './common.js';
 
+const SAVE_INTERVAL_MS = 5000;
+
 const MAX_SLOTS = 5;
 
 export class DataManager {
@@ -16,6 +18,25 @@ export class DataManager {
     this.currentSlot = parseInt(localStorage.getItem('gameCurrentSlot'), 10) || 0;
     // Delay updating last combat time until offline rewards have been processed
     this.enableLastFightTime = false;
+    this.lastLocalSaveAt = 0;
+    this._pendingSaveTimer = null;
+    this._pendingSavePromise = null;
+    this._pendingSaveResolve = null;
+    this._pendingSaveReject = null;
+    this._lastSerializedSnapshot = null;
+    this._lastEncryptedSnapshot = null;
+    this._saveInFlight = null;
+    this.saveGame = this.saveGame.bind(this);
+  }
+
+  toJSON() {
+    return {
+      session: this.session,
+      sessionInterval: this.sessionInterval,
+      currentSlot: this.currentSlot,
+      enableLastFightTime: this.enableLastFightTime,
+      lastLocalSaveAt: this.lastLocalSaveAt,
+    };
   }
 
   getSession() {
@@ -61,49 +82,197 @@ export class DataManager {
     return summaries;
   }
 
-  async saveGame({ cloud = false } = {}) {
-    const saveData = getGlobals();
-    if (this.enableLastFightTime) {
-      saveData.statistics.lastFightActive = await getTimeNow();
-    }
-    const encrypted = crypt.encrypt(JSON.stringify(saveData));
-    const slotKey = `gameProgress_${this.currentSlot}`;
-    localStorage.setItem(slotKey, encrypted);
-    // Maintain legacy key for debug tools
-    localStorage.setItem('gameProgress', encrypted);
-
+  async saveGame({ cloud = false, force = false } = {}) {
     if (cloud) {
-      try {
-        const slots = [];
-        for (let i = 0; i < MAX_SLOTS; i++) {
-          if (i === this.currentSlot) {
-            slots[i] = saveData;
-          } else {
-            const other = localStorage.getItem(`gameProgress_${i}`);
-            if (other) {
-              try {
-                const decryptedData = (crypt.decrypt(other));
-                slots[i] = decryptedData;
-              } catch {
+      return this._performSave({ cloud: true });
+    }
+
+    if (force) {
+      return this._performSave({ cloud: false });
+    }
+
+    if (this._pendingSavePromise) {
+      return this._pendingSavePromise;
+    }
+
+    const now = Date.now();
+    const delay = Math.max(0, (this.lastLocalSaveAt || 0) + SAVE_INTERVAL_MS - now);
+
+    this._pendingSavePromise = new Promise((resolve, reject) => {
+      this._pendingSaveResolve = resolve;
+      this._pendingSaveReject = reject;
+    });
+
+    const triggerSave = () => {
+      this._performSave({ cloud: false }).catch(() => {});
+    };
+
+    if (delay === 0) {
+      triggerSave();
+    } else {
+      this._pendingSaveTimer = setTimeout(triggerSave, delay);
+    }
+
+    return this._pendingSavePromise;
+  }
+
+  async _performSave({ cloud }) {
+    if (this._saveInFlight) {
+      await this._saveInFlight;
+    }
+
+    if (this._pendingSaveTimer) {
+      clearTimeout(this._pendingSaveTimer);
+      this._pendingSaveTimer = null;
+    }
+
+    const resolve = this._pendingSaveResolve;
+    const reject = this._pendingSaveReject;
+    this._pendingSavePromise = null;
+    this._pendingSaveResolve = null;
+    this._pendingSaveReject = null;
+
+    const saveOperation = (async () => {
+      const saveData = getGlobals();
+      if (this.enableLastFightTime) {
+        saveData.statistics.lastFightActive = await getTimeNow();
+      }
+
+      const serialized = JSON.stringify(saveData);
+      let encrypted;
+      if (serialized === this._lastSerializedSnapshot && this._lastEncryptedSnapshot) {
+        encrypted = this._lastEncryptedSnapshot;
+      } else {
+        encrypted = crypt.encrypt(serialized);
+        this._lastSerializedSnapshot = serialized;
+        this._lastEncryptedSnapshot = encrypted;
+      }
+
+      const slotKey = `gameProgress_${this.currentSlot}`;
+      this._writeLocalSave(slotKey, encrypted, { optional: false });
+      // Maintain legacy key for debug tools when possible without exceeding quota
+      this._writeLocalSave('gameProgress', encrypted, { optional: true });
+
+      this.lastLocalSaveAt = Date.now();
+      this._dispatchSavedEvent(this.lastLocalSaveAt);
+
+      if (cloud) {
+        try {
+          const slots = [];
+          for (let i = 0; i < MAX_SLOTS; i++) {
+            if (i === this.currentSlot) {
+              slots[i] = saveData;
+            } else {
+              const other = localStorage.getItem(`gameProgress_${i}`);
+              if (other) {
+                try {
+                  const decryptedData = crypt.decrypt(other);
+                  slots[i] = decryptedData;
+                } catch {
+                  slots[i] = null;
+                }
+              } else {
                 slots[i] = null;
               }
-            } else {
-              slots[i] = null;
             }
           }
-        }
 
-        await saveGameData(this.session.id, {
-          data_json: {
-            slots,
-            currentSlot: this.currentSlot,
-          },
-          game_name: import.meta.env.VITE_GAME_NAME,
-        });
-      } catch (e) {
-        showToast(t('dataManager.cloudSaveFailed'));
-        console.error('Cloud save failed:', e);
+          await saveGameData(this.session.id, {
+            data_json: {
+              slots,
+              currentSlot: this.currentSlot,
+            },
+            game_name: import.meta.env.VITE_GAME_NAME,
+          });
+        } catch (e) {
+          showToast(t('dataManager.cloudSaveFailed'));
+          console.error('Cloud save failed:', e);
+        }
       }
+    })();
+
+    this._saveInFlight = saveOperation;
+
+    try {
+      await saveOperation;
+      if (resolve) resolve();
+    } catch (error) {
+      if (reject) reject(error);
+      throw error;
+    } finally {
+      this._saveInFlight = null;
+    }
+  }
+
+  _writeLocalSave(key, value, { optional } = { optional: false }) {
+    if (typeof localStorage === 'undefined') {
+      return false;
+    }
+
+    try {
+      localStorage.setItem(key, value);
+      return true;
+    } catch (error) {
+      if (!this._isQuotaExceeded(error)) {
+        throw error;
+      }
+
+      console.warn(`Local storage quota exceeded while writing ${key}. Attempting cleanup.`, error);
+      const removedKeys = this._purgeBackupSaves();
+
+      try {
+        localStorage.setItem(key, value);
+        if (removedKeys.length > 0) {
+          console.info('Recovered space for local save by removing backups:', removedKeys);
+        }
+        return true;
+      } catch (retryError) {
+        if (!optional) {
+          showToast(t('dataManager.localSaveFailed'));
+        }
+        console.error(`Failed to persist ${key} after freeing space.`, retryError);
+        if (optional) {
+          return false;
+        }
+        throw retryError;
+      }
+    }
+  }
+
+  _isQuotaExceeded(error) {
+    if (!error) return false;
+    return (
+      error.name === 'QuotaExceededError' ||
+      error.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+      error.code === 22 ||
+      error.code === 1014
+    );
+  }
+
+  _purgeBackupSaves() {
+    if (typeof localStorage === 'undefined') {
+      return [];
+    }
+
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('game_backup_')) {
+        keysToRemove.push(key);
+      }
+    }
+
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
+    return keysToRemove;
+  }
+
+  _dispatchSavedEvent(timestamp) {
+    if (typeof document !== 'undefined') {
+      document.dispatchEvent(
+        new CustomEvent('dataManager:saved', {
+          detail: { timestamp },
+        }),
+      );
     }
   }
 

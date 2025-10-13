@@ -1452,36 +1452,55 @@ export default class Inventory {
 
   /* Utility to get a random material (weighted by dropChance) */
   getRandomMaterial() {
+    const pool = this.getMaterialDropPool();
+    return this.getRandomMaterialFromPool(pool);
+  }
+
+  getMaterialDropPool() {
     const region = getCurrentRegion();
+    if (!region) return null;
     const enemy = game.currentEnemy;
-    // Determine allowed exclusives from both enemy and region
+
     const allowedExclusive = [...(enemy?.canDrop || []), ...(region.canDrop || [])];
-    // Filter materials by dropChance and exclusivity
+
     const materials = Object.values(MATERIALS)
       .filter((m) => m.dropChance > 0)
       .filter((m) => !m.exclusive || allowedExclusive.includes(m.id));
-    // Combine region and enemy drop multipliers
-    const regionMultiplier = region.multiplier.materialDrop || 1.0;
-    const enemyMultiplier = enemy?.baseData?.multiplier.materialDrop || 1.0;
+    if (!materials.length) return null;
+
+    const regionMultiplier = region.multiplier?.materialDrop || 1.0;
+    const enemyMultiplier = enemy?.baseData?.multiplier?.materialDrop || 1.0;
     const multiplier = regionMultiplier * enemyMultiplier;
-    // Merge region and enemy weights (additive; default to 1 if none)
+
     const regionWeights = region.materialDropWeights || {};
     const enemyWeights = enemy?.baseData?.materialDropWeights || {};
-    const combinedWeights = {};
-    materials.forEach((m) => {
-      const w = (regionWeights[m.id] || 0) + (enemyWeights[m.id] || 0);
-      combinedWeights[m.id] = w > 0 ? w : 1;
+
+    const weights = materials.map((m) => {
+      const bonusWeight = (regionWeights[m.id] || 0) + (enemyWeights[m.id] || 0);
+      const finalWeight = bonusWeight > 0 ? bonusWeight : 1;
+      return m.dropChance * multiplier * finalWeight;
     });
-    // Calculate total weighted drop chances
-    const total = materials.reduce((sum, m) => sum + m.dropChance * multiplier * combinedWeights[m.id], 0);
-    let roll = Math.random() * total;
-    for (const mat of materials) {
-      const weight = mat.dropChance * multiplier * combinedWeights[mat.id];
-      if (roll < weight) return mat;
+
+    const totalWeight = weights.reduce((sum, value) => sum + value, 0);
+    if (!Number.isFinite(totalWeight) || totalWeight <= 0) return null;
+
+    return { materials, weights, totalWeight };
+  }
+
+  getRandomMaterialFromPool(pool) {
+    if (!pool || pool.totalWeight <= 0) return null;
+    let roll = Math.random() * pool.totalWeight;
+    for (let i = 0; i < pool.materials.length; i++) {
+      const weight = pool.weights[i];
+      if (weight <= 0) continue;
+      if (roll < weight) return pool.materials[i];
       roll -= weight;
     }
-    // fallback
-    return materials[0];
+
+    for (let i = pool.materials.length - 1; i >= 0; i--) {
+      if (pool.weights[i] > 0) return pool.materials[i];
+    }
+    return pool.materials[0] || null;
   }
 
   /**

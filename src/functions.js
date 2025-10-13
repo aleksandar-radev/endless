@@ -73,7 +73,7 @@ export function initDebugging() {
         // Initial update and monitor changes
         updateDebugUI();
         debugUiInterval = setInterval(updateDebugUI, 1000);
-        saveGameInterval = setInterval(dataManager.saveGame, 1000);
+        saveGameInterval = setInterval(() => dataManager.saveGame({ force: true }), 1000);
       } else {
         if (debugUiInterval) {
           clearInterval(debugUiInterval);

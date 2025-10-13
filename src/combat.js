@@ -34,6 +34,105 @@ const UNIQUE_RUNE_SET = new Set(RUNES.filter((r) => r.unique).map((r) => r.id));
 const COMMON_RUNE_DROP_CHANCE = 1 / 175;
 const UNIQUE_RUNE_DROP_CHANCE = 1 / 50000;
 const RUNE_DROP_RATE_MULTIPLIER = 1.5;
+const EXTRA_DROP_SIMULATION_THRESHOLD = 50;
+
+function gaussianRandom() {
+  const u1 = Math.random() || 1e-12;
+  const u2 = Math.random();
+  return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+}
+
+function sampleBinomial(trials, probability) {
+  if (!Number.isFinite(trials) || trials <= 0) return 0;
+  if (!Number.isFinite(probability) || probability <= 0) return 0;
+  if (probability >= 1) return Math.floor(trials);
+
+  const totalTrials = Math.floor(trials);
+  if (totalTrials <= EXTRA_DROP_SIMULATION_THRESHOLD) {
+    let successes = 0;
+    for (let i = 0; i < totalTrials; i++) {
+      if (Math.random() < probability) successes++;
+    }
+    return successes;
+  }
+
+  const mean = totalTrials * probability;
+  const variance = totalTrials * probability * (1 - probability);
+  const stdDev = Math.sqrt(Math.max(0, variance));
+  if (stdDev === 0) return Math.round(mean);
+
+  const sample = Math.round(mean + stdDev * gaussianRandom());
+  return Math.max(0, Math.min(totalTrials, sample));
+}
+
+function sampleUpgradeMaterialQuantity(dropCount, enemyLevel) {
+  if (dropCount <= 0) return 0;
+  if (dropCount <= EXTRA_DROP_SIMULATION_THRESHOLD) {
+    let total = 0;
+    for (let i = 0; i < dropCount; i++) {
+      total += inventory.getScrapPackSize(enemyLevel);
+    }
+    return total;
+  }
+
+  const rolls = Math.max(0, Math.floor(enemyLevel / 25));
+  if (rolls <= 0) return dropCount;
+
+  const minTotal = dropCount;
+  const meanAdditional = dropCount * rolls / 2;
+  const varianceSingle = rolls * (rolls + 2) / 12;
+  const varianceTotal = dropCount * varianceSingle;
+  const stdDev = Math.sqrt(Math.max(0, varianceTotal));
+  const sample = Math.round(minTotal + meanAdditional + stdDev * gaussianRandom());
+  const maxTotal = dropCount * (1 + rolls);
+  return Math.max(minTotal, Math.min(maxTotal, sample));
+}
+
+function sampleMaterialDrops(extraDrops, pool) {
+  const allocation = new Map();
+  if (!pool || !Number.isFinite(extraDrops) || extraDrops <= 0) return allocation;
+
+  const drops = Math.floor(extraDrops);
+  if (drops <= EXTRA_DROP_SIMULATION_THRESHOLD) {
+    for (let i = 0; i < drops; i++) {
+      const mat = inventory.getRandomMaterialFromPool(pool);
+      if (!mat) continue;
+      const existing = allocation.get(mat) || { mat, drops: 0 };
+      existing.drops += 1;
+      allocation.set(mat, existing);
+    }
+    return allocation;
+  }
+
+  const { materials, weights } = pool;
+  let remainingDrops = drops;
+  let remainingWeight = pool.totalWeight;
+
+  for (let i = 0; i < materials.length && remainingDrops > 0; i++) {
+    const mat = materials[i];
+    const weight = weights[i];
+    if (!mat || weight <= 0) continue;
+
+    let dropsForMaterial = 0;
+    if (i === materials.length - 1 || remainingWeight <= weight) {
+      dropsForMaterial = remainingDrops;
+      remainingDrops = 0;
+    } else {
+      const probability = Math.min(1, Math.max(0, weight / remainingWeight));
+      dropsForMaterial = sampleBinomial(remainingDrops, probability);
+      remainingDrops -= dropsForMaterial;
+      remainingWeight = Math.max(0, remainingWeight - weight);
+    }
+
+    if (dropsForMaterial > 0) {
+      const existing = allocation.get(mat) || { mat, drops: 0 };
+      existing.drops += dropsForMaterial;
+      allocation.set(mat, existing);
+    }
+  }
+
+  return allocation;
+}
 
 export function enemyAttack(currentTime) {
   if (!game || !hero) return;
@@ -461,21 +560,40 @@ export async function defeatEnemy() {
       }
 
       if (extraDrops > 0) {
-        // Aggregate materials to minimize inventory operations and notifications
+        const materialPool = inventory.getMaterialDropPool();
         const aggregate = new Map();
         const enemyLvl = enemy.level || game.stage;
-        for (let i = 0; i < extraDrops; i++) {
-          const extraMat = inventory.getRandomMaterial();
-          let extraQty = 1;
-          if (inventory.isUpgradeMaterial(extraMat)) {
-            extraQty = inventory.getScrapPackSize(enemyLvl);
+
+        if (materialPool) {
+          const distribution = sampleMaterialDrops(extraDrops, materialPool);
+          for (const { mat, drops } of distribution.values()) {
+            if (!mat || drops <= 0) continue;
+            const key = mat.id;
+            if (!aggregate.has(key)) aggregate.set(key, { mat, qty: 0 });
+            const entry = aggregate.get(key);
+            if (inventory.isUpgradeMaterial(mat)) {
+              entry.qty += sampleUpgradeMaterialQuantity(drops, enemyLvl);
+            } else {
+              entry.qty += drops;
+            }
           }
-          const key = extraMat.id;
-          if (!aggregate.has(key)) aggregate.set(key, { mat: extraMat, qty: 0 });
-          aggregate.get(key).qty += extraQty;
+        } else {
+          for (let i = 0; i < extraDrops; i++) {
+            const fallbackMat = inventory.getRandomMaterial();
+            if (!fallbackMat) continue;
+            const key = fallbackMat.id;
+            if (!aggregate.has(key)) aggregate.set(key, { mat: fallbackMat, qty: 0 });
+            const entry = aggregate.get(key);
+            if (inventory.isUpgradeMaterial(fallbackMat)) {
+              entry.qty += inventory.getScrapPackSize(enemyLvl);
+            } else {
+              entry.qty += 1;
+            }
+          }
         }
 
         for (const { mat: aMat, qty: totalQty } of aggregate.values()) {
+          if (!totalQty) continue;
           inventory.addMaterial({ id: aMat.id, qty: totalQty });
           statistics.increment('totalMaterialsDropped', null, totalQty);
           battleLog.addDrop(tp('battleLog.droppedMaterial', { name: aMat.name, qty: formatNumber(totalQty) }));

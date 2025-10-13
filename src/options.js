@@ -1038,7 +1038,7 @@ export class Options {
     apply.addEventListener('click', async () => {
       const slot = parseInt(select.value, 10);
       if (slot === dataManager.getCurrentSlot()) return;
-      await dataManager.saveGame();
+      await dataManager.saveGame({ force: true });
       dataManager.setCurrentSlot(slot);
       window.location.reload();
     });

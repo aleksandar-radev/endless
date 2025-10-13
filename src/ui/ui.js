@@ -15,7 +15,7 @@ import {
   training,
   soulShop,
 } from '../globals.js';
-import { t } from '../i18n.js';
+import { t, tp } from '../i18n.js';
 import { updateQuestsUI } from './questUi.js';
 import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
 import { TabIndicatorManager } from './tabIndicatorManager.js';
@@ -163,13 +163,15 @@ export function initializeUI() {
   // Add offline eligibility indicator at right end of region tabs
   try {
     const tabs = document.querySelector('.region-tabs');
-    if (tabs && !tabs.querySelector('.offline-eligibility-indicator')) {
+    if (tabs && !tabs.querySelector('.session-status-group')) {
+      const statusGroup = document.createElement('span');
+      statusGroup.className = 'session-status-group';
+      tabs.appendChild(statusGroup);
+
       const indicator = document.createElement('span');
-      indicator.className = 'offline-eligibility-indicator offline-not-eligible';
+      indicator.className = 'offline-eligibility-indicator offline-not-eligible tooltip-target';
       indicator.innerHTML = '<span class="icon">✖</span>';
-      indicator.classList.add('tooltip-target');
-      indicator.style.marginLeft = 'auto';
-      tabs.appendChild(indicator);
+      statusGroup.appendChild(indicator);
 
       const ensureBaseline = () => {
         if (statistics.offlineEligibilityStart == null) {
@@ -213,6 +215,53 @@ export function initializeUI() {
       document.addEventListener('resetRateCounters', () => {
         statistics.offlineEligibilityStart = statistics.totalTimeInFights || 0;
         updateIndicator();
+      });
+
+      const saveIndicator = document.createElement('span');
+      saveIndicator.className = 'save-status-indicator';
+      saveIndicator.innerHTML = '<span class="icon">💾</span><span class="label"></span>';
+      statusGroup.appendChild(saveIndicator);
+
+      const saveLabel = saveIndicator.querySelector('.label');
+      let lastSaveTimestamp = dataManager?.lastLocalSaveAt || 0;
+      let savePulseTimeout = null;
+
+      const formatRelativeSaveTime = () => {
+        if (!lastSaveTimestamp) return t('time.pending');
+        const diff = Date.now() - lastSaveTimestamp;
+        if (diff < 5000) return t('time.justNow');
+        if (diff < 60000) {
+          const seconds = Math.floor(diff / 1000);
+          return tp('time.secondsAgo', { count: seconds });
+        }
+        if (diff < 3600000) {
+          const minutes = Math.floor(diff / 60000);
+          return tp('time.minutesAgo', { count: minutes });
+        }
+        const hours = Math.floor(diff / 3600000);
+        return tp('time.hoursAgo', { count: hours });
+      };
+
+      const updateSaveLabel = () => {
+        const text = tp('counters.lastSave', { time: formatRelativeSaveTime() });
+        if (text.includes('<')) {
+          saveLabel.innerHTML = text;
+        } else {
+          saveLabel.textContent = text;
+        }
+      };
+
+      updateSaveLabel();
+      setInterval(updateSaveLabel, 1000);
+
+      document.addEventListener('dataManager:saved', (event) => {
+        lastSaveTimestamp = event.detail?.timestamp || Date.now();
+        updateSaveLabel();
+        saveIndicator.classList.add('recently-saved');
+        if (savePulseTimeout) clearTimeout(savePulseTimeout);
+        savePulseTimeout = setTimeout(() => {
+          saveIndicator.classList.remove('recently-saved');
+        }, 800);
       });
     }
   } catch {}

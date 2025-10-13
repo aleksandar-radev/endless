@@ -66,6 +66,15 @@
 }
 
 /* Offline eligibility indicator placed at the far right of the region tabs */
+.session-status-group {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
 .offline-eligibility-indicator {
   display: inline-flex;
   align-items: center;
@@ -79,6 +88,24 @@
 .offline-eligibility-indicator .icon { line-height: 1; font-size: 14px; }
 .offline-eligibility-indicator.offline-eligible { color: #10b981; }
 .offline-eligibility-indicator.offline-not-eligible { color: #ef4444; }
+
+.save-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.2s ease, filter 0.2s ease;
+}
+
+.save-status-indicator .icon {
+  font-size: 0.9rem;
+}
+
+.save-status-indicator.recently-saved {
+  color: #34d399;
+  filter: drop-shadow(0 0 4px rgba(52, 211, 153, 0.5));
+}
 
 .region-tabs-label {
   font-weight: 600;
