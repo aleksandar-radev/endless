@@ -1,7 +1,13 @@
 /**
  * Manages boss properties and state.
  */
-import { percentIncreasedByLevel, scaleStat, computeXPAdjustedMonotonic, xpDiminishingFactor } from './common.js';
+import {
+  percentIncreasedByLevel,
+  scaleStat,
+  computeScaledReward,
+  xpDiminishingFactor,
+  setStepFunctionMetadata,
+} from './common.js';
 import { BOSSES } from './constants/bosses.js';
 import { hero, options } from './globals.js';
 import { battleLog } from './battleLog.js';
@@ -20,6 +26,7 @@ const stat_increase = (level) => {
   const extra = percentIncreasedByLevel(0, level - 500, 1000, 0.5, 20);
   return base + extra;
 };
+setStepFunctionMetadata(stat_increase, 50, 1);
 const attackRatingAndEvasionScale = 0.7;
 
 function randomInRange(min, max) {
@@ -159,33 +166,19 @@ class Boss {
 
 
   calculateXP() {
-    let base = this.baseData.xp || 0;
     const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
-    base *= levelBonus;
-
-    // Monotonic XP: accumulate per-level increments with diminishing applied to increments only
-    const val = computeXPAdjustedMonotonic(
-      this.baseData.xp || 0,
-      this.level,
-      (lvl) => stat_increase(lvl),
-      (lvl) => 1 + Math.floor(lvl / 20) * INCREASE_PER_LEVEL,
-      (lvl) => xpDiminishingFactor(lvl),
-      'boss-xp',
-    );
+    const basePercent = stat_increase(this.level);
+    const diminishing = xpDiminishingFactor(this.level);
+    const val = computeScaledReward(this.baseData.xp || 0, this.level, basePercent, levelBonus, diminishing);
     const regionMultiplier = Number.isFinite(this.regionMultiplier?.xp) ? this.regionMultiplier.xp : 1;
     return val * (this.baseData.multiplier?.xp || 1) * regionMultiplier;
   }
 
   calculateGold() {
-    // Gold uses same monotonic adjusted scaling as XP
-    const val = computeXPAdjustedMonotonic(
-      this.baseData.gold || 0,
-      this.level,
-      (lvl) => stat_increase(lvl),
-      (lvl) => 1 + Math.floor(lvl / 20) * INCREASE_PER_LEVEL,
-      (lvl) => xpDiminishingFactor(lvl),
-      'boss-gold',
-    );
+    const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
+    const basePercent = stat_increase(this.level);
+    const diminishing = xpDiminishingFactor(this.level);
+    const val = computeScaledReward(this.baseData.gold || 0, this.level, basePercent, levelBonus, diminishing);
     const regionMultiplier = Number.isFinite(this.regionMultiplier?.gold) ? this.regionMultiplier.gold : 1;
     return val * (this.baseData.multiplier?.gold || 1) * regionMultiplier;
   }

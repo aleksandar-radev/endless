@@ -1,7 +1,7 @@
 import { ITEM_TYPES } from './constants/items.js';
 import { getCurrentRegion, getRegionEnemies } from './region.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
-import { percentIncreasedByLevel, scaleStat, computeXPAdjustedMonotonic, xpDiminishingFactor } from './common.js';
+import { createPercentScaleFunction, scaleStat, computeScaledReward, xpDiminishingFactor } from './common.js';
 import { hero, options } from './globals.js';
 import { battleLog } from './battleLog.js';
 import { ELEMENTS } from './constants/common.js';
@@ -12,18 +12,18 @@ import { formatNumber as formatNumberValue } from './utils/numberFormatter.js';
 // for tier 1 enemy level 1 50 life, level 2 is 50 + 25 = 75 (e.g. 50% increase for base value per level)
 // tier 12 enemy gets 8% increase per level on the base value
 const TIER_STAT_SCALE = {
-  1: (level) => percentIncreasedByLevel(0.65, level, 25, 0.025, 6),
-  2: (level) => percentIncreasedByLevel(0.6, level, 30, 0.02, 5.5),
-  3: (level) => percentIncreasedByLevel(0.55, level, 35, 0.015, 5),
-  4: (level) => percentIncreasedByLevel(0.5, level, 40, 0.01, 4.5),
-  5: (level) => percentIncreasedByLevel(0.45, level, 45, 0.01, 4),
-  6: (level) => percentIncreasedByLevel(0.4, level, 50, 0.01, 3.6),
-  7: (level) => percentIncreasedByLevel(0.32, level, 55, 0.01, 3),
-  8: (level) => percentIncreasedByLevel(0.24, level, 60, 0.01, 2.5),
-  9: (level) => percentIncreasedByLevel(0.2, level, 65, 0.01, 2),
-  10: (level) => percentIncreasedByLevel(0.15, level, 70, 0.01, 1.5),
-  11: (level) => percentIncreasedByLevel(0.1, level, 75, 0.01, 1),
-  12: (level) => percentIncreasedByLevel(0.08, level, 80, 0.01, 0.75),
+  1: createPercentScaleFunction(0.65, 25, 0.025, 6),
+  2: createPercentScaleFunction(0.6, 30, 0.02, 5.5),
+  3: createPercentScaleFunction(0.55, 35, 0.015, 5),
+  4: createPercentScaleFunction(0.5, 40, 0.01, 4.5),
+  5: createPercentScaleFunction(0.45, 45, 0.01, 4),
+  6: createPercentScaleFunction(0.4, 50, 0.01, 3.6),
+  7: createPercentScaleFunction(0.32, 55, 0.01, 3),
+  8: createPercentScaleFunction(0.24, 60, 0.01, 2.5),
+  9: createPercentScaleFunction(0.2, 65, 0.01, 2),
+  10: createPercentScaleFunction(0.15, 70, 0.01, 1.5),
+  11: createPercentScaleFunction(0.1, 75, 0.01, 1),
+  12: createPercentScaleFunction(0.08, 80, 0.01, 0.75),
 };
 
 // Removed tier-specific diminishing for XP/Gold. Both use the global xpDiminishingFactor.
@@ -423,21 +423,13 @@ class Enemy {
   }
 
   calculateXP() {
-    let base = this.baseData.xp || 0;
     const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
-    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
-    const baseAtL1 = (this.baseData.xp || 0) * scale.tierScale; // levelBonus handled inside
+    const baseAtL1 = (this.baseData.xp || 0) * scale.tierScale;
     const basePercentFn = TIER_STAT_SCALE[this.baseData.tier];
-    const tierFn = (lvl) => xpDiminishingFactor(lvl);
-    const levelBonusFn = (lvl) => 1 + Math.floor(lvl / 20) * scale.levelScale;
-    const val = computeXPAdjustedMonotonic(
-      baseAtL1,
-      this.level,
-      basePercentFn,
-      levelBonusFn,
-      tierFn,
-      `tier-${this.baseData.tier}`,
-    );
+    const basePercent = basePercentFn ? basePercentFn(this.level) : 0;
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    const diminishing = xpDiminishingFactor(this.level);
+    const val = computeScaledReward(baseAtL1, this.level, basePercent, levelBonus, diminishing);
     return (
       val *
       this.getRegionMultiplier('xp') *
@@ -447,21 +439,13 @@ class Enemy {
   }
 
   calculateGold() {
-    let base = this.baseData.gold || 0;
     const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
-    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
-    const baseAtL1 = (this.baseData.gold || 0) * scale.tierScale; // levelBonus handled inside
+    const baseAtL1 = (this.baseData.gold || 0) * scale.tierScale;
     const basePercentFn = TIER_STAT_SCALE[this.baseData.tier];
-    const tierFn = (lvl) => xpDiminishingFactor(lvl);
-    const levelBonusFn = (lvl) => 1 + Math.floor(lvl / 20) * scale.levelScale;
-    const val = computeXPAdjustedMonotonic(
-      baseAtL1,
-      this.level,
-      basePercentFn,
-      levelBonusFn,
-      tierFn,
-      `gold-tier-${this.baseData.tier}`,
-    );
+    const basePercent = basePercentFn ? basePercentFn(this.level) : 0;
+    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+    const diminishing = xpDiminishingFactor(this.level);
+    const val = computeScaledReward(baseAtL1, this.level, basePercent, levelBonus, diminishing);
     return (
       val *
       this.getRegionMultiplier('gold') *

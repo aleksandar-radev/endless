@@ -1,10 +1,5 @@
 import { ROCKY_FIELD_BASE_STATS, ROCKY_FIELD_ENEMIES } from './constants/rocky_field.js';
-import {
-  percentIncreasedByLevel,
-  scaleStat,
-  computeXPAdjustedMonotonic,
-  xpDiminishingFactor,
-} from './common.js';
+import { createPercentScaleFunction, scaleStat, computeScaledReward, xpDiminishingFactor } from './common.js';
 import { battleLog } from './battleLog.js';
 import { t, tp } from './i18n.js';
 import { ELEMENTS } from './constants/common.js';
@@ -178,12 +173,12 @@ export function getRockyFieldEnemies(regionId) {
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 
 const REGION_STAT_SCALE = {
-  outskirts: (level) => percentIncreasedByLevel(0.65, level, 25, 0.025, 3.2),
-  boulders: (level) => percentIncreasedByLevel(0.6, level, 30, 0.02, 2.9),
-  caves: (level) => percentIncreasedByLevel(0.55, level, 35, 0.015, 2.5),
-  cliffs: (level) => percentIncreasedByLevel(0.5, level, 40, 0.01, 2.2),
-  valley: (level) => percentIncreasedByLevel(0.45, level, 45, 0.01, 2),
-  summit: (level) => percentIncreasedByLevel(0.4, level, 50, 0.01, 1.8),
+  outskirts: createPercentScaleFunction(0.65, 25, 0.025, 3.2),
+  boulders: createPercentScaleFunction(0.6, 30, 0.02, 2.9),
+  caves: createPercentScaleFunction(0.55, 35, 0.015, 2.5),
+  cliffs: createPercentScaleFunction(0.5, 40, 0.01, 2.2),
+  valley: createPercentScaleFunction(0.45, 45, 0.01, 2),
+  summit: createPercentScaleFunction(0.4, 50, 0.01, 1.8),
 };
 
 // Removed region-specific diminishing. XP/Gold now use global xpDiminishingFactor.
@@ -447,28 +442,21 @@ export class RockyFieldEnemy {
   calculateXP() {
     const baseScale = BASE_SCALE_PER_REGION_AND_LEVEL[this.regionId] || { tierScale: 1, levelScale: 0 };
     const baseAtL1 = this.getStatValue('xp') * baseScale.tierScale;
-    const levelBonusFn = (lvl) => 1 + Math.floor(lvl / 20) * baseScale.levelScale;
-    return computeXPAdjustedMonotonic(
-      baseAtL1,
-      this.level,
-      (lvl) => REGION_STAT_SCALE[this.regionId](lvl),
-      levelBonusFn,
-      (lvl) => xpDiminishingFactor(lvl),
-      `rocky-${this.regionId}`,
-    );
+    const basePercentFn = REGION_STAT_SCALE[this.regionId];
+    const basePercent = basePercentFn ? basePercentFn(this.level) : 0;
+    const levelBonus = 1 + Math.floor(this.level / 20) * baseScale.levelScale;
+    const diminishing = xpDiminishingFactor(this.level);
+    return computeScaledReward(baseAtL1, this.level, basePercent, levelBonus, diminishing);
   }
 
   calculateGold() {
     const baseScale = BASE_SCALE_PER_REGION_AND_LEVEL[this.regionId] || { tierScale: 1, levelScale: 0 };
     const baseGoldAtL1 = this.getStatValue('gold') * baseScale.tierScale;
-    return computeXPAdjustedMonotonic(
-      baseGoldAtL1,
-      this.level,
-      (lvl) => REGION_STAT_SCALE[this.regionId](lvl),
-      (lvl) => 1 + Math.floor(lvl / 20) * baseScale.levelScale,
-      (lvl) => xpDiminishingFactor(lvl),
-      `rocky-gold-${this.regionId}`,
-    );
+    const basePercentFn = REGION_STAT_SCALE[this.regionId];
+    const basePercent = basePercentFn ? basePercentFn(this.level) : 0;
+    const levelBonus = 1 + Math.floor(this.level / 20) * baseScale.levelScale;
+    const diminishing = xpDiminishingFactor(this.level);
+    return computeScaledReward(baseGoldAtL1, this.level, basePercent, levelBonus, diminishing);
   }
 
   calculateElementalDamage(id) {

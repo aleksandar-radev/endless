@@ -87,98 +87,19 @@ export function scaleStat(
   return base + percentGain + flatGain + bonusGain;
 }
 
-/**
- * Monotonic stat scaling with diminishing slope applied only to incremental gains.
- *
- * Computes: base + base * sum_{k=2..level} (basePercentFn(k) * slopePercentFn(k))
- * where basePercentFn and slopePercentFn are step functions of level. This ensures
- * the value never decreases as level increases, while allowing the per-level
- * increment (slope) to diminish over time. The function optionally accepts
- * interval descriptors to jump across constant segments for performance.
- *
- * @param {number} base - Stat value at level 1.
- * @param {number} level - Target level (integer >= 1).
- * @param {(lvl:number)=>number} basePercentFn - Returns per-level percent-of-base gain at a level.
- * @param {(lvl:number)=>number} slopePercentFn - Returns diminishing factor at a level (fraction).
- * @param {{step:number, anchor?:number}[]=} baseIntervals - Optional intervals where basePercentFn changes.
- * @param {{step:number, anchor?:number}[]=} slopeIntervals - Optional intervals where slopePercentFn changes.
- * @returns {number}
- */
-// Removed unused experimental monotonic helpers to simplify the codebase.
-
-// Cache for adjusted monotonic series (minimal change from original stepwise XP)
-const __adjustedMonotonicCache = new Map();
-
-/**
- * Build or extend an adjusted monotonic series close to the original stepwise XP:
- * old(k) = levelBonus(k) * (1 + basePercentFn(k) * (k - 1)) * tierFn(k)
- * new(1) = old(1)
- * new(k) = max(old(k), new(k-1) + levelBonus(k) * basePercentFn(k) * tierFn(k))
- *
- * This enforces strictly increasing values while deviating minimally from the original.
- * Returns the normalized series (without baseAtLevel1 multiplier).
- *
- * @param {string} cacheId
- * @param {number} level
- * @param {(lvl:number)=>number} basePercentFn
- * @param {(lvl:number)=>number} levelBonusFn
- * @param {(lvl:number)=>number} tierFn
- * @returns {number[]} new series array (normalized)
- */
-export function getAdjustedMonotonicSeries(
-  cacheId,
-  level,
-  basePercentFn,
-  levelBonusFn,
-  tierFn,
-) {
-  let entry = __adjustedMonotonicCache.get(cacheId);
-  if (!entry) {
-    entry = { old: [0], neu: [0] };
-    // Initialize level 1
-    const old1 = (levelBonusFn(1) || 1) * (tierFn(1) || 0); // basePercent*(1-1)=0
-    entry.old[1] = old1;
-    entry.neu[1] = old1;
-    __adjustedMonotonicCache.set(cacheId, entry);
-  }
-  const { old, neu } = entry;
-  for (let k = old.length; k <= level; k++) {
-    const lb = levelBonusFn(k) || 1;
-    const bpRaw = k <= 1 ? 0 : (basePercentFn(k) || 0);
-    const bp = bpRaw * XP_GOLD_GROWTH_MULTIPLIER;
-    const tf = tierFn(k) || 0;
-    const oldVal = lb * (1 + bp * (k - 1)) * tf;
-    old[k] = oldVal;
-    if (k > 1) {
-      const inc = lb * bp * tf;
-      const prev = neu[k - 1] || 0;
-      neu[k] = Math.max(oldVal, prev + inc, prev + 1e-9);
-    }
-  }
-  return entry.neu;
-}
-
-/**
- * Compute XP using the adjusted monotonic series (minimal change approach).
- * @param {number} baseAtLevel1
- * @param {number} level
- * @param {(lvl:number)=>number} basePercentFn
- * @param {(lvl:number)=>number} levelBonusFn
- * @param {(lvl:number)=>number} tierFn
- * @param {string} cacheId
- * @returns {number}
- */
-export function computeXPAdjustedMonotonic(
-  baseAtLevel1,
-  level,
-  basePercentFn,
-  levelBonusFn,
-  tierFn,
-  cacheId,
-) {
-  if (baseAtLevel1 <= 0) return 0;
-  const series = getAdjustedMonotonicSeries(cacheId, level, basePercentFn, levelBonusFn, tierFn);
-  return baseAtLevel1 * (series[level] || 0);
+export function setStepFunctionMetadata(fn, interval, offset = 0) {
+  if (typeof fn !== 'function') return fn;
+  if (!Number.isFinite(interval) || interval <= 0) return fn;
+  const meta = {
+    interval,
+    offset: Number.isFinite(offset) ? offset : 0,
+  };
+  Object.defineProperty(fn, '__stepMeta', {
+    value: meta,
+    configurable: true,
+    writable: false,
+  });
+  return fn;
 }
 
 /**
@@ -189,10 +110,32 @@ export function computeXPAdjustedMonotonic(
 export function xpDiminishingFactor(level) {
   return percentReducedByLevel(1, level, 20, 0.01, 0.025);
 }
+setStepFunctionMetadata(xpDiminishingFactor, 20, 1);
 
 // Global multiplier to slow down XP/Gold growth from level scaling.
 // 0.6 means ~40% reduction in the per-level growth slope.
 export const XP_GOLD_GROWTH_MULTIPLIER = 0.6;
+
+export function computeScaledReward(
+  baseAtLevel1,
+  level,
+  basePercent,
+  levelBonus,
+  diminishingFactor = 1,
+) {
+  if (!Number.isFinite(baseAtLevel1) || baseAtLevel1 <= 0) {
+    return 0;
+  }
+  if (!Number.isFinite(level) || level <= 0) {
+    return 0;
+  }
+  const safeLevel = Math.max(1, Math.floor(level));
+  const percent = Number.isFinite(basePercent) ? Math.max(basePercent, 0) : 0;
+  const growth = 1 + XP_GOLD_GROWTH_MULTIPLIER * percent * (safeLevel - 1);
+  const levelScale = Number.isFinite(levelBonus) ? Math.max(levelBonus, 0) : 1;
+  const diminishing = Number.isFinite(diminishingFactor) ? Math.max(diminishingFactor, 0) : 1;
+  return baseAtLevel1 * levelScale * growth * diminishing;
+}
 
 export function scaleDownFlat(
   level,
@@ -326,4 +269,14 @@ export function percentIncreasedByLevel(
   const increased = sp + intervalsPassed * ipi;
   // Clamp between original start value and maxPercent
   return Math.min(mp, Math.max(increased, sp));
+}
+
+export function createPercentScaleFunction(
+  startPercent,
+  interval,
+  increasePerInterval,
+  maxPercent,
+) {
+  const fn = (level) => percentIncreasedByLevel(startPercent, level, interval, increasePerInterval, maxPercent);
+  return setStepFunctionMetadata(fn, interval, 1);
 }

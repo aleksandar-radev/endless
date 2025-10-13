@@ -17,6 +17,7 @@ export default function run() {
     <ul>
       <li>Stopped material drop rolls in Explore mode from spawning massive allocation loops that caused out-of-memory crashes at extreme stages.</li>
       <li>Removed cached save snapshots from the stored payload so local saves no longer double in size and immediately exceed browser quotas.</li>
+      <li>Simplified XP and gold scaling for enemies, bosses, and rocky field encounters so high-level rewards stay fast without spiking memory use.</li>
     </ul>
   `;
 }
