@@ -15,8 +15,8 @@ const PERCENT_SCALING = {
   tierEnd: 0.05,
 };
 const STAT_SCALING = {
-  start: 0.0075 * 2,
-  end: 0.005 * 0.5,
+  start: 0.006,
+  end: 0.001,
   tierStart: 0.1,
   tierEnd: 0.05,
 };

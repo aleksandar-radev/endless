@@ -9,6 +9,8 @@ export default function run() {
       <li>Smoothed out saving with a 5-second debounce, cached encryption, and a live "last saved" HUD indicator so progress is preserved without hammering the browser.</li>
       <li>Show stage controls under enemy option now works for Rocky Field as well.</li>
       <li>Buffered inventory and statistics refreshes so loot bursts only trigger UI updates once per second instead of spamming them for every single drop.</li>
+      <li>Reduced attribute stat level scaling on items by 2.5x to curb runaway stat growth.</li>
+      <li>Reduced cost of Stage Lock and Stage Reset crystal upgrades.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
