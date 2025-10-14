@@ -330,12 +330,25 @@ export default class SkillTree {
     if (this.skillPoints < totalCost) return 0;
 
     // Set new level and deduct points
+    const newLevel = currentLevel + allowedQty;
+    const isToggle = skill.type() === 'toggle';
+    const shouldAutoEnableToggle =
+      isToggle && (currentLevel > 0 ? wasActive : crystalShop.hasAutoSpellCastUpgrade());
+    const isActive = isToggle ? shouldAutoEnableToggle : false;
+    const isAffordable =
+      isToggle && isActive ? hero.stats.currentMana >= this.getSkillManaCost(skill, newLevel) : false;
+
     this.skills[skillId] = {
       ...skill,
-      level: currentLevel + allowedQty,
-      active: skill.type() === 'toggle' ? wasActive : false,
+      level: newLevel,
+      active: isActive,
+      affordable: isToggle ? isAffordable : undefined,
       slot: skill.type() !== 'passive' ? Object.keys(this.skills).length + 1 : null,
     };
+
+    if (!isToggle) {
+      delete this.skills[skillId].affordable;
+    }
 
     if (crystalShop.hasAutoSpellCastUpgrade()) {
       this.autoCastSettings[skillId] = true;
@@ -862,9 +875,27 @@ export default class SkillTree {
   }
 
   enableAutoCastForAllSkills() {
-    Object.keys(this.skills).forEach((skillId) => {
+    let togglesActivated = false;
+
+    Object.entries(this.skills).forEach(([skillId, skillData]) => {
       this.autoCastSettings[skillId] = true;
+
+      if (typeof skillData.type === 'function' && skillData.type() === 'toggle') {
+        if (!skillData.active) {
+          skillData.active = true;
+          togglesActivated = true;
+        }
+
+        const manaCost = this.getSkillManaCost(skillData, skillData.level);
+        skillData.affordable = hero.stats.currentMana >= manaCost;
+      }
     });
+
+    if (togglesActivated) {
+      hero.queueRecalculateFromAttributes();
+      updateActionBar();
+    }
+
     dataManager.saveGame();
   }
 

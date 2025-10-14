@@ -11,6 +11,7 @@ export default function run() {
       <li>Buffered inventory and statistics refreshes so loot bursts only trigger UI updates once per second instead of spamming them for every single drop.</li>
       <li>Reduced attribute stat level scaling on items by 2.5x to curb runaway stat growth.</li>
       <li>Reduced cost of Stage Lock and Stage Reset crystal upgrades.</li>
+      <li>Toggle skills now start active whenever the Auto Spell Cast crystal upgrade is owned, so their benefits are applied immediately.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
