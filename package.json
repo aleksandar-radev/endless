@@ -1,6 +1,6 @@
 {
   "name": "endless",
-  "version": "0.8.13",
+  "version": "0.8.14",
   "description": "Endless Game",
   "type": "module",
   "main": "electron-main.js",
