@@ -355,6 +355,7 @@ export default {
   'inventory.selectItemToEnchant': '选择一个已装备的物品进行附魔（提升稀有度）：',
   'inventory.enchantedItemToast': '已将 {item} 附魔为 {rarity}',
   'inventory.selectItemAndStatTransmute': '选择一个物品和属性进行转化。',
+  'inventory.orbRestrictionUniqueSet': '唯一或套装物品无法使用转化与交替宝珠。',
   'inventory.selectedItemLabel': '已选择物品：{item}',
   'inventory.noEquippedItems': '没有已装备的物品。',
   'inventory.noStatsToTransmute': '没有可转化的属性。',

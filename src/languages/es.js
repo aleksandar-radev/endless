@@ -341,6 +341,7 @@ export default {
   'inventory.selectItemToEnchant': 'Selecciona un objeto equipado para encantar (aumentar rareza):',
   'inventory.enchantedItemToast': 'Encantaste {item} a {rarity}',
   'inventory.selectItemAndStatTransmute': 'Selecciona un objeto y atributo para transmutar.',
+  'inventory.orbRestrictionUniqueSet': 'Las orbes de Transmutación y Alternación no se pueden usar en objetos únicos o de conjunto.',
   'inventory.selectedItemLabel': 'Objeto seleccionado: {item}',
   'inventory.noEquippedItems': 'No hay objetos equipados.',
   'inventory.noStatsToTransmute': 'No hay atributos para transmutar.',

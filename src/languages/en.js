@@ -355,6 +355,7 @@ export default {
   'inventory.selectItemToEnchant': 'Select an equipped item to enchant (increase rarity):',
   'inventory.enchantedItemToast': 'Enchanted {item} to {rarity}',
   'inventory.selectItemAndStatTransmute': 'Select an item and stat to transmute.',
+  'inventory.orbRestrictionUniqueSet': 'Transmutation and Alternation Orbs cannot be used on unique or set items.',
   'inventory.selectedItemLabel': 'Selected item: {item}',
   'inventory.noEquippedItems': 'No equipped items.',
   'inventory.noStatsToTransmute': 'No stats to transmute.',

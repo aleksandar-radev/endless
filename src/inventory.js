@@ -529,9 +529,10 @@ export default class Inventory {
           <p>${t(matDef.description || '')}</p>
           <p>${tp('inventory.youHaveAmount', { amount: `<b class="material-qty">${mat.qty}</b>` })}</p>
           <p>${t('inventory.selectItemAndStatTransmute')}</p>
+          <p>${t('inventory.orbRestrictionUniqueSet')}</p>
           <p>${tp('inventory.selectedItemLabel', { item: `<span id="transmutation-selected-name">${t('common.none')}</span>` })}</p>
           <div id="transmutation-item-list">
-            ${equipped.length === 0 ? `<div style="color:#f55;">${t('inventory.noEquippedItems')}</div>` : itemRows}
+            ${equipped.length === 0 ? `<div style="color:#f55;">${t('inventory.noEligibleEquippedItems')}</div>` : itemRows}
           </div>
           <div id="transmutation-selected-item" style="margin-top:10px;"></div>
           <div class="modal-controls">
@@ -690,7 +691,7 @@ export default class Inventory {
     // Alternation Orb
     if (matDef.isCustom && matDef.id === 'alternation_orb') {
       const equipped = Object.entries(this.equippedItems)
-        .filter(([slot, item]) => item)
+        .filter(([slot, item]) => item && !['SET', 'UNIQUE'].includes(item.rarity))
         .map(([slot, item]) => ({ slot, item }));
 
       const html = String.raw;
@@ -712,9 +713,10 @@ export default class Inventory {
           <p>${t(matDef.description || '')}</p>
           <p>${tp('inventory.youHaveAmount', { amount: `<b class="material-qty">${mat.qty}</b>` })}</p>
           <p>${t('inventory.selectItemAndStatReroll')}</p>
+          <p>${t('inventory.orbRestrictionUniqueSet')}</p>
           <p>${tp('inventory.selectedItemLabel', { item: `<span id="alternation-selected-name">${t('common.none')}</span>` })}</p>
           <div id="alternation-item-list">
-            ${equipped.length === 0 ? `<div style="color:#f55;">${t('inventory.noEquippedItems')}</div>` : itemRows}
+            ${equipped.length === 0 ? `<div style="color:#f55;">${t('inventory.noEligibleEquippedItems')}</div>` : itemRows}
           </div>
           <div id="alternation-selected-item" style="margin-top:10px;"></div>
           <div class="modal-controls">
