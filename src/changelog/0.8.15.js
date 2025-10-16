@@ -6,6 +6,7 @@ export default function run() {
 
     <span style="color:#FF8A00;">Improvements</span>
     <ul>
+      <li>Replaced iterative prestige bonus scaling with a direct formula so boss counts of any size compute instantly. (was causing lag or "white" screen on high boss levels)</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

@@ -34,25 +34,19 @@ export function getBossScalingFactor(highestBossLevel) {
   const intervals = Math.ceil(highestBossLevel / levelsPerInterval); // 1..n, 1 means levels 1-20
   const firstPercent = 0.08; // 8%
   const finalPercent = 0.01; // 1% at level 2500
-  const finalInterval = Math.ceil(2500 / levelsPerInterval); // 50
+  const finalInterval = Math.ceil(2500 / levelsPerInterval); // 125
 
-  let totalPercent = 0;
-  for (let i = 1; i <= intervals; i++) {
-    let perInterval;
-    if (i <= finalInterval) {
-      // linear interpolation from firstPercent (i=1) to finalPercent (i=finalInterval)
-      if (finalInterval === 1) {
-        perInterval = finalPercent;
-      } else {
-        perInterval = firstPercent - (i - 1) * (firstPercent - finalPercent) / (finalInterval - 1);
-      }
-    } else {
-      perInterval = finalPercent; // beyond level 2500, fixed 1% per interval
-    }
-    totalPercent += perInterval;
+  if (finalInterval <= 1) {
+    return 1 + intervals * finalPercent;
   }
 
-  return 1 + totalPercent;
+  const delta = (firstPercent - finalPercent) / (finalInterval - 1);
+  const linearIntervals = Math.min(intervals, finalInterval);
+  const linearSum = (linearIntervals / 2) * (2 * firstPercent - (linearIntervals - 1) * delta);
+  const extraIntervals = Math.max(0, intervals - finalInterval);
+  const extraSum = extraIntervals * finalPercent;
+
+  return 1 + linearSum + extraSum;
 }
 
 export default class Prestige {
