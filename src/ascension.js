@@ -480,7 +480,7 @@ export default class Ascension {
     hero.crystals = (hero.crystals || 0) + 100 + (ascBonuses.startingCrystals || 0);
     hero.souls += ascBonuses.startingSouls || 0;
     hero.queueRecalculateFromAttributes();
-    dataManager.saveGame();
+    await dataManager.saveGame({ force: true });
     window.location.reload();
   }
 }

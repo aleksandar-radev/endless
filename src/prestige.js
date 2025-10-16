@@ -395,7 +395,7 @@ export default class Prestige {
     // Recalculate attributes to reflect ascension bonuses applied
     try { hero.queueRecalculateFromAttributes(); } catch {}
 
-    dataManager.saveGame();
+    await dataManager.saveGame({ force: true });
     window.location.reload();
 
     // game.currentEnemy = new Enemy(game.stage);
