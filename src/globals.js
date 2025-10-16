@@ -86,7 +86,8 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
   dataManager = _dataManager;
 
   // useful when loading from cloud
-  dataManager.saveGame({ force: true });
+  await dataManager.saveGame({ force: true });
+  dataManager.createDailyBackups();
 }
 
 export function getGlobals() {

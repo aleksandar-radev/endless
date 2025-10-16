@@ -8,6 +8,7 @@ export default function run() {
     <ul>
       <li>Replaced iterative prestige bonus scaling with a direct formula so boss counts of any size compute instantly. (was causing lag or "white" screen on high boss levels)</li>
       <li>Prevented Transmutation and Alternation Orbs from affecting unique or set items and boosted those gear drop rates by 25%.</li>
+      <li>Captured a once-per-day local backup for every save slot (kept for seven days) and added a restore control to Options → General.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

@@ -23,7 +23,7 @@ import { CHANGELOG } from './changelog/changelog.js';
 import upcommingChanges from './upcoming.js';
 import { audioManager } from './audio.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
-import { setLanguage, t } from './i18n.js';
+import { setLanguage, t, tp } from './i18n.js';
 import {
   SOUL_SHOP_MAX_QTY,
   CRYSTAL_SHOP_MAX_QTY,
@@ -215,6 +215,73 @@ export class Options {
     return wrapper;
   }
 
+  _createBackupRestoreOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = `
+      <label for="backup-save-select" data-i18n="options.backup.label">${t('options.backup.label')}</label>
+      <select id="backup-save-select"></select>
+      <button id="backup-save-apply">${t('common.apply')}</button>
+    `;
+
+    const select = wrapper.querySelector('#backup-save-select');
+    const apply = wrapper.querySelector('#backup-save-apply');
+
+    const updateApplyState = () => {
+      if (apply) {
+        apply.disabled = !select?.value;
+      }
+    };
+
+    this.refreshBackupSelect(select, apply);
+    updateApplyState();
+
+    select.addEventListener('change', updateApplyState);
+
+    apply.addEventListener('click', async () => {
+      const value = select.value;
+      if (!value) return;
+
+      const [slotStr, timestampStr] = value.split(':');
+      const slot = parseInt(slotStr, 10);
+      const timestamp = Number(timestampStr);
+      if (!Number.isFinite(slot) || !Number.isFinite(timestamp)) {
+        return;
+      }
+
+      if (slot !== dataManager.getCurrentSlot()) {
+        showToast(tp('options.toast.backupWrongSlot', { slot: slot + 1 }), 'error');
+        return;
+      }
+
+      const backup = dataManager.getBackup(slot, timestamp);
+      if (!backup) {
+        showToast(t('options.toast.backupUnavailable'), 'error');
+        this.refreshBackupSelect(select, apply);
+        updateApplyState();
+        return;
+      }
+
+      const confirmed = await showConfirmDialog(
+        tp('options.backup.confirm', { date: backup.date, slot: slot + 1 }),
+      );
+      if (!confirmed) return;
+
+      const restored = dataManager.restoreBackup(slot, timestamp);
+      if (!restored) {
+        showToast(t('options.toast.backupRestoreFailed'), 'error');
+        return;
+      }
+
+      showToast(t('options.toast.backupRestored'), 'success');
+      setTimeout(() => {
+        window.location.reload();
+      }, 300);
+    });
+
+    return wrapper;
+  }
+
   /**
    * Creates the sound volume slider UI.
    */
@@ -312,6 +379,7 @@ export class Options {
     generalContent.className = 'options-content';
     generalContent.appendChild(this._createCloudSaveBar());
     generalContent.appendChild(this._createSaveSlotOption());
+    generalContent.appendChild(this._createBackupRestoreOption());
     generalContent.appendChild(this._createSaveTextButtons());
     generalContent.appendChild(this._createLanguageOption());
     generalContent.appendChild(this._createSoundVolumeOption());
@@ -1136,6 +1204,62 @@ export class Options {
       .join('');
     selectEl.innerHTML = optionsHtml;
     selectEl.value = dataManager.getCurrentSlot();
+    this.refreshBackupSelect();
+  }
+
+  refreshBackupSelect(
+    selectEl = document.getElementById('backup-save-select'),
+    applyBtn = document.getElementById('backup-save-apply'),
+  ) {
+    if (!selectEl) return;
+
+    const previousValue = selectEl.value;
+    const currentSlot = dataManager.getCurrentSlot();
+    const backups = dataManager.getBackupsForSlot(currentSlot);
+
+    selectEl.innerHTML = '';
+
+    if (!backups.length) {
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = t('options.backup.empty');
+      placeholder.disabled = true;
+      placeholder.selected = true;
+      selectEl.appendChild(placeholder);
+      if (applyBtn) applyBtn.disabled = true;
+      return;
+    }
+
+    let matched = false;
+    backups.forEach((backup) => {
+      const option = document.createElement('option');
+      option.value = `${backup.slot}:${backup.timestamp}`;
+      let pathText = backup.path || null;
+      if (pathText) {
+        pathText = CLASS_PATHS[pathText]?.name() ?? pathText;
+      } else {
+        pathText = t('options.backup.noPath');
+      }
+      option.textContent = tp('options.backup.option', {
+        date: backup.date,
+        slot: backup.slot + 1,
+        path: pathText,
+        level: backup.level ?? 0,
+      });
+      if (option.value === previousValue) {
+        option.selected = true;
+        matched = true;
+      }
+      selectEl.appendChild(option);
+    });
+
+    if (!matched) {
+      selectEl.selectedIndex = 0;
+    }
+
+    if (applyBtn) {
+      applyBtn.disabled = !selectEl.value;
+    }
   }
 
   /**

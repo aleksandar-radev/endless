@@ -10,6 +10,17 @@ import { getTimeNow } from './common.js';
 const SAVE_INTERVAL_MS = 5000;
 
 const MAX_SLOTS = 5;
+const BACKUP_KEY_PREFIX = 'gameProgressBackup_';
+const BACKUP_MAX_ENTRIES = 7;
+
+const toDateKey = (date) => {
+  const d = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(d.getTime())) return null;
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
 export class DataManager {
   constructor() {
@@ -61,25 +72,100 @@ export class DataManager {
   }
 
   getSlotSummaries() {
+    if (typeof localStorage === 'undefined') {
+      return Array(MAX_SLOTS).fill(null);
+    }
     const summaries = [];
     for (let i = 0; i < MAX_SLOTS; i++) {
       const raw = localStorage.getItem(`gameProgress_${i}`);
-      if (!raw) {
-        summaries[i] = null;
-        continue;
-      }
-      try {
-        let data = crypt.decrypt(raw);
-        if (typeof data === 'string') data = JSON.parse(data);
-        summaries[i] = {
-          level: data?.hero?.level ?? 0,
-          path: data?.skillTree?.selectedPath?.name || null,
-        };
-      } catch {
-        summaries[i] = null;
-      }
+      const summary = this._getSaveSummary(raw);
+      summaries[i] = summary
+        ? {
+            level: summary.level,
+            path: summary.path,
+          }
+        : null;
     }
     return summaries;
+  }
+
+  createDailyBackups() {
+    if (typeof localStorage === 'undefined') {
+      return;
+    }
+
+    const today = toDateKey(new Date());
+    if (!today) return;
+
+    for (let slot = 0; slot < MAX_SLOTS; slot++) {
+      const raw = localStorage.getItem(`gameProgress_${slot}`);
+      if (!raw) continue;
+
+      const backups = this._readBackupsForSlot(slot);
+      let modified = backups._dirty === true;
+
+      if (!backups.some((entry) => entry.date === today)) {
+        const summary = this._getSaveSummary(raw);
+        const entry = {
+          slot,
+          date: today,
+          timestamp: Date.now(),
+          level: summary?.level ?? 0,
+          path: summary?.path || null,
+          data: raw,
+        };
+        backups.push(entry);
+        modified = true;
+      }
+
+      backups.sort((a, b) => b.timestamp - a.timestamp);
+      if (backups.length > BACKUP_MAX_ENTRIES) {
+        backups.splice(BACKUP_MAX_ENTRIES);
+        modified = true;
+      }
+
+      if (modified) {
+        this._writeBackupsForSlot(slot, backups);
+      }
+    }
+  }
+
+  getBackupsForSlot(slot = this.getCurrentSlot()) {
+    if (slot < 0 || slot >= MAX_SLOTS) return [];
+    const backups = this._readBackupsForSlot(slot);
+    return backups
+      .slice()
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .map(({ data, ...rest }) => ({ ...rest }));
+  }
+
+  getBackup(slot, timestamp) {
+    if (slot < 0 || slot >= MAX_SLOTS) return null;
+    const backups = this._readBackupsForSlot(slot);
+    const found = backups.find((entry) => entry.timestamp === timestamp);
+    return found ? { ...found } : null;
+  }
+
+  restoreBackup(slot, timestamp) {
+    if (typeof localStorage === 'undefined') {
+      return false;
+    }
+    const backup = this.getBackup(slot, timestamp);
+    if (!backup || !backup.data) {
+      return false;
+    }
+
+    const slotKey = `gameProgress_${slot}`;
+    try {
+      this._writeLocalSave(slotKey, backup.data, { optional: false });
+      if (slot === this.getCurrentSlot()) {
+        this._writeLocalSave('gameProgress', backup.data, { optional: true });
+      }
+      return true;
+    } catch (error) {
+      console.error('Failed to restore backup:', error);
+      return false;
+    }
   }
 
   async saveGame({ cloud = false, force = false } = {}) {
@@ -259,11 +345,111 @@ export class DataManager {
       const key = localStorage.key(i);
       if (key && key.startsWith('game_backup_')) {
         keysToRemove.push(key);
+      } else if (key && key.startsWith(BACKUP_KEY_PREFIX)) {
+        keysToRemove.push(key);
       }
     }
 
     keysToRemove.forEach((key) => localStorage.removeItem(key));
     return keysToRemove;
+  }
+
+  _getBackupStorageKey(slot) {
+    return `${BACKUP_KEY_PREFIX}${slot}`;
+  }
+
+  _readBackupsForSlot(slot) {
+    if (typeof localStorage === 'undefined') {
+      return [];
+    }
+    try {
+      const raw = localStorage.getItem(this._getBackupStorageKey(slot));
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      let dirty = false;
+      const normalized = parsed.map((entry) => {
+        const normalizedSlot = typeof entry.slot === 'number' ? entry.slot : slot;
+        if (normalizedSlot !== entry.slot) dirty = true;
+        const normalizedTimestamp = typeof entry.timestamp === 'number' ? entry.timestamp : 0;
+        if (normalizedTimestamp !== entry.timestamp) dirty = true;
+        const normalizedLevel = typeof entry.level === 'number' ? entry.level : 0;
+        if (normalizedLevel !== entry.level) dirty = true;
+        if (entry.path !== undefined && entry.path !== null && typeof entry.path !== 'string') {
+          dirty = true;
+        }
+        return {
+          slot: normalizedSlot,
+          date: entry.date || null,
+          timestamp: normalizedTimestamp,
+          level: normalizedLevel,
+          path: typeof entry.path === 'string' ? entry.path : null,
+          data: typeof entry.data === 'string' ? entry.data : null,
+        };
+      });
+
+      const cleaned = normalized.filter((entry) => {
+        const valid = entry.data && entry.date && entry.timestamp;
+        if (!valid) dirty = true;
+        return valid;
+      });
+
+      if (cleaned.length !== parsed.length) {
+        dirty = true;
+      }
+
+      cleaned._dirty = dirty;
+      return cleaned;
+    } catch (error) {
+      console.warn('Failed to parse backup data for slot', slot, error);
+      return [];
+    }
+  }
+
+  _writeBackupsForSlot(slot, backups) {
+    if (typeof localStorage === 'undefined') {
+      return;
+    }
+    const sanitized = backups
+      .filter((entry) => entry && typeof entry.data === 'string')
+      .map((entry) => ({
+        slot,
+        date: entry.date,
+        timestamp: entry.timestamp,
+        level: entry.level ?? 0,
+        path: entry.path || null,
+        data: entry.data,
+      }));
+    this._writeLocalSave(this._getBackupStorageKey(slot), JSON.stringify(sanitized), { optional: true });
+  }
+
+  _decodeSaveData(raw) {
+    if (!raw) return null;
+    try {
+      let data = crypt.decrypt(raw);
+      if (typeof data === 'string') data = JSON.parse(data);
+      if (!data || typeof data !== 'object') return null;
+      return data;
+    } catch (err) {
+      try {
+        const data = JSON.parse(raw);
+        if (!data || typeof data !== 'object') return null;
+        return data;
+      } catch {
+        return null;
+      }
+    }
+  }
+
+  _getSaveSummary(raw) {
+    const data = this._decodeSaveData(raw);
+    if (!data) return null;
+    const selectedPath = data?.skillTree?.selectedPath;
+    const path = selectedPath?.id ?? selectedPath?.name ?? null;
+    return {
+      level: data?.hero?.level ?? 0,
+      path,
+    };
   }
 
   _dispatchSavedEvent(timestamp) {
