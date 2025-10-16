@@ -34,8 +34,13 @@ import Boss from './boss.js';
 import { RockyFieldEnemy } from './rockyField.js';
 import { applyTranslations, setLanguage, t } from './i18n.js';
 import { getGameInfo } from './api.js';
-import { createModal } from './ui/modal.js';
+import { createModal, closeModal } from './ui/modal.js';
 import { collectOfflineFightRewards } from './offlineFight.js';
+import {
+  appendDevAccessFooter,
+  ensureDevAccessRuntimeState,
+  showDevAccessApologyModal,
+} from './migrations/0.8.15.js';
 
 window.qwe = console.log;
 window.qw = console.log;
@@ -48,6 +53,14 @@ window.setLanguage = setLanguage;
 (async () => {
   await setGlobals();
   setLanguage(options.language);
+
+  const { active: devAccessActive, changed: devAccessChanged } = ensureDevAccessRuntimeState(options);
+
+  if (devAccessChanged) {
+    dataManager.saveGame();
+  }
+
+  const shouldEnableDebugging = devAccessActive || import.meta.env.VITE_ENV !== 'production';
 
   // Only set stage if not loaded from save data (undefined or null)
   if (!game.stage || game.stage == null) {
@@ -204,10 +217,6 @@ window.setLanguage = setLanguage;
 
   switchTab(game.activeTab);
 
-  if (import.meta.env.VITE_ENV !== 'production') {
-    initDebugging();
-  }
-
   let isRunning = false;
   setInterval(() => {
     if (!isRunning) {
@@ -280,16 +289,22 @@ window.setLanguage = setLanguage;
     renderPurchasedBuildings();
   }, 30000);
 
-  // Conditionally add footer if not production
-  if (import.meta.env.VITE_ENV !== 'production') {
-    const footer = document.createElement('footer');
-    footer.style.display = 'flex';
-    footer.style.flexDirection = 'column';
-    footer.style.justifyContent = 'center';
-    footer.style.alignItems = 'center';
-    footer.innerHTML = `
-      <div>Full game on <a href="https://ghost-team.top">ghost-team.top</a> In this test version, type <span style="color: #007bff; font-size: 1.4em">edev</span> anywhere in the browser to access developer options.</div>
-    `;
-    document.body.appendChild(footer);
+  if (shouldEnableDebugging) {
+    initDebugging();
+  }
+
+  appendDevAccessFooter({
+    environment: import.meta.env.VITE_ENV,
+    active: devAccessActive,
+  });
+
+  if (devAccessActive) {
+    setTimeout(() => {
+      showDevAccessApologyModal({
+        active: devAccessActive,
+        options,
+        dataManager,
+      });
+    }, 500);
   }
 })();

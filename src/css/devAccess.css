@@ -1,0 +1,56 @@
+.dev-access-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: center;
+  background: rgba(18, 20, 24, 0.88);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+}
+
+.dev-access-footer--test {
+  background: transparent;
+  border-top: none;
+  color: inherit;
+}
+
+.dev-access-highlight {
+  color: #4da3ff;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.dev-access-footer--test .dev-access-highlight {
+  color: #007bff;
+  font-size: 1.4em;
+}
+
+.dev-access-modal__actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.dev-access-modal__confirm {
+  padding: 8px 24px;
+  font-size: 1.1em;
+  border-radius: 6px;
+  border: none;
+  background: #2563eb;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.dev-access-modal__confirm:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.dev-access-modal__confirm:active {
+  transform: translateY(0);
+}

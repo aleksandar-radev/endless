@@ -1280,6 +1280,14 @@ export default {
   'inventory.noItemsToSalvage': 'No hay objetos para desguazar',
   'dataManager.cloudSaveFailed': '¡La guardada en la nube falló!',
   'dataManager.localSaveFailed': '¡Guardado local falló: el almacenamiento del navegador está lleno!',
+  'migration.0_8_15.apologyTitle': 'Lamentamos los inconvenientes',
+  'migration.0_8_15.apologyBody':
+    'Lamentamos los inconvenientes ocasionados por una de las últimas actualizaciones. Parece que hubo un problema con prestigio (y también con ascensión) que hacía que se perdiera todo el progreso después de hacerlo. Las opciones de desarrollo estarán habilitadas hasta el 31 de octubre de 2025 para que puedas recuperar tus bonificaciones de prestigio o ascensión con más facilidad. Escribe <span class="dev-access-highlight">edev</span> en cualquier parte para abrirlas.',
+  'migration.0_8_15.apologyConfirm': 'Entendido',
+  'footer.devOptionsTestNotice':
+    'Juego completo en <a href="https://ghost-team.top">ghost-team.top</a>. En esta versión de prueba, escribe <span class="dev-access-highlight">edev</span> en cualquier parte del navegador para acceder a las opciones de desarrollador.',
+  'footer.devOptionsNotice':
+    'Las opciones de desarrollo permanecerán habilitadas hasta el 31 de octubre de 2025. Escribe <span class="dev-access-highlight">edev</span> en cualquier parte para abrirlas y arreglar cualquier progreso perdido.',
   'training.notEnoughGoldBulk': '¡No hay suficiente oro para comprar en masa!',
   'training.bulkPurchaseSuccess': '¡Compra en masa exitosa!',
   'rune.convertName': 'Runa de {from} a {to}',

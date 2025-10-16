@@ -18,6 +18,7 @@ import {
   getItemSetDefinitions,
   getUniqueItemDefinitions,
 } from './uniqueItems.js';
+import { isDevAccessWindowActive } from './migrations/0.8.15.js';
 
 export const crypt = new SimpleCrypto(import.meta.env.VITE_ENCRYPT_KEY);
 
@@ -302,7 +303,8 @@ export function createDebugUI() {
 }
 
 export function createModifyUI() {
-  if (import.meta.env.VITE_ENV == 'production') {
+  const environment = import.meta.env.VITE_ENV;
+  if (environment === 'production' && !isDevAccessWindowActive()) {
     return;
   }
   const modifyDiv = document.createElement('div');

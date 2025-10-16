@@ -26,6 +26,50 @@ export function tp(key, params = {}) {
 }
 
 export function applyTranslations() {
+  document.querySelectorAll('[data-i18n-date-iso]').forEach((el) => {
+    const iso = el.getAttribute('data-i18n-date-iso');
+    if (!iso) return;
+    const date = new Date(iso);
+    if (Number.isNaN(date.getTime())) return;
+    const formatted = date.toLocaleDateString(currentLang, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+    let params = {};
+    const paramsAttr = el.getAttribute('data-i18n-params');
+    if (paramsAttr) {
+      try {
+        params = JSON.parse(paramsAttr);
+      } catch {
+        params = {};
+      }
+    }
+    params.date = formatted;
+    el.setAttribute('data-i18n-params', JSON.stringify(params));
+  });
+
+  document.querySelectorAll('[data-i18n-tp]').forEach((el) => {
+    const key = el.getAttribute('data-i18n-tp');
+    if (!key) return;
+    let params = {};
+    const paramsAttr = el.getAttribute('data-i18n-params');
+    if (paramsAttr) {
+      try {
+        params = JSON.parse(paramsAttr);
+      } catch {
+        params = {};
+      }
+    }
+    const value = tp(key, params) || '';
+    const forceHtml = el.hasAttribute('data-i18n-html');
+    if (forceHtml || value.includes('<')) {
+      el.innerHTML = value;
+    } else {
+      el.textContent = value;
+    }
+  });
+
   document.querySelectorAll('[data-i18n]').forEach((el) => {
     const key = el.getAttribute('data-i18n');
     const value = t(key) || '';

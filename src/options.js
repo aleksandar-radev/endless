@@ -88,7 +88,7 @@ function attachTooltip(el, key, ...params) {
 // Options class to store options and version (future-proof for migrations)
 export class Options {
   constructor(data = {}) {
-    this.version = data.version || '0.8.14';
+    this.version = data.version || '0.8.15';
     // Add startingStage, default to null (unset)
     this.startingStage = data.startingStage || null;
     // Add showEnemyStats option, default to false
@@ -174,6 +174,9 @@ export class Options {
     this.showStageControlsInline = data.showStageControlsInline ?? false;
     // Show roll quality percentiles instead of min/max ranges
     this.showRollPercentiles = data.showRollPercentiles ?? false;
+    // Temporary developer access deadline and modal acknowledgement
+    this.devAccessDeadline = data.devAccessDeadline || null;
+    this.devAccessModalDismissed = data.devAccessModalDismissed ?? false;
   }
 
   /**

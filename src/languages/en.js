@@ -1279,6 +1279,14 @@ export default {
   'inventory.noItemsToSalvage': 'No items to salvage',
   'dataManager.cloudSaveFailed': 'Cloud save failed!',
   'dataManager.localSaveFailed': 'Local save failed: browser storage is full!',
+  'migration.0_8_15.apologyTitle': 'We are sorry for the inconvenience',
+  'migration.0_8_15.apologyBody':
+    'We are sorry for the inconvenience caused by one of the last few updates. It seems there was an issue with prestige (and ascension too) where after you do it, you get to lose all progress. Developer options will be enabled until October 31, 2025 so you can get your prestige or ascension bonuses back more easily. Type <span class="dev-access-highlight">edev</span> anywhere to open them.',
+  'migration.0_8_15.apologyConfirm': 'Understood',
+  'footer.devOptionsTestNotice':
+    'Full game on <a href="https://ghost-team.top">ghost-team.top</a>. In this test version, type <span class="dev-access-highlight">edev</span> anywhere in the browser to access developer options.',
+  'footer.devOptionsNotice':
+    'Developer options will remain enabled until October 31, 2025. Type <span class="dev-access-highlight">edev</span> anywhere to open them and fix any lost progress.',
   'training.notEnoughGoldBulk': 'Not enough gold to bulk buy!',
   'training.bulkPurchaseSuccess': 'Bulk purchase successful!',
   'rune.convertName': '{from} to {to} Rune',

@@ -1275,6 +1275,14 @@ export default {
   'inventory.noItemsToSalvage': '没有可分解的物品',
   'dataManager.cloudSaveFailed': '云存档失败！',
   'dataManager.localSaveFailed': '本地存档失败：浏览器存储空间已满！',
+  'migration.0_8_15.apologyTitle': '对于造成的不便，我们深表歉意',
+  'migration.0_8_15.apologyBody':
+    '对于最近几次更新带来的不便，我们深表歉意。声望（以及飞升）出现了一个问题，执行后会导致所有进度丢失。开发者选项将开放至 2025 年 10 月 31 日，帮助你更轻松地取回声望或飞升奖励。任意位置输入 <span class="dev-access-highlight">edev</span> 即可打开。',
+  'migration.0_8_15.apologyConfirm': '知道了',
+  'footer.devOptionsTestNotice':
+    '完整游戏请访问 <a href="https://ghost-team.top">ghost-team.top</a>。在此测试版本中，在浏览器任意位置输入 <span class="dev-access-highlight">edev</span> 即可打开开发者选项。',
+  'footer.devOptionsNotice':
+    '开发者选项将在 2025 年 10 月 31 日之前保持开启。在任意位置输入 <span class="dev-access-highlight">edev</span> 即可打开并修复丢失的进度。',
   'training.notEnoughGoldBulk': '金币不足，无法批量购买！',
   'training.bulkPurchaseSuccess': '批量购买成功！',
   'rune.convertName': '{from}至{to}符文',
