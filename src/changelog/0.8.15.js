@@ -13,6 +13,7 @@ export default function run() {
     <span style="color:#FF8A00;">Bug Fixes</span>
     <ul>
       <li>Ensured prestiging and ascending wait for a forced save so ascension points and bonuses persist reliably between runs.</li>
+      <li>Corrected Earth's Embrace description to reflect its life bonus instead of life regeneration.</li>
     </ul>
   `;
 }

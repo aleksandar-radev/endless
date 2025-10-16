@@ -706,7 +706,7 @@ export default {
   'skill.stoneform': 'Hardens your skin, boosting armor, resistance, and earth damage.',
   'skill.spiritLink': 'Increases life steal and mana per hit.',
   'skill.moonfury': 'Empowers you under the moon, boosting cold and water damage.',
-  'skill.earthsEmbrace': 'Embrace the earth for armor, life regeneration, and resistance.',
+  'skill.earthsEmbrace': 'Embrace the earth for armor, life, and resistance.',
   'skill.wrathOfNature': 'Increases damage, vitality, and elemental damage.',
   'skill.avatarOfNature': 'Increases vitality, strength, damage, and life.',
   'skill.spiritBond': 'Boosts life and mana regeneration, adding damage from life regen.',

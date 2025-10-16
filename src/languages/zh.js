@@ -707,7 +707,7 @@ export default {
   'skill.stoneform': '硬化皮肤，提升护甲、抗性和土系伤害。',
   'skill.spiritLink': '提高生命偷取和每击法力回复。',
   'skill.moonfury': '月下强化，提升冰与水伤害。',
-  'skill.earthsEmbrace': '拥抱大地以获得护甲、生命回复和抗性。',
+  'skill.earthsEmbrace': '拥抱大地以获得护甲、生命和抗性。',
   'skill.wrathOfNature': '增加伤害、体力和元素伤害。',
   'skill.avatarOfNature': '增加体力、力量、伤害和生命。',
   'skill.spiritBond': '提高生命与法力回复，并从生命回复中获得伤害。',
