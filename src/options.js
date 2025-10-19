@@ -678,14 +678,16 @@ export class Options {
         max="${max}"
         value="${value}"
       />
-      <button class="max-btn" type="button" data-i18n="common.max">Max</button>
-      <button class="apply-btn" type="button" data-i18n="common.apply">Apply</button>
+      <div class="min-max-btn-group">
+        <button class="min-btn" type="button" data-i18n="common.min">Min</button>
+        <button class="max-btn" type="button" data-i18n="common.max">Max</button>
+      </div>
     `;
 
     const label = wrapper.querySelector('.stage-skip-label');
     const input = wrapper.querySelector('input');
+    const minBtn = wrapper.querySelector('.min-btn');
     const maxBtn = wrapper.querySelector('.max-btn');
-    const applyBtn = wrapper.querySelector('.apply-btn');
     attachTooltip(label, 'stageSkipLabel');
     attachTooltip(input, 'stageSkipInput', () => crystalShop.crystalUpgrades?.stageSkip || 0);
 
@@ -693,8 +695,30 @@ export class Options {
     this._stageSkipInput = input;
     this._stageSkipWrapper = wrapper;
 
-    applyBtn.onmouseenter = () => applyBtn.classList.add('hover');
-    applyBtn.onmouseleave = () => applyBtn.classList.remove('hover');
+    const applyStageSkip = () => {
+      let val = parseInt(input.value, 10);
+      let max = crystalShop.crystalUpgrades?.stageSkip || 0;
+      if (isNaN(val) || val < 0) val = 0;
+      if (val > max) val = max;
+      input.value = val;
+
+      if (this.stageSkip === val) return;
+
+      this.stageSkip = val;
+      dataManager.saveGame();
+      showToast(t('options.toast.stageSkipApplied'), 'success');
+      this.updateStageSkipOption();
+    };
+
+    if (minBtn) {
+      minBtn.onmouseenter = () => minBtn.classList.add('hover');
+      minBtn.onmouseleave = () => minBtn.classList.remove('hover');
+      minBtn.onclick = () => {
+        input.value = 0;
+        input.dispatchEvent(new Event('input'));
+        applyStageSkip();
+      };
+    }
     if (maxBtn) {
       maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
       maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
@@ -702,6 +726,7 @@ export class Options {
         const max = crystalShop.crystalUpgrades?.stageSkip || 0;
         input.value = max;
         input.dispatchEvent(new Event('input'));
+        applyStageSkip();
       };
     }
 
@@ -713,16 +738,14 @@ export class Options {
       input.value = val;
     });
 
-    applyBtn.onclick = () => {
-      let val = parseInt(input.value, 10);
-      let max = crystalShop.crystalUpgrades?.stageSkip || 0;
-      if (isNaN(val) || val < 0) val = 0;
-      if (val > max) val = max;
-
-      this.stageSkip = val;
-      dataManager.saveGame();
-      showToast(t('options.toast.stageSkipApplied'), 'success');
-    };
+    input.addEventListener('blur', applyStageSkip);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        applyStageSkip();
+        input.blur();
+      }
+    });
 
     // Initial update to ensure correct max/value
     this.updateStageSkipOption();
@@ -781,30 +804,56 @@ export class Options {
         value="${value}"
         ${purchased ? '' : 'disabled'}
       />
-      <button class="max-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.max">Max</button>
-      <button class="apply-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.apply">Apply</button>
+      <div class="min-max-btn-group">
+        <button class="min-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.min">Min</button>
+        <button class="max-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.max">Max</button>
+      </div>
     `;
     const label = wrapper.querySelector('.stage-lock-label');
     const input = wrapper.querySelector('input');
+    const minBtn = wrapper.querySelector('.min-btn');
     const maxBtn = wrapper.querySelector('.max-btn');
-    const applyBtn = wrapper.querySelector('.apply-btn');
     attachTooltip(label, 'stageLockStageLabel');
     attachTooltip(input, 'stageLockStageInput', () => !!crystalShop.crystalUpgrades?.stageLock);
 
     this._stageLockInput = input;
     this._stageLockWrapper = wrapper;
 
-    applyBtn.onmouseenter = () => applyBtn.classList.add('hover');
-    applyBtn.onmouseleave = () => applyBtn.classList.remove('hover');
+    const applyStageLock = () => {
+      if (input.disabled) return;
+      let val = parseInt(input.value, 10);
+      if (isNaN(val) || val < 0) val = 0;
+      input.value = val;
+
+      if (this.stageLock === val) return;
+
+      this.stageLock = val;
+      dataManager.saveGame();
+      this.updateStageLockOption();
+      showToast(t('options.toast.stageLockApplied'), 'success');
+    };
+
+    if (minBtn) {
+      minBtn.onmouseenter = () => minBtn.classList.add('hover');
+      minBtn.onmouseleave = () => minBtn.classList.remove('hover');
+      minBtn.onclick = () => {
+        if (minBtn.disabled) return;
+        input.value = 0;
+        input.dispatchEvent(new Event('input'));
+        applyStageLock();
+      };
+    }
     if (maxBtn) {
       maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
       maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
       maxBtn.onclick = () => {
+        if (maxBtn.disabled) return;
         const highest = Math.max(
           ...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0),
         );
         input.value = highest || 0;
         input.dispatchEvent(new Event('input'));
+        applyStageLock();
       };
     }
 
@@ -814,14 +863,14 @@ export class Options {
       input.value = val;
     });
 
-    applyBtn.onclick = () => {
-      let val = parseInt(input.value, 10);
-      if (isNaN(val) || val < 0) val = 0;
-      this.stageLock = val;
-      dataManager.saveGame();
-      showToast(t('options.toast.stageLockApplied'), 'success');
-      this.updateStageLockOption();
-    };
+    input.addEventListener('blur', applyStageLock);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        applyStageLock();
+        input.blur();
+      }
+    });
 
     this.updateStageLockOption();
 
@@ -845,14 +894,16 @@ export class Options {
         max="${max}"
         value="${value}"
       />
-      <button class="max-btn" type="button" data-i18n="common.max">Max</button>
-      <button class="apply-btn" type="button" data-i18n="common.apply">Apply</button>
+      <div class="min-max-btn-group">
+        <button class="min-btn" type="button" data-i18n="common.min">Min</button>
+        <button class="max-btn" type="button" data-i18n="common.max">Max</button>
+      </div>
     `;
 
     const label = wrapper.querySelector('.boss-skip-label');
     const input = wrapper.querySelector('input');
+    const minBtn = wrapper.querySelector('.min-btn');
     const maxBtn = wrapper.querySelector('.max-btn');
-    const applyBtn = wrapper.querySelector('.apply-btn');
     attachTooltip(label, 'arenaBossSkipLabel');
     attachTooltip(input, 'arenaBossSkipInput', () => {
       const rb = runes?.getBonusEffects?.() || {};
@@ -861,8 +912,31 @@ export class Options {
 
     this._bossSkipInput = input;
 
-    applyBtn.onmouseenter = () => applyBtn.classList.add('hover');
-    applyBtn.onmouseleave = () => applyBtn.classList.remove('hover');
+    const applyBossSkip = () => {
+      let val = parseInt(input.value, 10);
+      const rb = runes?.getBonusEffects?.() || {};
+      let m = (ascension.getBonuses()?.arenaBossSkip || 0) + (rb.arenaBossSkip || 0);
+      if (isNaN(val) || val < 0) val = 0;
+      if (val > m) val = m;
+      input.value = val;
+
+      if (this.arenaBossSkip === val) return;
+
+      this.arenaBossSkip = val;
+      dataManager.saveGame();
+      showToast(t('options.toast.arenaBossSkipApplied'), 'success');
+      this.updateArenaBossSkipOption();
+    };
+
+    if (minBtn) {
+      minBtn.onmouseenter = () => minBtn.classList.add('hover');
+      minBtn.onmouseleave = () => minBtn.classList.remove('hover');
+      minBtn.onclick = () => {
+        input.value = 0;
+        input.dispatchEvent(new Event('input'));
+        applyBossSkip();
+      };
+    }
     if (maxBtn) {
       maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
       maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
@@ -871,6 +945,7 @@ export class Options {
         const m = (ascension.getBonuses()?.arenaBossSkip || 0) + (rb.arenaBossSkip || 0);
         input.value = m;
         input.dispatchEvent(new Event('input'));
+        applyBossSkip();
       };
     }
 
@@ -883,16 +958,14 @@ export class Options {
       input.value = val;
     });
 
-    applyBtn.onclick = () => {
-      let val = parseInt(input.value, 10);
-      const rb = runes?.getBonusEffects?.() || {};
-      let m = (ascension.getBonuses()?.arenaBossSkip || 0) + (rb.arenaBossSkip || 0);
-      if (isNaN(val) || val < 0) val = 0;
-      if (val > m) val = m;
-      this.arenaBossSkip = val;
-      dataManager.saveGame();
-      showToast(t('options.toast.arenaBossSkipApplied'), 'success');
-    };
+    input.addEventListener('blur', applyBossSkip);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        applyBossSkip();
+        input.blur();
+      }
+    });
 
     this.updateArenaBossSkipOption();
 
@@ -952,9 +1025,9 @@ export class Options {
     if (this._stageLockInput) {
       this._stageLockInput.disabled = !purchased;
       this._stageLockInput.value = this.stageLock || 0;
-      const applyBtn = this._stageLockWrapper?.querySelector('.apply-btn');
+      const minBtn = this._stageLockWrapper?.querySelector('.min-btn');
       const maxBtn = this._stageLockWrapper?.querySelector('.max-btn');
-      if (applyBtn) applyBtn.disabled = !purchased;
+      if (minBtn) minBtn.disabled = !purchased;
       if (maxBtn) maxBtn.disabled = !purchased;
     }
     const inlineInput = document.querySelector('#inline-stage-controls .stage-lock-input');
@@ -966,12 +1039,12 @@ export class Options {
       const row = inlineInput.closest('.option-row');
       if (row) {
         row.style.display = this.stageLockEnabled ? '' : 'none';
-        const applyBtn = row.querySelector('.apply-btn');
+        const minBtn = row.querySelector('.min-btn');
         const maxBtn = row.querySelector('.max-btn');
-        if (applyBtn) {
-          applyBtn.disabled = !purchased;
-          if (!purchased) applyBtn.title = tooltip;
-          else applyBtn.removeAttribute('title');
+        if (minBtn) {
+          minBtn.disabled = !purchased;
+          if (!purchased) minBtn.title = tooltip;
+          else minBtn.removeAttribute('title');
         }
         if (maxBtn) {
           maxBtn.disabled = !purchased;
@@ -1017,32 +1090,58 @@ export class Options {
         value="${value}"
         ${purchased ? '' : 'disabled'}
       />
-      <button class="max-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.max">Max</button>
-      <button class="apply-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.apply">Apply</button>
+      <div class="min-max-btn-group">
+        <button class="min-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.min">Min</button>
+        <button class="max-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.max">Max</button>
+      </div>
     `;
 
     const label = wrapper.querySelector('.reset-stage-skip-label');
     const input = wrapper.querySelector('input');
+    const minBtn = wrapper.querySelector('.min-btn');
     const maxBtn = wrapper.querySelector('.max-btn');
-    const applyBtn = wrapper.querySelector('.apply-btn');
     attachTooltip(label, 'resetStageSkipLabel');
     attachTooltip(input, 'resetStageSkipInput', () => !!crystalShop.crystalUpgrades?.resetStageSkip);
 
     this._resetStageSkipInput = input;
     this._resetStageSkipWrapper = wrapper;
 
-    applyBtn.onmouseenter = () => applyBtn.classList.add('hover');
-    applyBtn.onmouseleave = () => applyBtn.classList.remove('hover');
+    const applyResetStageSkip = () => {
+      if (input.disabled) return;
+      let val = parseInt(input.value, 10);
+      if (isNaN(val) || val < 0) val = 0;
+      input.value = val;
+
+      if (this.resetStageSkip === val) return;
+
+      this.resetStageSkip = val;
+      dataManager.saveGame();
+      showToast(t('options.toast.resetStageSkipApplied'), 'success');
+      this.updateResetStageSkipOption();
+    };
+
+    if (minBtn) {
+      minBtn.onmouseenter = () => minBtn.classList.add('hover');
+      minBtn.onmouseleave = () => minBtn.classList.remove('hover');
+      minBtn.onclick = () => {
+        if (minBtn.disabled) return;
+        input.value = 0;
+        input.dispatchEvent(new Event('input'));
+        applyResetStageSkip();
+      };
+    }
     if (maxBtn) {
       maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
       maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
       maxBtn.onclick = () => {
+        if (maxBtn.disabled) return;
         // Use highest stage reached across all tiers as a sensible maximum
         const highest = Math.max(
           ...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0),
         );
         input.value = highest || 0;
         input.dispatchEvent(new Event('input'));
+        applyResetStageSkip();
       };
     }
 
@@ -1052,13 +1151,14 @@ export class Options {
       input.value = val;
     });
 
-    applyBtn.onclick = () => {
-      let val = parseInt(input.value, 10);
-      if (isNaN(val) || val < 0) val = 0;
-      this.resetStageSkip = val;
-      dataManager.saveGame();
-      showToast(t('options.toast.resetStageSkipApplied'), 'success');
-    };
+    input.addEventListener('blur', applyResetStageSkip);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        applyResetStageSkip();
+        input.blur();
+      }
+    });
 
     this.updateResetStageSkipOption();
 
@@ -1069,15 +1169,17 @@ export class Options {
     if (!this._resetStageSkipInput) return;
     const purchased = !!crystalShop.crystalUpgrades?.resetStageSkip;
     this._resetStageSkipInput.disabled = !purchased;
-    const btns = this._resetStageSkipWrapper?.querySelectorAll('.apply-btn, .max-btn');
+    const btns = this._resetStageSkipWrapper?.querySelectorAll('.min-btn, .max-btn');
     if (btns) btns.forEach((b) => (b.disabled = !purchased));
 
     // Update inline input/button if present
     const inlineInput = document.querySelector('#inline-stage-controls .reset-stage-skip-input');
     if (inlineInput) inlineInput.disabled = !purchased;
     const inlineRow = inlineInput?.closest('.option-row');
-    const inlineBtn = inlineRow?.querySelector('.apply-btn');
-    if (inlineBtn) inlineBtn.disabled = !purchased;
+    const inlineMin = inlineRow?.querySelector('.min-btn');
+    const inlineMax = inlineRow?.querySelector('.max-btn');
+    if (inlineMin) inlineMin.disabled = !purchased;
+    if (inlineMax) inlineMax.disabled = !purchased;
   }
 
   /**
@@ -1563,14 +1665,16 @@ export class Options {
         max="${max}"
         value="${value}"
       />
-      <button class="max-btn" type="button" data-i18n="common.max">Max</button>
-      <button class="apply-btn" type="button" data-i18n="common.apply">Apply</button>
+      <div class="min-max-btn-group">
+        <button class="min-btn" type="button" data-i18n="common.min">Min</button>
+        <button class="max-btn" type="button" data-i18n="common.max">Max</button>
+      </div>
     `;
 
     const label = wrapper.querySelector('.starting-stage-label');
     const input = wrapper.querySelector('input');
+    const minBtn = wrapper.querySelector('.min-btn');
     const maxBtn = wrapper.querySelector('.max-btn');
-    const applyBtn = wrapper.querySelector('.apply-btn');
     attachTooltip(label, 'startingStageLabel');
     attachTooltip(input, 'startingStageInput', () => 1 + (crystalShop.crystalUpgrades?.startingStage || 0));
 
@@ -1578,42 +1682,75 @@ export class Options {
     this._startingStageInput = input;
     this._startingStageWrapper = wrapper;
 
-    applyBtn.onmouseenter = () => applyBtn.classList.add('hover');
-    applyBtn.onmouseleave = () => applyBtn.classList.remove('hover');
-    if (maxBtn) {
-      maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
-      maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
-      maxBtn.onclick = () => {
-        const max = 1 + (crystalShop.crystalUpgrades?.startingStage || 0);
-        input.value = max;
-        input.dispatchEvent(new Event('input'));
-      };
-    }
-
-    input.addEventListener('input', () => {
+    const applyStartingStage = (force = false) => {
       let val = parseInt(input.value, 10);
-      let max = 1 + (crystalShop.crystalUpgrades?.startingStage || 0);
+      let maxVal = 1 + (crystalShop.crystalUpgrades?.startingStage || 0);
       if (isNaN(val) || val < 0) val = 0;
-      if (val > max) val = max;
+      if (val > maxVal) val = maxVal;
       input.value = val;
-    });
 
-    applyBtn.onclick = () => {
-      let val = parseInt(input.value, 10);
-      let max = 1 + (crystalShop.crystalUpgrades?.startingStage || 0);
-      if (isNaN(val) || val < 0) val = 0;
-      if (val > max) val = max;
+      const valueChanged = this.startingStage !== val;
+      const stageMismatch = game.fightMode === 'explore' && game.stage !== game.getStartingStage();
+      const shouldSyncStage = force || valueChanged || stageMismatch;
+      if (!valueChanged && !shouldSyncStage) return;
 
-      this.startingStage = val;
-      if (game.fightMode === 'explore') {
+      if (valueChanged) {
+        this.startingStage = val;
+      }
+
+      if (shouldSyncStage && game.fightMode === 'explore') {
         game.stage = game.getStartingStage();
         game.currentEnemy = new Enemy(game.stage);
         updateStageUI();
         game.resetAllLife();
       }
-      dataManager.saveGame();
+
+      if (valueChanged) {
+        dataManager.saveGame();
+        this.updateStartingStageOption();
+      } else if (force) {
+        this.updateStartingStageOption();
+      }
+
       showToast(t('options.toast.startingStageApplied'), 'success');
     };
+
+    if (minBtn) {
+      minBtn.onmouseenter = () => minBtn.classList.add('hover');
+      minBtn.onmouseleave = () => minBtn.classList.remove('hover');
+      minBtn.onclick = () => {
+        input.value = 0;
+        input.dispatchEvent(new Event('input'));
+        applyStartingStage(true);
+      };
+    }
+    if (maxBtn) {
+      maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
+      maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
+      maxBtn.onclick = () => {
+        const maxVal = 1 + (crystalShop.crystalUpgrades?.startingStage || 0);
+        input.value = maxVal;
+        input.dispatchEvent(new Event('input'));
+        applyStartingStage(true);
+      };
+    }
+
+    input.addEventListener('input', () => {
+      let val = parseInt(input.value, 10);
+      let maxVal = 1 + (crystalShop.crystalUpgrades?.startingStage || 0);
+      if (isNaN(val) || val < 0) val = 0;
+      if (val > maxVal) val = maxVal;
+      input.value = val;
+    });
+
+    input.addEventListener('blur', () => applyStartingStage(false));
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        applyStartingStage(true);
+        input.blur();
+      }
+    });
 
     // Initial update to ensure correct max/value
     this.updateStartingStageOption();

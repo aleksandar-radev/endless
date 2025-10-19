@@ -229,6 +229,7 @@ export default {
   'common.none': 'None',
   'common.lvl': 'Lvl',
   'common.max': 'Max',
+  'common.min': 'Min',
   'common.alreadyPurchased': 'Already purchased!',
   'common.notEnoughSouls': 'Not enough souls!',
   'common.purchased': 'Purchased',

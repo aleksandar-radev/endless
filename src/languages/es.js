@@ -215,6 +215,7 @@ export default {
   'common.none': 'Ninguno',
   'common.lvl': 'Nvl',
   'common.max': 'Máx',
+  'common.min': 'Mín',
   'common.alreadyPurchased': '¡Ya comprado!',
   'common.notEnoughSouls': '¡No hay suficientes almas!',
   'common.purchased': 'Comprado',

@@ -229,6 +229,7 @@ export default {
   'common.none': '无',
   'common.lvl': '等级',
   'common.max': '最大',
+  'common.min': '最小',
   'common.alreadyPurchased': '已购买过！',
   'common.notEnoughSouls': '灵魂不足！',
   'common.purchased': '已购买',
