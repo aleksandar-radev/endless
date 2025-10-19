@@ -368,6 +368,7 @@ export default {
   'inventory.noStatsToReroll': '没有可重新随机的属性。',
   'inventory.rerollAction': '重掷',
   'inventory.rerolledStatToast': '已为 {item} 重掷 {stat}',
+  'inventory.maxRollLockedTooltip': '该属性已达到最高数值，无法继续重掷。',
   'inventory.quantityLabel': '数量：',
   'inventory.usedMaterialsToast': '使用了 {quantity}× {item}',
   'inventory.salvagedItemsOfRarity': '分解了 {count} 件 {rarity} 装备',

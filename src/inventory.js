@@ -758,6 +758,13 @@ export default class Inventory {
             .map(([stat, value]) => {
               const decimals = STATS[stat].decimalPlaces || 0;
               const formattedValue = value.toFixed(decimals);
+              const { max: maxRoll } = item.getStatMinMax(stat);
+              let isMaxRoll = false;
+              if (Number.isFinite(maxRoll)) {
+                const normalizedMax = Number(maxRoll.toFixed(decimals));
+                const normalizedValue = Number(formattedValue);
+                isMaxRoll = normalizedValue >= normalizedMax;
+              }
               let adv = '';
               if (showAdvanced && statMinMax[stat]) {
                 const minRaw = statMinMax[stat].min;
@@ -775,12 +782,15 @@ export default class Inventory {
                   adv = `<span class="item-ref-range" style="color:#aaa;">${min} - ${max}</span>`;
                 }
               }
+              const rerollAttrs = isMaxRoll
+                ? `disabled title="${t('inventory.maxRollLockedTooltip')}"`
+                : '';
               return `<div class="stat-row" data-stat="${stat}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
                 <div style="flex:1;display:flex;justify-content:space-between;align-items:center;gap:8px;">
                   <span>${formatStatName(stat)}: <b>${formattedValue}${isPercentStat(stat) ? '%' : ''}</b></span>
                   ${adv}
                 </div>
-                <button class="reroll-btn" data-idx="${idx}" data-stat="${stat}">${t('inventory.rerollAction')}</button>
+                <button class="reroll-btn" data-idx="${idx}" data-stat="${stat}" ${rerollAttrs}>${t('inventory.rerollAction')}</button>
               </div>`;
             })
             .join('');
@@ -833,6 +843,16 @@ export default class Inventory {
             );
             dialog.querySelector('.material-qty').textContent = mat.qty;
             renderSelected(idx);
+            const postRollRange = item.getStatMinMax(statToReroll);
+            if (postRollRange && Number.isFinite(postRollRange.max)) {
+              const decimals = STATS[statToReroll].decimalPlaces || 0;
+              const maxValue = Number(postRollRange.max.toFixed(decimals));
+              const normalized = Number(item.stats[statToReroll].toFixed(decimals));
+              if (normalized >= maxValue) {
+                e.currentTarget.disabled = true;
+                e.currentTarget.title = t('inventory.maxRollLockedTooltip');
+              }
+            }
             if (mat.qty <= 0) {
               dialog.querySelectorAll('.reroll-btn').forEach((b) => {
                 b.disabled = true;

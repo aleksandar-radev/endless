@@ -12,9 +12,9 @@ export const DRUID_SKILLS = {
     summonStats: (level) => {
       return {
         percentOfPlayerDamage: Math.min(scaleDownFlat(level, 0.75), 80),
-        damage: scaleUpFlat(level, 1.25),
-        earthDamage: scaleUpFlat(level, 1.6),
-        waterDamage: scaleUpFlat(level, 1),
+        damage: scaleUpFlat(level, 1.6, 8),
+        earthDamage: scaleUpFlat(level, 2, 8),
+        waterDamage: scaleUpFlat(level, 1.3, 8),
         attackSpeed: 1,
       };
     },
@@ -94,6 +94,7 @@ export const DRUID_SKILLS = {
       return {
         earthDamage: earthDamage * 4,
         earthDamagePercent: earthDamagePercent * 4,
+        reduceEnemyDamagePercent: Math.min(scaleDownFlat(level, 1.5), 25),
       };
     },
   },
@@ -105,8 +106,8 @@ export const DRUID_SKILLS = {
     summonStats: (level) => {
       return {
         percentOfPlayerDamage: Math.min(scaleDownFlat(level, 0.2, 25), 60),
-        damage: scaleUpFlat(level, 5),
-        earthDamage: scaleUpFlat(level, 4),
+        damage: scaleUpFlat(level, 6.5, 8),
+        earthDamage: scaleUpFlat(level, 5, 8),
         attackSpeed: 2,
       };
     },
@@ -129,9 +130,9 @@ export const DRUID_SKILLS = {
     summonStats: (level) => {
       return {
         percentOfPlayerDamage: Math.min(scaleDownFlat(level, 1), 100),
-        damage: scaleUpFlat(level, 4),
+        damage: scaleUpFlat(level, 5.2, 5),
         attackSpeed: 0.9,
-        lifePerHit: scaleUpFlat(level, 4),
+        lifePerHit: scaleUpFlat(level, 4, 5),
       };
     },
     manaCost: (level) => 5 + level * 0.25,
@@ -191,8 +192,8 @@ export const DRUID_SKILLS = {
     summonStats: (level) => {
       return {
         percentOfPlayerDamage: Math.min(scaleDownFlat(level, 1.5), 200),
-        damage: scaleUpFlat(level, 8, 10, 0.5),
-        earthDamage: scaleUpFlat(level, 6, 10, 0.4),
+        damage: scaleUpFlat(level, 8, 6, 0.5),
+        earthDamage: scaleUpFlat(level, 6, 7, 0.4),
         attackSpeed: 0.6,
       };
     },

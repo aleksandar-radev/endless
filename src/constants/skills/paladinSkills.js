@@ -31,10 +31,10 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.smite'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 1),
+      damage: scaleUpFlat(level, 1.2, 6, 0.15),
       damagePercent: scaleDownFlat(level),
-      fireDamage: scaleUpFlat(level, 2),
-      fireDamagePercent: scaleDownFlat(level, 2),
+      fireDamage: scaleUpFlat(level, 2, 5, 0.15),
+      fireDamagePercent: scaleDownFlat(level, 1.8),
     }),
   },
   shieldBash: {
@@ -43,14 +43,14 @@ export const PALADIN_SKILLS = {
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: (level) => 3 + level * 0.125,
-    cooldown: () => 4500,
+    cooldown: () => 5500,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'bash',
     description: () => t('skill.shieldBash'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 2),
-      damagePercent: scaleDownFlat(level, 4),
+      damage: scaleUpFlat(level, 6, 5, 0.2),
+      damagePercent: scaleDownFlat(level, 8),
     }),
   },
   divineProtection: {
@@ -82,9 +82,10 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.consecration'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: scaleDownFlat(level, 5),
-      coldDamagePercent: scaleDownFlat(level, 5),
-      lightningDamagePercent: scaleDownFlat(level, 5),
+      fireDamage: scaleUpFlat(level, 1.5, 5, 0.2),
+      fireDamagePercent: scaleDownFlat(level, 4),
+      lightningDamage: scaleUpFlat(level, 1.5, 5, 0.2),
+      lightningDamagePercent: scaleDownFlat(level, 4),
     }),
   },
   greaterHealing: {

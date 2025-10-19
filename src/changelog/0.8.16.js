@@ -7,6 +7,8 @@ export default function run() {
     <span style="color:#FF8A00;">Improvements</span>
     <ul>
       <li>Split Options quick-set buttons so you can jump straight to minimum or maximum values for starting stage, stage skip, and related inputs, and apply those values instantly without an extra button.</li>
+      <li>Rebalanced many skills across all classes to improve early-game performance and reduce the gap between different playstyles.</li>
+      <li>Locked equipment stat re-roll buttons once a stat hits its maximum possible value to prevent accidentally losing perfect rolls.</li>
     </ul>
 
     <!-- <span style="color:#FF8A00;">Bug Fixes</span>

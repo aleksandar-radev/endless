@@ -368,6 +368,7 @@ export default {
   'inventory.noStatsToReroll': 'No stats to re-roll.',
   'inventory.rerollAction': 'Re-roll',
   'inventory.rerolledStatToast': 'Re-rolled {stat} on {item}',
+  'inventory.maxRollLockedTooltip': 'This stat rolled at its maximum value and can no longer be re-rolled.',
   'inventory.quantityLabel': 'Quantity:',
   'inventory.usedMaterialsToast': 'Used {quantity}× {item}',
   'inventory.salvagedItemsOfRarity': 'Salvaged {count} {rarity} item(s)',

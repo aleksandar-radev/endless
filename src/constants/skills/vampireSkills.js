@@ -15,7 +15,7 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.bloodSiphon'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifePerHit: scaleUpFlat(level, 1, 5, 0.2),
+      lifePerHit: scaleUpFlat(level, 2, 4, 0.2),
       damage: scaleUpFlat(level, 2, 4, 0.2),
       damagePercent: scaleDownFlat(level, 1.5),
     }),
@@ -35,24 +35,23 @@ export const VAMPIRE_SKILLS = {
   },
 
   // Tier 10 Skills
-  vampiricStrike: {
-    id: 'vampiricStrike',
-    name: () => t('Vampiric Strike'),
+  crimsonBurst: {
+    id: 'crimsonBurst',
+    name: () => t('Crimson Burst'),
     type: () => 'instant',
     skill_type: 'attack',
-    manaCost: (level) => 2 + level * 0.25,
-    cooldown: () => 9500,
+    manaCost: () => 0,
+    cooldown: () => 4000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
-    icon: () => 'bite',
-    description: () => t('skill.vampiricStrike'),
+    icon: () => 'burst',
+    description: () => t('skill.crimsonBurst'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 1),
-      damagePercent: scaleDownFlat(level, 2),
-      lifePerHit: scaleUpFlat(level, 5, 5, 0.1),
+      damage: scaleUpFlat(level, 20, 5, 0.3),
+      damagePercent: scaleDownFlat(level, 15),
+      lifePerHit: scaleUpFlat(level, -30, 5, 0.3),
     }),
-  },
-  darkAura: {
+  },  darkAura: {
     id: 'darkAura',
     name: () => t('Dark Aura'),
     type: () => 'buff',
@@ -108,20 +107,21 @@ export const VAMPIRE_SKILLS = {
   },
 
   // Tier 50 Skills
-  crimsonBurst: {
-    id: 'crimsonBurst',
-    name: () => t('Crimson Burst'),
+  vampiricStrike: {
+    id: 'vampiricStrike',
+    name: () => t('Vampiric Strike'),
     type: () => 'instant',
     skill_type: 'attack',
-    manaCost: (level) => 3 + level * 0.625,
-    cooldown: () => 5000,
+    manaCost: (level) => 2 + level * 0.25,
+    cooldown: () => 9500,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
-    icon: () => 'burst',
-    description: () => t('skill.crimsonBurst'),
+    icon: () => 'bite',
+    description: () => t('skill.vampiricStrike'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: scaleDownFlat(level, 10),
-      lifePerHit: scaleUpFlat(level, -1),
+      damage: scaleUpFlat(level, 6, 5, 0.2),
+      damagePercent: scaleDownFlat(level, 4),
+      lifePerHit: scaleUpFlat(level, 40, 5, 0.25),
     }),
   },
   summonBats: {

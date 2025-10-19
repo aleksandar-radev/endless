@@ -354,6 +354,7 @@ export default {
   'inventory.noStatsToReroll': 'No hay atributos para volver a tirar.',
   'inventory.rerollAction': 'Volver a tirar',
   'inventory.rerolledStatToast': 'Volviste a tirar {stat} en {item}',
+  'inventory.maxRollLockedTooltip': 'Este atributo alcanzó su valor máximo y ya no puede volver a tirarse.',
   'inventory.quantityLabel': 'Cantidad:',
   'inventory.usedMaterialsToast': 'Usaste {quantity}× {item}',
   'inventory.salvagedItemsOfRarity': 'Reciclaste {count} objeto(s) de rareza {rarity}',

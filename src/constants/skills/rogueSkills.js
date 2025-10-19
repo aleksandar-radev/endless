@@ -44,8 +44,9 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.poisonAffinity'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      earthDamage: scaleUpFlat(level, 2, 6, 0.2),
-      earthDamagePercent: scaleDownFlat(level, 1.5),
+      earthDamage: scaleUpFlat(level, 3, 6, 0.2),
+      earthDamagePercent: scaleDownFlat(level, 1),
+      intelligencePercent: scaleDownFlat(level, 0.75),
     }),
   },
   poisonDagger: {
@@ -58,8 +59,8 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.poisonDagger'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 2, 6, 0.2),
-      damagePercent: scaleDownFlat(level, 1.5),
+      damage: scaleUpFlat(level, 3, 5, 0.2),
+      earthDamage: scaleUpFlat(level, 3, 5, 0.2),
       attackSpeedPercent: Math.min(scaleDownFlat(level, 0.375), 100),
     }),
   },
@@ -85,17 +86,20 @@ export const ROGUE_SKILLS = {
   flurry: {
     id: 'flurry',
     name: () => t('Flurry'),
-    type: () => 'instant',
-    skill_type: 'attack',
+    type: () => 'summon',
+    summonStats: (level) => ({
+      percentOfPlayerDamage: Math.min(scaleDownFlat(level, 0.35), 30),
+      damage: scaleUpFlat(level, 4, 6, 0.3),
+      attackSpeed: 4,
+    }),
     manaCost: (level) => 5 + level * 0.25,
-    cooldown: () => 7000,
+    cooldown: () => 10000,
+    duration: () => 3000,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'flurry',
     description: () => t('skill.flurry'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      damage: scaleUpFlat(level, 5, 6, 0.3),
-      damagePercent: scaleDownFlat(level, 4.5),
+    effect: () => ({
     }),
   },
   precision: {
@@ -125,9 +129,10 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.backstab'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: scaleDownFlat(level, 2.5),
-      lifePerHit: scaleUpFlat(level, 6, 5, 0.5),
-      manaPerHit: scaleUpFlat(level, 1.5),
+      damagePercent: scaleDownFlat(level, 15),
+      earthDamagePercent: scaleDownFlat(level, 15),
+      ignoreEnemyArmor: 1,
+      ignoreAllEnemyResistances: 1,
     }),
   },
 
@@ -161,6 +166,7 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       critDamage: Math.min(scaleDownFlat(level, 0.0065), 5),
       attackSpeedPercent: Math.min(scaleDownFlat(level, 0.25), 100),
+      earthDamagePercent: scaleDownFlat(level, 2),
     }),
   },
 
