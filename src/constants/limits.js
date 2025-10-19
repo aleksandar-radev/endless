@@ -1,4 +1,4 @@
-export const GLOBAL_MAX_QTY = 1000000;
+export const GLOBAL_MAX_QTY = 1000000000;
 export const TRAINING_MAX_QTY = GLOBAL_MAX_QTY;
 export const BUILDING_MAX_QTY = GLOBAL_MAX_QTY;
 export const SOUL_SHOP_MAX_QTY = GLOBAL_MAX_QTY;

@@ -11,6 +11,8 @@ export default function run() {
       <li>Rebalanced many skills across all classes to improve early-game performance and reduce the gap between different playstyles.</li>
       <li>Clarified ignore enemy armor/resistance modifiers in skill and item tooltips by removing misleading numeric values.</li>
       <li>Locked equipment stat re-roll buttons once a stat hits its maximum possible value to prevent accidentally losing perfect rolls.</li>
+      <li>Raised the global quick-buy limit to 1,000,000,000 so bulk actions share the same generous ceiling.</li>
+      <li>Reworked Soul Shop max calculations to stay lightning fast even with billions of available souls.</li>
     </ul>
 
     <!-- <span style="color:#FF8A00;">Bug Fixes</span>

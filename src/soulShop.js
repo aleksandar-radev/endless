@@ -8,6 +8,125 @@ import { SOUL_SHOP_MAX_QTY } from './constants/limits.js';
 
 const html = String.raw;
 
+const gcdBigInt = (a, b) => {
+  let x = a < 0n ? -a : a;
+  let y = b < 0n ? -b : b;
+  while (y !== 0n) {
+    const temp = x % y;
+    x = y;
+    y = temp;
+  }
+  return x;
+};
+
+const reduceFraction = ({ num, den }) => {
+  if (den < 0n) {
+    num = -num;
+    den = -den;
+  }
+  if (num === 0n) return { num: 0n, den: 1n };
+  const divisor = gcdBigInt(num < 0n ? -num : num, den);
+  return { num: num / divisor, den: den / divisor };
+};
+
+const decimalToFraction = (value) => {
+  if (!Number.isFinite(value)) return { num: 0n, den: 1n };
+  if (value === 0) return { num: 0n, den: 1n };
+  const sign = value < 0 ? -1n : 1n;
+  let str = Math.abs(value).toString();
+  if (str.includes('e') || str.includes('E')) {
+    const [mantissa, exponentPart] = str.toLowerCase().split('e');
+    const exponent = parseInt(exponentPart, 10) || 0;
+    let [intPart, fracPart = ''] = mantissa.split('.');
+    fracPart = fracPart.replace(/0+$/, '');
+    const digits = fracPart.length;
+    const numeratorStr = (intPart + fracPart).replace(/^0+/, '') || '0';
+    let numerator = BigInt(numeratorStr);
+    let denominator = 10n ** BigInt(digits);
+    if (exponent > 0) {
+      numerator *= 10n ** BigInt(exponent);
+    } else if (exponent < 0) {
+      denominator *= 10n ** BigInt(-exponent);
+    }
+    numerator *= sign;
+    return reduceFraction({ num: numerator, den: denominator });
+  }
+  if (!str.includes('.')) {
+    return { num: BigInt(str) * sign, den: 1n };
+  }
+  str = str.replace(/0+$/, '');
+  if (str.endsWith('.')) str = str.slice(0, -1);
+  if (!str || str === '0') return { num: 0n, den: 1n };
+  const [intPart, fracPart] = str.split('.');
+  const denominator = 10n ** BigInt(fracPart.length);
+  const numerator = BigInt((intPart + fracPart).replace(/^0+/, '') || '0') * sign;
+  return reduceFraction({ num: numerator, den: denominator });
+};
+
+const multiplyFractions = (a, b) => {
+  if (!a || !b) return { num: 0n, den: 1n };
+  if (a.num === 0n || b.num === 0n) return { num: 0n, den: 1n };
+  return reduceFraction({ num: a.num * b.num, den: a.den * b.den });
+};
+
+const addFractions = (a, b) => {
+  if (!a) return b;
+  if (!b) return a;
+  const num = a.num * b.den + b.num * a.den;
+  const den = a.den * b.den;
+  return reduceFraction({ num, den });
+};
+
+const lcmBigInt = (a, b) => {
+  if (a === 0n || b === 0n) return 0n;
+  return (a / gcdBigInt(a, b)) * b;
+};
+
+const floorSumBigInt = (n, m, a, b) => {
+  let nn = n;
+  let aa = a;
+  let bb = b;
+  let mm = m;
+  let ans = 0n;
+  while (true) {
+    if (aa >= mm) {
+      const q = aa / mm;
+      ans += nn * (nn - 1n) / 2n * q;
+      aa %= mm;
+    }
+    if (bb >= mm) {
+      const q = bb / mm;
+      ans += nn * q;
+      bb %= mm;
+    }
+    const yMax = aa * nn + bb;
+    if (yMax < mm) break;
+    nn = yMax / mm;
+    bb = yMax % mm;
+    const tmp = mm;
+    mm = aa;
+    aa = tmp;
+  }
+  return ans;
+};
+
+const sumRoundedArithmetic = (startFrac, stepFrac, count) => {
+  if (count <= 0n) return 0n;
+  if (!startFrac || !stepFrac) return 0n;
+  const denBase = lcmBigInt(startFrac.den, stepFrac.den) || 1n;
+  const startNum = startFrac.num * (denBase / startFrac.den);
+  const stepNum = stepFrac.num * (denBase / stepFrac.den);
+  if (stepNum === 0n) {
+    const rounded = (2n * startNum + denBase) / (2n * denBase);
+    return rounded * count;
+  }
+  const two = 2n;
+  const m = two * denBase;
+  const a = two * stepNum;
+  const b = two * startNum + denBase;
+  return floorSumBigInt(count, m, a, b);
+};
+
 export const SOUL_UPGRADE_CONFIG = {
   // One-time purchase
   extraLife: {
@@ -602,30 +721,37 @@ export default class SoulShop {
 
     const increment = config.costIncrement || 0;
     const multiplier = this.getCostMultiplier();
-    if (multiplier === 0) return 0;
+    if (multiplier <= 0) return 0;
+
     if (increment === 0) {
-      const cost = Math.round((config.baseCost + increment * baseLevel) * multiplier);
-      return cost * qty;
+      const costPerLevel = Math.round((config.baseCost + increment * baseLevel) * multiplier);
+      const totalConst = BigInt(costPerLevel) * BigInt(Math.floor(qty));
+      if (totalConst > BigInt(Number.MAX_SAFE_INTEGER)) return Infinity;
+      return Number(totalConst);
     }
 
-    const baseCost = config.baseCost;
-    const step = increment;
-    const EPS = 1e-9;
-    let remaining = qty;
-    let level = baseLevel;
-    let total = 0;
+    const qtyInt = BigInt(Math.floor(qty));
+    if (qtyInt <= 0n) return 0;
 
-    while (remaining > 0) {
-      const baseValue = baseCost + step * level;
-      const cost = Math.round(baseValue * multiplier);
-      const upperBound = (cost + 0.5 - EPS) / multiplier;
-      const spanRaw = (upperBound - baseValue) / step;
-      const maxSpan = step > 0 ? Math.max(0, Math.floor(spanRaw + EPS)) : remaining - 1;
-      const span = Math.min(remaining, maxSpan + 1);
-      total += cost * span;
-      remaining -= span;
-      level += span;
+    if (!config._baseCostFraction) {
+      config._baseCostFraction = decimalToFraction(config.baseCost);
     }
+    if (!config._incrementFraction) {
+      config._incrementFraction = decimalToFraction(increment);
+    }
+    const baseCostFrac = config._baseCostFraction;
+    const incrementFrac = config._incrementFraction;
+    const baseLevelFrac = { num: BigInt(baseLevel), den: 1n };
+    const multiplierFrac = decimalToFraction(multiplier);
+
+    const levelOffset = multiplyFractions(incrementFrac, baseLevelFrac);
+    const baseValue = addFractions(baseCostFrac, levelOffset);
+    const startValue = multiplyFractions(baseValue, multiplierFrac);
+    const stepValue = multiplyFractions(incrementFrac, multiplierFrac);
+
+    const totalBigInt = sumRoundedArithmetic(startValue, stepValue, qtyInt);
+    const total = Number(totalBigInt);
+    if (!Number.isFinite(total) || total > Number.MAX_SAFE_INTEGER) return Infinity;
     return total;
   }
 
