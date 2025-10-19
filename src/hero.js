@@ -37,6 +37,8 @@ const STAT_KEYS = Object.keys(STATS);
 
 export const STATS_ON_LEVEL_UP = 3;
 
+const BASE_EXTRA_RESOURCE_DAMAGE_CAP_PER_LEVEL = 1000;
+
 function getElementalShareMap() {
   let shareMap = null;
   if (typeof training?.getElementalDistributionShares === 'function') {
@@ -719,12 +721,22 @@ export default class Hero {
     const computeResourceExtraDamage = (statsSnapshot, shareMap) => {
       if (!statsSnapshot) return { physical: 0, elemental: 0, perElement: {} };
 
-      const life = statsSnapshot.life || 0;
-      const armor = statsSnapshot.armor || 0;
-      const mana = statsSnapshot.mana || 0;
-      const lifeRegen = statsSnapshot.lifeRegen || 0;
-      const evasion = statsSnapshot.evasion || 0;
-      const attackRating = statsSnapshot.attackRating || 0;
+      const resourceCapPerLevel = Math.max(
+        0,
+        BASE_EXTRA_RESOURCE_DAMAGE_CAP_PER_LEVEL +
+          (ascensionBonuses.extraResourceDamageCapPerLevel || 0),
+      );
+      const maxResourceAmount = Math.max(0, this.level * resourceCapPerLevel);
+      if (maxResourceAmount <= 0) return { physical: 0, elemental: 0, perElement: {} };
+
+      const capResource = (value) => Math.min(Math.max(value || 0, 0), maxResourceAmount);
+
+      const life = capResource(statsSnapshot.life);
+      const armor = capResource(statsSnapshot.armor);
+      const mana = capResource(statsSnapshot.mana);
+      const lifeRegen = capResource(statsSnapshot.lifeRegen);
+      const evasion = capResource(statsSnapshot.evasion);
+      const attackRating = capResource(statsSnapshot.attackRating);
 
       const totalExtra =
         (statsSnapshot.extraDamageFromLifePercent || 0) * life +

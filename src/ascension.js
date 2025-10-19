@@ -45,6 +45,12 @@ export const ASCENSION_CATEGORIES = {
         bonus: 0.3,
         stat: 'elementalDamagePercent',
       },
+      resourceDamageCapPerLevel: {
+        label: t('ascension.upgrade.resourceDamageCapPerLevel'),
+        bonus: 20,
+        stat: 'extraResourceDamageCapPerLevel',
+        cost: 1,
+      },
       // New offensive upgrades
       critChance: {
         label: t('ascension.upgrade.critChance'),
