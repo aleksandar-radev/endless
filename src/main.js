@@ -279,7 +279,9 @@ window.setLanguage = setLanguage;
 
   // Keep combat activity timestamp up to date while the game is open
   setInterval(() => {
-    statistics.lastFightActive = Date.now();
+    const nowLocal = Date.now();
+    statistics.lastFightActive = nowLocal;
+    statistics.lastFightActiveLocal = nowLocal;
   }, 1000);
 
   // Periodically collect building bonuses (every 30 seconds, no modal)

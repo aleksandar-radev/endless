@@ -15,7 +15,14 @@ const refundPercent = 0.9;
 
 // Represents a single building instance (with state)
 export class Building {
-  constructor({ id, level = 0, placedAt = null, lastBonusTime = null, totalEarned = 0 }) {
+  constructor({
+    id,
+    level = 0,
+    placedAt = null,
+    lastBonusTime = null,
+    lastBonusTimeLocal = null,
+    totalEarned = 0,
+  }) {
     const data = buildingsData[id];
     if (!data) throw new Error(`Unknown building id: ${id}`);
     this.id = id;
@@ -28,6 +35,13 @@ export class Building {
     this.maxLevel = data.maxLevel;
     this.costStructure = data.costStructure;
     this.lastBonusTime = lastBonusTime;
+    this.lastBonusTimeLocal = lastBonusTimeLocal;
+    if (!Number.isFinite(this.lastBonusTime)) {
+      this.lastBonusTime = Date.now();
+    }
+    if (!Number.isFinite(this.lastBonusTimeLocal)) {
+      this.lastBonusTimeLocal = Date.now();
+    }
     this.totalEarned = totalEarned;
   }
 
@@ -39,11 +53,24 @@ export class Building {
     return buildingsData[this.id].description;
   }
 
-  static async create({ id, level = 0, placedAt = null, lastBonusTime = null, totalEarned = 0 }) {
-    if (!lastBonusTime) {
-      lastBonusTime = await getTimeNow();
-    }
-    return new Building({ id, level, placedAt, lastBonusTime, totalEarned });
+  static async create({
+    id,
+    level = 0,
+    placedAt = null,
+    lastBonusTime = null,
+    lastBonusTimeLocal = null,
+    totalEarned = 0,
+  }) {
+    const serverNow = lastBonusTime ?? (await getTimeNow());
+    const localNow = lastBonusTimeLocal ?? Date.now();
+    return new Building({
+      id,
+      level,
+      placedAt,
+      lastBonusTime: serverNow,
+      lastBonusTimeLocal: localNow,
+      totalEarned,
+    });
   }
 
   upgrade() {
@@ -173,6 +200,7 @@ export class Building {
       level: this.level,
       placedAt: this.placedAt,
       lastBonusTime: this.lastBonusTime,
+      lastBonusTimeLocal: this.lastBonusTimeLocal,
       totalEarned: this.totalEarned,
     };
   }
@@ -228,14 +256,24 @@ export class BuildingManager {
     const manager = Object.create(BuildingManager.prototype);
     manager.buildings = {};
     manager.placedBuildings = [null, null, null, null, null];
-    manager.lastActive = saved?.lastActive || await getTimeNow();
+    const serverNow = await getTimeNow();
+    const localNow = Date.now();
+    const offset = Number.isFinite(serverNow - localNow) ? serverNow - localNow : 0;
+    manager.lastActive = saved?.lastActive ?? serverNow;
+    const inferLocal = (value) => {
+      if (!Number.isFinite(value)) return localNow;
+      const candidate = value - offset;
+      return Number.isFinite(candidate) ? candidate : localNow;
+    };
+    manager.lastActiveLocal = saved?.lastActiveLocal ?? inferLocal(manager.lastActive);
     for (const id in buildingsData) {
       const bSave = saved?.buildings?.[id];
       manager.buildings[id] = await Building.create({
         id,
         level: bSave?.level || 0,
         placedAt: bSave?.placedAt ?? null,
-        lastBonusTime: bSave?.lastBonusTime || manager.lastActive,
+        lastBonusTime: bSave?.lastBonusTime ?? manager.lastActive,
+        lastBonusTimeLocal: bSave?.lastBonusTimeLocal ?? inferLocal(bSave?.lastBonusTime ?? manager.lastActive),
         totalEarned: bSave?.totalEarned || 0,
       });
       if (manager.buildings[id].placedAt !== null) {
@@ -256,7 +294,10 @@ export class BuildingManager {
     b.placedAt = placeholderIdx;
     this.placedBuildings[placeholderIdx] = buildingId;
     // Set lastBonusTime to now when placed
-    b.lastBonusTime = await getTimeNow();
+    const serverNow = await getTimeNow();
+    const localNow = Date.now();
+    b.lastBonusTime = serverNow;
+    b.lastBonusTimeLocal = localNow;
   }
 
   // Remove a building from the map
@@ -266,7 +307,10 @@ export class BuildingManager {
       this.placedBuildings[b.placedAt] = null;
       b.placedAt = null;
       b.level = 0; // Reset level when unplaced
-      b.lastBonusTime = await getTimeNow(); // Optionally reset lastBonusTime
+      const serverNow = await getTimeNow();
+      const localNow = Date.now();
+      b.lastBonusTime = serverNow; // Optionally reset lastBonusTime
+      b.lastBonusTimeLocal = localNow;
     }
   }
 
@@ -293,7 +337,15 @@ export class BuildingManager {
 
   // --- Bonus collection logic ---
   async collectBonuses({ showOfflineModal = false, extraBonuses = [], extraCollectFn } = {}) {
-    const now = await getTimeNow();
+    const nowLocal = Date.now();
+    const nowServer = await getTimeNow();
+    let now = nowServer;
+    if (Number.isFinite(this.lastActive) && Number.isFinite(this.lastActiveLocal)) {
+      const localElapsed = nowLocal - this.lastActiveLocal;
+      if (localElapsed > 0 && now < this.lastActive + localElapsed) {
+        now = this.lastActive + localElapsed;
+      }
+    }
     let offlineBonuses = [];
     const isFirstCollect = showOfflineModal;
     let changed = false;
@@ -303,7 +355,20 @@ export class BuildingManager {
       if (!b || b.level <= 0) continue;
       const intervalMs = intervalToMs(b.effect?.interval);
       if (!intervalMs) continue;
-      let times = Math.floor((now - b.lastBonusTime) / intervalMs);
+      const lastBonusTime = Number.isFinite(b.lastBonusTime) ? b.lastBonusTime : this.lastActive;
+      let elapsedMs = now - lastBonusTime;
+      if (!Number.isFinite(elapsedMs)) elapsedMs = 0;
+      if (elapsedMs < 0) {
+        const fallbackElapsed = nowLocal - (Number.isFinite(b.lastBonusTimeLocal)
+          ? b.lastBonusTimeLocal
+          : this.lastActiveLocal ?? nowLocal);
+        if (Number.isFinite(fallbackElapsed) && fallbackElapsed > 0) {
+          elapsedMs = fallbackElapsed;
+        } else {
+          elapsedMs = 0;
+        }
+      }
+      let times = Math.floor(elapsedMs / intervalMs);
       if (times > 0) {
         const totalBonus = b.effect.amount * b.level * times;
         if (isFirstCollect) {
@@ -361,7 +426,12 @@ export class BuildingManager {
           }
           // Increment total earned for this building
           b.totalEarned += totalBonus;
+          if (!Number.isFinite(b.lastBonusTime)) b.lastBonusTime = now;
           b.lastBonusTime += times * intervalMs;
+          if (!Number.isFinite(b.lastBonusTimeLocal)) {
+            b.lastBonusTimeLocal = nowLocal;
+          }
+          b.lastBonusTimeLocal += times * intervalMs;
           changed = true;
         }
       }
@@ -417,7 +487,14 @@ export class BuildingManager {
           }
           // Increment total earned for this building
           b.building.totalEarned += b.amount;
+          if (!Number.isFinite(b.building.lastBonusTime)) {
+            b.building.lastBonusTime = now;
+          }
           b.building.lastBonusTime += b.timesRaw * b.intervalMs;
+          if (!Number.isFinite(b.building.lastBonusTimeLocal)) {
+            b.building.lastBonusTimeLocal = nowLocal;
+          }
+          b.building.lastBonusTimeLocal += b.timesRaw * b.intervalMs;
         }
         if (materialDroppedTotal > 0) {
           // Count as found via buildings; we keep dropped stat for combat elsewhere
@@ -425,6 +502,7 @@ export class BuildingManager {
         }
         if (typeof extraCollectFn === 'function') await extraCollectFn();
         this.lastActive = await fetchTrustedUtcTime();
+        this.lastActiveLocal = Date.now();
         updateResources();
         dataManager.saveGame(); // Save after collecting bonuses
         // Reset rate counters so offline rewards don't inflate per-period metrics
@@ -433,6 +511,7 @@ export class BuildingManager {
       changed = true; // Modal will result in a change
     } else if (!isFirstCollect && changed) {
       this.lastActive = now;
+      this.lastActiveLocal = nowLocal;
       updateResources();
     }
     if (changed) {
@@ -442,7 +521,12 @@ export class BuildingManager {
 
   // Serialize state for saving
   toJSON() {
-    const out = { buildings: {}, placedBuildings: [...this.placedBuildings], lastActive: this.lastActive };
+    const out = {
+      buildings: {},
+      placedBuildings: [...this.placedBuildings],
+      lastActive: this.lastActive,
+      lastActiveLocal: this.lastActiveLocal,
+    };
     for (const id in this.buildings) {
       out.buildings[id] = this.buildings[id].toJSON();
     }

@@ -9,13 +9,24 @@ import { MATERIALS } from './constants/materials.js';
 import { rollSpecialItemDrop } from './uniqueItems.js';
 
 export async function collectOfflineFightRewards() {
-  const now = await getTimeNow();
-  const last = statistics.lastFightActive || now;
-  const elapsed = Math.floor((now - last) / 1000);
+  const nowLocal = Date.now();
+  const nowServer = await getTimeNow();
+  const lastServer = statistics.lastFightActive || nowServer;
+  const lastLocal = statistics.lastFightActiveLocal || nowLocal;
+  let elapsed = Math.floor((nowServer - lastServer) / 1000);
+  const fallbackElapsed = Math.floor((nowLocal - lastLocal) / 1000);
   // Allow future saves to update last combat timestamp
   dataManager.enableLastFightTime = true;
+  if (!Number.isFinite(elapsed)) elapsed = 0;
+  if (!Number.isFinite(fallbackElapsed) || fallbackElapsed < 0) {
+    // Ignore invalid fallback calculations
+  } else if (elapsed < fallbackElapsed) {
+    elapsed = fallbackElapsed;
+  }
+  if (elapsed < 0) elapsed = 0;
   if (elapsed < 1) {
-    statistics.lastFightActive = now;
+    statistics.lastFightActive = nowServer;
+    statistics.lastFightActiveLocal = nowLocal;
     dataManager.saveGame();
     return null;
   }
@@ -25,7 +36,8 @@ export async function collectOfflineFightRewards() {
   const items = Math.floor((rates.items || 0) * elapsed);
   const matsQty = Math.floor((rates.materials || 0) * elapsed);
   if (xp <= 0 && gold <= 0 && items <= 0 && matsQty <= 0) {
-    statistics.lastFightActive = now;
+    statistics.lastFightActive = nowServer;
+    statistics.lastFightActiveLocal = nowLocal;
     dataManager.saveGame();
     return null;
   }
@@ -171,7 +183,10 @@ export async function collectOfflineFightRewards() {
       const distrib = distributeMaterials(matsQty);
       inventory.bulkAddMaterials(distrib);
     }
-    statistics.lastFightActive = await getTimeNow();
+    const refreshedLocal = Date.now();
+    const refreshedServer = await getTimeNow();
+    statistics.lastFightActive = refreshedServer;
+    statistics.lastFightActiveLocal = refreshedLocal;
   };
 
   return { bonuses, apply };

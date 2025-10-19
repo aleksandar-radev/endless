@@ -81,9 +81,9 @@ export class DataManager {
       const summary = this._getSaveSummary(raw);
       summaries[i] = summary
         ? {
-            level: summary.level,
-            path: summary.path,
-          }
+          level: summary.level,
+          path: summary.path,
+        }
         : null;
     }
     return summaries;
@@ -221,7 +221,12 @@ export class DataManager {
     const saveOperation = (async () => {
       const saveData = getGlobals();
       if (this.enableLastFightTime) {
-        saveData.statistics.lastFightActive = await getTimeNow();
+        const serverNow = await getTimeNow();
+        const localNow = Date.now();
+        saveData.statistics.lastFightActive = serverNow;
+        saveData.statistics.lastFightActiveLocal = localNow;
+      } else if (!Number.isFinite(saveData.statistics?.lastFightActiveLocal)) {
+        saveData.statistics.lastFightActiveLocal = Date.now();
       }
 
       const serialized = JSON.stringify(saveData);

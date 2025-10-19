@@ -63,6 +63,15 @@ async function ensureTimeOffsetInitialized() {
     // Fallback to local time only - this is still valid for countdown calculations
     serverTimeOffsetMs = 0;
   }
+  if (serverTimeOffsetMs === 0 || !Number.isFinite(serverTimeOffsetMs)) {
+    const storedOffset =
+      Number.isFinite(buildings?.lastActive) && Number.isFinite(buildings?.lastActiveLocal)
+        ? buildings.lastActive - buildings.lastActiveLocal
+        : 0;
+    if (Number.isFinite(storedOffset) && storedOffset !== 0) {
+      serverTimeOffsetMs = storedOffset;
+    }
+  }
 }
 
 function updateBuildingCountdowns() {

@@ -15,9 +15,9 @@ export default function run() {
       <li>Reworked Soul Shop max calculations to stay lightning fast even with billions of available souls.</li>
     </ul>
 
-    <!-- <span style="color:#FF8A00;">Bug Fixes</span>
+    <span style="color:#FF8A00;">Bug Fixes</span>
     <ul>
-      <li>Ensured prestiging and ascending wait for a forced save so ascension points and bonuses persist reliably between runs.</li>
-    </ul> -->
+      <li>Stabilized offline reward detection so closing the browser without manually closing the tab still grants the accumulated bonuses on the next login.</li>
+    </ul>
   `;
 }

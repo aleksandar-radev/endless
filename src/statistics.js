@@ -254,7 +254,9 @@ export default class Statistics {
     this.rockyFieldHighestStages = createRockyFieldRegionMap();
     this.rockyFieldEnemiesKilledByRegion = createRockyFieldRegionMap();
     this.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
-    this.lastFightActive = Date.now();
+    const now = Date.now();
+    this.lastFightActive = now;
+    this.lastFightActiveLocal = now;
 
     handleSavedData(savedData, this);
     if (typeof this.rockyFieldHighestStage === 'number') {
@@ -283,6 +285,9 @@ export default class Statistics {
       if (this.enemiesKilled[key] == null) this.enemiesKilled[key] = 0;
     });
     this.lastUpdate = Date.now();
+    if (!Number.isFinite(this.lastFightActiveLocal)) {
+      this.lastFightActiveLocal = Date.now();
+    }
     this._statsUiRefresh = createDeferredRunner(
       () => this.updateStatisticsUI(),
       STATISTICS_UPDATE_DEBOUNCE_MS,
@@ -345,7 +350,9 @@ export default class Statistics {
     this.rockyFieldHighestStages = createRockyFieldRegionMap();
     this.rockyFieldEnemiesKilledByRegion = createRockyFieldRegionMap();
     this.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
-    this.lastFightActive = Date.now();
+    const now = Date.now();
+    this.lastFightActive = now;
+    this.lastFightActiveLocal = now;
     this._queueUiUpdate(true);
   }
 
