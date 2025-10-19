@@ -83,8 +83,8 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.berserkersRage'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => {
-      const coldDamage = scaleUpFlat(level, 4, 6) * 2;
-      const coldDamagePercent = scaleDownFlat(level, 3) * 2;
+      const coldDamage = scaleUpFlat(level, 6, 6);
+      const coldDamagePercent = scaleDownFlat(level, 5);
 
       return {
         coldDamage,
@@ -122,8 +122,8 @@ export const BERSERKER_SKILLS = {
     effect: (level) => ({
       damage: scaleUpFlat(level, 6, 6, 0.3),
       damagePercent: scaleDownFlat(level, 14),
-      earthDamage: scaleUpFlat(level, 8, 6, 0.4),
-      earthDamagePercent: scaleDownFlat(level, 16),
+      coldDamage: scaleUpFlat(level, 8, 6, 0.4),
+      coldDamagePercent: scaleDownFlat(level, 16),
     }),
   },
   rageMastery: {

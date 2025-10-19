@@ -163,15 +163,15 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.wrathOfTheHeavens'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => {
-      const damagePercent = scaleDownFlat(level, 2);
-      const lightningDamage = scaleUpFlat(level, 8);
-      const lightningDamagePercent = scaleDownFlat(level, 5);
-      const airDamagePercent = scaleDownFlat(level, 3);
+      const fireDamage = scaleDownFlat(level, 5);
+      const lightningDamage = scaleUpFlat(level, 5);
+      const lightningDamagePercent = scaleDownFlat(level, 3);
+      const fireDamagePercent = scaleDownFlat(level, 3);
       return {
-        damagePercent: damagePercent * 4,
         lightningDamage: lightningDamage * 4,
         lightningDamagePercent: lightningDamagePercent * 4,
-        airDamagePercent: airDamagePercent * 4,
+        fireDamage: fireDamage * 4,
+        fireDamagePercent: fireDamagePercent * 4,
       };
     },
   },
@@ -412,7 +412,8 @@ export const PALADIN_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: scaleDownFlat(level, 3),
-      fireDamagePercent: scaleDownFlat(level, 4),
+      lightningDamagePercent: scaleDownFlat(level, 2.5),
+      fireDamagePercent: scaleDownFlat(level, 3),
     }),
   },
 };

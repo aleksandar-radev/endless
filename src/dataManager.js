@@ -79,12 +79,14 @@ export class DataManager {
     for (let i = 0; i < MAX_SLOTS; i++) {
       const raw = localStorage.getItem(`gameProgress_${i}`);
       const summary = this._getSaveSummary(raw);
-      summaries[i] = summary
-        ? {
+      if (summary) {
+        summaries[i] = {
           level: summary.level,
           path: summary.path,
-        }
-        : null;
+        };
+      } else {
+        summaries[i] = null;
+      }
     }
     return summaries;
   }

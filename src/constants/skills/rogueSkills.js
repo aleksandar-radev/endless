@@ -183,8 +183,8 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       damage: scaleUpFlat(level, 3, 5, 0.2),
       damagePercent: scaleDownFlat(level, 2),
-      coldDamage: scaleUpFlat(level, 5, 5, 0.3),
-      coldDamagePercent: scaleDownFlat(level, 4),
+      earthDamage: scaleUpFlat(level, 5, 5, 0.3),
+      earthDamagePercent: scaleDownFlat(level, 4),
     }),
   },
 
