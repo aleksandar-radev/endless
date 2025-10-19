@@ -581,10 +581,11 @@ export default class Inventory {
             .filter((stat) => statsKeys.includes(stat))
             .map((stat) => {
               const value = item.stats[stat];
-              const decimals = STATS[stat].decimalPlaces || 0;
+              const statDef = STATS[stat] || {};
+              const decimals = statDef.decimalPlaces || 0;
               const formattedValue = value.toFixed(decimals);
               let adv = '';
-              if (showAdvanced && statMinMax[stat]) {
+              if (statDef.showValue !== false && showAdvanced && statMinMax[stat]) {
                 const minRaw = statMinMax[stat].min;
                 const maxRaw = statMinMax[stat].max;
                 if (options?.showRollPercentiles) {
@@ -599,6 +600,14 @@ export default class Inventory {
                   const max = maxRaw.toFixed(decimals);
                   adv = `<span class="item-ref-range" style="color:#aaa;">${min} - ${max}</span>`;
                 }
+              }
+              if (statDef.showValue === false) {
+                return `<div class="stat-row" data-stat="${stat}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                <div style="flex:1;display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                  <span>${formatStatName(stat)}</span>
+                </div>
+                <button class="reroll-btn" data-idx="${idx}" data-stat="${stat}">${t('inventory.transmuteAction')}</button>
+              </div>`;
               }
               return `<div class="stat-row" data-stat="${stat}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
                 <div style="flex:1;display:flex;justify-content:space-between;align-items:center;gap:8px;">
@@ -756,7 +765,8 @@ export default class Inventory {
         } else {
           statsHtml = statsEntries
             .map(([stat, value]) => {
-              const decimals = STATS[stat].decimalPlaces || 0;
+              const statDef = STATS[stat] || {};
+              const decimals = statDef.decimalPlaces || 0;
               const formattedValue = value.toFixed(decimals);
               const { max: maxRoll } = item.getStatMinMax(stat);
               let isMaxRoll = false;
@@ -766,7 +776,7 @@ export default class Inventory {
                 isMaxRoll = normalizedValue >= normalizedMax;
               }
               let adv = '';
-              if (showAdvanced && statMinMax[stat]) {
+              if (statDef.showValue !== false && showAdvanced && statMinMax[stat]) {
                 const minRaw = statMinMax[stat].min;
                 const maxRaw = statMinMax[stat].max;
                 if (options?.showRollPercentiles) {
@@ -785,6 +795,14 @@ export default class Inventory {
               const rerollAttrs = isMaxRoll
                 ? `disabled title="${t('inventory.maxRollLockedTooltip')}"`
                 : '';
+              if (statDef.showValue === false) {
+                return `<div class="stat-row" data-stat="${stat}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                <div style="flex:1;display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                  <span>${formatStatName(stat)}</span>
+                </div>
+                <button class="reroll-btn" data-idx="${idx}" data-stat="${stat}" ${rerollAttrs}>${t('inventory.rerollAction')}</button>
+              </div>`;
+              }
               return `<div class="stat-row" data-stat="${stat}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
                 <div style="flex:1;display:flex;justify-content:space-between;align-items:center;gap:8px;">
                   <span>${formatStatName(stat)}: <b>${formattedValue}${isPercentStat(stat) ? '%' : ''}</b></span>

@@ -514,10 +514,12 @@ export const OFFENSE_STATS = {
   ignoreEnemyArmor: {
     base: 0,
     decimalPlaces: 0,
+    showValue: false,
   },
   ignoreAllEnemyResistances: {
     base: 0,
     decimalPlaces: 0,
+    showValue: false,
   },
   attackNeverMiss: {
     base: 0,

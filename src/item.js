@@ -338,7 +338,11 @@ export default class Item {
             : '<span class="set-bonus-indicator">☆</span>';
           const statsHtml = Object.entries(bonus.stats || {})
             .map(([stat, value]) => {
-              const decimals = STATS[stat]?.decimalPlaces || 0;
+              const statDef = STATS[stat] || {};
+              if (statDef.showValue === false) {
+                return `<div class="set-bonus-stat">${formatStatName(stat)}</div>`;
+              }
+              const decimals = statDef.decimalPlaces || 0;
               const formattedValue = formatNumber(Number(value).toFixed(decimals));
               const percentSuffix = isPercentStat(stat) ? '%' : '';
               return `<div class="set-bonus-stat">${formatStatName(stat)}: ${formattedValue}${percentSuffix}</div>`;
@@ -370,7 +374,13 @@ export default class Item {
     const groupHtml = stats
       .map((stat) => {
         const value = this.stats[stat];
-        const decimals = STATS[stat].decimalPlaces || 0;
+        const statDef = STATS[stat] || {};
+        if (statDef.showValue === false) {
+          return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                    <span>${formatStatName(stat)}</span>
+                  </div>`;
+        }
+        const decimals = statDef.decimalPlaces || 0;
         const formattedValue = formatNumber(value.toFixed(decimals));
         let adv = '';
         if (showAdvanced && statMinMax[stat]) {
@@ -390,9 +400,9 @@ export default class Item {
           }
         }
         return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-          <span>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}</span>
-          ${adv}
-        </div>`;
+                  <span>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}</span>
+                  ${adv}
+                </div>`;
       })
       .join('');
     return groupHtml;

@@ -9,6 +9,13 @@ import { createModal, closeModal } from './modal.js';
 
 const html = String.raw;
 
+const shouldShowStatValue = (stat) => STATS[stat]?.showValue !== false;
+const getStatDecimals = (stat) => STATS[stat]?.decimalPlaces || 0;
+const formatSignedValue = (value, decimals, includeZero = true) => {
+  const shouldShowPlus = value > 0 || (includeZero && value === 0);
+  return `${shouldShowPlus ? '+' : ''}${value.toFixed(decimals)}`;
+};
+
 const SKILL_CATEGORY_TRANSLATIONS = {
   attack: 'skillTree.skillCategory.attack',
   spell: 'skillTree.skillCategory.spell',
@@ -276,10 +283,13 @@ function createPreviewTooltip(skill) {
   if (effectsCurrent && Object.keys(effectsCurrent).length > 0) {
     skillDescription += '<br /><u>Current Effects:</u><br />';
     Object.entries(effectsCurrent).forEach(([stat, value]) => {
-      const decimals = STATS[stat].decimalPlaces || 0;
-      const formattedValue = value.toFixed(decimals);
-      const prefix = value > 0 ? '+' : '';
-      skillDescription += `${formatStatName(stat)}: ${prefix}${formattedValue}<br />`;
+      if (!shouldShowStatValue(stat)) {
+        skillDescription += `${formatStatName(stat)}<br />`;
+        return;
+      }
+      const decimals = getStatDecimals(stat);
+      const formattedValue = formatSignedValue(value, decimals, false);
+      skillDescription += `${formatStatName(stat)}: ${formattedValue}<br />`;
     });
   }
 
@@ -287,20 +297,28 @@ function createPreviewTooltip(skill) {
     const summonStats = skill.summonStats(currentLevel);
     skillDescription += '<br /><u>Summon Stats:</u><br />';
     Object.entries(summonStats).forEach(([stat, value]) => {
-      const decimals = STATS[stat].decimalPlaces || 0;
+      if (!shouldShowStatValue(stat)) {
+        skillDescription += `${formatStatName(stat)}<br />`;
+        return;
+      }
+      const decimals = getStatDecimals(stat);
       skillDescription += `${formatStatName(stat)}: ${value.toFixed(decimals)}<br />`;
     });
   } else if (currentLevel < skill.maxLevel() || skill.maxLevel() === Infinity) {
     skillDescription += '<br /><u>Next Level Effects:</u><br />';
     Object.entries(effectsNext).forEach(([stat, value]) => {
-      const decimals = STATS[stat].decimalPlaces || 0;
+      if (!shouldShowStatValue(stat)) {
+        skillDescription += `${formatStatName(stat)}<br />`;
+        return;
+      }
+      const decimals = getStatDecimals(stat);
       const currentValue = effectsCurrent[stat] || 0;
       const difference = value - currentValue;
-      const valuePrefix = value >= 0 ? '+' : '';
-      const diffPrefix = difference >= 0 ? '+' : '';
-      skillDescription += `${formatStatName(stat)}: ${valuePrefix}${value.toFixed(
+      skillDescription += `${formatStatName(stat)}: ${formatSignedValue(
+        value,
         decimals,
-      )} <span class="bonus">(${diffPrefix}${difference.toFixed(decimals)})</span><br />`;
+        false,
+      )} <span class="bonus">(${formatSignedValue(difference, decimals)})</span><br />`;
     });
   }
 
@@ -836,9 +854,15 @@ function openSkillModal(skillId) {
   Object.entries(effectsNext).forEach(([stat, nextVal]) => {
     const currVal = effectsCurrent[stat] || 0;
     const diff = nextVal - currVal;
-    const decimals = STATS[stat].decimalPlaces || 0;
+    if (!shouldShowStatValue(stat)) {
+      effectsEl.innerHTML += `
+      <p>${formatStatName(stat)}</p>
+    `;
+      return;
+    }
+    const decimals = getStatDecimals(stat);
     effectsEl.innerHTML += `
-      <p>${formatStatName(stat)}: ${currVal.toFixed(decimals)} (${diff >= 0 ? '+' : ''}${diff.toFixed(decimals)})</p>
+      <p>${formatStatName(stat)}: ${currVal.toFixed(decimals)} (${formatSignedValue(diff, decimals)})</p>
     `;
   });
 
@@ -914,10 +938,15 @@ function updateSkillModalDetails() {
   Object.entries(effectsFuture).forEach(([stat, futureVal]) => {
     const currVal = effectsCurrent[stat] || 0;
     const diff = futureVal - currVal;
-    const decimals = STATS[stat].decimalPlaces || 0;
-    effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${currVal.toFixed(decimals)} (${
-      diff >= 0 ? '+' : ''
-    }${diff.toFixed(decimals)})</p>`;
+    if (!shouldShowStatValue(stat)) {
+      effectsEl.innerHTML += `<p>${formatStatName(stat)}</p>`;
+      return;
+    }
+    const decimals = getStatDecimals(stat);
+    effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${currVal.toFixed(decimals)} (${formatSignedValue(
+      diff,
+      decimals,
+    )})</p>`;
   });
 
   // --- Show summon stats if this is a summon skill ---
@@ -929,8 +958,15 @@ function updateSkillModalDetails() {
     Object.entries(summonStatsCurrent).forEach(([stat, currVal]) => {
       const futureVal = summonStatsFuture[stat];
       const diff = futureVal - currVal;
-      const decimals = STATS[stat].decimalPlaces || 0;
-      effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${currVal.toFixed(decimals)} (${diff >= 0 ? '+' : ''}${diff.toFixed(decimals)})</p>`;
+      if (!shouldShowStatValue(stat)) {
+        effectsEl.innerHTML += `<p>${formatStatName(stat)}</p>`;
+        return;
+      }
+      const decimals = getStatDecimals(stat);
+      effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${currVal.toFixed(decimals)} (${formatSignedValue(
+        diff,
+        decimals,
+      )})</p>`;
     });
   } else {
     const title = skillModal.querySelector('.modal-skill-effects h3');
@@ -1063,10 +1099,13 @@ const updateTooltipContent = (skillId) => {
   if (effectsCurrent && Object.keys(effectsCurrent).length > 0) {
     skillDescription += '<br /><u>Current Effects:</u><br />';
     Object.entries(effectsCurrent).forEach(([stat, value]) => {
-      const decimals = STATS[stat].decimalPlaces || 0;
-      const formattedValue = value.toFixed(decimals);
-      const prefix = value > 0 ? '+' : '';
-      skillDescription += `${formatStatName(stat)}: ${prefix}${formattedValue}<br />`;
+      if (!shouldShowStatValue(stat)) {
+        skillDescription += `${formatStatName(stat)}<br />`;
+        return;
+      }
+      const decimals = getStatDecimals(stat);
+      const formattedValue = formatSignedValue(value, decimals, false);
+      skillDescription += `${formatStatName(stat)}: ${formattedValue}<br />`;
     });
   }
 
@@ -1078,20 +1117,28 @@ const updateTooltipContent = (skillId) => {
     const summonStats = skill.summonStats(level);
     skillDescription += '<br /><u>Summon Stats:</u><br />';
     Object.entries(summonStats).forEach(([stat, value]) => {
-      const decimals = STATS[stat].decimalPlaces || 0;
+      if (!shouldShowStatValue(stat)) {
+        skillDescription += `${formatStatName(stat)}<br />`;
+        return;
+      }
+      const decimals = getStatDecimals(stat);
       skillDescription += `${formatStatName(stat)}: ${value.toFixed(decimals)}<br />`;
     });
   } else if (currentLevel < skill.maxLevel() || skill.maxLevel() === Infinity) {
     skillDescription += '<br /><u>Next Level Effects:</u><br />';
     Object.entries(effectsNext).forEach(([stat, value]) => {
-      const decimals = STATS[stat].decimalPlaces || 0;
+      if (!shouldShowStatValue(stat)) {
+        skillDescription += `${formatStatName(stat)}<br />`;
+        return;
+      }
+      const decimals = getStatDecimals(stat);
       const currentValue = effectsCurrent[stat] || 0;
       const difference = value - currentValue;
-      const valuePrefix = value >= 0 ? '+' : '';
-      const diffPrefix = difference >= 0 ? '+' : '';
-      skillDescription += `${formatStatName(stat)}: ${valuePrefix}${value.toFixed(
+      skillDescription += `${formatStatName(stat)}: ${formatSignedValue(
+        value,
         decimals,
-      )} <span class="bonus">(${diffPrefix}${difference.toFixed(decimals)})</span><br />`;
+        false,
+      )} <span class="bonus">(${formatSignedValue(difference, decimals)})</span><br />`;
     });
   }
 
@@ -1179,10 +1226,13 @@ function createSkillTooltip(skillId) {
   // Add effects
   tooltip += '<div class="tooltip-effects">';
   Object.entries(effects).forEach(([stat, value]) => {
-    const decimals = STATS[stat].decimalPlaces || 0;
-    const formattedValue = value.toFixed(decimals);
-    const prefix = value > 0 ? '+' : '';
-    tooltip += `<div>${formatStatName(stat)}: ${prefix}${formattedValue}</div>`;
+    if (!shouldShowStatValue(stat)) {
+      tooltip += `<div>${formatStatName(stat)}</div>`;
+      return;
+    }
+    const decimals = getStatDecimals(stat);
+    const formattedValue = formatSignedValue(value, decimals, false);
+    tooltip += `<div>${formatStatName(stat)}: ${formattedValue}</div>`;
   });
   tooltip += '</div>';
 
