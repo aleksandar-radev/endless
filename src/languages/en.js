@@ -718,6 +718,7 @@ export default {
   'skill.spiritBear': 'Summons a spectral bear dealing earth damage.',
   'skill.stoneform': 'Hardens your skin, boosting armor, resistance, and earth damage.',
   'skill.spiritLink': 'Increases life steal and mana per hit.',
+  'skill.totalPotentialDamage': 'Total Potential Damage',
   'skill.moonfury': 'Empowers you under the moon, boosting cold and water damage.',
   'skill.earthsEmbrace': 'Embrace the earth for armor, life, and resistance.',
   'skill.wrathOfNature': 'Increases damage, vitality, and earth damage.',

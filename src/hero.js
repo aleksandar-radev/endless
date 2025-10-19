@@ -927,7 +927,8 @@ export default class Hero {
   }
 
   // calculated when hit is successful
-  calculateTotalDamage(instantSkillBaseEffects = {}) {
+  calculateTotalDamage(instantSkillBaseEffects = {}, options = {}) {
+    const { includeRandom = true } = options;
     const elements = ELEMENT_IDS;
     const allowedDamageTypes = Array.isArray(instantSkillBaseEffects.allowedDamageTypes)
       ? instantSkillBaseEffects.allowedDamageTypes
@@ -1005,11 +1006,30 @@ export default class Hero {
     }
 
     // 3) Double-damage and criticals (after percent multipliers and conversions)
-    const isCritical = Math.random() * 100 < this.stats.critChance;
-    if (this.stats.doubleDamageChance && Math.random() * 100 < this.stats.doubleDamageChance) {
-      Object.keys(finalPools).forEach((k) => (finalPools[k] *= 2));
+    const scalePools = (multiplier) => {
+      if (!Number.isFinite(multiplier) || Math.abs(multiplier - 1) < 1e-9) return;
+      Object.keys(finalPools).forEach((k) => {
+        finalPools[k] *= multiplier;
+      });
+    };
+
+    let isCritical = false;
+    if (includeRandom) {
+      if (this.stats.doubleDamageChance && Math.random() * 100 < this.stats.doubleDamageChance) {
+        scalePools(2);
+      }
+      isCritical = Math.random() * 100 < (this.stats.critChance || 0);
+      if (isCritical) {
+        scalePools(this.stats.critDamage || 1);
+      }
+    } else {
+      const doubleChance = Math.max(0, Math.min(100, this.stats.doubleDamageChance || 0));
+      const critChance = Math.max(0, Math.min(100, this.stats.critChance || 0));
+      const critDamage = Math.max(0, this.stats.critDamage || 1);
+      const expectedMultiplier =
+        (1 + doubleChance / 100) * (1 + (critDamage - 1) * (critChance / 100));
+      scalePools(expectedMultiplier);
     }
-    if (isCritical) Object.keys(finalPools).forEach((k) => (finalPools[k] *= (this.stats.critDamage || 1)));
 
     const totalDamage = Object.values(finalPools).reduce((sum, v) => sum + v, 0);
     const breakdown = Object.fromEntries(Object.entries(finalPools).map(([k, v]) => [k, Math.floor(v)]));

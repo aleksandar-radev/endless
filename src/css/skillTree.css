@@ -618,3 +618,9 @@
   background: var(--bg-element);
   border-radius: 5px;
 }
+
+.tooltip-total-damage {
+  color: #d6c98d;
+  font-size: 0.95em;
+  margin-top: 6px;
+}

@@ -1244,6 +1244,13 @@ function createSkillTooltip(skillId) {
     tooltip += `<div class="tooltip-duration">Duration: ${(skillTree.getSkillDuration(skill) / 1000).toFixed(2)}s</div>`;
   }
 
+  if (skill?.type && skill.type() === 'instant' && skillTree.isDamageSkill?.(effects)) {
+    const damagePreview = hero.calculateTotalDamage(effects, { includeRandom: false });
+    if (damagePreview?.damage > 0) {
+      tooltip += `<div class="tooltip-total-damage">${t('skill.totalPotentialDamage')}: ${formatNumber(damagePreview.damage)}</div>`;
+    }
+  }
+
   return tooltip;
 }
 

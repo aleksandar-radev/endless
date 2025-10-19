@@ -704,6 +704,7 @@ export default {
   'skill.spiritBear': 'Invoca un oso espectral que inflige daño de tierra.',
   'skill.stoneform': 'Endurece tu piel, aumentando armadura, resistencia y daño de tierra.',
   'skill.spiritLink': 'Aumenta robo de vida y maná por golpe.',
+  'skill.totalPotentialDamage': 'Daño Potencial Total',
   'skill.moonfury': 'Te potencia bajo la luna, aumentando daño de frío y agua.',
   'skill.earthsEmbrace': 'Abraza la tierra para obtener armadura, vida y resistencias.',
   'skill.wrathOfNature': 'Aumenta daño, vitalidad y daño de tierra.',
