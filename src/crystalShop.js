@@ -31,6 +31,7 @@ import { CRYSTAL_SHOP_MAX_QTY } from './constants/limits.js';
 import { SOUL_UPGRADE_CONFIG } from './soulShop.js';
 import { runes } from './globals.js';
 import { BASE_RUNE_SLOTS } from './runes.js';
+import { floorSumBigInt } from './utils/bulkMath.js';
 
 const html = String.raw;
 
@@ -204,6 +205,89 @@ export default class CrystalShop {
     this.selectedQty = options.useNumericInputs
       ? Math.min(options.crystalShopQty || 1, CRYSTAL_SHOP_MAX_QTY)
       : 1;
+  }
+
+  getCrystalReductionNumerator() {
+    const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
+    const numerator = Math.round((1 - ascRed) * 100);
+    return Math.max(0, Math.min(100, numerator));
+  }
+
+  calculateTotalCost(config, qty, baseLevel) {
+    if (!qty || qty <= 0) return 0;
+
+    const numerator = this.getCrystalReductionNumerator();
+    const qtyBig = BigInt(qty);
+    const baseLevelBig = BigInt(baseLevel);
+    const numeratorBig = BigInt(numerator);
+    const hundred = 100n;
+    const baseCostBig = BigInt(Math.floor(config.baseCost));
+    const costIncrement = config.costIncrement ?? 0;
+
+    if (Number.isInteger(costIncrement)) {
+      const incrementBig = BigInt(Math.trunc(costIncrement));
+      const startFloor = baseCostBig + incrementBig * baseLevelBig;
+      const a = incrementBig * numeratorBig;
+      const b = startFloor * numeratorBig + 50n;
+      return Number(floorSumBigInt(qtyBig, hundred, a, b));
+    }
+
+    const denom = Math.round(1 / costIncrement);
+    const denomBig = BigInt(denom);
+    const c = baseCostBig * numeratorBig + 50n;
+
+    let remaining = qtyBig;
+    let total = 0n;
+    let levelBig = baseLevelBig;
+    let currentV = levelBig / denomBig;
+    const offset = Number(levelBig % denomBig);
+
+    if (offset !== 0 && remaining > 0n) {
+      const firstLen = remaining < BigInt(denom - offset) ? remaining : BigInt(denom - offset);
+      const costPer = (c + numeratorBig * currentV) / hundred;
+      total += costPer * firstLen;
+      remaining -= firstLen;
+      levelBig += firstLen;
+      currentV = levelBig / denomBig;
+    }
+
+    const fullBlocks = remaining / denomBig;
+    if (fullBlocks > 0n) {
+      const sumFloors = floorSumBigInt(fullBlocks, hundred, numeratorBig, numeratorBig * currentV + c);
+      total += denomBig * sumFloors;
+      currentV += fullBlocks;
+      remaining -= fullBlocks * denomBig;
+    }
+
+    if (remaining > 0n) {
+      const costPer = (c + numeratorBig * currentV) / hundred;
+      total += costPer * remaining;
+    }
+
+    return Number(total);
+  }
+
+  _getAffordablePurchase(config, baseLevel, crystals, desiredQty) {
+    if (!desiredQty || desiredQty <= 0) return { qty: 0, totalCost: 0 };
+    const maxQty = Math.max(0, Math.min(desiredQty, CRYSTAL_SHOP_MAX_QTY));
+    let low = 0;
+    let high = Math.floor(maxQty);
+    let bestQty = 0;
+    let bestCost = 0;
+
+    while (low <= high) {
+      const mid = Math.floor((low + high) / 2);
+      const cost = this.calculateTotalCost(config, mid, baseLevel);
+      if (cost <= crystals) {
+        bestQty = mid;
+        bestCost = cost;
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+
+    return { qty: bestQty, totalCost: bestCost };
   }
 
   resetCrystalShop() {
@@ -614,29 +698,17 @@ export default class CrystalShop {
       const crystalsAvailable = hero.crystals;
       const cap = config.maxLevel || Infinity;
       const levelsLeft = Math.max(0, cap - baseLevel);
-      let qty = this.selectedQty === 'max' ? levelsLeft : this.selectedQty;
-      qty = Math.min(qty, levelsLeft, CRYSTAL_SHOP_MAX_QTY);
-      let totalCost = 0;
+      const limit = Math.min(levelsLeft, CRYSTAL_SHOP_MAX_QTY);
+      let qty;
+      let totalCost;
 
       if (this.selectedQty === 'max') {
-        let lvl = baseLevel;
-        let crystals = crystalsAvailable;
-        qty = 0;
-        const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
-        while (lvl < cap && qty < CRYSTAL_SHOP_MAX_QTY) {
-          const cost = Math.round(Math.floor(config.baseCost + (config.costIncrement || 0) * lvl) * (1 - ascRed));
-          if (crystals < cost) break;
-          crystals -= cost;
-          totalCost += cost;
-          lvl++;
-          qty++;
-        }
+        const purchase = this._getAffordablePurchase(config, baseLevel, crystalsAvailable, limit);
+        qty = purchase.qty;
+        totalCost = purchase.totalCost;
       } else {
-        const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
-        for (let i = 0; i < qty; i++) {
-          const cost = Math.round(Math.floor(config.baseCost + (config.costIncrement || 0) * (baseLevel + i)) * (1 - ascRed));
-          totalCost += cost;
-        }
+        qty = Math.min(this.selectedQty, levelsLeft, CRYSTAL_SHOP_MAX_QTY);
+        totalCost = this.calculateTotalCost(config, qty, baseLevel);
       }
 
       const isMaxed = levelsLeft === 0;
@@ -651,11 +723,11 @@ export default class CrystalShop {
         if (q('.modal-qty')) q('.modal-qty').textContent = 0;
       } else {
         const bonusValue = (config.bonus || 0) * qty;
-        if (q('.modal-qty')) q('.modal-qty').textContent = qty;
-        if (q('.modal-total-cost')) q('.modal-total-cost').textContent = totalCost;
+        if (q('.modal-qty')) q('.modal-qty').textContent = formatNumber(qty);
+        if (q('.modal-total-cost')) q('.modal-total-cost').textContent = formatNumber(totalCost);
         if (q('.modal-total-bonus')) {
           const bonusLabel = config.bonusLabel ? t(config.bonusLabel) : t(config.label);
-          q('.modal-total-bonus').textContent = `+${bonusValue} ${bonusLabel}`;
+          q('.modal-total-bonus').textContent = `+${formatNumber(bonusValue)} ${bonusLabel}`;
         }
         if (q('.modal-next-bonus')) q('.modal-next-bonus').textContent = this.getBonusText(stat, config, baseLevel + 1);
         const input = q('.modal-qty-input');
@@ -719,36 +791,19 @@ export default class CrystalShop {
    * @param {number|'max'} qty
    */
   async _bulkPurchase(stat, config, qty) {
-    const { baseCost, costIncrement = 0, label } = config;
-    let level = this.crystalUpgrades[stat] || 0;
-    const prevLevel = level;
-    let count = 0,
-      totalCost = 0;
-    const nextCost = (lvl) => {
-      const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
-      return Math.round(Math.floor(baseCost + costIncrement * lvl) * (1 - ascRed));
-    };
+    const { label } = config;
+    const baseLevel = this.crystalUpgrades[stat] || 0;
+    const prevLevel = baseLevel;
+    const cap = config.maxLevel ?? Infinity;
+    const levelsLeft = Math.max(0, cap - baseLevel);
+    const desiredQty = qty === 'max' ? Math.min(levelsLeft, CRYSTAL_SHOP_MAX_QTY) : Math.min(qty, levelsLeft, CRYSTAL_SHOP_MAX_QTY);
+    const { qty: count, totalCost } = this._getAffordablePurchase(config, baseLevel, hero.crystals, desiredQty);
 
-    if (qty === 'max') {
-      while (hero.crystals >= nextCost(level) && count < CRYSTAL_SHOP_MAX_QTY) {
-        const cost = nextCost(level++);
-        hero.crystals -= cost;
-        totalCost += cost;
-        count++;
-      }
-    } else {
-      qty = Math.min(qty, CRYSTAL_SHOP_MAX_QTY);
-      for (let i = 0; i < qty; i++) {
-        const cost = nextCost(level);
-        if (hero.crystals < cost) break;
-        hero.crystals -= cost;
-        totalCost += cost;
-        level++;
-        count++;
-      }
+    if (count > 0) {
+      hero.crystals -= totalCost;
+      this.crystalUpgrades[stat] = baseLevel + count;
     }
-
-    this.crystalUpgrades[stat] = level;
+    const level = this.crystalUpgrades[stat] || 0;
 
     // If player hasn't customized related options yet, set them to newly unlocked max
     try {

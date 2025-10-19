@@ -6,6 +6,7 @@ import { ELEMENTS } from './constants/common.js';
 import { calculateHitChance, createDamageNumber } from './combat.js';
 import { battleLog } from './battleLog.js';
 import { t } from './i18n.js';
+import { floorSumBigInt } from './utils/bulkMath.js';
 import {
   showManaWarning,
   showToast,
@@ -241,19 +242,16 @@ export default class SkillTree {
 
   // Helper to calculate SP cost for buying qty levels from currentLevel
   calculateSkillPointCost(currentLevel, qty) {
-    let cost = 0;
-    let level = currentLevel;
-    let remaining = qty;
-    while (remaining > 0) {
-      // Find how many levels until the next 50-level band
-      const nextBand = 50 - (level % 50);
-      const bandLevels = Math.min(remaining, nextBand);
-      const bandCost = bandLevels * (1 + Math.floor(level / 50));
-      cost += bandCost;
-      level += bandLevels;
-      remaining -= bandLevels;
-    }
-    return cost;
+    if (!Number.isFinite(qty) || qty <= 0) return 0;
+    const levels = Math.floor(qty);
+    if (levels <= 0) return 0;
+
+    const startLevel = Math.max(0, Math.floor(currentLevel));
+    const qtyBig = BigInt(levels);
+    const baseCost = qtyBig;
+    const bandIncrements = floorSumBigInt(qtyBig, 50n, 1n, BigInt(startLevel));
+    const totalCost = Number(baseCost + bandIncrements);
+    return Number.isFinite(totalCost) ? totalCost : Infinity;
   }
 
   calculateTotalSpentSkillPoints() {
@@ -276,26 +274,31 @@ export default class SkillTree {
 
   // Calculate max levels you can afford given SP and maxLevel
   calculateMaxPurchasable(skill) {
-    let currentLevel = skill.level || 0;
-    const maxLevel = skill.maxLevel() || DEFAULT_MAX_SKILL_LEVEL;
-    let availableSP = this.skillPoints;
-    let n = 0;
-    let level = currentLevel;
+    const currentLevel = Math.max(0, skill.level || 0);
+    const rawMaxLevel = skill.maxLevel() || DEFAULT_MAX_SKILL_LEVEL;
+    const availableSP = Math.max(0, Math.floor(this.skillPoints));
+    if (availableSP <= 0) return 0;
 
-    while (level < maxLevel && availableSP > 0) {
-      const band = Math.floor(level / 50);
-      const bandCost = 1 + band;
-      // How many levels left in this band?
-      const bandEnd = (band + 1) * 50;
-      const levelsInBand = Math.min(bandEnd - level, maxLevel - level);
-      // How many can we afford in this band?
-      const affordable = Math.min(levelsInBand, Math.floor(availableSP / bandCost));
-      if (affordable <= 0) break;
-      n += affordable;
-      level += affordable;
-      availableSP -= affordable * bandCost;
+    const levelCap = Number.isFinite(rawMaxLevel) ? Math.max(0, rawMaxLevel - currentLevel) : SKILLS_MAX_QTY;
+    const heroCap = Number.isFinite(hero.level) ? Math.max(0, hero.level - currentLevel) : SKILLS_MAX_QTY;
+    let upperBound = Math.max(0, Math.min(levelCap, heroCap, SKILLS_MAX_QTY));
+
+    if (upperBound <= 0) return 0;
+
+    let low = 0;
+    let high = upperBound;
+    let best = 0;
+    while (low <= high) {
+      const mid = Math.floor((low + high) / 2);
+      const cost = this.calculateSkillPointCost(currentLevel, mid);
+      if (!Number.isFinite(cost) || cost > availableSP) {
+        high = mid - 1;
+      } else {
+        best = mid;
+        low = mid + 1;
+      }
     }
-    return n;
+    return best;
   }
 
   /**

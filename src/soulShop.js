@@ -5,6 +5,7 @@ import { closeModal, createModal } from './ui/modal.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { t } from './i18n.js';
 import { SOUL_SHOP_MAX_QTY } from './constants/limits.js';
+import { floorSumBigInt } from './utils/bulkMath.js';
 
 const html = String.raw;
 
@@ -80,34 +81,6 @@ const addFractions = (a, b) => {
 const lcmBigInt = (a, b) => {
   if (a === 0n || b === 0n) return 0n;
   return (a / gcdBigInt(a, b)) * b;
-};
-
-const floorSumBigInt = (n, m, a, b) => {
-  let nn = n;
-  let aa = a;
-  let bb = b;
-  let mm = m;
-  let ans = 0n;
-  while (true) {
-    if (aa >= mm) {
-      const q = aa / mm;
-      ans += nn * (nn - 1n) / 2n * q;
-      aa %= mm;
-    }
-    if (bb >= mm) {
-      const q = bb / mm;
-      ans += nn * q;
-      bb %= mm;
-    }
-    const yMax = aa * nn + bb;
-    if (yMax < mm) break;
-    nn = yMax / mm;
-    bb = yMax % mm;
-    const tmp = mm;
-    mm = aa;
-    aa = tmp;
-  }
-  return ans;
 };
 
 const sumRoundedArithmetic = (startFrac, stepFrac, count) => {
