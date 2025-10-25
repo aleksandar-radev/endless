@@ -8,6 +8,7 @@ import { battleLog } from './battleLog.js';
 import { t } from './i18n.js';
 import { floorSumBigInt } from './utils/bulkMath.js';
 import {
+  showLifeWarning,
   showManaWarning,
   showToast,
   updateActionBar,
@@ -546,6 +547,53 @@ export default class SkillTree {
     );
   }
 
+  evaluateLifeCost(effects, { includePerHit = false } = {}) {
+    if (!effects) {
+      return { hasCost: false, willSurvive: true };
+    }
+
+    const maxLife = hero.stats.life;
+    let projectedLife = hero.stats.currentLife;
+    let hasCost = false;
+
+    const applyChange = (change) => {
+      if (!change) return true;
+      if (change < 0) {
+        hasCost = true;
+        projectedLife += change;
+      } else {
+        projectedLife += change;
+        projectedLife = Math.min(projectedLife, maxLife);
+      }
+      return projectedLife > 0;
+    };
+
+    if (!applyChange(effects.life || 0)) {
+      return { hasCost, willSurvive: false };
+    }
+
+    if (effects.lifePercent) {
+      const percentAmount = (maxLife * effects.lifePercent) / 100;
+      if (!applyChange(percentAmount)) {
+        return { hasCost, willSurvive: false };
+      }
+      if (percentAmount < 0) {
+        hasCost = true;
+      }
+    }
+
+    if (includePerHit && effects.lifePerHit) {
+      if (effects.lifePerHit < 0) {
+        hasCost = true;
+      }
+      if (!applyChange(effects.lifePerHit)) {
+        return { hasCost, willSurvive: false };
+      }
+    }
+
+    return { hasCost, willSurvive: true };
+  }
+
   useInstantSkill(skillId, isAutoCast = false) {
     if (!game.gameStarted) return false;
     // if there is no live enemy, don’t cast
@@ -557,6 +605,16 @@ export default class SkillTree {
 
     if (!isAutoCast && hero.stats.currentMana < manaCost) {
       showManaWarning();
+      return false;
+    }
+
+    const includePerHit =
+      this.isDamageSkill(baseEffects) && typeof baseEffects.lifePerHit === 'number' && baseEffects.lifePerHit !== 0;
+    const lifeCostCheck = this.evaluateLifeCost(baseEffects, { includePerHit });
+    if (lifeCostCheck.hasCost && !lifeCostCheck.willSurvive) {
+      if (!isAutoCast) {
+        showLifeWarning();
+      }
       return false;
     }
 

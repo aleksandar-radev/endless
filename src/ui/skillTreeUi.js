@@ -1313,3 +1313,7 @@ export function updateBuffIndicators() {
 export function showManaWarning() {
   showToast(t('skillTree.notEnoughMana'), 'warning', 1500);
 }
+
+export function showLifeWarning() {
+  showToast(t('skillTree.notEnoughLife'), 'warning', 1500);
+}

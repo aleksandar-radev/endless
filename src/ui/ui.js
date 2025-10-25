@@ -29,6 +29,7 @@ export {
   updateSkillTreeValues,
   updateActionBar,
   updateBuffIndicators,
+  showLifeWarning,
   showManaWarning,
 } from './skillTreeUi.js';
 

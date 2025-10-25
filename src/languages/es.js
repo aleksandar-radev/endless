@@ -1253,6 +1253,7 @@ export default {
   'startingCrystals': 'Cristales Iniciales',
   'skillTree.purchaseAutoCastWarning': 'Compra la mejora de Auto Lanzamiento de Hechizos para habilitar el auto-lanzamiento.',
   'skillTree.notEnoughMana': '¡No hay suficiente maná!',
+  'skillTree.notEnoughLife': '¡No hay suficiente vida!',
   'skillTree.skillCategory.attack': 'Habilidad de Ataque',
   'skillTree.skillCategory.spell': 'Hechizo',
   'skillTree.requiresLevel': 'Requiere nivel {level}',

@@ -1248,6 +1248,7 @@ export default {
   'startingCrystals': '初始水晶',
   'skillTree.purchaseAutoCastWarning': '购买自动施法升级以启用自动施法。',
   'skillTree.notEnoughMana': '法力不足！',
+  'skillTree.notEnoughLife': '生命不足！',
   'skillTree.skillCategory.attack': '攻击技能',
   'skillTree.skillCategory.spell': '法术',
   'skillTree.requiresLevel': '需要等级{level}',

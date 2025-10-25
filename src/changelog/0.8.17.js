@@ -9,9 +9,9 @@ export default function run() {
       <li>Renamed the Berserker's Earthquake skill to Glacial Tremor to better match its cold-focused damage.</li>
     </ul>
 
-    <!-- <span style="color:#FF8A00;">Bug Fixes</span>
+    <span style="color:#FF8A00;">Bug Fixes</span>
     <ul>
-      <li>Stabilized offline reward detection so closing the browser without manually closing the tab still grants the accumulated bonuses on the next login.</li>
-    </ul> -->
+      <li>Prevented life-costing instant skills from activating when the hero lacks enough life, eliminating self-defeating casts.</li>
+    </ul>
   `;
 }
