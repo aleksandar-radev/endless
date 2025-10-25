@@ -110,14 +110,14 @@ export const BERSERKER_SKILLS = {
   // Tier 50 Skills
   earthquake: {
     id: 'earthquake',
-    name: () => t('Earthquake'),
+    name: () => t('Glacial Tremor'),
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: (level) => 7 + level * 0.66,
     cooldown: () => 12400,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'earthquake',
-    description: () => t('skill.earthquake'),
+    description: () => t('skill.glacialTremor'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: scaleUpFlat(level, 6, 6, 0.3),
