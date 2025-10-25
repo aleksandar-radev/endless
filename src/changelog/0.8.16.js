@@ -14,6 +14,7 @@ export default function run() {
       <li>Raised the global quick-buy limit to 1,000,000,000 so bulk actions share the same generous ceiling.</li>
       <li>Reworked Soul Shop max calculations to stay lightning fast even with billions of available souls.</li>
       <li>Added total potential damage to instant skill tooltips.</li>
+      <li>Added bottom border on prestige bonuses, so it's more visible how strong the bonus is (0-100%).</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

@@ -143,10 +143,20 @@ function openPrestigeModal() {
           : `${t('prestige.lock')} (20<img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('resource.crystal.name')}"/>)`;
         const rerollCost = formatNumber(prestige.getCardValueRerollCost(c));
         const rerollLabel = `${t('prestige.rerollValues')} (${rerollCost}<img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('resource.crystal.name')}"/>)`;
+        const descriptionItems = c.descriptions
+          .map((d, idx) => {
+            const percent = c.rollPercentiles?.[idx];
+            const style =
+              typeof percent === 'number' && !Number.isNaN(percent)
+                ? ` style="--roll-percent:${Math.max(0, Math.min(1, percent))};"`
+                : '';
+            return `<li${style}>${d}</li>`;
+          })
+          .join('');
         return html`
           <div class="prestige-card-wrapper" data-idx="${i}">
             <div class="prestige-card ${c.locked ? 'locked' : ''} ${selectedIdx === i ? 'selected' : ''}">
-              <ul>${c.descriptions.map((d) => `<li>${d}</li>`).join('')}</ul>
+              <ul>${descriptionItems}</ul>
             </div>
             <div class="prestige-card-actions">
               <button class="prestige-lock-btn">${lockLabel}</button>

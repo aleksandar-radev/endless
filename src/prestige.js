@@ -69,7 +69,14 @@ export default class Prestige {
     const startingCrystals = Math.floor(startingCrystalsBase * scalingFactor);
     const shuffled = [...PRESTIGE_BONUSES].sort(() => 0.5 - Math.random());
     const picked = shuffled.slice(0, bonusesPerCard);
-    const card = { bonuses: {}, baseBonuses: {}, descriptions: [], locked: false, valueRerolls: 0 };
+    const card = {
+      bonuses: {},
+      baseBonuses: {},
+      descriptions: [],
+      rollPercentiles: [],
+      locked: false,
+      valueRerolls: 0,
+    };
     picked.forEach((b) => {
       const baseValue = +(Math.random() * (b.max - b.min) + b.min).toFixed(4);
       const value = +(baseValue * scalingFactor).toFixed(4);
@@ -77,21 +84,24 @@ export default class Prestige {
       card.bonuses[b.stat] = (card.bonuses[b.stat] || 0) + value;
       let refMin = +(b.min * scalingFactor).toFixed(4);
       let refMax = +(b.max * scalingFactor).toFixed(4);
+      const percentile = refMax > refMin ? (value - refMin) / (refMax - refMin) : 1;
+      const clampedPercentile = Math.max(0, Math.min(1, percentile));
       let desc;
       if (b.stat.endsWith('Percent')) {
         const main = `${formatStatName(b.stat)}: +${(value * 100).toFixed(1)}%`;
         const right = options?.showRollPercentiles
-          ? `${Math.round((refMax > refMin) ? ((value - refMin) / (refMax - refMin)) * 100 : 100)}%`
+          ? `${Math.round(clampedPercentile * 100)}%`
           : `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
         desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
       } else {
         const main = `${formatStatName(b.stat)}: +${Math.round(value)}`;
         const right = options?.showRollPercentiles
-          ? `${Math.round((refMax > refMin) ? ((value - refMin) / (refMax - refMin)) * 100 : 100)}%`
+          ? `${Math.round(clampedPercentile * 100)}%`
           : `${Math.round(refMin)} - ${Math.round(refMax)}`;
         desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
       }
       card.descriptions.push(desc);
+      card.rollPercentiles.push(clampedPercentile);
     });
     card.baseBonuses[STARTING_CRYSTALS_BONUS.stat] = startingCrystalsBase;
     card.bonuses[STARTING_CRYSTALS_BONUS.stat] = startingCrystals;
@@ -101,9 +111,14 @@ export default class Prestige {
     const startMinScaled = Math.floor(refStartMin * scalingFactor);
     const startMaxScaled = Math.floor(refStartMax * scalingFactor);
     const right = options?.showRollPercentiles
-      ? `${Math.round(startMaxScaled > startMinScaled ? ((startingCrystals - startMinScaled) / (startMaxScaled - startMinScaled)) * 100 : 100)}%`
+      ? `${Math.round(clampedStartPercentile * 100)}%`
       : `${startMinScaled} - ${startMaxScaled}`;
+    const startPercentile = startMaxScaled > startMinScaled
+      ? (startingCrystals - startMinScaled) / (startMaxScaled - startMinScaled)
+      : 1;
+    const clampedStartPercentile = Math.max(0, Math.min(1, startPercentile));
     card.descriptions.push(`<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`);
+    card.rollPercentiles.push(clampedStartPercentile);
     return card;
   }
 
@@ -117,6 +132,7 @@ export default class Prestige {
     }
     card.bonuses = {};
     card.descriptions = [];
+    card.rollPercentiles = [];
 
     Object.entries(card.baseBonuses).forEach(([stat, baseValue]) => {
       let scaledValue;
@@ -141,12 +157,15 @@ export default class Prestige {
       }
 
       let desc;
+      let percentile = null;
       if (stat.endsWith('Percent')) {
         const scaledPct = (scaledValue * 100).toFixed(1);
         if (refMin != null && refMax != null) {
           const main = `${formatStatName(stat)}: +${scaledPct}%`;
+          const rawPercentile = refMax > refMin ? (scaledValue - refMin) / (refMax - refMin) : 1;
+          percentile = Math.max(0, Math.min(1, rawPercentile));
           const right = options?.showRollPercentiles
-            ? `${Math.round((refMax > refMin) ? ((scaledValue - refMin) / (refMax - refMin)) * 100 : 100)}%`
+            ? `${Math.round(percentile * 100)}%`
             : `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
           desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
         } else {
@@ -155,8 +174,10 @@ export default class Prestige {
       } else {
         if (refMin != null && refMax != null) {
           const main = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
+          const rawPercentile = refMax > refMin ? (scaledValue - refMin) / (refMax - refMin) : 1;
+          percentile = Math.max(0, Math.min(1, rawPercentile));
           const right = options?.showRollPercentiles
-            ? `${Math.round((refMax > refMin) ? ((scaledValue - refMin) / (refMax - refMin)) * 100 : 100)}%`
+            ? `${Math.round(percentile * 100)}%`
             : `${Math.round(refMin)} - ${Math.round(refMax)}`;
           desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
         } else {
@@ -164,6 +185,11 @@ export default class Prestige {
         }
       }
       card.descriptions.push(desc);
+      if (percentile != null) {
+        card.rollPercentiles.push(percentile);
+      } else {
+        card.rollPercentiles.push(null);
+      }
     });
 
     return card;
@@ -258,50 +284,7 @@ export default class Prestige {
     // Otherwise, generate new cards and save them
     const cards = [];
     for (let i = 0; i < count; i++) {
-      const startingCrystalsBase = Math.floor(
-        Math.random() * (STARTING_CRYSTALS_BONUS.max - STARTING_CRYSTALS_BONUS.min + 1),
-      ) + STARTING_CRYSTALS_BONUS.min;
-      const startingCrystals = Math.floor(startingCrystalsBase * scalingFactor);
-      const shuffled = [...PRESTIGE_BONUSES].sort(() => 0.5 - Math.random());
-      const picked = shuffled.slice(0, bonusesPerCard);
-      const card = { bonuses: {}, baseBonuses: {}, descriptions: [], valueRerolls: 0 };
-      picked.forEach((b) => {
-        // Pick a random value between min and max (inclusive)
-        const baseValue = +(Math.random() * (b.max - b.min) + b.min).toFixed(4);
-        const value = +(baseValue * scalingFactor).toFixed(4);
-        card.baseBonuses[b.stat] = (card.baseBonuses[b.stat] || 0) + baseValue;
-        card.bonuses[b.stat] = (card.bonuses[b.stat] || 0) + value;
-        // Update description to show the scaled value
-        // Also include the reference min/max scaled to current scalingFactor
-        let refMin = +(b.min * scalingFactor).toFixed(4);
-        let refMax = +(b.max * scalingFactor).toFixed(4);
-        let desc;
-        if (b.stat.endsWith('Percent')) {
-          const main = `${formatStatName(b.stat)}: +${(value * 100).toFixed(1)}%`;
-          const right = `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
-          desc = `<span class="prestige-main"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
-        } else {
-          const main = `${formatStatName(b.stat)}: +${Math.round(value)}`;
-          const right = `${Math.round(refMin)} - ${Math.round(refMax)}`;
-          desc = `<span class="prestige-main"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
-        }
-        card.descriptions.push(desc);
-      });
-      card.baseBonuses[STARTING_CRYSTALS_BONUS.stat] = startingCrystalsBase;
-      card.bonuses[STARTING_CRYSTALS_BONUS.stat] = startingCrystals;
-      // Show reference for starting crystals as well
-      const refStartMin = STARTING_CRYSTALS_BONUS.min;
-      const refStartMax = STARTING_CRYSTALS_BONUS.max;
-      {
-        const main = `${formatStatName(STARTING_CRYSTALS_BONUS.stat)}: +${startingCrystals}`;
-        const startMinScaled = Math.floor(refStartMin * scalingFactor);
-        const startMaxScaled = Math.floor(refStartMax * scalingFactor);
-        const right = options?.showRollPercentiles
-          ? `${Math.round(startMaxScaled > startMinScaled ? ((startingCrystals - startMinScaled) / (startMaxScaled - startMinScaled)) * 100 : 100)}%`
-          : `${startMinScaled} - ${startMaxScaled}`;
-        card.descriptions.push(`<span class=\"prestige-main\"><img src=\"${BASE}/icons/star.svg\" class=\"icon\" alt=\"\"/>${main}</span><span class=\"prestige-ref\">(${right})</span>`);
-      }
-      cards.push(card);
+      cards.push(this._createCard(bonusesPerCard, scalingFactor));
     }
     this.pendingCards = cards;
     return cards;
