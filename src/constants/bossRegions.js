@@ -29,6 +29,17 @@ function createMultiplier(overrides = {}) {
   return { ...DEFAULT_MULTIPLIER, ...overrides };
 }
 
+const ASCENDED_BOSS_IDS = [
+  'void-harbinger',
+  'ember-sovereign',
+  'tempest-titan',
+  'sandstorm-emperor',
+  'radiant-phoenix',
+  'abyssal-leviathan',
+  'arcane-overseer',
+  'glacial-tyrant',
+];
+
 export const BOSS_REGIONS = [
   {
     id: 'balanced_grounds',
@@ -131,6 +142,141 @@ export const BOSS_REGIONS = [
       airResistance: 0.52,
       earthResistance: 0.55,
       lightningResistance: 0.5,
+    }),
+  },
+  {
+    id: 'twilight_frontier',
+    unlockLevel: 1,
+    unlockBossLevel: 500,
+    bossSkipBonus: 1,
+    get name() {
+      return t('bossRegion.twilightFrontier.name');
+    },
+    get description() {
+      return t('bossRegion.twilightFrontier.desc');
+    },
+    bosses: ASCENDED_BOSS_IDS,
+    multiplier: createMultiplier({
+      life: 2.4,
+      damage: 2.05,
+      xp: 2,
+      gold: 2,
+      itemDrop: 1.4,
+      materialDrop: 1.4,
+      attackRating: 2.1,
+      evasion: 1.85,
+      armor: 1.55,
+      lightningDamage: 2.3,
+      coldDamage: 2.05,
+      airDamage: 1.6,
+      lightningResistance: 2.15,
+      coldResistance: 1.95,
+      airResistance: 1.65,
+      fireResistance: 1.25,
+      earthResistance: 1.35,
+      waterResistance: 1.7,
+    }),
+  },
+  {
+    id: 'voidscarred_wastes',
+    unlockLevel: 1,
+    unlockBossLevel: 2500,
+    bossSkipBonus: 2,
+    get name() {
+      return t('bossRegion.voidscarredWastes.name');
+    },
+    get description() {
+      return t('bossRegion.voidscarredWastes.desc');
+    },
+    bosses: ASCENDED_BOSS_IDS,
+    multiplier: createMultiplier({
+      life: 3.8,
+      damage: 3.1,
+      xp: 2.6,
+      gold: 2.4,
+      itemDrop: 1.5,
+      materialDrop: 1.6,
+      attackRating: 2.6,
+      evasion: 2.2,
+      armor: 2.05,
+      fireDamage: 2.8,
+      earthDamage: 2.6,
+      lightningDamage: 2.4,
+      fireResistance: 2.6,
+      earthResistance: 2.5,
+      lightningResistance: 2.2,
+      coldResistance: 1.6,
+      airResistance: 1.7,
+      waterResistance: 1.9,
+    }),
+  },
+  {
+    id: 'celestial_crucible',
+    unlockLevel: 1,
+    unlockBossLevel: 15000,
+    bossSkipBonus: 3,
+    get name() {
+      return t('bossRegion.celestialCrucible.name');
+    },
+    get description() {
+      return t('bossRegion.celestialCrucible.desc');
+    },
+    bosses: ASCENDED_BOSS_IDS,
+    multiplier: createMultiplier({
+      life: 6.5,
+      damage: 4.4,
+      xp: 3.5,
+      gold: 3,
+      itemDrop: 1.65,
+      materialDrop: 1.75,
+      attackRating: 3.2,
+      evasion: 2.8,
+      armor: 2.7,
+      fireDamage: 3.4,
+      airDamage: 3,
+      lightningDamage: 3.2,
+      fireResistance: 3.1,
+      airResistance: 2.9,
+      lightningResistance: 2.75,
+      coldResistance: 2.1,
+      earthResistance: 2.2,
+      waterResistance: 2.3,
+    }),
+  },
+  {
+    id: 'paradox_realm',
+    unlockLevel: 1,
+    unlockBossLevel: 75000,
+    bossSkipBonus: 5,
+    get name() {
+      return t('bossRegion.paradoxRealm.name');
+    },
+    get description() {
+      return t('bossRegion.paradoxRealm.desc');
+    },
+    bosses: ASCENDED_BOSS_IDS,
+    multiplier: createMultiplier({
+      life: 10.5,
+      damage: 6.2,
+      xp: 5,
+      gold: 4.2,
+      itemDrop: 1.8,
+      materialDrop: 1.9,
+      attackRating: 4.1,
+      evasion: 3.4,
+      armor: 3.2,
+      fireDamage: 4.2,
+      coldDamage: 3.8,
+      airDamage: 3.9,
+      earthDamage: 4.1,
+      lightningDamage: 4.3,
+      waterDamage: 3.7,
+      fireResistance: 3.9,
+      coldResistance: 3.6,
+      airResistance: 3.5,
+      earthResistance: 4,
+      lightningResistance: 4.1,
+      waterResistance: 3.8,
     }),
   },
 ];

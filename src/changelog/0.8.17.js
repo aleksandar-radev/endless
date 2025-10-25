@@ -7,6 +7,7 @@ export default function run() {
     <span style="color:#FF8A00;">Improvements</span>
     <ul>
       <li>Renamed the Berserker's Earthquake skill to Glacial Tremor to better match its cold-focused damage.</li>
+      <li>Opened four new boss regions featuring stronger enemies, but rewarding arena skip bonuses.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

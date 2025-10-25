@@ -16,6 +16,7 @@ import { ITEM_RARITY } from './constants/items.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateQuestsUI } from './ui/questUi.js';
 import { selectBoss, updateBossUI } from './ui/bossUi.js';
+import { getCurrentBossRegion } from './bossRegion.js';
 
 import { audioManager } from './audio.js';
 import { battleLog } from './battleLog.js';
@@ -489,8 +490,10 @@ export async function defeatEnemy() {
     statistics.increment('bossesKilled', null, 1);
     const runeBonuses = runes.getBonusEffects();
     const skipMax = (ascension.getBonuses()?.arenaBossSkip || 0) + (runeBonuses.arenaBossSkip || 0);
-    const skips = Math.min(options.arenaBossSkip || 0, skipMax);
-    hero.bossLevel += 1 + skips;
+    const optionSkips = Math.min(options.arenaBossSkip || 0, skipMax);
+    const regionSkipBonus = Math.max(0, Number(getCurrentBossRegion()?.bossSkipBonus) || 0);
+    const totalSkips = optionSkips + regionSkipBonus;
+    hero.bossLevel += 1 + totalSkips;
     // should update highestBossLevel only if the value is higher
     if (hero.bossLevel > statistics.get('highestBossLevel')) {
       statistics.set('highestBossLevel', null, hero.bossLevel);

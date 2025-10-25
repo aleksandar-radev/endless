@@ -19,8 +19,19 @@ const html = String.raw;
 
 let bossRegionsInitialized = false;
 
+function buildUnlockNote(region) {
+  const requirements = [];
+  if (Number.isFinite(region?.unlockLevel) && region.unlockLevel > 1) {
+    requirements.push(tp('bossRegion.unlockHint', { level: region.unlockLevel }));
+  }
+  if (Number.isFinite(region?.unlockBossLevel) && region.unlockBossLevel > 0) {
+    requirements.push(tp('bossRegion.unlockBossHint', { level: region.unlockBossLevel }));
+  }
+  return requirements.join(' • ');
+}
+
 function buildBossRegionTooltip(region, isUnlocked) {
-  const unlockNote = !isUnlocked ? tp('bossRegion.unlockHint', { level: region.unlockLevel }) : '';
+  const unlockNote = !isUnlocked ? buildUnlockNote(region) : '';
 
   return html`
     <div class="tooltip-header">${region.name}</div>
@@ -61,7 +72,10 @@ function renderBossRegionButtons() {
       accessibleDescriptionParts.push(region.description);
     }
     if (!isUnlocked) {
-      accessibleDescriptionParts.push(tp('bossRegion.unlockHint', { level: region.unlockLevel }));
+      const note = buildUnlockNote(region);
+      if (note) {
+        accessibleDescriptionParts.push(note);
+      }
     }
     btn.setAttribute('aria-label', accessibleDescriptionParts.join('. '));
     btn.classList.add('tooltip-target');
@@ -89,6 +103,9 @@ export function initializeBossRegionUI() {
   if (!bossRegionsInitialized) {
     bossRegionsInitialized = true;
     document.addEventListener('heroLevelUp', () => {
+      updateBossRegionSelector();
+    });
+    document.addEventListener('bossKilled', () => {
       updateBossRegionSelector();
     });
   }

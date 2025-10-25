@@ -993,6 +993,7 @@ export default {
   'region.itemDropBonus': 'Item Drop bonus',
   'region.materialDropBonus': 'Material Drop bonus',
   'bossRegion.unlockHint': 'Unlocks at level {level}',
+  'bossRegion.unlockBossHint': 'Unlocks at boss level {level}',
   'bossRegion.balancedGrounds.name': 'Balanced Grounds',
   'bossRegion.balancedGrounds.desc':
     'Fissures of magma fortify fire and earth resistance while softening every other element.',
@@ -1005,6 +1006,18 @@ export default {
   'bossRegion.elementalNexus.name': 'Elemental Nexus',
   'bossRegion.elementalNexus.desc':
     'Glacial currents reinforce cold and water resistance, draining strength from the remaining elements.',
+  'bossRegion.twilightFrontier.name': 'Twilight Frontier',
+  'bossRegion.twilightFrontier.desc':
+    'Electric twilight accelerates arena climbs by skipping 1 extra boss level per victory while storms hone lightning and cold damage.',
+  'bossRegion.voidscarredWastes.name': 'Voidscarred Wastes',
+  'bossRegion.voidscarredWastes.desc':
+    'Rifts soaked in voidfire warp reality, leaping 3 extra boss levels per win as molten sands and quake-torn earth punish the unprepared.',
+  'bossRegion.celestialCrucible.name': 'Celestial Crucible',
+  'bossRegion.celestialCrucible.desc':
+    'Starlit forges temper boss strength with radiant fury, vaulting 5 boss levels per kill while every element surges toward cosmic extremes.',
+  'bossRegion.paradoxRealm.name': 'Paradox Realm',
+  'bossRegion.paradoxRealm.desc':
+    'Timefolded horizons catapult you 8 boss levels per victory; chaotic energies amplify every stat and unleash unpredictable barrages.',
   'rockyField.region.outskirts.name': 'Outskirts',
   'rockyField.region.outskirts.desc':
     'Loose-earth beasts shrug off earth and water assaults yet crack under fire or lightning, lunging 40% faster with blows that never miss.',
@@ -1039,6 +1052,14 @@ export default {
   'resource.souls.name': 'Souls',
   'resource.souls.desc': 'Earned from killing bosses in Arena.',
   'battleLog.encounteredBoss': 'Encountered Boss Level {level} {name}',
+  'Void Harbinger': 'Void Harbinger',
+  'Ember Sovereign': 'Ember Sovereign',
+  'Tempest Titan': 'Tempest Titan',
+  'Sandstorm Emperor': 'Sandstorm Emperor',
+  'Radiant Phoenix': 'Radiant Phoenix',
+  'Abyssal Leviathan': 'Abyssal Leviathan',
+  'Arcane Overseer': 'Arcane Overseer',
+  'Glacial Tyrant': 'Glacial Tyrant',
   'battleLog.encounteredEnemy': 'Encountered {rarity} Level {level} {name}',
   'battleLog.receivedDamage': 'Received {value} damage{breakdown}',
   'battleLog.healedLife': 'Healed {value} life',

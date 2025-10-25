@@ -980,6 +980,7 @@ export default {
   'region.itemDropBonus': 'Bonificación de botín de objetos',
   'region.materialDropBonus': 'Bonificación de botín de materiales',
   'bossRegion.unlockHint': 'Se desbloquea en el nivel {level}',
+  'bossRegion.unlockBossHint': 'Se desbloquea al nivel de jefe {level}',
   'bossRegion.balancedGrounds.name': 'Tierras Equilibradas',
   'bossRegion.balancedGrounds.desc':
     'Fisuras de magma refuerzan las resistencias de fuego y tierra mientras debilitan los demás elementos.',
@@ -992,6 +993,18 @@ export default {
   'bossRegion.elementalNexus.name': 'Nexo Elemental',
   'bossRegion.elementalNexus.desc':
     'Corrientes glaciales refuerzan las resistencias de frío y agua, drenando la fuerza de los elementos restantes.',
+  'bossRegion.twilightFrontier.name': 'Frontera Crepuscular',
+  'bossRegion.twilightFrontier.desc':
+    'El crepúsculo eléctrico acelera el ascenso en la arena saltando 1 nivel de jefe adicional por victoria mientras las tormentas perfeccionan el daño de rayo y frío.',
+  'bossRegion.voidscarredWastes.name': 'Eriales Marcados por el Vacío',
+  'bossRegion.voidscarredWastes.desc':
+    'Fallas bañadas en fuego vacío distorsionan la realidad, saltando 3 niveles de jefe por victoria mientras las arenas fundidas y la tierra sacudida castigan a los desprevenidos.',
+  'bossRegion.celestialCrucible.name': 'Crisol Celestial',
+  'bossRegion.celestialCrucible.desc':
+    'Forjas estelares templan la fuerza de los jefes con furia radiante, impulsándote 5 niveles por muerte mientras cada elemento alcanza extremos cósmicos.',
+  'bossRegion.paradoxRealm.name': 'Reino Paradoja',
+  'bossRegion.paradoxRealm.desc':
+    'Horizontes plegados en el tiempo te catapultan 8 niveles de jefe por victoria; energías caóticas amplifican cada atributo y desatan andanadas impredecibles.',
   'rockyField.region.outskirts.name': 'Afueras',
   'rockyField.region.outskirts.desc':
     'Bestias de tierra suelta resisten tierra y agua, pero ceden ante fuego o rayo; se lanzan un 40% más rápido y nunca fallan.',
@@ -1026,6 +1039,14 @@ export default {
   'resource.souls.name': 'Almas',
   'resource.souls.desc': 'Obtenidas al matar jefes en la Arena.',
   'battleLog.encounteredBoss': 'Encontrado Jefe Nivel {level} {name}',
+  'Void Harbinger': 'Heraldo del Vacío',
+  'Ember Sovereign': 'Soberano Ascua',
+  'Tempest Titan': 'Titán de la Tempestad',
+  'Sandstorm Emperor': 'Emperador de la Tormenta de Arena',
+  'Radiant Phoenix': 'Fénix Radiante',
+  'Abyssal Leviathan': 'Leviatán Abismal',
+  'Arcane Overseer': 'Supervisor Arcano',
+  'Glacial Tyrant': 'Tirano Glacial',
   'battleLog.encounteredEnemy': 'Encontrado {rarity} Nivel {level} {name}',
   'battleLog.receivedDamage': 'Recibió {value} de daño{breakdown}',
   'battleLog.healedLife': 'Curó {value} de vida',

@@ -38,6 +38,28 @@ const REGION_VARIANCE_CONFIG = {
   shattered_bulwark: { type: 'elemental', boosted: ['air', 'lightning'] },
   elemental_nexus: { type: 'elemental', boosted: ['cold', 'water'] },
   iron_vanguard: { type: 'armor' },
+  twilight_frontier: {
+    type: 'elemental',
+    boosted: ['lightning', 'cold', 'air'],
+    boostedDamageRange: [1.05, 1.2],
+    boostedResistanceRange: [1.05, 1.25],
+    nonBoostedResistanceRange: [0.75, 1.05],
+  },
+  voidscarred_wastes: {
+    type: 'elemental',
+    boosted: ['fire', 'earth', 'lightning'],
+    boostedDamageRange: [1.08, 1.25],
+    boostedResistanceRange: [1.1, 1.3],
+    nonBoostedResistanceRange: [0.85, 1.1],
+  },
+  celestial_crucible: {
+    type: 'elemental',
+    boosted: ['fire', 'air', 'lightning', 'cold'],
+    boostedDamageRange: [1.1, 1.28],
+    boostedResistanceRange: [1.12, 1.32],
+    nonBoostedResistanceRange: [0.95, 1.18],
+  },
+  paradox_realm: { type: 'chaos' },
 };
 
 function applyRegionVariance(region, multipliers = {}) {
@@ -57,19 +79,33 @@ function applyRegionVariance(region, multipliers = {}) {
   };
 
   if (config.type === 'elemental') {
-    scaleStatWithVariance('life', 0.95, 1.1);
-    scaleStatWithVariance('damage', 0.95, 1.15);
-    scaleStatWithVariance('attackRating', 1.05, 1.2);
-    scaleStatWithVariance('evasion', 1.05, 1.2);
-    scaleStatWithVariance('armor', 0.9, 1.05);
+    const lifeRange = config.lifeRange || [0.95, 1.1];
+    const damageRange = config.damageRange || [0.95, 1.15];
+    const attackRange = config.attackRange || [1.05, 1.2];
+    const evasionRange = config.evasionRange || [1.05, 1.2];
+    const armorRange = config.armorRange || [0.9, 1.05];
+
+    scaleStatWithVariance('life', lifeRange[0], lifeRange[1]);
+    scaleStatWithVariance('damage', damageRange[0], damageRange[1]);
+    scaleStatWithVariance('attackRating', attackRange[0], attackRange[1]);
+    scaleStatWithVariance('evasion', evasionRange[0], evasionRange[1]);
+    scaleStatWithVariance('armor', armorRange[0], armorRange[1]);
 
     const boosted = new Set(config.boosted);
+    const boostedDamageRange = config.boostedDamageRange || [0.95, 1.1];
+    const boostedResistanceRange = config.boostedResistanceRange || [0.9, 1.1];
+    const nonBoostedResistanceRange = config.nonBoostedResistanceRange || [0.4, 0.7];
+
     Object.values(ELEMENTS).forEach(({ id }) => {
       if (boosted.has(id)) {
-        scaleStatWithVariance(`${id}Damage`, 0.95, 1.1);
-        scaleStatWithVariance(`${id}Resistance`, 0.9, 1.1);
+        scaleStatWithVariance(`${id}Damage`, boostedDamageRange[0], boostedDamageRange[1]);
+        scaleStatWithVariance(`${id}Resistance`, boostedResistanceRange[0], boostedResistanceRange[1]);
       } else {
-        scaleStatWithVariance(`${id}Resistance`, 0.4, 0.7);
+        scaleStatWithVariance(
+          `${id}Resistance`,
+          nonBoostedResistanceRange[0],
+          nonBoostedResistanceRange[1],
+        );
       }
     });
   } else if (config.type === 'armor') {
@@ -81,6 +117,17 @@ function applyRegionVariance(region, multipliers = {}) {
 
     Object.values(ELEMENTS).forEach(({ id }) => {
       scaleStatWithVariance(`${id}Resistance`, 0.6, 0.9);
+    });
+  } else if (config.type === 'chaos') {
+    scaleStatWithVariance('life', 1.15, 1.35);
+    scaleStatWithVariance('damage', 1.2, 1.4);
+    scaleStatWithVariance('attackRating', 1.2, 1.35);
+    scaleStatWithVariance('evasion', 1.15, 1.3);
+    scaleStatWithVariance('armor', 1.15, 1.35);
+
+    Object.values(ELEMENTS).forEach(({ id }) => {
+      scaleStatWithVariance(`${id}Damage`, 1.05, 1.25);
+      scaleStatWithVariance(`${id}Resistance`, 0.95, 1.25);
     });
   }
 
