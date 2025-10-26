@@ -68,25 +68,8 @@ function sampleBinomial(trials, probability) {
 
 function sampleUpgradeMaterialQuantity(dropCount, enemyLevel) {
   if (dropCount <= 0) return 0;
-  if (dropCount <= EXTRA_DROP_SIMULATION_THRESHOLD) {
-    let total = 0;
-    for (let i = 0; i < dropCount; i++) {
-      total += inventory.getScrapPackSize(enemyLevel);
-    }
-    return total;
-  }
-
-  const rolls = Math.max(0, Math.floor(enemyLevel / 25));
-  if (rolls <= 0) return dropCount;
-
-  const minTotal = dropCount;
-  const meanAdditional = dropCount * rolls / 2;
-  const varianceSingle = rolls * (rolls + 2) / 12;
-  const varianceTotal = dropCount * varianceSingle;
-  const stdDev = Math.sqrt(Math.max(0, varianceTotal));
-  const sample = Math.round(minTotal + meanAdditional + stdDev * gaussianRandom());
-  const maxTotal = dropCount * (1 + rolls);
-  return Math.max(minTotal, Math.min(maxTotal, sample));
+  // Always return 1 per drop, no scaling with enemy level
+  return dropCount;
 }
 
 function sampleMaterialDrops(extraDrops, pool) {
