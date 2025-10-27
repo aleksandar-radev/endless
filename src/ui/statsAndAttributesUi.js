@@ -43,29 +43,42 @@ const ELEMENT_IDS = Object.keys(ELEMENTS);
 const DAMAGE_PERCENT_SOURCES = {
   damage: ['totalDamagePercent', 'damagePercent'],
   elementalDamage: ['totalDamagePercent', 'elementalDamagePercent'],
+  thornsDamage: {
+    additive: ['totalDamagePercent', 'damagePercent'],
+    percent: 'thornsDamagePercent',
+  },
 };
 
 ELEMENT_IDS.forEach((id) => {
-  DAMAGE_PERCENT_SOURCES[`${id}Damage`] = [
-    'totalDamagePercent',
-    'elementalDamagePercent',
-    `${id}DamagePercent`,
-  ];
+  DAMAGE_PERCENT_SOURCES[`${id}Damage`] = {
+    additive: ['totalDamagePercent', 'elementalDamagePercent', `${id}DamagePercent`],
+  };
 });
 
 function appendDamagePercentBonus(el, key) {
-  const percentKeys = DAMAGE_PERCENT_SOURCES[key];
-  if (!percentKeys || !el) return;
+  const config = DAMAGE_PERCENT_SOURCES[key];
+  if (!config || !el) return;
 
-  const totalPercent = percentKeys.reduce(
+  const additiveKeys = Array.isArray(config) ? config : config.additive || [];
+  const additiveTotal = additiveKeys.reduce(
     (sum, statKey) => sum + (hero.stats?.[statKey] || 0),
     0,
   );
 
+  let totalPercent = additiveTotal;
+  let decimalKeys = [...additiveKeys];
+
+  if (!Array.isArray(config) && config.percent) {
+    const rawPercent = hero.stats?.[config.percent] || 0;
+    const fraction = Math.abs(rawPercent) > 1 ? rawPercent / 100 : rawPercent;
+    totalPercent = (1 + additiveTotal) * (1 + fraction) - 1;
+    decimalKeys.push(config.percent);
+  }
+
   if (!Number.isFinite(totalPercent)) return;
 
   const normalized = Math.abs(totalPercent) < 1e-6 ? 0 : totalPercent;
-  const decimals = percentKeys.reduce(
+  const decimals = decimalKeys.reduce(
     (max, statKey) => Math.max(max, STATS[statKey]?.decimalPlaces ?? 1),
     1,
   );

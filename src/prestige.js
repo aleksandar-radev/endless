@@ -110,13 +110,13 @@ export default class Prestige {
     const main = `${formatStatName(STARTING_CRYSTALS_BONUS.stat)}: +${startingCrystals}`;
     const startMinScaled = Math.floor(refStartMin * scalingFactor);
     const startMaxScaled = Math.floor(refStartMax * scalingFactor);
-    const right = options?.showRollPercentiles
-      ? `${Math.round(clampedStartPercentile * 100)}%`
-      : `${startMinScaled} - ${startMaxScaled}`;
     const startPercentile = startMaxScaled > startMinScaled
       ? (startingCrystals - startMinScaled) / (startMaxScaled - startMinScaled)
       : 1;
     const clampedStartPercentile = Math.max(0, Math.min(1, startPercentile));
+    const right = options?.showRollPercentiles
+      ? `${Math.round(clampedStartPercentile * 100)}%`
+      : `${startMinScaled} - ${startMaxScaled}`;
     card.descriptions.push(`<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`);
     card.rollPercentiles.push(clampedStartPercentile);
     return card;
