@@ -1,6 +1,6 @@
 import { MATERIALS } from './constants/materials.js';
 import { getCurrentRegion } from './region.js';
-import { game } from './globals.js';
+import { game, hero } from './globals.js';
 
 /**
  * Distribute a total quantity of materials across eligible materials using weighted chances.
@@ -12,7 +12,9 @@ import { game } from './globals.js';
  * @returns {Record<string, number>} mapping of material id -> qty (only positive quantities included)
  */
 export function distributeMaterials(total, opts = {}) {
-  const qty = Math.max(0, Math.floor(total || 0));
+  const baseTotal = Math.max(0, Number(total || 0));
+  const materialQuantityMultiplier = 1 + (hero?.stats?.materialQuantityPercent || 0);
+  const qty = Math.max(0, Math.floor(baseTotal * materialQuantityMultiplier));
   if (qty === 0) return {};
 
   const region = getCurrentRegion();

@@ -213,6 +213,7 @@ const CUSTOM_DESCRIPTIONS = {
   bonusGoldPercent: () => t('tooltip.bonusGoldPercent'),
   bonusExperiencePercent: () => t('tooltip.bonusExperiencePercent'),
   itemQuantityPercent: () => t('tooltip.itemQuantityPercent'),
+  materialQuantityPercent: () => t('tooltip.materialQuantityPercent'),
   itemRarityPercent: () => t('tooltip.itemRarityPercent'),
   skillPoints: () => t('tooltip.skillPoints'),
   allAttributes: () => t('tooltip.allAttributes'),

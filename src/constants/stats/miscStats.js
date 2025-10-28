@@ -275,6 +275,15 @@ export const MISC_STATS = {
     showInUI: true,
     subcategory: 'rewards',
   },
+  // MATERIAL QUANTITY
+  materialQuantityPercent: {
+    base: 0,
+    decimalPlaces: 0,
+    item: { min: 4, max: 13, scaling: (level, tier) => miscScaling(level, tier) },
+    itemTags: ['jewelry', 'ring', 'amulet'],
+    showInUI: true,
+    subcategory: 'rewards',
+  },
   // Only from materials. permanent skill points
   skillPoints: {
     base: 0,

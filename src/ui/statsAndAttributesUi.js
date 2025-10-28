@@ -371,7 +371,11 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           let val = hero.stats[key];
           if (key === 'extraMaterialDropPercent') {
             val = (val * 100).toFixed(1) + '%';
-          } else if (key === 'itemQuantityPercent' || key === 'itemRarityPercent') {
+          } else if (
+            key === 'itemQuantityPercent' ||
+            key === 'itemRarityPercent' ||
+            key === 'materialQuantityPercent'
+          ) {
             val = (val * 100).toFixed(statsDef[key].decimalPlaces) + '%';
           } else if (typeof val === 'number' && statsDef[key].decimalPlaces !== undefined) {
             val = formatNumber(val.toFixed(statsDef[key].decimalPlaces));
@@ -420,7 +424,11 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           let val = hero.stats[key];
           if (key === 'extraMaterialDropPercent') {
             val = (val * 100).toFixed(1) + '%';
-          } else if (key === 'itemQuantityPercent' || key === 'itemRarityPercent') {
+          } else if (
+            key === 'itemQuantityPercent' ||
+            key === 'itemRarityPercent' ||
+            key === 'materialQuantityPercent'
+          ) {
             val = (val * 100).toFixed(statsDef[key].decimalPlaces) + '%';
           } else if (typeof val === 'number' && statsDef[key].decimalPlaces !== undefined) {
             val = formatNumber(val.toFixed(statsDef[key].decimalPlaces));

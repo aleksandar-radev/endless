@@ -17,6 +17,15 @@ import { t } from './i18n.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 
+const DEFAULT_PERCENT_CAP = 1200;
+const SPECIAL_PERCENT_CAPS = {
+  bonusExperiencePercent: 400,
+  bonusGoldPercent: 400,
+  itemRarityPercent: 400,
+  itemQuantityPercent: 400,
+  materialQuantityPercent: 400,
+};
+
 // Dynamically generate AVAILABLE_STATS from STATS
 export const AVAILABLE_STATS = Object.fromEntries(
   Object.entries(STATS)
@@ -156,8 +165,9 @@ export default class Item {
     const ascBonuses = ascension?.getBonuses?.() || {};
     const percentCapMultiplier = 1 + (ascBonuses.itemPercentCapPercent || 0);
     const uniquePercentCapMultiplier = this.metaData?.unique ? UNIQUE_PERCENT_CAP_MULTIPLIER : 1;
+    const basePercentCap = SPECIAL_PERCENT_CAPS[stat] || DEFAULT_PERCENT_CAP;
     const percentCap =
-      this.tier * 100 * percentCapMultiplier * handedMultiplier * uniquePercentCapMultiplier;
+      basePercentCap * percentCapMultiplier * handedMultiplier * uniquePercentCapMultiplier;
     const limit = stat.toLowerCase().includes('percent')
       ? Math.min(baseLimit, percentCap)
       : baseLimit;
@@ -200,8 +210,9 @@ export default class Item {
     const ascBonuses = ascension?.getBonuses?.() || {};
     const percentCapMultiplier = 1 + (ascBonuses.itemPercentCapPercent || 0);
     const uniquePercentCapMultiplier = this.metaData?.unique ? UNIQUE_PERCENT_CAP_MULTIPLIER : 1;
+    const basePercentCap = SPECIAL_PERCENT_CAPS[stat] || DEFAULT_PERCENT_CAP;
     const percentCap =
-      this.tier * 100 * percentCapMultiplier * handedMultiplier * uniquePercentCapMultiplier;
+      basePercentCap * percentCapMultiplier * handedMultiplier * uniquePercentCapMultiplier;
     const limit = stat.toLowerCase().includes('percent')
       ? Math.min(baseLimit, percentCap)
       : baseLimit;

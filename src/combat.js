@@ -509,6 +509,7 @@ export async function defeatEnemy() {
     }
 
     const materialDropChance = enemy.rollForMaterialDrop();
+    const materialQuantityMultiplier = 1 + (hero.stats.materialQuantityPercent || 0);
 
     if (Math.random() * 100 < materialDropChance) {
       // First (guaranteed) drop
@@ -518,6 +519,7 @@ export async function defeatEnemy() {
         const enemyLvl = enemy.level || game.stage;
         qty = inventory.getScrapPackSize(enemyLvl);
       }
+      qty = Math.max(1, Math.round(qty * materialQuantityMultiplier));
       inventory.addMaterial({ id: mat.id, qty });
       statistics.increment('totalMaterialsDropped', null, qty);
       battleLog.addDrop(tp('battleLog.droppedMaterial', { name: mat.name, qty: formatNumber(qty) }));
@@ -580,9 +582,10 @@ export async function defeatEnemy() {
 
         for (const { mat: aMat, qty: totalQty } of aggregate.values()) {
           if (!totalQty) continue;
-          inventory.addMaterial({ id: aMat.id, qty: totalQty });
-          statistics.increment('totalMaterialsDropped', null, totalQty);
-          battleLog.addDrop(tp('battleLog.droppedMaterial', { name: aMat.name, qty: formatNumber(totalQty) }));
+          const adjustedQty = Math.max(1, Math.round(totalQty * materialQuantityMultiplier));
+          inventory.addMaterial({ id: aMat.id, qty: adjustedQty });
+          statistics.increment('totalMaterialsDropped', null, adjustedQty);
+          battleLog.addDrop(tp('battleLog.droppedMaterial', { name: aMat.name, qty: formatNumber(adjustedQty) }));
         }
       }
     }

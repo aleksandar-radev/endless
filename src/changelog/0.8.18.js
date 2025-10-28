@@ -4,13 +4,12 @@ export default function run() {
     <span style="color:#4F8A10;">2025-10-30</span>
     <hr>
 
-    <!-- <span style="color:#FF8A00;">Improvements</span>
+    <span style="color:#FF8A00;">Improvements</span>
     <ul>
-      <li>Renamed the Berserker's Earthquake skill to Glacial Tremor to better match its cold-focused damage.</li>
-      <li>Opened four new boss regions featuring stronger enemies, but rewarding arena skip bonuses.</li>
-      <li>High stage enemies now do not drop extra upgrade materials, its always 1.</li>
-      <li>Stats panel now shows the combined thorns damage bonus percentage alongside the flat value.</li>
-    </ul> -->
+      <li>Reduced exploration item and material bonuses across every region, with higher tiers receiving the largest cuts.</li>
+      <li>Standardized item-based percentage caps at 1200%, while limiting bonus experience, gold, item rarity, item quantity, and material quantity to 400% before ascension upgrades.</li>
+      <li>Introduced a material quantity bonus for rings and amulets that scales material drops similarly to item quantity.</li>
+    </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
     <ul>
