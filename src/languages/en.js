@@ -1013,13 +1013,13 @@ export default {
     'Electric twilight accelerates arena climbs by skipping 1 extra boss level per victory while storms hone lightning and cold damage.',
   'bossRegion.voidscarredWastes.name': 'Voidscarred Wastes',
   'bossRegion.voidscarredWastes.desc':
-    'Rifts soaked in voidfire warp reality, leaping 3 extra boss levels per win as molten sands and quake-torn earth punish the unprepared.',
+    'Rifts soaked in voidfire warp reality, leaping 2 extra boss levels per win as molten sands and quake-torn earth punish the unprepared.',
   'bossRegion.celestialCrucible.name': 'Celestial Crucible',
   'bossRegion.celestialCrucible.desc':
-    'Starlit forges temper boss strength with radiant fury, vaulting 5 boss levels per kill while every element surges toward cosmic extremes.',
+    'Starlit forges temper boss strength with radiant fury, vaulting 3 extra boss levels per kill while every element surges toward cosmic extremes.',
   'bossRegion.paradoxRealm.name': 'Paradox Realm',
   'bossRegion.paradoxRealm.desc':
-    'Timefolded horizons catapult you 8 boss levels per victory; chaotic energies amplify every stat and unleash unpredictable barrages.',
+    'Timefolded horizons catapult you 5 extra boss levels per victory; chaotic energies amplify every stat and unleash unpredictable barrages.',
   'rockyField.region.outskirts.name': 'Outskirts',
   'rockyField.region.outskirts.desc':
     'Loose-earth beasts shrug off earth and water assaults yet crack under fire or lightning, lunging 40% faster with blows that never miss.',

@@ -14,6 +14,7 @@ export default function run() {
     <span style="color:#FF8A00;">Bug Fixes</span>
     <ul>
       <li>Fixed stat range on items, so they always display the correct values.</li>
+      <li>Fixed descriptions on last 4 arena regions, to match the bonus provided.</li>
     </ul>
   `;
 }

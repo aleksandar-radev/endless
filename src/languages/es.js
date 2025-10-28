@@ -1000,13 +1000,13 @@ export default {
     'El crepúsculo eléctrico acelera el ascenso en la arena saltando 1 nivel de jefe adicional por victoria mientras las tormentas perfeccionan el daño de rayo y frío.',
   'bossRegion.voidscarredWastes.name': 'Eriales Marcados por el Vacío',
   'bossRegion.voidscarredWastes.desc':
-    'Fallas bañadas en fuego vacío distorsionan la realidad, saltando 3 niveles de jefe por victoria mientras las arenas fundidas y la tierra sacudida castigan a los desprevenidos.',
+    'Fallas bañadas en fuego vacío distorsionan la realidad, saltando 2 niveles de jefe adicionales por victoria mientras las arenas fundidas y la tierra sacudida castigan a los desprevenidos.',
   'bossRegion.celestialCrucible.name': 'Crisol Celestial',
   'bossRegion.celestialCrucible.desc':
-    'Forjas estelares templan la fuerza de los jefes con furia radiante, impulsándote 5 niveles por muerte mientras cada elemento alcanza extremos cósmicos.',
+    'Forjas estelares templan la fuerza de los jefes con furia radiante, impulsándote 3 niveles de jefe adicionales por muerte mientras cada elemento alcanza extremos cósmicos.',
   'bossRegion.paradoxRealm.name': 'Reino Paradoja',
   'bossRegion.paradoxRealm.desc':
-    'Horizontes plegados en el tiempo te catapultan 8 niveles de jefe por victoria; energías caóticas amplifican cada atributo y desatan andanadas impredecibles.',
+    'Horizontes plegados en el tiempo te catapultan 5 niveles de jefe adicionales por victoria; energías caóticas amplifican cada atributo y desatan andanadas impredecibles.',
   'rockyField.region.outskirts.name': 'Afueras',
   'rockyField.region.outskirts.desc':
     'Bestias de tierra suelta resisten tierra y agua, pero ceden ante fuego o rayo; se lanzan un 40% más rápido y nunca fallan.',
