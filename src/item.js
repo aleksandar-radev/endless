@@ -10,7 +10,7 @@ import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
 import { MISC_STATS } from './constants/stats/miscStats.js';
 import { ATTRIBUTES } from './constants/stats/attributes.js';
-import { UNIQUE_PERCENT_CAP_MULTIPLIER } from './constants/uniqueSets.js';
+import { UNIQUE_PERCENT_CAP_MULTIPLIER, UNIQUE_ITEMS, ITEM_SETS } from './constants/uniqueSets.js';
 import { options, ascension } from './globals.js';
 import { formatStatName, formatNumber } from './ui/ui.js';
 import { t } from './i18n.js';
@@ -22,6 +22,27 @@ export const AVAILABLE_STATS = Object.fromEntries(
   Object.entries(STATS)
     .filter(([_, config]) => config.item)
     .map(([stat, config]) => [stat, config.item]),
+);
+
+// Precompute lookup tables so we can recover stat bounds for legacy unique/set items
+// that may lack stored roll metadata.
+const UNIQUE_ITEM_STATS = new Map(
+  UNIQUE_ITEMS.map((item) => [
+    item.id,
+    new Map((item.stats || []).map((entry) => [entry.stat, entry])),
+  ]),
+);
+
+const ITEM_SET_LOOKUP = new Map(
+  ITEM_SETS.map((set) => [
+    set.id,
+    new Map(
+      (set.items || []).map((piece) => [
+        piece.id,
+        new Map((piece.stats || []).map((entry) => [entry.stat, entry])),
+      ]),
+    ),
+  ]),
 );
 
 const RESISTANCE_STATS = [
@@ -160,22 +181,10 @@ export default class Item {
    * @returns {{min: number, max: number}}
    */
   getStatMinMax(stat) {
-    const decimals = STATS[stat]?.decimalPlaces || 0;
-    const storedRoll = this.metaData?.statRolls?.[stat];
-    if (storedRoll && typeof storedRoll.min === 'number' && typeof storedRoll.max === 'number') {
-      return {
-        min: Number(storedRoll.min.toFixed(decimals)),
-        max: Number(storedRoll.max.toFixed(decimals)),
-      };
-    }
-    const statConfig = AVAILABLE_STATS[stat];
-    if (!statConfig) return { min: 0, max: 0 };
-    const tierBonus = this.getTierBonus(stat);
-    const multiplier = this.getMultiplier();
-    const scale = this.getLevelScale(stat, this.level);
+    const statInfo = STATS[stat];
+    const decimals = statInfo?.decimalPlaces || 0;
     const handedMultiplier = this.isTwoHanded() ? 2 : 1;
-    const decimalsFromConfig = STATS[stat]?.decimalPlaces || 0;
-    const limitConfig = STATS[stat].item?.limit;
+    const limitConfig = statInfo?.item?.limit;
     let baseLimit = Infinity;
     if (typeof limitConfig === 'number') {
       baseLimit = limitConfig;
@@ -196,18 +205,50 @@ export default class Item {
     const limit = stat.toLowerCase().includes('percent')
       ? Math.min(baseLimit, percentCap)
       : baseLimit;
-    // Min value
-    let minVal = statConfig.min * tierBonus * multiplier * scale * handedMultiplier;
-    let maxVal = statConfig.max * tierBonus * multiplier * scale * handedMultiplier;
-    if (stat === 'attackSpeedPercent') {
-      minVal *= 100;
-      maxVal *= 100;
+    const computeRangeFromBase = (minBase, maxBase) => {
+      const tierBonus = this.getTierBonus(stat);
+      const multiplier = this.getMultiplier();
+      const scale = this.getLevelScale(stat, this.level);
+      let minVal = minBase * tierBonus * multiplier * scale * handedMultiplier;
+      let maxVal = maxBase * tierBonus * multiplier * scale * handedMultiplier;
+      if (stat === 'attackSpeedPercent') {
+        minVal *= 100;
+        maxVal *= 100;
+      }
+      minVal = Number(minVal.toFixed(decimals));
+      maxVal = Number(maxVal.toFixed(decimals));
+      minVal = Math.min(minVal, limit);
+      maxVal = Math.min(maxVal, limit);
+      return { min: minVal, max: maxVal };
+    };
+
+    const findUniqueRange = () => {
+      const uniqueId = this.metaData?.uniqueId;
+      if (!uniqueId) return null;
+      const statDefinition = UNIQUE_ITEM_STATS.get(uniqueId)?.get(stat);
+      if (!statDefinition) return null;
+      return computeRangeFromBase(statDefinition.min, statDefinition.max);
+    };
+
+    const findSetPieceRange = () => {
+      const setId = this.metaData?.setId;
+      const pieceId = this.metaData?.setPieceId;
+      if (!setId || !pieceId) return null;
+      const pieceStats = ITEM_SET_LOOKUP.get(setId);
+      if (!pieceStats) return null;
+      const statDefinition = pieceStats.get(pieceId)?.get(stat);
+      if (!statDefinition) return null;
+      return computeRangeFromBase(statDefinition.min, statDefinition.max);
+    };
+
+    const specialRange = findUniqueRange() || findSetPieceRange();
+    if (specialRange) {
+      return specialRange;
     }
-    minVal = Number(minVal.toFixed(decimalsFromConfig));
-    maxVal = Number(maxVal.toFixed(decimalsFromConfig));
-    minVal = Math.min(minVal, limit);
-    maxVal = Math.min(maxVal, limit);
-    return { min: minVal, max: maxVal };
+
+    const statConfig = AVAILABLE_STATS[stat];
+    if (!statInfo || !statConfig) return { min: 0, max: 0 };
+    return computeRangeFromBase(statConfig.min, statConfig.max);
   }
 
   /**

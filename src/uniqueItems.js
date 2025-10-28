@@ -43,25 +43,8 @@ function buildItemWithStats(definition, level, tier, rarity, extraMeta = {}) {
     });
     stats[stat] = value;
 
-    const minValue = helper.calculateStatValue({
-      baseValue: min,
-      tierBonus,
-      multiplier,
-      scale,
-      stat,
-    });
-    const maxValue = helper.calculateStatValue({
-      baseValue: max,
-      tierBonus,
-      multiplier,
-      scale,
-      stat,
-    });
-
     statRolls[stat] = {
       baseValue,
-      min: minValue,
-      max: maxValue,
     };
   });
 
