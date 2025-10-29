@@ -71,7 +71,7 @@ function appendDamagePercentBonus(el, key) {
   if (!Array.isArray(config) && config.percent) {
     const rawPercent = hero.stats?.[config.percent] || 0;
     const fraction = Math.abs(rawPercent) > 1 ? rawPercent / 100 : rawPercent;
-    totalPercent = (1 + additiveTotal) * (1 + fraction) - 1;
+    totalPercent += fraction;
     decimalKeys.push(config.percent);
   }
 

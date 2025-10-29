@@ -784,6 +784,24 @@ export default class Hero {
       );
     });
 
+    const flatThornsDamage = Math.max(
+      0,
+      (flatValues.thornsDamage || 0) + (ascensionBonuses.thornsDamage || 0),
+    );
+    const combinedThornsPercent =
+      (this.stats.thornsDamagePercent || 0) +
+      (this.stats.damagePercent || 0) +
+      (this.stats.totalDamagePercent || 0);
+    const thornsMultiplier = Math.max(0, 1 + combinedThornsPercent);
+    let effectiveThorns = flatThornsDamage * thornsMultiplier;
+    const thornsDecimals = STATS.thornsDamage?.decimalPlaces ?? 0;
+    if (thornsDecimals > 0) {
+      effectiveThorns = Number(effectiveThorns.toFixed(thornsDecimals));
+    } else {
+      effectiveThorns = Math.floor(effectiveThorns);
+    }
+    this.stats.thornsDamage = effectiveThorns;
+
     this.stats.damage = Math.floor(
       this.baseDamages.physical *
         (1 + this.stats.totalDamagePercent + this.stats.damagePercent),
@@ -1116,14 +1134,10 @@ export default class Hero {
    * The damage info to reflect back to the attacker, or null if no thorns damage.
    */
   calculateTotalThornsDamage(_incomingDamage) {
-    const baseThorns = this.stats.thornsDamage || 0;
-    if (!baseThorns) return null;
+    const thornsValue = Math.max(0, this.stats.thornsDamage || 0);
+    if (!thornsValue) return null;
 
-    const thornsMultiplier = 1 + (this.stats.thornsDamagePercent || 0) / 100;
-    const damageScaling =
-      1 + (this.stats.totalDamagePercent || 0) + (this.stats.damagePercent || 0);
-
-    let total = baseThorns * thornsMultiplier * damageScaling;
+    let total = thornsValue;
 
     const didDoubleDamage =
       this.stats.doubleDamageChance &&

@@ -15,6 +15,7 @@ export default function run() {
     <ul>
       <li>Fixed stat range on items, so they always display the correct values.</li>
       <li>Fixed descriptions on last 4 arena regions, to match the bonus provided.</li>
+      <li>Updated the stats panel so the displayed thorns damage combines all bonus percentages additively, matching the reflected amount.</li>
     </ul>
   `;
 }
