@@ -153,6 +153,14 @@ const CRYSTAL_UPGRADE_CONFIG = {
     multiple: true,
     category: 'reset',
   },
+  resetSpecialization: {
+    label: 'crystalShop.upgrade.resetSpecialization.label',
+    bonus: 'crystalShop.upgrade.resetSpecialization.bonus',
+    bonusLabel: 'crystalShop.upgrade.resetSpecialization.bonusLabel',
+    baseCost: 200,
+    multiple: true,
+    category: 'reset',
+  },
   resetAttributes: {
     label: 'crystalShop.upgrade.resetAttributes.label',
     bonus: 'crystalShop.upgrade.resetAttributes.bonus',
@@ -372,6 +380,29 @@ export default class CrystalShop {
       updateActionBar();
       initializeSkillTreeUI();
       showToast(t('crystalShop.resetClassSuccess'), 'success');
+    } else if (stat === 'resetSpecialization') {
+      const hasSpecSelection =
+        typeof skillTree.getSelectedSpecializationId === 'function'
+          ? !!skillTree.getSelectedSpecializationId()
+          : false;
+      const spentOnSpec =
+        typeof skillTree.calculateTotalSpecializationPointsSpent === 'function'
+          ? skillTree.calculateTotalSpecializationPointsSpent()
+          : 0;
+      if (!hasSpecSelection || spentOnSpec === 0) {
+        showToast(t('skillTree.specialization.resetUnavailable'), 'info');
+        return;
+      }
+      confirmed = await showConfirmDialog(
+        tp('crystalShop.confirm.resetSpecialization', { count: cost }),
+      );
+      if (!confirmed) return;
+      hero.crystals -= cost;
+      skillTree.resetSpecializations();
+      updateSkillTreeValues();
+      updateActionBar();
+      initializeSkillTreeUI();
+      showToast(t('crystalShop.resetSpecializationSuccess'), 'success');
     } else if (stat === 'resetAttributes') {
       confirmed = await showConfirmDialog(
         tp('crystalShop.confirm.resetAttributes', { count: cost }),

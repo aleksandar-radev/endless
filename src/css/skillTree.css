@@ -88,6 +88,61 @@
   gap: 0.75rem;
 }
 
+.skill-tree-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.skill-tree-tab {
+  background: var(--bg-element, #23272f);
+  color: var(--text, #fff);
+  border: 1px solid var(--accent, #3b82f6);
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.skill-tree-tab:hover {
+  background: #2d3340;
+  color: var(--accent, #3b82f6);
+}
+
+.skill-tree-tab.active {
+  background: var(--accent, #3b82f6);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+
+.skill-tree-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skill-tree-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skill-tree-extras {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.skill-tree-extras > div {
+  background: rgba(17, 24, 39, 0.6);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: 10px;
+  padding: 16px;
+}
+
 /* Quick allocation controls — mirror training look */
 .skill-qty-controls {
   display: flex;
@@ -174,6 +229,276 @@
 .skill-level {
   font-size: 0.8em;
   color: #aaa;
+}
+
+.specialization-warning {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  background: rgba(127, 29, 29, 0.35);
+  color: #fecdd3;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.specialization-warning strong {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  color: #fca5a5;
+}
+
+.specialization-warning span {
+  flex: 1;
+  min-width: 220px;
+}
+
+.specialization-warning--preview {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.specialization-hint {
+  font-size: 0.95rem;
+  color: #cbd5f5;
+  margin-bottom: -4px;
+}
+
+.specialization-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.specialization-card {
+  background: rgba(17, 24, 39, 0.85);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  position: relative;
+}
+
+.specialization-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(59, 130, 246, 0.6);
+}
+
+.specialization-card.selected {
+  border-color: #38bdf8;
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.35);
+}
+
+.specialization-card.locked {
+  opacity: 0.65;
+}
+
+.specialization-card.locked-choice {
+  box-shadow: 0 0 18px rgba(248, 113, 113, 0.25);
+}
+
+.specialization-card--preview {
+  border-color: rgba(99, 102, 241, 0.4);
+  background: rgba(17, 24, 39, 0.7);
+}
+
+.specialization-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.specialization-header h3,
+.specialization-header h4 {
+  margin: 0;
+  color: var(--accent, #3b82f6);
+  font-size: 1.1rem;
+}
+
+.specialization-status {
+  font-weight: 600;
+  color: #e0e7ff;
+}
+
+.specialization-card.selected .specialization-status {
+  color: #38bdf8;
+}
+
+.specialization-description {
+  margin: 0;
+  color: #d1d5db;
+  line-height: 1.4;
+}
+
+.specialization-lock-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(10, 10, 26, 0.88);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 18px;
+  text-align: center;
+  color: #fecaca;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.specialization-lock-overlay strong {
+  font-size: 1rem;
+  color: #fca5a5;
+}
+
+.specialization-lock-overlay span {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.specialization-lock-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.specialization-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.specialization-step {
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: 10px;
+  padding: 12px;
+  background: rgba(15, 23, 42, 0.7);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.specialization-step.available {
+  border-color: #3b82f6;
+  box-shadow: 0 0 14px rgba(59, 130, 246, 0.3);
+}
+
+.specialization-step.unlocked {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.specialization-step.locked {
+  opacity: 0.65;
+}
+
+.specialization-step-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.specialization-step-name {
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.specialization-step-requirement,
+.specialization-step-meta {
+  font-size: 0.85rem;
+  color: #cbd5f5;
+}
+
+.specialization-step-description {
+  margin: 0;
+  color: #d1d5db;
+  line-height: 1.4;
+}
+
+.specialization-step-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.specialization-step-cost {
+  font-weight: 600;
+  color: #facc15;
+}
+
+.specialization-step-button {
+  background: var(--accent, #3b82f6);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.specialization-step-button:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.specialization-step-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.specialization-empty {
+  color: #cbd5f5;
+  font-style: italic;
+}
+
+.specialization-grid--preview {
+  margin-top: 12px;
+}
+
+.specialization-step-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.specialization-step-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+}
+
+.class-preview-specializations {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.class-preview-specializations h3 {
+  margin: 0;
+  color: var(--accent, #3b82f6);
 }
 
 .class-path button {

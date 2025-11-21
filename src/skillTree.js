@@ -1,11 +1,11 @@
 import { handleSavedData } from './functions.js';
 import { dataManager, game, hero, crystalShop, options } from './globals.js';
 import { SKILLS_MAX_QTY } from './constants/limits.js';
-import { CLASS_PATHS, SKILL_TREES } from './constants/skills.js';
+import { CLASS_PATHS, SKILL_TREES, CLASS_SPECIALIZATIONS } from './constants/skills.js';
 import { ELEMENTS } from './constants/common.js';
 import { calculateHitChance, createDamageNumber } from './combat.js';
 import { battleLog } from './battleLog.js';
-import { t } from './i18n.js';
+import { t, tp } from './i18n.js';
 import {
   showManaWarning,
   showToast,
@@ -44,8 +44,18 @@ export default class SkillTree {
     this.autoCastSettings = {};
     this.displaySettings = {};
     this.unlockedPaths = [];
+    this.specializations = {
+      selection: null,
+      steps: {},
+    };
 
     handleSavedData(savedData, this);
+    if (!this.specializations || typeof this.specializations !== 'object') {
+      this.specializations = { selection: null, steps: {} };
+    }
+    if (!this.specializations.steps || typeof this.specializations.steps !== 'object') {
+      this.specializations.steps = {};
+    }
     // add methods for all skills from SKILL_TREES
     Object.entries(this.skills).forEach(([skillId, skillData]) => {
       this.skills[skillId] = {};
@@ -78,16 +88,35 @@ export default class SkillTree {
     const passiveBonuses = this.calculatePassiveBonuses();
     const activeBuffEffects = this.getActiveBuffEffects();
     const toggleBonuses = this.calculateToggleBonuses();
+    const specializationBonuses = this.calculateSpecializationBonuses();
 
     const allBonuses = {};
 
-    ;[pathBonuses, passiveBonuses, activeBuffEffects, toggleBonuses].forEach((bonus) => {
+    ;[pathBonuses, passiveBonuses, activeBuffEffects, toggleBonuses, specializationBonuses].forEach((bonus) => {
       Object.entries(bonus).forEach(([stat, value]) => {
         allBonuses[stat] = (allBonuses[stat] || 0) + value;
       });
     });
 
     return allBonuses;
+  }
+
+  calculateSpecializationBonuses() {
+    if (!this.selectedPath) return {};
+    const bonuses = {};
+    const specializations = this.getSpecializations();
+    specializations.forEach((spec) => {
+      const unlockedSteps = this.specializations.steps?.[spec.id] || 0;
+      for (let i = 0; i < unlockedSteps; i += 1) {
+        const step = spec.steps[i];
+        if (!step) continue;
+        const effects = step.effect();
+        Object.entries(effects).forEach(([stat, value]) => {
+          bonuses[stat] = (bonuses[stat] || 0) + value;
+        });
+      }
+    });
+    return bonuses;
   }
 
   calculatePassiveBonuses() {
@@ -199,13 +228,135 @@ export default class SkillTree {
   }
 
   getSelectedPath() {
+    const basePath = CLASS_PATHS[this.selectedPath?.name];
+    if (!basePath) {
+      return {};
+    }
+
+    const selectedSpec = this.getSelectedSpecialization();
+    if (selectedSpec?.avatar) {
+      return {
+        ...basePath,
+        avatar: () => selectedSpec.avatar(),
+      };
+    }
+
     return {
-      ...CLASS_PATHS[this.selectedPath?.name],
+      ...basePath,
     };
   }
 
   getSkillsForPath(pathName) {
     return SKILL_TREES[pathName] || [];
+  }
+
+  getSpecializations(pathName = this.selectedPath?.name) {
+    if (!pathName) return [];
+    return CLASS_SPECIALIZATIONS[pathName] || CLASS_SPECIALIZATIONS.DEFAULT || [];
+  }
+
+  getSelectedSpecializationId() {
+    return this.specializations.selection || null;
+  }
+
+  getSelectedSpecialization() {
+    const selectedId = this.getSelectedSpecializationId();
+    if (!selectedId) return null;
+    return this.getSpecializationById(selectedId);
+  }
+
+  getSpecializationById(specId, pathName = this.selectedPath?.name) {
+    if (!specId) return null;
+    const primaryList = this.getSpecializations(pathName);
+    let match = primaryList.find((spec) => spec.id === specId);
+    if (match) return match;
+
+    const defaultList = CLASS_SPECIALIZATIONS.DEFAULT || [];
+    match = defaultList.find((spec) => spec.id === specId);
+    if (match) return match;
+
+    return (
+      Object.values(CLASS_SPECIALIZATIONS).reduce((found, list) => {
+        if (found) return found;
+        if (!Array.isArray(list)) return null;
+        return list.find((spec) => spec.id === specId) || null;
+      }, null) || null
+    );
+  }
+
+  getHeroAvatar() {
+    if (!this.selectedPath) return null;
+    const selectedSpec = this.getSelectedSpecialization();
+    if (selectedSpec?.avatar) {
+      return selectedSpec.avatar();
+    }
+    const basePath = CLASS_PATHS[this.selectedPath.name];
+    return basePath?.avatar?.();
+  }
+
+  getSpecializationProgress(specId) {
+    return this.specializations.steps?.[specId] || 0;
+  }
+
+  canUnlockSpecializationStep(specId, stepIndex, showWarning = false) {
+    if (!this.selectedPath) return { canUnlock: false, reason: 'noPath' };
+    const specializations = this.getSpecializations();
+    const specialization = specializations.find((spec) => spec.id === specId);
+    if (!specialization) return { canUnlock: false, reason: 'invalid' };
+
+    const unlockedSteps = this.getSpecializationProgress(specId);
+    if (stepIndex !== unlockedSteps) {
+      return { canUnlock: false, reason: 'outOfOrder' };
+    }
+
+    if (this.specializations.selection && this.specializations.selection !== specId) {
+      if (showWarning) {
+        showToast(t('skillTree.specialization.lockedByChoice'), 'warning');
+      }
+      return { canUnlock: false, reason: 'committed' };
+    }
+
+    const step = specialization.steps[stepIndex];
+    if (!step) {
+      return { canUnlock: false, reason: 'maxed' };
+    }
+
+    const requiredLevel = step.requiredLevel();
+    if (hero.level < requiredLevel) {
+      if (showWarning) {
+        showToast(tp('skillTree.specialization.requiresLevel', { level: requiredLevel }), 'warning');
+      }
+      return { canUnlock: false, reason: 'level', requiredLevel };
+    }
+
+    const cost = step.cost();
+    if (this.skillPoints < cost) {
+      if (showWarning) {
+        showToast(t('skillTree.specialization.notEnoughPoints'), 'warning');
+      }
+      return { canUnlock: false, reason: 'cost', cost };
+    }
+
+    return { canUnlock: true, cost, requiredLevel, specialization, step };
+  }
+
+  unlockSpecializationStep(specId, stepIndex) {
+    const { canUnlock, cost, step } = this.canUnlockSpecializationStep(specId, stepIndex, true);
+    if (!canUnlock) return false;
+
+    this.skillPoints -= cost;
+    this.specializations.steps[specId] = (this.specializations.steps[specId] || 0) + 1;
+    if (!this.specializations.selection) {
+      this.specializations.selection = specId;
+    }
+
+    hero.queueRecalculateFromAttributes();
+    updateSkillTreeValues();
+    updateTabIndicators();
+    dataManager.saveGame();
+
+    showToast(tp('skillTree.specialization.unlockSuccess', { name: step.name() }), 'success');
+    return true;
   }
 
   canUnlockSkill(skillId, showWarning = false) {
@@ -257,10 +408,28 @@ export default class SkillTree {
   }
 
   calculateTotalSpentSkillPoints() {
-    return Object.values(this.skills).reduce((total, skillData) => {
+    const skillPointsSpent = Object.values(this.skills).reduce((total, skillData) => {
       const level = skillData?.level || 0;
       if (level <= 0) return total;
       return total + this.calculateSkillPointCost(0, level);
+    }, 0);
+
+    return skillPointsSpent + this.calculateTotalSpecializationPointsSpent();
+  }
+
+  calculateTotalSpecializationPointsSpent() {
+    const stepEntries = Object.entries(this.specializations.steps || {});
+    if (!stepEntries.length) return 0;
+
+    return stepEntries.reduce((total, [specId, unlockedSteps]) => {
+      const specialization = this.getSpecializationById(specId);
+      if (!specialization) return total;
+      for (let i = 0; i < unlockedSteps; i += 1) {
+        const step = specialization.steps?.[i];
+        if (!step) continue;
+        total += step.cost();
+      }
+      return total;
     }, 0);
   }
 
@@ -841,7 +1010,8 @@ export default class SkillTree {
     if (container) container.innerHTML = '';
 
     // Refund all skill points
-    this.skillPoints = this.totalEarnedSkillPoints;
+    const specializationSpent = this.calculateTotalSpecializationPointsSpent();
+    this.skillPoints = Math.max(this.totalEarnedSkillPoints - specializationSpent, 0);
     this.selectedPath = null;
     this.skills = {};
     this.autoCastSettings = {};
@@ -859,6 +1029,18 @@ export default class SkillTree {
         event_category: 'SkillTree',
       });
     }
+  }
+
+  resetSpecializations() {
+    const spent = this.calculateTotalSpecializationPointsSpent();
+    this.specializations = { selection: null, steps: {} };
+    this.skillPoints += spent;
+    this.ensureTotalEarnedSkillPointsConsistency();
+    hero.queueRecalculateFromAttributes();
+    updateActionBar();
+    updateSkillTreeValues();
+    updateTabIndicators();
+    dataManager.saveGame();
   }
 
   enableAutoCastForAllSkills() {

@@ -4,10 +4,28 @@ import { SKILL_LEVEL_TIERS } from '../skillTree.js';
 import { SKILLS_MAX_QTY } from '../constants/limits.js';
 import { skillTree, hero, crystalShop, options, dataManager } from '../globals.js';
 import { formatNumber, formatStatName, hideTooltip, positionTooltip, showToast, showTooltip, updateResources } from './ui.js';
-import { t } from '../i18n.js';
+import { t, tp } from '../i18n.js';
 import { createModal, closeModal } from './modal.js';
 
 const html = String.raw;
+
+const SKILL_TREE_TABS = ['skills', 'specializations'];
+let currentSkillTreeTab = 'skills';
+
+function getSkillTreeTabs() {
+  return [
+    { id: 'skills', label: t('skillTree.tab.skills') },
+    { id: 'specializations', label: t('skillTree.tab.specializations') },
+  ];
+}
+
+function isSkillsTabActive() {
+  return currentSkillTreeTab === 'skills';
+}
+
+function isSpecializationsTabActive() {
+  return currentSkillTreeTab === 'specializations';
+}
 
 const SKILL_CATEGORY_TRANSLATIONS = {
   attack: 'skillTree.skillCategory.attack',
@@ -49,6 +67,334 @@ function formatSkillTypeBadge(skill) {
     return `${primaryType} - ${categoryLabel}`;
   }
   return primaryType;
+}
+
+function buildSkillTreeTabs(tabsContainer, tabContent) {
+  tabsContainer.innerHTML = '';
+  getSkillTreeTabs().forEach((tab) => {
+    const btn = document.createElement('button');
+    btn.className = 'skill-tree-tab';
+    btn.dataset.tab = tab.id;
+    btn.textContent = tab.label;
+    btn.addEventListener('click', () => {
+      if (currentSkillTreeTab === tab.id) return;
+      currentSkillTreeTab = tab.id;
+      renderSkillTreeTabContent(tabsContainer, tabContent);
+    });
+    tabsContainer.appendChild(btn);
+  });
+}
+
+function renderSkillTreeTabContent(tabsContainer, tabContent) {
+  const tabButtons = tabsContainer.querySelectorAll('.skill-tree-tab');
+  tabButtons.forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.tab === currentSkillTreeTab);
+  });
+
+  tabContent.innerHTML = '';
+  tabContent.dataset.activeTab = currentSkillTreeTab;
+
+  if (isSkillsTabActive()) {
+    renderSkillsTab(tabContent);
+  } else if (isSpecializationsTabActive()) {
+    renderSpecializationsTab(tabContent);
+  }
+
+  updateSkillTreeValues();
+  updateSkillTreeHeaderFloating?.();
+}
+
+function renderSkillsTab(tabContent) {
+  const grid = document.createElement('div');
+  grid.className = 'skill-tree-grid';
+  tabContent.appendChild(grid);
+
+  const noLvlRestriction = false;
+  const skills = SKILL_TREES[skillTree.selectedPath.name];
+  const levelGroups = SKILL_LEVEL_TIERS.reduce((acc, level) => {
+    if (level <= hero.level || noLvlRestriction) {
+      acc[level] = [];
+    }
+    return acc;
+  }, {});
+
+  Object.entries(skills).forEach(([skillId, skillData]) => {
+    if (noLvlRestriction || (skillData.requiredLevel() <= hero.level && levelGroups[skillData.requiredLevel()])) {
+      levelGroups[skillData.requiredLevel()].push({ id: skillId, ...skillData });
+    }
+  });
+
+  Object.entries(levelGroups).forEach(([reqLevel, groupSkills]) => {
+    if (groupSkills.length === 0) return;
+    const levelLabel = document.createElement('div');
+    levelLabel.className = 'level-requirement';
+    levelLabel.textContent = `Level ${reqLevel}`;
+    grid.appendChild(levelLabel);
+
+    const rowElement = document.createElement('div');
+    rowElement.className = 'skill-row';
+
+    groupSkills.forEach((skill) => {
+      const skillElement = createSkillElement(skill);
+      rowElement.appendChild(skillElement);
+    });
+
+    grid.appendChild(rowElement);
+  });
+
+  const extras = document.createElement('div');
+  extras.className = 'skill-tree-extras';
+  tabContent.appendChild(extras);
+}
+
+function renderSpecializationsTab(tabContent) {
+  const warning = document.createElement('div');
+  warning.className = 'specialization-warning';
+  warning.innerHTML = html`
+    <strong>${t('skillTree.specialization.lockWarningTitle')}</strong>
+    <span>${t('skillTree.specialization.lockWarning')}</span>
+  `;
+  tabContent.appendChild(warning);
+
+  const hint = document.createElement('p');
+  hint.className = 'specialization-hint';
+  hint.textContent = t('skillTree.specialization.selectHint');
+  tabContent.appendChild(hint);
+
+  const grid = document.createElement('div');
+  grid.className = 'specialization-grid';
+  tabContent.appendChild(grid);
+
+  const specializations = skillTree.getSpecializations();
+  if (!specializations.length) {
+    const empty = document.createElement('p');
+    empty.className = 'specialization-empty';
+    empty.textContent = t('skillTree.specialization.unavailable');
+    tabContent.appendChild(empty);
+    return;
+  }
+
+  specializations.forEach((spec) => {
+    const card = document.createElement('div');
+    card.className = 'specialization-card';
+    card.dataset.specId = spec.id;
+
+    const icon = document.createElement('div');
+    icon.className = 'specialization-icon';
+    icon.style.backgroundImage = `url('${import.meta.env.VITE_BASE_PATH}/skills/${spec.icon()}.jpg')`;
+    card.appendChild(icon);
+
+    const header = document.createElement('div');
+    header.className = 'specialization-header';
+    header.innerHTML = `<h3>${spec.name()}</h3>`;
+    card.appendChild(header);
+
+    const status = document.createElement('div');
+    status.className = 'specialization-status';
+    card.appendChild(status);
+
+    const desc = document.createElement('p');
+    desc.className = 'specialization-description';
+    desc.textContent = spec.description();
+    card.appendChild(desc);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'specialization-lock-overlay';
+    overlay.innerHTML = html`
+      <strong>${t('skillTree.specialization.lockedOverlayTitle')}</strong>
+      <span></span>
+    `;
+    card.appendChild(overlay);
+
+    const stepsContainer = document.createElement('div');
+    stepsContainer.className = 'specialization-steps';
+
+    spec.steps.forEach((step, index) => {
+      const stepEl = document.createElement('div');
+      stepEl.className = 'specialization-step';
+      stepEl.dataset.stepIndex = index;
+
+      const stepHeader = document.createElement('div');
+      stepHeader.className = 'specialization-step-header';
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'specialization-step-name';
+      nameSpan.textContent = step.name();
+      const reqSpan = document.createElement('span');
+      reqSpan.className = 'specialization-step-requirement';
+      reqSpan.textContent = tp('skillTree.specialization.requiresLevelShort', {
+        level: step.requiredLevel(),
+      });
+      stepHeader.appendChild(nameSpan);
+      stepHeader.appendChild(reqSpan);
+      stepEl.appendChild(stepHeader);
+
+      const stepDescription = document.createElement('p');
+      stepDescription.className = 'specialization-step-description';
+      stepDescription.textContent = step.description();
+      stepEl.appendChild(stepDescription);
+
+      const actions = document.createElement('div');
+      actions.className = 'specialization-step-actions';
+      const costLabel = document.createElement('span');
+      costLabel.className = 'specialization-step-cost';
+      costLabel.textContent = tp('skillTree.specialization.cost', { cost: step.cost() });
+      actions.appendChild(costLabel);
+
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'specialization-step-button';
+      button.dataset.specId = spec.id;
+      button.dataset.stepIndex = index;
+      button.textContent = t('skillTree.specialization.unlockButton');
+      button.addEventListener('click', () => {
+        skillTree.unlockSpecializationStep(spec.id, index);
+      });
+      actions.appendChild(button);
+
+      stepEl.appendChild(actions);
+      stepsContainer.appendChild(stepEl);
+    });
+
+    card.appendChild(stepsContainer);
+    grid.appendChild(card);
+  });
+
+  updateSpecializationUI();
+}
+
+function getSkillTreeExtrasContainer() {
+  const container = document.getElementById('skill-tree-container');
+  if (!container) return null;
+  return container.querySelector('.skill-tree-extras');
+}
+
+function updateSpecializationUI() {
+  const container = document.getElementById('skill-tree-container');
+  if (!container) return;
+  const cards = container.querySelectorAll('.specialization-card');
+  if (!cards.length) return;
+
+  const selectedId = skillTree.getSelectedSpecializationId();
+  const availablePoints = skillTree.skillPoints;
+  const specs = skillTree.getSpecializations();
+  const specsById = new Map(specs.map((spec) => [spec.id, spec]));
+
+  cards.forEach((card) => {
+    const specId = card.dataset.specId;
+    const spec = specsById.get(specId);
+    if (!spec) return;
+
+    const progress = skillTree.getSpecializationProgress(specId);
+    const isSelected = selectedId === specId;
+    const lockedByChoice = Boolean(selectedId) && !isSelected;
+    const status = card.querySelector('.specialization-status');
+    if (status) {
+      if (isSelected) {
+        status.textContent = t('skillTree.specialization.statusSelected');
+      } else if (progress >= spec.steps.length) {
+        status.textContent = t('skillTree.specialization.statusCompleted');
+      } else if (lockedByChoice) {
+        status.textContent = t('skillTree.specialization.statusLocked');
+      } else {
+        status.textContent = t('skillTree.specialization.statusAvailable');
+      }
+    }
+
+    card.classList.toggle('selected', isSelected);
+    card.classList.toggle('locked', lockedByChoice);
+    card.classList.toggle('locked-choice', lockedByChoice);
+
+    const overlay = card.querySelector('.specialization-lock-overlay');
+    if (overlay) {
+      const overlayMessage = overlay.querySelector('span');
+      if (lockedByChoice) {
+        overlay.classList.add('visible');
+        const activeSpec = selectedId ? specsById.get(selectedId) : null;
+        if (overlayMessage) {
+          overlayMessage.textContent = activeSpec?.name
+            ? tp('skillTree.specialization.lockedOverlay', {
+                name: activeSpec.name(),
+              })
+            : t('skillTree.specialization.lockWarning');
+        }
+      } else {
+        overlay.classList.remove('visible');
+        if (overlayMessage) {
+          overlayMessage.textContent = '';
+        }
+      }
+    }
+
+    const steps = card.querySelectorAll('.specialization-step');
+    steps.forEach((stepEl) => {
+      const stepIndex = Number(stepEl.dataset.stepIndex);
+      const stepData = spec.steps[stepIndex];
+      if (!stepData) return;
+
+      const unlocked = stepIndex < progress;
+      const currentIndex = progress;
+      const isCurrent = stepIndex === currentIndex;
+      const levelRequirement = stepData.requiredLevel();
+      const cost = stepData.cost();
+      const meetsLevel = hero.level >= levelRequirement;
+      const meetsCost = availablePoints >= cost;
+
+      const costLabel = stepEl.querySelector('.specialization-step-cost');
+      if (costLabel) {
+        costLabel.textContent = tp('skillTree.specialization.cost', { cost });
+      }
+
+      const button = stepEl.querySelector('.specialization-step-button');
+
+      if (unlocked) {
+        stepEl.classList.add('unlocked');
+        stepEl.classList.remove('locked', 'available');
+        if (button) {
+          button.disabled = true;
+          button.textContent = t('skillTree.specialization.unlockedButton');
+          button.title = '';
+        }
+        return;
+      }
+
+      if (lockedByChoice) {
+        stepEl.classList.add('locked');
+        stepEl.classList.remove('unlocked', 'available');
+        if (button) {
+          button.disabled = true;
+          button.textContent = t('skillTree.specialization.unlockButton');
+          button.title = t('skillTree.specialization.lockedByChoice');
+        }
+        return;
+      }
+
+      if (isCurrent) {
+        stepEl.classList.add('available');
+        stepEl.classList.remove('locked', 'unlocked');
+        if (button) {
+          const canUnlock = meetsLevel && meetsCost;
+          button.disabled = !canUnlock;
+          button.textContent = t('skillTree.specialization.unlockButton');
+          let title = '';
+          if (!meetsLevel) {
+            title = tp('skillTree.specialization.requiresLevel', { level: levelRequirement });
+          } else if (!meetsCost) {
+            title = t('skillTree.specialization.notEnoughPoints');
+          }
+          button.title = title;
+        }
+        return;
+      }
+
+      stepEl.classList.add('locked');
+      stepEl.classList.remove('available', 'unlocked');
+      if (button) {
+        button.disabled = true;
+        button.textContent = t('skillTree.specialization.unlockButton');
+        button.title = t('skillTree.specialization.requiresPrevious');
+      }
+    });
+  });
 }
 
 export function initializeSkillTreeUI() {
@@ -173,6 +519,7 @@ function selectClassPath(pathId) {
     updateResources();
     document.getElementById('class-selection').classList.add('hidden');
     document.getElementById('skill-tree-container').classList.remove('hidden');
+    currentSkillTreeTab = 'skills';
     showSkillTree();
     initializeSkillTreeUI();
   }
@@ -207,6 +554,73 @@ function buildClassPreviewTree(pathId, container) {
     });
     container.appendChild(rowElement);
   });
+
+  renderClassPreviewSpecializations(pathId, container);
+}
+
+function renderClassPreviewSpecializations(pathId, container) {
+  const specializations = skillTree.getSpecializations(pathId);
+  if (!specializations.length) return;
+
+  const section = document.createElement('div');
+  section.className = 'class-preview-specializations';
+  const title = document.createElement('h3');
+  title.textContent = t('skillTree.specialization.sectionTitle');
+  section.appendChild(title);
+
+  const warning = document.createElement('div');
+  warning.className = 'specialization-warning specialization-warning--preview';
+  warning.innerHTML = html`
+    <strong>${t('skillTree.specialization.lockWarningTitle')}</strong>
+    <span>${t('skillTree.specialization.lockWarning')}</span>
+  `;
+  section.appendChild(warning);
+
+  const grid = document.createElement('div');
+  grid.className = 'specialization-grid specialization-grid--preview';
+
+  specializations.forEach((spec) => {
+    const card = document.createElement('div');
+    card.className = 'specialization-card specialization-card--preview';
+
+    const icon = document.createElement('div');
+    icon.className = 'specialization-icon';
+    icon.style.backgroundImage = `url('${import.meta.env.VITE_BASE_PATH}/skills/${spec.icon()}.jpg')`;
+    card.appendChild(icon);
+
+    const header = document.createElement('div');
+    header.className = 'specialization-header';
+    header.innerHTML = `<h4>${spec.name()}</h4>`;
+    card.appendChild(header);
+
+    const desc = document.createElement('p');
+    desc.className = 'specialization-description';
+    desc.textContent = spec.description();
+    card.appendChild(desc);
+
+    const list = document.createElement('ul');
+    list.className = 'specialization-step-list';
+    spec.steps.forEach((step) => {
+      const item = document.createElement('li');
+      item.innerHTML = `
+        <span class="specialization-step-name">${step.name()}</span>
+        <span class="specialization-step-meta">
+          ${tp('skillTree.specialization.previewDetail', {
+            level: step.requiredLevel(),
+            cost: step.cost(),
+          })}
+        </span>
+        <span class="specialization-step-description">${step.description()}</span>
+      `;
+      list.appendChild(item);
+    });
+    card.appendChild(list);
+
+    grid.appendChild(card);
+  });
+
+  section.appendChild(grid);
+  container.appendChild(section);
 }
 
 function createPreviewSkillElement(skill) {
@@ -318,52 +732,24 @@ export function initializeSkillTreeStructure() {
   const skillPointsHeader = document.createElement('div');
   skillPointsHeader.className = 'skill-points-header';
   container.appendChild(skillPointsHeader);
+  const tabsContainer = document.createElement('div');
+  tabsContainer.className = 'skill-tree-tabs';
+  container.appendChild(tabsContainer);
 
-  const noLvlRestriction = false;
+  const tabContent = document.createElement('div');
+  tabContent.className = 'skill-tree-tab-content';
+  container.appendChild(tabContent);
 
-  const skills = SKILL_TREES[skillTree.selectedPath.name];
-  const levelGroups = SKILL_LEVEL_TIERS.reduce((acc, level) => {
-    if (level <= hero.level || noLvlRestriction) {
-      acc[level] = [];
-    }
-    return acc;
-  }, {});
-
-  Object.entries(skills).forEach(([skillId, skillData]) => {
-    if (noLvlRestriction || (skillData.requiredLevel() <= hero.level && levelGroups[skillData.requiredLevel()])) {
-      levelGroups[skillData.requiredLevel()].push({ id: skillId, ...skillData });
-    }
-  });
-
-  Object.entries(levelGroups).forEach(([reqLevel, groupSkills]) => {
-    if (groupSkills.length > 0) {
-      const rowElement = document.createElement('div');
-      rowElement.className = 'skill-row';
-
-      const levelLabel = document.createElement('div');
-      levelLabel.className = 'level-requirement';
-      levelLabel.textContent = `Level ${reqLevel}`;
-      container.appendChild(levelLabel);
-
-      groupSkills.forEach((skill) => {
-        const skillElement = createSkillElement(skill);
-        rowElement.appendChild(skillElement);
-      });
-
-      container.appendChild(rowElement);
-    }
-  });
-  updateSkillTreeValues();
-  // --- Auto-cast toggles for instant/buff skills ---
-  renderAutoCastToggles();
-  // --- Slot Display Toggles ---
-  renderDisplayToggles();
+  buildSkillTreeTabs(tabsContainer, tabContent);
+  renderSkillTreeTabContent(tabsContainer, tabContent);
   setupSkillTreeFloatingHeader(container, skillPointsHeader);
 }
 
 function renderAutoCastToggles() {
-  const container = document.getElementById('skill-tree-container');
-  let autoCastSection = document.getElementById('auto-cast-section');
+  if (!isSkillsTabActive()) return;
+  const extrasContainer = getSkillTreeExtrasContainer();
+  if (!extrasContainer) return;
+  let autoCastSection = extrasContainer.querySelector('#auto-cast-section');
   if (autoCastSection) autoCastSection.remove();
 
   // Only show if player owns the upgrade
@@ -378,7 +764,7 @@ function renderAutoCastToggles() {
     .map(([skillId, skill]) => {
       const base = skillTree.getSkill(skillId);
       return { ...base, id: skillId };
-    });
+  });
 
   if (eligibleSkills.length === 0) return;
 
@@ -424,13 +810,15 @@ function renderAutoCastToggles() {
     autoCastSection.appendChild(wrapper);
   });
 
-  container.appendChild(autoCastSection);
+  extrasContainer.appendChild(autoCastSection);
 }
 
 // --- Slot Display Toggles ---
 function renderDisplayToggles() {
-  const container = document.getElementById('skill-tree-container');
-  let displaySection = document.getElementById('display-section');
+  if (!isSkillsTabActive()) return;
+  const extrasContainer = getSkillTreeExtrasContainer();
+  if (!extrasContainer) return;
+  let displaySection = extrasContainer.querySelector('#display-section');
   if (displaySection) displaySection.remove();
 
   const eligibleSkills = Object.entries(skillTree.skills)
@@ -469,7 +857,7 @@ function renderDisplayToggles() {
     wrapper.appendChild(toggle);
     displaySection.appendChild(wrapper);
   });
-  container.appendChild(displaySection);
+  extrasContainer.appendChild(displaySection);
 }
 
 function setupSkillTreeFloatingHeader(container, header) {
@@ -578,16 +966,26 @@ export function updateSkillTreeValues() {
   }
 
   const selectedPath = skillTree.getSelectedPath();
-  if (characterAvatarEl && selectedPath?.avatar) {
+  const selectedSpec =
+    typeof skillTree.getSelectedSpecialization === 'function'
+      ? skillTree.getSelectedSpecialization()
+      : null;
+  const heroAvatar =
+    typeof skillTree.getHeroAvatar === 'function'
+      ? skillTree.getHeroAvatar()
+      : selectedPath?.avatar?.();
+
+  if (characterAvatarEl && heroAvatar) {
     // Remove any previous img
     let img = characterAvatarEl.querySelector('img');
     if (!img) {
       img = document.createElement('img');
-      img.alt = selectedPath.name() + ' avatar';
+      img.alt = `${selectedSpec ? selectedSpec.name() : selectedPath.name()} avatar`;
       characterAvatarEl.innerHTML = '';
       characterAvatarEl.appendChild(img);
     }
-    img.src = `${import.meta.env.VITE_BASE_PATH}/avatars/${selectedPath.avatar()}`;
+    img.src = `${import.meta.env.VITE_BASE_PATH}/avatars/${heroAvatar}`;
+    img.alt = `${selectedSpec ? selectedSpec.name() : selectedPath.name()} avatar`;
   }
 
   const characterName =
@@ -706,6 +1104,7 @@ export function updateSkillTreeValues() {
   renderAutoCastToggles();
   // --- Slot display toggles ---
   renderDisplayToggles();
+  updateSpecializationUI();
 }
 
 function showSkillTree() {

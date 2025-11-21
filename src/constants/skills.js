@@ -141,3 +141,139 @@ export const SKILL_TREES = {
 
   MAGE: MAGE_SKILLS,
 };
+
+const DEFAULT_SPECIALIZATIONS = [
+  {
+    id: 'VANGUARD_OATH',
+    icon: () => 'eternal-guardian',
+    avatar: () => 'monk-avatar.jpg',
+    name: () => t('skillTree.specialization.vanguard.name'),
+    description: () => t('skillTree.specialization.vanguard.description'),
+    steps: [
+      {
+        id: 'VANGUARD_STEP_1',
+        name: () => t('skillTree.specialization.vanguard.step1.name'),
+        description: () => t('skillTree.specialization.vanguard.step1.description'),
+        requiredLevel: () => 50,
+        cost: () => 10,
+        effect: () => ({
+          lifePercent: 15,
+          armorPercent: 20,
+        }),
+      },
+      {
+        id: 'VANGUARD_STEP_2',
+        name: () => t('skillTree.specialization.vanguard.step2.name'),
+        description: () => t('skillTree.specialization.vanguard.step2.description'),
+        requiredLevel: () => 110,
+        cost: () => 20,
+        effect: () => ({
+          lifeRegenPercent: 20,
+          blockChance: 5,
+        }),
+      },
+      {
+        id: 'VANGUARD_STEP_3',
+        name: () => t('skillTree.specialization.vanguard.step3.name'),
+        description: () => t('skillTree.specialization.vanguard.step3.description'),
+        requiredLevel: () => 170,
+        cost: () => 30,
+        effect: () => ({
+          lifePercent: 20,
+          allResistance: 150,
+        }),
+      },
+    ],
+  },
+  {
+    id: 'PREDATOR_PATH',
+    icon: () => 'apex-predator',
+    avatar: () => 'dwarf-avatar.jpg',
+    name: () => t('skillTree.specialization.predator.name'),
+    description: () => t('skillTree.specialization.predator.description'),
+    steps: [
+      {
+        id: 'PREDATOR_STEP_1',
+        name: () => t('skillTree.specialization.predator.step1.name'),
+        description: () => t('skillTree.specialization.predator.step1.description'),
+        requiredLevel: () => 50,
+        cost: () => 10,
+        effect: () => ({
+          damagePercent: 15,
+          critChance: 5,
+        }),
+      },
+      {
+        id: 'PREDATOR_STEP_2',
+        name: () => t('skillTree.specialization.predator.step2.name'),
+        description: () => t('skillTree.specialization.predator.step2.description'),
+        requiredLevel: () => 110,
+        cost: () => 20,
+        effect: () => ({
+          attackSpeedPercent: 10,
+          attackRating: 250,
+        }),
+      },
+      {
+        id: 'PREDATOR_STEP_3',
+        name: () => t('skillTree.specialization.predator.step3.name'),
+        description: () => t('skillTree.specialization.predator.step3.description'),
+        requiredLevel: () => 170,
+        cost: () => 30,
+        effect: () => ({
+          critDamage: 0.35,
+          damagePercent: 10,
+        }),
+      },
+    ],
+  },
+  {
+    id: 'ARCANE_LEGACY',
+    icon: () => 'arcane-power',
+    avatar: () => 'witch-avatar.jpg',
+    name: () => t('skillTree.specialization.arcane.name'),
+    description: () => t('skillTree.specialization.arcane.description'),
+    steps: [
+      {
+        id: 'ARCANE_STEP_1',
+        name: () => t('skillTree.specialization.arcane.step1.name'),
+        description: () => t('skillTree.specialization.arcane.step1.description'),
+        requiredLevel: () => 50,
+        cost: () => 10,
+        effect: () => ({
+          manaPercent: 20,
+          manaRegen: 2,
+        }),
+      },
+      {
+        id: 'ARCANE_STEP_2',
+        name: () => t('skillTree.specialization.arcane.step2.name'),
+        description: () => t('skillTree.specialization.arcane.step2.description'),
+        requiredLevel: () => 110,
+        cost: () => 20,
+        effect: () => ({
+          cooldownReductionPercent: 0.1,
+          elementalDamagePercent: 15,
+        }),
+      },
+      {
+        id: 'ARCANE_STEP_3',
+        name: () => t('skillTree.specialization.arcane.step3.name'),
+        description: () => t('skillTree.specialization.arcane.step3.description'),
+        requiredLevel: () => 170,
+        cost: () => 30,
+        effect: () => ({
+          manaPercent: 15,
+          damagePercent: 10,
+        }),
+      },
+    ],
+  },
+];
+
+const specializationMap = { DEFAULT: DEFAULT_SPECIALIZATIONS };
+Object.keys(CLASS_PATHS).forEach((key) => {
+  specializationMap[key] = DEFAULT_SPECIALIZATIONS;
+});
+
+export const CLASS_SPECIALIZATIONS = specializationMap;

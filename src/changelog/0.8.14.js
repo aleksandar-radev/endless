@@ -8,6 +8,8 @@ export default function run() {
     <ul>
       <li>Smoothed out saving with a 5-second debounce, cached encryption, and a live "last saved" HUD indicator so progress is preserved without hammering the browser.</li>
       <li>Show stage controls under enemy option now works for Rocky Field as well.</li>
+      <li>Introduced a Specializations tab to the skill tree with unique class evolutions, exclusive choice locking, and class preview support.</li>
+      <li>Specialization choices now swap the hero avatar, highlight their exclusivity in the UI, and can be reset independently via a new crystal upgrade.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
