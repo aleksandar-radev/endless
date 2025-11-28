@@ -1,5 +1,6 @@
 import { STATS } from '../constants/stats/stats.js';
 import { CLASS_PATHS, SKILL_TREES } from '../constants/skills.js';
+import { SPECIALIZATIONS } from '../constants/specializations.js';
 import { SKILL_LEVEL_TIERS } from '../skillTree.js';
 import { SKILLS_MAX_QTY } from '../constants/limits.js';
 import { skillTree, hero, crystalShop, options, dataManager } from '../globals.js';
@@ -8,6 +9,8 @@ import { t } from '../i18n.js';
 import { createModal, closeModal } from './modal.js';
 
 const html = String.raw;
+
+let currentTab = 'skills';
 
 const shouldShowStatValue = (stat) => STATS[stat]?.showValue !== false;
 const getStatDecimals = (stat) => STATS[stat]?.decimalPlaces || 0;
@@ -214,6 +217,53 @@ function buildClassPreviewTree(pathId, container) {
     });
     container.appendChild(rowElement);
   });
+
+  // Add Specializations Preview
+  const specs = SPECIALIZATIONS[pathId];
+  if (specs && specs.length > 0) {
+    const specHeader = document.createElement('h3');
+    specHeader.textContent = t('skillTree.tab.specialization');
+    specHeader.style.marginTop = '20px';
+    specHeader.style.textAlign = 'center';
+    container.appendChild(specHeader);
+
+    const specContainer = document.createElement('div');
+    specContainer.style.display = 'flex';
+    specContainer.style.gap = '10px';
+    specContainer.style.justifyContent = 'center';
+    specContainer.style.flexWrap = 'wrap';
+
+    specs.forEach((spec) => {
+      const specDiv = document.createElement('div');
+      specDiv.style.border = '1px solid #444';
+      specDiv.style.padding = '10px';
+      specDiv.style.borderRadius = '8px';
+      specDiv.style.flex = '1';
+      specDiv.style.minWidth = '200px';
+      specDiv.style.display = 'flex';
+      specDiv.style.flexDirection = 'column';
+      specDiv.style.alignItems = 'center';
+
+      specDiv.innerHTML = `
+        <h4 style="margin-top:0;">${spec.name()}</h4>
+        <p style="font-size:0.8em; margin-bottom:10px;">${spec.description()}</p>
+      `;
+
+      const skillsContainer = document.createElement('div');
+      skillsContainer.style.display = 'flex';
+      skillsContainer.style.flexWrap = 'wrap';
+      skillsContainer.style.justifyContent = 'center';
+      skillsContainer.style.gap = '5px';
+
+      Object.values(spec.skills).forEach((skillDef) => {
+        const skillEl = createPreviewSkillElement({ ...skillDef, id: 'preview_spec_skill' }); // Fake ID to avoid errors if accessed
+        skillsContainer.appendChild(skillEl);
+      });
+      specDiv.appendChild(skillsContainer);
+      specContainer.appendChild(specDiv);
+    });
+    container.appendChild(specContainer);
+  }
 }
 
 function createPreviewSkillElement(skill) {
@@ -337,6 +387,39 @@ export function initializeSkillTreeStructure() {
   skillPointsHeader.className = 'skill-points-header';
   container.appendChild(skillPointsHeader);
 
+  // Render Tabs
+  const tabs = document.createElement('div');
+  tabs.className = 'skill-tabs';
+  tabs.style.display = 'flex';
+  tabs.style.gap = '10px';
+  tabs.style.marginBottom = '20px';
+  tabs.innerHTML = `
+    <button class="skill-tab ${currentTab === 'skills' ? 'active' : ''}" data-tab="skills">${t('skillTree.tab.skills')}</button>
+    <button class="skill-tab ${currentTab === 'specialization' ? 'active' : ''}" data-tab="specialization">${t('skillTree.tab.specialization')}</button>
+  `;
+  tabs.querySelectorAll('.skill-tab').forEach((btn) => {
+    btn.onclick = () => {
+      currentTab = btn.dataset.tab;
+      initializeSkillTreeStructure();
+    };
+  });
+  container.appendChild(tabs);
+
+  if (currentTab === 'skills') {
+    renderMainSkillTree(container);
+  } else {
+    renderSpecializationTree(container);
+  }
+
+  updateSkillTreeValues();
+  // --- Auto-cast toggles for instant/buff skills ---
+  renderAutoCastToggles();
+  // --- Slot Display Toggles ---
+  renderDisplayToggles();
+  setupSkillTreeFloatingHeader(container, skillPointsHeader);
+}
+
+function renderMainSkillTree(container) {
   const noLvlRestriction = false;
 
   const skills = SKILL_TREES[skillTree.selectedPath.name];
@@ -371,12 +454,59 @@ export function initializeSkillTreeStructure() {
       container.appendChild(rowElement);
     }
   });
-  updateSkillTreeValues();
-  // --- Auto-cast toggles for instant/buff skills ---
-  renderAutoCastToggles();
-  // --- Slot Display Toggles ---
-  renderDisplayToggles();
-  setupSkillTreeFloatingHeader(container, skillPointsHeader);
+}
+
+function renderSpecializationTree(container) {
+  const specs = SPECIALIZATIONS[skillTree.selectedPath.name];
+  if (!specs) return;
+
+  const specContainer = document.createElement('div');
+  specContainer.className = 'specialization-container';
+  specContainer.style.display = 'flex';
+  specContainer.style.gap = '20px';
+  specContainer.style.justifyContent = 'center';
+
+  specs.forEach((spec) => {
+    const col = document.createElement('div');
+    col.className = 'spec-column';
+    col.style.flex = '1';
+    col.style.border = '1px solid #444';
+    col.style.padding = '10px';
+    col.style.borderRadius = '8px';
+    col.style.display = 'flex';
+    col.style.flexDirection = 'column';
+    col.style.alignItems = 'center';
+
+    // Check locked state
+    const isLocked = skillTree.selectedSpecialization && skillTree.selectedSpecialization !== spec.id;
+    if (isLocked) {
+      col.style.opacity = '0.5';
+      col.style.pointerEvents = 'none';
+    }
+
+    // Header
+    col.innerHTML = `
+      <h3>${spec.name()}</h3>
+      <p style="font-size:0.8em;margin-bottom:10px;">${spec.description()}</p>
+    `;
+
+    if (isLocked) {
+      col.innerHTML += `<p style="color:red;font-weight:bold;">${t('specialization.locked')}</p>`;
+    } else if (skillTree.selectedSpecialization === spec.id) {
+      col.style.borderColor = '#ffd700';
+      col.style.boxShadow = '0 0 10px #ffd700';
+    }
+
+    // Skills
+    Object.entries(spec.skills).forEach(([skillId]) => {
+      const skillElement = createSkillElement({ id: skillId });
+      col.appendChild(skillElement);
+    });
+
+    specContainer.appendChild(col);
+  });
+
+  container.appendChild(specContainer);
 }
 
 function renderAutoCastToggles() {
@@ -388,7 +518,8 @@ function renderAutoCastToggles() {
   if (!crystalShop.hasAutoSpellCastUpgrade()) return;
 
   // Only show if there are any instant/buff skills unlocked
-  const eligibleSkills = Object.entries(skillTree.skills)
+  const allSkills = { ...skillTree.skills, ...skillTree.specializationSkills };
+  const eligibleSkills = Object.entries(allSkills)
     .filter(([skillId, skill]) => {
       const base = skillTree.getSkill(skillId);
       return base && (base.type() === 'instant' || base.type() === 'buff' || base.type() === 'summon') && skill.level > 0;
@@ -451,7 +582,8 @@ function renderDisplayToggles() {
   let displaySection = document.getElementById('display-section');
   if (displaySection) displaySection.remove();
 
-  const eligibleSkills = Object.entries(skillTree.skills)
+  const allSkills = { ...skillTree.skills, ...skillTree.specializationSkills };
+  const eligibleSkills = Object.entries(allSkills)
     .filter(([id, data]) => {
       const base = skillTree.getSkill(id);
       return base && base.type() !== 'passive' && data.level > 0;
@@ -708,16 +840,16 @@ export function updateSkillTreeValues() {
 
   container.querySelectorAll('.skill-node').forEach((node) => {
     const skillId = node.dataset.skillId;
-    const currentLevel = skillTree.skills[skillId]?.level || 0;
+    const skill = skillTree.getSkill(skillId);
+    const currentLevel = skill.level || 0;
     const canUnlock = skillTree.canUnlockSkill(skillId, false);
 
     const levelDisplay = node.querySelector('.skill-level');
-    const skill = skillTree.getSkill(skillId);
 
     levelDisplay.textContent = skill.maxLevel() == Infinity ? `${currentLevel}` : `${currentLevel}/${skill.maxLevel()}`;
 
     node.classList.toggle('available', canUnlock);
-    node.classList.toggle('unlocked', !!skillTree.skills[skillId]);
+    node.classList.toggle('unlocked', currentLevel > 0);
   });
 
   // --- Auto-cast toggles for instant/buff skills ---
@@ -801,7 +933,7 @@ function openSkillModal(skillId) {
   const iconEl = skillModal.querySelector('.modal-skill-icon');
   iconEl.style.backgroundImage = `url('${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg')`;
 
-  const currentLevel = skillTree.skills[skillId]?.level || 0;
+  const currentLevel = skill.level || 0;
   const nextLevel = currentLevel + 1;
   skillModal.querySelector('.modal-skill-name').textContent = skill.name();
   skillModal.querySelector('.modal-skill-desc').innerHTML = skill.description().replace(/\n/g, '<br>');
@@ -877,8 +1009,8 @@ function closeSkillModal() {
 
 function updateSkillModalDetails() {
   const qty = selectedSkillQty === 'max' ? Infinity : parseInt(selectedSkillQty, 10);
-  const currentLevel = skillTree.skills[currentSkillId]?.level || 0;
   const skill = skillTree.getSkill(currentSkillId);
+  const currentLevel = skill.level || 0;
   const maxLevel = skill.maxLevel() || Infinity;
   const maxQty = skillTree.calculateMaxPurchasable(skill);
   const actualQty = selectedSkillQty === 'max' ? maxQty : Math.min(qty, maxQty);
@@ -982,7 +1114,8 @@ function updateSkillModalDetails() {
 
 function buySkillBulk() {
   let count = selectedSkillQty === 'max' ? Infinity : parseInt(selectedSkillQty, 10);
-  const currentLevel = skillTree.skills[currentSkillId]?.level || 0;
+  const skill = skillTree.getSkill(currentSkillId);
+  const currentLevel = skill.level || 0;
   const unlocked = skillTree.unlockSkillBulk(currentSkillId, count);
 
   if (typeof gtag === 'function') {
@@ -1023,7 +1156,7 @@ function createSkillElement(baseSkill) {
   skillElement.addEventListener('click', (e) => {
     if (options?.quickBuy) {
       const count = skillTree.quickQty === 'max' ? Infinity : parseInt(skillTree.quickQty, 10) || 1;
-      const currentLevel = skillTree.skills[skill.id]?.level || 0;
+      const currentLevel = skill.level || 0;
       const unlocked = skillTree.unlockSkillBulk(skill.id, count);
       skill = skillTree.getSkill(skill.id);
       if (typeof gtag === 'function' && unlocked > 0) {
@@ -1051,7 +1184,7 @@ function createSkillElement(baseSkill) {
 const updateTooltipContent = (skillId) => {
   // get fresh skill data
   let skill = skillTree.getSkill(skillId);
-  const currentLevel = skillTree.skills[skill.id]?.level || 0;
+  const currentLevel = skill.level || 0;
 
   // Calculate effects at current level
   const effectsCurrent = skillTree.getSkillEffect(skill.id);

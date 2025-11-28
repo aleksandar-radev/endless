@@ -2,6 +2,7 @@ import { handleSavedData } from './functions.js';
 import { dataManager, game, hero, crystalShop, options } from './globals.js';
 import { SKILLS_MAX_QTY } from './constants/limits.js';
 import { CLASS_PATHS, SKILL_TREES } from './constants/skills.js';
+import { SPECIALIZATIONS } from './constants/specializations.js';
 import { ELEMENTS } from './constants/common.js';
 import { calculateHitChance, createDamageNumber } from './combat.js';
 import { battleLog } from './battleLog.js';
@@ -43,6 +44,8 @@ export default class SkillTree {
     this.totalEarnedSkillPoints = 0;
     this.selectedPath = null;
     this.skills = {};
+    this.selectedSpecialization = null;
+    this.specializationSkills = {};
     this.autoCastSettings = {};
     this.displaySettings = {};
     this.unlockedPaths = [];
@@ -59,6 +62,13 @@ export default class SkillTree {
         ...skillData,
         affordable: true,
       };
+    });
+    // Hydrate specialization skills with definitions
+    Object.entries(this.specializationSkills).forEach(([skillId, skillData]) => {
+      this.specializationSkills[skillId] = { ...skillData }; // Copy saved data
+      // Helper to hydrate is complex here as getSkill might rely on hydration,
+      // but getSkill logic I plan to add will look up definitions.
+      // So we just ensure it's an object.
     });
     // always empty at start
     this.activeBuffs = new Map();
@@ -78,18 +88,43 @@ export default class SkillTree {
   getAllSkillTreeBonuses() {
     const pathBonuses = this.getPathBonuses();
     const passiveBonuses = this.calculatePassiveBonuses();
+    const specializationBonuses = this.calculateSpecializationBonuses();
     const activeBuffEffects = this.getActiveBuffEffects();
     const toggleBonuses = this.calculateToggleBonuses();
 
     const allBonuses = {};
 
-    ;[pathBonuses, passiveBonuses, activeBuffEffects, toggleBonuses].forEach((bonus) => {
+    ;[pathBonuses, passiveBonuses, specializationBonuses, activeBuffEffects, toggleBonuses].forEach((bonus) => {
       Object.entries(bonus).forEach(([stat, value]) => {
         allBonuses[stat] = (allBonuses[stat] || 0) + value;
       });
     });
 
     return allBonuses;
+  }
+
+  calculateSpecializationBonuses() {
+    const bonuses = {};
+    Object.entries(this.specializationSkills).forEach(([skillId, skillData]) => {
+      const skillDef = this.findSpecializationSkillDef(skillId);
+      if (skillDef && skillDef.type() === 'passive') {
+        const effects = skillDef.effect(skillData.level);
+        Object.entries(effects).forEach(([stat, value]) => {
+          bonuses[stat] = (bonuses[stat] || 0) + value;
+        });
+      }
+    });
+    return bonuses;
+  }
+
+  findSpecializationSkillDef(skillId) {
+    if (!this.selectedPath) return null;
+    const specs = SPECIALIZATIONS[this.selectedPath.name];
+    if (!specs) return null;
+    for (const spec of specs) {
+      if (spec.skills[skillId]) return spec.skills[skillId];
+    }
+    return null;
   }
 
   calculatePassiveBonuses() {
@@ -201,9 +236,17 @@ export default class SkillTree {
   }
 
   getSelectedPath() {
-    return {
-      ...CLASS_PATHS[this.selectedPath?.name],
-    };
+    const path = { ...CLASS_PATHS[this.selectedPath?.name] };
+    if (this.selectedSpecialization) {
+      const specs = SPECIALIZATIONS[this.selectedPath.name];
+      const spec = specs?.find((s) => s.id === this.selectedSpecialization);
+      if (spec && spec.avatar) {
+        path.avatar = () => spec.avatar;
+        // Optionally update name, but keeping class name is usually better, or append it.
+        // path.name = () => `${path.name()} (${spec.name()})`;
+      }
+    }
+    return path;
   }
 
   getSkillsForPath(pathName) {
@@ -212,6 +255,10 @@ export default class SkillTree {
 
   canUnlockSkill(skillId, showWarning = false) {
     if (!this.selectedPath) return false;
+
+    if (this.findSpecializationSkillDef(skillId)) {
+      return this.canUnlockSpecializationSkill(skillId, showWarning);
+    }
 
     const skill = this.getSkill(skillId);
     if (!skill) return false;
@@ -255,12 +302,26 @@ export default class SkillTree {
     return Number.isFinite(totalCost) ? totalCost : Infinity;
   }
 
-  calculateTotalSpentSkillPoints() {
-    return Object.values(this.skills).reduce((total, skillData) => {
-      const level = skillData?.level || 0;
-      if (level <= 0) return total;
-      return total + this.calculateSkillPointCost(0, level);
-    }, 0);
+  calculateTotalSpentSkillPoints(onlySpec = false, onlyMain = false) {
+    let total = 0;
+
+    if (!onlySpec) {
+      total += Object.values(this.skills).reduce((sum, skillData) => {
+        const level = skillData?.level || 0;
+        if (level <= 0) return sum;
+        return sum + this.calculateSkillPointCost(0, level);
+      }, 0);
+    }
+
+    if (!onlyMain) {
+      total += Object.values(this.specializationSkills).reduce((sum, skillData) => {
+        const level = skillData?.level || 0;
+        if (level <= 0) return sum;
+        return sum + this.calculateSkillPointCost(0, level);
+      }, 0);
+    }
+
+    return total;
   }
 
   ensureTotalEarnedSkillPointsConsistency() {
@@ -308,6 +369,11 @@ export default class SkillTree {
    */
   unlockSkillBulk(skillId, count, opts = {}) {
     if (!this.selectedPath) return 0;
+
+    // Check if it's a specialization skill
+    if (this.findSpecializationSkillDef(skillId)) {
+      return this.unlockSpecializationSkillBulk(skillId, count, opts);
+    }
 
     const skill = this.getSkill(skillId);
     if (!skill) return 0;
@@ -480,7 +546,9 @@ export default class SkillTree {
   }
 
   toggleSkill(skillId) {
-    if (!this.skills[skillId]) return;
+    // If spec skill, use specializationSkills
+    if (this.findSpecializationSkillDef(skillId) && !this.specializationSkills[skillId]) return;
+    if (!this.findSpecializationSkillDef(skillId) && !this.skills[skillId]) return;
 
     const skill = this.getSkill(skillId);
 
@@ -506,11 +574,120 @@ export default class SkillTree {
   }
 
   getSkill(skillId) {
-    const skillObj = {
-      ...SKILL_TREES[this.selectedPath?.name][skillId],
-      ...this.skills[skillId],
+    // Check main tree
+    const mainSkill = SKILL_TREES[this.selectedPath?.name]?.[skillId];
+    if (mainSkill) {
+      return {
+        ...mainSkill,
+        ...this.skills[skillId],
+      };
+    }
+
+    // Check specialization
+    const specSkill = this.findSpecializationSkillDef(skillId);
+    if (specSkill) {
+      return {
+        ...specSkill,
+        ...this.specializationSkills[skillId],
+      };
+    }
+
+    return {};
+  }
+
+  unlockSpecializationSkillBulk(skillId, count, opts = {}) {
+    if (!this.selectedPath) return 0;
+
+    const skillDef = this.findSpecializationSkillDef(skillId);
+    if (!skillDef) return 0;
+
+    // Find spec
+    const specs = SPECIALIZATIONS[this.selectedPath.name];
+    const spec = specs.find((s) => s.skills[skillId]);
+    if (!spec) return 0;
+
+    // Check lock
+    if (this.selectedSpecialization && this.selectedSpecialization !== spec.id) {
+      return 0;
+    }
+
+    const { skipUpdates = false } = opts;
+
+    let maxLevel = skillDef.maxLevel() || DEFAULT_MAX_SKILL_LEVEL;
+    const currentLevel = this.specializationSkills[skillId]?.level || 0;
+
+    // Calculate max possible to buy
+    // Reuse calculateMaxPurchasable logic but pass object with level
+    const maxQty = this.calculateMaxPurchasable({
+      ...skillDef,
+      level: currentLevel,
+    });
+
+    const qty = count === Infinity ? maxQty : Math.min(count, maxQty);
+    if (qty <= 0) return 0;
+
+    // Clamp qty to not exceed maxLevel or hero.level
+    const allowedQty = Math.max(0, Math.min(qty, maxLevel - currentLevel, hero.level - currentLevel));
+
+    if (allowedQty <= 0) return 0;
+
+    let totalCost = this.calculateSkillPointCost(currentLevel, allowedQty);
+    if (this.skillPoints < totalCost) return 0;
+
+    const newLevel = currentLevel + allowedQty;
+
+    // Set new level
+    this.specializationSkills[skillId] = {
+      ...this.specializationSkills[skillId], // Preserve existing props if any
+      level: newLevel,
+      // For now assume spec skills are mostly passive, but if we have actives we need to handle them.
+      // If we add actives, we need to add them to action bar etc.
     };
-    return skillObj;
+
+    // Lock spec if first point
+    if (!this.selectedSpecialization && newLevel > 0) {
+      this.selectedSpecialization = spec.id;
+    }
+
+    this.skillPoints -= totalCost;
+
+    if (!skipUpdates) {
+      hero.queueRecalculateFromAttributes();
+      updateSkillTreeValues(); // This should update avatar too
+      dataManager.saveGame();
+    }
+    return allowedQty;
+  }
+
+  canUnlockSpecializationSkill(skillId, showWarning = false) {
+    if (!this.selectedPath) return false;
+
+    // Find skill def
+    const skillDef = this.findSpecializationSkillDef(skillId);
+    if (!skillDef) return false;
+
+    // Check locking
+    const specs = SPECIALIZATIONS[this.selectedPath.name];
+    const spec = specs.find((s) => s.skills[skillId]);
+    if (this.selectedSpecialization && this.selectedSpecialization !== spec.id) {
+      if (showWarning) showToast(t('specialization.locked.desc'), 'warning');
+      return false;
+    }
+
+    const currentLevel = this.specializationSkills[skillId]?.level || 0;
+    // ... cost/level check similar to canUnlockSkill
+    const cost = 1 + Math.floor(currentLevel / 50); // Same cost scaling? Assume so.
+
+    if (currentLevel >= hero.level) {
+      if (showWarning) showToast(t('skillTree.cannotLevelAbove', { skill: skillDef.name() }), 'warning');
+      return false;
+    }
+
+    return (
+      this.skillPoints >= cost &&
+      currentLevel < (skillDef.maxLevel() || DEFAULT_MAX_SKILL_LEVEL) &&
+      hero.level >= skillDef.requiredLevel()
+    );
   }
 
   getSkillEffect(skillId, level = 0) {
@@ -914,13 +1091,19 @@ export default class SkillTree {
     const container = document.getElementById('skill-tree-container');
     if (container) container.innerHTML = '';
 
-    // Refund all skill points
-    this.skillPoints = this.totalEarnedSkillPoints;
-    this.selectedPath = null;
+    // Calculate points spent in specialization (to preserve them)
+    const specPoints = this.calculateTotalSpentSkillPoints(true, false);
+
+    // Reset main skills
+    // Note: We do NOT reset selectedPath (class) or specialization here.
     this.skills = {};
     this.autoCastSettings = {};
     this.displaySettings = {};
     this.activeBuffs.clear();
+
+    // Recalculate available points
+    this.skillPoints = this.totalEarnedSkillPoints - specPoints;
+
     this.ensureTotalEarnedSkillPointsConsistency();
     hero.queueRecalculateFromAttributes();
     updateActionBar();
@@ -933,6 +1116,25 @@ export default class SkillTree {
         event_category: 'SkillTree',
       });
     }
+  }
+
+  resetSpecialization() {
+    const container = document.getElementById('skill-tree-container');
+    if (container) container.innerHTML = '';
+
+    // Calculate main points spent
+    const mainPoints = this.calculateTotalSpentSkillPoints(false, true);
+
+    this.selectedSpecialization = null;
+    this.specializationSkills = {};
+
+    this.skillPoints = this.totalEarnedSkillPoints - mainPoints;
+
+    this.ensureTotalEarnedSkillPointsConsistency();
+    hero.queueRecalculateFromAttributes();
+    updateActionBar();
+    updateSkillTreeValues();
+    dataManager.saveGame();
   }
 
   enableAutoCastForAllSkills() {
