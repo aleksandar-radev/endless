@@ -1562,7 +1562,7 @@ export class Options {
             className: 'login-modal',
             content: `
               <div class="modal-content">
-                <button class="modal-close">�</button>
+                <button class="modal-close">X</button>
                 <iframe src="${loginUrl}-mini" class="login-iframe"></iframe>
               </div>
             `,
