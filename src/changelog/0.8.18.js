@@ -13,6 +13,7 @@ export default function run() {
       <li>Improved design for login dialog</li>
       <li>Added all resistance $ bonus in prestige bonuses.</li>
       <li>Increased life regen bonus flat and percent in ascension upgrades and reduced in soul shop upgrades.</li>
+      <li>Increased resistance bonus from perseverance to 3 per point (2 before), reduced armor bonus from endurance to 4 per point (5 before), and increased life per point for vitality to 6 per point (5 before).</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

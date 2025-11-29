@@ -18,7 +18,7 @@ export const ATTRIBUTES = {
   },
   vitality: {
     effects: {
-      lifePerPoint: 5,
+      lifePerPoint: 6,
     },
   },
   wisdom: {
@@ -29,7 +29,7 @@ export const ATTRIBUTES = {
   },
   endurance: {
     effects: {
-      armorPerPoint: 5,
+      armorPerPoint: 4,
       thornsDamagePerPoint: 0,
     },
   },
@@ -47,7 +47,7 @@ export const ATTRIBUTES = {
     effects: {
       lifeRegenPerPoint: 0.5,
       manaRegenPerPoint: 0.05,
-      allResistancePerPoint: 2,
+      allResistancePerPoint: 3,
     },
   },
 };
@@ -113,47 +113,75 @@ const generateDescription = (stat) => {
 };
 
 const CUSTOM_DESCRIPTIONS = {
-  strength: () =>
-    tp('tooltip.strength', { damage: ATTRIBUTES.strength.effects.damagePerPoint }),
-  agility: () =>
-    tp('tooltip.agility', {
-      attackRating: ATTRIBUTES.agility.effects.attackRatingPerPoint,
-      damage: ATTRIBUTES.agility.effects.damagePerPoint,
-    }),
-  vitality: () =>
-    tp('tooltip.vitality', { life: ATTRIBUTES.vitality.effects.lifePerPoint }),
-  wisdom: () =>
-    tp('tooltip.wisdom', {
-      mana: ATTRIBUTES.wisdom.effects.manaPerPoint,
-      manaRegen: ATTRIBUTES.wisdom.effects.manaRegenPerPoint,
-    }),
+  strength: () => {
+    const bonus = ascension?.getBonuses?.()?.strengthEffectiveness || 0;
+    const val = ATTRIBUTES.strength.effects.damagePerPoint * (1 + bonus);
+    return tp('tooltip.strength', { damage: Number(val.toFixed(2)) });
+  },
+  agility: () => {
+    const bonus = ascension?.getBonuses?.()?.agilityEffectiveness || 0;
+    const ar = ATTRIBUTES.agility.effects.attackRatingPerPoint * (1 + bonus);
+    const dmg = ATTRIBUTES.agility.effects.damagePerPoint * (1 + bonus);
+    return tp('tooltip.agility', {
+      attackRating: Number(ar.toFixed(2)),
+      damage: Number(dmg.toFixed(2)),
+    });
+  },
+  vitality: () => {
+    const bonus = ascension?.getBonuses?.()?.vitalityEffectiveness || 0;
+    const val = ATTRIBUTES.vitality.effects.lifePerPoint * (1 + bonus);
+    return tp('tooltip.vitality', { life: Number(val.toFixed(2)) });
+  },
+  wisdom: () => {
+    const bonus = ascension?.getBonuses?.()?.wisdomEffectiveness || 0;
+    const mana = ATTRIBUTES.wisdom.effects.manaPerPoint * (1 + bonus);
+    const regen = ATTRIBUTES.wisdom.effects.manaRegenPerPoint * (1 + bonus);
+    return tp('tooltip.wisdom', {
+      mana: Number(mana.toFixed(2)),
+      manaRegen: Number(regen.toFixed(3)),
+    });
+  },
   endurance: () => {
-    const armor = ATTRIBUTES.endurance.effects.armorPerPoint;
-    const bonuses = skillTree?.getAllSkillTreeBonuses?.() || {};
+    const bonus = ascension?.getBonuses?.()?.enduranceEffectiveness || 0;
+    const armor = ATTRIBUTES.endurance.effects.armorPerPoint * (1 + bonus);
+    const skillBonuses = skillTree?.getAllSkillTreeBonuses?.() || {};
     const baseThorns = ATTRIBUTES.endurance.effects.thornsDamagePerPoint || 0;
-    const totalThornsPerPoint = baseThorns + (bonuses.enduranceThornsDamagePerPoint || 0);
+    // Assuming thorns per point from skills also gets scaled by effectiveness?
+    // Usually effectiveness scales the attribute's *output*.
+    const totalThornsPerPoint = (baseThorns + (skillBonuses.enduranceThornsDamagePerPoint || 0)) * (1 + bonus);
     let thornsBonus = '';
 
     if (totalThornsPerPoint > 0) {
       thornsBonus = tp('tooltip.endurance.thornsBonus', {
-        thornsDamage: Number(totalThornsPerPoint.toFixed(1)),
+        thornsDamage: Number(totalThornsPerPoint.toFixed(2)),
       });
     }
 
-    return tp('tooltip.endurance', { armor, thornsBonus });
+    return tp('tooltip.endurance', { armor: Number(armor.toFixed(2)), thornsBonus });
   },
-  dexterity: () =>
-    tp('tooltip.dexterity', { evasion: ATTRIBUTES.dexterity.effects.evasionPerPoint }),
-  intelligence: () =>
-    tp('tooltip.intelligence', {
-      elementalDamage: ATTRIBUTES.intelligence.effects.elementalDamagePerPoint,
-    }),
-  perseverance: () =>
-    tp('tooltip.perseverance', {
-      manaRegen: ATTRIBUTES.perseverance.effects.manaRegenPerPoint,
-      lifeRegen: ATTRIBUTES.perseverance.effects.lifeRegenPerPoint,
-      allResistance: ATTRIBUTES.perseverance.effects.allResistancePerPoint,
-    }),
+  dexterity: () => {
+    const bonus = ascension?.getBonuses?.()?.dexterityEffectiveness || 0;
+    const val = ATTRIBUTES.dexterity.effects.evasionPerPoint * (1 + bonus);
+    return tp('tooltip.dexterity', { evasion: Number(val.toFixed(2)) });
+  },
+  intelligence: () => {
+    const bonus = ascension?.getBonuses?.()?.intelligenceEffectiveness || 0;
+    const val = ATTRIBUTES.intelligence.effects.elementalDamagePerPoint * (1 + bonus);
+    return tp('tooltip.intelligence', {
+      elementalDamage: Number(val.toFixed(3)),
+    });
+  },
+  perseverance: () => {
+    const bonus = ascension?.getBonuses?.()?.perseveranceEffectiveness || 0;
+    const mr = ATTRIBUTES.perseverance.effects.manaRegenPerPoint * (1 + bonus);
+    const lr = ATTRIBUTES.perseverance.effects.lifeRegenPerPoint * (1 + bonus);
+    const res = ATTRIBUTES.perseverance.effects.allResistancePerPoint * (1 + bonus);
+    return tp('tooltip.perseverance', {
+      manaRegen: Number(mr.toFixed(3)),
+      lifeRegen: Number(lr.toFixed(2)),
+      allResistance: Number(res.toFixed(2)),
+    });
+  },
   elementalDamage: () => t('tooltip.elementalDamage'),
   damage: () => t('tooltip.damage'),
   attackSpeed: () => {
@@ -263,7 +291,6 @@ const CUSTOM_DESCRIPTIONS = {
 };
 
 export const getAttributeTooltip = (stat) => {
-  const title = formatTitle(stat);
   const description = CUSTOM_DESCRIPTIONS[stat]?.() ?? generateDescription(stat);
-  return html`<strong>${title}</strong><br />${description}`;
+  return description;
 };
