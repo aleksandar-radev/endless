@@ -1,6 +1,7 @@
 import { STATS } from '../constants/stats/stats.js';
 import { CLASS_PATHS, SKILL_TREES } from '../constants/skills.js';
-import { SKILL_LEVEL_TIERS } from '../skillTree.js';
+import { getClassSpecializations, getSpecialization } from '../constants/specializations.js';
+import { SKILL_LEVEL_TIERS, getSpellDamageTypes } from '../skillTree.js';
 import { SKILLS_MAX_QTY } from '../constants/limits.js';
 import { skillTree, hero, crystalShop, options, dataManager } from '../globals.js';
 import { formatNumber, formatStatName, hideTooltip, positionTooltip, showToast, showTooltip, updateResources } from './ui.js';
@@ -28,6 +29,14 @@ let skillBulkCostEl = null;
 
 function updateSkillBulkCostDisplay() {
   if (!options?.bulkBuy || !skillBulkButton || !skillBulkCostEl) return;
+
+  const specTabActive = document.getElementById('specializations-tab-content')?.classList.contains('active');
+  if (specTabActive) {
+    skillBulkButton.disabled = true;
+    skillBulkCostEl.textContent = '';
+    return;
+  }
+
   const { totalCost, affordable } = skillTree.calculateBulkAllocation(skillTree.quickQty);
   skillBulkCostEl.textContent = `${t('skillTree.cost')}: ${formatNumber(totalCost)} ${t('skillTree.skillPointsLabel')}`;
   skillBulkCostEl.classList.toggle('unaffordable', !affordable);
@@ -83,12 +92,449 @@ export function initializeSkillTreeUI() {
   } else {
     classSelection.classList.add('hidden');
     skillTreeContainer.classList.remove('hidden');
-    showSkillTree();
+    showSkillTreeWithTabs();
   }
 
   updateSkillTreeValues();
   updateActionBar();
 }
+
+function showSkillTreeWithTabs() {
+  const container = document.getElementById('skill-tree-container');
+  console.log('showSkillTreeWithTabs called, container:', container);
+
+  // Create tabs structure if it doesn't exist
+  let tabsContainer = container.querySelector('.skill-tree-tabs');
+  if (!tabsContainer) {
+    console.log('Creating new tabs structure');
+    container.innerHTML = '';
+
+    tabsContainer = document.createElement('div');
+    tabsContainer.className = 'skill-tree-tabs';
+
+    let tabsHtml = `<button class="skill-tree-tab active" data-tab="skills">${t('skillTree.tabs.skills')}</button>`;
+    if (hero.level >= 1000) {
+      tabsHtml += `<button class="skill-tree-tab" data-tab="specializations">${t('skillTree.tabs.specializations')}</button>`;
+    }
+    tabsContainer.innerHTML = tabsHtml;
+
+    container.appendChild(tabsContainer);
+
+    // Skills tab content
+    const skillsContent = document.createElement('div');
+    skillsContent.className = 'skill-tree-tab-content active';
+    skillsContent.id = 'skills-tab-content';
+    container.appendChild(skillsContent);
+
+    // Specializations tab content
+    const specializationsContent = document.createElement('div');
+    specializationsContent.className = 'skill-tree-tab-content';
+    specializationsContent.id = 'specializations-tab-content';
+    container.appendChild(specializationsContent);
+
+    console.log('Created specializations-tab-content:', specializationsContent);
+
+    // Tab click handlers
+    tabsContainer.querySelectorAll('.skill-tree-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.dataset.tab;
+        console.log('Tab clicked:', tabName);
+        switchSkillTreeTab(tabName);
+      });
+    });
+  }
+
+  // Initialize both tabs
+  console.log('Initializing tabs...');
+  initializeSkillsTab();
+  if (hero.level >= 1000) {
+    initializeSpecializationsTab();
+  }
+}
+
+function openSpecializationSelectionModal(spec) {
+  const baseStatsHtml = Object.entries(spec.baseStats())
+    .map(([stat, value]) => {
+      let readableStat = stat.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
+      let displayValue = value;
+      if (stat.endsWith('Percent')) {
+        readableStat = readableStat.replace(/ Percent$/, '');
+        displayValue = `${value}%`;
+      }
+      const prefix = value > 0 ? '+' : '';
+      return `<div>${readableStat}: ${prefix}${displayValue}</div>`;
+    })
+    .join('');
+
+  const content = html`
+    <div class="class-preview-wrapper">
+      <button class="modal-close">&times;</button>
+      <div class="class-preview-header" style="display: flex; flex-direction: row; gap: 20px; align-items: flex-start; text-align: left;">
+        <img src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}" alt="${spec.name()}" class="character-avatar spec-preview-avatar" style="width: 72px; height: 128px; object-fit: cover; border-radius: 8px; border: 2px solid var(--accent);" />
+        <div style="flex: 1;">
+            <h2 style="color: var(--accent); margin-top: 0;">${spec.name()}</h2>
+            <p style="color: #ccc; margin-bottom: 10px;">${spec.description()}</p>
+            <div class="base-stats" style="font-size: 0.9em; color: #aaa; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
+              ${baseStatsHtml}
+            </div>
+        </div>
+      </div>
+      
+      <div class="specialization-skills-preview" style="margin-top: 20px;">
+        <h3 style="color: var(--accent); margin-bottom: 15px; text-align: center;">Passives Unlocked</h3>
+        <div class="skill-row" style="flex-wrap: wrap; justify-content: center; gap: 15px;"></div>
+      </div>
+
+      <div class="class-preview-footer" style="flex-direction: column; gap: 10px; margin-top: 30px;">
+        <div style="color: #ff6b6b; font-size: 0.9em; text-align: center;">
+          ⚠️ Selecting this specialization will lock the others.<br>
+          (Reset cost: 200 Crystals)
+        </div>
+        <button class="select-class-btn" style="width: 100%;">Select ${spec.name()}</button>
+      </div>
+    </div>
+  `;
+
+  const modal = createModal({ id: 'spec-selection-modal', className: 'class-preview-modal', content });
+
+  // Render skills grid
+  const skillsContainer = modal.querySelector('.skill-row');
+  Object.values(spec.skills).forEach(skill => {
+    const skillEl = createPreviewSkillElement(skill);
+    skillsContainer.appendChild(skillEl);
+  });
+
+  // Bind select button
+  const selectBtn = modal.querySelector('.select-class-btn');
+  selectBtn.addEventListener('click', () => {
+    if (skillTree.selectSpecialization(spec.id)) {
+      closeModal('spec-selection-modal');
+      initializeSpecializationsTab();
+      updateSkillTreeValues();
+      showToast(`${spec.name()} specialization selected!`, 'success');
+    } else {
+      // If failed (e.g. level req), toast is handled by selectSpecialization
+      closeModal('spec-selection-modal');
+    }
+  });
+}
+
+function switchSkillTreeTab(tabName) {
+  const container = document.getElementById('skill-tree-container');
+
+  // Update tab buttons
+  container.querySelectorAll('.skill-tree-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.tab === tabName);
+  });
+
+  // Update tab contents
+  const skillsContent = document.getElementById('skills-tab-content');
+  const specializationsContent = document.getElementById('specializations-tab-content');
+
+  if (tabName === 'skills') {
+    skillsContent.classList.add('active');
+    specializationsContent.classList.remove('active');
+  } else {
+    skillsContent.classList.remove('active');
+    specializationsContent.classList.add('active');
+  }
+  updateSkillTreeValues();
+}
+
+function initializeSkillsTab() {
+  const skillsContent = document.getElementById('skills-tab-content');
+  if (!skillsContent) return;
+
+  // Move existing skill tree structure here
+  skillsContent.innerHTML = '';
+
+  const skillPointsHeader = document.createElement('div');
+  skillPointsHeader.className = 'skill-points-header';
+  skillsContent.appendChild(skillPointsHeader);
+
+  const noLvlRestriction = false;
+
+  const skills = SKILL_TREES[skillTree.selectedPath.name];
+  const levelGroups = SKILL_LEVEL_TIERS.reduce((acc, level) => {
+    if (level <= hero.level || noLvlRestriction) {
+      acc[level] = [];
+    }
+    return acc;
+  }, {});
+
+  Object.entries(skills).forEach(([skillId, skillData]) => {
+    if (noLvlRestriction || (skillData.requiredLevel() <= hero.level && levelGroups[skillData.requiredLevel()])) {
+      levelGroups[skillData.requiredLevel()].push({ id: skillId, ...skillData });
+    }
+  });
+
+  Object.entries(levelGroups).forEach(([reqLevel, groupSkills]) => {
+    if (groupSkills.length > 0) {
+      const rowElement = document.createElement('div');
+      rowElement.className = 'skill-row';
+
+      const levelLabel = document.createElement('div');
+      levelLabel.className = 'level-requirement';
+      levelLabel.textContent = `Level ${reqLevel}`;
+      skillsContent.appendChild(levelLabel);
+
+      groupSkills.forEach((skill) => {
+        const skillElement = createSkillElement(skill);
+        rowElement.appendChild(skillElement);
+      });
+
+      skillsContent.appendChild(rowElement);
+    }
+  });
+
+  updateSkillTreeValues();
+  renderAutoCastToggles();
+  renderDisplayToggles();
+  setupSkillTreeFloatingHeader(skillsContent, skillPointsHeader);
+}
+
+function initializeSpecializationsTab() {
+  const specializationsContent = document.getElementById('specializations-tab-content');
+  if (!specializationsContent) return;
+
+  if (!skillTree.selectedPath) {
+    specializationsContent.innerHTML = '<p style="padding: 20px;">Please select a class first.</p>';
+    return;
+  }
+
+  specializationsContent.innerHTML = '';
+
+  // --- If Specialization Selected: Show Details & Skills ---
+  if (skillTree.selectedSpecialization) {
+    const spec = getSpecialization(skillTree.selectedPath.name, skillTree.selectedSpecialization.id);
+
+    const baseStatsHtml = Object.entries(spec.baseStats())
+      .map(([stat, value]) => {
+        let readableStat = stat.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
+        let displayValue = value;
+        if (stat.endsWith('Percent')) {
+          readableStat = readableStat.replace(/ Percent$/, '');
+          displayValue = `${value}%`;
+        }
+        const prefix = value > 0 ? '+' : '';
+        return `<div>${readableStat}: ${prefix}${displayValue}</div>`;
+      })
+      .join('');
+
+    const header = document.createElement('div');
+    header.className = 'selected-specialization-header';
+    header.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+        <img src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}" alt="${spec.name()} Avatar" class="character-avatar specialization-avatar" style="width: 72px; height: 128px; border-radius: 8px; object-fit: cover;" />
+        <div>
+            <h3 style="margin: 0; font-size: 1.5em; color: #ffd700;">${spec.name()}</h3>
+            <p style="margin: 5px 0; opacity: 0.8;">${spec.description()}</p>
+            <div class="base-stats" style="margin-top: 10px; font-size: 0.9em; color: #aaa;">
+              ${baseStatsHtml}
+            </div>
+        </div>
+      </div>
+    `;
+    specializationsContent.appendChild(header);
+
+    const skillsContainer = document.createElement('div');
+    skillsContainer.className = 'specialization-skills-container';
+    specializationsContent.appendChild(skillsContainer);
+
+    const skills = spec.skills;
+    const levelGroups = SKILL_LEVEL_TIERS.reduce((acc, level) => {
+      acc[level] = [];
+      return acc;
+    }, {});
+
+    Object.entries(skills).forEach(([skillId, skillData]) => {
+      const reqLevel = skillData.requiredLevel();
+      // Only show if level tier exists (it should)
+      if (Array.isArray(levelGroups[reqLevel])) {
+        levelGroups[reqLevel].push({ id: skillId, ...skillData });
+      }
+    });
+
+    Object.entries(levelGroups).forEach(([reqLevel, groupSkills]) => {
+      if (groupSkills.length > 0) {
+        const rowElement = document.createElement('div');
+        rowElement.className = 'skill-row';
+
+        const levelLabel = document.createElement('div');
+        levelLabel.className = 'level-requirement';
+        levelLabel.textContent = `Level ${reqLevel}`;
+        skillsContainer.appendChild(levelLabel);
+
+        groupSkills.forEach(skill => {
+          const skillEl = createSpecializationSkillElement(skill);
+          rowElement.appendChild(skillEl);
+        });
+        skillsContainer.appendChild(rowElement);
+      }
+    });
+
+    return;
+  }
+
+  // --- If No Specialization Selected: Show Selection Grid ---
+  specializationsContent.innerHTML = `<h3 class="specialization-title">${t('skillTree.selectSpecialization')}</h3>`;
+
+  const specializations = getClassSpecializations(skillTree.selectedPath.name);
+  if (!specializations || Object.keys(specializations).length === 0) {
+    specializationsContent.innerHTML += '<p style="padding: 20px;">No specializations available for this class yet.</p>';
+    return;
+  }
+
+  const specializationsGrid = document.createElement('div');
+  specializationsGrid.className = 'specializations-grid';
+
+  Object.values(specializations).forEach(spec => {
+    const specCard = document.createElement('div');
+    specCard.className = 'specialization-card';
+
+    const baseStatsHtml = Object.entries(spec.baseStats())
+      .map(([stat, value]) => {
+        let readableStat = stat.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
+        let displayValue = value;
+        if (stat.endsWith('Percent')) {
+          readableStat = readableStat.replace(/ Percent$/, '');
+          displayValue = `${value}%`;
+        }
+        const prefix = value > 0 ? '+' : '';
+        return `<div>${readableStat}: ${prefix}${displayValue}</div>`;
+      })
+      .join('');
+
+    specCard.innerHTML = `
+      <div class="specialization-header">
+        <img src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}" alt="${spec.name()} Avatar" class="character-avatar specialization-avatar" />
+        <h4>${spec.name()}</h4>
+      </div>
+      <p class="specialization-description">${spec.description()}</p>
+      <div class="base-stats" style="margin: 10px 0; font-size: 0.9em; color: #aaa;">
+        ${baseStatsHtml}
+      </div>
+      
+      <button class="select-spec-btn">Select Specialization</button>
+    `;
+
+    const selectBtn = specCard.querySelector('.select-spec-btn');
+    selectBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openSpecializationSelectionModal(spec);
+    });
+
+    specializationsGrid.appendChild(specCard);
+  });
+
+  specializationsContent.appendChild(specializationsGrid);
+}
+
+function createSpecializationSkillElement(baseSkill) {
+  // Always get fresh state
+  let skill = skillTree.getSpecializationSkill(baseSkill.id);
+  // Fallback if not initialized yet (should not happen if logic is correct)
+  if (!skill) skill = { ...baseSkill, level: 0 };
+
+  const skillElement = document.createElement('div');
+  skillElement.className = 'skill-node specialization-node';
+  skillElement.dataset.skillId = skill.id;
+  skillElement.dataset.skillType = skill.type();
+
+  skillElement.innerHTML = html`
+    <div
+      class="skill-icon"
+      style="background-image: url('${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg')"
+    ></div>
+    <div class="skill-level">
+      ${skill.level || 0}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
+    </div>
+  `;
+
+  skillElement.addEventListener('mouseenter', (e) => showTooltip(updateSpecializationTooltipContent(skill.id), e));
+  skillElement.addEventListener('mousemove', positionTooltip);
+  skillElement.addEventListener('mouseleave', hideTooltip);
+
+  skillElement.addEventListener('click', (e) => {
+    // For now, specialization skills work on click (buy 1 or quick qty)
+    // We reuse the main skill tree quick buy setting
+    const count = skillTree.quickQty === 'max' ? Infinity : parseInt(skillTree.quickQty, 10) || 1;
+    const currentLevel = skill.level || 0;
+    const unlocked = skillTree.unlockSpecializationSkill(skill.id, count);
+
+    if (unlocked > 0) {
+      // Refresh tooltip
+      showTooltip(updateSpecializationTooltipContent(skill.id), e);
+      // Update this specific node immediately for better responsiveness
+      const newLevel = currentLevel + unlocked;
+      skillElement.querySelector('.skill-level').textContent =
+            skill.maxLevel() !== Infinity ? `${newLevel}/${skill.maxLevel()}` : `${newLevel}`;
+      skillElement.classList.add('unlocked');
+    }
+  });
+
+  return skillElement;
+}
+
+function updateSpecializationTooltipContent(skillId) {
+  let skill = skillTree.getSpecializationSkill(skillId);
+  if (!skill) return '';
+
+  const currentLevel = skill.level || 0;
+  const effectsCurrent = skillTree.getSpecializationSkillEffect(skillId, currentLevel);
+
+  const nextLevel = currentLevel < skill.maxLevel() ? currentLevel + 1 : currentLevel;
+  const effectsNext = skillTree.getSpecializationSkillEffect(skillId, nextLevel);
+
+  const typeBadge = formatSkillTypeBadge(skill);
+
+  let skillDescription = `
+      <strong>${skill.name()} [${typeBadge}]</strong><br>
+      ${skill
+    .description()
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line)
+    .join('<br>')}
+      <br>
+      Level: ${currentLevel}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
+    `;
+
+  // Passive effects
+  if (effectsCurrent && Object.keys(effectsCurrent).length > 0) {
+    skillDescription += '<br /><u>Current Effects:</u><br />';
+    Object.entries(effectsCurrent).forEach(([stat, value]) => {
+      if (!shouldShowStatValue(stat)) {
+        skillDescription += `${formatStatName(stat)}<br />`;
+        return;
+      }
+      const decimals = getStatDecimals(stat);
+      const formattedValue = formatSignedValue(value, decimals, false);
+      skillDescription += `${formatStatName(stat)}: ${formattedValue}<br />`;
+    });
+  }
+
+  if (currentLevel < skill.maxLevel() || skill.maxLevel() === Infinity) {
+    skillDescription += '<br /><u>Next Level Effects:</u><br />';
+    Object.entries(effectsNext).forEach(([stat, value]) => {
+      if (!shouldShowStatValue(stat)) {
+        skillDescription += `${formatStatName(stat)}<br />`;
+        return;
+      }
+      const decimals = getStatDecimals(stat);
+      const currentValue = effectsCurrent[stat] || 0;
+      const difference = value - currentValue;
+      skillDescription += `${formatStatName(stat)}: ${formatSignedValue(
+        value,
+        decimals,
+        false,
+      )} <span class="bonus">(${formatSignedValue(difference, decimals)})</span><br />`;
+    });
+  }
+
+  return skillDescription;
+}
+
 
 function showClassSelection() {
   const classSelection = document.getElementById('class-selection');
@@ -152,12 +598,35 @@ function showClassSelection() {
 
 function openClassPreview(pathId) {
   const pathData = CLASS_PATHS[pathId];
+
+  let specializationsPreview = '';
+  const specializations = getClassSpecializations(pathId);
+  if (Object.keys(specializations).length > 0) {
+    specializationsPreview = `
+      <div class="class-preview-specializations">
+        <h3>Available Specializations</h3>
+        <div class="specializations-preview-grid">
+          ${Object.values(specializations).map(spec => `
+            <div class="specialization-preview-card" style="display: flex; align-items: flex-start; gap: 10px; text-align: left;">
+              <img src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}" alt="${spec.name()}" class="character-avatar spec-preview-avatar" style="width: 60px; height: 106px; flex-shrink: 0; object-fit: cover; border-radius: 6px; border: 2px solid var(--accent);" />
+              <div>
+                <h4 style="margin: 0; margin-bottom: 5px;">${spec.name()}</h4>
+                <p class="spec-preview-desc">${spec.description()}</p>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
   const content = html`
     <div class="class-preview-wrapper">
       <button class="modal-close">&times;</button>
       <div class="class-preview-header">
         <h2>${pathData.name()}</h2>
       </div>
+      ${specializationsPreview}
       <div class="class-preview-tree"></div>
       <div class="class-preview-footer">
         <button class="select-class-btn">Select Class</button>
@@ -180,7 +649,7 @@ function selectClassPath(pathId) {
     updateResources();
     document.getElementById('class-selection').classList.add('hidden');
     document.getElementById('skill-tree-container').classList.remove('hidden');
-    showSkillTree();
+    showSkillTreeWithTabs();
     initializeSkillTreeUI();
   }
 }
@@ -330,57 +799,13 @@ export function initializeSkillTreeStructure() {
     cleanupSkillTreeHeaderFloating?.();
     return;
   }
-  const container = document.getElementById('skill-tree-container');
-  container.innerHTML = '';
 
-  const skillPointsHeader = document.createElement('div');
-  skillPointsHeader.className = 'skill-points-header';
-  container.appendChild(skillPointsHeader);
-
-  const noLvlRestriction = false;
-
-  const skills = SKILL_TREES[skillTree.selectedPath.name];
-  const levelGroups = SKILL_LEVEL_TIERS.reduce((acc, level) => {
-    if (level <= hero.level || noLvlRestriction) {
-      acc[level] = [];
-    }
-    return acc;
-  }, {});
-
-  Object.entries(skills).forEach(([skillId, skillData]) => {
-    if (noLvlRestriction || (skillData.requiredLevel() <= hero.level && levelGroups[skillData.requiredLevel()])) {
-      levelGroups[skillData.requiredLevel()].push({ id: skillId, ...skillData });
-    }
-  });
-
-  Object.entries(levelGroups).forEach(([reqLevel, groupSkills]) => {
-    if (groupSkills.length > 0) {
-      const rowElement = document.createElement('div');
-      rowElement.className = 'skill-row';
-
-      const levelLabel = document.createElement('div');
-      levelLabel.className = 'level-requirement';
-      levelLabel.textContent = `Level ${reqLevel}`;
-      container.appendChild(levelLabel);
-
-      groupSkills.forEach((skill) => {
-        const skillElement = createSkillElement(skill);
-        rowElement.appendChild(skillElement);
-      });
-
-      container.appendChild(rowElement);
-    }
-  });
-  updateSkillTreeValues();
-  // --- Auto-cast toggles for instant/buff skills ---
-  renderAutoCastToggles();
-  // --- Slot Display Toggles ---
-  renderDisplayToggles();
-  setupSkillTreeFloatingHeader(container, skillPointsHeader);
+  // Use the new tabs-based structure
+  showSkillTreeWithTabs();
 }
 
 function renderAutoCastToggles() {
-  const container = document.getElementById('skill-tree-container');
+  const container = document.getElementById('skills-tab-content') || document.getElementById('skill-tree-container');
   let autoCastSection = document.getElementById('auto-cast-section');
   if (autoCastSection) autoCastSection.remove();
 
@@ -447,7 +872,7 @@ function renderAutoCastToggles() {
 
 // --- Slot Display Toggles ---
 function renderDisplayToggles() {
-  const container = document.getElementById('skill-tree-container');
+  const container = document.getElementById('skills-tab-content') || document.getElementById('skill-tree-container');
   let displaySection = document.getElementById('display-section');
   if (displaySection) displaySection.remove();
 
@@ -596,16 +1021,30 @@ export function updateSkillTreeValues() {
   }
 
   const selectedPath = skillTree.getSelectedPath();
-  if (characterAvatarEl && selectedPath?.avatar) {
+
+  // Check if there's a specialization selected and use its avatar
+  let avatarToUse = selectedPath?.avatar();
+  let nameToUse = selectedPath.name();
+
+  if (skillTree.selectedSpecialization) {
+    const spec = getSpecialization(skillTree.selectedPath.name, skillTree.selectedSpecialization.id);
+    if (spec && spec.avatar) {
+      avatarToUse = spec.avatar();
+      nameToUse = spec.name();
+    }
+  }
+
+  if (characterAvatarEl && avatarToUse) {
     // Remove any previous img
     let img = characterAvatarEl.querySelector('img');
     if (!img) {
       img = document.createElement('img');
-      img.alt = selectedPath.name() + ' avatar';
+      img.alt = nameToUse + ' avatar';
       characterAvatarEl.innerHTML = '';
       characterAvatarEl.appendChild(img);
     }
-    img.src = `${import.meta.env.VITE_BASE_PATH}/avatars/${selectedPath.avatar()}`;
+    img.src = `${import.meta.env.VITE_BASE_PATH}/avatars/${avatarToUse}`;
+    img.alt = nameToUse + ' avatar';
   }
 
   const characterName =
@@ -615,98 +1054,121 @@ export function updateSkillTreeValues() {
   const container = document.getElementById('skill-tree-container');
 
   const skillPointsHeader = container.querySelector('.skill-points-header');
-  const showQtyControls = options?.quickBuy || options?.bulkBuy;
-  let quickControls = '';
-  if (showQtyControls) {
-    if (options.useNumericInputs) {
-      const val = skillTree.quickQty === 'max' ? (options.skillQuickQty || 1) : skillTree.quickQty;
-      quickControls = `
+  if (skillPointsHeader) {
+    const showQtyControls = options?.quickBuy || options?.bulkBuy;
+    let quickControls = '';
+    if (showQtyControls) {
+      if (options.useNumericInputs) {
+        const val = skillTree.quickQty === 'max' ? (options.skillQuickQty || 1) : skillTree.quickQty;
+        quickControls = `
         <div class="skill-qty-controls">
           <input type="number" class="skill-qty-input input-number" min="1" value="${val}" />
           <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">Max</button>
         </div>`;
-    } else {
-      quickControls = `
+      } else {
+        quickControls = `
         <div class="skill-qty-controls">
           <button data-qty="1" class="${skillTree.quickQty === 1 ? 'active' : ''}">1</button>
           <button data-qty="5" class="${skillTree.quickQty === 5 ? 'active' : ''}">5</button>
           <button data-qty="25" class="${skillTree.quickQty === 25 ? 'active' : ''}">25</button>
           <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">Max</button>
         </div>`;
+      }
     }
-  }
 
-  let bulkControls = '';
-  if (options?.bulkBuy) {
-    bulkControls = `
+    let bulkControls = '';
+    if (options?.bulkBuy) {
+      bulkControls = `
       <div class="skill-bulk-controls">
         <button class="bulk-buy">${t('skillTree.bulkAllocate')}</button>
         <span class="skill-bulk-cost"></span>
       </div>`;
-  }
+    }
 
-  const controlsMarkup = quickControls || bulkControls ? `<div class="skill-header-controls">${quickControls}${bulkControls}</div>` : '';
+    const controlsMarkup = quickControls || bulkControls ? `<div class="skill-header-controls">${quickControls}${bulkControls}</div>` : '';
 
-  skillPointsHeader.innerHTML = `
+    const specTabActive = document.getElementById('specializations-tab-content')?.classList.contains('active');
+    const pointsLabel = specTabActive ? 'Specialization Points' : 'Available Skill Points';
+    const pointsValue = specTabActive ? skillTree.specializationPoints : skillTree.skillPoints;
+
+    skillPointsHeader.innerHTML = `
     <div class="skill-header-left">
       <span class="skill-path-name">${characterName}</span>
-      <span class="skill-points">Available Skill Points: ${skillTree.skillPoints}</span>
+      <span class="skill-points">${pointsLabel}: ${pointsValue}</span>
     </div>
     ${controlsMarkup}
   `;
 
-  const qtyControls = skillPointsHeader.querySelector('.skill-qty-controls');
-  if (qtyControls) {
-    if (options.useNumericInputs) {
-      const input = qtyControls.querySelector('.skill-qty-input');
-      const maxBtn = qtyControls.querySelector('button[data-qty="max"]');
-      input.oninput = () => {
-        let v = parseInt(input.value, 10);
-        if (isNaN(v) || v < 1) v = 1;
-        if (v > SKILLS_MAX_QTY) v = SKILLS_MAX_QTY;
-        input.value = v;
-        skillTree.quickQty = v;
-        options.skillQuickQty = v;
-        maxBtn.classList.remove('active');
-        updateSkillBulkCostDisplay();
-        dataManager.saveGame();
-        // Don't call updateSkillTreeValues() here as it rebuilds the input and loses focus
-      };
-      maxBtn.onclick = () => {
-        skillTree.quickQty = 'max';
-        maxBtn.classList.add('active');
-        // Update the input field to show the max value without rebuilding the entire UI
-        const maxValue = Math.min(options.skillQuickQty || 1, SKILLS_MAX_QTY);
-        input.value = maxValue;
-        updateSkillBulkCostDisplay();
-        dataManager.saveGame();
-      };
-    } else {
-      qtyControls.querySelectorAll('button').forEach((btn) => {
-        btn.onclick = () => {
-          skillTree.quickQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
-          qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
-          btn.classList.add('active');
+    const qtyControls = skillPointsHeader.querySelector('.skill-qty-controls');
+    if (qtyControls) {
+      if (options.useNumericInputs) {
+        const input = qtyControls.querySelector('.skill-qty-input');
+        const maxBtn = qtyControls.querySelector('button[data-qty="max"]');
+        input.oninput = () => {
+          let v = parseInt(input.value, 10);
+          if (isNaN(v) || v < 1) v = 1;
+          if (v > SKILLS_MAX_QTY) v = SKILLS_MAX_QTY;
+          input.value = v;
+          skillTree.quickQty = v;
+          options.skillQuickQty = v;
+          maxBtn.classList.remove('active');
+          updateSkillBulkCostDisplay();
+          dataManager.saveGame();
+          // Don't call updateSkillTreeValues() here as it rebuilds the input and loses focus
+        };
+        maxBtn.onclick = () => {
+          skillTree.quickQty = 'max';
+          maxBtn.classList.add('active');
+          // Update the input field to show the max value without rebuilding the entire UI
+          const maxValue = Math.min(options.skillQuickQty || 1, SKILLS_MAX_QTY);
+          input.value = maxValue;
           updateSkillBulkCostDisplay();
           dataManager.saveGame();
         };
-      });
+      } else {
+        qtyControls.querySelectorAll('button').forEach((btn) => {
+          btn.onclick = () => {
+            skillTree.quickQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+            qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateSkillBulkCostDisplay();
+            dataManager.saveGame();
+          };
+        });
+      }
     }
-  }
 
-  skillBulkButton = skillPointsHeader.querySelector('.skill-bulk-controls .bulk-buy');
-  skillBulkCostEl = skillPointsHeader.querySelector('.skill-bulk-cost');
-  if (skillBulkButton) {
-    skillBulkButton.onclick = () => {
-      skillTree.bulkAllocateSkills(skillTree.quickQty);
-    };
+    skillBulkButton = skillPointsHeader.querySelector('.skill-bulk-controls .bulk-buy');
+    skillBulkCostEl = skillPointsHeader.querySelector('.skill-bulk-cost');
+    if (skillBulkButton) {
+      skillBulkButton.onclick = () => {
+        skillTree.bulkAllocateSkills(skillTree.quickQty);
+      };
+    }
   }
 
   updateSkillBulkCostDisplay();
 
   updateSkillTreeHeaderFloating?.();
 
-  container.querySelectorAll('.skill-node').forEach((node) => {
+  // Update Specialization Skills
+  container.querySelectorAll('.skill-node.specialization-node').forEach((node) => {
+    const skillId = node.dataset.skillId;
+    const skill = skillTree.getSpecializationSkill(skillId);
+    if (!skill) return;
+
+    const currentLevel = skill.level || 0;
+    const canUnlock = skillTree.canUnlockSpecializationSkill(skillId, false);
+
+    const levelDisplay = node.querySelector('.skill-level');
+    levelDisplay.textContent = skill.maxLevel() == Infinity ? `${currentLevel}` : `${currentLevel}/${skill.maxLevel()}`;
+
+    node.classList.toggle('available', canUnlock);
+    node.classList.toggle('unlocked', currentLevel > 0);
+  });
+
+  // Update Normal Skills
+  container.querySelectorAll('.skill-node:not(.specialization-node)').forEach((node) => {
     const skillId = node.dataset.skillId;
     const currentLevel = skillTree.skills[skillId]?.level || 0;
     const canUnlock = skillTree.canUnlockSkill(skillId, false);
@@ -726,14 +1188,7 @@ export function updateSkillTreeValues() {
   renderDisplayToggles();
 }
 
-function showSkillTree() {
-  const container = document.getElementById('skill-tree-container');
-  if (!container.children.length) {
-    initializeSkillTreeStructure();
-  } else {
-    updateSkillTreeValues();
-  }
-}
+// Removed - using showSkillTreeWithTabs instead
 
 let skillModal;
 let currentSkillId;
@@ -1245,7 +1700,24 @@ function createSkillTooltip(skillId) {
   }
 
   if (skill?.type && skill.type() === 'instant' && skillTree.isDamageSkill?.(effects)) {
-    const damagePreview = hero.calculateTotalDamage(effects, { includeRandom: false });
+    // Compute allowedDamageTypes for spells, same as useInstantSkill
+    const skillTypeSource = skill?.skill_type ?? skill?.skillType;
+    const resolvedSkillType =
+      typeof skillTypeSource === 'function' ? skillTypeSource() : skillTypeSource;
+    const skillType = (resolvedSkillType || 'attack').toLowerCase();
+    const isSpell = skillType === 'spell';
+
+    let damageEffects = effects;
+    if (isSpell) {
+      const allowedDamageTypes = getSpellDamageTypes(effects);
+      damageEffects = {
+        ...effects,
+        ...(allowedDamageTypes.length ? { allowedDamageTypes } : {}),
+      };
+    }
+
+    const damagePreview = hero.calculateTotalDamage(damageEffects, { includeRandom: false });
+
     if (damagePreview?.damage > 0) {
       tooltip += `<div class="tooltip-total-damage">${t('skill.totalPotentialDamage')}: ${formatNumber(damagePreview.damage)}</div>`;
     }
