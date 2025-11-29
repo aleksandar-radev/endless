@@ -187,9 +187,38 @@ function getAdvancedAttributeTooltip(attr) {
     .map((s) => `${s.name}: ${formatNumber(s.flat || 0)}${s.percent ? ` (${(s.percent * 100).toFixed(1)}%)` : ''}`)
     .join('<br />');
 
+  const baseTooltip = getAttributeTooltip(attr);
+  const ascKey = `${attr}EffectPercent`;
+  const bonusMultiplier = (ascension?.getBonuses?.()?.[ascKey] || 0);
+
+  let ascInfo = '';
+
+  if (bonusMultiplier > 0) {
+
+    const effects = ATTRIBUTES[attr]?.effects || {};
+
+    const extraTexts = Object.entries(effects).map(([statKey, baseVal]) => {
+
+      const extra = baseVal * bonusMultiplier;
+
+      const statName = formatStatName(statKey.replace('PerPoint', ''));
+
+      return `+${formatNumber(extra.toFixed(2))} ${statName}`;
+
+    });
+
+    const extraStr = extraTexts.length ? ` (${extraTexts.join(', ')})` : '';
+
+    ascInfo = `<div style="margin-top: 4px; font-size: 0.9em; color: #a8e6cf;"><em>${t('stats.tooltip.ascensionBaseBonus')}:</em> +${(bonusMultiplier * 100).toFixed(0)}%<p>${extraStr}</p></div>`;
+
+  }
+
   return html`
     <strong>${formatStatName(attr)}</strong><br />
-    ${lines}<br />
+    <div style="margin-bottom:8px; font-size:0.9em; color:#aaa; border-bottom: 1px solid #444; padding-bottom: 4px;">${baseTooltip}</div>
+    ${lines}
+    ${ascInfo}
+    <hr style="border:none; border-top:1px solid #444; margin:4px 0">
     <em>Total Flat:</em> ${formatNumber(totalFlat)}<br />
     <em>Total %:</em> ${(totalPercent * 100).toFixed(1)}%<br />
     <strong>Total:</strong> ${formatNumber(finalValue)}
@@ -387,9 +416,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           row.appendChild(lbl);
           row.appendChild(document.createTextNode(' '));
           row.appendChild(span);
-          targetPanel.appendChild(row);
-
-          lbl.addEventListener('mouseenter', (e) => showTooltip(getAttributeTooltip(key), e));
+          lbl.addEventListener('mouseenter', (e) => showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e));
           lbl.addEventListener('mousemove', positionTooltip);
           lbl.addEventListener('mouseleave', hideTooltip);
         });
@@ -442,7 +469,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           row.appendChild(span);
           panel.appendChild(row);
 
-          lbl.addEventListener('mouseenter', (e) => showTooltip(getAttributeTooltip(key), e));
+          lbl.addEventListener('mouseenter', (e) => showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e));
           lbl.addEventListener('mousemove', positionTooltip);
           lbl.addEventListener('mouseleave', hideTooltip);
         });
@@ -628,7 +655,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
       row.addEventListener('mouseenter', (e) => {
         const tip = options.showAdvancedAttributeTooltips
           ? getAdvancedAttributeTooltip(stat)
-          : getAttributeTooltip(stat);
+          : html`<strong>${formatStatName(stat)}</strong><br />${getAttributeTooltip(stat)}`;
         showTooltip(tip, e);
       });
       row.addEventListener('mousemove', positionTooltip);

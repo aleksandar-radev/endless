@@ -1369,4 +1369,5 @@ export default {
   'rune.bossSkip.desc': '竞技场Boss跳过+1。',
   'rune.crystalGain.name': '水晶收集者符文',
   'rune.crystalGain.desc': '水晶获取+100%。',
+  'stats.tooltip.ascensionBaseBonus': '基础加成 (飞升)',
 };

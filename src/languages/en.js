@@ -1483,4 +1483,5 @@ export default {
   'Power Surge': 'Power Surge',
   'skill.powerSurge': 'Temporarily boosts magical power.',
   'skillTree.specializationLevelReq': 'Specializations require Level 1000.',
+  'stats.tooltip.ascensionBaseBonus': 'Base Bonus (Ascension)',
 };
