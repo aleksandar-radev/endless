@@ -65,6 +65,11 @@ export const PRESTIGE_BONUSES = [
     max: 0.4,
   },
   {
+    stat: 'allResistancePercent',
+    min: 0.2,
+    max: 0.4,
+  },
+  {
     stat: 'attackRatingPercent',
     min: 0.2,
     max: 0.4,

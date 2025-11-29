@@ -11,6 +11,7 @@ export default function run() {
       <li>Introduced a material quantity bonus for rings and amulets that scales material drops similarly to item quantity.</li>
       <li>Added class specializations. Each class gets 3 specializations.</li>
       <li>Improved design for login dialog</li>
+      <li>Added all resistance $ bonus in prestige bonuses.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
@@ -20,6 +21,7 @@ export default function run() {
       <li>Updated the stats panel so the displayed thorns damage combines all bonus percentages additively, matching the reflected amount.</li>
       <li>Fixed potential damage calculation for skills (doesn't include crit and double damage chance)</li>
       <li>Fixed tooltip for starting souls ascension bonus.</li>
+      <li>Fixed display values for all cost reduction ascension upgrades. (1% instead of 0.01)</li>
     </ul>
   `;
 }

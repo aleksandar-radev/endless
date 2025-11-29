@@ -273,9 +273,8 @@ function getAscensionPerLevelBonusText(key, cfg) {
   const base = cfg?.bonus ?? 0;
   if (!isFinite(base)) return '';
   // Determine decimals/suffix from a representative stat/effect when possible
-  const target = cfg.stat || cfg.effect || (Array.isArray(cfg.stats) ? cfg.stats[0] : null);
-  const isPercent = (s) => (s && /Percent$/i.test(s)) || false;
-  // Stats that store percent as raw integer points (not fraction 0..1)
+  const target = cfg.stat || cfg.effect || (Array.isArray(cfg.stats) ? cfg.stats[0] : null) || key;
+  const isPercent = (s) => s && (/Percent$/i.test(s) || /CostReduction$/i.test(s));
   const useFractional = isPercent(target);
   const decimals =
     (target && STATS[target]?.decimalPlaces !== undefined)
@@ -290,8 +289,8 @@ function getAscensionBonusText(key, cfg, level) {
   if (!isFinite(valPerLevel)) return '';
   const lvl = Math.max(0, level || 0);
   const total = valPerLevel * lvl;
-  const target = cfg.stat || cfg.effect || (Array.isArray(cfg.stats) ? cfg.stats[0] : null);
-  const isPercent = (s) => (s && /Percent$/i.test(s)) || false;
+  const target = cfg.stat || cfg.effect || (Array.isArray(cfg.stats) ? cfg.stats[0] : null) || key;
+  const isPercent = (s) => s && (/Percent$/i.test(s) || /CostReduction$/i.test(s));
   const useFractional = isPercent(target);
   const decimals =
     (target && STATS[target]?.decimalPlaces !== undefined)
