@@ -12,6 +12,7 @@ export default function run() {
       <li>Added class specializations. Each class gets 3 specializations.</li>
       <li>Improved design for login dialog</li>
       <li>Added all resistance $ bonus in prestige bonuses.</li>
+      <li>Increased life regen bonus flat and percent in ascension upgrades and reduced in soul shop upgrades.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

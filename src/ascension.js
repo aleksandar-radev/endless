@@ -156,12 +156,12 @@ export const ASCENSION_CATEGORIES = {
       },
       lifeRegen: {
         label: t('ascension.upgrade.lifeRegen'),
-        bonus: 2.5,
+        bonus: 30,
         stat: 'lifeRegen',
       },
       lifeRegenPercent: {
         label: t('ascension.upgrade.lifeRegenPercent'),
-        bonus: 0.01,
+        bonus: 0.2,
         stat: 'lifeRegenPercent',
       },
     },

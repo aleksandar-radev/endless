@@ -182,7 +182,7 @@ export const SOUL_UPGRADE_CONFIG = {
   },
   lifeRegenBoost: {
     label: 'soulShop.upgrade.lifeRegenBoost.label',
-    bonus: 0.025,
+    bonus: 0.0125,
     baseCost: 4,
     costIncrement: 0.3,
     stat: 'lifeRegenPercent',
