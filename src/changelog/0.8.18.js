@@ -19,6 +19,7 @@ export default function run() {
       <li>Fixed descriptions on last 4 arena regions, to match the bonus provided.</li>
       <li>Updated the stats panel so the displayed thorns damage combines all bonus percentages additively, matching the reflected amount.</li>
       <li>Fixed potential damage calculation for skills (doesn't include crit and double damage chance)</li>
+      <li>Fixed tooltip for starting souls ascension bonus.</li>
     </ul>
   `;
 }

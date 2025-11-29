@@ -185,7 +185,7 @@ export default {
   'ascension.tooltip.runeTabs': '每级解锁一个额外的符文分页。',
   'ascension.tooltip.startingGold': '获得100k金币，重置时也可获得。',
   'ascension.tooltip.startingCrystals': '获得100水晶，重置时也可获得。',
-  'ascension.tooltip.startingSouls': '获得100灵魂，重置时也可获得。',
+  'ascension.tooltip.startingSouls': '获得300灵魂，重置时也可获得。',
   'ascension.tooltip.life': '每级增加1000生命。',
   'ascension.tooltip.mana': '每级增加500法力。',
   'ascension.tooltip.lifePercent': '每级增加20%生命。',

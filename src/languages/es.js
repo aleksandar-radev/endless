@@ -171,7 +171,7 @@ export default {
   'ascension.tooltip.runeTabs': 'Desbloquea una pestaña adicional de inventario de runas por nivel.',
   'ascension.tooltip.startingGold': 'Obtén 100k de oro al instante y en cada reinicio.',
   'ascension.tooltip.startingCrystals': 'Obtén 100 cristales al instante y en cada reinicio.',
-  'ascension.tooltip.startingSouls': 'Obtén 100 almas al instante y en cada reinicio.',
+  'ascension.tooltip.startingSouls': 'Obtén 300 almas al instante y en cada reinicio.',
   'ascension.tooltip.life': 'Incrementa la vida en 1000 por nivel.',
   'ascension.tooltip.mana': 'Incrementa el maná en 500 por nivel.',
   'ascension.tooltip.lifePercent': 'Incrementa la vida en 20% por nivel.',

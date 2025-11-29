@@ -185,7 +185,7 @@ export default {
   'ascension.tooltip.runeTabs': 'Unlocks one additional rune inventory tab per level.',
   'ascension.tooltip.startingGold': 'Gain 100k gold instantly and on each reset.',
   'ascension.tooltip.startingCrystals': 'Gain 100 crystals instantly and on each reset.',
-  'ascension.tooltip.startingSouls': 'Gain 100 souls instantly and on each reset.',
+  'ascension.tooltip.startingSouls': 'Gain 300 souls instantly and on each reset.',
   'ascension.tooltip.life': 'Increases life by 1000 per level.',
   'ascension.tooltip.mana': 'Increases mana by 500 per level.',
   'ascension.tooltip.lifePercent': 'Increases life by 20% per level.',
