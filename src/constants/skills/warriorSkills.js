@@ -61,11 +61,9 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.ironWill'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      vitality: scaleUpFlat(level, 3),
-      vitalityPercent: scaleDownFlat(level),
-      lifeRegen: scaleUpFlat(level, 1),
-      allResistance: scaleUpFlat(level, 3),
-      extraDamageFromLifeRegenPercent: Math.min(0.2 * scaleDownFlat(level), 25),
+      vitality: scaleUpFlat(level, 4, 8, 0.2),
+      perseverance: scaleUpFlat(level, 4, 8, 0.2),
+      extraDamageFromLifePercent: Math.min(0.2 * scaleDownFlat(level), 25),
     }),
   },
 
@@ -95,8 +93,7 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.fortitude'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.005, 1),
-      lifeRegen: scaleUpFlat(level, 2, 4),
+      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.0075, 1.5),
       lifeRegenPercent: scaleDownFlat(level, 1),
     }),
   },
@@ -129,7 +126,7 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.armorBreaker'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armorPenetration: scaleUpFlat(level, 15, 5, 0.5),
+      armorPenetration: scaleUpFlat(level, 15, 4, 0.5),
       armorPenetrationPercent: Math.min(0.35 * scaleDownFlat(level), 40),
     }),
   },
@@ -147,9 +144,8 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.shieldWall'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      extraDamageFromArmorPercent: Math.min(0.03 * scaleDownFlat(level), 2),
-      armorPercent: 4 * scaleDownFlat(level),
-      blockChance: Math.min(level * 0.1, 20),
+      extraDamageFromArmorPercent: Math.min(0.03 * scaleDownFlat(level), 2.5),
+      armorPercent: scaleDownFlat(level, 4),
     }),
   },
 
@@ -178,10 +174,8 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.lastStand'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeSteal: Math.min(scaleDownFlat(level, 0.01), 1),
       attackSpeedPercent: Math.min(scaleDownFlat(level, 0.65), 75),
-      attackRating: scaleUpFlat(level, 6, 5, 0.3),
-      attackRatingPercent: scaleDownFlat(level, 1.4),
+      attackRatingPercent: scaleDownFlat(level, 6),
     }),
   },
 
