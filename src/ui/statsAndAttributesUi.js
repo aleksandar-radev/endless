@@ -416,6 +416,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           row.appendChild(lbl);
           row.appendChild(document.createTextNode(' '));
           row.appendChild(span);
+          targetPanel.appendChild(row);
           lbl.addEventListener('mouseenter', (e) => showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e));
           lbl.addEventListener('mousemove', positionTooltip);
           lbl.addEventListener('mouseleave', hideTooltip);
