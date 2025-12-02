@@ -27,7 +27,7 @@ export const DEFENSE_STATS = {
     base: 100,
     decimalPlaces: 0,
     levelUpBonus: 1,
-    training: { cost: 80, bonus: 5, maxLevel: Infinity },
+    training: { cost: 80, bonus: 8, maxLevel: Infinity },
     item: { min: 30, max: 80, scaling: (level, tier) => defenseScaling(level, tier) },
     itemTags: ['defense'],
     showInUI: true,
@@ -81,7 +81,7 @@ export const DEFENSE_STATS = {
   lifeRegen: {
     base: 0,
     decimalPlaces: 1,
-    training: { cost: 50, bonus: 0.25, maxLevel: Infinity },
+    training: { cost: 100, bonus: 1, maxLevel: Infinity },
     item: { min: 3, max: 8, scaling: (level, tier) => defenseScaling(level, tier) },
     itemTags: ['belt', 'pants'],
     showInUI: true,
