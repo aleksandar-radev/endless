@@ -687,6 +687,7 @@ export default class Hero {
         if (stat === 'extraDamageFromLifeRegenPercent') value = Math.min(value, 40);
         if (stat === 'extraDamageFromEvasionPercent') value = Math.min(value, 10);
         if (stat === 'extraDamageFromAttackRatingPercent') value = Math.min(value, 6);
+        if (stat === 'extraDamageFromAllResistancesPercent') value = Math.min(value, 10);
         if (stat === 'reduceEnemyHpPercent') value = Math.min(value, 50);
         if (stat === 'reduceEnemyAttackSpeedPercent') value = Math.min(value, 50);
         if (stat === 'reduceEnemyDamagePercent') value = Math.min(value, 50);
@@ -737,6 +738,8 @@ export default class Hero {
       const lifeRegen = capResource(statsSnapshot.lifeRegen);
       const evasion = capResource(statsSnapshot.evasion);
       const attackRating = capResource(statsSnapshot.attackRating);
+      const allResistancesValue = RESISTANCE_KEYS.reduce((sum, key) => sum + (statsSnapshot[key] || 0), 0);
+      const allResistances = capResource(allResistancesValue);
 
       const totalExtra =
         (statsSnapshot.extraDamageFromLifePercent || 0) * life +
@@ -744,7 +747,8 @@ export default class Hero {
         (statsSnapshot.extraDamageFromManaPercent || 0) * mana +
         (statsSnapshot.extraDamageFromLifeRegenPercent || 0) * lifeRegen +
         (statsSnapshot.extraDamageFromEvasionPercent || 0) * evasion +
-        (statsSnapshot.extraDamageFromAttackRatingPercent || 0) * attackRating;
+        (statsSnapshot.extraDamageFromAttackRatingPercent || 0) * attackRating +
+        (statsSnapshot.extraDamageFromAllResistancesPercent || 0) * allResistances;
 
       if (!totalExtra) return { physical: 0, elemental: 0, perElement: {} };
 

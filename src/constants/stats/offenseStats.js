@@ -567,4 +567,8 @@ export const OFFENSE_STATS = {
       scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING),
     },
   },
+  extraDamageFromAllResistancesPercent: {
+    base: 0,
+    decimalPlaces: 2,
+  },
 };
