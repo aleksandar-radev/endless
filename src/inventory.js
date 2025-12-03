@@ -1366,6 +1366,17 @@ export default class Inventory {
       if (this.isTwoHanded(item)) return false;
       if (this.isTwoHanded(this.equippedItems.weapon)) return false;
     }
+
+    if (item.type === 'SHIELD') {
+      const otherSlot = slotName === 'weapon' ? 'offhand' : (slotName === 'offhand' ? 'weapon' : null);
+      if (otherSlot) {
+        const otherItem = this.equippedItems[otherSlot];
+        if (otherItem && otherItem.type === 'SHIELD' && otherItem.id !== item.id) {
+          return false;
+        }
+      }
+    }
+
     return true;
   }
 
@@ -1401,6 +1412,14 @@ export default class Inventory {
     if (!this.canEquipInSlot(item, slot)) {
       if (slot === 'offhand' && this.isTwoHanded(this.equippedItems.weapon)) {
         showToast(t('inventory.cannotEquipOffhandTwoHanded'), 'error');
+      } else if (item.type === 'SHIELD') {
+        const otherSlot = slot === 'weapon' ? 'offhand' : (slot === 'offhand' ? 'weapon' : null);
+        if (otherSlot) {
+          const otherItem = this.equippedItems[otherSlot];
+          if (otherItem && otherItem.type === 'SHIELD' && otherItem.id !== item.id) {
+            showToast(t('inventory.cannotEquipTwoShields'), 'error');
+          }
+        }
       }
       return false;
     }
