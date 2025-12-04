@@ -436,11 +436,11 @@ export const SPECIALIZATIONS = {
         },
       },
     },
-    GUARDIAN: {
-      id: 'GUARDIAN',
-      name: () => t('specialization.paladin.guardian.name'),
-      description: () => t('specialization.paladin.guardian.description'),
-      avatar: () => 'paladin-guardian-avatar.jpg',
+    SENTINEL: {
+      id: 'SENTINEL',
+      name: () => t('specialization.paladin.sentinel.name'),
+      description: () => t('specialization.paladin.sentinel.description'),
+      avatar: () => 'paladin-sentinel-avatar.jpg',
       baseStats: () => ({
         lifePercent: 20,
         allResistance: 10,
