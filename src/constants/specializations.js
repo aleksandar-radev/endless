@@ -860,11 +860,11 @@ export const SPECIALIZATIONS = {
         },
       },
     },
-    BATTLEMAGE: {
-      id: 'BATTLEMAGE',
-      name: () => t('specialization.mage.battlemage.name'),
-      description: () => t('specialization.mage.battlemage.description'),
-      avatar: () => 'mage-battlemage-avatar.jpg',
+    BLOODMAGE: {
+      id: 'BLOODMAGE',
+      name: () => t('specialization.mage.bloodmage.name'),
+      description: () => t('specialization.mage.bloodmage.description'),
+      avatar: () => 'mage-bloodmage-avatar.jpg',
       baseStats: () => ({
         damagePercent: 15,
         elementalDamagePercent: 15,
