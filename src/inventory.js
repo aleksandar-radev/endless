@@ -1364,7 +1364,21 @@ export default class Inventory {
     }
     if (slotName === 'offhand') {
       if (this.isTwoHanded(item)) return false;
-      if (this.isTwoHanded(this.equippedItems.weapon)) return false;
+
+      const weapon = this.equippedItems.weapon;
+      if (this.isTwoHanded(weapon)) {
+        // Allow ARROWS with BOW
+        if (weapon.type === 'BOW' && item.type === 'ARROWS') {
+          // continue to shield check
+        } else {
+          return false;
+        }
+      }
+
+      // ARROWS require BOW
+      if (item.type === 'ARROWS') {
+        if (!weapon || weapon.type !== 'BOW') return false;
+      }
     }
 
     if (item.type === 'SHIELD') {
@@ -1401,6 +1415,24 @@ export default class Inventory {
       const emptySlot = this.inventoryItems.findIndex((s) => s === null);
       if (emptySlot !== -1) {
         this.inventoryItems[emptySlot] = item;
+        // If unequipping BOW, must unequip ARROWS too
+        if (item.type === 'BOW' && this.equippedItems.offhand?.type === 'ARROWS') {
+          // This handles manual unequip.
+          // But `equipItem` handles "equip to slot". "Unequip" logic is inside this block.
+          // We need to handle returning the offhand too if it's ARROWS.
+          const offhandArrows = this.equippedItems.offhand;
+          const secondEmpty = this.inventoryItems.findIndex((s, idx) => s === null && idx !== emptySlot);
+          if (secondEmpty !== -1) {
+            this.inventoryItems[secondEmpty] = offhandArrows;
+            delete this.equippedItems.offhand;
+          } else {
+            showToast(t('inventory.notEnoughInventorySpace'), 'error');
+            // Revert? Or just keep bow equipped?
+            // Simplest is to block unequip if no space for arrows.
+            this.inventoryItems[emptySlot] = null; // Revert
+            return false;
+          }
+        }
         delete this.equippedItems[slot];
         this.updateItemBonuses();
         dataManager.saveGame();
@@ -1411,7 +1443,12 @@ export default class Inventory {
 
     if (!this.canEquipInSlot(item, slot)) {
       if (slot === 'offhand' && this.isTwoHanded(this.equippedItems.weapon)) {
-        showToast(t('inventory.cannotEquipOffhandTwoHanded'), 'error');
+        // Allow custom message for Arrows?
+        if (item.type === 'ARROWS' && this.equippedItems.weapon?.type !== 'BOW') {
+          showToast(t('inventory.arrowsRequireBow'), 'error');
+        } else {
+          showToast(t('inventory.cannotEquipOffhandTwoHanded'), 'error');
+        }
       } else if (item.type === 'SHIELD') {
         const otherSlot = slot === 'weapon' ? 'offhand' : (slot === 'offhand' ? 'weapon' : null);
         if (otherSlot) {
@@ -1420,6 +1457,8 @@ export default class Inventory {
             showToast(t('inventory.cannotEquipTwoShields'), 'error');
           }
         }
+      } else if (item.type === 'ARROWS' && (!this.equippedItems.weapon || this.equippedItems.weapon.type !== 'BOW')) {
+        showToast(t('inventory.arrowsRequireBow'), 'error');
       }
       return false;
     }
@@ -1432,8 +1471,16 @@ export default class Inventory {
 
     const itemsToReturn = [];
     if (isTwoHandedWeapon && this.equippedItems.offhand) {
+      // Keep arrows if equipping bow
+      if (!(item.type === 'BOW' && this.equippedItems.offhand.type === 'ARROWS')) {
+        itemsToReturn.push({ item: this.equippedItems.offhand, sourceSlot: 'offhand' });
+      }
+    }
+    // If equipping non-BOW weapon, remove ARROWS
+    if (slot === 'weapon' && item.type !== 'BOW' && this.equippedItems.offhand?.type === 'ARROWS') {
       itemsToReturn.push({ item: this.equippedItems.offhand, sourceSlot: 'offhand' });
     }
+
     if (this.equippedItems[slot] && this.equippedItems[slot].id !== item.id) {
       itemsToReturn.push({ item: this.equippedItems[slot], sourceSlot: slot });
     }

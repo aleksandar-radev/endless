@@ -23,15 +23,15 @@ export const SLOT_REQUIREMENTS = {
   belt: ['BELT'],
   legs: ['PANTS'],
   boots: ['BOOTS'],
-  weapon: ['SWORD', 'AXE', 'MACE', 'WAND', 'STAFF', 'SHIELD'],
-  offhand: ['SWORD', 'AXE', 'WAND', 'SHIELD'],
+  weapon: ['SWORD', 'AXE', 'MACE', 'WAND', 'STAFF', 'SHIELD', 'BOW'],
+  offhand: ['SWORD', 'AXE', 'WAND', 'SHIELD', 'ARROWS'],
   gloves: ['GLOVES'],
   amulet: ['AMULET'],
   ring1: ['RING'],
   ring2: ['RING'],
 };
 
-export const TWO_HANDED_TYPES = ['MACE', 'STAFF'];
+export const TWO_HANDED_TYPES = ['MACE', 'STAFF', 'BOW'];
 export const DUAL_WIELD_TYPES = ['SWORD', 'AXE', 'WAND', 'SHIELD'];
 
 export const ITEM_TYPES = {
@@ -46,6 +46,8 @@ export const ITEM_TYPES = {
   WAND: 'WAND',
   STAFF: 'STAFF',
   SHIELD: 'SHIELD',
+  BOW: 'BOW',
+  ARROWS: 'ARROWS',
   GLOVES: 'GLOVES',
   AMULET: 'AMULET',
   RING: 'RING',
@@ -63,6 +65,8 @@ export const ITEM_ICONS = {
   WAND: `<img src="${BASE}/icons/wand.svg" class="icon" alt="wand"/>`,
   STAFF: `<img src="${BASE}/icons/staff.svg" class="icon" alt="staff"/>`,
   SHIELD: `<img src="${BASE}/icons/shield.svg" class="icon" alt="shield"/>`,
+  BOW: `<img src="${BASE}/icons/bow.svg" class="icon" alt="bow"/>`,
+  ARROWS: `<img src="${BASE}/icons/arrows.svg" class="icon" alt="arrows"/>`,
   GLOVES: `<img src="${BASE}/icons/gloves.svg" class="icon" alt="gloves"/>`,
   AMULET: `<img src="${BASE}/icons/amulet.svg" class="icon" alt="amulet"/>`,
   RING: `<img src="${BASE}/icons/ring.svg" class="icon" alt="ring"/>`,
@@ -131,6 +135,14 @@ export const ITEM_STAT_POOLS = {
     mandatory: [],
     possible: [...getStatsByTags(['magic', 'staff', 'elemental'])],
   },
+  BOW: {
+    mandatory: [],
+    possible: [...getStatsByTags(['offense', 'bow'])],
+  },
+  ARROWS: {
+    mandatory: [],
+    possible: [...getStatsByTags(['offense', 'arrows'])],
+  },
   SHIELD: {
     mandatory: ['blockChance'],
     possible: [...getStatsByTags(['defense', 'stat', 'shield'])],
@@ -190,7 +202,7 @@ export function getTypesByCategory(category) {
     case 'jewelry':
       return ['AMULET', 'RING'];
     case 'weapon':
-      return ['SWORD', 'AXE', 'MACE', 'WAND', 'STAFF', 'SHIELD'];
+      return ['SWORD', 'AXE', 'MACE', 'WAND', 'STAFF', 'SHIELD', 'BOW', 'ARROWS'];
     default:
       return [];
   }

@@ -18,6 +18,7 @@ export default function run() {
       <li>Increased life and life regen gained from training.</li>
       <li>Add extra damage from all resistances stat.</li>
       <li>Disallow equipping of 2 shields.</li>
+      <li>Add bow and arrows as items.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

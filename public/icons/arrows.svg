@@ -1,0 +1,30 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <g id="arrow-fletching-up">
+      <rect x="-1" y="-25" width="2" height="25" fill="#8B4513"/>
+      <rect x="-1.5" y="-27" width="3" height="2" fill="#5D4037"/>
+      <path d="M -1 -25 L -6 -15 L -6 -5 L -1 -10 Z" fill="#D32F2F"/> 
+      <path d="M 1 -25 L 6 -15 L 6 -5 L 1 -10 Z" fill="#D32F2F"/>
+      <rect x="-0.5" y="-25" width="1" height="18" fill="#B71C1C"/> 
+    </g>
+  </defs>
+
+  <ellipse cx="50" cy="35" rx="16" ry="6" fill="#3E2723"/>
+  <path d="M 34 35 L 40 90 C 40 97, 60 97, 60 90 L 66 35 Z" fill="#A0522D" stroke="#5D4037" stroke-width="2"/>
+
+  <g transform="translate(50, 38)">
+    <use href="#arrow-fletching-up" transform="translate(-5, -2) rotate(-15) scale(0.9)" opacity="0.9"/>
+    <use href="#arrow-fletching-up" transform="translate(5, -2) rotate(15) scale(0.9)" opacity="0.9"/>
+    
+    <use href="#arrow-fletching-up" transform="translate(-8, 1) rotate(-25)"/>
+    <use href="#arrow-fletching-up" transform="translate(0, 3) rotate(0) scale(1.05)"/> <use href="#arrow-fletching-up" transform="translate(8, 1) rotate(25)"/>
+  </g>
+
+  <path d="M 34 35 A 16 6 0 0 0 66 35" fill="none" stroke="#5D4037" stroke-width="4" stroke-linecap="round"/>
+  <rect x="35" y="38" width="30" height="6" rx="2" fill="#5D4037"/>
+
+  <path d="M 34 40 C 15 50, 15 80, 38 90" fill="none" stroke="#5D4037" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="35" cy="42" r="2.5" fill="#CD7F32"/>
+  <circle cx="38" cy="89" r="2.5" fill="#CD7F32"/>
+
+</svg>

@@ -384,6 +384,7 @@ export default {
   'inventory.unlockSalvageMaterials': 'Unlock this option by purchasing the Salvage Materials upgrade in the Crystal Shop.',
   'inventory.cannotEquipOffhandTwoHanded': 'Cannot equip an off-hand item while using a two-handed weapon.',
   'inventory.cannotEquipTwoShields': 'Cannot equip two shields at the same time.',
+  'inventory.arrowsRequireBow': 'Arrows require a Bow equipped.',
   'inventory.offhandUnequippedTwoHanded': 'Off-hand item unequipped due to two-handed weapon.',
   'inventory.notEnoughInventorySpace': 'Not enough inventory space to unequip the current items.',
   'class.warrior': 'Warrior',
