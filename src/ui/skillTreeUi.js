@@ -186,10 +186,6 @@ function openSpecializationSelectionModal(spec) {
       </div>
 
       <div class="class-preview-footer" style="flex-direction: column; gap: 10px; margin-top: 30px;">
-        <div style="color: #ff6b6b; font-size: 0.9em; text-align: center;">
-          ⚠️ Selecting this specialization will lock the others.<br>
-          (Reset cost: 200 Crystals)
-        </div>
         <button class="select-class-btn" style="width: 100%;">Select ${spec.name()}</button>
       </div>
     </div>
@@ -406,13 +402,15 @@ function initializeSpecializationsTab() {
       .join('');
 
     specCard.innerHTML = `
-      <div class="specialization-header">
-        <img src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}" alt="${spec.name()} Avatar" class="character-avatar specialization-avatar" />
-        <h4>${spec.name()}</h4>
-      </div>
-      <p class="specialization-description">${spec.description()}</p>
-      <div class="base-stats" style="margin: 10px 0; font-size: 0.9em; color: #aaa;">
-        ${baseStatsHtml}
+      <div style="display: flex; align-items: flex-start; gap: 15px;">
+        <img src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}" alt="${spec.name()} Avatar" class="character-avatar specialization-avatar" style="width: 60px; height: 106px; flex-shrink: 0; object-fit: cover; border-radius: 6px; border: 2px solid var(--accent);" />
+        <div style="flex: 1;">
+          <h4 style="margin-top: 0; margin-bottom: 10px;">${spec.name()}</h4>
+          <p class="specialization-description" style="margin-bottom: 10px;">${spec.description()}</p>
+          <div class="base-stats" style="margin: 10px 0; font-size: 0.9em; color: #aaa;">
+            ${baseStatsHtml}
+          </div>
+        </div>
       </div>
       
       <button class="select-spec-btn">Select Specialization</button>
