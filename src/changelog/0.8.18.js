@@ -19,6 +19,7 @@ export default function run() {
       <li>Add extra damage from all resistances stat.</li>
       <li>Disallow equipping of 2 shields.</li>
       <li>Add bow and arrows as items.</li>
+      <li>Add ascension upgrade to persist runes through ascensions and prestiges.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

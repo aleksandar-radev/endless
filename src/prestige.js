@@ -339,10 +339,25 @@ export default class Prestige {
       upgrades: ascension?.upgrades || {},
     };
 
+    // Preserve runes if the upgrade is purchased
+    let preservedRunes = null;
+    if (ascension?.getBonuses().runeRetention) {
+      preservedRunes = {
+        equipped: runes.equipped,
+        inventory: runes.inventory,
+      };
+    }
+
     await setGlobals({ reset: true });
 
     // Reapply preserved options onto the new options instance
     Object.assign(options, preservedOptions);
+
+    // Reapply preserved runes after reset
+    if (preservedRunes) {
+      runes.equipped = preservedRunes.equipped;
+      runes.inventory = preservedRunes.inventory;
+    }
 
     // Restore ascension points and upgrades after reset
     if (preservedAscension) {

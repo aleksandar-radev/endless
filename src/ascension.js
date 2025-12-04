@@ -243,6 +243,13 @@ export const ASCENSION_CATEGORIES = {
         cost: (lvl) => 2 + lvl,
         maxLevel: 8,
       },
+      runeRetention: {
+        label: t('ascension.upgrade.runeRetention'),
+        bonus: 1,
+        effect: 'runeRetention',
+        cost: 10,
+        maxLevel: 1,
+      },
       startingGold: {
         label: t('ascension.upgrade.startingGold'),
         bonus: 100000,
@@ -473,9 +480,23 @@ export default class Ascension {
       delete preservedOptions[k];
     });
 
+    // Preserve runes if the upgrade is purchased
+    let preservedRunes = null;
+    if (this.getBonuses().runeRetention) {
+      preservedRunes = {
+        equipped: runes.equipped,
+        inventory: runes.inventory,
+      };
+    }
+
     await setGlobals({ reset: true });
     // Reapply preserved options after reset
     Object.assign(options, preservedOptions);
+    // Reapply preserved runes after reset
+    if (preservedRunes) {
+      runes.equipped = preservedRunes.equipped;
+      runes.inventory = preservedRunes.inventory;
+    }
     // after reset, ascensionState refers to the new instance
     ascensionState.points = saved.points;
     ascensionState.upgrades = saved.upgrades;
