@@ -167,7 +167,7 @@
   display: flex;
   justify-content: center;
   gap: 20px;
-  margin: 15px 0;
+  margin: 5px 0;
   flex-wrap: wrap;
 }
 
@@ -271,9 +271,9 @@
 
 .skill-node {
   width: 60px;
-  height: 60px;
+  height: 70px;
   /* background: var(--bg-element); */
-  border: 2px solid #666;
+  /* border: 2px solid #666; */
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -285,37 +285,48 @@
   transition: all 0.2s;
 }
 
-.skill-node.available {
+.skill-node.available .skill-icon {
   border-color: #4caf50;
 }
 
-.skill-node.unlocked {
+.skill-node.unlocked .skill-icon {
   /* background: var(--accent); */
   border-color: #fff;
 }
 
 /* Skill type color coding */
-.skill-node.unlocked[data-skill-type='passive'] {
-  border-color: #4caf50;
+.skill-node.unlocked[data-skill-type='passive'] .skill-icon {
+  border-color: #d4e022;
 }
 
-.skill-node.unlocked[data-skill-type='instant'] {
+.skill-node.unlocked[data-skill-type='instant'] .skill-icon {
   border-color: #ff9800;
 }
 
-.skill-node.unlocked[data-skill-type='buff'] {
+.skill-node.unlocked[data-skill-type='buff'] .skill-icon {
   border-color: #2196f3;
 }
 
-.skill-node.unlocked[data-skill-type='summon'] {
+.skill-node.unlocked[data-skill-type='summon'] .skill-icon {
   border-color: #ab47bc;
 }
 
-.skill-node.active {
+.skill-node.active .skill-icon {
   border-color: #ff4444;
 }
 
-.skill-icon {
+.skill-row .skill-icon {
+  width: 55px;
+  height: 55px;
+  border: 2px solid #666;
+  border-radius: 10px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin: auto;
+}
+
+.skill-slots .skill-icon {
   width: 36px;
   height: 36px;
   background-size: contain;
