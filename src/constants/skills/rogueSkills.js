@@ -1,6 +1,7 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
 import { scaleDownFlat, scaleUpFlat } from '../../common.js';
+import { hero } from '../../globals.js';
 
 // Rogue skills extracted from skills.js
 export const ROGUE_SKILLS = {
@@ -346,5 +347,28 @@ export const ROGUE_SKILLS = {
       damagePercent: scaleDownFlat(level, 3.5),
       critChance: Math.min(scaleDownFlat(level, 0.15), 50),
     }),
+  },
+
+  // Specialization Skills
+  shadowClone: {
+    id: 'shadowClone',
+    name: () => t('Shadow Clone'),
+    type: () => 'summon',
+    summonStats: (level) => {
+      return {
+        percentOfPlayerDamage: 5 + level * 5,
+        attackSpeed: hero.stats.attackSpeed,
+      };
+    },
+    manaCost: (level) => 30 + level * 1,
+    cooldown: () => 48000,
+    duration: () => 22000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[4],
+    icon: () => 'clone-mastery',
+    description: () => t('skill.shadowClone'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+    }),
+    isVisible: () => hero.stats.cloneUnlocked > 0,
   },
 };

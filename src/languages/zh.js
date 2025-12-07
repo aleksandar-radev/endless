@@ -1077,6 +1077,7 @@ export default {
   'battleLog.autoAttack': '（普通攻击）',
   'battleLog.summonDamage': '召唤物 {summon} 造成了 {value} 点伤害{breakdown}{critical}',
   'battleLog.evadedAttack': '闪避了攻击',
+  'battleLog.avoidedAttack': '躲避了攻击',
   'battleLog.blockedAttack': '格挡了攻击',
   'battleLog.missedAttack': '攻击未命中',
   'battleLog.died': '死亡',
@@ -1531,7 +1532,7 @@ export default {
   'Shadow Magic': '暗影魔法',
   'skill.shadowMagic': '提供额外土系伤害。',
   'Animal Tracking': '动物追踪',
-  'skill.animalTracking': '提高对稀有敌人的伤害。',
+  'skill.animalTracking': '增加对高稀有度敌人的伤害。伤害加成随稀有度增加（神话级最高 4 倍）。',
   'Ranged Precision': '远程精准',
   'skill.rangedPrecision': '提高攻击评分并根据攻击评分增加伤害。',
 
@@ -1575,7 +1576,7 @@ export default {
   'Blood Bank': '血库',
   'skill.bloodBank': '溢出的治疗量增加最大生命值。',
   'Giant Slayer': '巨人杀手',
-  'skill.giantSlayer': '增加对精英和首领敌人的伤害。',
+  'skill.giantSlayer': '增加对高稀有度敌人的伤害。伤害加成随稀有度增加（神话级最高 4 倍）。',
 
   // Elementalist Specializations
   'Searing Heat': '灼热',
@@ -1620,9 +1621,9 @@ export default {
   'skill.enchantedArmor': '提高护甲附魔的效果。',
 
   // Stats
-  'stats.stealthChance': '隐身几率',
+  'stats.avoidChance': '闪避几率',
   'stats.executeThresholdPercent': '处决阈值 %',
-  'stats.damageToRareEnemiesPercent': '对稀有敌人伤害 %',
+  'stats.damageToHighRarityEnemiesPercent': '对高稀有度敌人伤害 %',
   'stats.healDamagesEnemiesPercent': '治疗伤害敌人 %',
   'stats.batsHealPercent': '蝙蝠治疗 %',
   'stats.reduceEnemyDamagePercent': '减少敌人伤害 %',
@@ -1646,8 +1647,7 @@ export default {
   'stats.warcryBuffEffectivenessPercent': '战吼效果 %',
   'stats.uncappedAttackSpeed': '攻速无上限',
   'stats.overhealToLife': '过量治疗转生命',
-  'stats.damageToElitesPercent': '对精英伤害 %',
-  'stats.overkillDamageEnabled': '过量伤害',
+  'stats.overkillDamageEnabled': '溢出伤害',
   'stats.burnStackingChance': '燃烧叠加几率',
   'stats.explosionChance': '爆炸几率',
   'stats.chainLightningChance': '连锁闪电几率',

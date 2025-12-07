@@ -1085,6 +1085,7 @@ export default {
   'battleLog.autoAttack': ' (auto attack)',
   'battleLog.summonDamage': 'Summon {summon} dealt {value} damage{breakdown}{critical}',
   'battleLog.evadedAttack': 'Evaded attack',
+  'battleLog.avoidedAttack': 'Avoided attack',
   'battleLog.blockedAttack': 'Blocked attack',
   'battleLog.missedAttack': 'Missed attack',
   'battleLog.died': 'Died',
@@ -1535,12 +1536,12 @@ export default {
   'skill.vanish': 'Chance to become invisible and avoid attacks.',
   'Assassinate': 'Assassinate',
   'skill.assassinate': 'Instantly kills enemies below a health threshold.',
-  'Clone Mastery': 'Clone Mastery',
-  'skill.cloneMastery': 'Increases effectiveness of your clone.',
+  'Shadow Clone': 'Shadow Clone',
+  'skill.shadowClone': 'Unlocks a shadow clone that fights for you.',
   'Shadow Magic': 'Shadow Magic',
   'skill.shadowMagic': 'Grants extra earth damage.',
   'Animal Tracking': 'Animal Tracking',
-  'skill.animalTracking': 'Increases damage against rare enemies.',
+  'skill.animalTracking': 'Increases damage against rare enemies and above. Damage bonus scales with rarity (up to 4x for Mythic).',
   'Ranged Precision': 'Ranged Precision',
   'skill.rangedPrecision': 'Increases attack rating and adds damage based on attack rating.',
 
@@ -1584,7 +1585,7 @@ export default {
   'Blood Bank': 'Blood Bank',
   'skill.bloodBank': 'Overhealing increases max life.',
   'Giant Slayer': 'Giant Slayer',
-  'skill.giantSlayer': 'Increases damage against elite and boss enemies.',
+  'skill.giantSlayer': 'Increases damage against rare enemies and above. Damage bonus scales with rarity (up to 4x for Mythic).',
 
   // Elementalist Specializations
   'Searing Heat': 'Searing Heat',
@@ -1629,9 +1630,9 @@ export default {
   'skill.enchantedArmor': 'Increases effectiveness of armor enchantments.',
 
   // Stats
-  'stats.stealthChance': 'Stealth Chance',
+  'stats.avoidChance': 'Avoid Chance',
   'stats.executeThresholdPercent': 'Execute Threshold %',
-  'stats.damageToRareEnemiesPercent': 'Damage to Rare Enemies %',
+  'stats.damageToHighRarityEnemiesPercent': 'Damage to High Rarity Enemies %',
   'stats.healDamagesEnemiesPercent': 'Heal Damages Enemies %',
   'stats.batsHealPercent': 'Bats Heal %',
   'stats.reduceEnemyDamagePercent': 'Reduce Enemy Damage %',
@@ -1655,7 +1656,7 @@ export default {
   'stats.warcryBuffEffectivenessPercent': 'Warcry Effectiveness %',
   'stats.uncappedAttackSpeed': 'Uncapped Attack Speed',
   'stats.overhealToLife': 'Overheal to Life',
-  'stats.damageToElitesPercent': 'Damage to Elites %',
+  'stats.damageToBossesPercent': 'Damage to Bosses %',
   'stats.overkillDamageEnabled': 'Overkill Damage',
   'stats.burnStackingChance': 'Burn Stacking Chance',
   'stats.explosionChance': 'Explosion Chance',
@@ -1678,5 +1679,5 @@ export default {
   'stats.weaponBuffEffectivenessPercent': 'Weapon Buff Effectiveness %',
   'stats.armorEnchantmentEffectivenessPercent': 'Armor Enchant Effectiveness %',
   'stats.cloneUnlocked': 'Clone Unlocked',
-  'stats.cloneEffectivenessPercent': 'Clone Effectiveness %',
+  'stats.cloneDamagePercent': 'Clone Damage %',
 };

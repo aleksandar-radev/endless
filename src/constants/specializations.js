@@ -123,7 +123,7 @@ export const SPECIALIZATIONS = {
       description: () => t('specialization.rogue.assassin.description'),
       avatar: () => 'rogue-assassin-avatar.jpg',
       baseStats: () => ({
-        critDamage: 0.5,
+        critDamage: 2,
       }),
       skills: {
         vanish: {
@@ -133,9 +133,9 @@ export const SPECIALIZATIONS = {
           requiredLevel: () => SKILL_LEVEL_TIERS[0],
           icon: () => 'vanish',
           description: () => t('skill.vanish'),
-          maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+          maxLevel: () => 400,
           effect: (level) => ({
-            stealthChance: scaleDownFlat(level, 0.5),
+            avoidChance: 5 + scaleDownFlat(level, 0.466, 3),
           }),
         },
         assassinate: {
@@ -147,7 +147,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.assassinate'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            executeThresholdPercent: scaleDownFlat(level, 0.5),
+            critDamage: level * 0.025,
+            executeThresholdPercent: Math.min(5 + scaleDownFlat(level, 0.34, 3), 50),
           }),
         },
       },
@@ -158,19 +159,20 @@ export const SPECIALIZATIONS = {
       description: () => t('specialization.rogue.shadowdancer.description'),
       avatar: () => 'rogue-shadowdancer-avatar.jpg',
       baseStats: () => ({
-        cloneUnlocked: 1,
+        attackSpeed: 0.5,
       }),
       skills: {
-        cloneMastery: {
-          id: 'cloneMastery',
-          name: () => t('Clone Mastery'),
+        shadowClone: {
+          id: 'shadowClone',
+          name: () => t('Shadow Clone'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[0],
           icon: () => 'clone-mastery',
-          description: () => t('skill.cloneMastery'),
+          description: () => t('skill.shadowClone'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            cloneEffectivenessPercent: scaleUpFlat(level, 10, 5, 0.2),
+            cloneUnlocked: 1,
+            cloneDamagePercent: scaleUpFlat(level, 5, 10, 0.5),
           }),
         },
         shadowMagic: {
@@ -182,8 +184,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.shadowMagic'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            earthDamage: scaleUpFlat(level, 15, 8, 0.2),
-            earthDamagePercent: scaleDownFlat(level, 2),
+            earthDamage: level ? 20000 - 50 + scaleUpFlat(level, 50, 3, 1) : 0,
+            earthDamagePercent: level ? 100 - 6 + scaleDownFlat(level, 6, 4) : 0,
           }),
         },
       },
@@ -194,7 +196,8 @@ export const SPECIALIZATIONS = {
       description: () => t('specialization.rogue.ranger.description'),
       avatar: () => 'rogue-ranger-avatar.jpg',
       baseStats: () => ({
-        damagePercent: 20,
+        damagePercent: 200,
+        elementalDamagePercent: 200,
       }),
       skills: {
         animalTracking: {
@@ -206,7 +209,7 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.animalTracking'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            damageToRareEnemiesPercent: scaleDownFlat(level, 2),
+            damageToHighRarityEnemiesPercent: scaleDownFlat(level, 10),
           }),
         },
         rangedPrecision: {
@@ -218,8 +221,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.rangedPrecision'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            attackRating: scaleUpFlat(level, 20, 10, 0.2),
-            extraDamageFromAttackRatingPercent: scaleDownFlat(level, 0.05),
+            attackRating: 20000 + scaleUpFlat(level, 80, 10, 1),
+            extraDamageFromAttackRatingPercent: 0.5 + scaleDownFlat(level, 0.018),
           }),
         },
       },
@@ -545,7 +548,7 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.giantSlayer'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            damageToElitesPercent: scaleDownFlat(level, 5),
+            damageToHighRarityEnemiesPercent: scaleDownFlat(level, 5),
           }),
         },
       },

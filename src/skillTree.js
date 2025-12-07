@@ -174,6 +174,8 @@ export default class SkillTree {
         return;
       }
 
+      if ((skillData.level || 0) <= 0) return;
+
       if (skill.type() === 'passive') {
         const effects = this.getSpecializationSkillEffect(skillId, skillData.level);
         Object.entries(effects).forEach(([stat, value]) => {
@@ -1093,6 +1095,9 @@ export default class SkillTree {
 
         if (skillId === 'animatedWeapons') {
           damage *= (hero.stats.animatedWeaponsDamagePercent) || 1;
+        }
+        if (skillId === 'shadowClone') {
+          damage *= (hero.stats.cloneDamagePercent) || 1;
         }
 
         if (buffData.summonStats.lifePerHit) {

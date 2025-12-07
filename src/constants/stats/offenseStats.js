@@ -592,12 +592,16 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
   },
-  // STEALTH
-  stealthChance: {
+  // ROGUE CLONE
+  cloneDamagePercent: {
     base: 0,
     decimalPlaces: 1,
-    showInUI: true,
-    subcategory: 'attack',
+  },
+  // STEALTH
+  avoidChance: {
+    base: 0,
+    decimalPlaces: 1,
+    forceNotShow: true,
   },
   // EXECUTE
   executeThresholdPercent: {
@@ -607,10 +611,9 @@ export const OFFENSE_STATS = {
     subcategory: 'attack',
   },
   // RARE ENEMY DAMAGE
-  damageToRareEnemiesPercent: {
-    base: 0,
-    decimalPlaces: 1,
-    subcategory: 'attack',
+  damageToHighRarityEnemiesPercent: {
+    label: 'stats.damageToHighRarityEnemiesPercent',
+    isPercentage: true,
   },
   // HEAL DAMAGES ENEMIES
   healDamagesEnemiesPercent: {
@@ -721,10 +724,9 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
   },
-  // ANT-ELITE DAMAGE
-  damageToElitesPercent: {
-    base: 0,
-    decimalPlaces: 1,
-    subcategory: 'attack',
+  damageToBossesPercent: {
+    label: 'stats.damageToBossesPercent',
+    isPercentage: true,
   },
+
 };

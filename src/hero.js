@@ -20,6 +20,7 @@ import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { ATTRIBUTES } from './constants/stats/attributes.js';
 import { SOUL_UPGRADE_CONFIG } from './soulShop.js';
 import { ELEMENTS } from './constants/common.js';
+import { ENEMY_RARITY } from './constants/enemies.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 const ATTRIBUTE_KEYS = Object.keys(ATTRIBUTES);
@@ -1157,13 +1158,23 @@ export default class Hero {
     // Apply damage multipliers based on enemy type
     if (enemy) {
       let multiplier = 1;
-      if (enemy.rarity !== 'normal' && this.stats.damageToRareEnemiesPercent) {
-        multiplier += this.stats.damageToRareEnemiesPercent / 100;
+      if (enemy.rarity !== ENEMY_RARITY.NORMAL.type && this.stats.damageToHighRarityEnemiesPercent) {
+        let rarityMult = 1;
+        // rare is default 1
+        if (enemy.rarity === ENEMY_RARITY.EPIC.type) rarityMult = 2;
+        if (enemy.rarity === ENEMY_RARITY.LEGENDARY.type) rarityMult = 3;
+        if (enemy.rarity === ENEMY_RARITY.MYTHIC.type) rarityMult = 4;
+
+        if (enemy.isBoss) rarityMult = Math.max(rarityMult, 4);
+
+        multiplier += (this.stats.damageToHighRarityEnemiesPercent * rarityMult);
       }
-      if ((enemy.rarity === 'mythic' || enemy.isBoss || enemy.rarity === 'legendary') && this.stats.damageToElitesPercent) {
-        multiplier += this.stats.damageToElitesPercent / 100;
-      }
+      console.log(enemy.rarity);
+      console.log(multiplier);
+      console.log(finalDamage);
+
       finalDamage *= multiplier;
+      console.log(finalDamage);
     }
 
     console.debug('Final Damage Breakdown:', reducedBreakdown);

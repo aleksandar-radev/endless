@@ -135,32 +135,39 @@ export function enemyAttack(currentTime) {
     // carried over to future ticks instead of being rounded to the 100 ms game loop
     enemy.lastAttack += timeBetweenAttacks;
 
-    // Check for evasion first
+    // Check for evasion/avoidance/dodge hierarchy
     const alwaysHit = enemy.special?.includes('alwaysHit');
     const enemySpecials = enemy.special || [];
     const enemySpecialData = enemy.specialData || {};
+
+    let avoided = false;
+
     const hitChance = calculateHitChance(
       enemy.attackRating,
       hero.stats.evasion,
       alwaysHit ? 1 : undefined,
     );
-    let isEvaded = !alwaysHit && Math.random() * 100 > hitChance;
 
-    if (!isEvaded && !alwaysHit) {
-      if (hero.stats.stealthChance > 0 && Math.random() * 100 < hero.stats.stealthChance) {
-        isEvaded = true;
-        createDamageNumber({ text: 'STEALTH', isPlayer: true, color: '#888888' });
+    if (!alwaysHit) {
+      if (Math.random() * 100 > hitChance) {
+        avoided = true;
+        createDamageNumber({ text: 'EVADED', isPlayer: true, color: '#FFD700' });
+        battleLog.addBattle(t('battleLog.evadedAttack'));
+      } else if (hero.stats.avoidChance > 0 && Math.random() * 100 < hero.stats.avoidChance) {
+        avoided = true;
+        createDamageNumber({ text: 'AVOIDED', isPlayer: true, color: '#888888' });
+        battleLog.addBattle(t('battleLog.avoidedAttack'));
       } else if (hero.stats.teleportDodgeChance > 0 && Math.random() * 100 < hero.stats.teleportDodgeChance) {
         const cost = hero.stats.mana * 0.1;
         if (hero.stats.currentMana >= cost) {
           game.restoreMana(-cost);
-          isEvaded = true;
+          avoided = true;
           createDamageNumber({ text: 'BLINK', isPlayer: true, color: '#00FFFF' });
         }
       }
     }
 
-    if (!isEvaded) {
+    if (!avoided) {
       if (hero.stats.freezeChance > 0 && Math.random() * 100 < hero.stats.freezeChance) {
         createDamageNumber({ text: 'FROZEN', isPlayer: true, color: '#ADD8E6' });
         enemy.lastAttack += 1000;
@@ -171,13 +178,7 @@ export function enemyAttack(currentTime) {
         enemy.lastAttack += 1000;
         continue;
       }
-    }
 
-    if (isEvaded) {
-      // Show "EVADED" text
-      createDamageNumber({ text: 'EVADED', isPlayer: true, color: '#FFD700' });
-      battleLog.addBattle(t('battleLog.evadedAttack'));
-    } else {
       // Use PoE2 armor formula for physical damage reduction
       const physicalDamageRaw = enemy.damage;
       const armorReduction = calculateArmorReduction(hero.stats.armor, physicalDamageRaw) / 100;
@@ -329,9 +330,9 @@ export function playerAttack(currentTime) {
 
       // Execute Check
       if (hero.stats.executeThresholdPercent > 0) {
-        const threshold = enemy.maxLife * (hero.stats.executeThresholdPercent / 100);
+        const threshold = enemy.life * (hero.stats.executeThresholdPercent);
         if (enemy.currentLife <= threshold) {
-          damage = enemy.currentLife + 1e9; // Ensure kill
+          damage = enemy.currentLife + 1e200; // Ensure kill
           createCombatText('EXECUTE!', true);
         }
       }
