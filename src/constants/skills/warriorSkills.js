@@ -2,6 +2,7 @@ import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
 import { scaleDownFlat } from '../../common.js';
 import { scaleUpFlat } from '../../common.js';
+import { hero } from '../../globals.js';
 
 // Warrior skills extracted from skills.js
 export const WARRIOR_SKILLS = {
@@ -326,5 +327,28 @@ export const WARRIOR_SKILLS = {
       reduceEnemyAttackSpeedPercent: Math.min(scaleDownFlat(level, 0.1), 15),
       reduceEnemyDamagePercent: Math.min(scaleDownFlat(level, 0.075), 10),
     }),
+  },
+
+  // Specialization Skills
+  animatedWeapons: {
+    id: 'animatedWeapons',
+    name: () => t('Animated Weapons'),
+    type: () => 'summon',
+    summonStats: (level) => {
+      return {
+        percentOfPlayerDamage: 5 + level * 5,
+        attackSpeed: hero.stats.attackSpeed,
+      };
+    },
+    manaCost: (level) => 30 + level * 1,
+    cooldown: () => 48000,
+    duration: () => 22000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[1],
+    icon: () => 'animated-weapons',
+    description: () => t('skill.animatedWeapons'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+    }),
+    isVisible: () => hero.stats.animatedWeaponsUnlocked > 0,
   },
 };

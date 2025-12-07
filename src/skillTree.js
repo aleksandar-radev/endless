@@ -1,5 +1,5 @@
 import { handleSavedData } from './functions.js';
-import { dataManager, game, hero, crystalShop, options } from './globals.js';
+import { dataManager, game, hero, crystalShop, options, inventory } from './globals.js';
 import { SKILLS_MAX_QTY } from './constants/limits.js';
 import { CLASS_PATHS, SKILL_TREES } from './constants/skills.js';
 import { getSpecialization } from './constants/specializations.js';
@@ -558,6 +558,110 @@ export default class SkillTree {
     return allocations.reduce((sum, { qty }) => sum + qty, 0);
   }
 
+  calculateSpecializationBulkAllocation(qtySetting) {
+    if (!this.selectedSpecialization) {
+      return { totalCost: 0, allocations: [], affordable: false };
+    }
+
+    const spec = getSpecialization(this.selectedPath.name, this.selectedSpecialization.id);
+    if (!spec) return { totalCost: 0, allocations: [], affordable: false };
+
+    const entries = Object.keys(spec.skills)
+      .map((skillId) => {
+        const skill = this.getSpecializationSkill(skillId);
+        if (!skill) return null;
+
+        const requiredLevel = typeof skill.requiredLevel === 'function' ? skill.requiredLevel() : 0;
+        if (hero.level < requiredLevel) return null;
+
+        const currentLevel = this.specializationSkills[skillId]?.level || 0;
+        const rawMax = typeof skill.maxLevel === 'function' ? skill.maxLevel() : DEFAULT_MAX_SKILL_LEVEL;
+        const maxLevel = Number.isFinite(rawMax) ? rawMax : DEFAULT_MAX_SKILL_LEVEL;
+        const levelCap = Math.min(maxLevel, hero.level);
+        const levelsLeft = Math.max(0, levelCap - currentLevel);
+
+        if (levelsLeft <= 0) return null;
+
+        return { skillId, currentLevel, levelsLeft };
+      })
+      .filter(Boolean);
+
+    if (entries.length === 0) {
+      return { totalCost: 0, allocations: [], affordable: false };
+    }
+
+    let totalCost = 0;
+    const allocations = [];
+
+    if (qtySetting === 'max') {
+      const perChunk = Math.floor(this.specializationPoints / entries.length);
+      if (perChunk <= 0) {
+        return { totalCost: 0, allocations: [], affordable: false };
+      }
+      entries.forEach(({ skillId, currentLevel, levelsLeft }) => {
+        const cap = Math.min(levelsLeft, SKILLS_MAX_QTY);
+        if (cap <= 0) return;
+        let low = 0;
+        let high = cap;
+        let bestQty = 0;
+        while (low <= high) {
+          const mid = Math.floor((low + high) / 2);
+          const cost = this.calculateSkillPointCost(currentLevel, mid);
+          if (cost <= perChunk) {
+            bestQty = mid;
+            low = mid + 1;
+          } else {
+            high = mid - 1;
+          }
+        }
+        if (bestQty > 0) {
+          const cost = this.calculateSkillPointCost(currentLevel, bestQty);
+          if (Number.isFinite(cost) && cost > 0) {
+            totalCost += cost;
+            allocations.push({ skillId, qty: bestQty, cost });
+          }
+        }
+      });
+    } else {
+      const desiredRaw = Number(qtySetting);
+      const desired = Number.isFinite(desiredRaw) ? Math.max(0, Math.min(desiredRaw, SKILLS_MAX_QTY)) : 0;
+      if (desired <= 0) {
+        return { totalCost: 0, allocations: [], affordable: false };
+      }
+      entries.forEach(({ skillId, currentLevel, levelsLeft }) => {
+        const qty = Math.min(desired, levelsLeft);
+        if (qty <= 0) return;
+        const cost = this.calculateSkillPointCost(currentLevel, qty);
+        if (!Number.isFinite(cost) || cost <= 0) return;
+        totalCost += cost;
+        allocations.push({ skillId, qty, cost });
+      });
+    }
+
+    const affordable = this.specializationPoints >= totalCost && totalCost > 0;
+    return { totalCost, allocations, affordable };
+  }
+
+  bulkAllocateSpecializationSkills(qtySetting) {
+    const { totalCost, allocations, affordable } = this.calculateSpecializationBulkAllocation(qtySetting);
+    if (allocations.length === 0) return 0;
+    if (!affordable) {
+      showToast(t('skillTree.notEnoughSkillPointsBulk'), 'error');
+      return 0;
+    }
+
+    allocations.forEach(({ skillId, qty }) => {
+      this.unlockSpecializationSkill(skillId, qty);
+    });
+
+    hero.queueRecalculateFromAttributes();
+    updateSkillTreeValues();
+    updateTabIndicators();
+    dataManager.saveGame();
+    showToast(t('skillTree.bulkAllocateSuccess'), 'success');
+    return allocations.reduce((sum, { qty }) => sum + qty, 0);
+  }
+
   toggleSkill(skillId) {
     if (!this.skills[skillId]) return;
 
@@ -987,6 +1091,10 @@ export default class SkillTree {
         damage += buffData.summonStats.lightningDamage || 0;
         damage += buffData.summonStats.waterDamage || 0;
 
+        if (skillId === 'animatedWeapons') {
+          damage *= (hero.stats.animatedWeaponsDamagePercent) || 1;
+        }
+
         if (buffData.summonStats.lifePerHit) {
           game.healPlayer(buffData.summonStats.lifePerHit);
         }
@@ -996,7 +1104,10 @@ export default class SkillTree {
 
         const skill = this.getSkill(skillId);
         const summonName = typeof skill?.name === 'function' ? skill.name() : null;
-        game.damageEnemy(damage, false, null, null, summonName);
+
+        const canCrit = buffData.summonStats.canCrit;
+        game.damageEnemy(damage, canCrit ? playerDamage.isCritical : false, null, null, summonName);
+
         // Schedule next attack
         buffData.nextAttackTime = now + 1000 / buffData.summonStats.attackSpeed;
       }
@@ -1038,6 +1149,7 @@ export default class SkillTree {
     this.specializationSkills = {};
     this.updateSpecializationPoints();
     hero.queueRecalculateFromAttributes();
+    inventory.validateEquipment();
     updateActionBar();
     updateSkillTreeValues();
     dataManager.saveGame();

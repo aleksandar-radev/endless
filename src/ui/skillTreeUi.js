@@ -259,6 +259,9 @@ function initializeSkillsTab() {
   }, {});
 
   Object.entries(skills).forEach(([skillId, skillData]) => {
+    const isVisible = typeof skillData.isVisible === 'function' ? skillData.isVisible() : (skillData.isVisible !== false);
+    if (!isVisible) return;
+
     if (noLvlRestriction || (skillData.requiredLevel() <= hero.level && levelGroups[skillData.requiredLevel()])) {
       levelGroups[skillData.requiredLevel()].push({ id: skillId, ...skillData });
     }
@@ -312,26 +315,110 @@ function initializeSpecializationsTab() {
           readableStat = readableStat.replace(/ Percent$/, '');
           displayValue = `${value}%`;
         }
+        if (!shouldShowStatValue(stat)) return `<div>${readableStat}</div>`;
         const prefix = value > 0 ? '+' : '';
         return `<div>${readableStat}: ${prefix}${displayValue}</div>`;
       })
       .join('');
 
+    const showQtyControls = options?.quickBuy || options?.bulkBuy;
+    let quickControls = '';
+    if (showQtyControls) {
+      if (options.useNumericInputs) {
+        const val = skillTree.quickQty === 'max' ? (options.skillQuickQty || 1) : skillTree.quickQty;
+        quickControls = `
+        <div class="skill-qty-controls">
+          <input type="number" class="skill-qty-input input-number" min="1" value="${val}" />
+          <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">Max</button>
+        </div>`;
+      } else {
+        quickControls = `
+        <div class="skill-qty-controls">
+          <button data-qty="1" class="${skillTree.quickQty === 1 ? 'active' : ''}">1</button>
+          <button data-qty="5" class="${skillTree.quickQty === 5 ? 'active' : ''}">5</button>
+          <button data-qty="25" class="${skillTree.quickQty === 25 ? 'active' : ''}">25</button>
+          <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">Max</button>
+        </div>`;
+      }
+    }
+
+    let bulkControls = '';
+    if (options?.bulkBuy) {
+      bulkControls = `
+      <div class="skill-bulk-controls">
+        <button class="bulk-buy">${t('skillTree.bulkAllocate')}</button>
+        <span class="skill-bulk-cost"></span>
+      </div>`;
+    }
+
+    const controlsMarkup = quickControls || bulkControls ? `<div class="skill-header-controls" style="display: flex; gap: 10px;">${quickControls}${bulkControls}</div>` : '';
+
     const header = document.createElement('div');
     header.className = 'selected-specialization-header';
     header.innerHTML = `
-      <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
-        <img src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}" alt="${spec.name()} Avatar" class="character-avatar specialization-avatar" style="width: 72px; height: 128px; border-radius: 8px; object-fit: cover;" />
-        <div>
-            <h3 style="margin: 0; font-size: 1.5em; color: #ffd700;">${spec.name()}</h3>
-            <p style="margin: 5px 0; opacity: 0.8;">${spec.description()}</p>
-            <div class="base-stats" style="margin-top: 10px; font-size: 0.9em; color: #aaa;">
-              ${baseStatsHtml}
-            </div>
+      <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+           <div class="spec-points-display" style="font-size: 1.2em; color: #ffd700;">${t('skillTree.specializationPoints')}: ${formatNumber(skillTree.specializationPoints)}</div>
+           ${controlsMarkup}
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 20px;">
+          <img src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}" alt="${spec.name()} Avatar" class="character-avatar specialization-avatar" style="width: 72px; height: 128px; border-radius: 8px; object-fit: cover;" />
+          <div style="flex: 1;">
+              <h3 style="margin: 0; font-size: 1.5em; color: #ffd700;">${spec.name()}</h3>
+              <p style="margin: 5px 0; opacity: 0.8;">${spec.description()}</p>
+              <div class="base-stats" style="margin-top: 10px; font-size: 0.9em; color: #aaa;">
+                ${baseStatsHtml}
+              </div>
+          </div>
         </div>
       </div>
     `;
     specializationsContent.appendChild(header);
+
+    // Attach event listeners for controls
+    const qtyControls = header.querySelector('.skill-qty-controls');
+    if (qtyControls) {
+      if (options.useNumericInputs) {
+        const input = qtyControls.querySelector('.skill-qty-input');
+        const maxBtn = qtyControls.querySelector('button[data-qty="max"]');
+        input.oninput = () => {
+          let v = parseInt(input.value, 10);
+          if (isNaN(v) || v < 1) v = 1;
+          if (v > SKILLS_MAX_QTY) v = SKILLS_MAX_QTY;
+          input.value = v;
+          skillTree.quickQty = v;
+          options.skillQuickQty = v;
+          maxBtn.classList.remove('active');
+          updateSkillTreeValues(); // Update UI to reflect cost changes
+          dataManager.saveGame();
+        };
+        maxBtn.onclick = () => {
+          skillTree.quickQty = 'max';
+          maxBtn.classList.add('active');
+          const maxValue = Math.min(options.skillQuickQty || 1, SKILLS_MAX_QTY);
+          input.value = maxValue;
+          updateSkillTreeValues();
+          dataManager.saveGame();
+        };
+      } else {
+        qtyControls.querySelectorAll('button').forEach((btn) => {
+          btn.onclick = () => {
+            skillTree.quickQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+            qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateSkillTreeValues();
+            dataManager.saveGame();
+          };
+        });
+      }
+    }
+
+    const bulkBtn = header.querySelector('.skill-bulk-controls .bulk-buy');
+    if (bulkBtn) {
+      bulkBtn.onclick = () => {
+        skillTree.bulkAllocateSpecializationSkills(skillTree.quickQty);
+      };
+    }
 
     const skillsContainer = document.createElement('div');
     skillsContainer.className = 'specialization-skills-container';
@@ -396,6 +483,7 @@ function initializeSpecializationsTab() {
           readableStat = readableStat.replace(/ Percent$/, '');
           displayValue = `${value}%`;
         }
+        if (!shouldShowStatValue(stat)) return `<div>${readableStat}</div>`;
         const prefix = value > 0 ? '+' : '';
         return `<div>${readableStat}: ${prefix}${displayValue}</div>`;
       })
@@ -454,24 +542,247 @@ function createSpecializationSkillElement(baseSkill) {
   skillElement.addEventListener('mouseleave', hideTooltip);
 
   skillElement.addEventListener('click', (e) => {
-    // For now, specialization skills work on click (buy 1 or quick qty)
-    // We reuse the main skill tree quick buy setting
-    const count = skillTree.quickQty === 'max' ? Infinity : parseInt(skillTree.quickQty, 10) || 1;
-    const currentLevel = skill.level || 0;
-    const unlocked = skillTree.unlockSpecializationSkill(skill.id, count);
+    if (options?.quickBuy) {
+      const count = skillTree.quickQty === 'max' ? Infinity : parseInt(skillTree.quickQty, 10) || 1;
+      const unlocked = skillTree.unlockSpecializationSkill(skill.id, count);
 
-    if (unlocked > 0) {
-      // Refresh tooltip
-      showTooltip(updateSpecializationTooltipContent(skill.id), e);
-      // Update this specific node immediately for better responsiveness
-      const newLevel = currentLevel + unlocked;
-      skillElement.querySelector('.skill-level').textContent =
-            skill.maxLevel() !== Infinity ? `${newLevel}/${skill.maxLevel()}` : `${newLevel}`;
-      skillElement.classList.add('unlocked');
+      if (unlocked > 0) {
+        // Refresh tooltip
+        showTooltip(updateSpecializationTooltipContent(skill.id), e);
+      }
+    } else {
+      openSpecializationSkillModal(skill.id);
     }
   });
 
   return skillElement;
+}
+
+let specSkillModal;
+let currentSpecSkillId;
+let selectedSpecSkillQty = 1;
+
+function initializeSpecSkillModal() {
+  if (specSkillModal) return;
+  const content = html`
+    <div class="skill-modal-content">
+      <span class="modal-close">&times;</span>
+      <div class="modal-skill-icon"></div>
+      <h2 class="modal-skill-name"></h2>
+      <p class="modal-skill-desc"></p>
+      <div class="modal-skill-stats">
+        <p>Level: <span class="modal-level"></span>/<span class="modal-max-level"></span></p>
+        <p>Available Points: <span class="modal-available-points"></span></p>
+        <p>Skill Point Cost: <span class="modal-sp-cost"></span></p>
+      </div>
+      <div class="modal-skill-effects">
+        <h3>Effects</h3>
+        <div class="effects-list"></div>
+      </div>
+      <div class="modal-controls">
+        <button data-qty="1">+1</button>
+        <button data-qty="5">+5</button>
+        <button data-qty="25">+25</button>
+        <button class="max-btn" data-qty="max">Max</button>
+      </div>
+      <button class="modal-buy">Buy</button>
+    </div>
+  `;
+  specSkillModal = createModal({
+    id: 'spec-skill-modal',
+    className: 'skill-modal hidden',
+    content,
+    onClose: closeSpecSkillModal,
+  });
+  specSkillModal.querySelectorAll('.modal-controls button').forEach((btn) => {
+    btn.onclick = () => {
+      selectedSpecSkillQty = btn.dataset.qty;
+      updateSpecSkillModalDetails();
+    };
+  });
+  specSkillModal.querySelector('.modal-buy').onclick = () => buySpecSkillBulk();
+}
+
+function openSpecializationSkillModal(skillId) {
+  initializeSpecSkillModal();
+  currentSpecSkillId = skillId;
+  const skill = skillTree.getSpecializationSkill(skillId);
+
+  const iconEl = specSkillModal.querySelector('.modal-skill-icon');
+  iconEl.style.backgroundImage = `url('${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg')`;
+
+  const currentLevel = skill.level || 0;
+  specSkillModal.querySelector('.modal-skill-name').textContent = skill.name();
+  specSkillModal.querySelector('.modal-skill-desc').innerHTML = skill.description().replace(/\n/g, '<br>');
+  specSkillModal.querySelector('.modal-level').textContent = currentLevel;
+  specSkillModal.querySelector('.modal-max-level').textContent = skill.maxLevel() === Infinity ? '∞' : skill.maxLevel();
+  specSkillModal.querySelector('.modal-available-points').textContent = formatNumber(skillTree.specializationPoints);
+
+  // Populate effects
+  const effectsCurrent = skillTree.getSpecializationSkillEffect(skillId, currentLevel);
+  const effectsNext = skillTree.getSpecializationSkillEffect(skillId, currentLevel + 1);
+  const effectsEl = specSkillModal.querySelector('.effects-list');
+  effectsEl.innerHTML = '';
+
+  if (effectsNext) {
+    Object.entries(effectsNext).forEach(([stat, nextVal]) => {
+      const currVal = effectsCurrent?.[stat] || 0;
+      const diff = nextVal - currVal;
+      if (!shouldShowStatValue(stat)) {
+        effectsEl.innerHTML += `<p>${formatStatName(stat)}</p>`;
+        return;
+      }
+      const decimals = getStatDecimals(stat);
+      effectsEl.innerHTML += `
+          <p>${formatStatName(stat)}: ${currVal.toFixed(decimals)} (${formatSignedValue(diff, decimals)})</p>
+        `;
+    });
+  }
+
+  selectedSpecSkillQty = 1;
+  updateSpecSkillModalDetails();
+  specSkillModal.classList.remove('hidden');
+}
+
+function closeSpecSkillModal() {
+  if (specSkillModal) specSkillModal.classList.add('hidden');
+}
+
+function updateSpecSkillModalDetails() {
+  const qty = selectedSpecSkillQty === 'max' ? Infinity : parseInt(selectedSpecSkillQty, 10);
+  const skill = skillTree.getSpecializationSkill(currentSpecSkillId);
+  const currentLevel = skill.level || 0;
+  const maxLevel = skill.maxLevel() || Infinity;
+
+  // Use specialization points for calculation
+  const maxQty = skillTree.calculateMaxPurchasable(skill, skillTree.specializationPoints);
+  const actualQty = selectedSpecSkillQty === 'max' ? maxQty : Math.min(qty, maxQty);
+  const displayQty = selectedSpecSkillQty === 'max' ? maxQty : (isNaN(qty) ? 0 : qty);
+
+  specSkillModal.querySelector('.modal-level').textContent = currentLevel;
+  specSkillModal.querySelector('.modal-max-level').textContent = maxLevel === Infinity ? '∞' : maxLevel;
+  specSkillModal.querySelector('.modal-available-points').textContent = formatNumber(skillTree.specializationPoints);
+
+  const displayCost = skillTree.calculateSkillPointCost(currentLevel, displayQty);
+  specSkillModal.querySelector('.modal-sp-cost').textContent = displayCost + ' SP';
+
+  specSkillModal.querySelectorAll('.modal-controls button').forEach((btn) => {
+    const v = btn.dataset.qty;
+    const rawQty = v === 'max' ? maxQty : parseInt(v, 10);
+    const btnCost = skillTree.calculateSkillPointCost(currentLevel, isNaN(rawQty) ? 0 : rawQty);
+    btn.textContent = (v === 'max' ? 'Max' : '+' + v) + ' (' + btnCost + ' SP)';
+  });
+
+  const buyBtn = specSkillModal.querySelector('.modal-buy');
+  buyBtn.disabled = actualQty <= 0;
+  buyBtn.textContent = `Buy ${displayQty} for ${displayCost} SP`;
+}
+
+function buySpecSkillBulk() {
+  let count = selectedSpecSkillQty === 'max' ? Infinity : parseInt(selectedSpecSkillQty, 10);
+  const unlocked = skillTree.unlockSpecializationSkill(currentSpecSkillId, count);
+
+  if (unlocked > 0) {
+    updateSkillTreeValues();
+    updateSpecSkillModalDetails();
+  }
+}
+
+function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNext) {
+  const typeBadge = formatSkillTypeBadge(skill);
+  const nextLevel = currentLevel + 1;
+  const isMaxed = currentLevel >= skill.maxLevel() && skill.maxLevel() !== Infinity;
+
+  let html = `
+      <strong>${skill.name()} [${typeBadge}]</strong><br>
+      ${skill
+    .description()
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line)
+    .join('<br>')}
+      <br>
+      ${t('skillTree.level')}: ${currentLevel}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
+    `;
+
+  if (skill.manaCost) {
+    const manaCost = skillTree.getSkillManaCost(skill, currentLevel);
+    const manaCostNextLevel = skillTree.getSkillManaCost(skill, nextLevel);
+    if (manaCost) {
+      html += `<br />${t('skillTree.manaCost')}: ${manaCost.toFixed(2)}`;
+      if (!isMaxed) {
+        const diff = manaCostNextLevel - manaCost;
+        html += ` (+${diff.toFixed(2)})`;
+      }
+    }
+  }
+  if (skill.cooldown) {
+    const cooldown = skillTree.getSkillCooldown(skill, currentLevel);
+    const cooldownNextLevel = skillTree.getSkillCooldown(skill, nextLevel);
+    if (cooldown) {
+      html += `<br />${t('skillTree.cooldown')}: ${(cooldown / 1000).toFixed(2)}s`;
+      if (!isMaxed) {
+        html += ` (${(cooldownNextLevel - cooldown) / 1000}s)`;
+      }
+    }
+  }
+  if (skill.duration) {
+    const duration = skillTree.getSkillDuration(skill, currentLevel);
+    const durationNextLevel = skillTree.getSkillDuration(skill, nextLevel);
+    if (duration) {
+      html += `<br />${t('skillTree.duration')}: ${(duration / 1000).toFixed(2)}s`;
+      if (!isMaxed) {
+        html += ` (+${(durationNextLevel - duration) / 1000}s)`;
+      }
+    }
+  }
+
+  // Current Effects
+  if (effectsCurrent && Object.keys(effectsCurrent).length > 0) {
+    html += `<br /><u>${t('skillTree.currentEffects')}:</u><br />`;
+    Object.entries(effectsCurrent).forEach(([stat, value]) => {
+      if (!shouldShowStatValue(stat)) {
+        html += `${formatStatName(stat)}<br />`;
+        return;
+      }
+      const decimals = getStatDecimals(stat);
+      const formattedValue = formatSignedValue(value, decimals, false);
+      html += `${formatStatName(stat)}: ${formattedValue}<br />`;
+    });
+  }
+
+  // Summon Stats or Next Level Effects
+  if (skill.type() === 'summon') {
+    const summonStats = skill.summonStats(currentLevel);
+    html += `<br /><u>${t('skillTree.summonStats')}:</u><br />`;
+    Object.entries(summonStats).forEach(([stat, value]) => {
+      if (!shouldShowStatValue(stat)) {
+        html += `${formatStatName(stat)}<br />`;
+        return;
+      }
+      const decimals = getStatDecimals(stat);
+      html += `${formatStatName(stat)}: ${value.toFixed(decimals)}<br />`;
+    });
+  } else if (!isMaxed) {
+    html += `<br /><u>${t('skillTree.nextLevelEffects')}:</u><br />`;
+    Object.entries(effectsNext).forEach(([stat, value]) => {
+      const decimals = getStatDecimals(stat);
+      const currentValue = effectsCurrent[stat] || 0;
+      const difference = value - currentValue;
+      if (!shouldShowStatValue(stat)) {
+        html += `${formatStatName(stat)}<br />`;
+        return;
+      }
+
+      html += `${formatStatName(stat)}: ${formatSignedValue(
+        value,
+        decimals,
+        false,
+      )} <span class="bonus">(${formatSignedValue(difference, decimals)})</span><br />`;
+    });
+  }
+
+  return html;
 }
 
 function updateSpecializationTooltipContent(skillId) {
@@ -484,53 +795,7 @@ function updateSpecializationTooltipContent(skillId) {
   const nextLevel = currentLevel < skill.maxLevel() ? currentLevel + 1 : currentLevel;
   const effectsNext = skillTree.getSpecializationSkillEffect(skillId, nextLevel);
 
-  const typeBadge = formatSkillTypeBadge(skill);
-
-  let skillDescription = `
-      <strong>${skill.name()} [${typeBadge}]</strong><br>
-      ${skill
-    .description()
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line)
-    .join('<br>')}
-      <br>
-      Level: ${currentLevel}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
-    `;
-
-  // Passive effects
-  if (effectsCurrent && Object.keys(effectsCurrent).length > 0) {
-    skillDescription += '<br /><u>Current Effects:</u><br />';
-    Object.entries(effectsCurrent).forEach(([stat, value]) => {
-      if (!shouldShowStatValue(stat)) {
-        skillDescription += `${formatStatName(stat)}<br />`;
-        return;
-      }
-      const decimals = getStatDecimals(stat);
-      const formattedValue = formatSignedValue(value, decimals, false);
-      skillDescription += `${formatStatName(stat)}: ${formattedValue}<br />`;
-    });
-  }
-
-  if (currentLevel < skill.maxLevel() || skill.maxLevel() === Infinity) {
-    skillDescription += '<br /><u>Next Level Effects:</u><br />';
-    Object.entries(effectsNext).forEach(([stat, value]) => {
-      if (!shouldShowStatValue(stat)) {
-        skillDescription += `${formatStatName(stat)}<br />`;
-        return;
-      }
-      const decimals = getStatDecimals(stat);
-      const currentValue = effectsCurrent[stat] || 0;
-      const difference = value - currentValue;
-      skillDescription += `${formatStatName(stat)}: ${formatSignedValue(
-        value,
-        decimals,
-        false,
-      )} <span class="bonus">(${formatSignedValue(difference, decimals)})</span><br />`;
-    });
-  }
-
-  return skillDescription;
+  return generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNext);
 }
 
 
@@ -565,6 +830,7 @@ function showClassSelection() {
         readableStat = readableStat.replace(/ Percent$/, '');
         displayValue = `${value}%`;
       }
+      if (!shouldShowStatValue(stat)) return `<div>${readableStat}</div>`;
       const prefix = value > 0 ? '+' : '';
       return `<div>${readableStat}: ${prefix}${displayValue}</div>`;
     })
@@ -710,86 +976,7 @@ function createPreviewTooltip(skill) {
   const nextLevel = currentLevel + 1;
   const effectsNext = skill.effect(nextLevel);
 
-  const typeBadge = formatSkillTypeBadge(skill);
-
-  let skillDescription = `
-      <strong>${skill.name()} [${typeBadge}]</strong><br>
-      ${skill
-    .description()
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line)
-    .join('<br>')}
-      <br>
-      Level: ${currentLevel}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
-    `;
-
-  if (skill.manaCost) {
-    const manaCost = skill.manaCost(currentLevel);
-    const manaCostNextLevel = skill.manaCost(nextLevel);
-    if (manaCost) {
-      const diff = manaCostNextLevel - manaCost;
-      skillDescription += `<br />Mana Cost: ${manaCost.toFixed(2)} (+${diff.toFixed(2)})`;
-    }
-  }
-  if (skill.cooldown) {
-    const cooldown = skill.cooldown(currentLevel);
-    const cooldownNextLevel = skill.cooldown(nextLevel);
-    if (cooldown) {
-      skillDescription += `<br />Cooldown: ${(cooldown / 1000).toFixed(2)}s (${(cooldownNextLevel - cooldown) / 1000}s)`;
-    }
-  }
-  if (skill.duration) {
-    const duration = skill.duration(currentLevel);
-    const durationNextLevel = skill.duration(nextLevel);
-    if (duration) {
-      skillDescription += `<br />Duration: ${(duration / 1000).toFixed(2)}s (+${(durationNextLevel - duration) / 1000}s)`;
-    }
-  }
-
-  if (effectsCurrent && Object.keys(effectsCurrent).length > 0) {
-    skillDescription += '<br /><u>Current Effects:</u><br />';
-    Object.entries(effectsCurrent).forEach(([stat, value]) => {
-      if (!shouldShowStatValue(stat)) {
-        skillDescription += `${formatStatName(stat)}<br />`;
-        return;
-      }
-      const decimals = getStatDecimals(stat);
-      const formattedValue = formatSignedValue(value, decimals, false);
-      skillDescription += `${formatStatName(stat)}: ${formattedValue}<br />`;
-    });
-  }
-
-  if (skill.type() === 'summon') {
-    const summonStats = skill.summonStats(currentLevel);
-    skillDescription += '<br /><u>Summon Stats:</u><br />';
-    Object.entries(summonStats).forEach(([stat, value]) => {
-      if (!shouldShowStatValue(stat)) {
-        skillDescription += `${formatStatName(stat)}<br />`;
-        return;
-      }
-      const decimals = getStatDecimals(stat);
-      skillDescription += `${formatStatName(stat)}: ${value.toFixed(decimals)}<br />`;
-    });
-  } else if (currentLevel < skill.maxLevel() || skill.maxLevel() === Infinity) {
-    skillDescription += '<br /><u>Next Level Effects:</u><br />';
-    Object.entries(effectsNext).forEach(([stat, value]) => {
-      if (!shouldShowStatValue(stat)) {
-        skillDescription += `${formatStatName(stat)}<br />`;
-        return;
-      }
-      const decimals = getStatDecimals(stat);
-      const currentValue = effectsCurrent[stat] || 0;
-      const difference = value - currentValue;
-      skillDescription += `${formatStatName(stat)}: ${formatSignedValue(
-        value,
-        decimals,
-        false,
-      )} <span class="bonus">(${formatSignedValue(difference, decimals)})</span><br />`;
-    });
-  }
-
-  return skillDescription;
+  return generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNext);
 }
 
 export function initializeSkillTreeStructure() {
@@ -802,115 +989,117 @@ export function initializeSkillTreeStructure() {
   showSkillTreeWithTabs();
 }
 
-function renderAutoCastToggles() {
+function renderSkillToggleSection(
+  containerId,
+  titleKey,
+  eligibleSkills,
+  isCheckedFn,
+  onToggleFn,
+  wrapperClass,
+  styleOptions = {},
+) {
   const container = document.getElementById('skills-tab-content') || document.getElementById('skill-tree-container');
-  let autoCastSection = document.getElementById('auto-cast-section');
-  if (autoCastSection) autoCastSection.remove();
+  let section = document.getElementById(containerId);
+  if (section) section.remove();
 
-  // Only show if player owns the upgrade
-  if (!crystalShop.hasAutoSpellCastUpgrade()) return;
+  if (eligibleSkills.length === 0) return;
+
+  section = document.createElement('div');
+  section.id = containerId;
+  if (styleOptions.marginTop) section.style.marginTop = styleOptions.marginTop;
+
+  section.innerHTML = `<h3 style="margin-bottom:8px;">${t(titleKey)}</h3>`;
+
+  eligibleSkills.forEach((skill) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = wrapperClass;
+    if (styleOptions.wrapperAlignItems) wrapper.style.alignItems = styleOptions.wrapperAlignItems;
+    if (styleOptions.wrapperMarginBottom) wrapper.style.marginBottom = styleOptions.wrapperMarginBottom;
+
+    const icon = document.createElement('div');
+    icon.className = 'skill-icon';
+    icon.style.width = '28px';
+    icon.style.height = '28px';
+    icon.style.backgroundImage = `url('${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg')`;
+    icon.style.marginRight = '8px';
+    wrapper.appendChild(icon);
+
+    const label = document.createElement('label');
+    label.textContent = skill.name();
+    label.style.marginRight = '8px';
+    wrapper.appendChild(label);
+
+    const toggle = document.createElement('input');
+    toggle.type = 'checkbox';
+    toggle.checked = isCheckedFn(skill.id);
+    toggle.addEventListener('change', (e) => onToggleFn(skill, e));
+    wrapper.appendChild(toggle);
+
+    section.appendChild(wrapper);
+  });
+
+  container.appendChild(section);
+}
+
+function renderAutoCastToggles() {
+  if (!crystalShop.hasAutoSpellCastUpgrade()) {
+    document.getElementById('auto-cast-section')?.remove();
+    return;
+  }
 
   // Only show if there are any instant/buff skills unlocked
   const eligibleSkills = Object.entries(skillTree.skills)
     .filter(([skillId, skill]) => {
       const base = skillTree.getSkill(skillId);
-      return base && (base.type() === 'instant' || base.type() === 'buff' || base.type() === 'summon') && skill.level > 0;
+      return (
+        base && (base.type() === 'instant' || base.type() === 'buff' || base.type() === 'summon') && skill.level > 0
+      );
     })
     .map(([skillId, skill]) => {
       const base = skillTree.getSkill(skillId);
       return { ...base, id: skillId };
     });
 
-  if (eligibleSkills.length === 0) return;
-
-  autoCastSection = document.createElement('div');
-  autoCastSection.id = 'auto-cast-section';
-  autoCastSection.style.marginTop = '32px';
-  autoCastSection.innerHTML = '<h3 style="margin-bottom:8px;">Auto-Cast Settings</h3>';
-
-  eligibleSkills.forEach((skill) => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'auto-cast-switch';
-    wrapper.style.alignItems = 'center';
-    wrapper.style.marginBottom = '6px';
-
-    const icon = document.createElement('div');
-    icon.className = 'skill-icon';
-    icon.style.width = '28px';
-    icon.style.height = '28px';
-    icon.style.backgroundImage = `url('${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg')`;
-    icon.style.marginRight = '8px';
-    wrapper.appendChild(icon);
-
-    const label = document.createElement('label');
-    label.textContent = skill.name();
-    label.style.marginRight = '8px';
-    wrapper.appendChild(label);
-
-    const toggle = document.createElement('input');
-    toggle.type = 'checkbox';
-    toggle.checked = skillTree.isAutoCastEnabled(skill.id);
-    toggle.addEventListener('change', (e) => {
+  renderSkillToggleSection(
+    'auto-cast-section',
+    'skillTree.autoCastSettings',
+    eligibleSkills,
+    (skillId) => skillTree.isAutoCastEnabled(skillId),
+    (skill, e) => {
       // Only allow toggling if upgrade is owned
       if (crystalShop.hasAutoSpellCastUpgrade()) {
         skillTree.setAutoCast(skill.id, e.target.checked);
       } else {
         e.preventDefault();
         showToast(t('skillTree.purchaseAutoCastWarning'), 'warning');
-        toggle.checked = false;
+        e.target.checked = false;
       }
-    });
-    wrapper.appendChild(toggle);
-
-    autoCastSection.appendChild(wrapper);
-  });
-
-  container.appendChild(autoCastSection);
+    },
+    'auto-cast-switch',
+    { marginTop: '32px', wrapperAlignItems: 'center', wrapperMarginBottom: '6px' },
+  );
 }
 
 // --- Slot Display Toggles ---
 function renderDisplayToggles() {
-  const container = document.getElementById('skills-tab-content') || document.getElementById('skill-tree-container');
-  let displaySection = document.getElementById('display-section');
-  if (displaySection) displaySection.remove();
-
   const eligibleSkills = Object.entries(skillTree.skills)
     .filter(([id, data]) => {
       const base = skillTree.getSkill(id);
       return base && base.type() !== 'passive' && data.level > 0;
     })
     .map(([id]) => ({ ...skillTree.getSkill(id), id }));
-  if (eligibleSkills.length === 0) return;
 
-  displaySection = document.createElement('div');
-  displaySection.id = 'display-section';
-  displaySection.innerHTML = '<h3 style="margin-bottom:8px;">Slot Display Settings</h3>';
-
-  eligibleSkills.forEach((skill) => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'display-switch';
-    const icon = document.createElement('div');
-    icon.className = 'skill-icon';
-    icon.style.width = '28px';
-    icon.style.height = '28px';
-    icon.style.backgroundImage = `url('${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg')`;
-    icon.style.marginRight = '8px';
-    wrapper.appendChild(icon);
-    const label = document.createElement('label');
-    label.textContent = skill.name();
-    label.style.marginRight = '8px';
-    wrapper.appendChild(label);
-    const toggle = document.createElement('input');
-    toggle.type = 'checkbox';
-    toggle.checked = skillTree.isDisplayEnabled(skill.id);
-    toggle.addEventListener('change', (e) => {
+  renderSkillToggleSection(
+    'display-section',
+    'skillTree.slotDisplaySettings',
+    eligibleSkills,
+    (skillId) => skillTree.isDisplayEnabled(skillId),
+    (skill, e) => {
       skillTree.setDisplay(skill.id, e.target.checked);
       updateActionBar();
-    });
-    wrapper.appendChild(toggle);
-    displaySection.appendChild(wrapper);
-  });
-  container.appendChild(displaySection);
+    },
+    'display-switch',
+  );
 }
 
 function setupSkillTreeFloatingHeader(container, header) {
@@ -1142,6 +1331,46 @@ export function updateSkillTreeValues() {
       skillBulkButton.onclick = () => {
         skillTree.bulkAllocateSkills(skillTree.quickQty);
       };
+    }
+  }
+
+  // Update Specialization Header if present
+  const specHeader = container.querySelector('.selected-specialization-header');
+  if (specHeader) {
+    const pointsDisplay = specHeader.querySelector('.spec-points-display');
+    if (pointsDisplay) {
+      pointsDisplay.textContent = `${t('skillTree.specializationPoints')}: ${formatNumber(skillTree.specializationPoints)}`;
+    }
+
+    // Update active state of quantity buttons
+    const qtyControls = specHeader.querySelector('.skill-qty-controls');
+    if (qtyControls) {
+      if (options.useNumericInputs) {
+        const input = qtyControls.querySelector('.skill-qty-input');
+        const maxBtn = qtyControls.querySelector('button[data-qty="max"]');
+        if (input && document.activeElement !== input) {
+          const val = skillTree.quickQty === 'max' ? (options.skillQuickQty || 1) : skillTree.quickQty;
+          input.value = val;
+        }
+        if (maxBtn) {
+          maxBtn.classList.toggle('active', skillTree.quickQty === 'max');
+        }
+      } else {
+        qtyControls.querySelectorAll('button').forEach((btn) => {
+          const btnQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+          btn.classList.toggle('active', skillTree.quickQty === btnQty);
+        });
+      }
+    }
+
+    // Update bulk cost
+    const bulkCostEl = specHeader.querySelector('.skill-bulk-cost');
+    const bulkBtn = specHeader.querySelector('.bulk-buy');
+    if (bulkCostEl && bulkBtn) {
+      const { totalCost, affordable } = skillTree.calculateSpecializationBulkAllocation(skillTree.quickQty);
+      bulkCostEl.textContent = `${t('skillTree.cost')}: ${formatNumber(totalCost)} ${t('skillTree.specializationPoints')}`;
+      bulkCostEl.classList.toggle('unaffordable', !affordable);
+      bulkBtn.disabled = totalCost === 0 || !affordable;
     }
   }
 
@@ -1513,89 +1742,7 @@ const updateTooltipContent = (skillId) => {
   const nextLevel = currentLevel < skill.maxLevel() ? currentLevel + 1 : currentLevel;
   const effectsNext = skillTree.getSkillEffect(skill.id, nextLevel);
 
-  const typeBadge = formatSkillTypeBadge(skill);
-
-  let skillDescription = `
-      <strong>${skill.name()} [${typeBadge}]</strong><br>
-      ${skill
-    .description()
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line)
-    .join('<br>')}
-      <br>
-      Level: ${currentLevel}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
-    `;
-
-  const skillManaCost = skillTree.getSkillManaCost(skill);
-  const skillManaCostNextLevel = skillTree.getSkillManaCost(skill, nextLevel);
-  if (skillManaCost) {
-    skillDescription += `<br />Mana Cost: ${skillManaCost} (+${skillManaCostNextLevel - skillManaCost})`;
-  }
-  const skillCooldown = skillTree.getSkillCooldown(skill);
-  const skillCooldownNextLevel = skillTree.getSkillCooldown(skill, nextLevel);
-
-  if (skillCooldown) {
-    skillDescription += `<br />Cooldown: ${(skillCooldown / 1000).toFixed(2)}s (${
-      (skillCooldownNextLevel - skillCooldown) / 1000
-    }s)`;
-  }
-  const skillDuration = skillTree.getSkillDuration(skill);
-  const skillDurationNextLevel = skillTree.getSkillDuration(skill, nextLevel);
-  if (skillDuration) {
-    skillDescription += `<br />Duration: ${(skillDuration / 1000).toFixed(2)}s (+${
-      (skillDurationNextLevel - skillDuration) / 1000
-    }s)`;
-  }
-
-  // Calculate effects at current level
-  if (effectsCurrent && Object.keys(effectsCurrent).length > 0) {
-    skillDescription += '<br /><u>Current Effects:</u><br />';
-    Object.entries(effectsCurrent).forEach(([stat, value]) => {
-      if (!shouldShowStatValue(stat)) {
-        skillDescription += `${formatStatName(stat)}<br />`;
-        return;
-      }
-      const decimals = getStatDecimals(stat);
-      const formattedValue = formatSignedValue(value, decimals, false);
-      skillDescription += `${formatStatName(stat)}: ${formattedValue}<br />`;
-    });
-  }
-
-  // If not at max level, show next level effects and the bonus
-
-  if (skill.type() === 'summon') {
-  // Show summon stats at current level
-    const level = skillTree.skills[skill.id]?.level || 0;
-    const summonStats = skill.summonStats(level);
-    skillDescription += '<br /><u>Summon Stats:</u><br />';
-    Object.entries(summonStats).forEach(([stat, value]) => {
-      if (!shouldShowStatValue(stat)) {
-        skillDescription += `${formatStatName(stat)}<br />`;
-        return;
-      }
-      const decimals = getStatDecimals(stat);
-      skillDescription += `${formatStatName(stat)}: ${value.toFixed(decimals)}<br />`;
-    });
-  } else if (currentLevel < skill.maxLevel() || skill.maxLevel() === Infinity) {
-    skillDescription += '<br /><u>Next Level Effects:</u><br />';
-    Object.entries(effectsNext).forEach(([stat, value]) => {
-      if (!shouldShowStatValue(stat)) {
-        skillDescription += `${formatStatName(stat)}<br />`;
-        return;
-      }
-      const decimals = getStatDecimals(stat);
-      const currentValue = effectsCurrent[stat] || 0;
-      const difference = value - currentValue;
-      skillDescription += `${formatStatName(stat)}: ${formatSignedValue(
-        value,
-        decimals,
-        false,
-      )} <span class="bonus">(${formatSignedValue(difference, decimals)})</span><br />`;
-    });
-  }
-
-  return skillDescription;
+  return generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNext);
 };
 
 export function updateActionBar() {

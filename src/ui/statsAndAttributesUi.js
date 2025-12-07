@@ -395,27 +395,35 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           lbl.className = 'stat-label';
           const lblText = formatStatName(key);
           if (lblText && lblText.includes('<')) lbl.innerHTML = lblText; else lbl.textContent = lblText;
+
+          const showValue = statsDef[key].showValue !== false;
           const span = document.createElement('span');
           span.id = `${key}-value`;
-          let val = hero.stats[key];
-          if (key === 'extraMaterialDropPercent') {
-            val = (val * 100).toFixed(1) + '%';
-          } else if (
-            key === 'itemQuantityPercent' ||
-            key === 'itemRarityPercent' ||
-            key === 'materialQuantityPercent'
-          ) {
-            val = (val * 100).toFixed(statsDef[key].decimalPlaces) + '%';
-          } else if (typeof val === 'number' && statsDef[key].decimalPlaces !== undefined) {
-            val = formatNumber(val.toFixed(statsDef[key].decimalPlaces));
-          } else {
-            val = formatNumber(val);
+
+          if (showValue) {
+            let val = hero.stats[key];
+            if (key === 'extraMaterialDropPercent') {
+              val = (val * 100).toFixed(1) + '%';
+            } else if (
+              key === 'itemQuantityPercent' ||
+              key === 'itemRarityPercent' ||
+              key === 'materialQuantityPercent'
+            ) {
+              val = (val * 100).toFixed(statsDef[key].decimalPlaces) + '%';
+            } else if (typeof val === 'number' && statsDef[key].decimalPlaces !== undefined) {
+              val = formatNumber(val.toFixed(statsDef[key].decimalPlaces));
+            } else {
+              val = formatNumber(val);
+            }
+            span.textContent = val;
+            appendDamagePercentBonus(span, key);
           }
-          span.textContent = val;
-          appendDamagePercentBonus(span, key);
+
           row.appendChild(lbl);
-          row.appendChild(document.createTextNode(' '));
-          row.appendChild(span);
+          if (showValue) {
+            row.appendChild(document.createTextNode(' '));
+            row.appendChild(span);
+          }
           targetPanel.appendChild(row);
           lbl.addEventListener('mouseenter', (e) => showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e));
           lbl.addEventListener('mousemove', positionTooltip);

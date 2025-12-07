@@ -37,7 +37,7 @@ const STAT_KEYS = Object.keys(STATS);
 
 export const STATS_ON_LEVEL_UP = 3;
 
-const BASE_EXTRA_RESOURCE_DAMAGE_CAP_PER_LEVEL = 1000;
+const BASE_EXTRA_RESOURCE_DAMAGE_CAP_PER_LEVEL = 500;
 
 function getElementalShareMap() {
   let shareMap = null;
@@ -315,7 +315,14 @@ export default class Hero {
 
   recalculateFromAttributes() {
     const skillTreeBonuses = skillTree.getAllSkillTreeBonuses();
-    const equipmentBonuses = inventory.getEquipmentBonuses();
+    const weaponEffectiveness = skillTreeBonuses.weaponEffectiveness || 0;
+    const itemLifeEffectivenessPercent = skillTreeBonuses.itemLifeEffectivenessPercent || 0;
+    const itemArmorEffectivenessPercent = skillTreeBonuses.itemArmorEffectivenessPercent || 0;
+    const equipmentBonuses = inventory.getEquipmentBonuses(
+      weaponEffectiveness,
+      itemLifeEffectivenessPercent,
+      itemArmorEffectivenessPercent,
+    );
     const trainingBonuses = training.getTrainingBonuses();
     const soulBonuses = this.getSoulShopBonuses();
     const prestigeBonuses = prestige?.bonuses || {};
@@ -988,12 +995,17 @@ export default class Hero {
     // 2) Percent phase: apply percent bonuses (physical + per-elemental + global elemental)
     const finalPools = {};
     const physicalPct = (instantSkillBaseEffects.damagePercent || 0) / 100;
+    let totalDamagePercent = (this.stats.totalDamagePercent || 0) + (this.stats.damagePercent || 0);
+
+    if (game.fightMode === 'arena' && this.stats.arenaDamagePercent) {
+      totalDamagePercent += this.stats.arenaDamagePercent;
+    }
+
     finalPools.physical = includePhysical
       ? flatPools.physical *
         (1 +
           physicalPct +
-          (this.stats.totalDamagePercent || 0) +
-          (this.stats.damagePercent || 0))
+          totalDamagePercent)
       : 0;
 
     // elemental global percent from both sources

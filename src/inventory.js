@@ -1363,21 +1363,30 @@ export default class Inventory {
       return false;
     }
     if (slotName === 'offhand') {
-      if (this.isTwoHanded(item)) return false;
-
+      const canDualWield = hero.stats.canDualWieldTwoHanded;
       const weapon = this.equippedItems.weapon;
-      if (this.isTwoHanded(weapon)) {
-        // Allow ARROWS with BOW
-        if (weapon.type === 'BOW' && item.type === 'ARROWS') {
-          // continue to shield check
-        } else {
-          return false;
-        }
-      }
 
       // ARROWS require BOW
       if (item.type === 'ARROWS') {
         if (!weapon || weapon.type !== 'BOW') return false;
+      }
+
+      // If main hand is BOW, offhand MUST be ARROWS (or empty)
+      if (weapon && weapon.type === 'BOW') {
+        if (item.type !== 'ARROWS') return false;
+      }
+
+      if (this.isTwoHanded(item)) {
+        // Cannot equip Bow in offhand (game design assumption based on "Bows can only have off-hand arrows")
+        if (item.type === 'BOW') return false;
+        if (!canDualWield) return false;
+      }
+
+      if (weapon && this.isTwoHanded(weapon)) {
+        // If main hand is 2H (and not Bow, checked above), need dual wield skill
+        if (weapon.type !== 'BOW' && !canDualWield) {
+          return false;
+        }
       }
     }
 
@@ -1404,6 +1413,51 @@ export default class Inventory {
     if (inventoryItem) return inventoryItem;
 
     return Object.values(this.equippedItems).find((i) => i && i.id === id);
+  }
+
+  unequipItem(slot) {
+    const item = this.equippedItems[slot];
+    if (!item) return false;
+
+    const emptySlot = this.inventoryItems.findIndex((s) => s === null);
+    if (emptySlot === -1) {
+      showToast(t('inventory.notEnoughInventorySpace'), 'error');
+      return false;
+    }
+
+    this.inventoryItems[emptySlot] = item;
+    delete this.equippedItems[slot];
+
+    // Handle Arrows if Bow is unequipped
+    if (slot === 'weapon' && item.type === 'BOW' && this.equippedItems.offhand?.type === 'ARROWS') {
+      const arrows = this.equippedItems.offhand;
+      const secondEmpty = this.inventoryItems.findIndex((s, idx) => s === null && idx !== emptySlot);
+      if (secondEmpty !== -1) {
+        this.inventoryItems[secondEmpty] = arrows;
+        delete this.equippedItems.offhand;
+      } else {
+        showToast(t('inventory.notEnoughInventorySpace'), 'error');
+      }
+    }
+
+    this.updateItemBonuses();
+    dataManager.saveGame();
+    return true;
+  }
+
+  validateEquipment() {
+    const weapon = this.equippedItems.weapon;
+    const offhand = this.equippedItems.offhand;
+    const canDualWield = hero.stats.canDualWieldTwoHanded;
+
+    if (weapon && offhand) {
+      if (this.isTwoHanded(weapon) && this.isTwoHanded(offhand)) {
+        if (!canDualWield) {
+          this.unequipItem('offhand');
+          showToast(t('inventory.offhandUnequippedTwoHanded'), 'info');
+        }
+      }
+    }
   }
 
   equipItem(item, slot) {
@@ -1471,14 +1525,30 @@ export default class Inventory {
 
     const itemsToReturn = [];
     if (isTwoHandedWeapon && this.equippedItems.offhand) {
-      // Keep arrows if equipping bow
-      if (!(item.type === 'BOW' && this.equippedItems.offhand.type === 'ARROWS')) {
-        itemsToReturn.push({ item: this.equippedItems.offhand, sourceSlot: 'offhand' });
+      const canDualWield = hero.stats.canDualWieldTwoHanded;
+      const isBow = item.type === 'BOW';
+      const isOffhandArrows = this.equippedItems.offhand.type === 'ARROWS';
+
+      if (isBow) {
+        // Bows can only be paired with Arrows
+        if (!isOffhandArrows) {
+          itemsToReturn.push({ item: this.equippedItems.offhand, sourceSlot: 'offhand' });
+        }
+      } else {
+        // Non-Bow 2H weapon
+        // If offhand is Arrows, must remove (Arrows need Bow)
+        // If cannot dual wield, must remove
+        if (isOffhandArrows || !canDualWield) {
+          itemsToReturn.push({ item: this.equippedItems.offhand, sourceSlot: 'offhand' });
+        }
       }
     }
     // If equipping non-BOW weapon, remove ARROWS
     if (slot === 'weapon' && item.type !== 'BOW' && this.equippedItems.offhand?.type === 'ARROWS') {
-      itemsToReturn.push({ item: this.equippedItems.offhand, sourceSlot: 'offhand' });
+      // Already handled above for 2H, but good for 1H check too
+      if (!itemsToReturn.some((e) => e.sourceSlot === 'offhand')) {
+        itemsToReturn.push({ item: this.equippedItems.offhand, sourceSlot: 'offhand' });
+      }
     }
 
     if (this.equippedItems[slot] && this.equippedItems[slot].id !== item.id) {
@@ -1532,19 +1602,73 @@ export default class Inventory {
     return true;
   }
 
-  updateItemBonuses() {
+  updateItemBonuses({
+    weaponEffectiveness = 0,
+    itemLifeEffectivenessPercent = 0,
+    itemArmorEffectivenessPercent = 0,
+  } = {}) {
     // Reset equipment bonuses
     Object.keys(this.equipmentBonuses).forEach((stat) => {
       this.equipmentBonuses[stat] = 0;
     });
 
     const equippedItems = Object.values(this.equippedItems).filter(Boolean);
+    const WEAPON_TYPES = ['SWORD', 'AXE', 'MACE', 'DAGGER', 'SPEAR', 'BOW', 'STAFF', 'WAND'];
 
     // Calculate bonuses from all equipped items
     equippedItems.forEach((item) => {
+      let multiplier = 1;
+      if (weaponEffectiveness > 0 && WEAPON_TYPES.includes(item.type)) {
+        multiplier += weaponEffectiveness / 100;
+      }
+
+      let lifeMultiplier = 1;
+      if (itemLifeEffectivenessPercent > 0) {
+        lifeMultiplier += itemLifeEffectivenessPercent / 100;
+      }
+
+      let armorMultiplier = 1;
+      if (itemArmorEffectivenessPercent > 0) {
+        armorMultiplier += itemArmorEffectivenessPercent / 100;
+      }
+
       Object.entries(item.stats).forEach(([stat, value]) => {
+        let effectiveValue = value;
+
+        if (multiplier !== 1) {
+          const isPercentStat =
+            stat.endsWith('Percent') ||
+            stat === 'critChance' ||
+            stat === 'blockChance' ||
+            stat === 'lifeSteal' ||
+            stat === 'manaSteal' ||
+            stat === 'omniSteal';
+
+          if (isPercentStat) {
+            effectiveValue = value * multiplier;
+          } else {
+            effectiveValue = Math.floor(value * multiplier);
+          }
+        }
+
+        if (lifeMultiplier !== 1 && (stat === 'life' || stat === 'lifePercent')) {
+          if (stat === 'life') {
+            effectiveValue = Math.floor(effectiveValue * lifeMultiplier);
+          } else {
+            effectiveValue = effectiveValue * lifeMultiplier;
+          }
+        }
+
+        if (armorMultiplier !== 1 && (stat === 'armor' || stat === 'armorPercent')) {
+          if (stat === 'armor') {
+            effectiveValue = Math.floor(effectiveValue * armorMultiplier);
+          } else {
+            effectiveValue = effectiveValue * armorMultiplier;
+          }
+        }
+
         if (this.equipmentBonuses[stat] !== undefined) {
-          this.equipmentBonuses[stat] += value;
+          this.equipmentBonuses[stat] += effectiveValue;
         }
       });
     });
@@ -1557,9 +1681,13 @@ export default class Inventory {
     });
   }
 
-  getEquipmentBonuses() {
+  getEquipmentBonuses(weaponEffectiveness = 0, itemLifeEffectivenessPercent = 0, itemArmorEffectivenessPercent = 0) {
     // Ensure bonuses are up-to-date
-    this.updateItemBonuses();
+    this.updateItemBonuses({
+      weaponEffectiveness,
+      itemLifeEffectivenessPercent,
+      itemArmorEffectivenessPercent,
+    });
     return { ...this.equipmentBonuses };
   }
 

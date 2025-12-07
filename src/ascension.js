@@ -47,7 +47,7 @@ export const ASCENSION_CATEGORIES = {
       },
       resourceDamageCapPerLevel: {
         label: t('ascension.upgrade.resourceDamageCapPerLevel'),
-        bonus: 20,
+        bonus: 10,
         stat: 'extraResourceDamageCapPerLevel',
         cost: 1,
       },

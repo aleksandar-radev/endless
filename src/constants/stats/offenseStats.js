@@ -571,4 +571,21 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 2,
   },
+  // RETALIATION
+  retaliateWhenHit: {
+    base: 0,
+    decimalPlaces: 0,
+    showValue: false,
+  },
+  // ARENA DAMAGE
+  arenaDamagePercent: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'attack',
+  },
+  // ANIMATED WEAPONS
+  animatedWeaponsDamagePercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
 };

@@ -263,4 +263,16 @@ export const DEFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
   },
+  // ARENA DAMAGE REDUCTION
+  arenaDamageReductionPercent: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'defense',
+  },
+  // ITEM LIFE EFFECTIVENESS
+  itemLifeEffectivenessPercent: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'defense',
+  },
 };

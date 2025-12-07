@@ -24,7 +24,7 @@ export const SLOT_REQUIREMENTS = {
   legs: ['PANTS'],
   boots: ['BOOTS'],
   weapon: ['SWORD', 'AXE', 'MACE', 'WAND', 'STAFF', 'SHIELD', 'BOW'],
-  offhand: ['SWORD', 'AXE', 'WAND', 'SHIELD', 'ARROWS'],
+  offhand: ['SWORD', 'AXE', 'WAND', 'SHIELD', 'ARROWS', 'MACE', 'STAFF'],
   gloves: ['GLOVES'],
   amulet: ['AMULET'],
   ring1: ['RING'],

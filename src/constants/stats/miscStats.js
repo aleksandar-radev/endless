@@ -329,4 +329,28 @@ export const MISC_STATS = {
     base: 0,
     decimalPlaces: 1,
   },
+  // DUAL WIELD 2H
+  canDualWieldTwoHanded: {
+    base: 0,
+    decimalPlaces: 0,
+    showValue: false,
+  },
+  // WEAPON EFFECTIVENESS
+  weaponEffectiveness: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  // BOSS LOOT
+  allowBossLoot: {
+    base: 0,
+    decimalPlaces: 0,
+    showValue: false,
+    itemTags: [],
+  },
+  // ANIMATED WEAPONS
+  animatedWeaponsUnlocked: {
+    base: 0,
+    decimalPlaces: 0,
+    showValue: false,
+  },
 };

@@ -12,7 +12,7 @@ import {
 } from './ui/ui.js';
 import Enemy from './enemy.js';
 import { hero, game, inventory, crystalShop, statistics, skillTree, dataManager, runtime, options, runes, ascension } from './globals.js';
-import { ITEM_RARITY } from './constants/items.js';
+import { ITEM_RARITY, ITEM_TYPES } from './constants/items.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateQuestsUI } from './ui/questUi.js';
 import { selectBoss, updateBossUI } from './ui/bossUi.js';
@@ -154,7 +154,7 @@ export function enemyAttack(currentTime) {
       // Use PoE2 armor formula for physical damage reduction
       const physicalDamageRaw = enemy.damage;
       const armorReduction = calculateArmorReduction(hero.stats.armor, physicalDamageRaw) / 100;
-      const physicalDamage = Math.floor(physicalDamageRaw * (1 - armorReduction));
+      let physicalDamage = Math.floor(physicalDamageRaw * (1 - armorReduction));
 
       const elementalDamage = {};
       ELEMENT_IDS.forEach((id) => {
@@ -167,6 +167,17 @@ export function enemyAttack(currentTime) {
       });
 
       let totalDamage = physicalDamage + ELEMENT_IDS.reduce((sum, id) => sum + elementalDamage[id], 0);
+
+      if (game.fightMode === 'arena' && hero.stats.arenaDamageReductionPercent) {
+        // min 5% damage taken
+        const multiplier = Math.max(0.2, 1 - hero.stats.arenaDamageReductionPercent);
+        totalDamage *= multiplier;
+        // Scale breakdown components for consistency (though mainly visual/logging)
+        physicalDamage = Math.floor(physicalDamage * multiplier);
+        ELEMENT_IDS.forEach((id) => {
+          elementalDamage[id] = Math.floor(elementalDamage[id] * multiplier);
+        });
+      }
 
       const breakdown = { physical: physicalDamage, ...elementalDamage };
 
@@ -213,6 +224,14 @@ export function enemyAttack(currentTime) {
         }
 
         game.damagePlayer(totalDamage, breakdown);
+
+        if (hero.stats.retaliateWhenHit) {
+          const { damage, isCritical } = hero.calculateDamageAgainst(enemy, {});
+          game.damageEnemy(damage, isCritical, null, 'retaliation', null, {
+            color: '#FF4500',
+            source: 'retaliation',
+          });
+        }
 
         if (enemySpecials.includes('lifeSteal')) {
           const lifeStealPercent = Number.isFinite(enemySpecialData.lifeStealPercent)
@@ -460,15 +479,69 @@ export async function defeatEnemy() {
       text += `+${crystals} crystals, `;
     }
     if (souls) {
-      hero.gainSouls(souls + Math.floor(hero.bossLevel * 0.001)); // +0.01% per boss level
-      text += `+${souls + Math.floor(hero.bossLevel * 0.001)} souls, `;
+      const baseSouls = souls + Math.floor(hero.bossLevel * 0.001);
+      hero.gainSouls(baseSouls);
+      text += `+${baseSouls} souls, `;
     }
+    // Guaranteed material drops
     if (materials && materials.length) {
       materials.forEach(({ id, qty }) => {
         inventory.addMaterial({ id, qty });
         statistics.increment('totalMaterialsDropped', null, qty);
       });
     }
+
+    // Extra drops if allowed
+    if (hero.stats.allowBossLoot) {
+      // Random Item Drop from Boss
+      // Uses standard drop chance calculation (same as explore)
+      // Tier based on boss level: <50 = Tier 1, 50-99 = Tier 2, etc.
+      const dropTier = Math.floor(hero.bossLevel / 50) + 1;
+      const itemLevel = hero.bossLevel;
+      // Use explore drop chance logic
+      const itemDropChance = 3 * (1 + hero.stats.itemQuantityPercent);
+
+      if (Math.random() * 100 <= itemDropChance) {
+        // Random item type
+        const types = Object.values(ITEM_TYPES);
+        const itemType = types[Math.floor(Math.random() * types.length)];
+
+        // Roll special unique item or standard item
+        const specialDrop = rollSpecialItemDrop({
+          tier: dropTier,
+          level: itemLevel,
+          preferredType: itemType,
+        });
+        const newItem = specialDrop?.item || inventory.createItem(itemType, itemLevel, undefined, dropTier);
+
+        inventory.addItemToInventory(newItem);
+        const rarityName = ITEM_RARITY[newItem.rarity]?.name || newItem.rarity;
+        battleLog.addDrop(tp('battleLog.droppedItem', { rarity: rarityName, type: t(newItem.type) }));
+        showLootNotification(newItem);
+      }
+
+      // Random Material Drop from Boss
+      // Uses standard material drop chance (2.5 base)
+      const materialDropChance = 2.5 * (1 + hero.stats.extraMaterialDropPercent);
+      if (Math.random() * 100 < materialDropChance) {
+        const mat = inventory.getRandomMaterial();
+        if (mat) {
+          let qty = 1;
+          if (inventory.isUpgradeMaterial(mat)) {
+            qty = inventory.getScrapPackSize(hero.bossLevel);
+          }
+          // Apply material quantity multiplier
+          const materialQuantityMultiplier = 1 + (hero.stats.materialQuantityPercent || 0);
+          qty = Math.max(1, Math.round(qty * materialQuantityMultiplier));
+
+          inventory.addMaterial({ id: mat.id, qty });
+          statistics.increment('totalMaterialsDropped', null, qty);
+          battleLog.addDrop(tp('battleLog.droppedMaterial', { name: mat.name, qty: formatNumber(qty) }));
+          showMaterialNotification(mat);
+        }
+      }
+    }
+
     showToast(text, 'success');
     statistics.increment('bossesKilled', null, 1);
     const runeBonuses = runes.getBonusEffects();
