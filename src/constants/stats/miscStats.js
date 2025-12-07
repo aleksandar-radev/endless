@@ -353,4 +353,86 @@ export const MISC_STATS = {
     decimalPlaces: 0,
     showValue: false,
   },
+  // ROGUE CLONE
+  cloneUnlocked: {
+    base: 0,
+    decimalPlaces: 0,
+    showValue: false,
+  },
+  cloneEffectivenessPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  // NIGHTSTALKER
+  nightStalkerBuffEffectivenessPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  // PALADIN EQUIPMENT
+  canUseTwoShields: {
+    base: 0,
+    decimalPlaces: 0,
+    showValue: false,
+  },
+  canUseTwoAmulets: {
+    base: 0,
+    decimalPlaces: 0,
+    showValue: false,
+  },
+  canUseExtraRing: {
+    base: 0,
+    decimalPlaces: 0,
+    showValue: false,
+  },
+  amuletEffectivenessPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  ringEffectivenessPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  // BERSERKER
+  warcryBuffEffectivenessPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  uncappedAttackSpeed: {
+    base: 0,
+    decimalPlaces: 0,
+    showValue: false,
+  },
+  overhealToLife: {
+    base: 0,
+    decimalPlaces: 0,
+    showValue: false,
+  },
+  // DRUID
+  shapeshiftUnlocked: {
+    base: 0,
+    decimalPlaces: 0,
+    showValue: false,
+  },
+  terrainControlPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  // MAGE
+  reduceEnemyResistancesPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  weaponIllusionUnlocked: {
+    base: 0,
+    decimalPlaces: 0,
+    showValue: false,
+  },
+  weaponBuffEffectivenessPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  armorEnchantmentEffectivenessPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
 };

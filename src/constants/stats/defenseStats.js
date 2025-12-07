@@ -275,4 +275,16 @@ export const DEFENSE_STATS = {
     decimalPlaces: 1,
     subcategory: 'defense',
   },
+  // ITEM ARMOR EFFECTIVENESS
+  itemArmorEffectivenessPercent: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'defense',
+  },
+  // FROST SHIELD
+  frostShield: {
+    base: 0,
+    decimalPlaces: 0,
+    showValue: false,
+  },
 };

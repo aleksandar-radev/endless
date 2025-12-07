@@ -684,8 +684,10 @@ export default class Hero {
           value = Math.min(value, cap);
         }
         if (stat === 'attackSpeed') {
-          const cap = 5 + (ascensionBonuses.attackSpeedCap || 0);
-          value = Math.min(value, cap);
+          if (!this.stats.uncappedAttackSpeed) {
+            const cap = 5 + (ascensionBonuses.attackSpeedCap || 0);
+            value = Math.min(value, cap);
+          }
         }
         if (stat === 'extraMaterialDropMax') value = Math.max(value, 1); // Always at least 1
         if (stat === 'extraDamageFromLifePercent') value = Math.min(value, 5);
@@ -701,6 +703,22 @@ export default class Hero {
 
         this.stats[stat] = value;
       }
+    }
+
+    // Apply specific stat interactions
+    if (this.stats.manaToLifeTransferPercent > 0) {
+      const transfer = this.stats.mana * (this.stats.manaToLifeTransferPercent / 100);
+      this.stats.life += transfer;
+      this.stats.mana = Math.max(0, this.stats.mana - transfer);
+    }
+
+    if (this.stats.extraEvasionFromLifePercent > 0) {
+      this.stats.evasion += this.stats.life * (this.stats.extraEvasionFromLifePercent / 100);
+    }
+
+    if (this.stats.frostShield > 0) {
+      this.stats.armor *= 1.2;
+      this.stats.allResistance *= 1.1;
     }
 
     const baseElementResistances = {};
@@ -1100,7 +1118,12 @@ export default class Hero {
       if (this.stats.ignoreAllEnemyResistances > 0) return 0;
       let effectiveRes = baseRes;
       // Apply percent penetration first (elementalPenetrationPercent + specific percent)
-      const totalPercentPen = ((percentPen || 0) + (this.stats.elementalPenetrationPercent || 0) + (instantSkillBaseEffects.elementalPenetrationPercent || 0)) * 100;
+      let totalPercentPen = ((percentPen || 0) + (this.stats.elementalPenetrationPercent || 0) + (instantSkillBaseEffects.elementalPenetrationPercent || 0)) * 100;
+
+      // Add Arcane Dissolution reduction
+      if (this.stats.reduceEnemyResistancesPercent) {
+        totalPercentPen += this.stats.reduceEnemyResistancesPercent;
+      }
 
       effectiveRes *= 1 - totalPercentPen / 100;
       // Then apply flat penetration (elementalPenetration + specific flat)
@@ -1129,7 +1152,19 @@ export default class Hero {
           ) / 100);
     });
 
-    const finalDamage = Object.values(reducedBreakdown).reduce((sum, val) => sum + val, 0);
+    let finalDamage = Object.values(reducedBreakdown).reduce((sum, val) => sum + val, 0);
+
+    // Apply damage multipliers based on enemy type
+    if (enemy) {
+      let multiplier = 1;
+      if (enemy.rarity !== 'normal' && this.stats.damageToRareEnemiesPercent) {
+        multiplier += this.stats.damageToRareEnemiesPercent / 100;
+      }
+      if ((enemy.rarity === 'mythic' || enemy.isBoss || enemy.rarity === 'legendary') && this.stats.damageToElitesPercent) {
+        multiplier += this.stats.damageToElitesPercent / 100;
+      }
+      finalDamage *= multiplier;
+    }
 
     console.debug('Final Damage Breakdown:', reducedBreakdown);
     console.debug('Final Damage:', finalDamage);

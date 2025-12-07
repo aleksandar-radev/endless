@@ -144,7 +144,34 @@ export function enemyAttack(currentTime) {
       hero.stats.evasion,
       alwaysHit ? 1 : undefined,
     );
-    const isEvaded = !alwaysHit && Math.random() * 100 > hitChance;
+    let isEvaded = !alwaysHit && Math.random() * 100 > hitChance;
+
+    if (!isEvaded && !alwaysHit) {
+      if (hero.stats.stealthChance > 0 && Math.random() * 100 < hero.stats.stealthChance) {
+        isEvaded = true;
+        createDamageNumber({ text: 'STEALTH', isPlayer: true, color: '#888888' });
+      } else if (hero.stats.teleportDodgeChance > 0 && Math.random() * 100 < hero.stats.teleportDodgeChance) {
+        const cost = hero.stats.mana * 0.1;
+        if (hero.stats.currentMana >= cost) {
+          game.restoreMana(-cost);
+          isEvaded = true;
+          createDamageNumber({ text: 'BLINK', isPlayer: true, color: '#00FFFF' });
+        }
+      }
+    }
+
+    if (!isEvaded) {
+      if (hero.stats.freezeChance > 0 && Math.random() * 100 < hero.stats.freezeChance) {
+        createDamageNumber({ text: 'FROZEN', isPlayer: true, color: '#ADD8E6' });
+        enemy.lastAttack += 1000;
+        continue;
+      }
+      if (hero.stats.entangleChance > 0 && Math.random() * 100 < hero.stats.entangleChance) {
+        createDamageNumber({ text: 'ENTANGLED', isPlayer: true, color: '#228B22' });
+        enemy.lastAttack += 1000;
+        continue;
+      }
+    }
 
     if (isEvaded) {
       // Show "EVADED" text
@@ -298,7 +325,17 @@ export function playerAttack(currentTime) {
       createDamageNumber({ text: 'MISS', color: '#888888' });
       battleLog.addBattle(t('battleLog.missedAttack'));
     } else {
-      const { damage, isCritical, breakdown } = hero.calculateDamageAgainst(enemy, {});
+      let { damage, isCritical, breakdown } = hero.calculateDamageAgainst(enemy, {});
+
+      // Execute Check
+      if (hero.stats.executeThresholdPercent > 0) {
+        const threshold = enemy.maxLife * (hero.stats.executeThresholdPercent / 100);
+        if (enemy.currentLife <= threshold) {
+          damage = enemy.currentLife + 1e9; // Ensure kill
+          createCombatText('EXECUTE!', true);
+        }
+      }
+
       const enemySpecials = enemy.special || [];
       const enemySpecialData = enemy.specialData || {};
 
@@ -320,6 +357,25 @@ export function playerAttack(currentTime) {
         createDamageNumber({ text: `${lifeSign}${lifeDisplayAmount}`, isPlayer: true, color: lifeColor });
       }
       game.healPlayer(totalLifeChange);
+
+      if (totalLifeChange > 0 && hero.stats.healDamagesEnemiesPercent > 0) {
+        const healDmg = totalLifeChange * (hero.stats.healDamagesEnemiesPercent / 100);
+        game.damageEnemy(healDmg, false, null, 'healDamage');
+      }
+
+      // On-hit Effects
+      if (hero.stats.bleedChance > 0 && Math.random() * 100 < hero.stats.bleedChance) {
+        const bleedDmg = damage * ((hero.stats.bleedDamagePercent || 0) / 100);
+        if (bleedDmg > 0) game.damageEnemy(bleedDmg, false, null, 'bleed');
+      }
+      if (hero.stats.burnStackingChance > 0 && Math.random() * 100 < hero.stats.burnStackingChance) {
+        const burnDmg = damage * 0.2;
+        if (burnDmg > 0) game.damageEnemy(burnDmg, false, null, 'burn');
+      }
+      if (hero.stats.chainLightningChance > 0 && Math.random() * 100 < hero.stats.chainLightningChance) {
+        // Simulate chain by dealing extra damage to current enemy
+        game.damageEnemy(damage * 0.5, false, null, 'chainLightning');
+      }
 
       const manaRestore = (manaPerHit > 0 ? manaPerHit : 0) + manaStealAmount + omniStealAmount;
       const manaDisplayAmount = Math.floor(Math.abs(manaRestore));
@@ -711,6 +767,22 @@ export async function defeatEnemy() {
     statistics.increment('rockyFieldEnemiesKilledByRegion', game.rockyFieldRegion);
   }
   // END REGION HANDLING
+
+  // Overkill Check
+  if (hero.stats.overkillDamageEnabled && enemy.currentLife < 0) {
+    const overkill = Math.abs(enemy.currentLife);
+    const enemyHealth = enemy.life;
+    // Prevent division by zero
+    if (enemyHealth > 0) {
+      const extraKills = Math.floor(overkill / enemyHealth);
+      if (extraKills > 0) {
+        const safeKills = Math.min(extraKills, 5);
+        baseExpGained += baseExpGained * safeKills;
+        baseGoldGained += baseGoldGained * safeKills;
+        createCombatText(`OVERKILL x${safeKills}!`, true);
+      }
+    }
+  }
 
   const expGained = Math.floor(baseExpGained * (1 + hero.stats.bonusExperiencePercent));
   const goldGained = Math.floor(baseGoldGained * (1 + hero.stats.bonusGoldPercent));

@@ -567,6 +567,10 @@ export const OFFENSE_STATS = {
       scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING),
     },
   },
+  extraEvasionFromLifePercent: {
+    base: 0,
+    decimalPlaces: 2,
+  },
   extraDamageFromAllResistancesPercent: {
     base: 0,
     decimalPlaces: 2,
@@ -587,5 +591,140 @@ export const OFFENSE_STATS = {
   animatedWeaponsDamagePercent: {
     base: 0,
     decimalPlaces: 1,
+  },
+  // STEALTH
+  stealthChance: {
+    base: 0,
+    decimalPlaces: 1,
+    showInUI: true,
+    subcategory: 'attack',
+  },
+  // EXECUTE
+  executeThresholdPercent: {
+    base: 0,
+    decimalPlaces: 1,
+    showInUI: true,
+    subcategory: 'attack',
+  },
+  // RARE ENEMY DAMAGE
+  damageToRareEnemiesPercent: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'attack',
+  },
+  // HEAL DAMAGES ENEMIES
+  healDamagesEnemiesPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  // BATS HEAL
+  batsHealPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  // BLEED
+  bleedChance: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'attack',
+  },
+  bleedDamagePercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  // ZEAL
+  zealDamageReductionPerStack: {
+    base: 0,
+    decimalPlaces: 2,
+  },
+  // BERSERKER AOE
+  aoeDevastationChance: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'attack',
+  },
+  // DOT STRIKE
+  dotStrikeChance: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'attack',
+  },
+  // ARMOR SHRED
+  armorShredChance: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'attack',
+  },
+  // PYROMANCER
+  overkillDamageEnabled: {
+    base: 0,
+    decimalPlaces: 0,
+    showValue: false,
+  },
+  burnStackingChance: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+  },
+  explosionChance: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+  },
+  // STORMCALLER
+  chainLightningChance: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+  },
+  shockChance: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+  },
+  shockDamagePercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  // CRYOMANCER
+  freezeChance: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+  },
+  slowChance: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+  },
+  // DRUID SUMMONS
+  summonDamageBuffPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  summonAttackSpeedBuffPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  entangleChance: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+  },
+  // MAGE
+  teleportDodgeChance: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'defense',
+  },
+  manaToLifeTransferPercent: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  // ANT-ELITE DAMAGE
+  damageToElitesPercent: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'attack',
   },
 };
