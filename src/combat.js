@@ -359,19 +359,18 @@ export function playerAttack(currentTime) {
       }
       game.healPlayer(totalLifeChange);
 
-      if (totalLifeChange > 0 && hero.stats.healDamagesEnemiesPercent > 0) {
-        const healDmg = totalLifeChange * (hero.stats.healDamagesEnemiesPercent / 100);
-        game.damageEnemy(healDmg, false, null, 'healDamage');
-      }
-
       // On-hit Effects
       if (hero.stats.bleedChance > 0 && Math.random() * 100 < hero.stats.bleedChance) {
-        const bleedDmg = damage * ((hero.stats.bleedDamagePercent || 0) / 100);
-        if (bleedDmg > 0) game.damageEnemy(bleedDmg, false, null, 'bleed');
+        const bleedDmg = damage * ((hero.stats.bleedDamagePercent || 0));
+        if (bleedDmg > 0) {
+          game.currentEnemy.applyBleed(bleedDmg);
+        }
       }
-      if (hero.stats.burnStackingChance > 0 && Math.random() * 100 < hero.stats.burnStackingChance) {
-        const burnDmg = damage * 0.2;
-        if (burnDmg > 0) game.damageEnemy(burnDmg, false, null, 'burn');
+      if (hero.stats.burnChance > 0 && Math.random() * 100 < hero.stats.burnChance) {
+        const burnDmg = damage * 0.2; // Base burn damage is 20% of hit
+        if (burnDmg > 0) {
+          game.currentEnemy.applyBurn(burnDmg);
+        }
       }
       if (hero.stats.chainLightningChance > 0 && Math.random() * 100 < hero.stats.chainLightningChance) {
         // Simulate chain by dealing extra damage to current enemy

@@ -1,6 +1,7 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
 import { scaleDownFlat, scaleUpFlat } from '../../common.js';
+import { hero } from '../../globals.js';
 
 // Vampire skills extracted from skills.js
 export const VAMPIRE_SKILLS = {
@@ -28,10 +29,13 @@ export const VAMPIRE_SKILLS = {
     icon: () => 'moon',
     description: () => t('skill.nightStalker'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      damagePercent: scaleDownFlat(level, 2),
-      agility: scaleUpFlat(level, 4),
-    }),
+    effect: (level) => {
+      const buffEffectiveness = 1 + (hero.stats.nightStalkerBuffEffectivenessPercent || 0);
+      return {
+        damagePercent: scaleDownFlat(level, 2) * buffEffectiveness,
+        agility: scaleUpFlat(level, 4) * buffEffectiveness,
+      };
+    },
   },
 
   // Tier 10 Skills
@@ -51,7 +55,8 @@ export const VAMPIRE_SKILLS = {
       damagePercent: scaleDownFlat(level, 15),
       lifePerHit: scaleUpFlat(level, -30, 5, 0.3),
     }),
-  },  darkAura: {
+  },
+  darkAura: {
     id: 'darkAura',
     name: () => t('Dark Aura'),
     type: () => 'buff',
@@ -130,10 +135,11 @@ export const VAMPIRE_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(scaleDownFlat(level, 0.25), 20),
+        percentOfPlayerDamage: 5 + Math.min(scaleDownFlat(level, 0.25), 25),
         damage: scaleUpFlat(level, 3),
         airDamage: scaleUpFlat(level, 2),
         attackSpeed: 4,
+        canCrit: true,
       };
     },
     manaCost: (level) => 3 + level * 0.625,
@@ -341,5 +347,22 @@ export const VAMPIRE_SKILLS = {
       airDamagePercent: scaleDownFlat(level, 5),
       damagePercent: scaleDownFlat(level, 3.8),
     }),
+  },
+
+  // Specialization Skills
+  bloodSacrifice: {
+    id: 'bloodSacrifice',
+    name: () => t('Blood Sacrifice'),
+    type: () => 'instant',
+    skill_type: 'attack',
+    manaCost: () => 0,
+    cooldown: () => 5000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[1],
+    icon: () => 'blood-sacrifice',
+    description: () => t('skill.bloodSacrifice'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+    }),
+    isVisible: () => hero.stats.bloodSacrificeUnlocked > 0,
   },
 };

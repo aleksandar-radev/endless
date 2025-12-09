@@ -21,6 +21,8 @@ export default function run() {
       <li>Add bow and arrows as items.</li>
       <li>Add ascension upgrade to persist runes through ascensions and prestiges.</li>
       <li>Reduced extra damage from "resource" cap to 500 for level, from 1000. And ascension upgrade to 10 put point, compared to 20 before. (2x nerf, in favor of increased percentages on the skills)</li>
+      <li>Animated Weapons and Summon bats skills can now critically hit.</li>
+      <li>Chance to hit reduced to 12% for items. (20 before)</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

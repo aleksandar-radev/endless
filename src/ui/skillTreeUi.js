@@ -101,12 +101,10 @@ export function initializeSkillTreeUI() {
 
 function showSkillTreeWithTabs() {
   const container = document.getElementById('skill-tree-container');
-  console.log('showSkillTreeWithTabs called, container:', container);
 
   // Create tabs structure if it doesn't exist
   let tabsContainer = container.querySelector('.skill-tree-tabs');
   if (!tabsContainer) {
-    console.log('Creating new tabs structure');
     container.innerHTML = '';
 
     tabsContainer = document.createElement('div');
@@ -132,8 +130,6 @@ function showSkillTreeWithTabs() {
     specializationsContent.id = 'specializations-tab-content';
     container.appendChild(specializationsContent);
 
-    console.log('Created specializations-tab-content:', specializationsContent);
-
     // Tab click handlers
     tabsContainer.querySelectorAll('.skill-tree-tab').forEach(tab => {
       tab.addEventListener('click', () => {
@@ -144,8 +140,6 @@ function showSkillTreeWithTabs() {
     });
   }
 
-  // Initialize both tabs
-  console.log('Initializing tabs...');
   initializeSkillsTab();
   if (hero.level >= 1000) {
     initializeSpecializationsTab();
@@ -161,6 +155,7 @@ function openSpecializationSelectionModal(spec) {
         readableStat = readableStat.replace(/ Percent$/, '');
         displayValue = `${value}%`;
       }
+      if (!shouldShowStatValue(stat)) return `<div>${readableStat}</div>`;
       const prefix = value > 0 ? '+' : '';
       return `<div>${readableStat}: ${prefix}${displayValue}</div>`;
     })
@@ -431,6 +426,9 @@ function initializeSpecializationsTab() {
     }, {});
 
     Object.entries(skills).forEach(([skillId, skillData]) => {
+      const isVisible = typeof skillData.isVisible === 'function' ? skillData.isVisible() : (skillData.isVisible !== false);
+      if (!isVisible) return;
+
       const reqLevel = skillData.requiredLevel();
       // Only show if level tier exists (it should)
       if (Array.isArray(levelGroups[reqLevel])) {
@@ -761,7 +759,9 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNe
         return;
       }
       const decimals = getStatDecimals(stat);
-      html += `${formatStatName(stat)}: ${value.toFixed(decimals)}<br />`;
+      const formattedValue = (typeof value === 'number') ? `: ${value.toFixed(decimals)}` : '';
+
+      html += `${formatStatName(stat)}${formattedValue}<br />`;
     });
   } else if (!isMaxed) {
     html += `<br /><u>${t('skillTree.nextLevelEffects')}:</u><br />`;
@@ -1393,6 +1393,35 @@ export function updateSkillTreeValues() {
     node.classList.toggle('available', canUnlock);
     node.classList.toggle('unlocked', currentLevel > 0);
   });
+
+  // Check if we need to re-render specialization skills due to visibility changes
+  if (skillTree.selectedSpecialization) {
+    const renderedSpecSkills = new Set(Array.from(container.querySelectorAll('.skill-node.specialization-node')).map(n => n.dataset.skillId));
+    const spec = getSpecialization(skillTree.selectedPath.name, skillTree.selectedSpecialization.id);
+    const allSpecSkills = spec?.skills || {};
+    const needsSpecRender = Object.entries(allSpecSkills).some(([skillId, skillData]) => {
+      const isVisible = typeof skillData.isVisible === 'function' ? skillData.isVisible() : (skillData.isVisible !== false);
+      return isVisible && !renderedSpecSkills.has(skillId);
+    });
+
+    if (needsSpecRender) {
+      initializeSpecializationsTab();
+    }
+  }
+
+  // Check if we need to re-render normal skills due to visibility changes
+  if (skillTree.selectedPath) {
+    const renderedSkills = new Set(Array.from(container.querySelectorAll('.skill-node:not(.specialization-node)')).map(n => n.dataset.skillId));
+    const allSkills = SKILL_TREES[skillTree.selectedPath.name] || {};
+    const needsRender = Object.entries(allSkills).some(([skillId, skillData]) => {
+      const isVisible = typeof skillData.isVisible === 'function' ? skillData.isVisible() : (skillData.isVisible !== false);
+      return isVisible && !renderedSkills.has(skillId);
+    });
+
+    if (needsRender) {
+      initializeSkillsTab();
+    }
+  }
 
   // Update Normal Skills
   container.querySelectorAll('.skill-node:not(.specialization-node)').forEach((node) => {

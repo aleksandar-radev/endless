@@ -235,7 +235,7 @@ export const SPECIALIZATIONS = {
       description: () => t('specialization.vampire.bloodlord.description'),
       avatar: () => 'vampire-bloodlord-avatar.jpg',
       baseStats: () => ({
-        healDamagesEnemiesPercent: 100,
+        healDamagesEnemiesPercent: 200,
       }),
       skills: {
         vampiricBats: {
@@ -247,19 +247,20 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.vampiricBats'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            batsHealPercent: scaleDownFlat(level, 1),
+            batsHealPercent: level ? 50 + scaleDownFlat(level, 10, 5, 0.2) : 0,
           }),
         },
-        stoneSkin: {
-          id: 'stoneSkin',
-          name: () => t('Stone Skin'),
+        crimsonFeast: {
+          id: 'crimsonFeast',
+          name: () => t('Crimson Feast'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[1],
-          icon: () => 'stone-skin',
-          description: () => t('skill.stoneSkin'),
+          icon: () => 'crimson-feast',
+          description: () => t('skill.crimsonFeast'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            reduceEnemyDamagePercent: scaleDownFlat(level, 1),
+            lifeSteal: scaleDownFlat(level, 0.2),
+            lifePerHit: level ? 1000 + scaleUpFlat(level, 50, 10, 1) : 0,
           }),
         },
       },
@@ -270,31 +271,32 @@ export const SPECIALIZATIONS = {
       description: () => t('specialization.vampire.nightstalker.description'),
       avatar: () => 'vampire-nightstalker-avatar.jpg',
       baseStats: () => ({
-        nightStalkerBuffEffectivenessPercent: 10,
+        overhealPercent: 100,
       }),
       skills: {
-        lifeShadows: {
-          id: 'lifeShadows',
-          name: () => t('Life Shadows'),
+        nightStalkerMastery: {
+          id: 'nightStalkerMastery',
+          name: () => t('Night Stalker Mastery'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[0],
-          icon: () => 'life-shadows',
-          description: () => t('skill.lifeShadows'),
+          icon: () => 'night-stalker-mastery',
+          description: () => t('skill.nightStalkerMastery'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            extraEvasionFromLifePercent: scaleDownFlat(level, 0.05),
+            nightStalkerBuffEffectivenessPercent: level ? 50 + scaleUpFlat(level, 8) : 0,
           }),
         },
-        shadowStealth: {
-          id: 'shadowStealth',
-          name: () => t('Shadow Stealth'),
+        bloodRitual: {
+          id: 'bloodRitual',
+          name: () => t('Blood Ritual'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[1],
-          icon: () => 'shadow-stealth',
-          description: () => t('skill.shadowStealth'),
+          icon: () => 'blood-ritual',
+          description: () => t('skill.bloodRitual'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            evasionPercent: scaleDownFlat(level, 2),
+            bloodSacrificeUnlocked: 1,
+            bloodSacrificeEffectiveness: scaleUpFlat(level, 5, 1, 0),
           }),
         },
       },
@@ -305,7 +307,7 @@ export const SPECIALIZATIONS = {
       description: () => t('specialization.vampire.hemomancer.description'),
       avatar: () => 'vampire-hemomancer-avatar.jpg',
       baseStats: () => ({
-        damagePercent: 20,
+        bleedChance: 20,
       }),
       skills: {
         bloodPotency: {
@@ -317,8 +319,9 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.bloodPotency'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            lifeSteal: scaleDownFlat(level, 0.5),
-            lifePerHit: scaleUpFlat(level, 5, 5, 0.2),
+            damagePercent: scaleDownFlat(level, 6),
+            attackSpeedPercent: scaleDownFlat(level, 2),
+            chanceToHitPercent: Math.min(scaleDownFlat(level, 0.2), 40),
           }),
         },
         hemorrhage: {
@@ -330,8 +333,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.hemorrhage'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            bleedChance: scaleDownFlat(level, 1),
-            bleedDamagePercent: scaleDownFlat(level, 2),
+            bleedChance: Math.min(5 + scaleDownFlat(level, 0.6), 80),
+            bleedDamagePercent: scaleDownFlat(level, 3.4),
           }),
         },
       },
@@ -498,7 +501,7 @@ export const SPECIALIZATIONS = {
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[0],
           icon: () => 'frenzy',
-          description: () => t('skill.frenzy'),
+          description: () => t('skill.warlord.frenzy'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             attackSpeed: scaleDownFlat(level, 0.05),
@@ -573,7 +576,7 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.searingHeat'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            burnStackingChance: scaleDownFlat(level, 2),
+            burnChance: scaleDownFlat(level, 2),
           }),
         },
         combustion: {

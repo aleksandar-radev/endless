@@ -14,13 +14,13 @@ import {
 } from './globals.js';
 import { calculateArmorReduction, calculateResistanceReduction, createCombatText, createDamageNumber } from './combat.js';
 import { handleSavedData } from './functions.js';
-import { getCurrentRegion, updateRegionUI } from './region.js';
-import { STATS } from './constants/stats/stats.js';
+import { updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { ATTRIBUTES } from './constants/stats/attributes.js';
 import { SOUL_UPGRADE_CONFIG } from './soulShop.js';
 import { ELEMENTS } from './constants/common.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
+import { STATS } from './constants/stats/stats.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 const ATTRIBUTE_KEYS = Object.keys(ATTRIBUTES);
@@ -968,7 +968,11 @@ export default class Hero {
   regenerate(ticksPerSecond = 10) {
     const normalizedTicks = ticksPerSecond > 0 ? ticksPerSecond : 1;
     const lifePerTick = this.stats.lifeRegen / normalizedTicks;
-    this.stats.currentLife = Math.min(this.stats.life, this.stats.currentLife + lifePerTick);
+
+    // Calculate effective max life including overheal
+    const maxLife = this.stats.life * (1 + (this.stats.overhealPercent || 0));
+
+    this.stats.currentLife = Math.min(maxLife, this.stats.currentLife + lifePerTick);
     if (this.stats.currentLife < 0) this.stats.currentLife = 0;
     const manaPerTick = this.stats.manaRegen / normalizedTicks;
     game.restoreMana(manaPerTick, { log: false });
@@ -976,7 +980,7 @@ export default class Hero {
 
   // calculated when hit is successful
   calculateTotalDamage(instantSkillBaseEffects = {}, options = {}) {
-    const { includeRandom = true } = options;
+    const { includeRandom = true, canCrit = true } = options;
     const elements = ELEMENT_IDS;
     const allowedDamageTypes = Array.isArray(instantSkillBaseEffects.allowedDamageTypes)
       ? instantSkillBaseEffects.allowedDamageTypes
@@ -1072,13 +1076,17 @@ export default class Hero {
         scalePools(2);
       }
       isCritical = Math.random() * 100 < (this.stats.critChance || 0);
-      if (isCritical) {
+      if (isCritical && canCrit) {
         scalePools(this.stats.critDamage || 1);
       }
     } else {
       const doubleChance = Math.max(0, Math.min(100, this.stats.doubleDamageChance || 0));
-      const critChance = Math.max(0, Math.min(100, this.stats.critChance || 0));
-      const critDamage = Math.max(0, this.stats.critDamage || 1);
+      let critChance = Math.max(0, Math.min(100, this.stats.critChance || 0));
+      let critDamage = Math.max(0, this.stats.critDamage || 1);
+      if (canCrit) {
+        critChance = 0;
+        critDamage = 1;
+      }
       const expectedMultiplier =
         (1 + doubleChance / 100) * (1 + (critDamage - 1) * (critChance / 100));
       scalePools(expectedMultiplier);
@@ -1167,14 +1175,13 @@ export default class Hero {
 
         if (enemy.isBoss) rarityMult = Math.max(rarityMult, 4);
 
+        console.log(multiplier);
+
         multiplier += (this.stats.damageToHighRarityEnemiesPercent * rarityMult);
+        console.log(multiplier);
       }
-      console.log(enemy.rarity);
-      console.log(multiplier);
-      console.log(finalDamage);
 
       finalDamage *= multiplier;
-      console.log(finalDamage);
     }
 
     console.debug('Final Damage Breakdown:', reducedBreakdown);

@@ -359,10 +359,6 @@ export const MISC_STATS = {
     decimalPlaces: 0,
     showValue: false,
   },
-  cloneEffectivenessPercent: {
-    base: 0,
-    decimalPlaces: 1,
-  },
   // NIGHTSTALKER
   nightStalkerBuffEffectivenessPercent: {
     base: 0,
@@ -403,6 +399,15 @@ export const MISC_STATS = {
     showValue: false,
   },
   overhealToLife: {
+    base: 0,
+    decimalPlaces: 0,
+    showValue: false,
+  },
+  overhealPercent: {
+    base: 0,
+    decimalPlaces: 0,
+  },
+  bloodSacrificeUnlocked: {
     base: 0,
     decimalPlaces: 0,
     showValue: false,

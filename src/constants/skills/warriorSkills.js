@@ -336,8 +336,9 @@ export const WARRIOR_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: 5 + level * 5,
+        percentOfPlayerDamage: 5 + scaleDownFlat(level, 4),
         attackSpeed: hero.stats.attackSpeed,
+        canCrit: true,
       };
     },
     manaCost: (level) => 30 + level * 1,

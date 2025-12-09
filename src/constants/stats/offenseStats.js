@@ -149,7 +149,7 @@ export const OFFENSE_STATS = {
   chanceToHitPercent: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 5, max: 10, limit: 20, scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING) },
+    item: { min: 5, max: 10, limit: 12, scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING) },
     itemTags: ['offense', 'magic', 'gloves'],
     showInUI: true,
     subcategory: 'attack',
@@ -612,8 +612,8 @@ export const OFFENSE_STATS = {
   },
   // RARE ENEMY DAMAGE
   damageToHighRarityEnemiesPercent: {
-    label: 'stats.damageToHighRarityEnemiesPercent',
-    isPercentage: true,
+    base: 0,
+    decimalPlaces: 1,
   },
   // HEAL DAMAGES ENEMIES
   healDamagesEnemiesPercent: {
@@ -664,7 +664,7 @@ export const OFFENSE_STATS = {
     decimalPlaces: 0,
     showValue: false,
   },
-  burnStackingChance: {
+  burnChance: {
     base: 0,
     decimalPlaces: 1,
     subcategory: 'elemental',
@@ -726,7 +726,10 @@ export const OFFENSE_STATS = {
   },
   damageToBossesPercent: {
     label: 'stats.damageToBossesPercent',
-    isPercentage: true,
   },
-
+  bloodSacrificeEffectiveness: {
+    base: 0,
+    decimalPlaces: 1,
+  },
 };
+

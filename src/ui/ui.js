@@ -444,6 +444,38 @@ export function updateEnemyStats() {
       img.src = baseUrl + game.currentEnemy.image;
     }
   }
+  updateAilmentIcons();
+}
+
+function updateAilmentIcons() {
+  const ailmentsContainer = document.querySelector('.enemy-ailments');
+  if (!ailmentsContainer) return;
+  ailmentsContainer.innerHTML = '';
+
+  const enemy = game.currentEnemy;
+  if (!enemy) return;
+
+  const basePath = import.meta.env.VITE_BASE_PATH || '';
+
+  if (enemy.bleed) {
+    const el = document.createElement('div');
+    el.className = 'ailment-icon bleed';
+    el.style.backgroundImage = `url('${basePath}/icons/bleed.jpg')`;
+    el.addEventListener('mouseenter', (e) => showTooltip(tp('ailment.bleed.tooltip', { amount: formatNumber(Math.floor(enemy.bleed.damagePool)), duration: (enemy.bleed.duration / 1000).toFixed(1) }), e));
+    el.addEventListener('mouseleave', hideTooltip);
+    el.addEventListener('mousemove', positionTooltip);
+    ailmentsContainer.appendChild(el);
+  }
+
+  if (enemy.burn) {
+    const el = document.createElement('div');
+    el.className = 'ailment-icon burn';
+    el.style.backgroundImage = `url('${basePath}/icons/burn.jpg')`;
+    el.addEventListener('mouseenter', (e) => showTooltip(tp('ailment.burn.tooltip', { amount: formatNumber(Math.floor(enemy.burn.damagePool)), duration: (enemy.burn.duration / 1000).toFixed(1) }), e));
+    el.addEventListener('mouseleave', hideTooltip);
+    el.addEventListener('mousemove', positionTooltip);
+    ailmentsContainer.appendChild(el);
+  }
 }
 
 export function updateEnemyStatLabels() {
@@ -767,7 +799,10 @@ function renderRegionPanel(region) {
     <div class="enemy-main-row">
       <div class="enemy-avatar"></div>
       <div class="enemy-life-and-stats">
-        <div class="enemy-name"></div>
+        <div class="enemy-name-row">
+          <div class="enemy-name"></div>
+          <div class="enemy-ailments"></div>
+        </div>
         <div class="enemy-life-bar">
           <div id="enemy-life-fill"></div>
           <div id="enemy-life-text"></div>

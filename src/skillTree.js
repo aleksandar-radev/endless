@@ -804,6 +804,14 @@ export default class SkillTree {
     const baseEffects = { ...this.getSkillEffect(skillId) };
     const manaCost = this.getSkillManaCost(skill);
 
+    if (skillId === 'bloodSacrifice') {
+      const lifeCost = hero.stats.currentLife * 0.5;
+      baseEffects.life = (baseEffects.life || 0) - lifeCost;
+      const effectiveness = 1 + (hero.stats.bloodSacrificeEffectiveness || 0) / 100;
+      baseEffects.damage = (baseEffects.damage || 0) + (lifeCost * effectiveness);
+    };
+
+
     if (!isAutoCast && hero.stats.currentMana < manaCost) {
       showManaWarning();
       return false;
@@ -881,6 +889,8 @@ export default class SkillTree {
       hero.stats.reduceEnemyDamagePercent -= baseEffects.reduceEnemyDamagePercent / 100;
     }
 
+    const canHeal = !skillId.includes('bloodSacrifice');
+
     if (dealsDamage && didHit && damageResult) {
       const { damage, isCritical, breakdown } = damageResult;
 
@@ -896,7 +906,7 @@ export default class SkillTree {
         omniStealPercent += baseEffects.omniSteal || 0;
       }
 
-      if (lifeStealPercent) {
+      if (lifeStealPercent && canHeal) {
         game.healPlayer(damage * (lifeStealPercent / 100));
       }
 
@@ -904,13 +914,13 @@ export default class SkillTree {
         game.restoreMana(damage * (manaStealPercent / 100));
       }
 
-      if (omniStealPercent) {
+      if (omniStealPercent && canHeal) {
         const omniStealAmount = damage * (omniStealPercent / 100);
         game.healPlayer(omniStealAmount);
         game.restoreMana(omniStealAmount);
       }
 
-      if (baseEffects.lifePerHit) {
+      if (baseEffects.lifePerHit && canHeal) {
         game.healPlayer(baseEffects.lifePerHit);
       }
 
@@ -1083,8 +1093,8 @@ export default class SkillTree {
       if (!buffData.summonStats) return;
       if (buffData.nextAttackTime <= now) {
       // Calculate summon damage as % of player's damage
-        const playerDamage = hero.calculateTotalDamage();
-        let damage = playerDamage.damage * (buffData.summonStats.percentOfPlayerDamage / 100);
+        const playerDamage = hero.calculateTotalDamage({}, { canCrit: buffData?.summonStats?.canCrit || false });
+        let damage = 0;
         damage += buffData.summonStats.damage || 0;
         damage += buffData.summonStats.fireDamage || 0;
         damage += buffData.summonStats.coldDamage || 0;
@@ -1093,11 +1103,22 @@ export default class SkillTree {
         damage += buffData.summonStats.lightningDamage || 0;
         damage += buffData.summonStats.waterDamage || 0;
 
+        if (playerDamage.isCritical) {
+          damage *= hero.stats.critDamage;
+        }
+
+        // in the % damage, the crit damage is already factored in
+        damage += playerDamage.damage * (buffData.summonStats.percentOfPlayerDamage / 100);
+
         if (skillId === 'animatedWeapons') {
           damage *= (hero.stats.animatedWeaponsDamagePercent) || 1;
         }
         if (skillId === 'shadowClone') {
           damage *= (hero.stats.cloneDamagePercent) || 1;
+        }
+
+        if (skillId === 'summonBats' && hero.stats.batsHealPercent) {
+          game.healPlayer(damage * (hero.stats.batsHealPercent));
         }
 
         if (buffData.summonStats.lifePerHit) {

@@ -572,3 +572,17 @@
   z-index: 20;
   font-size: 2rem;
 }
+
+.enemy-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.enemy-ailments .ailment-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+  background-size: cover;
+  border-radius: 4px;
+}

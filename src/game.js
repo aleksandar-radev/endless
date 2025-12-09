@@ -146,13 +146,20 @@ class Game {
 
   healPlayer(heal) {
     hero.stats.currentLife += heal;
-    if (hero.stats.currentLife > hero.stats.life) {
-      hero.stats.currentLife = hero.stats.life;
+    const maxLife = hero.stats.life * (1 + (hero.stats.overhealPercent || 0));
+    if (hero.stats.currentLife > maxLife) {
+      hero.stats.currentLife = maxLife;
     }
 
     // handle special case for BERSERKER class, where lifePerHit can be negative
     if (hero.stats.currentLife <= 0) {
       playerDeath();
+    }
+
+
+    if (heal > 0 && hero.stats.healDamagesEnemiesPercent > 0) {
+      const healDmg = heal * (hero.stats.healDamagesEnemiesPercent);
+      game.damageEnemy(healDmg, false, null, 'healDamage');
     }
 
     updatePlayerLife();
@@ -287,6 +294,12 @@ class Game {
 
     playerAttack(currentTime);
     enemyAttack(currentTime);
+
+    // Process DoTs on enemy
+    if (this.currentEnemy && this.currentEnemy.currentLife > 0) {
+      // gameLoop runs every 100ms (this.loopInterval = 100)
+      this.currentEnemy.processDoT(100);
+    }
 
     const deltaSeconds = 0.1; // gameLoop runs every 100ms
     statistics.addFightTime(deltaSeconds);
