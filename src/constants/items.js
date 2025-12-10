@@ -3,38 +3,7 @@ import { STATS } from './stats/stats.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 
-export const EQUIPMENT_SLOTS = {
-  HEAD: 'head',
-  CHEST: 'chest',
-  BELT: 'belt',
-  LEGS: 'legs',
-  BOOTS: 'boots',
-  WEAPON: 'weapon',
-  OFFHAND: 'offhand',
-  GLOVES: 'gloves',
-  AMULET: 'amulet',
-  RING1: 'ring1',
-  RING2: 'ring2',
-};
-
-export const SLOT_REQUIREMENTS = {
-  head: ['HELMET'],
-  chest: ['ARMOR'],
-  belt: ['BELT'],
-  legs: ['PANTS'],
-  boots: ['BOOTS'],
-  weapon: ['SWORD', 'AXE', 'MACE', 'WAND', 'STAFF', 'SHIELD', 'BOW'],
-  offhand: ['SWORD', 'AXE', 'WAND', 'SHIELD', 'ARROWS', 'MACE', 'STAFF'],
-  gloves: ['GLOVES'],
-  amulet: ['AMULET'],
-  ring1: ['RING'],
-  ring2: ['RING'],
-};
-
-export const TWO_HANDED_TYPES = ['MACE', 'STAFF', 'BOW'];
-export const DUAL_WIELD_TYPES = ['SWORD', 'AXE', 'WAND', 'SHIELD'];
-
-export const ITEM_TYPES = {
+export const ITEM_IDS = {
   HELMET: 'HELMET',
   ARMOR: 'ARMOR',
   BELT: 'BELT',
@@ -52,6 +21,78 @@ export const ITEM_TYPES = {
   AMULET: 'AMULET',
   RING: 'RING',
 };
+
+export const EQUIPMENT_SLOTS = {
+  HEAD: 'head',
+  CHEST: 'chest',
+  BELT: 'belt',
+  LEGS: 'legs',
+  BOOTS: 'boots',
+  WEAPON: 'weapon',
+  OFFHAND: 'offhand',
+  GLOVES: 'gloves',
+  AMULET: 'amulet',
+  RING1: 'ring1',
+  RING2: 'ring2',
+};
+
+export const SLOT_REQUIREMENTS = {
+  head: [ITEM_IDS.HELMET],
+  chest: [ITEM_IDS.ARMOR],
+  belt: [ITEM_IDS.BELT],
+  legs: [ITEM_IDS.PANTS],
+  boots: [ITEM_IDS.BOOTS],
+  weapon: [ITEM_IDS.SWORD, ITEM_IDS.AXE, ITEM_IDS.MACE, ITEM_IDS.WAND, ITEM_IDS.STAFF, ITEM_IDS.SHIELD, ITEM_IDS.BOW],
+  offhand: [ITEM_IDS.SWORD, ITEM_IDS.AXE, ITEM_IDS.WAND, ITEM_IDS.SHIELD, ITEM_IDS.ARROWS, ITEM_IDS.MACE, ITEM_IDS.STAFF],
+  gloves: [ITEM_IDS.GLOVES],
+  amulet: [ITEM_IDS.AMULET],
+  ring1: [ITEM_IDS.RING],
+  ring2: [ITEM_IDS.RING],
+};
+
+export const TWO_HANDED_TYPES = [ITEM_IDS.MACE, ITEM_IDS.STAFF, ITEM_IDS.BOW];
+export const DUAL_WIELD_TYPES = [ITEM_IDS.SWORD, ITEM_IDS.AXE, ITEM_IDS.WAND, ITEM_IDS.SHIELD];
+
+
+export const ITEM_TYPES = {
+  weapon: {
+    id: 'weapon',
+    items: [
+      ITEM_IDS.SWORD,
+      ITEM_IDS.AXE,
+      ITEM_IDS.MACE,
+      ITEM_IDS.WAND,
+      ITEM_IDS.STAFF,
+      ITEM_IDS.SHIELD,
+      ITEM_IDS.BOW,
+      ITEM_IDS.ARROWS,
+    ],
+  },
+  armor: {
+    id: 'armor',
+    items: [
+      ITEM_IDS.HELMET,
+      ITEM_IDS.ARMOR,
+      ITEM_IDS.BELT,
+      ITEM_IDS.PANTS,
+      ITEM_IDS.BOOTS,
+      ITEM_IDS.SHIELD,
+      ITEM_IDS.GLOVES,
+    ],
+  },
+  jewelry: {
+    id: 'jewelry',
+    items: [ITEM_IDS.AMULET, ITEM_IDS.RING],
+  },
+};
+
+export const ALL_ITEM_TYPES = [
+  ...new Set([
+    ...ITEM_TYPES.weapon.items,
+    ...ITEM_TYPES.armor.items,
+    ...ITEM_TYPES.jewelry.items,
+  ]),
+];
 
 export const ITEM_ICONS = {
   HELMET: `<img src="${BASE}/icons/helmet.svg" class="icon" alt="helmet"/>`,
@@ -95,67 +136,67 @@ export const RARITY_ORDER = [
 ];
 
 export const ITEM_STAT_POOLS = {
-  HELMET: {
+  [ITEM_IDS.HELMET]: {
     mandatory: [],
     possible: [...getStatsByTags(['defense', 'stat', 'helmet'])],
   },
-  ARMOR: {
+  [ITEM_IDS.ARMOR]: {
     mandatory: ['armor'],
     possible: [...getStatsByTags(['defense', 'stat', 'armor'])],
   },
-  BELT: {
+  [ITEM_IDS.BELT]: {
     mandatory: [],
     possible: [...getStatsByTags(['defense', 'stat', 'belt', 'misc'])],
   },
-  PANTS: {
+  [ITEM_IDS.PANTS]: {
     mandatory: [],
     possible: [...getStatsByTags(['defense', 'stat', 'pants'])],
   },
-  BOOTS: {
+  [ITEM_IDS.BOOTS]: {
     mandatory: [],
     possible: [...getStatsByTags(['defense', 'stat', 'boots'])],
   },
-  SWORD: {
+  [ITEM_IDS.SWORD]: {
     mandatory: [],
     possible: [...getStatsByTags(['offense', 'sword'])],
   },
-  AXE: {
+  [ITEM_IDS.AXE]: {
     mandatory: [],
     possible: [...getStatsByTags(['offense', 'axe'])],
   },
-  MACE: {
+  [ITEM_IDS.MACE]: {
     mandatory: [],
     possible: [...getStatsByTags(['offense', 'mace'])],
   },
-  WAND: {
+  [ITEM_IDS.WAND]: {
     mandatory: [],
     possible: [...getStatsByTags(['magic', 'wand', 'elemental'])],
   },
-  STAFF: {
+  [ITEM_IDS.STAFF]: {
     mandatory: [],
     possible: [...getStatsByTags(['magic', 'staff', 'elemental'])],
   },
-  BOW: {
+  [ITEM_IDS.BOW]: {
     mandatory: [],
     possible: [...getStatsByTags(['offense', 'bow'])],
   },
-  ARROWS: {
+  [ITEM_IDS.ARROWS]: {
     mandatory: [],
     possible: [...getStatsByTags(['offense', 'arrows'])],
   },
-  SHIELD: {
+  [ITEM_IDS.SHIELD]: {
     mandatory: ['blockChance'],
     possible: [...getStatsByTags(['defense', 'stat', 'shield'])],
   },
-  GLOVES: {
+  [ITEM_IDS.GLOVES]: {
     mandatory: [],
     possible: [...getStatsByTags(['gloves'])],
   },
-  AMULET: {
+  [ITEM_IDS.AMULET]: {
     mandatory: [],
     possible: [...getStatsByTags(['jewelry', 'amulet', 'misc'])],
   },
-  RING: {
+  [ITEM_IDS.RING]: {
     mandatory: [],
     possible: [...getStatsByTags(['jewelry', 'ring', 'misc'])],
   },
@@ -167,27 +208,14 @@ export const ITEM_STAT_POOLS = {
  * @returns {string[]}
  */
 export function getSlotsByCategory(category) {
-  switch (category) {
-    case 'armor':
-      // All slots that are not weapon, amulet, or ring
-      return Object.entries(SLOT_REQUIREMENTS)
-        .filter(([slot, types]) =>
-          types.some((type) => ['HELMET', 'ARMOR', 'BELT', 'PANTS', 'BOOTS', 'SHIELD', 'GLOVES'].includes(type)),
-        )
-        .map(([slot]) => slot);
-    case 'jewelry':
-      return Object.entries(SLOT_REQUIREMENTS)
-        .filter(([slot, types]) => types.some((type) => ['AMULET', 'RING'].includes(type)))
-        .map(([slot]) => slot);
-    case 'weapon':
-      return Object.entries(SLOT_REQUIREMENTS)
-        .filter(([slot, types]) =>
-          types.some((type) => ['SWORD', 'AXE', 'MACE', 'WAND', 'STAFF', 'SHIELD'].includes(type)),
-        )
-        .map(([slot]) => slot);
-    default:
-      return [];
+  const itemTypes = getTypesByCategory(category);
+  if (itemTypes.length === 0) {
+    return [];
   }
+
+  return Object.entries(SLOT_REQUIREMENTS)
+    .filter(([, types]) => types.some((type) => itemTypes.includes(type)))
+    .map(([slot]) => slot);
 }
 
 /**
@@ -196,16 +224,10 @@ export function getSlotsByCategory(category) {
  * @returns {string[]}
  */
 export function getTypesByCategory(category) {
-  switch (category) {
-    case 'armor':
-      return ['HELMET', 'ARMOR', 'BELT', 'PANTS', 'BOOTS', 'SHIELD', 'GLOVES'];
-    case 'jewelry':
-      return ['AMULET', 'RING'];
-    case 'weapon':
-      return ['SWORD', 'AXE', 'MACE', 'WAND', 'STAFF', 'SHIELD', 'BOW', 'ARROWS'];
-    default:
-      return [];
+  if (ITEM_TYPES[category]) {
+    return ITEM_TYPES[category].items;
   }
+  return [];
 }
 
 // Helper to get stats by tag

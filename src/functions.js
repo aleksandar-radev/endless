@@ -4,7 +4,7 @@ import { RUNES, MAX_CONVERSION_PERCENT, MIN_CONVERSION_PERCENT } from './constan
 import SimpleCrypto from 'simple-crypto-js';
 import { initializeSkillTreeStructure, showToast, updatePlayerLife, updateResources, updateStageUI, updateTabIndicators } from './ui/ui.js';
 import { createImageDropdownFromData } from './ui/imageDropdown.js';
-import { ITEM_ICONS, ITEM_RARITY, ITEM_TYPES } from './constants/items.js';
+import { ITEM_ICONS, ITEM_RARITY, ITEM_TYPES, ALL_ITEM_TYPES } from './constants/items.js';
 import { updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { createCombatText } from './combat.js';
@@ -568,10 +568,10 @@ export function createModifyUI() {
   // Item type
   const itemTypeSelect = document.createElement('select');
   itemTypeSelect.id = 'item-type-select';
-  Object.keys(ITEM_TYPES).forEach((type) => {
+  ALL_ITEM_TYPES.forEach((type) => {
     const option = document.createElement('option');
-    option.value = ITEM_TYPES[type];
-    option.textContent = ITEM_TYPES[type];
+    option.value = type;
+    option.textContent = type;
     itemTypeSelect.appendChild(option);
   });
   addItemControlsDiv.appendChild(makeControl('Type', itemTypeSelect));
@@ -648,7 +648,7 @@ export function createModifyUI() {
     const rarity = raritySelect.value;
     const tier = parseInt(tierInput.value, 10) || 1;
     let count = 0;
-    Object.values(ITEM_TYPES).forEach((itemType) => {
+    ALL_ITEM_TYPES.forEach((itemType) => {
       if (itemType === 'RING') {
         for (let i = 0; i < 2; i++) {
           const newItem = inventory.createItem(itemType, itemLevel, rarity, tier);

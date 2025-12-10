@@ -1606,6 +1606,7 @@ export default class Inventory {
     weaponEffectiveness = 0,
     itemLifeEffectivenessPercent = 0,
     itemArmorEffectivenessPercent = 0,
+    shieldEffectiveness = 0,
   } = {}) {
     // Reset equipment bonuses
     Object.keys(this.equipmentBonuses).forEach((stat) => {
@@ -1620,6 +1621,9 @@ export default class Inventory {
       let multiplier = 1;
       if (weaponEffectiveness > 0 && WEAPON_TYPES.includes(item.type)) {
         multiplier += weaponEffectiveness / 100;
+      }
+      if (shieldEffectiveness > 0 && item.type === 'SHIELD') {
+        multiplier += shieldEffectiveness / 100;
       }
 
       let lifeMultiplier = 1;
@@ -1681,12 +1685,18 @@ export default class Inventory {
     });
   }
 
-  getEquipmentBonuses(weaponEffectiveness = 0, itemLifeEffectivenessPercent = 0, itemArmorEffectivenessPercent = 0) {
+  getEquipmentBonuses(
+    weaponEffectiveness = 0,
+    itemLifeEffectivenessPercent = 0,
+    itemArmorEffectivenessPercent = 0,
+    shieldEffectiveness = 0,
+  ) {
     // Ensure bonuses are up-to-date
     this.updateItemBonuses({
       weaponEffectiveness,
       itemLifeEffectivenessPercent,
       itemArmorEffectivenessPercent,
+      shieldEffectiveness,
     });
     return { ...this.equipmentBonuses };
   }

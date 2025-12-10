@@ -342,13 +342,13 @@ export const SPECIALIZATIONS = {
   },
   PALADIN: {
     CRUSADER: {
+      // Specialize in thorns damage.
       id: 'CRUSADER',
       name: () => t('specialization.paladin.crusader.name'),
       description: () => t('specialization.paladin.crusader.description'),
       avatar: () => 'paladin-crusader-avatar.jpg',
       baseStats: () => ({
-        thornsDamage: 20,
-        thornsDamagePercent: 10,
+        canUseTwoShields: 1,
       }),
       skills: {
         shieldMastery: {
@@ -360,8 +360,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.shieldMastery'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            canUseTwoShields: 1,
-            extraDamageFromArmorPercent: scaleDownFlat(level, 0.05),
+            shieldEffectiveness: scaleUpFlat(level, 10, 5, 0.2),
+            endurancePercent: scaleUpFlat(level, 5, 5, 0.2),
           }),
         },
         zeal: {
@@ -373,7 +373,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.zeal'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            zealDamageReductionPerStack: scaleDownFlat(level, 0.1),
+            divineProtectionBuffEffectivenessPercent: level ? 50 + scaleUpFlat(level, 10) : 0,
+            perseverancePercent: scaleUpFlat(level, 5, 5, 0.2),
           }),
         },
       },
@@ -386,6 +387,7 @@ export const SPECIALIZATIONS = {
       baseStats: () => ({
         armorPercent: 20,
         allResistancePercent: 10,
+        cooldownReductionCap: 0.1,
       }),
       skills: {
         divineAmulet: {
@@ -408,8 +410,8 @@ export const SPECIALIZATIONS = {
           icon: () => 'sacred-relic',
           description: () => t('skill.sacredRelic'),
           maxLevel: () => 1,
-          effect: () => ({
-            canUseTwoAmulets: 1,
+          effect: (level) => ({
+
           }),
         },
       },

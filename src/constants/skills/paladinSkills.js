@@ -1,6 +1,7 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
 import { scaleDownFlat, scaleUpFlat } from '../../common.js';
+import { hero } from '../../globals.js';
 
 // Paladin skills extracted from skills.js
 export const PALADIN_SKILLS = {
@@ -61,12 +62,15 @@ export const PALADIN_SKILLS = {
     icon: () => 'protection',
     description: () => t('skill.divineProtection'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      armor: scaleUpFlat(level, 2),
-      armorPercent: scaleDownFlat(level, 2),
-      thornsDamage: scaleUpFlat(level, 4, 6),
-      thornsDamagePercent: scaleDownFlat(level, 3),
-    }),
+    effect: (level) => {
+      const buffEffectiveness = 1 + (hero.stats.divineProtectionBuffEffectivenessPercent || 0);
+      return {
+        armor: scaleUpFlat(level, 2) * buffEffectiveness,
+        armorPercent: scaleDownFlat(level, 2) * buffEffectiveness,
+        thornsDamage: scaleUpFlat(level, 4, 6) * buffEffectiveness,
+        thornsDamagePercent: scaleDownFlat(level, 3) * buffEffectiveness,
+      };
+    },
   },
 
   // Tier 10 Skills

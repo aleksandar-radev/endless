@@ -1,6 +1,6 @@
 import { hero, inventory, statistics, game, dataManager } from './globals.js';
 import { getTimeNow } from './common.js';
-import { ITEM_TYPES, ITEM_RARITY, RARITY_ORDER } from './constants/items.js';
+import { ITEM_TYPES, ALL_ITEM_TYPES, ITEM_RARITY, RARITY_ORDER } from './constants/items.js';
 import { getCurrentRegion } from './region.js';
 import { t } from './i18n.js';
 import { distributeMaterials } from './materialsUtil.js';
@@ -66,7 +66,7 @@ export async function collectOfflineFightRewards() {
     if (xp > 0) hero.gainExp(xp);
     if (gold > 0) hero.gainGold(gold);
     const region = getCurrentRegion();
-    const types = Object.values(ITEM_TYPES);
+    const types = ALL_ITEM_TYPES;
     const level = Math.max(1, Math.floor(game.stage));
     const maxItems = 100;
     const itemCount = Math.min(items, maxItems);
@@ -141,9 +141,9 @@ export async function collectOfflineFightRewards() {
         let totalGold = 0;
         let crystals = 0;
         const matsAgg = { [MATERIALS.armor_upgrade_stone.id]: 0, [MATERIALS.weapon_upgrade_core.id]: 0, [MATERIALS.jewelry_upgrade_gem.id]: 0 };
-        const armorTypes = 7; // HELMET, ARMOR, BELT, PANTS, BOOTS, SHIELD, GLOVES
-        const weaponTypes = 5; // SWORD, AXE, MACE, WAND, STAFF
-        const jewelryTypes = 2; // AMULET, RING
+        const armorTypes = ITEM_TYPES.armor.items.length;
+        const weaponTypes = ITEM_TYPES.weapon.items.length;
+        const jewelryTypes = ITEM_TYPES.jewelry.items.length;
         const totalTypes = armorTypes + weaponTypes + jewelryTypes;
 
         for (const [rarityName, count] of rarityCounts.entries()) {

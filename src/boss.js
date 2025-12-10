@@ -1,16 +1,16 @@
 /**
  * Manages boss properties and state.
  */
-import {
-  percentIncreasedByLevel,
+import { percentIncreasedByLevel,
   scaleStat,
   computeScaledReward,
   xpDiminishingFactor,
   setStepFunctionMetadata,
 } from './common.js';
 import { BOSSES } from './constants/bosses.js';
-import { hero, options } from './globals.js';
+import { hero, options, game } from './globals.js';
 import { battleLog } from './battleLog.js';
+
 import { ELEMENTS } from './constants/common.js';
 import { t, tp } from './i18n.js';
 import { getCurrentBossRegion } from './bossRegion.js';
@@ -352,6 +352,65 @@ class Boss {
    */
   resetLife() {
     this.currentLife = this.life;
+    this.bleed = null;
+    this.burn = null;
+  }
+
+  applyBleed(damage) {
+    if (!this.bleed) {
+      this.bleed = { damagePool: 0, duration: 2000 };
+    }
+    this.bleed.damagePool += damage;
+    this.bleed.duration = 2000;
+  }
+
+  applyBurn(damage) {
+    if (!this.burn) {
+      this.burn = { damagePool: 0, duration: 2000 };
+    }
+    this.burn.damagePool += damage;
+    this.burn.duration = 2000;
+  }
+
+  processDoT(deltaMs) {
+    if (this.currentLife <= 0) return;
+
+    if (this.bleed) {
+      if (this.bleed.duration > 0) {
+        // Calculate damage for this tick based on remaining pool and duration
+        // We want to deplete the pool over the remaining duration
+        // rate = pool / duration (dmg/ms)
+        // tickDmg = rate * deltaMs
+        // However, if deltaMs > duration, we just deal remainder.
+        const tickMs = Math.min(deltaMs, this.bleed.duration);
+        const damage = (this.bleed.damagePool / this.bleed.duration) * tickMs;
+
+        if (damage > 0) {
+          game.damageEnemy(damage, false, null, 'bleed');
+          this.bleed.damagePool -= damage;
+        }
+        this.bleed.duration -= deltaMs;
+      }
+      if (this.bleed.duration <= 0 || this.bleed.damagePool <= 1e-6) {
+        this.bleed = null;
+      }
+    }
+
+    if (this.burn) {
+      if (this.burn.duration > 0) {
+        const tickMs = Math.min(deltaMs, this.burn.duration);
+        const damage = (this.burn.damagePool / this.burn.duration) * tickMs;
+
+        if (damage > 0) {
+          game.damageEnemy(damage, false, null, 'burn');
+          this.burn.damagePool -= damage;
+        }
+        this.burn.duration -= deltaMs;
+      }
+      if (this.burn.duration <= 0 || this.burn.damagePool <= 1e-6) {
+        this.burn = null;
+      }
+    }
   }
 
   /**

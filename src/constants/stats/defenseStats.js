@@ -281,6 +281,18 @@ export const DEFENSE_STATS = {
     decimalPlaces: 1,
     subcategory: 'defense',
   },
+  // SHIELD EFFECTIVENESS
+  shieldEffectiveness: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'defense',
+  },
+  // DIVINE PROTECTION BUFF EFFECTIVENESS
+  divineProtectionBuffEffectivenessPercent: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'defense',
+  },
   // FROST SHIELD
   frostShield: {
     base: 0,

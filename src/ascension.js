@@ -65,7 +65,7 @@ export const ASCENSION_CATEGORIES = {
       },
       attackRating: {
         label: t('ascension.upgrade.attackRating'),
-        bonus: 1000,
+        bonus: 8000,
         stat: 'attackRating',
       },
       chanceToHitPercent: {
@@ -228,6 +228,12 @@ export const ASCENSION_CATEGORIES = {
         bonus: 1,
         effect: 'skillPointsPerLevel',
         cost: (lvl) => 100 + 10 * lvl,
+      },
+      attributesPerLevel: {
+        label: t('ascension.upgrade.attributesPerLevel'),
+        bonus: 1,
+        effect: 'attributesPerLevel',
+        cost: (lvl) => 50 + 5 * lvl,
       },
       runeSlots: {
         label: t('ascension.upgrade.runeSlots'),

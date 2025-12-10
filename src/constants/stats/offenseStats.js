@@ -635,11 +635,6 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
   },
-  // ZEAL
-  zealDamageReductionPerStack: {
-    base: 0,
-    decimalPlaces: 2,
-  },
   // BERSERKER AOE
   aoeDevastationChance: {
     base: 0,

@@ -263,10 +263,12 @@ export default class Hero {
   levelUp(levels) {
     this.exp = 0;
     this.level += levels;
-    this.statPoints += STATS_ON_LEVEL_UP * levels;
     statistics.heroLevel = this.level;
 
     const ascBonuses = ascension?.getBonuses() || {};
+    const attributesPerLevel = STATS_ON_LEVEL_UP + (ascBonuses.attributesPerLevel || 0);
+    this.statPoints += attributesPerLevel * levels;
+
     const runeBonuses = runes?.getBonusEffects?.() || {};
     const skillPointsPerLevel =
       1 + (ascBonuses.skillPointsPerLevel || 0) + (runeBonuses.skillPointsPerLevel || 0);
@@ -317,12 +319,14 @@ export default class Hero {
   recalculateFromAttributes() {
     const skillTreeBonuses = skillTree.getAllSkillTreeBonuses();
     const weaponEffectiveness = skillTreeBonuses.weaponEffectiveness || 0;
+    const shieldEffectiveness = skillTreeBonuses.shieldEffectiveness || 0;
     const itemLifeEffectivenessPercent = skillTreeBonuses.itemLifeEffectivenessPercent || 0;
     const itemArmorEffectivenessPercent = skillTreeBonuses.itemArmorEffectivenessPercent || 0;
     const equipmentBonuses = inventory.getEquipmentBonuses(
       weaponEffectiveness,
       itemLifeEffectivenessPercent,
       itemArmorEffectivenessPercent,
+      shieldEffectiveness,
     );
     const trainingBonuses = training.getTrainingBonuses();
     const soulBonuses = this.getSoulShopBonuses();

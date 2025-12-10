@@ -1,4 +1,4 @@
-import { ITEM_TYPES } from './constants/items.js';
+import { ITEM_TYPES, ALL_ITEM_TYPES } from './constants/items.js';
 import { QUEST_DEFINITIONS } from './constants/quests.js';
 import { hero, statistics, dataManager, inventory } from './globals.js';
 import { showToast, updateResources, updateTabIndicators } from './ui/ui.js';
@@ -87,7 +87,7 @@ export class Quest {
         const tier = rewardItem.tier || 1;
         const level = statistics.highestStages?.[tier] || 1;
         // Pick a random item type
-        const itemTypes = Object.keys(ITEM_TYPES);
+        const itemTypes = ALL_ITEM_TYPES;
         const type = itemTypes[Math.floor(Math.random() * itemTypes.length)];
         const newItem = inventory.createItem(type, level, rarity, tier);
         inventory.addItemToInventory(newItem);

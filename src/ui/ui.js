@@ -460,7 +460,7 @@ function updateAilmentIcons() {
   if (enemy.bleed) {
     const el = document.createElement('div');
     el.className = 'ailment-icon bleed';
-    el.style.backgroundImage = `url('${basePath}/icons/bleed.jpg')`;
+    el.style.backgroundImage = `url('${basePath}/icons/bleed.svg')`;
     el.addEventListener('mouseenter', (e) => showTooltip(tp('ailment.bleed.tooltip', { amount: formatNumber(Math.floor(enemy.bleed.damagePool)), duration: (enemy.bleed.duration / 1000).toFixed(1) }), e));
     el.addEventListener('mouseleave', hideTooltip);
     el.addEventListener('mousemove', positionTooltip);
@@ -470,7 +470,7 @@ function updateAilmentIcons() {
   if (enemy.burn) {
     const el = document.createElement('div');
     el.className = 'ailment-icon burn';
-    el.style.backgroundImage = `url('${basePath}/icons/burn.jpg')`;
+    el.style.backgroundImage = `url('${basePath}/icons/burn.svg')`;
     el.addEventListener('mouseenter', (e) => showTooltip(tp('ailment.burn.tooltip', { amount: formatNumber(Math.floor(enemy.burn.damagePool)), duration: (enemy.burn.duration / 1000).toFixed(1) }), e));
     el.addEventListener('mouseleave', hideTooltip);
     el.addEventListener('mousemove', positionTooltip);

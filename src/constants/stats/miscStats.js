@@ -240,6 +240,11 @@ export const MISC_STATS = {
     showInUI: true,
     subcategory: 'misc',
   },
+  cooldownReductionCap: {
+    base: 0.8,
+    decimalPlaces: 2,
+    showValue: false,
+  },
   // MANA COST REDUCTION
   manaCostReductionPercent: {
     base: 0,
@@ -366,11 +371,6 @@ export const MISC_STATS = {
   },
   // PALADIN EQUIPMENT
   canUseTwoShields: {
-    base: 0,
-    decimalPlaces: 0,
-    showValue: false,
-  },
-  canUseTwoAmulets: {
     base: 0,
     decimalPlaces: 0,
     showValue: false,

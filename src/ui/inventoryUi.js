@@ -2,7 +2,7 @@ import { hero, inventory, dataManager, crystalShop } from '../globals.js';
 import { ITEM_SLOTS, MATERIALS_SLOTS, PERSISTENT_SLOTS, requestMaterialsUiRefresh } from '../inventory.js';
 import { MATERIALS } from '../constants/materials.js';
 import { hideTooltip, positionTooltip, showToast, showTooltip } from '../ui/ui.js';
-import { ITEM_RARITY, RARITY_ORDER, SLOT_REQUIREMENTS, ITEM_TYPES, ITEM_ICONS } from '../constants/items.js';
+import { ITEM_RARITY, RARITY_ORDER, SLOT_REQUIREMENTS, ITEM_IDS, ITEM_ICONS } from '../constants/items.js';
 import { closeModal, createModal } from './modal.js';
 import { formatStatName } from './ui.js';
 import { t, tp } from '../i18n.js';
@@ -217,7 +217,7 @@ export function initializeInventoryUI(inv) {
       return;
     }
 
-    if (itemData.type === ITEM_TYPES.RING) {
+    if (itemData.type === ITEM_IDS.RING) {
       const emptyRingSlots = ['ring1', 'ring2'].filter((s) => !inventory.equippedItems[s]);
       const slot = emptyRingSlots[0] || 'ring1';
       inventory.equipItem(itemData, slot);
@@ -932,7 +932,7 @@ export function setupItemDragAndTooltip(root = getInventoryTab()) {
         return;
       }
 
-      if (itemData.type === ITEM_TYPES.RING) {
+      if (itemData.type === ITEM_IDS.RING) {
         const emptyRingSlots = ['ring1', 'ring2'].filter((s) => !inventory.equippedItems[s]);
         const slot = emptyRingSlots[0] || 'ring1';
         inventory.equipItem(itemData, slot);
@@ -1382,7 +1382,7 @@ function openItemContextMenu(itemEl, x, y) {
       return;
     }
 
-    if (itemData.type === ITEM_TYPES.RING) {
+    if (itemData.type === ITEM_IDS.RING) {
       const emptyRingSlots = ['ring1', 'ring2'].filter((s) => !inventory.equippedItems[s]);
       const slot = emptyRingSlots[0] || 'ring1';
       inventory.equipItem(itemData, slot);

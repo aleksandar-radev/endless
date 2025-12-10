@@ -1,4 +1,4 @@
-import { ITEM_TYPES } from './items.js';
+import { ITEM_IDS } from './items.js';
 import { DEFENSE_STATS } from './stats/defenseStats.js';
 import { MISC_STATS } from './stats/miscStats.js';
 import { OFFENSE_STATS } from './stats/offenseStats.js';
@@ -11,7 +11,7 @@ export const UNIQUE_ITEMS = [
   {
     id: 'stormlash',
     nameKey: 'items.unique.stormlash',
-    type: ITEM_TYPES.SWORD,
+    type: ITEM_IDS.SWORD,
     stats: [
       { stat: 'damagePercent', min: -9999, max: -9999 },
       { stat: 'lightningDamage', min: STATS.lightningDamage.item.min * 8, max: STATS.lightningDamage.item.max * 20 },
@@ -28,7 +28,7 @@ export const UNIQUE_ITEMS = [
   {
     id: 'nightveil_hood',
     nameKey: 'items.unique.nightveilHood',
-    type: ITEM_TYPES.HELMET,
+    type: ITEM_IDS.HELMET,
     stats: [
       { stat: 'dexterity', min: STATS.dexterity.item.min * 4, max: STATS.dexterity.item.max * 7 },
       { stat: 'evasionPercent', min: STATS.evasionPercent.item.min * 2.5, max: STATS.evasionPercent.item.max * 4.5 },
@@ -39,7 +39,7 @@ export const UNIQUE_ITEMS = [
   {
     id: 'phoenixheart_mantle',
     nameKey: 'items.unique.phoenixheartMantle',
-    type: ITEM_TYPES.ARMOR,
+    type: ITEM_IDS.ARMOR,
     stats: [
       { stat: 'life', min: STATS.life.item.min * 6, max: STATS.life.item.max * 12 },
       { stat: 'lifeRegenPercent', min: STATS.lifeRegenPercent.item.min * 3, max: STATS.lifeRegenPercent.item.max * 5 },
@@ -50,7 +50,7 @@ export const UNIQUE_ITEMS = [
   {
     id: 'maelstrom_core',
     nameKey: 'items.unique.maelstromCore',
-    type: ITEM_TYPES.AMULET,
+    type: ITEM_IDS.AMULET,
     stats: [
       {
         stat: 'lightningDamagePercent',
@@ -73,7 +73,7 @@ export const UNIQUE_ITEMS = [
   {
     id: 'tempestbind_grips',
     nameKey: 'items.unique.tempestbindGrips',
-    type: ITEM_TYPES.GLOVES,
+    type: ITEM_IDS.GLOVES,
     stats: [
       { stat: 'attackSpeedPercent', min: STATS.attackSpeedPercent.item.min * 6, max: STATS.attackSpeedPercent.item.max * 9 },
       { stat: 'elementalDamage', min: STATS.elementalDamage.item.min * 4, max: STATS.elementalDamage.item.max * 7 },
@@ -84,7 +84,7 @@ export const UNIQUE_ITEMS = [
   {
     id: 'riftstrider_boots',
     nameKey: 'items.unique.riftstriderBoots',
-    type: ITEM_TYPES.BOOTS,
+    type: ITEM_IDS.BOOTS,
     stats: [
       { stat: 'evasion', min: STATS.evasion.item.min * 6, max: STATS.evasion.item.max * 14 },
       { stat: 'allResistancePercent', min: STATS.allResistancePercent.item.min * 2.5, max: STATS.allResistancePercent.item.max * 4 },
@@ -95,7 +95,7 @@ export const UNIQUE_ITEMS = [
   {
     id: 'ribbonweave_vestments',
     nameKey: 'items.unique.ribbonweaveVestments',
-    type: ITEM_TYPES.ARMOR,
+    type: ITEM_IDS.ARMOR,
     stats: [
       { stat: 'allAttributes', min: 10, max: 10 },
       { stat: 'allResistance', min: 20, max: 20 },
@@ -118,7 +118,7 @@ export const ITEM_SETS = [
       {
         id: 'arcanist_staff',
         nameKey: 'items.set.arcanistRegalia.staff',
-        type: ITEM_TYPES.STAFF,
+        type: ITEM_IDS.STAFF,
         stats: [
           { stat: 'fireDamage', min: STATS.fireDamage.item.min * 2.8, max: STATS.fireDamage.item.max * 1.6 },
           { stat: 'coldDamage', min: STATS.coldDamage.item.min * 2.8, max: STATS.coldDamage.item.max * 1.6 },
@@ -130,7 +130,7 @@ export const ITEM_SETS = [
       {
         id: 'arcanist_amulet',
         nameKey: 'items.set.arcanistRegalia.amulet',
-        type: ITEM_TYPES.AMULET,
+        type: ITEM_IDS.AMULET,
         stats: [
           { stat: 'manaRegen', min: STATS.manaRegen.item.min * 1.8, max: STATS.manaRegen.item.max * 1.1 },
           { stat: 'intelligence', min: STATS.intelligence.item.min * 2.3, max: STATS.intelligence.item.max * 1.6 },
@@ -142,7 +142,7 @@ export const ITEM_SETS = [
       {
         id: 'arcanist_gloves',
         nameKey: 'items.set.arcanistRegalia.gloves',
-        type: ITEM_TYPES.GLOVES,
+        type: ITEM_IDS.GLOVES,
         stats: [
           { stat: 'attackSpeedPercent', min: STATS.attackSpeedPercent.item.min, max: STATS.attackSpeedPercent.item.max * 0.7 },
           { stat: 'elementalDamagePercent', min: STATS.elementalDamagePercent.item.min * 6, max: STATS.elementalDamagePercent.item.max * 2.6 },
@@ -178,7 +178,7 @@ export const ITEM_SETS = [
       {
         id: 'wardens_helm',
         nameKey: 'items.set.wardensBulwark.helm',
-        type: ITEM_TYPES.HELMET,
+        type: ITEM_IDS.HELMET,
         stats: [
           { stat: 'armor', min: STATS.armor.item.min * 3.2, max: STATS.armor.item.max * 1.8 },
           { stat: 'allResistance', min: STATS.allResistance.item.min * 1.8, max: STATS.allResistance.item.max },
@@ -190,7 +190,7 @@ export const ITEM_SETS = [
       {
         id: 'wardens_plate',
         nameKey: 'items.set.wardensBulwark.plate',
-        type: ITEM_TYPES.ARMOR,
+        type: ITEM_IDS.ARMOR,
         stats: [
           { stat: 'life', min: STATS.life.item.min * 6.7, max: STATS.life.item.max * 3.5 },
           { stat: 'armorPercent', min: STATS.armorPercent.item.min * 1.3, max: STATS.armorPercent.item.max * 0.9 },
@@ -202,7 +202,7 @@ export const ITEM_SETS = [
       {
         id: 'wardens_bulwark',
         nameKey: 'items.set.wardensBulwark.shield',
-        type: ITEM_TYPES.SHIELD,
+        type: ITEM_IDS.SHIELD,
         stats: [
           { stat: 'blockChance', min: STATS.blockChance.item.min * 3, max: STATS.blockChance.item.max * 1.6 },
           { stat: 'armor', min: STATS.armor.item.min * 3.6, max: STATS.armor.item.max * 2 },
@@ -214,7 +214,7 @@ export const ITEM_SETS = [
       {
         id: 'wardens_boots',
         nameKey: 'items.set.wardensBulwark.boots',
-        type: ITEM_TYPES.BOOTS,
+        type: ITEM_IDS.BOOTS,
         stats: [
           { stat: 'evasion', min: STATS.evasion.item.min * 5.3, max: STATS.evasion.item.max * 2.8 },
           { stat: 'dexterity', min: STATS.dexterity.item.min * 2, max: STATS.dexterity.item.max * 1.5 },

@@ -12,7 +12,7 @@ import {
 } from './ui/ui.js';
 import Enemy from './enemy.js';
 import { hero, game, inventory, crystalShop, statistics, skillTree, dataManager, runtime, options, runes, ascension } from './globals.js';
-import { ITEM_RARITY, ITEM_TYPES } from './constants/items.js';
+import { ITEM_RARITY, ITEM_TYPES, ALL_ITEM_TYPES } from './constants/items.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateQuestsUI } from './ui/questUi.js';
 import { selectBoss, updateBossUI } from './ui/bossUi.js';
@@ -559,7 +559,7 @@ export async function defeatEnemy() {
 
       if (Math.random() * 100 <= itemDropChance) {
         // Random item type
-        const types = Object.values(ITEM_TYPES);
+        const types = ALL_ITEM_TYPES;
         const itemType = types[Math.floor(Math.random() * types.length)];
 
         // Roll special unique item or standard item

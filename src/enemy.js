@@ -1,4 +1,4 @@
-import { ITEM_TYPES } from './constants/items.js';
+import { ITEM_TYPES, ALL_ITEM_TYPES } from './constants/items.js';
 import { getCurrentRegion, getRegionEnemies } from './region.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
 import { createPercentScaleFunction, scaleStat, computeScaledReward, xpDiminishingFactor } from './common.js';
@@ -553,7 +553,7 @@ class Enemy {
   }
 
   getRandomItemType() {
-    const types = Object.values(ITEM_TYPES);
+    const types = ALL_ITEM_TYPES;
     return types[Math.floor(Math.random() * types.length)];
   }
 
