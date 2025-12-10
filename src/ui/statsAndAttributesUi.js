@@ -402,7 +402,16 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
 
           if (showValue) {
             let val = hero.stats[key];
-            if (key === 'extraMaterialDropPercent') {
+            if (key === 'cooldownReductionPercent') {
+              const cap = hero.stats.cooldownReductionCap || 0.8;
+              const effective = Math.min(val, cap);
+              const decimals = statsDef[key]?.decimalPlaces ?? 1;
+              let text = (effective * 100).toFixed(decimals) + '%';
+              if (val > cap) {
+                text += ` (${(val * 100).toFixed(decimals)}%)`;
+              }
+              val = text;
+            } else if (key === 'extraMaterialDropPercent') {
               val = (val * 100).toFixed(1) + '%';
             } else if (
               key === 'itemQuantityPercent' ||
@@ -458,7 +467,16 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           const span = document.createElement('span');
           span.id = `${key}-value`;
           let val = hero.stats[key];
-          if (key === 'extraMaterialDropPercent') {
+          if (key === 'cooldownReductionPercent') {
+            const cap = hero.stats.cooldownReductionCap || 0.8;
+            const effective = Math.min(val, cap);
+            const decimals = statsDef[key]?.decimalPlaces ?? 1;
+            let text = (effective * 100).toFixed(decimals) + '%';
+            if (val > cap) {
+              text += ` (${(val * 100).toFixed(decimals)}%)`;
+            }
+            val = text;
+          } else if (key === 'extraMaterialDropPercent') {
             val = (val * 100).toFixed(1) + '%';
           } else if (
             key === 'itemQuantityPercent' ||
@@ -530,6 +548,16 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           el.textContent = formatNumber(hero.stats.manaRegen.toFixed(STATS.manaRegen.decimalPlaces));
         } else if (key === 'blockChance') {
           el.textContent = hero.stats.blockChance.toFixed(STATS.blockChance.decimalPlaces) + '%';
+        } else if (key === 'cooldownReductionPercent') {
+          const val = hero.stats[key];
+          const cap = hero.stats.cooldownReductionCap || 0.8;
+          const effective = Math.min(val, cap);
+          const decimals = STATS[key]?.decimalPlaces ?? 1;
+          let text = (effective * 100).toFixed(decimals) + '%';
+          if (val > cap) {
+            text += ` (${(val * 100).toFixed(decimals)}%)`;
+          }
+          el.textContent = text;
         } else {
           // Use decimalPlaces from STATS config if available
           const decimalPlaces = STATS[key]?.decimalPlaces ?? 0;
