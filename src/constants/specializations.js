@@ -385,9 +385,7 @@ export const SPECIALIZATIONS = {
       description: () => t('specialization.paladin.templar.description'),
       avatar: () => 'paladin-templar-avatar.jpg',
       baseStats: () => ({
-        armorPercent: 20,
-        allResistancePercent: 10,
-        cooldownReductionCap: 0.1,
+        cooldownReductionCapPercent: 10,
       }),
       skills: {
         divineAmulet: {
@@ -399,7 +397,7 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.divineAmulet'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            amuletEffectivenessPercent: scaleUpFlat(level, 5, 5, 0.2),
+            jewelryEffectiveness: level ? 50 + scaleUpFlat(level, 8, 8, 0.2) : 0,
           }),
         },
         sacredRelic: {
@@ -409,9 +407,11 @@ export const SPECIALIZATIONS = {
           requiredLevel: () => SKILL_LEVEL_TIERS[1],
           icon: () => 'sacred-relic',
           description: () => t('skill.sacredRelic'),
-          maxLevel: () => 1,
+          maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-
+            attackSpeedPercent: scaleUpFlat(level, 3, 10, 0.1),
+            attackRatingPercent: level ? 50 + scaleUpFlat(level, 8, 10, 0.1) : 0,
+            elementalDamagePercent: level ? 40 + scaleUpFlat(level, 5, 10, 0.1) : 0,
           }),
         },
       },
@@ -422,31 +422,35 @@ export const SPECIALIZATIONS = {
       description: () => t('specialization.paladin.sentinel.description'),
       avatar: () => 'paladin-sentinel-avatar.jpg',
       baseStats: () => ({
-        reduceEnemyDamagePercent: 10,
+        extraDamageFromLifePercent: 0.5,
+        extraDamageFromAllResistancesPercent: 0.08,
+        extraDamageFromArmorPercent: 0.5,
       }),
       skills: {
-        ringMastery: {
-          id: 'ringMastery',
-          name: () => t('Ring Mastery'),
+        unyieldingSpirit: {
+          id: 'unyieldingSpirit',
+          name: () => t('Unyielding Spirit'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[0],
           icon: () => 'ring-mastery',
-          description: () => t('skill.ringMastery'),
+          description: () => t('skill.unyieldingSpirit'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            ringEffectivenessPercent: scaleUpFlat(level, 5, 5, 0.2),
+            endurancePercent: scaleDownFlat(level, 5),
+            perseverancePercent: scaleDownFlat(level, 3),
           }),
         },
-        guardianSignet: {
-          id: 'guardianSignet',
-          name: () => t('Guardian Signet'),
+        immortalPresence: {
+          id: 'immortalPresence',
+          name: () => t('Immortal Presence'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[1],
           icon: () => 'guardian-signet',
-          description: () => t('skill.guardianSignet'),
-          maxLevel: () => 1,
-          effect: () => ({
-            canUseExtraRing: 1,
+          description: () => t('skill.immortalPresence'),
+          maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+          effect: (level) => ({
+            life: scaleUpFlat(level, 50, 10, 1),
+            lifePercent: scaleDownFlat(level, 3),
           }),
         },
       },

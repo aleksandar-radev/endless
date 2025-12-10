@@ -240,10 +240,11 @@ export const MISC_STATS = {
     showInUI: true,
     subcategory: 'misc',
   },
-  cooldownReductionCap: {
+  cooldownReductionCapPercent: {
     base: 0.8,
-    decimalPlaces: 2,
-    showValue: false,
+    decimalPlaces: 0,
+    showInUI: true,
+    subcategory: 'misc',
   },
   // MANA COST REDUCTION
   manaCostReductionPercent: {
@@ -342,6 +343,11 @@ export const MISC_STATS = {
   },
   // WEAPON EFFECTIVENESS
   weaponEffectiveness: {
+    base: 0,
+    decimalPlaces: 1,
+  },
+  // JEWELRY EFFECTIVENESS
+  jewelryEffectiveness: {
     base: 0,
     decimalPlaces: 1,
   },

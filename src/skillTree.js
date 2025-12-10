@@ -732,7 +732,7 @@ export default class SkillTree {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.cooldown) return 0;
     const baseCooldown = skill.cooldown(effectiveLevel);
-    const cap = hero.stats.cooldownReductionCap || 0.8;
+    const cap = hero.stats.cooldownReductionCapPercent || 0.8;
     const cooldownReduction = Math.min(hero.stats.cooldownReductionPercent, cap); // Max cap reduction
     // Apply direct percentage reduction
     const reducedCooldown = baseCooldown * (1 - cooldownReduction);

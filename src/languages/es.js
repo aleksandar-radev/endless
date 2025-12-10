@@ -1504,10 +1504,10 @@ export default {
   'skill.divineAmulet': 'Aumenta la efectividad de tu amuleto.',
   'Sacred Relic': 'Reliquia Sagrada',
   'skill.sacredRelic': 'Permite equipar un segundo amuleto.',
-  'Ring Mastery': 'Maestría de Anillos',
-  'skill.ringMastery': 'Aumenta la efectividad de tus anillos.',
-  'Guardian Signet': 'Sello del Guardián',
-  'skill.guardianSignet': 'Permite equipar un anillo extra.',
+  'Unyielding Spirit': 'Espíritu Inquebrantable',
+  'skill.unyieldingSpirit': 'Aumenta vitalidad, resistencia y perseverancia.',
+  'Immortal Presence': 'Presencia Inmortal',
+  'skill.immortalPresence': 'Aumenta la vida y el porcentaje de vida.',
 
   // Berserker Specializations
   'Lacerate': 'Lacerar',

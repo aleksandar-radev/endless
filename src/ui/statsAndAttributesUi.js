@@ -403,7 +403,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           if (showValue) {
             let val = hero.stats[key];
             if (key === 'cooldownReductionPercent') {
-              const cap = hero.stats.cooldownReductionCap || 0.8;
+              const cap = hero.stats.cooldownReductionCapPercent || 0.8;
               const effective = Math.min(val, cap);
               const decimals = statsDef[key]?.decimalPlaces ?? 1;
               let text = (effective * 100).toFixed(decimals) + '%';
@@ -468,7 +468,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           span.id = `${key}-value`;
           let val = hero.stats[key];
           if (key === 'cooldownReductionPercent') {
-            const cap = hero.stats.cooldownReductionCap || 0.8;
+            const cap = hero.stats.cooldownReductionCapPercent || 0.8;
             const effective = Math.min(val, cap);
             const decimals = statsDef[key]?.decimalPlaces ?? 1;
             let text = (effective * 100).toFixed(decimals) + '%';
@@ -550,7 +550,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           el.textContent = hero.stats.blockChance.toFixed(STATS.blockChance.decimalPlaces) + '%';
         } else if (key === 'cooldownReductionPercent') {
           const val = hero.stats[key];
-          const cap = hero.stats.cooldownReductionCap || 0.8;
+          const cap = hero.stats.cooldownReductionCapPercent || 0.8;
           const effective = Math.min(val, cap);
           const decimals = STATS[key]?.decimalPlaces ?? 1;
           let text = (effective * 100).toFixed(decimals) + '%';

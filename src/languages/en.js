@@ -1575,9 +1575,10 @@ export default {
   'Sacred Relic': 'Sacred Relic',
   'skill.sacredRelic': 'Allows equipping a second amulet.',
   'Ring Mastery': 'Ring Mastery',
-  'skill.ringMastery': 'Increases effectiveness of your rings.',
-  'Guardian Signet': 'Guardian Signet',
-  'skill.guardianSignet': 'Allows equipping an extra ring.',
+  'Unyielding Spirit': 'Unyielding Spirit',
+  'skill.unyieldingSpirit': 'Increases vitality, endurance, and perseverance.',
+  'Immortal Presence': 'Immortal Presence',
+  'skill.immortalPresence': 'Increases life and life percent.',
 
   // Berserker Specializations
   'Lacerate': 'Lacerate',

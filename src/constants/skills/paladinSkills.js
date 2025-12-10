@@ -340,7 +340,7 @@ export const PALADIN_SKILLS = {
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 20 + level * 1,
-    cooldown: () => 30000,
+    cooldown: () => 12000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'divine-judgment',
     description: () => t('skill.divineJudgment'),

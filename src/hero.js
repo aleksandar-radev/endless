@@ -320,6 +320,7 @@ export default class Hero {
     const skillTreeBonuses = skillTree.getAllSkillTreeBonuses();
     const weaponEffectiveness = skillTreeBonuses.weaponEffectiveness || 0;
     const shieldEffectiveness = skillTreeBonuses.shieldEffectiveness || 0;
+    const jewelryEffectiveness = skillTreeBonuses.jewelryEffectiveness || 0;
     const itemLifeEffectivenessPercent = skillTreeBonuses.itemLifeEffectivenessPercent || 0;
     const itemArmorEffectivenessPercent = skillTreeBonuses.itemArmorEffectivenessPercent || 0;
     const equipmentBonuses = inventory.getEquipmentBonuses(
@@ -327,6 +328,7 @@ export default class Hero {
       itemLifeEffectivenessPercent,
       itemArmorEffectivenessPercent,
       shieldEffectiveness,
+      jewelryEffectiveness,
     );
     const trainingBonuses = training.getTrainingBonuses();
     const soulBonuses = this.getSoulShopBonuses();
@@ -578,6 +580,7 @@ export default class Hero {
       if (stat.endsWith('Percent')) {
         const statName = stat.replace('Percent', '');
         let value =
+          (STATS[stat]?.base || 0) +
           (attributeEffects[stat] || 0) +
           (this.permaStats[stat] || 0) +
           (skillTreeBonuses[stat] || 0) / 100 +

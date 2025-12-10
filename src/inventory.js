@@ -1607,6 +1607,7 @@ export default class Inventory {
     itemLifeEffectivenessPercent = 0,
     itemArmorEffectivenessPercent = 0,
     shieldEffectiveness = 0,
+    jewelryEffectiveness = 0,
   } = {}) {
     // Reset equipment bonuses
     Object.keys(this.equipmentBonuses).forEach((stat) => {
@@ -1615,6 +1616,7 @@ export default class Inventory {
 
     const equippedItems = Object.values(this.equippedItems).filter(Boolean);
     const WEAPON_TYPES = ['SWORD', 'AXE', 'MACE', 'DAGGER', 'SPEAR', 'BOW', 'STAFF', 'WAND'];
+    const JEWELRY_TYPES = ['AMULET', 'RING'];
 
     // Calculate bonuses from all equipped items
     equippedItems.forEach((item) => {
@@ -1624,6 +1626,9 @@ export default class Inventory {
       }
       if (shieldEffectiveness > 0 && item.type === 'SHIELD') {
         multiplier += shieldEffectiveness / 100;
+      }
+      if (jewelryEffectiveness > 0 && JEWELRY_TYPES.includes(item.type)) {
+        multiplier += jewelryEffectiveness / 100;
       }
 
       let lifeMultiplier = 1;
@@ -1690,6 +1695,7 @@ export default class Inventory {
     itemLifeEffectivenessPercent = 0,
     itemArmorEffectivenessPercent = 0,
     shieldEffectiveness = 0,
+    jewelryEffectiveness = 0,
   ) {
     // Ensure bonuses are up-to-date
     this.updateItemBonuses({
@@ -1697,6 +1703,7 @@ export default class Inventory {
       itemLifeEffectivenessPercent,
       itemArmorEffectivenessPercent,
       shieldEffectiveness,
+      jewelryEffectiveness,
     });
     return { ...this.equipmentBonuses };
   }

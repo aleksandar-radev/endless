@@ -1568,10 +1568,10 @@ export default {
   'skill.divineAmulet': '提高护身符的效果。',
   'Sacred Relic': '圣物',
   'skill.sacredRelic': '允许装备第二个护身符。',
-  'Ring Mastery': '戒指精通',
-  'skill.ringMastery': '提高戒指的效果。',
-  'Guardian Signet': '守护者印记',
-  'skill.guardianSignet': '允许装备一个额外的戒指。',
+  'Unyielding Spirit': '不屈精神',
+  'skill.unyieldingSpirit': '提升体力、韧性与毅力。',
+  'Immortal Presence': '不朽存在',
+  'skill.immortalPresence': '提升生命与生命百分比。',
 
   // Berserker Specializations
   'Lacerate': '撕裂',

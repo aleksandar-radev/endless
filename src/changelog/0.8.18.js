@@ -25,6 +25,7 @@ export default function run() {
       <li>Chance to hit reduced to 12% for items. (20 before)</li>
       <li>Added ascension upgrade for bonus attibute points on level.</li>
       <li>Attack rating flat bonus from ascension upgrades increased to 8000, from 1000.</li>
+      <li>Divine judgement skill cd reduced to 12s from 30s.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
