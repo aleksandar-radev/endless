@@ -25,7 +25,8 @@ export const DRUID_SKILLS = {
     icon: () => 'summon-pest',
     description: () => t('skill.summonPest'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({}),
+    effect: (level) => ({
+    }),
   },
   barkSkin: {
     id: 'barkSkin',
@@ -58,7 +59,7 @@ export const DRUID_SKILLS = {
     }),
   },
 
-  // Tier 10
+  // Tier 10 Skills
   rejuvenation: {
     id: 'rejuvenation',
     name: () => t('Rejuvenation'),
@@ -117,10 +118,11 @@ export const DRUID_SKILLS = {
     icon: () => 'sproutling',
     description: () => t('skill.sproutling'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({}),
+    effect: (level) => ({
+    }),
   },
 
-  // Tier 25
+  // Tier 25 Skills
   animalCompanion: {
     id: 'animalCompanion',
     name: () => t('Animal Companion'),
@@ -140,7 +142,8 @@ export const DRUID_SKILLS = {
     icon: () => 'companion',
     description: () => t('skill.animalCompanion'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({}),
+    effect: (level) => ({
+    }),
   },
   naturalGrowth: {
     id: 'naturalGrowth',
@@ -156,7 +159,7 @@ export const DRUID_SKILLS = {
     }),
   },
 
-  // Tier 50
+  // Tier 50 Skills
   hurricane: {
     id: 'hurricane',
     name: () => t('Hurricane'),
@@ -201,7 +204,8 @@ export const DRUID_SKILLS = {
     icon: () => 'spirit-bear',
     description: () => t('skill.spiritBear'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({}),
+    effect: (level) => ({
+    }),
   },
   stoneform: {
     id: 'stoneform',
@@ -222,7 +226,7 @@ export const DRUID_SKILLS = {
     }),
   },
 
-  // Tier 75
+  // Tier 75 Skills
   spiritLink: {
     id: 'spiritLink',
     name: () => t('Spirit Link'),
@@ -255,7 +259,7 @@ export const DRUID_SKILLS = {
     }),
   },
 
-  // Tier 100
+  // Tier 100 Skills
   earthsEmbrace: {
     id: 'earthsEmbrace',
     name: () => "Earth's Embrace",
@@ -289,7 +293,7 @@ export const DRUID_SKILLS = {
     }),
   },
 
-  // Tier 200
+  // Tier 200 Skills
   avatarOfNature: {
     id: 'avatarOfNature',
     name: () => t('Avatar of Nature'),
@@ -306,7 +310,7 @@ export const DRUID_SKILLS = {
     }),
   },
 
-  // Tier 1200
+  // Tier 1200 Skills
   spiritBond: {
     id: 'spiritBond',
     name: () => t('Spirit Bond'),
@@ -341,7 +345,7 @@ export const DRUID_SKILLS = {
     }),
   },
 
-  // Tier 2000
+  // Tier 2000 Skills
   ancientRoots: {
     id: 'ancientRoots',
     name: () => t('Ancient Roots'),
@@ -379,7 +383,7 @@ export const DRUID_SKILLS = {
     },
   },
 
-  // Tier 3000
+  // Tier 3000 Skills
   natureEternal: {
     id: 'natureEternal',
     name: () => t('Nature Eternal'),
@@ -414,17 +418,18 @@ export const DRUID_SKILLS = {
     icon: () => 'primeval-guardian',
     description: () => t('skill.primevalGuardian'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({}),
+    effect: (level) => ({
+    }),
   },
 
-  // Tier 5000
-  earthsEmbraceUltimate: {
-    id: 'earthsEmbraceUltimate',
-    name: () => t("Earth's Embrace (Ascended)"),
+  // Tier 5000 Skills
+  earthsEmbrace: {
+    id: 'earthsEmbrace',
+    name: () => "Earth's Embrace",
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'earths-embrace',
-    description: () => t('skill.earthsEmbraceUltimate'),
+    description: () => t('skill.earthsEmbrace'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: scaleUpFlat(level, 12, 5),
@@ -444,166 +449,5 @@ export const DRUID_SKILLS = {
     effect: (level) => ({
       elementalDamagePercent: scaleDownFlat(level, 3),
     }),
-  },
-
-  /////////////////////////////////////////////////////////////////////////////
-  // NEW TIERS BELOW
-  /////////////////////////////////////////////////////////////////////////////
-
-  // TIER 10000
-  worldshaperBond: {
-    id: 'worldshaperBond',
-    name: () => t('Worldshaper Bond'),
-    type: () => 'passive',
-    requiredLevel: () => 10000,
-    icon: () => 'worldshaper-bond',
-    description: () => t('skill.worldshaperBond'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      vitalityPercent: scaleDownFlat(level, 5),
-      armorPercent: scaleDownFlat(level, 5),
-      earthDamagePercent: scaleDownFlat(level, 6),
-      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level, 0.02), 4),
-    }),
-  },
-
-  earthAvatar: {
-    id: 'earthAvatar',
-    name: () => t('Earth Avatar'),
-    type: () => 'summon',
-    summonStats: (level) => {
-      return {
-        percentOfPlayerDamage: Math.min(scaleDownFlat(level, 2), 300),
-        damage: scaleUpFlat(level, 40, 3),
-        earthDamage: scaleUpFlat(level, 45, 3),
-        armorPercent: scaleDownFlat(level, 8),
-        attackSpeed: 0.8,
-      };
-    },
-    manaCost: (level) => 100 + level * 3,
-    cooldown: () => 180000,
-    duration: () => 60000,
-    requiredLevel: () => 10000,
-    icon: () => 'earth-avatar',
-    description: () => t('skill.earthAvatar'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({}),
-  },
-
-  // TIER 25000
-  primalConvergence: {
-    id: 'primalConvergence',
-    name: () => t('Primal Convergence'),
-    type: () => 'buff',
-    manaCost: (level) => 150 + level * 4,
-    cooldown: () => 240000,
-    duration: () => 45000,
-    requiredLevel: () => 25000,
-    icon: () => 'primal-convergence',
-    description: () => t('skill.primalConvergence'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      elementalDamagePercent: scaleDownFlat(level, 10),
-      waterDamagePercent: scaleDownFlat(level, 6),
-      coldDamagePercent: scaleDownFlat(level, 6),
-      earthDamagePercent: scaleDownFlat(level, 6),
-      lifeRegen: scaleUpFlat(level, 20),
-    }),
-  },
-
-  natureEnkindled: {
-    id: 'natureEnkindled',
-    name: () => t('Nature Enkindled'),
-    type: () => 'passive',
-    requiredLevel: () => 25000,
-    icon: () => 'nature-enkindled',
-    description: () => t('skill.natureEnkindled'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      damagePercent: scaleDownFlat(level, 8),
-      vitality: scaleUpFlat(level, 10),
-      manaRegenPercent: scaleDownFlat(level, 5),
-    }),
-  },
-
-  // TIER 50000
-  eternalGrove: {
-    id: 'eternalGrove',
-    name: () => t('Eternal Grove'),
-    type: () => 'toggle',
-    manaCost: (level) => 200 + level * 5,
-    requiredLevel: () => 50000,
-    icon: () => 'eternal-grove',
-    description: () => t('skill.eternalGrove'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      lifePercent: scaleDownFlat(level, 15),
-      endurancePercent: scaleDownFlat(level, 8),
-      perseverancePercent: scaleDownFlat(level, 8),
-      lifeRegenPercent: scaleDownFlat(level, 4),
-    }),
-  },
-
-  groveTitan: {
-    id: 'groveTitan',
-    name: () => t('Grove Titan'),
-    type: () => 'summon',
-    summonStats: (level) => ({
-      percentOfPlayerDamage: Math.min(scaleDownFlat(level, 3), 400),
-      damage: scaleUpFlat(level, 80, 3),
-      earthDamage: scaleUpFlat(level, 70, 3),
-      armor: scaleUpFlat(level, 50, 4),
-      attackSpeed: 1.1,
-    }),
-    manaCost: (level) => 250 + level * 8,
-    cooldown: () => 240000,
-    duration: () => 80000,
-    requiredLevel: () => 50000,
-    icon: () => 'grove-titan',
-    description: () => t('skill.groveTitan'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({}),
-  },
-
-  // TIER 100000
-  mythicAwakening: {
-    id: 'mythicAwakening',
-    name: () => t('Mythic Awakening'),
-    type: () => 'passive',
-    requiredLevel: () => 100000,
-    icon: () => 'mythic-awakening',
-    description: () => t('skill.mythicAwakening'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      vitalityPercent: scaleDownFlat(level, 20),
-      damagePercent: scaleDownFlat(level, 16),
-      elementalDamagePercent: scaleDownFlat(level, 12),
-      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level, 0.05), 10),
-    }),
-  },
-
-  starbornRitual: {
-    id: 'starbornRitual',
-    name: () => t('Starborn Ritual'),
-    type: () => 'instant',
-    skill_type: 'spell',
-    manaCost: (level) => 500 + level * 10,
-    cooldown: () => 160000,
-    requiredLevel: () => 100000,
-    icon: () => 'starborn-ritual',
-    description: () => t('skill.starbornRitual'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const dmg = scaleUpFlat(level, 200, 4, 0.4);
-      const coldPercent = scaleDownFlat(level, 20);
-      const waterPercent = scaleDownFlat(level, 20);
-      const earthPercent = scaleDownFlat(level, 20);
-      return {
-        damage: dmg * 4,
-        coldDamagePercent: coldPercent * 4,
-        waterDamagePercent: waterPercent * 4,
-        earthDamagePercent: earthPercent * 4,
-      };
-    },
   },
 };

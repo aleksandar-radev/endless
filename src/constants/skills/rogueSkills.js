@@ -100,7 +100,8 @@ export const ROGUE_SKILLS = {
     icon: () => 'flurry',
     description: () => t('skill.flurry'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: () => ({}),
+    effect: () => ({
+    }),
   },
   precision: {
     id: 'precision',
@@ -348,99 +349,6 @@ export const ROGUE_SKILLS = {
     }),
   },
 
-  /////////////////////////////////////////////////////////////////////////////
-  // NEW TIERS BELOW
-  /////////////////////////////////////////////////////////////////////////////
-
-  // Tier 10000 Skills
-  shadowOverload: {
-    id: 'shadowOverload',
-    name: () => t('Shadow Overload'),
-    type: () => 'instant',
-    skill_type: 'attack',
-    manaCost: (level) => 95 + level * 2.5,
-    cooldown: () => 25000,
-    requiredLevel: () => SKILL_LEVEL_TIERS[12],
-    icon: () => 'toxic-requiem',
-    description: () => t('skill.toxicRequiem'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      earthDamage: scaleUpFlat(level, 30, 10, 0.5),
-      earthDamagePercent: scaleDownFlat(level, 25),
-      damageOverTimePercent: scaleDownFlat(level, 8),
-    }),
-  },
-
-  // Tier 50000 Skills
-  perfectAssassin: {
-    id: 'perfectAssassin',
-    name: () => t('Perfect Assassin'),
-    type: () => 'passive',
-    requiredLevel: () => SKILL_LEVEL_TIERS[13],
-    icon: () => 'perfect-assassin',
-    description: () => t('skill.perfectAssassin'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      critChance: Math.min(scaleDownFlat(level, 0.2), 60),
-      critDamage: Math.min(scaleDownFlat(level, 0.02), 10),
-      damagePercent: scaleDownFlat(level, 6),
-      evasionPercent: scaleDownFlat(level, 4),
-    }),
-  },
-  shadestep: {
-    id: 'shadestep',
-    name: () => t('Shadestep'),
-    type: () => 'instant',
-    skill_type: 'attack',
-    manaCost: (level) => 110 + level * 3,
-    cooldown: () => 15000,
-    requiredLevel: () => SKILL_LEVEL_TIERS[13],
-    icon: () => 'shadestep',
-    description: () => t('skill.shadestep'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      damagePercent: scaleDownFlat(level, 18),
-      ignoreEnemyArmor: 1,
-      ignoreAllEnemyResistances: 1,
-      teleportToTarget: 1,
-    }),
-  },
-
-  // Tier 100000 Skills
-  grandShadowlord: {
-    id: 'grandShadowlord',
-    name: () => t('Grand Shadowlord'),
-    type: () => 'passive',
-    requiredLevel: () => SKILL_LEVEL_TIERS[14],
-    icon: () => 'grand-shadowlord',
-    description: () => t('skill.grandShadowlord'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      damagePercent: scaleDownFlat(level, 10),
-      critChance: Math.min(scaleDownFlat(level, 0.25), 70),
-      critDamage: Math.min(scaleDownFlat(level, 0.03), 15),
-      shadowDamagePercent: scaleDownFlat(level, 6),
-    }),
-  },
-  deathFromBeyond: {
-    id: 'deathFromBeyond',
-    name: () => t('Death From Beyond'),
-    type: () => 'instant',
-    skill_type: 'attack',
-    manaCost: (level) => 150 + level * 4,
-    cooldown: () => 30000,
-    requiredLevel: () => SKILL_LEVEL_TIERS[14],
-    icon: () => 'death-from-beyond',
-    description: () => t('skill.deathFromBeyond'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      damage: scaleUpFlat(level, 50, 12, 0.6),
-      damagePercent: scaleDownFlat(level, 20),
-      earthDamagePercent: scaleDownFlat(level, 30),
-      guaranteedCrit: 1,
-    }),
-  },
-
   // Specialization Skills
   shadowClone: {
     id: 'shadowClone',
@@ -459,7 +367,8 @@ export const ROGUE_SKILLS = {
     icon: () => 'clone-mastery',
     description: () => t('skill.shadowClone'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({}),
+    effect: (level) => ({
+    }),
     isVisible: () => hero.stats.cloneUnlocked > 0,
   },
 };

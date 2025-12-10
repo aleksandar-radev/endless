@@ -230,7 +230,8 @@ export const MAGE_SKILLS = {
     icon: () => 'summon-elemental',
     description: () => t('skill.summonElemental'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({}),
+    effect: (level) => ({
+    }),
   },
 
   // Tier 200 Skills
@@ -323,6 +324,7 @@ export const MAGE_SKILLS = {
     },
   },
 
+
   // Tier 3000 Skills
   manaOverflow: {
     id: 'manaOverflow',
@@ -394,87 +396,5 @@ export const MAGE_SKILLS = {
         lightningDamagePercent: lightningDamagePercent * 4,
       };
     },
-  },
-
-  /////////////////////////////////////////////////////////////////////////////
-  // NEW TIERS BELOW
-  /////////////////////////////////////////////////////////////////////////////
-
-  // Tier 10000 Skills
-  astralConvergence: {
-    id: 'astralConvergence',
-    name: () => t('Astral Convergence'),
-    type: () => 'buff',
-    manaCost: (level) => 200 + level * 2,
-    cooldown: () => 160000,
-    duration: () => 30000,
-    requiredLevel: () => 10000,
-    icon: () => 'astral-convergence',
-    description: () => t('skill.astralConvergence'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      elementalDamagePercent: scaleDownFlat(level, 10),
-      manaPercent: scaleDownFlat(level, 8),
-      cooldownReductionPercent: Math.min(scaleDownFlat(level, 0.2), 60),
-    }),
-  },
-
-  voidEntropy: {
-    id: 'voidEntropy',
-    name: () => t('Void Entropy'),
-    type: () => 'instant',
-    skill_type: 'spell',
-    manaCost: (level) => 250 + level * 3,
-    cooldown: () => 26000,
-    requiredLevel: () => 10000,
-    icon: () => 'void-entropy',
-    description: () => t('skill.voidEntropy'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      chaosDamagePercent: scaleDownFlat(level, 8) * 4,
-      ignoreAllEnemyResistances: 1,
-      elementalPenetrationPercent: scaleDownFlat(level, 4),
-    }),
-  },
-
-  // Tier 25000 Skills
-  celestialHarmony: {
-    id: 'celestialHarmony',
-    name: () => t('Celestial Harmony'),
-    type: () => 'passive',
-    requiredLevel: () => 25000,
-    icon: () => 'celestial-harmony',
-    description: () => t('skill.celestialHarmony'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      manaRegenPercent: scaleDownFlat(level, 5),
-      elementalDamagePercent: scaleDownFlat(level, 4),
-      wisdomPercent: scaleDownFlat(level, 6),
-    }),
-  },
-
-  starlance: {
-    id: 'starlance',
-    name: () => t('Starlance'),
-    type: () => 'instant',
-    skill_type: 'spell',
-    manaCost: (level) => 350 + level * 4,
-    cooldown: () => 20000,
-    requiredLevel: () => 25000,
-    icon: () => 'starlance',
-    description: () => t('skill.starlance'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      fireDamagePercent: scaleDownFlat(level, 9),
-      airDamagePercent: scaleDownFlat(level, 9),
-      coldDamagePercent: scaleDownFlat(level, 9),
-    }),
-  },
-
-  // Tier 50000 Skills
-  arcaneEternity: {
-    id: 'arcaneEternity',
-    name: () => t('Arcane Eternity'),
-    type: () => 'buff',
   },
 };
