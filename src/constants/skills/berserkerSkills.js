@@ -75,7 +75,7 @@ export const BERSERKER_SKILLS = {
   // Tier 25 Skills
   berserkersRage: {
     id: 'berserkersRage',
-    name: () => t('Berserker\'s Rage'),
+    name: () => t("Berserker's Rage"),
     type: () => 'toggle',
     manaCost: (level) => 2 + level * 0.025,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
@@ -331,6 +331,142 @@ export const BERSERKER_SKILLS = {
       damagePercent: scaleDownFlat(level, 4),
       armorPenetrationPercent: Math.min(scaleDownFlat(level, 0.5), 35),
       attackRatingPercent: scaleDownFlat(level, 5),
+    }),
+  },
+
+  // ============================================================
+  // NEW TIERS START HERE
+  // ============================================================
+
+  // Tier 10000 Skills
+  cataclysmicCharge: {
+    id: 'cataclysmicCharge',
+    name: () => t('Cataclysmic Charge'),
+    type: () => 'instant',
+    skill_type: 'attack',
+    manaCost: (level) => 60 + level * 0.75,
+    cooldown: () => 95000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[11],
+    icon: () => 'cataclysmic-charge',
+    description: () => t('skill.cataclysmicCharge'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damagePercent: scaleDownFlat(level, 5),
+      coldDamagePercent: scaleDownFlat(level, 5),
+      armorShredPercent: Math.min(scaleDownFlat(level, 1), 40),
+    }),
+  },
+  titanicEndurance: {
+    id: 'titanicEndurance',
+    name: () => t('Titanic Endurance'),
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[11],
+    icon: () => 'titanic-endurance',
+    description: () => t('skill.titanicEndurance'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      lifePercent: scaleDownFlat(level, 2),
+      allResistancePercent: scaleDownFlat(level, 2),
+      critDamage: Math.min(scaleDownFlat(level, 0.01), 4),
+    }),
+  },
+
+  // Tier 25000 Skills
+  abyssalRend: {
+    id: 'abyssalRend',
+    name: () => t('Abyssal Rend'),
+    type: () => 'toggle',
+    manaCost: (level) => 30 + level * 0.35,
+    requiredLevel: () => SKILL_LEVEL_TIERS[12],
+    icon: () => 'abyssal-rend',
+    description: () => t('skill.abyssalRend'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damagePercent: scaleDownFlat(level, 4),
+      doubleDamageChance: Math.min(scaleDownFlat(level, 0.4), 30),
+      manaPerHit: scaleUpFlat(level, 0.2),
+    }),
+  },
+  bloodTitan: {
+    id: 'bloodTitan',
+    name: () => t('Blood Titan'),
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[12],
+    icon: () => 'blood-titan',
+    description: () => t('skill.bloodTitan'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      strengthPercent: scaleDownFlat(level, 4),
+      attackSpeedPercent: Math.min(scaleDownFlat(level, 0.8), 150),
+      lifePerHit: scaleUpFlat(level, 3, 3, 1),
+    }),
+  },
+
+  // Tier 50000 Skills
+  voidHowl: {
+    id: 'voidHowl',
+    name: () => t('Void Howl'),
+    type: () => 'buff',
+    manaCost: (level) => 50 + level * 0.7,
+    cooldown: () => 140000,
+    duration: () => 40000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[13],
+    icon: () => 'void-howl',
+    description: () => t('skill.voidHowl'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      attackSpeedPercent: Math.min(scaleDownFlat(level, 1.2), 150),
+      reduceEnemyDamagePercent: Math.min(scaleDownFlat(level, 0.2), 30),
+      damagePercent: scaleDownFlat(level, 4),
+    }),
+  },
+  unbrokenSavage: {
+    id: 'unbrokenSavage',
+    name: () => t('Unbroken Savage'),
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[13],
+    icon: () => 'unbroken-savage',
+    description: () => t('skill.unbrokenSavage'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      critChance: Math.min(scaleDownFlat(level, 0.1), 35),
+      armorPenetrationPercent: Math.min(scaleDownFlat(level, 2.5), 40),
+      damage: scaleUpFlat(level, 4, 6, 1),
+    }),
+  },
+
+  // Tier 100000 Skills
+  apocalypseStrike: {
+    id: 'apocalypseStrike',
+    name: () => t('Apocalypse Strike'),
+    type: () => 'instant',
+    skill_type: 'attack',
+    manaCost: (level) => 80 + level * 1.2,
+    cooldown: () => 180000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[14],
+    icon: () => 'apocalypse-strike',
+    description: () => t('skill.apocalypseStrike'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      ignoreEnemyArmor: 1,
+      damagePercent: scaleDownFlat(level, 6),
+      coldDamagePercent: scaleDownFlat(level, 6),
+      stunChance: Math.min(scaleDownFlat(level, 0.2), 40),
+    }),
+  },
+  berserkerAscendant: {
+    id: 'berserkerAscendant',
+    name: () => t('Berserker Ascendant'),
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[14],
+    icon: () => 'berserker-ascendant',
+    description: () => t('skill.berserkerAscendant'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      strengthPercent: scaleDownFlat(level, 5),
+      damagePercent: scaleDownFlat(level, 4),
+      attackSpeedPercent: Math.min(scaleDownFlat(level, 1.5), 150),
+      critDamage: Math.min(scaleDownFlat(level, 0.02), 5),
     }),
   },
 };

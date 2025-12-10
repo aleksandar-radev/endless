@@ -329,6 +329,148 @@ export const WARRIOR_SKILLS = {
     }),
   },
 
+  /////////////////////////////////////////////////////////////////////////////
+  // NEW TIERS BELOW
+  /////////////////////////////////////////////////////////////////////////////
+
+  // Tier 10000 Skills
+  titanRoar: {
+    id: 'titanRoar',
+    name: () => t('Titan Roar'),
+    type: () => 'buff',
+    manaCost: (level) => 90 + level * 2.2,
+    cooldown: () => 140000,
+    duration: () => 40000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[11],
+    icon: () => 'titan-roar',
+    description: () => t('skill.titanRoar'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      strengthPercent: scaleDownFlat(level, 6),
+      defensePercent: scaleDownFlat(level, 5),
+      damageReduction: Math.min(scaleDownFlat(level, 0.1), 20),
+    }),
+  },
+  avalancheStrike: {
+    id: 'avalancheStrike',
+    name: () => t('Avalanche Strike'),
+    type: () => 'instant',
+    skill_type: 'attack',
+    manaCost: (level) => 40 + level * 1.4,
+    cooldown: () => 8000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[11],
+    icon: () => 'avalanche-strike',
+    description: () => t('skill.avalancheStrike'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damage: scaleUpFlat(level, 55, 6, 0.25),
+      defenseBreak: Math.min(scaleDownFlat(level, 0.08), 15),
+      stunChance: Math.min(5 + level * 0.15, 40),
+    }),
+  },
+
+  // Tier 25000 Skills
+  ironColossus: {
+    id: 'ironColossus',
+    name: () => t('Iron Colossus'),
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[12],
+    icon: () => 'iron-colossus',
+    description: () => t('skill.ironColossus'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      vitalityPercent: scaleDownFlat(level, 7),
+      armorPercent: scaleDownFlat(level, 6),
+      blockChance: Math.min(scaleDownFlat(level, 0.2), 25),
+    }),
+  },
+  quakeSmash: {
+    id: 'quakeSmash',
+    name: () => t('Quake Smash'),
+    type: () => 'instant',
+    skill_type: 'attack',
+    manaCost: (level) => 55 + level * 2,
+    cooldown: () => 12000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[12],
+    icon: () => 'quake-smash',
+    description: () => t('skill.quakeSmash'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damage: scaleUpFlat(level, 95, 9, 0.3),
+      areaSize: 2 + level * 0.04,
+      bonusDamageToStunned: scaleDownFlat(level, 4.5),
+    }),
+  },
+
+  // Tier 50000 Skills
+  berserkerParagon: {
+    id: 'berserkerParagon',
+    name: () => t('Berserker Paragon'),
+    type: () => 'toggle',
+    manaCost: (level) => 65 + level * 3,
+    requiredLevel: () => SKILL_LEVEL_TIERS[13],
+    icon: () => 'berserker-paragon',
+    description: () => t('skill.berserkerParagon'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      attackSpeedPercent: scaleDownFlat(level, 6),
+      strengthPercent: scaleDownFlat(level, 8),
+      damageTakenPercent: scaleDownFlat(level, -4),
+    }),
+  },
+  earthsplitter: {
+    id: 'earthsplitter',
+    name: () => t('Earthsplitter'),
+    type: () => 'instant',
+    skill_type: 'attack',
+    manaCost: (level) => 80 + level * 3,
+    cooldown: () => 16000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[13],
+    icon: () => 'earthsplitter',
+    description: () => t('skill.earthsplitter'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damage: scaleUpFlat(level, 130, 12, 0.35),
+      armorShredPercent: Math.min(scaleDownFlat(level, 0.12), 30),
+      shockwaveDamage: scaleUpFlat(level, 45),
+    }),
+  },
+
+  // Tier 100000 Skills
+  warbringerAscendant: {
+    id: 'warbringerAscendant',
+    name: () => t('Warbringer Ascendant'),
+    type: () => 'buff',
+    manaCost: (level) => 140 + level * 7,
+    cooldown: () => 190000,
+    duration: () => 65000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[14],
+    icon: () => 'warbringer-ascendant',
+    description: () => t('skill.warbringerAscendant'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      strengthPercent: scaleDownFlat(level, 12),
+      armorPercent: scaleDownFlat(level, 10),
+      critDamage: scaleDownFlat(level, 0.015),
+      bonusDamageBasedOnArmor: Math.min(scaleDownFlat(level, 0.014), 1.1),
+    }),
+  },
+  titanOverlord: {
+    id: 'titanOverlord',
+    name: () => t('Titan Overlord'),
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[14],
+    icon: () => 'titan-overlord',
+    description: () => t('skill.titanOverlord'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      vitalityPercent: scaleDownFlat(level, 15),
+      armorPercent: scaleDownFlat(level, 10),
+      damageReductionPercent: scaleDownFlat(level, 6),
+      stunPower: scaleDownFlat(level, 5),
+    }),
+  },
+
   // Specialization Skills
   animatedWeapons: {
     id: 'animatedWeapons',
@@ -348,8 +490,7 @@ export const WARRIOR_SKILLS = {
     icon: () => 'animated-weapons',
     description: () => t('skill.animatedWeapons'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-    }),
+    effect: (level) => ({}),
     isVisible: () => hero.stats.animatedWeaponsUnlocked > 0,
   },
 };

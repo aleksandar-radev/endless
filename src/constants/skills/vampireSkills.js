@@ -149,8 +149,7 @@ export const VAMPIRE_SKILLS = {
     icon: () => 'bat',
     description: () => t('skill.summonBats'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-    }),
+    effect: (level) => ({}),
   },
 
   // Tier 75 Skills
@@ -349,6 +348,96 @@ export const VAMPIRE_SKILLS = {
     }),
   },
 
+  /////////////////////////////////////////////////////////////////////////////
+  // NEW TIERS BELOW
+  /////////////////////////////////////////////////////////////////////////////
+
+  // Tier 10000 Skills
+  sanguineAscendance: {
+    id: 'sanguineAscendance',
+    name: () => t('Sanguine Ascendance'),
+    type: () => 'buff',
+    manaCost: (level) => 120 + level * 2.5,
+    cooldown: () => 160000,
+    duration: () => 45000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[11],
+    icon: () => 'sanguine-ascendance',
+    description: () => t('skill.sanguineAscendance'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damagePercent: scaleDownFlat(level, 5),
+      lifePercent: scaleDownFlat(level, 4),
+      critDamagePercent: scaleDownFlat(level, 1.5),
+    }),
+  },
+  bloodstorm: {
+    id: 'bloodstorm',
+    name: () => t('Bloodstorm'),
+    type: () => 'instant',
+    skill_type: 'spell',
+    manaCost: (level) => 30 + level * 1.2,
+    cooldown: () => 9000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[11],
+    icon: () => 'bloodstorm',
+    description: () => t('skill.bloodstorm'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      airDamage: scaleUpFlat(level, 40, 6, 0.25),
+      damagePercent: scaleDownFlat(level, 4.5),
+      lifePerHit: scaleUpFlat(level, 200),
+    }),
+  },
+
+  // Tier 25000 Skills
+  crimsonDominance: {
+    id: 'crimsonDominance',
+    name: () => t('Crimson Dominance'),
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[12],
+    icon: () => 'crimson-dominance',
+    description: () => t('skill.crimsonDominance'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      strengthPercent: scaleDownFlat(level, 6),
+      vitalityPercent: scaleDownFlat(level, 3),
+      attackSpeedPercent: scaleDownFlat(level, 2.5),
+    }),
+  },
+  bloodNova: {
+    id: 'bloodNova',
+    name: () => t('Blood Nova'),
+    type: () => 'instant',
+    skill_type: 'spell',
+    manaCost: (level) => 45 + level * 2,
+    cooldown: () => 11000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[12],
+    icon: () => 'blood-nova',
+    description: () => t('skill.bloodNova'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damage: scaleUpFlat(level, 85, 8, 0.3),
+      damagePercent: scaleDownFlat(level, 6),
+      lifeSteal: Math.min(scaleDownFlat(level, 0.05), 15),
+    }),
+  },
+
+  // Tier 50000 Skills
+  sanguineEminence: {
+    id: 'sanguineEminence',
+    name: () => t('Sanguine Eminence'),
+    type: () => 'toggle',
+    manaCost: (level) => 55 + level * 3,
+    requiredLevel: () => SKILL_LEVEL_TIERS[13],
+    icon: () => 'sanguine-eminence',
+    description: () => t('skill.sanguineEminence'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      damagePercent: scaleDownFlat(level, 8),
+      critChance: Math.min(scaleDownFlat(level, 0.2), 40),
+      lifePerHit: scaleUpFlat(level, 500),
+    }),
+  },
+
   // Specialization Skills
   bloodSacrifice: {
     id: 'bloodSacrifice',
@@ -361,8 +450,7 @@ export const VAMPIRE_SKILLS = {
     icon: () => 'blood-sacrifice',
     description: () => t('skill.bloodSacrifice'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-    }),
+    effect: (level) => ({}),
     isVisible: () => hero.stats.bloodSacrificeUnlocked > 0,
   },
 };
