@@ -1415,7 +1415,8 @@ export function updateSkillTreeValues() {
     const allSkills = SKILL_TREES[skillTree.selectedPath.name] || {};
     const needsRender = Object.entries(allSkills).some(([skillId, skillData]) => {
       const isVisible = typeof skillData.isVisible === 'function' ? skillData.isVisible() : (skillData.isVisible !== false);
-      return isVisible && !renderedSkills.has(skillId);
+      const levelMet = skillData.requiredLevel() <= hero.level;
+      return isVisible && levelMet && !renderedSkills.has(skillId);
     });
 
     if (needsRender) {
