@@ -3,10 +3,10 @@ import { createPercentScaleFunction, scaleStat, computeScaledReward, xpDiminishi
 import { battleLog } from './battleLog.js';
 import { t, tp } from './i18n.js';
 import { ELEMENTS } from './constants/common.js';
-import { BLEED_DURATION_MS, BURN_DURATION_MS } from './constants/ailments.js';
 import { MAX_CONVERSION_PERCENT, MIN_CONVERSION_PERCENT } from './constants/runes.js';
-import { hero, options, game } from './globals.js';
+import { hero, options } from './globals.js';
 import { formatNumber as formatNumberValue } from './utils/numberFormatter.js';
+import EnemyBase from './enemyBase.js';
 
 export const ROCKY_FIELD_REGIONS = [
   {
@@ -314,8 +314,9 @@ export function getRockyFieldRunePercent(regionId, stage) {
   return Math.max(regionRange.min, Math.min(regionRange.max, scaled));
 }
 
-export class RockyFieldEnemy {
+export class RockyFieldEnemy extends EnemyBase {
   constructor(regionId, level) {
+    super();
     this.regionId = regionId;
     this.level = level;
 
@@ -507,7 +508,6 @@ export class RockyFieldEnemy {
     );
   }
 
-  // used when reductions are applied from skills usually buff, but can be instant too
   recalculateStats() {
     this.attackSpeed = this.calculateAttackSpeed();
     this.life = this.calculateLife();
@@ -517,86 +517,9 @@ export class RockyFieldEnemy {
     });
   }
 
-  canAttack(currentTime) {
-    const timeBetweenAttacks = 1000 / this.attackSpeed;
-    return currentTime - this.lastAttack >= timeBetweenAttacks;
-  }
-
-  resetLife() {
-    this.currentLife = this.life;
-    this.bleed = null;
-    this.burn = null;
-  }
-
-  applyBleed(damage) {
-    if (!this.bleed) {
-      this.bleed = { damagePool: 0, duration: BLEED_DURATION_MS };
-    }
-    this.bleed.damagePool += damage;
-    this.bleed.duration = BLEED_DURATION_MS;
-  }
-
-  applyBurn(damage) {
-    if (!this.burn) {
-      this.burn = { damagePool: 0, duration: BURN_DURATION_MS };
-    }
-    this.burn.damagePool += damage;
-    this.burn.duration = BURN_DURATION_MS;
-  }
-
-  processDoT(deltaMs) {
-    if (this.currentLife <= 0) return;
-
-    if (this.bleed) {
-      if (this.bleed.duration > 0) {
-        // Calculate damage for this tick based on remaining pool and duration
-        // We want to deplete the pool over the remaining duration
-        // rate = pool / duration (dmg/ms)
-        // tickDmg = rate * deltaMs
-        // However, if deltaMs > duration, we just deal remainder.
-        const tickMs = Math.min(deltaMs, this.bleed.duration);
-        const damage = (this.bleed.damagePool / this.bleed.duration) * tickMs;
-
-        if (damage > 0) {
-          game.damageEnemy(damage, false, null, 'bleed');
-          this.bleed.damagePool -= damage;
-        }
-        this.bleed.duration -= deltaMs;
-      }
-      if (this.bleed.duration <= 0 || this.bleed.damagePool <= 1e-6) {
-        this.bleed = null;
-      }
-    }
-
-    if (this.burn) {
-      if (this.burn.duration > 0) {
-        const tickMs = Math.min(deltaMs, this.burn.duration);
-        const damage = (this.burn.damagePool / this.burn.duration) * tickMs;
-
-        if (damage > 0) {
-          game.damageEnemy(damage, false, null, 'burn');
-          this.burn.damagePool -= damage;
-        }
-        this.burn.duration -= deltaMs;
-      }
-      if (this.burn.duration <= 0 || this.burn.damagePool <= 1e-6) {
-        this.burn = null;
-      }
-    }
-  }
-
   takeDamage(damage) {
     this.currentLife -= damage;
     return this.currentLife <= 0;
-  }
-
-  heal(amount) {
-    if (!Number.isFinite(amount) || amount <= 0) {
-      return 0;
-    }
-    const previousLife = this.currentLife;
-    this.currentLife = Math.min(this.life, this.currentLife + amount);
-    return this.currentLife - previousLife;
   }
 }
 
