@@ -688,7 +688,7 @@ export default class Hero {
           value = Math.min(value, cap);
         }
         if (stat === 'critChance') {
-          const cap = 50 + ((ascensionBonuses.critChanceCap || 0) | 0);
+          const cap = (flatValues.critChanceCap || 50) + (ascensionBonuses.critChanceCap || 0);
           value = Math.min(value, cap);
         }
         if (stat === 'attackSpeed') {

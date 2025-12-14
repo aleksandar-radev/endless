@@ -102,6 +102,12 @@ export const OFFENSE_STATS = {
     showInUI: true,
     subcategory: 'attack',
   },
+  critChanceCap: {
+    base: 50,
+    decimalPlaces: 0,
+    showInUI: true,
+    subcategory: 'attack',
+  },
   critChancePercent: {
     base: 0,
     decimalPlaces: 1,
@@ -635,29 +641,16 @@ export const OFFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
   },
-  // BERSERKER AOE
-  aoeDevastationChance: {
-    base: 0,
-    decimalPlaces: 1,
-    subcategory: 'attack',
-  },
   // DOT STRIKE
   dotStrikeChance: {
     base: 0,
     decimalPlaces: 1,
     subcategory: 'attack',
   },
-  // ARMOR SHRED
-  armorShredChance: {
-    base: 0,
-    decimalPlaces: 1,
-    subcategory: 'attack',
-  },
   // PYROMANCER
-  overkillDamageEnabled: {
+  overkillDamagePercent: {
     base: 0,
     decimalPlaces: 0,
-    showValue: false,
   },
   burnChance: {
     base: 0,
@@ -665,6 +658,11 @@ export const OFFENSE_STATS = {
     subcategory: 'elemental',
   },
   explosionChance: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+  },
+  extraDamageAgainstBurningEnemies: {
     base: 0,
     decimalPlaces: 1,
     subcategory: 'elemental',
@@ -725,6 +723,10 @@ export const OFFENSE_STATS = {
   bloodSacrificeEffectiveness: {
     base: 0,
     decimalPlaces: 1,
+  },
+  instaKillPercent: {
+    base: 0,
+    decimalPlaces: 2,
   },
 };
 

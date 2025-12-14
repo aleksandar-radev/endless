@@ -21,7 +21,8 @@ import {
 
 export const SKILL_LEVEL_TIERS = [1, 10, 25, 60, 150, 400, 750, 1200, 2000, 3000, 5000];
 export const DEFAULT_MAX_SKILL_LEVEL = Infinity;
-export const SPECIALIZATION_POINT_INTERVAL = 100;
+export const SPECIALIZATION_POINT_INTERVAL = 50;
+export const SPECIALIZATION_UNLOCK_LEVEL = 100;
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 export function getSpellDamageTypes(effects) {
@@ -1051,6 +1052,7 @@ export default class SkillTree {
 
   getActiveBuffEffects() {
     const effects = {};
+    const buffMultiplier = 1 + (hero.stats.buffEffectivenessPercent || 0) / 100;
 
     this.activeBuffs.forEach((buffData, skillId) => {
       if (buffData.endTime <= Date.now()) {
@@ -1058,8 +1060,12 @@ export default class SkillTree {
         return;
       }
 
+      const skill = this.getSkill(skillId);
+      const isBuff = skill && skill.type() === 'buff';
+      const multiplier = isBuff ? buffMultiplier : 1;
+
       Object.entries(buffData.effects).forEach(([stat, value]) => {
-        effects[stat] = (effects[stat] || 0) + value;
+        effects[stat] = (effects[stat] || 0) + value * multiplier;
       });
     });
 

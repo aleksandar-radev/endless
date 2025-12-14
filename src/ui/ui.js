@@ -365,7 +365,7 @@ export function updateEnemyStats() {
   if (!enemy) {
     return;
   }
-  const lifePercentage = (enemy.currentLife / enemy.life) * 100;
+  const lifePercentage = Math.max(0, (enemy.currentLife / enemy.life) * 100);
   document.getElementById('enemy-life-fill').style.width = `${lifePercentage}%`;
   document.getElementById('enemy-life-text').textContent = `${formatNumber(
     Math.max(0, Math.floor(enemy.currentLife)),

@@ -339,9 +339,9 @@ class Boss {
    * @returns {boolean} True if boss is dead after damage.
    */
   takeDamage(amount) {
-    this.currentLife = Math.max(this.currentLife - amount, 0);
+    this.currentLife -= amount;
     // On death
-    if (this.currentLife === 0) {
+    if (this.currentLife <= 0) {
       return true;
     }
     return false;

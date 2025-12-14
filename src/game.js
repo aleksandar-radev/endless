@@ -6,7 +6,7 @@ import {
   updateBuffIndicators,
   formatNumber,
 } from './ui/ui.js';
-import { playerAttack, enemyAttack, playerDeath, defeatEnemy, createDamageNumber } from './combat.js';
+import { playerAttack, enemyAttack, playerDeath, defeatEnemy, createDamageNumber, createCombatText } from './combat.js';
 import { game, hero, crystalShop, skillTree, statistics, dataManager, setGlobals, options } from './globals.js';
 import Enemy from './enemy.js';
 import { RockyFieldEnemy } from './rockyField.js';
@@ -45,6 +45,7 @@ class Game {
     this.regenTicksPerSecond = 1000 / this.regenIntervalMs;
     // guard to prevent multiple kills in same tick
     this._justDefeated = false;
+    this.overkillDamage = 0;
   }
 
   incrementStage() {
@@ -247,7 +248,6 @@ class Game {
     // Regular enemy flow
     if (this.currentEnemy) {
       this.currentEnemy.currentLife -= damage;
-      if (this.currentEnemy.currentLife < 0) this.currentEnemy.currentLife = 0;
 
       updateEnemyStats();
 
@@ -338,6 +338,14 @@ class Game {
       if (this.currentEnemy) {
         this.currentEnemy.lastAttack = currentTime;
       }
+
+      if (this.overkillDamage > 0 && this.currentEnemy) {
+        const dmg = this.overkillDamage;
+        this.overkillDamage = 0;
+        createCombatText('OVERKILL!', true);
+        this.damageEnemy(dmg, false, null, 'overkill');
+      }
+
       // Reset life and update resources
       // this.resetAllLife();
       updateResources();

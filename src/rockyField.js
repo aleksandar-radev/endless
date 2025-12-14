@@ -586,7 +586,6 @@ export class RockyFieldEnemy {
 
   takeDamage(damage) {
     this.currentLife -= damage;
-    if (this.currentLife < 0) this.currentLife = 0;
     return this.currentLife <= 0;
   }
 

@@ -1,6 +1,7 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
 import { scaleDownFlat, scaleUpFlat } from '../../common.js';
+import { hero } from '../../globals.js';
 
 // Berserker skills extracted from skills.js
 export const BERSERKER_SKILLS = {
@@ -201,12 +202,15 @@ export const BERSERKER_SKILLS = {
     icon: () => 'warlord',
     description: () => t('skill.warlord'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      strengthPercent: scaleDownFlat(level, 2.5),
-      critChance: Math.min(scaleDownFlat(level, 0.05), 20),
-      attackSpeedPercent: Math.min(scaleDownFlat(level, 0.1), 75),
-      damagePercent: scaleDownFlat(level),
-    }),
+    effect: (level) => {
+      const effectiveness = 1 + (hero.stats.warlordEffectivenessPercent || 0) / 100;
+      return {
+        strengthPercent: scaleDownFlat(level, 2.5) * effectiveness,
+        critChance: Math.min(scaleDownFlat(level, 0.05), 20) * effectiveness,
+        attackSpeedPercent: Math.min(scaleDownFlat(level, 0.1), 75) * effectiveness,
+        damagePercent: scaleDownFlat(level) * effectiveness,
+      };
+    },
   },
 
   // Tier 1200 Skills

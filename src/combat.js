@@ -328,11 +328,22 @@ export function playerAttack(currentTime) {
     } else {
       let { damage, isCritical, breakdown } = hero.calculateDamageAgainst(enemy, {});
 
+      // Extra Damage Against Burning Enemies
+      if (game.currentEnemy.burn && hero.stats.extraDamageAgainstBurningEnemies > 0) {
+        damage *= (1 + hero.stats.extraDamageAgainstBurningEnemies / 100);
+      }
+
+      // Instant Kill Check
+      if (hero.stats.instaKillPercent > 0 && Math.random() * 100 < hero.stats.instaKillPercent) {
+        damage = enemy.life; // Ensure kill (should be full life, not current life, to prevent overkill logic issues)
+        createCombatText('FATAL BLOW!', true);
+      }
+
       // Execute Check
       if (hero.stats.executeThresholdPercent > 0) {
         const threshold = enemy.life * (hero.stats.executeThresholdPercent);
         if (enemy.currentLife <= threshold) {
-          damage = enemy.currentLife + 1e200; // Ensure kill
+          damage = enemy.life; // Ensure kill
           createCombatText('EXECUTE!', true);
         }
       }
@@ -769,18 +780,26 @@ export async function defeatEnemy() {
   // END REGION HANDLING
 
   // Overkill Check
-  if (hero.stats.overkillDamageEnabled && enemy.currentLife < 0) {
-    const overkill = Math.abs(enemy.currentLife);
-    const enemyHealth = enemy.life;
-    // Prevent division by zero
-    if (enemyHealth > 0) {
-      const extraKills = Math.floor(overkill / enemyHealth);
-      if (extraKills > 0) {
-        const safeKills = Math.min(extraKills, 5);
-        baseExpGained += baseExpGained * safeKills;
-        baseGoldGained += baseGoldGained * safeKills;
-        createCombatText(`OVERKILL x${safeKills}!`, true);
-      }
+  if (hero.stats.overkillDamagePercent > 0 && enemy.currentLife < 0) {
+    if (Math.abs(enemy.currentLife) > enemy.life) {
+      enemy.currentLife = enemy.life;
+    }
+    game.overkillDamage = Math.abs(enemy.currentLife) * hero.stats.overkillDamagePercent;
+  } else {
+    game.overkillDamage = 0;
+  }
+
+  // Explosion Check (Pyromancer)
+  if (hero.stats.explosionChance > 0 && Math.random() * 100 < hero.stats.explosionChance) {
+    let explosionDamage = 0;
+    const explosionDamageMultiplier = 10;
+    if (enemy.burn && enemy.burn.damagePool > 0) {
+      explosionDamage = enemy.burn.damagePool * explosionDamageMultiplier;
+    }
+
+    if (explosionDamage > 0) {
+      game.overkillDamage = (game.overkillDamage || 0) + explosionDamage;
+      createCombatText('EXPLOSION!', true);
     }
   }
 
@@ -833,6 +852,14 @@ export async function defeatEnemy() {
     const currentTime = Date.now();
     game.lastPlayerAttack = currentTime;
     game.currentEnemy.lastAttack = currentTime;
+
+    if (game.overkillDamage > 0) {
+      game._justDefeated = false;
+      const dmg = game.overkillDamage;
+      game.overkillDamage = 0;
+      createCombatText('OVERKILL!', true);
+      game.damageEnemy(dmg, false, null, 'overkill');
+    }
   }
 
   // clear defeat guard so next enemy can be damaged

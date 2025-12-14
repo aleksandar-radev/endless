@@ -258,6 +258,13 @@ export const MISC_STATS = {
     showInUI: true,
     subcategory: 'misc',
   },
+  // BUFF EFFECTIVENESS
+  buffEffectivenessPercent: {
+    base: 0,
+    decimalPlaces: 1,
+    showInUI: true,
+    subcategory: 'misc',
+  },
   // ITEM BONUSES
   itemBonusesPercent: {
     base: 0,
@@ -395,14 +402,14 @@ export const MISC_STATS = {
     decimalPlaces: 1,
   },
   // BERSERKER
-  warcryBuffEffectivenessPercent: {
-    base: 0,
-    decimalPlaces: 1,
-  },
   uncappedAttackSpeed: {
     base: 0,
     decimalPlaces: 0,
     showValue: false,
+  },
+  warlordEffectivenessPercent: {
+    base: 0,
+    decimalPlaces: 1,
   },
   overhealToLife: {
     base: 0,

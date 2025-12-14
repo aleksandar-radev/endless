@@ -1,7 +1,7 @@
 import { STATS } from '../constants/stats/stats.js';
 import { CLASS_PATHS, SKILL_TREES } from '../constants/skills.js';
 import { getClassSpecializations, getSpecialization } from '../constants/specializations.js';
-import { SKILL_LEVEL_TIERS, getSpellDamageTypes } from '../skillTree.js';
+import { SKILL_LEVEL_TIERS, getSpellDamageTypes, SPECIALIZATION_UNLOCK_LEVEL } from '../skillTree.js';
 import { SKILLS_MAX_QTY } from '../constants/limits.js';
 import { skillTree, hero, crystalShop, options, dataManager } from '../globals.js';
 import { formatNumber, formatStatName, hideTooltip, positionTooltip, showToast, showTooltip, updateResources } from './ui.js';
@@ -111,7 +111,7 @@ function showSkillTreeWithTabs() {
     tabsContainer.className = 'skill-tree-tabs';
 
     let tabsHtml = `<button class="skill-tree-tab active" data-tab="skills">${t('skillTree.tabs.skills')}</button>`;
-    if (hero.level >= 1000) {
+    if (hero.level >= SPECIALIZATION_UNLOCK_LEVEL) {
       tabsHtml += `<button class="skill-tree-tab" data-tab="specializations">${t('skillTree.tabs.specializations')}</button>`;
     }
     tabsContainer.innerHTML = tabsHtml;
@@ -141,7 +141,7 @@ function showSkillTreeWithTabs() {
   }
 
   initializeSkillsTab();
-  if (hero.level >= 1000) {
+  if (hero.level >= SPECIALIZATION_UNLOCK_LEVEL) {
     initializeSpecializationsTab();
   }
 }
@@ -616,27 +616,6 @@ function openSpecializationSkillModal(skillId) {
   specSkillModal.querySelector('.modal-max-level').textContent = skill.maxLevel() === Infinity ? '∞' : skill.maxLevel();
   specSkillModal.querySelector('.modal-available-points').textContent = formatNumber(skillTree.specializationPoints);
 
-  // Populate effects
-  const effectsCurrent = skillTree.getSpecializationSkillEffect(skillId, currentLevel);
-  const effectsNext = skillTree.getSpecializationSkillEffect(skillId, currentLevel + 1);
-  const effectsEl = specSkillModal.querySelector('.effects-list');
-  effectsEl.innerHTML = '';
-
-  if (effectsNext) {
-    Object.entries(effectsNext).forEach(([stat, nextVal]) => {
-      const currVal = effectsCurrent?.[stat] || 0;
-      const diff = nextVal - currVal;
-      if (!shouldShowStatValue(stat)) {
-        effectsEl.innerHTML += `<p>${formatStatName(stat)}</p>`;
-        return;
-      }
-      const decimals = getStatDecimals(stat);
-      effectsEl.innerHTML += `
-          <p>${formatStatName(stat)}: ${currVal.toFixed(decimals)} (${formatSignedValue(diff, decimals)})</p>
-        `;
-    });
-  }
-
   selectedSpecSkillQty = 1;
   updateSpecSkillModalDetails();
   specSkillModal.classList.remove('hidden');
@@ -674,6 +653,27 @@ function updateSpecSkillModalDetails() {
   const buyBtn = specSkillModal.querySelector('.modal-buy');
   buyBtn.disabled = actualQty <= 0;
   buyBtn.textContent = `Buy ${displayQty} for ${displayCost} SP`;
+
+  // Update Effects
+  const effectsCurrent = skillTree.getSpecializationSkillEffect(currentSpecSkillId, currentLevel);
+  const effectsNext = skillTree.getSpecializationSkillEffect(currentSpecSkillId, currentLevel + 1);
+  const effectsEl = specSkillModal.querySelector('.effects-list');
+  effectsEl.innerHTML = '';
+
+  if (effectsNext) {
+    Object.entries(effectsNext).forEach(([stat, nextVal]) => {
+      const currVal = effectsCurrent?.[stat] || 0;
+      const diff = nextVal - currVal;
+      if (!shouldShowStatValue(stat)) {
+        effectsEl.innerHTML += `<p>${formatStatName(stat)}</p>`;
+        return;
+      }
+      const decimals = getStatDecimals(stat);
+      effectsEl.innerHTML += `
+          <p>${formatStatName(stat)}: ${currVal.toFixed(decimals)} (${formatSignedValue(diff, decimals)})</p>
+        `;
+    });
+  }
 }
 
 function buySpecSkillBulk() {
