@@ -196,6 +196,13 @@ class Game {
   ) {
     // bail out if we've already defeated this enemy this tick
     if (this._justDefeated) return;
+
+    if (damage > 0 && this.currentEnemy?.shock?.duration > 0) {
+      const shockBonusBase = 0.5; // shocked enemies take 1.5x damage at 0% effectiveness
+      const shockEffectivenessPercent = hero.stats.shockEffectiveness || 0;
+      const shockMultiplier = 1 + shockBonusBase * (1 + shockEffectivenessPercent / 100);
+      damage *= shockMultiplier;
+    }
     damage = Math.floor(damage); // Ensure damage is an integer
     let message;
     if (summonName) {

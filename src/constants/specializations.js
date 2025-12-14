@@ -591,6 +591,7 @@ export const SPECIALIZATIONS = {
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             burnChance: Math.min(scaleDownFlat(level, 2), 60),
+            burnDamagePercent: scaleDownFlat(level, 5),
           }),
         },
         combustion: {
@@ -614,7 +615,8 @@ export const SPECIALIZATIONS = {
       description: () => t('specialization.elementalist.stormcaller.description'),
       avatar: () => 'elementalist-stormcaller-avatar.jpg',
       baseStats: () => ({
-        lightningDamagePercent: 20,
+        lightningEffectivenessPercent: 20,
+        shockChance: 20,
       }),
       skills: {
         arcDischarge: {
@@ -626,7 +628,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.arcDischarge'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            chainLightningChance: scaleDownFlat(level, 2),
+            arcDischargeChance: Math.min(scaleDownFlat(level, 2), 10),
+            lightningDamage: scaleUpFlat(level, 4),
           }),
         },
         staticShock: {
@@ -638,8 +641,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.staticShock'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            shockChance: scaleDownFlat(level, 1),
-            shockDamagePercent: scaleDownFlat(level, 2),
+            shockChance: Math.min(scaleDownFlat(level, 1), 20),
+            shockEffectiveness: scaleDownFlat(level, 2),
           }),
         },
       },

@@ -626,6 +626,24 @@ export default class Hero {
     const ascensionBonuses = ascension?.getBonuses() || {};
     this.damageConversionDeltas = {};
 
+    // Stormcaller: scale lightning damage bonuses at the stat level so the Stats UI reflects the effect.
+    // This applies to the aggregated lightningDamage (flat) and lightningDamagePercent (fraction).
+    const lightningBonusEffectivenessPercent =
+      (flatValues.lightningEffectivenessPercent || 0) +
+      (soulBonuses.lightningEffectivenessPercent || 0);
+    const lightningBonusEffectivenessMultiplier = Math.max(
+      0,
+      1 + (lightningBonusEffectivenessPercent || 0) / 100,
+    );
+    if (Math.abs(lightningBonusEffectivenessMultiplier - 1) > 1e-9) {
+      if (Number.isFinite(flatValues.lightningDamage)) {
+        flatValues.lightningDamage *= lightningBonusEffectivenessMultiplier;
+      }
+      if (Number.isFinite(percentBonuses.lightningDamagePercent)) {
+        percentBonuses.lightningDamagePercent *= lightningBonusEffectivenessMultiplier;
+      }
+    }
+
     for (const stat of STAT_KEYS) {
       if (stat.endsWith('Percent')) {
         let percentValue = percentBonuses[stat] || 0;
@@ -989,6 +1007,7 @@ export default class Hero {
   calculateTotalDamage(instantSkillBaseEffects = {}, options = {}) {
     const { includeRandom = true, canCrit = true } = options;
     const elements = ELEMENT_IDS;
+    const lightningBonusEffectivenessMultiplier = 1 + (this.stats.lightningEffectivenessPercent || 0) / 100;
     const allowedDamageTypes = Array.isArray(instantSkillBaseEffects.allowedDamageTypes)
       ? instantSkillBaseEffects.allowedDamageTypes
       : null;
@@ -1006,9 +1025,13 @@ export default class Hero {
     };
     elements.forEach((e) => {
       const key = `${e}Damage`;
-      flatPools[e] =
-        (allowedElements.has(e) ? (this.baseDamages?.[e] || 0) : 0) +
-        (allowedElements.has(e) ? (instantSkillBaseEffects[key] || 0) : 0);
+      const baseFlat = allowedElements.has(e) ? (this.baseDamages?.[e] || 0) : 0;
+      const skillFlat = allowedElements.has(e) ? (instantSkillBaseEffects[key] || 0) : 0;
+
+      // Aggregated stats already include the effectiveness multiplier (so UI matches).
+      // Apply it here only to instant-skill lightning bonus contributions.
+      const scaledSkillFlat = e === 'lightning' ? skillFlat * lightningBonusEffectivenessMultiplier : skillFlat;
+      flatPools[e] = baseFlat + scaledSkillFlat;
     });
 
     // flat elementalDamage applies to every elemental pool
@@ -1041,11 +1064,14 @@ export default class Hero {
     // elemental global percent from both sources
     const elementalGlobalPct = (instantSkillBaseEffects.elementalDamagePercent || 0) / 100;
     elements.forEach((e) => {
-      const specificPct = (instantSkillBaseEffects[`${e}DamagePercent`] || 0) / 100;
+      const specificBonusPercent = instantSkillBaseEffects[`${e}DamagePercent`] || 0;
+      const scaledSpecificPct = e === 'lightning'
+        ? (specificBonusPercent * lightningBonusEffectivenessMultiplier) / 100
+        : specificBonusPercent / 100;
       finalPools[e] = allowedElements.has(e)
         ? flatPools[e] *
           (1 +
-            specificPct +
+            scaledSpecificPct +
             elementalGlobalPct +
             (this.stats.totalDamagePercent || 0) +
             (this.stats.elementalDamagePercent || 0) +

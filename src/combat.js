@@ -378,15 +378,17 @@ export function playerAttack(currentTime) {
         }
       }
       if (hero.stats.burnChance > 0 && Math.random() * 100 < hero.stats.burnChance) {
-        const burnDmg = damage * 0.2; // Base burn damage is 20% of hit
+        const burnShare = 2 * (hero.stats.burnDamagePercent || 0);
+        const burnDmg = damage * burnShare; // Base burn is 20% of hit; burnDamagePercent adds on top
         if (burnDmg > 0) {
           game.currentEnemy.applyBurn(burnDmg);
         }
       }
-      if (hero.stats.chainLightningChance > 0 && Math.random() * 100 < hero.stats.chainLightningChance) {
-        // Simulate chain by dealing extra damage to current enemy
-        game.damageEnemy(damage * 0.5, false, null, 'chainLightning');
-      }
+      const shockChance = Math.max(0, Math.min(100, hero.stats.shockChance || 0));
+      const didShock = shockChance > 0 && Math.random() * 100 < shockChance;
+
+      const arcDischargeChance = Math.max(0, Math.min(100, hero.stats.arcDischargeChance || 0));
+      const didArcDischarge = arcDischargeChance > 0 && Math.random() * 100 < arcDischargeChance;
 
       const manaRestore = (manaPerHit > 0 ? manaPerHit : 0) + manaStealAmount + omniStealAmount;
       const manaDisplayAmount = Math.floor(Math.abs(manaRestore));
@@ -398,6 +400,19 @@ export function playerAttack(currentTime) {
       }
 
       game.damageEnemy(damage, isCritical, breakdown);
+
+      // If the enemy died (or swapped) from the main hit, don't apply on-hit followups.
+      if (!game.currentEnemy || game.currentEnemy !== enemy || game.currentEnemy.currentLife <= 0) {
+        continue;
+      }
+
+      if (didShock) {
+        game.currentEnemy.applyShock();
+      }
+      if (didArcDischarge) {
+        // Extra hit: 0.5x your damage.
+        game.damageEnemy(damage * 0.5, false, null, 'Arc Discharge');
+      }
 
       if (enemySpecials.includes('thornsAura')) {
         const thornsPercent = Number.isFinite(enemySpecialData.thornsPercent)

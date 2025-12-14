@@ -12,6 +12,7 @@ import { hero, options, game } from './globals.js';
 import { battleLog } from './battleLog.js';
 
 import { ELEMENTS } from './constants/common.js';
+import { BLEED_DURATION_MS, BURN_DURATION_MS } from './constants/ailments.js';
 import { t, tp } from './i18n.js';
 import { getCurrentBossRegion } from './bossRegion.js';
 import { formatNumber as formatNumberValue } from './utils/numberFormatter.js';
@@ -358,18 +359,18 @@ class Boss {
 
   applyBleed(damage) {
     if (!this.bleed) {
-      this.bleed = { damagePool: 0, duration: 2000 };
+      this.bleed = { damagePool: 0, duration: BLEED_DURATION_MS };
     }
     this.bleed.damagePool += damage;
-    this.bleed.duration = 2000;
+    this.bleed.duration = BLEED_DURATION_MS;
   }
 
   applyBurn(damage) {
     if (!this.burn) {
-      this.burn = { damagePool: 0, duration: 2000 };
+      this.burn = { damagePool: 0, duration: BURN_DURATION_MS };
     }
     this.burn.damagePool += damage;
-    this.burn.duration = 2000;
+    this.burn.duration = BURN_DURATION_MS;
   }
 
   processDoT(deltaMs) {

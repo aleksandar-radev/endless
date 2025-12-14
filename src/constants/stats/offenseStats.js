@@ -657,6 +657,11 @@ export const OFFENSE_STATS = {
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
+  burnDamagePercent: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+  },
   explosionChance: {
     base: 0,
     decimalPlaces: 1,
@@ -668,7 +673,13 @@ export const OFFENSE_STATS = {
     subcategory: 'elemental',
   },
   // STORMCALLER
-  chainLightningChance: {
+  lightningEffectivenessPercent: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+    showInUI: true,
+  },
+  arcDischargeChance: {
     base: 0,
     decimalPlaces: 1,
     subcategory: 'elemental',
@@ -678,7 +689,7 @@ export const OFFENSE_STATS = {
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
-  shockDamagePercent: {
+  shockEffectiveness: {
     base: 0,
     decimalPlaces: 1,
   },

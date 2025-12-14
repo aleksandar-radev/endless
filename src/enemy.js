@@ -5,6 +5,7 @@ import { createPercentScaleFunction, scaleStat, computeScaledReward, xpDiminishi
 import { hero, options, game } from './globals.js';
 import { battleLog } from './battleLog.js';
 import { ELEMENTS } from './constants/common.js';
+import { BLEED_DURATION_MS, BURN_DURATION_MS, SHOCK_DURATION_MS } from './constants/ailments.js';
 import { t, tp } from './i18n.js';
 import { formatNumber as formatNumberValue } from './utils/numberFormatter.js';
 
@@ -464,22 +465,31 @@ class Enemy {
     this.currentLife = this.life;
     this.bleed = null;
     this.burn = null;
+    this.shock = null;
   }
 
   applyBleed(damage) {
     if (!this.bleed) {
-      this.bleed = { damagePool: 0, duration: 2000 };
+      this.bleed = { damagePool: 0, duration: BLEED_DURATION_MS };
     }
     this.bleed.damagePool += damage;
-    this.bleed.duration = 2000;
+    this.bleed.duration = BLEED_DURATION_MS;
   }
 
   applyBurn(damage) {
     if (!this.burn) {
-      this.burn = { damagePool: 0, duration: 2000 };
+      this.burn = { damagePool: 0, duration: BURN_DURATION_MS };
     }
     this.burn.damagePool += damage;
-    this.burn.duration = 2000;
+    this.burn.duration = BURN_DURATION_MS;
+  }
+
+  applyShock() {
+    if (!this.shock) {
+      this.shock = { duration: SHOCK_DURATION_MS };
+      return;
+    }
+    this.shock.duration = SHOCK_DURATION_MS;
   }
 
   processDoT(deltaMs) {
@@ -519,6 +529,13 @@ class Enemy {
       }
       if (this.burn.duration <= 0 || this.burn.damagePool <= 1e-6) {
         this.burn = null;
+      }
+    }
+
+    if (this.shock) {
+      this.shock.duration -= deltaMs;
+      if (this.shock.duration <= 0) {
+        this.shock = null;
       }
     }
   }
