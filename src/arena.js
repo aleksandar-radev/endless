@@ -334,20 +334,6 @@ class Boss extends EnemyBase {
   }
 
   /**
-   * Inflict damage to the boss.
-   * @param {number} amount Amount of damage.
-   * @returns {boolean} True if boss is dead after damage.
-   */
-  takeDamage(amount) {
-    this.currentLife -= amount;
-    // On death
-    if (this.currentLife <= 0) {
-      return true;
-    }
-    return false;
-  }
-
-  /**
    * Get life percentage for UI display.
    * @returns {number} Percentage of life remaining.
    */

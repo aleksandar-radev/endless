@@ -138,6 +138,16 @@ class EnemyBase {
     this.currentLife = Math.min(this.life, this.currentLife + amount);
     return this.currentLife - previousLife;
   }
+
+  /**
+   * Inflict damage to the enemy
+   * @param {number} amount - Amount of damage
+   * @returns {boolean} - True if enemy is dead after damage
+   */
+  takeDamage(amount) {
+    this.currentLife -= amount;
+    return this.currentLife <= 0;
+  }
 }
 
 export default EnemyBase;

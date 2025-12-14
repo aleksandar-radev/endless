@@ -516,11 +516,6 @@ export class RockyFieldEnemy extends EnemyBase {
       this[`${id}Damage`] = this.calculateElementalDamage(id);
     });
   }
-
-  takeDamage(damage) {
-    this.currentLife -= damage;
-    return this.currentLife <= 0;
-  }
 }
 
 export default {
