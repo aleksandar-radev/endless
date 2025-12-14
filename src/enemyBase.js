@@ -69,6 +69,8 @@ class EnemyBase {
 
   /**
    * Apply shock status effect
+   * Shock does not deal damage but applies a status effect for the duration.
+   * If already shocked, the duration is refreshed.
    */
   applyShock() {
     if (!this.shock) {
