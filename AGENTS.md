@@ -1,3 +1,6 @@
+# Package Management
+- This project uses `pnpm` for package management.
+
 # Code structure
 - app/game logic is directly in `src/`
 - constants are in `src/constants/` (and sometimes in subfolders)
