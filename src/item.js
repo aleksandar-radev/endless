@@ -5,7 +5,7 @@ import {
   SLOT_REQUIREMENTS,
   TWO_HANDED_TYPES,
 } from './constants/items.js';
-import { STATS, getItemTierBonus } from './constants/stats/stats.js';
+import { getDivisor, getStatDecimalPlaces, STATS, getItemTierBonus } from './constants/stats/stats.js';
 import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
 import { MISC_STATS } from './constants/stats/miscStats.js';
@@ -139,7 +139,7 @@ export default class Item {
   }
 
   calculateStatValue({ baseValue, tierBonus, multiplier, scale, stat }) {
-    const decimals = STATS[stat].decimalPlaces || 0;
+    const decimals = getStatDecimalPlaces(stat);
     const handedMultiplier = this.isTwoHanded() ? 2 : 1;
     let val = baseValue * tierBonus * multiplier * scale * handedMultiplier;
 
@@ -192,7 +192,7 @@ export default class Item {
    */
   getStatMinMax(stat) {
     const statInfo = STATS[stat];
-    const decimals = statInfo?.decimalPlaces || 0;
+    const decimals = getStatDecimalPlaces(stat);
     const handedMultiplier = this.isTwoHanded() ? 2 : 1;
     const limitConfig = statInfo?.item?.limit;
     let baseLimit = Infinity;
@@ -333,14 +333,7 @@ export default class Item {
     const html = String.raw;
 
     const isPercentStat = (stat) => {
-      return (
-        stat.endsWith('Percent') ||
-        stat === 'critChance' ||
-        stat === 'blockChance' ||
-        stat === 'lifeSteal' ||
-        stat === 'manaSteal' ||
-        stat === 'omniSteal'
-      );
+      return getDivisor(stat) !== 1;
     };
 
     // Check global options for advanced tooltips
@@ -394,7 +387,7 @@ export default class Item {
               if (statDef.showValue === false) {
                 return `<div class="set-bonus-stat">${formatStatName(stat)}</div>`;
               }
-              const decimals = statDef.decimalPlaces || 0;
+              const decimals = getStatDecimalPlaces(stat);
               const formattedValue = formatNumber(Number(value).toFixed(decimals));
               const percentSuffix = isPercentStat(stat) ? '%' : '';
               return `<div class="set-bonus-stat">${formatStatName(stat)}: ${formattedValue}${percentSuffix}</div>`;
@@ -432,7 +425,7 @@ export default class Item {
                     <span>${formatStatName(stat)}</span>
                   </div>`;
         }
-        const decimals = statDef.decimalPlaces || 0;
+        const decimals = getStatDecimalPlaces(stat);
         const formattedValue = formatNumber(value.toFixed(decimals));
         let adv = '';
         if (showAdvanced && statMinMax[stat]) {

@@ -20,7 +20,7 @@ import { ATTRIBUTES } from './constants/stats/attributes.js';
 import { SOUL_UPGRADE_CONFIG } from './soulShop.js';
 import { ELEMENTS } from './constants/common.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
-import { STATS } from './constants/stats/stats.js';
+import { STATS, getDivisor, getStatDecimalPlaces } from './constants/stats/stats.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 const ATTRIBUTE_KEYS = Object.keys(ATTRIBUTES);
@@ -356,7 +356,7 @@ export default class Hero {
     ATTRIBUTE_KEYS.forEach((attr) => {
       const pct = basePercent[`${attr}Percent`] || 0;
       let v = baseFlat[attr] * (1 + pct);
-      const decimals = STATS[attr].decimalPlaces ?? 0;
+      const decimals = getStatDecimalPlaces(attr);
       this.stats[attr] = decimals > 0 ? Number(v.toFixed(decimals)) : Math.floor(v);
     });
 
@@ -394,16 +394,16 @@ export default class Hero {
         prestigePercent;
       const itemsFlat = (equipmentBonuses[attr] || 0) + (equipmentBonuses.allAttributes || 0);
       const itemsPercent =
-        (equipmentBonuses[`${attr}Percent`] || 0) / 100 +
-        (equipmentBonuses.allAttributesPercent || 0) / 100;
+        (equipmentBonuses[`${attr}Percent`] || 0) / getDivisor(`${attr}Percent`) +
+        (equipmentBonuses.allAttributesPercent || 0) / getDivisor('allAttributesPercent');
       const skillsFlat = (skillTreeBonuses[attr] || 0) + (skillTreeBonuses.allAttributes || 0);
       const skillsPercent =
-        (skillTreeBonuses[`${attr}Percent`] || 0) / 100 +
-        (skillTreeBonuses.allAttributesPercent || 0) / 100;
+        (skillTreeBonuses[`${attr}Percent`] || 0) / getDivisor(`${attr}Percent`) +
+        (skillTreeBonuses.allAttributesPercent || 0) / getDivisor('allAttributesPercent');
       const trainingFlat = (trainingBonuses[attr] || 0) + (trainingBonuses.allAttributes || 0);
       const trainingPercent =
-        (trainingBonuses[`${attr}Percent`] || 0) / 100 +
-        (trainingBonuses.allAttributesPercent || 0) / 100;
+        (trainingBonuses[`${attr}Percent`] || 0) / getDivisor(`${attr}Percent`) +
+        (trainingBonuses.allAttributesPercent || 0) / getDivisor('allAttributesPercent');
       const soulFlat = (soulBonuses[attr] || 0) + (soulBonuses.allAttributes || 0);
       const soulPercent =
         (soulBonuses[`${attr}Percent`] || 0) + (soulBonuses.allAttributesPercent || 0);
@@ -429,12 +429,6 @@ export default class Hero {
     });
 
     this.applyFinalCalculations(flatValues, percentBonuses, soulBonuses);
-
-    // cycle through all stats to make all numbers have the correct decimal places
-    for (const stat in this.stats) {
-      const decimals = STATS[stat]?.decimalPlaces || 0;
-      this.stats[stat] = Number((this.stats[stat] * 100).toFixed(decimals) / 100);
-    }
 
     updatePlayerLife();
     updateStatsAndAttributesUI();
@@ -571,24 +565,34 @@ export default class Hero {
   calculatePercentBonuses(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses) {
     const percentBonuses = {};
     const ascensionBonuses = ascension?.getBonuses() || {};
+    const prestigeBonuses = prestige?.bonuses || {};
+    const prestigeAllAttributesPercent = prestigeBonuses.allAttributesPercent || 0;
+    const sharedPercentAttributesRaw =
+      (this.primaryStats.allAttributesPercent ?? 0) +
+      ((this.permaStats.allAttributesPercent || 0) - prestigeAllAttributesPercent) +
+      (equipmentBonuses.allAttributesPercent || 0) +
+      (skillTreeBonuses.allAttributesPercent || 0) +
+      (trainingBonuses.allAttributesPercent || 0);
     const sharedPercentAttributes =
-      (this.permaStats.allAttributesPercent || 0) +
-      (equipmentBonuses.allAttributesPercent || 0) / 100 +
-      (skillTreeBonuses.allAttributesPercent || 0) / 100 +
-      (trainingBonuses.allAttributesPercent || 0) / 100;
+      sharedPercentAttributesRaw / getDivisor('allAttributesPercent') +
+      prestigeAllAttributesPercent;
     for (const stat of STAT_KEYS) {
       if (stat.endsWith('Percent')) {
         const statName = stat.replace('Percent', '');
-        let value =
+        const prestigePercent = prestigeBonuses[stat] || 0;
+        const raw =
           (STATS[stat]?.base || 0) +
           (attributeEffects[stat] || 0) +
-          (this.permaStats[stat] || 0) +
-          (skillTreeBonuses[stat] || 0) / 100 +
-          (equipmentBonuses[stat] || 0) / 100 +
-          (trainingBonuses[stat] || 0) / 100;
+          (this.primaryStats[stat] ?? 0) +
+          ((this.permaStats[stat] || 0) - prestigePercent) +
+          (skillTreeBonuses[stat] || 0) +
+          (equipmentBonuses[stat] || 0) +
+          (trainingBonuses[stat] || 0);
+        let value = raw / getDivisor(stat);
         if (ATTRIBUTE_SET.has(statName)) {
           value += sharedPercentAttributes;
         }
+        value += prestigePercent;
         value += ascensionBonuses[stat] || 0;
         percentBonuses[stat] = value;
       }
@@ -624,17 +628,15 @@ export default class Hero {
   applyFinalCalculations(flatValues, percentBonuses, soulBonuses) {
     // Apply percent bonuses to all stats that have them
     const ascensionBonuses = ascension?.getBonuses() || {};
+    const prestigeBonuses = prestige?.bonuses || {};
     this.damageConversionDeltas = {};
 
     // Stormcaller: scale lightning damage bonuses at the stat level so the Stats UI reflects the effect.
     // This applies to the aggregated lightningDamage (flat) and lightningDamagePercent (fraction).
-    const lightningBonusEffectivenessPercent =
-      (flatValues.lightningEffectivenessPercent || 0) +
+    const lightningBonusEffectiveness =
+      (percentBonuses.lightningEffectivenessPercent || 0) +
       (soulBonuses.lightningEffectivenessPercent || 0);
-    const lightningBonusEffectivenessMultiplier = Math.max(
-      0,
-      1 + (lightningBonusEffectivenessPercent || 0) / 100,
-    );
+    const lightningBonusEffectivenessMultiplier = Math.max(0, 1 + (lightningBonusEffectiveness || 0));
     if (Math.abs(lightningBonusEffectivenessMultiplier - 1) > 1e-9) {
       if (Number.isFinite(flatValues.lightningDamage)) {
         flatValues.lightningDamage *= lightningBonusEffectivenessMultiplier;
@@ -704,7 +706,7 @@ export default class Hero {
         }
 
         // Apply decimal places
-        const decimals = STATS[stat].decimalPlaces ?? 0;
+        const decimals = getStatDecimalPlaces(stat);
         value = decimals > 0 ? Number(value.toFixed(decimals)) : Math.floor(value);
 
         // Apply caps
@@ -734,22 +736,27 @@ export default class Hero {
         if (stat === 'reduceEnemyAttackSpeedPercent') value = Math.min(value, 50);
         if (stat === 'reduceEnemyDamagePercent') value = Math.min(value, 50);
 
-        this.stats[stat] = value;
+        const divisor = getDivisor(stat);
+        const prestigeBonus = prestigeBonuses[stat] || 0;
+        if (divisor !== 1) {
+          // Prestige bonuses are stored as fractions already (e.g. 0.05 for 5%),
+          // so exclude them from divisor scaling and add them back after scaling.
+          this.stats[stat] = prestigeBonus ? (value - prestigeBonus) / divisor + prestigeBonus : value / divisor;
+        } else {
+          this.stats[stat] = value;
+        }
       }
     }
 
-    // Ensure lightningEffectivenessPercent is correctly reflected in the stats (and UI)
-    this.stats.lightningEffectivenessPercent = (lightningBonusEffectivenessPercent || 0) / 100;
-
     // Apply specific stat interactions
     if (this.stats.manaToLifeTransferPercent > 0) {
-      const transfer = this.stats.mana * (this.stats.manaToLifeTransferPercent / 100);
+      const transfer = this.stats.mana * this.stats.manaToLifeTransferPercent;
       this.stats.life += transfer;
       this.stats.mana = Math.max(0, this.stats.mana - transfer);
     }
 
     if (this.stats.extraEvasionFromLifePercent > 0) {
-      this.stats.evasion += this.stats.life * (this.stats.extraEvasionFromLifePercent / 100);
+      this.stats.evasion += this.stats.life * this.stats.extraEvasionFromLifePercent;
     }
 
     if (this.stats.frostShield > 0) {
@@ -859,7 +866,7 @@ export default class Hero {
       (this.stats.totalDamagePercent || 0);
     const thornsMultiplier = Math.max(0, 1 + combinedThornsPercent);
     let effectiveThorns = flatThornsDamage * thornsMultiplier;
-    const thornsDecimals = STATS.thornsDamage?.decimalPlaces ?? 0;
+    const thornsDecimals = getStatDecimalPlaces('thornsDamage');
     if (thornsDecimals > 0) {
       effectiveThorns = Number(effectiveThorns.toFixed(thornsDecimals));
     } else {
@@ -1017,7 +1024,7 @@ export default class Hero {
   calculateTotalDamage(instantSkillBaseEffects = {}, options = {}) {
     const { includeRandom = true, canCrit = true } = options;
     const elements = ELEMENT_IDS;
-    const lightningBonusEffectivenessMultiplier = 1 + (this.stats.lightningEffectivenessPercent || 0) / 100;
+    const lightningBonusEffectivenessMultiplier = 1 + (this.stats.lightningEffectivenessPercent || 0);
     const allowedDamageTypes = Array.isArray(instantSkillBaseEffects.allowedDamageTypes)
       ? instantSkillBaseEffects.allowedDamageTypes
       : null;
@@ -1057,7 +1064,7 @@ export default class Hero {
 
     // 2) Percent phase: apply percent bonuses (physical + per-elemental + global elemental)
     const finalPools = {};
-    const physicalPct = (instantSkillBaseEffects.damagePercent || 0) / 100;
+    const physicalPct = (instantSkillBaseEffects.damagePercent || 0) / getDivisor('damagePercent');
     let totalDamagePercent = (this.stats.totalDamagePercent || 0) + (this.stats.damagePercent || 0);
 
     if (game.fightMode === 'arena' && this.stats.arenaDamagePercent) {
@@ -1072,12 +1079,13 @@ export default class Hero {
       : 0;
 
     // elemental global percent from both sources
-    const elementalGlobalPct = (instantSkillBaseEffects.elementalDamagePercent || 0) / 100;
+    const elementalGlobalPct = (instantSkillBaseEffects.elementalDamagePercent || 0) / getDivisor('elementalDamagePercent');
     elements.forEach((e) => {
       const specificBonusPercent = instantSkillBaseEffects[`${e}DamagePercent`] || 0;
+      const baseSpecificPct = specificBonusPercent / getDivisor(`${e}DamagePercent`);
       const scaledSpecificPct = e === 'lightning'
-        ? (specificBonusPercent * lightningBonusEffectivenessMultiplier) / 100
-        : specificBonusPercent / 100;
+        ? baseSpecificPct * lightningBonusEffectivenessMultiplier
+        : baseSpecificPct;
       finalPools[e] = allowedElements.has(e)
         ? flatPools[e] *
           (1 +
@@ -1115,23 +1123,23 @@ export default class Hero {
 
     let isCritical = false;
     if (includeRandom) {
-      if (this.stats.doubleDamageChance && Math.random() * 100 < this.stats.doubleDamageChance) {
+      if (this.stats.doubleDamageChance && Math.random() < this.stats.doubleDamageChance) {
         scalePools(2);
       }
-      isCritical = Math.random() * 100 < (this.stats.critChance || 0);
+      isCritical = Math.random() < (this.stats.critChance || 0);
       if (isCritical && canCrit) {
         scalePools(this.stats.critDamage || 1);
       }
     } else {
-      const doubleChance = Math.max(0, Math.min(100, this.stats.doubleDamageChance || 0));
-      let critChance = Math.max(0, Math.min(100, this.stats.critChance || 0));
+      const doubleChance = Math.max(0, Math.min(1, this.stats.doubleDamageChance || 0));
+      let critChance = Math.max(0, Math.min(1, this.stats.critChance || 0));
       let critDamage = Math.max(0, this.stats.critDamage || 1);
-      if (canCrit) {
+      if (!canCrit) {
         critChance = 0;
         critDamage = 1;
       }
       const expectedMultiplier =
-        (1 + doubleChance / 100) * (1 + (critDamage - 1) * (critChance / 100));
+        (1 + doubleChance) * (1 + (critDamage - 1) * critChance);
       scalePools(expectedMultiplier);
     }
 
@@ -1153,7 +1161,10 @@ export default class Hero {
       effectiveArmor = 0;
     } else {
       // Apply percent armor penetration first
-      effectiveArmor *= 1 - ((this.stats.armorPenetrationPercent || 0) + (instantSkillBaseEffects.armorPenetrationPercent || 0)) / 100;
+      const armorPenFraction =
+        (this.stats.armorPenetrationPercent || 0) +
+        (instantSkillBaseEffects.armorPenetrationPercent || 0) / getDivisor('armorPenetrationPercent');
+      effectiveArmor *= 1 - armorPenFraction;
       // Then apply flat armor penetration
       const armorPenFromSkill = (instantSkillBaseEffects.armorPenetration || 0) * flatPenMultiplier;
       effectiveArmor -= (this.stats.armorPenetration || 0) + armorPenFromSkill;
@@ -1170,14 +1181,17 @@ export default class Hero {
       if (this.stats.ignoreAllEnemyResistances > 0) return 0;
       let effectiveRes = baseRes;
       // Apply percent penetration first (elementalPenetrationPercent + specific percent)
-      let totalPercentPen = ((percentPen || 0) + (this.stats.elementalPenetrationPercent || 0) + (instantSkillBaseEffects.elementalPenetrationPercent || 0)) * 100;
+      let totalPercentPen =
+        (percentPen || 0) +
+        (this.stats.elementalPenetrationPercent || 0) +
+        (instantSkillBaseEffects.elementalPenetrationPercent || 0) / getDivisor('elementalPenetrationPercent');
 
       // Add Arcane Dissolution reduction
       if (this.stats.reduceEnemyResistancesPercent) {
         totalPercentPen += this.stats.reduceEnemyResistancesPercent;
       }
 
-      effectiveRes *= 1 - totalPercentPen / 100;
+      effectiveRes *= 1 - totalPercentPen;
       // Then apply flat penetration (elementalPenetration + specific flat)
       const skillFlatPen = (instantSkillBaseEffects.elementalPenetration || 0) * flatPenMultiplier;
       const totalFlatPen = (flatPen || 0) + (this.stats.elementalPenetration || 0) + skillFlatPen;
@@ -1250,13 +1264,13 @@ export default class Hero {
 
     const didDoubleDamage =
       this.stats.doubleDamageChance &&
-      Math.random() * 100 < this.stats.doubleDamageChance;
+      Math.random() < this.stats.doubleDamageChance;
     if (didDoubleDamage) {
       total *= 2;
     }
 
     const critChance = this.stats.critChance || 0;
-    const isCritical = Math.random() * 100 < critChance;
+    const isCritical = Math.random() < critChance;
     if (isCritical) {
       const critMultiplier = this.stats.critDamage || 1;
       total *= critMultiplier;
@@ -1282,8 +1296,7 @@ export default class Hero {
 
     // Check if resurrection chance is enabled
     if (!res && this.stats.resurrectionChance > 0) {
-      const roll = Math.random() * 100;
-      if (roll < this.stats.resurrectionChance && game.resurrectCount < 2) {
+      if (Math.random() < this.stats.resurrectionChance && game.resurrectCount < 2) {
         game.resurrectCount++;
         res = true;
       }

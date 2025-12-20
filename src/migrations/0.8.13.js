@@ -1,8 +1,8 @@
-import { STATS } from '../constants/stats/stats.js';
+import { getStatDecimalPlaces } from '../constants/stats/stats.js';
 
 const STORED_PERCENT_PER_FLAT = 50;
 const BASE_CONVERSION = 0.5;
-const PERCENT_DECIMALS = STATS.attackSpeedPercent?.decimalPlaces ?? 2;
+const PERCENT_DECIMALS = getStatDecimalPlaces('attackSpeedPercent', 2);
 const BASE_DECIMALS = Math.max(PERCENT_DECIMALS + 2, 4);
 
 function roundPercent(value) {

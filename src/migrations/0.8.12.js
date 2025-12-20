@@ -1,6 +1,6 @@
 
 import { TWO_HANDED_TYPES } from '../constants/items.js';
-import { STATS } from '../constants/stats/stats.js';
+import { getStatDecimalPlaces } from '../constants/stats/stats.js';
 
 const twoHandedSet = new Set(TWO_HANDED_TYPES);
 
@@ -9,7 +9,7 @@ function doubleItemStats(item) {
   Object.keys(item.stats).forEach((stat) => {
     const value = item.stats[stat];
     if (typeof value !== 'number') return;
-    const decimals = STATS[stat]?.decimalPlaces ?? 0;
+    const decimals = getStatDecimalPlaces(stat);
     const multiplied = value * 2;
     item.stats[stat] = Number(multiplied.toFixed(decimals));
   });

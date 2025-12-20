@@ -30,7 +30,6 @@ export const OFFENSE_STATS = {
   // DAMAGE
   damage: {
     base: 10,
-    decimalPlaces: 0,
     training: { cost: 100, bonus: 1, maxLevel: Infinity },
     item: { min: 10, max: 28, limit: Infinity, scaling: (level, tier) => offenseScaling(level, tier) },
     itemTags: ['offense'],
@@ -43,6 +42,7 @@ export const OFFENSE_STATS = {
   },
   damagePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: { min: 15, max: 36, limit: Infinity, scaling: (level, tier) => offenseScaling(level, tier, PERCENT_SCALING) },
     itemTags: ['offense', 'gloves'],
@@ -50,6 +50,7 @@ export const OFFENSE_STATS = {
   },
   totalDamagePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'attack',
   },
@@ -62,6 +63,7 @@ export const OFFENSE_STATS = {
   },
   attackSpeedPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
     training: {
       cost: 400,
@@ -83,6 +85,7 @@ export const OFFENSE_STATS = {
   // CRIT CHANCE
   critChance: {
     base: 5,
+    divisor: 100,
     decimalPlaces: 2,
     training: {
       cost: 550,
@@ -104,12 +107,13 @@ export const OFFENSE_STATS = {
   },
   critChanceCap: {
     base: 50,
-    decimalPlaces: 0,
+    divisor: 100,
     showInUI: true,
     subcategory: 'attack',
   },
   critChancePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     forceNotShow: true,
   },
@@ -132,13 +136,13 @@ export const OFFENSE_STATS = {
   },
   critDamagePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     forceNotShow: true,
   },
   // ATTACK RATING
   attackRating: {
     base: 100,
-    decimalPlaces: 0,
     training: { cost: 160, bonus: 10, maxLevel: Infinity },
     item: { min: 60, max: 140, limit: Infinity, scaling: (level, tier) => offenseScaling(level, tier) },
     itemTags: ['offense', 'jewelry', 'gloves'],
@@ -147,6 +151,7 @@ export const OFFENSE_STATS = {
   },
   attackRatingPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: { min: 10, max: 30, limit: Infinity, scaling: (level, tier) => offenseScaling(level, tier, PERCENT_SCALING) },
     itemTags: ['offense', 'gloves'],
@@ -154,6 +159,7 @@ export const OFFENSE_STATS = {
   },
   chanceToHitPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: { min: 5, max: 10, limit: 12, scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING) },
     itemTags: ['offense', 'magic', 'gloves'],
@@ -163,6 +169,7 @@ export const OFFENSE_STATS = {
   // LIFE STEAL
   lifeSteal: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
     training: { cost: 800, bonus: 0.01, maxLevel: 100 }, // max bonus: 1
     item: { min: 0.5, max: 1.25, limit: 5, scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING) },
@@ -172,12 +179,14 @@ export const OFFENSE_STATS = {
   },
   lifeStealPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     forceNotShow: true,
   },
   // MANA STEAL
   manaSteal: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
     item: { min: 0.5, max: 1.25, limit: 5, scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING) },
     itemTags: ['magic', 'wand', 'staff'],
@@ -186,12 +195,14 @@ export const OFFENSE_STATS = {
   },
   manaStealPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     forceNotShow: true,
   },
   // OMNI STEAL
   omniSteal: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
     item: { min: 0.5, max: 1.25, limit: 5, scaling: (level, tier) => offenseScaling(level, tier, CHANCE_SCALING) },
     itemTags: ['offense', 'magic'],
@@ -200,6 +211,7 @@ export const OFFENSE_STATS = {
   },
   omniStealPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     forceNotShow: true,
   },
@@ -214,13 +226,13 @@ export const OFFENSE_STATS = {
   },
   lifePerHitPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     forceNotShow: true,
   },
   // FIRE DAMAGE
   fireDamage: {
     base: 0,
-    decimalPlaces: 0,
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -233,6 +245,7 @@ export const OFFENSE_STATS = {
   },
   fireDamagePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: {
       min: ELEMENTAL_DAMAGE_PERCENT_MIN,
@@ -246,7 +259,6 @@ export const OFFENSE_STATS = {
   // COLD DAMAGE
   coldDamage: {
     base: 0,
-    decimalPlaces: 0,
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -259,6 +271,7 @@ export const OFFENSE_STATS = {
   },
   coldDamagePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: {
       min: ELEMENTAL_DAMAGE_PERCENT_MIN,
@@ -272,7 +285,6 @@ export const OFFENSE_STATS = {
   // AIR DAMAGE
   airDamage: {
     base: 0,
-    decimalPlaces: 0,
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -285,6 +297,7 @@ export const OFFENSE_STATS = {
   },
   airDamagePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: {
       min: ELEMENTAL_DAMAGE_PERCENT_MIN,
@@ -298,7 +311,6 @@ export const OFFENSE_STATS = {
   // EARTH DAMAGE
   earthDamage: {
     base: 0,
-    decimalPlaces: 0,
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -311,6 +323,7 @@ export const OFFENSE_STATS = {
   },
   earthDamagePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: {
       min: ELEMENTAL_DAMAGE_PERCENT_MIN,
@@ -324,7 +337,6 @@ export const OFFENSE_STATS = {
   // LIGHTNING DAMAGE
   lightningDamage: {
     base: 0,
-    decimalPlaces: 0,
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -337,6 +349,7 @@ export const OFFENSE_STATS = {
   },
   lightningDamagePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: {
       min: ELEMENTAL_DAMAGE_PERCENT_MIN,
@@ -350,7 +363,6 @@ export const OFFENSE_STATS = {
   // WATER DAMAGE
   waterDamage: {
     base: 0,
-    decimalPlaces: 0,
     item: {
       min: ELEMENTAL_DAMAGE_MIN,
       max: ELEMENTAL_DAMAGE_MAX,
@@ -363,6 +375,7 @@ export const OFFENSE_STATS = {
   },
   waterDamagePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: {
       min: ELEMENTAL_DAMAGE_PERCENT_MIN,
@@ -376,6 +389,7 @@ export const OFFENSE_STATS = {
   // DOUBLE DAMAGE
   doubleDamageChance: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     training: {
       cost: 550,
@@ -406,6 +420,7 @@ export const OFFENSE_STATS = {
   },
   elementalDamagePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: { min: 2, max: 7, limit: Infinity, scaling: (level, tier) => offenseScaling(level, tier, PERCENT_SCALING) },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
@@ -413,12 +428,12 @@ export const OFFENSE_STATS = {
   },
   percentOfPlayerDamage: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     forceNotShow: true,
   },
   armorPenetration: {
     base: 0,
-    decimalPlaces: 0,
     training: { cost: 50, bonus: 10, maxLevel: Infinity },
     item: {
       min: 10,
@@ -431,72 +446,72 @@ export const OFFENSE_STATS = {
   },
   armorPenetrationPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'attack',
   },
   firePenetration: {
     base: 0,
-    decimalPlaces: 0,
     subcategory: 'elemental',
   },
   firePenetrationPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
   coldPenetration: {
     base: 0,
-    decimalPlaces: 0,
     subcategory: 'elemental',
   },
   coldPenetrationPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
   airPenetration: {
     base: 0,
-    decimalPlaces: 0,
     subcategory: 'elemental',
   },
   airPenetrationPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
   earthPenetration: {
     base: 0,
-    decimalPlaces: 0,
     subcategory: 'elemental',
   },
   earthPenetrationPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
   lightningPenetration: {
     base: 0,
-    decimalPlaces: 0,
     subcategory: 'elemental',
   },
   lightningPenetrationPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
   waterPenetration: {
     base: 0,
-    decimalPlaces: 0,
     subcategory: 'elemental',
   },
   waterPenetrationPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
   elementalPenetration: {
     base: 0,
-    decimalPlaces: 0,
     training: { cost: 50, bonus: 10, maxLevel: Infinity },
     item: {
       min: 10,
@@ -509,62 +524,70 @@ export const OFFENSE_STATS = {
   },
   flatPenetrationPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'attack',
   },
   elementalPenetrationPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
   ignoreEnemyArmor: {
     base: 0,
-    decimalPlaces: 0,
     showValue: false,
   },
   ignoreAllEnemyResistances: {
     base: 0,
-    decimalPlaces: 0,
     showValue: false,
   },
   attackNeverMiss: {
     base: 0,
-    decimalPlaces: 0,
   },
   reduceEnemyDamagePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
   },
   reduceEnemyHpPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
   },
   reduceEnemyAttackSpeedPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
   },
   extraDamageFromLifePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
   },
   extraDamageFromArmorPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
   },
   extraDamageFromManaPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
   },
   extraDamageFromLifeRegenPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
   },
   extraDamageFromEvasionPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
   },
   extraDamageFromAttackRatingPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
     item: {
       min: 0.1,
@@ -575,43 +598,49 @@ export const OFFENSE_STATS = {
   },
   extraEvasionFromLifePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
   },
   extraDamageFromAllResistancesPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
   },
   // RETALIATION
   retaliateWhenHit: {
     base: 0,
-    decimalPlaces: 0,
     showValue: false,
   },
   // ARENA DAMAGE
   arenaDamagePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'attack',
   },
   // ANIMATED WEAPONS
   animatedWeaponsDamagePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   // ROGUE CLONE
   cloneDamagePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   // STEALTH
   avoidChance: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     forceNotShow: true,
   },
   // EXECUTE
   executeThresholdPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     showInUI: true,
     subcategory: 'attack',
@@ -619,125 +648,148 @@ export const OFFENSE_STATS = {
   // RARE ENEMY DAMAGE
   damageToHighRarityEnemiesPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   // HEAL DAMAGES ENEMIES
   healDamagesEnemiesPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   // BATS HEAL
   batsHealPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   // BLEED
   bleedChance: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'attack',
   },
   bleedDamagePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   // DOT STRIKE
   dotStrikeChance: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'attack',
   },
   // PYROMANCER
   overkillDamagePercent: {
     base: 0,
-    decimalPlaces: 0,
+    divisor: 100,
   },
   burnChance: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
   burnDamagePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
   explosionChance: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
   extraDamageAgainstBurningEnemies: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
   // STORMCALLER
   lightningEffectivenessPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
     showInUI: true,
   },
   arcDischargeChance: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
   shockChance: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
   shockEffectiveness: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   // CRYOMANCER
   freezeChance: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
   extraDamageAgainstFrozenEnemies: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
     showInUI: true,
   },
   chanceToShatterEnemy: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
     showInUI: true,
   },
   slowChance: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
   // DRUID SUMMONS
   summonDamageBuffPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   summonAttackSpeedBuffPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   entangleChance: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
   // MAGE
   teleportDodgeChance: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     subcategory: 'defense',
   },
   manaToLifeTransferPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   damageToBossesPercent: {
@@ -745,10 +797,12 @@ export const OFFENSE_STATS = {
   },
   bloodSacrificeEffectiveness: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   instaKillPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
   },
 };

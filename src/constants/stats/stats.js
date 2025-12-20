@@ -9,6 +9,17 @@ export const STATS = {
   ...MISC_STATS,
 };
 
+export function getDivisor(statKey) {
+  const divisor = STATS?.[statKey]?.divisor;
+  if (typeof divisor === 'number' && Number.isFinite(divisor) && divisor > 0) return divisor;
+  return 1;
+}
+
+export function getStatDecimalPlaces(statKey, fallback = 0) {
+  const decimals = STATS?.[statKey]?.decimalPlaces;
+  return decimals === undefined ? fallback : decimals;
+}
+
 // Base tier bonus configuration by stat bonus type.
 // Higher tiers receive significantly larger multipliers.
 const ITEM_BASE_BONUS = {

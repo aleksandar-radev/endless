@@ -159,11 +159,11 @@ export function enemyAttack(currentTime) {
         avoided = true;
         createDamageNumber({ text: 'EVADED', isPlayer: true, color: '#FFD700' });
         battleLog.addBattle(t('battleLog.evadedAttack'));
-      } else if (hero.stats.avoidChance > 0 && Math.random() * 100 < hero.stats.avoidChance) {
+      } else if (hero.stats.avoidChance > 0 && Math.random() < hero.stats.avoidChance) {
         avoided = true;
         createDamageNumber({ text: 'AVOIDED', isPlayer: true, color: '#888888' });
         battleLog.addBattle(t('battleLog.avoidedAttack'));
-      } else if (hero.stats.teleportDodgeChance > 0 && Math.random() * 100 < hero.stats.teleportDodgeChance) {
+      } else if (hero.stats.teleportDodgeChance > 0 && Math.random() < hero.stats.teleportDodgeChance) {
         const cost = hero.stats.mana * 0.1;
         if (hero.stats.currentMana >= cost) {
           game.restoreMana(-cost);
@@ -174,7 +174,7 @@ export function enemyAttack(currentTime) {
     }
 
     if (!avoided) {
-      if (hero.stats.entangleChance > 0 && Math.random() * 100 < hero.stats.entangleChance) {
+      if (hero.stats.entangleChance > 0 && Math.random() < hero.stats.entangleChance) {
         createDamageNumber({ text: 'ENTANGLED', isPlayer: true, color: '#228B22' });
         enemy.lastAttack += 1000;
         continue;
@@ -265,7 +265,7 @@ export function enemyAttack(currentTime) {
         });
       }
 
-      const isBlocked = Math.random() * 100 < hero.stats.blockChance;
+      const isBlocked = Math.random() < (hero.stats.blockChance || 0);
 
       if (isBlocked) {
         // Calculate and apply block healing
@@ -357,7 +357,7 @@ export function playerAttack(currentTime) {
     const roll = Math.random() * 100;
     const neverMiss = hero.stats.attackNeverMiss > 0 && !alwaysEvade;
 
-    const manaPerHit = (hero.stats.manaPerHit || 0) * (1 + (hero.stats.manaPerHitPercent || 0) / 100);
+    const manaPerHit = (hero.stats.manaPerHit || 0) * (1 + (hero.stats.manaPerHitPercent || 0));
 
     if (!neverMiss && (alwaysEvade || roll > hitChance)) {
       createDamageNumber({ text: 'MISS', color: '#888888' });
@@ -367,7 +367,7 @@ export function playerAttack(currentTime) {
 
       const isFrozen = enemy.frozenUntil && enemy.frozenUntil > currentTime;
       if (isFrozen && hero.stats.extraDamageAgainstFrozenEnemies > 0) {
-        const mult = 1 + hero.stats.extraDamageAgainstFrozenEnemies / 100;
+        const mult = 1 + hero.stats.extraDamageAgainstFrozenEnemies;
         damage *= mult;
         if (breakdown) {
           Object.keys(breakdown).forEach((k) => {
@@ -377,7 +377,7 @@ export function playerAttack(currentTime) {
       }
 
       let didShatter = false;
-      if (isFrozen && hero.stats.chanceToShatterEnemy > 0 && Math.random() * 100 < hero.stats.chanceToShatterEnemy) {
+      if (isFrozen && hero.stats.chanceToShatterEnemy > 0 && Math.random() < hero.stats.chanceToShatterEnemy) {
         didShatter = true;
         enemy.frozenUntil = 0;
         damage *= 3;
@@ -390,14 +390,14 @@ export function playerAttack(currentTime) {
 
       // Freeze is applied only by hits that deal cold damage.
       const coldDealt = breakdown?.cold || 0;
-      if (!didShatter && coldDealt > 0 && hero.stats.freezeChance > 0 && Math.random() * 100 < hero.stats.freezeChance) {
+      if (!didShatter && coldDealt > 0 && hero.stats.freezeChance > 0 && Math.random() < hero.stats.freezeChance) {
         enemy.frozenUntil = currentTime + AILMENTS.freeze.duration;
         createDamageNumber({ text: 'FROZEN', color: '#ADD8E6' });
       }
 
       // Extra Damage Against Burning Enemies
       if (game.currentEnemy.ailments[AILMENTS.burn.id] && hero.stats.extraDamageAgainstBurningEnemies > 0) {
-        const multiplier = (1 + hero.stats.extraDamageAgainstBurningEnemies / 100);
+        const multiplier = (1 + hero.stats.extraDamageAgainstBurningEnemies);
         damage *= multiplier;
         if (breakdown) {
           Object.keys(breakdown).forEach((k) => {
@@ -407,7 +407,7 @@ export function playerAttack(currentTime) {
       }
 
       // Instant Kill Check
-      if (hero.stats.instaKillPercent > 0 && Math.random() * 100 < hero.stats.instaKillPercent) {
+      if (hero.stats.instaKillPercent > 0 && Math.random() < hero.stats.instaKillPercent) {
         damage = enemy.life; // Ensure kill (should be full life, not current life, to prevent overkill logic issues)
         createCombatText('FATAL BLOW!', true);
       }
@@ -424,10 +424,10 @@ export function playerAttack(currentTime) {
       const enemySpecials = enemy.special || [];
       const enemySpecialData = enemy.specialData || {};
 
-      const lifePerHit = (hero.stats.lifePerHit || 0) * (1 + (hero.stats.lifePerHitPercent || 0) / 100);
-      const lifeStealAmount = damage * (hero.stats.lifeSteal || 0) / 100;
-      const manaStealAmount = damage * (hero.stats.manaSteal || 0) / 100;
-      const omniStealAmount = damage * (hero.stats.omniSteal || 0) / 100;
+      const lifePerHit = (hero.stats.lifePerHit || 0) * (1 + (hero.stats.lifePerHitPercent || 0));
+      const lifeStealAmount = damage * (hero.stats.lifeSteal || 0);
+      const manaStealAmount = damage * (hero.stats.manaSteal || 0);
+      const omniStealAmount = damage * (hero.stats.omniSteal || 0);
 
       const disallowLeech = enemySpecials.includes('noLeech');
       const adjustedLifePerHit = disallowLeech ? Math.min(lifePerHit, 0) : lifePerHit;
@@ -444,25 +444,25 @@ export function playerAttack(currentTime) {
       game.healPlayer(totalLifeChange);
 
       // On-hit Effects
-      if (hero.stats.bleedChance > 0 && Math.random() * 100 < hero.stats.bleedChance) {
+      if (hero.stats.bleedChance > 0 && Math.random() < hero.stats.bleedChance) {
         const bleedDmg = damage * ((hero.stats.bleedDamagePercent || 0));
         if (bleedDmg > 0) {
           game.currentEnemy.applyBleed(bleedDmg);
         }
       }
 
-      if (hero.stats.burnChance > 0 && Math.random() * 100 < hero.stats.burnChance) {
-        const burnShare = AILMENTS.burn.baseDamageMultiplier + (hero.stats.burnDamagePercent || 1);
+      if (hero.stats.burnChance > 0 && Math.random() < hero.stats.burnChance) {
+        const burnShare = AILMENTS.burn.baseDamageMultiplier + (hero.stats.burnDamagePercent || 0);
         const burnDmg = damage * burnShare;
         if (burnDmg > 0) {
           game.currentEnemy.applyBurn(burnDmg);
         }
       }
-      const shockChance = Math.max(0, Math.min(100, hero.stats.shockChance || 0));
-      const didShock = shockChance > 0 && Math.random() * 100 < shockChance;
+      const shockChance = Math.max(0, Math.min(1, hero.stats.shockChance || 0));
+      const didShock = shockChance > 0 && Math.random() < shockChance;
 
-      const arcDischargeChance = Math.max(0, Math.min(100, hero.stats.arcDischargeChance || 0));
-      const didArcDischarge = arcDischargeChance > 0 && Math.random() * 100 < arcDischargeChance;
+      const arcDischargeChance = Math.max(0, Math.min(1, hero.stats.arcDischargeChance || 0));
+      const didArcDischarge = arcDischargeChance > 0 && Math.random() < arcDischargeChance;
 
       const manaRestore = (manaPerHit > 0 ? manaPerHit : 0) + manaStealAmount + omniStealAmount;
       const manaDisplayAmount = Math.floor(Math.abs(manaRestore));
@@ -880,7 +880,7 @@ export async function defeatEnemy(source) {
   }
 
   // Explosion Check (Pyromancer)
-  if (hero.stats.explosionChance > 0 && Math.random() * 100 < hero.stats.explosionChance) {
+  if (hero.stats.explosionChance > 0 && Math.random() < hero.stats.explosionChance) {
     let explosionDamage = 0;
     const explosionDamageMultiplier = 10;
     const burnAilment = enemy.ailments[AILMENTS.burn.id];

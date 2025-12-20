@@ -1,5 +1,5 @@
 import { game, hero, statistics, options, training, soulShop, ascension } from '../globals.js';
-import { STATS } from '../constants/stats/stats.js';
+import { getDivisor, getStatDecimalPlaces } from '../constants/stats/stats.js';
 import { hideTooltip, positionTooltip, showTooltip, updateEnemyStats, formatNumber, switchTab } from '../ui/ui.js';
 import { OFFENSE_STATS } from '../constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from '../constants/stats/defenseStats.js';
@@ -79,8 +79,8 @@ function appendDamagePercentBonus(el, key) {
 
   const normalized = Math.abs(totalPercent) < 1e-6 ? 0 : totalPercent;
   const decimals = decimalKeys.reduce(
-    (max, statKey) => Math.max(max, STATS[statKey]?.decimalPlaces ?? 1),
-    1,
+    (max, statKey) => Math.max(max, getStatDecimalPlaces(statKey)),
+    0,
   );
   const formattedPercent = (normalized * 100).toFixed(decimals);
   el.textContent = `${el.textContent} (${formattedPercent}%)`;
@@ -356,6 +356,32 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
 
     // Populate panels based on showInUI flags
     const addStatsToPanel = (panel, group, statsDef) => {
+      const formatDisplayValue = (statKey, statValue) => {
+        if (statKey === 'cooldownReductionPercent') {
+          const cap = hero.stats.cooldownReductionCapPercent || 0.8;
+          const raw = typeof statValue === 'number' ? statValue : 0;
+          const effective = Math.min(raw, cap);
+          const decimals = getStatDecimalPlaces(statKey);
+          const divisor = getDivisor(statKey);
+          let text = (effective * divisor).toFixed(decimals) + '%';
+          if (raw > cap) {
+            text += ` (${(raw * divisor).toFixed(decimals)}%)`;
+          }
+          return text;
+        }
+
+        if (typeof statValue === 'number') {
+          const divisor = getDivisor(statKey);
+          const decimals = getStatDecimalPlaces(statKey);
+          if (divisor !== 1) {
+            return formatNumber((statValue * divisor).toFixed(decimals)) + '%';
+          }
+          return formatNumber(statValue.toFixed(decimals));
+        }
+
+        return formatNumber(statValue);
+      };
+
       if (options.showAllStats) {
         const subcats = SUBCATEGORIES[group];
         const tabs = document.createElement('div');
@@ -401,30 +427,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           span.id = `${key}-value`;
 
           if (showValue) {
-            let val = hero.stats[key];
-            if (key === 'cooldownReductionPercent') {
-              const cap = hero.stats.cooldownReductionCapPercent || 0.8;
-              const effective = Math.min(val, cap);
-              const decimals = statsDef[key]?.decimalPlaces ?? 1;
-              let text = (effective * 100).toFixed(decimals) + '%';
-              if (val > cap) {
-                text += ` (${(val * 100).toFixed(decimals)}%)`;
-              }
-              val = text;
-            } else if (key === 'extraMaterialDropPercent') {
-              val = (val * 100).toFixed(1) + '%';
-            } else if (
-              key === 'itemQuantityPercent' ||
-              key === 'itemRarityPercent' ||
-              key === 'materialQuantityPercent'
-            ) {
-              val = (val * 100).toFixed(statsDef[key].decimalPlaces) + '%';
-            } else if (typeof val === 'number' && statsDef[key].decimalPlaces !== undefined) {
-              val = formatNumber(val.toFixed(statsDef[key].decimalPlaces));
-            } else {
-              val = formatNumber(val);
-            }
-            span.textContent = val;
+            span.textContent = formatDisplayValue(key, hero.stats[key]);
             appendDamagePercentBonus(span, key);
           }
 
@@ -466,30 +469,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           if (lblText && lblText.includes('<')) lbl.innerHTML = lblText; else lbl.textContent = lblText;
           const span = document.createElement('span');
           span.id = `${key}-value`;
-          let val = hero.stats[key];
-          if (key === 'cooldownReductionPercent') {
-            const cap = hero.stats.cooldownReductionCapPercent || 0.8;
-            const effective = Math.min(val, cap);
-            const decimals = statsDef[key]?.decimalPlaces ?? 1;
-            let text = (effective * 100).toFixed(decimals) + '%';
-            if (val > cap) {
-              text += ` (${(val * 100).toFixed(decimals)}%)`;
-            }
-            val = text;
-          } else if (key === 'extraMaterialDropPercent') {
-            val = (val * 100).toFixed(1) + '%';
-          } else if (
-            key === 'itemQuantityPercent' ||
-            key === 'itemRarityPercent' ||
-            key === 'materialQuantityPercent'
-          ) {
-            val = (val * 100).toFixed(statsDef[key].decimalPlaces) + '%';
-          } else if (typeof val === 'number' && statsDef[key].decimalPlaces !== undefined) {
-            val = formatNumber(val.toFixed(statsDef[key].decimalPlaces));
-          } else {
-            val = formatNumber(val);
-          }
-          span.textContent = val;
+          span.textContent = formatDisplayValue(key, hero.stats[key]);
           appendDamagePercentBonus(span, key);
           row.appendChild(lbl);
           row.appendChild(document.createTextNode(' '));
@@ -531,45 +511,47 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
       if (el) {
         // Special formatting for certain stats
         if (key === 'attackSpeed') {
-          el.textContent = formatNumber(hero.stats.attackSpeed.toFixed(STATS.attackSpeed.decimalPlaces));
+          el.textContent = formatNumber(hero.stats.attackSpeed.toFixed(getStatDecimalPlaces('attackSpeed')));
         } else if (key === 'critChance') {
-          el.textContent = hero.stats.critChance.toFixed(STATS.critChance.decimalPlaces) + '%';
+          const d = getDivisor('critChance');
+          el.textContent = (hero.stats.critChance * d).toFixed(getStatDecimalPlaces('critChance')) + '%';
         } else if (key === 'critDamage') {
-          el.textContent = hero.stats.critDamage.toFixed(STATS.critDamage.decimalPlaces) + 'x';
+          el.textContent = hero.stats.critDamage.toFixed(getStatDecimalPlaces('critDamage')) + 'x';
         } else if (key === 'lifeSteal') {
-          el.textContent = hero.stats.lifeSteal.toFixed(STATS.lifeSteal.decimalPlaces) + '%';
+          const d = getDivisor('lifeSteal');
+          el.textContent = (hero.stats.lifeSteal * d).toFixed(getStatDecimalPlaces('lifeSteal')) + '%';
         } else if (key === 'manaSteal') {
-          el.textContent = hero.stats.manaSteal.toFixed(STATS.manaSteal.decimalPlaces) + '%';
+          const d = getDivisor('manaSteal');
+          el.textContent = (hero.stats.manaSteal * d).toFixed(getStatDecimalPlaces('manaSteal')) + '%';
         } else if (key === 'omniSteal') {
-          el.textContent = hero.stats.omniSteal.toFixed(STATS.omniSteal.decimalPlaces) + '%';
+          const d = getDivisor('omniSteal');
+          el.textContent = (hero.stats.omniSteal * d).toFixed(getStatDecimalPlaces('omniSteal')) + '%';
         } else if (key === 'lifeRegen') {
-          el.textContent = formatNumber(hero.stats.lifeRegen.toFixed(STATS.lifeRegen.decimalPlaces));
+          el.textContent = formatNumber(hero.stats.lifeRegen.toFixed(getStatDecimalPlaces('lifeRegen')));
         } else if (key === 'manaRegen') {
-          el.textContent = formatNumber(hero.stats.manaRegen.toFixed(STATS.manaRegen.decimalPlaces));
+          el.textContent = formatNumber(hero.stats.manaRegen.toFixed(getStatDecimalPlaces('manaRegen')));
         } else if (key === 'blockChance') {
-          el.textContent = hero.stats.blockChance.toFixed(STATS.blockChance.decimalPlaces) + '%';
+          const d = getDivisor('blockChance');
+          el.textContent = (hero.stats.blockChance * d).toFixed(getStatDecimalPlaces('blockChance')) + '%';
         } else if (key === 'cooldownReductionPercent') {
           const val = hero.stats[key];
           const cap = hero.stats.cooldownReductionCapPercent || 0.8;
           const effective = Math.min(val, cap);
-          const decimals = STATS[key]?.decimalPlaces ?? 1;
+          const decimals = getStatDecimalPlaces(key);
           let text = (effective * 100).toFixed(decimals) + '%';
           if (val > cap) {
             text += ` (${(val * 100).toFixed(decimals)}%)`;
           }
           el.textContent = text;
         } else {
-          // Use decimalPlaces from STATS config if available
-          const decimalPlaces = STATS[key]?.decimalPlaces ?? 0;
+          const decimalPlaces = getStatDecimalPlaces(key);
+          const divisor = getDivisor(key);
           let value = Number(hero.stats[key]);
-          // If stat name ends with %, multiply by 100
-          if (key.endsWith('Percent')) {
-            value = value * 100;
-          }
-          el.textContent = formatNumber(value.toFixed(decimalPlaces));
-          // Add % sign if stat name ends with Percent
-          if (key.endsWith('Percent')) {
-            el.textContent += '%';
+          if (divisor !== 1) {
+            value *= divisor;
+            el.textContent = formatNumber(value.toFixed(decimalPlaces)) + '%';
+          } else {
+            el.textContent = formatNumber(value.toFixed(decimalPlaces));
           }
         }
         appendDamagePercentBonus(el, key);
@@ -624,7 +606,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     resistanceMap.forEach(([resKey, dmgKey]) => {
       const el = document.getElementById(`${resKey}-value`);
       if (el) {
-        const value = formatNumber(hero.stats[resKey].toFixed(STATS[resKey].decimalPlaces || 0));
+        const value = formatNumber(hero.stats[resKey].toFixed(getStatDecimalPlaces(resKey)));
         el.textContent = value;
         if (enemy) {
           const reduction = calculateResistanceReduction(hero.stats[resKey], enemy[dmgKey]);

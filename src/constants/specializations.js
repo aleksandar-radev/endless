@@ -753,7 +753,6 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.natureGrasp'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            terrainControlPercent: scaleDownFlat(level, 2),
           }),
         },
       },
@@ -895,7 +894,6 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.enchantedArmor'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            armorEnchantmentEffectivenessPercent: scaleDownFlat(level, 2),
           }),
         },
       },

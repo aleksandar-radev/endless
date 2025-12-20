@@ -34,7 +34,6 @@ export const MISC_STATS = {
   // MANA
   mana: {
     base: 50,
-    decimalPlaces: 0,
     levelUpBonus: 0,
     training: { cost: 50, bonus: 1, maxLevel: Infinity },
     item: { min: 25, max: 70, scaling: (level, tier) => miscScaling(level, tier) },
@@ -48,6 +47,7 @@ export const MISC_STATS = {
   },
   manaPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: { min: 3, max: 8, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry', 'magic'],
@@ -64,6 +64,7 @@ export const MISC_STATS = {
   },
   manaRegenPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: { min: 4, max: 10, limit: 50, scaling: (level, tier) => miscScaling(level, tier, PERCENT_SCALING) },
     itemTags: ['jewelry', 'magic'],
@@ -79,17 +80,17 @@ export const MISC_STATS = {
   },
   manaPerHitPercent: {
     base: 0,
-    decimalPlaces: 0,
+    divisor: 100,
   },
   // STATS
   strength: {
     base: 0,
-    decimalPlaces: 0,
     item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
     itemTags: ['misc', 'stat', 'axe', 'mace'],
   },
   strengthPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: {
       min: STATS_MIN_PERCENT,
@@ -100,12 +101,12 @@ export const MISC_STATS = {
   },
   agility: {
     base: 0,
-    decimalPlaces: 0,
     item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
     itemTags: ['misc', 'stat', 'axe', 'mace'],
   },
   agilityPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: {
       min: STATS_MIN_PERCENT,
@@ -116,12 +117,12 @@ export const MISC_STATS = {
   },
   vitality: {
     base: 0,
-    decimalPlaces: 0,
     item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
     itemTags: ['misc', 'stat'],
   },
   vitalityPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: {
       min: STATS_MIN_PERCENT,
@@ -132,12 +133,12 @@ export const MISC_STATS = {
   },
   wisdom: {
     base: 0,
-    decimalPlaces: 0,
     item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
     itemTags: ['misc', 'jewelry', 'stat', 'magic'],
   },
   wisdomPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: {
       min: STATS_MIN_PERCENT,
@@ -148,12 +149,12 @@ export const MISC_STATS = {
   },
   endurance: {
     base: 0,
-    decimalPlaces: 0,
     item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
     itemTags: ['misc', 'jewelry', 'stat'],
   },
   endurancePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: {
       min: STATS_MIN_PERCENT,
@@ -164,13 +165,12 @@ export const MISC_STATS = {
   },
   dexterity: {
     base: 0,
-    decimalPlaces: 0,
     item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
     itemTags: ['misc', 'jewelry', 'stat'],
   },
   dexterityPercent: {
     base: 0,
-    decimalPlaces: 0,
+    divisor: 100,
     item: {
       min: STATS_MIN_PERCENT,
       max: STATS_MAX_PERCENT,
@@ -180,12 +180,12 @@ export const MISC_STATS = {
   },
   intelligence: {
     base: 0,
-    decimalPlaces: 0,
     item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
     itemTags: ['misc', 'jewelry', 'stat', 'magic'],
   },
   intelligencePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: {
       min: STATS_MIN_PERCENT,
@@ -196,12 +196,12 @@ export const MISC_STATS = {
   },
   perseverance: {
     base: 0,
-    decimalPlaces: 0,
     item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
     itemTags: ['misc', 'jewelry', 'stat'],
   },
   perseverancePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: {
       min: STATS_MIN_PERCENT,
@@ -218,6 +218,7 @@ export const MISC_STATS = {
   // BONUS GOLD
   bonusGoldPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: { min: 5, max: 20, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry'],
@@ -227,6 +228,7 @@ export const MISC_STATS = {
   // BONUS EXPERIENCE
   bonusExperiencePercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     item: { min: 5, max: 15, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry'],
@@ -236,24 +238,27 @@ export const MISC_STATS = {
   // COOLDOWN REDUCTION
   cooldownReductionPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     showInUI: true,
     subcategory: 'misc',
   },
   cooldownReductionCapPercent: {
-    base: 0.8,
-    decimalPlaces: 0,
+    base: 80,
+    divisor: 100,
     showInUI: true,
     subcategory: 'misc',
   },
   // MANA COST REDUCTION
   manaCostReductionPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   // BUFF DURATION
   buffDurationPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     showInUI: true,
     subcategory: 'misc',
@@ -261,6 +266,7 @@ export const MISC_STATS = {
   // BUFF EFFECTIVENESS
   buffEffectivenessPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
     showInUI: true,
     subcategory: 'misc',
@@ -268,12 +274,13 @@ export const MISC_STATS = {
   // ITEM BONUSES
   itemBonusesPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   // ITEM QUANTITY
   itemQuantityPercent: {
     base: 0,
-    decimalPlaces: 0,
+    divisor: 100,
     item: { min: 4, max: 13, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry', 'gloves'],
     showInUI: true,
@@ -282,7 +289,7 @@ export const MISC_STATS = {
   // ITEM RARITY
   itemRarityPercent: {
     base: 0,
-    decimalPlaces: 0,
+    divisor: 100,
     item: { min: 4, max: 13, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry', 'gloves'],
     showInUI: true,
@@ -291,7 +298,7 @@ export const MISC_STATS = {
   // MATERIAL QUANTITY
   materialQuantityPercent: {
     base: 0,
-    decimalPlaces: 0,
+    divisor: 100,
     item: { min: 4, max: 13, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['jewelry', 'ring', 'amulet'],
     showInUI: true,
@@ -300,7 +307,6 @@ export const MISC_STATS = {
   // Only from materials. permanent skill points
   skillPoints: {
     base: 0,
-    decimalPlaces: 0,
     showInUI: true,
     subcategory: 'rewards',
   },
@@ -310,7 +316,7 @@ export const MISC_STATS = {
    */
   extraMaterialDropPercent: {
     base: 0,
-    decimalPlaces: 0,
+    divisor: 100,
   },
   /**
    * Max number of extra materials dropped per enemy kill.
@@ -318,10 +324,10 @@ export const MISC_STATS = {
    */
   extraMaterialDropMax: {
     base: 1,
-    decimalPlaces: 0,
   },
   manaRegenOfTotalPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 2,
     training: { cost: 1000, bonus: 0.01, maxLevel: 100 },
     item: { min: 0.01, max: 0.05, max: 1, scaling: (level, tier) => miscScaling(level, tier, PERCENT_SCALING) },
@@ -329,7 +335,6 @@ export const MISC_STATS = {
   },
   allAttributes: {
     base: 0,
-    decimalPlaces: 0,
     item: {
       min: 4,
       max: 8,
@@ -340,12 +345,12 @@ export const MISC_STATS = {
   },
   allAttributesPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   // DUAL WIELD 2H
   canDualWieldTwoHanded: {
     base: 0,
-    decimalPlaces: 0,
     showValue: false,
   },
   // WEAPON EFFECTIVENESS
@@ -361,102 +366,85 @@ export const MISC_STATS = {
   // BOSS LOOT
   allowBossLoot: {
     base: 0,
-    decimalPlaces: 0,
     showValue: false,
     itemTags: [],
   },
   // ANIMATED WEAPONS
   animatedWeaponsUnlocked: {
     base: 0,
-    decimalPlaces: 0,
     showValue: false,
   },
   // ROGUE CLONE
   cloneUnlocked: {
     base: 0,
-    decimalPlaces: 0,
     showValue: false,
   },
   // NIGHTSTALKER
   nightStalkerBuffEffectivenessPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   // PALADIN EQUIPMENT
   canUseTwoShields: {
     base: 0,
-    decimalPlaces: 0,
-    showValue: false,
-  },
-  canUseExtraRing: {
-    base: 0,
-    decimalPlaces: 0,
     showValue: false,
   },
   amuletEffectivenessPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   ringEffectivenessPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   // BERSERKER
   uncappedAttackSpeed: {
     base: 0,
-    decimalPlaces: 0,
     showValue: false,
   },
   warlordEffectivenessPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   overhealToLife: {
     base: 0,
-    decimalPlaces: 0,
     showValue: false,
   },
   overhealPercent: {
     base: 0,
-    decimalPlaces: 0,
+    divisor: 100,
   },
   bloodSacrificeUnlocked: {
     base: 0,
-    decimalPlaces: 0,
     showValue: false,
   },
   // DRUID
   shapeshiftUnlocked: {
     base: 0,
-    decimalPlaces: 0,
     showValue: false,
-  },
-  terrainControlPercent: {
-    base: 0,
-    decimalPlaces: 1,
   },
   // MAGE
   reduceEnemyResistancesPercent: {
     base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
   weaponIllusionUnlocked: {
     base: 0,
-    decimalPlaces: 0,
     showValue: false,
   },
   // ELEMENTALIST (CRYOMANCER)
   glacialBulwarkUnlocked: {
     base: 0,
-    decimalPlaces: 0,
     showValue: false,
   },
   weaponBuffEffectivenessPercent: {
     base: 0,
-    decimalPlaces: 1,
-  },
-  armorEnchantmentEffectivenessPercent: {
-    base: 0,
+    divisor: 100,
     decimalPlaces: 1,
   },
 };

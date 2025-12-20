@@ -1,4 +1,4 @@
-import { STATS } from '../constants/stats/stats.js';
+import { STATS, getStatDecimalPlaces } from '../constants/stats/stats.js';
 import { CLASS_PATHS, SKILL_TREES } from '../constants/skills.js';
 import { getClassSpecializations, getSpecialization } from '../constants/specializations.js';
 import { SKILL_LEVEL_TIERS, getSpellDamageTypes, SPECIALIZATION_UNLOCK_LEVEL } from '../skillTree.js';
@@ -11,7 +11,7 @@ import { createModal, closeModal } from './modal.js';
 const html = String.raw;
 
 const shouldShowStatValue = (stat) => STATS[stat]?.showValue !== false;
-const getStatDecimals = (stat) => STATS[stat]?.decimalPlaces || 0;
+const getStatDecimals = (stat) => getStatDecimalPlaces(stat);
 const formatSignedValue = (value, decimals, includeZero = true) => {
   const shouldShowPlus = value > 0 || (includeZero && value === 0);
   return `${shouldShowPlus ? '+' : ''}${value.toFixed(decimals)}`;

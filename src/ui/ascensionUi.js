@@ -3,7 +3,7 @@ import { showToast, showTooltip, hideTooltip, positionTooltip, formatNumber } fr
 import { createModal, closeModal } from './modal.js';
 import { t, tp } from '../i18n.js';
 import { renderRunesUI } from './runesUi.js';
-import { STATS } from '../constants/stats/stats.js';
+import { getStatDecimalPlaces } from '../constants/stats/stats.js';
 
 let activeCategory = null;
 
@@ -276,9 +276,10 @@ function getAscensionPerLevelBonusText(key, cfg) {
   const target = cfg.stat || cfg.effect || (Array.isArray(cfg.stats) ? cfg.stats[0] : null) || key;
   const isPercent = (s) => s && (/Percent$/i.test(s) || /CostReduction$/i.test(s));
   const useFractional = isPercent(target);
+  const definedDecimals = target ? getStatDecimalPlaces(target, undefined) : undefined;
   const decimals =
-    (target && STATS[target]?.decimalPlaces !== undefined)
-      ? STATS[target].decimalPlaces
+    definedDecimals !== undefined
+      ? definedDecimals
       : (isPercent(target) ? 1 : Number.isInteger(base) ? 0 : 2);
   const value = useFractional ? base * 100 : base;
   return `+${formatNumber(value.toFixed(decimals))}${isPercent(target) ? ' %' : ''}`;
@@ -292,9 +293,10 @@ function getAscensionBonusText(key, cfg, level) {
   const target = cfg.stat || cfg.effect || (Array.isArray(cfg.stats) ? cfg.stats[0] : null) || key;
   const isPercent = (s) => s && (/Percent$/i.test(s) || /CostReduction$/i.test(s));
   const useFractional = isPercent(target);
+  const definedDecimals = target ? getStatDecimalPlaces(target, undefined) : undefined;
   const decimals =
-    (target && STATS[target]?.decimalPlaces !== undefined)
-      ? STATS[target].decimalPlaces
+    definedDecimals !== undefined
+      ? definedDecimals
       : (isPercent(target) ? 1 : Number.isInteger(total) ? 0 : 2);
   const value = useFractional ? total * 100 : total;
   return `+${formatNumber(value.toFixed(decimals))}${isPercent(target) ? ' %' : ''}`;

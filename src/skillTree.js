@@ -9,6 +9,7 @@ import { battleLog } from './battleLog.js';
 import { t } from './i18n.js';
 import { floorSumBigInt } from './utils/bulkMath.js';
 import { AILMENTS } from './constants/ailments.js';
+import { getDivisor } from './constants/stats/stats.js';
 import {
   showLifeWarning,
   showManaWarning,
@@ -726,7 +727,7 @@ export default class SkillTree {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.manaCost) return 0;
     return Math.floor(
-      skill.manaCost(effectiveLevel) - (skill.manaCost(effectiveLevel) * hero.stats.manaCostReductionPercent) / 100,
+      skill.manaCost(effectiveLevel) - (skill.manaCost(effectiveLevel) * (hero.stats.manaCostReductionPercent || 0)),
     );
   }
 
@@ -777,7 +778,8 @@ export default class SkillTree {
     }
 
     if (effects.lifePercent) {
-      const percentAmount = (maxLife * effects.lifePercent) / 100;
+      const d = getDivisor('lifePercent');
+      const percentAmount = maxLife * ((effects.lifePercent || 0) / d);
       if (!applyChange(percentAmount)) {
         return { hasCost, willSurvive: false };
       }
@@ -810,7 +812,7 @@ export default class SkillTree {
     if (skillId === 'bloodSacrifice') {
       const lifeCost = hero.stats.currentLife * 0.5;
       baseEffects.life = (baseEffects.life || 0) - lifeCost;
-      const effectiveness = 1 + (hero.stats.bloodSacrificeEffectiveness || 0) / 100;
+      const effectiveness = 1 + (hero.stats.bloodSacrificeEffectiveness || 0);
       baseEffects.damage = (baseEffects.damage || 0) + (lifeCost * effectiveness);
     };
 
@@ -832,7 +834,7 @@ export default class SkillTree {
 
     if (skill.cooldownEndTime && skill.cooldownEndTime > Date.now()) return false;
 
-    const manaPerHit = (hero.stats.manaPerHit || 0) * (1 + (hero.stats.manaPerHitPercent || 0) / 100);
+    const manaPerHit = (hero.stats.manaPerHit || 0) * (1 + (hero.stats.manaPerHitPercent || 0));
     const skillTypeSource = skill?.skill_type ?? skill?.skillType;
     const resolvedSkillType =
       typeof skillTypeSource === 'function' ? skillTypeSource() : skillTypeSource;
@@ -882,14 +884,16 @@ export default class SkillTree {
     }
 
     if (baseEffects.lifePercent) {
-      game.healPlayer((hero.stats.life * baseEffects.lifePercent) / 100);
+      const d = getDivisor('lifePercent');
+      game.healPlayer(hero.stats.life * ((baseEffects.lifePercent || 0) / d));
     }
 
     if (baseEffects.reduceEnemyDamagePercent) {
-      hero.stats.reduceEnemyDamagePercent += baseEffects.reduceEnemyDamagePercent / 100;
+      const d = getDivisor('reduceEnemyDamagePercent');
+      hero.stats.reduceEnemyDamagePercent += (baseEffects.reduceEnemyDamagePercent || 0) / d;
       game.currentEnemy.damage = game.currentEnemy.calculateDamage();
       // reset after calculation
-      hero.stats.reduceEnemyDamagePercent -= baseEffects.reduceEnemyDamagePercent / 100;
+      hero.stats.reduceEnemyDamagePercent -= (baseEffects.reduceEnemyDamagePercent || 0) / d;
     }
 
     const canHeal = !skillId.includes('bloodSacrifice');
@@ -902,7 +906,7 @@ export default class SkillTree {
       const isFrozen = enemy?.frozenUntil && enemy.frozenUntil > now;
 
       if (isFrozen && hero.stats.extraDamageAgainstFrozenEnemies > 0) {
-        const mult = 1 + hero.stats.extraDamageAgainstFrozenEnemies / 100;
+        const mult = 1 + hero.stats.extraDamageAgainstFrozenEnemies;
         damage *= mult;
         if (breakdown) {
           Object.keys(breakdown).forEach((k) => {
@@ -912,7 +916,7 @@ export default class SkillTree {
       }
 
       let didShatter = false;
-      if (isFrozen && hero.stats.chanceToShatterEnemy > 0 && Math.random() * 100 < hero.stats.chanceToShatterEnemy) {
+      if (isFrozen && hero.stats.chanceToShatterEnemy > 0 && Math.random() < hero.stats.chanceToShatterEnemy) {
         didShatter = true;
         enemy.frozenUntil = 0;
         damage *= 3;
@@ -924,34 +928,38 @@ export default class SkillTree {
       }
 
       const coldDealt = breakdown?.cold || 0;
-      if (!didShatter && coldDealt > 0 && hero.stats.freezeChance > 0 && Math.random() * 100 < hero.stats.freezeChance) {
+      if (!didShatter && coldDealt > 0 && hero.stats.freezeChance > 0 && Math.random() < hero.stats.freezeChance) {
         const now = Date.now();
         enemy.frozenUntil = now + AILMENTS.freeze.duration;
         createDamageNumber({ text: 'FROZEN', color: '#ADD8E6' });
       }
 
-      let lifeStealPercent = 0;
-      let manaStealPercent = 0;
-      let omniStealPercent = hero.stats.omniSteal || 0;
+      let lifeStealFraction = 0;
+      let manaStealFraction = 0;
+      let omniStealFraction = hero.stats.omniSteal || 0;
 
       if (isSpell) {
-        omniStealPercent += baseEffects.omniSteal || 0;
+        const d = getDivisor('omniSteal');
+        omniStealFraction += (baseEffects.omniSteal || 0) / d;
       } else {
-        lifeStealPercent += (hero.stats.lifeSteal || 0) + (baseEffects.lifeSteal || 0);
-        manaStealPercent += (hero.stats.manaSteal || 0) + (baseEffects.manaSteal || 0);
-        omniStealPercent += baseEffects.omniSteal || 0;
+        const lifeD = getDivisor('lifeSteal');
+        const manaD = getDivisor('manaSteal');
+        const omniD = getDivisor('omniSteal');
+        lifeStealFraction += (hero.stats.lifeSteal || 0) + (baseEffects.lifeSteal || 0) / lifeD;
+        manaStealFraction += (hero.stats.manaSteal || 0) + (baseEffects.manaSteal || 0) / manaD;
+        omniStealFraction += (baseEffects.omniSteal || 0) / omniD;
       }
 
-      if (lifeStealPercent && canHeal) {
-        game.healPlayer(damage * (lifeStealPercent / 100));
+      if (lifeStealFraction && canHeal) {
+        game.healPlayer(damage * lifeStealFraction);
       }
 
-      if (manaStealPercent) {
-        game.restoreMana(damage * (manaStealPercent / 100));
+      if (manaStealFraction) {
+        game.restoreMana(damage * manaStealFraction);
       }
 
-      if (omniStealPercent && canHeal) {
-        const omniStealAmount = damage * (omniStealPercent / 100);
+      if (omniStealFraction && canHeal) {
+        const omniStealAmount = damage * omniStealFraction;
         game.healPlayer(omniStealAmount);
         game.restoreMana(omniStealAmount);
       }
@@ -1053,13 +1061,15 @@ export default class SkillTree {
 
     // update enemy right away
     if (skill.effect(skill.level).reduceEnemyAttackSpeedPercent) {
-      hero.stats.reduceEnemyAttackSpeedPercent += skill.effect(skill.level).reduceEnemyAttackSpeedPercent / 100;
+      const d = getDivisor('reduceEnemyAttackSpeedPercent');
+      hero.stats.reduceEnemyAttackSpeedPercent += (skill.effect(skill.level).reduceEnemyAttackSpeedPercent || 0) / d;
       if (game.currentEnemy) {
         game.currentEnemy.recalculateStats();
       }
     }
     if (skill.effect(skill.level).reduceEnemyDamagePercent) {
-      hero.stats.reduceEnemyDamagePercent += skill.effect(skill.level).reduceEnemyDamagePercent / 100;
+      const d = getDivisor('reduceEnemyDamagePercent');
+      hero.stats.reduceEnemyDamagePercent += (skill.effect(skill.level).reduceEnemyDamagePercent || 0) / d;
       if (game.currentEnemy) {
         game.currentEnemy.recalculateStats();
       }
@@ -1086,7 +1096,7 @@ export default class SkillTree {
 
   getActiveBuffEffects() {
     const effects = {};
-    const buffMultiplier = 1 + (hero.stats.buffEffectivenessPercent || 0) / 100;
+    const buffMultiplier = 1 + (hero.stats.buffEffectivenessPercent || 0);
 
     this.activeBuffs.forEach((buffData, skillId) => {
       if (buffData.endTime <= Date.now()) {
@@ -1149,7 +1159,8 @@ export default class SkillTree {
         }
 
         // in the % damage, the crit damage is already factored in
-        damage += playerDamage.damage * (buffData.summonStats.percentOfPlayerDamage / 100);
+        const d = getDivisor('percentOfPlayerDamage');
+        damage += playerDamage.damage * ((buffData.summonStats.percentOfPlayerDamage || 0) / d);
 
         if (skillId === 'animatedWeapons') {
           damage *= (hero.stats.animatedWeaponsDamagePercent) || 1;

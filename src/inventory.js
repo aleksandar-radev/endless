@@ -17,7 +17,7 @@ import {
 import { getCurrentRegion } from './region.js';
 import { computeSetBonuses } from './uniqueItems.js';
 import { MATERIALS } from './constants/materials.js';
-import { STATS } from './constants/stats/stats.js';
+import { getDivisor, getStatDecimalPlaces, STATS } from './constants/stats/stats.js';
 import {
   ITEM_RARITY,
   RARITY_ORDER,
@@ -558,13 +558,7 @@ export default class Inventory {
           currentIdx = idx;
         }
 
-        const isPercentStat = (stat) =>
-          stat.endsWith('Percent') ||
-          stat === 'critChance' ||
-          stat === 'blockChance' ||
-          stat === 'lifeSteal' ||
-          stat === 'manaSteal' ||
-          stat === 'omniSteal';
+        const isPercentStat = (stat) => getDivisor(stat) !== 1;
         let showAdvanced = false;
         try {
           if (options.showAdvancedTooltips) showAdvanced = true;
@@ -582,7 +576,7 @@ export default class Inventory {
             .map((stat) => {
               const value = item.stats[stat];
               const statDef = STATS[stat] || {};
-              const decimals = statDef.decimalPlaces || 0;
+              const decimals = getStatDecimalPlaces(stat);
               const formattedValue = value.toFixed(decimals);
               let adv = '';
               if (statDef.showValue !== false && showAdvanced && statMinMax[stat]) {
@@ -744,13 +738,7 @@ export default class Inventory {
         dialog.querySelector('#alternation-selected-name').textContent = item.getDisplayName();
 
         const statsEntries = Object.entries(item.stats);
-        const isPercentStat = (stat) =>
-          stat.endsWith('Percent') ||
-          stat === 'critChance' ||
-          stat === 'blockChance' ||
-          stat === 'lifeSteal' ||
-          stat === 'manaSteal' ||
-          stat === 'omniSteal';
+        const isPercentStat = (stat) => getDivisor(stat) !== 1;
         let showAdvanced = false;
         try {
           if (options.showAdvancedTooltips) showAdvanced = true;
@@ -766,7 +754,7 @@ export default class Inventory {
           statsHtml = statsEntries
             .map(([stat, value]) => {
               const statDef = STATS[stat] || {};
-              const decimals = statDef.decimalPlaces || 0;
+              const decimals = getStatDecimalPlaces(stat);
               const formattedValue = value.toFixed(decimals);
               const { max: maxRoll } = item.getStatMinMax(stat);
               let isMaxRoll = false;
@@ -863,7 +851,7 @@ export default class Inventory {
             renderSelected(idx);
             const postRollRange = item.getStatMinMax(statToReroll);
             if (postRollRange && Number.isFinite(postRollRange.max)) {
-              const decimals = STATS[statToReroll].decimalPlaces || 0;
+              const decimals = getStatDecimalPlaces(statToReroll);
               const maxValue = Number(postRollRange.max.toFixed(decimals));
               const normalized = Number(item.stats[statToReroll].toFixed(decimals));
               if (normalized >= maxValue) {
@@ -1645,13 +1633,7 @@ export default class Inventory {
         let effectiveValue = value;
 
         if (multiplier !== 1) {
-          const isPercentStat =
-            stat.endsWith('Percent') ||
-            stat === 'critChance' ||
-            stat === 'blockChance' ||
-            stat === 'lifeSteal' ||
-            stat === 'manaSteal' ||
-            stat === 'omniSteal';
+          const isPercentStat = getDivisor(stat) !== 1;
 
           if (isPercentStat) {
             effectiveValue = value * multiplier;

@@ -4,7 +4,7 @@ import { showToast } from './ui/ui.js';
 import { hero, dataManager, options, runes, ascension } from './globals.js';
 import { TRAINING_MAX_QTY } from './constants/limits.js';
 import { handleSavedData } from './functions.js';
-import { STATS } from './constants/stats/stats.js';
+import { getStatDecimalPlaces, STATS } from './constants/stats/stats.js';
 import { createModal } from './ui/modal.js';
 import { MISC_STATS } from './constants/stats/miscStats.js';
 import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
@@ -456,7 +456,7 @@ export default class Training {
 
     // Compute total bonus gained
     const bonusValue = (config.bonus || 0) * qty;
-    const decimals = STATS[stat].decimalPlaces || 0;
+    const decimals = getStatDecimalPlaces(stat);
 
     // --- Update ALL modal fields ---
     this.modal.querySelector('.modal-qty').innerHTML = formatNumber(qty);
@@ -686,7 +686,7 @@ export default class Training {
   }
   getBonusText(stat, config, level) {
     const value = config.bonus * level;
-    const decimals = STATS[stat].decimalPlaces || 0;
+    const decimals = getStatDecimalPlaces(stat);
     const formattedValue = formatNumber(value.toFixed(decimals));
     return `+${formattedValue}${config.suffix || ''} ${formatStatName(stat)}`;
   }
@@ -946,7 +946,7 @@ export default class Training {
         });
       }
       if (amountEl) {
-        const decimals = STATS[stat]?.decimalPlaces || 0;
+        const decimals = getStatDecimalPlaces(stat);
         const displayDecimals = decimals > 0 ? decimals : 2;
         const allocation = combinedTotal * (shares[stat] || 0);
         amountEl.textContent = tp('training.elementalDistributionAmount', {

@@ -203,7 +203,7 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.warlord'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => {
-      const effectiveness = 1 + (hero.stats.warlordEffectivenessPercent || 0) / 100;
+      const effectiveness = 1 + (hero.stats.warlordEffectivenessPercent || 0);
       return {
         strengthPercent: scaleDownFlat(level, 2.5) * effectiveness,
         critChance: Math.min(scaleDownFlat(level, 0.05), 20) * effectiveness,
