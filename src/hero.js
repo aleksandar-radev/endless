@@ -779,8 +779,8 @@ export default class Hero {
       this.stats[key] = Math.max((this.stats[key] || 0) + initialAllResBonus, 0);
     });
 
-    this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * this.stats.mana * (1 + this.stats.manaRegenPercent);
-    this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.life * (1 + this.stats.lifeRegenPercent);
+    this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * this.stats.mana;
+    this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.life;
 
     let pendingDamageAdditions = {};
     if (runes && typeof runes.applyPreDamageConversions === 'function') {

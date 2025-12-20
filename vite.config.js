@@ -38,6 +38,31 @@ export default defineConfig(({ mode }) => {
           max_line_len: false,
         },
       } : undefined,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            const normalizedId = String(id).replace(/\\/g, '/');
+            if (normalizedId.includes('/node_modules/')) return 'vendor';
+            if (normalizedId.includes('/src/languages/')) return 'languages';
+            if (normalizedId.includes('/src/constants/skills/')) return 'constants-skills';
+            if (normalizedId.includes('/src/constants/quests/')) return 'constants-quests';
+            if (normalizedId.includes('/src/constants/enemies/')) return 'constants-enemies';
+            if (normalizedId.includes('/src/constants/rocky_field_enemies/')) return 'constants-rocky-field-enemies';
+            if (normalizedId.includes('/src/constants/stats/')) return 'constants-stats';
+            if (normalizedId.endsWith('/src/constants/items.js')) return 'constants-items';
+            if (normalizedId.endsWith('/src/constants/materials.js')) return 'constants-materials';
+            if (normalizedId.endsWith('/src/constants/regions.js')) return 'constants-regions';
+            if (normalizedId.endsWith('/src/constants/specializations.js')) return 'constants-specializations';
+            if (normalizedId.endsWith('/src/constants/uniqueSets.js')) return 'constants-unique-sets';
+            if (normalizedId.endsWith('/src/constants/runes.js')) return 'constants-runes';
+            if (normalizedId.endsWith('/src/constants/bosses.js')) return 'constants-bosses';
+            if (normalizedId.includes('/src/constants/')) return 'constants-core';
+            if (normalizedId.includes('/src/ui/')) return 'ui';
+            if (normalizedId.includes('/src/migrations/')) return 'migrations';
+            return undefined;
+          },
+        },
+      },
     },
     server: {
       open: true,

@@ -6,6 +6,7 @@ export default function run() {
 
     <span style="color:#FF8A00;">Improvements</span>
     <ul>
+      <li>Slight performance improvements.</li>
       <li>Reduced exploration item and material bonuses across every region, with higher tiers receiving the largest cuts.</li>
       <li>Standardized item-based percentage caps at 1200%, while limiting bonus experience, gold, item rarity, item quantity, and material quantity to 400% before ascension upgrades.</li>
       <li>Introduced a material quantity bonus for rings and amulets that scales material drops similarly to item quantity.</li>
@@ -26,6 +27,7 @@ export default function run() {
       <li>Added ascension upgrade for bonus attibute points on level.</li>
       <li>Attack rating flat bonus from ascension upgrades increased to 8000, from 1000.</li>
       <li>Paladin's Divine judgement skill cooldown reduced to 12s from 30s.</li>
+      <li>Life regen percent of total life (and mana) now are not affected by life regen % and mana regen % bonuses.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
