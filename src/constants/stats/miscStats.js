@@ -445,6 +445,12 @@ export const MISC_STATS = {
     decimalPlaces: 0,
     showValue: false,
   },
+  // ELEMENTALIST (CRYOMANCER)
+  glacialBulwarkUnlocked: {
+    base: 0,
+    decimalPlaces: 0,
+    showValue: false,
+  },
   weaponBuffEffectivenessPercent: {
     base: 0,
     decimalPlaces: 1,

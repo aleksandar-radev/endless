@@ -1,6 +1,7 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
 import { scaleDownFlat, scaleUpFlat } from '../../common.js';
+import { hero } from '../../globals.js';
 
 // Elementalist skills extracted from skills.js
 export const ELEMENTALIST_SKILLS = {
@@ -414,5 +415,21 @@ export const ELEMENTALIST_SKILLS = {
         elementalDamage: elementalDamage * 4,
       };
     },
+  },
+
+  // Specialization-unlocked skills
+  glacialBulwark: {
+    id: 'glacialBulwark',
+    name: () => t('Glacial Bulwark'),
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[0],
+    icon: () => 'ice-barrier',
+    description: () => t('skill.glacialBulwark'),
+    maxLevel: () => 150,
+    effect: (level) => ({
+      damageTakenConvertedToColdPercent: Math.min(level * 0.5, 75),
+      coldDamageTakenReductionPercent: Math.min((50 * level) / 150, 50),
+    }),
+    isVisible: () => hero.stats.glacialBulwarkUnlocked > 0,
   },
 };

@@ -26,6 +26,7 @@ import { renderRunesUI } from './ui/runesUi.js';
 import { getRuneName, getRuneIcon } from './runes.js';
 import { RUNES } from './constants/runes.js';
 import { rollSpecialItemDrop } from './uniqueItems.js';
+import { AILMENTS } from './constants/ailments.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 import { ELEMENTS } from './constants/common.js';
@@ -126,6 +127,11 @@ export function enemyAttack(currentTime) {
     const attackSpeed = enemy?.attackSpeed || 0;
     if (!Number.isFinite(attackSpeed) || attackSpeed <= 0) break;
 
+    if (enemy.frozenUntil && enemy.frozenUntil > currentTime) {
+      enemy.lastAttack = Math.max(enemy.lastAttack || 0, enemy.frozenUntil);
+      break;
+    }
+
     const timeBetweenAttacks = 1000 / attackSpeed;
     if (currentTime - enemy.lastAttack < timeBetweenAttacks) {
       break;
@@ -168,11 +174,6 @@ export function enemyAttack(currentTime) {
     }
 
     if (!avoided) {
-      if (hero.stats.freezeChance > 0 && Math.random() * 100 < hero.stats.freezeChance) {
-        createDamageNumber({ text: 'FROZEN', isPlayer: true, color: '#ADD8E6' });
-        enemy.lastAttack += 1000;
-        continue;
-      }
       if (hero.stats.entangleChance > 0 && Math.random() * 100 < hero.stats.entangleChance) {
         createDamageNumber({ text: 'ENTANGLED', isPlayer: true, color: '#228B22' });
         enemy.lastAttack += 1000;
@@ -193,6 +194,42 @@ export function enemyAttack(currentTime) {
           ) / 100;
         elementalDamage[id] = enemy[`${id}Damage`] * (1 - reduction);
       });
+
+      // Convert a portion of non-cold damage taken into cold, then reduce cold damage taken.
+      const rawConversionPercent = hero.stats.damageTakenConvertedToColdPercent || 0;
+      const conversionPercent = Math.max(0, Math.min(.75, rawConversionPercent));
+      const rawColdReductionPercent = hero.stats.coldDamageTakenReductionPercent || 0;
+      const coldReductionPercent = Math.max(0, Math.min(.50, rawColdReductionPercent));
+
+      if (conversionPercent > 0) {
+        const nonColdTotal = Math.max(
+          0,
+          physicalDamage +
+            ELEMENT_IDS.reduce((sum, id) => (id === 'cold' ? sum : sum + (elementalDamage[id] || 0)), 0),
+        );
+        if (nonColdTotal > 0) {
+          const convertAmount = nonColdTotal * conversionPercent;
+
+          const physicalShare = physicalDamage / nonColdTotal;
+          if (physicalDamage > 0) {
+            physicalDamage = Math.max(0, physicalDamage - convertAmount * physicalShare);
+          }
+
+          ELEMENT_IDS.forEach((id) => {
+            if (id === 'cold') return;
+            const v = elementalDamage[id] || 0;
+            if (v <= 0) return;
+            const share = v / nonColdTotal;
+            elementalDamage[id] = Math.max(0, v - convertAmount * share);
+          });
+
+          elementalDamage.cold = (elementalDamage.cold || 0) + convertAmount;
+        }
+      }
+
+      if (coldReductionPercent > 0 && elementalDamage.cold > 0) {
+        elementalDamage.cold *= (1 - coldReductionPercent);
+      }
 
       let totalDamage = physicalDamage + ELEMENT_IDS.reduce((sum, id) => sum + elementalDamage[id], 0);
 
@@ -328,9 +365,45 @@ export function playerAttack(currentTime) {
     } else {
       let { damage, isCritical, breakdown } = hero.calculateDamageAgainst(enemy, {});
 
+      const isFrozen = enemy.frozenUntil && enemy.frozenUntil > currentTime;
+      if (isFrozen && hero.stats.extraDamageAgainstFrozenEnemies > 0) {
+        const mult = 1 + hero.stats.extraDamageAgainstFrozenEnemies / 100;
+        damage *= mult;
+        if (breakdown) {
+          Object.keys(breakdown).forEach((k) => {
+            breakdown[k] *= mult;
+          });
+        }
+      }
+
+      let didShatter = false;
+      if (isFrozen && hero.stats.chanceToShatterEnemy > 0 && Math.random() * 100 < hero.stats.chanceToShatterEnemy) {
+        didShatter = true;
+        enemy.frozenUntil = 0;
+        damage *= 3;
+        if (breakdown) {
+          Object.keys(breakdown).forEach((k) => {
+            breakdown[k] *= 3;
+          });
+        }
+      }
+
+      // Freeze is applied only by hits that deal cold damage.
+      const coldDealt = breakdown?.cold || 0;
+      if (!didShatter && coldDealt > 0 && hero.stats.freezeChance > 0 && Math.random() * 100 < hero.stats.freezeChance) {
+        enemy.frozenUntil = currentTime + AILMENTS.freeze.duration;
+        createDamageNumber({ text: 'FROZEN', color: '#ADD8E6' });
+      }
+
       // Extra Damage Against Burning Enemies
-      if (game.currentEnemy.burn && hero.stats.extraDamageAgainstBurningEnemies > 0) {
-        damage *= (1 + hero.stats.extraDamageAgainstBurningEnemies / 100);
+      if (game.currentEnemy.ailments[AILMENTS.burn.id] && hero.stats.extraDamageAgainstBurningEnemies > 0) {
+        const multiplier = (1 + hero.stats.extraDamageAgainstBurningEnemies / 100);
+        damage *= multiplier;
+        if (breakdown) {
+          Object.keys(breakdown).forEach((k) => {
+            breakdown[k] *= multiplier;
+          });
+        }
       }
 
       // Instant Kill Check
@@ -377,9 +450,10 @@ export function playerAttack(currentTime) {
           game.currentEnemy.applyBleed(bleedDmg);
         }
       }
+
       if (hero.stats.burnChance > 0 && Math.random() * 100 < hero.stats.burnChance) {
-        const burnShare = 2 * (hero.stats.burnDamagePercent || 0);
-        const burnDmg = damage * burnShare; // Base burn is 20% of hit; burnDamagePercent adds on top
+        const burnShare = AILMENTS.burn.baseDamageMultiplier + (hero.stats.burnDamagePercent || 1);
+        const burnDmg = damage * burnShare;
         if (burnDmg > 0) {
           game.currentEnemy.applyBurn(burnDmg);
         }
@@ -529,7 +603,7 @@ export function playerDeath() {
   });
 }
 
-export async function defeatEnemy() {
+export async function defeatEnemy(source) {
   // If a prestige is in progress, skip granting rewards from this kill
   if (runtime.prestigeInProgress) {
     // clear the justDefeated guard and return early without applying rewards
@@ -623,7 +697,6 @@ export async function defeatEnemy() {
         }
       }
     }
-
     showToast(text, 'success');
     statistics.increment('bossesKilled', null, 1);
     const runeBonuses = runes.getBonusEffects();
@@ -796,10 +869,12 @@ export async function defeatEnemy() {
 
   // Overkill Check
   if (hero.stats.overkillDamagePercent > 0 && enemy.currentLife < 0) {
-    if (Math.abs(enemy.currentLife) > enemy.life) {
-      enemy.currentLife = enemy.life;
+    const excessDamage = Math.abs(enemy.currentLife);
+    if (source === 'overkill') {
+      game.overkillDamage = excessDamage;
+    } else {
+      game.overkillDamage = excessDamage * hero.stats.overkillDamagePercent;
     }
-    game.overkillDamage = Math.abs(enemy.currentLife) * hero.stats.overkillDamagePercent;
   } else {
     game.overkillDamage = 0;
   }
@@ -808,12 +883,13 @@ export async function defeatEnemy() {
   if (hero.stats.explosionChance > 0 && Math.random() * 100 < hero.stats.explosionChance) {
     let explosionDamage = 0;
     const explosionDamageMultiplier = 10;
-    if (enemy.burn && enemy.burn.damagePool > 0) {
-      explosionDamage = enemy.burn.damagePool * explosionDamageMultiplier;
+    const burnAilment = enemy.ailments[AILMENTS.burn.id];
+    if (burnAilment && burnAilment.damagePool > 0) {
+      explosionDamage = burnAilment.damagePool * explosionDamageMultiplier;
     }
 
     if (explosionDamage > 0) {
-      game.overkillDamage = (game.overkillDamage || 0) + explosionDamage;
+      game.explosionDamage = (game.explosionDamage || 0) + explosionDamage;
       createCombatText('EXPLOSION!', true);
     }
   }
@@ -867,6 +943,14 @@ export async function defeatEnemy() {
     const currentTime = Date.now();
     game.lastPlayerAttack = currentTime;
     game.currentEnemy.lastAttack = currentTime;
+
+    if (game.explosionDamage > 0) {
+      game._justDefeated = false;
+      const dmg = game.explosionDamage;
+      game.explosionDamage = 0;
+      createCombatText('EXPLOSION!', true);
+      game.damageEnemy(dmg, false, null, 'explosion');
+    }
 
     if (game.overkillDamage > 0) {
       game._justDefeated = false;

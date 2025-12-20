@@ -61,8 +61,9 @@ export class Building {
     lastBonusTimeLocal = null,
     totalEarned = 0,
   }) {
-    const serverNow = lastBonusTime ?? (await getTimeNow());
-    const localNow = lastBonusTimeLocal ?? Date.now();
+    const nowLocal = Date.now();
+    const serverNow = Number.isFinite(lastBonusTime) ? lastBonusTime : nowLocal;
+    const localNow = Number.isFinite(lastBonusTimeLocal) ? lastBonusTimeLocal : nowLocal;
     return new Building({
       id,
       level,
@@ -256,9 +257,13 @@ export class BuildingManager {
     const manager = Object.create(BuildingManager.prototype);
     manager.buildings = {};
     manager.placedBuildings = [null, null, null, null, null];
-    const serverNow = await getTimeNow();
     const localNow = Date.now();
-    const offset = Number.isFinite(serverNow - localNow) ? serverNow - localNow : 0;
+    const savedOffset =
+      Number.isFinite(saved?.lastActive) && Number.isFinite(saved?.lastActiveLocal)
+        ? saved.lastActive - saved.lastActiveLocal
+        : 0;
+    const offset = Number.isFinite(savedOffset) ? savedOffset : 0;
+    const serverNow = localNow + offset;
     manager.lastActive = saved?.lastActive ?? serverNow;
     const inferLocal = (value) => {
       if (!Number.isFinite(value)) return localNow;
@@ -280,6 +285,9 @@ export class BuildingManager {
         manager.placedBuildings[manager.buildings[id].placedAt] = id;
       }
     }
+
+    // Warm the trusted time cache in the background (do not block game load).
+    getTimeNow().catch(() => {});
     return manager;
   }
 

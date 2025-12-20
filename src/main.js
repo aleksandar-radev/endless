@@ -262,17 +262,24 @@ window.setLanguage = setLanguage;
     });
   })();
 
-  // Collect offline bonuses on load (show modal if any)
-  const fightRewards = await collectOfflineFightRewards();
-  buildings.collectBonuses({
-    showOfflineModal: true,
-    extraBonuses: fightRewards?.bonuses || [],
-    extraCollectFn: async () => {
-      if (fightRewards?.apply) await fightRewards.apply();
-      // Clear the preserve flag after offline rewards have been applied
-      statistics.preserveOfflineRates = false;
-    },
-  });
+  // Collect offline bonuses after the game has rendered.
+  // This prevents a slow trusted-time API call from blocking startup.
+  setTimeout(() => {
+    (async () => {
+      const fightRewards = await collectOfflineFightRewards();
+      await buildings.collectBonuses({
+        showOfflineModal: true,
+        extraBonuses: fightRewards?.bonuses || [],
+        extraCollectFn: async () => {
+          if (fightRewards?.apply) await fightRewards.apply();
+          // Clear the preserve flag after offline rewards have been applied
+          statistics.preserveOfflineRates = false;
+        },
+      });
+    })().catch((e) => {
+      console.warn('Offline bonus collection failed:', e);
+    });
+  }, 1000);
 
   // Safety: ensure preserve flag is cleared even if collection didn't happen
   statistics.preserveOfflineRates = false;

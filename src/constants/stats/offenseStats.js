@@ -699,6 +699,18 @@ export const OFFENSE_STATS = {
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
+  extraDamageAgainstFrozenEnemies: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+    showInUI: true,
+  },
+  chanceToShatterEnemy: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+    showInUI: true,
+  },
   slowChance: {
     base: 0,
     decimalPlaces: 1,

@@ -653,7 +653,8 @@ export const SPECIALIZATIONS = {
       description: () => t('specialization.elementalist.cryomancer.description'),
       avatar: () => 'elementalist-cryomancer-avatar.jpg',
       baseStats: () => ({
-        coldDamagePercent: 20,
+        freezeChance: 5,
+        ignoreAllEnemyResistances: 1,
       }),
       skills: {
         permafrost: {
@@ -665,8 +666,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.permafrost'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            freezeChance: scaleDownFlat(level, 0.5),
-            slowChance: scaleDownFlat(level, 2),
+            extraDamageAgainstFrozenEnemies: scaleDownFlat(level, 1.5),
+            chanceToShatterEnemy: Math.min(scaleDownFlat(level, 1), 15),
           }),
         },
         iceBarrier: {
@@ -676,9 +677,10 @@ export const SPECIALIZATIONS = {
           requiredLevel: () => SKILL_LEVEL_TIERS[6],
           icon: () => 'ice-barrier',
           description: () => t('skill.iceBarrier'),
-          maxLevel: () => 1,
-          effect: () => ({
-            frostShield: 1,
+          maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+          effect: (level) => ({
+            coldDamagePercent: scaleDownFlat(level, 2),
+            glacialBulwarkUnlocked: 1,
           }),
         },
       },

@@ -639,9 +639,16 @@ export default class Hero {
       if (Number.isFinite(flatValues.lightningDamage)) {
         flatValues.lightningDamage *= lightningBonusEffectivenessMultiplier;
       }
-      if (Number.isFinite(percentBonuses.lightningDamagePercent)) {
-        percentBonuses.lightningDamagePercent *= lightningBonusEffectivenessMultiplier;
-      }
+
+      const pLightning = percentBonuses.lightningDamagePercent || 0;
+      const sLightning = soulBonuses.lightningDamagePercent || 0;
+      const pShared = (percentBonuses.elementalDamagePercent || 0) + (percentBonuses.totalDamagePercent || 0);
+      const sShared = (soulBonuses.elementalDamagePercent || 0) + (soulBonuses.totalDamagePercent || 0);
+      const sharedBase = pShared + sShared;
+
+      percentBonuses.lightningDamagePercent =
+        pLightning * lightningBonusEffectivenessMultiplier +
+        (sLightning + sharedBase) * (lightningBonusEffectivenessMultiplier - 1);
     }
 
     for (const stat of STAT_KEYS) {
@@ -730,6 +737,9 @@ export default class Hero {
         this.stats[stat] = value;
       }
     }
+
+    // Ensure lightningEffectivenessPercent is correctly reflected in the stats (and UI)
+    this.stats.lightningEffectivenessPercent = (lightningBonusEffectivenessPercent || 0) / 100;
 
     // Apply specific stat interactions
     if (this.stats.manaToLifeTransferPercent > 0) {
@@ -1208,10 +1218,7 @@ export default class Hero {
 
         if (enemy.isBoss) rarityMult = Math.max(rarityMult, 4);
 
-        console.log(multiplier);
-
         multiplier += (this.stats.damageToHighRarityEnemiesPercent * rarityMult);
-        console.log(multiplier);
       }
 
       finalDamage *= multiplier;

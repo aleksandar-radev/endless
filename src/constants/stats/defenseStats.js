@@ -299,4 +299,17 @@ export const DEFENSE_STATS = {
     decimalPlaces: 0,
     showValue: false,
   },
+  // DAMAGE TAKEN CONVERSIONS / MITIGATION
+  damageTakenConvertedToColdPercent: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+    showInUI: true,
+  },
+  coldDamageTakenReductionPercent: {
+    base: 0,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+    showInUI: true,
+  },
 };

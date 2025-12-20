@@ -8,6 +8,7 @@ import {
 } from './ui/ui.js';
 import { playerAttack, enemyAttack, playerDeath, defeatEnemy, createDamageNumber, createCombatText } from './combat.js';
 import { game, hero, crystalShop, skillTree, statistics, dataManager, setGlobals, options } from './globals.js';
+import { AILMENTS } from './constants/ailments.js';
 import Enemy from './enemy.js';
 import { RockyFieldEnemy } from './rockyField.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
@@ -197,8 +198,8 @@ class Game {
     // bail out if we've already defeated this enemy this tick
     if (this._justDefeated) return;
 
-    if (damage > 0 && this.currentEnemy?.shock?.duration > 0) {
-      const shockBonusBase = 0.5; // shocked enemies take 1.5x damage at 0% effectiveness
+    if (damage > 0 && this.currentEnemy?.ailments[AILMENTS.shock.id]?.duration > 0) {
+      const shockBonusBase = AILMENTS.shock.baseDamageTakenBonus;
       const shockEffectivenessPercent = hero.stats.shockEffectiveness || 0;
       const shockMultiplier = 1 + shockBonusBase * (1 + shockEffectivenessPercent / 100);
       damage *= shockMultiplier;
@@ -245,7 +246,7 @@ class Game {
       const isDead = this.currentEnemy.takeDamage(damage);
 
       if (isDead) {
-        defeatEnemy();
+        defeatEnemy(skillName);
         this._justDefeated = true;
       }
       updateEnemyStats();
@@ -259,7 +260,7 @@ class Game {
       updateEnemyStats();
 
       if (this.currentEnemy.currentLife <= 0) {
-        defeatEnemy();
+        defeatEnemy(skillName);
         this._justDefeated = true;
       }
     }
@@ -344,6 +345,13 @@ class Game {
       this.lastPlayerAttack = currentTime;
       if (this.currentEnemy) {
         this.currentEnemy.lastAttack = currentTime;
+      }
+
+      if (this.explosionDamage > 0 && this.currentEnemy) {
+        const dmg = this.explosionDamage;
+        this.explosionDamage = 0;
+        createCombatText('EXPLOSION!', true);
+        this.damageEnemy(dmg, false, null, 'explosion');
       }
 
       if (this.overkillDamage > 0 && this.currentEnemy) {

@@ -8,6 +8,7 @@ import { calculateHitChance, createDamageNumber } from './combat.js';
 import { battleLog } from './battleLog.js';
 import { t } from './i18n.js';
 import { floorSumBigInt } from './utils/bulkMath.js';
+import { AILMENTS } from './constants/ailments.js';
 import {
   showLifeWarning,
   showManaWarning,
@@ -894,7 +895,40 @@ export default class SkillTree {
     const canHeal = !skillId.includes('bloodSacrifice');
 
     if (dealsDamage && didHit && damageResult) {
-      const { damage, isCritical, breakdown } = damageResult;
+      let { damage, isCritical, breakdown } = damageResult;
+
+      const now = Date.now();
+      const enemy = game.currentEnemy;
+      const isFrozen = enemy?.frozenUntil && enemy.frozenUntil > now;
+
+      if (isFrozen && hero.stats.extraDamageAgainstFrozenEnemies > 0) {
+        const mult = 1 + hero.stats.extraDamageAgainstFrozenEnemies / 100;
+        damage *= mult;
+        if (breakdown) {
+          Object.keys(breakdown).forEach((k) => {
+            breakdown[k] *= mult;
+          });
+        }
+      }
+
+      let didShatter = false;
+      if (isFrozen && hero.stats.chanceToShatterEnemy > 0 && Math.random() * 100 < hero.stats.chanceToShatterEnemy) {
+        didShatter = true;
+        enemy.frozenUntil = 0;
+        damage *= 3;
+        if (breakdown) {
+          Object.keys(breakdown).forEach((k) => {
+            breakdown[k] *= 3;
+          });
+        }
+      }
+
+      const coldDealt = breakdown?.cold || 0;
+      if (!didShatter && coldDealt > 0 && hero.stats.freezeChance > 0 && Math.random() * 100 < hero.stats.freezeChance) {
+        const now = Date.now();
+        enemy.frozenUntil = now + AILMENTS.freeze.duration;
+        createDamageNumber({ text: 'FROZEN', color: '#ADD8E6' });
+      }
 
       let lifeStealPercent = 0;
       let manaStealPercent = 0;

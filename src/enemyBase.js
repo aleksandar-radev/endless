@@ -3,15 +3,13 @@
  * This class is extended by explore enemies, arena bosses, and rocky field enemies.
  */
 import { game } from './globals.js';
-import { BLEED_DURATION_MS, BURN_DURATION_MS, SHOCK_DURATION_MS } from './constants/ailments.js';
+import { AILMENTS } from './constants/ailments.js';
 
 class EnemyBase {
   constructor() {
     this.currentLife = 0;
     this.lastAttack = Date.now();
-    this.bleed = null;
-    this.burn = null;
-    this.shock = null;
+    this.ailments = {};
   }
 
   /**
@@ -38,9 +36,7 @@ class EnemyBase {
    */
   resetLife() {
     this.currentLife = this.life;
-    this.bleed = null;
-    this.burn = null;
-    this.shock = null;
+    this.ailments = {};
   }
 
   /**
@@ -48,11 +44,12 @@ class EnemyBase {
    * @param {number} damage - Amount of damage to add to the bleed pool
    */
   applyBleed(damage) {
-    if (!this.bleed) {
-      this.bleed = { damagePool: 0, duration: BLEED_DURATION_MS };
+    const id = AILMENTS.bleed.id;
+    if (!this.ailments[id]) {
+      this.ailments[id] = { damagePool: 0, duration: AILMENTS.bleed.duration };
     }
-    this.bleed.damagePool += damage;
-    this.bleed.duration = BLEED_DURATION_MS;
+    this.ailments[id].damagePool += damage;
+    this.ailments[id].duration = AILMENTS.bleed.duration;
   }
 
   /**
@@ -60,11 +57,12 @@ class EnemyBase {
    * @param {number} damage - Amount of damage to add to the burn pool
    */
   applyBurn(damage) {
-    if (!this.burn) {
-      this.burn = { damagePool: 0, duration: BURN_DURATION_MS };
+    const id = AILMENTS.burn.id;
+    if (!this.ailments[id]) {
+      this.ailments[id] = { damagePool: 0, duration: AILMENTS.burn.duration };
     }
-    this.burn.damagePool += damage;
-    this.burn.duration = BURN_DURATION_MS;
+    this.ailments[id].damagePool += damage;
+    this.ailments[id].duration = AILMENTS.burn.duration;
   }
 
   /**
@@ -73,11 +71,12 @@ class EnemyBase {
    * If already shocked, the duration is refreshed.
    */
   applyShock() {
-    if (!this.shock) {
-      this.shock = { duration: SHOCK_DURATION_MS };
+    const id = AILMENTS.shock.id;
+    if (!this.ailments[id]) {
+      this.ailments[id] = { duration: AILMENTS.shock.duration };
       return;
     }
-    this.shock.duration = SHOCK_DURATION_MS;
+    this.ailments[id].duration = AILMENTS.shock.duration;
   }
 
   /**
@@ -87,44 +86,31 @@ class EnemyBase {
   processDoT(deltaMs) {
     if (this.currentLife <= 0) return;
 
-    if (this.bleed) {
-      if (this.bleed.duration > 0) {
-        const tickMs = Math.min(deltaMs, this.bleed.duration);
-        const damage = (this.bleed.damagePool / this.bleed.duration) * tickMs;
+    Object.entries(this.ailments).forEach(([id, ailment]) => {
+      if (ailment.duration > 0) {
+        // Handle DoTs (Bleed, Burn)
+        if (ailment.damagePool !== undefined) {
+          const tickMs = Math.min(deltaMs, ailment.duration);
+          // ensure at least 1 damage per tick if there's any damage left in pool
+          const damage = Math.max((ailment.damagePool / ailment.duration) * tickMs, 1);
 
-        if (damage > 0) {
-          game.damageEnemy(damage, false, null, 'bleed');
-          this.bleed.damagePool -= damage;
+          if (damage > 0) {
+            game.damageEnemy(damage, false, null, id);
+            ailment.damagePool -= damage;
+          }
         }
-        this.bleed.duration -= deltaMs;
-      }
-      if (this.bleed.duration <= 0 || this.bleed.damagePool <= 1e-6) {
-        this.bleed = null;
-      }
-    }
 
-    if (this.burn) {
-      if (this.burn.duration > 0) {
-        const tickMs = Math.min(deltaMs, this.burn.duration);
-        const damage = (this.burn.damagePool / this.burn.duration) * tickMs;
+        // Reduce duration for all ailments
+        ailment.duration -= deltaMs;
 
-        if (damage > 0) {
-          game.damageEnemy(damage, false, null, 'burn');
-          this.burn.damagePool -= damage;
+        // Cleanup
+        if (ailment.duration <= 0 || (ailment.damagePool !== undefined && ailment.damagePool <= 1e-6)) {
+          delete this.ailments[id];
         }
-        this.burn.duration -= deltaMs;
+      } else {
+        delete this.ailments[id];
       }
-      if (this.burn.duration <= 0 || this.burn.damagePool <= 1e-6) {
-        this.burn = null;
-      }
-    }
-
-    if (this.shock) {
-      this.shock.duration -= deltaMs;
-      if (this.shock.duration <= 0) {
-        this.shock = null;
-      }
-    }
+    });
   }
 
   /**

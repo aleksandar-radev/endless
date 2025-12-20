@@ -15,6 +15,7 @@ import {
   training,
   soulShop,
 } from '../globals.js';
+import { AILMENTS } from '../constants/ailments.js';
 import { t, tp } from '../i18n.js';
 import { updateQuestsUI } from './questUi.js';
 import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
@@ -457,25 +458,60 @@ function updateAilmentIcons() {
 
   const basePath = import.meta.env.VITE_BASE_PATH || '';
 
-  if (enemy.bleed) {
-    const el = document.createElement('div');
-    el.className = 'ailment-icon bleed';
-    el.style.backgroundImage = `url('${basePath}/icons/bleed.svg')`;
-    el.addEventListener('mouseenter', (e) => showTooltip(tp('ailment.bleed.tooltip', { amount: formatNumber(Math.floor(enemy.bleed.damagePool)), duration: (enemy.bleed.duration / 1000).toFixed(1) }), e));
-    el.addEventListener('mouseleave', hideTooltip);
-    el.addEventListener('mousemove', positionTooltip);
-    ailmentsContainer.appendChild(el);
-  }
+  const ailments = [
+    {
+      id: 'bleed',
+      isActive: !!enemy.ailments[AILMENTS.bleed.id],
+      getTooltip: () => tp('ailment.bleed.tooltip', {
+        amount: formatNumber(Math.floor(enemy.ailments[AILMENTS.bleed.id]?.damagePool || 0)),
+        duration: ((enemy.ailments[AILMENTS.bleed.id]?.duration || 0) / 1000).toFixed(1),
+      }),
+    },
+    {
+      id: 'burn',
+      isActive: !!enemy.ailments[AILMENTS.burn.id],
+      getTooltip: () => tp('ailment.burn.tooltip', {
+        amount: formatNumber(Math.floor(enemy.ailments[AILMENTS.burn.id]?.damagePool || 0)),
+        duration: ((enemy.ailments[AILMENTS.burn.id]?.duration || 0) / 1000).toFixed(1),
+      }),
+    },
+    {
+      id: 'shock',
+      isActive: !!enemy.ailments[AILMENTS.shock.id],
+      getTooltip: () => {
+        const shockBonusBase = AILMENTS.shock.baseDamageTakenBonus;
+        const shockEffectivenessPercent = hero.stats.shockEffectiveness || 0;
+        const shockMultiplier = 1 + shockBonusBase * (1 + shockEffectivenessPercent / 100);
+        const percent = Math.round((shockMultiplier - 1) * 100);
+        return tp('ailment.shock.tooltip', {
+          amount: percent,
+          duration: ((enemy.ailments[AILMENTS.shock.id]?.duration || 0) / 1000).toFixed(1),
+        });
+      },
+    },
+    {
+      id: 'freeze',
+      isActive: enemy.frozenUntil > Date.now(),
+      getTooltip: () => {
+        const remainingMs = Math.max(0, enemy.frozenUntil - Date.now());
+        return tp('ailment.freeze.tooltip', {
+          duration: (remainingMs / 1000).toFixed(1),
+        });
+      },
+    },
+  ];
 
-  if (enemy.burn) {
-    const el = document.createElement('div');
-    el.className = 'ailment-icon burn';
-    el.style.backgroundImage = `url('${basePath}/icons/burn.svg')`;
-    el.addEventListener('mouseenter', (e) => showTooltip(tp('ailment.burn.tooltip', { amount: formatNumber(Math.floor(enemy.burn.damagePool)), duration: (enemy.burn.duration / 1000).toFixed(1) }), e));
-    el.addEventListener('mouseleave', hideTooltip);
-    el.addEventListener('mousemove', positionTooltip);
-    ailmentsContainer.appendChild(el);
-  }
+  ailments.forEach((ailment) => {
+    if (ailment.isActive) {
+      const el = document.createElement('div');
+      el.className = `ailment-icon ${ailment.id}`;
+      el.style.backgroundImage = `url('${basePath}/icons/${ailment.id}.png')`;
+      el.addEventListener('mouseenter', (e) => showTooltip(ailment.getTooltip(), e));
+      el.addEventListener('mouseleave', hideTooltip);
+      el.addEventListener('mousemove', positionTooltip);
+      ailmentsContainer.appendChild(el);
+    }
+  });
 }
 
 export function updateEnemyStatLabels() {
