@@ -7,6 +7,8 @@ export default function run() {
     <span style="color:#FF8A00;">Improvements</span>
     <ul>
       <li>Slight performance improvements.</li>
+      <li>Elemental Allocation now includes a Physical % split for resource-based extra damage bonuses.</li>
+      <li>Life steal, mana steal and omni steal now cannot appear on items.</li>
       <li>Reduced exploration item and material bonuses across every region, with higher tiers receiving the largest cuts.</li>
       <li>Standardized item-based percentage caps at 1200%, while limiting bonus experience, gold, item rarity, item quantity, and material quantity to 400% before ascension upgrades.</li>
       <li>Introduced a material quantity bonus for rings and amulets that scales material drops similarly to item quantity.</li>

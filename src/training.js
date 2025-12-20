@@ -29,12 +29,15 @@ const ELEMENTAL_TRAINING_STATS = [
   'waterDamage',
 ];
 
+const DEFAULT_RESOURCE_EXTRA_PHYSICAL_SHARE_PERCENT = 50;
+
 export default class Training {
   constructor(savedData = null) {
     this.upgradeLevels = {};
     this.trainingBonuses = {};
     this.goldSpent = 0;
     this.elementalDistribution = {};
+    this.resourceExtraDamagePhysicalSharePercent = DEFAULT_RESOURCE_EXTRA_PHYSICAL_SHARE_PERCENT;
     Object.entries(STATS).forEach(([stat, config]) => {
       if (config.training) {
         this.upgradeLevels[stat] = 0;
@@ -47,6 +50,7 @@ export default class Training {
     const hadSavedDistribution = !!savedData?.elementalDistribution;
     this._migrateLegacyElementalTraining(hadSavedDistribution);
     this._ensureElementalDistributionStructure();
+    this._ensureResourceExtraDamageSplitStructure();
     if (savedData && savedData.goldSpent === undefined) {
       this.goldSpent = 0;
       Object.entries(this.upgradeLevels).forEach(([stat, lvl]) => {
@@ -63,6 +67,20 @@ export default class Training {
       ? Math.min(options.trainingQuickQty || 1, TRAINING_MAX_QTY)
       : 1;
     this.initializeTrainingUI();
+  }
+
+  _ensureResourceExtraDamageSplitStructure() {
+    const value = Number(this.resourceExtraDamagePhysicalSharePercent);
+    if (!Number.isFinite(value)) {
+      this.resourceExtraDamagePhysicalSharePercent = DEFAULT_RESOURCE_EXTRA_PHYSICAL_SHARE_PERCENT;
+      return;
+    }
+    this.resourceExtraDamagePhysicalSharePercent = Math.max(0, Math.min(100, value));
+  }
+
+  getResourceExtraDamagePhysicalShare() {
+    this._ensureResourceExtraDamageSplitStructure();
+    return (this.resourceExtraDamagePhysicalSharePercent || 0) / 100;
   }
 
   reset() {
@@ -778,6 +796,18 @@ export default class Training {
     return Number.isFinite(value) ? value : 0;
   }
 
+  _getPhysicalResourceExtraTotal() {
+    if (hero?.physicalDamageFromResources === undefined) return 0;
+    const value = Number(hero.physicalDamageFromResources);
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  _getTotalResourceExtraDamage() {
+    const total = Number(hero?.totalExtraDamageFromResources);
+    if (Number.isFinite(total)) return total;
+    return this._getElementalResourceExtraTotal() + this._getPhysicalResourceExtraTotal();
+  }
+
   _getElementalDistributionShares() {
     const shares = {};
     let total = 0;
@@ -844,6 +874,18 @@ export default class Training {
           >
             ${t('training.elementalDistributionDescription')}
           </p>
+          <div class="elemental-distribution-row elemental-distribution-resource-split" data-stat="damage">
+            <div class="elemental-row-header">
+              <span class="elemental-label" data-i18n="training.elementalDistributionResourcePhysicalLabel">
+                ${t('training.elementalDistributionResourcePhysicalLabel')}
+              </span>
+              <span class="elemental-share resource-physical-share"></span>
+            </div>
+            <input class="resource-physical-slider" type="range" min="0" max="100" step="1" />
+            <div class="elemental-row-footer">
+              <span class="elemental-allocation resource-physical-amount"></span>
+            </div>
+          </div>
           <div class="elemental-distribution-totals">
             <p
               class="elemental-total"
@@ -859,9 +901,15 @@ export default class Training {
             </p>
             <p
               class="elemental-extra-total"
-              data-i18n="training.elementalDistributionResourceTotal"
+              data-i18n="training.elementalDistributionResourceElementalTotal"
             >
-              ${tp('training.elementalDistributionResourceTotal', { amount: formatNumber(0) })}
+              ${tp('training.elementalDistributionResourceElementalTotal', { amount: formatNumber(0) })}
+            </p>
+            <p
+              class="physical-extra-total"
+              data-i18n="training.elementalDistributionResourcePhysicalTotal"
+            >
+              ${tp('training.elementalDistributionResourcePhysicalTotal', { amount: formatNumber(0) })}
             </p>
           </div>
           <div class="elemental-distribution-rows">
@@ -892,7 +940,12 @@ export default class Training {
           const stat = row?.dataset.stat;
           input.addEventListener('input', () => {
             if (!stat) return;
-            this.elementalDistribution[stat] = Number(input.value);
+            if (stat === 'damage') {
+              this.resourceExtraDamagePhysicalSharePercent = Number(input.value);
+              this._ensureResourceExtraDamageSplitStructure();
+            } else {
+              this.elementalDistribution[stat] = Number(input.value);
+            }
             this.updateTrainingBonuses();
             hero?.queueRecalculateFromAttributes?.();
             dataManager.saveGame();
@@ -911,8 +964,11 @@ export default class Training {
     if (!modal || typeof modal.querySelector !== 'function') return;
     const trainingTotal = this._getElementalTrainingTotal();
     const intelligenceTotal = this._getElementalIntelligenceTotal();
-    const resourceTotal = this._getElementalResourceExtraTotal();
-    const combinedTotal = trainingTotal + intelligenceTotal + resourceTotal;
+    const totalResourceExtra = this._getTotalResourceExtraDamage();
+    const resourcePhysicalShare = this.getResourceExtraDamagePhysicalShare();
+    const resourcePhysicalTotal = totalResourceExtra * resourcePhysicalShare;
+    const resourceElementalTotal = totalResourceExtra - resourcePhysicalTotal;
+    const combinedTotal = trainingTotal + intelligenceTotal + resourceElementalTotal;
     const shares = this._getElementalDistributionShares();
     const totalEl = modal.querySelector('.elemental-total');
     if (totalEl) {
@@ -928,12 +984,39 @@ export default class Training {
     }
     const resourceEl = modal.querySelector('.elemental-extra-total');
     if (resourceEl) {
-      resourceEl.textContent = tp('training.elementalDistributionResourceTotal', {
-        amount: formatNumber(Number(resourceTotal.toFixed(2))),
+      resourceEl.textContent = tp('training.elementalDistributionResourceElementalTotal', {
+        amount: formatNumber(Number(resourceElementalTotal.toFixed(2))),
       });
     }
+
+    const physicalEl = modal.querySelector('.physical-extra-total');
+    if (physicalEl) {
+      physicalEl.textContent = tp('training.elementalDistributionResourcePhysicalTotal', {
+        amount: formatNumber(Number(resourcePhysicalTotal.toFixed(2))),
+      });
+    }
+
+    const physicalSlider = modal.querySelector('.resource-physical-slider');
+    if (physicalSlider) {
+      physicalSlider.value = String(Number(this.resourceExtraDamagePhysicalSharePercent || 0));
+    }
+    const physicalShareEl = modal.querySelector('.resource-physical-share');
+    if (physicalShareEl) {
+      physicalShareEl.textContent = tp('training.elementalDistributionShare', {
+        percent: formatNumber(Number(this.resourceExtraDamagePhysicalSharePercent || 0).toFixed(1)),
+      });
+    }
+    const physicalAmountEl = modal.querySelector('.resource-physical-amount');
+    if (physicalAmountEl) {
+      const allocation = totalResourceExtra * resourcePhysicalShare;
+      physicalAmountEl.textContent = tp('training.elementalDistributionAmount', {
+        amount: formatNumber(Number(allocation.toFixed(2))),
+      });
+    }
+
     modal.querySelectorAll('.elemental-distribution-row').forEach((row) => {
       const stat = row.dataset.stat;
+      if (stat === 'damage') return;
       const slider = row.querySelector('input[type="range"]');
       const shareEl = row.querySelector('.elemental-share');
       const amountEl = row.querySelector('.elemental-allocation');

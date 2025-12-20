@@ -40,6 +40,14 @@ export const STATS_ON_LEVEL_UP = 3;
 
 const BASE_EXTRA_RESOURCE_DAMAGE_CAP_PER_LEVEL = 500;
 
+function getResourceExtraDamagePhysicalShare() {
+  if (typeof training?.getResourceExtraDamagePhysicalShare === 'function') {
+    const share = Number(training.getResourceExtraDamagePhysicalShare());
+    if (Number.isFinite(share)) return Math.max(0, Math.min(1, share));
+  }
+  return 0.5;
+}
+
 function getElementalShareMap() {
   let shareMap = null;
   if (typeof training?.getElementalDistributionShares === 'function') {
@@ -177,6 +185,8 @@ export default class Hero {
       this.baseDamages[id] = 0;
     });
     this.elementalDamageFromResources = 0;
+    this.physicalDamageFromResources = 0;
+    this.totalExtraDamageFromResources = 0;
 
     this.damageConversionDeltas = {};
 
@@ -787,7 +797,7 @@ export default class Hero {
       pendingDamageAdditions = runes.applyPreDamageConversions(this.stats) || {};
     }
 
-    const computeResourceExtraDamage = (statsSnapshot, shareMap) => {
+    const computeResourceExtraDamage = (statsSnapshot, shareMap, physicalShare = 0.5) => {
       if (!statsSnapshot) return { physical: 0, elemental: 0, perElement: {} };
 
       const resourceCapPerLevel = Math.max(
@@ -820,8 +830,9 @@ export default class Hero {
 
       if (!totalExtra) return { physical: 0, elemental: 0, perElement: {} };
 
-      const physical = totalExtra / 2;
-      const totalElemental = totalExtra / 2;
+      const clampedShare = Math.max(0, Math.min(1, Number(physicalShare) || 0));
+      const physical = totalExtra * clampedShare;
+      const totalElemental = totalExtra - physical;
       const perElement = distributeElementalAmount(totalElemental, shareMap);
 
       return { physical, elemental: totalElemental, perElement };
@@ -831,7 +842,12 @@ export default class Hero {
     const baseFlatElementalBeforeResources = flatValues.elementalDamage;
 
     const elementalShareMap = getElementalShareMap();
-    const initialResourceExtraDamage = computeResourceExtraDamage(this.stats, elementalShareMap);
+    const resourceExtraPhysicalShare = getResourceExtraDamagePhysicalShare();
+    const initialResourceExtraDamage = computeResourceExtraDamage(
+      this.stats,
+      elementalShareMap,
+      resourceExtraPhysicalShare,
+    );
 
     if (initialResourceExtraDamage.physical) {
       flatValues.damage += initialResourceExtraDamage.physical;
@@ -921,7 +937,11 @@ export default class Hero {
       runes.applyPostDamageConversions(this.stats);
     }
 
-    const finalResourceExtraDamage = computeResourceExtraDamage(this.stats, elementalShareMap);
+    const finalResourceExtraDamage = computeResourceExtraDamage(
+      this.stats,
+      elementalShareMap,
+      resourceExtraPhysicalShare,
+    );
     const basePhysicalFlatWithoutResources =
       baseFlatDamageBeforeResources +
       (ascensionBonuses.damage || 0) +
@@ -934,6 +954,9 @@ export default class Hero {
     );
     this.baseDamages.elemental = Math.floor(Math.max(0, baseElementalFlatWithoutResources));
     this.elementalDamageFromResources = finalResourceExtraDamage.elemental;
+    this.physicalDamageFromResources = finalResourceExtraDamage.physical;
+    this.totalExtraDamageFromResources =
+      finalResourceExtraDamage.physical + finalResourceExtraDamage.elemental;
 
     const deltaPhysicalFlat =
       finalResourceExtraDamage.physical - initialResourceExtraDamage.physical;
