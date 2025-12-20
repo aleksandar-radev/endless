@@ -499,6 +499,14 @@ function updateAilmentIcons() {
         });
       },
     },
+    {
+      id: 'poison',
+      isActive: !!enemy.ailments[AILMENTS.poison.id],
+      getTooltip: () => tp('ailment.poison.tooltip', {
+        amount: formatNumber(Math.floor(enemy.ailments[AILMENTS.poison.id]?.damagePool || 0)),
+        duration: ((enemy.ailments[AILMENTS.poison.id]?.duration || 0) / 1000).toFixed(1),
+      }),
+    },
   ];
 
   ailments.forEach((ailment) => {

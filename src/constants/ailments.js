@@ -21,6 +21,11 @@ export const AILMENTS = {
     id: 'freeze',
     duration: 1000,
   },
+  poison: {
+    id: 'poison',
+    duration: 10000,
+    tickRate: 500,
+  },
   shatter: {
     id: 'shatter',
     damageMultiplier: 3, // 3x damage on shatter

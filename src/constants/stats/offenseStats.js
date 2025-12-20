@@ -696,6 +696,18 @@ export const OFFENSE_STATS = {
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
+  poisonChance: {
+    base: 0,
+    divisor: 100,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+  },
+  poisonDamagePercent: {
+    base: 0,
+    divisor: 100,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+  },
   explosionChance: {
     base: 0,
     divisor: 100,

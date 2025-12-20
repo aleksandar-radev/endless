@@ -445,19 +445,30 @@ export function playerAttack(currentTime) {
 
       // On-hit Effects
       if (hero.stats.bleedChance > 0 && Math.random() < hero.stats.bleedChance) {
-        const bleedDmg = damage * ((hero.stats.bleedDamagePercent || 0));
+        const physicalDealt = breakdown ? (breakdown.physical || 0) : damage;
+        const bleedDmg = physicalDealt * ((hero.stats.bleedDamagePercent || 0));
         if (bleedDmg > 0) {
           game.currentEnemy.applyBleed(bleedDmg);
         }
       }
 
       if (hero.stats.burnChance > 0 && Math.random() < hero.stats.burnChance) {
+        const fireDealt = breakdown ? (breakdown.fire || 0) : 0;
         const burnShare = AILMENTS.burn.baseDamageMultiplier + (hero.stats.burnDamagePercent || 0);
-        const burnDmg = damage * burnShare;
+        const burnDmg = fireDealt * burnShare;
         if (burnDmg > 0) {
           game.currentEnemy.applyBurn(burnDmg);
         }
       }
+
+      const earthDealt = breakdown?.earth || 0;
+      if (earthDealt > 0 && hero.stats.poisonChance > 0 && Math.random() < hero.stats.poisonChance) {
+        const poisonDmg = earthDealt * (hero.stats.poisonDamagePercent || 0);
+        if (poisonDmg > 0) {
+          game.currentEnemy.applyPoison(poisonDmg);
+        }
+      }
+
       const shockChance = Math.max(0, Math.min(1, hero.stats.shockChance || 0));
       const didShock = shockChance > 0 && Math.random() < shockChance;
 

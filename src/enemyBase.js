@@ -66,6 +66,19 @@ class EnemyBase {
   }
 
   /**
+   * Apply poison damage over time effect
+   * @param {number} damage - Amount of damage to add to the poison pool
+   */
+  applyPoison(damage) {
+    const id = AILMENTS.poison.id;
+    if (!this.ailments[id]) {
+      this.ailments[id] = { damagePool: 0, duration: AILMENTS.poison.duration };
+    }
+    this.ailments[id].damagePool += damage;
+    this.ailments[id].duration = AILMENTS.poison.duration;
+  }
+
+  /**
    * Apply shock status effect
    * Shock does not deal damage but applies a status effect for the duration.
    * If already shocked, the duration is refreshed.
