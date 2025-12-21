@@ -7,7 +7,7 @@ This document explains the new simplified scaling system for mobs and items in t
 
 The scaling system can be toggled between two modes:
 - **In Development**: Use the dropdown in the Options menu (Game tab) - look for "[DEV] Scaling System"
-- **In Code**: Change `EnemyBase.SCALING_SYSTEM` in `src/enemyBase.js`
+- **In Code**: Change `options.scalingSystem` default value in `src/options.js`
 
 Values:
 - `'simple'` - New simplified scaling system (default)
@@ -17,11 +17,10 @@ Values:
 
 ## Scaling Constants Location
 
-All scaling constants are now defined as static properties in the `EnemyBase` class in `src/enemyBase.js`:
+All scaling constants are defined as static properties in the `EnemyBase` class in `src/enemyBase.js`:
 
 ```javascript
 class EnemyBase {
-  static SCALING_SYSTEM = 'simple';
   static MOB_REGION_SCALING_MULTIPLIER = 5;
   static MOB_STAGE_SCALING_PERCENT = 0.1;
   static ITEM_FLAT_REGION_SCALING_MULTIPLIER = 2;
@@ -31,6 +30,8 @@ class EnemyBase {
   // ...
 }
 ```
+
+The scaling system selection is stored in `options.scalingSystem` and accessed throughout the codebase via the global `options` object.
 
 ## Mob Scaling (Explore Region Only)
 
@@ -170,9 +171,10 @@ class EnemyBase {
 
 **In Production**:
 The dropdown is hidden in production builds. To switch systems in production, you must change the code:
-1. Open `src/enemyBase.js`
-2. Change `static SCALING_SYSTEM = 'simple';` to `'legacy'` or vice versa
-3. Rebuild and redeploy
+1. Open `src/options.js`
+2. In the constructor, find the line: `this.scalingSystem = data.scalingSystem || 'simple';`
+3. Change the default from `'simple'` to `'legacy'` or vice versa
+4. Rebuild and redeploy
 
 ### Why Keep Legacy System?
 - Allows for A/B testing between systems
