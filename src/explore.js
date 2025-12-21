@@ -7,7 +7,10 @@ import { battleLog } from './battleLog.js';
 import { ELEMENTS, BASE_MATERIAL_DROP_CHANCE } from './constants/common.js';
 import { t, tp } from './i18n.js';
 import { formatNumber as formatNumberValue } from './utils/numberFormatter.js';
-import EnemyBase from './enemyBase.js';
+import EnemyBase, {
+  MOB_REGION_SCALING_MULTIPLIER,
+  MOB_STAGE_SCALING_PERCENT,
+} from './enemyBase.js';
 
 // Legacy scaling system (kept for backward compatibility)
 const TIER_STAT_SCALE = {
@@ -281,13 +284,13 @@ class Enemy extends EnemyBase {
     // Tier 1: multiplier^0 = 1
     // Tier 2: multiplier^1 = 5
     // Tier 3: multiplier^2 = 25, etc.
-    const regionScale = Math.pow(EnemyBase.MOB_REGION_SCALING_MULTIPLIER, tier - 1);
+    const regionScale = Math.pow(MOB_REGION_SCALING_MULTIPLIER, tier - 1);
 
     // Calculate stage scaling: 10% increase per stage from the base value
     // Stage 1: base * (1 + 0 * 0.1) = base
     // Stage 2: base * (1 + 1 * 0.1) = base * 1.1
     // Stage 3: base * (1 + 2 * 0.1) = base * 1.2, etc.
-    const stageScale = 1 + (this.level - 1) * EnemyBase.MOB_STAGE_SCALING_PERCENT;
+    const stageScale = 1 + (this.level - 1) * MOB_STAGE_SCALING_PERCENT;
 
     return baseStat * regionScale * stageScale;
   }
@@ -471,10 +474,10 @@ class Enemy extends EnemyBase {
     
     if (options.scalingSystem === 'simple') {
       // Apply region scaling to XP
-      const regionScale = Math.pow(EnemyBase.MOB_REGION_SCALING_MULTIPLIER, tier - 1);
+      const regionScale = Math.pow(MOB_REGION_SCALING_MULTIPLIER, tier - 1);
       baseAtL1 = base * regionScale;
       // Apply stage scaling using the existing reward computation
-      basePercent = EnemyBase.MOB_STAGE_SCALING_PERCENT;
+      basePercent = MOB_STAGE_SCALING_PERCENT;
       levelBonus = 1;
     } else {
       // Legacy scaling
@@ -504,10 +507,10 @@ class Enemy extends EnemyBase {
     
     if (options.scalingSystem === 'simple') {
       // Apply region scaling to Gold
-      const regionScale = Math.pow(EnemyBase.MOB_REGION_SCALING_MULTIPLIER, tier - 1);
+      const regionScale = Math.pow(MOB_REGION_SCALING_MULTIPLIER, tier - 1);
       baseAtL1 = base * regionScale;
       // Apply stage scaling using the existing reward computation
-      basePercent = EnemyBase.MOB_STAGE_SCALING_PERCENT;
+      basePercent = MOB_STAGE_SCALING_PERCENT;
       levelBonus = 1;
     } else {
       // Legacy scaling

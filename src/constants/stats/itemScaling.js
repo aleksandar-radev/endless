@@ -1,4 +1,9 @@
-import EnemyBase from '../../enemyBase.js';
+import {
+  ITEM_FLAT_REGION_SCALING_MULTIPLIER,
+  ITEM_PERCENT_REGION_SCALING_MULTIPLIER,
+  ITEM_FLAT_STAGE_SCALING_PERCENT,
+  ITEM_PERCENT_STAGE_SCALING_PERCENT,
+} from '../../enemyBase.js';
 import { options } from '../../globals.js';
 
 /**
@@ -77,14 +82,14 @@ export function itemLevelScaling(
     // New simple scaling system
     // Tier scaling: multiply by the appropriate multiplier for each tier above 1
     const tierMultiplier = isPercent
-      ? EnemyBase.ITEM_PERCENT_REGION_SCALING_MULTIPLIER
-      : EnemyBase.ITEM_FLAT_REGION_SCALING_MULTIPLIER;
+      ? ITEM_PERCENT_REGION_SCALING_MULTIPLIER
+      : ITEM_FLAT_REGION_SCALING_MULTIPLIER;
     const tierScale = Math.pow(tierMultiplier, tier - 1);
 
     // Level scaling: percentage increase per level from base
     const levelPercent = isPercent
-      ? EnemyBase.ITEM_PERCENT_STAGE_SCALING_PERCENT
-      : EnemyBase.ITEM_FLAT_STAGE_SCALING_PERCENT;
+      ? ITEM_PERCENT_STAGE_SCALING_PERCENT
+      : ITEM_FLAT_STAGE_SCALING_PERCENT;
     const levelScale = 1 + (level - 1) * levelPercent;
 
     return tierScale * levelScale;
