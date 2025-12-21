@@ -5,9 +5,32 @@ This document explains the new simplified scaling system for mobs and items in t
 
 ## Scaling System Configuration
 
-The scaling system can be toggled between two modes via the `SCALING_SYSTEM` constant in `src/constants/scaling.js`:
+The scaling system can be toggled between two modes:
+- **In Development**: Use the dropdown in the Options menu (Game tab) - look for "[DEV] Scaling System"
+- **In Code**: Change `EnemyBase.SCALING_SYSTEM` in `src/enemyBase.js`
+
+Values:
 - `'simple'` - New simplified scaling system (default)
 - `'legacy'` - Original complex scaling system
+
+**Note**: The options dropdown is only visible when `VITE_ENV !== 'production'` (development/local builds only).
+
+## Scaling Constants Location
+
+All scaling constants are now defined as static properties in the `EnemyBase` class in `src/enemyBase.js`:
+
+```javascript
+class EnemyBase {
+  static SCALING_SYSTEM = 'simple';
+  static MOB_REGION_SCALING_MULTIPLIER = 5;
+  static MOB_STAGE_SCALING_PERCENT = 0.1;
+  static ITEM_FLAT_REGION_SCALING_MULTIPLIER = 2;
+  static ITEM_PERCENT_REGION_SCALING_MULTIPLIER = 1.3;
+  static ITEM_FLAT_STAGE_SCALING_PERCENT = 0.008;
+  static ITEM_PERCENT_STAGE_SCALING_PERCENT = 0.001;
+  // ...
+}
+```
 
 ## Mob Scaling (Explore Region Only)
 
@@ -118,29 +141,38 @@ Tier 2, Level 50 item with 10% base life bonus:
 
 ## Adjusting the Scaling
 
-All scaling constants are in `src/constants/scaling.js`:
+All scaling constants are defined as static properties in the `EnemyBase` class in `src/enemyBase.js`:
 
 ```javascript
-// Mob scaling
-export const MOB_REGION_SCALING_MULTIPLIER = 5;        // Change this to adjust region scaling
-export const MOB_STAGE_SCALING_PERCENT = 0.1;          // Change this to adjust stage scaling
-
-// Item flat value scaling
-export const ITEM_FLAT_REGION_SCALING_MULTIPLIER = 2;  // Change this to adjust tier scaling
-export const ITEM_FLAT_STAGE_SCALING_PERCENT = 0.008;  // Change this to adjust level scaling
-
-// Item percent value scaling
-export const ITEM_PERCENT_REGION_SCALING_MULTIPLIER = 1.3;  // Change this to adjust tier scaling
-export const ITEM_PERCENT_STAGE_SCALING_PERCENT = 0.001;    // Change this to adjust level scaling
+class EnemyBase {
+  // Change these values to adjust scaling
+  static MOB_REGION_SCALING_MULTIPLIER = 5;        // Change this to adjust region scaling
+  static MOB_STAGE_SCALING_PERCENT = 0.1;          // Change this to adjust stage scaling
+  
+  static ITEM_FLAT_REGION_SCALING_MULTIPLIER = 2;  // Change this to adjust tier scaling
+  static ITEM_FLAT_STAGE_SCALING_PERCENT = 0.008;  // Change this to adjust level scaling
+  
+  static ITEM_PERCENT_REGION_SCALING_MULTIPLIER = 1.3;  // Change this to adjust tier scaling
+  static ITEM_PERCENT_STAGE_SCALING_PERCENT = 0.001;    // Change this to adjust level scaling
+}
 ```
 
 ## Migration Notes
 
 ### Switching Between Systems
-To switch between the new and legacy systems:
-1. Open `src/constants/scaling.js`
-2. Change `export const SCALING_SYSTEM = 'simple';` to `'legacy'` or vice versa
-3. Restart the game
+
+**In Development**:
+1. Open the game
+2. Go to Options → Game tab
+3. Find the "[DEV] Scaling System" dropdown
+4. Select "Simple (New)" or "Legacy (Old)"
+5. Reload the page
+
+**In Production**:
+The dropdown is hidden in production builds. To switch systems in production, you must change the code:
+1. Open `src/enemyBase.js`
+2. Change `static SCALING_SYSTEM = 'simple';` to `'legacy'` or vice versa
+3. Rebuild and redeploy
 
 ### Why Keep Legacy System?
 - Allows for A/B testing between systems
