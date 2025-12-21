@@ -17,17 +17,19 @@ Values:
 
 ## Scaling Constants Location
 
-All scaling constants are defined as static properties in the `EnemyBase` class in `src/enemyBase.js`:
+All scaling constants are defined as exported constants at the top of `src/enemyBase.js`:
 
 ```javascript
+// enemyBase.js
+export const MOB_REGION_SCALING_MULTIPLIER = 5;
+export const MOB_STAGE_SCALING_PERCENT = 0.1;
+export const ITEM_FLAT_REGION_SCALING_MULTIPLIER = 2;
+export const ITEM_PERCENT_REGION_SCALING_MULTIPLIER = 1.3;
+export const ITEM_FLAT_STAGE_SCALING_PERCENT = 0.008;
+export const ITEM_PERCENT_STAGE_SCALING_PERCENT = 0.001;
+
 class EnemyBase {
-  static MOB_REGION_SCALING_MULTIPLIER = 5;
-  static MOB_STAGE_SCALING_PERCENT = 0.1;
-  static ITEM_FLAT_REGION_SCALING_MULTIPLIER = 2;
-  static ITEM_PERCENT_REGION_SCALING_MULTIPLIER = 1.3;
-  static ITEM_FLAT_STAGE_SCALING_PERCENT = 0.008;
-  static ITEM_PERCENT_STAGE_SCALING_PERCENT = 0.001;
-  // ...
+  // ... class implementation
 }
 ```
 
@@ -142,20 +144,23 @@ Tier 2, Level 50 item with 10% base life bonus:
 
 ## Adjusting the Scaling
 
-All scaling constants are defined as static properties in the `EnemyBase` class in `src/enemyBase.js`:
+All scaling constants are defined as exported constants at the top of `src/enemyBase.js`:
 
 ```javascript
-class EnemyBase {
-  // Change these values to adjust scaling
-  static MOB_REGION_SCALING_MULTIPLIER = 5;        // Change this to adjust region scaling
-  static MOB_STAGE_SCALING_PERCENT = 0.1;          // Change this to adjust stage scaling
-  
-  static ITEM_FLAT_REGION_SCALING_MULTIPLIER = 2;  // Change this to adjust tier scaling
-  static ITEM_FLAT_STAGE_SCALING_PERCENT = 0.008;  // Change this to adjust level scaling
-  
-  static ITEM_PERCENT_REGION_SCALING_MULTIPLIER = 1.3;  // Change this to adjust tier scaling
-  static ITEM_PERCENT_STAGE_SCALING_PERCENT = 0.001;    // Change this to adjust level scaling
-}
+// Change these values to adjust scaling
+export const MOB_REGION_SCALING_MULTIPLIER = 5;        // Change this to adjust region scaling
+export const MOB_STAGE_SCALING_PERCENT = 0.1;          // Change this to adjust stage scaling
+
+export const ITEM_FLAT_REGION_SCALING_MULTIPLIER = 2;  // Change this to adjust tier scaling
+export const ITEM_FLAT_STAGE_SCALING_PERCENT = 0.008;  // Change this to adjust level scaling
+
+export const ITEM_PERCENT_REGION_SCALING_MULTIPLIER = 1.3;  // Change this to adjust tier scaling
+export const ITEM_PERCENT_STAGE_SCALING_PERCENT = 0.001;    // Change this to adjust level scaling
+```
+
+To use these constants in your code:
+```javascript
+import { MOB_REGION_SCALING_MULTIPLIER, MOB_STAGE_SCALING_PERCENT } from './enemyBase.js';
 ```
 
 ## Migration Notes
