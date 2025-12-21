@@ -17,23 +17,19 @@ Values:
 
 ## Scaling Constants Location
 
-All scaling constants are defined as exported constants at the top of `src/enemyBase.js`:
+All scaling constants are defined as exported constants in `src/constants/enemies.js`:
 
 ```javascript
-// enemyBase.js
+// enemies.js
 export const MOB_REGION_SCALING_MULTIPLIER = 5;
 export const MOB_STAGE_SCALING_PERCENT = 0.1;
 export const ITEM_FLAT_REGION_SCALING_MULTIPLIER = 2;
 export const ITEM_PERCENT_REGION_SCALING_MULTIPLIER = 1.3;
 export const ITEM_FLAT_STAGE_SCALING_PERCENT = 0.008;
 export const ITEM_PERCENT_STAGE_SCALING_PERCENT = 0.001;
-
-class EnemyBase {
-  // ... class implementation
-}
 ```
 
-The scaling system selection is stored in `options.scalingSystem` and accessed throughout the codebase via the global `options` object.
+The scaling system selection is stored in `options.scalingSystem` and passed as a parameter through the scaling functions to avoid circular dependencies.
 
 ## Mob Scaling (Explore Region Only)
 
@@ -144,7 +140,7 @@ Tier 2, Level 50 item with 10% base life bonus:
 
 ## Adjusting the Scaling
 
-All scaling constants are defined as exported constants at the top of `src/enemyBase.js`:
+All scaling constants are defined as exported constants in `src/constants/enemies.js`:
 
 ```javascript
 // Change these values to adjust scaling
@@ -160,7 +156,37 @@ export const ITEM_PERCENT_STAGE_SCALING_PERCENT = 0.001;    // Change this to ad
 
 To use these constants in your code:
 ```javascript
-import { MOB_REGION_SCALING_MULTIPLIER, MOB_STAGE_SCALING_PERCENT } from './enemyBase.js';
+import {
+  MOB_REGION_SCALING_MULTIPLIER,
+  MOB_STAGE_SCALING_PERCENT
+} from './constants/enemies.js';
+```
+
+## Implementation Details
+
+### Parameter Passing (No Circular Dependencies)
+
+To avoid circular dependencies, the `scalingSystem` is passed as a parameter rather than imported:
+
+1. **Item Scaling**: `item.js` reads `options.scalingSystem` and passes it to scaling functions
+2. **Stat Definitions**: Each stat's scaling function accepts `(level, tier, scalingSystem)` parameters
+3. **itemLevelScaling**: Accepts `scalingSystem` in config object, defaults to `'simple'`
+
+```javascript
+// item.js
+getLevelScale(stat, level) {
+  const scalingSystem = options?.scalingSystem || 'simple';
+  return scalingFn(level, this.tier, scalingSystem);
+}
+
+// defenseStats.js
+scaling: (level, tier, scalingSystem) => 
+  defenseScaling(level, tier, FLAT_SCALING, scalingSystem)
+
+// itemScaling.js
+export function itemLevelScaling(level, tier, { scalingSystem = 'simple', ... } = {}) {
+  if (scalingSystem === 'simple') { /* ... */ }
+}
 ```
 
 ## Migration Notes
