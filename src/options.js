@@ -88,7 +88,7 @@ function attachTooltip(el, key, ...params) {
 // Options class to store options and version (future-proof for migrations)
 export class Options {
   constructor(data = {}) {
-    this.version = data.version || '0.8.17';
+    this.version = data.version || '0.8.19';
     // Add startingStage, default to null (unset)
     this.startingStage = data.startingStage || null;
     // Add showEnemyStats option, default to false
@@ -174,6 +174,8 @@ export class Options {
     this.showStageControlsInline = data.showStageControlsInline ?? false;
     // Show roll quality percentiles instead of min/max ranges
     this.showRollPercentiles = data.showRollPercentiles ?? false;
+    // Scaling system selection (dev only)
+    this.scalingSystem = data.scalingSystem || 'simple';
     // Temporary developer access deadline and modal acknowledgement
     this.devAccessDeadline = data.devAccessDeadline || null;
     this.devAccessModalDismissed = data.devAccessModalDismissed ?? false;
@@ -353,6 +355,8 @@ export class Options {
     // --- Game Options Content ---
     const gameContent = document.createElement('div');
     gameContent.className = 'options-content active';
+    // Development only option (now at the top)
+    gameContent.appendChild(this._createScalingSystemOption());
     gameContent.appendChild(this._createAdvancedTooltipsOption());
     gameContent.appendChild(this._createAdvancedAttributeTooltipsOption());
     gameContent.appendChild(this._createRollPercentilesOption());
@@ -1929,6 +1933,45 @@ export class Options {
       dataManager.saveGame();
       updateStatsAndAttributesUI(true);
     });
+    return wrapper;
+  }
+
+  /**
+   * Creates the scaling system selection dropdown (dev only)
+   */
+  _createScalingSystemOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="scaling-system-select" style="color: #ff6b35;" data-i18n="options.scalingSystem">${t('options.scalingSystem')}:</label>
+      <select id="scaling-system-select">
+        <option value="simple">${t('options.scalingSystem.simple')}</option>
+        <option value="legacy">${t('options.scalingSystem.legacy')}</option>
+      </select>
+      <button id="scaling-reload-btn" style="display:none;">${t('options.scalingSystem.reload')}</button>
+    `;
+
+    const label = wrapper.querySelector('label');
+    const select = wrapper.querySelector('select');
+    const reloadBtn = wrapper.querySelector('#scaling-reload-btn');
+
+    // Manually attach tooltip since we can't easily inject into OPTION_TOOLTIPS const
+    label.addEventListener('mouseenter', (e) => showTooltip(t('options.scalingSystem.tooltip'), e));
+    label.addEventListener('mousemove', positionTooltip);
+    label.addEventListener('mouseleave', hideTooltip);
+
+    select.value = this.scalingSystem;
+    select.addEventListener('change', () => {
+      this.scalingSystem = select.value;
+      dataManager.saveGame();
+      showToast(t('versionModal.refreshPrompt'), 'info');
+      reloadBtn.style.display = 'inline-block';
+    });
+
+    reloadBtn.addEventListener('click', () => {
+      window.location.reload();
+    });
+
     return wrapper;
   }
 

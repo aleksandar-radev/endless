@@ -31,6 +31,7 @@ export default function run() {
       <li>Paladin's Divine judgement skill cooldown reduced to 12s from 30s.</li>
       <li>Life regen percent of total life (and mana) now are not affected by life regen % and mana regen % bonuses.</li>
       <li>Slightly reduced the drop chance of items and materials.</li>
+      <li>Reworked scaling of enemies and added the option to switch to legacy scaling system. All stats of enemies are scaled differently, as well as items dropped by the enemies.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

@@ -107,6 +107,11 @@ export default class Item {
     this.tier = tier;
     // Only generate new stats if no existing stats provided
     this.metaData = metaData || {};
+    // Persist the scaling system used when the item was obtained/rolled.
+    // This prevents exploits where players switch scaling systems before rerolling.
+    if (!this.metaData.scalingSystem) {
+      this.metaData.scalingSystem = options?.scalingSystem || 'simple';
+    }
     this.nameKey = this.metaData.nameKey || null;
     this.descriptionKey = this.metaData.descriptionKey || null;
     this.uniqueId = this.metaData.uniqueId || null;
@@ -127,7 +132,17 @@ export default class Item {
 
   getLevelScale(stat, level) {
     const scalingFn = AVAILABLE_STATS[stat].scaling;
-    return typeof scalingFn === 'function' ? scalingFn(level, this.tier) : 1;
+    if (typeof scalingFn === 'function') {
+      // Use the scaling system that was active when this item was obtained.
+      // Fallback to current options for legacy items that might lack metadata.
+      const scalingSystem = this.metaData?.scalingSystem || options?.scalingSystem || 'simple';
+      // Check if the scaling function accepts 3 parameters (level, tier, scalingSystem)
+      if (scalingFn.length >= 3) {
+        return scalingFn(level, this.tier, scalingSystem);
+      }
+      return scalingFn(level, this.tier);
+    }
+    return 1;
   }
 
   getTierBonus(stat) {

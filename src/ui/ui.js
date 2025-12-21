@@ -377,7 +377,7 @@ export function updateEnemyStats() {
   if (dmg) dmg.textContent = formatNumber(Math.floor(enemy.damage));
   ELEMENT_IDS.forEach((id) => {
     const dmgEl = document.getElementById(`enemy-${id}-damage-value`);
-    if (dmgEl) dmgEl.textContent = formatNumber(Math.floor(enemy[`${id}Damage`] || 0));
+    if (dmgEl) dmgEl.textContent = formatNumber(enemy[`${id}Damage`] || 0);
   });
 
   const armor = document.getElementById('enemy-armor-value');

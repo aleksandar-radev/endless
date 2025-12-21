@@ -7,18 +7,21 @@ const FLAT_SCALING = {
   end: 0.0012 * 0.5,
   tierStart: 0.1,
   tierEnd: 0.05,
+  isPercent: false,
 };
 const PERCENT_SCALING = {
   start: 0.00025 * 2,
   end: 0.00025 * 0.5,
   tierStart: 0.1,
   tierEnd: 0.05,
+  isPercent: true,
 };
 const STAT_SCALING = {
   start: 0.006,
   end: 0.001,
   tierStart: 0.1,
   tierEnd: 0.05,
+  isPercent: false,
 };
 
 const STATS_MIN = 8;
@@ -26,8 +29,8 @@ const STATS_MAX = 15;
 const STATS_MIN_PERCENT = 6;
 const STATS_MAX_PERCENT = 12;
 
-const miscScaling = (level, tier, config = FLAT_SCALING) =>
-  itemLevelScaling(level, tier, config);
+const miscScaling = (level, tier, config = FLAT_SCALING, scalingSystem = 'simple') =>
+  itemLevelScaling(level, tier, { ...config, scalingSystem });
 
 // Miscellaneous stats
 export const MISC_STATS = {
@@ -36,7 +39,7 @@ export const MISC_STATS = {
     base: 50,
     levelUpBonus: 0,
     training: { cost: 50, bonus: 1, maxLevel: Infinity },
-    item: { min: 25, max: 70, scaling: (level, tier) => miscScaling(level, tier) },
+    item: { min: 25, max: 70, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['misc', 'jewelry', 'magic'],
     showInUI: true,
     subcategory: 'resources',
@@ -49,7 +52,7 @@ export const MISC_STATS = {
     base: 0,
     divisor: 100,
     decimalPlaces: 1,
-    item: { min: 3, max: 8, scaling: (level, tier) => miscScaling(level, tier) },
+    item: { min: 3, max: 8, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['misc', 'jewelry', 'magic'],
   },
   // MANA REGEN
@@ -57,7 +60,7 @@ export const MISC_STATS = {
     base: 0,
     decimalPlaces: 1,
     training: { cost: 300, bonus: 0.1, maxLevel: 8000 },
-    item: { min: 2, max: 4, scaling: (level, tier) => miscScaling(level, tier) },
+    item: { min: 2, max: 4, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['misc', 'jewelry', 'magic'],
     showInUI: true,
     subcategory: 'resources',
@@ -66,14 +69,14 @@ export const MISC_STATS = {
     base: 0,
     divisor: 100,
     decimalPlaces: 1,
-    item: { min: 4, max: 10, limit: 50, scaling: (level, tier) => miscScaling(level, tier, PERCENT_SCALING) },
+    item: { min: 4, max: 10, limit: 50, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem) },
     itemTags: ['jewelry', 'magic'],
   },
   // MANA PER HIT
   manaPerHit: {
     base: 0,
     decimalPlaces: 1,
-    item: { min: 3, max: 6, scaling: (level, tier) => miscScaling(level, tier) },
+    item: { min: 3, max: 6, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['misc', 'jewelry', 'magic'],
     showInUI: true,
     subcategory: 'resources',
@@ -85,7 +88,7 @@ export const MISC_STATS = {
   // STATS
   strength: {
     base: 0,
-    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem) },
     itemTags: ['misc', 'stat', 'axe', 'mace'],
   },
   strengthPercent: {
@@ -95,13 +98,13 @@ export const MISC_STATS = {
     item: {
       min: STATS_MIN_PERCENT,
       max: STATS_MAX_PERCENT,
-      scaling: (level, tier) => miscScaling(level, tier, PERCENT_SCALING),
+      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem),
     },
     itemTags: ['misc', 'axe', 'mace'],
   },
   agility: {
     base: 0,
-    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem) },
     itemTags: ['misc', 'stat', 'axe', 'mace'],
   },
   agilityPercent: {
@@ -111,13 +114,13 @@ export const MISC_STATS = {
     item: {
       min: STATS_MIN_PERCENT,
       max: STATS_MAX_PERCENT,
-      scaling: (level, tier) => miscScaling(level, tier, PERCENT_SCALING),
+      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem),
     },
     itemTags: ['misc', 'axe', 'mace'],
   },
   vitality: {
     base: 0,
-    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem) },
     itemTags: ['misc', 'stat'],
   },
   vitalityPercent: {
@@ -127,13 +130,13 @@ export const MISC_STATS = {
     item: {
       min: STATS_MIN_PERCENT,
       max: STATS_MAX_PERCENT,
-      scaling: (level, tier) => miscScaling(level, tier, PERCENT_SCALING),
+      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem),
     },
     itemTags: ['misc'],
   },
   wisdom: {
     base: 0,
-    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem) },
     itemTags: ['misc', 'jewelry', 'stat', 'magic'],
   },
   wisdomPercent: {
@@ -143,13 +146,13 @@ export const MISC_STATS = {
     item: {
       min: STATS_MIN_PERCENT,
       max: STATS_MAX_PERCENT,
-      scaling: (level, tier) => miscScaling(level, tier, PERCENT_SCALING),
+      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem),
     },
     itemTags: ['misc', 'jewelry', 'magic'],
   },
   endurance: {
     base: 0,
-    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem) },
     itemTags: ['misc', 'jewelry', 'stat'],
   },
   endurancePercent: {
@@ -159,13 +162,13 @@ export const MISC_STATS = {
     item: {
       min: STATS_MIN_PERCENT,
       max: STATS_MAX_PERCENT,
-      scaling: (level, tier) => miscScaling(level, tier, PERCENT_SCALING),
+      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem),
     },
     itemTags: ['misc', 'jewelry'],
   },
   dexterity: {
     base: 0,
-    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem) },
     itemTags: ['misc', 'jewelry', 'stat'],
   },
   dexterityPercent: {
@@ -174,13 +177,13 @@ export const MISC_STATS = {
     item: {
       min: STATS_MIN_PERCENT,
       max: STATS_MAX_PERCENT,
-      scaling: (level, tier) => miscScaling(level, tier, PERCENT_SCALING),
+      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem),
     },
     itemTags: ['misc', 'jewelry'],
   },
   intelligence: {
     base: 0,
-    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem) },
     itemTags: ['misc', 'jewelry', 'stat', 'magic'],
   },
   intelligencePercent: {
@@ -190,13 +193,13 @@ export const MISC_STATS = {
     item: {
       min: STATS_MIN_PERCENT,
       max: STATS_MAX_PERCENT,
-      scaling: (level, tier) => miscScaling(level, tier, PERCENT_SCALING),
+      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem),
     },
     itemTags: ['misc', 'jewelry', 'magic'],
   },
   perseverance: {
     base: 0,
-    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING) },
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem) },
     itemTags: ['misc', 'jewelry', 'stat'],
   },
   perseverancePercent: {
@@ -206,7 +209,7 @@ export const MISC_STATS = {
     item: {
       min: STATS_MIN_PERCENT,
       max: STATS_MAX_PERCENT,
-      scaling: (level, tier) => miscScaling(level, tier, PERCENT_SCALING),
+      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem),
     },
     itemTags: ['misc', 'jewelry'],
   },
@@ -220,7 +223,7 @@ export const MISC_STATS = {
     base: 0,
     divisor: 100,
     decimalPlaces: 1,
-    item: { min: 5, max: 20, scaling: (level, tier) => miscScaling(level, tier) },
+    item: { min: 5, max: 20, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['misc', 'jewelry'],
     showInUI: true,
     subcategory: 'rewards',
@@ -230,7 +233,7 @@ export const MISC_STATS = {
     base: 0,
     divisor: 100,
     decimalPlaces: 1,
-    item: { min: 5, max: 15, scaling: (level, tier) => miscScaling(level, tier) },
+    item: { min: 5, max: 15, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['misc', 'jewelry'],
     showInUI: true,
     subcategory: 'rewards',
@@ -281,7 +284,7 @@ export const MISC_STATS = {
   itemQuantityPercent: {
     base: 0,
     divisor: 100,
-    item: { min: 4, max: 13, scaling: (level, tier) => miscScaling(level, tier) },
+    item: { min: 4, max: 13, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['misc', 'jewelry', 'gloves'],
     showInUI: true,
     subcategory: 'rewards',
@@ -290,7 +293,7 @@ export const MISC_STATS = {
   itemRarityPercent: {
     base: 0,
     divisor: 100,
-    item: { min: 4, max: 13, scaling: (level, tier) => miscScaling(level, tier) },
+    item: { min: 4, max: 13, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['misc', 'jewelry', 'gloves'],
     showInUI: true,
     subcategory: 'rewards',
@@ -299,7 +302,7 @@ export const MISC_STATS = {
   materialQuantityPercent: {
     base: 0,
     divisor: 100,
-    item: { min: 4, max: 13, scaling: (level, tier) => miscScaling(level, tier) },
+    item: { min: 4, max: 13, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['jewelry', 'ring', 'amulet'],
     showInUI: true,
     subcategory: 'rewards',
@@ -330,7 +333,7 @@ export const MISC_STATS = {
     divisor: 100,
     decimalPlaces: 2,
     training: { cost: 1000, bonus: 0.01, maxLevel: 100 },
-    item: { min: 0.01, max: 0.05, max: 1, scaling: (level, tier) => miscScaling(level, tier, PERCENT_SCALING) },
+    item: { min: 0.01, max: 0.05, max: 1, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem) },
     itemTags: ['staff'],
   },
   allAttributes: {
@@ -339,7 +342,7 @@ export const MISC_STATS = {
       min: 4,
       max: 8,
       limit: Infinity,
-      scaling: (level, tier) => miscScaling(level, tier, STAT_SCALING),
+      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem),
     },
     itemTags: ['defense', 'jewelry', 'gloves', 'misc'],
   },
