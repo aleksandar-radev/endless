@@ -127,7 +127,16 @@ export default class Item {
 
   getLevelScale(stat, level) {
     const scalingFn = AVAILABLE_STATS[stat].scaling;
-    return typeof scalingFn === 'function' ? scalingFn(level, this.tier) : 1;
+    if (typeof scalingFn === 'function') {
+      // Pass scalingSystem from options, defaulting to 'simple'
+      const scalingSystem = options?.scalingSystem || 'simple';
+      // Check if the scaling function accepts 3 parameters (level, tier, scalingSystem)
+      if (scalingFn.length >= 3) {
+        return scalingFn(level, this.tier, scalingSystem);
+      }
+      return scalingFn(level, this.tier);
+    }
+    return 1;
   }
 
   getTierBonus(stat) {

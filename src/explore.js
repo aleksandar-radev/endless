@@ -1,16 +1,17 @@
 import { ITEM_TYPES, ALL_ITEM_TYPES } from './constants/items.js';
 import { getCurrentRegion, getRegionEnemies } from './region.js';
-import { ENEMY_RARITY } from './constants/enemies.js';
+import {
+  ENEMY_RARITY,
+  MOB_REGION_SCALING_MULTIPLIER,
+  MOB_STAGE_SCALING_PERCENT,
+} from './constants/enemies.js';
 import { createPercentScaleFunction, scaleStat, computeScaledReward, xpDiminishingFactor } from './common.js';
 import { hero, options } from './globals.js';
 import { battleLog } from './battleLog.js';
 import { ELEMENTS, BASE_MATERIAL_DROP_CHANCE } from './constants/common.js';
 import { t, tp } from './i18n.js';
 import { formatNumber as formatNumberValue } from './utils/numberFormatter.js';
-import EnemyBase, {
-  MOB_REGION_SCALING_MULTIPLIER,
-  MOB_STAGE_SCALING_PERCENT,
-} from './enemyBase.js';
+import EnemyBase from './enemyBase.js';
 
 // Legacy scaling system (kept for backward compatibility)
 const TIER_STAT_SCALE = {

@@ -19,8 +19,8 @@ const CHANCE_SCALING = {
   isPercent: true,
 };
 
-const defenseScaling = (level, tier, config = FLAT_SCALING) =>
-  itemLevelScaling(level, tier, config);
+const defenseScaling = (level, tier, config = FLAT_SCALING, scalingSystem = 'simple') =>
+  itemLevelScaling(level, tier, { ...config, scalingSystem });
 
 // Defense stats
 export const DEFENSE_STATS = {
@@ -29,7 +29,7 @@ export const DEFENSE_STATS = {
     base: 100,
     levelUpBonus: 1,
     training: { cost: 80, bonus: 8, maxLevel: Infinity },
-    item: { min: 30, max: 80, scaling: (level, tier) => defenseScaling(level, tier) },
+    item: { min: 30, max: 80, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['defense'],
     showInUI: true,
     subcategory: 'defense',
@@ -45,7 +45,7 @@ export const DEFENSE_STATS = {
   armor: {
     base: 0,
     training: { cost: 100, bonus: 4, maxLevel: Infinity },
-    item: { min: 25, max: 60, scaling: (level, tier) => defenseScaling(level, tier) },
+    item: { min: 25, max: 60, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['defense'],
     showInUI: true,
     subcategory: 'defense',
@@ -85,7 +85,7 @@ export const DEFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
     training: { cost: 100, bonus: 1, maxLevel: Infinity },
-    item: { min: 3, max: 8, scaling: (level, tier) => defenseScaling(level, tier) },
+    item: { min: 3, max: 8, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['belt', 'pants'],
     showInUI: true,
     subcategory: 'defense',
@@ -110,7 +110,7 @@ export const DEFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
     training: { cost: 100, bonus: 2, maxLevel: Infinity },
-    item: { min: 15, max: 40, scaling: (level, tier) => defenseScaling(level, tier) },
+    item: { min: 15, max: 40, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['shield', 'armor'],
     showInUI: true,
     subcategory: 'defense',
@@ -142,7 +142,7 @@ export const DEFENSE_STATS = {
     base: 0,
     decimalPlaces: 1,
     training: { cost: 100, bonus: 3, maxLevel: Infinity },
-    item: { min: 30, max: 75, scaling: (level, tier) => defenseScaling(level, tier) },
+    item: { min: 30, max: 75, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['defense'],
     showInUI: true,
     subcategory: 'defense',
@@ -159,7 +159,7 @@ export const DEFENSE_STATS = {
   fireResistance: {
     base: 0,
     training: { cost: 100, bonus: 3, maxLevel: Infinity },
-    item: { min: 25, max: 60, scaling: (level, tier) => defenseScaling(level, tier) },
+    item: { min: 25, max: 60, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
     subcategory: 'elemental',
@@ -175,7 +175,7 @@ export const DEFENSE_STATS = {
   coldResistance: {
     base: 0,
     training: { cost: 100, bonus: 3, maxLevel: Infinity },
-    item: { min: 25, max: 60, scaling: (level, tier) => defenseScaling(level, tier) },
+    item: { min: 25, max: 60, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
     subcategory: 'elemental',
@@ -191,7 +191,7 @@ export const DEFENSE_STATS = {
   airResistance: {
     base: 0,
     training: { cost: 100, bonus: 3, maxLevel: Infinity },
-    item: { min: 25, max: 60, scaling: (level, tier) => defenseScaling(level, tier) },
+    item: { min: 25, max: 60, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
     subcategory: 'elemental',
@@ -207,7 +207,7 @@ export const DEFENSE_STATS = {
   earthResistance: {
     base: 0,
     training: { cost: 100, bonus: 3, maxLevel: Infinity },
-    item: { min: 25, max: 60, scaling: (level, tier) => defenseScaling(level, tier) },
+    item: { min: 25, max: 60, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
     subcategory: 'elemental',
@@ -223,7 +223,7 @@ export const DEFENSE_STATS = {
   lightningResistance: {
     base: 0,
     training: { cost: 100, bonus: 3, maxLevel: Infinity },
-    item: { min: 25, max: 60, scaling: (level, tier) => defenseScaling(level, tier) },
+    item: { min: 25, max: 60, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
     subcategory: 'elemental',
@@ -239,7 +239,7 @@ export const DEFENSE_STATS = {
   waterResistance: {
     base: 0,
     training: { cost: 100, bonus: 3, maxLevel: Infinity },
-    item: { min: 25, max: 60, scaling: (level, tier) => defenseScaling(level, tier) },
+    item: { min: 25, max: 60, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['defense', 'jewelry'],
     showInUI: true,
     subcategory: 'elemental',
@@ -254,7 +254,7 @@ export const DEFENSE_STATS = {
   },
   allResistance: {
     base: 0,
-    item: { min: 8, max: 20, scaling: (level, tier) => defenseScaling(level, tier) },
+    item: { min: 8, max: 20, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
     itemTags: ['defense', 'jewelry'],
     subcategory: 'elemental',
   },

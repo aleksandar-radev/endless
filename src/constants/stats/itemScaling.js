@@ -3,8 +3,7 @@ import {
   ITEM_PERCENT_REGION_SCALING_MULTIPLIER,
   ITEM_FLAT_STAGE_SCALING_PERCENT,
   ITEM_PERCENT_STAGE_SCALING_PERCENT,
-} from '../../enemyBase.js';
-import { options } from '../../globals.js';
+} from '../enemies.js';
 
 /**
  * Sum diminishing flat bonuses until a minimum value then
@@ -61,6 +60,7 @@ function scaleDownFlat(
  * @param {number} [config.tierStart=0.1] - Multiplier applied to `start` per tier above 1.
  * @param {number} [config.tierEnd=0.1] - Multiplier applied to `end` per tier above 1.
  * @param {boolean} [config.isPercent=false] - Whether this is a percent stat (affects simple scaling).
+ * @param {string} [config.scalingSystem='simple'] - The scaling system to use ('simple' or 'legacy').
  * @returns {number} Scaling factor to multiply base stat values by.
  */
 export function itemLevelScaling(
@@ -74,11 +74,12 @@ export function itemLevelScaling(
     tierStart = 0.1,
     tierEnd = 0.1,
     isPercent = false,
+    scalingSystem = 'simple',
   } = {},
 ) {
   if (level <= 0) return 1;
 
-  if (options.scalingSystem === 'simple') {
+  if (scalingSystem === 'simple') {
     // New simple scaling system
     // Tier scaling: multiply by the appropriate multiplier for each tier above 1
     const tierMultiplier = isPercent
