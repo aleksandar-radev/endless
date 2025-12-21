@@ -30,6 +30,7 @@ export default function run() {
       <li>Attack rating flat bonus from ascension upgrades increased to 8000, from 1000.</li>
       <li>Paladin's Divine judgement skill cooldown reduced to 12s from 30s.</li>
       <li>Life regen percent of total life (and mana) now are not affected by life regen % and mana regen % bonuses.</li>
+      <li>Slightly reduced the drop chance of items and materials.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
