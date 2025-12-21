@@ -26,3 +26,6 @@ export const ELEMENTS = {
     icon: `<img src="${BASE}/icons/water.svg" class="icon" alt="water"/>`,
   },
 };
+
+export const BASE_ITEM_DROP_CHANCE = 2.0;
+export const BASE_MATERIAL_DROP_CHANCE = 2.0;

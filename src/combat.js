@@ -29,7 +29,7 @@ import { rollSpecialItemDrop } from './uniqueItems.js';
 import { AILMENTS } from './constants/ailments.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
-import { ELEMENTS } from './constants/common.js';
+import { ELEMENTS, BASE_MATERIAL_DROP_CHANCE, BASE_ITEM_DROP_CHANCE } from './constants/common.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 const UNIQUE_RUNE_SET = new Set(RUNES.filter((r) => r.unique).map((r) => r.id));
@@ -666,7 +666,7 @@ export async function defeatEnemy(source) {
       const dropTier = Math.floor(hero.bossLevel / 50) + 1;
       const itemLevel = hero.bossLevel;
       // Use explore drop chance logic
-      const itemDropChance = 3 * (1 + hero.stats.itemQuantityPercent);
+      const itemDropChance = BASE_ITEM_DROP_CHANCE * (1 + hero.stats.itemQuantityPercent);
 
       if (Math.random() * 100 <= itemDropChance) {
         // Random item type
@@ -689,7 +689,7 @@ export async function defeatEnemy(source) {
 
       // Random Material Drop from Boss
       // Uses standard material drop chance (2.5 base)
-      const materialDropChance = 2.5 * (1 + hero.stats.extraMaterialDropPercent);
+      const materialDropChance = BASE_MATERIAL_DROP_CHANCE * (1 + hero.stats.extraMaterialDropPercent);
       if (Math.random() * 100 < materialDropChance) {
         const mat = inventory.getRandomMaterial();
         if (mat) {

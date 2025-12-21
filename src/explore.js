@@ -4,7 +4,7 @@ import { ENEMY_RARITY } from './constants/enemies.js';
 import { createPercentScaleFunction, scaleStat, computeScaledReward, xpDiminishingFactor } from './common.js';
 import { hero, options } from './globals.js';
 import { battleLog } from './battleLog.js';
-import { ELEMENTS } from './constants/common.js';
+import { ELEMENTS, BASE_MATERIAL_DROP_CHANCE } from './constants/common.js';
 import { t, tp } from './i18n.js';
 import { formatNumber as formatNumberValue } from './utils/numberFormatter.js';
 import EnemyBase from './enemyBase.js';
@@ -481,7 +481,7 @@ class Enemy extends EnemyBase {
   }
 
   rollForMaterialDrop() {
-    const baseChance = 0.025; // Base chance of 2.5%
+    const baseChance = BASE_MATERIAL_DROP_CHANCE / 100; // Base chance of 2.5%
 
     return (
       baseChance *

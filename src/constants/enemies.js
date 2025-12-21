@@ -10,7 +10,7 @@ import { SUNKEN_RUINS_ENEMIES } from './enemies/sunken_ruins.js';
 import { HAUNTED_MOOR_ENEMIES } from './enemies/haunted_moor.js';
 import { GOLDEN_STEPPE_ENEMIES } from './enemies/golden_steppe.js';
 import { OBSIDIAN_SPIRE_ENEMIES } from './enemies/obsidian_spire.js';
-import { ELEMENTS } from './common.js';
+import { ELEMENTS, BASE_ITEM_DROP_CHANCE } from './common.js';
 
 const ELEMENTAL_DAMAGE_STATS = Object.keys(ELEMENTS).map(
   (el) => `${el}Damage`,
@@ -19,7 +19,7 @@ const ELEMENTAL_DAMAGE_STATS = Object.keys(ELEMENTS).map(
 export const ENEMY_RARITY = {
   NORMAL: {
     type: 'NORMAL',
-    itemDropChance: 2.5,
+    itemDropChance: BASE_ITEM_DROP_CHANCE,
     color: 'gray',
     threshold: 800,
     multiplier: {
@@ -49,7 +49,7 @@ export const ENEMY_RARITY = {
   },
   RARE: {
     type: 'RARE',
-    itemDropChance: 3,
+    itemDropChance: BASE_ITEM_DROP_CHANCE * 1.2,
     color: 'blue',
     threshold: 900,
     multiplier: {
@@ -79,7 +79,7 @@ export const ENEMY_RARITY = {
   },
   EPIC: {
     type: 'EPIC',
-    itemDropChance: 3.5,
+    itemDropChance: BASE_ITEM_DROP_CHANCE * 1.4,
     color: 'purple',
     threshold: 960,
     multiplier: {
@@ -109,7 +109,7 @@ export const ENEMY_RARITY = {
   },
   LEGENDARY: {
     type: 'LEGENDARY',
-    itemDropChance: 4,
+    itemDropChance: BASE_ITEM_DROP_CHANCE * 1.6,
     color: 'orange',
     threshold: 990,
     multiplier: {
@@ -139,7 +139,7 @@ export const ENEMY_RARITY = {
   },
   MYTHIC: {
     type: 'MYTHIC',
-    itemDropChance: 5,
+    itemDropChance: BASE_ITEM_DROP_CHANCE * 2,
     color: 'red',
     threshold: 1000,
     multiplier: {
