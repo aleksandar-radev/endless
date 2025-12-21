@@ -7,18 +7,21 @@ const FLAT_SCALING = {
   end: 0.0012 * 0.5,
   tierStart: 0.1,
   tierEnd: 0.05,
+  isPercent: false,
 };
 const PERCENT_SCALING = {
   start: 0.00025 * 2,
   end: 0.00025 * 0.5,
   tierStart: 0.1,
   tierEnd: 0.05,
+  isPercent: true,
 };
 const STAT_SCALING = {
   start: 0.006,
   end: 0.001,
   tierStart: 0.1,
   tierEnd: 0.05,
+  isPercent: false,
 };
 
 const STATS_MIN = 8;

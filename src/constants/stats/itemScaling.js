@@ -1,3 +1,11 @@
+import {
+  SCALING_SYSTEM,
+  ITEM_FLAT_REGION_SCALING_MULTIPLIER,
+  ITEM_PERCENT_REGION_SCALING_MULTIPLIER,
+  ITEM_FLAT_STAGE_SCALING_PERCENT,
+  ITEM_PERCENT_STAGE_SCALING_PERCENT,
+} from '../scaling.js';
+
 /**
  * Sum diminishing flat bonuses until a minimum value then
  * continue adding that minimum for remaining levels.
@@ -34,11 +42,14 @@ function scaleDownFlat(
 }
 
 /**
- * Compute a scaling multiplier for item stats by accumulating diminishing
- * flat bonuses from `start` toward `end`, adjusted by item tier.
- *
- * Higher tier items receive a small additional overall multiplier so they
- * scale slightly faster, while tier 1 items scale a bit slower.
+ * Compute a scaling multiplier for item stats.
+ * 
+ * For the simple scaling system:
+ * - Flat values: scale by tier (2x per tier) and level (0.8% per level)
+ * - Percent values: scale by tier (1.3x per tier) and level (0.1% per level)
+ * 
+ * For the legacy scaling system:
+ * - Uses diminishing flat bonuses from start toward end, adjusted by item tier
  *
  * @param {number} level - Item level.
  * @param {number} [tier=1] - Item tier (1-based).
@@ -49,6 +60,7 @@ function scaleDownFlat(
  * @param {number} [config.maxLevel=2000] - Levels over which start to end transition occurs.
  * @param {number} [config.tierStart=0.1] - Multiplier applied to `start` per tier above 1.
  * @param {number} [config.tierEnd=0.1] - Multiplier applied to `end` per tier above 1.
+ * @param {boolean} [config.isPercent=false] - Whether this is a percent stat (affects simple scaling).
  * @returns {number} Scaling factor to multiply base stat values by.
  */
 export function itemLevelScaling(
@@ -61,10 +73,29 @@ export function itemLevelScaling(
     maxLevel = 2000,
     tierStart = 0.1,
     tierEnd = 0.1,
+    isPercent = false,
   } = {},
 ) {
   if (level <= 0) return 1;
 
+  if (SCALING_SYSTEM === 'simple') {
+    // New simple scaling system
+    // Tier scaling: multiply by the appropriate multiplier for each tier above 1
+    const tierMultiplier = isPercent 
+      ? ITEM_PERCENT_REGION_SCALING_MULTIPLIER 
+      : ITEM_FLAT_REGION_SCALING_MULTIPLIER;
+    const tierScale = Math.pow(tierMultiplier, tier - 1);
+
+    // Level scaling: percentage increase per level from base
+    const levelPercent = isPercent
+      ? ITEM_PERCENT_STAGE_SCALING_PERCENT
+      : ITEM_FLAT_STAGE_SCALING_PERCENT;
+    const levelScale = 1 + (level - 1) * levelPercent;
+
+    return tierScale * levelScale;
+  }
+
+  // Legacy scaling system
   // Adjust starting and ending values based on tier with separate scaling.
   const s = start * (1 + (tier - 1) * tierStart);
   const e = end * (1 + (tier - 1) * tierEnd);
