@@ -1,9 +1,5 @@
 import { ITEM_IDS } from './items.js';
-import { DEFENSE_STATS } from './stats/defenseStats.js';
-import { MISC_STATS } from './stats/miscStats.js';
-import { OFFENSE_STATS } from './stats/offenseStats.js';
-
-const STATS = { ...OFFENSE_STATS, ...DEFENSE_STATS, ...MISC_STATS };
+import { STATS } from './stats/stats.js';
 
 export const UNIQUE_PERCENT_CAP_MULTIPLIER = 2;
 
