@@ -7,13 +7,6 @@ import { AILMENTS } from './constants/ailments.js';
 
 class EnemyBase {
   /**
-   * Scaling system configuration
-   * Set to 'simple' for the new simplified scaling system
-   * Set to 'legacy' to use the old complex scaling system
-   */
-  static SCALING_SYSTEM = 'simple';
-
-  /**
    * Mob Scaling Constants
    * 
    * Mobs scale based on two factors:

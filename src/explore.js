@@ -166,7 +166,7 @@ class Enemy extends EnemyBase {
     this.specialData = { ...(baseData.specialData || {}) };
 
     // For legacy scaling system
-    if (EnemyBase.SCALING_SYSTEM === 'legacy') {
+    if (options.scalingSystem === 'legacy') {
       this.baseScale = TIER_STAT_SCALE[baseData.tier](this.level);
     }
 
@@ -306,7 +306,7 @@ class Enemy extends EnemyBase {
     let base = this.baseData.life || 0;
     let scaled;
     
-    if (EnemyBase.SCALING_SYSTEM === 'simple') {
+    if (options.scalingSystem === 'simple') {
       scaled = this.calculateSimpleScaling(base);
     } else {
       // Legacy scaling
@@ -329,7 +329,7 @@ class Enemy extends EnemyBase {
     let base = this.baseData.damage || 0;
     let scaled;
     
-    if (EnemyBase.SCALING_SYSTEM === 'simple') {
+    if (options.scalingSystem === 'simple') {
       scaled = this.calculateSimpleScaling(base);
     } else {
       // Legacy scaling
@@ -353,7 +353,7 @@ class Enemy extends EnemyBase {
     let base = this.baseData.armor || 0;
     let scaled;
     
-    if (EnemyBase.SCALING_SYSTEM === 'simple') {
+    if (options.scalingSystem === 'simple') {
       scaled = this.calculateSimpleScaling(base);
     } else {
       // Legacy scaling
@@ -375,7 +375,7 @@ class Enemy extends EnemyBase {
     let base = this.baseData.evasion || 0;
     let scaled;
     
-    if (EnemyBase.SCALING_SYSTEM === 'simple') {
+    if (options.scalingSystem === 'simple') {
       scaled = this.calculateSimpleScaling(base);
     } else {
       // Legacy scaling
@@ -398,7 +398,7 @@ class Enemy extends EnemyBase {
     let base = this.baseData.attackRating || 0;
     let scaled;
     
-    if (EnemyBase.SCALING_SYSTEM === 'simple') {
+    if (options.scalingSystem === 'simple') {
       scaled = this.calculateSimpleScaling(base);
     } else {
       // Legacy scaling
@@ -423,7 +423,7 @@ class Enemy extends EnemyBase {
     if (base === 0) return 0;
     
     let scaled;
-    if (EnemyBase.SCALING_SYSTEM === 'simple') {
+    if (options.scalingSystem === 'simple') {
       scaled = this.calculateSimpleScaling(base);
     } else {
       // Legacy scaling
@@ -446,7 +446,7 @@ class Enemy extends EnemyBase {
     if (base === 0) return 0;
     
     let scaled;
-    if (EnemyBase.SCALING_SYSTEM === 'simple') {
+    if (options.scalingSystem === 'simple') {
       scaled = this.calculateSimpleScaling(base);
     } else {
       // Legacy scaling
@@ -469,7 +469,7 @@ class Enemy extends EnemyBase {
     let basePercent;
     let levelBonus;
     
-    if (EnemyBase.SCALING_SYSTEM === 'simple') {
+    if (options.scalingSystem === 'simple') {
       // Apply region scaling to XP
       const regionScale = Math.pow(EnemyBase.MOB_REGION_SCALING_MULTIPLIER, tier - 1);
       baseAtL1 = base * regionScale;
@@ -502,7 +502,7 @@ class Enemy extends EnemyBase {
     let basePercent;
     let levelBonus;
     
-    if (EnemyBase.SCALING_SYSTEM === 'simple') {
+    if (options.scalingSystem === 'simple') {
       // Apply region scaling to Gold
       const regionScale = Math.pow(EnemyBase.MOB_REGION_SCALING_MULTIPLIER, tier - 1);
       baseAtL1 = base * regionScale;

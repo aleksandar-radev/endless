@@ -1954,12 +1954,9 @@ export class Options {
     `;
     const select = wrapper.querySelector('select');
     select.value = this.scalingSystem;
-    select.addEventListener('change', async () => {
+    select.addEventListener('change', () => {
       this.scalingSystem = select.value;
       dataManager.saveGame();
-      // Update EnemyBase.SCALING_SYSTEM
-      const { default: EnemyBase } = await import('./enemyBase.js');
-      EnemyBase.SCALING_SYSTEM = this.scalingSystem;
       showToast('Scaling system changed. Please reload the page for full effect.', 'info');
     });
     return wrapper;

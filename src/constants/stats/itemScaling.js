@@ -1,4 +1,5 @@
 import EnemyBase from '../../enemyBase.js';
+import { options } from '../../globals.js';
 
 /**
  * Sum diminishing flat bonuses until a minimum value then
@@ -72,7 +73,7 @@ export function itemLevelScaling(
 ) {
   if (level <= 0) return 1;
 
-  if (EnemyBase.SCALING_SYSTEM === 'simple') {
+  if (options.scalingSystem === 'simple') {
     // New simple scaling system
     // Tier scaling: multiply by the appropriate multiplier for each tier above 1
     const tierMultiplier = isPercent
