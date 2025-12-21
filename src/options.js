@@ -174,6 +174,8 @@ export class Options {
     this.showStageControlsInline = data.showStageControlsInline ?? false;
     // Show roll quality percentiles instead of min/max ranges
     this.showRollPercentiles = data.showRollPercentiles ?? false;
+    // Scaling system selection (dev only)
+    this.scalingSystem = data.scalingSystem || 'simple';
     // Temporary developer access deadline and modal acknowledgement
     this.devAccessDeadline = data.devAccessDeadline || null;
     this.devAccessModalDismissed = data.devAccessModalDismissed ?? false;
@@ -358,6 +360,10 @@ export class Options {
     gameContent.appendChild(this._createRollPercentilesOption());
     gameContent.appendChild(this._createEnemyStatsToggleOption());
     gameContent.appendChild(this._createShowAllStatsOption());
+    // Development only option
+    if (import.meta.env.VITE_ENV !== 'production') {
+      gameContent.appendChild(this._createScalingSystemOption());
+    }
     gameContent.appendChild(this._createShortElementalNamesOption());
     gameContent.appendChild(this._createShortNumbersOption());
     gameContent.appendChild(this._createQuickBuyOption());
@@ -1928,6 +1934,33 @@ export class Options {
       this.showAllStats = checkbox.checked;
       dataManager.saveGame();
       updateStatsAndAttributesUI(true);
+    });
+    return wrapper;
+  }
+
+  /**
+   * Creates the scaling system selection dropdown (dev only)
+   */
+  _createScalingSystemOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="scaling-system-select" style="color: #ff6b35;">[DEV] Scaling System:</label>
+      <select id="scaling-system-select">
+        <option value="simple">Simple (New)</option>
+        <option value="legacy">Legacy (Old)</option>
+      </select>
+      <span style="font-size: 0.9em; color: #aaa;">(Requires reload)</span>
+    `;
+    const select = wrapper.querySelector('select');
+    select.value = this.scalingSystem;
+    select.addEventListener('change', async () => {
+      this.scalingSystem = select.value;
+      dataManager.saveGame();
+      // Update EnemyBase.SCALING_SYSTEM
+      const { default: EnemyBase } = await import('./enemyBase.js');
+      EnemyBase.SCALING_SYSTEM = this.scalingSystem;
+      showToast('Scaling system changed. Please reload the page for full effect.', 'info');
     });
     return wrapper;
   }

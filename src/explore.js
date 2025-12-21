@@ -8,11 +8,6 @@ import { ELEMENTS, BASE_MATERIAL_DROP_CHANCE } from './constants/common.js';
 import { t, tp } from './i18n.js';
 import { formatNumber as formatNumberValue } from './utils/numberFormatter.js';
 import EnemyBase from './enemyBase.js';
-import {
-  SCALING_SYSTEM,
-  MOB_REGION_SCALING_MULTIPLIER,
-  MOB_STAGE_SCALING_PERCENT,
-} from './constants/scaling.js';
 
 // Legacy scaling system (kept for backward compatibility)
 const TIER_STAT_SCALE = {
@@ -171,7 +166,7 @@ class Enemy extends EnemyBase {
     this.specialData = { ...(baseData.specialData || {}) };
 
     // For legacy scaling system
-    if (SCALING_SYSTEM === 'legacy') {
+    if (EnemyBase.SCALING_SYSTEM === 'legacy') {
       this.baseScale = TIER_STAT_SCALE[baseData.tier](this.level);
     }
 
@@ -286,13 +281,13 @@ class Enemy extends EnemyBase {
     // Tier 1: multiplier^0 = 1
     // Tier 2: multiplier^1 = 5
     // Tier 3: multiplier^2 = 25, etc.
-    const regionScale = Math.pow(MOB_REGION_SCALING_MULTIPLIER, tier - 1);
+    const regionScale = Math.pow(EnemyBase.MOB_REGION_SCALING_MULTIPLIER, tier - 1);
 
     // Calculate stage scaling: 10% increase per stage from the base value
     // Stage 1: base * (1 + 0 * 0.1) = base
     // Stage 2: base * (1 + 1 * 0.1) = base * 1.1
     // Stage 3: base * (1 + 2 * 0.1) = base * 1.2, etc.
-    const stageScale = 1 + (this.level - 1) * MOB_STAGE_SCALING_PERCENT;
+    const stageScale = 1 + (this.level - 1) * EnemyBase.MOB_STAGE_SCALING_PERCENT;
 
     return baseStat * regionScale * stageScale;
   }
@@ -309,25 +304,20 @@ class Enemy extends EnemyBase {
 
   calculateLife() {
     let base = this.baseData.life || 0;
+    let scaled;
     
-    if (SCALING_SYSTEM === 'simple') {
-      const scaled = this.calculateSimpleScaling(base);
-      const baseLife =
-        scaled *
-        this.getRegionMultiplier('life') *
-        (this.rarityData.multiplier.life || 1) *
-        (this.baseData.multiplier?.life || 1);
-      const hpRed = hero.stats.reduceEnemyHpPercent || 0;
-      return baseLife * (1 - hpRed);
+    if (EnemyBase.SCALING_SYSTEM === 'simple') {
+      scaled = this.calculateSimpleScaling(base);
+    } else {
+      // Legacy scaling
+      const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+      const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+      base *= scale.tierScale * levelBonus;
+      scaled = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     }
     
-    // Legacy scaling
-    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
-    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
-    base *= scale.tierScale * levelBonus;
-    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const baseLife =
-      val *
+      scaled *
       this.getRegionMultiplier('life') *
       (this.rarityData.multiplier.life || 1) *
       (this.baseData.multiplier?.life || 1);
@@ -337,27 +327,21 @@ class Enemy extends EnemyBase {
 
   calculateDamage = () => {
     let base = this.baseData.damage || 0;
+    let scaled;
     
-    if (SCALING_SYSTEM === 'simple') {
-      const scaled = this.calculateSimpleScaling(base);
-      const damageRed = hero.stats.reduceEnemyDamagePercent || 0;
-      const totalDamage =
-        scaled *
-        this.getRegionMultiplier('damage') *
-        (this.rarityData.multiplier.damage || 1) *
-        (this.baseData.multiplier?.damage || 1) *
-        (1 - damageRed);
-      return Math.max(totalDamage, 1);
+    if (EnemyBase.SCALING_SYSTEM === 'simple') {
+      scaled = this.calculateSimpleScaling(base);
+    } else {
+      // Legacy scaling
+      const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+      const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+      base *= scale.tierScale * levelBonus;
+      scaled = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     }
     
-    // Legacy scaling
-    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
-    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
-    base *= scale.tierScale * levelBonus;
-    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const damageRed = hero.stats.reduceEnemyDamagePercent || 0;
     const totalDamage =
-      val *
+      scaled *
       this.getRegionMultiplier('damage') *
       (this.rarityData.multiplier.damage || 1) *
       (this.baseData.multiplier?.damage || 1) *
@@ -367,24 +351,20 @@ class Enemy extends EnemyBase {
 
   calculateArmor() {
     let base = this.baseData.armor || 0;
+    let scaled;
     
-    if (SCALING_SYSTEM === 'simple') {
-      const scaled = this.calculateSimpleScaling(base);
-      return (
-        scaled *
-        this.getRegionMultiplier('armor') *
-        (this.rarityData.multiplier.armor || 1) *
-        (this.baseData.multiplier?.armor || 1)
-      );
+    if (EnemyBase.SCALING_SYSTEM === 'simple') {
+      scaled = this.calculateSimpleScaling(base);
+    } else {
+      // Legacy scaling
+      const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+      const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+      base *= scale.tierScale * levelBonus;
+      scaled = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     }
     
-    // Legacy scaling
-    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
-    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
-    base *= scale.tierScale * levelBonus;
-    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     return (
-      val *
+      scaled *
       this.getRegionMultiplier('armor') *
       (this.rarityData.multiplier.armor || 1) *
       (this.baseData.multiplier?.armor || 1)
@@ -393,25 +373,20 @@ class Enemy extends EnemyBase {
 
   calculateEvasion() {
     let base = this.baseData.evasion || 0;
+    let scaled;
     
-    if (SCALING_SYSTEM === 'simple') {
-      const scaled = this.calculateSimpleScaling(base);
-      return (
-        scaled *
-        this.getRegionMultiplier('evasion') *
-        (this.rarityData.multiplier.evasion || 1) *
-        (this.baseData.multiplier?.evasion || 1) *
-        attackRatingAndEvasionScale
-      );
+    if (EnemyBase.SCALING_SYSTEM === 'simple') {
+      scaled = this.calculateSimpleScaling(base);
+    } else {
+      // Legacy scaling
+      const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+      const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+      base *= scale.tierScale * levelBonus;
+      scaled = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     }
     
-    // Legacy scaling
-    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
-    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
-    base *= scale.tierScale * levelBonus;
-    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     return (
-      val *
+      scaled *
       this.getRegionMultiplier('evasion') *
       (this.rarityData.multiplier.evasion || 1) *
       (this.baseData.multiplier?.evasion || 1) *
@@ -421,25 +396,20 @@ class Enemy extends EnemyBase {
 
   calculateAttackRating() {
     let base = this.baseData.attackRating || 0;
+    let scaled;
     
-    if (SCALING_SYSTEM === 'simple') {
-      const scaled = this.calculateSimpleScaling(base);
-      return (
-        scaled *
-        this.getRegionMultiplier('attackRating') *
-        (this.rarityData.multiplier.attackRating || 1) *
-        (this.baseData.multiplier?.attackRating || 1) *
-        attackRatingAndEvasionScale
-      );
+    if (EnemyBase.SCALING_SYSTEM === 'simple') {
+      scaled = this.calculateSimpleScaling(base);
+    } else {
+      // Legacy scaling
+      const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+      const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+      base *= scale.tierScale * levelBonus;
+      scaled = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     }
     
-    // Legacy scaling
-    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
-    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
-    base *= scale.tierScale * levelBonus;
-    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     return (
-      val *
+      scaled *
       this.getRegionMultiplier('attackRating') *
       (this.rarityData.multiplier.attackRating || 1) *
       (this.baseData.multiplier?.attackRating || 1) *
@@ -452,81 +422,69 @@ class Enemy extends EnemyBase {
     let base = this.baseData[`${type}Damage`] || 0;
     if (base === 0) return 0;
     
-    if (SCALING_SYSTEM === 'simple') {
-      const scaled = this.calculateSimpleScaling(base);
-      const regionMult = this.getRegionMultiplier(`${type}Damage`);
-      const rarityMult = this.rarityData.multiplier[`${type}Damage`] || 1;
-      const baseMult = this.baseData.multiplier?.[`${type}Damage`] || 1;
-      const damageRed = hero.stats.reduceEnemyDamagePercent || 0;
-      const totalDamage = scaled * regionMult * rarityMult * baseMult * (1 - damageRed);
-      return Math.max(totalDamage, 1);
+    let scaled;
+    if (EnemyBase.SCALING_SYSTEM === 'simple') {
+      scaled = this.calculateSimpleScaling(base);
+    } else {
+      // Legacy scaling
+      const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+      const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+      base *= scale.tierScale * levelBonus;
+      scaled = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     }
     
-    // Legacy scaling
-    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
-    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
-    base *= scale.tierScale * levelBonus;
-    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const regionMult = this.getRegionMultiplier(`${type}Damage`);
     const rarityMult = this.rarityData.multiplier[`${type}Damage`] || 1;
     const baseMult = this.baseData.multiplier?.[`${type}Damage`] || 1;
     const damageRed = hero.stats.reduceEnemyDamagePercent || 0;
-    const totalDamage = val * regionMult * rarityMult * baseMult * (1 - damageRed);
-    return Math.max(totalDamage, 1);
+    const totalDamage = scaled * regionMult * rarityMult * baseMult * (1 - damageRed);
+    return Math.round(totalDamage);
   }
 
   calculateElementalResistance(type) {
     let base = this.baseData[`${type}Resistance`] || 0;
     if (base === 0) return 0;
     
-    if (SCALING_SYSTEM === 'simple') {
-      const scaled = this.calculateSimpleScaling(base);
-      const regionMult = this.getRegionMultiplier(`${type}Resistance`);
-      const rarityMult = this.rarityData.multiplier[`${type}Resistance`] || 1;
-      const baseMult = this.baseData.multiplier?.[`${type}Resistance`] || 1;
-      return scaled * regionMult * rarityMult * baseMult;
+    let scaled;
+    if (EnemyBase.SCALING_SYSTEM === 'simple') {
+      scaled = this.calculateSimpleScaling(base);
+    } else {
+      // Legacy scaling
+      const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+      const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
+      base *= scale.tierScale * levelBonus;
+      scaled = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     }
     
-    // Legacy scaling
-    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
-    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
-    base *= scale.tierScale * levelBonus;
-    const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const regionMult = this.getRegionMultiplier(`${type}Resistance`);
     const rarityMult = this.rarityData.multiplier[`${type}Resistance`] || 1;
     const baseMult = this.baseData.multiplier?.[`${type}Resistance`] || 1;
-    return val * regionMult * rarityMult * baseMult;
+    return scaled * regionMult * rarityMult * baseMult;
   }
 
   calculateXP() {
     const base = this.baseData.xp || 0;
     const tier = this.region?.tier || 1;
+    let baseAtL1;
+    let basePercent;
+    let levelBonus;
     
-    if (SCALING_SYSTEM === 'simple') {
+    if (EnemyBase.SCALING_SYSTEM === 'simple') {
       // Apply region scaling to XP
-      const regionScale = Math.pow(MOB_REGION_SCALING_MULTIPLIER, tier - 1);
-      const baseAtL1 = base * regionScale;
-      
+      const regionScale = Math.pow(EnemyBase.MOB_REGION_SCALING_MULTIPLIER, tier - 1);
+      baseAtL1 = base * regionScale;
       // Apply stage scaling using the existing reward computation
-      const basePercent = MOB_STAGE_SCALING_PERCENT;
-      const levelBonus = 1;
-      const diminishing = xpDiminishingFactor(this.level);
-      const val = computeScaledReward(baseAtL1, this.level, basePercent, levelBonus, diminishing);
-      
-      return (
-        val *
-        this.getRegionMultiplier('xp') *
-        (this.rarityData.multiplier.xp || 1) *
-        (this.baseData.multiplier?.xp || 1)
-      );
+      basePercent = EnemyBase.MOB_STAGE_SCALING_PERCENT;
+      levelBonus = 1;
+    } else {
+      // Legacy scaling
+      const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+      baseAtL1 = base * scale.tierScale;
+      const basePercentFn = TIER_STAT_SCALE[this.baseData.tier];
+      basePercent = basePercentFn ? basePercentFn(this.level) : 0;
+      levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
     }
     
-    // Legacy scaling
-    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
-    const baseAtL1 = base * scale.tierScale;
-    const basePercentFn = TIER_STAT_SCALE[this.baseData.tier];
-    const basePercent = basePercentFn ? basePercentFn(this.level) : 0;
-    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
     const diminishing = xpDiminishingFactor(this.level);
     const val = computeScaledReward(baseAtL1, this.level, basePercent, levelBonus, diminishing);
     return (
@@ -540,32 +498,26 @@ class Enemy extends EnemyBase {
   calculateGold() {
     const base = this.baseData.gold || 0;
     const tier = this.region?.tier || 1;
+    let baseAtL1;
+    let basePercent;
+    let levelBonus;
     
-    if (SCALING_SYSTEM === 'simple') {
+    if (EnemyBase.SCALING_SYSTEM === 'simple') {
       // Apply region scaling to Gold
-      const regionScale = Math.pow(MOB_REGION_SCALING_MULTIPLIER, tier - 1);
-      const baseAtL1 = base * regionScale;
-      
+      const regionScale = Math.pow(EnemyBase.MOB_REGION_SCALING_MULTIPLIER, tier - 1);
+      baseAtL1 = base * regionScale;
       // Apply stage scaling using the existing reward computation
-      const basePercent = MOB_STAGE_SCALING_PERCENT;
-      const levelBonus = 1;
-      const diminishing = xpDiminishingFactor(this.level);
-      const val = computeScaledReward(baseAtL1, this.level, basePercent, levelBonus, diminishing);
-      
-      return (
-        val *
-        this.getRegionMultiplier('gold') *
-        (this.rarityData.multiplier.gold || 1) *
-        (this.baseData.multiplier?.gold || 1)
-      );
+      basePercent = EnemyBase.MOB_STAGE_SCALING_PERCENT;
+      levelBonus = 1;
+    } else {
+      // Legacy scaling
+      const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
+      baseAtL1 = base * scale.tierScale;
+      const basePercentFn = TIER_STAT_SCALE[this.baseData.tier];
+      basePercent = basePercentFn ? basePercentFn(this.level) : 0;
+      levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
     }
     
-    // Legacy scaling
-    const scale = BASE_SCALE_PER_TIER_AND_LEVEL[this.baseData.tier];
-    const baseAtL1 = base * scale.tierScale;
-    const basePercentFn = TIER_STAT_SCALE[this.baseData.tier];
-    const basePercent = basePercentFn ? basePercentFn(this.level) : 0;
-    const levelBonus = 1 + Math.floor(this.level / 20) * scale.levelScale;
     const diminishing = xpDiminishingFactor(this.level);
     const val = computeScaledReward(baseAtL1, this.level, basePercent, levelBonus, diminishing);
     return (

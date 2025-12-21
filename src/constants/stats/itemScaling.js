@@ -1,10 +1,4 @@
-import {
-  SCALING_SYSTEM,
-  ITEM_FLAT_REGION_SCALING_MULTIPLIER,
-  ITEM_PERCENT_REGION_SCALING_MULTIPLIER,
-  ITEM_FLAT_STAGE_SCALING_PERCENT,
-  ITEM_PERCENT_STAGE_SCALING_PERCENT,
-} from '../scaling.js';
+import EnemyBase from '../../enemyBase.js';
 
 /**
  * Sum diminishing flat bonuses until a minimum value then
@@ -78,18 +72,18 @@ export function itemLevelScaling(
 ) {
   if (level <= 0) return 1;
 
-  if (SCALING_SYSTEM === 'simple') {
+  if (EnemyBase.SCALING_SYSTEM === 'simple') {
     // New simple scaling system
     // Tier scaling: multiply by the appropriate multiplier for each tier above 1
     const tierMultiplier = isPercent
-      ? ITEM_PERCENT_REGION_SCALING_MULTIPLIER
-      : ITEM_FLAT_REGION_SCALING_MULTIPLIER;
+      ? EnemyBase.ITEM_PERCENT_REGION_SCALING_MULTIPLIER
+      : EnemyBase.ITEM_FLAT_REGION_SCALING_MULTIPLIER;
     const tierScale = Math.pow(tierMultiplier, tier - 1);
 
     // Level scaling: percentage increase per level from base
     const levelPercent = isPercent
-      ? ITEM_PERCENT_STAGE_SCALING_PERCENT
-      : ITEM_FLAT_STAGE_SCALING_PERCENT;
+      ? EnemyBase.ITEM_PERCENT_STAGE_SCALING_PERCENT
+      : EnemyBase.ITEM_FLAT_STAGE_SCALING_PERCENT;
     const levelScale = 1 + (level - 1) * levelPercent;
 
     return tierScale * levelScale;

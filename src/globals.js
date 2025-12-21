@@ -53,6 +53,11 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
 
   const _options = new Options(savedData?.options);
   options = _options;
+  
+  // Apply scaling system from options
+  const { default: EnemyBase } = await import('./enemyBase.js');
+  EnemyBase.SCALING_SYSTEM = options.scalingSystem || 'simple';
+  
   const _game = new Game(savedData?.game);
   game = _game;
   const _hero = new Hero(savedData?.hero);
