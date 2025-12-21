@@ -81,8 +81,8 @@ export function itemLevelScaling(
   if (SCALING_SYSTEM === 'simple') {
     // New simple scaling system
     // Tier scaling: multiply by the appropriate multiplier for each tier above 1
-    const tierMultiplier = isPercent 
-      ? ITEM_PERCENT_REGION_SCALING_MULTIPLIER 
+    const tierMultiplier = isPercent
+      ? ITEM_PERCENT_REGION_SCALING_MULTIPLIER
       : ITEM_FLAT_REGION_SCALING_MULTIPLIER;
     const tierScale = Math.pow(tierMultiplier, tier - 1);
 
