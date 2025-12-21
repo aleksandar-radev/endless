@@ -280,11 +280,57 @@ export default class SkillTree {
     return SKILL_TREES[pathName] || [];
   }
 
+  getExclusiveSkillIds(skill) {
+    const src = typeof skill?.exclusiveWith === 'function' ? skill.exclusiveWith() : skill?.exclusiveWith;
+    if (!Array.isArray(src)) return [];
+    return src.filter(Boolean);
+  }
+
+  isSkillVisible(skill) {
+    if (!skill) return false;
+    if (typeof skill.isVisible !== 'function') return true;
+    try {
+      return !!skill.isVisible();
+    } catch {
+      return true;
+    }
+  }
+
+  isSkillUnlockBlocked(skillId) {
+    const skill = this.getSkill(skillId);
+    if (!skill) return true;
+    const exclusiveIds = this.getExclusiveSkillIds(skill);
+    if (exclusiveIds.length === 0) return false;
+    return exclusiveIds.some((otherId) => (this.skills[otherId]?.level || 0) > 0);
+  }
+
+  shouldSkipExclusiveSkillInBulk(skillId) {
+    const skill = this.getSkill(skillId);
+    if (!skill) return true;
+    const exclusiveIds = this.getExclusiveSkillIds(skill);
+    if (exclusiveIds.length === 0) return false;
+    const currentLevel = this.skills[skillId]?.level || 0;
+    if (currentLevel > 0) return false;
+    const anyChosen = exclusiveIds.some((otherId) => (this.skills[otherId]?.level || 0) > 0);
+    return !anyChosen;
+  }
+
   canUnlockSkill(skillId, showWarning = false) {
     if (!this.selectedPath) return false;
 
     const skill = this.getSkill(skillId);
     if (!skill) return false;
+
+    if (!this.isSkillVisible(skill)) {
+      return false;
+    }
+
+    if (this.isSkillUnlockBlocked(skillId)) {
+      if (showWarning) {
+        showToast(t('skillTree.shapeshiftExclusiveWarning'), 'warning');
+      }
+      return false;
+    }
 
     const currentLevel = this.skills[skillId]?.level || 0;
     const cost = 1 + Math.floor(currentLevel / 50);
@@ -396,6 +442,10 @@ export default class SkillTree {
     const skill = this.getSkill(skillId);
     if (!skill) return 0;
 
+    if (!this.isSkillVisible(skill) || this.isSkillUnlockBlocked(skillId)) {
+      return 0;
+    }
+
     const { skipUpdates = false } = opts;
 
     // Calculate max possible to buy
@@ -466,6 +516,9 @@ export default class SkillTree {
       .map((skillId) => {
         const skill = this.getSkill(skillId);
         if (!skill) return null;
+        if (!this.isSkillVisible(skill)) return null;
+        if (this.isSkillUnlockBlocked(skillId)) return null;
+        if (this.shouldSkipExclusiveSkillInBulk(skillId)) return null;
         const prerequisitesMet =
           !Array.isArray(skill.prerequisites) || skill.prerequisites.length === 0 || this.arePrerequisitesMet(skill);
         if (!prerequisitesMet) return null;
@@ -1030,6 +1083,24 @@ export default class SkillTree {
 
     // Check if skill is on cooldown
     if (skill.cooldownEndTime && skill.cooldownEndTime > Date.now()) return false;
+
+    // Mutually-exclusive buff groups (e.g. shapeshift forms)
+    const group =
+      typeof skill.exclusiveBuffGroup === 'function' ? skill.exclusiveBuffGroup() : skill.exclusiveBuffGroup;
+    if (group) {
+      Array.from(this.activeBuffs.keys()).forEach((activeId) => {
+        if (activeId === skillId) return;
+        const activeSkill = this.getSkill(activeId);
+        if (!activeSkill) return;
+        const activeGroup =
+          typeof activeSkill.exclusiveBuffGroup === 'function'
+            ? activeSkill.exclusiveBuffGroup()
+            : activeSkill.exclusiveBuffGroup;
+        if (activeGroup === group) {
+          this.deactivateSkill(activeId);
+        }
+      });
+    }
 
     // Apply buff
     hero.stats.currentMana -= manaCost;

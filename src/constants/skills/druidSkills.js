@@ -1,6 +1,7 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
 import { scaleDownFlat, scaleUpFlat } from '../../common.js';
+import { hero } from '../../globals.js';
 
 // Druid skills
 export const DRUID_SKILLS = {
@@ -223,6 +224,47 @@ export const DRUID_SKILLS = {
       armorPercent: scaleDownFlat(level, 5),
       earthDamagePercent: scaleDownFlat(level, 2),
       allResistance: scaleUpFlat(level, 4),
+    }),
+  },
+
+  // Shapeshifting Skills (Unlocked via Shapeshifter specialization)
+  bearForm: {
+    id: 'bearForm',
+    name: () => t('Bear Form'),
+    type: () => 'buff',
+    exclusiveWith: () => ['snakeForm'],
+    exclusiveBuffGroup: () => 'shapeshiftForm',
+    manaCost: (level) => 10 + level * 0.625,
+    cooldown: () => 60000,
+    duration: () => 30000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[3],
+    icon: () => 'spirit-bear',
+    description: () => t('skill.bearForm'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    isVisible: () => hero.stats.shapeshiftUnlocked > 0,
+    effect: (level) => ({
+      life: scaleUpFlat(level, 10),
+      damage: scaleUpFlat(level, 4),
+    }),
+  },
+  snakeForm: {
+    id: 'snakeForm',
+    name: () => t('Snake Form'),
+    type: () => 'buff',
+    exclusiveWith: () => ['bearForm'],
+    exclusiveBuffGroup: () => 'shapeshiftForm',
+    manaCost: (level) => 10 + level * 0.625,
+    cooldown: () => 60000,
+    duration: () => 30000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[3],
+    icon: () => 'fangs',
+    description: () => t('skill.snakeForm'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    isVisible: () => hero.stats.shapeshiftUnlocked > 0,
+    effect: (level) => ({
+      earthDamage: scaleUpFlat(level, 4),
+      poisonDamagePercent: scaleDownFlat(level, 0.5),
+      poisonChance: 20,
     }),
   },
 

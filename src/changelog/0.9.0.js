@@ -25,6 +25,8 @@ export default function run() {
       <li>Standardized item-based percentage caps at 1200%, while limiting bonus experience, gold, item rarity, item quantity, and material quantity to 400% before ascension upgrades.</li>
       <li>Introduced a material quantity bonus for rings and amulets that scales material drops similarly to item quantity.</li>
       <li>Added class specializations. Each class gets 3 specializations.</li>
+      <li>Druid: Shapeshifter specialization now unlocks Bear Form and Snake Form skills.</li>
+      <li>Druid: Reworked Shapeshifter specialization skills to grant attribute, offense, and defense bonuses.</li>
       <li>Improved design for login dialog</li>
       <li>Added all resistance $ bonus in prestige bonuses.</li>
       <li>Increased life regen bonus flat and percent in ascension upgrades and reduced in soul shop upgrades.</li>
