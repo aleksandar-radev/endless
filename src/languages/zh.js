@@ -423,7 +423,7 @@ export default {
   'options.lang.english': '英语',
   'options.lang.spanish': '西班牙语',
   'options.lang.chinese': '中文',
-  'options.lang.note': '并非所有内容都已翻译。更改语言后你可能需要刷新页面以使所有更改生效。如果你想看到其他语言，请在 Discord 中请求。',
+  'options.lang.reload': '重新加载',
   'options.soundVolume': '音量',
   'options.soundVolume.tooltip': '调整游戏音量',
   'options.tab.game': '游戏',
@@ -1527,6 +1527,9 @@ export default {
   'Power Surge': '能量涌动',
   'skill.powerSurge': '暂时提升魔法力量。',
   'skillTree.specializationLevelReq': '专精需要等级 100。',
+  'skillTree.selectClassFirst': '请先选择一个职业。',
+  'skillTree.noSpecializationsAvailable': '此职业暂无可用的专精。',
+  'quests.noQuestsReadyToClaim': '没有可领取的任务。',
 
   // Warrior Specialization Skills
   'Armored Offense': '装甲攻势',

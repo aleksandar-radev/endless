@@ -409,7 +409,7 @@ export default {
   'options.lang.english': 'Inglés',
   'options.lang.spanish': 'Español',
   'options.lang.chinese': 'Chino',
-  'options.lang.note': 'Aún no todo está traducido. Es posible que todavía veas textos en inglés como idioma predeterminado. Puede que debas refrescar la página después de cambiar el idioma para que todos los cambios surtan efecto. Si deseas ver otro idioma, solicítalo en discord.',
+  'options.lang.reload': 'Recargar',
   'options.soundVolume': 'Volumen de Sonido',
   'options.soundVolume.tooltip': 'Ajusta el volumen del sonido del juego',
   'options.tab.game': 'Juego',
@@ -1734,7 +1734,10 @@ export default {
   'skill.enchantWeapon': 'Añade daño elemental a los ataques.',
   'Power Surge': 'Oleada de Poder',
   'skill.powerSurge': 'Aumenta temporalmente el poder mágico.',
-  'skillTree.specializationLevelReq': 'Las especializaciones requieren nivel 1000.',
+  'skillTree.specializationLevelReq': 'Las especializaciones requieren nivel 100.',
+  'skillTree.selectClassFirst': 'Por favor, selecciona primero una clase.',
+  'skillTree.noSpecializationsAvailable': 'Aún no hay especializaciones disponibles para esta clase.',
+  'quests.noQuestsReadyToClaim': 'No hay misiones listas para reclamar.',
 
   // Warrior Specialization Skills
   'Vitality Boost': 'Impulso de Vitalidad',

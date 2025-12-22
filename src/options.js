@@ -205,10 +205,11 @@ export class Options {
         <option value="es">Español</option>
         <option value="zh">中文</option>
       </select>
-      <span data-i18n="options.lang.note">Not everything translated yet. You might still see translations in english, as a default language. You might want to refresh page after changing language, to see all changes take effect.</span>
+      <button id="language-reload-btn" style="display:none;" data-i18n="options.lang.reload">${t('options.lang.reload')}</button>
     `;
     const label = wrapper.querySelector('label');
     const select = wrapper.querySelector('select');
+    const reloadBtn = wrapper.querySelector('#language-reload-btn');
     attachTooltip(label, 'languageLabel');
     attachTooltip(select, 'languageSelect');
     select.value = this.language;
@@ -216,6 +217,10 @@ export class Options {
       this.language = select.value;
       setLanguage(this.language);
       dataManager.saveGame();
+      reloadBtn.style.display = 'inline-block';
+    });
+    reloadBtn.addEventListener('click', () => {
+      window.location.reload();
     });
     return wrapper;
   }

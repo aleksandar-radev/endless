@@ -292,7 +292,7 @@ function initializeSpecializationsTab() {
   if (!specializationsContent) return;
 
   if (!skillTree.selectedPath) {
-    specializationsContent.innerHTML = '<p style="padding: 20px;">Please select a class first.</p>';
+    specializationsContent.innerHTML = `<p style="padding: 20px;">${t('skillTree.selectClassFirst')}</p>`;
     return;
   }
 
@@ -462,7 +462,7 @@ function initializeSpecializationsTab() {
 
   const specializations = getClassSpecializations(skillTree.selectedPath.name);
   if (!specializations || Object.keys(specializations).length === 0) {
-    specializationsContent.innerHTML += '<p style="padding: 20px;">No specializations available for this class yet.</p>';
+    specializationsContent.innerHTML += `<p style="padding: 20px;">${t('skillTree.noSpecializationsAvailable')}</p>`;
     return;
   }
 

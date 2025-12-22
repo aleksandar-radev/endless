@@ -423,7 +423,7 @@ export default {
   'options.lang.english': 'English',
   'options.lang.spanish': 'Spanish',
   'options.lang.chinese': 'Chinese',
-  'options.lang.note': 'Not everything translated yet. You might still see translations in English as a default language. You might want to refresh page after changing language, to see all changes take effect. If you would like to see another language, request it in discord.',
+  'options.lang.reload': 'Reload',
   'options.soundVolume': 'Sound Volume',
   'options.soundVolume.tooltip': 'Adjust game sound volume',
   'options.tab.game': 'Game',
@@ -1535,6 +1535,9 @@ export default {
   'Power Surge': 'Power Surge',
   'skill.powerSurge': 'Temporarily boosts magical power.',
   'skillTree.specializationLevelReq': 'Specializations require Level 100.',
+  'skillTree.selectClassFirst': 'Please select a class first.',
+  'skillTree.noSpecializationsAvailable': 'No specializations available for this class yet.',
+  'quests.noQuestsReadyToClaim': 'No quests ready to claim.',
   'stats.tooltip.ascensionBaseBonus': 'Base Bonus (Ascension)',
 
   // Warrior Specialization Skills
