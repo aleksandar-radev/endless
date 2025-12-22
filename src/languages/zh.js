@@ -1651,9 +1651,11 @@ export default {
   'Stone Torrent': '石涛奔涌',
   'skill.stoneTorrent': '瞬间用大地与水之力打击敌人。',
   'Beast Frenzy': '野兽狂乱',
-  'skill.beastFrenzy': '增加召唤物的攻击速度。',
+  'skill.beastFrenzy': '提高召唤物的攻击速度与伤害。',
+  'Summon Treant': '召唤树人',
+  'skill.summonTreant': '召唤一个攻击极慢但伤害极高的树人。',
   'Wild Communion': '荒野共鸣',
-  'skill.wildCommunion': '增加召唤物的伤害。',
+  'skill.wildCommunion': '提高你的生命值%、生命回复%、护甲%与抗性%。',
 
   // Mage Specializations
   'Blink': '闪现',

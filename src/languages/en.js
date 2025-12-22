@@ -1656,9 +1656,11 @@ export default {
   'Stone Torrent': 'Stone Torrent',
   'skill.stoneTorrent': 'Instantly strikes the enemy with earth and water damage.',
   'Beast Frenzy': 'Beast Frenzy',
-  'skill.beastFrenzy': 'Increases attack speed of summons.',
+  'Summon Treant': 'Summon Treant',
+  'skill.summonTreant': 'Summons a treant that attacks very slowly but deals massive damage.',
   'Wild Communion': 'Wild Communion',
-  'skill.wildCommunion': 'Increases damage of summons.',
+  'skill.wildCommunion': 'Increases your Life %, Life Regeneration %, Armor %, and Resistance %.',
+  'skill.beastFrenzy': 'Increases summon attack speed and summon damage.',
 
   // Mage Specializations
   'Blink': 'Blink',

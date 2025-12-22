@@ -1117,10 +1117,18 @@ export default class SkillTree {
     if (skill.type() === 'summon') {
       const summonStats = skill.summonStats(skill.level);
       const now = Date.now();
+
+      // Keep the base attack speed so we can apply dynamic buffs/caps later.
+      if (typeof summonStats.baseAttackSpeed !== 'number') {
+        summonStats.baseAttackSpeed = summonStats.attackSpeed;
+      }
+
+      const summonAttackSpeedBonus = hero.stats.summonAttackSpeedBuffPercent || 0;
+      const effectiveAttackSpeed = (summonStats.baseAttackSpeed || 1) * (1 + summonAttackSpeedBonus);
       this.activeBuffs.set(skillId, {
         endTime: now + this.getSkillDuration(skill),
         summonStats,
-        nextAttackTime: now + 1000 / summonStats.attackSpeed,
+        nextAttackTime: now + 1000 / effectiveAttackSpeed,
         skillId,
         effects: {},
       });
@@ -1221,7 +1229,8 @@ export default class SkillTree {
       if (!buffData.summonStats) return;
       if (buffData.nextAttackTime <= now) {
       // Calculate summon damage as % of player's damage
-        const playerDamage = hero.calculateTotalDamage({}, { canCrit: buffData?.summonStats?.canCrit || false });
+        const canCrit = (buffData?.summonStats?.canCrit || false) || (hero.stats.summonsCanCrit || 0) > 0;
+        const playerDamage = hero.calculateTotalDamage({}, { canCrit });
         let damage = 0;
         damage += buffData.summonStats.damage || 0;
         damage += buffData.summonStats.fireDamage || 0;
@@ -1260,11 +1269,17 @@ export default class SkillTree {
         const skill = this.getSkill(skillId);
         const summonName = typeof skill?.name === 'function' ? skill.name() : null;
 
-        const canCrit = buffData.summonStats.canCrit;
+        // Apply summon damage bonus (if any) after all damage components are combined.
+        const summonDamageMultiplier = 1 + (hero.stats.summonDamageBuffPercent || 0);
+        damage *= summonDamageMultiplier;
+
         game.damageEnemy(damage, canCrit ? playerDamage.isCritical : false, null, null, summonName);
 
         // Schedule next attack
-        buffData.nextAttackTime = now + 1000 / buffData.summonStats.attackSpeed;
+        const baseAttackSpeed = buffData?.summonStats?.baseAttackSpeed || buffData?.summonStats?.attackSpeed || 1;
+        const summonAttackSpeedBonus = hero.stats.summonAttackSpeedBuffPercent || 0;
+        const effectiveAttackSpeed = baseAttackSpeed * (1 + summonAttackSpeedBonus);
+        buffData.nextAttackTime = now + 1000 / effectiveAttackSpeed;
       }
     });
   }

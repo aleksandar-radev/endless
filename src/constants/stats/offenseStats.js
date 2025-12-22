@@ -791,6 +791,10 @@ export const OFFENSE_STATS = {
     divisor: 100,
     decimalPlaces: 1,
   },
+  summonerExtraSummonUnlocked: {
+    base: 0,
+    showValue: false,
+  },
   entangleChance: {
     base: 0,
     divisor: 100,

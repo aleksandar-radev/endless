@@ -172,6 +172,31 @@ export const DRUID_SKILLS = {
     effect: (level) => ({
     }),
   },
+
+  // Summoner specialization bonus skill
+  summonTreant: {
+    id: 'summonTreant',
+    name: () => t('Summon Treant'),
+    type: () => 'summon',
+    summonStats: (level) => {
+      return {
+        percentOfPlayerDamage: Math.min(scaleDownFlat(level, 1.5), 400),
+        damage: scaleUpFlat(level, 22, 5, 0.6),
+        earthDamage: scaleUpFlat(level, 30, 5, 0.7),
+        attackSpeed: 0.25,
+      };
+    },
+    manaCost: (level) => 10 + level * 0.4,
+    cooldown: () => 90000,
+    duration: () => 25000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[2],
+    icon: () => 'primeval-guardian',
+    description: () => t('skill.summonTreant'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    isVisible: () => hero.stats.summonerExtraSummonUnlocked > 0,
+    effect: (level) => ({
+    }),
+  },
   naturalGrowth: {
     id: 'naturalGrowth',
     name: () => t('Natural Growth'),

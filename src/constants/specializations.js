@@ -773,7 +773,8 @@ export const SPECIALIZATIONS = {
       description: () => t('specialization.druid.summoner.description'),
       avatar: () => 'druid-summoner-avatar.jpg',
       baseStats: () => ({
-        summonDamageBuffPercent: 20,
+        summonsCanCrit: 1,
+        summonerExtraSummonUnlocked: 1,
       }),
       skills: {
         beastFrenzy: {
@@ -785,7 +786,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.beastFrenzy'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            summonAttackSpeedBuffPercent: scaleDownFlat(level, 2),
+            summonAttackSpeedBuffPercent: Math.min(scaleDownFlat(level, 1), 3),
+            summonDamageBuffPercent: scaleDownFlat(level, 2),
           }),
         },
         wildCommunion: {
@@ -797,7 +799,10 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.wildCommunion'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            summonDamageBuffPercent: scaleDownFlat(level, 3),
+            lifePercent: scaleDownFlat(level, 0.5),
+            lifeRegenPercent: scaleDownFlat(level, 0.5),
+            armorPercent: scaleDownFlat(level, 0.5),
+            allResistancePercent: scaleDownFlat(level, 0.5),
           }),
         },
       },

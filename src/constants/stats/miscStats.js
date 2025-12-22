@@ -218,6 +218,12 @@ export const MISC_STATS = {
     decimalPlaces: 1,
     subcategory: 'defense',
   },
+
+  // SUMMONS
+  summonsCanCrit: {
+    base: 0,
+    showValue: false,
+  },
   // BONUS GOLD
   bonusGoldPercent: {
     base: 0,

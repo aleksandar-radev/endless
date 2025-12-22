@@ -751,7 +751,7 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNe
 
   // Summon Stats or Next Level Effects
   if (skill.type() === 'summon') {
-    const summonStats = skill.summonStats(currentLevel);
+    const summonStats = getDisplayedSummonStats(skill.summonStats(currentLevel));
     html += `<br /><u>${t('skillTree.summonStats')}:</u><br />`;
     Object.entries(summonStats).forEach(([stat, value]) => {
       if (!shouldShowStatValue(stat)) {
@@ -796,6 +796,36 @@ function updateSpecializationTooltipContent(skillId) {
   const effectsNext = skillTree.getSpecializationSkillEffect(skillId, nextLevel);
 
   return generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNext);
+}
+
+function getDisplayedSummonStats(rawSummonStats) {
+  const summonStats = { ...rawSummonStats };
+  const summonAttackSpeedBonus = hero.stats.summonAttackSpeedBuffPercent || 0;
+  const summonDamageBonus = hero.stats.summonDamageBuffPercent || 0;
+  const summonDamageMultiplier = 1 + summonDamageBonus;
+  if (typeof summonStats.attackSpeed === 'number') {
+    summonStats.attackSpeed *= 1 + summonAttackSpeedBonus;
+  }
+
+  if (typeof summonStats.percentOfPlayerDamage === 'number') {
+    summonStats.percentOfPlayerDamage *= summonDamageMultiplier;
+  }
+
+  [
+    'damage',
+    'fireDamage',
+    'coldDamage',
+    'airDamage',
+    'earthDamage',
+    'lightningDamage',
+    'waterDamage',
+  ].forEach((key) => {
+    if (typeof summonStats[key] === 'number') {
+      summonStats[key] *= summonDamageMultiplier;
+    }
+  });
+
+  return summonStats;
 }
 
 
@@ -1665,8 +1695,8 @@ function updateSkillModalDetails() {
   if (skill.type() === 'summon') {
     const title = skillModal.querySelector('.modal-skill-effects h3');
     title.innerHTML = 'Summon Stats';
-    const summonStatsCurrent = skill.summonStats(currentLevel);
-    const summonStatsFuture = skill.summonStats(futureLevel);
+    const summonStatsCurrent = getDisplayedSummonStats(skill.summonStats(currentLevel));
+    const summonStatsFuture = getDisplayedSummonStats(skill.summonStats(futureLevel));
     Object.entries(summonStatsCurrent).forEach(([stat, currVal]) => {
       const futureVal = summonStatsFuture[stat];
       const diff = futureVal - currVal;
@@ -1872,6 +1902,27 @@ function createSkillTooltip(skillId) {
   }
   if (skillTree.getSkillDuration(skill)) {
     tooltip += `<div class="tooltip-duration">Duration: ${(skillTree.getSkillDuration(skill) / 1000).toFixed(2)}s</div>`;
+  }
+
+  // Add summon stats for summon skills
+  if (skill?.type && skill.type() === 'summon' && typeof skill.summonStats === 'function') {
+    const summonStats = getDisplayedSummonStats(skill.summonStats(level));
+    tooltip += `<div class="tooltip-effects"><u>${t('skillTree.summonStats')}:</u>`;
+    Object.entries(summonStats).forEach(([stat, value]) => {
+      if (!shouldShowStatValue(stat)) {
+        tooltip += `<div>${formatStatName(stat)}</div>`;
+        return;
+      }
+
+      if (typeof value !== 'number') {
+        tooltip += `<div>${formatStatName(stat)}</div>`;
+        return;
+      }
+
+      const decimals = stat === 'attackSpeed' ? 2 : getStatDecimals(stat);
+      tooltip += `<div>${formatStatName(stat)}: ${value.toFixed(decimals)}</div>`;
+    });
+    tooltip += '</div>';
   }
 
   if (skill?.type && skill.type() === 'instant' && skillTree.isDamageSkill?.(effects)) {

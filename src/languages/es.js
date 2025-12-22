@@ -1587,9 +1587,11 @@ export default {
   'Stone Torrent': 'Torrente de Piedra',
   'skill.stoneTorrent': 'Golpea instantáneamente al enemigo con daño de tierra y agua.',
   'Beast Frenzy': 'Frenesí Bestial',
-  'skill.beastFrenzy': 'Aumenta la velocidad de ataque de las invocaciones.',
+  'skill.beastFrenzy': 'Aumenta la velocidad de ataque y el daño de las invocaciones.',
+  'Summon Treant': 'Invocar Treant',
+  'skill.summonTreant': 'Invoca un treant que ataca muy lentamente pero inflige un daño enorme.',
   'Wild Communion': 'Comunión Salvaje',
-  'skill.wildCommunion': 'Aumenta el daño de las invocaciones.',
+  'skill.wildCommunion': 'Aumenta tu Vida %, Regeneración de Vida %, Armadura % y Resistencia %.',
 
   // Mage Specializations
   'Blink': 'Parpadeo',
