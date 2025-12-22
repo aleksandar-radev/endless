@@ -21,6 +21,10 @@ export const AILMENTS = {
     id: 'freeze',
     duration: 1000,
   },
+  stun: {
+    id: 'stun',
+    duration: 1000,
+  },
   poison: {
     id: 'poison',
     duration: 10000,

@@ -121,7 +121,6 @@ export const DEFENSE_STATS = {
     decimalPlaces: 1,
     item: { min: 8, max: 18, scaling: (level, tier) => defenseScaling(level, tier, PERCENT_SCALING) },
     itemTags: ['shield', 'armor'],
-    showInUI: true,
     subcategory: 'defense',
   },
   // RESURRECTION
@@ -131,7 +130,6 @@ export const DEFENSE_STATS = {
     decimalPlaces: 1,
     item: { min: 3, max: 8, limit: 40, scaling: (level, tier) => defenseScaling(level, tier, CHANCE_SCALING) },
     itemTags: ['amulet'],
-    showInUI: true,
     subcategory: 'defense',
   },
   reflectFireDamage: {
@@ -316,13 +314,18 @@ export const DEFENSE_STATS = {
     divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
-    showInUI: true,
   },
   coldDamageTakenReductionPercent: {
     base: 0,
     divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
+  },
+  damageTakenReductionPercent: {
+    base: 0,
+    divisor: 100,
+    decimalPlaces: 1,
+    subcategory: 'defense',
     showInUI: true,
   },
 };

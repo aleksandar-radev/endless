@@ -500,6 +500,16 @@ function updateAilmentIcons() {
       },
     },
     {
+      id: 'stun',
+      isActive: enemy.stunnedUntil > Date.now(),
+      getTooltip: () => {
+        const remainingMs = Math.max(0, enemy.stunnedUntil - Date.now());
+        return tp('ailment.stun.tooltip', {
+          duration: (remainingMs / 1000).toFixed(1),
+        });
+      },
+    },
+    {
       id: 'poison',
       isActive: !!enemy.ailments[AILMENTS.poison.id],
       getTooltip: () => tp('ailment.poison.tooltip', {

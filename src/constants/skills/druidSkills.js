@@ -100,6 +100,32 @@ export const DRUID_SKILLS = {
     },
   },
 
+  frostBloom: {
+    id: 'frostBloom',
+    name: () => t('Frost Bloom'),
+    type: () => 'instant',
+    skill_type: 'spell',
+    manaCost: (level) => 4 + level * 0.35,
+    cooldown: () => 13500,
+    requiredLevel: () => SKILL_LEVEL_TIERS[5],
+    icon: () => 'frost-bloom',
+    description: () => t('skill.frostBloom'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    isVisible: () => hero.stats.naturalistInstantSkillsUnlocked > 0,
+    effect: (level) => {
+      const waterDamage = scaleUpFlat(level, 3.5);
+      const waterDamagePercent = scaleDownFlat(level, 6);
+      const coldDamage = scaleUpFlat(level, 3.5);
+      const coldDamagePercent = scaleDownFlat(level, 6);
+      return {
+        waterDamage: waterDamage * 3.5,
+        waterDamagePercent: waterDamagePercent * 3.5,
+        coldDamage: coldDamage * 3.5,
+        coldDamagePercent: coldDamagePercent * 3.5,
+      };
+    },
+  },
+
   sproutling: {
     id: 'sproutling',
     name: () => t('Sproutling'),
@@ -158,6 +184,32 @@ export const DRUID_SKILLS = {
       lifePercent: scaleDownFlat(level, 1),
       extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.008), 1.11),
     }),
+  },
+
+  stoneTorrent: {
+    id: 'stoneTorrent',
+    name: () => t('Stone Torrent'),
+    type: () => 'instant',
+    skill_type: 'spell',
+    manaCost: (level) => 7 + level * 0.45,
+    cooldown: () => 22000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[6],
+    icon: () => 'stone-torrent',
+    description: () => t('skill.stoneTorrent'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    isVisible: () => hero.stats.naturalistInstantSkillsUnlocked > 0,
+    effect: (level) => {
+      const earthDamage = scaleUpFlat(level, 5);
+      const earthDamagePercent = scaleDownFlat(level, 6);
+      const waterDamage = scaleUpFlat(level, 3);
+      const waterDamagePercent = scaleDownFlat(level, 6);
+      return {
+        earthDamage: earthDamage * 4.2,
+        earthDamagePercent: earthDamagePercent * 4.2,
+        waterDamage: waterDamage * 4.2,
+        waterDamagePercent: waterDamagePercent * 4.2,
+      };
+    },
   },
 
   // Tier 50 Skills

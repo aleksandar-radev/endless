@@ -987,6 +987,12 @@ export default class SkillTree {
         createDamageNumber({ text: 'FROZEN', color: '#ADD8E6' });
       }
 
+      const isInstantSkill = skill.type() === 'instant';
+      if (isInstantSkill && hero.stats.stunChance > 0 && Math.random() < hero.stats.stunChance) {
+        enemy.stunnedUntil = now + AILMENTS.stun.duration;
+        createDamageNumber({ text: 'STUNNED', color: '#FFD700' });
+      }
+
       let lifeStealFraction = 0;
       let manaStealFraction = 0;
       let omniStealFraction = hero.stats.omniSteal || 0;

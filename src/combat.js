@@ -127,8 +127,12 @@ export function enemyAttack(currentTime) {
     const attackSpeed = enemy?.attackSpeed || 0;
     if (!Number.isFinite(attackSpeed) || attackSpeed <= 0) break;
 
-    if (enemy.frozenUntil && enemy.frozenUntil > currentTime) {
-      enemy.lastAttack = Math.max(enemy.lastAttack || 0, enemy.frozenUntil);
+    const frozenUntil = enemy.frozenUntil || 0;
+    const stunnedUntil = enemy.stunnedUntil || 0;
+    const disabledUntil = Math.max(frozenUntil, stunnedUntil);
+
+    if (disabledUntil > currentTime) {
+      enemy.lastAttack = Math.max(enemy.lastAttack || 0, disabledUntil);
       break;
     }
 
@@ -238,6 +242,16 @@ export function enemyAttack(currentTime) {
         const multiplier = Math.max(0.2, 1 - hero.stats.arenaDamageReductionPercent);
         totalDamage *= multiplier;
         // Scale breakdown components for consistency (though mainly visual/logging)
+        physicalDamage = Math.floor(physicalDamage * multiplier);
+        ELEMENT_IDS.forEach((id) => {
+          elementalDamage[id] = Math.floor(elementalDamage[id] * multiplier);
+        });
+      }
+
+      if (hero.stats.damageTakenReductionPercent) {
+        const reduction = Math.max(0, Math.min(0.3, hero.stats.damageTakenReductionPercent));
+        const multiplier = 1 - reduction;
+        totalDamage *= multiplier;
         physicalDamage = Math.floor(physicalDamage * multiplier);
         ELEMENT_IDS.forEach((id) => {
           elementalDamage[id] = Math.floor(elementalDamage[id] * multiplier);

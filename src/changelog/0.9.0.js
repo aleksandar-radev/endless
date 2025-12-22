@@ -13,7 +13,7 @@ export default function run() {
       <li>Item percent values now scale 1.3x per tier (multiplicative from previous tier).</li>
       <li>Item flat values now scale 0.8% per level based on the base value at level 1.</li>
       <li>Item percent values now scale 0.1% per level based on the base value at level 1.</li>
-      <li>Reworked scaling of enemies and added the option to switch to legacy scaling system. All stats of enemies are scaled differently, as well as items dropped by the enemies.</li>
+      <li>Reworked scaling of enemies and added the option to switch to legacy scaling system.</li>
     </ul>
 
     <span style="color:#FF8A00;">Improvements</span>
@@ -25,10 +25,8 @@ export default function run() {
       <li>Standardized item-based percentage caps at 1200%, while limiting bonus experience, gold, item rarity, item quantity, and material quantity to 400% before ascension upgrades.</li>
       <li>Introduced a material quantity bonus for rings and amulets that scales material drops similarly to item quantity.</li>
       <li>Added class specializations. Each class gets 3 specializations.</li>
-      <li>Druid: Shapeshifter specialization now unlocks Bear Form and Snake Form skills.</li>
-      <li>Druid: Reworked Shapeshifter specialization skills to grant attribute, offense, and defense bonuses.</li>
       <li>Improved design for login dialog</li>
-      <li>Added all resistance $ bonus in prestige bonuses.</li>
+      <li>Added all resistance % bonus in prestige bonuses.</li>
       <li>Increased life regen bonus flat and percent in ascension upgrades and reduced in soul shop upgrades.</li>
       <li>Increased resistance bonus from perseverance to 3 per point (2 before), reduced armor bonus from endurance to 4 per point (5 before), and increased life per point for vitality to 6 per point (5 before).</li>
       <li>Extended advanced tooltips to show more information, including actual ascension bonus.</li>
@@ -50,10 +48,6 @@ export default function run() {
     <span style="color:#FF8A00;">Technical</span>
     <ul>
       <li>Added a scaling system configuration flag to easily switch between the new simplified scaling and the legacy scaling system if needed.</li>
-      <li>Items now store the scaling system that was active when they were obtained; stat re-rolls use the item's stored scaling system (not the current global setting).</li>
-      <li>Existing items in inventory and equipped slots are migrated to be treated as legacy-scaling items to prevent cross-system re-roll exploits.</li>
-      <li>Removed complex tier-based scaling logic from enemy calculations.</li>
-      <li>Consolidated scaling constants in a centralized location for easier balancing.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

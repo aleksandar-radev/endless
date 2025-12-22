@@ -734,30 +734,35 @@ export const SPECIALIZATIONS = {
       description: () => t('specialization.druid.naturalist.description'),
       avatar: () => 'druid-naturalist-avatar.jpg',
       baseStats: () => ({
-        elementalDamagePercent: 30,
+        stunChance: 10,
+        naturalistInstantSkillsUnlocked: 1,
       }),
       skills: {
-        entanglingVines: {
-          id: 'entanglingVines',
-          name: () => t('Entangling Vines'),
+        elementalHarmony: {
+          id: 'elementalHarmony',
+          name: () => t('Elemental Harmony'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[4],
-          icon: () => 'entangling-vines',
-          description: () => t('skill.entanglingVines'),
+          icon: () => 'elemental-harmony',
+          description: () => t('skill.elementalHarmony'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            entangleChance: scaleDownFlat(level, 1),
+            waterDamagePercent: scaleDownFlat(level, 2),
+            coldDamagePercent: scaleDownFlat(level, 2),
+            earthDamagePercent: scaleDownFlat(level, 2),
           }),
         },
-        natureGrasp: {
-          id: 'natureGrasp',
-          name: () => t('Nature\'s Grasp'),
+        primalResilience: {
+          id: 'primalResilience',
+          name: () => t('Primal Resilience'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[6],
-          icon: () => 'nature-grasp',
-          description: () => t('skill.natureGrasp'),
+          icon: () => 'primal-resilience',
+          description: () => t('skill.primalResilience'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
+            elementalPenetrationPercent: Math.min((20 * level) / 200, 20),
+            damageTakenReductionPercent: Math.min((30 * level) / 200, 30),
           }),
         },
       },

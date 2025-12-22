@@ -754,6 +754,12 @@ export const OFFENSE_STATS = {
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
+  stunChance: {
+    base: 0,
+    divisor: 100,
+    decimalPlaces: 1,
+    subcategory: 'attack',
+  },
   extraDamageAgainstFrozenEnemies: {
     base: 0,
     divisor: 100,
@@ -790,6 +796,10 @@ export const OFFENSE_STATS = {
     divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
+  },
+  naturalistInstantSkillsUnlocked: {
+    base: 0,
+    showValue: false,
   },
   // MAGE
   teleportDodgeChance: {
