@@ -200,12 +200,12 @@ export class Options {
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
       <label for="language-select" data-i18n="options.language">Language:</label>
-      <select id="language-select">
+      <select id="language-select" class="common-select">
         <option value="en">English</option>
         <option value="es">Español</option>
         <option value="zh">中文</option>
       </select>
-      <button id="language-reload-btn" style="display:none;">${t('options.lang.reload')}</button>
+      <button id="language-reload-btn" class="common-action-btn" style="display:none;">${t('options.lang.reload')}</button>
     `;
     const label = wrapper.querySelector('label');
     const select = wrapper.querySelector('select');
@@ -230,8 +230,8 @@ export class Options {
     wrapper.className = 'option-row';
     wrapper.innerHTML = `
       <label for="backup-save-select" data-i18n="options.backup.label">${t('options.backup.label')}</label>
-      <select id="backup-save-select"></select>
-      <button id="backup-save-apply">${t('common.apply')}</button>
+      <select id="backup-save-select" class="common-select"></select>
+      <button id="backup-save-apply" class="common-action-btn">${t('common.apply')}</button>
     `;
 
     const select = wrapper.querySelector('#backup-save-select');
@@ -1211,8 +1211,8 @@ export class Options {
     wrapper.className = 'option-row';
     wrapper.innerHTML = `
       <label for="save-slot-select">Save Slot:</label>
-      <select id="save-slot-select"></select>
-      <button id="save-slot-apply">${t('common.apply')}</button>
+      <select id="save-slot-select" class="common-select"></select>
+      <button id="save-slot-apply" class="common-action-btn">${t('common.apply')}</button>
     `;
     const select = wrapper.querySelector('#save-slot-select');
     const apply = wrapper.querySelector('#save-slot-apply');
@@ -1949,11 +1949,11 @@ export class Options {
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
       <label for="scaling-system-select" style="color: #ff6b35;" data-i18n="options.scalingSystem">${t('options.scalingSystem')}:</label>
-      <select id="scaling-system-select">
+      <select id="scaling-system-select" class="common-select">
         <option value="simple">${t('options.scalingSystem.simple')}</option>
         <option value="legacy">${t('options.scalingSystem.legacy')}</option>
       </select>
-      <button id="scaling-reload-btn" style="display:none;">${t('options.scalingSystem.reload')}</button>
+      <button id="scaling-reload-btn" class="common-action-btn" style="display:none;">${t('options.scalingSystem.reload')}</button>
     `;
 
     const label = wrapper.querySelector('label');
