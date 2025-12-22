@@ -1783,7 +1783,7 @@ export default {
   'Phantom': 'Fantasma',
   'Banshee': 'Banshee',
   'Hellhound': 'Sabueso Infernal',
-  'Flame Djinn': 'Djinn de Llamas',
+  'Flame Djinn': 'Djinn de Fuego',
   'Aurelius': 'Aurelius',
   'Golden Sphinx': 'Esfinge Dorada',
   'Midas Beast': 'Bestia de Midas',
@@ -1797,7 +1797,7 @@ export default {
   // Boss Names
   'Goblin King': 'Rey Goblin',
   'Stone Golem': 'Gólem de Piedra',
-  'Ogre Chieftain': 'Jefe Ogro',
+  'Ogre Chieftain': 'Cacique Ogro',
   'Fire Drake': 'Drake de Fuego',
   'Ancient Serpent': 'Serpiente Ancestral',
 };

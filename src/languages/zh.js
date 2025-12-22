@@ -1789,7 +1789,7 @@ export default {
   // Boss Names
   'Goblin King': '地精之王',
   'Stone Golem': '石头魔像',
-  'Ogre Chieftain': '食人魔酋长',
+  'Ogre Chieftain': '食人魔首领',
   'Fire Drake': '火焰亚龙',
   'Ancient Serpent': '远古巨蛇',
 };
