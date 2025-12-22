@@ -205,7 +205,7 @@ export class Options {
         <option value="es">Español</option>
         <option value="zh">中文</option>
       </select>
-      <button id="language-reload-btn" style="display:none;" data-i18n="options.lang.reload">${t('options.lang.reload')}</button>
+      <button id="language-reload-btn" style="display:none;">${t('options.lang.reload')}</button>
     `;
     const label = wrapper.querySelector('label');
     const select = wrapper.querySelector('select');
