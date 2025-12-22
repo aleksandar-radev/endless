@@ -168,8 +168,9 @@ export function enemyAttack(currentTime) {
         createDamageNumber({ text: 'AVOIDED', isPlayer: true, color: '#888888' });
         battleLog.addBattle(t('battleLog.avoidedAttack'));
       } else if (hero.stats.teleportDodgeChance > 0 && Math.random() < hero.stats.teleportDodgeChance) {
-        const cost = hero.stats.mana * 0.1;
-        if (hero.stats.currentMana >= cost) {
+        const currentMana = hero.stats.currentMana || 0;
+        const cost = currentMana * 0.05;
+        if (cost > 0 && currentMana >= cost) {
           game.restoreMana(-cost);
           avoided = true;
           createDamageNumber({ text: 'BLINK', isPlayer: true, color: '#00FFFF' });

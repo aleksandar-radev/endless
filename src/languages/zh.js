@@ -423,7 +423,7 @@ export default {
   'options.lang.english': '英语',
   'options.lang.spanish': '西班牙语',
   'options.lang.chinese': '中文',
-  'options.lang.note': '并非所有内容都已翻译。更改语言后你可能需要刷新页面以使所有更改生效。如果你想看到其他语言，请在 Discord 中请求。',
+  'options.lang.reload': '重新加载',
   'options.soundVolume': '音量',
   'options.soundVolume.tooltip': '调整游戏音量',
   'options.tab.game': '游戏',
@@ -953,6 +953,7 @@ export default {
   'tooltip.allAttributes': '为所有属性增加点数。',
   'tooltip.allAttributesPercent': '按百分比提高所有属性。',
   'tooltip.manaShieldPercent': '在扣除生命前由法力承担的伤害比例。',
+  'tooltip.manaShieldDamageTakenReductionPercent': '当法力护盾吸收伤害时，按百分比减少由法力承担的伤害（最高 50%）。',
   'tooltip.reflectFireDamage': '将火焰伤害反射给攻击者。',
   'tooltip.thornsDamage':
     '受到攻击时对攻击者造成伤害，并同时受益于伤害%、总伤害%与反伤%的加成。',
@@ -1379,7 +1380,7 @@ export default {
   'specialization.druid.summoner.name': '召唤师',
   'specialization.druid.summoner.description': '召唤生物为你而战。',
   'specialization.mage.arcanist.name': '奥术师',
-  'specialization.mage.arcanist.description': '纯粹魔法的专精者。',
+  'specialization.mage.arcanist.description': '专精法力操控与奥术防御。',
   'specialization.mage.bloodmage.name': '血法师',
   'specialization.mage.bloodmage.description': '操控血魔法的法师。',
   'specialization.mage.enchanter.name': '附魔师',
@@ -1527,6 +1528,9 @@ export default {
   'Power Surge': '能量涌动',
   'skill.powerSurge': '暂时提升魔法力量。',
   'skillTree.specializationLevelReq': '专精需要等级 100。',
+  'skillTree.selectClassFirst': '请先选择一个职业。',
+  'skillTree.noSpecializationsAvailable': '此职业暂无可用的专精。',
+  'quests.noQuestsReadyToClaim': '没有可领取的任务。',
 
   // Warrior Specialization Skills
   'Armored Offense': '装甲攻势',
@@ -1658,10 +1662,10 @@ export default {
   'skill.wildCommunion': '提高你的生命值%、生命回复%、护甲%与抗性%。',
 
   // Mage Specializations
-  'Blink': '闪现',
-  'skill.blink': '有几率牺牲法力来躲避攻击。',
-  'Arcane Dissolution': '奥术消解',
-  'skill.arcaneDissolution': '降低敌人的元素抗性。',
+  'Mana Ward': '法力结界',
+  'skill.manaWard': '当法力护盾吸收伤害时，降低由法力承担的伤害（最高 50%），并提高法力%。',
+  'Arcane Overload': '奥术过载',
+  'skill.arcaneOverload': '提高来自法力的额外伤害（最高 2%），并提高法力回复（固定值与%）。',
   'Sanguine Power': '鲜血之力',
   'skill.sanguinePower': '将法力伤害加成转化为生命伤害加成。',
   'Vitality Overflow': '活力溢出',
@@ -1721,6 +1725,7 @@ export default {
   'stats.entangleChance': '缠绕几率',
   'stats.summonAttackSpeedBuffPercent': '召唤物攻速 %',
   'stats.teleportDodgeChance': '瞬移躲避几率',
+  'stats.manaShieldDamageTakenReductionPercent': '法力护盾法力承伤减免 %',
   'stats.reduceEnemyResistancesPercent': '减少敌人抗性 %',
   'stats.extraDamageAgainstBurningEnemies': '对燃烧敌人的伤害 %',
   'stats.manaToLifeTransferPercent': '法力转换为生命 %',

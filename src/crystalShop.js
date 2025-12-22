@@ -154,6 +154,14 @@ const CRYSTAL_UPGRADE_CONFIG = {
     multiple: true,
     category: 'reset',
   },
+  resetSpecialization: {
+    label: 'crystalShop.upgrade.resetSpecialization.label',
+    bonus: 'crystalShop.upgrade.resetSpecialization.bonus',
+    bonusLabel: 'crystalShop.upgrade.resetSpecialization.bonusLabel',
+    baseCost: 50,
+    multiple: true,
+    category: 'reset',
+  },
   resetAttributes: {
     label: 'crystalShop.upgrade.resetAttributes.label',
     bonus: 'crystalShop.upgrade.resetAttributes.bonus',
@@ -456,6 +464,17 @@ export default class CrystalShop {
       updateActionBar();
       initializeSkillTreeUI();
       showToast(t('crystalShop.resetClassSuccess'), 'success');
+    } else if (stat === 'resetSpecialization') {
+      confirmed = await showConfirmDialog(
+        tp('crystalShop.confirm.resetSpecialization', { count: cost }),
+      );
+      if (!confirmed) return;
+      hero.crystals -= cost;
+      skillTree.resetSpecialization();
+      // resetSpecialization in skillTree already updates values/actionbar/saves
+      // but we might want to refresh UI structure if needed
+      initializeSkillTreeUI();
+      showToast(t('crystalShop.resetSpecializationSuccess'), 'success');
     } else if (stat === 'resetAttributes') {
       confirmed = await showConfirmDialog(
         tp('crystalShop.confirm.resetAttributes', { count: cost }),
@@ -573,7 +592,7 @@ export default class CrystalShop {
    */
   async openUpgradeModal(stat) {
     if (
-      ['resetSkillTree', 'resetAttributes', 'resetArenaLevel', 'resetTraining', 'resetSoulShop', 'resetAscension'].includes(stat)
+      ['resetSkillTree', 'resetSpecialization', 'resetAttributes', 'resetArenaLevel', 'resetTraining', 'resetSoulShop', 'resetAscension'].includes(stat)
     ) {
       await this.confirmReset(stat);
       return;
@@ -926,7 +945,7 @@ export default class CrystalShop {
 
     // special resets use confirm dialog
     if (
-      ['resetSkillTree', 'resetAttributes', 'resetArenaLevel', 'resetTraining', 'resetSoulShop', 'resetAscension'].includes(stat)
+      ['resetSkillTree', 'resetSpecialization', 'resetAttributes', 'resetArenaLevel', 'resetTraining', 'resetSoulShop', 'resetAscension'].includes(stat)
     ) {
       await this.confirmReset(stat);
       return;

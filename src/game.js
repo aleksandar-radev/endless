@@ -119,12 +119,27 @@ class Game {
     const activeBuffs = skillTree.getActiveBuffEffects();
     if (activeBuffs && activeBuffs.manaShieldPercent) {
       // If manaShieldPercent is active, apply it
-      let manaDamage = Math.floor(damage * activeBuffs.manaShieldPercent / 100);
-      manaDamage = Math.min(manaDamage, hero.stats.currentMana);
-      this.restoreMana(-manaDamage);
-      // special handling of popup when mana is negative:
-      createDamageNumber({ text: `-${Math.floor(manaDamage)}`, isPlayer: true, isCritical: false, color: 'blue' });
-      damage -= manaDamage; // Reduce the damage by the mana damage
+      const manaShieldPercent = activeBuffs.manaShieldPercent;
+      const rawReduction = hero.stats.manaShieldDamageTakenReductionPercent || 0;
+      const reduction = Math.max(0, Math.min(0.5, rawReduction));
+      const costMultiplier = 1 - reduction;
+
+      // Prevent a portion of the incoming damage from hitting life.
+      // The prevented portion costs mana, reduced by `manaShieldDamageTakenReductionPercent`.
+      let preventedDamage = Math.floor((damage * manaShieldPercent) / 100);
+      if (preventedDamage > 0) {
+        const currentMana = hero.stats.currentMana || 0;
+        const maxPrevented = costMultiplier > 0 ? Math.floor(currentMana / costMultiplier) : preventedDamage;
+        preventedDamage = Math.min(preventedDamage, maxPrevented);
+
+        if (preventedDamage > 0) {
+          const manaCost = Math.min(currentMana, Math.ceil(preventedDamage * costMultiplier));
+          this.restoreMana(-manaCost);
+          // special handling of popup when mana is negative:
+          createDamageNumber({ text: `-${Math.floor(manaCost)}`, isPlayer: true, isCritical: false, color: 'blue' });
+          damage -= preventedDamage;
+        }
+      }
     }
     if (damage < 1) return;
 

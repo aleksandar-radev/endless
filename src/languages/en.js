@@ -423,7 +423,7 @@ export default {
   'options.lang.english': 'English',
   'options.lang.spanish': 'Spanish',
   'options.lang.chinese': 'Chinese',
-  'options.lang.note': 'Not everything translated yet. You might still see translations in English as a default language. You might want to refresh page after changing language, to see all changes take effect. If you would like to see another language, request it in discord.',
+  'options.lang.reload': 'Reload',
   'options.soundVolume': 'Sound Volume',
   'options.soundVolume.tooltip': 'Adjust game sound volume',
   'options.tab.game': 'Game',
@@ -955,6 +955,7 @@ export default {
   'tooltip.allAttributes': 'Adds points to all attributes.',
   'tooltip.allAttributesPercent': 'Increases all attributes by a percentage.',
   'tooltip.manaShieldPercent': 'Portion of damage taken from mana before life.',
+  'tooltip.manaShieldDamageTakenReductionPercent': 'Reduces damage taken from mana when Mana Shield absorbs damage (max 50%).',
   'tooltip.reflectFireDamage': 'Reflects fire damage back to attackers.',
   'tooltip.thornsDamage':
     'Deals damage back to attackers when hit and scales with Damage %, Total Damage %, and Thorns Damage % bonuses.',
@@ -1388,7 +1389,7 @@ export default {
   'specialization.druid.summoner.name': 'Summoner',
   'specialization.druid.summoner.description': 'Call forth creatures to fight.',
   'specialization.mage.arcanist.name': 'Arcanist',
-  'specialization.mage.arcanist.description': 'Pure magic specialist.',
+  'specialization.mage.arcanist.description': 'Specialist in mana manipulation and arcane defenses.',
   'specialization.mage.bloodmage.name': 'Bloodmage',
   'specialization.mage.bloodmage.description': 'Mage wielding blood magic.',
   'specialization.mage.enchanter.name': 'Enchanter',
@@ -1535,6 +1536,9 @@ export default {
   'Power Surge': 'Power Surge',
   'skill.powerSurge': 'Temporarily boosts magical power.',
   'skillTree.specializationLevelReq': 'Specializations require Level 100.',
+  'skillTree.selectClassFirst': 'Please select a class first.',
+  'skillTree.noSpecializationsAvailable': 'No specializations available for this class yet.',
+  'quests.noQuestsReadyToClaim': 'No quests ready to claim.',
   'stats.tooltip.ascensionBaseBonus': 'Base Bonus (Ascension)',
 
   // Warrior Specialization Skills
@@ -1663,10 +1667,10 @@ export default {
   'skill.beastFrenzy': 'Increases summon attack speed and summon damage.',
 
   // Mage Specializations
-  'Blink': 'Blink',
-  'skill.blink': 'Chance to sacrifice mana to dodge an attack.',
-  'Arcane Dissolution': 'Arcane Dissolution',
-  'skill.arcaneDissolution': 'Reduces enemy elemental resistances.',
+  'Mana Ward': 'Mana Ward',
+  'skill.manaWard': 'Reduces damage taken from mana when Mana Shield absorbs damage (max 50%) and increases Mana %.',
+  'Arcane Overload': 'Arcane Overload',
+  'skill.arcaneOverload': 'Increases extra damage from Mana (max 2%) and increases Mana Regeneration (flat and %).',
   'Sanguine Power': 'Sanguine Power',
   'skill.sanguinePower': 'Converts mana damage bonus to life damage bonus.',
   'Vitality Overflow': 'Vitality Overflow',
@@ -1727,6 +1731,7 @@ export default {
   'stats.entangleChance': 'Entangle Chance',
   'stats.summonAttackSpeedBuffPercent': 'Summon Attack Speed %',
   'stats.teleportDodgeChance': 'Teleport Dodge Chance',
+  'stats.manaShieldDamageTakenReductionPercent': 'Mana Shield Damage Taken Reduction %',
   'stats.reduceEnemyResistancesPercent': 'Reduce Enemy Res %',
   'stats.manaToLifeTransferPercent': 'Mana to Life Transfer %',
   'stats.weaponIllusionUnlocked': 'Weapon Illusion Unlocked',

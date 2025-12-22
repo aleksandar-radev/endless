@@ -192,7 +192,7 @@ function openClaimableQuestsModal() {
   const claimAllBtn = modal.querySelector('#claim-all-btn');
   const claimable = quests.quests.filter((q) => q.isComplete() && !q.claimed);
   if (claimable.length === 0) {
-    listDiv.innerHTML = '<p style="color:#aaa;">No quests ready to claim.</p>';
+    listDiv.innerHTML = `<p style="color:#aaa;">${t('quests.noQuestsReadyToClaim')}</p>`;
     claimAllBtn.disabled = true;
   } else {
     claimAllBtn.disabled = false;

@@ -247,6 +247,7 @@ const CUSTOM_DESCRIPTIONS = {
   allAttributes: () => t('tooltip.allAttributes'),
   allAttributesPercent: () => t('tooltip.allAttributesPercent'),
   manaShieldPercent: () => t('tooltip.manaShieldPercent'),
+  manaShieldDamageTakenReductionPercent: () => t('tooltip.manaShieldDamageTakenReductionPercent'),
   reflectFireDamage: () => t('tooltip.reflectFireDamage'),
   thornsDamage: () => t('tooltip.thornsDamage'),
   thornsDamagePercent: () => t('tooltip.thornsDamagePercent'),

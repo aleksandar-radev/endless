@@ -269,6 +269,13 @@ export const DEFENSE_STATS = {
     divisor: 100,
     decimalPlaces: 1,
   },
+  manaShieldDamageTakenReductionPercent: {
+    base: 0,
+    divisor: 100,
+    decimalPlaces: 1,
+    subcategory: 'defense',
+    showInUI: true,
+  },
   // ARENA DAMAGE REDUCTION
   arenaDamageReductionPercent: {
     base: 0,

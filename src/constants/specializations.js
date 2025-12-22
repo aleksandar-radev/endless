@@ -479,8 +479,8 @@ export const SPECIALIZATIONS = {
             bleedDamagePercent: scaleUpFlat(level, 5, 10, 0.5),
           }),
         },
-        bloodThirst: {
-          id: 'bloodThirst',
+        fatalBlow: {
+          id: 'fatalBlow',
           name: () => t('Fatal Blow'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[6],
@@ -696,8 +696,8 @@ export const SPECIALIZATIONS = {
         shapeshiftUnlocked: 1,
       }),
       skills: {
-        packLeader: {
-          id: 'packLeader',
+        shapeshiftingMastery: {
+          id: 'shapeshiftingMastery',
           name: () => t('Shapeshifting Mastery'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[4],
@@ -709,8 +709,8 @@ export const SPECIALIZATIONS = {
             allAttributesPercent: scaleDownFlat(level, 1),
           }),
         },
-        primalVigor: {
-          id: 'primalVigor',
+        primalAdaptation: {
+          id: 'primalAdaptation',
           name: () => t('Primal Adaptation'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[6],
@@ -815,31 +815,34 @@ export const SPECIALIZATIONS = {
       description: () => t('specialization.mage.arcanist.description'),
       avatar: () => 'mage-arcanist-avatar.jpg',
       baseStats: () => ({
-        extraDamageFromManaPercent: 1,
+        teleportDodgeChance: 20,
       }),
       skills: {
-        blink: {
-          id: 'blink',
-          name: () => t('Blink'),
+        manaWard: {
+          id: 'manaWard',
+          name: () => t('Mana Ward'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[4],
           icon: () => 'blink',
-          description: () => t('skill.blink'),
+          description: () => t('skill.manaWard'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            teleportDodgeChance: scaleDownFlat(level, 0.5),
+            manaShieldDamageTakenReductionPercent: Math.min(scaleDownFlat(level, 0.75), 50),
+            manaPercent: scaleDownFlat(level, 2),
           }),
         },
-        arcaneDissolution: {
-          id: 'arcaneDissolution',
-          name: () => t('Arcane Dissolution'),
+        arcaneOverload: {
+          id: 'arcaneOverload',
+          name: () => t('Arcane Overload'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[6],
           icon: () => 'arcane-dissolution',
-          description: () => t('skill.arcaneDissolution'),
+          description: () => t('skill.arcaneOverload'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            reduceEnemyResistancesPercent: scaleDownFlat(level, 2),
+            extraDamageFromManaPercent: Math.min(scaleDownFlat(level, 0.012), 2),
+            manaRegen: scaleUpFlat(level, 0.2),
+            manaRegenPercent: scaleDownFlat(level, 0.8),
           }),
         },
       },
