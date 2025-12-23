@@ -36,3 +36,4 @@
 - do not add dynamic imports, always import on top of file
 - ignore linting and spacing errors ( Do not prompt to run pnpm lint)
 - ignore indentation issues
+* Do not run pnpm lint or pnpm build and do not commit any changes to generated files, except when you are explicitly asked to do so.
