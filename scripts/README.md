@@ -10,7 +10,7 @@ Checks that all language files have the same translation keys and reports any mi
 
 **Usage:**
 ```bash
-npm run check-translations
+pnpm check-translations
 ```
 
 **What it does:**
@@ -68,3 +68,53 @@ When adding new scripts to this directory:
 2. Add appropriate documentation at the top of the file
 3. Add a corresponding npm script in `package.json`
 4. Update this README with usage instructions
+
+### check-unused-translations.js
+
+Reports translation keys that appear unused in the codebase.
+
+This is a **static best-effort** scan. It only finds keys referenced as string literals (e.g. `t('foo.bar')`).
+Some translation keys are built dynamically at runtime (e.g. stats names), so this script is intentionally conservative and supports ignores.
+
+**Usage:**
+```bash
+pnpm check-unused-translations
+```
+
+**Config:**
+- Default config: `scripts/translation-usage.config.json`
+- Use `ignoreKeyPatterns` for dynamic namespaces (regex strings), e.g. `^stats\\.`.
+
+**Strict mode (CI-friendly):**
+```bash
+node scripts/check-unused-translations.js --strict
+```
+
+### remove-unused-translations.js
+
+Removes translation keys from language files using the JSON report produced by `check-unused-translations.js`.
+
+This is **dangerous** if your code uses dynamic lookups like `t(variable)`.
+For safety, it defaults to **dry-run** and only removes keys that contain a dot (`.`).
+
+**Dry-run (recommended first):**
+```bash
+node scripts/check-unused-translations.js --out scripts/.tmp/translation-usage-report.json
+node scripts/remove-unused-translations.js --report scripts/.tmp/translation-usage-report.json
+```
+
+**Apply changes:**
+```bash
+node scripts/remove-unused-translations.js --report scripts/.tmp/translation-usage-report.json --apply
+```
+
+**More aggressive (high risk):**
+```bash
+node scripts/remove-unused-translations.js --report scripts/.tmp/translation-usage-report.json --apply --include-nondotted
+```
+
+**Maximum aggressive (very high risk):**
+```bash
+node scripts/remove-unused-translations.js --report scripts/.tmp/translation-usage-report.json --apply --include-nondotted-all
+```
+
