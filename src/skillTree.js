@@ -1014,7 +1014,7 @@ export default class SkillTree {
       const isInstantSkill = skill.type() === 'instant';
       if (isInstantSkill && hero.stats.stunChance > 0 && Math.random() < hero.stats.stunChance) {
         enemy.stunnedUntil = now + AILMENTS.stun.duration;
-        createDamageNumber({ text: 'STUNNED', color: '#FFD700' });
+        createDamageNumber({ text: 'STUNNED', color: 'var(--stun)' });
       }
 
       let lifeStealFraction = 0;

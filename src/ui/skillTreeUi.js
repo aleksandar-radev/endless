@@ -380,13 +380,13 @@ function initializeSpecializationsTab() {
     header.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-           <div class="spec-points-display" style="font-size: 1.2em; color: #ffd700;">${t('skillTree.specializationPoints')}: ${formatNumber(skillTree.specializationPoints)}</div>
+           <div class="spec-points-display" style="font-size: 1.2em; color: var(--gold);">${t('skillTree.specializationPoints')}: ${formatNumber(skillTree.specializationPoints)}</div>
            ${controlsMarkup}
         </div>
         <div style="display: flex; align-items: flex-start; gap: 20px;">
           <img src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}" alt="${spec.name()} Avatar" class="character-avatar specialization-avatar" style="width: 72px; height: 128px; border-radius: 8px; object-fit: cover;" />
           <div style="flex: 1;">
-              <h3 style="margin: 0; font-size: 1.5em; color: #ffd700;">${spec.name()}</h3>
+              <h3 style="margin: 0; font-size: 1.5em; color: var(--gold);">${spec.name()}</h3>
               <p style="margin: 5px 0; opacity: 0.8;">${spec.description()}</p>
               <div class="base-stats" style="margin-top: 10px; font-size: 0.9em; color: #aaa;">
                 ${baseStatsHtml}

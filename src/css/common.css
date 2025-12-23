@@ -3,6 +3,10 @@
   --bg-panel: #1f2937;
   --bg-element: #374151;
   --accent: #3b82f6;
+  --gold: #ffd700;
+  --evade: var(--gold);
+  --stun: var(--gold);
+  --crystals: #38bdf8;
   --text: #ffffff;
   --life: #ef4444;
   /* Element icon gradients */

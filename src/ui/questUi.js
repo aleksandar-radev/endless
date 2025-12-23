@@ -88,7 +88,7 @@ export function openQuestModal(quest) {
     <div class="quest-modal-content">
       <button class="modal-close">&times;</button>
       <h2 id="quest-modal-title"></h2>
-      <div id="quest-modal-category" style="color:#38bdf8;font-size:1em;"></div>
+      <div id="quest-modal-category" style="color:var(--crystals);font-size:1em;"></div>
       <p id="quest-modal-desc"></p>
       <p id="quest-modal-reward"></p>
       <button id="quest-claim-btn" class="modal-btn">${t('quests.modal.claimReward')}</button>
@@ -112,8 +112,8 @@ export function openQuestModal(quest) {
   let rewardParts = [];
   for (const [key, value] of Object.entries(quest.reward)) {
     let color = '';
-    if (key === 'gold') color = '#FFD700';
-    else if (key === 'crystals') color = '#38bdf8';
+    if (key === 'gold') color = 'var(--gold)';
+    else if (key === 'crystals') color = 'var(--crystals)';
     else color = '#fff';
 
     const rewardName =
@@ -129,7 +129,7 @@ export function openQuestModal(quest) {
       const tierLabel = t('item.tier');
       const rarityName = t(`rarity.${value.rarity}`);
       const rarityHtml = `<span class="item-color-${value.rarity}">${rarityName}</span>`;
-      const tierHtml = `<span style='color:#38bdf8'>${value.tier}</span>`;
+      const tierHtml = `<span style='color:var(--crystals)'>${value.tier}</span>`;
 
       rewardParts.push(
         `<span style="color:#fff;font-weight:bold;">${tp('quests.modal.randomItemReward', {

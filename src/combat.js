@@ -161,7 +161,7 @@ export function enemyAttack(currentTime) {
     if (!alwaysHit) {
       if (Math.random() * 100 > hitChance) {
         avoided = true;
-        createDamageNumber({ text: 'EVADED', isPlayer: true, color: '#FFD700' });
+        createDamageNumber({ text: 'EVADED', isPlayer: true, color: 'var(--evade)' });
         battleLog.addBattle(t('battleLog.evadedAttack'));
       } else if (hero.stats.avoidChance > 0 && Math.random() < hero.stats.avoidChance) {
         avoided = true;
@@ -1001,7 +1001,7 @@ function showMaterialNotification(mat) {
   if (!options?.showNotifications) return;
   const notification = document.createElement('div');
   notification.className = 'loot-notification';
-  notification.style.color = '#FFD700';
+  notification.style.color = 'var(--gold)';
   notification.innerHTML = `Found: ${mat.icon} ${mat.name}`;
   document.body.appendChild(notification);
 
@@ -1172,7 +1172,7 @@ export function createCombatText(text, isPlayer = true) {
   const textEl = document.createElement('div');
   textEl.className = 'damage-number level-up';
   textEl.textContent = text;
-  textEl.style.color = '#FFD700';
+  textEl.style.color = 'var(--gold)';
 
   const avatarRect = avatar.getBoundingClientRect();
   const parentRect = parent.getBoundingClientRect();

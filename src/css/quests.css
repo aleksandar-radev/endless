@@ -81,7 +81,7 @@
 
 .quest-tab {
   background: #232946;
-  color: #38bdf8;
+  color: var(--crystals);
   border: none;
   border-radius: 4px 4px 0 0;
   padding: 6px 18px;
@@ -92,7 +92,7 @@
 }
 
 .quest-tab.active {
-  background: #38bdf8;
+  background: var(--crystals);
   color: #fff;
 }
 
@@ -115,7 +115,7 @@
 }
 
 .quest-claimable-btn:hover {
-  background: #38bdf8;
+  background: var(--crystals);
   color: #fff;
 }
 
@@ -174,7 +174,7 @@
 }
 
 #claimable-quests-modal .modal-btn {
-  background: linear-gradient(90deg, #22c55e 60%, #38bdf8 100%);
+  background: linear-gradient(90deg, #22c55e 60%, var(--crystals) 100%);
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -187,7 +187,7 @@
 }
 
 #claimable-quests-modal .modal-btn:hover {
-  background: linear-gradient(90deg, #38bdf8 60%, #22c55e 100%);
+  background: linear-gradient(90deg, var(--crystals) 60%, #22c55e 100%);
 }
 
 .quest-modal.hidden {
