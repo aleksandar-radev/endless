@@ -8,7 +8,7 @@ export const ELEMENTALIST_SKILLS = {
   // Tier 1 Skills
   fireball: {
     id: 'fireball',
-    name: () => t('Fireball'),
+    name: () => t('skill.fireball.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 2 + level * 0.25,
@@ -28,7 +28,7 @@ export const ELEMENTALIST_SKILLS = {
   },
   frostArmor: {
     id: 'frostArmor',
-    name: () => t('Frost Armor'),
+    name: () => t('skill.frostArmor.name'),
     type: () => 'buff',
     manaCost: (level) => 6 + level * 1.25,
     cooldown: () => 34000,
@@ -46,7 +46,7 @@ export const ELEMENTALIST_SKILLS = {
 
   warmth: {
     id: 'warmth',
-    name: () => t('Warmth'),
+    name: () => t('skill.warmth.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'storm',
@@ -64,7 +64,7 @@ export const ELEMENTALIST_SKILLS = {
   // Tier 10 Skills
   lightningStrike: {
     id: 'lightningStrike',
-    name: () => t('Lightning Strike'),
+    name: () => t('skill.lightningStrike.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 4 + level * 0.375,
@@ -86,7 +86,7 @@ export const ELEMENTALIST_SKILLS = {
   },
   elementalMastery: {
     id: 'elementalMastery',
-    name: () => t('Elemental Mastery'),
+    name: () => t('skill.elementalMastery.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'elemental-mastery',
@@ -102,7 +102,7 @@ export const ELEMENTALIST_SKILLS = {
   // Tier 25 Skills
   blizzard: {
     id: 'blizzard',
-    name: () => t('Blizzard'),
+    name: () => t('skill.blizzard.name'),
     type: () => 'buff',
     manaCost: (level) => 10 + level * 1.25,
     cooldown: () => 88000,
@@ -122,7 +122,7 @@ export const ELEMENTALIST_SKILLS = {
   },
   fireShield: {
     id: 'fireShield',
-    name: () => t('Fire Shield'),
+    name: () => t('skill.fireShield.name'),
     type: () => 'buff',
     manaCost: (level) => 20 + level * 0.5,
     cooldown: () => 37000,
@@ -138,7 +138,7 @@ export const ELEMENTALIST_SKILLS = {
   },
   arcaneWisdom: {
     id: 'arcaneWisdom',
-    name: () => t('Arcane Wisdom'),
+    name: () => t('skill.arcaneWisdom.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'wisdom',
@@ -155,7 +155,7 @@ export const ELEMENTALIST_SKILLS = {
   // Tier 50 Skills
   elementalStorm: {
     id: 'elementalStorm',
-    name: () => t('Elemental Storm'),
+    name: () => t('skill.elementalStorm.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 50,
@@ -175,7 +175,7 @@ export const ELEMENTALIST_SKILLS = {
   },
   elementalAffinity: {
     id: 'elementalAffinity',
-    name: () => t('Elemental Affinity'),
+    name: () => t('skill.elementalAffinity.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'affinity',
@@ -192,7 +192,7 @@ export const ELEMENTALIST_SKILLS = {
   // Tier 75 Skills
   arcanePulse: {
     id: 'arcanePulse',
-    name: () => t('Arcane Pulse'),
+    name: () => t('skill.arcanePulse.name'),
     type: () => 'buff',
     manaCost: (level) => 30 + level * 0.75,
     cooldown: () => 51000,
@@ -212,7 +212,7 @@ export const ELEMENTALIST_SKILLS = {
   // Tier 100 Skills
   elementalOverload: {
     id: 'elementalOverload',
-    name: () => t('Elemental Overload'),
+    name: () => t('skill.elementalOverload.name'),
     type: () => 'toggle',
     manaCost: (level) => 4 + level * 0.625,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
@@ -228,7 +228,7 @@ export const ELEMENTALIST_SKILLS = {
   },
   primordialControl: {
     id: 'primordialControl',
-    name: () => t('Primordial Control'),
+    name: () => t('skill.primordialControl.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'control',
@@ -245,7 +245,7 @@ export const ELEMENTALIST_SKILLS = {
   // Tier 200 Skills
   avatarOfTheElements: {
     id: 'avatarOfTheElements',
-    name: () => t('Avatar of the Elements'),
+    name: () => t('skill.avatarOfTheElements.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'avatar-of-elements',
@@ -263,7 +263,7 @@ export const ELEMENTALIST_SKILLS = {
   // Tier 1200 Skills
   elementalCorrosion: {
     id: 'elementalCorrosion',
-    name: () => t('Elemental Corrosion'),
+    name: () => t('skill.elementalCorrosion.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'elemental-corrosion',
@@ -277,7 +277,7 @@ export const ELEMENTALIST_SKILLS = {
   },
   volcanicWrath: {
     id: 'volcanicWrath',
-    name: () => t('Volcanic Wrath'),
+    name: () => t('skill.volcanicWrath.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 25 + level * 1.25,
@@ -301,7 +301,7 @@ export const ELEMENTALIST_SKILLS = {
   // Tier 2000 Skills
   tempestNova: {
     id: 'tempestNova',
-    name: () => t('Tempest Nova'),
+    name: () => t('skill.tempestNova.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 35 + level * 1.25,
@@ -325,7 +325,7 @@ export const ELEMENTALIST_SKILLS = {
   },
   earthShatter: {
     id: 'earthShatter',
-    name: () => t('Earth Shatter'),
+    name: () => t('skill.earthShatter.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 30 + level * 1.25,
@@ -347,7 +347,7 @@ export const ELEMENTALIST_SKILLS = {
   // Tier 3000 Skills
   tidalWave: {
     id: 'tidalWave',
-    name: () => t('Tidal Wave'),
+    name: () => t('skill.tidalWave.name'),
     type: () => 'buff',
     manaCost: (level) => 40 + level * 1.25,
     cooldown: () => 70000,
@@ -364,7 +364,7 @@ export const ELEMENTALIST_SKILLS = {
   },
   stormLord: {
     id: 'stormLord',
-    name: () => t('Storm Lord'),
+    name: () => t('skill.stormLord.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'storm-lord',
@@ -380,7 +380,7 @@ export const ELEMENTALIST_SKILLS = {
   // Tier 5000 Skills
   elementalAscension: {
     id: 'elementalAscension',
-    name: () => t('Elemental Ascension'),
+    name: () => t('skill.elementalAscension.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'elemental-ascension',
@@ -394,7 +394,7 @@ export const ELEMENTALIST_SKILLS = {
   },
   natureCataclysm: {
     id: 'natureCataclysm',
-    name: () => t('Nature Cataclysm'),
+    name: () => t('skill.natureCataclysm.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 50 + level * 1.25,
@@ -420,7 +420,7 @@ export const ELEMENTALIST_SKILLS = {
   // Specialization-unlocked skills
   glacialBulwark: {
     id: 'glacialBulwark',
-    name: () => t('Glacial Bulwark'),
+    name: () => t('skill.glacialBulwark.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'ice-barrier',

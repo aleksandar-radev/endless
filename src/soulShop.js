@@ -291,7 +291,7 @@ export default class SoulShop {
         if (options.useNumericInputs) {
           qtyControls.innerHTML = `
             <input type="number" class="soul-qty-input input-number" min="1" max="${SOUL_SHOP_MAX_QTY}" value="${this.quickQty === 'max' ? options.soulShopQuickQty || 1 : this.quickQty}" />
-            <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">Max</button>
+            <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
           `;
           controlBar.appendChild(qtyControls);
           const input = qtyControls.querySelector('.soul-qty-input');
@@ -319,7 +319,7 @@ export default class SoulShop {
             <button data-qty="1" class="${this.quickQty === 1 ? 'active' : ''}">1</button>
             <button data-qty="10" class="${this.quickQty === 10 ? 'active' : ''}">10</button>
             <button data-qty="50" class="${this.quickQty === 50 ? 'active' : ''}">50</button>
-            <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">Max</button>
+            <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
           `;
           controlBar.appendChild(qtyControls);
           qtyControls.querySelectorAll('button').forEach((btn) => {
@@ -338,7 +338,7 @@ export default class SoulShop {
         const bulkControls = document.createElement('div');
         bulkControls.className = 'soulShop-bulk-controls';
         bulkControls.innerHTML = `
-          <button class="bulk-buy">Bulk Buy</button>
+          <button class="bulk-buy">${t('common.bulkBuy')}</button>
           <span class="soulShop-bulk-cost"></span>
         `;
         controlBar.appendChild(bulkControls);
@@ -806,7 +806,7 @@ export default class SoulShop {
       if (options.useNumericInputs) {
         controls.innerHTML = `
         <input type="number" class="modal-qty-input input-number" min="1" max="${SOUL_SHOP_MAX_QTY}" value="${this.selectedQty}" />
-        <button data-qty="max">Max</button>
+        <button data-qty="max">${t('common.max')}</button>
       `;
         const qtyInput = controls.querySelector('.modal-qty-input');
         const maxBtn = controls.querySelector('button[data-qty="max"]');
@@ -828,7 +828,7 @@ export default class SoulShop {
           <button data-qty="1">+1</button>
           <button data-qty="10">+10</button>
           <button data-qty="50">+50</button>
-          <button data-qty="max">Max</button>
+          <button data-qty="max">${t('common.max')}</button>
         `;
         controls.querySelectorAll('button').forEach((btn) => {
           btn.onclick = () => {

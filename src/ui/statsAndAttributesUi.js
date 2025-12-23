@@ -8,7 +8,7 @@ import { formatStatName } from '../ui/ui.js';
 import { getAttributeTooltip, ATTRIBUTES } from '../constants/stats/attributes.js';
 import { calculateArmorReduction, calculateEvasionChance, calculateHitChance, calculateResistanceReduction } from '../combat.js';
 import { createModal } from './modal.js';
-import { t } from '../i18n.js';
+import { t, tp } from '../i18n.js';
 import { updateInventoryGrid } from './inventoryUi.js';
 import { renderRunesUI } from './runesUi.js';
 import { updateAscensionUI } from './ascensionUi.js';
@@ -99,6 +99,8 @@ function updateRateCounters() {
   const elapsed = statistics.totalTimeInFights - startTimeInFights;
   const eligibilityElapsed = (statistics.totalTimeInFights || 0) - eligibilityBaseline;
   const periodLabel = formatPeriod(ratePeriod);
+  const formatRateLine = (labelKey, value) =>
+    tp('counters.rateLine', { label: t(labelKey), period: periodLabel, value });
   const dmgEls = document.querySelectorAll('.counter-damage');
   const xpEls = document.querySelectorAll('.counter-xp');
   const goldEls = document.querySelectorAll('.counter-gold');
@@ -119,11 +121,11 @@ function updateRateCounters() {
     offlineEl.classList.toggle('offline-not-eligible', !eligible);
   }
   if (!elapsed || elapsed <= 0) {
-    dmgEls.forEach((el) => (el.textContent = `Damage/${periodLabel}: 0`));
-    xpEls.forEach((el) => (el.textContent = `XP/${periodLabel}: 0`));
-    goldEls.forEach((el) => (el.textContent = `Gold/${periodLabel}: 0`));
-    itemsEls.forEach((el) => (el.textContent = `Items/${periodLabel}: 0`));
-    matEls.forEach((el) => (el.textContent = `Materials/${periodLabel}: 0`));
+    dmgEls.forEach((el) => (el.textContent = formatRateLine('counters.damage', 0)));
+    xpEls.forEach((el) => (el.textContent = formatRateLine('counters.xp', 0)));
+    goldEls.forEach((el) => (el.textContent = formatRateLine('counters.gold', 0)));
+    itemsEls.forEach((el) => (el.textContent = formatRateLine('counters.items', 0)));
+    matEls.forEach((el) => (el.textContent = formatRateLine('counters.materials', 0)));
     // Only reset offline rates if we're not preserving them during offline collection
     if (!statistics.preserveOfflineRates) {
       statistics.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
@@ -131,15 +133,32 @@ function updateRateCounters() {
     return;
   }
   const damageRate = sessionDamage / elapsed;
-  dmgEls.forEach((el) => (el.textContent = `Damage/${periodLabel}: ${formatNumber((damageRate * ratePeriod).toFixed(1))}`));
+  dmgEls.forEach((el) =>
+    (el.textContent = formatRateLine(
+      'counters.damage',
+      formatNumber((damageRate * ratePeriod).toFixed(1)),
+    )));
   const xpRate = (statistics.totalExpFromCombat - startExp) / elapsed;
-  xpEls.forEach((el) => (el.textContent = `XP/${periodLabel}: ${formatNumber((xpRate * ratePeriod).toFixed(1))}`));
+  xpEls.forEach((el) =>
+    (el.textContent = formatRateLine('counters.xp', formatNumber((xpRate * ratePeriod).toFixed(1)))));
   const goldRate = (statistics.totalGoldFromCombat - startGold) / elapsed;
-  goldEls.forEach((el) => (el.textContent = `Gold/${periodLabel}: ${formatNumber((goldRate * ratePeriod).toFixed(1))}`));
+  goldEls.forEach((el) =>
+    (el.textContent = formatRateLine(
+      'counters.gold',
+      formatNumber((goldRate * ratePeriod).toFixed(1)),
+    )));
   const itemRate = (statistics.totalItemsFound - startItems) / elapsed;
-  itemsEls.forEach((el) => (el.textContent = `Items/${periodLabel}: ${formatNumber((itemRate * ratePeriod).toFixed(1))}`));
+  itemsEls.forEach((el) =>
+    (el.textContent = formatRateLine(
+      'counters.items',
+      formatNumber((itemRate * ratePeriod).toFixed(1)),
+    )));
   const matRate = (statistics.totalMaterialsDropped - startMaterialsDropped) / elapsed;
-  matEls.forEach((el) => (el.textContent = `Materials/${periodLabel}: ${formatNumber((matRate * ratePeriod).toFixed(1))}`));
+  matEls.forEach((el) =>
+    (el.textContent = formatRateLine(
+      'counters.materials',
+      formatNumber((matRate * ratePeriod).toFixed(1)),
+    )));
   // Only expose offlineRates after at least 60s spent in fights (eligibility)
   // But preserve existing rates if offline rewards are being collected
   if (!statistics.preserveOfflineRates) {
@@ -241,7 +260,7 @@ export function setRateCountersVisibility(show) {
         <div class="counter counter-gold"></div>
         <div class="counter counter-items"></div>
         <div class="counter counter-materials"></div>
-        <button class="reset-btn">Reset</button>
+        <button class="reset-btn" data-i18n="counters.reset">${t('counters.reset')}</button>
       `;
       document.body.appendChild(bottomBar);
       bottomBar.querySelector('.reset-btn').addEventListener('click', resetRateCounters);
@@ -305,9 +324,9 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     statsContainer.className = 'stats-container';
     // Header: level, EXP
     const headerHtml = html`
-      <div><strong>Level:</strong> <span id="level-value">${formatNumber(hero.level || 1)}</span></div>
+      <div><strong>${t('skillTree.level')}:</strong> <span id="level-value">${formatNumber(hero.level || 1)}</span></div>
       <div>
-        <strong>EXP:</strong> <span id="exp-value">${formatNumber(hero.exp || 0)}</span> /
+        <strong>${t('stats.exp')}:</strong> <span id="exp-value">${formatNumber(hero.exp || 0)}</span> /
         <span id="exp-to-next-level-value">${formatNumber(hero.getExpToNextLevel() || 100)}</span>
         (<span id="exp-progress">${((hero.exp / hero.getExpToNextLevel()) * 100).toFixed(1)}%</span>)
       </div>
@@ -637,7 +656,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           <button class="mode-btn" data-amount="30">+30</button>
           <button class="mode-btn" data-amount="60">+60</button>
           <button class="mode-btn" data-amount="120">+120</button>
-          <button class="mode-btn" data-amount="max">MAX</button>
+          <button class="mode-btn" data-amount="max">${t('common.max')}</button>
         </div>
       </div>
       <div class="attributes-body">

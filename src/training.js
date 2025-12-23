@@ -137,7 +137,7 @@ export default class Training {
       if (options.useNumericInputs) {
         qtyControls.innerHTML = `
           <input type="number" class="training-qty-input input-number" min="1" max="${TRAINING_MAX_QTY}" value="${this.quickQty === 'max' ? options.trainingQuickQty || 1 : this.quickQty}" />
-          <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">Max</button>
+          <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
         `;
         nav.appendChild(qtyControls);
         const input = qtyControls.querySelector('.training-qty-input');
@@ -163,7 +163,7 @@ export default class Training {
           <button data-qty="1" class="${this.quickQty === 1 ? 'active' : ''}">1</button>
           <button data-qty="10" class="${this.quickQty === 10 ? 'active' : ''}">10</button>
           <button data-qty="50" class="${this.quickQty === 50 ? 'active' : ''}">50</button>
-          <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">Max</button>
+          <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
         `;
         nav.appendChild(qtyControls);
         qtyControls.querySelectorAll('button').forEach((btn) => {
@@ -181,7 +181,7 @@ export default class Training {
       const bulkControls = document.createElement('div');
       bulkControls.className = 'training-bulk-controls';
       bulkControls.innerHTML = `
-        <button class="bulk-buy">Bulk Buy</button>
+        <button class="bulk-buy">${t('common.bulkBuy')}</button>
         <span class="training-bulk-cost"></span>
       `;
       nav.appendChild(bulkControls);
@@ -211,11 +211,11 @@ export default class Training {
       // Build markup for bulk-buy modal
       const controlsMarkup = options.useNumericInputs
         ? `<input type="number" class="modal-qty-input input-number" min="1" max="${TRAINING_MAX_QTY}" />
-            <button data-qty="max">Max</button>`
+          <button data-qty="max">${t('common.max')}</button>`
         : `<button data-qty="1">+1</button>
             <button data-qty="10">+10</button>
             <button data-qty="50">+50</button>
-            <button data-qty="max">Max</button>`;
+          <button data-qty="max">${t('common.max')}</button>`;
       const content = html`
         <div class="training-modal-content">
           <button class="modal-close">&times;</button>
@@ -696,8 +696,8 @@ export default class Training {
 
     return html`
       <button data-stat="${stat}" ${disabled ? ' disabled' : ''}>
-        <span class="upgrade-name">${formatStatName(stat)} (Lvl ${formatNumber(level)}${isMaxed ? ' / Max' : ''})</span>
-        <span class="upgrade-bonus ${bonusClass}">${bonus}${isMaxed ? ' <strong>Max</strong>' : ''}</span>
+        <span class="upgrade-name">${formatStatName(stat)} (${t('common.lvl')} ${formatNumber(level)}${isMaxed ? ' / ' + t('common.max') : ''})</span>
+        <span class="upgrade-bonus ${bonusClass}">${bonus}${isMaxed ? ' <strong>' + t('common.max') + '</strong>' : ''}</span>
         ${costLine}
       </button>
     `;

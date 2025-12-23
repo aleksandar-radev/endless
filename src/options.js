@@ -35,47 +35,47 @@ import {
 const html = String.raw;
 
 const OPTION_TOOLTIPS = {
-  languageLabel: () => html`Select the game language`,
-  languageSelect: () => html`Change the game's language`,
-  soundVolumeLabel: () => html`Adjust overall sound volume`,
+  languageLabel: () => html`${t('options.language.tooltip')}`,
+  languageSelect: () => html`${t('options.languageSelect.tooltip')}`,
+  soundVolumeLabel: () => html`${t('options.soundVolumeLabel.tooltip')}`,
   soundVolumeSlider: () => html`${t('options.soundVolume.tooltip')}`,
-  advancedTooltipsLabel: () => html`Show detailed information in item tooltips`,
-  advancedAttrTooltipsLabel: () => html`Display extra attribute details in tooltips`,
-  showRateCountersLabel: () => html`Toggle the resource rate counters bar`,
-  rateCountersPeriodLabel: () => html`Period used to calculate rate counters`,
-  showInfoMessagesLabel: () => html`Display informational messages during gameplay`,
-  showNotificationsLabel: () => html`Enable browser notifications for game events`,
-  showCombatTextLabel: () => html`Show damage numbers and other combat text`,
-  stageSkipLabel: () => html`Skip ahead by this many stages after each kill`,
+  advancedTooltipsLabel: () => html`${t('options.advancedTooltips.tooltip')}`,
+  advancedAttrTooltipsLabel: () => html`${t('options.advancedAttributeTooltips.tooltip')}`,
+  showRateCountersLabel: () => html`${t('options.showRateCounters.tooltip')}`,
+  rateCountersPeriodLabel: () => html`${t('options.rateCountersPeriod.tooltip')}`,
+  showInfoMessagesLabel: () => html`${t('options.showInfoMessages.tooltip')}`,
+  showNotificationsLabel: () => html`${t('options.showNotifications.tooltip')}`,
+  showCombatTextLabel: () => html`${t('options.showCombatText.tooltip')}`,
+  stageSkipLabel: () => html`${t('options.stageSkip.tooltip')}`,
   stageSkipInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnCrystal')}`,
-  stageLockToggleLabel: () => html`Enable or disable locking stage progression`,
+  stageLockToggleLabel: () => html`${t('options.stageLock.tooltip')}`,
   stageLockToggle: (isPurchased) =>
     html`${isPurchased() ? '' : t('options.stageLock.disabledTooltip')}`,
-  stageLockStageLabel: () => html`Stage at which progression will lock`,
+  stageLockStageLabel: () => html`${t('options.stageLockStage.tooltip')}`,
   stageLockStageInput: (isPurchased) =>
     html`${isPurchased() ? '' : t('options.stageLock.disabledTooltip')}`,
   arenaBossSkipLabel: () => html`${t('options.arenaBossSkip.tooltip')}`,
   arenaBossSkipInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnAscensionAndRunes')}`,
-  resetStageSkipLabel: () => html`Stage where stage skip resets to zero`,
+  resetStageSkipLabel: () => html`${t('options.resetStageSkip.tooltip')}`,
   resetStageSkipInput: (isPurchased) =>
     html`${isPurchased()
       ? t('options.resetStageSkip.enabledTooltip')
       : t('options.resetStageSkip.disabledTooltip')}`,
-  startingStageLabel: () => html`Stage to begin from after resetting`,
+  startingStageLabel: () => html`${t('options.startingStage.tooltip')}`,
   startingStageInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnCrystal')}`,
-  shortElementalNamesLabel: () => html`Use abbreviated elemental stat names`,
-  showSkillCooldownsLabel: () => html`Display numeric cooldown timers on skills`,
-  showAllStatsLabel: () => html`Display every available statistic`,
+  shortElementalNamesLabel: () => html`${t('options.shortElementalNames.tooltip')}`,
+  showSkillCooldownsLabel: () => html`${t('options.showSkillCooldowns.tooltip')}`,
+  showAllStatsLabel: () => html`${t('options.showAllStats.tooltip')}`,
   quickBuyLabel: () =>
-    html`Enable quick buy controls for training, the soul shop, and the skill tree`,
-  bulkBuyLabel: () => html`Enable bulk actions across training, the skill tree, and the soul shop`,
-  numericInputLabel: () => html`Use numeric fields to specify purchase quantities`,
-  autoSortInventoryLabel: () => html`Automatically sort inventory items`,
+    html`${t('options.quickBuy.tooltip')}`,
+  bulkBuyLabel: () => html`${t('options.bulkBuy.tooltip')}`,
+  numericInputLabel: () => html`${t('options.numericPurchaseInputs.tooltip')}`,
+  autoSortInventoryLabel: () => html`${t('options.autoSortInventory.tooltip')}`,
   autoSortInventoryToggle: (isPurchased) =>
     html`${isPurchased() ? '' : t('options.autoSortInventory.disabledTooltip')}`,
-  enemyStatsLabel: () => html`Display enemy statistics during combat`,
-  stageControlsInlineLabel: () => html`Show stage controls under enemy in Explore and Rocky Field`,
-  shortNumbersLabel: () => html`Display large numbers using abbreviations`,
+  enemyStatsLabel: () => html`${t('options.showEnemyStats.tooltip')}`,
+  stageControlsInlineLabel: () => html`${t('options.stageControlsInline.tooltip')}`,
+  shortNumbersLabel: () => html`${t('options.shortNumbers.tooltip')}`,
   rollPercentilesLabel: () => html`${t('options.rollPercentiles.tooltip')}`,
 };
 
@@ -216,7 +216,7 @@ export class Options {
     select.addEventListener('change', () => {
       this.language = select.value;
       setLanguage(this.language);
-      dataManager.saveGame();
+      dataManager.saveGame({ force: true });
       reloadBtn.style.display = 'inline-block';
     });
     reloadBtn.addEventListener('click', () => {
@@ -1210,7 +1210,7 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = `
-      <label for="save-slot-select">Save Slot:</label>
+      <label for="save-slot-select">${t('options.saveSlot.label')}</label>
       <select id="save-slot-select" class="common-select"></select>
       <button id="save-slot-apply" class="common-action-btn">${t('common.apply')}</button>
     `;
@@ -1307,12 +1307,12 @@ export class Options {
         let pathName = s ? CLASS_PATHS[s.path]?.name() ?? s.path : null;
         if (pathName === null) pathName = 'Peasant';
         let text = s
-          ? `Slot ${i + 1} - ${pathName} Lv ${s.level}`
-          : `Slot ${i + 1} - Empty`;
+          ? tp('options.saveSlot.occupied', { slot: i + 1, path: pathName, level: s.level })
+          : tp('options.saveSlot.placeholder', { slot: i + 1 });
         const classes = [];
         if (s) classes.push('used-slot');
         if (i === dataManager.getCurrentSlot()) classes.push('current-slot');
-        if (i === dataManager.getCurrentSlot()) text += ' (Current)';
+        if (i === dataManager.getCurrentSlot()) text += t('options.saveSlot.current');
         return `<option value="${i}" class="${classes.join(' ')}">${text}</option>`;
       })
       .join('');
@@ -1968,7 +1968,7 @@ export class Options {
     select.value = this.scalingSystem;
     select.addEventListener('change', () => {
       this.scalingSystem = select.value;
-      dataManager.saveGame();
+      dataManager.saveGame({ force: true });
       showToast(t('versionModal.refreshPrompt'), 'info');
       reloadBtn.style.display = 'inline-block';
     });

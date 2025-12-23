@@ -2,7 +2,7 @@
 import { showTooltip, hideTooltip, positionTooltip, formatNumber } from './ui.js';
 import { quests } from '../globals.js';
 import { MATERIALS } from '../constants/materials.js';
-import { t } from '../i18n.js';
+import { t, tp } from '../i18n.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 
@@ -91,7 +91,7 @@ export function openQuestModal(quest) {
       <div id="quest-modal-category" style="color:#38bdf8;font-size:1em;"></div>
       <p id="quest-modal-desc"></p>
       <p id="quest-modal-reward"></p>
-      <button id="quest-claim-btn" class="modal-btn">Claim Reward</button>
+      <button id="quest-claim-btn" class="modal-btn">${t('quests.modal.claimReward')}</button>
     </div>
   `;
   document.body.appendChild(modal);
@@ -115,10 +115,29 @@ export function openQuestModal(quest) {
     if (key === 'gold') color = '#FFD700';
     else if (key === 'crystals') color = '#38bdf8';
     else color = '#fff';
+
+    const rewardName =
+      key === 'gold'
+        ? t('resource.gold.name')
+        : key === 'crystals'
+          ? t('resource.crystal.name')
+          : key.charAt(0).toUpperCase() + key.slice(1);
+
     if (key === 'item' && typeof value === 'object') {
       // Show item reward details (rarity, tier)
+      const rarityLabel = t('quests.tab.rarity');
+      const tierLabel = t('item.tier');
+      const rarityName = t(`rarity.${value.rarity}`);
+      const rarityHtml = `<span class="item-color-${value.rarity}">${rarityName}</span>`;
+      const tierHtml = `<span style='color:#38bdf8'>${value.tier}</span>`;
+
       rewardParts.push(
-        `<span style="color:#fff;font-weight:bold;">Random Item (Rarity: <span class="item-color-${value.rarity}">${value.rarity}</span>, Tier: <span style='color:#38bdf8'>${value.tier}</span>)</span>`,
+        `<span style="color:#fff;font-weight:bold;">${tp('quests.modal.randomItemReward', {
+          rarityLabel,
+          tierLabel,
+          rarity: rarityHtml,
+          tier: tierHtml,
+        })}</span>`,
       );
     } else if (key === 'materials' && Array.isArray(value)) {
       value.forEach(({ id, qty }) => {
@@ -129,22 +148,22 @@ export function openQuestModal(quest) {
       });
     } else {
       rewardParts.push(
-        `<span style=\"color:${color};font-weight:bold;\">${formatNumber(value)} ${key.charAt(0).toUpperCase() + key.slice(1)}</span>`,
+        `<span style=\"color:${color};font-weight:bold;\">${formatNumber(value)} ${rewardName}</span>`,
       );
     }
   }
   const rewardHtml = rewardParts.join(', ');
-  modal.querySelector('#quest-modal-reward').innerHTML = `Progress: ${progressHtml}<br>Reward: ${rewardHtml}`;
+  modal.querySelector('#quest-modal-reward').innerHTML = `${t('quests.modal.progress')}: ${progressHtml}<br>${t('quests.modal.reward')}: ${rewardHtml}`;
 
   // Claim button logic
   const claimBtn = modal.querySelector('#quest-claim-btn');
   claimBtn.disabled = !quest.isComplete() || quest.claimed;
   if (quest.claimed) {
-    claimBtn.textContent = 'Claimed';
+    claimBtn.textContent = t('quests.modal.claimed');
     claimBtn.style.backgroundColor = '#22c55e'; // green
     claimBtn.disabled = true;
   } else {
-    claimBtn.textContent = 'Claim Reward';
+    claimBtn.textContent = t('quests.modal.claimReward');
     claimBtn.style.backgroundColor = '';
     claimBtn.disabled = !quest.isComplete();
   }
@@ -179,8 +198,8 @@ function openClaimableQuestsModal() {
     <div class="quest-modal-content">
       <button class="modal-close">&times;</button>
       <div class="claimable-header">
-        <button id="claim-all-btn" class="modal-btn claim-all-btn">Claim All</button>
-        <h2>Claimable Quests</h2>
+        <button id="claim-all-btn" class="modal-btn claim-all-btn">${t('quests.modal.claimAll')}</button>
+        <h2>${t('quests.modal.claimableTitle')}</h2>
       </div>
       <div id="claimable-quests-list"></div>
     </div>
@@ -208,7 +227,7 @@ function openClaimableQuestsModal() {
         <span class="quest-icon">${q.icon}</span>
         <span class="quest-title">${q.title}</span>
         <span class="quest-progress">${formatNumber(q.getProgress())}/${formatNumber(q.target)}</span>
-        <button class="modal-btn" style="margin-left:auto;">Claim</button>
+        <button class="modal-btn" style="margin-left:auto;">${t('quests.modal.claim')}</button>
       `;
       // Show tooltip on hover
       item.addEventListener('mouseenter', (e) => showTooltip(q.description, e));

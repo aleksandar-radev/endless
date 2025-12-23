@@ -442,6 +442,11 @@ export const MISC_STATS = {
     divisor: 100,
     decimalPlaces: 1,
   },
+  convertManaToLifePercent: {
+    base: 0,
+    divisor: 100,
+    decimalPlaces: 1,
+  },
   weaponIllusionUnlocked: {
     base: 0,
     showValue: false,
@@ -455,5 +460,13 @@ export const MISC_STATS = {
     base: 0,
     divisor: 100,
     decimalPlaces: 1,
+  },
+  crimsonAegisSkillUnlocked: {
+    base: 0,
+    showValue: false,
+  },
+  bloodSiphonSkillUnlocked: {
+    base: 0,
+    showValue: false,
   },
 };

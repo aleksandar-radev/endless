@@ -117,7 +117,7 @@ class Game {
 
   damagePlayer(damage, breakdown) {
     const activeBuffs = skillTree.getActiveBuffEffects();
-    if (activeBuffs && activeBuffs.manaShieldPercent) {
+    if (activeBuffs && activeBuffs.manaShieldPercent && !(hero.stats.convertManaToLifePercent >= 1)) {
       // If manaShieldPercent is active, apply it
       const manaShieldPercent = activeBuffs.manaShieldPercent;
       const rawReduction = hero.stats.manaShieldDamageTakenReductionPercent || 0;

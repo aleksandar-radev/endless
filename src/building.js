@@ -98,14 +98,25 @@ export class Building {
     if (!this.effect || typeof this.effect !== 'object') return '';
     const interval = formatInterval(this.effect.interval);
     const typeName = this.effect.displayName || this.effect.type;
-    return `+${formatNumber(this.effect.amount * level)} ${typeName}${interval}`;
+    const effectLabel = this.effect.displayName ? typeName : Building.formatResourceTypeLabel(typeName);
+    return `+${formatNumber(this.effect.amount * level)} ${effectLabel}${interval}`;
+  }
+
+  static formatResourceTypeLabel(type) {
+    if (!type) return '';
+    if (type === 'gold') return t('resource.gold.name');
+    if (type === 'crystal' || type === 'crystals') return t('resource.crystal.name');
+    if (type === 'soul' || type === 'souls') return t('resource.souls.name');
+    if (type === 'material' || type === 'materials') return t('inventory.materials');
+    if (type === 'level' || type === 'levels') return t('skillTree.level');
+    return t(type);
   }
 
   // Returns a formatted string for a cost object
   static formatCost(costObj) {
     if (!costObj || typeof costObj !== 'object') return '';
     return Object.entries(costObj)
-      .map(([type, value]) => `${formatNumber(value)} ${type}`)
+      .map(([type, value]) => `${formatNumber(value)} ${Building.formatResourceTypeLabel(type)}`)
       .join(', ');
   }
 

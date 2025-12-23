@@ -674,14 +674,6 @@ export const OFFENSE_STATS = {
     divisor: 100,
     decimalPlaces: 1,
   },
-  // DOT STRIKE
-  dotStrikeChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'attack',
-  },
-  // PYROMANCER
   overkillDamagePercent: {
     base: 0,
     divisor: 100,
@@ -774,12 +766,6 @@ export const OFFENSE_STATS = {
     subcategory: 'elemental',
     showInUI: true,
   },
-  slowChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
   // DRUID SUMMONS
   summonDamageBuffPercent: {
     base: 0,
@@ -794,12 +780,6 @@ export const OFFENSE_STATS = {
   summonerExtraSummonUnlocked: {
     base: 0,
     showValue: false,
-  },
-  entangleChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
   },
   naturalistInstantSkillsUnlocked: {
     base: 0,
@@ -818,7 +798,9 @@ export const OFFENSE_STATS = {
     decimalPlaces: 1,
   },
   damageToBossesPercent: {
-    label: 'stats.damageToBossesPercent',
+    base: 0,
+    divisor: 100,
+    decimalPlaces: 1,
   },
   bloodSacrificeEffectiveness: {
     base: 0,

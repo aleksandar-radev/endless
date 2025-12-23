@@ -738,6 +738,7 @@ export default class Hero {
         if (stat === 'reduceEnemyHpPercent') value = Math.min(value, 50);
         if (stat === 'reduceEnemyAttackSpeedPercent') value = Math.min(value, 50);
         if (stat === 'reduceEnemyDamagePercent') value = Math.min(value, 50);
+        if (stat === 'damageTakenReductionPercent') value = Math.min(value, 80);
 
         const divisor = getDivisor(stat);
         const prestigeBonus = prestigeBonuses[stat] || 0;
@@ -752,7 +753,21 @@ export default class Hero {
     }
 
     // Apply specific stat interactions
-    if (this.stats.manaToLifeTransferPercent > 0) {
+    // Bloodmage: convert mana pool into life pool. Mana bonuses apply to mana first, then convert.
+    // Life% bonuses apply only to base life (not the converted mana).
+    let convertedManaForBloodmage = 0;
+    const conversionPercent = (this.stats.convertManaToLifePercent || 0);
+
+    if (conversionPercent > 0) {
+      const manaToConvert = this.stats.mana || 0;
+      convertedManaForBloodmage = manaToConvert * conversionPercent;
+
+      if (convertedManaForBloodmage > 0) {
+        this.stats.life += convertedManaForBloodmage;
+        this.stats.mana -= convertedManaForBloodmage;
+        if (this.stats.mana < 0) this.stats.mana = 0;
+      }
+    } else if (this.stats.manaToLifeTransferPercent > 0) {
       const transfer = this.stats.mana * this.stats.manaToLifeTransferPercent;
       this.stats.life += transfer;
       this.stats.mana = Math.max(0, this.stats.mana - transfer);
@@ -760,11 +775,6 @@ export default class Hero {
 
     if (this.stats.extraEvasionFromLifePercent > 0) {
       this.stats.evasion += this.stats.life * this.stats.extraEvasionFromLifePercent;
-    }
-
-    if (this.stats.frostShield > 0) {
-      this.stats.armor *= 1.2;
-      this.stats.allResistance *= 1.1;
     }
 
     const baseElementResistances = {};
@@ -782,8 +792,19 @@ export default class Hero {
       this.stats[key] = Math.max((this.stats[key] || 0) + initialAllResBonus, 0);
     });
 
-    this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * this.stats.mana;
+    const manaForRegenOfTotal = this.stats.mana + convertedManaForBloodmage;
+    this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * manaForRegenOfTotal;
     this.stats.lifeRegen += this.stats.lifeRegenOfTotalPercent * this.stats.life;
+
+    if (conversionPercent > 0) {
+      const manaRegenToConvert = this.stats.manaRegen || 0;
+      const convertedRegen = manaRegenToConvert * conversionPercent;
+      if (convertedRegen > 0) {
+        this.stats.lifeRegen += convertedRegen;
+        this.stats.manaRegen -= convertedRegen;
+        if (this.stats.manaRegen < 0) this.stats.manaRegen = 0;
+      }
+    }
 
     let pendingDamageAdditions = {};
     if (runes && typeof runes.applyPreDamageConversions === 'function') {
@@ -805,7 +826,8 @@ export default class Hero {
 
       const life = capResource(statsSnapshot.life);
       const armor = capResource(statsSnapshot.armor);
-      const mana = capResource(statsSnapshot.mana);
+      const isBloodmage = (statsSnapshot.convertManaToLifePercent || 0) >= 1;
+      const mana = capResource(isBloodmage ? statsSnapshot.life : statsSnapshot.mana);
       const lifeRegen = capResource(statsSnapshot.lifeRegen);
       const evasion = capResource(statsSnapshot.evasion);
       const attackRating = capResource(statsSnapshot.attackRating);

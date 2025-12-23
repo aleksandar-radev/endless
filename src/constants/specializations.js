@@ -853,31 +853,34 @@ export const SPECIALIZATIONS = {
       description: () => t('specialization.mage.bloodmage.description'),
       avatar: () => 'mage-bloodmage-avatar.jpg',
       baseStats: () => ({
-        manaToLifeTransferPercent: 100,
+        convertManaToLifePercent: 100,
       }),
       skills: {
-        sanguinePower: {
-          id: 'sanguinePower',
-          name: () => t('Sanguine Power'),
+        crimsonFortitude: {
+          id: 'crimsonFortitude',
+          name: () => t('Crimson Fortitude'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[4],
-          icon: () => 'sanguine-power',
-          description: () => t('skill.sanguinePower'),
-          maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-          effect: (level) => ({
-            extraDamageFromLifePercent: scaleDownFlat(level, 0.05),
-          }),
-        },
-        vitalityOverflow: {
-          id: 'vitalityOverflow',
-          name: () => t('Vitality Overflow'),
-          type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
-          icon: () => 'vitality-overflow',
-          description: () => t('skill.vitalityOverflow'),
+          icon: () => 'crimson-fortitude',
+          description: () => t('skill.crimsonFortitude'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             lifePercent: scaleDownFlat(level, 2),
+            crimsonAegisSkillUnlocked: 1,
+          }),
+        },
+        sanguineLeech: {
+          id: 'sanguineLeech',
+          name: () => t('Sanguine Leech'),
+          type: () => 'passive',
+          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          icon: () => 'sanguine-leech',
+          description: () => t('skill.sanguineLeech'),
+          maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+          effect: (level) => ({
+            lifeSteal: Math.min(scaleDownFlat(level, 0.02), 1),
+            lifePerHitPercent: scaleDownFlat(level, 2),
+            bloodSiphonSkillUnlocked: 1,
           }),
         },
       },

@@ -8,7 +8,7 @@ export const BERSERKER_SKILLS = {
   // Tier 1 Skills
   frenzy: {
     id: 'frenzy',
-    name: () => t('Frenzy'),
+    name: () => t('skill.frenzy.name'),
     type: () => 'toggle',
     manaCost: (level) => 2 + level * 0.125,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
@@ -23,7 +23,7 @@ export const BERSERKER_SKILLS = {
   },
   toughSkin: {
     id: 'toughSkin',
-    name: () => t('Tough Skin'),
+    name: () => t('skill.toughSkin.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'tough-skin',
@@ -40,7 +40,7 @@ export const BERSERKER_SKILLS = {
   // Tier 10 Skills
   recklessSwing: {
     id: 'recklessSwing',
-    name: () => t('Reckless Swing'),
+    name: () => t('skill.recklessSwing.name'),
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: () => 0,
@@ -57,7 +57,7 @@ export const BERSERKER_SKILLS = {
   },
   battleCry: {
     id: 'battleCry',
-    name: () => t('Battle Cry'),
+    name: () => t('skill.battleCry.name'),
     type: () => 'buff',
     manaCost: (level) => 8 + level * 0.625,
     cooldown: () => 24400,
@@ -76,7 +76,7 @@ export const BERSERKER_SKILLS = {
   // Tier 25 Skills
   berserkersRage: {
     id: 'berserkersRage',
-    name: () => t('Berserker\'s Rage'),
+    name: () => t('skill.berserkersRage.name'),
     type: () => 'toggle',
     manaCost: (level) => 2 + level * 0.025,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
@@ -96,7 +96,7 @@ export const BERSERKER_SKILLS = {
   },
   greaterFrenzy: {
     id: 'greaterFrenzy',
-    name: () => t('Greater Frenzy'),
+    name: () => t('skill.greaterFrenzy.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'greater-rage',
@@ -111,7 +111,7 @@ export const BERSERKER_SKILLS = {
   // Tier 50 Skills
   earthquake: {
     id: 'earthquake',
-    name: () => t('Glacial Tremor'),
+    name: () => t('skill.glacialTremor.name'),
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: (level) => 7 + level * 0.66,
@@ -129,7 +129,7 @@ export const BERSERKER_SKILLS = {
   },
   rageMastery: {
     id: 'rageMastery',
-    name: () => t('Rage Mastery'),
+    name: () => t('skill.rageMastery.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'mastery',
@@ -146,7 +146,7 @@ export const BERSERKER_SKILLS = {
   // Tier 75 Skills
   bloodLust: {
     id: 'bloodLust',
-    name: () => t('Blood Lust'),
+    name: () => t('skill.bloodLust.name'),
     type: () => 'buff',
     manaCost: (level) => 20 + level * 0.313,
     cooldown: () => 76000,
@@ -165,7 +165,7 @@ export const BERSERKER_SKILLS = {
   // Tier 100 Skills
   unbridledFury: {
     id: 'unbridledFury',
-    name: () => t('Unbridled Fury'),
+    name: () => t('skill.unbridledFury.name'),
     type: () => 'toggle',
     manaCost: (level) => 0,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
@@ -180,7 +180,7 @@ export const BERSERKER_SKILLS = {
   },
   undyingRage: {
     id: 'undyingRage',
-    name: () => t('Undying Rage'),
+    name: () => t('skill.undyingRage.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'undying',
@@ -196,7 +196,7 @@ export const BERSERKER_SKILLS = {
   // Tier 200 Skills
   warlord: {
     id: 'warlord',
-    name: () => t('Warlord'),
+    name: () => t('skill.warlord.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'warlord',
@@ -216,7 +216,7 @@ export const BERSERKER_SKILLS = {
   // Tier 1200 Skills
   rageOverflow: {
     id: 'rageOverflow',
-    name: () => t('Rage Overflow'),
+    name: () => t('skill.rageOverflow.name'),
     type: () => 'toggle',
     manaCost: (level) => 10 + level * 0.25,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
@@ -230,7 +230,7 @@ export const BERSERKER_SKILLS = {
   },
   crushingBlows: {
     id: 'crushingBlows',
-    name: () => t('Crushing Blows'),
+    name: () => t('skill.crushingBlows.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'crushing-blows',
@@ -246,7 +246,7 @@ export const BERSERKER_SKILLS = {
   // Tier 2000 Skills
   bloodFrenzy: {
     id: 'bloodFrenzy',
-    name: () => t('Blood Frenzy'),
+    name: () => t('skill.bloodFrenzy.name'),
     type: () => 'buff',
     manaCost: (level) => 30 + level * 1.25,
     cooldown: () => 110000,
@@ -263,7 +263,7 @@ export const BERSERKER_SKILLS = {
   },
   unyieldingOnslaught: {
     id: 'unyieldingOnslaught',
-    name: () => t('Unyielding Onslaught'),
+    name: () => t('skill.unyieldingOnslaught.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'unyielding-onslaught',
@@ -278,7 +278,7 @@ export const BERSERKER_SKILLS = {
   // Tier 3000 Skills
   primalRoar: {
     id: 'primalRoar',
-    name: () => t('Primal Roar'),
+    name: () => t('skill.primalRoar.name'),
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: (level) => 40 + level * 0.625,
@@ -294,7 +294,7 @@ export const BERSERKER_SKILLS = {
   },
   berserkerSpirit: {
     id: 'berserkerSpirit',
-    name: () => t('Berserker Spirit'),
+    name: () => t('skill.berserkerSpirit.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'berserker-spirit',
@@ -310,7 +310,7 @@ export const BERSERKER_SKILLS = {
   // Tier 5000 Skills
   apexPredator: {
     id: 'apexPredator',
-    name: () => t('Apex Predator'),
+    name: () => t('skill.apexPredator.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'apex-predator',
@@ -324,7 +324,7 @@ export const BERSERKER_SKILLS = {
   },
   rageIncarnate: {
     id: 'rageIncarnate',
-    name: () => t('Rage Incarnate'),
+    name: () => t('skill.rageIncarnate.name'),
     type: () => 'toggle',
     manaCost: (level) => 20 + level * 0.85,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],

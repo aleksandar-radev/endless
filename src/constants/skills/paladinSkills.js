@@ -8,7 +8,7 @@ export const PALADIN_SKILLS = {
   // Tier 1 Skills
   holyLight: {
     id: 'holyLight',
-    name: () => t('Holy Light'),
+    name: () => t('skill.holyLight.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 3 + level * 0.25,
@@ -24,7 +24,7 @@ export const PALADIN_SKILLS = {
   },
   smite: {
     id: 'smite',
-    name: () => t('Smite'),
+    name: () => t('skill.smite.name'),
     type: () => 'toggle',
     manaCost: (level) => 1,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
@@ -40,7 +40,7 @@ export const PALADIN_SKILLS = {
   },
   shieldBash: {
     id: 'shieldBash',
-    name: () => t('Shield Bash'),
+    name: () => t('skill.shieldBash.name'),
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: (level) => 3 + level * 0.125,
@@ -56,7 +56,7 @@ export const PALADIN_SKILLS = {
   },
   divineProtection: {
     id: 'divineProtection',
-    name: () => t('Divine Protection'),
+    name: () => t('skill.divineProtection.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'protection',
@@ -76,7 +76,7 @@ export const PALADIN_SKILLS = {
   // Tier 10 Skills
   consecration: {
     id: 'consecration',
-    name: () => t('Consecration'),
+    name: () => t('skill.consecration.name'),
     type: () => 'buff',
     manaCost: (level) => 12 + level * 0.75,
     cooldown: () => 70000,
@@ -94,7 +94,7 @@ export const PALADIN_SKILLS = {
   },
   greaterHealing: {
     id: 'greaterHealing',
-    name: () => t('Greater Healing'),
+    name: () => t('skill.greaterHealing.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 8 + level * 0.375,
@@ -112,7 +112,7 @@ export const PALADIN_SKILLS = {
   // Tier 25 Skills
   divineShield: {
     id: 'divineShield',
-    name: () => t('Divine Shield'),
+    name: () => t('skill.divineShield.name'),
     type: () => 'buff',
     manaCost: (level) => 13 + level * 0.625,
     cooldown: () => 47000,
@@ -129,7 +129,7 @@ export const PALADIN_SKILLS = {
   },
   auraOfLight: {
     id: 'auraOfLight',
-    name: () => t('Aura of Light'),
+    name: () => t('skill.auraOfLight.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'holy-aura',
@@ -143,7 +143,7 @@ export const PALADIN_SKILLS = {
   },
   thornedBulwark: {
     id: 'thornedBulwark',
-    name: () => t('Thorned Bulwark'),
+    name: () => t('skill.thornedBulwark.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'thorned-bulwark',
@@ -157,7 +157,7 @@ export const PALADIN_SKILLS = {
   // Tier 50 Skills
   wrathOfTheHeavens: {
     id: 'wrathOfTheHeavens',
-    name: () => t('Wrath of the Heavens'),
+    name: () => t('skill.wrathOfTheHeavens.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 10 + level * 1,
@@ -181,7 +181,7 @@ export const PALADIN_SKILLS = {
   },
   beaconOfFaith: {
     id: 'beaconOfFaith',
-    name: () => t('Beacon of Faith'),
+    name: () => t('skill.beaconOfFaith.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'beacon',
@@ -198,7 +198,7 @@ export const PALADIN_SKILLS = {
   // Tier 75 Skills
   holyBarrier: {
     id: 'holyBarrier',
-    name: () => t('Holy Barrier'),
+    name: () => t('skill.holyBarrier.name'),
     type: () => 'buff',
     manaCost: (level) => 30 + level * 0.875,
     cooldown: () => 44000,
@@ -216,7 +216,7 @@ export const PALADIN_SKILLS = {
 
   AidFromHeaven: {
     id: 'AidFromHeaven',
-    name: () => t('Aid From Heaven'),
+    name: () => t('skill.AidFromHeaven.name'),
     type: () => 'summon',
     summonStats: (level) => {
       return {
@@ -238,7 +238,7 @@ export const PALADIN_SKILLS = {
   // Tier 100 Skills
   divineWrath: {
     id: 'divineWrath',
-    name: () => t('Divine Wrath'),
+    name: () => t('skill.divineWrath.name'),
     type: () => 'toggle',
     manaCost: (level) => 4 + level * 0.3,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
@@ -252,7 +252,7 @@ export const PALADIN_SKILLS = {
   },
   guardianAngel: {
     id: 'guardianAngel',
-    name: () => t('Guardian Angel'),
+    name: () => t('skill.guardianAngel.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'angel',
@@ -270,7 +270,7 @@ export const PALADIN_SKILLS = {
   // Tier 200 Skills
   ascension: {
     id: 'ascension',
-    name: () => t('Ascension'),
+    name: () => t('skill.ascension.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'ascension',
@@ -289,7 +289,7 @@ export const PALADIN_SKILLS = {
   // Tier 1200 Skills
   celestialGuard: {
     id: 'celestialGuard',
-    name: () => t('Celestial Guard'),
+    name: () => t('skill.celestialGuard.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'celestial-guard',
@@ -303,7 +303,7 @@ export const PALADIN_SKILLS = {
   },
   holyCrusade: {
     id: 'holyCrusade',
-    name: () => t('Holy Crusade'),
+    name: () => t('skill.holyCrusade.name'),
     type: () => 'toggle',
     manaCost: (level) => 5 + level * 0.625,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
@@ -319,7 +319,7 @@ export const PALADIN_SKILLS = {
   // Tier 2000 Skills
   radiantAegis: {
     id: 'radiantAegis',
-    name: () => t('Radiant Aegis'),
+    name: () => t('skill.radiantAegis.name'),
     type: () => 'buff',
     manaCost: (level) => 40 + level * 1.25,
     cooldown: () => 1000,
@@ -336,7 +336,7 @@ export const PALADIN_SKILLS = {
   },
   divineJudgment: {
     id: 'divineJudgment',
-    name: () => t('Divine Judgment'),
+    name: () => t('skill.divineJudgment.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 20 + level * 1,
@@ -360,7 +360,7 @@ export const PALADIN_SKILLS = {
   // Tier 3000 Skills
   angelicResurgence: {
     id: 'angelicResurgence',
-    name: () => t('Angelic Resurgence'),
+    name: () => t('skill.angelicResurgence.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'angelic-resurgence',
@@ -374,7 +374,7 @@ export const PALADIN_SKILLS = {
   },
   sacredGround: {
     id: 'sacredGround',
-    name: () => t('Sacred Ground'),
+    name: () => t('skill.sacredGround.name'),
     type: () => 'buff',
     manaCost: (level) => 30 + level * 1.25,
     cooldown: () => 140000,
@@ -393,7 +393,7 @@ export const PALADIN_SKILLS = {
   // Tier 5000 Skills
   eternalLight: {
     id: 'eternalLight',
-    name: () => t('Eternal Light'),
+    name: () => t('skill.eternalLight.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'eternal-light',
@@ -407,7 +407,7 @@ export const PALADIN_SKILLS = {
   },
   championOfFaith: {
     id: 'championOfFaith',
-    name: () => t('Champion of Faith'),
+    name: () => t('skill.championOfFaith.name'),
     type: () => 'toggle',
     manaCost: (level) => 10 + level * 1.25,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],

@@ -8,7 +8,7 @@ export const DRUID_SKILLS = {
   // Tier 1 Skills
   summonPest: {
     id: 'summonPest',
-    name: () => t('Summon Pest'),
+    name: () => t('skill.summonPest.name'),
     type: () => 'summon',
     summonStats: (level) => {
       return {
@@ -31,7 +31,7 @@ export const DRUID_SKILLS = {
   },
   barkSkin: {
     id: 'barkSkin',
-    name: () => t('Bark Skin'),
+    name: () => t('skill.barkSkin.name'),
     type: () => 'passive',
     manaCost: (level) => 1 + level * 0.125,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
@@ -47,7 +47,7 @@ export const DRUID_SKILLS = {
   },
   naturalAffinity: {
     id: 'naturalAffinity',
-    name: () => t('Natural Affinity'),
+    name: () => t('skill.naturalAffinity.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'leaf',
@@ -63,7 +63,7 @@ export const DRUID_SKILLS = {
   // Tier 10 Skills
   rejuvenation: {
     id: 'rejuvenation',
-    name: () => t('Rejuvenation'),
+    name: () => t('skill.rejuvenation.name'),
     type: () => 'buff',
     manaCost: (level) => 5 + level * 0.25,
     cooldown: () => 45000,
@@ -80,7 +80,7 @@ export const DRUID_SKILLS = {
   },
   entanglingRoots: {
     id: 'entanglingRoots',
-    name: () => t('Entangling Roots'),
+    name: () => t('skill.entanglingRoots.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 4 + level * 0.375,
@@ -102,7 +102,7 @@ export const DRUID_SKILLS = {
 
   frostBloom: {
     id: 'frostBloom',
-    name: () => t('Frost Bloom'),
+    name: () => t('skill.frostBloom.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 4 + level * 0.35,
@@ -128,7 +128,7 @@ export const DRUID_SKILLS = {
 
   sproutling: {
     id: 'sproutling',
-    name: () => t('Sproutling'),
+    name: () => t('skill.sproutling.name'),
     type: () => 'summon',
     summonStats: (level) => {
       return {
@@ -152,7 +152,7 @@ export const DRUID_SKILLS = {
   // Tier 25 Skills
   animalCompanion: {
     id: 'animalCompanion',
-    name: () => t('Animal Companion'),
+    name: () => t('skill.animalCompanion.name'),
     type: () => 'summon',
     summonStats: (level) => {
       return {
@@ -176,7 +176,7 @@ export const DRUID_SKILLS = {
   // Summoner specialization bonus skill
   summonTreant: {
     id: 'summonTreant',
-    name: () => t('Summon Treant'),
+    name: () => t('skill.summonTreant.name'),
     type: () => 'summon',
     summonStats: (level) => {
       return {
@@ -199,7 +199,7 @@ export const DRUID_SKILLS = {
   },
   naturalGrowth: {
     id: 'naturalGrowth',
-    name: () => t('Natural Growth'),
+    name: () => t('skill.naturalGrowth.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'growth',
@@ -213,7 +213,7 @@ export const DRUID_SKILLS = {
 
   stoneTorrent: {
     id: 'stoneTorrent',
-    name: () => t('Stone Torrent'),
+    name: () => t('skill.stoneTorrent.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 7 + level * 0.45,
@@ -240,7 +240,7 @@ export const DRUID_SKILLS = {
   // Tier 50 Skills
   hurricane: {
     id: 'hurricane',
-    name: () => t('Hurricane'),
+    name: () => t('skill.hurricane.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 8 + level * 0.5,
@@ -265,7 +265,7 @@ export const DRUID_SKILLS = {
 
   spiritBear: {
     id: 'spiritBear',
-    name: () => t('Spirit Bear'),
+    name: () => t('skill.spiritBear.name'),
     type: () => 'summon',
     summonStats: (level) => {
       return {
@@ -287,7 +287,7 @@ export const DRUID_SKILLS = {
   },
   stoneform: {
     id: 'stoneform',
-    name: () => t('Stoneform'),
+    name: () => t('skill.stoneform.name'),
     type: () => 'buff',
     manaCost: (level) => 10 + level * 0.625,
     cooldown: () => 52000,
@@ -307,7 +307,7 @@ export const DRUID_SKILLS = {
   // Shapeshifting Skills (Unlocked via Shapeshifter specialization)
   bearForm: {
     id: 'bearForm',
-    name: () => t('Bear Form'),
+    name: () => t('skill.bearForm.name'),
     type: () => 'buff',
     exclusiveWith: () => ['snakeForm'],
     exclusiveBuffGroup: () => 'shapeshiftForm',
@@ -326,7 +326,7 @@ export const DRUID_SKILLS = {
   },
   snakeForm: {
     id: 'snakeForm',
-    name: () => t('Snake Form'),
+    name: () => t('skill.snakeForm.name'),
     type: () => 'buff',
     exclusiveWith: () => ['bearForm'],
     exclusiveBuffGroup: () => 'shapeshiftForm',
@@ -348,7 +348,7 @@ export const DRUID_SKILLS = {
   // Tier 75 Skills
   spiritLink: {
     id: 'spiritLink',
-    name: () => t('Spirit Link'),
+    name: () => t('skill.spiritLink.name'),
     type: () => 'buff',
     manaCost: (level) => 15 + level * 0.625,
     cooldown: () => 76000,
@@ -364,7 +364,7 @@ export const DRUID_SKILLS = {
   },
   moonfury: {
     id: 'moonfury',
-    name: () => t('Moonfury'),
+    name: () => t('skill.moonfury.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'moonfury',
@@ -381,7 +381,7 @@ export const DRUID_SKILLS = {
   // Tier 100 Skills
   earthsEmbrace: {
     id: 'earthsEmbrace',
-    name: () => "Earth's Embrace",
+    name: () => t('skill.earthsEmbrace.name'),
     type: () => 'buff',
     manaCost: (level) => 4 + level * 0.375,
     cooldown: () => 64000,
@@ -399,7 +399,7 @@ export const DRUID_SKILLS = {
   },
   wrathOfNature: {
     id: 'wrathOfNature',
-    name: () => t('Wrath of Nature'),
+    name: () => t('skill.wrathOfNature.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'wrath-of-nature',
@@ -415,7 +415,7 @@ export const DRUID_SKILLS = {
   // Tier 200 Skills
   avatarOfNature: {
     id: 'avatarOfNature',
-    name: () => t('Avatar of Nature'),
+    name: () => t('skill.avatarOfNature.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'avatar-of-nature',
@@ -432,7 +432,7 @@ export const DRUID_SKILLS = {
   // Tier 1200 Skills
   spiritBond: {
     id: 'spiritBond',
-    name: () => t('Spirit Bond'),
+    name: () => t('skill.spiritBond.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'spirit-bond',
@@ -447,7 +447,7 @@ export const DRUID_SKILLS = {
   },
   wildGrowth: {
     id: 'wildGrowth',
-    name: () => t('Wild Growth'),
+    name: () => t('skill.wildGrowth.name'),
     type: () => 'buff',
     manaCost: (level) => 25 + level * 1.25,
     cooldown: () => 100000,
@@ -467,7 +467,7 @@ export const DRUID_SKILLS = {
   // Tier 2000 Skills
   ancientRoots: {
     id: 'ancientRoots',
-    name: () => t('Ancient Roots'),
+    name: () => t('skill.ancientRoots.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'ancient-roots',
@@ -481,7 +481,7 @@ export const DRUID_SKILLS = {
   },
   furyOfTheWilds: {
     id: 'furyOfTheWilds',
-    name: () => t('Fury of the Wilds'),
+    name: () => t('skill.furyOfTheWilds.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 30 + level * 1.25,
@@ -505,7 +505,7 @@ export const DRUID_SKILLS = {
   // Tier 3000 Skills
   natureEternal: {
     id: 'natureEternal',
-    name: () => t('Nature Eternal'),
+    name: () => t('skill.natureEternal.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'nature-eternal',
@@ -519,7 +519,7 @@ export const DRUID_SKILLS = {
   },
   primevalGuardian: {
     id: 'primevalGuardian',
-    name: () => t('Primeval Guardian'),
+    name: () => t('skill.primevalGuardian.name'),
     type: () => 'summon',
     summonStats: (level) => {
       return {
@@ -544,7 +544,7 @@ export const DRUID_SKILLS = {
   // Tier 5000 Skills
   earthsEmbrace: {
     id: 'earthsEmbrace',
-    name: () => "Earth's Embrace",
+    name: () => t('skill.earthsEmbrace.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'earths-embrace',
@@ -558,7 +558,7 @@ export const DRUID_SKILLS = {
   },
   cosmicHarmony: {
     id: 'cosmicHarmony',
-    name: () => t('Cosmic Harmony'),
+    name: () => t('skill.cosmicHarmony.name'),
     type: () => 'toggle',
     manaCost: (level) => 20 + level * 1.25,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],

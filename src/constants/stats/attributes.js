@@ -53,6 +53,10 @@ export const ATTRIBUTES = {
 };
 
 const formatTitle = (stat) => {
+  const statsKey = `stats.${stat}`;
+  const statsTranslation = t(statsKey);
+  if (statsTranslation && statsTranslation !== statsKey) return statsTranslation;
+
   const translated = t(stat);
   if (translated && translated !== stat) return translated;
   return stat.replace(/([A-Z])/g, ' $1').replace(/^./, (c) => c.toUpperCase());

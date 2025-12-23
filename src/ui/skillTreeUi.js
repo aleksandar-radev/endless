@@ -17,9 +17,26 @@ const formatSignedValue = (value, decimals, includeZero = true) => {
   return `${shouldShowPlus ? '+' : ''}${value.toFixed(decimals)}`;
 };
 
+const formatBaseStatLabel = (stat) => {
+  let label = formatStatName(stat);
+  // Keep prior UX: percent sign belongs to the value (e.g. "+5%"), not necessarily the label.
+  if (stat.endsWith('Percent')) {
+    label = label.replace(/\s*%$/, '');
+  }
+  return label;
+};
+
 const SKILL_CATEGORY_TRANSLATIONS = {
   attack: 'skillTree.skillCategory.attack',
   spell: 'skillTree.skillCategory.spell',
+};
+
+const SKILL_TYPE_TRANSLATIONS = {
+  instant: 'skill.type.instant',
+  passive: 'skill.type.passive',
+  buff: 'skill.type.buff',
+  summon: 'skill.type.summon',
+  toggle: 'skill.type.toggle',
 };
 
 let cleanupSkillTreeHeaderFloating = null;
@@ -57,9 +74,21 @@ function resolveSkillCategoryLabel(skill) {
   return normalized.charAt(0).toUpperCase() + normalized.slice(1);
 }
 
+function resolveSkillTypeLabel(skill) {
+  if (!skill?.type) return '';
+  const rawType = skill.type();
+  if (!rawType) return '';
+  const normalized = `${rawType}`.toLowerCase();
+  const translationKey = SKILL_TYPE_TRANSLATIONS[normalized];
+  if (translationKey) {
+    return t(translationKey);
+  }
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+}
+
 function formatSkillTypeBadge(skill) {
   if (!skill?.type) return '';
-  const primaryType = `${skill.type().toUpperCase()}`;
+  const primaryType = resolveSkillTypeLabel(skill);
   const categoryLabel = resolveSkillCategoryLabel(skill);
   if (categoryLabel) {
     return `${primaryType} - ${categoryLabel}`;
@@ -149,15 +178,14 @@ function showSkillTreeWithTabs() {
 function openSpecializationSelectionModal(spec) {
   const baseStatsHtml = Object.entries(spec.baseStats())
     .map(([stat, value]) => {
-      let readableStat = stat.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
+      const label = formatBaseStatLabel(stat);
       let displayValue = value;
       if (stat.endsWith('Percent')) {
-        readableStat = readableStat.replace(/ Percent$/, '');
         displayValue = `${value}%`;
       }
-      if (!shouldShowStatValue(stat)) return `<div>${readableStat}</div>`;
+      if (!shouldShowStatValue(stat)) return `<div>${label}</div>`;
       const prefix = value > 0 ? '+' : '';
-      return `<div>${readableStat}: ${prefix}${displayValue}</div>`;
+      return `<div>${label}: ${prefix}${displayValue}</div>`;
     })
     .join('');
 
@@ -176,12 +204,12 @@ function openSpecializationSelectionModal(spec) {
       </div>
       
       <div class="specialization-skills-preview" style="margin-top: 20px;">
-        <h3 style="color: var(--accent); margin-bottom: 15px; text-align: center;">Passives Unlocked</h3>
+        <h3 style="color: var(--accent); margin-bottom: 15px; text-align: center;">${t('skillTree.passivesUnlocked')}</h3>
         <div class="skill-row" style="flex-wrap: wrap; justify-content: center; gap: 15px;"></div>
       </div>
 
       <div class="class-preview-footer" style="flex-direction: column; gap: 10px; margin-top: 30px;">
-        <button class="select-class-btn" style="width: 100%;">Select ${spec.name()}</button>
+        <button class="select-class-btn" style="width: 100%;">${t('skillTree.selectSpec', { name: spec.name() })}</button>
       </div>
     </div>
   `;
@@ -304,15 +332,14 @@ function initializeSpecializationsTab() {
 
     const baseStatsHtml = Object.entries(spec.baseStats())
       .map(([stat, value]) => {
-        let readableStat = stat.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
+        const label = formatBaseStatLabel(stat);
         let displayValue = value;
         if (stat.endsWith('Percent')) {
-          readableStat = readableStat.replace(/ Percent$/, '');
           displayValue = `${value}%`;
         }
-        if (!shouldShowStatValue(stat)) return `<div>${readableStat}</div>`;
+        if (!shouldShowStatValue(stat)) return `<div>${label}</div>`;
         const prefix = value > 0 ? '+' : '';
-        return `<div>${readableStat}: ${prefix}${displayValue}</div>`;
+        return `<div>${label}: ${prefix}${displayValue}</div>`;
       })
       .join('');
 
@@ -324,7 +351,7 @@ function initializeSpecializationsTab() {
         quickControls = `
         <div class="skill-qty-controls">
           <input type="number" class="skill-qty-input input-number" min="1" value="${val}" />
-          <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">Max</button>
+          <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
         </div>`;
       } else {
         quickControls = `
@@ -332,7 +359,7 @@ function initializeSpecializationsTab() {
           <button data-qty="1" class="${skillTree.quickQty === 1 ? 'active' : ''}">1</button>
           <button data-qty="5" class="${skillTree.quickQty === 5 ? 'active' : ''}">5</button>
           <button data-qty="25" class="${skillTree.quickQty === 25 ? 'active' : ''}">25</button>
-          <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">Max</button>
+          <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
         </div>`;
       }
     }
@@ -475,15 +502,14 @@ function initializeSpecializationsTab() {
 
     const baseStatsHtml = Object.entries(spec.baseStats())
       .map(([stat, value]) => {
-        let readableStat = stat.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
+        const label = formatBaseStatLabel(stat);
         let displayValue = value;
         if (stat.endsWith('Percent')) {
-          readableStat = readableStat.replace(/ Percent$/, '');
           displayValue = `${value}%`;
         }
-        if (!shouldShowStatValue(stat)) return `<div>${readableStat}</div>`;
+        if (!shouldShowStatValue(stat)) return `<div>${label}</div>`;
         const prefix = value > 0 ? '+' : '';
-        return `<div>${readableStat}: ${prefix}${displayValue}</div>`;
+        return `<div>${label}: ${prefix}${displayValue}</div>`;
       })
       .join('');
 
@@ -581,7 +607,7 @@ function initializeSpecSkillModal() {
         <button data-qty="1">+1</button>
         <button data-qty="5">+5</button>
         <button data-qty="25">+25</button>
-        <button class="max-btn" data-qty="max">Max</button>
+        <button class="max-btn" data-qty="max">${t('common.max')}</button>
       </div>
       <button class="modal-buy">Buy</button>
     </div>
@@ -647,7 +673,7 @@ function updateSpecSkillModalDetails() {
     const v = btn.dataset.qty;
     const rawQty = v === 'max' ? maxQty : parseInt(v, 10);
     const btnCost = skillTree.calculateSkillPointCost(currentLevel, isNaN(rawQty) ? 0 : rawQty);
-    btn.textContent = (v === 'max' ? 'Max' : '+' + v) + ' (' + btnCost + ' SP)';
+    btn.textContent = (v === 'max' ? t('common.max') : '+' + v) + ' (' + btnCost + ' SP)';
   });
 
   const buyBtn = specSkillModal.querySelector('.modal-buy');
@@ -706,8 +732,9 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNe
   if (skill.manaCost) {
     const manaCost = skillTree.getSkillManaCost(skill, currentLevel);
     const manaCostNextLevel = skillTree.getSkillManaCost(skill, nextLevel);
+    const costLabelKey = hero.stats.convertManaToLifePercent >= 1 ? 'skillTree.lifeCost' : 'skillTree.manaCost';
     if (manaCost) {
-      html += `<br />${t('skillTree.manaCost')}: ${manaCost.toFixed(2)}`;
+      html += `<br />${t(costLabelKey)}: ${manaCost.toFixed(2)}`;
       if (!isMaxed) {
         const diff = manaCostNextLevel - manaCost;
         html += ` (+${diff.toFixed(2)})`;
@@ -854,15 +881,14 @@ function showClassSelection() {
       <div class="base-stats" style="margin-top: 15px;">
         ${Object.entries(pathData.baseStats())
     .map(([stat, value]) => {
-      let readableStat = stat.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
+      const label = formatBaseStatLabel(stat);
       let displayValue = value;
       if (stat.endsWith('Percent')) {
-        readableStat = readableStat.replace(/ Percent$/, '');
         displayValue = `${value}%`;
       }
-      if (!shouldShowStatValue(stat)) return `<div>${readableStat}</div>`;
+      if (!shouldShowStatValue(stat)) return `<div>${label}</div>`;
       const prefix = value > 0 ? '+' : '';
-      return `<div>${readableStat}: ${prefix}${displayValue}</div>`;
+      return `<div>${label}: ${prefix}${displayValue}</div>`;
     })
     .join('')}
       </div>
@@ -898,7 +924,7 @@ function openClassPreview(pathId) {
   if (Object.keys(specializations).length > 0) {
     specializationsPreview = `
       <div class="class-preview-specializations">
-        <h3>Available Specializations</h3>
+        <h3>${t('skillTree.availableSpecializations')}</h3>
         <div class="specializations-preview-grid">
           ${Object.values(specializations).map(spec => `
             <div class="specialization-preview-card" style="display: flex; align-items: flex-start; gap: 10px; text-align: left;">
@@ -923,7 +949,7 @@ function openClassPreview(pathId) {
       ${specializationsPreview}
       <div class="class-preview-tree"></div>
       <div class="class-preview-footer">
-        <button class="select-class-btn">Select Class</button>
+        <button class="select-class-btn">${t('skillTree.selectClass')}</button>
       </div>
     </div>
   `;
@@ -1266,7 +1292,7 @@ export function updateSkillTreeValues() {
 
   const characterName =
     skillTree.selectedPath.name.charAt(0).toUpperCase() + skillTree.selectedPath.name.slice(1).toLowerCase();
-  characterNameEl.innerHTML = `<span class="character-name">${characterName}</span> (Level: ${hero.level})`;
+  characterNameEl.innerHTML = `<span class="character-name">${characterName}</span> (${t('skillTree.level')}: ${hero.level})`;
 
   const container = document.getElementById('skill-tree-container');
 
@@ -1280,7 +1306,7 @@ export function updateSkillTreeValues() {
         quickControls = `
         <div class="skill-qty-controls">
           <input type="number" class="skill-qty-input input-number" min="1" value="${val}" />
-          <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">Max</button>
+          <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
         </div>`;
       } else {
         quickControls = `
@@ -1288,7 +1314,7 @@ export function updateSkillTreeValues() {
           <button data-qty="1" class="${skillTree.quickQty === 1 ? 'active' : ''}">1</button>
           <button data-qty="5" class="${skillTree.quickQty === 5 ? 'active' : ''}">5</button>
           <button data-qty="25" class="${skillTree.quickQty === 25 ? 'active' : ''}">25</button>
-          <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">Max</button>
+          <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
         </div>`;
       }
     }
@@ -1305,7 +1331,7 @@ export function updateSkillTreeValues() {
     const controlsMarkup = quickControls || bulkControls ? `<div class="skill-header-controls">${quickControls}${bulkControls}</div>` : '';
 
     const specTabActive = document.getElementById('specializations-tab-content')?.classList.contains('active');
-    const pointsLabel = specTabActive ? 'Specialization Points' : 'Available Skill Points';
+    const pointsLabel = specTabActive ? t('skillTree.specializationPoints') : t('skillTree.availablePoints');
     const pointsValue = specTabActive ? skillTree.specializationPoints : skillTree.skillPoints;
 
     skillPointsHeader.innerHTML = `
@@ -1495,7 +1521,7 @@ function initializeSkillModal() {
         <p>Available Points: <span class="modal-available-points"></span></p>
         <p>Skill Point Cost: <span class="modal-sp-cost"></span></p>
         <p class="modal-mana-row">
-          Mana Cost: <span class="modal-current-mana-cost"></span> (<span class="modal-next-mana-cost"></span>)
+          ${t(hero.stats.convertManaToLifePercent >= 1 ? 'skillTree.lifeCost' : 'skillTree.manaCost')}: <span class="modal-current-mana-cost"></span> (<span class="modal-next-mana-cost"></span>)
         </p>
         <p class="modal-cooldown-row">
           Cooldown: <span class="modal-current-cooldown"></span> (<span class="modal-next-cooldown"></span>)
@@ -1512,7 +1538,7 @@ function initializeSkillModal() {
         <button data-qty="1">+1</button>
         <button data-qty="5">+5</button>
         <button data-qty="25">+25</button>
-        <button class="max-btn" data-qty="max">Max</button>
+        <button class="max-btn" data-qty="max">${t('common.max')}</button>
       </div>
       <button class="modal-buy">Buy</button>
     </div>
@@ -1643,7 +1669,7 @@ function updateSkillModalDetails() {
     const v = btn.dataset.qty;
     const rawQty = v === 'max' ? maxQty : parseInt(v, 10);
     const btnCost = skillTree.calculateSkillPointCost(currentLevel, isNaN(rawQty) ? 0 : rawQty);
-    btn.textContent = (v === 'max' ? 'Max' : '+' + v) + ' (' + btnCost + ' SP)';
+    btn.textContent = (v === 'max' ? t('common.max') : '+' + v) + ' (' + btnCost + ' SP)';
   });
 
   // Update cost and stats
@@ -1712,7 +1738,7 @@ function updateSkillModalDetails() {
     });
   } else {
     const title = skillModal.querySelector('.modal-skill-effects h3');
-    title.innerHTML = 'Skill Effects';
+    title.innerHTML = t('skillTree.skillEffects');
   }
 
   // Update buy button
@@ -1879,8 +1905,8 @@ function createSkillTooltip(skillId) {
   let tooltip = `
       <div class="tooltip-header">${skill.name()}</div>
       <div class="tooltip-type">${typeBadge}</div>
-      <div class="tooltip-level">Level: ${level}</div>
-      <div class="tooltip-mana">Mana Cost: ${skillTree.getSkillManaCost(skill, level).toFixed(2)} (+${(skillTree.getSkillManaCost(skill, level + 1) - skillTree.getSkillManaCost(skill, level)).toFixed(2)})</div>
+      <div class="tooltip-level">${t('skillTree.level')}: ${level}</div>
+      <div class="tooltip-mana">${t(hero.stats.convertManaToLifePercent >= 1 ? 'skillTree.lifeCost' : 'skillTree.manaCost')}: ${skillTree.getSkillManaCost(skill, level).toFixed(2)} (+${(skillTree.getSkillManaCost(skill, level + 1) - skillTree.getSkillManaCost(skill, level)).toFixed(2)})</div>
   `;
 
   // Add effects
@@ -1897,11 +1923,13 @@ function createSkillTooltip(skillId) {
   tooltip += '</div>';
 
   // Add cooldown/duration for applicable skills
-  if (skillTree.getSkillCooldown(skill)) {
-    tooltip += `<div class="tooltip-cooldown">Cooldown: ${(skillTree.getSkillCooldown(skill) / 1000).toFixed(2)}s</div>`;
+  const cooldownMs = skillTree.getSkillCooldown(skill, level);
+  if (cooldownMs) {
+    tooltip += `<div class="tooltip-cooldown">${t('skillTree.cooldown')}: ${(cooldownMs / 1000).toFixed(2)}s</div>`;
   }
-  if (skillTree.getSkillDuration(skill)) {
-    tooltip += `<div class="tooltip-duration">Duration: ${(skillTree.getSkillDuration(skill) / 1000).toFixed(2)}s</div>`;
+  const durationMs = skillTree.getSkillDuration(skill, level);
+  if (durationMs) {
+    tooltip += `<div class="tooltip-duration">${t('skillTree.duration')}: ${(durationMs / 1000).toFixed(2)}s</div>`;
   }
 
   // Add summon stats for summon skills

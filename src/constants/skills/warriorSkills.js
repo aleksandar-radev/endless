@@ -9,7 +9,7 @@ export const WARRIOR_SKILLS = {
   // Tier 0 Skills
   bash: {
     id: 'bash',
-    name: () => t('Bash'),
+    name: () => t('skill.bash.name'),
     type: () => 'toggle',
     manaCost: (level) => 1 + level * 0.1,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
@@ -23,7 +23,7 @@ export const WARRIOR_SKILLS = {
   },
   toughness: {
     id: 'toughness',
-    name: () => t('Toughness'),
+    name: () => t('skill.toughness.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'shield',
@@ -39,7 +39,7 @@ export const WARRIOR_SKILLS = {
   // Tier 1 Skills
   powerStrike: {
     id: 'powerStrike',
-    name: () => t('Power Strike'),
+    name: () => t('skill.powerStrike.name'),
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: (level) => 4 + level * 0.3,
@@ -55,7 +55,7 @@ export const WARRIOR_SKILLS = {
   },
   ironWill: {
     id: 'ironWill',
-    name: () => t('Iron Will'),
+    name: () => t('skill.ironWill.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'helmet',
@@ -71,7 +71,7 @@ export const WARRIOR_SKILLS = {
   // Tier 2 Skills
   battleCry: {
     id: 'battleCry',
-    name: () => t('Battle Cry'),
+    name: () => t('skill.battleCry.name'),
     type: () => 'buff',
     manaCost: (level) => 10 + level * 0.5,
     cooldown: () => 72000,
@@ -87,7 +87,7 @@ export const WARRIOR_SKILLS = {
   },
   fortitude: {
     id: 'fortitude',
-    name: () => t('Fortitude'),
+    name: () => t('skill.fortitude.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'armor',
@@ -102,7 +102,7 @@ export const WARRIOR_SKILLS = {
   // Tier 3 Skills
   groundSlam: {
     id: 'groundSlam',
-    name: () => t('Ground Slam'),
+    name: () => t('skill.groundSlam.name'),
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: (level) => 5 + level * 0.6,
@@ -120,7 +120,7 @@ export const WARRIOR_SKILLS = {
   // Tier 3 Skills
   armorBreaker: {
     id: 'armorBreaker',
-    name: () => t('Armor Breaker'),
+    name: () => t('skill.armorBreaker.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'armor-break',
@@ -135,7 +135,7 @@ export const WARRIOR_SKILLS = {
   // Tier 4 Skills
   shieldWall: {
     id: 'shieldWall',
-    name: () => t('Shield Wall'),
+    name: () => t('skill.shieldWall.name'),
     type: () => 'buff',
     manaCost: (level) => 12 + level * 0.625,
     cooldown: () => 45000,
@@ -153,7 +153,7 @@ export const WARRIOR_SKILLS = {
   // Tier 5 Skills
   berserk: {
     id: 'berserk',
-    name: () => t('Berserk'),
+    name: () => t('skill.berserk.name'),
     type: () => 'toggle',
     manaCost: (level) => 3 + level * 0.188,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
@@ -168,7 +168,7 @@ export const WARRIOR_SKILLS = {
 
   lastStand: {
     id: 'lastStand',
-    name: () => t('Last Stand'),
+    name: () => t('skill.lastStand.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'last-stand',
@@ -183,7 +183,7 @@ export const WARRIOR_SKILLS = {
   // Tier 6 Skills
   warlord: {
     id: 'warlord',
-    name: () => t('Warlord'),
+    name: () => t('skill.warlord.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'warlord',
@@ -201,7 +201,7 @@ export const WARRIOR_SKILLS = {
   // Tier 1200 Skills
   unstoppableForce: {
     id: 'unstoppableForce',
-    name: () => t('Unstoppable Force'),
+    name: () => t('skill.unstoppableForce.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'unstoppable-force',
@@ -215,7 +215,7 @@ export const WARRIOR_SKILLS = {
   },
   unyieldingDefense: {
     id: 'unyieldingDefense',
-    name: () => t('Unyielding Defense'),
+    name: () => t('skill.unyieldingDefense.name'),
     type: () => 'buff',
     manaCost: (level) => 20 + level * 1.25,
     cooldown: () => 100000,
@@ -234,7 +234,7 @@ export const WARRIOR_SKILLS = {
   // Tier 2000 Skills
   bladeStorm: {
     id: 'bladeStorm',
-    name: () => t('Blade Storm'),
+    name: () => t('skill.bladeStorm.name'),
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: (level) => 30 + level * 0.4,
@@ -251,7 +251,7 @@ export const WARRIOR_SKILLS = {
   },
   ironFortress: {
     id: 'ironFortress',
-    name: () => t('Iron Fortress'),
+    name: () => t('skill.ironFortress.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'iron-fortress',
@@ -267,7 +267,7 @@ export const WARRIOR_SKILLS = {
   // Tier 3000 Skills
   titanStrength: {
     id: 'titanStrength',
-    name: () => t('Titan Strength'),
+    name: () => t('skill.titanStrength.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'titan-strength',
@@ -281,7 +281,7 @@ export const WARRIOR_SKILLS = {
   },
   heroicStand: {
     id: 'heroicStand',
-    name: () => t('Heroic Stand'),
+    name: () => t('skill.heroicStand.name'),
     type: () => 'buff',
     manaCost: (level) => 40 + level * 1.25,
     cooldown: () => 150000,
@@ -300,7 +300,7 @@ export const WARRIOR_SKILLS = {
   // Tier 5000 Skills
   legendaryWarlord: {
     id: 'legendaryWarlord',
-    name: () => t('Legendary Warlord'),
+    name: () => t('skill.legendaryWarlord.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'legendary-warlord',
@@ -314,7 +314,7 @@ export const WARRIOR_SKILLS = {
   },
   eternalGuardian: {
     id: 'eternalGuardian',
-    name: () => t('Eternal Guardian'),
+    name: () => t('skill.eternalGuardian.name'),
     type: () => 'buff',
     manaCost: (level) => 15 + level * 0.35,
     cooldown: () => 110000,
@@ -332,7 +332,7 @@ export const WARRIOR_SKILLS = {
   // Specialization Skills
   animatedWeapons: {
     id: 'animatedWeapons',
-    name: () => t('Animated Weapons'),
+    name: () => t('skill.animatedWeapons.name'),
     type: () => 'summon',
     summonStats: (level) => {
       return {

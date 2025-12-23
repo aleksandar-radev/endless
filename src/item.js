@@ -340,8 +340,14 @@ export default class Item {
   getDisplayName() {
     if (this.metaData?.customName) return this.metaData.customName;
     if (this.nameKey) return t(this.nameKey);
-    const rarityName = ITEM_RARITY[this.rarity]?.name || this.rarity;
-    return `${rarityName} ${this.type}`;
+    const rarityTranslationKey = `rarity.${String(this.rarity).toLowerCase()}`;
+    const rarityName =
+      t(rarityTranslationKey) !== rarityTranslationKey
+        ? t(rarityTranslationKey)
+        : ITEM_RARITY[this.rarity]?.name || this.rarity;
+
+    const typeName = t(this.type) !== this.type ? t(this.type) : this.type;
+    return `${rarityName} ${typeName}`;
   }
 
   getTooltipHTML(isEquipped = false) {

@@ -425,7 +425,7 @@ export default class CrystalShop {
         <h2 class="modal-title"></h2>
         <div class="modal-fields"></div>
         <div class="modal-controls" style="display:none;"></div>
-        <button class="modal-buy">Buy</button>
+        <button class="modal-buy">${t('crystalShop.modal.buy')}</button>
       </div>
     `;
     this.modal = createModal({
@@ -613,17 +613,17 @@ export default class CrystalShop {
     if (config.bulkModal) {
       const maxLevelText = config.maxLevel ? ' / <span class="modal-max-level"></span>' : '';
       fields.innerHTML = `
-        <p>Current Level: <span class="modal-level"></span>${maxLevelText}</p>
-        <p>Current Bonus: <span class="modal-bonus"></span></p>
-        <p>Next Level Bonus: <span class="modal-next-bonus"></span></p>
-        <p>Total Bonus: <span class="modal-total-bonus"></span></p>
-        <p>Total Cost: <span class="modal-total-cost"></span> Crystals (<span class="modal-qty">1</span>)</p>
+        <p>${t('ascension.upgrade.currentLevel')}: <span class="modal-level"></span>${maxLevelText}</p>
+        <p>${t('ascension.upgrade.currentBonus')}: <span class="modal-bonus"></span></p>
+        <p>${t('ascension.upgrade.nextLevelBonus')}: <span class="modal-next-bonus"></span></p>
+        <p>${t('crystalShop.modal.totalBonus')}: <span class="modal-total-bonus"></span></p>
+        <p>${t('ascension.upgrade.totalCost')}: <span class="modal-total-cost"></span> ${t('resource.crystal.name')} (<span class="modal-qty">1</span>)</p>
       `;
       controls.style.display = '';
       if (options.useNumericInputs) {
         controls.innerHTML = `
         <input type="number" class="modal-qty-input input-number" min="1" max="${CRYSTAL_SHOP_MAX_QTY}" value="${this.selectedQty}" />
-        <button data-qty="max">Max</button>
+        <button data-qty="max">${t('common.max')}</button>
       `;
         const qtyInput = controls.querySelector('.modal-qty-input');
         const maxBtn = controls.querySelector('button[data-qty="max"]');
@@ -645,7 +645,7 @@ export default class CrystalShop {
           <button data-qty="1">+1</button>
           <button data-qty="10">+10</button>
           <button data-qty="50">+50</button>
-          <button data-qty="max">Max</button>
+          <button data-qty="max">${t('common.max')}</button>
         `;
         controls.querySelectorAll('button').forEach((btn) => {
           btn.onclick = () => {
@@ -664,7 +664,7 @@ export default class CrystalShop {
       const reduced = Math.round(config.baseCost * (1 - ascRed));
       fields.innerHTML = `
         <p>${oneTimeBonusText}</p>
-        <p>Cost: <span class="modal-total-cost">${reduced}</span> Crystals</p>
+        <p>${t('ascension.upgrade.cost')}: <span class="modal-total-cost">${reduced}</span> ${t('resource.crystal.name')}</p>
         <div class="modal-status">${
   purchased ? '<span style="color:#10b981;font-weight:bold;">' + t('common.purchased') + '</span>' : ''
 }</div>
@@ -683,8 +683,8 @@ export default class CrystalShop {
         const autoSalvageBonus = typeof config.bonus === 'string' ? t(config.bonus) : (config.bonus || '');
         fields.innerHTML = `
           <p>${autoSalvageBonus}</p>
-          <p>Current Level: <span class="modal-level">${level}</span> / <span class="modal-max-level">${cap}</span></p>
-          ${isMaxed ? '<p style="color:#10b981;font-weight:bold;">' + t('common.max') + '</p>' : `<p>Next Level Cost: <span class="modal-total-cost">${nextCost}</span> Crystals</p>`}
+          <p>${t('ascension.upgrade.currentLevel')}: <span class="modal-level">${level}</span> / <span class="modal-max-level">${cap}</span></p>
+          ${isMaxed ? '<p style="color:#10b981;font-weight:bold;">' + t('common.max') + '</p>' : `<p>${t('crystalShop.modal.nextLevelCost')}: <span class="modal-total-cost">${nextCost}</span> ${t('resource.crystal.name')}</p>`}
         `;
         buyBtn.disabled = isMaxed;
         buyBtn.style.display = isMaxed ? 'none' : '';
@@ -694,7 +694,7 @@ export default class CrystalShop {
         const reduced = Math.round(config.baseCost * (1 - ascRed));
         fields.innerHTML = `
             <p>${multipleBonus}</p>
-            <p>Cost: <span class="modal-total-cost">${reduced}</span> Crystals</p>
+            <p>${t('ascension.upgrade.cost')}: <span class="modal-total-cost">${reduced}</span> ${t('resource.crystal.name')}</p>
           `;
         buyBtn.style.display = '';
         buyBtn.disabled = false;
@@ -736,7 +736,7 @@ export default class CrystalShop {
       if (q('.modal-bonus')) q('.modal-bonus').textContent = this.getBonusText(stat, config, baseLevel);
 
       if (isMaxed) {
-        if (q('.modal-next-bonus')) q('.modal-next-bonus').textContent = 'Maxed';
+        if (q('.modal-next-bonus')) q('.modal-next-bonus').textContent = t('common.max');
         if (q('.modal-total-bonus')) q('.modal-total-bonus').textContent = this.getBonusText(stat, config, baseLevel);
         if (q('.modal-total-cost')) q('.modal-total-cost').textContent = 0;
         if (q('.modal-qty')) q('.modal-qty').textContent = 0;

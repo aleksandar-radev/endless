@@ -8,7 +8,7 @@ export const ROGUE_SKILLS = {
   // Tier 0 Skills
   shadowDance: {
     id: 'shadowDance',
-    name: () => t('Shadow Dance'),
+    name: () => t('skill.shadowDance.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'dagger',
@@ -22,7 +22,7 @@ export const ROGUE_SKILLS = {
   },
   evasion: {
     id: 'evasion',
-    name: () => t('Evasion'),
+    name: () => t('skill.evasion.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'dodge',
@@ -38,7 +38,7 @@ export const ROGUE_SKILLS = {
   // Tier 1 Skills
   poisonAffinity: {
     id: 'poisonAffinity',
-    name: () => t('Poison Affinity'),
+    name: () => t('skill.poisonAffinity.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'poison-affinity',
@@ -52,7 +52,7 @@ export const ROGUE_SKILLS = {
   },
   poisonDagger: {
     id: 'poisonDagger',
-    name: () => t('Poison Dagger'),
+    name: () => t('skill.poisonDagger.name'),
     type: () => 'toggle',
     manaCost: (level) => 1 + level * 0.125,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
@@ -67,7 +67,7 @@ export const ROGUE_SKILLS = {
   },
   shadowForm: {
     id: 'shadowForm',
-    name: () => t('Shadow Form'),
+    name: () => t('skill.shadowForm.name'),
     type: () => 'buff',
     manaCost: (level) => 10 + level * 0.625,
     cooldown: () => 66000,
@@ -86,7 +86,7 @@ export const ROGUE_SKILLS = {
   // Tier 2 Skills
   flurry: {
     id: 'flurry',
-    name: () => t('Flurry'),
+    name: () => t('skill.flurry.name'),
     type: () => 'summon',
     summonStats: (level) => ({
       percentOfPlayerDamage: Math.min(scaleDownFlat(level, 0.35), 30),
@@ -105,7 +105,7 @@ export const ROGUE_SKILLS = {
   },
   precision: {
     id: 'precision',
-    name: () => t('Precision'),
+    name: () => t('skill.precision.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'agility',
@@ -120,7 +120,7 @@ export const ROGUE_SKILLS = {
 
   backstab: {
     id: 'backstab',
-    name: () => t('Backstab'),
+    name: () => t('skill.backstab.name'),
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: (level) => 0,
@@ -139,7 +139,7 @@ export const ROGUE_SKILLS = {
 
   evasiveManeuver: {
     id: 'evasiveManeuver',
-    name: () => t('Evasive Maneuver'),
+    name: () => t('skill.evasiveManeuver.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'evasive-maneuver',
@@ -155,7 +155,7 @@ export const ROGUE_SKILLS = {
   // Tier 4 Skills
   darkPact: {
     id: 'darkPact',
-    name: () => t('Dark Pact'),
+    name: () => t('skill.darkPact.name'),
     type: () => 'buff',
     manaCost: (level) => 14 + level * 0.375,
     cooldown: () => 61000,
@@ -174,7 +174,7 @@ export const ROGUE_SKILLS = {
   // Tier 5 Skills
   assassination: {
     id: 'assassination',
-    name: () => t('Assassination'),
+    name: () => t('skill.assassination.name'),
     type: () => 'toggle',
     manaCost: (level) => 2 + level * 0.5,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
@@ -191,7 +191,7 @@ export const ROGUE_SKILLS = {
 
   deadlyPrecision: {
     id: 'deadlyPrecision',
-    name: () => t('Deadly Precision'),
+    name: () => t('skill.deadlyPrecision.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'precision',
@@ -208,7 +208,7 @@ export const ROGUE_SKILLS = {
   // Tier 6 Skills
   masterThief: {
     id: 'masterThief',
-    name: () => t('Master Thief'),
+    name: () => t('skill.masterThief.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'master',
@@ -225,7 +225,7 @@ export const ROGUE_SKILLS = {
   // Tier 1200 Skills
   shadowMastery: {
     id: 'shadowMastery',
-    name: () => t('Shadow Mastery'),
+    name: () => t('skill.shadowMastery.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'shadow-mastery',
@@ -239,7 +239,7 @@ export const ROGUE_SKILLS = {
   },
   venomousAssault: {
     id: 'venomousAssault',
-    name: () => t('Venomous Assault'),
+    name: () => t('skill.venomousAssault.name'),
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: (level) => 15 + level * 1.25,
@@ -257,7 +257,7 @@ export const ROGUE_SKILLS = {
   // Tier 2000 Skills
   phantomStrike: {
     id: 'phantomStrike',
-    name: () => t('Phantom Strike'),
+    name: () => t('skill.phantomStrike.name'),
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: (level) => 25 + level * 1.25,
@@ -274,7 +274,7 @@ export const ROGUE_SKILLS = {
   },
   silentExecution: {
     id: 'silentExecution',
-    name: () => t('Silent Execution'),
+    name: () => t('skill.silentExecution.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'silent-execution',
@@ -290,7 +290,7 @@ export const ROGUE_SKILLS = {
   // Tier 3000 Skills
   eclipseForm: {
     id: 'eclipseForm',
-    name: () => t('Eclipse Form'),
+    name: () => t('skill.eclipseForm.name'),
     type: () => 'buff',
     manaCost: (level) => 35 + level * 1.25,
     cooldown: () => 140000,
@@ -307,7 +307,7 @@ export const ROGUE_SKILLS = {
   },
   perfectDodge: {
     id: 'perfectDodge',
-    name: () => t('Perfect Dodge'),
+    name: () => t('skill.perfectDodge.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'perfect-dodge',
@@ -322,7 +322,7 @@ export const ROGUE_SKILLS = {
   // Tier 5000 Skills
   kingOfThieves: {
     id: 'kingOfThieves',
-    name: () => t('King of Thieves'),
+    name: () => t('skill.kingOfThieves.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'king-of-thieves',
@@ -336,7 +336,7 @@ export const ROGUE_SKILLS = {
   },
   nightfallAssassin: {
     id: 'nightfallAssassin',
-    name: () => t('Nightfall Assassin'),
+    name: () => t('skill.nightfallAssassin.name'),
     type: () => 'toggle',
     manaCost: (level) => 10 + level * 0.35,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
@@ -352,7 +352,7 @@ export const ROGUE_SKILLS = {
   // Specialization Skills
   shadowClone: {
     id: 'shadowClone',
-    name: () => t('Shadow Clone'),
+    name: () => t('skill.shadowClone.name'),
     type: () => 'summon',
     summonStats: (level) => {
       return {

@@ -179,12 +179,6 @@ export function enemyAttack(currentTime) {
     }
 
     if (!avoided) {
-      if (hero.stats.entangleChance > 0 && Math.random() < hero.stats.entangleChance) {
-        createDamageNumber({ text: 'ENTANGLED', isPlayer: true, color: '#228B22' });
-        enemy.lastAttack += 1000;
-        continue;
-      }
-
       // Use PoE2 armor formula for physical damage reduction
       const physicalDamageRaw = enemy.damage;
       const armorReduction = calculateArmorReduction(hero.stats.armor, physicalDamageRaw) / 100;
@@ -250,7 +244,7 @@ export function enemyAttack(currentTime) {
       }
 
       if (hero.stats.damageTakenReductionPercent) {
-        const reduction = Math.max(0, Math.min(0.3, hero.stats.damageTakenReductionPercent));
+        const reduction = Math.max(0, hero.stats.damageTakenReductionPercent);
         const multiplier = 1 - reduction;
         totalDamage *= multiplier;
         physicalDamage = Math.floor(physicalDamage * multiplier);

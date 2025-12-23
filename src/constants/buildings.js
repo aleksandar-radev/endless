@@ -44,7 +44,7 @@ export const buildingsData = {
   experienceWorkshop: {
     id: 'experienceWorkshop',
     get name() { return t('Experience Workshop'); },
-    get description() { return t('Grants levels every 2 hours.');},
+    get description() { return t('buildings.experienceWorkshop.description');},
     image: '/buildings/experience-workshop.png',
     effect: {
       type: 'level',

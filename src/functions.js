@@ -57,42 +57,52 @@ export function initDebugging() {
   let keySequence = [];
   const toggleSequence = ['e', 'd', 'e', 'v'];
 
+  const toggleDevMode = () => {
+    dev = !dev;
+    console.log(`Dev mode is now ${dev ? 'enabled' : 'disabled'}.`);
+    if (dev) {
+      document.body.classList.add('dev-active');
+      createDebugUI();
+      saveExpandedState(expandedState);
+      createModifyUI();
+
+      // Initial update and monitor changes
+      updateDebugUI();
+      debugUiInterval = setInterval(updateDebugUI, 1000);
+      saveGameInterval = setInterval(() => dataManager.saveGame({ force: true }), 1000);
+    } else {
+      if (debugUiInterval) {
+        clearInterval(debugUiInterval);
+        debugUiInterval = null;
+      }
+      clearInterval(saveGameInterval);
+      document.body.classList.remove('dev-active');
+      const debugDiv = document.querySelector('.debug-ui');
+      const modifyUI = document.querySelector('.modify-ui');
+      if (debugDiv) {
+        debugDiv.remove();
+      }
+      if (modifyUI) {
+        modifyUI.remove();
+      }
+      valueNodes.clear();
+      lastEncryptedSave = null;
+    }
+  };
+
   document.addEventListener('keydown', (event) => {
     keySequence.push(event.key.toLowerCase());
     if (keySequence.length > toggleSequence.length) {
       keySequence.shift();
     }
     if (keySequence.join('') === toggleSequence.join('')) {
-      dev = !dev;
-      console.log(`Dev mode is now ${dev ? 'enabled' : 'disabled'}.`);
-      if (dev) {
-        document.body.classList.add('dev-active');
-        createDebugUI();
-        saveExpandedState(expandedState);
-        createModifyUI();
+      toggleDevMode();
+    }
+  });
 
-        // Initial update and monitor changes
-        updateDebugUI();
-        debugUiInterval = setInterval(updateDebugUI, 1000);
-        saveGameInterval = setInterval(() => dataManager.saveGame({ force: true }), 1000);
-      } else {
-        if (debugUiInterval) {
-          clearInterval(debugUiInterval);
-          debugUiInterval = null;
-        }
-        clearInterval(saveGameInterval);
-        document.body.classList.remove('dev-active');
-        const debugDiv = document.querySelector('.debug-ui');
-        const modifyUI = document.querySelector('.modify-ui');
-        if (debugDiv) {
-          debugDiv.remove();
-        }
-        if (modifyUI) {
-          modifyUI.remove();
-        }
-        valueNodes.clear();
-        lastEncryptedSave = null;
-      }
+  document.addEventListener('click', (event) => {
+    if (event.target.classList.contains('dev-access-highlight')) {
+      toggleDevMode();
     }
   });
 }

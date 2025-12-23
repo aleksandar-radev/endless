@@ -22,6 +22,7 @@
   color: #4da3ff;
   font-size: 1.1em;
   font-weight: 600;
+  cursor: pointer;
 }
 
 .dev-access-footer--test .dev-access-highlight {

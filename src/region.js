@@ -3,7 +3,7 @@
 
 import { dataManager, game, hero } from './globals.js';
 import { showConfirmDialog, toggleGame, updateStageUI } from './ui/ui.js';
-import { t } from './i18n.js';
+import { t, tp } from './i18n.js';
 import Enemy from './enemy.js';
 // Tooltip imports
 import { showTooltip, positionTooltip, hideTooltip } from './ui/ui.js';
@@ -15,8 +15,9 @@ import { formatNamedType } from './format.js';
 export async function setCurrentRegion(regionId) {
   if (regionId === game.currentRegionId) return;
   // Show confirm dialog before changing region
+  const nextRegion = REGIONS.find((r) => r.id === regionId);
   const confirmed = await showConfirmDialog(
-    'Are you sure you want to change region? That will reset your stage progress and will find you a new enemy',
+    tp('combat.changeRegionConfirm', { region: nextRegion?.name ?? regionId }),
   );
   if (!confirmed) return;
   game.currentRegionId = regionId;

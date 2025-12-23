@@ -28,6 +28,12 @@ export function formatStatName(stat, shortElementalNames = false) {
     return `${icon} ${elementName} ${base}`.trim();
   }
 
+  // Try looking up with "stats." prefix first
+  const statsKey = `stats.${stat}`;
+  const statsTranslation = t(statsKey);
+  if (statsTranslation !== statsKey) return statsTranslation;
+
+  // Fallback to looking up the key directly
   const translation = t(stat);
   if (translation !== stat) return translation;
 

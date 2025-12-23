@@ -106,7 +106,7 @@ export function initializeUI() {
       const region = btn.dataset.region;
       if (game.fightMode === region) return; // No change needed
       const confirmed = await showConfirmDialog(
-        `Are you sure you want to change to ${region}? That will reset your stage progress and will find you a new enemy`,
+        tp('combat.changeRegionConfirm', { region: t(`region.${region}`) }),
       );
       if (!confirmed) return;
       // Reset stage progress and enemy as if the hero died
@@ -825,9 +825,8 @@ export function updateRockyFieldRegionSelector() {
     if (hasEnemies && unlocked) {
       btn.onclick = async () => {
         const confirmed = await showConfirmDialog(
-          `Are you sure you want to change to ${region.name}? That will reset your stage progress and will find you a new enemy`,
-        );
-        if (!confirmed) return;
+          tp('combat.changeRegionConfirm', { region: region.name }),
+        );        if (!confirmed) return;
         game.rockyFieldRegion = region.id;
         game.rockyFieldStage = 1;
         game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);

@@ -18,6 +18,7 @@ export default function run() {
 
     <span style="color:#FF8A00;">Improvements</span>
     <ul>
+      <li>Most if not all texts are not translated for all existing languagese correctly.</li>
       <li>Slight performance improvements.</li>
       <li>Elemental Allocation now includes a Physical % split for resource-based extra damage bonuses.</li>
       <li>Life steal, mana steal and omni steal now cannot appear on items.</li>

@@ -1,13 +1,14 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
 import { scaleDownFlat, scaleUpFlat } from '../../common.js';
+import { hero } from '../../globals.js';
 
 // Mage skills
 export const MAGE_SKILLS = {
   // Tier 1 Skills
   magicMissile: {
     id: 'magicMissile',
-    name: () => t('Magic Missile'),
+    name: () => t('skill.magicMissile.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 2 + level * 0.25,
@@ -27,7 +28,7 @@ export const MAGE_SKILLS = {
   },
   arcaneIntellect: {
     id: 'arcaneIntellect',
-    name: () => t('Arcane Intellect'),
+    name: () => t('skill.arcaneIntellect.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'intellect',
@@ -45,7 +46,7 @@ export const MAGE_SKILLS = {
   // Tier 10 Skills
   frostBolt: {
     id: 'frostBolt',
-    name: () => t('Frost Bolt'),
+    name: () => t('skill.frostBolt.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 3 + level * 0.25,
@@ -65,7 +66,7 @@ export const MAGE_SKILLS = {
   },
   fireBlast: {
     id: 'fireBlast',
-    name: () => t('Fire Blast'),
+    name: () => t('skill.fireBlast.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 4 + level * 0.25,
@@ -87,7 +88,7 @@ export const MAGE_SKILLS = {
   // Tier 25 Skills
   mindControl: {
     id: 'mindControl',
-    name: () => t('Mind Control'),
+    name: () => t('skill.mindControl.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'mind-control',
@@ -102,7 +103,7 @@ export const MAGE_SKILLS = {
   },
   manaShield: {
     id: 'manaShield',
-    name: () => t('Mana Shield'),
+    name: () => t('skill.manaShield.name'),
     type: () => 'buff',
     manaCost: (level) => 8 + level * 0.625,
     cooldown: () => 30000,
@@ -115,11 +116,37 @@ export const MAGE_SKILLS = {
       manaShieldPercent: Math.min(scaleDownFlat(level, 0.75), 100),
     }),
   },
+  crimsonAegis: {
+    id: 'crimsonAegis',
+    name: () => t('skill.crimsonAegis.name'),
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[2],
+    isVisible: () => hero.stats.crimsonAegisSkillUnlocked > 0,
+    icon: () => 'crimson-aegis',
+    description: () => t('skill.crimsonAegis'),
+    maxLevel: () => 200,
+    effect: (level) => ({
+      damageTakenReductionPercent: Math.min((35 * level) / 200, 35),
+    }),
+  },
+  crimsonDrain: {
+    id: 'crimsonDrain',
+    name: () => t('skill.crimsonDrain.name'),
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[2],
+    isVisible: () => hero.stats.bloodSiphonSkillUnlocked > 0,
+    icon: () => 'blood-siphon',
+    description: () => t('skill.crimsonDrain'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      lifePerHit: scaleUpFlat(level, 3, 6),
+    }),
+  },
 
   // Tier 50 Skills
   resourceInfusion: {
     id: 'resourceInfusion',
-    name: () => t('Resource Infusion'),
+    name: () => t('skill.resourceInfusion.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'resource-infusion',
@@ -133,7 +160,7 @@ export const MAGE_SKILLS = {
   },
   iceStorm: {
     id: 'iceStorm',
-    name: () => t('Ice Storm'),
+    name: () => t('skill.iceStorm.name'),
     type: () => 'buff',
     manaCost: (level) => 15 + level * 0.75,
     cooldown: () => 64000,
@@ -150,7 +177,7 @@ export const MAGE_SKILLS = {
   },
   arcaneFocus: {
     id: 'arcaneFocus',
-    name: () => t('Arcane Focus'),
+    name: () => t('skill.arcaneFocus.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
     icon: () => 'focus',
@@ -165,7 +192,7 @@ export const MAGE_SKILLS = {
   // Tier 75 Skills
   pyroclasm: {
     id: 'pyroclasm',
-    name: () => t('Pyroclasm'),
+    name: () => t('skill.pyroclasm.name'),
     type: () => 'buff',
     manaCost: (level) => 20 + level * 0.75,
     cooldown: () => 72000,
@@ -181,7 +208,7 @@ export const MAGE_SKILLS = {
   },
   timeWarp: {
     id: 'timeWarp',
-    name: () => t('Time Warp'),
+    name: () => t('skill.timeWarp.name'),
     type: () => 'buff',
     manaCost: (level) => 25 + level * 0.875,
     cooldown: () => 96000,
@@ -198,7 +225,7 @@ export const MAGE_SKILLS = {
   // Tier 100 Skills
   arcanePower: {
     id: 'arcanePower',
-    name: () => t('Arcane Power'),
+    name: () => t('skill.arcanePower.name'),
     type: () => 'toggle',
     manaCost: (level) => 5 + level * 0.375,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
@@ -211,7 +238,7 @@ export const MAGE_SKILLS = {
   },
   summonElemental: {
     id: 'summonElemental',
-    name: () => t('Summon Elemental'),
+    name: () => t('skill.summonElemental.name'),
     type: () => 'summon',
     summonStats: (level) => {
       return {
@@ -237,7 +264,7 @@ export const MAGE_SKILLS = {
   // Tier 200 Skills
   archmage: {
     id: 'archmage',
-    name: () => t('Archmage'),
+    name: () => t('skill.archmage.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'archmage',
@@ -254,7 +281,7 @@ export const MAGE_SKILLS = {
   // Tier 1200 Skills
   arcaneMight: {
     id: 'arcaneMight',
-    name: () => t('Arcane Might'),
+    name: () => t('skill.arcaneMight.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'arcane-might',
@@ -268,7 +295,7 @@ export const MAGE_SKILLS = {
   },
   voidBlast: {
     id: 'voidBlast',
-    name: () => t('Void Blast'),
+    name: () => t('skill.voidBlast.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 25 + level * 1.25,
@@ -289,7 +316,7 @@ export const MAGE_SKILLS = {
   // Tier 2000 Skills
   chronomancerSurge: {
     id: 'chronomancerSurge',
-    name: () => t('Chronomancer Surge'),
+    name: () => t('skill.chronomancerSurge.name'),
     type: () => 'buff',
     manaCost: (level) => 35 + level * 1.25,
     cooldown: () => 120000,
@@ -305,7 +332,7 @@ export const MAGE_SKILLS = {
   },
   starFire: {
     id: 'starFire',
-    name: () => t('Star Fire'),
+    name: () => t('skill.starFire.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 30 + level * 1.25,
@@ -328,7 +355,7 @@ export const MAGE_SKILLS = {
   // Tier 3000 Skills
   manaOverflow: {
     id: 'manaOverflow',
-    name: () => t('Mana Overflow'),
+    name: () => t('skill.manaOverflow.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'mana-overflow',
@@ -342,7 +369,7 @@ export const MAGE_SKILLS = {
   },
   dimensionalRift: {
     id: 'dimensionalRift',
-    name: () => t('Dimensional Rift'),
+    name: () => t('skill.dimensionalRift.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 45 + level * 1.25,
@@ -363,7 +390,7 @@ export const MAGE_SKILLS = {
   // Tier 5000 Skills
   supremeSorcery: {
     id: 'supremeSorcery',
-    name: () => t('Supreme Sorcery'),
+    name: () => t('skill.supremeSorcery.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'supreme-sorcery',
@@ -377,7 +404,7 @@ export const MAGE_SKILLS = {
   },
   apocalypse: {
     id: 'apocalypse',
-    name: () => t('Apocalypse'),
+    name: () => t('skill.apocalypse.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 60 + level * 1.25,

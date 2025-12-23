@@ -105,6 +105,14 @@ export const DEFENSE_STATS = {
     item: { min: 0.01, max: 0.05, limit: 1.23, scaling: (level, tier) => defenseScaling(level, tier, PERCENT_SCALING) },
     itemTags: ['belt'],
   },
+
+  damageTakenReductionPercent: {
+    base: 0,
+    divisor: 100,
+    decimalPlaces: 1,
+    showInUI: true,
+    subcategory: 'defense',
+  },
   // THORNS
   thornsDamage: {
     base: 0,
@@ -310,11 +318,6 @@ export const DEFENSE_STATS = {
     decimalPlaces: 1,
     subcategory: 'defense',
   },
-  // FROST SHIELD
-  frostShield: {
-    base: 0,
-    showValue: false,
-  },
   // DAMAGE TAKEN CONVERSIONS / MITIGATION
   damageTakenConvertedToColdPercent: {
     base: 0,
@@ -327,12 +330,5 @@ export const DEFENSE_STATS = {
     divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
-  },
-  damageTakenReductionPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'defense',
-    showInUI: true,
   },
 };

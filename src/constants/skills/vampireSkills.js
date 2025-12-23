@@ -8,7 +8,7 @@ export const VAMPIRE_SKILLS = {
   // Tier 1 Skills
   bloodSiphon: {
     id: 'bloodSiphon',
-    name: () => t('Blood Siphon'),
+    name: () => t('skill.bloodSiphon.name'),
     type: () => 'toggle',
     manaCost: (level) => 1 + level * 0.125,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
@@ -23,7 +23,7 @@ export const VAMPIRE_SKILLS = {
   },
   nightStalker: {
     id: 'nightStalker',
-    name: () => t('Night Stalker'),
+    name: () => t('skill.nightStalker.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'moon',
@@ -41,7 +41,7 @@ export const VAMPIRE_SKILLS = {
   // Tier 10 Skills
   crimsonBurst: {
     id: 'crimsonBurst',
-    name: () => t('Crimson Burst'),
+    name: () => t('skill.crimsonBurst.name'),
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: () => 0,
@@ -58,7 +58,7 @@ export const VAMPIRE_SKILLS = {
   },
   darkAura: {
     id: 'darkAura',
-    name: () => t('Dark Aura'),
+    name: () => t('skill.darkAura.name'),
     type: () => 'buff',
     manaCost: (level) => 6 + level * 0.625,
     cooldown: () => 64000,
@@ -78,7 +78,7 @@ export const VAMPIRE_SKILLS = {
   // Tier 25 Skills
   drainingTouch: {
     id: 'drainingTouch',
-    name: () => t('Draining Touch'),
+    name: () => t('skill.drainingTouch.name'),
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 0 + level * 0,
@@ -99,7 +99,7 @@ export const VAMPIRE_SKILLS = {
   },
   greaterBloodHunger: {
     id: 'greaterBloodHunger',
-    name: () => t('Greater Blood Hunger'),
+    name: () => t('skill.greaterBloodHunger.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'bloodlust',
@@ -114,7 +114,7 @@ export const VAMPIRE_SKILLS = {
   // Tier 50 Skills
   vampiricStrike: {
     id: 'vampiricStrike',
-    name: () => t('Vampiric Strike'),
+    name: () => t('skill.vampiricStrike.name'),
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: (level) => 2 + level * 0.25,
@@ -131,7 +131,7 @@ export const VAMPIRE_SKILLS = {
   },
   summonBats: {
     id: 'summonBats',
-    name: () => t('Summon Bats'),
+    name: () => t('skill.summonBats.name'),
     type: () => 'summon',
     summonStats: (level) => {
       return {
@@ -156,7 +156,7 @@ export const VAMPIRE_SKILLS = {
   // Tier 75 Skills
   bloodPact: {
     id: 'bloodPact',
-    name: () => t('Blood Pact'),
+    name: () => t('skill.bloodPact.name'),
     type: () => 'buff',
     manaCost: (level) => 20 + level * 0.25,
     cooldown: () => 66000,
@@ -175,7 +175,7 @@ export const VAMPIRE_SKILLS = {
   // Tier 100 Skills
   eternalThirst: {
     id: 'eternalThirst',
-    name: () => t('Eternal Thirst'),
+    name: () => t('skill.eternalThirst.name'),
     type: () => 'toggle',
     manaCost: (level) => 2 + level * 0.425,
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
@@ -189,7 +189,7 @@ export const VAMPIRE_SKILLS = {
   },
   deathlyPresence: {
     id: 'deathlyPresence',
-    name: () => t('Deathly Presence'),
+    name: () => t('skill.deathlyPresence.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
     icon: () => 'presence',
@@ -205,7 +205,7 @@ export const VAMPIRE_SKILLS = {
   // Tier 200 Skills
   lordOfNight: {
     id: 'lordOfNight',
-    name: () => t('Lord of Night'),
+    name: () => t('skill.lordOfNight.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[6],
     icon: () => 'lord',
@@ -224,7 +224,7 @@ export const VAMPIRE_SKILLS = {
   // Tier 1200 Skills
   bloodMoon: {
     id: 'bloodMoon',
-    name: () => t('Blood Moon'),
+    name: () => t('skill.bloodMoon.name'),
     type: () => 'buff',
     manaCost: (level) => 25 + level * 1.25,
     cooldown: () => 100000,
@@ -241,7 +241,7 @@ export const VAMPIRE_SKILLS = {
   },
   sanguineFury: {
     id: 'sanguineFury',
-    name: () => t('Sanguine Fury'),
+    name: () => t('skill.sanguineFury.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'sanguine-fury',
@@ -257,7 +257,7 @@ export const VAMPIRE_SKILLS = {
   // Tier 2000 Skills
   twilightVeil: {
     id: 'twilightVeil',
-    name: () => t('Twilight Veil'),
+    name: () => t('skill.twilightVeil.name'),
     type: () => 'buff',
     manaCost: (level) => 35 + level * 1.25,
     cooldown: () => 120000,
@@ -274,7 +274,7 @@ export const VAMPIRE_SKILLS = {
   },
   shadowRebirth: {
     id: 'shadowRebirth',
-    name: () => t('Shadow Rebirth'),
+    name: () => t('skill.shadowRebirth.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'shadow-rebirth',
@@ -290,7 +290,7 @@ export const VAMPIRE_SKILLS = {
   // Tier 3000 Skills
   eternalHunger: {
     id: 'eternalHunger',
-    name: () => t('Eternal Hunger'),
+    name: () => t('skill.eternalHunger.name'),
     type: () => 'toggle',
     manaCost: (level) => 0,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
@@ -305,7 +305,7 @@ export const VAMPIRE_SKILLS = {
   },
   nocturnalDominion: {
     id: 'nocturnalDominion',
-    name: () => t('Nocturnal Dominion'),
+    name: () => t('skill.nocturnalDominion.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'nocturnal-dominion',
@@ -321,7 +321,7 @@ export const VAMPIRE_SKILLS = {
   // Tier 5000 Skills
   vampireOverlord: {
     id: 'vampireOverlord',
-    name: () => t('Vampire Overlord'),
+    name: () => t('skill.vampireOverlord.name'),
     type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'vampire-overlord',
@@ -335,7 +335,7 @@ export const VAMPIRE_SKILLS = {
   },
   immortalSovereign: {
     id: 'immortalSovereign',
-    name: () => t('Immortal Sovereign'),
+    name: () => t('skill.immortalSovereign.name'),
     type: () => 'toggle',
     manaCost: (level) => 20 + level * 1.25,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
@@ -352,7 +352,7 @@ export const VAMPIRE_SKILLS = {
   // Specialization Skills
   bloodSacrifice: {
     id: 'bloodSacrifice',
-    name: () => t('Blood Sacrifice'),
+    name: () => t('skill.bloodSacrifice.name'),
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: () => 0,
