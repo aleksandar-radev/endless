@@ -739,6 +739,10 @@ export default class Hero {
         if (stat === 'reduceEnemyAttackSpeedPercent') value = Math.min(value, 50);
         if (stat === 'reduceEnemyDamagePercent') value = Math.min(value, 50);
         if (stat === 'damageTakenReductionPercent') value = Math.min(value, 80);
+        if (stat === 'elementalDamageTakenReductionPercent') value = Math.min(value, 80);
+        if (stat === 'coldDamageTakenReductionPercent') value = Math.min(value, 50);
+        if (stat === 'arenaDamageReductionPercent') value = Math.min(value, 80);
+        if (stat === 'damageTakenConvertedToColdPercent') value = Math.min(value, 75);
 
         const divisor = getDivisor(stat);
         const prestigeBonus = prestigeBonuses[stat] || 0;

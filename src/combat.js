@@ -195,10 +195,8 @@ export function enemyAttack(currentTime) {
       });
 
       // Convert a portion of non-cold damage taken into cold, then reduce cold damage taken.
-      const rawConversionPercent = hero.stats.damageTakenConvertedToColdPercent || 0;
-      const conversionPercent = Math.max(0, Math.min(.75, rawConversionPercent));
-      const rawColdReductionPercent = hero.stats.coldDamageTakenReductionPercent || 0;
-      const coldReductionPercent = Math.max(0, Math.min(.50, rawColdReductionPercent));
+      const conversionPercent = Math.max(0, hero.stats.damageTakenConvertedToColdPercent || 0);
+      const coldReductionPercent = Math.max(0, hero.stats.coldDamageTakenReductionPercent || 0);
 
       if (conversionPercent > 0) {
         const nonColdTotal = Math.max(
@@ -231,7 +229,7 @@ export function enemyAttack(currentTime) {
       }
 
       if (hero.stats.elementalDamageTakenReductionPercent > 0) {
-        const reduction = Math.min(0.8, hero.stats.elementalDamageTakenReductionPercent);
+        const reduction = hero.stats.elementalDamageTakenReductionPercent;
         ELEMENT_IDS.forEach((id) => {
           if (elementalDamage[id] > 0) {
             elementalDamage[id] *= (1 - reduction);
@@ -243,7 +241,7 @@ export function enemyAttack(currentTime) {
 
       if (game.fightMode === 'arena' && hero.stats.arenaDamageReductionPercent) {
         // min 5% damage taken
-        const multiplier = Math.max(0.2, 1 - hero.stats.arenaDamageReductionPercent);
+        const multiplier = Math.max(0, 1 - hero.stats.arenaDamageReductionPercent);
         totalDamage *= multiplier;
         // Scale breakdown components for consistency (though mainly visual/logging)
         physicalDamage = Math.floor(physicalDamage * multiplier);
