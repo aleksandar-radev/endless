@@ -16,7 +16,8 @@
     "electron": "electron electron-main.js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "check-translations": "node scripts/check-translations.js"
+    "check-translations": "node scripts/check-translations.js",
+    "check-unused-translations": "node scripts/check-unused-translations.js"
   },
   "dependencies": {
     "dotenv": "^17.2.2",
