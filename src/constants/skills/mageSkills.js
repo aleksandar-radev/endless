@@ -424,4 +424,28 @@ export const MAGE_SKILLS = {
       };
     },
   },
+
+  // Specialization Skills
+  weaponIllusion: {
+    id: 'weaponIllusion',
+    name: () => t('skill.weaponIllusion.name'),
+    type: () => 'summon',
+    summonStats: (level) => {
+      return {
+        percentOfPlayerDamage: 5 + scaleDownFlat(level, 4),
+        attackSpeed: hero.stats.attackSpeed,
+        canCrit: true,
+      };
+    },
+    manaCost: (level) => 30 + level * 1,
+    cooldown: () => 48000,
+    duration: () => 22000,
+    requiredLevel: () => SKILL_LEVEL_TIERS[4],
+    icon: () => 'weapon-illusion',
+    description: () => t('skill.weaponIllusion'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+    }),
+    isVisible: () => hero.stats.weaponIllusionUnlocked > 0,
+  },
 };

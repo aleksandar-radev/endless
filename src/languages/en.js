@@ -1854,6 +1854,8 @@ export default {
   'Dancing Blades': 'Dancing Blades',
   'skill.dancingBlades': 'Unlocks a weapon illusion summon.',
   'Enchanted Armor': 'Enchanted Armor',
+  'skill.weaponIllusion.name': 'Weapon Illusion',
+  'skill.weaponIllusion': 'Unlocks a weapon illusion that fights for you.',
   'skill.enchantedArmor': 'Increases effectiveness of armor enchantments.',
 
   // Stats
@@ -1939,6 +1941,7 @@ export default {
   'stats.chanceToShatterEnemy': 'Shatter Chance',
   'stats.damageTakenConvertedToColdPercent': 'Damage Taken Converted to Cold %',
   'stats.coldDamageTakenReductionPercent': 'Cold Damage Taken Reduction %',
+  'stats.elementalDamageTakenReductionPercent': 'Elemental Damage Taken Reduction %',
   'stats.damageTakenReductionPercent': 'Reduced Damage Taken %',
   'stats.shapeshiftUnlocked': 'Shapeshift Unlocked',
   'stats.summonDamageBuffPercent': 'Summon Damage %',

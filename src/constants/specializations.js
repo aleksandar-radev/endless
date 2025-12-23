@@ -892,6 +892,7 @@ export const SPECIALIZATIONS = {
       avatar: () => 'mage-enchanter-avatar.jpg',
       baseStats: () => ({
         weaponBuffEffectivenessPercent: 20,
+        weaponIllusionUnlocked: 1,
       }),
       skills: {
         dancingBlades: {
@@ -901,9 +902,11 @@ export const SPECIALIZATIONS = {
           requiredLevel: () => SKILL_LEVEL_TIERS[4],
           icon: () => 'dancing-blades',
           description: () => t('skill.dancingBlades'),
-          maxLevel: () => 1,
-          effect: () => ({
-            weaponIllusionUnlocked: 1,
+          maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+          effect: (level) => ({
+            allResistancePercent: scaleUpFlat(level, 5, 5, 0.2),
+            extraDamageFromAllResistancesPercent: 0.5 + scaleDownFlat(level, 0.01),
+            elementalDamageTakenReductionPercent: Math.min(scaleDownFlat(level, 0.5), 25),
           }),
         },
         enchantedArmor: {
@@ -915,6 +918,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.enchantedArmor'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
+            weaponEffectiveness: scaleUpFlat(level, 10, 5, 0.2),
+            jewelryEffectiveness: scaleUpFlat(level, 10, 5, 0.2),
           }),
         },
       },

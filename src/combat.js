@@ -230,6 +230,15 @@ export function enemyAttack(currentTime) {
         elementalDamage.cold *= (1 - coldReductionPercent);
       }
 
+      if (hero.stats.elementalDamageTakenReductionPercent > 0) {
+        const reduction = Math.min(0.8, hero.stats.elementalDamageTakenReductionPercent);
+        ELEMENT_IDS.forEach((id) => {
+          if (elementalDamage[id] > 0) {
+            elementalDamage[id] *= (1 - reduction);
+          }
+        });
+      }
+
       let totalDamage = physicalDamage + ELEMENT_IDS.reduce((sum, id) => sum + elementalDamage[id], 0);
 
       if (game.fightMode === 'arena' && hero.stats.arenaDamageReductionPercent) {

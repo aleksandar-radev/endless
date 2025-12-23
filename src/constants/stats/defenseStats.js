@@ -331,4 +331,10 @@ export const DEFENSE_STATS = {
     decimalPlaces: 1,
     subcategory: 'elemental',
   },
+  elementalDamageTakenReductionPercent: {
+    base: 0,
+    divisor: 100,
+    decimalPlaces: 1,
+    subcategory: 'elemental',
+  },
 };
