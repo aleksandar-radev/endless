@@ -37,3 +37,5 @@
 - ignore linting and spacing errors ( Do not prompt to run pnpm lint)
 - ignore indentation issues
 * Do not run pnpm lint or pnpm build and do not commit any changes to generated files, except when you are explicitly asked to do so.
+
+Perform tasks in a single step whenever possible. Do not use tool calls for simple reasoning. If you must use a tool, combine multiple operations into one request.
