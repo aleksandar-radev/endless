@@ -62,6 +62,7 @@ export const OFFENSE_STATS = {
     decimalPlaces: 2,
     showInUI: true,
     subcategory: 'attack',
+    cap: 5,
   },
   attackSpeedPercent: {
     base: 0,
@@ -106,6 +107,7 @@ export const OFFENSE_STATS = {
     itemTags: ['offense', 'jewelry', 'gloves', 'wand', 'staff'],
     showInUI: true,
     subcategory: 'attack',
+    cap: 50,
   },
   critChanceCap: {
     base: 50,
@@ -548,16 +550,19 @@ export const OFFENSE_STATS = {
     base: 0,
     divisor: 100,
     decimalPlaces: 2,
+    cap: 50,
   },
   reduceEnemyHpPercent: {
     base: 0,
     divisor: 100,
     decimalPlaces: 2,
+    cap: 50,
   },
   reduceEnemyAttackSpeedPercent: {
     base: 0,
     divisor: 100,
     decimalPlaces: 2,
+    cap: 50,
   },
   extraDamageFromLifePercent: {
     base: 0,

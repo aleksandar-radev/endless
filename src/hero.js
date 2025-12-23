@@ -667,22 +667,15 @@ export default class Hero {
       if (stat.endsWith('Percent')) {
         let percentValue = percentBonuses[stat] || 0;
         percentValue += soulBonuses[stat] || 0;
-        if (
-          stat === 'reduceEnemyHpPercent' ||
-          stat === 'reduceEnemyAttackSpeedPercent' ||
-          stat === 'reduceEnemyDamagePercent'
-        ) {
-          percentValue = Math.min(percentValue, 0.5);
-        }
         this.stats[stat] = percentValue;
         percentBonuses[stat] = percentValue;
       }
     }
 
     for (const stat of STAT_KEYS) {
+      let value;
       if (!stat.endsWith('Percent')) {
         // Use Math.floor for integer stats, Number.toFixed for decimals
-        let value;
         if (stat === 'attackSpeed') {
           // Attack speed percent bonuses scale the pre-percent total (base 1.0 plus flat additions).
           const flatBase = flatValues.attackSpeed + (ascensionBonuses.attackSpeed || 0);
@@ -708,51 +701,48 @@ export default class Hero {
           value += (this.stats.manaPerLevel || 0) * (this.level - 1);
         }
 
-        // Apply soul shop bonuses (flat or percent)
-        if (stat.endsWith('Percent')) {
-          value += soulBonuses[stat] || 0;
-        } else if (soulBonuses[stat]) {
+        // Apply soul shop bonuses (flat only, percent handled in first loop)
+        if (soulBonuses[stat]) {
           value += soulBonuses[stat];
         }
+      } else {
+        value = (percentBonuses[stat] || 0) * getDivisor(stat);
+      }
 
-        // Apply decimal places
-        const decimals = getStatDecimalPlaces(stat);
-        value = decimals > 0 ? Number(value.toFixed(decimals)) : Math.floor(value);
+      // Apply decimal places
+      const decimals = getStatDecimalPlaces(stat);
+      value = decimals > 0 ? Number(value.toFixed(decimals)) : Math.floor(value);
 
-        // Apply caps
-        if (stat === 'blockChance') {
-          const cap = 50 + ((ascensionBonuses.blockChanceCap || 0) | 0);
-          value = Math.min(value, cap);
-        }
-        if (stat === 'critChance') {
-          const cap = (flatValues.critChanceCap || 50) + (ascensionBonuses.critChanceCap || 0);
-          value = Math.min(value, cap);
-        }
-        if (stat === 'attackSpeed') {
-          if (!this.stats.uncappedAttackSpeed) {
-            const cap = 5 + (ascensionBonuses.attackSpeedCap || 0);
-            value = Math.min(value, cap);
-          }
-        }
-        if (stat === 'extraMaterialDropMax') value = Math.max(value, 1); // Always at least 1
-        if (stat === 'reduceEnemyHpPercent') value = Math.min(value, 50);
-        if (stat === 'reduceEnemyAttackSpeedPercent') value = Math.min(value, 50);
-        if (stat === 'reduceEnemyDamagePercent') value = Math.min(value, 50);
-        if (stat === 'damageTakenReductionPercent') value = Math.min(value, 80);
-        if (stat === 'elementalDamageTakenReductionPercent') value = Math.min(value, 80);
-        if (stat === 'coldDamageTakenReductionPercent') value = Math.min(value, 50);
-        if (stat === 'arenaDamageReductionPercent') value = Math.min(value, 80);
-        if (stat === 'damageTakenConvertedToColdPercent') value = Math.min(value, 75);
-
-        const divisor = getDivisor(stat);
-        const prestigeBonus = prestigeBonuses[stat] || 0;
-        if (divisor !== 1) {
-          // Prestige bonuses are stored as fractions already (e.g. 0.05 for 5%),
-          // so exclude them from divisor scaling and add them back after scaling.
-          this.stats[stat] = prestigeBonus ? (value - prestigeBonus) / divisor + prestigeBonus : value / divisor;
+      // Apply caps
+      let cap = STATS[stat]?.cap;
+      if (stat === 'blockChance') {
+        cap = (cap || 50) + ((ascensionBonuses.blockChanceCap || 0) | 0);
+      }
+      if (stat === 'critChance') {
+        cap = (flatValues.critChanceCap || cap || 50) + (ascensionBonuses.critChanceCap || 0);
+      }
+      if (stat === 'attackSpeed') {
+        if (this.stats.uncappedAttackSpeed) {
+          cap = Infinity;
         } else {
-          this.stats[stat] = value;
+          cap = (cap || 5) + (ascensionBonuses.attackSpeedCap || 0);
         }
+      }
+
+      if (cap !== undefined && Number.isFinite(cap)) {
+        value = Math.min(value, cap);
+      }
+
+      if (stat === 'extraMaterialDropMax') value = Math.max(value, 1); // Always at least 1
+
+      const divisor = getDivisor(stat);
+      const prestigeBonus = prestigeBonuses[stat] || 0;
+      if (divisor !== 1) {
+        // Prestige bonuses are stored as fractions already (e.g. 0.05 for 5%),
+        // so exclude them from divisor scaling and add them back after scaling.
+        this.stats[stat] = prestigeBonus ? (value - prestigeBonus) / divisor + prestigeBonus : value / divisor;
+      } else {
+        this.stats[stat] = value;
       }
     }
 

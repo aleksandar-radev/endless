@@ -75,6 +75,7 @@ export const DEFENSE_STATS = {
     itemTags: ['shield'],
     showInUI: true,
     subcategory: 'defense',
+    cap: 50,
   },
   blockChancePercent: {
     base: 0,
@@ -112,6 +113,7 @@ export const DEFENSE_STATS = {
     decimalPlaces: 1,
     showInUI: true,
     subcategory: 'defense',
+    cap: 80,
   },
   // THORNS
   thornsDamage: {
@@ -290,6 +292,7 @@ export const DEFENSE_STATS = {
     divisor: 100,
     decimalPlaces: 1,
     subcategory: 'defense',
+    cap: 80,
   },
   // ITEM LIFE EFFECTIVENESS
   itemLifeEffectivenessPercent: {
@@ -324,17 +327,20 @@ export const DEFENSE_STATS = {
     divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
+    cap: 75,
   },
   coldDamageTakenReductionPercent: {
     base: 0,
     divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
+    cap: 50,
   },
   elementalDamageTakenReductionPercent: {
     base: 0,
     divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
+    cap: 80,
   },
 };
