@@ -441,7 +441,11 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           const lblText = formatStatName(key);
           if (lblText && lblText.includes('<')) lbl.innerHTML = lblText; else lbl.textContent = lblText;
 
-          const showValue = statsDef[key].showValue !== false;
+          let showValue = statsDef[key].showValue !== false;
+          if (options.showAllStats && statsDef[key].showValueAll !== undefined) {
+            showValue = statsDef[key].showValueAll;
+          }
+
           const span = document.createElement('span');
           span.id = `${key}-value`;
 
@@ -452,11 +456,6 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
 
           row.appendChild(lbl);
           row.appendChild(span);
-
-          if (showValue) {
-            span.textContent = formatDisplayValue(key, hero.stats[key]);
-            appendDamagePercentBonus(span, key);
-          }
           targetPanel.appendChild(row);
           lbl.addEventListener('mouseenter', (e) => showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e));
           lbl.addEventListener('mousemove', positionTooltip);

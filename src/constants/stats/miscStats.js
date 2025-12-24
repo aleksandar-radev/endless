@@ -382,11 +382,13 @@ export const MISC_STATS = {
   animatedWeaponsUnlocked: {
     base: 0,
     showValue: false,
+    showValueAll: true,
   },
   // ROGUE CLONE
   cloneUnlocked: {
     base: 0,
     showValue: false,
+    showValueAll: true,
   },
   // NIGHTSTALKER
   nightStalkerBuffEffectivenessPercent: {
@@ -430,11 +432,13 @@ export const MISC_STATS = {
   bloodSacrificeUnlocked: {
     base: 0,
     showValue: false,
+    showValueAll: true,
   },
   // DRUID
   shapeshiftUnlocked: {
     base: 0,
     showValue: false,
+    showValueAll: true,
   },
   // MAGE
   reduceEnemyResistancesPercent: {
@@ -450,11 +454,13 @@ export const MISC_STATS = {
   weaponIllusionUnlocked: {
     base: 0,
     showValue: false,
+    showValueAll: true,
   },
   // ELEMENTALIST (CRYOMANCER)
   glacialBulwarkUnlocked: {
     base: 0,
     showValue: false,
+    showValueAll: true,
   },
   weaponBuffEffectivenessPercent: {
     base: 0,
@@ -464,9 +470,11 @@ export const MISC_STATS = {
   crimsonAegisSkillUnlocked: {
     base: 0,
     showValue: false,
+    showValueAll: true,
   },
   bloodSiphonSkillUnlocked: {
     base: 0,
     showValue: false,
+    showValueAll: true,
   },
 };
