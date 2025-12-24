@@ -451,9 +451,11 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           }
 
           row.appendChild(lbl);
+          row.appendChild(span);
+
           if (showValue) {
-            row.appendChild(document.createTextNode(' '));
-            row.appendChild(span);
+            span.textContent = formatDisplayValue(key, hero.stats[key]);
+            appendDamagePercentBonus(span, key);
           }
           targetPanel.appendChild(row);
           lbl.addEventListener('mouseenter', (e) => showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e));
@@ -491,7 +493,6 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           span.textContent = formatDisplayValue(key, hero.stats[key]);
           appendDamagePercentBonus(span, key);
           row.appendChild(lbl);
-          row.appendChild(document.createTextNode(' '));
           row.appendChild(span);
           panel.appendChild(row);
 

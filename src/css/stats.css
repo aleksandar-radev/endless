@@ -106,8 +106,15 @@
 }
 
 .stats-panel.active.default {
+  display: grid;
   grid-template-columns: max-content 1fr;
   gap: 3px 12px;
+}
+
+@media (min-width: 600px) {
+  .stats-panel.active.default {
+    grid-template-columns: max-content 1fr max-content 1fr;
+  }
 }
 
 /* Tab button styling */
@@ -217,33 +224,18 @@
 .stat-row .stat-label {
   white-space: nowrap;
   font-weight: bold;
-  grid-column: 1;
   position: relative;
   padding-right: 6px;
   line-height: 20px;
 }
 
-.stat-row .stat-label::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 1px;
-  /* extend the underline beyond the label; adjust --label-underline-extend as needed */
-  width: calc(100% + var(--label-underline-extend, 120px));
-  background-color: #666565;
-  pointer-events: none;
-}
-
-/* For rows with multiple value spans, group them into a container that sits in column 2 */
-.stat-row .stat-values {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  justify-self: start;
-  /* keep values left-aligned inside their column */
-  grid-column: 2;
-  /* ensures the values live in the second column */
+.stat-row>* {
+  /* border-bottom: 1px solid #444;
+  padding-bottom: 2px; */
+  border-bottom: 1px solid #696969;
+  padding-bottom: 4px;
+  padding-top: 4px;
+  justify-self: stretch;
 }
 
 /* Subcategory tabs inside each stats panel */
@@ -275,21 +267,42 @@
   display: none;
 }
 
-.stat-subpanel.active {
-  /* When the subpanel is active, create a two-column grid where the
-     left column sizes to the widest label (max-content) and the right
-     column takes the remaining space so all values align in one column. */
+.stat-subpanel.active,
+.stats-panel.active.default {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: 3px 12px;
+  gap: 0;
+  /* Remove gaps to allow continuous borders */
   align-items: center;
+  /* Extend to container edges */
+  margin-left: -10px;
+  margin-right: -10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+@media (min-width: 600px) {
+
+  .stat-subpanel.active,
+  .stats-panel.active.default {
+    grid-template-columns: max-content 1fr max-content 1fr;
+  }
+
+  /* Spacing between the first stat's value and second stat's label in 4-column mode */
+  .stat-subpanel.active> :nth-child(4n+2),
+  .stats-panel.active.default> :nth-child(4n+2) {
+    padding-right: 20px;
+  }
+}
+
+.stat-row .stat-label {
+  padding-right: 12px;
 }
 
 /* Handle rows that use a single value element (no .stat-values wrapper)
    by placing any child that's not .stat-label into column 2. */
 .stat-subpanel .stat-row> :not(.stat-label) {
-  grid-column: 2;
-  justify-self: start;
+  justify-self: stretch;
 }
 
 .character-name {
