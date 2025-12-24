@@ -1259,6 +1259,8 @@ export default {
   'region.goldBonus': 'Gold bonus',
   'region.itemDropBonus': 'Item Drop bonus',
   'region.materialDropBonus': 'Material Drop bonus',
+  'region.selectRegion': 'Select Region',
+  'region.current': 'Current',
   'bossRegion.unlockHint': 'Unlocks at level {level}',
   'bossRegion.unlockBossHint': 'Unlocks at boss level {level}',
   'bossRegion.balancedGrounds.name': 'Balanced Grounds',

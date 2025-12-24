@@ -1052,6 +1052,8 @@ export default {
   'region.goldBonus': 'Bonificación de oro',
   'region.itemDropBonus': 'Bonificación de botín de objetos',
   'region.materialDropBonus': 'Bonificación de botín de materiales',
+  'region.selectRegion': 'Seleccionar Región',
+  'region.current': 'Actual',
   'bossRegion.unlockHint': 'Se desbloquea en el nivel {level}',
   'bossRegion.unlockBossHint': 'Se desbloquea al nivel de jefe {level}',
   'bossRegion.balancedGrounds.name': 'Tierras Equilibradas',

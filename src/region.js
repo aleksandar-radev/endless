@@ -11,6 +11,39 @@ import { REGIONS } from './constants/regions.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { ENEMY_LIST } from './constants/enemies.js';
 import { formatNamedType } from './format.js';
+import { createModal, closeModal } from './ui/modal.js';
+
+/**
+ * Shared utility to update the region selector button
+ * @param {string} fightMode - The current fight mode to check against
+ * @param {string} regionName - The region name to display
+ * @param {Function} clickHandler - The function to call when clicked
+ */
+export function updateRegionSelectorButton(fightMode, regionName, clickHandler) {
+  const regionSelectorDiv = document.getElementById('combat-region-selector');
+  const button = document.getElementById('combat-region-select-btn');
+  
+  // Only update if we're in the correct mode
+  if (game.fightMode !== fightMode) {
+    return;
+  }
+  
+  // Show region selector
+  if (regionSelectorDiv) {
+    regionSelectorDiv.style.display = 'flex';
+  }
+  
+  // Update button text and click handler
+  if (button) {
+    button.textContent = regionName;
+    
+    // Remove all existing listeners and add new one
+    const newButton = button.cloneNode(true);
+    button.parentNode.replaceChild(newButton, button);
+    
+    newButton.addEventListener('click', clickHandler);
+  }
+}
 
 export function setCurrentRegion(regionId) {
   if (regionId === game.currentRegionId) return;
@@ -67,13 +100,81 @@ function getRegionTooltip(region) {
   `;
 }
 
+export function openRegionSelectionDialog() {
+  const html = String.raw;
+  const unlocked = getUnlockedRegions(hero);
+  const currentRegion = getCurrentRegion();
+
+  const regionItems = REGIONS.map(region => {
+    const isUnlocked = unlocked.includes(region);
+    const isCurrent = region.id === currentRegion.id;
+    const disabledClass = !isUnlocked ? 'disabled' : '';
+    const selectedClass = isCurrent ? 'selected' : '';
+
+    return html`
+      <div class="region-dialog-item ${disabledClass} ${selectedClass}" data-region-id="${region.id}">
+        <div class="region-dialog-item-header">
+          <span class="region-dialog-item-name">${region.name}</span>
+          <span class="region-dialog-item-unlock">${t('region.unlockLevel')}: ${region.unlockLevel}</span>
+          ${isCurrent ? html`<span class="region-dialog-item-current">${t('region.current')}</span>` : ''}
+          ${!isUnlocked ? html`<span class="region-dialog-item-locked">🔒</span>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const content = html`
+    <div class="modal-content region-selection-modal">
+      <button class="modal-close">×</button>
+      <h2 class="modal-title">${t('region.selectRegion')}</h2>
+      <div class="region-dialog-list">
+        ${regionItems}
+      </div>
+    </div>
+  `;
+
+  createModal({
+    id: 'region-selection-dialog',
+    className: 'region-selection-dialog',
+    content,
+    closeOnOutsideClick: true,
+  });
+
+  // Add click handlers and tooltips to region items
+  document.querySelectorAll('.region-dialog-item').forEach(item => {
+    const regionId = item.dataset.regionId;
+    const region = REGIONS.find(r => r.id === regionId);
+
+    if (region) {
+      const tooltipContent = getRegionTooltip(region);
+      item.classList.add('tooltip-target');
+      item.addEventListener('mouseenter', (e) => showTooltip(tooltipContent, e));
+      item.addEventListener('mousemove', positionTooltip);
+      item.addEventListener('mouseleave', hideTooltip);
+
+      if (!item.classList.contains('disabled')) {
+        item.addEventListener('click', () => {
+          if (regionId !== currentRegion.id) {
+            hideTooltip();
+            setCurrentRegion(regionId);
+            closeModal('region-selection-dialog');
+          }
+        });
+      }
+    }
+  });
+}
+
 export function updateRegionUI() {
   const container = document.getElementById('region-selector');
-  const dropdown = document.getElementById('combat-region-select');
 
   if (!game.currentRegionId) {
     game.currentRegionId = REGIONS[0].id; // Default to first region if none set
   }
+
+  // Update the region selector button for explore mode
+  const currentRegion = getCurrentRegion();
+  updateRegionSelectorButton('explore', currentRegion.name, openRegionSelectionDialog);
 
   // Update the old button-based selector if it exists
   if (container) {
@@ -95,28 +196,5 @@ export function updateRegionUI() {
       btn.addEventListener('mouseleave', hideTooltip);
       container.appendChild(btn);
     });
-  }
-
-  // Update the new dropdown-based selector
-  if (dropdown) {
-    const unlocked = getUnlockedRegions(hero);
-    dropdown.innerHTML = '';
-
-    unlocked.forEach((region) => {
-      const option = document.createElement('option');
-      option.value = region.id;
-      option.textContent = region.name;
-      dropdown.appendChild(option);
-    });
-
-    dropdown.value = game.currentRegionId;
-
-    // Add change listener if not already added
-    if (!dropdown.dataset.listenerAttached) {
-      dropdown.addEventListener('change', () => {
-        setCurrentRegion(dropdown.value);
-      });
-      dropdown.dataset.listenerAttached = 'true';
-    }
   }
 }

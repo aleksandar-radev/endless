@@ -20,10 +20,12 @@ import { t, tp } from '../i18n.js';
 import { updateQuestsUI } from './questUi.js';
 import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
 import { TabIndicatorManager } from './tabIndicatorManager.js';
-import { initializeBossRegionUI, selectBoss, updateBossUI } from './bossUi.js';
+import { initializeBossRegionUI, selectBoss, updateBossUI, updateBossRegionSelector } from './bossUi.js';
 import { ELEMENTS } from '../constants/common.js';
+import { updateRegionUI, updateRegionSelectorButton } from '../region.js';
 import { calculateArmorReduction, calculateEvasionChance, calculateHitChance, calculateResistanceReduction } from '../combat.js';
 import { renderRunesUI } from './runesUi.js';
+import { createModal, closeModal } from './modal.js';
 export {
   initializeSkillTreeUI,
   initializeSkillTreeStructure,
@@ -572,8 +574,26 @@ export function updateStageUI() {
 
 function updateCombatRegionDropdownVisibility() {
   const regionSelector = document.getElementById('combat-region-selector');
-  if (regionSelector) {
-    regionSelector.style.display = game.fightMode === 'explore' ? '' : 'none';
+  if (!regionSelector) return;
+
+  if (game.fightMode === 'explore') {
+    regionSelector.style.display = 'flex';
+    // Ensure explore region UI is updated
+    if (typeof updateRegionUI === 'function') {
+      updateRegionUI();
+    }
+  } else if (game.fightMode === 'arena') {
+    regionSelector.style.display = 'flex';
+    // Ensure boss region UI is updated
+    if (typeof updateBossRegionSelector === 'function') {
+      updateBossRegionSelector();
+    }
+  } else if (game.fightMode === 'rockyField') {
+    regionSelector.style.display = 'flex';
+    // Ensure rocky field region UI is updated
+    updateRockyFieldRegionSelector();
+  } else {
+    regionSelector.style.display = 'none';
   }
 }
 
@@ -796,7 +816,88 @@ function getRockyFieldRegionTooltip(region) {
   `;
 }
 
+export function openRockyFieldRegionSelectionDialog() {
+  const html = String.raw;
+
+  const regionItems = ROCKY_FIELD_REGIONS.map(region => {
+    const hasEnemies = getRockyFieldEnemies(region.id).length > 0;
+    const unlocked = !region.unlockStage || game.rockyFieldHighestStage >= region.unlockStage;
+    const isUnlocked = hasEnemies && unlocked;
+    const isCurrent = region.id === game.rockyFieldRegion;
+    const disabledClass = !isUnlocked ? 'disabled' : '';
+    const selectedClass = isCurrent ? 'selected' : '';
+
+    return html`
+      <div class="region-dialog-item ${disabledClass} ${selectedClass}" data-region-id="${region.id}">
+        <div class="region-dialog-item-header">
+          <span class="region-dialog-item-name">${region.name}</span>
+          ${region.unlockStage ? html`<span class="region-dialog-item-unlock">${t('rockyField.unlockStage')}: ${region.unlockStage}</span>` : ''}
+          ${isCurrent ? html`<span class="region-dialog-item-current">${t('region.current')}</span>` : ''}
+          ${!isUnlocked ? html`<span class="region-dialog-item-locked">🔒</span>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const content = html`
+    <div class="modal-content region-selection-modal">
+      <button class="modal-close">×</button>
+      <h2 class="modal-title">${t('region.selectRegion')}</h2>
+      <div class="region-dialog-list">
+        ${regionItems}
+      </div>
+    </div>
+  `;
+
+  createModal({
+    id: 'rocky-field-region-selection-dialog',
+    className: 'region-selection-dialog',
+    content,
+    closeOnOutsideClick: true,
+  });
+
+  // Add click handlers and tooltips to region items
+  document.querySelectorAll('#rocky-field-region-selection-dialog .region-dialog-item').forEach(item => {
+    const regionId = item.dataset.regionId;
+    const region = ROCKY_FIELD_REGIONS.find(r => r.id === regionId);
+
+    if (region) {
+      const tooltipContent = getRockyFieldRegionTooltip(region);
+      item.classList.add('tooltip-target');
+      item.addEventListener('mouseenter', (e) => showTooltip(tooltipContent, e));
+      item.addEventListener('mousemove', positionTooltip);
+      item.addEventListener('mouseleave', hideTooltip);
+
+      if (!item.classList.contains('disabled')) {
+        item.addEventListener('click', async () => {
+          if (regionId !== game.rockyFieldRegion) {
+            hideTooltip();
+            const confirmed = await showConfirmDialog(
+              tp('combat.changeRegionConfirm', { region: region.name }),
+            );
+            if (!confirmed) return;
+            game.rockyFieldRegion = regionId;
+            game.rockyFieldStage = 1;
+            game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);
+            updateEnemyStats();
+            updateStageUI();
+            updateRockyFieldRegionSelector();
+            closeModal('rocky-field-region-selection-dialog');
+          }
+        });
+      }
+    }
+  });
+}
+
 export function updateRockyFieldRegionSelector() {
+  // Update the region selector button for rocky field mode
+  const currentRegion = ROCKY_FIELD_REGIONS.find(r => r.id === game.rockyFieldRegion);
+  if (currentRegion) {
+    updateRegionSelectorButton('rockyField', currentRegion.name, openRockyFieldRegionSelectionDialog);
+  }
+  
+  // Update old button-based selector if it exists
   const container = document.getElementById('rocky-field-region-selector');
   if (!container) return;
   container.innerHTML = '';
@@ -944,19 +1045,17 @@ function renderRegionPanel(region) {
     const panel = document.createElement('div');
     panel.id = 'arena-panel';
     panel.classList.add('region-panel');
-    panel.innerHTML = `
-      <div id="boss-region-selector"></div>
-      ${baseHtml}
-    `;
+    panel.innerHTML = baseHtml;
     container.appendChild(panel);
     initializeBossRegionUI();
+    updateBossRegionSelector();
     updateBossUI();
     initializeEnemyStatsCaret(panel);
   } else if (region === 'rockyField') {
     const panel = document.createElement('div');
     panel.id = 'rocky-field-panel';
     panel.classList.add('region-panel');
-    panel.innerHTML = `<div id="rocky-field-region-selector"></div>${baseHtml}`;
+    panel.innerHTML = baseHtml;
     container.appendChild(panel);
 
     updateRockyFieldRegionSelector();

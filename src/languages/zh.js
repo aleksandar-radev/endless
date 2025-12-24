@@ -1076,6 +1076,8 @@ export default {
   'region.goldBonus': '金币加成',
   'region.itemDropBonus': '物品掉落加成',
   'region.materialDropBonus': '材料掉落加成',
+  'region.selectRegion': '选择区域',
+  'region.current': '当前',
   'bossRegion.unlockHint': '在{level}级解锁',
   'bossRegion.unlockBossHint': '在首领等级 {level} 解锁',
   'bossRegion.balancedGrounds.name': '平衡之地',

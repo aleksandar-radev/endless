@@ -305,7 +305,17 @@
   justify-self: stretch;
 }
 
-.character-name {
+#character-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0px 10px;
+  position: relative;
+  z-index: 1;
+}
+
+#character-name>span.character-name {
   font-weight: bold;
   color: rgb(219, 219, 219);
   font-size: 1.4em;
