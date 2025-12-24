@@ -155,10 +155,133 @@
 
 .enemy-stats {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0.5rem;
-  color: white;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  color: var(--text);
   margin-top: 1rem;
+}
+
+.enemy-stats-card {
+  background-color: var(--bg-element);
+  border-radius: 0.5rem;
+  border: 1px solid;
+  padding: 0.65rem 0.75rem;
+}
+
+.enemy-stats-card--full {
+  grid-column: 1 / -1;
+}
+
+.enemy-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 2px 0;
+}
+
+.enemy-stat-label {
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.enemy-stat-value {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.enemy-elements-table {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 0.7fr) minmax(0, 0.8fr) minmax(0, 1fr);
+  gap: 0.35rem 0.65rem;
+  align-items: center;
+}
+
+.enemy-elements-header {
+  font-size: 0.75rem;
+  opacity: 0.75;
+  font-weight: bold;
+}
+
+.enemy-elements-col {
+  text-align: right;
+}
+
+.enemy-elements-element {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.enemy-elements-element .icon {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.enemy-elements-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: bold;
+  opacity: 0.9;
+}
+
+.enemy-elements-value {
+  text-align: right;
+  font-weight: bold;
+}
+
+.enemy-reward-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 2px 0;
+}
+
+.enemy-reward-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+.enemy-reward-value {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.enemy-rewards-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.enemy-reward-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border: 1px solid;
+  border-radius: 0.5rem;
+  padding: 0.35rem 0.55rem;
+  background-color: var(--bg-element);
+  height: 2rem;
+}
+
+.enemy-stats-card--rewards {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+@media (max-width: 900px) {
+  .enemy-stats {
+    grid-template-columns: 1fr;
+  }
 }
 
 .enemy-fire-damage,
@@ -524,7 +647,6 @@
 .enemy-name {
   text-align: left;
   margin: 0;
-  margin-bottom: 0.25rem;
   font-size: 1.2rem;
   font-weight: bold;
 }
@@ -577,6 +699,40 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.enemy-name-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.enemy-ailments {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.enemy-stats-caret {
+  background: transparent;
+  border: 1px solid;
+  color: var(--text);
+  border-radius: 0.4rem;
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  padding: 0;
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.enemy-stats-caret.collapsed {
+  transform: rotate(-90deg);
 }
 
 .enemy-ailments .ailment-icon {

@@ -419,6 +419,12 @@ export function updateEnemyStats() {
     }
   });
 
+  const xp = document.getElementById('enemy-xp-value');
+  if (xp) xp.textContent = formatNumber(Math.floor(enemy.xp || 0));
+
+  const gold = document.getElementById('enemy-gold-value');
+  if (gold) gold.textContent = formatNumber(Math.floor(enemy.gold || 0));
+
   setEnemyName();
   if (game.fightMode === 'explore') {
     game.currentEnemy.setEnemyColor();
@@ -854,7 +860,15 @@ function renderRegionPanel(region) {
       <div class="enemy-life-and-stats">
         <div class="enemy-name-row">
           <div class="enemy-name"></div>
-          <div class="enemy-ailments"></div>
+          <div class="enemy-name-controls">
+            <div class="enemy-ailments"></div>
+            <button
+              type="button"
+              class="enemy-stats-caret"
+              aria-label="${t('enemy.stats.toggle')}"
+              title="${t('enemy.stats.toggle')}"
+            >▾</button>
+          </div>
         </div>
         <div class="enemy-life-bar">
           <div id="enemy-life-fill"></div>
@@ -862,19 +876,80 @@ function renderRegionPanel(region) {
         </div>
       </div>
     </div>
+
     <div class="enemy-stats">
-      <div class="enemy-damage">${formatStatName('damage')}: <span id="enemy-damage-value"></span></div>
-      <div class="enemy-armor">${formatStatName('armor')}: <span id="enemy-armor-value"></span></div>
-      <div class="enemy-evasion">${formatStatName('evasion')}: <span id="enemy-evasion-value"></span></div>
-      <div class="enemy-attack-rating">${formatStatName('attackRating')}: <span id="enemy-attack-rating-value"></span></div>
-      <div class="enemy-attack-speed">${formatStatName('attackSpeed')}: <span id="enemy-attack-speed-value"></span></div>
-      <div></div>
-      <!-- Empty div for layout -->
-      <div>
-        ${ELEMENT_IDS.map((id) => `<div class="enemy-${id}-damage">${formatStatName(id + 'Damage')}: <span id="enemy-${id}-damage-value"></span></div>`).join('')}
+      <div class="enemy-stats-card enemy-stats-card--offense">
+        <div class="enemy-stat-row">
+          <div class="enemy-stat-label">${formatStatName('damage')}</div>
+          <div class="enemy-stat-value" id="enemy-damage-value"></div>
+        </div>
+        <div class="enemy-stat-row">
+          <div class="enemy-stat-label">${formatStatName('attackSpeed')}</div>
+          <div class="enemy-stat-value" id="enemy-attack-speed-value"></div>
+        </div>
+        <div class="enemy-stat-row">
+          <div class="enemy-stat-label">${formatStatName('attackRating')}</div>
+          <div class="enemy-stat-value" id="enemy-attack-rating-value"></div>
+        </div>
       </div>
-      <div>
-        ${ELEMENT_IDS.map((id) => `<div class="enemy-${id}-resistance">${formatStatName(id + 'Resistance')}: <span id="enemy-${id}-resistance-value"></span></div>`).join('')}
+
+      <div class="enemy-stats-card enemy-stats-card--defense">
+        <div class="enemy-stat-row">
+          <div class="enemy-stat-label">${formatStatName('armor')}</div>
+          <div class="enemy-stat-value" id="enemy-armor-value"></div>
+        </div>
+        <div class="enemy-stat-row">
+          <div class="enemy-stat-label">${formatStatName('evasion')}</div>
+          <div class="enemy-stat-value" id="enemy-evasion-value"></div>
+        </div>
+      </div>
+
+      <div class="enemy-stats-card enemy-stats-card--elements enemy-stats-card--full">
+        <div class="enemy-elements-table">
+          <div class="enemy-elements-header"></div>
+          <div class="enemy-elements-header enemy-elements-col">${t('enemy.stats.dmgShort')}</div>
+          <div class="enemy-elements-header enemy-elements-col">${t('enemy.stats.resShort')}</div>
+
+          <div class="enemy-elements-element enemy-fire-damage">${ELEMENTS.fire.icon}<span class="enemy-elements-name">${t('fire')}</span></div>
+          <div class="enemy-elements-value enemy-fire-damage" id="enemy-fire-damage-value"></div>
+          <div class="enemy-elements-value enemy-fire-resistance" id="enemy-fire-resistance-value"></div>
+
+          <div class="enemy-elements-element enemy-cold-damage">${ELEMENTS.cold.icon}<span class="enemy-elements-name">${t('cold')}</span></div>
+          <div class="enemy-elements-value enemy-cold-damage" id="enemy-cold-damage-value"></div>
+          <div class="enemy-elements-value enemy-cold-resistance" id="enemy-cold-resistance-value"></div>
+
+          <div class="enemy-elements-element enemy-air-damage">${ELEMENTS.air.icon}<span class="enemy-elements-name">${t('air')}</span></div>
+          <div class="enemy-elements-value enemy-air-damage" id="enemy-air-damage-value"></div>
+          <div class="enemy-elements-value enemy-air-resistance" id="enemy-air-resistance-value"></div>
+
+          <div class="enemy-elements-element enemy-earth-damage">${ELEMENTS.earth.icon}<span class="enemy-elements-name">${t('earth')}</span></div>
+          <div class="enemy-elements-value enemy-earth-damage" id="enemy-earth-damage-value"></div>
+          <div class="enemy-elements-value enemy-earth-resistance" id="enemy-earth-resistance-value"></div>
+
+          <div class="enemy-elements-element enemy-lightning-damage">${ELEMENTS.lightning.icon}<span class="enemy-elements-name">${t('lightning')}</span></div>
+          <div class="enemy-elements-value enemy-lightning-damage" id="enemy-lightning-damage-value"></div>
+          <div class="enemy-elements-value enemy-lightning-resistance" id="enemy-lightning-resistance-value"></div>
+
+          <div class="enemy-elements-element enemy-water-damage">${ELEMENTS.water.icon}<span class="enemy-elements-name">${t('water')}</span></div>
+          <div class="enemy-elements-value enemy-water-damage" id="enemy-water-damage-value"></div>
+          <div class="enemy-elements-value enemy-water-resistance" id="enemy-water-resistance-value"></div>
+        </div>
+      </div>
+
+      <div class="enemy-stats-card enemy-stats-card--rewards enemy-stats-card--full">
+        <div class="enemy-rewards-row">
+          <div class="enemy-reward-item">
+            <div class="enemy-reward-label">
+              <img src="${BASE}/icons/gold.svg" class="icon" alt="${t('resource.gold.name')}"/>
+              ${t('resource.gold.name')}
+            </div>
+            <div class="enemy-reward-value" id="enemy-gold-value"></div>
+          </div>
+          <div class="enemy-reward-item">
+            <div class="enemy-reward-label">${t('counters.xp')}</div>
+            <div class="enemy-reward-value" id="enemy-xp-value"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>`;
@@ -891,6 +966,7 @@ function renderRegionPanel(region) {
     container.appendChild(panel);
     initializeBossRegionUI();
     updateBossUI();
+    initializeEnemyStatsCaret(panel);
   } else if (region === 'rockyField') {
     const panel = document.createElement('div');
     panel.id = 'rocky-field-panel';
@@ -902,6 +978,7 @@ function renderRegionPanel(region) {
     updateEnemyStats();
     updateResources();
     updateStageControlsInlineVisibility();
+    initializeEnemyStatsCaret(panel);
   } else {
     const panel = document.createElement('div');
     panel.id = 'explore-panel';
@@ -916,6 +993,7 @@ function renderRegionPanel(region) {
 
     // Render inline stage controls if enabled
     updateStageControlsInlineVisibility();
+    initializeEnemyStatsCaret(panel);
   }
   // Set the active class on the correct region tab based on the region prop
   document.querySelectorAll('.region-tab').forEach((b) => {
@@ -926,6 +1004,38 @@ function renderRegionPanel(region) {
     }
   });
   dataManager.saveGame();
+}
+
+function applyEnemyStatsVisibility(visible, panel = null) {
+  if (options) {
+    options.showEnemyStats = !!visible;
+  }
+  const scope = panel || document;
+  const stats = scope.querySelector('.enemy-stats');
+  if (stats) stats.style.display = visible ? '' : 'none';
+
+  const caret = scope.querySelector('.enemy-stats-caret');
+  if (caret) {
+    caret.classList.toggle('collapsed', !visible);
+    caret.setAttribute('aria-expanded', visible ? 'true' : 'false');
+  }
+
+  const checkbox = document.getElementById('enemy-stats-toggle');
+  if (checkbox) checkbox.checked = !!visible;
+
+  dataManager.saveGame();
+}
+
+function initializeEnemyStatsCaret(panel) {
+  const caret = panel?.querySelector('.enemy-stats-caret');
+  if (!caret) return;
+
+  applyEnemyStatsVisibility(!!options?.showEnemyStats, panel);
+
+  caret.onclick = () => {
+    const nextVisible = !options?.showEnemyStats;
+    applyEnemyStatsVisibility(nextVisible, panel);
+  };
 }
 
 /**
