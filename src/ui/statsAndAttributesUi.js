@@ -428,6 +428,8 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           if (group === 'misc' && ATTRIBUTES[key]) return;
           if (!options.showAllStats && !statsDef[key].showInUI) return;
           if (statsDef[key].forceNotShow) return;
+          // Skip rendering if displayed is false when showAllStats is enabled
+          if (options.showAllStats && statsDef[key].displayed === false) return;
 
           // Do not special-case elemental stats here; let them be created like other stats so
           // they appear in the same rows instead of a separate elemental grid.

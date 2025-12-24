@@ -223,6 +223,7 @@ export const MISC_STATS = {
   summonsCanCrit: {
     base: 0,
     showValue: false,
+    displayed: false,
   },
   // BONUS GOLD
   bonusGoldPercent: {
@@ -361,6 +362,7 @@ export const MISC_STATS = {
   canDualWieldTwoHanded: {
     base: 0,
     showValue: false,
+    displayed: false,
   },
   // WEAPON EFFECTIVENESS
   weaponEffectiveness: {
@@ -376,17 +378,20 @@ export const MISC_STATS = {
   allowBossLoot: {
     base: 0,
     showValue: false,
+    displayed: false,
     itemTags: [],
   },
   // ANIMATED WEAPONS
   animatedWeaponsUnlocked: {
     base: 0,
     showValue: false,
+    displayed: false,
   },
   // ROGUE CLONE
   cloneUnlocked: {
     base: 0,
     showValue: false,
+    displayed: false,
   },
   // NIGHTSTALKER
   nightStalkerBuffEffectivenessPercent: {
@@ -398,6 +403,7 @@ export const MISC_STATS = {
   canUseTwoShields: {
     base: 0,
     showValue: false,
+    displayed: false,
   },
   amuletEffectivenessPercent: {
     base: 0,
@@ -413,6 +419,7 @@ export const MISC_STATS = {
   uncappedAttackSpeed: {
     base: 0,
     showValue: false,
+    displayed: false,
   },
   warlordEffectivenessPercent: {
     base: 0,
@@ -422,6 +429,7 @@ export const MISC_STATS = {
   overhealToLife: {
     base: 0,
     showValue: false,
+    displayed: false,
   },
   overhealPercent: {
     base: 0,
@@ -430,11 +438,13 @@ export const MISC_STATS = {
   bloodSacrificeUnlocked: {
     base: 0,
     showValue: false,
+    displayed: false,
   },
   // DRUID
   shapeshiftUnlocked: {
     base: 0,
     showValue: false,
+    displayed: false,
   },
   // MAGE
   reduceEnemyResistancesPercent: {
@@ -450,11 +460,13 @@ export const MISC_STATS = {
   weaponIllusionUnlocked: {
     base: 0,
     showValue: false,
+    displayed: false,
   },
   // ELEMENTALIST (CRYOMANCER)
   glacialBulwarkUnlocked: {
     base: 0,
     showValue: false,
+    displayed: false,
   },
   weaponBuffEffectivenessPercent: {
     base: 0,
@@ -464,9 +476,11 @@ export const MISC_STATS = {
   crimsonAegisSkillUnlocked: {
     base: 0,
     showValue: false,
+    displayed: false,
   },
   bloodSiphonSkillUnlocked: {
     base: 0,
     showValue: false,
+    displayed: false,
   },
 };
