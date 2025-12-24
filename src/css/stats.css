@@ -226,7 +226,6 @@
   font-weight: bold;
   position: relative;
   padding-right: 6px;
-  line-height: 20px;
 }
 
 .stat-row>* {
@@ -236,6 +235,7 @@
   padding-bottom: 4px;
   padding-top: 4px;
   justify-self: stretch;
+  line-height: 20px;
 }
 
 /* Subcategory tabs inside each stats panel */
