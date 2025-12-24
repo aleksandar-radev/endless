@@ -3,6 +3,7 @@ import { ELEMENTS } from '../constants/common.js';
 export default {
   'attributes': '属性',
   'app.title': '无尽',
+  'tab.battle': '战斗',
   'tab.stats': '统计',
   'tab.training': '训练',
   'tab.inventory': '物品栏',

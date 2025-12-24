@@ -34,12 +34,10 @@ import Boss from './boss.js';
 import { RockyFieldEnemy } from './rockyField.js';
 import { applyTranslations, setLanguage, t } from './i18n.js';
 import { getGameInfo } from './api.js';
-import { createModal, closeModal } from './ui/modal.js';
+import { createModal } from './ui/modal.js';
 import { collectOfflineFightRewards } from './offlineFight.js';
 import {
-  appendDevAccessFooter,
   ensureDevAccessRuntimeState,
-  showDevAccessApologyModal,
 } from './migrations/0.8.15.js';
 
 window.qwe = console.log;
@@ -215,6 +213,9 @@ window.setLanguage = setLanguage;
 
   setupLeaderboardTabLazyLoad();
 
+  if (game.activeTab === 'battle' && window.innerWidth > 900) {
+    game.activeTab = 'stats';
+  }
   switchTab(game.activeTab);
 
   let isRunning = false;
@@ -253,6 +254,15 @@ window.setLanguage = setLanguage;
 
     toggleBtn.addEventListener('click', openSidebar);
     backdrop.addEventListener('click', closeSidebar);
+
+    // Close sidebar when a tab is clicked (mobile/dialog mode)
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (window.innerWidth <= 1300) { // Match the media query breakpoint for sidebar visibility
+          closeSidebar();
+        }
+      });
+    });
 
     // Optional: close sidebar on resize if > 1100px
     window.addEventListener('resize', () => {
@@ -300,20 +310,5 @@ window.setLanguage = setLanguage;
 
   if (shouldEnableDebugging) {
     initDebugging();
-  }
-
-  appendDevAccessFooter({
-    environment: import.meta.env.VITE_ENV,
-    active: devAccessActive,
-  });
-
-  if (devAccessActive) {
-    setTimeout(() => {
-      showDevAccessApologyModal({
-        active: devAccessActive,
-        options,
-        dataManager,
-      });
-    }, 500);
   }
 })();

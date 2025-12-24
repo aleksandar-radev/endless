@@ -712,3 +712,72 @@
   background-size: cover;
   border-radius: 4px;
 }
+@media (max-width: 900px) {
+  /* Mobile Layout Changes */
+  .combat-panel {
+    display: none;
+  }
+
+  .combat-panel.active {
+    display: block;
+  }
+
+  .game-panel.hidden {
+    display: none;
+  }
+
+  .tab-btn[data-tab="battle"] {
+    display: block !important;
+  }
+
+  /* Sidebar as Dialog on Mobile */
+  .sidebar.sidebar-visible {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    min-width: 0;
+    max-width: 400px;
+    height: auto;
+    max-height: 80vh;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-y: auto;
+    flex-direction: column;
+    padding-top: 1.5rem;
+  }
+  
+  /* Move tabs to top */
+  .sidebar.sidebar-visible .tab-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .sidebar.sidebar-visible .resource-bar {
+    margin-bottom: 0;
+  }
+
+  /* Improve sidebar toggle button design */
+  .sidebar-toggle {
+    position: fixed;
+    z-index: 1200; /* Ensure it's above everything */
+    top: auto;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    left: auto;
+    transform: none;
+    width: 56px;
+    height: 56px;
+    background: var(--accent);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .sidebar-toggle:active {
+    transform: scale(0.95);
+  }
+}

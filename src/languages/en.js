@@ -3,6 +3,7 @@ import { ELEMENTS } from '../constants/common.js';
 export default {
   'attributes': 'Attributes',
   'app.title': 'Endless',
+  'tab.battle': 'Battle',
   'tab.stats': 'Stats',
   'tab.training': 'Training',
   'tab.inventory': 'Inventory',

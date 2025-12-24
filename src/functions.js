@@ -12,6 +12,7 @@ import { renderRunesUI } from './ui/runesUi.js';
 import { updateAscensionUI } from './ui/ascensionUi.js';
 import { getRuneName } from './runes.js';
 import { t, tp } from './i18n.js';
+import { createModal, closeModal } from './ui/modal.js';
 import {
   createSetItemsById,
   createUniqueItemById,
@@ -62,9 +63,93 @@ export function initDebugging() {
     console.log(`Dev mode is now ${dev ? 'enabled' : 'disabled'}.`);
     if (dev) {
       document.body.classList.add('dev-active');
-      createDebugUI();
+
+      if (window.innerWidth <= 900) {
+        const content = document.createElement('div');
+        content.className = 'modal-content devtools-modal-content';
+        content.style.display = 'flex';
+        content.style.flexDirection = 'column';
+        content.style.gap = '10px';
+        content.style.maxHeight = '90vh';
+        content.style.overflowY = 'auto';
+        content.style.background = '#000';
+        content.style.color = '#fff';
+        content.style.padding = '20px';
+
+        const closeBtn = document.createElement('span');
+        closeBtn.className = 'modal-close';
+        closeBtn.innerHTML = '&times;';
+        closeBtn.style.position = 'absolute';
+        closeBtn.style.top = '10px';
+        closeBtn.style.right = '15px';
+        closeBtn.style.fontSize = '24px';
+        closeBtn.style.cursor = 'pointer';
+        content.appendChild(closeBtn);
+
+        const title = document.createElement('h2');
+        title.textContent = 'DevTools';
+        title.style.marginTop = '0';
+        content.appendChild(title);
+
+        // Create UIs but append to content instead of body
+        const debugUI = createDebugUI(content);
+        debugUI.style.position = 'static'; // Reset fixed position for modal
+        debugUI.style.maxWidth = '100%';
+        debugUI.style.height = '300px';
+        debugUI.style.border = '1px solid #333';
+
+        createModifyUI(content);
+
+        createModal({
+          id: 'devtools-modal',
+          className: 'devtools-modal',
+          content: content.outerHTML,
+          onClose: () => {
+            if (dev) toggleDevMode();
+          },
+        });
+
+        setTimeout(() => {
+          const modalContent = document.querySelector('#devtools-modal .modal-content');
+          if (modalContent) {
+            modalContent.innerHTML = '';
+
+            // Re-add close button and title since we cleared innerHTML
+            const closeBtn = document.createElement('span');
+            closeBtn.className = 'modal-close';
+            closeBtn.innerHTML = '&times;';
+            closeBtn.style.position = 'absolute';
+            closeBtn.style.top = '10px';
+            closeBtn.style.right = '15px';
+            closeBtn.style.fontSize = '24px';
+            closeBtn.style.cursor = 'pointer';
+            // Re-attach close listener manually since we are inside the content
+            closeBtn.onclick = () => closeModal('devtools-modal');
+            modalContent.appendChild(closeBtn);
+
+            const title = document.createElement('h2');
+            title.textContent = 'DevTools';
+            title.style.marginTop = '0';
+            modalContent.appendChild(title);
+
+            const debugUI = createDebugUI(modalContent);
+            debugUI.style.position = 'static';
+            debugUI.style.maxWidth = '100%';
+            debugUI.style.height = '300px';
+            debugUI.style.border = '1px solid #333';
+            createModifyUI(modalContent);
+
+            valueNodes.clear();
+            updateDebugUI();
+          }
+        }, 0);
+
+      } else {
+        createDebugUI();
+        createModifyUI();
+      }
+
       saveExpandedState(expandedState);
-      createModifyUI();
 
       // Initial update and monitor changes
       updateDebugUI();
@@ -85,6 +170,13 @@ export function initDebugging() {
       if (modifyUI) {
         modifyUI.remove();
       }
+
+      const modal = document.getElementById('devtools-modal');
+      if (modal) {
+        modal._onClose = null; // Prevent callback loop
+        closeModal(modal);
+      }
+
       valueNodes.clear();
       lastEncryptedSave = null;
     }
@@ -101,7 +193,7 @@ export function initDebugging() {
   });
 
   document.addEventListener('click', (event) => {
-    if (event.target.classList.contains('dev-access-highlight')) {
+    if (event.target.classList.contains('dev-access-highlight') || event.target.id === 'edev-btn') {
       toggleDevMode();
     }
   });
@@ -293,7 +385,7 @@ function renderObject(obj, parent, path = '', level = 0) {
   }
 }
 
-export function createDebugUI() {
+export function createDebugUI(container = document.body) {
   const debugDiv = document.createElement('div');
   debugDiv.style.position = 'fixed';
   debugDiv.style.top = '0';
@@ -309,17 +401,18 @@ export function createDebugUI() {
   debugDiv.style.fontFamily = 'monospace';
   debugDiv.style.fontSize = '12px';
   debugDiv.classList.add('debug-ui');
-  document.body.appendChild(debugDiv);
+  container.appendChild(debugDiv);
+  return debugDiv;
 }
 
-export function createModifyUI() {
+export function createModifyUI(container = document.body) {
   const environment = import.meta.env.VITE_ENV;
   if (environment === 'production' && !isDevAccessWindowActive()) {
     return;
   }
   const modifyDiv = document.createElement('div');
   modifyDiv.className = 'modify-panel modify-ui';
-  document.body.appendChild(modifyDiv);
+  container.appendChild(modifyDiv);
 
   // Example: Add buttons to modify hero stats
   const heroSection = document.createElement('div');

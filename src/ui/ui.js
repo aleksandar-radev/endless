@@ -256,17 +256,38 @@ export function initializeUI() {
 export function switchTab(tabName) {
   const previousTab = game.activeTab;
 
+  // Handle Mobile Panel Switching
+  const combatPanel = document.querySelector('.combat-panel');
+  const gamePanel = document.querySelector('.game-panel');
+
+  if (window.innerWidth <= 900) {
+    if (tabName === 'battle') {
+      if (combatPanel) combatPanel.classList.add('active');
+      if (gamePanel) gamePanel.classList.add('hidden');
+    } else {
+      if (combatPanel) combatPanel.classList.remove('active');
+      if (gamePanel) gamePanel.classList.remove('hidden');
+    }
+  }
+
   document.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach((btn) => btn.classList.remove('active'));
-  let tabElement = document.getElementById(tabName);
-  if (!tabElement) tabElement = document.getElementById('stats');
-  tabElement.classList.add('active');
+
+  if (tabName !== 'battle') {
+    let tabElement = document.getElementById(tabName);
+    if (!tabElement) tabElement = document.getElementById('stats');
+    tabElement.classList.add('active');
+  }
 
   let tab = document.querySelector(`[data-tab="${tabName}"]`);
   if (!tab) {
-    tab = document.querySelector('[data-tab="stats"]');
+    // If battle tab is selected but button doesn't exist (e.g. desktop), fallback or just don't select button?
+    // Actually battle button exists but is hidden on desktop.
+    if (tabName !== 'battle') {
+      tab = document.querySelector('[data-tab="stats"]');
+    }
   }
-  tab.classList.add('active');
+  if (tab) tab.classList.add('active');
 
   if (tabName === 'stats') {
     updateStatsAndAttributesUI();
