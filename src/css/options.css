@@ -43,7 +43,7 @@
 .options-content {
   display: none;
   flex-direction: column;
-  gap: 15px;
+  gap: 4px;
   flex: 1;
 }
 
@@ -446,7 +446,46 @@
   display: flex;
   align-items: center;
   gap: 1em;
-  margin: 0.5em 0;
+  margin: 0.2em 0;
+  padding: 4px 20px;
+  min-height: 2.5em;
+}
+
+.option-row label:not(.toggle-btn) {
+  flex: 1;
+  text-align: left;
+  padding-right: 15px;
+  line-height: 1.2;
+}
+
+.option-row .toggle-btn,
+.option-row input[type=number],
+.option-row select,
+.option-row input[type=range] {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .option-row {
+    padding: 4px 12px;
+  }
+
+  .option-row label {
+    padding-right: 8px;
+  }
+
+  .cloud-save-bar {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    height: auto;
+    padding: 10px;
+  }
+
+  .cloud-save-bar button {
+    flex: 1 1 40%;
+  }
 }
 
 .starting-stage-label {
@@ -573,7 +612,7 @@
 
 #options label {
   font-weight: bold;
-  font-size: 1.1em;
+  font-size: 1em;
 }
 
 #options input[type="checkbox"] {
