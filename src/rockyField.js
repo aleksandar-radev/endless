@@ -417,28 +417,28 @@ export class RockyFieldEnemy extends EnemyBase {
   calculateDamage() {
     const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
     const statMultiplier = this.getStatMultiplier();
-    return Math.max(
+    return Math.floor(Math.max(
       scaleStat(this.getStatValue('damage') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * (1 - dmgRed),
       1,
-    );
+    ));
   }
 
   calculateArmor() {
     const statMultiplier = this.getStatMultiplier();
     const armorMult = this.getSpecialMultiplier('armorMultiplier');
-    return (
-      scaleStat(this.getStatValue('armor') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * armorMult
+    return Math.floor(
+      scaleStat(this.getStatValue('armor') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * armorMult,
     );
   }
 
   calculateEvasion() {
     const statMultiplier = this.getStatMultiplier();
-    return scaleStat(this.getStatValue('evasion') * statMultiplier, this.level, 0, 0, 0, this.baseScale);
+    return Math.floor(scaleStat(this.getStatValue('evasion') * statMultiplier, this.level, 0, 0, 0, this.baseScale));
   }
 
   calculateAttackRating() {
     const statMultiplier = this.getStatMultiplier();
-    return scaleStat(this.getStatValue('attackRating') * statMultiplier, this.level, 0, 0, 0, this.baseScale);
+    return Math.floor(scaleStat(this.getStatValue('attackRating') * statMultiplier, this.level, 0, 0, 0, this.baseScale));
   }
 
   calculateXP() {
@@ -490,13 +490,13 @@ export class RockyFieldEnemy extends EnemyBase {
       0,
       this.baseScale,
     );
-    return elementDamage > 0 ? Math.max(dmgBase * (1 - dmgRed), 1) : 0;
+    return elementDamage > 0 ? Math.floor(Math.max(dmgBase * (1 - dmgRed), 1)) : 0;
   }
 
   calculateElementalResistance(id) {
     const statMultiplier = this.getStatMultiplier();
     const resistanceMult = this.getSpecialMultiplier('resistanceMultiplier');
-    return (
+    return Math.floor(
       scaleStat(
         this.getStatValue(`${id}Resistance`) * statMultiplier,
         this.level,
@@ -504,7 +504,7 @@ export class RockyFieldEnemy extends EnemyBase {
         0,
         0,
         this.baseScale,
-      ) * resistanceMult
+      ) * resistanceMult,
     );
   }
 

@@ -351,7 +351,7 @@ class Enemy extends EnemyBase {
       (this.rarityData.multiplier.damage || 1) *
       (this.baseData.multiplier?.damage || 1) *
       (1 - damageRed);
-    return Math.max(totalDamage, 1);
+    return Math.floor(Math.max(totalDamage, 1));
   };
 
   calculateArmor() {
@@ -368,11 +368,11 @@ class Enemy extends EnemyBase {
       scaled = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     }
 
-    return (
+    return Math.floor(
       scaled *
       this.getRegionMultiplier('armor') *
       (this.rarityData.multiplier.armor || 1) *
-      (this.baseData.multiplier?.armor || 1)
+      (this.baseData.multiplier?.armor || 1),
     );
   }
 
@@ -390,12 +390,12 @@ class Enemy extends EnemyBase {
       scaled = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     }
 
-    return (
+    return Math.floor(
       scaled *
       this.getRegionMultiplier('evasion') *
       (this.rarityData.multiplier.evasion || 1) *
       (this.baseData.multiplier?.evasion || 1) *
-      attackRatingAndEvasionScale
+      attackRatingAndEvasionScale,
     );
   }
 
@@ -413,12 +413,12 @@ class Enemy extends EnemyBase {
       scaled = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     }
 
-    return (
+    return Math.floor(
       scaled *
       this.getRegionMultiplier('attackRating') *
       (this.rarityData.multiplier.attackRating || 1) *
       (this.baseData.multiplier?.attackRating || 1) *
-      attackRatingAndEvasionScale
+      attackRatingAndEvasionScale,
     );
   }
 
@@ -464,7 +464,7 @@ class Enemy extends EnemyBase {
     const regionMult = this.getRegionMultiplier(`${type}Resistance`);
     const rarityMult = this.rarityData.multiplier[`${type}Resistance`] || 1;
     const baseMult = this.baseData.multiplier?.[`${type}Resistance`] || 1;
-    return scaled * regionMult * rarityMult * baseMult;
+    return Math.floor(scaled * regionMult * rarityMult * baseMult);
   }
 
   calculateXP() {

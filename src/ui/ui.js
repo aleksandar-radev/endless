@@ -353,7 +353,7 @@ export function updateEnemyStats() {
 
   // Main stats
   const dmg = document.getElementById('enemy-damage-value');
-  if (dmg) dmg.textContent = formatNumber(Math.floor(enemy.damage));
+  if (dmg) dmg.textContent = formatNumber(enemy.damage);
   ELEMENT_IDS.forEach((id) => {
     const dmgEl = document.getElementById(`enemy-${id}-damage-value`);
     if (dmgEl) dmgEl.textContent = formatNumber(enemy[`${id}Damage`] || 0);
@@ -896,7 +896,7 @@ export function updateRockyFieldRegionSelector() {
   if (currentRegion) {
     updateRegionSelectorButton('rockyField', currentRegion.name, openRockyFieldRegionSelectionDialog);
   }
-  
+
   // Update old button-based selector if it exists
   const container = document.getElementById('rocky-field-region-selector');
   if (!container) return;

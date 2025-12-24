@@ -259,7 +259,7 @@ class Boss extends EnemyBase {
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
     const regionMultiplier = Number.isFinite(this.regionMultiplier?.damage) ? this.regionMultiplier.damage : 1;
-    return val * (this.baseData.multiplier?.damage || 1) * regionMultiplier * (1 - dmgRed);
+    return Math.floor(val * (this.baseData.multiplier?.damage || 1) * regionMultiplier * (1 - dmgRed));
   }
 
   calculateArmor() {
@@ -269,7 +269,7 @@ class Boss extends EnemyBase {
 
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const regionMultiplier = Number.isFinite(this.regionMultiplier?.armor) ? this.regionMultiplier.armor : 1;
-    return val * (this.baseData.multiplier?.armor || 1) * regionMultiplier;
+    return Math.floor(val * (this.baseData.multiplier?.armor || 1) * regionMultiplier);
   }
 
   calculateEvasion() {
@@ -278,11 +278,11 @@ class Boss extends EnemyBase {
     base *= levelBonus;
 
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
-    return (
+    return Math.floor(
       val *
       (this.baseData.multiplier?.evasion || 1) *
       (Number.isFinite(this.regionMultiplier?.evasion) ? this.regionMultiplier.evasion : 1) *
-      attackRatingAndEvasionScale
+      attackRatingAndEvasionScale,
     );
   }
 
@@ -292,11 +292,11 @@ class Boss extends EnemyBase {
     base *= levelBonus;
 
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
-    return (
+    return Math.floor(
       val *
       (this.baseData.multiplier?.attackRating || 1) *
       (Number.isFinite(this.regionMultiplier?.attackRating) ? this.regionMultiplier.attackRating : 1) *
-      attackRatingAndEvasionScale
+      attackRatingAndEvasionScale,
     );
   }
 
@@ -309,11 +309,11 @@ class Boss extends EnemyBase {
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
 
     const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
-    return (
+    return Math.floor(
       val *
       (this.baseData.multiplier?.[`${type}Damage`] || 1) *
       (Number.isFinite(this.regionMultiplier?.[`${type}Damage`]) ? this.regionMultiplier[`${type}Damage`] : 1) *
-      (1 - dmgRed)
+      (1 - dmgRed),
     );
   }
 
@@ -324,12 +324,12 @@ class Boss extends EnemyBase {
 
     if (base === 0) return 0;
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
-    return (
+    return Math.floor(
       val *
       (this.baseData.multiplier?.[`${type}Resistance`] || 1) *
       (Number.isFinite(this.regionMultiplier?.[`${type}Resistance`])
         ? this.regionMultiplier[`${type}Resistance`]
-        : 1)
+        : 1),
     );
   }
 
