@@ -100,75 +100,39 @@ export function initializeUI() {
   updateStageUI();
   updateQuestsUI();
 
-  // Setup region tab switching (Explore / Arena)
-  document.querySelectorAll('.region-tab').forEach((btn) => {
-    btn.addEventListener('click', async () => {
-      const region = btn.dataset.region;
-      if (game.fightMode === region) return; // No change needed
-      const confirmed = await showConfirmDialog(
-        tp('combat.changeRegionConfirm', { region: t(`region.${region}`) }),
-      );
-      if (!confirmed) return;
-      // Reset stage progress and enemy as if the hero died
+  // Setup combat mode dropdown
+  const combatModeSelect = document.getElementById('combat-mode-select');
+  if (combatModeSelect) {
+    combatModeSelect.value = game.fightMode;
+    combatModeSelect.addEventListener('change', () => {
+      const region = combatModeSelect.value;
+      if (game.fightMode === region) return;
       if (game.gameStarted) {
-        toggleGame(); // Stop the game if it's running
+        toggleGame();
       }
-
       game.fightMode = region;
-
-      // find new enemy/boss based on region
       if (game.fightMode === 'explore') {
         game.currentEnemy = new Enemy(game.stage);
       } else if (game.fightMode === 'arena') {
-        selectBoss(); // Select boss based on current level
+        selectBoss();
       } else if (game.fightMode === 'rockyField') {
         game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);
       }
-      // Toggle active tab class
-      document.querySelectorAll('.region-tab').forEach((b) => b.classList.toggle('active', b === btn));
-      // Render the appropriate region panel
       renderRegionPanel(region);
       updateStatsAndAttributesUI();
-      // Update controls label
-      const display = document.getElementById('stage-display');
-      const label = display?.querySelector('.stage-label');
-      const value = display?.querySelector('.stage-value');
-      if (region === 'explore') {
-        if (label) {
-          const val = t('combat.stage');
-          if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
-        }
-        if (value) value.textContent = formatNumber(game.stage);
-      } else if (region === 'arena') {
-        if (label) {
-          const val = t('combat.bossLevel');
-          if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
-        }
-        if (value) value.textContent = formatNumber(hero.bossLevel);
-      } else if (region === 'rockyField') {
-        if (label) {
-          const val = t('combat.stage');
-          if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
-        }
-        if (value) value.textContent = formatNumber(game.rockyFieldStage);
-      }
-      // Hide or show region-selector based on region
-      const regionSelector = document.getElementById('region-selector');
-      regionSelector.style.display = region === 'arena' || region === 'rockyField' ? 'none' : '';
+      updateStageUI();
+      updateCombatRegionDropdownVisibility();
     });
-  });
-  // Render initial region panel and set region-selector visibility
-  renderRegionPanel(game.fightMode);
-  const regionSelector = document.getElementById('region-selector');
-  regionSelector.style.display = game.fightMode === 'arena' || game.fightMode === 'rockyField' ? 'none' : '';
+  }
 
-  // Add offline eligibility indicator at right end of region tabs
+  // Render initial region panel
+  renderRegionPanel(game.fightMode);
+  updateCombatRegionDropdownVisibility();
+
+  // Add offline eligibility indicator and save status
   try {
-    const tabs = document.querySelector('.region-tabs');
-    if (tabs && !tabs.querySelector('.session-status-group')) {
-      const statusGroup = document.createElement('span');
-      statusGroup.className = 'session-status-group';
-      tabs.appendChild(statusGroup);
+    const statusGroup = document.querySelector('.session-status-group');
+    if (statusGroup && !statusGroup.querySelector('.offline-eligibility-indicator')) {
 
       const indicator = document.createElement('span');
       indicator.className = 'offline-eligibility-indicator offline-not-eligible tooltip-target';
@@ -252,9 +216,19 @@ export function initializeUI() {
         } else {
           saveLabel.textContent = text;
         }
-
-        saveIndicator.title = tp('counters.lastSaveTooltip', { time: relativeTime });
       };
+
+      const getSaveTooltip = () => {
+        const relativeTime = formatRelativeSaveTime();
+        return html`
+          <div class="tooltip-header">${t('options.cloud.lastSave')}</div>
+          <div class="tooltip-desc">${tp('counters.lastSaveTooltip', { time: relativeTime })}</div>
+        `;
+      };
+
+      saveIndicator.addEventListener('mouseenter', (e) => showTooltip(getSaveTooltip(), e));
+      saveIndicator.addEventListener('mousemove', positionTooltip);
+      saveIndicator.addEventListener('mouseleave', hideTooltip);
 
       updateSaveLabel();
       setInterval(updateSaveLabel, 1000);
@@ -595,6 +569,14 @@ export function updateStageUI() {
     if (value) value.textContent = formatNumber(game.stage);
   }
 }
+
+function updateCombatRegionDropdownVisibility() {
+  const regionSelector = document.getElementById('combat-region-selector');
+  if (regionSelector) {
+    regionSelector.style.display = game.fightMode === 'explore' ? '' : 'none';
+  }
+}
+
 
 export function showToast(message, type = 'normal', duration = 3000) {
   if (!options?.showInfoMessages) return;

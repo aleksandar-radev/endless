@@ -651,36 +651,6 @@
   font-weight: bold;
 }
 
-.character-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin: 1rem 0;
-}
-
-.character-controls button {
-  background-color: var(--bg-element);
-  color: var(--text);
-  border: none;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-}
-
-#start-btn {
-  background-color: #059669;
-  color: #fff;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-#start-btn:hover {
-  background-color: #047857;
-}
-
 #death-screen {
   position: absolute;
   left: 0;

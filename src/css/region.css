@@ -1,9 +1,5 @@
 #region-selector {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 6px;
-  margin-bottom: 16px;
-  margin-top: 8px;
+  display: none;
 }
 
 #rocky-field-region-selector {
@@ -57,7 +53,8 @@
   opacity: 0.7;
 }
 
-.region-tabs {
+/* Combat controls row - replaces old region tabs */
+.combat-controls-row {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -65,7 +62,105 @@
   flex-wrap: wrap;
 }
 
-/* Offline eligibility indicator placed at the far right of the region tabs */
+.combat-mode-selector,
+.combat-region-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.combat-mode-label,
+.combat-region-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  white-space: nowrap;
+}
+
+.combat-mode-dropdown,
+.combat-region-dropdown {
+  position: relative;
+  background: linear-gradient(135deg, #232b3a 0%, #1c2531 100%);
+  color: #e5e7eb;
+  border: 1px solid #3b82f6;
+  border-radius: 6px;
+  padding: 6px 32px 6px 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  outline: none;
+  min-width: 140px;
+  line-height: 1.2;
+  transition: border-color .18s, box-shadow .18s, background .25s, color .25s;
+  appearance: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25), inset 0 0 0 1px #0f172a;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%2360a5fa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px 16px;
+}
+
+.combat-mode-dropdown:hover,
+.combat-region-dropdown:hover {
+  border-color: #60a5fa;
+  background: linear-gradient(135deg, #253042 0%, #232b3a 100%);
+}
+
+.combat-mode-dropdown:focus,
+.combat-region-dropdown:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.35), 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.combat-mode-dropdown::-ms-expand,
+.combat-region-dropdown::-ms-expand {
+  display: none;
+}
+
+.combat-mode-dropdown option,
+.combat-region-dropdown option {
+  background: #1f2937;
+  color: #f1f5f9;
+}
+
+.combat-fight-btn {
+  background-color: #059669;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.combat-fight-btn:hover {
+  background-color: #047857;
+}
+
+.combat-stage-display {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.combat-stage-display .stage-label {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.combat-stage-display .stage-value {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Offline eligibility indicator placed at the far right */
 .session-status-group {
   margin-left: auto;
   display: inline-flex;
@@ -73,6 +168,14 @@
   gap: 12px;
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.65);
+}
+
+.region-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
 }
 
 .offline-eligibility-indicator {
@@ -85,9 +188,19 @@
   font-weight: 700;
   user-select: none;
 }
-.offline-eligibility-indicator .icon { line-height: 1; font-size: 14px; }
-.offline-eligibility-indicator.offline-eligible { color: #10b981; }
-.offline-eligibility-indicator.offline-not-eligible { color: #ef4444; }
+
+.offline-eligibility-indicator .icon {
+  line-height: 1;
+  font-size: 14px;
+}
+
+.offline-eligibility-indicator.offline-eligible {
+  color: #10b981;
+}
+
+.offline-eligibility-indicator.offline-not-eligible {
+  color: #ef4444;
+}
 
 .save-status-indicator {
   display: inline-flex;

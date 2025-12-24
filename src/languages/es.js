@@ -83,6 +83,8 @@ export default {
   'combat.stop': 'Detener',
   'combat.stage': 'Etapa',
   'combat.bossLevel': 'Nivel de Jefe',
+  'combat.mode': 'MODO',
+  'combat.regionLabel': 'REGIÓN:',
   'death.message': '¡Has muerto! Reviviendo en <span id="revive-countdown">10</span>',
   'leaderboard.noData': 'No hay datos de clasificación disponibles.',
   'leaderboard.updateMessage': 'Para verte en la clasificación, debes reiniciar tu progreso debido a una nueva actualización.',

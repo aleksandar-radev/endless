@@ -2,8 +2,8 @@
 // Handles region data, selection, unlocking, and UI
 
 import { dataManager, game, hero } from './globals.js';
-import { showConfirmDialog, toggleGame, updateStageUI } from './ui/ui.js';
-import { t, tp } from './i18n.js';
+import { toggleGame, updateStageUI } from './ui/ui.js';
+import { t } from './i18n.js';
 import Enemy from './enemy.js';
 // Tooltip imports
 import { showTooltip, positionTooltip, hideTooltip } from './ui/ui.js';
@@ -12,21 +12,14 @@ import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { ENEMY_LIST } from './constants/enemies.js';
 import { formatNamedType } from './format.js';
 
-export async function setCurrentRegion(regionId) {
+export function setCurrentRegion(regionId) {
   if (regionId === game.currentRegionId) return;
-  // Show confirm dialog before changing region
-  const nextRegion = REGIONS.find((r) => r.id === regionId);
-  const confirmed = await showConfirmDialog(
-    tp('combat.changeRegionConfirm', { region: nextRegion?.name ?? regionId }),
-  );
-  if (!confirmed) return;
   game.currentRegionId = regionId;
-  // Reset stage progress and enemy as if the hero died
-
+  
   game.stage = game.getStartingStage();
   game.currentEnemy = new Enemy(game.stage);
   game.resetAllLife();
-  hero.queueRecalculateFromAttributes(); // in order to apply region changes to hero stats (elemental resistances)
+  hero.queueRecalculateFromAttributes();
   updateStatsAndAttributesUI();
   updateStageUI();
   updateRegionUI();
@@ -37,7 +30,6 @@ export async function setCurrentRegion(regionId) {
   }
 
   dataManager.saveGame();
-
 }
 
 export function getCurrentRegion() {
@@ -77,26 +69,54 @@ function getRegionTooltip(region) {
 
 export function updateRegionUI() {
   const container = document.getElementById('region-selector');
-  if (!container) return;
+  const dropdown = document.getElementById('combat-region-select');
+  
   if (!game.currentRegionId) {
     game.currentRegionId = REGIONS[0].id; // Default to first region if none set
   }
-  container.innerHTML = '';
-  const unlocked = getUnlockedRegions(hero);
-  const nextLockedRegion = REGIONS.find((region) => !unlocked.includes(region) && hero.level < region.unlockLevel);
-  const visibleRegions = [...unlocked];
-  if (nextLockedRegion) visibleRegions.push(nextLockedRegion);
+  
+  // Update the old button-based selector if it exists
+  if (container) {
+    container.innerHTML = '';
+    const unlocked = getUnlockedRegions(hero);
+    const nextLockedRegion = REGIONS.find((region) => !unlocked.includes(region) && hero.level < region.unlockLevel);
+    const visibleRegions = [...unlocked];
+    if (nextLockedRegion) visibleRegions.push(nextLockedRegion);
 
-  visibleRegions.forEach((region) => {
-    const btn = document.createElement('button');
-    btn.className = 'region-btn' + (region.id === game.currentRegionId ? ' selected' : '');
-    btn.textContent = region.name;
-    btn.disabled = !unlocked.includes(region);
-    btn.onclick = () => setCurrentRegion(region.id);
-    // Tooltip events
-    btn.addEventListener('mouseenter', (e) => showTooltip(getRegionTooltip(region), e));
-    btn.addEventListener('mousemove', positionTooltip);
-    btn.addEventListener('mouseleave', hideTooltip);
-    container.appendChild(btn);
-  });
+    visibleRegions.forEach((region) => {
+      const btn = document.createElement('button');
+      btn.className = 'region-btn' + (region.id === game.currentRegionId ? ' selected' : '');
+      btn.textContent = region.name;
+      btn.disabled = !unlocked.includes(region);
+      btn.onclick = () => setCurrentRegion(region.id);
+      // Tooltip events
+      btn.addEventListener('mouseenter', (e) => showTooltip(getRegionTooltip(region), e));
+      btn.addEventListener('mousemove', positionTooltip);
+      btn.addEventListener('mouseleave', hideTooltip);
+      container.appendChild(btn);
+    });
+  }
+  
+  // Update the new dropdown-based selector
+  if (dropdown) {
+    const unlocked = getUnlockedRegions(hero);
+    dropdown.innerHTML = '';
+    
+    unlocked.forEach((region) => {
+      const option = document.createElement('option');
+      option.value = region.id;
+      option.textContent = region.name;
+      dropdown.appendChild(option);
+    });
+    
+    dropdown.value = game.currentRegionId;
+    
+    // Add change listener if not already added
+    if (!dropdown.dataset.listenerAttached) {
+      dropdown.addEventListener('change', () => {
+        setCurrentRegion(dropdown.value);
+      });
+      dropdown.dataset.listenerAttached = 'true';
+    }
+  }
 }

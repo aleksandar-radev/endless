@@ -104,14 +104,27 @@
             </div>
 
             <div class="combat-panel">
-                <!-- Region Tabs -->
-                <div class="region-tabs">
-                    <span class="region-tabs-label" data-i18n="combatMode.groupTitle">Combat Modes</span>
-                    <button data-region="explore" class="region-tab active" data-i18n="region.explore">Explore</button>
-                    <button data-region="arena" class="region-tab" data-i18n="region.arena">Arena</button>
-                    <button data-region="rockyField" class="region-tab" data-i18n="region.rockyField">Rocky
-                        Field</button>
+                <!-- Combat Controls Row -->
+                <div class="combat-controls-row">
+                    <div class="combat-mode-selector">
+                        <label class="combat-mode-label" data-i18n="combat.mode">MODE</label>
+                        <select id="combat-mode-select" class="combat-mode-dropdown">
+                            <option value="explore" data-i18n="region.explore">Explore</option>
+                            <option value="arena" data-i18n="region.arena">Arena</option>
+                            <option value="rockyField" data-i18n="region.rockyField">Rocky Field</option>
+                        </select>
+                    </div>
+                    <div class="combat-region-selector" id="combat-region-selector">
+                        <label class="combat-region-label" data-i18n="combat.regionLabel">REGION:</label>
+                        <select id="combat-region-select" class="combat-region-dropdown">
+                        </select>
+                    </div>
+                    <button id="start-btn" class="combat-fight-btn" data-i18n="combat.fight">Fight</button>
+                    <div id="stage-display" class="combat-stage-display"><span class="stage-label"
+                            data-i18n="combat.stage">Stage</span>: <span class="stage-value">1</span></div>
+                    <span class="session-status-group"></span>
                 </div>
+
                 <div class="character-info">
                     <div id="character-avatar"><img src="/avatars/peasant-avatar.jpg" class="icon"
                             data-i18n-alt="icon.avatar" alt="" />
@@ -138,11 +151,6 @@
                     <div class="skill-slots">
                         <!-- Skills will be added dynamically -->
                     </div>
-                </div>
-                <div class="character-controls">
-                    <button id="start-btn" data-i18n="combat.fight">Fight</button>
-                    <div id="stage-display"><span class="stage-label" data-i18n="combat.stage">Stage</span>: <span
-                            class="stage-value">1</span></div>
                 </div>
 
                 <div id="region-selector"></div>

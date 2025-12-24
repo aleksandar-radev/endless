@@ -84,6 +84,8 @@ export default {
   'combat.stop': 'Stop',
   'combat.stage': 'Stage',
   'combat.bossLevel': 'Boss Level',
+  'combat.mode': 'MODE',
+  'combat.regionLabel': 'REGION:',
   'combat.changeRegionConfirm': 'Are you sure you want to change to {region}? That will reset your stage progress and will find you a new enemy',
   'death.message': 'You died! Reviving in <span id="revive-countdown">10</span>',
   'leaderboard.noData': 'No leaderboard data available.',

@@ -112,6 +112,8 @@ export default {
   'combat.stop': '停止',
   'combat.stage': '阶段',
   'combat.bossLevel': '首领等级',
+  'combat.mode': '模式',
+  'combat.regionLabel': '区域：',
   'death.message': '你死了！<span id="revive-countdown">10</span> 秒后复活',
   'leaderboard.noData': '暂无排行榜数据。',
   'leaderboard.updateMessage': '要在排行榜上看到自己，你需要因新更新而重置进度。',
