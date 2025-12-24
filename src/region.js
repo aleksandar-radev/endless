@@ -15,7 +15,7 @@ import { formatNamedType } from './format.js';
 export function setCurrentRegion(regionId) {
   if (regionId === game.currentRegionId) return;
   game.currentRegionId = regionId;
-  
+
   game.stage = game.getStartingStage();
   game.currentEnemy = new Enemy(game.stage);
   game.resetAllLife();
@@ -70,11 +70,11 @@ function getRegionTooltip(region) {
 export function updateRegionUI() {
   const container = document.getElementById('region-selector');
   const dropdown = document.getElementById('combat-region-select');
-  
+
   if (!game.currentRegionId) {
     game.currentRegionId = REGIONS[0].id; // Default to first region if none set
   }
-  
+
   // Update the old button-based selector if it exists
   if (container) {
     container.innerHTML = '';
@@ -96,21 +96,21 @@ export function updateRegionUI() {
       container.appendChild(btn);
     });
   }
-  
+
   // Update the new dropdown-based selector
   if (dropdown) {
     const unlocked = getUnlockedRegions(hero);
     dropdown.innerHTML = '';
-    
+
     unlocked.forEach((region) => {
       const option = document.createElement('option');
       option.value = region.id;
       option.textContent = region.name;
       dropdown.appendChild(option);
     });
-    
+
     dropdown.value = game.currentRegionId;
-    
+
     // Add change listener if not already added
     if (!dropdown.dataset.listenerAttached) {
       dropdown.addEventListener('change', () => {
