@@ -305,44 +305,18 @@ window.setLanguage = setLanguage;
   // Setup edev button to open dev tools
   const edevBtn = document.getElementById('edev-btn');
   if (edevBtn) {
-    edevBtn.addEventListener('click', () => {
-      // Check if dev mode is already active
-      const isDevActive = document.body.classList.contains('dev-active');
-      
-      if (!isDevActive) {
-        // Trigger the dev mode by simulating the 'edev' key sequence
-        const event = new KeyboardEvent('keydown', { key: 'e' });
-        document.dispatchEvent(event);
+    // Helper function to simulate 'edev' key sequence
+    const simulateEdevSequence = () => {
+      const keys = ['e', 'd', 'e', 'v'];
+      keys.forEach((key, index) => {
         setTimeout(() => {
-          const event2 = new KeyboardEvent('keydown', { key: 'd' });
-          document.dispatchEvent(event2);
-          setTimeout(() => {
-            const event3 = new KeyboardEvent('keydown', { key: 'e' });
-            document.dispatchEvent(event3);
-            setTimeout(() => {
-              const event4 = new KeyboardEvent('keydown', { key: 'v' });
-              document.dispatchEvent(event4);
-            }, 10);
-          }, 10);
-        }, 10);
-      } else {
-        // If dev mode is active, toggle it off
-        const event = new KeyboardEvent('keydown', { key: 'e' });
-        document.dispatchEvent(event);
-        setTimeout(() => {
-          const event2 = new KeyboardEvent('keydown', { key: 'd' });
-          document.dispatchEvent(event2);
-          setTimeout(() => {
-            const event3 = new KeyboardEvent('keydown', { key: 'e' });
-            document.dispatchEvent(event3);
-            setTimeout(() => {
-              const event4 = new KeyboardEvent('keydown', { key: 'v' });
-              document.dispatchEvent(event4);
-            }, 10);
-          }, 10);
-        }, 10);
-      }
-    });
+          const event = new KeyboardEvent('keydown', { key });
+          document.dispatchEvent(event);
+        }, index * 10);
+      });
+    };
+
+    edevBtn.addEventListener('click', simulateEdevSequence);
   }
 
   // Do not append dev-access-footer anymore

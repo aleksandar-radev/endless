@@ -26,6 +26,9 @@ import { updateRegionUI, updateRegionSelectorButton } from '../region.js';
 import { calculateArmorReduction, calculateEvasionChance, calculateHitChance, calculateResistanceReduction } from '../combat.js';
 import { renderRunesUI } from './runesUi.js';
 import { createModal, closeModal } from './modal.js';
+
+// Mobile breakpoint constant
+const MOBILE_BREAKPOINT = 1300;
 export {
   initializeSkillTreeUI,
   initializeSkillTreeStructure,
@@ -276,7 +279,7 @@ export function switchTab(tabName) {
     }
   } else {
     // Hide combat panel when not on battle tab on mobile
-    if (window.innerWidth <= 1300) {
+    if (window.innerWidth <= MOBILE_BREAKPOINT) {
       const combatPanel = document.querySelector('.combat-panel');
       if (combatPanel) {
         combatPanel.style.display = 'none';
