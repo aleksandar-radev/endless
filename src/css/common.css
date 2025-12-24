@@ -58,6 +58,37 @@ body.dev-active .game-container {
     margin-left: 0;
     margin-right: 0;
   }
+
+  /* On mobile, show debug/modify panels in a modal-like overlay */
+  body.dev-active .debug-ui,
+  body.dev-active .modify-ui {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 500px;
+    max-height: 80vh;
+    background: var(--bg-panel);
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    padding: 1.5rem;
+    z-index: 10000;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Add a backdrop behind the debug UI on mobile */
+  body.dev-active::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+  }
 }
 
 .tooltip-header {

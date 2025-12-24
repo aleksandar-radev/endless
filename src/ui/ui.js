@@ -268,6 +268,22 @@ export function switchTab(tabName) {
   }
   tab.classList.add('active');
 
+  // Handle battle tab on mobile - show combat panel
+  if (tabName === 'battle') {
+    const combatPanel = document.querySelector('.combat-panel');
+    if (combatPanel) {
+      combatPanel.style.display = 'block';
+    }
+  } else {
+    // Hide combat panel when not on battle tab on mobile
+    if (window.innerWidth <= 1300) {
+      const combatPanel = document.querySelector('.combat-panel');
+      if (combatPanel) {
+        combatPanel.style.display = 'none';
+      }
+    }
+  }
+
   if (tabName === 'stats') {
     updateStatsAndAttributesUI();
   }
