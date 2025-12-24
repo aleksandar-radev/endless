@@ -245,12 +245,15 @@ export function initializeUI() {
       };
 
       const updateSaveLabel = () => {
-        const text = tp('counters.lastSave', { time: formatRelativeSaveTime() });
+        const relativeTime = formatRelativeSaveTime();
+        const text = tp('counters.lastSave', { time: relativeTime });
         if (text.includes('<')) {
           saveLabel.innerHTML = text;
         } else {
           saveLabel.textContent = text;
         }
+
+        saveIndicator.title = tp('counters.lastSaveTooltip', { time: relativeTime });
       };
 
       updateSaveLabel();

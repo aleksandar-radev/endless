@@ -71,7 +71,8 @@ export default {
   'enemy.stats.resShort': '抗性',
   'enemy.stats.toggle': '显示/隐藏敌人属性',
   'counters.reset': '重置',
-  'counters.lastSave': '上次保存：{time}',
+  'counters.lastSave': '{time}',
+  'counters.lastSaveTooltip': '游戏进度上次保存于{time}',
   'time.pending': '保存中…',
   'time.justNow': '刚刚',
   'time.secondsAgo': '{count} 秒前',
@@ -1649,6 +1650,8 @@ export default {
   'Dancing Blades': '剑刃乱舞',
   'skill.dancingBlades': '解锁幻影武器召唤。',
   'Enchanted Armor': '附魔护甲',
+  'skill.weaponIllusion.name': '幻影武器',
+  'skill.weaponIllusion': '解锁一个为你战斗的幻影武器。',
   'skill.enchantedArmor': '提高护甲附魔的效果。',
 
   // Stats
@@ -1732,6 +1735,7 @@ export default {
   'stats.chanceToShatterEnemy': '粉碎几率',
   'stats.damageTakenConvertedToColdPercent': '受到伤害转化为冰冷 %',
   'stats.coldDamageTakenReductionPercent': '受到冰冷伤害减免 %',
+  'stats.elementalDamageTakenReductionPercent': '受到元素伤害减免 %',
   'stats.damageTakenReductionPercent': '额外伤害减免 %',
   'stats.shapeshiftUnlocked': '变形解锁',
   'stats.summonDamageBuffPercent': '召唤物伤害 %',

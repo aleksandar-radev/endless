@@ -1187,7 +1187,8 @@ export default {
   'enemy.stats.resShort': 'RES',
   'enemy.stats.toggle': 'Mostrar/ocultar estadísticas del enemigo',
   'counters.reset': 'Reiniciar',
-  'counters.lastSave': 'Último guardado: {time}',
+  'counters.lastSave': '{time}',
+  'counters.lastSaveTooltip': 'El progreso del juego se guardó por última vez {time}',
   'time.pending': 'Guardando…',
   'time.justNow': 'ahora mismo',
   'time.secondsAgo': 'hace {count}s',
@@ -1666,6 +1667,8 @@ export default {
   'Dancing Blades': 'Hojas Danzantes',
   'skill.dancingBlades': 'Desbloquea una invocación de ilusión de arma.',
   'Enchanted Armor': 'Armadura Encantada',
+  'skill.weaponIllusion.name': 'Ilusión de Arma',
+  'skill.weaponIllusion': 'Desbloquea una ilusión de arma que lucha por ti.',
   'skill.enchantedArmor': 'Aumenta la efectividad de los encantamientos de armadura.',
 
   // Stats
@@ -1748,6 +1751,7 @@ export default {
   'stats.chanceToShatterEnemy': 'Probabilidad de Hacer Añicos',
   'stats.damageTakenConvertedToColdPercent': 'Daño Recibido Convertido a Frío %',
   'stats.coldDamageTakenReductionPercent': 'Reducción de Daño de Frío Recibido %',
+  'stats.elementalDamageTakenReductionPercent': 'Reducción de Daño Elemental Recibido %',
   'stats.damageTakenReductionPercent': 'Daño Recibido Reducido %',
   'stats.shapeshiftUnlocked': 'Cambio de Forma Desbloqueado',
   'stats.summonDamageBuffPercent': 'Daño de Invocación %',
