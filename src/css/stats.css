@@ -213,19 +213,21 @@
 }
 
 .stat-row {
-  /* Let the label/value children participate in the parent grid so
-     the parent (.stat-subpanel) can size the left column based on the
-     widest label across all rows. display:contents flattens the
-     element's children into the parent for layout purposes. */
-  display: contents;
+  /* Use subgrid to maintain alignment while allowing height matching */
+  display: grid;
+  grid-column: span 2;
+  grid-template-columns: subgrid;
+  height: 100%;
 }
 
 /* Keep label from wrapping so width calculation is stable */
 .stat-row .stat-label {
-  white-space: nowrap;
   font-weight: bold;
   position: relative;
-  padding-right: 6px;
+  padding-right: 12px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 240px;
 }
 
 .stat-row>* {
@@ -234,8 +236,17 @@
   border-bottom: 1px solid #696969;
   padding-bottom: 4px;
   padding-top: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
   justify-self: stretch;
   line-height: 20px;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  align-self: stretch;
 }
 
 /* Subcategory tabs inside each stats panel */
@@ -289,20 +300,19 @@
   }
 
   /* Spacing between the first stat's value and second stat's label in 4-column mode */
-  .stat-subpanel.active> :nth-child(4n+2),
-  .stats-panel.active.default> :nth-child(4n+2) {
+  .stat-subpanel.active .stat-row> :nth-child(2),
+  .stats-panel.active.default .stat-row> :nth-child(2) {
     padding-right: 20px;
   }
-}
-
-.stat-row .stat-label {
-  padding-right: 12px;
 }
 
 /* Handle rows that use a single value element (no .stat-values wrapper)
    by placing any child that's not .stat-label into column 2. */
 .stat-subpanel .stat-row> :not(.stat-label) {
   justify-self: stretch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #character-name {

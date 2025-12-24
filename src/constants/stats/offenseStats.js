@@ -112,7 +112,6 @@ export const OFFENSE_STATS = {
   critChanceCap: {
     base: 50,
     divisor: 100,
-    showInUI: true,
     subcategory: 'attack',
   },
   critChancePercent: {
@@ -186,21 +185,6 @@ export const OFFENSE_STATS = {
     decimalPlaces: 1,
     forceNotShow: true,
   },
-  // MANA STEAL
-  manaSteal: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
-    item: { min: 0.5, max: 1.25, limit: 5, scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, CHANCE_SCALING, scalingSystem) },
-    showInUI: true,
-    subcategory: 'attack',
-  },
-  manaStealPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    forceNotShow: true,
-  },
   // OMNI STEAL
   omniSteal: {
     base: 0,
@@ -230,6 +214,28 @@ export const OFFENSE_STATS = {
     divisor: 100,
     decimalPlaces: 1,
     forceNotShow: true,
+  },
+  doubleDamageChance: {
+    base: 0,
+    divisor: 100,
+    decimalPlaces: 1,
+    training: {
+      cost: 550,
+      costIncrease: 600,
+      costIncreaseMultiplier: 1.012,
+      costThresholds: [{ level: 50, costIncreaseMultiplier: 1.025 }],
+      bonus: 0.1,
+      maxLevel: 200,
+    }, // max bonus: 20
+    item: {
+      min: 2,
+      max: 5,
+      limit: 25,
+      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, CHANCE_SCALING, scalingSystem),
+    },
+    itemTags: ['offense', 'gloves', 'jewelry', 'wand', 'staff'],
+    showInUI: true,
+    subcategory: 'attack',
   },
   // FIRE DAMAGE
   fireDamage: {
@@ -387,30 +393,6 @@ export const OFFENSE_STATS = {
     itemTags: ['sword', 'jewelry', 'gloves', 'magic'],
     subcategory: 'elemental',
   },
-  // DOUBLE DAMAGE
-  doubleDamageChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    training: {
-      cost: 550,
-      costIncrease: 600,
-      costIncreaseMultiplier: 1.012,
-      costThresholds: [{ level: 50, costIncreaseMultiplier: 1.025 }],
-      bonus: 0.1,
-      maxLevel: 200,
-    }, // max bonus: 20
-    item: {
-      min: 2,
-      max: 5,
-      limit: 25,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, CHANCE_SCALING, scalingSystem),
-    },
-    itemTags: ['offense', 'gloves', 'jewelry', 'wand', 'staff'],
-    showInUI: true,
-    subcategory: 'attack',
-  },
-  // ELEMENTAL DAMAGE PERCENT
   elementalDamage: {
     base: 0,
     decimalPlaces: 1,
@@ -646,7 +628,6 @@ export const OFFENSE_STATS = {
     base: 0,
     divisor: 100,
     decimalPlaces: 1,
-    showInUI: true,
     subcategory: 'attack',
   },
   // RARE ENEMY DAMAGE
@@ -725,7 +706,6 @@ export const OFFENSE_STATS = {
     divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
-    showInUI: true,
   },
   arcDischargeChance: {
     base: 0,
@@ -762,14 +742,12 @@ export const OFFENSE_STATS = {
     divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
-    showInUI: true,
   },
   chanceToShatterEnemy: {
     base: 0,
     divisor: 100,
     decimalPlaces: 1,
     subcategory: 'elemental',
-    showInUI: true,
   },
   // DRUID SUMMONS
   summonDamageBuffPercent: {

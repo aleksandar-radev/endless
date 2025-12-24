@@ -392,10 +392,28 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
         if (typeof statValue === 'number') {
           const divisor = getDivisor(statKey);
           const decimals = getStatDecimalPlaces(statKey);
+          let formattedValue;
           if (divisor !== 1) {
-            return formatNumber((statValue * divisor).toFixed(decimals)) + '%';
+            formattedValue = formatNumber((statValue * divisor).toFixed(decimals)) + '%';
+          } else {
+            formattedValue = formatNumber(statValue.toFixed(decimals));
           }
-          return formatNumber(statValue.toFixed(decimals));
+          
+          // Truncate to 12 digits (excluding separators, decimals, and percent sign)
+          const strippedValue = formattedValue.replace(/[,\.%]/g, '');
+          if (strippedValue.length > 12) {
+            const numberPart = formattedValue.replace('%', '');
+            const digitsOnly = numberPart.replace(/,/g, '');
+            const num = parseFloat(digitsOnly);
+            if (!isNaN(num)) {
+              // Show first 12 significant digits with ellipsis
+              const significantDigits = num.toPrecision(12);
+              const truncated = formatNumber(parseFloat(significantDigits).toFixed(decimals));
+              return truncated + (divisor !== 1 ? '%' : '') + '...';
+            }
+          }
+          
+          return formattedValue;
         }
 
         return formatNumber(statValue);
