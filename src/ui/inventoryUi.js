@@ -73,43 +73,97 @@ export function initializeInventoryUI(inv) {
   if (!inventoryTab) return;
   inventoryTab.innerHTML = '';
 
-  // Equipment container
-  const equipmentContainer = document.createElement('div');
-  equipmentContainer.className = 'equipment-container';
-  equipmentContainer.innerHTML = html`
-    <div class="equipment-layout">
-      <div class="equipment-slots">
-        <div class="equipment-slot" data-slot="head"><div class="slot-indicator">${ITEM_ICONS.HELMET}</div></div>
-        <div class="equipment-slot" data-slot="amulet"><div class="slot-indicator">${ITEM_ICONS.AMULET}</div></div>
-        <div class="equipment-slot" data-slot="chest"><div class="slot-indicator">${ITEM_ICONS.ARMOR}</div></div>
-        <div class="equipment-slot" data-slot="belt"><div class="slot-indicator">${ITEM_ICONS.BELT}</div></div>
-        <div class="equipment-slot" data-slot="weapon"><div class="slot-indicator">${ITEM_ICONS.SWORD}</div></div>
-        <div class="equipment-slot" data-slot="offhand"><div class="slot-indicator">${ITEM_ICONS.SHIELD}</div></div>
-        <div class="equipment-slot" data-slot="gloves"><div class="slot-indicator">${ITEM_ICONS.GLOVES}</div></div>
-        <div class="equipment-slot" data-slot="ring1"><div class="slot-indicator">${ITEM_ICONS.RING}</div></div>
-        <div class="equipment-slot" data-slot="legs"><div class="slot-indicator">${ITEM_ICONS.PANTS}</div></div>
-        <div class="equipment-slot" data-slot="ring2"><div class="slot-indicator">${ITEM_ICONS.RING}</div></div>
-        <div class="equipment-slot" data-slot="boots"><div class="slot-indicator">${ITEM_ICONS.BOOTS}</div></div>
+  // Top section with equipment and options side-by-side
+  const topSection = document.createElement('div');
+  topSection.className = 'inventory-top-section';
+  topSection.innerHTML = html`
+    <div class="inventory-left-section">
+      <div class="equipment-container">
+        <div class="equipment-layout">
+          <div class="equipment-slots">
+            <div class="equipment-slot" data-slot="head"><div class="slot-indicator">${ITEM_ICONS.HELMET}</div></div>
+            <div class="equipment-slot" data-slot="amulet"><div class="slot-indicator">${ITEM_ICONS.AMULET}</div></div>
+            <div class="equipment-slot" data-slot="chest"><div class="slot-indicator">${ITEM_ICONS.ARMOR}</div></div>
+            <div class="equipment-slot" data-slot="belt"><div class="slot-indicator">${ITEM_ICONS.BELT}</div></div>
+            <div class="equipment-slot" data-slot="weapon"><div class="slot-indicator">${ITEM_ICONS.SWORD}</div></div>
+            <div class="equipment-slot" data-slot="offhand"><div class="slot-indicator">${ITEM_ICONS.SHIELD}</div></div>
+            <div class="equipment-slot" data-slot="gloves"><div class="slot-indicator">${ITEM_ICONS.GLOVES}</div></div>
+            <div class="equipment-slot" data-slot="ring1"><div class="slot-indicator">${ITEM_ICONS.RING}</div></div>
+            <div class="equipment-slot" data-slot="legs"><div class="slot-indicator">${ITEM_ICONS.PANTS}</div></div>
+            <div class="equipment-slot" data-slot="ring2"><div class="slot-indicator">${ITEM_ICONS.RING}</div></div>
+            <div class="equipment-slot" data-slot="boots"><div class="slot-indicator">${ITEM_ICONS.BOOTS}</div></div>
+          </div>
+          <div class="character-preview"><img src="${BASE}/icons/account.svg" class="icon" alt="${t('icon.avatar')}"/></div>
+        </div>
       </div>
-      <div class="character-preview"><img src="${BASE}/icons/account.svg" class="icon" alt="${t('icon.avatar')}"/></div>
-    </div>
-    <div class="salvage-container">
-      <div class="inventory-tabs">
-        <button id="items-tab" class="inventory-btn active" data-i18n="inventory.items">${t('inventory.items')}</button>
-        <button id="materials-tab" class="inventory-btn" data-i18n="inventory.materials">${t('inventory.materials')}</button>
+      <div class="inventory-controls">
+        <div class="inventory-tabs">
+          <button id="items-tab" class="inventory-btn active" data-i18n="inventory.items">${t('inventory.items')}</button>
+          <button id="materials-tab" class="inventory-btn" data-i18n="inventory.materials">${t('inventory.materials')}</button>
+        </div>
+        <div class="sort-row">
+          <div id="sort-inventory" class="inventory-btn sort-btn" aria-label="${t('inventory.sort')}"><span role="img" aria-label="${t('inventory.sort')}"><img src="${BASE}/icons/refresh.svg" class="icon" alt="${t('inventory.sort')}"/></span></div>
+          <button id="desktop-equip-btn" class="inventory-btn desktop-equip-btn desktop-only" style="display: none" data-i18n="inventory.equip">${t('inventory.equip')}</button>
+          <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn" style="display: none" data-i18n="inventory.equip">${t('inventory.equip')}</button>
+        </div>
       </div>
-      <div class="sort-row">
-        <div id="sort-inventory" class="inventory-btn sort-btn" aria-label="${t('inventory.sort')}"><span role="img" aria-label="${t('inventory.sort')}"><img src="${BASE}/icons/refresh.svg" class="icon" alt="${t('inventory.sort')}"/></span></div>
-      </div>
-      <button id="open-salvage-modal" class="inventory-btn" data-i18n="inventory.options">${t('inventory.options')}</button>
       <div class="search-container">
         <input type="text" id="inventory-filter" class="inventory-btn filter-input" data-i18n-placeholder="inventory.searchItems" placeholder="${t('inventory.searchItems')}" />
         <span class="search-icon"><img src="${BASE}/icons/search.svg" class="icon" alt="${t('icon.search')}"/></span>
-        <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn" style="display: none" data-i18n="inventory.equip">${t('inventory.equip')}</button>
       </div>
     </div>
+    <div class="inventory-options-panel desktop-only">
+      <h3 class="options-title">${t('inventory.options')}</h3>
+      <div class="salvage-options-inline">
+        ${RARITY_ORDER.map(rarity => {
+    const selectedRarities = inv.autoSalvageRarities || [];
+    const autoSalvageLevel = crystalShop?.crystalUpgrades?.autoSalvage || 0;
+    const isChecked = selectedRarities.includes(rarity);
+    const atCap = selectedRarities.length >= autoSalvageLevel;
+    const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
+    const inputId = `auto-salvage-inline-${rarity}`;
+    return html`
+  <div class="salvage-inline-row">
+        <button class="salvage-btn-inline" data-rarity="${rarity}">${tp('inventory.salvageRarityItems', { rarity: t('rarity.' + rarity.toLowerCase()) })}</button>
+        <div class="auto-salvage-inline-toggle">
+          <input id="${inputId}" name="${inputId}" type="checkbox" class="auto-salvage-toggle-inline" data-rarity="${rarity}" ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} />
+          <span class="toggle-btn${isChecked ? ' checked' : ''}${isDisabled ? ' disabled' : ''}"></span>
+          <label for="${inputId}" class="auto-salvage-toggle-text">${t('inventory.auto')}</label>
+        </div>
+      </div>
+    `;
+  }).join('')}
+        <div class="salvage-all-inline-row">
+          <button id="salvage-all-inline-btn" class="salvage-all-btn">${t('inventory.allItems')}</button>
+        </div>
+      </div>
+      <div class="salvage-material-inline">
+        <div class="salvage-reward-title">${t('inventory.salvageReward')}</div>
+        <div class="salvage-material-toggle-container">
+          ${t('inventory.gold')}<input id="salvage-material-toggle-inline" name="salvage-material-toggle-inline" type="checkbox" class="salvage-material-toggle-inline" ${inv.salvageUpgradeMaterials ? 'checked' : ''} />
+          <span class="toggle-btn${inv.salvageUpgradeMaterials ? ' checked' : ''}${!crystalShop?.crystalUpgrades?.salvageMaterials ? ' disabled' : ''}"></span>
+          <label for="salvage-material-toggle-inline">${t('inventory.upgradeMaterials')}</label>
+        </div>
+      </div>
+      <div class="sort-by-inline">
+        <div class="salvage-reward-title">${t('inventory.sortBy')}</div>
+        <select id="sort-mode-select-inline" class="inventory-btn sort-select">
+          <option value="type-rarity-level">${t('inventory.typeRarityLevel')}</option>
+          <option value="type-level-rarity">${t('inventory.typeLevelRarity')}</option>
+          <option value="rarity-level">${t('inventory.rarityLevel')}</option>
+          <option value="level-rarity">${t('inventory.levelRarity')}</option>
+          <option value="tier-rarity-level">${t('inventory.tierRarityLevel')}</option>
+          <option value="tier-level-rarity">${t('inventory.tierLevelRarity')}</option>
+          <option value="type-tier-rarity">${t('inventory.typeTierRarity')}</option>
+          <option value="type-tier-level">${t('inventory.typeTierLevel')}</option>
+          <option value="rarity-tier-level">${t('inventory.rarityTierLevel')}</option>
+          <option value="level-tier-rarity">${t('inventory.levelTierRarity')}</option>
+        </select>
+      </div>
+    </div>
+    <button id="open-salvage-modal" class="inventory-btn mobile-only-btn" data-i18n="inventory.options">${t('inventory.options')}</button>
   `;
-  inventoryTab.appendChild(equipmentContainer);
+  inventoryTab.appendChild(topSection);
 
   // Inventory grid
   const inventoryGrid = document.createElement('div');
@@ -200,6 +254,60 @@ export function initializeInventoryUI(inv) {
     showSalvageModal(inv);
   });
 
+  // Desktop inline options panel logic
+  setupInlineOptionsPanel(inv, inventoryTab);
+
+  // Desktop equip button
+  const desktopEquipBtn = document.getElementById('desktop-equip-btn');
+  if (desktopEquipBtn) {
+    desktopEquipBtn.addEventListener('click', () => {
+      if (!selectedItemEl) return;
+      const itemData = inventory.getItemById(selectedItemEl.dataset.itemId);
+
+      const equippedSlot = Object.entries(inventory.equippedItems).find(
+        ([slot, equipped]) => equipped && equipped.id === itemData.id,
+      )?.[0];
+
+      if (equippedSlot) {
+        inventory.equipItem(itemData, equippedSlot);
+        hero.queueRecalculateFromAttributes();
+        updateInventoryGrid();
+        clearMobileSelection();
+        return;
+      }
+
+      if (itemData.type === ITEM_IDS.RING) {
+        const emptyRingSlots = ['ring1', 'ring2'].filter((s) => !inventory.equippedItems[s]);
+        const slot = emptyRingSlots[0] || 'ring1';
+        inventory.equipItem(itemData, slot);
+        hero.queueRecalculateFromAttributes();
+        updateInventoryGrid();
+        clearMobileSelection();
+      } else {
+        const slot = getPreferredSlotForItem(itemData);
+        if (slot) {
+          inventory.equipItem(itemData, slot);
+          hero.queueRecalculateFromAttributes();
+          updateInventoryGrid();
+        }
+        clearMobileSelection();
+      }
+    });
+  }
+
+  // Sort mode select inline
+  const sortModeSelectInline = document.getElementById('sort-mode-select-inline');
+  if (sortModeSelectInline) {
+    sortModeSelectInline.value = sortMode;
+    sortModeSelectInline.addEventListener('change', () => {
+      sortMode = sortModeSelectInline.value;
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('inventorySortMode', sortMode);
+      }
+      sortInventory(sortMode);
+    });
+  }
+
   mobileEquipBtn.addEventListener('click', () => {
     if (!selectedItemEl) return;
     const itemData = inventory.getItemById(selectedItemEl.dataset.itemId);
@@ -240,11 +348,120 @@ export function initializeInventoryUI(inv) {
       !e.target.closest('.inventory-item') &&
       !e.target.closest('.equipment-slot') &&
       !e.target.closest('#item-context-menu') &&
-      e.target.id !== 'mobile-equip-btn'
+      e.target.id !== 'mobile-equip-btn' &&
+      e.target.id !== 'desktop-equip-btn'
     ) {
       clearMobileSelection();
     }
   });
+}
+
+// Setup inline options panel for desktop view
+function setupInlineOptionsPanel(inv, root) {
+  const autoSalvageLevel = crystalShop?.crystalUpgrades?.autoSalvage || 0;
+
+  // Salvage buttons by rarity
+  root.querySelectorAll('.salvage-btn-inline[data-rarity]').forEach((btn) => {
+    btn.onclick = () => {
+      const rarity = btn.dataset.rarity;
+      inventory.salvageItemsByRarity(rarity);
+    };
+  });
+
+  // Salvage all button
+  const salvageAllInlineBtn = root.querySelector('#salvage-all-inline-btn');
+  if (salvageAllInlineBtn) {
+    salvageAllInlineBtn.onclick = () => {
+      inventory.salvageAllItems();
+    };
+  }
+
+  // Auto-salvage toggles
+  root.querySelectorAll('.salvage-inline-row').forEach((row) => {
+    const input = row.querySelector('.auto-salvage-toggle-inline');
+    const toggleBtn = row.querySelector('.toggle-btn');
+    if (!input || !toggleBtn) return;
+
+    function syncToggleState() {
+      const selected = inv.autoSalvageRarities ? [...inv.autoSalvageRarities] : [];
+      root.querySelectorAll('.salvage-inline-row').forEach((otherRow) => {
+        const otherInput = otherRow.querySelector('.auto-salvage-toggle-inline');
+        const otherBtn = otherRow.querySelector('.toggle-btn');
+        if (!otherInput || !otherBtn) return;
+        const otherRarity = otherInput.dataset.rarity;
+        const isChecked = selected.includes(otherRarity);
+        const atCap = selected.length >= autoSalvageLevel;
+        const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
+        otherInput.checked = isChecked;
+        otherInput.disabled = isDisabled;
+        otherBtn.classList.toggle('checked', isChecked);
+        otherBtn.classList.toggle('disabled', isDisabled);
+      });
+    }
+
+    syncToggleState();
+
+    input.addEventListener('change', () => {
+      if (autoSalvageLevel === 0) return;
+      let selected = inv.autoSalvageRarities ? [...inv.autoSalvageRarities] : [];
+      const rarity = input.dataset.rarity;
+      if (input.checked) {
+        if (selected.length >= autoSalvageLevel && !selected.includes(rarity)) {
+          input.checked = false;
+          const key = autoSalvageLevel === 1 ? 'inventory.autoSalvageLimitOne' : 'inventory.autoSalvageLimit';
+          showToast(tp(key, { count: autoSalvageLevel }), 'info');
+          return;
+        }
+        if (!selected.includes(rarity)) selected.push(rarity);
+      } else {
+        selected = selected.filter(r => r !== rarity);
+      }
+      inv.setAutoSalvageRarities(selected);
+      syncToggleState();
+    });
+
+    toggleBtn.addEventListener('click', () => {
+      if (input.disabled) return;
+      input.checked = !input.checked;
+      input.dispatchEvent(new Event('change'));
+    });
+  });
+
+  // Salvage material toggle
+  const matToggleInline = root.querySelector('.salvage-material-toggle-inline');
+  const matToggleBtnInline = root.querySelector('.salvage-material-toggle-inline + .toggle-btn');
+  if (matToggleInline && matToggleBtnInline) {
+    const hasUpgrade = crystalShop?.crystalUpgrades?.salvageMaterials;
+    matToggleInline.disabled = !hasUpgrade;
+    if (!hasUpgrade) {
+      matToggleInline.title = t('inventory.unlockSalvageMaterials');
+      matToggleInline.checked = false;
+      matToggleBtnInline.classList.remove('checked');
+    }
+
+    function syncMatToggleState() {
+      matToggleInline.checked = inv.salvageUpgradeMaterials && hasUpgrade;
+      matToggleBtnInline.classList.toggle('checked', inv.salvageUpgradeMaterials && hasUpgrade);
+      matToggleBtnInline.classList.toggle('disabled', !hasUpgrade);
+    }
+
+    matToggleInline.addEventListener('change', () => {
+      if (!hasUpgrade) {
+        matToggleInline.checked = false;
+        return;
+      }
+      inv.setSalvageUpgradeMaterials(matToggleInline.checked);
+      syncMatToggleState();
+    });
+
+    matToggleBtnInline.addEventListener('click', () => {
+      if (!hasUpgrade) return;
+      matToggleInline.checked = !matToggleInline.checked;
+      matToggleInline.dispatchEvent(new Event('change'));
+    });
+
+    syncMatToggleState();
+  }
 }
 
 // Salvage Modal Implementation
@@ -274,7 +491,7 @@ export function showSalvageModal(inv) {
 
   // Modal content: inventory tab (left), salvage sidebar (right)
   const html = String.raw;
-  const autoSalvageLevel = crystalShop.crystalUpgrades.autoSalvage || 0;
+  const autoSalvageLevel = crystalShop?.crystalUpgrades?.autoSalvage || 0;
   const selectedRarities = inv.autoSalvageRarities || [];
   const modalContent = html`
     <div class="inventory-salvage-modal-content">
@@ -312,7 +529,7 @@ export function showSalvageModal(inv) {
             <div class="salvage-reward-title">${t('inventory.salvageReward')}</div>
             <div class="salvage-material-toggle-container">
               ${t('inventory.gold')}<input id="salvage-material-toggle-main" name="salvage-material-toggle-main" type="checkbox" class="salvage-material-toggle" ${inv.salvageUpgradeMaterials ? 'checked' : ''} />
-              <span class="toggle-btn${inv.salvageUpgradeMaterials ? ' checked' : ''}${!crystalShop.crystalUpgrades?.salvageMaterials ? ' disabled' : ''}"></span>
+              <span class="toggle-btn${inv.salvageUpgradeMaterials ? ' checked' : ''}${!crystalShop?.crystalUpgrades?.salvageMaterials ? ' disabled' : ''}"></span>
               <label for="salvage-material-toggle-main">${t('inventory.upgradeMaterials')}</label>
             </div>
           </div>
@@ -345,8 +562,8 @@ export function showSalvageModal(inv) {
     content: modalContent,
     closeOnOutsideClick: true,
     onClose: () => {
-      // Restore equipment container visibility and move inventory tab back
-      if (hiddenEquipment) hiddenEquipment.style.display = '';
+      // Restore top section visibility and move inventory tab back
+      if (hiddenTopSection) hiddenTopSection.style.display = '';
       placeholder.parentNode.insertBefore(inventoryTab, placeholder);
       placeholder.remove();
       // Force UI refresh to fix equipped items disappearing
@@ -357,9 +574,9 @@ export function showSalvageModal(inv) {
   // Move the inventory tab DOM node into the modal
   overlay.querySelector('.inventory-modal-full-content').appendChild(inventoryTab);
 
-  // Hide the equipment container inside the modal
-  const hiddenEquipment = inventoryTab.querySelector('.equipment-container');
-  if (hiddenEquipment) hiddenEquipment.style.display = 'none';
+  // Hide the top section (equipment + options) inside the modal
+  const hiddenTopSection = inventoryTab.querySelector('.inventory-top-section');
+  if (hiddenTopSection) hiddenTopSection.style.display = 'none';
 
   const sortModeSelect = overlay.querySelector('#sort-mode-select');
   if (sortModeSelect) {
@@ -460,7 +677,7 @@ export function showSalvageModal(inv) {
   const matToggleBtn = overlay.querySelector('.salvage-material-toggle + .toggle-btn');
   if (matToggle && matToggleBtn) {
     // Only allow toggle if the crystal upgrade is owned
-    const hasUpgrade = crystalShop.crystalUpgrades.salvageMaterials;
+    const hasUpgrade = crystalShop?.crystalUpgrades?.salvageMaterials;
     matToggle.disabled = !hasUpgrade;
     if (!hasUpgrade) {
       matToggle.title = t('inventory.unlockSalvageMaterials');
@@ -918,6 +1135,7 @@ export function setupItemDragAndTooltip(root = getInventoryTab()) {
   items.forEach((item) => {
     // Add double-click handler
     item.addEventListener('dblclick', () => {
+      hideTooltip(); // Hide tooltip when double-clicking
       const itemData = inventory.getItemById(item.dataset.itemId);
       if (!itemData) return;
 
@@ -966,6 +1184,8 @@ export function setupItemDragAndTooltip(root = getInventoryTab()) {
     // Tooltip events
     item.addEventListener('mouseenter', (e) => {
       if (item.classList.contains('dragging')) return;
+      // Prevent tooltip on touch devices (mobile)
+      if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
 
       const itemData = inventory.getItemById(item.dataset.itemId);
       if (!itemData) return;
@@ -973,34 +1193,31 @@ export function setupItemDragAndTooltip(root = getInventoryTab()) {
       // Create tooltip content for hovered item
       let tooltipContent = `<div>${itemData.getTooltipHTML()}`;
 
-      // --- Add salvage gold value if in salvage modal (for hovered item only) ---
-      const inSalvageModal = item.closest('.inventory-salvage-modal-content');
-      if (inSalvageModal) {
-        if (inventory.salvageUpgradeMaterials) {
-          const { id, qty } = inventory.getItemSalvageMaterial(itemData);
-          tooltipContent += `<div style="margin-top:8px;
-            color:#fff;
-            background: rgba(224, 192, 96, 0.6);
-            border-top:1px solid #e0c060;
-            padding:6px 8px 4px 8px;
-            border-radius:0 0 8px 8px;
-            font-weight:bold;
-            text-shadow: 1px 1px 2px #7a5c1c;">
-            <b>${t('inventory.salvageValue')}</b> ${qty} ${t(MATERIALS[id].name)}
-          </div>`;
-        } else {
-          let goldGained = inventory.getItemSalvageValue(itemData);
-          tooltipContent += `<div style="margin-top:8px;
-            color:#fff;
-            background: rgba(224, 192, 96, 0.6);
-            border-top:1px solid #e0c060;
-            padding:6px 8px 4px 8px;
-            border-radius:0 0 8px 8px;
-            font-weight:bold;
-            text-shadow: 1px 1px 2px #7a5c1c;">
-            <b>${t('inventory.salvageValue')}</b> ${goldGained} ${t('inventory.gold').toLowerCase()}
-          </div>`;
-        }
+      // --- Add salvage value to all item tooltips (always shown now) ---
+      if (inventory.salvageUpgradeMaterials) {
+        const { id, qty } = inventory.getItemSalvageMaterial(itemData);
+        tooltipContent += `<div style="margin-top:8px;
+          color:#fff;
+          background: rgba(224, 192, 96, 0.6);
+          border-top:1px solid #e0c060;
+          padding:6px 8px 4px 8px;
+          border-radius:0 0 8px 8px;
+          font-weight:bold;
+          text-shadow: 1px 1px 2px #7a5c1c;">
+          <b>${t('inventory.salvageValue')}</b> ${qty} ${t(MATERIALS[id].name)}
+        </div>`;
+      } else {
+        let goldGained = inventory.getItemSalvageValue(itemData);
+        tooltipContent += `<div style="margin-top:8px;
+          color:#fff;
+          background: rgba(224, 192, 96, 0.6);
+          border-top:1px solid #e0c060;
+          padding:6px 8px 4px 8px;
+          border-radius:0 0 8px 8px;
+          font-weight:bold;
+          text-shadow: 1px 1px 2px #7a5c1c;">
+          <b>${t('inventory.salvageValue')}</b> ${goldGained} ${t('inventory.gold').toLowerCase()}
+        </div>`;
       }
       tooltipContent += '</div>';
 
@@ -1090,6 +1307,9 @@ export function updateMaterialsGrid(inv, root = getInventoryTab()) {
       const materialItem = cell.querySelector('.material-item');
       // Tooltip on hover (show name and amount)
       materialItem.addEventListener('mouseenter', (e) => {
+        // Prevent tooltip on touch devices (mobile)
+        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+
         let tooltipContent = `<div class="item-tooltip"><b>${
           matDef.icon || icon
         } ${t(matDef.name || mat.name || '')} &times; ${mat.qty}</b>`;
@@ -1224,11 +1444,13 @@ function clearSlotHighlights(root = getInventoryTab()) {
 }
 
 function showEquipButton(show) {
-  const btn = document.getElementById('mobile-equip-btn');
+  const mobileBtn = document.getElementById('mobile-equip-btn');
+  const desktopBtn = document.getElementById('desktop-equip-btn');
   // Hide equip button only when the salvage modal is actually visible
   const modal = document.getElementById('salvage-modal');
   if (modal && !modal.classList.contains('hidden')) show = false;
-  if (btn) btn.style.display = show ? '' : 'none';
+  if (mobileBtn) mobileBtn.style.display = show ? '' : 'none';
+  if (desktopBtn) desktopBtn.style.display = show ? '' : 'none';
 }
 
 function showSalvageButton(show) {
@@ -1401,12 +1623,39 @@ function openItemContextMenu(itemEl, x, y) {
     closeItemContextMenu();
   };
   menu.querySelector('[data-action="inspect"]').onclick = () => {
+    let inspectContent = itemData.getTooltipHTML();
+
+    // Add salvage value to inspect modal
+    if (inventory.salvageUpgradeMaterials) {
+      const { id, qty } = inventory.getItemSalvageMaterial(itemData);
+      inspectContent += `<div style="margin-top:8px;
+        color:#fff;
+        background: rgba(224, 192, 96, 0.6);
+        border-top:1px solid #e0c060;
+        padding:6px 8px 4px 8px;
+        border-radius:0 0 8px 8px;
+        font-weight:bold;
+        text-shadow: 1px 1px 2px #7a5c1c;">
+        <b>${t('inventory.salvageValue')}</b> ${qty} ${t(MATERIALS[id].name)}
+      </div>`;
+    } else {
+      let goldGained = inventory.getItemSalvageValue(itemData);
+      inspectContent += `<div style="margin-top:8px;
+        color:#fff;
+        background: rgba(224, 192, 96, 0.6);
+        border-top:1px solid #e0c060;
+        padding:6px 8px 4px 8px;
+        border-radius:0 0 8px 8px;
+        font-weight:bold;
+        text-shadow: 1px 1px 2px #7a5c1c;">
+        <b>${t('inventory.salvageValue')}</b> ${goldGained} ${t('inventory.gold').toLowerCase()}
+      </div>`;
+    }
+
     const dialog = createModal({
       id: 'inspect-item',
       className: 'inventory-modal',
-      content: `<div class="inventory-modal-content"><button class="modal-close">&times;</button>${itemData
-        .getTooltipHTML()
-        .replace('item-tooltip', 'item-preview')}</div>`,
+      content: `<div class="inventory-modal-content"><button class="modal-close">&times;</button>${inspectContent.replace('item-tooltip', 'item-preview')}</div>`,
     });
     dialog.querySelector('.modal-close').onclick = () => closeModal('inspect-item');
     closeItemContextMenu();
