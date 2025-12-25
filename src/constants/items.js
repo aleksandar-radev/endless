@@ -12,6 +12,7 @@ export const ITEM_IDS = {
   SWORD: 'SWORD',
   AXE: 'AXE',
   MACE: 'MACE',
+  DAGGER: 'DAGGER',
   WAND: 'WAND',
   STAFF: 'STAFF',
   SHIELD: 'SHIELD',
@@ -42,8 +43,8 @@ export const SLOT_REQUIREMENTS = {
   belt: [ITEM_IDS.BELT],
   legs: [ITEM_IDS.PANTS],
   boots: [ITEM_IDS.BOOTS],
-  weapon: [ITEM_IDS.SWORD, ITEM_IDS.AXE, ITEM_IDS.MACE, ITEM_IDS.WAND, ITEM_IDS.STAFF, ITEM_IDS.SHIELD, ITEM_IDS.BOW],
-  offhand: [ITEM_IDS.SWORD, ITEM_IDS.AXE, ITEM_IDS.WAND, ITEM_IDS.SHIELD, ITEM_IDS.ARROWS, ITEM_IDS.MACE, ITEM_IDS.STAFF],
+  weapon: [ITEM_IDS.SWORD, ITEM_IDS.AXE, ITEM_IDS.MACE, ITEM_IDS.DAGGER, ITEM_IDS.WAND, ITEM_IDS.STAFF, ITEM_IDS.SHIELD, ITEM_IDS.BOW],
+  offhand: [ITEM_IDS.SWORD, ITEM_IDS.AXE, ITEM_IDS.DAGGER, ITEM_IDS.WAND, ITEM_IDS.SHIELD, ITEM_IDS.ARROWS, ITEM_IDS.MACE, ITEM_IDS.STAFF],
   gloves: [ITEM_IDS.GLOVES],
   amulet: [ITEM_IDS.AMULET],
   ring1: [ITEM_IDS.RING],
@@ -51,7 +52,7 @@ export const SLOT_REQUIREMENTS = {
 };
 
 export const TWO_HANDED_TYPES = [ITEM_IDS.MACE, ITEM_IDS.STAFF, ITEM_IDS.BOW];
-export const DUAL_WIELD_TYPES = [ITEM_IDS.SWORD, ITEM_IDS.AXE, ITEM_IDS.WAND, ITEM_IDS.SHIELD];
+export const DUAL_WIELD_TYPES = [ITEM_IDS.SWORD, ITEM_IDS.AXE, ITEM_IDS.DAGGER, ITEM_IDS.WAND, ITEM_IDS.SHIELD];
 
 
 export const ITEM_TYPES = {
@@ -61,6 +62,7 @@ export const ITEM_TYPES = {
       ITEM_IDS.SWORD,
       ITEM_IDS.AXE,
       ITEM_IDS.MACE,
+      ITEM_IDS.DAGGER,
       ITEM_IDS.WAND,
       ITEM_IDS.STAFF,
       ITEM_IDS.SHIELD,
@@ -103,6 +105,7 @@ export const ITEM_ICONS = {
   SWORD: `<img src="${BASE}/icons/sword.svg" class="icon" alt="sword"/>`,
   AXE: `<img src="${BASE}/icons/axe.svg" class="icon" alt="axe"/>`,
   MACE: `<img src="${BASE}/icons/mace.svg" class="icon" alt="mace"/>`,
+  DAGGER: `<img src="${BASE}/icons/dagger.svg" class="icon" alt="dagger"/>`,
   WAND: `<img src="${BASE}/icons/wand.svg" class="icon" alt="wand"/>`,
   STAFF: `<img src="${BASE}/icons/staff.svg" class="icon" alt="staff"/>`,
   SHIELD: `<img src="${BASE}/icons/shield.svg" class="icon" alt="shield"/>`,
@@ -167,6 +170,10 @@ export const ITEM_STAT_POOLS = {
   [ITEM_IDS.MACE]: {
     mandatory: [],
     possible: [...getStatsByTags(['offense', 'mace'])],
+  },
+  [ITEM_IDS.DAGGER]: {
+    mandatory: [],
+    possible: [...getStatsByTags(['offense', 'dagger'])],
   },
   [ITEM_IDS.WAND]: {
     mandatory: [],

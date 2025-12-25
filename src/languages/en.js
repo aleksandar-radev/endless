@@ -1386,6 +1386,7 @@ export default {
   'SWORD': 'Sword',
   'AXE': 'Axe',
   'MACE': 'Mace',
+  'DAGGER': 'Dagger',
   'WAND': 'Wand',
   'STAFF': 'Staff',
   'SHIELD': 'Shield',

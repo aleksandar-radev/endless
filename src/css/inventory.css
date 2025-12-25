@@ -379,7 +379,8 @@
   }
 }
 
-.grid-container {
+.grid-container,
+.materials-grid {
   display: grid;
   grid-template-columns: repeat(15, 1fr);
   gap: 2px;

@@ -1197,6 +1197,7 @@ export default {
   'SWORD': '剑',
   'AXE': '斧头',
   'MACE': '钉锤',
+  'DAGGER': '匕首',
   'WAND': '魔杖',
   'STAFF': '法杖',
   'SHIELD': '盾牌',

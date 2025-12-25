@@ -1210,6 +1210,7 @@ export default {
   'SWORD': 'Espada',
   'AXE': 'Hacha',
   'MACE': 'Maza',
+  'DAGGER': 'Daga',
   'WAND': 'Varita',
   'STAFF': 'Bastón',
   'SHIELD': 'Escudo',
