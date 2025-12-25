@@ -796,11 +796,11 @@ export default class SoulShop {
     const isMultiLevel = typeof config.bonus === 'number' && !config.oneTime;
     if (isMultiLevel) {
       fields.innerHTML = `
-        <p>Current Level: <span class="modal-level"></span></p>
-        <p>Current Bonus: <span class="modal-bonus"></span></p>
-        <p>Next Level Bonus: <span class="modal-next-bonus"></span></p>
-        <p>Total Bonus: <span class="modal-total-bonus"></span></p>
-        <p>Total Cost: <span class="modal-total-cost"></span> Souls (<span class="modal-qty">1</span>)</p>
+        <p>${t('ascension.upgrade.currentLevel')}: <span class="modal-level"></span></p>
+        <p>${t('ascension.upgrade.currentBonus')}: <span class="modal-bonus"></span></p>
+        <p>${t('ascension.upgrade.nextLevelBonus')}: <span class="modal-next-bonus"></span></p>
+        <p>${t('crystalShop.modal.totalBonus')}: <span class="modal-total-bonus"></span></p>
+        <p>${t('training.totalCost')}: <span class="modal-total-cost"></span> ${t('resource.souls.name')} (<span class="modal-qty">1</span>)</p>
       `;
       controls.style.display = '';
       if (options.useNumericInputs) {
@@ -848,7 +848,7 @@ export default class SoulShop {
       const oneTimeBonusText = typeof config.bonus === 'string' ? t(config.bonus) : (config.bonus || '');
       fields.innerHTML = `
         <p>${oneTimeBonusText}</p>
-        <p>Cost: <span class="modal-total-cost">${config.baseCost}</span> ${t('resource.souls.name')}</p>
+        <p>${t('soulShop.cost')}: <span class="modal-total-cost">${config.baseCost}</span> ${t('resource.souls.name')}</p>
         <div class="modal-status">${
   purchased ? '<span style="color:#10b981;font-weight:bold;">' + t('common.purchased') + '</span>' : ''
 }</div>
@@ -861,7 +861,7 @@ export default class SoulShop {
       const multipleBonusText = typeof config.bonus === 'string' ? t(config.bonus) : (config.bonus || '');
       fields.innerHTML = `
         <p>${multipleBonusText}</p>
-        <p>Cost: <span class="modal-total-cost">${config.baseCost}</span> ${t('resource.souls.name')}</p>
+        <p>${t('soulShop.cost')}: <span class="modal-total-cost">${config.baseCost}</span> ${t('resource.souls.name')}</p>
       `;
       buyBtn.style.display = '';
       buyBtn.disabled = false;
@@ -923,7 +923,10 @@ export default class SoulShop {
       if (q('.modal-bonus')) q('.modal-bonus').textContent = this.getBonusText(stat, config, baseLevel);
       if (q('.modal-next-bonus')) q('.modal-next-bonus').textContent = this.getBonusText(stat, config, baseLevel + 1);
       const buyBtn = q('.modal-buy');
-      if (buyBtn) buyBtn.disabled = !affordable || baseLevel >= maxLevel;
+      if (buyBtn) {
+        buyBtn.textContent = t('crystalShop.modal.buy');
+        buyBtn.disabled = !affordable || baseLevel >= maxLevel;
+      }
       const slider = q('.modal-slider');
       if (slider) {
         slider.max = Math.min(levelsLeft, SOUL_SHOP_MAX_QTY);

@@ -66,7 +66,6 @@ export default class Training {
     this.quickQty = options.useNumericInputs
       ? Math.min(options.trainingQuickQty || 1, TRAINING_MAX_QTY)
       : 1;
-    this.initializeTrainingUI();
   }
 
   _ensureResourceExtraDamageSplitStructure() {
@@ -225,14 +224,14 @@ export default class Training {
         <div class="training-modal-content">
           <button class="modal-close">&times;</button>
           <h2 class="modal-title"></h2>
-          <p>Current Level: <span class="modal-level"></span>/<span class="modal-max-level"></span></p>
-          <p>Current Bonus: <span class="modal-bonus"></span></p>
-          <p>Next Level Bonus: <span class="modal-next-bonus"></span></p>
-          <p>Total Bonus: <span class="modal-total-bonus"></span></p>
+          <p>${t('ascension.upgrade.currentLevel')}: <span class="modal-level"></span>/<span class="modal-max-level"></span></p>
+          <p>${t('ascension.upgrade.currentBonus')}: <span class="modal-bonus"></span></p>
+          <p>${t('ascension.upgrade.nextLevelBonus')}: <span class="modal-next-bonus"></span></p>
+          <p>${t('crystalShop.modal.totalBonus')}: <span class="modal-total-bonus"></span></p>
           <p>${t('training.totalCost')}: <span class="modal-total-cost"></span> ${t('resource.gold.name')} (<span class="modal-qty">1</span>)</p>
           <div class="modal-controls">${controlsMarkup}</div>
           <input type="range" class="modal-slider" min="0" max="1" value="1" step="1" />
-          <button class="modal-buy">Buy</button>
+          <button class="modal-buy">${t('crystalShop.modal.buy')}</button>
         </div>
       `;
       // Use shared modal helper
