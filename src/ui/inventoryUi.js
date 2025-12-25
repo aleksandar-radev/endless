@@ -177,7 +177,7 @@ export function initializeInventoryUI(inv) {
   `;
   inventoryTab.appendChild(inventoryGrid);
 
-  // Create ITEM_SLOTS empty cells (10x20 grid)
+  // Create ITEM_SLOTS empty cells
   const gridContainer = inventoryTab.querySelector('.grid-container');
   for (let i = 0; i < ITEM_SLOTS; i++) {
     const cell = document.createElement('div');

@@ -46,9 +46,9 @@ export function requestMaterialsUiRefresh({ immediate = false } = {}) {
   }
 }
 
-export const ITEM_SLOTS = 200;
+export const ITEM_SLOTS = 210;
 export const PERSISTENT_SLOTS = 30;
-export const MATERIALS_SLOTS = 100;
+export const MATERIALS_SLOTS = 120;
 
 export default class Inventory {
   constructor(savedData = null) {
