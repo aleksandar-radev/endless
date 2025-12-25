@@ -1976,5 +1976,7 @@ export default {
   'skillTree.selectSpec': 'Select {name}',
   'skillTree.availableSpecializations': 'Available Specializations',
   'skillTree.skillEffects': 'Skill Effects',
+  'skillTree.mobileTooltipNotice': 'Skill details are hidden on mobile when Quick Buy is enabled. To view skill effects, disable Quick Buy in Options.',
+  'skillTree.mobileTooltipNotice.goToOptions': 'Go to Options',
 
 };

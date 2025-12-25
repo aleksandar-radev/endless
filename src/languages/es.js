@@ -768,6 +768,8 @@ export default {
   'skill.snakeForm': 'Cámbiate en serpiente, obteniendo Daño de Tierra y bonificaciones de Veneno. Otorga una probabilidad fija de Veneno del 20%. Solo puedes desbloquear una forma a la vez.',
   'skill.spiritLink': 'Aumenta robo de vida y maná por golpe.',
   'skill.totalPotentialDamage': 'Daño Potencial Total',
+  'skillTree.mobileTooltipNotice': 'Los detalles de las habilidades están ocultos en móvil cuando la compra rápida está habilitada. Para ver los efectos de las habilidades, desactiva la compra rápida en Opciones.',
+  'skillTree.mobileTooltipNotice.goToOptions': 'Ir a Opciones',
   'skill.moonfury': 'Te potencia bajo la luna, aumentando daño de frío y agua.',
   'skill.earthsEmbrace': 'Abraza la tierra para obtener armadura, vida y resistencias.',
   'skill.wrathOfNature': 'Aumenta daño, vitalidad y daño elemental.',

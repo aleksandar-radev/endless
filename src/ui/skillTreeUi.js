@@ -271,6 +271,9 @@ function initializeSkillsTab() {
   skillPointsHeader.className = 'skill-points-header';
   skillsContent.appendChild(skillPointsHeader);
 
+  // Add mobile tooltip notice if quick buy is enabled
+  renderMobileTooltipNotice(skillsContent);
+
   const noLvlRestriction = false;
 
   const skills = SKILL_TREES[skillTree.selectedPath.name];
@@ -396,6 +399,9 @@ function initializeSpecializationsTab() {
       </div>
     `;
     specializationsContent.appendChild(header);
+
+    // Add mobile tooltip notice if quick buy is enabled
+    renderMobileTooltipNotice(specializationsContent);
 
     // Attach event listeners for controls
     const qtyControls = header.querySelector('.skill-qty-controls');
@@ -561,7 +567,10 @@ function createSpecializationSkillElement(baseSkill) {
     </div>
   `;
 
-  skillElement.addEventListener('mouseenter', (e) => showTooltip(updateSpecializationTooltipContent(skill.id), e));
+  skillElement.addEventListener('mouseenter', (e) => {
+    if (window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window) return;
+    showTooltip(updateSpecializationTooltipContent(skill.id), e);
+  });
   skillElement.addEventListener('mousemove', positionTooltip);
   skillElement.addEventListener('mouseleave', hideTooltip);
 
@@ -1134,6 +1143,66 @@ function renderAutoCastToggles() {
     'auto-cast-switch',
     { marginTop: '32px', wrapperAlignItems: 'center', wrapperMarginBottom: '6px' },
   );
+}
+
+// --- Mobile Tooltip Notice ---
+function renderMobileTooltipNotice(container) {
+  // Remove existing notice if present
+  const existingNotice = container.querySelector('.mobile-tooltip-notice');
+  if (existingNotice) existingNotice.remove();
+
+  // Only show on mobile when quick buy is enabled
+  const isMobile = window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window;
+  if (!isMobile || !options?.quickBuy) return;
+
+  // Check if user has dismissed this notice (use localStorage)
+  const dismissedKey = 'skillTreeMobileNotice_dismissed';
+  if (localStorage.getItem(dismissedKey) === 'true') return;
+
+  const notice = document.createElement('div');
+  notice.className = 'mobile-tooltip-notice';
+  notice.innerHTML = html`
+    <div class="mobile-tooltip-notice-content">
+      <button class="mobile-tooltip-notice-close" aria-label="Close">&times;</button>
+      <div class="mobile-tooltip-notice-text">
+        <svg class="mobile-tooltip-notice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span>${t('skillTree.mobileTooltipNotice')}</span>
+      </div>
+      <button class="mobile-tooltip-notice-action" data-tab="options">
+        ${t('skillTree.mobileTooltipNotice.goToOptions')}
+      </button>
+    </div>
+  `;
+
+  // Insert after the header
+  const header = container.querySelector('.skill-points-header');
+  if (header && header.nextSibling) {
+    container.insertBefore(notice, header.nextSibling);
+  } else {
+    container.insertBefore(notice, container.firstChild);
+  }
+
+  // Close button handler
+  const closeBtn = notice.querySelector('.mobile-tooltip-notice-close');
+  closeBtn.addEventListener('click', () => {
+    notice.remove();
+    localStorage.setItem(dismissedKey, 'true');
+  });
+
+  // Action button handler - navigate to options tab
+  const actionBtn = notice.querySelector('.mobile-tooltip-notice-action');
+  actionBtn.addEventListener('click', () => {
+    const optionsTab = document.querySelector('[data-tab="options"]');
+    if (optionsTab) {
+      optionsTab.click();
+      notice.remove();
+      localStorage.setItem(dismissedKey, 'true');
+    }
+  });
 }
 
 // --- Slot Display Toggles ---
@@ -1788,7 +1857,10 @@ function createSkillElement(baseSkill) {
     </div>
   `;
 
-  skillElement.addEventListener('mouseenter', (e) => showTooltip(updateTooltipContent(skill.id), e));
+  skillElement.addEventListener('mouseenter', (e) => {
+    if (window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window) return;
+    showTooltip(updateTooltipContent(skill.id), e);
+  });
   skillElement.addEventListener('mousemove', positionTooltip);
   skillElement.addEventListener('mouseleave', hideTooltip);
 

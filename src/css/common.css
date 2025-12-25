@@ -31,7 +31,7 @@ body {
   background-color: var(--bg-dark);
   color: var(--text);
   min-height: 100vh;
-  padding: 1rem 1rem 2rem 1rem;
+  padding: 0.5rem;
 }
 
 ul,

@@ -796,6 +796,8 @@ export default {
   'skill.snakeForm': '变身为蛇，获得土系伤害与毒素加成。提供固定 20% 的中毒几率。只能解锁一种形态。',
   'skill.spiritLink': '提高生命偷取和每击法力回复。',
   'skill.totalPotentialDamage': '总潜在伤害',
+  'skillTree.mobileTooltipNotice': '启用快速购买时，移动设备上隐藏技能详情。要查看技能效果，请在选项中禁用快速购买。',
+  'skillTree.mobileTooltipNotice.goToOptions': '前往选项',
   'skill.moonfury': '月下强化，提升冰与水伤害。',
   'skill.earthsEmbrace': '拥抱大地以获得护甲、生命和抗性。',
   'skill.wrathOfNature': '增加伤害、体力和元素伤害。',
