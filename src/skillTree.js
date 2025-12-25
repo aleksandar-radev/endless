@@ -1384,7 +1384,7 @@ export default class SkillTree {
     if (this.selectedSpecialization) return false;
     if (!this.selectedPath) return false;
 
-    if (hero.level < 1000) {
+    if (hero.level < SPECIALIZATION_UNLOCK_LEVEL) {
       showToast(t('skillTree.specializationLevelReq'), 'error');
       return false;
     }
