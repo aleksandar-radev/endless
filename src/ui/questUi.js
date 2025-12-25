@@ -1,5 +1,5 @@
 // Quest UI logic moved from ui.js
-import { showTooltip, hideTooltip, positionTooltip, formatNumber } from './ui.js';
+import { formatNumber } from './ui.js';
 import { quests } from '../globals.js';
 import { MATERIALS } from '../constants/materials.js';
 import { t, tp } from '../i18n.js';
@@ -64,10 +64,6 @@ export function updateQuestsUI() {
       <span class="quest-title">${q.title}</span>
       <span class="quest-progress">${progress}/${q.target}</span>
     `;
-      // Show tooltip on hover
-      item.addEventListener('mouseenter', (e) => showTooltip(q.description, e));
-      item.addEventListener('mousemove', positionTooltip);
-      item.addEventListener('mouseleave', hideTooltip);
       // Always open modal on click
       item.addEventListener('click', () => openQuestModal(q));
       list.appendChild(item);
@@ -229,10 +225,6 @@ function openClaimableQuestsModal() {
         <span class="quest-progress">${formatNumber(q.getProgress())}/${formatNumber(q.target)}</span>
         <button class="modal-btn" style="margin-left:auto;">${t('quests.modal.claim')}</button>
       `;
-      // Show tooltip on hover
-      item.addEventListener('mouseenter', (e) => showTooltip(q.description, e));
-      item.addEventListener('mousemove', positionTooltip);
-      item.addEventListener('mouseleave', hideTooltip);
       // Open quest modal on title/icon click
       item.querySelector('.quest-title').onclick = () => openQuestModal(q);
       item.querySelector('.quest-icon').onclick = () => openQuestModal(q);

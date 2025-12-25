@@ -424,6 +424,13 @@
   width: 100%;
 }
 
+@media (max-width: 600px) {
+  .changelog-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
 #options input[type=number] {
   background: #232b3a;
   color: #fff;
@@ -468,11 +475,32 @@
 
 @media (max-width: 600px) {
   .option-row {
-    padding: 4px 12px;
+    padding: 4px 8px;
+    gap: 0.5em;
+    flex-wrap: wrap;
   }
 
   .option-row label {
     padding-right: 8px;
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .option-row .common-select {
+    min-width: 120px;
+    max-width: 100%;
+    flex: 1 1 auto;
+  }
+
+  .option-row .common-action-btn {
+    flex: 0 0 auto;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .option-row input[type=number] {
+    width: 80px;
+    flex-shrink: 1;
   }
 
   .cloud-save-bar {
@@ -480,11 +508,38 @@
     justify-content: center;
     gap: 0.5rem;
     height: auto;
-    padding: 10px;
+    padding: 10px 8px;
   }
 
   .cloud-save-bar button {
-    flex: 1 1 40%;
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: 0;
+    padding: 0.45em 0.8em;
+    font-size: 0.9rem;
+  }
+
+  #cloud-save-status {
+    flex: 1 1 100%;
+    text-align: center;
+    font-size: 1rem;
+  }
+
+  #copy-save-text-btn,
+  #paste-save-text-btn {
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: 0;
+    padding: 0.45em 0.8em;
+    font-size: 0.9rem;
+  }
+
+  .min-max-btn-group {
+    margin-left: 0;
+  }
+
+  .min-max-btn-group .min-btn,
+  .min-max-btn-group .max-btn {
+    padding: 6px 10px;
+    font-size: 0.85em;
   }
 }
 

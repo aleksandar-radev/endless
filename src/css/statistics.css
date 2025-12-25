@@ -1,7 +1,6 @@
 .stats-display {
   display: flex;
   flex-direction: column;
-  gap: 20px;
   color: #fff;
   margin-bottom: 20px;
 }
