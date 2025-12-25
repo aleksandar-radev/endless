@@ -22,8 +22,11 @@
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
   position: relative;
   width: min(640px, 92vw);
+  max-width: 92vw;
   max-height: 90vh;
   overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Ensure any modal content container respects viewport height */
@@ -52,4 +55,12 @@
 
 .migration-info {
   overflow-y: auto;
+}
+
+@media (max-width: 600px) {
+  .modal-content {
+    width: 95vw;
+    max-width: 95vw;
+    padding: 1rem;
+  }
 }
