@@ -166,12 +166,34 @@
 
 /* Offline eligibility indicator inside character name */
 .session-status-group {
-  margin-left: auto;
   display: inline-flex;
   align-items: center;
   gap: 12px;
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.65);
+}
+
+/* Hero ailments display */
+.hero-ailments {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.hero-ailments .ailment-icon {
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+
+.hero-ailments .ailment-icon:hover {
+  opacity: 1;
 }
 
 .region-tabs {

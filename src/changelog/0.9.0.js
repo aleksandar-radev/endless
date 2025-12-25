@@ -46,6 +46,7 @@ export default function run() {
       <li>Life regen percent of total life (and mana) now are not affected by life regen % and mana regen % bonuses.</li>
       <li>Slightly reduced the drop chance of items and materials.</li>
       <li>Redesigned the enemy stats panel and added XP/Gold reward preview.</li>
+      <li>Added a death penalty. When you die, an ailment gets applied to the hero, reducing gold and xp gains by 50% for the next 20 seconds. Also, the minimum death timer is now 2 seconds and the maximum is 30 seconds.</li>
     </ul>
 
     <span style="color:#FF8A00;">Technical</span>

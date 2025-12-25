@@ -34,4 +34,9 @@ export const AILMENTS = {
     id: 'shatter',
     damageMultiplier: 3, // 3x damage on shatter
   },
+  warmup: {
+    id: 'warmup',
+    duration: 20000, // 20 seconds
+    goldXpReduction: 0.5, // 50% reduction
+  },
 };

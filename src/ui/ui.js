@@ -359,6 +359,8 @@ export function updatePlayerLife() {
   document.getElementById('xp-text').textContent = `${formatNumber(
     Math.max(0, Math.floor(hero.exp)),
   )} / ${formatNumber(Math.floor(hero.getExpToNextLevel()))} XP`;
+
+  updateHeroAilmentIcons();
 }
 
 export function updateEnemyStats() {
@@ -521,6 +523,36 @@ function updateAilmentIcons() {
       getTooltip: () => tp('ailment.poison.tooltip', {
         amount: formatNumber(Math.floor(enemy.ailments[AILMENTS.poison.id]?.damagePool || 0)),
         duration: ((enemy.ailments[AILMENTS.poison.id]?.duration || 0) / 1000).toFixed(1),
+      }),
+    },
+  ];
+
+  ailments.forEach((ailment) => {
+    if (ailment.isActive) {
+      const el = document.createElement('div');
+      el.className = `ailment-icon ${ailment.id}`;
+      el.style.backgroundImage = `url('${basePath}/icons/${ailment.id}.png')`;
+      el.addEventListener('mouseenter', (e) => showTooltip(ailment.getTooltip(), e));
+      el.addEventListener('mouseleave', hideTooltip);
+      el.addEventListener('mousemove', positionTooltip);
+      ailmentsContainer.appendChild(el);
+    }
+  });
+}
+
+function updateHeroAilmentIcons() {
+  const ailmentsContainer = document.querySelector('.hero-ailments');
+  if (!ailmentsContainer) return;
+  ailmentsContainer.innerHTML = '';
+
+  const basePath = import.meta.env.VITE_BASE_PATH || '';
+
+  const ailments = [
+    {
+      id: 'warmup',
+      isActive: !!hero.ailments[AILMENTS.warmup.id],
+      getTooltip: () => tp('ailment.warmup.tooltip', {
+        duration: ((hero.ailments[AILMENTS.warmup.id]?.duration || 0) / 1000).toFixed(1),
       }),
     },
   ];

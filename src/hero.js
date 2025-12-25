@@ -21,6 +21,7 @@ import { SOUL_UPGRADE_CONFIG } from './soulShop.js';
 import { ELEMENTS } from './constants/common.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
 import { STATS, getDivisor, getStatDecimalPlaces } from './constants/stats/stats.js';
+import { AILMENTS } from './constants/ailments.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 const ATTRIBUTE_KEYS = Object.keys(ATTRIBUTES);
@@ -138,6 +139,7 @@ function levelsAffordable(startLevel, availableExp) {
 export default class Hero {
   constructor(savedData = null) {
     this._recalcScheduled = false;
+    this.ailments = {}; // Track hero ailments
     this.setBaseStats(savedData);
   }
 
@@ -1369,5 +1371,36 @@ export default class Hero {
     this.statPoints += totalAllocated;
     this.recalculateFromAttributes();
     dataManager.saveGame();
+  }
+
+  /**
+   * Apply warmup ailment to the hero
+   */
+  applyWarmup() {
+    const id = AILMENTS.warmup.id;
+    this.ailments[id] = { duration: AILMENTS.warmup.duration };
+  }
+
+  /**
+   * Process hero ailments (duration decay)
+   * @param {number} deltaMs - Time delta in milliseconds
+   * @param {boolean} inCombat - Whether the hero is in combat
+   */
+  processAilments(deltaMs, inCombat = false) {
+    Object.entries(this.ailments).forEach(([id, ailment]) => {
+      if (ailment.duration > 0) {
+        // Only process warmup when in combat
+        if (id === AILMENTS.warmup.id && !inCombat) {
+          return; // Don't decay warmup outside of combat
+        }
+
+        ailment.duration -= deltaMs;
+        if (ailment.duration <= 0) {
+          delete this.ailments[id];
+        }
+      } else {
+        delete this.ailments[id];
+      }
+    });
   }
 }

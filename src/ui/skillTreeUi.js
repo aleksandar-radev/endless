@@ -1362,7 +1362,11 @@ export function updateSkillTreeValues() {
   const characterName =
     skillTree.selectedPath.name.charAt(0).toUpperCase() + skillTree.selectedPath.name.slice(1).toLowerCase();
   const sessionStatusGroup = characterNameEl.querySelector('.session-status-group');
+  const heroAilments = characterNameEl.querySelector('.hero-ailments');
   characterNameEl.innerHTML = `<span class="character-name">${characterName}</span> (${t('skillTree.level')}: ${hero.level})`;
+  if (heroAilments) {
+    characterNameEl.appendChild(heroAilments);
+  }
   if (sessionStatusGroup) {
     characterNameEl.appendChild(sessionStatusGroup);
   }

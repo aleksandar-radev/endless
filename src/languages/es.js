@@ -1137,6 +1137,7 @@ export default {
   'ailment.freeze.tooltip': 'Congelar: Congelado durante {duration}s.',
   'ailment.stun.tooltip': 'Aturdir: Aturdido durante {duration}s.',
   'ailment.poison.tooltip': 'Veneno: Inflige {amount} de daño de tierra durante {duration}s.',
+  'ailment.warmup.tooltip': 'Calentamiento: 50% menos Oro/XP durante {duration}s',
   'bleed': 'Sangrado',
   'burn': 'Quemadura',
   'poison': 'Veneno',

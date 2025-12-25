@@ -1152,6 +1152,7 @@ export default {
   'ailment.freeze.tooltip': '冻结：冻结 {duration} 秒。',
   'ailment.stun.tooltip': '眩晕：眩晕 {duration} 秒。',
   'ailment.poison.tooltip': '中毒：在 {duration} 秒内造成 {amount} 点大地伤害。',
+  'ailment.warmup.tooltip': '热身：在 {duration} 秒内金币/经验减少 50%',
   'bleed': '流血',
   'burn': '燃烧',
   'poison': '中毒',

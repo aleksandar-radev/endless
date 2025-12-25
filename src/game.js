@@ -308,6 +308,9 @@ class Game {
       this.lastRegen = currentTime;
     }
 
+    // Process hero ailments (only decay warmup during combat)
+    hero.processAilments(100, this.gameStarted);
+
     if (!this.gameStarted) return;
 
     // Update buff timers and effects

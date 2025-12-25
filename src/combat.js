@@ -29,7 +29,7 @@ import { rollSpecialItemDrop } from './uniqueItems.js';
 import { AILMENTS } from './constants/ailments.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
-import { ELEMENTS, BASE_MATERIAL_DROP_CHANCE, BASE_ITEM_DROP_CHANCE } from './constants/common.js';
+import { ELEMENTS, BASE_MATERIAL_DROP_CHANCE, BASE_ITEM_DROP_CHANCE, MIN_DEATH_TIMER, MAX_DEATH_TIMER } from './constants/common.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 const UNIQUE_RUNE_SET = new Set(RUNES.filter((r) => r.unique).map((r) => r.id));
@@ -554,7 +554,7 @@ export function playerDeath() {
   if (game.fightMode === 'explore') {
     // Use the current stage for death timer calculations
     const baseDeathTimer = 1 + 0.5 * Math.floor(game.stage / 100);
-    deathTimer = Math.max(0, baseDeathTimer - timerReduction);
+    deathTimer = Math.max(MIN_DEATH_TIMER, Math.min(MAX_DEATH_TIMER, baseDeathTimer - timerReduction));
   }
   battleLog.addBattle(t('battleLog.died'));
 
@@ -610,6 +610,9 @@ export function playerDeath() {
     skillTree.stopAllBuffs();
     skillTree.resetAllCooldowns();
     updateBuffIndicators();
+
+    // Apply warmup ailment
+    hero.applyWarmup();
 
     // If continuing, restart the game state
     if (shouldContinue) {
@@ -921,8 +924,18 @@ export async function defeatEnemy(source) {
     }
   }
 
-  const expGained = Math.floor(baseExpGained * (1 + hero.stats.bonusExperiencePercent));
-  const goldGained = Math.floor(baseGoldGained * (1 + hero.stats.bonusGoldPercent));
+  let expMultiplier = 1 + hero.stats.bonusExperiencePercent;
+  let goldMultiplier = 1 + hero.stats.bonusGoldPercent;
+
+  // Apply warmup reduction if active
+  if (hero.ailments[AILMENTS.warmup.id]) {
+    const reduction = AILMENTS.warmup.goldXpReduction;
+    expMultiplier *= (1 - reduction);
+    goldMultiplier *= (1 - reduction);
+  }
+
+  const expGained = Math.floor(baseExpGained * expMultiplier);
+  const goldGained = Math.floor(baseGoldGained * goldMultiplier);
 
   hero.gainGold(goldGained);
   hero.gainExp(expGained);

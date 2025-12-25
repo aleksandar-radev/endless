@@ -29,3 +29,6 @@ export const ELEMENTS = {
 
 export const BASE_ITEM_DROP_CHANCE = 2.0;
 export const BASE_MATERIAL_DROP_CHANCE = 2.0;
+
+export const MIN_DEATH_TIMER = 2; // Minimum death timer in seconds
+export const MAX_DEATH_TIMER = 30; // Maximum death timer in seconds

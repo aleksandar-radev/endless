@@ -1342,6 +1342,7 @@ export default {
   'ailment.freeze.tooltip': 'Freeze: Frozen for {duration}s.',
   'ailment.stun.tooltip': 'Stun: Stunned for {duration}s.',
   'ailment.poison.tooltip': 'Poison: Deals {amount} earth damage over {duration}s.',
+  'ailment.warmup.tooltip': 'Warming up: 50% reduced Gold/XP for {duration}s',
   'bleed': 'Bleed',
   'burn': 'Burn',
   'poison': 'Poison',
