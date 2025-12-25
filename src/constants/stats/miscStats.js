@@ -90,7 +90,7 @@ export const MISC_STATS = {
     base: 0,
     divisor: 100,
     decimalPlaces: 2,
-    item: { min: 0.5, max: 1.25, limit: 5, scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, CHANCE_SCALING, scalingSystem) },
+    item: { min: 0.5, max: 1.25, limit: 5, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, CHANCE_SCALING, scalingSystem) },
     showInUI: true,
     subcategory: 'attack',
   },

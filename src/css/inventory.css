@@ -26,6 +26,15 @@
   margin: 0 auto;
 }
 
+@media (max-width: 768px) {
+  .equipment-layout {
+    width: 100%;
+    max-width: 280px;
+    height: auto;
+    aspect-ratio: 1 / 0.93;
+  }
+}
+
 .equipment-slots {
   position: absolute;
   background-color: var(--bg-element);
@@ -110,11 +119,6 @@
   transform: translateX(-50%);
 }
 
-/* Hide indicator when slot has an item */
-.equipment-slot.has-item .slot-indicator {
-  display: none;
-}
-
 /* Adjust equipment slots to match new size */
 .equipment-slot {
   width: 40px;
@@ -126,6 +130,32 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .equipment-slot[data-slot='head'] { top: 7%; left: 50%; transform: translateX(-50%); }
+  .equipment-slot[data-slot='amulet'] { top: 12.5%; right: 23%; }
+  .equipment-slot[data-slot='chest'] { top: 25%; left: 50%; transform: translateX(-50%); }
+  .equipment-slot[data-slot='belt'] { top: 43%; left: 50%; transform: translateX(-50%); }
+  .equipment-slot[data-slot='legs'] { top: 60.7%; left: 50%; transform: translateX(-50%); }
+  .equipment-slot[data-slot='weapon'] { top: 35.7%; left: 13%; }
+  .equipment-slot[data-slot='offhand'] { top: 35.7%; right: 13%; }
+  .equipment-slot[data-slot='gloves'] { top: 57%; left: 13%; }
+  .equipment-slot[data-slot='ring1'] { top: 57%; right: 23%; }
+  .equipment-slot[data-slot='ring2'] { top: 57%; right: 6.6%; }
+  .equipment-slot[data-slot='boots'] { top: 78.5%; left: 50%; transform: translateX(-50%); }
+
+  .equipment-slot {
+    width: 12vw;
+    height: 12vw;
+    max-width: 36px;
+    max-height: 36px;
+  }
+}
+
+/* Hide indicator when slot has an item */
+.equipment-slot.has-item .slot-indicator {
+  display: none;
 }
 
 .equipment-slot .inventory-item {
@@ -211,6 +241,27 @@
   scroll-behavior: smooth;
 }
 
+@media (max-width: 768px) {
+  .grid-container {
+    width: 100%;
+    max-width: 100%;
+    grid-template-rows: auto;
+    gap: 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-container {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}
+
 .grid-cell,
 .materials-cell {
   width: 40px;
@@ -218,6 +269,16 @@
   background: #202329;
   border: 1px solid var(--bg-element);
   border-radius: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .grid-cell,
+  .materials-cell {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    min-width: unset;
+  }
 }
 
 .grid-cell.move-target {
@@ -664,6 +725,27 @@
   margin-bottom: 10px;
 }
 
+@media (max-width: 768px) {
+  .materials-container {
+    width: 100%;
+    max-width: 100%;
+    grid-template-rows: auto;
+    gap: 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .materials-container {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .materials-container {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}
+
 .material-item {
   height: 38px;
 }
@@ -866,7 +948,7 @@
   .inventory-salvage-modal-content {
     flex-direction: column;
     align-items: stretch;
-    width: 100%;
+    width: 95vw;
     padding: 16px;
     gap: 16px;
     max-height: 80%;
@@ -890,6 +972,27 @@
   overflow-y: auto;
   max-height: 820px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+  .salvage-modal-grid {
+    width: 100%;
+    max-width: 100%;
+    grid-template-rows: auto;
+    gap: 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .salvage-modal-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .salvage-modal-grid {
+    grid-template-columns: repeat(8, 1fr);
+  }
 }
 
 .salvage-options-modal {
