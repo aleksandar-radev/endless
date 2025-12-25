@@ -102,8 +102,13 @@
   justify-content: center;
 }
 
-.training-qty-controls {
+.training-controls-wrapper {
+  display: flex;
+  gap: 0.5rem;
   margin-left: auto;
+}
+
+.training-qty-controls {
   display: flex;
   gap: 0.5rem;
 }
@@ -190,7 +195,6 @@
   background: var(--accent, #3b82f6);
   color: #fff;
   border-color: var(--accent, #3b82f6);
-  transform: translateY(-2px) scale(1.04);
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
 }
 
@@ -382,4 +386,50 @@
 
 .sub-tab-panel.active {
   display: block;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .training-grid {
+    grid-template-columns: 1fr;
+    padding: 0.5rem;
+  }
+
+  .training-section-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .training-controls-wrapper {
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+    margin-top: 0.25rem;
+  }
+
+  .training-section-btn {
+    font-size: 0.95rem;
+    padding: 0.4rem 1rem;
+    flex: 1; /* Allow buttons to grow and fill space */
+    text-align: center;
+  }
+
+  .training-qty-controls button,
+  .training-bulk-controls button {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .training-modal-content {
+    width: min(400px, 90vw);
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+
+  .training-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
 }

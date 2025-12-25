@@ -131,6 +131,11 @@ export default class Training {
       </button>
     `,
     ).join('');
+
+    const controlsWrapper = document.createElement('div');
+    controlsWrapper.className = 'training-controls-wrapper';
+    nav.appendChild(controlsWrapper);
+
     if (options?.quickBuy) {
       const qtyControls = document.createElement('div');
       qtyControls.className = 'training-qty-controls';
@@ -139,7 +144,7 @@ export default class Training {
           <input type="number" class="training-qty-input input-number" min="1" max="${TRAINING_MAX_QTY}" value="${this.quickQty === 'max' ? options.trainingQuickQty || 1 : this.quickQty}" />
           <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
         `;
-        nav.appendChild(qtyControls);
+        controlsWrapper.appendChild(qtyControls);
         const input = qtyControls.querySelector('.training-qty-input');
         const maxBtn = qtyControls.querySelector('button[data-qty="max"]');
         input.oninput = () => {
@@ -165,7 +170,7 @@ export default class Training {
           <button data-qty="50" class="${this.quickQty === 50 ? 'active' : ''}">50</button>
           <button data-qty="max" class="${this.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
         `;
-        nav.appendChild(qtyControls);
+        controlsWrapper.appendChild(qtyControls);
         qtyControls.querySelectorAll('button').forEach((btn) => {
           btn.onclick = () => {
             this.quickQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
@@ -184,7 +189,7 @@ export default class Training {
         <button class="bulk-buy">${t('common.bulkBuy')}</button>
         <span class="training-bulk-cost"></span>
       `;
-      nav.appendChild(bulkControls);
+      controlsWrapper.appendChild(bulkControls);
       this.bulkBuyBtn = bulkControls.querySelector('.bulk-buy');
       this.bulkCostEl = bulkControls.querySelector('.training-bulk-cost');
       this.bulkBuyBtn.onclick = () => this.bulkBuySection();
