@@ -63,6 +63,11 @@ export default class SkillTree {
       // find skill in SKILL_TREES
       const skill = this.getSkill(skillId);
 
+      if (!skill) {
+        delete this.skills[skillId];
+        return;
+      }
+
       this.skills[skillId] = {
         ...skill,
         ...skillData,
@@ -132,10 +137,7 @@ export default class SkillTree {
     Object.entries(this.skills).forEach(([skillId, skillData]) => {
       const skill = this.getSkill(skillId);
 
-      if (!skill) {
-        console.error('contact support. skill not found: ', skillId);
-        return;
-      }
+      if (!skill) return;
 
       if (skill.type() === 'passive') {
         const effects = this.getSkillEffect(skillId, skillData.level);
@@ -152,7 +154,7 @@ export default class SkillTree {
     const bonuses = {};
     Object.entries(this.skills).forEach(([skillId, skillData]) => {
       const skill = this.getSkill(skillId);
-      if (skill.type() === 'toggle' && skillData.active && skillData.affordable) {
+      if (skill && skill.type() === 'toggle' && skillData.active && skillData.affordable) {
         const manaCost = this.getSkillManaCost(skill);
         const effects = this.getSkillEffect(skillId, skillData.level);
         Object.entries(effects).forEach(([stat, value]) => {
@@ -176,10 +178,7 @@ export default class SkillTree {
     Object.entries(this.specializationSkills).forEach(([skillId, skillData]) => {
       const skill = this.getSpecializationSkill(skillId);
 
-      if (!skill) {
-        console.error('contact support. specialization skill not found: ', skillId);
-        return;
-      }
+      if (!skill) return;
 
       if ((skillData.level || 0) <= 0) return;
 
@@ -213,7 +212,7 @@ export default class SkillTree {
     let changed = false;
     Object.entries(this.skills).forEach(([skillId, skillData]) => {
       const skill = this.getSkill(skillId);
-      if (skill.type() === 'toggle' && skillData.active) {
+      if (skill && skill.type() === 'toggle' && skillData.active) {
         const cost = this.getSkillManaCost(skill);
         const affordable = hero.stats.convertManaToLifePercent > 0
           ? (hero.stats.currentLife + hero.stats.currentMana) >= cost
@@ -735,6 +734,7 @@ export default class SkillTree {
     if (!this.skills[skillId]) return;
 
     const skill = this.getSkill(skillId);
+    if (!skill) return;
 
     // Handle different skill types
     switch (skill.type()) {
@@ -758,8 +758,12 @@ export default class SkillTree {
   }
 
   getSkill(skillId) {
+    if (!this.selectedPath) return null;
+    const skillDef = SKILL_TREES[this.selectedPath.name]?.[skillId];
+    if (!skillDef) return null;
+
     const skillObj = {
-      ...SKILL_TREES[this.selectedPath?.name][skillId],
+      ...skillDef,
       ...this.skills[skillId],
     };
     return skillObj;
@@ -769,21 +773,28 @@ export default class SkillTree {
     if (!this.selectedPath || !this.selectedSpecialization) return null;
     const spec = getSpecialization(this.selectedPath.name, this.selectedSpecialization.id);
     if (!spec) return null;
-    const skillObj = {
-      ...spec.skills[skillId],
-      ...this.specializationSkills[skillId],
+
+    const specSkill = spec.skills[skillId];
+    if (!specSkill) return null;
+
+    const savedSkill = this.specializationSkills[skillId];
+
+    return {
+      ...specSkill,
+      level: savedSkill?.level || 0,
     };
-    return skillObj;
   }
 
   getSkillEffect(skillId, level = 0) {
     const skill = this.getSkill(skillId);
-    return this.getSkill(skillId)?.effect(level || this.getSkill(skillId)?.level || 0);
+    if (!skill) return {};
+    return skill.effect(level || skill.level || 0);
   }
 
   getSpecializationSkillEffect(skillId, level = 0) {
     const skill = this.getSpecializationSkill(skillId);
-    return skill?.effect(level || skill?.level || 0);
+    if (!skill) return {};
+    return skill.effect(level || skill.level || 0);
   }
 
   // level is for getting the mana cost for a certain level
