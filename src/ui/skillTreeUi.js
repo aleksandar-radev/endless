@@ -13,6 +13,7 @@ const html = String.raw;
 const shouldShowStatValue = (stat) => STATS[stat]?.showValue !== false;
 const getStatDecimals = (stat) => getStatDecimalPlaces(stat);
 const formatSignedValue = (value, decimals, includeZero = true) => {
+  if (typeof value !== 'number') return value;
   const shouldShowPlus = value > 0 || (includeZero && value === 0);
   return `${shouldShowPlus ? '+' : ''}${value.toFixed(decimals)}`;
 };
@@ -704,8 +705,10 @@ function updateSpecSkillModalDetails() {
         return;
       }
       const decimals = getStatDecimals(stat);
+      const formattedCurr = typeof currVal === 'number' ? currVal.toFixed(decimals) : currVal;
+      const formattedDiff = (typeof currVal === 'number' && typeof nextVal === 'number') ? ` (${formatSignedValue(diff, decimals)})` : '';
       effectsEl.innerHTML += `
-          <p>${formatStatName(stat)}: ${currVal.toFixed(decimals)} (${formatSignedValue(diff, decimals)})</p>
+          <p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>
         `;
     });
   }
@@ -810,11 +813,9 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNe
         return;
       }
 
-      html += `${formatStatName(stat)}: ${formatSignedValue(
-        value,
-        decimals,
-        false,
-      )} <span class="bonus">(${formatSignedValue(difference, decimals)})</span><br />`;
+      const formattedValue = formatSignedValue(value, decimals, false);
+      const bonus = (typeof value === 'number' && typeof currentValue === 'number') ? ` <span class="bonus">(${formatSignedValue(difference, decimals)})</span>` : '';
+      html += `${formatStatName(stat)}: ${formattedValue}${bonus}<br />`;
     });
   }
 
@@ -1706,8 +1707,10 @@ function openSkillModal(skillId) {
       return;
     }
     const decimals = getStatDecimals(stat);
+    const formattedCurr = typeof currVal === 'number' ? currVal.toFixed(decimals) : currVal;
+    const formattedDiff = (typeof currVal === 'number' && typeof nextVal === 'number') ? ` (${formatSignedValue(diff, decimals)})` : '';
     effectsEl.innerHTML += `
-      <p>${formatStatName(stat)}: ${currVal.toFixed(decimals)} (${formatSignedValue(diff, decimals)})</p>
+      <p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>
     `;
   });
 
@@ -1788,10 +1791,9 @@ function updateSkillModalDetails() {
       return;
     }
     const decimals = getStatDecimals(stat);
-    effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${currVal.toFixed(decimals)} (${formatSignedValue(
-      diff,
-      decimals,
-    )})</p>`;
+    const formattedCurr = typeof currVal === 'number' ? currVal.toFixed(decimals) : currVal;
+    const formattedDiff = (typeof currVal === 'number' && typeof futureVal === 'number') ? ` (${formatSignedValue(diff, decimals)})` : '';
+    effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>`;
   });
 
   // --- Show summon stats if this is a summon skill ---
@@ -1808,10 +1810,9 @@ function updateSkillModalDetails() {
         return;
       }
       const decimals = getStatDecimals(stat);
-      effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${currVal.toFixed(decimals)} (${formatSignedValue(
-        diff,
-        decimals,
-      )})</p>`;
+      const formattedCurr = typeof currVal === 'number' ? currVal.toFixed(decimals) : currVal;
+      const formattedDiff = (typeof currVal === 'number' && typeof futureVal === 'number') ? ` (${formatSignedValue(diff, decimals)})` : '';
+      effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>`;
     });
   } else {
     const title = skillModal.querySelector('.modal-skill-effects h3');
