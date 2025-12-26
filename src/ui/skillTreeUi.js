@@ -1921,7 +1921,26 @@ export function updateActionBar() {
 
   // Render skills in a deterministic order based on the class skill constants
   const orderedIds = Object.keys(SKILL_TREES[skillTree.selectedPath?.name] || {});
-  orderedIds.forEach((skillId) => {
+
+  // Sort skills to ensure they always appear in the same order
+  // We sort by required level (tier) first, then by ID
+  const sortedIds = [...orderedIds].sort((a, b) => {
+    const skillA = skillTree.getSkill(a);
+    const skillB = skillTree.getSkill(b);
+
+    if (!skillA || !skillB) return 0;
+
+    const levelA = typeof skillA.requiredLevel === 'function' ? skillA.requiredLevel() : 0;
+    const levelB = typeof skillB.requiredLevel === 'function' ? skillB.requiredLevel() : 0;
+
+    if (levelA !== levelB) {
+      return levelA - levelB;
+    }
+
+    return a.localeCompare(b);
+  });
+
+  sortedIds.forEach((skillId) => {
     const unlocked = !!skillTree.skills[skillId];
     if (!unlocked) return;
 
