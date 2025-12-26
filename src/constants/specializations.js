@@ -53,13 +53,13 @@ export const SPECIALIZATIONS = {
         canDualWieldTwoHanded: 1,
       }),
       skills: {
-        animatedWeapons: {
-          id: 'animatedWeapons',
-          name: () => t('Animated Weapons'),
+        spiritualWeapons: {
+          id: 'spiritualWeapons',
+          name: () => t('Spiritual Weapons'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[4],
-          icon: () => 'animated-weapons',
-          description: () => t('skill.animatedWeapons'),
+          icon: () => 'spiritual-weapons',
+          description: () => t('skill.spiritualWeapons'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             animatedWeaponsUnlocked: 1,

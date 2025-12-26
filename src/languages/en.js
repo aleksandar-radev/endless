@@ -1720,7 +1720,10 @@ export default {
 
 
   'Animated Weapons': 'Animated Weapons',
+  'Spiritual Weapons': 'Spiritual Weapons',
   'skill.animatedWeapons': 'Unlocks animated weapons that fight for you.',
+  'skill.spiritualWeapons': 'Unlocks spiritual weapons that fight for you.',
+  'skill.animatedWeapons.name': 'Animated Weapons',
   'Weapon Mastery': 'Weapon Mastery',
   'skill.weaponMastery': 'Increases effectiveness of weapon bonuses.',
   'Arena Dominance': 'Arena Dominance',
