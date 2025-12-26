@@ -1624,10 +1624,10 @@ export default {
   // Druid Specializations
 
   'Shapeshifting Mastery': '变形精通',
-  'skill.packLeader': '增加全属性和全属性百分比。',
+  'skill.shapeshiftingMastery': '增加全属性和全属性百分比。',
 
   'Primal Adaptation': '原始适应',
-  'skill.primalVigor': '增加伤害百分比、元素伤害百分比、护甲百分比、生命百分比、生命回复百分比和元素抗性百分比。',
+  'skill.primalAdaptation': '增加伤害百分比、元素伤害百分比、护甲百分比、生命百分比、生命回复百分比和元素抗性百分比。',
   'Elemental Harmony': '元素和谐',
 
   'skill.elementalHarmony': '提高你的水、冰冷与大地伤害加成。',

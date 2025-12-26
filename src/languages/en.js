@@ -1834,10 +1834,10 @@ export default {
   // Druid Specializations
 
   'Shapeshifting Mastery': 'Shapeshifting Mastery',
-  'skill.packLeader': 'Increases all attributes and all attributes %.',
+  'skill.shapeshiftingMastery': 'Increases all attributes and all attributes %.',
 
   'Primal Adaptation': 'Primal Adaptation',
-  'skill.primalVigor': 'Increases damage %, elemental damage %, armor %, life %, life regen %, and elemental resistance %.',
+  'skill.primalAdaptation': 'Increases damage %, elemental damage %, armor %, life %, life regen %, and elemental resistance %.',
   'Elemental Harmony': 'Elemental Harmony',
 
   'skill.elementalHarmony': 'Increases your Water, Cold, and Earth damage bonuses.',

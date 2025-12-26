@@ -1641,10 +1641,10 @@ export default {
   // Druid Specializations
 
   'Shapeshifting Mastery': 'Maestría de Metamorfosis',
-  'skill.packLeader': 'Aumenta todos los atributos y % de atributos.',
+  'skill.shapeshiftingMastery': 'Aumenta todos los atributos y % de atributos.',
 
   'Primal Adaptation': 'Adaptación Primitiva',
-  'skill.primalVigor': 'Aumenta % de daño, % de daño elemental, % de armadura, % de vida, % de regeneración de vida y % de resistencia elemental.',
+  'skill.primalAdaptation': 'Aumenta % de daño, % de daño elemental, % de armadura, % de vida, % de regeneración de vida y % de resistencia elemental.',
   'Elemental Harmony': 'Armonía Elemental',
 
   'skill.elementalHarmony': 'Aumenta tus bonificaciones de daño de Agua, Frío y Tierra.',
