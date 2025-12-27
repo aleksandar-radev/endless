@@ -27,6 +27,42 @@ import { calculateArmorReduction,
   calculateResistanceReduction } from '../combat.js';
 import { renderRunesUI } from './runesUi.js';
 import { createModal, closeModal } from './modal.js';
+
+export function initializeShopUI() {
+  document.querySelectorAll('.shop-tab-btn').forEach((btn) => {
+    btn.addEventListener('click', () => switchShopSubTab(btn.dataset.shopTab));
+  });
+}
+
+export function switchShopSubTab(subTabName) {
+  document.querySelectorAll('.shop-tab-panel').forEach((panel) => panel.classList.remove('active'));
+  document.querySelectorAll('.shop-tab-btn').forEach((btn) => btn.classList.remove('active'));
+
+  const tabElement = document.getElementById(subTabName);
+  if (tabElement) {
+    tabElement.classList.add('active');
+  }
+
+  const tabBtn = document.querySelector(`.shop-tab-btn[data-shop-tab="${subTabName}"]`);
+  if (tabBtn) {
+    tabBtn.classList.add('active');
+  }
+
+  // Update specific shop UI if needed
+  if (subTabName === 'training') {
+    if (training) {
+        training.updateTrainingAffordability('gold-upgrades');
+        training.updateTrainingAffordability('crystal-upgrades');
+    }
+  }
+
+  if (subTabName === 'soulShop') {
+    if (soulShop) {
+        soulShop.updateSoulShopAffordability();
+    }
+  }
+}
+
 export {
   initializeSkillTreeUI,
   initializeSkillTreeStructure,
@@ -61,6 +97,7 @@ export function initializeUI() {
   document.querySelectorAll('.tab-btn').forEach((btn) => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
+  initializeShopUI();
   document.getElementById('start-btn').addEventListener('click', () => toggleGame());
 
   // Add tooltips to resource icons
@@ -264,12 +301,20 @@ export function initializeUI() {
 export function switchTab(tabName) {
   const previousTab = game.activeTab;
 
+  // Handle Legacy Tabs
+  let actualTab = tabName;
+  let targetSubTab = null;
+  if (['training', 'crystalShop', 'soulShop'].includes(tabName)) {
+    actualTab = 'shop';
+    targetSubTab = tabName;
+  }
+
   // Handle Mobile Panel Switching
   const combatPanel = document.querySelector('.combat-panel');
   const gamePanel = document.querySelector('.game-panel');
 
   if (window.innerWidth <= BREAKPOINTS.TABLET) {
-    if (tabName === 'battle') {
+    if (actualTab === 'battle') {
       if (combatPanel) combatPanel.classList.add('active');
       if (gamePanel) gamePanel.classList.add('hidden');
     } else {
@@ -281,51 +326,52 @@ export function switchTab(tabName) {
   document.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach((btn) => btn.classList.remove('active'));
 
-  if (tabName !== 'battle') {
-    let tabElement = document.getElementById(tabName);
+  if (actualTab !== 'battle') {
+    let tabElement = document.getElementById(actualTab);
     if (!tabElement) tabElement = document.getElementById('stats');
     tabElement.classList.add('active');
   }
 
-  let tab = document.querySelector(`[data-tab="${tabName}"]`);
+  let tab = document.querySelector(`[data-tab="${actualTab}"]`);
   if (!tab) {
     // If battle tab is selected but button doesn't exist (e.g. desktop), fallback or just don't select button?
     // Actually battle button exists but is hidden on desktop.
-    if (tabName !== 'battle') {
+    if (actualTab !== 'battle') {
       tab = document.querySelector('[data-tab="stats"]');
     }
   }
   if (tab) tab.classList.add('active');
 
-  if (tabName === 'stats') {
+  if (actualTab === 'stats') {
     updateStatsAndAttributesUI();
   }
-  if (tabName === 'quests') {
+  if (actualTab === 'quests') {
     updateQuestsUI();
   }
-  if (tabName === 'inventory') {
+  if (actualTab === 'inventory') {
     // Clear new items flag when visiting inventory.
     inventory?.clearNewItemsFlag();
     if (typeof document !== 'undefined') {
       document.dispatchEvent(new Event('inventory:refresh'));
     }
   }
-  if (tabName === 'runes') {
+  if (actualTab === 'runes') {
     renderRunesUI();
   }
 
-  game.activeTab = tabName;
-
-  if (tabName === 'training') {
-    training.updateTrainingAffordability('gold-upgrades');
-    training.updateTrainingAffordability('crystal-upgrades');
+  // If switching to shop, handle sub-tab
+  if (actualTab === 'shop') {
+     if (!targetSubTab) {
+       // If no specific sub-tab requested, use the currently active one or default to training
+       const activeSubTab = document.querySelector('.shop-tab-panel.active');
+       targetSubTab = activeSubTab ? activeSubTab.id : 'training';
+     }
+     switchShopSubTab(targetSubTab);
   }
 
-  if (tabName === 'soulShop') {
-    soulShop.updateSoulShopAffordability();
-  }
+  game.activeTab = actualTab;
 
-  if (tabName === 'options') {
+  if (actualTab === 'options') {
     options.refreshSaveSlotSelect();
   }
 

@@ -5,6 +5,7 @@ export default {
   'app.title': '无尽',
   'tab.battle': '战斗',
   'tab.stats': '统计',
+  'tab.shop': '商店',
   'tab.training': '训练',
   'tab.inventory': '物品栏',
   'tab.runes': '符文',

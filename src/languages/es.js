@@ -5,6 +5,7 @@ export default {
   'app.title': 'Endless',
   'tab.battle': 'Batalla',
   'tab.stats': 'Estadísticas',
+  'tab.shop': 'Tienda',
   'tab.training': 'Entrenamiento',
   'tab.inventory': 'Inventario',
   'tab.runes': 'Runas',

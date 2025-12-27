@@ -795,3 +795,48 @@
 .dev-btn {
   background-color: #23886f;
 }
+
+/* Shop Sub-tabs */
+.shop-tab-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding: 0 10px;
+  border-bottom: 2px solid var(--bg-element);
+}
+
+.shop-tab-btn {
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.shop-tab-btn:hover {
+  color: var(--text);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.shop-tab-btn.active {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+
+.shop-tab-panel {
+  display: none;
+}
+
+.shop-tab-panel.active {
+  display: block;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

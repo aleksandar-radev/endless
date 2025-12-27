@@ -43,11 +43,11 @@ const decimalToFraction = (value) => {
     const digits = fracPart.length;
     const numeratorStr = (intPart + fracPart).replace(/^0+/, '') || '0';
     let numerator = BigInt(numeratorStr);
-    let denominator = 10n ** BigInt(digits);
+    let denominator = BigInt('1' + '0'.repeat(digits));
     if (exponent > 0) {
-      numerator *= 10n ** BigInt(exponent);
+      numerator *= BigInt('1' + '0'.repeat(exponent));
     } else if (exponent < 0) {
-      denominator *= 10n ** BigInt(-exponent);
+      denominator *= BigInt('1' + '0'.repeat(-exponent));
     }
     numerator *= sign;
     return reduceFraction({ num: numerator, den: denominator });
@@ -59,7 +59,7 @@ const decimalToFraction = (value) => {
   if (str.endsWith('.')) str = str.slice(0, -1);
   if (!str || str === '0') return { num: 0n, den: 1n };
   const [intPart, fracPart] = str.split('.');
-  const denominator = 10n ** BigInt(fracPart.length);
+  const denominator = BigInt('1' + '0'.repeat(fracPart.length));
   const numerator = BigInt((intPart + fracPart).replace(/^0+/, '') || '0') * sign;
   return reduceFraction({ num: numerator, den: denominator });
 };

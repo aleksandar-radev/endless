@@ -75,12 +75,10 @@
           Battle
         </button>
         <button class="tab-btn active" data-tab="stats" data-i18n="tab.stats">Stats</button>
-        <button class="tab-btn" data-tab="training" data-i18n="tab.training">Training</button>
+        <button class="tab-btn" data-tab="shop" data-i18n="tab.shop">Shop</button>
         <button class="tab-btn" data-tab="inventory" data-i18n="tab.inventory">Inventory</button>
         <button class="tab-btn" data-tab="runes" data-i18n="tab.runes">Runes</button>
         <button class="tab-btn" data-tab="skilltree" data-i18n="tab.skilltree">Skill Tree</button>
-        <button class="tab-btn" data-tab="crystalShop" data-i18n="tab.crystalShop">Crystal Shop</button>
-        <button class="tab-btn" data-tab="soulShop" data-i18n="tab.soulShop">Soul Shop</button>
         <button class="tab-btn" data-tab="buildings" data-i18n="tab.buildings">Buildings</button>
         <button class="tab-btn" data-tab="prestige" data-i18n="tab.prestige">Prestige</button>
         <button class="tab-btn" data-tab="ascension" data-i18n="tab.ascension">Ascension</button>
@@ -96,12 +94,19 @@
     <div class="main-content">
       <div class="game-panel">
         <div id="stats" class="tab-panel active"></div>
-        <div id="training" class="tab-panel"></div>
-        <div id="crystalShop" class="tab-panel"></div>
+        <div id="shop" class="tab-panel">
+          <div class="shop-tab-buttons">
+            <button class="shop-tab-btn active" data-shop-tab="training" data-i18n="tab.training">Training</button>
+            <button class="shop-tab-btn" data-shop-tab="crystalShop" data-i18n="tab.crystalShop">Crystal Shop</button>
+            <button class="shop-tab-btn" data-shop-tab="soulShop" data-i18n="tab.soulShop">Soul Shop</button>
+          </div>
+          <div id="training" class="shop-tab-panel active"></div>
+          <div id="crystalShop" class="shop-tab-panel"></div>
+          <div id="soulShop" class="shop-tab-panel"></div>
+        </div>
         <div id="inventory" class="tab-panel"></div>
         <div id="runes" class="tab-panel"></div>
         <div id="skilltree" class="tab-panel"></div>
-        <div id="soulShop" class="tab-panel"></div>
         <div id="prestige" class="tab-panel"></div>
         <div id="ascension" class="tab-panel"></div>
         <div id="statistics" class="tab-panel"></div>
