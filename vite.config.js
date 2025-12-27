@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => {
             stringArray: true,
             stringArrayThreshold: 1,
             identifierNamesGenerator: 'hexadecimal',
-            compact: true,
+            compact: false,
             deadCodeInjection: false,
             controlFlowFlattening: false,
           },

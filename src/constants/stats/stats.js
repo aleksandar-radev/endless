@@ -69,7 +69,7 @@ export function createTierScaling(start, end, power = 1) {
   for (let t = 1; t <= 12; t++) {
     const progress = (t - 1) / 11;
     const value = start + (end - start) * (progress ** power);
-    scaling[t] = Number(value.toFixed(2));
+    scaling[t] = Math.round(value * 100) / 100;
   }
   return scaling;
 }
