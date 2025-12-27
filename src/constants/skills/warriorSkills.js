@@ -1,7 +1,6 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { scaleDownFlat } from '../../common.js';
-import { scaleUpFlat } from '../../common.js';
+import { getPercentBonus, getFlatBonus, getChanceBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Warrior skills extracted from skills.js
@@ -17,8 +16,7 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.bash'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 3, 5, 0.2),
-      damagePercent: scaleDownFlat(level, 2),
+      damage: getFlatBonus(level, { basePerLevel: 2, milestoneInterval: 50, milestoneMultiplier: 1.2 }),
     }),
   },
   toughness: {
@@ -30,9 +28,13 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.toughness'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: scaleUpFlat(level, 3, 5, 0.2),
-      armorPercent: scaleDownFlat(level, 2.5),
-      extraDamageFromArmorPercent: Math.min(0.014 * scaleDownFlat(level), 1.5),
+      armor: getFlatBonus(level, { basePerLevel: 3, milestoneInterval: 50, milestoneMultiplier: 1.2 }),
+      extraDamageFromArmorPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.01, 
+        earlyGameScale: 0.8,
+        earlyGameType: 'log' 
+      }) / 100,
     }),
   },
 
@@ -49,9 +51,19 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.powerStrike'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 6, 4, 0.2),
-      damagePercent: scaleDownFlat(level, 8, 5),
+      damage: getFlatBonus(level, { basePerLevel: 5, milestoneInterval: 50, milestoneMultiplier: 1.2 }),
+      damagePercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.5, 
+        earlyGameScale: 1.2,
+        earlyGameType: 'sqrt' 
+      }) / 100,
     }),
+    // Power Strike benefits from Iron Will (strength synergy)
+    synergiesFrom: () => [
+      { skillId: 'ironWill', bonusPerLevel: 0.005, maxBonus: 0.5 } // +0.5% per level, max +50%
+    ],
+    synergiesTo: () => ['ironWill'],
   },
   ironWill: {
     id: 'ironWill',
@@ -62,10 +74,20 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.ironWill'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      vitality: scaleUpFlat(level, 4, 8, 0.2),
-      perseverance: scaleUpFlat(level, 4, 8, 0.2),
-      extraDamageFromLifePercent: Math.min(0.2 * scaleDownFlat(level), 25),
+      vitality: getFlatBonus(level, { basePerLevel: 4, milestoneInterval: 50, milestoneMultiplier: 1.15 }),
+      perseverance: getFlatBonus(level, { basePerLevel: 4, milestoneInterval: 50, milestoneMultiplier: 1.15 }),
+      extraDamageFromLifePercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.02, 
+        earlyGameScale: 0.6,
+        earlyGameType: 'log' 
+      }) / 100,
     }),
+    // Iron Will benefits from Toughness (defensive synergy)
+    synergiesFrom: () => [
+      { skillId: 'toughness', bonusPerLevel: 0.005, maxBonus: 0.4 }
+    ],
+    synergiesTo: () => ['powerStrike'],
   },
 
   // Tier 2 Skills
@@ -81,8 +103,13 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.battleCry'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 3, 5, 0.2),
-      damagePercent: scaleDownFlat(level, 2.5),
+      damage: getFlatBonus(level, { basePerLevel: 3, milestoneInterval: 50, milestoneMultiplier: 1.15 }),
+      damagePercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.3, 
+        earlyGameScale: 1.0,
+        earlyGameType: 'sqrt' 
+      }) / 100,
     }),
   },
   fortitude: {
@@ -94,8 +121,18 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.fortitude'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.0075, 1.5),
-      lifeRegenPercent: scaleDownFlat(level, 1),
+      lifeRegenOfTotalPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.005, 
+        earlyGameScale: 0.4,
+        earlyGameType: 'log' 
+      }) / 100,
+      lifeRegenPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.1, 
+        earlyGameScale: 0.8,
+        earlyGameType: 'log' 
+      }) / 100,
     }),
   },
 
@@ -112,8 +149,13 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.groundSlam'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 3, 5, 0.3),
-      damagePercent: scaleDownFlat(level, 16),
+      damage: getFlatBonus(level, { basePerLevel: 4, milestoneInterval: 50, milestoneMultiplier: 1.25 }),
+      damagePercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.6, 
+        earlyGameScale: 1.5,
+        earlyGameType: 'sqrt' 
+      }) / 100,
     }),
   },
 
@@ -127,8 +169,13 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.armorBreaker'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armorPenetration: scaleUpFlat(level, 15, 4, 0.5),
-      armorPenetrationPercent: Math.min(0.35 * scaleDownFlat(level), 40),
+      armorPenetration: getFlatBonus(level, { basePerLevel: 10, milestoneInterval: 50, milestoneMultiplier: 1.2 }),
+      armorPenetrationPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.3, 
+        earlyGameScale: 1.0,
+        earlyGameType: 'log' 
+      }) / 100,
     }),
   },
 
@@ -145,8 +192,18 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.shieldWall'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      extraDamageFromArmorPercent: Math.min(0.03 * scaleDownFlat(level), 2.5),
-      armorPercent: scaleDownFlat(level, 4),
+      extraDamageFromArmorPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.02, 
+        earlyGameScale: 0.7,
+        earlyGameType: 'log' 
+      }) / 100,
+      armorPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.4, 
+        earlyGameScale: 1.2,
+        earlyGameType: 'sqrt' 
+      }) / 100,
     }),
   },
 
@@ -161,8 +218,7 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.berserk'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamage: scaleUpFlat(level, 4, 5, 0.5),
-      fireDamagePercent: scaleDownFlat(level, 7),
+      fireDamage: getFlatBonus(level, { basePerLevel: 3, milestoneInterval: 50, milestoneMultiplier: 1.3 }),
     }),
   },
 
@@ -175,8 +231,18 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.lastStand'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeedPercent: Math.min(scaleDownFlat(level, 0.65), 75),
-      attackRatingPercent: scaleDownFlat(level, 6),
+      attackSpeedPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.5, 
+        earlyGameScale: 1.0,
+        earlyGameType: 'log' 
+      }) / 100,
+      attackRatingPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.6, 
+        earlyGameScale: 1.0,
+        earlyGameType: 'log' 
+      }) / 100,
     }),
   },
 
@@ -190,11 +256,36 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.warlordWarrior'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifePercent: scaleDownFlat(level, 1),
-      extraDamageFromLifePercent: Math.min(0.008 * scaleDownFlat(level), 1),
-      strengthPercent: scaleDownFlat(level, 1.5),
-      vitalityPercent: scaleDownFlat(level, 1.5),
-      endurancePercent: scaleDownFlat(level, 1.5),
+      lifePercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.1, 
+        earlyGameScale: 0.8,
+        earlyGameType: 'log' 
+      }) / 100,
+      extraDamageFromLifePercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.008, 
+        earlyGameScale: 0.5,
+        earlyGameType: 'log' 
+      }) / 100,
+      strengthPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.15, 
+        earlyGameScale: 0.9,
+        earlyGameType: 'log' 
+      }) / 100,
+      vitalityPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.15, 
+        earlyGameScale: 0.9,
+        earlyGameType: 'log' 
+      }) / 100,
+      endurancePercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.15, 
+        earlyGameScale: 0.9,
+        earlyGameType: 'log' 
+      }) / 100,
     }),
   },
 
@@ -208,9 +299,24 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.unstoppableForce'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: scaleDownFlat(level, 2),
-      attackRatingPercent: scaleDownFlat(level, 3),
-      critDamage: Math.min(scaleDownFlat(level, 0.006), 1),
+      damagePercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.2, 
+        earlyGameScale: 1.0,
+        earlyGameType: 'log' 
+      }) / 100,
+      attackRatingPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.3, 
+        earlyGameScale: 1.0,
+        earlyGameType: 'log' 
+      }) / 100,
+      critDamage: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.006, 
+        earlyGameScale: 0.4,
+        earlyGameType: 'log' 
+      }) / 100,
     }),
   },
   unyieldingDefense: {
@@ -225,9 +331,22 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.unyieldingDefense'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armorPercent: scaleDownFlat(level, 1.5),
-      blockChance: Math.min(scaleDownFlat(level, 0.1), 10),
-      allResistancePercent: scaleDownFlat(level, 2.5),
+      armorPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.15, 
+        earlyGameScale: 1.0,
+        earlyGameType: 'sqrt' 
+      }) / 100,
+      blockChance: getChanceBonus(level, { 
+        perLevel: 0.05, 
+        maxChance: 10 
+      }),
+      allResistancePercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.25, 
+        earlyGameScale: 1.2,
+        earlyGameType: 'sqrt' 
+      }) / 100,
     }),
   },
 

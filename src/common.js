@@ -280,3 +280,121 @@ export function createPercentScaleFunction(
   const fn = (level) => percentIncreasedByLevel(startPercent, level, interval, increasePerInterval, maxPercent);
   return setStepFunctionMetadata(fn, interval, 1);
 }
+
+/**
+ * New skill scaling system - Segmented linear percent bonus with smooth transition
+ * Phase 1 (Early Game): Non-linear growth (logarithmic/square root) for powerful feel
+ * Phase 2 (End Game): Linear progression after softcap level
+ * 
+ * @param {number} level - Current skill level
+ * @param {Object} config - Configuration object
+ * @param {number} config.softcapLevel - Level at which to transition to linear (e.g., 200)
+ * @param {number} config.linearSlope - Linear slope after softcap (e.g., 0.5 for +0.5% per level)
+ * @param {number} config.earlyGameScale - Scale factor for early game (higher = faster growth)
+ * @param {string} config.earlyGameType - Type of curve: 'log' or 'sqrt'
+ * @returns {number} - The percent bonus at this level
+ */
+export function getPercentBonus(level, config = {}) {
+  const {
+    softcapLevel = 200,
+    linearSlope = 0.5,
+    earlyGameScale = 1,
+    earlyGameType = 'log'
+  } = config;
+
+  if (level <= 0) return 0;
+
+  if (level <= softcapLevel) {
+    // Phase 1: Non-linear growth
+    if (earlyGameType === 'sqrt') {
+      // For sqrt: f(x) = a * sqrt(x)
+      // Match slope at softcap: f'(softcapLevel) = linearSlope
+      // f'(x) = a / (2 * sqrt(x))
+      // a = 2 * linearSlope * sqrt(softcapLevel)
+      const a = 2 * linearSlope * Math.sqrt(softcapLevel) * earlyGameScale;
+      return a * Math.sqrt(level);
+    } else {
+      // For log: f(x) = a * ln(x + b) + c
+      // Match slope at softcap: f'(softcapLevel) = linearSlope
+      // f'(x) = a / (x + b)
+      // At softcap: a / (softcapLevel + b) = linearSlope
+      // Choose b = 1 for simplicity, so: a = linearSlope * (softcapLevel + 1)
+      const b = 1;
+      const a = linearSlope * (softcapLevel + b) * earlyGameScale;
+      return a * Math.log(level + b);
+    }
+  } else {
+    // Phase 2: Linear progression
+    // Calculate the value at softcap to ensure continuity
+    let valueAtSoftcap;
+    if (earlyGameType === 'sqrt') {
+      const a = 2 * linearSlope * Math.sqrt(softcapLevel) * earlyGameScale;
+      valueAtSoftcap = a * Math.sqrt(softcapLevel);
+    } else {
+      const b = 1;
+      const a = linearSlope * (softcapLevel + b) * earlyGameScale;
+      valueAtSoftcap = a * Math.log(softcapLevel + b);
+    }
+    
+    // Continue linearly from softcap
+    return valueAtSoftcap + linearSlope * (level - softcapLevel);
+  }
+}
+
+/**
+ * Flat bonus scaling with milestone jumps
+ * Linear growth per level, with multiplicative jumps at milestone intervals
+ * 
+ * @param {number} level - Current skill level
+ * @param {Object} config - Configuration object
+ * @param {number} config.basePerLevel - Base flat increase per level (e.g., 1)
+ * @param {number} config.milestoneInterval - Levels between milestones (e.g., 50)
+ * @param {number} config.milestoneMultiplier - Multiplier at each milestone (e.g., 1.2)
+ * @returns {number} - The flat bonus at this level
+ */
+export function getFlatBonus(level, config = {}) {
+  const {
+    basePerLevel = 1,
+    milestoneInterval = 50,
+    milestoneMultiplier = 1.2
+  } = config;
+
+  if (level <= 0) return 0;
+
+  // Calculate milestone tier
+  const milestoneTier = Math.floor((level - 1) / milestoneInterval);
+  
+  // Calculate base value with milestone multiplier
+  const multiplier = Math.pow(milestoneMultiplier, milestoneTier);
+  
+  // Calculate total flat bonus (linear per level, scaled by milestone)
+  return basePerLevel * level * multiplier;
+}
+
+/**
+ * Chance bonus scaling with linear growth and hard cap
+ * 
+ * @param {number} level - Current skill level
+ * @param {Object} config - Configuration object
+ * @param {number} config.perLevel - Percentage increase per level (e.g., 0.1 for +0.1% per level)
+ * @param {number} config.maxChance - Maximum chance cap (e.g., 75 for 75%)
+ * @param {number} config.levelsToMax - Number of levels to reach max (alternative to perLevel)
+ * @returns {number} - The chance percentage at this level
+ */
+export function getChanceBonus(level, config = {}) {
+  const {
+    perLevel,
+    maxChance = 75,
+    levelsToMax
+  } = config;
+
+  if (level <= 0) return 0;
+
+  let effectivePerLevel = perLevel;
+  if (levelsToMax && !perLevel) {
+    effectivePerLevel = maxChance / levelsToMax;
+  }
+
+  const calculated = effectivePerLevel * level;
+  return Math.min(calculated, maxChance);
+}

@@ -343,7 +343,8 @@ export default class SkillTree {
     }
 
     const currentLevel = this.skills[skillId]?.level || 0;
-    const cost = 1 + Math.floor(currentLevel / 50);
+    // NEW SYSTEM: Flat 1 SP per level
+    const cost = 1;
     // Prevent leveling skill above hero level
     if (currentLevel >= hero.level) {
       if (showWarning) {
@@ -368,17 +369,14 @@ export default class SkillTree {
   }
 
   // Helper to calculate SP cost for buying qty levels from currentLevel
+  // NEW SYSTEM: Flat 1 SP per level (no progressive cost)
   calculateSkillPointCost(currentLevel, qty) {
     if (!Number.isFinite(qty) || qty <= 0) return 0;
     const levels = Math.floor(qty);
     if (levels <= 0) return 0;
 
-    const startLevel = Math.max(0, Math.floor(currentLevel));
-    const qtyBig = BigInt(levels);
-    const baseCost = qtyBig;
-    const bandIncrements = floorSumBigInt(qtyBig, 50n, 1n, BigInt(startLevel));
-    const totalCost = Number(baseCost + bandIncrements);
-    return Number.isFinite(totalCost) ? totalCost : Infinity;
+    // Simple flat cost: 1 SP per level
+    return levels;
   }
 
   calculateTotalSpentSkillPoints() {
@@ -788,13 +786,74 @@ export default class SkillTree {
   getSkillEffect(skillId, level = 0) {
     const skill = this.getSkill(skillId);
     if (!skill) return {};
-    return skill.effect(level || skill.level || 0);
+    const baseEffect = skill.effect(level || skill.level || 0);
+    
+    // Apply synergies
+    const synergyBonus = this.calculateSynergyBonusForSkill(skillId);
+    if (synergyBonus > 0) {
+      const multiplier = 1 + synergyBonus;
+      const boostedEffect = {};
+      Object.entries(baseEffect).forEach(([stat, value]) => {
+        boostedEffect[stat] = value * multiplier;
+      });
+      return boostedEffect;
+    }
+    
+    return baseEffect;
   }
 
   getSpecializationSkillEffect(skillId, level = 0) {
     const skill = this.getSpecializationSkill(skillId);
     if (!skill) return {};
     return skill.effect(level || skill.level || 0);
+  }
+
+  /**
+   * Calculate the total synergy bonus for a target skill
+   * @param {string} targetSkillId - The skill receiving the bonus
+   * @returns {number} - Total synergy bonus as a decimal (e.g., 0.5 for +50%)
+   */
+  calculateSynergyBonusForSkill(targetSkillId) {
+    const targetSkill = this.getSkill(targetSkillId);
+    if (!targetSkill || !targetSkill.synergiesFrom) return 0;
+
+    const synergiesFrom = typeof targetSkill.synergiesFrom === 'function' 
+      ? targetSkill.synergiesFrom() 
+      : targetSkill.synergiesFrom;
+    
+    if (!Array.isArray(synergiesFrom) || synergiesFrom.length === 0) return 0;
+
+    let totalBonus = 0;
+    synergiesFrom.forEach(synergyDef => {
+      const sourceSkillId = synergyDef.skillId;
+      const sourceSkill = this.skills[sourceSkillId];
+      if (!sourceSkill || !sourceSkill.level) return;
+
+      const sourceLevel = sourceSkill.level;
+      const bonusPerLevel = synergyDef.bonusPerLevel || 0.01; // Default 1% per level
+      const maxBonus = synergyDef.maxBonus || Infinity;
+
+      const bonus = Math.min(sourceLevel * bonusPerLevel, maxBonus);
+      totalBonus += bonus;
+    });
+
+    return totalBonus;
+  }
+
+  /**
+   * Get all skills that this skill provides synergies to
+   * @param {string} sourceSkillId - The source skill
+   * @returns {Array} - Array of target skill IDs
+   */
+  getSkillSynergyTargets(sourceSkillId) {
+    const sourceSkill = this.getSkill(sourceSkillId);
+    if (!sourceSkill || !sourceSkill.synergiesTo) return [];
+
+    const synergiesTo = typeof sourceSkill.synergiesTo === 'function'
+      ? sourceSkill.synergiesTo()
+      : sourceSkill.synergiesTo;
+
+    return Array.isArray(synergiesTo) ? synergiesTo : [];
   }
 
   // level is for getting the mana cost for a certain level
