@@ -13,6 +13,7 @@ import { formatNumber,
   updateResources } from './ui.js';
 import { t } from '../i18n.js';
 import { createModal, closeModal } from './modal.js';
+import { IS_MOBILE_OR_TABLET } from '../constants/common.js';
 
 const html = String.raw;
 
@@ -589,15 +590,18 @@ function createSpecializationSkillElement(baseSkill) {
       class="skill-icon"
       style="background-image: url('${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg')"
     ></div>
-    <div class="skill-level">${skill.level || 0}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}</div>
+    <div class="skill-level">
+      ${skillTree.skills[skill.id]?.level || 0}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
+    </div>
   `;
 
+  // Tooltip
   skillElement.addEventListener('mouseenter', (e) => {
-    if (window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window) return;
+    if (IS_MOBILE_OR_TABLET()) return;
     showTooltip(updateSpecializationTooltipContent(skill.id), e);
   });
   skillElement.addEventListener('mousemove', positionTooltip);
-  skillElement.addEventListener('mouseleave', hideTooltip);
+
 
   skillElement.addEventListener('click', (e) => {
     if (options?.quickBuy) {
@@ -1182,7 +1186,7 @@ function renderMobileTooltipNotice(container) {
   if (existingNotice) existingNotice.remove();
 
   // Only show on mobile when quick buy is enabled
-  const isMobile = window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window;
+  const isMobile = IS_MOBILE_OR_TABLET();
   if (!isMobile || !options?.quickBuy) return;
 
   // Check if user has dismissed this notice (use localStorage)
@@ -1903,7 +1907,7 @@ function createSkillElement(baseSkill) {
   `;
 
   skillElement.addEventListener('mouseenter', (e) => {
-    if (window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window) return;
+    if (IS_MOBILE_OR_TABLET()) return;
     showTooltip(updateTooltipContent(skill.id), e);
   });
   skillElement.addEventListener('mousemove', positionTooltip);

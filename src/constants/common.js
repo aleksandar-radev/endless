@@ -32,3 +32,11 @@ export const BASE_MATERIAL_DROP_CHANCE = 2.0;
 
 export const MIN_DEATH_TIMER = 2; // Minimum death timer in seconds
 export const MAX_DEATH_TIMER = 30; // Maximum death timer in seconds
+
+export const BREAKPOINTS = {
+  MOBILE: 768,
+  TABLET: 900,
+  DESKTOP: 1024,
+};
+
+export const IS_MOBILE_OR_TABLET = () => window.matchMedia(`(max-width: ${BREAKPOINTS.MOBILE}px)`).matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0;

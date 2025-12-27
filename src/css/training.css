@@ -415,7 +415,7 @@
 }
 
 /* Mobile Responsiveness */
-@media (max-width: 768px) {
+@media (max-width: var(--mobile-breakpoint)) {
   .training-grid {
     grid-template-columns: 1fr;
     padding: 0.5rem;
@@ -453,7 +453,7 @@
   }
 }
 
-@media (min-width: 768px) and (max-width: 1024px) {
+@media (min-width: var(--mobile-breakpoint)) and (max-width: var(--desktop-breakpoint)) {
   .training-grid {
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   }

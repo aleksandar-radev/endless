@@ -198,7 +198,7 @@
   max-width: calc((100% - 36px) / 3);
 }
 
-@media (max-width: 900px) {
+@media (max-width: var(--tablet-breakpoint)) {
   /* At medium widths use 2 per row */
   .choose-building-list > * {
     flex: 0 0 calc((100% - 18px) / 2);
@@ -449,7 +449,7 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: var(--tablet-breakpoint)) {
   .building-modal-content {
     width: 500px;
     height: 600px;

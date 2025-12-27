@@ -19,7 +19,7 @@ import { updateQuestsUI } from './questUi.js';
 import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
 import { TabIndicatorManager } from './tabIndicatorManager.js';
 import { initializeBossRegionUI, selectBoss, updateBossUI, updateBossRegionSelector } from './bossUi.js';
-import { ELEMENTS } from '../constants/common.js';
+import { ELEMENTS, BREAKPOINTS, IS_MOBILE_OR_TABLET } from '../constants/common.js';
 import { updateRegionUI, updateRegionSelectorButton } from '../region.js';
 import { calculateArmorReduction,
   calculateEvasionChance,
@@ -268,7 +268,7 @@ export function switchTab(tabName) {
   const combatPanel = document.querySelector('.combat-panel');
   const gamePanel = document.querySelector('.game-panel');
 
-  if (window.innerWidth <= 900) {
+  if (window.innerWidth <= BREAKPOINTS.TABLET) {
     if (tabName === 'battle') {
       if (combatPanel) combatPanel.classList.add('active');
       if (gamePanel) gamePanel.classList.add('hidden');
@@ -711,6 +711,9 @@ export function hideDeathScreen() {
 
 // Function to show the tooltip
 export function showTooltip(content, event, classes = '') {
+  // Global check: Disable tooltips on mobile/touch devices
+  if (IS_MOBILE_OR_TABLET()) return;
+
   const tooltip = document.getElementById('tooltip');
   tooltip.innerHTML = content;
   tooltip.className = `tooltip show ${classes}`; // Add custom classes here
@@ -726,6 +729,9 @@ export function hideTooltip() {
 
 // Function to position the tooltip
 export function positionTooltip(event) {
+  // Global check: Disable tooltip positioning on mobile/touch devices
+  if (IS_MOBILE_OR_TABLET()) return;
+
   const tooltip = document.getElementById('tooltip');
   const tooltipRect = tooltip.getBoundingClientRect();
   const offset = 10; // Offset from the mouse pointer

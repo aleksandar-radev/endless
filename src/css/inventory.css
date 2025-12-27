@@ -88,7 +88,7 @@
   display: none;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: var(--desktop-breakpoint)) {
   .inventory-top-section {
     flex-direction: column;
     align-items: center;
@@ -123,7 +123,7 @@
   margin: 0 auto;
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--mobile-breakpoint)) {
   .equipment-layout {
     width: 100%;
     max-width: 280px;
@@ -228,7 +228,7 @@
   justify-content: center;
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--mobile-breakpoint)) {
   .equipment-slot[data-slot='head'] {
     top: 7%;
     left: 50%;
@@ -373,7 +373,7 @@
   padding: 0 1rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--mobile-breakpoint)) {
   .inventory-grid {
     padding: 0 0.5rem;
   }
@@ -1217,7 +1217,7 @@
 }
 
 /* Responsive: stack items in rows on small screens */
-@media (max-width: 900px) {
+@media (max-width: var(--tablet-breakpoint)) {
   .inventory-salvage-modal-content {
     flex-direction: column;
     align-items: stretch;
@@ -1246,7 +1246,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--mobile-breakpoint)) {
   .salvage-modal-grid {
     width: 100%;
     max-width: 100%;
@@ -1261,7 +1261,7 @@
   }
 }
 
-@media (min-width: 481px) and (max-width: 768px) {
+@media (min-width: 481px) and (max-width: var(--mobile-breakpoint)) {
   .salvage-modal-grid {
     grid-template-columns: repeat(8, 1fr);
   }

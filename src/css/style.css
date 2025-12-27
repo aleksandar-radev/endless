@@ -1,4 +1,9 @@
+@import './variables.css';
+
 :root {
+  --primary-color: #2c3e50;
+  --secondary-color: #34495e;
+
   --fire: rgb(228, 85, 85);
   --cold: rgb(85, 170, 228);
   --air: rgb(138, 170, 190);
@@ -278,7 +283,7 @@
   padding: 0;
 }
 
-@media (max-width: 900px) {
+@media (max-width: var(--tablet-breakpoint)) {
   .enemy-stats {
     grid-template-columns: 1fr;
   }
@@ -715,7 +720,8 @@
   border-radius: 4px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: var(--tablet-breakpoint)) {
+
   /* Mobile Layout Changes */
   .combat-panel {
     display: none;
