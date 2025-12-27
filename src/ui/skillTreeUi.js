@@ -591,7 +591,7 @@ function createSpecializationSkillElement(baseSkill) {
       style="background-image: url('${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg')"
     ></div>
     <div class="skill-level">
-      ${skillTree.skills[skill.id]?.level || 0}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
+      ${skill.level || 0}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
     </div>
   `;
 

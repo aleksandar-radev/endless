@@ -19,7 +19,7 @@
   margin-bottom: 8px;
 }
 
-@media (max-width: var(--mobile-breakpoint)) {
+@media (max-width: 768px) {
   .rune-inventory {
     grid-template-columns: repeat(5, 1fr);
   }

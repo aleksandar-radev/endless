@@ -381,7 +381,7 @@
 }
 
 /* Responsive layout for smaller screens */
-@media (max-width: var(--mobile-breakpoint)) {
+@media (max-width: 768px) {
   .region-dialog-item-header {
     flex-direction: column;
     align-items: flex-start;

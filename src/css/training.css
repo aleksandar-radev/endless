@@ -415,7 +415,7 @@
 }
 
 /* Mobile Responsiveness */
-@media (max-width: var(--mobile-breakpoint)) {
+@media (max-width: 768px) {
   .training-grid {
     grid-template-columns: 1fr;
     padding: 0.5rem;
@@ -437,7 +437,7 @@
   .training-section-btn {
     font-size: 0.95rem;
     padding: 0.4rem 1rem;
-    flex: 1; /* Allow buttons to grow and fill space */
+    flex: 1;
     text-align: center;
   }
 
@@ -453,7 +453,7 @@
   }
 }
 
-@media (min-width: var(--mobile-breakpoint)) and (max-width: var(--desktop-breakpoint)) {
+@media (min-width: 768px) and (max-width: 1024px) {
   .training-grid {
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   }

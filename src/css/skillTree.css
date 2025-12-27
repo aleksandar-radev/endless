@@ -1061,7 +1061,7 @@
 }
 
 /* Mobile Responsive Improvements */
-@media (max-width: var(--mobile-breakpoint)) {
+@media (max-width: 768px) {
   .skill-tree-container {
     --skill-tree-base-padding: 12px;
     padding: var(--skill-tree-base-padding);

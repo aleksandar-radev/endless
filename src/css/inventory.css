@@ -88,7 +88,7 @@
   display: none;
 }
 
-@media (max-width: var(--desktop-breakpoint)) {
+@media (max-width: 1024px) {
   .inventory-top-section {
     flex-direction: column;
     align-items: center;
@@ -123,7 +123,7 @@
   margin: 0 auto;
 }
 
-@media (max-width: var(--mobile-breakpoint)) {
+@media (max-width: 768px) {
   .equipment-layout {
     width: 100%;
     max-width: 280px;
@@ -228,7 +228,7 @@
   justify-content: center;
 }
 
-@media (max-width: var(--mobile-breakpoint)) {
+@media (max-width: 768px) {
   .equipment-slot[data-slot='head'] {
     top: 7%;
     left: 50%;
@@ -373,7 +373,7 @@
   padding: 0 1rem;
 }
 
-@media (max-width: var(--mobile-breakpoint)) {
+@media (max-width: 768px) {
   .inventory-grid {
     padding: 0 0.5rem;
   }
@@ -1217,7 +1217,7 @@
 }
 
 /* Responsive: stack items in rows on small screens */
-@media (max-width: var(--tablet-breakpoint)) {
+@media (max-width: 900px) {
   .inventory-salvage-modal-content {
     flex-direction: column;
     align-items: stretch;
@@ -1246,7 +1246,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-@media (max-width: var(--mobile-breakpoint)) {
+@media (max-width: 768px) {
   .salvage-modal-grid {
     width: 100%;
     max-width: 100%;
@@ -1261,7 +1261,7 @@
   }
 }
 
-@media (min-width: 481px) and (max-width: var(--mobile-breakpoint)) {
+@media (min-width: 481px) and (max-width: 768px) {
   .salvage-modal-grid {
     grid-template-columns: repeat(8, 1fr);
   }
@@ -1416,7 +1416,7 @@
   vertical-align: middle;
 }
 
-#salvage-modal input[type='checkbox']:checked + .toggle-btn {
+#salvage-modal input[type='checkbox']:checked+.toggle-btn {
   background: #2563eb;
   border-color: #2563eb;
 }
@@ -1434,7 +1434,7 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
 }
 
-#salvage-modal input[type='checkbox']:checked + .toggle-btn::before {
+#salvage-modal input[type='checkbox']:checked+.toggle-btn::before {
   left: 25px;
 }
 
