@@ -88,45 +88,27 @@ function attachTooltip(el, key, ...params) {
 export class Options {
   constructor(data = {}) {
     this.version = data.version || '0.9.0';
-    // Add startingStage, default to null (unset)
     this.startingStage = data.startingStage || null;
-    // Add showEnemyStats option, default to false
     this.showEnemyStats = data.showEnemyStats ?? false;
-    // Option to show all stats including those hidden by default
     this.showAllStats = data.showAllStats ?? false;
     this.resetRequired = data.resetRequired ?? null;
-    // Add stageSkip option, default to 0
     this.stageSkip = data.stageSkip || 0;
-    // Add arena boss skip option, default to 0
     this.arenaBossSkip = data.arenaBossSkip || 0;
-    // Add resetStageSkip option, default to 0 (disabled)
     this.resetStageSkip = data.resetStageSkip || 0;
-    // Option to lock stage progression at a chosen stage
     this.stageLockEnabled = data.stageLockEnabled ?? false;
     this.stageLock = data.stageLock || 0;
-    // Add soundVolume option, default to 0
     this.soundVolume = typeof data.soundVolume === 'number' ? data.soundVolume : 0;
-    // Remember salvage preference across prestiges
     this.salvageMaterialsEnabled = data.salvageMaterialsEnabled ?? false;
-    // Enable auto inventory sorting
     this.autoSortInventory = data.autoSortInventory ?? false;
-    // Add advanced tooltips option
     this.showAdvancedTooltips = data.showAdvancedTooltips ?? true;
-    // Add advanced attribute tooltips option
     this.showAdvancedAttributeTooltips = data.showAdvancedAttributeTooltips ?? false;
-    // Show rate counters bar
     this.showRateCounters = data.showRateCounters ?? false;
-    // Period for rate counters in seconds
     this.rateCountersPeriod = data.rateCountersPeriod || 1;
-    // Unified quick purchase toggle
     const quickFlags = [data.quickBuy, data.quickTraining, data.quickSoulShop, data.quickSkills];
     this.quickBuy = quickFlags.some((value) => value === true || value === 'true');
-    // Unified bulk purchase toggle
     const bulkValue = data.bulkBuy ?? data.bulkTraining ?? false;
     this.bulkBuy = typeof bulkValue === 'boolean' ? bulkValue : bulkValue === 'true';
-    // Use numeric inputs for bulk purchases
     this.useNumericInputs = data.useNumericInputs ?? false;
-    // Default quantities for bulk purchases
     this.soulShopQty = typeof data.soulShopQty === 'number' ? Math.min(data.soulShopQty, SOUL_SHOP_MAX_QTY) : 1;
     this.soulShopQuickQty =
       typeof data.soulShopQuickQty === 'number' ? Math.min(data.soulShopQuickQty, SOUL_SHOP_MAX_QTY) : 1;
@@ -138,25 +120,15 @@ export class Options {
     this.skillQuickQty =
       typeof data.skillQuickQty === 'number' ? Math.max(1, Math.min(data.skillQuickQty, GLOBAL_MAX_QTY)) : 1;
     this.buildingQty = typeof data.buildingQty === 'number' ? Math.min(data.buildingQty, BUILDING_MAX_QTY) : 1;
-    // Preferred language, default to English
     this.language = data.language || 'en';
-    // Use short elemental stat names
     this.shortElementalNames = data.shortElementalNames ?? false;
-    // Use shortened number notation
     this.shortNumbers = data.shortNumbers ?? false;
-    // Show cooldown numbers on skill slots
     this.showSkillCooldowns = data.showSkillCooldowns ?? false;
-    // Show informational toast messages
     this.showInfoMessages = data.showInfoMessages ?? true;
-    // Show bottom notifications for loot and materials
     this.showNotifications = data.showNotifications ?? true;
-    // Show combat texts (damage numbers, level up text)
     this.showCombatText = data.showCombatText ?? true;
-    // Show stage controls under enemy in Explore and Rocky Field panels
     this.showStageControlsInline = data.showStageControlsInline ?? false;
-    // Show roll quality percentiles instead of min/max ranges
     this.showRollPercentiles = data.showRollPercentiles ?? false;
-    // Temporary developer access deadline and modal acknowledgement
     this.devAccessDeadline = data.devAccessDeadline || null;
     this.devAccessModalDismissed = data.devAccessModalDismissed ?? false;
   }
@@ -339,29 +311,404 @@ export class Options {
     // --- Game Options Content ---
     const gameContent = document.createElement('div');
     gameContent.className = 'options-content active';
-    gameContent.appendChild(this._createAdvancedTooltipsOption());
-    gameContent.appendChild(this._createAdvancedAttributeTooltipsOption());
-    gameContent.appendChild(this._createRollPercentilesOption());
-    gameContent.appendChild(this._createEnemyStatsToggleOption());
-    gameContent.appendChild(this._createShowAllStatsOption());
-    gameContent.appendChild(this._createShortElementalNamesOption());
-    gameContent.appendChild(this._createShortNumbersOption());
-    gameContent.appendChild(this._createQuickBuyOption());
-    gameContent.appendChild(this._createBulkBuyOption());
-    gameContent.appendChild(this._createNumericInputOption());
-    gameContent.appendChild(this._createAutoSortInventoryOption());
-    gameContent.appendChild(this._createStageControlsInlineOption());
-    gameContent.appendChild(this._createStartingStageOption());
-    gameContent.appendChild(this._createStageSkipOption());
-    gameContent.appendChild(this._createStageLockToggleOption());
-    gameContent.appendChild(this._createStageLockInputOption());
-    gameContent.appendChild(this._createArenaBossSkipOption());
-    gameContent.appendChild(this._createResetStageSkipOption());
-    gameContent.appendChild(this._createRateCountersOption());
-    gameContent.appendChild(this._createRateCountersPeriodOption());
-    gameContent.appendChild(this._createShowInfoMessagesOption());
-    gameContent.appendChild(this._createShowNotificationsOption());
-    gameContent.appendChild(this._createShowCombatTextOption());
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'advanced-tooltips-toggle',
+        i18nKey: 'options.advancedTooltips',
+        labelText: 'Show Advanced Item Tooltips:',
+        tooltipKey: 'advancedTooltipsLabel',
+        stateKey: 'showAdvancedTooltips',
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'advanced-attr-tooltips-toggle',
+        i18nKey: 'options.advancedAttributeTooltips',
+        labelText: 'Show Advanced Attribute Tooltips:',
+        tooltipKey: 'advancedAttrTooltipsLabel',
+        stateKey: 'showAdvancedAttributeTooltips',
+        onChange: () => updateStatsAndAttributesUI(true),
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'roll-percentiles-toggle',
+        i18nKey: 'options.rollPercentiles',
+        labelText: 'Show Roll Percentiles:',
+        tooltipKey: 'rollPercentilesLabel',
+        stateKey: 'showRollPercentiles',
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'enemy-stats-toggle',
+        i18nKey: 'options.showEnemyStats',
+        labelText: 'Show Enemy Stats:',
+        tooltipKey: 'enemyStatsLabel',
+        stateKey: 'showEnemyStats',
+        onChange: () => {
+          const stats = document.querySelector('.enemy-stats');
+          if (stats) stats.style.display = this.showEnemyStats ? '' : 'none';
+        },
+        onCreated: () => {
+          setTimeout(() => {
+            const stats = document.querySelector('.enemy-stats');
+            if (stats) stats.style.display = this.showEnemyStats ? '' : 'none';
+          }, 0);
+        },
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'show-all-stats-toggle',
+        i18nKey: 'options.showAllStats',
+        labelText: 'Show All Stats:',
+        tooltipKey: 'showAllStatsLabel',
+        stateKey: 'showAllStats',
+        onChange: () => updateStatsAndAttributesUI(true),
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'short-elemental-names-toggle',
+        i18nKey: 'options.shortElementalNames',
+        labelText: 'Use Short Elemental Stat Names:',
+        tooltipKey: 'shortElementalNamesLabel',
+        stateKey: 'shortElementalNames',
+        onChange: () => {
+          updateStatsAndAttributesUI(true);
+          updateEnemyStats();
+        },
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'short-numbers-toggle',
+        i18nKey: 'options.shortNumbers',
+        labelText: 'Use Short Number Notation:',
+        tooltipKey: 'shortNumbersLabel',
+        stateKey: 'shortNumbers',
+        onChange: () => {
+          updateResources();
+          updateStatsAndAttributesUI(true);
+          updateStageUI();
+          updatePlayerLife();
+          training.updateTrainingUI('gold-upgrades');
+          crystalShop.updateCrystalShopUI();
+          soulShop.updateSoulShopUI();
+          initializeBuildingsUI();
+        },
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'quick-buy-toggle',
+        i18nKey: 'options.quickBuy',
+        labelText: 'Enable Quick Buy:',
+        tooltipKey: 'quickBuyLabel',
+        stateKey: 'quickBuy',
+        onChange: () => {
+          if (training) training.initializeTrainingUI();
+          if (soulShop) soulShop.initializeSoulShopUI();
+          initializeSkillTreeStructure();
+        },
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'bulk-buy-toggle',
+        i18nKey: 'options.bulkBuy',
+        labelText: 'Enable Bulk Buy:',
+        tooltipKey: 'bulkBuyLabel',
+        stateKey: 'bulkBuy',
+        onChange: () => {
+          if (training) training.initializeTrainingUI();
+          if (soulShop) soulShop.initializeSoulShopUI();
+          initializeSkillTreeStructure();
+        },
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'numeric-input-toggle',
+        i18nKey: 'options.numericPurchaseInputs',
+        labelText: 'Enable Numeric Purchase Inputs:',
+        tooltipKey: 'numericInputLabel',
+        stateKey: 'useNumericInputs',
+        onChange: () => {
+          if (!this.useNumericInputs) {
+            if (training) training.quickQty = 1;
+            if (soulShop) soulShop.quickQty = 1;
+            if (skillTree) skillTree.quickQty = 1;
+          }
+          if (training) {
+            training.modal = null;
+            training.initializeTrainingUI();
+          }
+          if (soulShop) {
+            soulShop.modal = null;
+            soulShop.initializeSoulShopUI();
+          }
+          if (crystalShop) {
+            crystalShop.modal = null;
+            crystalShop.initializeCrystalShopUI();
+          }
+          initializeSkillTreeStructure();
+          initializeBuildingsUI();
+        },
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'auto-sort-inventory-toggle',
+        i18nKey: 'options.autoSortInventory',
+        labelText: 'Auto Sort Inventory:',
+        tooltipKey: 'autoSortInventoryLabel',
+        stateKey: 'autoSortInventory',
+        disabled: !crystalShop.crystalUpgrades?.autoSortInventory,
+        onCreated: (wrapper, checkbox) => {
+          attachTooltip(checkbox, 'autoSortInventoryToggle', () => !!crystalShop.crystalUpgrades?.autoSortInventory);
+          this._autoSortInventoryToggle = checkbox;
+          this._autoSortInventoryWrapper = wrapper;
+          this.updateAutoSortInventoryOption();
+        },
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'stage-controls-inline-toggle',
+        i18nKey: 'options.stageControlsInline',
+        labelText: 'Show Stage Controls Under Enemy:',
+        tooltipKey: 'stageControlsInlineLabel',
+        stateKey: 'showStageControlsInline',
+        onChange: () => {
+          try {
+            document.dispatchEvent(new CustomEvent('updateInlineStageControls'));
+          } catch (e) {}
+        },
+      }),
+    );
+    gameContent.appendChild(
+      this._createNumberInputOption({
+        id: 'starting-stage-input',
+        i18nKey: 'options.startingStage',
+        labelText: 'Starting Stage:',
+        tooltipKey: 'startingStageLabel',
+        inputTooltipKey: 'startingStageInput',
+        inputTooltipParams: [() => 1 + (crystalShop.crystalUpgrades?.startingStage || 0)],
+        stateKey: 'startingStage',
+        min: 1,
+        max: () => 1 + (crystalShop.crystalUpgrades?.startingStage || 0),
+        showMinMax: true,
+        onApply: (val, force, changed) => {
+          const stageMismatch = game.fightMode === 'explore' && game.stage !== val;
+          if (stageMismatch) {
+            game.stage = game.getStartingStage();
+            game.currentEnemy = new Enemy(game.stage);
+            updateStageUI();
+            game.resetAllLife();
+          }
+          if (changed || force || stageMismatch) {
+            this.updateStartingStageOption();
+            showToast(t('options.toast.startingStageApplied'), 'success');
+          }
+        },
+        onCreated: (w, i) => {
+          this._startingStageInput = i;
+          this._startingStageWrapper = w;
+          this.updateStartingStageOption();
+        },
+      }),
+    );
+    gameContent.appendChild(
+      this._createNumberInputOption({
+        id: 'stage-skip-input',
+        i18nKey: 'options.stageSkipPerKill',
+        labelText: 'Stage Skip per Kill:',
+        tooltipKey: 'stageSkipLabel',
+        inputTooltipKey: 'stageSkipInput',
+        inputTooltipParams: [() => crystalShop.crystalUpgrades?.stageSkip || 0],
+        stateKey: 'stageSkip',
+        max: () => crystalShop.crystalUpgrades?.stageSkip || 0,
+        showMinMax: true,
+        onApply: (val, force, changed) => {
+          if (changed || force) {
+            showToast(t('options.toast.stageSkipApplied'), 'success');
+            this.updateStageSkipOption();
+          }
+        },
+        onCreated: (w, i) => {
+          this._stageSkipInput = i;
+          this._stageSkipWrapper = w;
+          this.updateStageSkipOption();
+        },
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'stage-lock-toggle',
+        i18nKey: 'options.stageLock',
+        labelText: 'Stage Lock:',
+        tooltipKey: 'stageLockToggleLabel',
+        stateKey: 'stageLockEnabled',
+        disabled: !crystalShop.crystalUpgrades?.stageLock,
+        onCreated: (wrapper, checkbox) => {
+          attachTooltip(checkbox, 'stageLockToggle', () => !!crystalShop.crystalUpgrades?.stageLock);
+          this._stageLockToggle = checkbox;
+          this._stageLockToggleWrapper = wrapper;
+          this.updateStageLockOption();
+        },
+      }),
+    );
+    gameContent.appendChild(
+      this._createNumberInputOption({
+        id: 'stage-lock-input',
+        i18nKey: 'options.stageLockStage',
+        labelText: 'Lock at Stage:',
+        tooltipKey: 'stageLockStageLabel',
+        inputTooltipKey: 'stageLockStageInput',
+        inputTooltipParams: [() => !!crystalShop.crystalUpgrades?.stageLock],
+        stateKey: 'stageLock',
+        showMinMax: true,
+        disabled: !crystalShop.crystalUpgrades?.stageLock,
+        onMax: (input) => {
+          const highest = Math.max(...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0));
+          input.value = highest || 0;
+        },
+        onApply: (val, force, changed) => {
+          if (changed || force) {
+            this.updateStageLockOption();
+            showToast(t('options.toast.stageLockApplied'), 'success');
+          }
+        },
+        onCreated: (w, i) => {
+          this._stageLockInput = i;
+          this._stageLockWrapper = w;
+          this.updateStageLockOption();
+        },
+      }),
+    );
+    gameContent.appendChild(
+      this._createNumberInputOption({
+        id: 'boss-skip-input',
+        i18nKey: 'options.arenaBossSkipPerKill',
+        labelText: 'Boss Skip per Kill:',
+        tooltipKey: 'arenaBossSkipLabel',
+        inputTooltipKey: 'arenaBossSkipInput',
+        inputTooltipParams: [() => {
+          const rb = runes?.getBonusEffects?.() || {};
+          return (ascension.getBonuses()?.arenaBossSkip || 0) + (rb.arenaBossSkip || 0);
+        }],
+        stateKey: 'arenaBossSkip',
+        max: () => {
+          const rb = runes?.getBonusEffects?.() || {};
+          return (ascension.getBonuses()?.arenaBossSkip || 0) + (rb.arenaBossSkip || 0);
+        },
+        showMinMax: true,
+        onApply: (val, force, changed) => {
+          if (changed || force) {
+            showToast(t('options.toast.arenaBossSkipApplied'), 'success');
+            this.updateArenaBossSkipOption();
+          }
+        },
+        onCreated: (w, i) => {
+          this._bossSkipInput = i;
+          this.updateArenaBossSkipOption();
+        },
+      }),
+    );
+    gameContent.appendChild(
+      this._createNumberInputOption({
+        id: 'reset-stage-skip-input',
+        i18nKey: 'options.resetStageSkipAt',
+        labelText: 'Reset Stage Skip At:',
+        tooltipKey: 'resetStageSkipLabel',
+        inputTooltipKey: 'resetStageSkipInput',
+        inputTooltipParams: [() => !!crystalShop.crystalUpgrades?.resetStageSkip],
+        stateKey: 'resetStageSkip',
+        disabled: !crystalShop.crystalUpgrades?.resetStageSkip,
+        showMinMax: true,
+        onMax: (input) => {
+          const highest = Math.max(...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0));
+          input.value = highest || 0;
+        },
+        onApply: (val, force, changed) => {
+          if (changed || force) {
+            showToast(t('options.toast.resetStageSkipApplied'), 'success');
+            this.updateResetStageSkipOption();
+          }
+        },
+        onCreated: (w, i) => {
+          this._resetStageSkipInput = i;
+          this._resetStageSkipWrapper = w;
+          this.updateResetStageSkipOption();
+        },
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'rate-counters-toggle',
+        i18nKey: 'options.showRateCounters',
+        labelText: 'Show Counters Bar:',
+        tooltipKey: 'showRateCountersLabel',
+        stateKey: 'showRateCounters',
+        onChange: () => {
+          document.dispatchEvent(new CustomEvent('toggleRateCounters', { detail: this.showRateCounters }));
+        },
+      }),
+    );
+    gameContent.appendChild(
+      this._createNumberInputOption({
+        id: 'rate-counters-period',
+        i18nKey: 'options.rateCountersPeriod',
+        labelText: 'Counters Period (sec):',
+        tooltipKey: 'rateCountersPeriodLabel',
+        stateKey: 'rateCountersPeriod',
+        min: 1,
+        onApply: (v, f, changed) => {
+          if (changed) {
+            document.dispatchEvent(new CustomEvent('ratePeriodChange', { detail: v }));
+          }
+        },
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'show-info-messages-toggle',
+        i18nKey: 'options.showInfoMessages',
+        labelText: 'Show Info Messages:',
+        tooltipKey: 'showInfoMessagesLabel',
+        stateKey: 'showInfoMessages',
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'show-notifications-toggle',
+        i18nKey: 'options.showNotifications',
+        labelText: 'Show Notifications:',
+        tooltipKey: 'showNotificationsLabel',
+        stateKey: 'showNotifications',
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'show-combat-text-toggle',
+        i18nKey: 'options.showCombatText',
+        labelText: 'Show Combat Texts:',
+        tooltipKey: 'showCombatTextLabel',
+        stateKey: 'showCombatText',
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'show-skill-cooldowns-toggle',
+        i18nKey: 'options.showSkillCooldowns',
+        labelText: 'Show Skill Cooldown Numbers:',
+        tooltipKey: 'showSkillCooldownsLabel',
+        stateKey: 'showSkillCooldowns',
+        onChange: () => updateBuffIndicators(),
+      }),
+    );
 
     // --- General Options Content ---
     const generalContent = document.createElement('div');
@@ -422,535 +769,178 @@ export class Options {
   }
 
   /**
-   * Creates the advanced tooltips toggle option UI.
+   * Creates a generic number input option UI.
    */
-  _createAdvancedTooltipsOption() {
+  _createNumberInputOption({
+    id,
+    i18nKey,
+    labelText,
+    tooltipKey,
+    inputTooltipKey,
+    inputTooltipParams = [],
+    stateKey,
+    min = 0,
+    max,
+    onApply,
+    showMinMax = false,
+    onMin,
+    onMax,
+    onCreated,
+    disabled = false,
+  }) {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
-    wrapper.innerHTML = `
-      <label for="advanced-tooltips-toggle" class="advanced-tooltips-toggle-label" data-i18n="options.advancedTooltips">Show Advanced Item Tooltips:</label>
-      <input
-        type="checkbox"
-        id="advanced-tooltips-toggle"
-        class="advanced-tooltips-toggle"
-        ${this.showAdvancedTooltips ? 'checked' : ''}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.advanced-tooltips-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'advancedTooltipsLabel');
-    // Make the toggle button clickable and sync with checkbox
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.showAdvancedTooltips = checkbox.checked;
-      // Save option
-      dataManager.saveGame();
-      // Optionally, refresh tooltips if needed
-    });
-    return wrapper;
-  }
+    const i18nAttr = i18nKey ? `data-i18n="${i18nKey}"` : '';
 
-  _createAdvancedAttributeTooltipsOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = `
-      <label for="advanced-attr-tooltips-toggle" class="advanced-attr-tooltips-toggle-label" data-i18n="options.advancedAttributeTooltips">Show Advanced Attribute Tooltips:</label>
-      <input
-        type="checkbox"
-        id="advanced-attr-tooltips-toggle"
-        class="advanced-attr-tooltips-toggle"
-        ${this.showAdvancedAttributeTooltips ? 'checked' : ''}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.advanced-attr-tooltips-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'advancedAttrTooltipsLabel');
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.showAdvancedAttributeTooltips = checkbox.checked;
-      dataManager.saveGame();
-      updateStatsAndAttributesUI(true);
-    });
-    return wrapper;
-  }
+    let buttonsHtml = '';
+    if (showMinMax) {
+      buttonsHtml = `
+        <div class="min-max-btn-group">
+          <button class="min-btn" type="button" ${disabled ? 'disabled' : ''} data-i18n="common.min">Min</button>
+          <button class="max-btn" type="button" ${disabled ? 'disabled' : ''} data-i18n="common.max">Max</button>
+        </div>
+      `;
+    }
 
-  _createRollPercentilesOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = `
-      <label for="roll-percentiles-toggle" class="roll-percentiles-toggle-label" data-i18n="options.rollPercentiles">Show Roll Percentiles:</label>
-      <input
-        type="checkbox"
-        id="roll-percentiles-toggle"
-        class="roll-percentiles-toggle"
-        ${this.showRollPercentiles ? 'checked' : ''}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.roll-percentiles-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'rollPercentilesLabel');
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.showRollPercentiles = checkbox.checked;
-      dataManager.saveGame();
-    });
-    return wrapper;
-  }
-
-  _createRateCountersOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = `
-      <label for="rate-counters-toggle" class="rate-counters-toggle-label" data-i18n="options.showRateCounters">Show Counters Bar:</label>
-      <input
-        type="checkbox"
-        id="rate-counters-toggle"
-        class="rate-counters-toggle"
-        ${this.showRateCounters ? 'checked' : ''}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.rate-counters-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'showRateCountersLabel');
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.showRateCounters = checkbox.checked;
-      dataManager.saveGame();
-      document.dispatchEvent(new CustomEvent('toggleRateCounters', { detail: this.showRateCounters }));
-    });
-    return wrapper;
-  }
-
-  _createRateCountersPeriodOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = `
-      <label for="rate-counters-period" class="rate-counters-period-label" data-i18n="options.rateCountersPeriod">Counters Period (sec):</label>
+    wrapper.innerHTML = html`
+      <label for="${id}" class="${id}-label" ${i18nAttr}>${labelText}</label>
       <input
         type="number"
-        id="rate-counters-period"
-        class="rate-counters-period-input"
-        min="1"
-        value="${this.rateCountersPeriod}"
+        id="${id}"
+        class="${id}"
+        min="${min}"
+        ${max !== undefined ? `max="${typeof max === 'function' ? max() : max}"` : ''}
+        value="${this[stateKey] ?? 0}"
+        ${disabled ? 'disabled' : ''}
       />
+      ${buttonsHtml}
     `;
-    const label = wrapper.querySelector('.rate-counters-period-label');
+
+    const label = wrapper.querySelector('label');
     const input = wrapper.querySelector('input');
-    attachTooltip(label, 'rateCountersPeriodLabel');
-    input.addEventListener('change', () => {
-      let v = parseInt(input.value, 10);
-      if (isNaN(v) || v <= 0) v = 3600;
-      this.rateCountersPeriod = v;
-      dataManager.saveGame();
-      document.dispatchEvent(new CustomEvent('ratePeriodChange', { detail: v }));
-    });
-    return wrapper;
-  }
 
-  _createShowInfoMessagesOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = `
-      <label for="show-info-messages-toggle" class="show-info-messages-toggle-label" data-i18n="options.showInfoMessages">Show Info Messages:</label>
-      <input
-        type="checkbox"
-        id="show-info-messages-toggle"
-        class="show-info-messages-toggle"
-        ${this.showInfoMessages ? 'checked' : ''}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.show-info-messages-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'showInfoMessagesLabel');
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.showInfoMessages = checkbox.checked;
-      dataManager.saveGame();
-    });
-    return wrapper;
-  }
+    if (tooltipKey) attachTooltip(label, tooltipKey);
+    if (inputTooltipKey) attachTooltip(input, inputTooltipKey, ...inputTooltipParams);
 
-  _createShowNotificationsOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = `
-      <label for="show-notifications-toggle" class="show-notifications-toggle-label" data-i18n="options.showNotifications">Show Notifications:</label>
-      <input
-        type="checkbox"
-        id="show-notifications-toggle"
-        class="show-notifications-toggle"
-        ${this.showNotifications ? 'checked' : ''}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.show-notifications-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'showNotificationsLabel');
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.showNotifications = checkbox.checked;
-      dataManager.saveGame();
-    });
-    return wrapper;
-  }
-
-  _createShowCombatTextOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = `
-      <label for="show-combat-text-toggle" class="show-combat-text-toggle-label" data-i18n="options.showCombatText">Show Combat Texts:</label>
-      <input
-        type="checkbox"
-        id="show-combat-text-toggle"
-        class="show-combat-text-toggle"
-        ${this.showCombatText ? 'checked' : ''}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.show-combat-text-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'showCombatTextLabel');
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.showCombatText = checkbox.checked;
-      dataManager.saveGame();
-    });
-    return wrapper;
-  }
-
-  /**
-   * Creates the stage skip number input UI.
-   */
-  _createStageSkipOption() {
-    let max = crystalShop.crystalUpgrades?.stageSkip || 0;
-    const value = this.stageSkip !== null ? this.stageSkip : 0;
-
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label for="stage-skip-input" class="stage-skip-label" data-i18n="options.stageSkipPerKill"
-        >Stage Skip per Kill:</label
-      >
-      <input type="number" id="stage-skip-input" class="stage-skip-input" min="0" max="${max}" value="${value}" />
-      <div class="min-max-btn-group">
-        <button class="min-btn" type="button" data-i18n="common.min">Min</button>
-        <button class="max-btn" type="button" data-i18n="common.max">Max</button>
-      </div>
-    `;
-
-    const label = wrapper.querySelector('.stage-skip-label');
-    const input = wrapper.querySelector('input');
-    const minBtn = wrapper.querySelector('.min-btn');
-    const maxBtn = wrapper.querySelector('.max-btn');
-    attachTooltip(label, 'stageSkipLabel');
-    attachTooltip(input, 'stageSkipInput', () => crystalShop.crystalUpgrades?.stageSkip || 0);
-
-    // Store refs for update
-    this._stageSkipInput = input;
-    this._stageSkipWrapper = wrapper;
-
-    const applyStageSkip = () => {
+    const getSafeValue = () => {
       let val = parseInt(input.value, 10);
-      let max = crystalShop.crystalUpgrades?.stageSkip || 0;
-      if (isNaN(val) || val < 0) val = 0;
-      if (val > max) val = max;
-      input.value = val;
-
-      if (this.stageSkip === val) return;
-
-      this.stageSkip = val;
-      dataManager.saveGame();
-      showToast(t('options.toast.stageSkipApplied'), 'success');
-      this.updateStageSkipOption();
+      let currentMax = typeof max === 'function' ? max() : max;
+      if (isNaN(val) || val < min) val = min;
+      if (currentMax !== undefined && val > currentMax) val = currentMax;
+      return val;
     };
 
-    if (minBtn) {
-      minBtn.onmouseenter = () => minBtn.classList.add('hover');
-      minBtn.onmouseleave = () => minBtn.classList.remove('hover');
-      minBtn.onclick = () => {
-        input.value = 0;
-        input.dispatchEvent(new Event('input'));
-        applyStageSkip();
-      };
-    }
-    if (maxBtn) {
-      maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
-      maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
-      maxBtn.onclick = () => {
-        const max = crystalShop.crystalUpgrades?.stageSkip || 0;
-        input.value = max;
-        input.dispatchEvent(new Event('input'));
-        applyStageSkip();
-      };
-    }
+    const applyValue = (force = false) => {
+      if (input.disabled) return;
+      let val = getSafeValue();
+      input.value = val;
+
+      const valueChanged = this[stateKey] !== val;
+
+      if (valueChanged) {
+        this[stateKey] = val;
+        dataManager.saveGame();
+      }
+
+      if (onApply) onApply(val, force, valueChanged);
+    };
 
     input.addEventListener('input', () => {
-      let val = parseInt(input.value, 10);
-      let max = crystalShop.crystalUpgrades?.stageSkip || 0;
-      if (isNaN(val) || val < 0) val = 0;
-      if (val > max) val = max;
-      input.value = val;
+      input.value = getSafeValue();
     });
 
-    input.addEventListener('blur', applyStageSkip);
+    input.addEventListener('blur', () => applyValue());
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        applyStageSkip();
+        applyValue(true);
         input.blur();
       }
     });
 
-    // Initial update to ensure correct max/value
-    this.updateStageSkipOption();
+    if (showMinMax) {
+      const minBtn = wrapper.querySelector('.min-btn');
+      const maxBtn = wrapper.querySelector('.max-btn');
 
+      minBtn.onclick = () => {
+        if (minBtn.disabled) return;
+        if (onMin) onMin(input);
+        else input.value = min;
+        input.dispatchEvent(new Event('input'));
+        applyValue(true);
+      };
+
+      maxBtn.onclick = () => {
+        if (maxBtn.disabled) return;
+        if (onMax) onMax(input);
+        else {
+          const currentMax = typeof max === 'function' ? max() : max;
+          if (currentMax !== undefined) input.value = currentMax;
+        }
+        input.dispatchEvent(new Event('input'));
+        applyValue(true);
+      };
+    }
+
+    if (onCreated) onCreated(wrapper, input, label);
     return wrapper;
   }
-
-  _createStageLockToggleOption() {
-    const purchased = !!crystalShop.crystalUpgrades?.stageLock;
+  /**
+   * Creates a generic toggle option UI.
+   */
+  _createToggleOption({
+    id,
+    i18nKey,
+    labelText,
+    tooltipKey,
+    tooltipParams = [],
+    stateKey,
+    onChange,
+    disabled = false,
+    onCreated,
+  }) {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label for="stage-lock-toggle" class="stage-lock-toggle-label" data-i18n="options.stageLock">Stage Lock:</label>
+    const i18nAttr = i18nKey ? `data-i18n="${i18nKey}"` : '';
+    wrapper.innerHTML = `
+      <label for="${id}" class="${id}-label" ${i18nAttr}>${labelText}</label>
       <input
         type="checkbox"
-        id="stage-lock-toggle"
-        class="stage-lock-toggle"
-        ${this.stageLockEnabled ? 'checked' : ''}
-        ${purchased ? '' : 'disabled'}
+        id="${id}"
+        class="${id}"
+        ${this[stateKey] ? 'checked' : ''}
+        ${disabled ? 'disabled' : ''}
       />
-      <span class="toggle-btn"></span>
+      <span class="toggle-btn ${disabled ? 'disabled' : ''}"></span>
     `;
-    const label = wrapper.querySelector('.stage-lock-toggle-label');
+    const label = wrapper.querySelector('label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'stageLockToggleLabel');
-    attachTooltip(checkbox, 'stageLockToggle', () => !!crystalShop.crystalUpgrades?.stageLock);
+    if (tooltipKey) {
+      attachTooltip(label, tooltipKey, ...tooltipParams);
+    }
     toggleBtn.addEventListener('click', () => {
       if (checkbox.disabled) return;
       checkbox.checked = !checkbox.checked;
       checkbox.dispatchEvent(new Event('change'));
     });
     checkbox.addEventListener('change', () => {
-      this.stageLockEnabled = checkbox.checked;
+      this[stateKey] = checkbox.checked;
+      if (onChange) onChange();
       dataManager.saveGame();
-      this.updateStageLockOption();
     });
-    this._stageLockToggle = checkbox;
-    this._stageLockToggleWrapper = wrapper;
-    this.updateStageLockOption();
+    if (onCreated) onCreated(wrapper, checkbox, label);
     return wrapper;
   }
 
-  _createStageLockInputOption() {
-    const purchased = !!crystalShop.crystalUpgrades?.stageLock;
-    const value = this.stageLock || 0;
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label for="stage-lock-input" class="stage-lock-label" data-i18n="options.stageLockStage">Lock at Stage:</label>
-      <input
-        type="number"
-        id="stage-lock-input"
-        class="stage-lock-input"
-        min="0"
-        value="${value}"
-        ${purchased ? '' : 'disabled'}
-      />
-      <div class="min-max-btn-group">
-        <button class="min-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.min">Min</button>
-        <button class="max-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.max">Max</button>
-      </div>
-    `;
-    const label = wrapper.querySelector('.stage-lock-label');
-    const input = wrapper.querySelector('input');
-    const minBtn = wrapper.querySelector('.min-btn');
-    const maxBtn = wrapper.querySelector('.max-btn');
-    attachTooltip(label, 'stageLockStageLabel');
-    attachTooltip(input, 'stageLockStageInput', () => !!crystalShop.crystalUpgrades?.stageLock);
 
-    this._stageLockInput = input;
-    this._stageLockWrapper = wrapper;
 
-    const applyStageLock = () => {
-      if (input.disabled) return;
-      let val = parseInt(input.value, 10);
-      if (isNaN(val) || val < 0) val = 0;
-      input.value = val;
 
-      if (this.stageLock === val) return;
 
-      this.stageLock = val;
-      dataManager.saveGame();
-      this.updateStageLockOption();
-      showToast(t('options.toast.stageLockApplied'), 'success');
-    };
 
-    if (minBtn) {
-      minBtn.onmouseenter = () => minBtn.classList.add('hover');
-      minBtn.onmouseleave = () => minBtn.classList.remove('hover');
-      minBtn.onclick = () => {
-        if (minBtn.disabled) return;
-        input.value = 0;
-        input.dispatchEvent(new Event('input'));
-        applyStageLock();
-      };
-    }
-    if (maxBtn) {
-      maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
-      maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
-      maxBtn.onclick = () => {
-        if (maxBtn.disabled) return;
-        const highest = Math.max(...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0));
-        input.value = highest || 0;
-        input.dispatchEvent(new Event('input'));
-        applyStageLock();
-      };
-    }
 
-    input.addEventListener('input', () => {
-      let val = parseInt(input.value, 10);
-      if (isNaN(val) || val < 0) val = 0;
-      input.value = val;
-    });
 
-    input.addEventListener('blur', applyStageLock);
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        applyStageLock();
-        input.blur();
-      }
-    });
 
-    this.updateStageLockOption();
-
-    return wrapper;
-  }
-
-  _createArenaBossSkipOption() {
-    const runeBonuses = runes?.getBonusEffects?.() || {};
-    let max = (ascension.getBonuses()?.arenaBossSkip || 0) + (runeBonuses.arenaBossSkip || 0);
-    const value = this.arenaBossSkip != null ? this.arenaBossSkip : 0;
-
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label for="boss-skip-input" class="boss-skip-label" data-i18n="options.arenaBossSkipPerKill"
-        >Boss Skip per Kill:</label
-      >
-      <input type="number" id="boss-skip-input" class="boss-skip-input" min="0" max="${max}" value="${value}" />
-      <div class="min-max-btn-group">
-        <button class="min-btn" type="button" data-i18n="common.min">Min</button>
-        <button class="max-btn" type="button" data-i18n="common.max">Max</button>
-      </div>
-    `;
-
-    const label = wrapper.querySelector('.boss-skip-label');
-    const input = wrapper.querySelector('input');
-    const minBtn = wrapper.querySelector('.min-btn');
-    const maxBtn = wrapper.querySelector('.max-btn');
-    attachTooltip(label, 'arenaBossSkipLabel');
-    attachTooltip(input, 'arenaBossSkipInput', () => {
-      const rb = runes?.getBonusEffects?.() || {};
-      return (ascension.getBonuses()?.arenaBossSkip || 0) + (rb.arenaBossSkip || 0);
-    });
-
-    this._bossSkipInput = input;
-
-    const applyBossSkip = () => {
-      let val = parseInt(input.value, 10);
-      const rb = runes?.getBonusEffects?.() || {};
-      let m = (ascension.getBonuses()?.arenaBossSkip || 0) + (rb.arenaBossSkip || 0);
-      if (isNaN(val) || val < 0) val = 0;
-      if (val > m) val = m;
-      input.value = val;
-
-      if (this.arenaBossSkip === val) return;
-
-      this.arenaBossSkip = val;
-      dataManager.saveGame();
-      showToast(t('options.toast.arenaBossSkipApplied'), 'success');
-      this.updateArenaBossSkipOption();
-    };
-
-    if (minBtn) {
-      minBtn.onmouseenter = () => minBtn.classList.add('hover');
-      minBtn.onmouseleave = () => minBtn.classList.remove('hover');
-      minBtn.onclick = () => {
-        input.value = 0;
-        input.dispatchEvent(new Event('input'));
-        applyBossSkip();
-      };
-    }
-    if (maxBtn) {
-      maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
-      maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
-      maxBtn.onclick = () => {
-        const rb = runes?.getBonusEffects?.() || {};
-        const m = (ascension.getBonuses()?.arenaBossSkip || 0) + (rb.arenaBossSkip || 0);
-        input.value = m;
-        input.dispatchEvent(new Event('input'));
-        applyBossSkip();
-      };
-    }
-
-    input.addEventListener('input', () => {
-      let val = parseInt(input.value, 10);
-      const rb = runes?.getBonusEffects?.() || {};
-      let m = (ascension.getBonuses()?.arenaBossSkip || 0) + (rb.arenaBossSkip || 0);
-      if (isNaN(val) || val < 0) val = 0;
-      if (val > m) val = m;
-      input.value = val;
-    });
-
-    input.addEventListener('blur', applyBossSkip);
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        applyBossSkip();
-        input.blur();
-      }
-    });
-
-    this.updateArenaBossSkipOption();
-
-    return wrapper;
-  }
 
   /**
    * Updates the stage skip input's max, title, and value if needed.
@@ -1054,96 +1044,6 @@ export class Options {
     }
   }
 
-  _createResetStageSkipOption() {
-    const purchased = !!crystalShop.crystalUpgrades?.resetStageSkip;
-    const value = this.resetStageSkip || 0;
-
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label for="reset-stage-skip-input" class="reset-stage-skip-label" data-i18n="options.resetStageSkipAt"
-        >Reset Stage Skip At:</label
-      >
-      <input
-        type="number"
-        id="reset-stage-skip-input"
-        class="reset-stage-skip-input"
-        min="0"
-        value="${value}"
-        ${purchased ? '' : 'disabled'}
-      />
-      <div class="min-max-btn-group">
-        <button class="min-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.min">Min</button>
-        <button class="max-btn" type="button" ${purchased ? '' : 'disabled'} data-i18n="common.max">Max</button>
-      </div>
-    `;
-
-    const label = wrapper.querySelector('.reset-stage-skip-label');
-    const input = wrapper.querySelector('input');
-    const minBtn = wrapper.querySelector('.min-btn');
-    const maxBtn = wrapper.querySelector('.max-btn');
-    attachTooltip(label, 'resetStageSkipLabel');
-    attachTooltip(input, 'resetStageSkipInput', () => !!crystalShop.crystalUpgrades?.resetStageSkip);
-
-    this._resetStageSkipInput = input;
-    this._resetStageSkipWrapper = wrapper;
-
-    const applyResetStageSkip = () => {
-      if (input.disabled) return;
-      let val = parseInt(input.value, 10);
-      if (isNaN(val) || val < 0) val = 0;
-      input.value = val;
-
-      if (this.resetStageSkip === val) return;
-
-      this.resetStageSkip = val;
-      dataManager.saveGame();
-      showToast(t('options.toast.resetStageSkipApplied'), 'success');
-      this.updateResetStageSkipOption();
-    };
-
-    if (minBtn) {
-      minBtn.onmouseenter = () => minBtn.classList.add('hover');
-      minBtn.onmouseleave = () => minBtn.classList.remove('hover');
-      minBtn.onclick = () => {
-        if (minBtn.disabled) return;
-        input.value = 0;
-        input.dispatchEvent(new Event('input'));
-        applyResetStageSkip();
-      };
-    }
-    if (maxBtn) {
-      maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
-      maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
-      maxBtn.onclick = () => {
-        if (maxBtn.disabled) return;
-        // Use highest stage reached across all tiers as a sensible maximum
-        const highest = Math.max(...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0));
-        input.value = highest || 0;
-        input.dispatchEvent(new Event('input'));
-        applyResetStageSkip();
-      };
-    }
-
-    input.addEventListener('input', () => {
-      let val = parseInt(input.value, 10);
-      if (isNaN(val) || val < 0) val = 0;
-      input.value = val;
-    });
-
-    input.addEventListener('blur', applyResetStageSkip);
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        applyResetStageSkip();
-        input.blur();
-      }
-    });
-
-    this.updateResetStageSkipOption();
-
-    return wrapper;
-  }
 
   updateResetStageSkipOption() {
     if (!this._resetStageSkipInput) return;
@@ -1630,119 +1530,6 @@ export class Options {
     });
   }
 
-  /**
-   * Creates the starting stage number input UI.
-   */
-  _createStartingStageOption() {
-    let max = 1 + (crystalShop.crystalUpgrades?.startingStage || 0);
-    const value = this.startingStage !== null ? this.startingStage : 0;
-
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label for="starting-stage-input" class="starting-stage-label" data-i18n="options.startingStage"
-        >Starting Stage:</label
-      >
-      <input
-        type="number"
-        id="starting-stage-input"
-        class="starting-stage-input"
-        min="1"
-        max="${max}"
-        value="${value}"
-      />
-      <div class="min-max-btn-group">
-        <button class="min-btn" type="button" data-i18n="common.min">Min</button>
-        <button class="max-btn" type="button" data-i18n="common.max">Max</button>
-      </div>
-    `;
-
-    const label = wrapper.querySelector('.starting-stage-label');
-    const input = wrapper.querySelector('input');
-    const minBtn = wrapper.querySelector('.min-btn');
-    const maxBtn = wrapper.querySelector('.max-btn');
-    attachTooltip(label, 'startingStageLabel');
-    attachTooltip(input, 'startingStageInput', () => 1 + (crystalShop.crystalUpgrades?.startingStage || 0));
-
-    // Store refs for update
-    this._startingStageInput = input;
-    this._startingStageWrapper = wrapper;
-
-    const applyStartingStage = (force = false) => {
-      let val = parseInt(input.value, 10);
-      let maxVal = 1 + (crystalShop.crystalUpgrades?.startingStage || 0);
-      if (isNaN(val) || val < 0) val = 0;
-      if (val > maxVal) val = maxVal;
-      input.value = val;
-
-      const valueChanged = this.startingStage !== val;
-      const stageMismatch = game.fightMode === 'explore' && game.stage !== game.getStartingStage();
-      const shouldSyncStage = force || valueChanged || stageMismatch;
-      if (!valueChanged && !shouldSyncStage) return;
-
-      if (valueChanged) {
-        this.startingStage = val;
-      }
-
-      if (shouldSyncStage && game.fightMode === 'explore') {
-        game.stage = game.getStartingStage();
-        game.currentEnemy = new Enemy(game.stage);
-        updateStageUI();
-        game.resetAllLife();
-      }
-
-      if (valueChanged) {
-        dataManager.saveGame();
-        this.updateStartingStageOption();
-      } else if (force) {
-        this.updateStartingStageOption();
-      }
-
-      showToast(t('options.toast.startingStageApplied'), 'success');
-    };
-
-    if (minBtn) {
-      minBtn.onmouseenter = () => minBtn.classList.add('hover');
-      minBtn.onmouseleave = () => minBtn.classList.remove('hover');
-      minBtn.onclick = () => {
-        input.value = 1;
-        input.dispatchEvent(new Event('input'));
-        applyStartingStage(true);
-      };
-    }
-    if (maxBtn) {
-      maxBtn.onmouseenter = () => maxBtn.classList.add('hover');
-      maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
-      maxBtn.onclick = () => {
-        const maxVal = 1 + (crystalShop.crystalUpgrades?.startingStage || 0);
-        input.value = maxVal;
-        input.dispatchEvent(new Event('input'));
-        applyStartingStage(true);
-      };
-    }
-
-    input.addEventListener('input', () => {
-      let val = parseInt(input.value, 10);
-      let maxVal = 1 + (crystalShop.crystalUpgrades?.startingStage || 0);
-      if (isNaN(val) || val < 0) val = 0;
-      if (val > maxVal) val = maxVal;
-      input.value = val;
-    });
-
-    input.addEventListener('blur', () => applyStartingStage(false));
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        applyStartingStage(true);
-        input.blur();
-      }
-    });
-
-    // Initial update to ensure correct max/value
-    this.updateStartingStageOption();
-
-    return wrapper;
-  }
 
   /**
    * Updates the starting stage input's max, title, and value if needed.
@@ -1785,304 +1572,13 @@ export class Options {
     }
   }
 
-  /**
-   * Creates the toggle for short/long elemental stat names.
-   */
-  _createShortElementalNamesOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label
-        for="short-elemental-names-toggle"
-        class="short-elemental-names-toggle-label"
-        data-i18n="options.shortElementalNames"
-        >Use Short Elemental Stat Names:</label
-      >
-      <input
-        type="checkbox"
-        id="short-elemental-names-toggle"
-        class="short-elemental-names-toggle"
-        ${this.shortElementalNames ? 'checked' : ''}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.short-elemental-names-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'shortElementalNamesLabel');
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.shortElementalNames = checkbox.checked;
-      dataManager.saveGame();
-      updateStatsAndAttributesUI(true);
-      updateEnemyStats();
-    });
-    return wrapper;
-  }
 
-  _createShortNumbersOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label for="short-numbers-toggle" class="short-numbers-toggle-label" data-i18n="options.shortNumbers"
-        >Use Short Number Notation:</label
-      >
-      <input
-        type="checkbox"
-        id="short-numbers-toggle"
-        class="short-numbers-toggle"
-        ${this.shortNumbers ? 'checked' : ''}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.short-numbers-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'shortNumbersLabel');
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.shortNumbers = checkbox.checked;
-      dataManager.saveGame();
-      updateResources();
-      updateStatsAndAttributesUI(true);
-      updateStageUI();
-      updatePlayerLife();
-      training.updateTrainingUI('gold-upgrades');
-      crystalShop.updateCrystalShopUI();
-      soulShop.updateSoulShopUI();
-      initializeBuildingsUI();
-    });
-    return wrapper;
-  }
 
-  /**
-   * Creates the show skill cooldown numbers toggle option UI.
-   */
-  _createShowSkillCooldownsOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label
-        for="show-skill-cooldowns-toggle"
-        class="show-skill-cooldowns-toggle-label"
-        data-i18n="options.showSkillCooldowns"
-        >Show Skill Cooldown Numbers:</label
-      >
-      <input
-        type="checkbox"
-        id="show-skill-cooldowns-toggle"
-        class="show-skill-cooldowns-toggle"
-        ${this.showSkillCooldowns ? 'checked' : ''}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.show-skill-cooldowns-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'showSkillCooldownsLabel');
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.showSkillCooldowns = checkbox.checked;
-      dataManager.saveGame();
-      updateBuffIndicators();
-    });
-    return wrapper;
-  }
 
-  /**
-   * Creates the show all stats toggle option UI.
-   */
-  _createShowAllStatsOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label for="show-all-stats-toggle" class="show-all-stats-toggle-label" data-i18n="options.showAllStats"
-        >Show All Stats:</label
-      >
-      <input
-        type="checkbox"
-        id="show-all-stats-toggle"
-        class="show-all-stats-toggle"
-        ${this.showAllStats ? 'checked' : ''}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.show-all-stats-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'showAllStatsLabel');
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.showAllStats = checkbox.checked;
-      dataManager.saveGame();
-      updateStatsAndAttributesUI(true);
-    });
-    return wrapper;
-  }
 
-  /**
-   * Creates the unified quick buy toggle option UI.
-   */
-  _createQuickBuyOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label for="quick-buy-toggle" class="quick-buy-toggle-label" data-i18n="options.quickBuy"
-        >Enable Quick Buy:</label
-      >
-      <input type="checkbox" id="quick-buy-toggle" class="quick-buy-toggle" ${this.quickBuy ? 'checked' : ''} />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.quick-buy-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'quickBuyLabel');
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.quickBuy = checkbox.checked;
-      dataManager.saveGame();
-      if (training) training.initializeTrainingUI();
-      if (soulShop) soulShop.initializeSoulShopUI();
-      initializeSkillTreeStructure();
-    });
-    return wrapper;
-  }
 
-  /**
-   * Creates the unified bulk buy toggle option UI.
-   */
-  _createBulkBuyOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label for="bulk-buy-toggle" class="bulk-buy-toggle-label" data-i18n="options.bulkBuy">Enable Bulk Buy:</label>
-      <input type="checkbox" id="bulk-buy-toggle" class="bulk-buy-toggle" ${this.bulkBuy ? 'checked' : ''} />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.bulk-buy-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'bulkBuyLabel');
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.bulkBuy = checkbox.checked;
-      dataManager.saveGame();
-      if (training) training.initializeTrainingUI();
-      if (soulShop) soulShop.initializeSoulShopUI();
-      initializeSkillTreeStructure();
-    });
-    return wrapper;
-  }
 
-  /**
-   * Toggle numeric input fields for bulk purchases.
-   */
-  _createNumericInputOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label for="numeric-input-toggle" class="numeric-input-toggle-label" data-i18n="options.numericPurchaseInputs"
-        >Enable Numeric Purchase Inputs:</label
-      >
-      <input
-        type="checkbox"
-        id="numeric-input-toggle"
-        class="numeric-input-toggle"
-        ${this.useNumericInputs ? 'checked' : ''}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.numeric-input-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'numericInputLabel');
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.useNumericInputs = checkbox.checked;
-      if (!this.useNumericInputs) {
-        if (training) training.quickQty = 1;
-        if (soulShop) soulShop.quickQty = 1;
-        if (skillTree) skillTree.quickQty = 1;
-      }
-      dataManager.saveGame();
-      if (training) {
-        training.modal = null;
-        training.initializeTrainingUI();
-      }
-      if (soulShop) {
-        soulShop.modal = null;
-        soulShop.initializeSoulShopUI();
-      }
-      if (crystalShop) {
-        crystalShop.modal = null;
-        crystalShop.initializeCrystalShopUI();
-      }
-      initializeSkillTreeStructure();
-      initializeBuildingsUI();
-    });
-    return wrapper;
-  }
 
-  _createAutoSortInventoryOption() {
-    const purchased = !!crystalShop.crystalUpgrades?.autoSortInventory;
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label
-        for="auto-sort-inventory-toggle"
-        class="auto-sort-inventory-toggle-label"
-        data-i18n="options.autoSortInventory"
-        >Auto Sort Inventory:</label
-      >
-      <input
-        type="checkbox"
-        id="auto-sort-inventory-toggle"
-        class="auto-sort-inventory-toggle"
-        ${this.autoSortInventory ? 'checked' : ''}
-        ${purchased ? '' : 'disabled'}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.auto-sort-inventory-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'autoSortInventoryLabel');
-    attachTooltip(checkbox, 'autoSortInventoryToggle', () => !!crystalShop.crystalUpgrades?.autoSortInventory);
-    toggleBtn.addEventListener('click', () => {
-      if (checkbox.disabled) return;
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.autoSortInventory = checkbox.checked;
-      dataManager.saveGame();
-    });
-    this._autoSortInventoryToggle = checkbox;
-    this._autoSortInventoryWrapper = wrapper;
-    this.updateAutoSortInventoryOption();
-    return wrapper;
-  }
 
   updateAutoSortInventoryOption() {
     if (!this._autoSortInventoryToggle) return;
@@ -2092,87 +1588,6 @@ export class Options {
     if (toggleBtn) toggleBtn.classList.toggle('disabled', !purchased);
   }
 
-  /**
-   * Creates the enemy stats toggle option UI.
-   */
-  _createEnemyStatsToggleOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label for="enemy-stats-toggle" class="enemy-stats-toggle-label" data-i18n="options.showEnemyStats"
-        >Show Enemy Stats:</label
-      >
-      <input
-        type="checkbox"
-        id="enemy-stats-toggle"
-        class="enemy-stats-toggle"
-        ${this.showEnemyStats ? 'checked' : ''}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.enemy-stats-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'enemyStatsLabel');
-    // Make the toggle button clickable and sync with checkbox
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.showEnemyStats = checkbox.checked;
-      // Save option
-      dataManager.saveGame();
-      // Show/hide enemy stats in UI
-      const stats = document.querySelector('.enemy-stats');
-      if (stats) stats.style.display = this.showEnemyStats ? '' : 'none';
-    });
-    // Initial hide/show
-    setTimeout(() => {
-      const stats = document.querySelector('.enemy-stats');
-      if (stats) stats.style.display = this.showEnemyStats ? '' : 'none';
-    }, 0);
-    return wrapper;
-  }
 
-  /**
-   * Creates a toggle to show stage-related controls below the enemy in Explore and Rocky Field panels.
-   */
-  _createStageControlsInlineOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label
-        for="stage-controls-inline-toggle"
-        class="stage-controls-inline-toggle-label"
-        data-i18n="options.stageControlsInline"
-        >Show Stage Controls Under Enemy:</label
-      >
-      <input
-        type="checkbox"
-        id="stage-controls-inline-toggle"
-        class="stage-controls-inline-toggle"
-        ${this.showStageControlsInline ? 'checked' : ''}
-      />
-      <span class="toggle-btn"></span>
-    `;
-    const label = wrapper.querySelector('.stage-controls-inline-toggle-label');
-    const checkbox = wrapper.querySelector('input');
-    const toggleBtn = wrapper.querySelector('.toggle-btn');
-    attachTooltip(label, 'stageControlsInlineLabel');
-    toggleBtn.addEventListener('click', () => {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
-    });
-    checkbox.addEventListener('change', () => {
-      this.showStageControlsInline = checkbox.checked;
-      dataManager.saveGame();
-      // Ask UI to update inline controls visibility
-      try {
-        const evt = new CustomEvent('updateInlineStageControls');
-        document.dispatchEvent(evt);
-      } catch (e) {}
-    });
-    return wrapper;
-  }
+
 }

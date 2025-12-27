@@ -53,13 +53,6 @@ export function getStatDecimalPlaces(statKey, fallback = 0) {
   return decimals === undefined ? fallback : decimals;
 }
 
-/**
- * Compute the tier-based scaling multiplier.
- * Tier scaling: multiply by ITEM_FLAT_REGION_SCALING_MULTIPLIER for each tier above 1.
- *
- * @param {number} tier - Item tier (1-based).
- * @returns {number} Scaling factor for the given tier.
- */
 export function itemTierScaling(tier = 1) {
   return Math.pow(ITEM_FLAT_REGION_SCALING_MULTIPLIER, Math.max(0, tier - 1));
 }
@@ -81,25 +74,9 @@ export function createTierScaling(start, end, power = 1) {
   return scaling;
 }
 
-/**
- * Compute a scaling multiplier for item flat stats.
- *
- * Flat values scale by:
- * - Tier: exponential based on ITEM_FLAT_REGION_SCALING_MULTIPLIER
- * - Level: linear based on ITEM_FLAT_STAGE_SCALING_PERCENT
- *
- * @param {number} level - Item level.
- * @param {number} [tier=1] - Item tier (1-based).
- * @returns {number} Scaling factor to multiply base stat values by.
- */
 export function itemLevelScaling(level, tier = 1) {
-  // Tier scaling
   const tierScale = itemTierScaling(tier);
-
   if (level <= 1) return tierScale;
-
-  // Level scaling: percentage increase per level from base
   const levelScale = 1 + (level - 1) * ITEM_FLAT_STAGE_SCALING_PERCENT;
-
   return tierScale * levelScale;
 }
