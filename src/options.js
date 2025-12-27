@@ -26,7 +26,6 @@ import { closeModal, createModal } from './ui/modal.js';
 import Enemy from './enemy.js';
 import { logout } from './api.js';
 import { CHANGELOG } from './changelog/changelog.js';
-import upcommingChanges from './upcoming.js';
 import { audioManager } from './audio.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { setLanguage, t, tp } from './i18n.js';
@@ -133,19 +132,12 @@ export class Options {
     this.devAccessModalDismissed = data.devAccessModalDismissed ?? false;
   }
 
-  /**
-   * Main entry to initialize the Options tab UI.
-   */
   initializeOptionsUI() {
     this._renderOptionsUI();
     this._initCloudSaveButtons();
-    // Always set audio volume to current option when initializing options UI
     audioManager.setVolume(this.soundVolume);
   }
 
-  /**
-   * Creates the language selection dropdown.
-   */
   _createLanguageOption() {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
@@ -243,9 +235,6 @@ export class Options {
     return wrapper;
   }
 
-  /**
-   * Creates the sound volume slider UI.
-   */
   _createSoundVolumeOption() {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
@@ -273,12 +262,9 @@ export class Options {
       if (val > 1) val = 1;
       this.soundVolume = val;
       valueLabel.textContent = `${Math.round(val * 100)}%`;
-      // Set global audio volume
       audioManager.setVolume(val);
-      // Save option
       dataManager.saveGame();
     });
-    // Set initial volume on load
     setTimeout(() => {
       audioManager.setVolume(this.soundVolume);
     }, 0);
@@ -293,7 +279,6 @@ export class Options {
     const container = document.createElement('div');
     container.className = 'options-container';
 
-    // --- Tabs ---
     const tabs = document.createElement('div');
     tabs.className = 'options-tabs';
     const gameTabBtn = document.createElement('button');
@@ -308,7 +293,6 @@ export class Options {
     tabs.appendChild(generalTabBtn);
     container.appendChild(tabs);
 
-    // --- Game Options Content ---
     const gameContent = document.createElement('div');
     gameContent.className = 'options-content active';
     gameContent.appendChild(
@@ -710,7 +694,6 @@ export class Options {
       }),
     );
 
-    // --- General Options Content ---
     const generalContent = document.createElement('div');
     generalContent.className = 'options-content';
     generalContent.appendChild(this._createCloudSaveBar());
@@ -723,7 +706,6 @@ export class Options {
     const changelogRow = document.createElement('div');
     changelogRow.className = 'changelog-row';
     changelogRow.appendChild(this._createChangelogButton());
-    changelogRow.appendChild(this._createUpcomingChangesButton());
     generalContent.appendChild(changelogRow);
 
     generalContent.appendChild(this._createDiscordSection());
@@ -750,7 +732,6 @@ export class Options {
     container.appendChild(gameContent);
     container.appendChild(generalContent);
 
-    // --- Tab Switching Logic ---
     gameTabBtn.addEventListener('click', () => {
       gameTabBtn.classList.add('active');
       generalTabBtn.classList.remove('active');
@@ -768,9 +749,6 @@ export class Options {
     optionsTab.appendChild(container);
   }
 
-  /**
-   * Creates a generic number input option UI.
-   */
   _createNumberInputOption({
     id,
     i18nKey,
@@ -885,9 +863,6 @@ export class Options {
     if (onCreated) onCreated(wrapper, input, label);
     return wrapper;
   }
-  /**
-   * Creates a generic toggle option UI.
-   */
   _createToggleOption({
     id,
     i18nKey,
@@ -933,19 +908,6 @@ export class Options {
     return wrapper;
   }
 
-
-
-
-
-
-
-
-
-
-  /**
-   * Updates the stage skip input's max, title, and value if needed.
-   * Call this whenever crystalShop.crystalUpgrades.stageSkip changes.
-   */
   updateStageSkipOption() {
     if (!this._stageSkipInput) return;
     const oldMax = parseInt(this._stageSkipInput.max, 10) || 0;
@@ -955,8 +917,6 @@ export class Options {
     let val = parseInt(this._stageSkipInput.value, 10);
     if (isNaN(val) || val < 0) val = 0;
     if (val > max) val = max;
-    // If user hadn't set a custom value (0/default), bump to current option (which may be newly synced)
-    // Also, if user value was exactly the previous max, follow the new max.
     if ((val === 0 || isNaN(val)) && this.stageSkip > 0) {
       this._stageSkipInput.value = this.stageSkip;
     } else if (oldMax > 0 && val === oldMax) {
@@ -965,7 +925,6 @@ export class Options {
       this._stageSkipInput.value = val;
     }
 
-    // Update inline input if present
     const inlineInput = document.querySelector('#inline-stage-controls .stage-skip-input');
     if (inlineInput) {
       const oldInlineMax = parseInt(inlineInput.max, 10) || 0;
@@ -1052,7 +1011,6 @@ export class Options {
     const btns = this._resetStageSkipWrapper?.querySelectorAll('.min-btn, .max-btn');
     if (btns) btns.forEach((b) => (b.disabled = !purchased));
 
-    // Update inline input/button if present
     const inlineInput = document.querySelector('#inline-stage-controls .reset-stage-skip-input');
     if (inlineInput) inlineInput.disabled = !purchased;
     const inlineRow = inlineInput?.closest('.option-row');
@@ -1062,9 +1020,6 @@ export class Options {
     if (inlineMax) inlineMax.disabled = !purchased;
   }
 
-  /**
-   * Creates the cloud save/load bar UI.
-   */
   _createCloudSaveBar() {
     const bar = document.createElement('div');
     bar.className = 'cloud-save-bar';
@@ -1166,10 +1121,6 @@ export class Options {
     return wrapper;
   }
 
-  /**
-   * Refreshes the save slot dropdown with latest summaries.
-   * @param {HTMLSelectElement} [selectEl]
-   */
   refreshSaveSlotSelect(selectEl = document.getElementById('save-slot-select')) {
     if (!selectEl) return;
     const summaries = dataManager.getSlotSummaries();
@@ -1249,9 +1200,6 @@ export class Options {
     }
   }
 
-  /**
-   * Creates the reset progress button and its logic.
-   */
   _createResetButton() {
     const resetButton = document.createElement('button');
     resetButton.id = 'reset-progress';
@@ -1271,9 +1219,6 @@ export class Options {
     return resetButton;
   }
 
-  /**
-   * Creates the changelog button and its modal logic.
-   */
   _createChangelogButton() {
     const changelogBtn = document.createElement('button');
     changelogBtn.id = 'view-changelog';
@@ -1340,31 +1285,6 @@ export class Options {
       });
     };
     return changelogBtn;
-  }
-
-  /**
-   * Creates the Upcoming Changes button and its modal logic.
-   */
-  _createUpcomingChangesButton() {
-    const upcomingBtn = document.createElement('button');
-    upcomingBtn.id = 'view-upcoming';
-    upcomingBtn.setAttribute('data-i18n', 'options.upcoming.view');
-    upcomingBtn.textContent = t('options.upcoming.view');
-    upcomingBtn.onclick = async () => {
-      let text = '';
-      text = upcommingChanges();
-      let content = '<div class="changelog-modal-content">';
-      content += '<button class="modal-close">X</button>';
-      content += `<h2>${t('options.upcoming.title')}</h2>`;
-      content += `<div class="changelog-body">${text || ''}</div>`;
-      content += '</div>';
-      createModal({
-        id: 'upcoming-modal',
-        className: 'changelog-modal',
-        content,
-      });
-    };
-    return upcomingBtn;
   }
 
   /**

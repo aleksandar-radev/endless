@@ -496,8 +496,6 @@ export default {
   'options.changelog.errorFor': 'Error al cargar el registro para',
   'options.changelog.noContentFor': 'No hay contenido de registro para',
   'options.changelog.current': 'actual',
-  'options.upcoming.view': 'Ver cambios futuros',
-  'options.upcoming.title': 'Cambios próximos',
   'options.discord': 'Únete a nuestro Discord',
   'options.currentVersion': 'Versión actual:',
   'options.suggestionsPrompt': 'Por favor añade tus sugerencias de cambios en el canal de Discord :)',

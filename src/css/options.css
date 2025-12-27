@@ -377,8 +377,7 @@
 }
 
 /* Changelog button */
-#view-changelog,
-#view-upcoming {
+#view-changelog {
   background: #2563eb;
   color: #fff;
   border: none;
@@ -390,8 +389,7 @@
   width: 100%;
 }
 
-#view-changelog:hover,
-#view-upcoming:hover {
+#view-changelog:hover {
   background: #1d4ed8;
 }
 
@@ -615,8 +613,7 @@
     font-size: 0.75em;
   }
 
-  #view-changelog,
-  #view-upcoming {
+  #view-changelog {
     padding: 10px 12px;
     font-size: 0.85rem;
   }

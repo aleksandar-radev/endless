@@ -61,7 +61,7 @@
 2. **Progression systems**
    - Skill tree path selection and respec, building upgrades affecting stats/resource generation, training & ascension loops, prestige resets with retained meta currencies.
    - Soul shop perks, crystal shop upgrades (including starting stage logic), runes crafting/upgrading, unique item acquisition.
-   - Quest tracking, statistics achievements, upcoming content placeholders.
+   - Quest tracking and statistics achievements.
 3. **Economy balancing**
    - Recreate drop tables, currency sinks, and scaling curves. Use analytics to ensure pacing matches existing game while enabling tuning via config files.
 

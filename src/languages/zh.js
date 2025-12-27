@@ -528,8 +528,6 @@ export default {
   'options.changelog.errorFor': '加载更新日志时出错',
   'options.changelog.noContentFor': '没有更新内容',
   'options.changelog.current': '当前',
-  'options.upcoming.view': '查看即将到来的更改',
-  'options.upcoming.title': '即将到来的更改',
   'options.discord': '加入我们的 Discord',
   'options.currentVersion': '当前版本：',
   'options.suggestionsPrompt': '请在 Discord 频道中提出您对游戏的建议 :)',

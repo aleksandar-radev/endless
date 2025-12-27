@@ -523,8 +523,6 @@ export default {
   'options.changelog.errorFor': 'Error loading changelog for',
   'options.changelog.noContentFor': 'No changelog content for',
   'options.changelog.current': 'current',
-  'options.upcoming.view': 'View Upcoming Changes',
-  'options.upcoming.title': 'Upcoming Changes',
   'options.discord': 'Join our Discord',
   'options.currentVersion': 'Current version:',
   'options.suggestionsPrompt': 'Please add your suggestions for changes in the Discord channel :)',
