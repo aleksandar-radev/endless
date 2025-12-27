@@ -25,22 +25,22 @@ const SPECIAL_PERCENT_CAPS = {
 export const AVAILABLE_STATS = Object.fromEntries(
   Object.entries(STATS)
     .filter(([_, config]) => config.item)
-    .map(([stat, config]) => [stat, config.item])
+    .map(([stat, config]) => [stat, config.item]),
 );
 
 // Precompute lookup tables so we can recover stat bounds for legacy unique/set items
 // that may lack stored roll metadata.
 const UNIQUE_ITEM_STATS = new Map(
-  UNIQUE_ITEMS.map((item) => [item.id, new Map((item.stats || []).map((entry) => [entry.stat, entry]))])
+  UNIQUE_ITEMS.map((item) => [item.id, new Map((item.stats || []).map((entry) => [entry.stat, entry]))]),
 );
 
 const ITEM_SET_LOOKUP = new Map(
   ITEM_SETS.map((set) => [
     set.id,
     new Map(
-      (set.items || []).map((piece) => [piece.id, new Map((piece.stats || []).map((entry) => [entry.stat, entry]))])
+      (set.items || []).map((piece) => [piece.id, new Map((piece.stats || []).map((entry) => [entry.stat, entry]))]),
     ),
-  ])
+  ]),
 );
 
 const RESISTANCE_STATS = [
@@ -167,7 +167,9 @@ export default class Item {
     return ITEM_RARITY[this.rarity].statMultiplier;
   }
 
-  calculateStatValue({ baseValue, multiplier, scale, stat }) {
+  calculateStatValue({
+    baseValue, multiplier, scale, stat,
+  }) {
     const decimals = getStatDecimalPlaces(stat);
     const handedMultiplier = this.isTwoHanded() ? 2 : 1;
     let val = baseValue * multiplier * scale * handedMultiplier;
@@ -256,7 +258,9 @@ export default class Item {
       max = max * (multiplier.max || 1);
     }
 
-    return { min, max, limit };
+    return {
+      min, max, limit,
+    };
   }
 
   /**
@@ -374,7 +378,9 @@ export default class Item {
     const multiplier = this.getMultiplier();
     const calcValue = (stat, baseValue) => {
       const scale = this.getLevelScale(stat, this.level);
-      return this.calculateStatValue({ baseValue, multiplier, scale, stat });
+      return this.calculateStatValue({
+        baseValue, multiplier, scale, stat,
+      });
     };
 
     const subtypeData = this.subtypeData || {};
@@ -399,7 +405,7 @@ export default class Item {
     // Remove mandatory stats (already added)
     // Remove disabled stats
     let availableStats = [...itemPool.possible, ...additionalStats].filter(
-      (stat) => !itemPool.mandatory.includes(stat) && !disabledStats.has(stat)
+      (stat) => !itemPool.mandatory.includes(stat) && !disabledStats.has(stat),
     );
 
     // Deduplicate in case additionalStats overlaps with possible stats
@@ -414,7 +420,7 @@ export default class Item {
       const eligibleStats = availableStats.filter(
         (s) =>
           !(RESISTANCE_STATS.includes(s) && resistanceCount >= 3) &&
-          !(ATTRIBUTE_STATS.includes(s) && attributeCount >= 3)
+          !(ATTRIBUTE_STATS.includes(s) && attributeCount >= 3),
       );
 
       if (eligibleStats.length === 0) break;
@@ -553,46 +559,46 @@ export default class Item {
         ${descriptionLine}
         <div class="item-stats">
           ${STAT_GROUPS.map((group) => {
-            const stats = group.order.filter((s) => this.stats[s] !== undefined);
-            if (stats.length === 0) return null;
-            const groupHtml = stats
-              .map((stat) => {
-                const value = this.stats[stat];
-                const statDef = STATS[stat] || {};
-                if (statDef.showValue === false) {
-                  return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+    const stats = group.order.filter((s) => this.stats[s] !== undefined);
+    if (stats.length === 0) return null;
+    const groupHtml = stats
+      .map((stat) => {
+        const value = this.stats[stat];
+        const statDef = STATS[stat] || {};
+        if (statDef.showValue === false) {
+          return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
                     <span>${formatStatName(stat)}</span>
                   </div>`;
-                }
-                const decimals = getStatDecimalPlaces(stat);
-                const formattedValue = formatNumber(value.toFixed(decimals));
-                let adv = '';
-                if (showAdvanced && statMinMax[stat]) {
-                  const minRaw = statMinMax[stat].min;
-                  const maxRaw = statMinMax[stat].max;
-                  if (options?.showRollPercentiles) {
-                    let pct = 100;
-                    if (maxRaw > minRaw) {
-                      pct = Math.max(0, Math.min(1, (value - minRaw) / (maxRaw - minRaw))) * 100;
-                    }
-                    const pctStr = `${Math.round(pct)}%`;
-                    adv = `<span class="item-ref-range" style="float:right; color:#aaa; text-align:right; min-width:60px;">${pctStr}</span>`;
-                  } else {
-                    const min = formatNumber(minRaw.toFixed(decimals));
-                    const max = formatNumber(maxRaw.toFixed(decimals));
-                    adv = `<span class="item-ref-range" style="float:right; color:#aaa; text-align:right; min-width:60px;">${min} - ${max}</span>`;
-                  }
-                }
-                return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+        }
+        const decimals = getStatDecimalPlaces(stat);
+        const formattedValue = formatNumber(value.toFixed(decimals));
+        let adv = '';
+        if (showAdvanced && statMinMax[stat]) {
+          const minRaw = statMinMax[stat].min;
+          const maxRaw = statMinMax[stat].max;
+          if (options?.showRollPercentiles) {
+            let pct = 100;
+            if (maxRaw > minRaw) {
+              pct = Math.max(0, Math.min(1, (value - minRaw) / (maxRaw - minRaw))) * 100;
+            }
+            const pctStr = `${Math.round(pct)}%`;
+            adv = `<span class="item-ref-range" style="float:right; color:#aaa; text-align:right; min-width:60px;">${pctStr}</span>`;
+          } else {
+            const min = formatNumber(minRaw.toFixed(decimals));
+            const max = formatNumber(maxRaw.toFixed(decimals));
+            adv = `<span class="item-ref-range" style="float:right; color:#aaa; text-align:right; min-width:60px;">${min} - ${max}</span>`;
+          }
+        }
+        return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
                   <span>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}</span>
                   ${adv}
                 </div>`;
-              })
-              .join('');
-            return groupHtml;
-          })
-            .filter(Boolean)
-            .join('<hr class="item-tooltip-separator" />')}
+      })
+      .join('');
+    return groupHtml;
+  })
+    .filter(Boolean)
+    .join('<hr class="item-tooltip-separator" />')}
         </div>
         ${setSection}
       </div>
@@ -607,14 +613,14 @@ export default class Item {
     if (this.metaData) {
       if (this.metaData.statRolls && Object.keys(this.metaData.statRolls).length > 0) {
         const entries = Object.entries(this.metaData.statRolls).filter(
-          ([, data]) => data && typeof data.baseValue === 'number'
+          ([, data]) => data && typeof data.baseValue === 'number',
         );
         if (entries.length) {
           return Object.fromEntries(entries.map(([stat, data]) => [stat, data.baseValue]));
         }
       }
       const legacyEntries = Object.entries(this.metaData).filter(
-        ([key, data]) => key !== 'statRolls' && data && typeof data.baseValue === 'number'
+        ([key, data]) => key !== 'statRolls' && data && typeof data.baseValue === 'number',
       );
       if (legacyEntries.length) {
         return Object.fromEntries(legacyEntries.map(([stat, data]) => [stat, data.baseValue]));
@@ -641,7 +647,9 @@ export default class Item {
     const multiplier = this.getMultiplier();
     for (const stat of Object.keys(this.stats)) {
       const scale = this.getLevelScale(stat, newLevel);
-      this.stats[stat] = this.calculateStatValue({ baseValue: baseValues[stat], multiplier, scale, stat });
+      this.stats[stat] = this.calculateStatValue({
+        baseValue: baseValues[stat], multiplier, scale, stat,
+      });
     }
     this.level = newLevel;
     if (Array.isArray(this.metaData?.setBonuses)) {
@@ -674,7 +682,7 @@ export default class Item {
     const attributeCount = Object.keys(this.stats).filter((s) => ATTRIBUTE_STATS.includes(s)).length;
     const eligibleStats = availableStats.filter(
       (s) =>
-        !(RESISTANCE_STATS.includes(s) && resistanceCount >= 3) && !(ATTRIBUTE_STATS.includes(s) && attributeCount >= 3)
+        !(RESISTANCE_STATS.includes(s) && resistanceCount >= 3) && !(ATTRIBUTE_STATS.includes(s) && attributeCount >= 3),
     );
     if (eligibleStats.length === 0) return;
     const stat = eligibleStats[Math.floor(Math.random() * eligibleStats.length)];

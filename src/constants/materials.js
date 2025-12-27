@@ -272,7 +272,7 @@ export const MATERIALS = {
     icon: `<img src="${BASE}/icons/armor-upgrade-stone.svg" class="icon" alt="armor"/>`,
     get description() {
       return t(
-        "Upgrade the level of an equipped armor item. Requires a quantity equal to the item's tier for each level."
+        "Upgrade the level of an equipped armor item. Requires a quantity equal to the item's tier for each level.",
       );
     },
     dropChance: 20,
@@ -291,7 +291,7 @@ export const MATERIALS = {
     icon: `<img src="${BASE}/icons/jewelry-upgrade-gem.svg" class="icon" alt="ring"/>`,
     get description() {
       return t(
-        "Upgrade the level of an equipped jewelry item. Requires a quantity equal to the item's tier for each level."
+        "Upgrade the level of an equipped jewelry item. Requires a quantity equal to the item's tier for each level.",
       );
     },
     dropChance: 4,

@@ -1,5 +1,4 @@
-import {
-  hero,
+import { hero,
   game,
   dataManager,
   setGlobals,
@@ -9,8 +8,7 @@ import {
   runes,
   training,
   crystalShop,
-  soulShop,
-} from './globals.js';
+  soulShop } from './globals.js';
 import { handleSavedData } from './functions.js';
 import { showToast } from './ui/ui.js';
 import { t } from './i18n.js';

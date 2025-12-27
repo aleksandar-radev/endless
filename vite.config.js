@@ -32,18 +32,18 @@ export default defineConfig(({ mode }) => {
       minify: shouldMinify ? 'terser' : false,
       terserOptions: shouldMinify
         ? {
-            compress: {
-              drop_console: true,
-              drop_debugger: true,
-              passes: 3,
-            },
-            mangle: true,
-            format: {
-              comments: false,
-              beautify: false,
-              max_line_len: false,
-            },
-          }
+          compress: {
+            drop_console: true,
+            drop_debugger: true,
+            passes: 3,
+          },
+          mangle: true,
+          format: {
+            comments: false,
+            beautify: false,
+            max_line_len: false,
+          },
+        }
         : undefined,
       rollupOptions: {
         output: {
@@ -56,8 +56,6 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    server: {
-      open: true,
-    },
+    server: { open: true },
   };
 });

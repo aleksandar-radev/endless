@@ -10,16 +10,14 @@ import { t } from './i18n.js';
 import { floorSumBigInt } from './utils/bulkMath.js';
 import { AILMENTS } from './constants/ailments.js';
 import { getDivisor } from './constants/stats/stats.js';
-import {
-  showLifeWarning,
+import { showLifeWarning,
   showManaWarning,
   showToast,
   updateActionBar,
   updatePlayerLife,
   updateSkillTreeValues,
   initializeSkillTreeUI,
-  updateTabIndicators,
-} from './ui/ui.js';
+  updateTabIndicators } from './ui/ui.js';
 
 export const SKILL_LEVEL_TIERS = [1, 10, 25, 60, 150, 400, 750, 1200, 2000, 3000, 5000];
 export const DEFAULT_MAX_SKILL_LEVEL = Infinity;
@@ -287,9 +285,7 @@ export default class SkillTree {
   }
 
   getSelectedPath() {
-    return {
-      ...CLASS_PATHS[this.selectedPath?.name],
-    };
+    return { ...CLASS_PATHS[this.selectedPath?.name] };
   }
 
   getSkillsForPath(pathName) {
@@ -522,7 +518,9 @@ export default class SkillTree {
 
   calculateBulkAllocation(qtySetting) {
     if (!this.selectedPath) {
-      return { totalCost: 0, allocations: [], affordable: false };
+      return {
+        totalCost: 0, allocations: [], affordable: false,
+      };
     }
 
     const skillDefinitions = SKILL_TREES[this.selectedPath?.name] || {};
@@ -546,12 +544,16 @@ export default class SkillTree {
         const levelsLeft = Math.max(0, levelCap - currentLevel);
         if (levelsLeft <= 0) return null;
         const affectsActionBar = typeof skill.type === 'function' && skill.type() !== 'passive';
-        return { skillId, currentLevel, levelsLeft, affectsActionBar };
+        return {
+          skillId, currentLevel, levelsLeft, affectsActionBar,
+        };
       })
       .filter(Boolean);
 
     if (entries.length === 0) {
-      return { totalCost: 0, allocations: [], affordable: false };
+      return {
+        totalCost: 0, allocations: [], affordable: false,
+      };
     }
 
     let totalCost = 0;
@@ -560,9 +562,13 @@ export default class SkillTree {
     if (qtySetting === 'max') {
       const perChunk = Math.floor(this.skillPoints / entries.length);
       if (perChunk <= 0) {
-        return { totalCost: 0, allocations: [], affordable: false };
+        return {
+          totalCost: 0, allocations: [], affordable: false,
+        };
       }
-      entries.forEach(({ skillId, currentLevel, levelsLeft, affectsActionBar }) => {
+      entries.forEach(({
+        skillId, currentLevel, levelsLeft, affectsActionBar,
+      }) => {
         const cap = Math.min(levelsLeft, SKILLS_MAX_QTY);
         if (cap <= 0) return;
         let low = 0;
@@ -582,7 +588,9 @@ export default class SkillTree {
           const cost = this.calculateSkillPointCost(currentLevel, bestQty);
           if (Number.isFinite(cost) && cost > 0) {
             totalCost += cost;
-            allocations.push({ skillId, qty: bestQty, cost, affectsActionBar });
+            allocations.push({
+              skillId, qty: bestQty, cost, affectsActionBar,
+            });
           }
         }
       });
@@ -590,24 +598,34 @@ export default class SkillTree {
       const desiredRaw = Number(qtySetting);
       const desired = Number.isFinite(desiredRaw) ? Math.max(0, Math.min(desiredRaw, SKILLS_MAX_QTY)) : 0;
       if (desired <= 0) {
-        return { totalCost: 0, allocations: [], affordable: false };
+        return {
+          totalCost: 0, allocations: [], affordable: false,
+        };
       }
-      entries.forEach(({ skillId, currentLevel, levelsLeft, affectsActionBar }) => {
+      entries.forEach(({
+        skillId, currentLevel, levelsLeft, affectsActionBar,
+      }) => {
         const qty = Math.min(desired, levelsLeft);
         if (qty <= 0) return;
         const cost = this.calculateSkillPointCost(currentLevel, qty);
         if (!Number.isFinite(cost) || cost <= 0) return;
         totalCost += cost;
-        allocations.push({ skillId, qty, cost, affectsActionBar });
+        allocations.push({
+          skillId, qty, cost, affectsActionBar,
+        });
       });
     }
 
     const affordable = this.skillPoints >= totalCost && totalCost > 0;
-    return { totalCost, allocations, affordable };
+    return {
+      totalCost, allocations, affordable,
+    };
   }
 
   bulkAllocateSkills(qtySetting) {
-    const { totalCost, allocations, affordable } = this.calculateBulkAllocation(qtySetting);
+    const {
+      totalCost, allocations, affordable,
+    } = this.calculateBulkAllocation(qtySetting);
     if (allocations.length === 0) return 0;
     if (!affordable) {
       showToast(t('skillTree.notEnoughSkillPointsBulk'), 'error');
@@ -615,7 +633,9 @@ export default class SkillTree {
     }
 
     let requiresActionBarUpdate = false;
-    allocations.forEach(({ skillId, qty, affectsActionBar }) => {
+    allocations.forEach(({
+      skillId, qty, affectsActionBar,
+    }) => {
       if (affectsActionBar) requiresActionBarUpdate = true;
       this.unlockSkillBulk(skillId, qty, { skipUpdates: true });
     });
@@ -633,11 +653,15 @@ export default class SkillTree {
 
   calculateSpecializationBulkAllocation(qtySetting) {
     if (!this.selectedSpecialization) {
-      return { totalCost: 0, allocations: [], affordable: false };
+      return {
+        totalCost: 0, allocations: [], affordable: false,
+      };
     }
 
     const spec = getSpecialization(this.selectedPath.name, this.selectedSpecialization.id);
-    if (!spec) return { totalCost: 0, allocations: [], affordable: false };
+    if (!spec) return {
+      totalCost: 0, allocations: [], affordable: false,
+    };
 
     const entries = Object.keys(spec.skills)
       .map((skillId) => {
@@ -655,12 +679,16 @@ export default class SkillTree {
 
         if (levelsLeft <= 0) return null;
 
-        return { skillId, currentLevel, levelsLeft };
+        return {
+          skillId, currentLevel, levelsLeft,
+        };
       })
       .filter(Boolean);
 
     if (entries.length === 0) {
-      return { totalCost: 0, allocations: [], affordable: false };
+      return {
+        totalCost: 0, allocations: [], affordable: false,
+      };
     }
 
     let totalCost = 0;
@@ -669,9 +697,13 @@ export default class SkillTree {
     if (qtySetting === 'max') {
       const perChunk = Math.floor(this.specializationPoints / entries.length);
       if (perChunk <= 0) {
-        return { totalCost: 0, allocations: [], affordable: false };
+        return {
+          totalCost: 0, allocations: [], affordable: false,
+        };
       }
-      entries.forEach(({ skillId, currentLevel, levelsLeft }) => {
+      entries.forEach(({
+        skillId, currentLevel, levelsLeft,
+      }) => {
         const cap = Math.min(levelsLeft, SKILLS_MAX_QTY);
         if (cap <= 0) return;
         let low = 0;
@@ -691,7 +723,9 @@ export default class SkillTree {
           const cost = this.calculateSkillPointCost(currentLevel, bestQty);
           if (Number.isFinite(cost) && cost > 0) {
             totalCost += cost;
-            allocations.push({ skillId, qty: bestQty, cost });
+            allocations.push({
+              skillId, qty: bestQty, cost,
+            });
           }
         }
       });
@@ -699,24 +733,34 @@ export default class SkillTree {
       const desiredRaw = Number(qtySetting);
       const desired = Number.isFinite(desiredRaw) ? Math.max(0, Math.min(desiredRaw, SKILLS_MAX_QTY)) : 0;
       if (desired <= 0) {
-        return { totalCost: 0, allocations: [], affordable: false };
+        return {
+          totalCost: 0, allocations: [], affordable: false,
+        };
       }
-      entries.forEach(({ skillId, currentLevel, levelsLeft }) => {
+      entries.forEach(({
+        skillId, currentLevel, levelsLeft,
+      }) => {
         const qty = Math.min(desired, levelsLeft);
         if (qty <= 0) return;
         const cost = this.calculateSkillPointCost(currentLevel, qty);
         if (!Number.isFinite(cost) || cost <= 0) return;
         totalCost += cost;
-        allocations.push({ skillId, qty, cost });
+        allocations.push({
+          skillId, qty, cost,
+        });
       });
     }
 
     const affordable = this.specializationPoints >= totalCost && totalCost > 0;
-    return { totalCost, allocations, affordable };
+    return {
+      totalCost, allocations, affordable,
+    };
   }
 
   bulkAllocateSpecializationSkills(qtySetting) {
-    const { totalCost, allocations, affordable } = this.calculateSpecializationBulkAllocation(qtySetting);
+    const {
+      totalCost, allocations, affordable,
+    } = this.calculateSpecializationBulkAllocation(qtySetting);
     if (allocations.length === 0) return 0;
     if (!affordable) {
       showToast(t('skillTree.notEnoughSkillPointsBulk'), 'error');
@@ -807,7 +851,7 @@ export default class SkillTree {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.manaCost) return 0;
     return Math.floor(
-      skill.manaCost(effectiveLevel) - skill.manaCost(effectiveLevel) * (hero.stats.manaCostReductionPercent || 0)
+      skill.manaCost(effectiveLevel) - skill.manaCost(effectiveLevel) * (hero.stats.manaCostReductionPercent || 0),
     );
   }
 
@@ -915,7 +959,7 @@ export default class SkillTree {
         ...baseEffects,
         ...(includePerHit ? { lifePerHit: totalLifePerHitEffect } : {}),
       },
-      { includePerHit }
+      { includePerHit },
     );
     if (lifeCostCheck.hasCost && !lifeCostCheck.willSurvive) {
       if (!isAutoCast) {
@@ -951,11 +995,11 @@ export default class SkillTree {
         const hitChance = alwaysEvade
           ? 0
           : calculateHitChance(
-              hero.stats.attackRating,
-              game.currentEnemy.evasion,
-              undefined,
-              hero.stats.chanceToHitPercent || 0
-            );
+            hero.stats.attackRating,
+            game.currentEnemy.evasion,
+            undefined,
+            hero.stats.chanceToHitPercent || 0,
+          );
         const roll = Math.random() * 100;
         const neverMiss = hero.stats.attackNeverMiss > 0 && !alwaysEvade;
 
@@ -990,7 +1034,9 @@ export default class SkillTree {
     const canHeal = !skillId.includes('bloodSacrifice');
 
     if (dealsDamage && didHit && damageResult) {
-      let { damage, isCritical, breakdown } = damageResult;
+      let {
+        damage, isCritical, breakdown,
+      } = damageResult;
 
       const now = Date.now();
       const enemy = game.currentEnemy;
@@ -1366,9 +1412,7 @@ export default class SkillTree {
 
     // Google Analytics event: skill tree reset
     if (typeof gtag === 'function') {
-      gtag('event', 'skill_tree_reset', {
-        event_category: 'SkillTree',
-      });
+      gtag('event', 'skill_tree_reset', { event_category: 'SkillTree' });
     }
   }
 
@@ -1387,9 +1431,7 @@ export default class SkillTree {
 
     // Google Analytics event: specialization reset
     if (typeof gtag === 'function') {
-      gtag('event', 'specialization_reset', {
-        event_category: 'SkillTree',
-      });
+      gtag('event', 'specialization_reset', { event_category: 'SkillTree' });
     }
   }
 

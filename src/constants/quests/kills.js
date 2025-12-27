@@ -15,7 +15,9 @@ export const KILL_QUESTS = [
     target: 1,
     reward: {
       gold: 150,
-      item: { uniqueId: 'ribbonweave_vestments', rarity: 'unique', tier: 1, level: 1 },
+      item: {
+        uniqueId: 'ribbonweave_vestments', rarity: 'unique', tier: 1, level: 1,
+      },
     },
     icon: `<img src="${BASE}/icons/sword.svg" class="icon" alt="kills"/>`,
   },
@@ -30,7 +32,13 @@ export const KILL_QUESTS = [
     },
     type: 'kill',
     target: 10,
-    reward: { gold: 500, crystals: 1, item: { rarity: 'rare', type: 'random', tier: 1 } },
+    reward: {
+      gold: 500,
+      crystals: 1,
+      item: {
+        rarity: 'rare', type: 'random', tier: 1,
+      },
+    },
     icon: `<img src="${BASE}/icons/sword.svg" class="icon" alt="kills"/>`,
   },
   {
@@ -58,7 +66,12 @@ export const KILL_QUESTS = [
     },
     type: 'kill',
     target: 250,
-    reward: { gold: 4000, item: { rarity: 'rare', type: 'random', tier: 1 } },
+    reward: {
+      gold: 4000,
+      item: {
+        rarity: 'rare', type: 'random', tier: 1,
+      },
+    },
     icon: `<img src="${BASE}/icons/strength-potion.svg" class="icon" alt="crit"/>`,
   },
   {

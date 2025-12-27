@@ -21,7 +21,13 @@ export const RARITY_QUESTS = [
     type: 'kill_rarity',
     rarity: 'rare',
     target: 10,
-    reward: { gold: 500, crystals: 1, item: { rarity: 'rare', type: 'random', tier: 1 } },
+    reward: {
+      gold: 500,
+      crystals: 1,
+      item: {
+        rarity: 'rare', type: 'random', tier: 1,
+      },
+    },
   },
   {
     id: 'kill_rare_50',
@@ -134,7 +140,13 @@ export const RARITY_QUESTS = [
     type: 'kill_rarity',
     rarity: 'epic',
     target: 5,
-    reward: { gold: 1200, crystals: 1, item: { rarity: 'epic', type: 'random', tier: 1 } },
+    reward: {
+      gold: 1200,
+      crystals: 1,
+      item: {
+        rarity: 'epic', type: 'random', tier: 1,
+      },
+    },
   },
   {
     id: 'kill_epic_30',
@@ -261,7 +273,13 @@ export const RARITY_QUESTS = [
     type: 'kill_rarity',
     rarity: 'legendary',
     target: 15,
-    reward: { gold: 20000, crystals: 5, item: { rarity: 'legendary', type: 'random', tier: 1 } },
+    reward: {
+      gold: 20000,
+      crystals: 5,
+      item: {
+        rarity: 'legendary', type: 'random', tier: 1,
+      },
+    },
   },
   {
     id: 'kill_legendary_50',
@@ -402,7 +420,13 @@ export const RARITY_QUESTS = [
     type: 'kill_rarity',
     rarity: 'mythic',
     target: 80,
-    reward: { gold: 350000, crystals: 25, item: { rarity: 'mythic', type: 'random', tier: 1 } },
+    reward: {
+      gold: 350000,
+      crystals: 25,
+      item: {
+        rarity: 'mythic', type: 'random', tier: 1,
+      },
+    },
   },
   {
     id: 'kill_mythic_200',

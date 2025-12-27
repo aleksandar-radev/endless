@@ -1,6 +1,5 @@
 import { initializeSkillTreeStructure, updatePlayerLife, updateResources, updateTabIndicators } from './ui/ui.js';
-import {
-  game,
+import { game,
   inventory,
   training,
   skillTree,
@@ -10,14 +9,11 @@ import {
   prestige,
   ascension,
   crystalShop,
-  runes,
-} from './globals.js';
-import {
-  calculateArmorReduction,
+  runes } from './globals.js';
+import { calculateArmorReduction,
   calculateResistanceReduction,
   createCombatText,
-  createDamageNumber,
-} from './combat.js';
+  createDamageNumber } from './combat.js';
 import { handleSavedData } from './functions.js';
 import { updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
@@ -341,7 +337,7 @@ export default class Hero {
       itemLifeEffectivenessPercent,
       itemArmorEffectivenessPercent,
       shieldEffectiveness,
-      jewelryEffectiveness
+      jewelryEffectiveness,
     );
     const trainingBonuses = training.getTrainingBonuses();
     const soulBonuses = this.getSoulShopBonuses();
@@ -356,13 +352,13 @@ export default class Hero {
       /* attributeEffects */ {},
       skillTreeBonuses,
       equipmentBonuses,
-      trainingBonuses
+      trainingBonuses,
     );
     const basePercent = this.calculatePercentBonuses(
       /* attributeEffects */ {},
       skillTreeBonuses,
       equipmentBonuses,
-      trainingBonuses
+      trainingBonuses,
     );
 
     // 3) “Lock in” each attribute (STR, VIT, etc.) so that attributeEffects sees the %-increased value
@@ -385,7 +381,7 @@ export default class Hero {
       attributeEffects,
       skillTreeBonuses,
       equipmentBonuses,
-      trainingBonuses
+      trainingBonuses,
     );
 
     ATTRIBUTE_KEYS.forEach((attr) => {
@@ -788,14 +784,18 @@ export default class Hero {
     }
 
     const computeResourceExtraDamage = (statsSnapshot, shareMap, physicalShare = 0.5) => {
-      if (!statsSnapshot) return { physical: 0, elemental: 0, perElement: {} };
+      if (!statsSnapshot) return {
+        physical: 0, elemental: 0, perElement: {},
+      };
 
       const resourceCapPerLevel = Math.max(
         0,
-        BASE_EXTRA_RESOURCE_DAMAGE_CAP_PER_LEVEL + (ascensionBonuses.extraResourceDamageCapPerLevel || 0)
+        BASE_EXTRA_RESOURCE_DAMAGE_CAP_PER_LEVEL + (ascensionBonuses.extraResourceDamageCapPerLevel || 0),
       );
       const maxResourceAmount = Math.max(0, this.level * resourceCapPerLevel);
-      if (maxResourceAmount <= 0) return { physical: 0, elemental: 0, perElement: {} };
+      if (maxResourceAmount <= 0) return {
+        physical: 0, elemental: 0, perElement: {},
+      };
 
       const capResource = (value) => Math.min(Math.max(value || 0, 0), maxResourceAmount);
 
@@ -818,14 +818,18 @@ export default class Hero {
         (statsSnapshot.extraDamageFromAttackRatingPercent || 0) * attackRating +
         (statsSnapshot.extraDamageFromAllResistancesPercent || 0) * allResistances;
 
-      if (!totalExtra) return { physical: 0, elemental: 0, perElement: {} };
+      if (!totalExtra) return {
+        physical: 0, elemental: 0, perElement: {},
+      };
 
       const clampedShare = Math.max(0, Math.min(1, Number(physicalShare) || 0));
       const physical = totalExtra * clampedShare;
       const totalElemental = totalExtra - physical;
       const perElement = distributeElementalAmount(totalElemental, shareMap);
 
-      return { physical, elemental: totalElemental, perElement };
+      return {
+        physical, elemental: totalElemental, perElement,
+      };
     };
 
     const baseFlatDamageBeforeResources = flatValues.damage;
@@ -836,7 +840,7 @@ export default class Hero {
     const initialResourceExtraDamage = computeResourceExtraDamage(
       this.stats,
       elementalShareMap,
-      resourceExtraPhysicalShare
+      resourceExtraPhysicalShare,
     );
 
     if (initialResourceExtraDamage.physical) {
@@ -849,7 +853,7 @@ export default class Hero {
 
     // Store flat-only values for later damage calculations
     this.baseDamages.physical = Math.floor(
-      flatValues.damage + (ascensionBonuses.damage || 0) + (this.stats.damagePerLevel || 0) * this.level
+      flatValues.damage + (ascensionBonuses.damage || 0) + (this.stats.damagePerLevel || 0) * this.level,
     );
     this.baseDamages.elemental = Math.floor(flatValues.elementalDamage + (ascensionBonuses.elementalDamage || 0));
     ELEMENT_IDS.forEach((id) => {
@@ -870,7 +874,7 @@ export default class Hero {
     this.stats.thornsDamage = effectiveThorns;
 
     this.stats.damage = Math.floor(
-      this.baseDamages.physical * (1 + this.stats.totalDamagePercent + this.stats.damagePercent)
+      this.baseDamages.physical * (1 + this.stats.totalDamagePercent + this.stats.damagePercent),
     );
 
     // Special handling for elemental damages
@@ -878,7 +882,7 @@ export default class Hero {
       const base = this.baseDamages[id] + this.baseDamages.elemental;
       this.stats[`${id}Damage`] = Math.floor(
         base *
-          (1 + this.stats.elementalDamagePercent + this.stats[`${id}DamagePercent`] + this.stats.totalDamagePercent)
+          (1 + this.stats.elementalDamagePercent + this.stats[`${id}DamagePercent`] + this.stats.totalDamagePercent),
       );
 
       // reflect damage calculation
@@ -886,14 +890,12 @@ export default class Hero {
       if (flatValues[reflectKey] > 0) {
         this.stats[reflectKey] = Math.floor(
           (flatValues[reflectKey] + base) *
-            (1 + this.stats.totalDamagePercent + this.stats[`${id}DamagePercent`] + this.stats.elementalDamagePercent)
+            (1 + this.stats.totalDamagePercent + this.stats[`${id}DamagePercent`] + this.stats.elementalDamagePercent),
         );
       }
     });
 
-    const preConversionDamage = {
-      damage: this.stats.damage,
-    };
+    const preConversionDamage = { damage: this.stats.damage };
     ELEMENT_IDS.forEach((id) => {
       preConversionDamage[`${id}Damage`] = this.stats[`${id}Damage`];
     });
@@ -912,7 +914,7 @@ export default class Hero {
     const finalResourceExtraDamage = computeResourceExtraDamage(
       this.stats,
       elementalShareMap,
-      resourceExtraPhysicalShare
+      resourceExtraPhysicalShare,
     );
     const basePhysicalFlatWithoutResources =
       baseFlatDamageBeforeResources + (ascensionBonuses.damage || 0) + (this.stats.damagePerLevel || 0) * this.level;
@@ -920,7 +922,7 @@ export default class Hero {
       baseFlatElementalBeforeResources + (ascensionBonuses.elementalDamage || 0);
 
     this.baseDamages.physical = Math.floor(
-      Math.max(0, basePhysicalFlatWithoutResources + finalResourceExtraDamage.physical)
+      Math.max(0, basePhysicalFlatWithoutResources + finalResourceExtraDamage.physical),
     );
     this.baseDamages.elemental = Math.floor(Math.max(0, baseElementalFlatWithoutResources));
     this.elementalDamageFromResources = finalResourceExtraDamage.elemental;
@@ -1130,7 +1132,9 @@ export default class Hero {
     const totalDamage = Object.values(finalPools).reduce((sum, v) => sum + v, 0);
     const breakdown = Object.fromEntries(Object.entries(finalPools).map(([k, v]) => [k, Math.floor(v)]));
     console.debug('Damage Breakdown:', breakdown);
-    return { damage: Math.floor(totalDamage), isCritical, breakdown };
+    return {
+      damage: Math.floor(totalDamage), isCritical, breakdown,
+    };
   }
 
   calculateDamageAgainst(enemy, instantSkillBaseEffects = {}) {
@@ -1184,9 +1188,7 @@ export default class Hero {
       return Math.max(0, effectiveRes);
     }
 
-    const reducedBreakdown = {
-      physical: breakdown.physical * (1 - armorReduction),
-    };
+    const reducedBreakdown = { physical: breakdown.physical * (1 - armorReduction) };
     ELEMENT_IDS.forEach((id) => {
       reducedBreakdown[id] =
         breakdown[id] *
@@ -1196,9 +1198,9 @@ export default class Hero {
               this,
               enemy[`${id}Resistance`],
               this.stats[`${id}Penetration`],
-              this.stats[`${id}PenetrationPercent`]
+              this.stats[`${id}PenetrationPercent`],
             ),
-            breakdown[id]
+            breakdown[id],
           ) /
             100);
     });
@@ -1287,7 +1289,9 @@ export default class Hero {
 
     // If resurrection was successful
     if (res) {
-      createDamageNumber({ text: 'Ressurected!', isPlayer: true, isCritical: false, color: '#00FF00' });
+      createDamageNumber({
+        text: 'Ressurected!', isPlayer: true, isCritical: false, color: '#00FF00',
+      });
       game.healPlayer(this.stats.life);
       game.restoreMana(this.stats.mana);
       return true;

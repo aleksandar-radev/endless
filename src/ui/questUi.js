@@ -133,13 +133,13 @@ export function openQuestModal(quest) {
           tierLabel,
           rarity: rarityHtml,
           tier: tierHtml,
-        })}</span>`
+        })}</span>`,
       );
     } else if (key === 'materials' && Array.isArray(value)) {
       value.forEach(({ id, qty }) => {
         const matDef = MATERIALS[id] || Object.values(MATERIALS).find((m) => m.id === id);
         rewardParts.push(
-          `<span style=\"color:#fff;font-weight:bold;\">${formatNumber(qty)} ${matDef?.name || id}</span>`
+          `<span style=\"color:#fff;font-weight:bold;\">${formatNumber(qty)} ${matDef?.name || id}</span>`,
         );
       });
     } else {

@@ -67,7 +67,7 @@ export function scaleStat(
   increasePerLevel = 0,
   bonusInterval = 1,
   bonusIncrease = 0,
-  basePercentGain = 0.3
+  basePercentGain = 0.3,
 ) {
   if (base <= 0) return 0; // Avoid scaling if base is zero or negative
   if (bonusInterval == 0) bonusInterval = 1; // Avoid division by zero
@@ -229,7 +229,7 @@ export function percentIncreasedByLevel(
   level,
   interval = 20,
   increasePerInterval = 0.01,
-  maxPercent = 1
+  maxPercent = 1,
 ) {
   // startPercent may be any numeric starting value (not forced to be a fraction).
   if (interval <= 0) interval = 1; // avoid division by zero

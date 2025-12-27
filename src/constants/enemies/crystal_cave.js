@@ -31,9 +31,7 @@ export const CRYSTAL_CAVE_ENEMIES = [
       waterResistance: 0.67,
     },
 
-    materialDropWeights: {
-      crystalized_rock: 4,
-    },
+    materialDropWeights: { crystalized_rock: 4 },
     tags: ['crystal_cave'],
   },
   {

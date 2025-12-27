@@ -53,11 +53,19 @@ export async function collectOfflineFightRewards() {
   }
 
   const bonuses = [];
-  if (xp > 0) bonuses.push({ name: t('combat.fight'), type: 'XP', amount: xp, times, interval });
-  if (gold > 0) bonuses.push({ name: t('combat.fight'), type: t('resource.gold.name'), amount: gold, times, interval });
-  if (items > 0) bonuses.push({ name: t('combat.fight'), type: t('inventory.items'), amount: items, times, interval });
+  if (xp > 0) bonuses.push({
+    name: t('combat.fight'), type: 'XP', amount: xp, times, interval,
+  });
+  if (gold > 0) bonuses.push({
+    name: t('combat.fight'), type: t('resource.gold.name'), amount: gold, times, interval,
+  });
+  if (items > 0) bonuses.push({
+    name: t('combat.fight'), type: t('inventory.items'), amount: items, times, interval,
+  });
   if (matsQty > 0)
-    bonuses.push({ name: t('combat.fight'), type: t('inventory.materials'), amount: matsQty, times, interval });
+    bonuses.push({
+      name: t('combat.fight'), type: t('inventory.materials'), amount: matsQty, times, interval,
+    });
 
   const apply = async () => {
     if (xp > 0) hero.gainExp(xp);
@@ -94,7 +102,9 @@ export async function collectOfflineFightRewards() {
         .map(([key, config]) => {
           const rarityIndex = RARITY_ORDER.indexOf(config.name);
           const weight = config.chance * (1 + boostFactor * rarityIndex) * (1 + rarityBonus * rarityIndex);
-          return { name: config.name, index: rarityIndex, weight };
+          return {
+            name: config.name, index: rarityIndex, weight,
+          };
         });
       const weightSum = rarityEntries.reduce((s, e) => s + e.weight, 0);
       if (weightSum > 0 && rarityEntries.length) {
@@ -111,7 +121,9 @@ export async function collectOfflineFightRewards() {
           }
           const fraction = exact - base;
           if (fraction > 0) {
-            fractional.push({ entry: e, fraction, jitter: Math.random() });
+            fractional.push({
+              entry: e, fraction, jitter: Math.random(),
+            });
           }
         }
         let rem = overflow - allocated;
@@ -158,9 +170,11 @@ export async function collectOfflineFightRewards() {
             totalGold += goldPer * count;
           } else {
             // Materials salvage: split by category proportions and apply qty formula per item
-            const rarityAmounts = { NORMAL: 1, MAGIC: 1.5, RARE: 2, EPIC: 2.5, LEGENDARY: 3, MYTHIC: 3.5 };
+            const rarityAmounts = {
+              NORMAL: 1, MAGIC: 1.5, RARE: 2, EPIC: 2.5, LEGENDARY: 3, MYTHIC: 3.5,
+            };
             const qtyPer = Math.floor(
-              (rarityAmounts[rarityName] || 1) * Math.max(level / 200, 1) * Math.max(region.tier, 1)
+              (rarityAmounts[rarityName] || 1) * Math.max(level / 200, 1) * Math.max(region.tier, 1),
             );
             if (qtyPer > 0) {
               const armorCount = Math.floor((armorTypes / totalTypes) * count);

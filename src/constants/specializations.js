@@ -12,9 +12,7 @@ export const SPECIALIZATIONS = {
       name: () => t('specialization.warrior.guardian.name'),
       description: () => t('specialization.warrior.guardian.description'),
       avatar: () => 'warrior-guardian-avatar.jpg',
-      baseStats: () => ({
-        retaliateWhenHit: 1,
-      }),
+      baseStats: () => ({ retaliateWhenHit: 1 }),
       skills: {
         armoredOffense: {
           id: 'armoredOffense',
@@ -49,9 +47,7 @@ export const SPECIALIZATIONS = {
       name: () => t('specialization.warrior.weaponmaster.name'),
       description: () => t('specialization.warrior.weaponmaster.description'),
       avatar: () => 'warrior-weaponmaster-avatar.jpg',
-      baseStats: () => ({
-        canDualWieldTwoHanded: 1,
-      }),
+      baseStats: () => ({ canDualWieldTwoHanded: 1 }),
       skills: {
         spiritualWeapons: {
           id: 'spiritualWeapons',
@@ -74,9 +70,7 @@ export const SPECIALIZATIONS = {
           icon: () => 'weapon-mastery',
           description: () => t('skill.weaponMastery'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-          effect: (level) => ({
-            weaponEffectiveness: scaleUpFlat(level, 10, 5, 0.2),
-          }),
+          effect: (level) => ({ weaponEffectiveness: scaleUpFlat(level, 10, 5, 0.2) }),
         },
       },
     },
@@ -85,9 +79,7 @@ export const SPECIALIZATIONS = {
       name: () => t('specialization.warrior.gladiator.name'),
       description: () => t('specialization.warrior.gladiator.description'),
       avatar: () => 'warrior-gladiator-avatar.jpg',
-      baseStats: () => ({
-        allowBossLoot: 1,
-      }),
+      baseStats: () => ({ allowBossLoot: 1 }),
       skills: {
         arenaDominance: {
           id: 'arenaDominance',
@@ -97,9 +89,7 @@ export const SPECIALIZATIONS = {
           icon: () => 'arena-dominance',
           description: () => t('skill.arenaDominance'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-          effect: (level) => ({
-            arenaDamagePercent: 20 + scaleUpFlat(level, 8, 10, 0.1),
-          }),
+          effect: (level) => ({ arenaDamagePercent: 20 + scaleUpFlat(level, 8, 10, 0.1) }),
         },
         arenaResilience: {
           id: 'arenaResilience',
@@ -109,9 +99,7 @@ export const SPECIALIZATIONS = {
           icon: () => 'arena-resilience',
           description: () => t('skill.arenaResilience'),
           maxLevel: () => 400,
-          effect: (level) => ({
-            arenaDamageReductionPercent: 5 + scaleDownFlat(level, 0.466, 3),
-          }),
+          effect: (level) => ({ arenaDamageReductionPercent: 5 + scaleDownFlat(level, 0.466, 3) }),
         },
       },
     },
@@ -122,9 +110,7 @@ export const SPECIALIZATIONS = {
       name: () => t('specialization.rogue.assassin.name'),
       description: () => t('specialization.rogue.assassin.description'),
       avatar: () => 'rogue-assassin-avatar.jpg',
-      baseStats: () => ({
-        critDamage: 2,
-      }),
+      baseStats: () => ({ critDamage: 2 }),
       skills: {
         vanish: {
           id: 'vanish',
@@ -134,9 +120,7 @@ export const SPECIALIZATIONS = {
           icon: () => 'vanish',
           description: () => t('skill.vanish'),
           maxLevel: () => 400,
-          effect: (level) => ({
-            avoidChance: 5 + scaleDownFlat(level, 0.466, 3),
-          }),
+          effect: (level) => ({ avoidChance: 5 + scaleDownFlat(level, 0.466, 3) }),
         },
         assassinate: {
           id: 'assassinate',
@@ -158,9 +142,7 @@ export const SPECIALIZATIONS = {
       name: () => t('specialization.rogue.shadowdancer.name'),
       description: () => t('specialization.rogue.shadowdancer.description'),
       avatar: () => 'rogue-shadowdancer-avatar.jpg',
-      baseStats: () => ({
-        attackSpeed: 0.5,
-      }),
+      baseStats: () => ({ attackSpeed: 0.5 }),
       skills: {
         shadowClone: {
           id: 'shadowClone',
@@ -208,9 +190,7 @@ export const SPECIALIZATIONS = {
           icon: () => 'animal-tracking',
           description: () => t('skill.animalTracking'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-          effect: (level) => ({
-            damageToHighRarityEnemiesPercent: scaleDownFlat(level, 10),
-          }),
+          effect: (level) => ({ damageToHighRarityEnemiesPercent: scaleDownFlat(level, 10) }),
         },
         rangedPrecision: {
           id: 'rangedPrecision',
@@ -234,9 +214,7 @@ export const SPECIALIZATIONS = {
       name: () => t('specialization.vampire.bloodlord.name'),
       description: () => t('specialization.vampire.bloodlord.description'),
       avatar: () => 'vampire-bloodlord-avatar.jpg',
-      baseStats: () => ({
-        healDamagesEnemiesPercent: 200,
-      }),
+      baseStats: () => ({ healDamagesEnemiesPercent: 200 }),
       skills: {
         vampiricBats: {
           id: 'vampiricBats',
@@ -246,9 +224,7 @@ export const SPECIALIZATIONS = {
           icon: () => 'vampiric-bats',
           description: () => t('skill.vampiricBats'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-          effect: (level) => ({
-            batsHealPercent: level ? 50 + scaleDownFlat(level, 10, 5, 0.2) : 0,
-          }),
+          effect: (level) => ({ batsHealPercent: level ? 50 + scaleDownFlat(level, 10, 5, 0.2) : 0 }),
         },
         crimsonFeast: {
           id: 'crimsonFeast',
@@ -270,9 +246,7 @@ export const SPECIALIZATIONS = {
       name: () => t('specialization.vampire.nightstalker.name'),
       description: () => t('specialization.vampire.nightstalker.description'),
       avatar: () => 'vampire-nightstalker-avatar.jpg',
-      baseStats: () => ({
-        overhealPercent: 100,
-      }),
+      baseStats: () => ({ overhealPercent: 100 }),
       skills: {
         nightStalkerMastery: {
           id: 'nightStalkerMastery',
@@ -282,9 +256,7 @@ export const SPECIALIZATIONS = {
           icon: () => 'night-stalker-mastery',
           description: () => t('skill.nightStalkerMastery'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-          effect: (level) => ({
-            nightStalkerBuffEffectivenessPercent: level ? 50 + scaleUpFlat(level, 8) : 0,
-          }),
+          effect: (level) => ({ nightStalkerBuffEffectivenessPercent: level ? 50 + scaleUpFlat(level, 8) : 0 }),
         },
         bloodRitual: {
           id: 'bloodRitual',
@@ -306,9 +278,7 @@ export const SPECIALIZATIONS = {
       name: () => t('specialization.vampire.hemomancer.name'),
       description: () => t('specialization.vampire.hemomancer.description'),
       avatar: () => 'vampire-hemomancer-avatar.jpg',
-      baseStats: () => ({
-        bleedChance: 20,
-      }),
+      baseStats: () => ({ bleedChance: 20 }),
       skills: {
         bloodPotency: {
           id: 'bloodPotency',
@@ -347,9 +317,7 @@ export const SPECIALIZATIONS = {
       name: () => t('specialization.paladin.crusader.name'),
       description: () => t('specialization.paladin.crusader.description'),
       avatar: () => 'paladin-crusader-avatar.jpg',
-      baseStats: () => ({
-        canUseTwoShields: 1,
-      }),
+      baseStats: () => ({ canUseTwoShields: 1 }),
       skills: {
         shieldMastery: {
           id: 'shieldMastery',
@@ -384,9 +352,7 @@ export const SPECIALIZATIONS = {
       name: () => t('specialization.paladin.templar.name'),
       description: () => t('specialization.paladin.templar.description'),
       avatar: () => 'paladin-templar-avatar.jpg',
-      baseStats: () => ({
-        cooldownReductionCapPercent: 10,
-      }),
+      baseStats: () => ({ cooldownReductionCapPercent: 10 }),
       skills: {
         divineAmulet: {
           id: 'divineAmulet',
@@ -396,9 +362,7 @@ export const SPECIALIZATIONS = {
           icon: () => 'divine-amulet',
           description: () => t('skill.divineAmulet'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-          effect: (level) => ({
-            jewelryEffectiveness: level ? 50 + scaleUpFlat(level, 8, 8, 0.2) : 0,
-          }),
+          effect: (level) => ({ jewelryEffectiveness: level ? 50 + scaleUpFlat(level, 8, 8, 0.2) : 0 }),
         },
         sacredRelic: {
           id: 'sacredRelic',
@@ -462,9 +426,7 @@ export const SPECIALIZATIONS = {
       name: () => t('specialization.berserker.ravager.name'),
       description: () => t('specialization.berserker.ravager.description'),
       avatar: () => 'berserker-ravager-avatar.jpg',
-      baseStats: () => ({
-        overkillDamagePercent: 200,
-      }),
+      baseStats: () => ({ overkillDamagePercent: 200 }),
       skills: {
         lacerate: {
           id: 'lacerate',
@@ -512,9 +474,7 @@ export const SPECIALIZATIONS = {
           icon: () => 'battle-command',
           description: () => t('skill.battleCommand'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-          effect: (level) => ({
-            buffEffectivenessPercent: scaleUpFlat(level, 10, 5, 0.5),
-          }),
+          effect: (level) => ({ buffEffectivenessPercent: scaleUpFlat(level, 10, 5, 0.5) }),
         },
         warlordsAuthority: {
           id: 'warlordsAuthority',
@@ -524,9 +484,7 @@ export const SPECIALIZATIONS = {
           icon: () => 'warlords-authority',
           description: () => t('skill.warlordsAuthority'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-          effect: (level) => ({
-            warlordEffectivenessPercent: scaleUpFlat(level, 10, 5, 0.5),
-          }),
+          effect: (level) => ({ warlordEffectivenessPercent: scaleUpFlat(level, 10, 5, 0.5) }),
         },
       },
     },
@@ -692,9 +650,7 @@ export const SPECIALIZATIONS = {
       name: () => t('specialization.druid.shapeshifter.name'),
       description: () => t('specialization.druid.shapeshifter.description'),
       avatar: () => 'druid-shapeshifter-avatar.jpg',
-      baseStats: () => ({
-        shapeshiftUnlocked: 1,
-      }),
+      baseStats: () => ({ shapeshiftUnlocked: 1 }),
       skills: {
         shapeshiftingMastery: {
           id: 'shapeshiftingMastery',
@@ -814,9 +770,7 @@ export const SPECIALIZATIONS = {
       name: () => t('specialization.mage.arcanist.name'),
       description: () => t('specialization.mage.arcanist.description'),
       avatar: () => 'mage-arcanist-avatar.jpg',
-      baseStats: () => ({
-        teleportDodgeChance: 20,
-      }),
+      baseStats: () => ({ teleportDodgeChance: 20 }),
       skills: {
         manaWard: {
           id: 'manaWard',
@@ -852,9 +806,7 @@ export const SPECIALIZATIONS = {
       name: () => t('specialization.mage.bloodmage.name'),
       description: () => t('specialization.mage.bloodmage.description'),
       avatar: () => 'mage-bloodmage-avatar.jpg',
-      baseStats: () => ({
-        convertManaToLifePercent: 100,
-      }),
+      baseStats: () => ({ convertManaToLifePercent: 100 }),
       skills: {
         crimsonFortitude: {
           id: 'crimsonFortitude',

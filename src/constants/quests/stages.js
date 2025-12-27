@@ -9,17 +9,23 @@ const BASE_STAGE_QUESTS = [
   },
   {
     target: 25,
-    reward: { gold: 2400, crystals: 1, materials: [{ id: 'greater_experience_potion', qty: 1 }] },
+    reward: {
+      gold: 2400, crystals: 1, materials: [{ id: 'greater_experience_potion', qty: 1 }],
+    },
     icon: `<img src="${BASE}/icons/dexterity-potion.svg" class="icon" alt="stage"/>`,
   },
   {
     target: 50,
-    reward: { gold: 8000, crystals: 2, materials: [{ id: 'experience_potion', qty: 2 }] },
+    reward: {
+      gold: 8000, crystals: 2, materials: [{ id: 'experience_potion', qty: 2 }],
+    },
     icon: `<img src="${BASE}/icons/dexterity-potion.svg" class="icon" alt="stage"/>`,
   },
   {
     target: 100,
-    reward: { gold: 18000, crystals: 4, materials: [{ id: 'huge_experience_potion', qty: 2 }] },
+    reward: {
+      gold: 18000, crystals: 4, materials: [{ id: 'huge_experience_potion', qty: 2 }],
+    },
     icon: `<img src="${BASE}/icons/dexterity-potion.svg" class="icon" alt="stage"/>`,
   },
   {
@@ -64,9 +70,9 @@ for (let tier = 1; tier <= 12; tier++) {
     const scaledCrystals = base.reward.crystals ? Math.max(1, Math.round(base.reward.crystals * scale)) : undefined;
     const scaledMaterials = base.reward.materials
       ? base.reward.materials.map((m) => ({
-          id: m.id,
-          qty: Math.max(1, Math.round(m.qty * scale)),
-        }))
+        id: m.id,
+        qty: Math.max(1, Math.round(m.qty * scale)),
+      }))
       : undefined;
 
     STAGE_QUESTS.push({

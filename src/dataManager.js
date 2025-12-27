@@ -462,14 +462,14 @@ export class DataManager {
   _dispatchSavedEvent(timestamp) {
     if (typeof document !== 'undefined') {
       document.dispatchEvent(
-        new CustomEvent('dataManager:saved', {
-          detail: { timestamp },
-        })
+        new CustomEvent('dataManager:saved', { detail: { timestamp } }),
       );
     }
   }
 
-  async loadGame({ cloud = false, premium = 'no', statusCheck = false } = {}) {
+  async loadGame({
+    cloud = false, premium = 'no', statusCheck = false,
+  } = {}) {
     let data = null;
     let updated_at = null;
     let source = 'local';

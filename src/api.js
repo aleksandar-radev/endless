@@ -28,9 +28,7 @@ export async function saveGameData(userId, data) {
   };
   const response = await apiFetch(`/game-data/${userId}`, {
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
   if (!response.ok) {
@@ -71,9 +69,7 @@ export async function getLeaderboard() {
 }
 
 export async function logout() {
-  const response = await apiFetch('/user/logout', {
-    method: 'POST',
-  });
+  const response = await apiFetch('/user/logout', { method: 'POST' });
   if (!response.ok) {
     throw new Error('Failed to logout');
   }

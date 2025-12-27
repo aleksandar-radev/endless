@@ -32,9 +32,7 @@ export let ascension = null;
 export let runes = null;
 
 // Runtime state that persists during resets
-export const runtime = {
-  prestigeInProgress: false,
-};
+export const runtime = { prestigeInProgress: false };
 
 // Setters for initialization in main.js
 export async function setGlobals({ cloud = false, reset = false } = {}) {

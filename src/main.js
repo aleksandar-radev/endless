@@ -1,16 +1,13 @@
-import {
-  initializeSkillTreeUI,
+import { initializeSkillTreeUI,
   initializeUI,
   switchTab,
   updateEnemyStats,
   updatePlayerLife,
   updateResources,
   updateStageUI,
-  updateTabIndicators,
-} from './ui/ui.js';
+  updateTabIndicators } from './ui/ui.js';
 import { initDebugging } from './functions.js';
-import {
-  game,
+import { game,
   hero,
   crystalShop,
   statistics,
@@ -19,8 +16,7 @@ import {
   options,
   dataManager,
   buildings,
-  training,
-} from './globals.js';
+  training } from './globals.js';
 import { updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { initializeBuildingsUI, renderPurchasedBuildings } from './ui/buildingUi.js';

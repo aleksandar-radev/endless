@@ -1,5 +1,4 @@
-import {
-  game,
+import { game,
   hero,
   inventory,
   training,
@@ -8,19 +7,16 @@ import {
   statistics,
   runes,
   ascension,
-  prestige,
-} from './globals.js';
+  prestige } from './globals.js';
 import { MATERIALS } from './constants/materials.js';
 import { RUNES, MAX_CONVERSION_PERCENT, MIN_CONVERSION_PERCENT } from './constants/runes.js';
 import SimpleCrypto from 'simple-crypto-js';
-import {
-  initializeSkillTreeStructure,
+import { initializeSkillTreeStructure,
   showToast,
   updatePlayerLife,
   updateResources,
   updateStageUI,
-  updateTabIndicators,
-} from './ui/ui.js';
+  updateTabIndicators } from './ui/ui.js';
 import { createImageDropdownFromData } from './ui/imageDropdown.js';
 import { ITEM_ICONS, ITEM_RARITY, ITEM_TYPES, ALL_ITEM_TYPES } from './constants/items.js';
 import { updateRegionUI } from './region.js';
@@ -31,12 +27,10 @@ import { updateAscensionUI } from './ui/ascensionUi.js';
 import { getRuneName } from './runes.js';
 import { t, tp } from './i18n.js';
 import { createModal, closeModal } from './ui/modal.js';
-import {
-  createSetItemsById,
+import { createSetItemsById,
   createUniqueItemById,
   getItemSetDefinitions,
-  getUniqueItemDefinitions,
-} from './uniqueItems.js';
+  getUniqueItemDefinitions } from './uniqueItems.js';
 import { isDevAccessWindowActive } from './migrations/0.8.15.js';
 
 export const crypt = new SimpleCrypto(import.meta.env.VITE_ENCRYPT_KEY);
@@ -755,7 +749,7 @@ export function createModifyUI(container = document.body) {
       inventory.addItemToInventory(newItem);
     }
     showToast(
-      `Added 10x ${itemType} (levels ${baseLevel} to ${baseLevel + 4500}, ${rarity}, tier ${tier}) to inventory`
+      `Added 10x ${itemType} (levels ${baseLevel} to ${baseLevel + 4500}, ${rarity}, tier ${tier}) to inventory`,
     );
   });
   addItemControlsDiv.appendChild(add10ItemsBtn);
@@ -822,7 +816,9 @@ export function createModifyUI(container = document.body) {
     } catch (e) {
       iconUrl = '';
     }
-    return { id: mat.id, text: mat.name, icon: iconUrl };
+    return {
+      id: mat.id, text: mat.name, icon: iconUrl,
+    };
   });
 
   // Quantity input
@@ -872,7 +868,9 @@ export function createModifyUI(container = document.body) {
     } catch {
       iconUrl = '';
     }
-    return { id: r.id, text: getRuneName(r), icon: iconUrl };
+    return {
+      id: r.id, text: getRuneName(r), icon: iconUrl,
+    };
   });
 
   const runeDd = createImageDropdownFromData(runeItems, runeItems[0] && runeItems[0].id);
@@ -1083,7 +1081,9 @@ export function createModifyUI(container = document.body) {
       return;
     }
     items.forEach((item) => inventory.addItemToInventory(item));
-    showToast(tp('debug.addedSetItems', { name: t(setDef.nameKey), count: items.length, tier }));
+    showToast(tp('debug.addedSetItems', {
+      name: t(setDef.nameKey), count: items.length, tier,
+    }));
   });
 
   setDiv.appendChild(setSearch);

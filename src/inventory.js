@@ -3,26 +3,22 @@ import { game, hero, statistics, dataManager, crystalShop, options } from './glo
 import { showToast, updateResources, formatStatName } from './ui/ui.js';
 import { t, tp } from './i18n.js';
 import { createModal, closeModal } from './ui/modal.js';
-import {
-  initializeInventoryUI,
+import { initializeInventoryUI,
   updateInventoryGrid,
   updateMaterialsGrid,
   sortInventory,
-  sortMaterials,
-} from './ui/inventoryUi.js';
+  sortMaterials } from './ui/inventoryUi.js';
 import { getCurrentRegion } from './region.js';
 import { computeSetBonuses } from './uniqueItems.js';
 import { MATERIALS } from './constants/materials.js';
 import { getDivisor, getStatDecimalPlaces, STATS } from './constants/stats/stats.js';
 import { rollRandomSubtype } from './constants/itemSubtypes.js';
-import {
-  ITEM_RARITY,
+import { ITEM_RARITY,
   RARITY_ORDER,
   SLOT_REQUIREMENTS,
   TWO_HANDED_TYPES,
   getSlotsByCategory,
-  getTypesByCategory,
-} from './constants/items.js';
+  getTypesByCategory } from './constants/items.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
 import { INVENTORY_MAX_QTY } from './constants/limits.js';
@@ -481,7 +477,7 @@ export default class Inventory {
           <span class="alternation-icon">${item.getIcon()}</span>
           <span><b>${item.type}</b> (Lvl ${item.level})</span>
           <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
-        </div>`
+        </div>`,
         )
         .join('');
 
@@ -493,14 +489,12 @@ export default class Inventory {
         <p>${t('inventory.selectItemAndStatTransmute')}</p>
         <p>${t('inventory.orbRestrictionUniqueSet')}</p>
         <p>
-          ${tp('inventory.selectedItemLabel', {
-            item: `<span id="transmutation-selected-name">${t('common.none')}</span>`,
-          })}
+          ${tp('inventory.selectedItemLabel', { item: `<span id="transmutation-selected-name">${t('common.none')}</span>` })}
         </p>
         <div id="transmutation-item-list">
           ${equipped.length === 0
-            ? `<div style="color:#f55;">${t('inventory.noEligibleEquippedItems')}</div>`
-            : itemRows}
+    ? `<div style="color:#f55;">${t('inventory.noEligibleEquippedItems')}</div>`
+    : itemRows}
         </div>
         <div id="transmutation-selected-item" style="margin-top:10px;"></div>
         <div class="modal-controls">
@@ -663,7 +657,7 @@ export default class Inventory {
           <span class="alternation-icon">${item.getIcon()}</span>
           <span><b>${item.type}</b> (Lvl ${item.level})</span>
           <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
-        </div>`
+        </div>`,
         )
         .join('');
 
@@ -675,14 +669,12 @@ export default class Inventory {
         <p>${t('inventory.selectItemAndStatReroll')}</p>
         <p>${t('inventory.orbRestrictionUniqueSet')}</p>
         <p>
-          ${tp('inventory.selectedItemLabel', {
-            item: `<span id="alternation-selected-name">${t('common.none')}</span>`,
-          })}
+          ${tp('inventory.selectedItemLabel', { item: `<span id="alternation-selected-name">${t('common.none')}</span>` })}
         </p>
         <div id="alternation-item-list">
           ${equipped.length === 0
-            ? `<div style="color:#f55;">${t('inventory.noEligibleEquippedItems')}</div>`
-            : itemRows}
+    ? `<div style="color:#f55;">${t('inventory.noEligibleEquippedItems')}</div>`
+    : itemRows}
         </div>
         <div id="alternation-selected-item" style="margin-top:10px;"></div>
         <div class="modal-controls">
@@ -896,7 +888,7 @@ export default class Inventory {
 
   getItemSalvageValue(item) {
     return Math.floor(
-      25 * item.level * Math.max(RARITY_ORDER.indexOf(item.rarity) / 2 + 1, 1) * Math.max(item.tier * 3, 1)
+      25 * item.level * Math.max(RARITY_ORDER.indexOf(item.rarity) / 2 + 1, 1) * Math.max(item.tier * 3, 1),
     );
   }
 
@@ -960,7 +952,7 @@ export default class Inventory {
         tp('inventory.gainedResource', {
           amount: crystalsGained,
           resource: t('resource.crystal.name'),
-        })
+        }),
       );
     }
     showToast(messages.join(', '), 'success');
@@ -1021,7 +1013,7 @@ export default class Inventory {
           tp('inventory.gainedResource', {
             amount: crystalsGained,
             resource: t('resource.crystal.name'),
-          })
+          }),
         );
       }
       showToast(messages.join(', '), 'success');
@@ -1082,7 +1074,7 @@ export default class Inventory {
           tp('inventory.gainedResource', {
             amount: crystalsGained,
             resource: t('resource.crystal.name'),
-          })
+          }),
         );
       }
       showToast(messages.join(', '), 'success');
@@ -1442,7 +1434,7 @@ export default class Inventory {
     }
 
     const sourceSlot = Object.entries(this.equippedItems).find(
-      ([slotName, equipped]) => equipped && equipped.id === item.id
+      ([slotName, equipped]) => equipped && equipped.id === item.id,
     )?.[0];
     const movingBetweenSlots = sourceSlot && sourceSlot !== slot;
     const isTwoHandedWeapon = slot === 'weapon' && this.isTwoHanded(item);
@@ -1613,7 +1605,7 @@ export default class Inventory {
     itemLifeEffectivenessPercent = 0,
     itemArmorEffectivenessPercent = 0,
     shieldEffectiveness = 0,
-    jewelryEffectiveness = 0
+    jewelryEffectiveness = 0,
   ) {
     // Ensure bonuses are up-to-date
     this.updateItemBonuses({
@@ -1660,7 +1652,9 @@ export default class Inventory {
     const totalWeight = weights.reduce((sum, value) => sum + value, 0);
     if (!Number.isFinite(totalWeight) || totalWeight <= 0) return null;
 
-    return { materials, weights, totalWeight };
+    return {
+      materials, weights, totalWeight,
+    };
   }
 
   getRandomMaterialFromPool(pool) {

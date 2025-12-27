@@ -66,7 +66,9 @@ export function appendDevAccessFooter({ environment, active }) {
   applyTranslations();
 }
 
-export function showDevAccessApologyModal({ active, options, dataManager }) {
+export function showDevAccessApologyModal({
+  active, options, dataManager,
+}) {
   if (!active) return;
   if (!options || options.devAccessModalDismissed) return;
 

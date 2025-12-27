@@ -15,9 +15,15 @@ import { t, tp } from './i18n.js';
 const html = String.raw;
 
 const SECTION_DEFS = [
-  { key: 'offense', labelKey: 'stats.offense', stats: Object.keys(OFFENSE_STATS) },
-  { key: 'defense', labelKey: 'stats.defense', stats: Object.keys(DEFENSE_STATS) },
-  { key: 'misc', labelKey: 'stats.misc', stats: Object.keys(MISC_STATS) },
+  {
+    key: 'offense', labelKey: 'stats.offense', stats: Object.keys(OFFENSE_STATS),
+  },
+  {
+    key: 'defense', labelKey: 'stats.defense', stats: Object.keys(DEFENSE_STATS),
+  },
+  {
+    key: 'misc', labelKey: 'stats.misc', stats: Object.keys(MISC_STATS),
+  },
 ];
 
 const ELEMENTAL_TRAINING_STATS = [
@@ -124,7 +130,7 @@ export default class Training {
       <button class="training-section-btn${this.activeSection === sec.key ? ' active' : ''}" data-section="${sec.key}" data-i18n="${sec.labelKey}">
         ${t(sec.labelKey)}
       </button>
-    `
+    `,
     ).join('');
 
     const controlsWrapper = document.createElement('div');
@@ -314,12 +320,12 @@ export default class Training {
     m.querySelector('.modal-bonus').innerHTML = this.getBonusText(
       stat,
       STATS[stat].training,
-      this.upgradeLevels[stat] || 0
+      this.upgradeLevels[stat] || 0,
     );
     m.querySelector('.modal-next-bonus').innerHTML = this.getBonusText(
       stat,
       STATS[stat].training,
-      (this.upgradeLevels[stat] || 0) + 1
+      (this.upgradeLevels[stat] || 0) + 1,
     );
     // Reset to default quantity
     this.selectedQty = options.useNumericInputs ? Math.min(options.trainingQty || 1, TRAINING_MAX_QTY) : 1;
@@ -595,38 +601,54 @@ export default class Training {
         const level = this.upgradeLevels[stat] || 0;
         const maxLevel = config?.maxLevel ?? Infinity;
         const levelsLeft = maxLevel - level;
-        return { stat, config, level, maxLevel, levelsLeft };
+        return {
+          stat, config, level, maxLevel, levelsLeft,
+        };
       })
       .filter(({ levelsLeft }) => levelsLeft > 0);
 
-    if (eligible.length === 0) return { totalCost: 0, purchases: [], affordable: true };
+    if (eligible.length === 0) return {
+      totalCost: 0, purchases: [], affordable: true,
+    };
 
     if (qty === 'max') {
       // Divide available gold into equal chunks across eligible stats
       const perChunk = Math.floor((hero.gold || 0) / eligible.length);
-      if (perChunk <= 0) return { totalCost: 0, purchases: [], affordable: false };
-      eligible.forEach(({ stat, config, level, maxLevel }) => {
+      if (perChunk <= 0) return {
+        totalCost: 0, purchases: [], affordable: false,
+      };
+      eligible.forEach(({
+        stat, config, level, maxLevel,
+      }) => {
         const res = this.getMaxPurchasable('max', level, maxLevel, config, perChunk);
         if (res.qty > 0 && res.totalCost > 0) {
           totalCost += res.totalCost;
-          purchases.push({ stat, qty: res.qty, cost: res.totalCost });
+          purchases.push({
+            stat, qty: res.qty, cost: res.totalCost,
+          });
         }
       });
     } else {
       // Fixed quantity per stat
-      eligible.forEach(({ stat, config, level, levelsLeft }) => {
+      eligible.forEach(({
+        stat, config, level, levelsLeft,
+      }) => {
         const qtyToBuy = Math.min(qty, levelsLeft);
         if (qtyToBuy <= 0) return;
         const cost = this.calculateTotalCost(config, qtyToBuy, level);
         if (cost > 0) {
           totalCost += cost;
-          purchases.push({ stat, qty: qtyToBuy, cost });
+          purchases.push({
+            stat, qty: qtyToBuy, cost,
+          });
         }
       });
     }
 
     const affordable = (hero.gold || 0) >= totalCost && totalCost > 0;
-    return { totalCost, purchases, affordable };
+    return {
+      totalCost, purchases, affordable,
+    };
   }
 
   updateBulkCost() {
@@ -638,7 +660,9 @@ export default class Training {
   }
 
   bulkBuySection() {
-    const { totalCost, purchases, affordable } = this.calculateBulkCostAndPurchases(this.quickQty);
+    const {
+      totalCost, purchases, affordable,
+    } = this.calculateBulkCostAndPurchases(this.quickQty);
     if (purchases.length === 0) return;
     if (!affordable) {
       showToast(t('training.notEnoughGoldBulk'), 'error');
@@ -865,7 +889,7 @@ export default class Training {
               <span class="elemental-allocation"></span>
             </div>
           </div>
-        `
+        `,
       ).join('');
       const content = html`
         <div class="elemental-distribution-modal-content">
@@ -956,28 +980,20 @@ export default class Training {
     const shares = this._getElementalDistributionShares();
     const totalEl = modal.querySelector('.elemental-total');
     if (totalEl) {
-      totalEl.textContent = tp('training.elementalDistributionTrainingTotal', {
-        amount: formatNumber(Number(trainingTotal.toFixed(2))),
-      });
+      totalEl.textContent = tp('training.elementalDistributionTrainingTotal', { amount: formatNumber(Number(trainingTotal.toFixed(2))) });
     }
     const intelligenceEl = modal.querySelector('.elemental-intelligence-total');
     if (intelligenceEl) {
-      intelligenceEl.textContent = tp('training.elementalDistributionIntelligenceTotal', {
-        amount: formatNumber(Number(intelligenceTotal.toFixed(2))),
-      });
+      intelligenceEl.textContent = tp('training.elementalDistributionIntelligenceTotal', { amount: formatNumber(Number(intelligenceTotal.toFixed(2))) });
     }
     const resourceEl = modal.querySelector('.elemental-extra-total');
     if (resourceEl) {
-      resourceEl.textContent = tp('training.elementalDistributionResourceElementalTotal', {
-        amount: formatNumber(Number(resourceElementalTotal.toFixed(2))),
-      });
+      resourceEl.textContent = tp('training.elementalDistributionResourceElementalTotal', { amount: formatNumber(Number(resourceElementalTotal.toFixed(2))) });
     }
 
     const physicalEl = modal.querySelector('.physical-extra-total');
     if (physicalEl) {
-      physicalEl.textContent = tp('training.elementalDistributionResourcePhysicalTotal', {
-        amount: formatNumber(Number(resourcePhysicalTotal.toFixed(2))),
-      });
+      physicalEl.textContent = tp('training.elementalDistributionResourcePhysicalTotal', { amount: formatNumber(Number(resourcePhysicalTotal.toFixed(2))) });
     }
 
     const physicalSlider = modal.querySelector('.resource-physical-slider');
@@ -986,16 +1002,12 @@ export default class Training {
     }
     const physicalShareEl = modal.querySelector('.resource-physical-share');
     if (physicalShareEl) {
-      physicalShareEl.textContent = tp('training.elementalDistributionShare', {
-        percent: formatNumber(Number(this.resourceExtraDamagePhysicalSharePercent || 0).toFixed(1)),
-      });
+      physicalShareEl.textContent = tp('training.elementalDistributionShare', { percent: formatNumber(Number(this.resourceExtraDamagePhysicalSharePercent || 0).toFixed(1)) });
     }
     const physicalAmountEl = modal.querySelector('.resource-physical-amount');
     if (physicalAmountEl) {
       const allocation = totalResourceExtra * resourcePhysicalShare;
-      physicalAmountEl.textContent = tp('training.elementalDistributionAmount', {
-        amount: formatNumber(Number(allocation.toFixed(2))),
-      });
+      physicalAmountEl.textContent = tp('training.elementalDistributionAmount', { amount: formatNumber(Number(allocation.toFixed(2))) });
     }
 
     modal.querySelectorAll('.elemental-distribution-row').forEach((row) => {
@@ -1008,17 +1020,13 @@ export default class Training {
       if (slider) slider.value = weight;
       if (shareEl) {
         const sharePercent = (shares[stat] || 0) * 100;
-        shareEl.textContent = tp('training.elementalDistributionShare', {
-          percent: formatNumber(sharePercent.toFixed(1)),
-        });
+        shareEl.textContent = tp('training.elementalDistributionShare', { percent: formatNumber(sharePercent.toFixed(1)) });
       }
       if (amountEl) {
         const decimals = getStatDecimalPlaces(stat);
         const displayDecimals = decimals > 0 ? decimals : 2;
         const allocation = combinedTotal * (shares[stat] || 0);
-        amountEl.textContent = tp('training.elementalDistributionAmount', {
-          amount: formatNumber(Number(allocation.toFixed(displayDecimals))),
-        });
+        amountEl.textContent = tp('training.elementalDistributionAmount', { amount: formatNumber(Number(allocation.toFixed(displayDecimals))) });
       }
     });
   }
@@ -1054,7 +1062,7 @@ export default class Training {
         currentLevel,
         currentLevel + desiredLevels,
         config,
-        gold
+        gold,
       ));
     }
 

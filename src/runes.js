@@ -102,7 +102,7 @@ export default class Runes {
     if (rune.conversion) {
       const percent = clampConversionPercent(
         rune,
-        typeof percentOverride === 'number' ? percentOverride : rune.conversion.percent
+        typeof percentOverride === 'number' ? percentOverride : rune.conversion.percent,
       );
       if (typeof percent === 'number') {
         inst.conversion = { percent };

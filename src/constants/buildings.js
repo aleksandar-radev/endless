@@ -11,10 +11,16 @@ export const buildingsData = {
       return t('Generates crystals over time.');
     },
     image: '/buildings/crystal-lab.png',
-    effect: { type: 'crystal', amount: 1, interval: 60 * 60 },
+    effect: {
+      type: 'crystal', amount: 1, interval: 60 * 60,
+    },
     costStructure: {
-      gold: { base: 2000, increment: 150, cap: 15000 },
-      crystal: { base: 5, increment: 1, cap: 20 },
+      gold: {
+        base: 2000, increment: 150, cap: 15000,
+      },
+      crystal: {
+        base: 5, increment: 1, cap: 20,
+      },
     },
     maxLevel: 50000,
     unlockRequirements: {},
@@ -28,9 +34,13 @@ export const buildingsData = {
       return t('Produces gold every few minutes.');
     },
     image: '/buildings/gold-mine.png',
-    effect: { type: 'gold', amount: 10, interval: 60 },
+    effect: {
+      type: 'gold', amount: 10, interval: 60,
+    },
     costStructure: {
-      gold: { base: 2000, increment: 100, cap: 12000 },
+      gold: {
+        base: 2000, increment: 100, cap: 12000,
+      },
     },
     maxLevel: 1000000,
     unlockRequirements: {},
@@ -44,11 +54,19 @@ export const buildingsData = {
       return t('Converts resources into souls.');
     },
     image: '/buildings/soul-forge.png',
-    effect: { type: 'soul', amount: 5, interval: 60 * 60 },
+    effect: {
+      type: 'soul', amount: 5, interval: 60 * 60,
+    },
     costStructure: {
-      gold: { base: 10000, increment: 500, cap: 50000 },
-      crystal: { base: 12, increment: 1, cap: 30 },
-      soul: { base: 10, increment: 2, cap: 50 },
+      gold: {
+        base: 10000, increment: 500, cap: 50000,
+      },
+      crystal: {
+        base: 12, increment: 1, cap: 30,
+      },
+      soul: {
+        base: 10, increment: 2, cap: 50,
+      },
     },
     maxLevel: 30000,
     unlockRequirements: {},
@@ -93,8 +111,12 @@ export const buildingsData = {
       interval: 10 * 60,
     },
     costStructure: {
-      gold: { base: 500, increment: 1000, cap: 70000 },
-      crystal: { base: 1, increment: 1, cap: 50 },
+      gold: {
+        base: 500, increment: 1000, cap: 70000,
+      },
+      crystal: {
+        base: 1, increment: 1, cap: 50,
+      },
     },
     maxLevel: 2000,
     unlockRequirements: {},

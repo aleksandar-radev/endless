@@ -7,7 +7,9 @@
 //  - className: CSS class to apply to overlay (e.g. 'training-modal')
 //  - content: HTML string to inject inside overlay
 //  - onClose: optional callback when modal closes
-export function createModal({ id, className, content, onClose, closeOnOutsideClick = true }) {
+export function createModal({
+  id, className, content, onClose, closeOnOutsideClick = true,
+}) {
   // Remove existing modal with same id
   const existing = document.getElementById(id);
   if (existing) existing.remove();

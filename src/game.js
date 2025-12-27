@@ -1,11 +1,9 @@
-import {
-  updatePlayerLife,
+import { updatePlayerLife,
   updateEnemyStats,
   updateStageUI,
   updateResources,
   updateBuffIndicators,
-  formatNumber,
-} from './ui/ui.js';
+  formatNumber } from './ui/ui.js';
 import { playerAttack, enemyAttack, playerDeath, defeatEnemy, createDamageNumber, createCombatText } from './combat.js';
 import { game, hero, crystalShop, skillTree, statistics, dataManager, setGlobals, options } from './globals.js';
 import { AILMENTS } from './constants/ailments.js';
@@ -136,7 +134,9 @@ class Game {
           const manaCost = Math.min(currentMana, Math.ceil(preventedDamage * costMultiplier));
           this.restoreMana(-manaCost);
           // special handling of popup when mana is negative:
-          createDamageNumber({ text: `-${Math.floor(manaCost)}`, isPlayer: true, isCritical: false, color: 'blue' });
+          createDamageNumber({
+            text: `-${Math.floor(manaCost)}`, isPlayer: true, isCritical: false, color: 'blue',
+          });
           damage -= preventedDamage;
         }
       }
@@ -148,7 +148,7 @@ class Game {
       tp('battleLog.receivedDamage', {
         value: formatNumber(Math.floor(damage)),
         breakdown: formatDamageBreakdown(breakdown),
-      }) + t('battleLog.autoAttack')
+      }) + t('battleLog.autoAttack'),
     );
     if (hero.stats.currentLife <= 0) {
       // check if ressurection will proc

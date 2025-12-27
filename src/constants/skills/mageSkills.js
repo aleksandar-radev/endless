@@ -112,9 +112,7 @@ export const MAGE_SKILLS = {
     icon: () => 'mana-shield',
     description: () => t('skill.manaShield'),
     maxLevel: () => 250,
-    effect: (level) => ({
-      manaShieldPercent: Math.min(scaleDownFlat(level, 0.75), 100),
-    }),
+    effect: (level) => ({ manaShieldPercent: Math.min(scaleDownFlat(level, 0.75), 100) }),
   },
   crimsonAegis: {
     id: 'crimsonAegis',
@@ -125,9 +123,7 @@ export const MAGE_SKILLS = {
     icon: () => 'crimson-aegis',
     description: () => t('skill.crimsonAegis'),
     maxLevel: () => 200,
-    effect: (level) => ({
-      damageTakenReductionPercent: Math.min((35 * level) / 200, 35),
-    }),
+    effect: (level) => ({ damageTakenReductionPercent: Math.min((35 * level) / 200, 35) }),
   },
   crimsonDrain: {
     id: 'crimsonDrain',
@@ -138,9 +134,7 @@ export const MAGE_SKILLS = {
     icon: () => 'blood-siphon',
     description: () => t('skill.crimsonDrain'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      lifePerHit: scaleUpFlat(level, 3, 6),
-    }),
+    effect: (level) => ({ lifePerHit: scaleUpFlat(level, 3, 6) }),
   },
 
   // Tier 50 Skills
@@ -217,9 +211,7 @@ export const MAGE_SKILLS = {
     icon: () => 'time-warp',
     description: () => t('skill.timeWarp'),
     maxLevel: () => 300,
-    effect: (level) => ({
-      attackSpeedPercent: Math.min(scaleDownFlat(level, 1), 100),
-    }),
+    effect: (level) => ({ attackSpeedPercent: Math.min(scaleDownFlat(level, 1), 100) }),
   },
 
   // Tier 100 Skills
@@ -232,9 +224,7 @@ export const MAGE_SKILLS = {
     icon: () => 'arcane-power',
     description: () => t('skill.arcanePower'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      elementalDamagePercent: scaleDownFlat(level, 1.25),
-    }),
+    effect: (level) => ({ elementalDamagePercent: scaleDownFlat(level, 1.25) }),
   },
   summonElemental: {
     id: 'summonElemental',

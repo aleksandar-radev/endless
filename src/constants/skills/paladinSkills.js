@@ -149,9 +149,7 @@ export const PALADIN_SKILLS = {
     icon: () => 'thorned-bulwark',
     description: () => t('skill.thornedBulwark'),
     maxLevel: () => 1,
-    effect: (level) => ({
-      enduranceThornsDamagePerPoint: level > 0 ? 0.3 : 0,
-    }),
+    effect: (level) => ({ enduranceThornsDamagePerPoint: level > 0 ? 0.3 : 0 }),
   },
 
   // Tier 50 Skills

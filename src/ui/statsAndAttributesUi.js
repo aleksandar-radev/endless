@@ -6,12 +6,10 @@ import { DEFENSE_STATS } from '../constants/stats/defenseStats.js';
 import { MISC_STATS } from '../constants/stats/miscStats.js';
 import { formatStatName } from '../ui/ui.js';
 import { getAttributeTooltip, ATTRIBUTES } from '../constants/stats/attributes.js';
-import {
-  calculateArmorReduction,
+import { calculateArmorReduction,
   calculateEvasionChance,
   calculateHitChance,
-  calculateResistanceReduction,
-} from '../combat.js';
+  calculateResistanceReduction } from '../combat.js';
 import { createModal } from './modal.js';
 import { t, tp } from '../i18n.js';
 import { updateInventoryGrid } from './inventoryUi.js';
@@ -55,9 +53,7 @@ const DAMAGE_PERCENT_SOURCES = {
 };
 
 ELEMENT_IDS.forEach((id) => {
-  DAMAGE_PERCENT_SOURCES[`${id}Damage`] = {
-    additive: ['totalDamagePercent', 'elementalDamagePercent', `${id}DamagePercent`],
-  };
+  DAMAGE_PERCENT_SOURCES[`${id}Damage`] = { additive: ['totalDamagePercent', 'elementalDamagePercent', `${id}DamagePercent`] };
 });
 
 function appendDamagePercentBonus(el, key) {
@@ -99,7 +95,9 @@ function updateRateCounters() {
   const eligibilityElapsed = (statistics.totalTimeInFights || 0) - eligibilityBaseline;
   const periodLabel = formatPeriod(ratePeriod);
   const formatRateLine = (labelKey, value) =>
-    tp('counters.rateLine', { label: t(labelKey), period: periodLabel, value });
+    tp('counters.rateLine', {
+      label: t(labelKey), period: periodLabel, value,
+    });
   const dmgEls = document.querySelectorAll('.counter-damage');
   const xpEls = document.querySelectorAll('.counter-xp');
   const goldEls = document.querySelectorAll('.counter-gold');
@@ -127,37 +125,43 @@ function updateRateCounters() {
     matEls.forEach((el) => (el.textContent = formatRateLine('counters.materials', 0)));
     // Only reset offline rates if we're not preserving them during offline collection
     if (!statistics.preserveOfflineRates) {
-      statistics.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
+      statistics.offlineRates = {
+        xp: 0, gold: 0, items: 0, materials: 0,
+      };
     }
     return;
   }
   const damageRate = sessionDamage / elapsed;
   dmgEls.forEach(
-    (el) => (el.textContent = formatRateLine('counters.damage', formatNumber((damageRate * ratePeriod).toFixed(1))))
+    (el) => (el.textContent = formatRateLine('counters.damage', formatNumber((damageRate * ratePeriod).toFixed(1)))),
   );
   const xpRate = (statistics.totalExpFromCombat - startExp) / elapsed;
   xpEls.forEach(
-    (el) => (el.textContent = formatRateLine('counters.xp', formatNumber((xpRate * ratePeriod).toFixed(1))))
+    (el) => (el.textContent = formatRateLine('counters.xp', formatNumber((xpRate * ratePeriod).toFixed(1)))),
   );
   const goldRate = (statistics.totalGoldFromCombat - startGold) / elapsed;
   goldEls.forEach(
-    (el) => (el.textContent = formatRateLine('counters.gold', formatNumber((goldRate * ratePeriod).toFixed(1))))
+    (el) => (el.textContent = formatRateLine('counters.gold', formatNumber((goldRate * ratePeriod).toFixed(1)))),
   );
   const itemRate = (statistics.totalItemsFound - startItems) / elapsed;
   itemsEls.forEach(
-    (el) => (el.textContent = formatRateLine('counters.items', formatNumber((itemRate * ratePeriod).toFixed(1))))
+    (el) => (el.textContent = formatRateLine('counters.items', formatNumber((itemRate * ratePeriod).toFixed(1)))),
   );
   const matRate = (statistics.totalMaterialsDropped - startMaterialsDropped) / elapsed;
   matEls.forEach(
-    (el) => (el.textContent = formatRateLine('counters.materials', formatNumber((matRate * ratePeriod).toFixed(1))))
+    (el) => (el.textContent = formatRateLine('counters.materials', formatNumber((matRate * ratePeriod).toFixed(1)))),
   );
   // Only expose offlineRates after at least 60s spent in fights (eligibility)
   // But preserve existing rates if offline rewards are being collected
   if (!statistics.preserveOfflineRates) {
     if (eligible) {
-      statistics.offlineRates = { xp: xpRate, gold: goldRate, items: itemRate, materials: matRate };
+      statistics.offlineRates = {
+        xp: xpRate, gold: goldRate, items: itemRate, materials: matRate,
+      };
     } else {
-      statistics.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
+      statistics.offlineRates = {
+        xp: 0, gold: 0, items: 0, materials: 0,
+      };
     }
   }
 }
@@ -180,14 +184,30 @@ function getAdvancedAttributeTooltip(attr) {
   if (!breakdown) return '';
 
   const sources = [
-    { name: 'Base', flat: Math.floor(breakdown.base), percent: 0 },
-    { name: 'Allocated', flat: Math.floor(breakdown.allocated), percent: 0 },
-    { name: 'Potions', flat: Math.floor(breakdown.perma), percent: breakdown.percent.perma },
-    { name: 'Prestige', flat: Math.floor(breakdown.prestige), percent: breakdown.percent.prestige },
-    { name: 'Items', flat: Math.floor(breakdown.items), percent: breakdown.percent.items },
-    { name: 'Skills', flat: Math.floor(breakdown.skills), percent: breakdown.percent.skills },
-    { name: 'Training', flat: Math.floor(breakdown.training), percent: breakdown.percent.training },
-    { name: 'Soul Shop', flat: Math.floor(breakdown.soul), percent: breakdown.percent.soul },
+    {
+      name: 'Base', flat: Math.floor(breakdown.base), percent: 0,
+    },
+    {
+      name: 'Allocated', flat: Math.floor(breakdown.allocated), percent: 0,
+    },
+    {
+      name: 'Potions', flat: Math.floor(breakdown.perma), percent: breakdown.percent.perma,
+    },
+    {
+      name: 'Prestige', flat: Math.floor(breakdown.prestige), percent: breakdown.percent.prestige,
+    },
+    {
+      name: 'Items', flat: Math.floor(breakdown.items), percent: breakdown.percent.items,
+    },
+    {
+      name: 'Skills', flat: Math.floor(breakdown.skills), percent: breakdown.percent.skills,
+    },
+    {
+      name: 'Training', flat: Math.floor(breakdown.training), percent: breakdown.percent.training,
+    },
+    {
+      name: 'Soul Shop', flat: Math.floor(breakdown.soul), percent: breakdown.percent.soul,
+    },
   ].filter((s) => s.flat || s.percent);
 
   const totalFlat = sources.reduce((sum, s) => sum + (s.flat || 0), 0);
@@ -468,7 +488,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           }
           targetPanel.appendChild(row);
           lbl.addEventListener('mouseenter', (e) =>
-            showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e)
+            showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e),
           );
           lbl.addEventListener('mousemove', positionTooltip);
           lbl.addEventListener('mouseleave', hideTooltip);
@@ -509,7 +529,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           panel.appendChild(row);
 
           lbl.addEventListener('mouseenter', (e) =>
-            showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e)
+            showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e),
           );
           lbl.addEventListener('mousemove', positionTooltip);
           lbl.addEventListener('mouseleave', hideTooltip);
@@ -612,7 +632,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
             hero.stats.attackRating,
             enemy.evasion,
             undefined,
-            hero.stats.chanceToHitPercent || 0
+            hero.stats.chanceToHitPercent || 0,
           ).toFixed(2) + '%';
         attackRatingEl.appendChild(document.createTextNode(` (${hitPct})`));
       }
@@ -677,19 +697,19 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
       </div>
       <div class="attributes-body">
         ${Object.entries(hero.stats)
-          .map(([stat, value]) => {
-            if (!ATTRIBUTES[stat]) return '';
+    .map(([stat, value]) => {
+      if (!ATTRIBUTES[stat]) return '';
 
-            const displayName = t(stat);
-            return `
+      const displayName = t(stat);
+      return `
             <div class="attribute-row">
               <button class="allocate-btn" data-stat="${stat}">+</button>
               <strong>${displayName}:</strong>
               <span id="${stat}-value">${formatNumber(hero.stats[stat])}</span>
             </div>
           `;
-          })
-          .join('')}
+    })
+    .join('')}
       </div>
     `;
 

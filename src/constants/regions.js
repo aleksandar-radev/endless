@@ -39,9 +39,7 @@ export const REGIONS = [
       lightningDamage: 1,
       waterDamage: 1,
     },
-    materialDropWeights: {
-      crystalized_rock: 1.1,
-    },
+    materialDropWeights: { crystalized_rock: 1.1 },
     combatProfile: {
       primaryElement: 'earth',
       averageElements: ['air', 'water', 'cold'],
@@ -87,9 +85,7 @@ export const REGIONS = [
       lightningDamage: 1.5,
       waterDamage: 1.5,
     },
-    materialDropWeights: {
-      crystalized_rock: 5,
-    },
+    materialDropWeights: { crystalized_rock: 5 },
     combatProfile: {
       primaryElement: 'lightning',
       averageElements: ['fire', 'cold', 'air'],
@@ -190,9 +186,7 @@ export const REGIONS = [
       lightningDamage: 2.7,
       waterDamage: 2.7,
     },
-    materialDropWeights: {
-      elixir: 5,
-    },
+    materialDropWeights: { elixir: 5 },
     canDrop: ['elixir'],
   },
   {
@@ -204,7 +198,7 @@ export const REGIONS = [
     },
     get description() {
       return t(
-        'Enemies resist water but are weak to lightning and air. Gold Coins up to Freaky Gold Coins are common finds.'
+        'Enemies resist water but are weak to lightning and air. Gold Coins up to Freaky Gold Coins are common finds.',
       );
     },
     allowedTags: ['murky_swamp'],
@@ -368,7 +362,7 @@ export const REGIONS = [
     },
     get description() {
       return t(
-        'Enemies resist fire but are weak to water and cold. Weapon Upgrade Cores, Armor Upgrade Stones, and Jewelry Upgrade Gems drop often.'
+        'Enemies resist fire but are weak to water and cold. Weapon Upgrade Cores, Armor Upgrade Stones, and Jewelry Upgrade Gems drop often.',
       );
     },
     allowedTags: ['volcanic_rift'],
@@ -565,7 +559,7 @@ export const REGIONS = [
     },
     get description() {
       return t(
-        'Enemies resist lightning but are weak to water and earth. Enchantment Scrolls plus Alternation and Transmutation Orbs drop here.'
+        'Enemies resist lightning but are weak to water and earth. Enchantment Scrolls plus Alternation and Transmutation Orbs drop here.',
       );
     },
     allowedTags: ['obsidian_spire'],

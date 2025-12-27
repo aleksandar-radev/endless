@@ -294,7 +294,7 @@ export function getRockyFieldRunePercent(regionId, stage) {
 
   const lowBandWeight = Math.max(
     LOW_BAND_WEIGHT_MIN,
-    Math.min(LOW_BAND_WEIGHT_MAX, LOW_BAND_WEIGHT_MAX - difficulty * 0.1)
+    Math.min(LOW_BAND_WEIGHT_MAX, LOW_BAND_WEIGHT_MAX - difficulty * 0.1),
   );
   if (Math.random() < lowBandWeight) {
     return rollLowBandPercent(regionRange);
@@ -357,7 +357,7 @@ export class RockyFieldEnemy extends EnemyBase {
         rarity: rarityName,
         level: formatNumberValue(this.level, options?.shortNumbers),
         name: t(this.name),
-      })
+      }),
     );
   }
 
@@ -417,8 +417,8 @@ export class RockyFieldEnemy extends EnemyBase {
     return Math.floor(
       Math.max(
         scaleStat(this.getStatValue('damage') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * (1 - dmgRed),
-        1
-      )
+        1,
+      ),
     );
   }
 
@@ -426,7 +426,7 @@ export class RockyFieldEnemy extends EnemyBase {
     const statMultiplier = this.getStatMultiplier();
     const armorMult = this.getSpecialMultiplier('armorMultiplier');
     return Math.floor(
-      scaleStat(this.getStatValue('armor') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * armorMult
+      scaleStat(this.getStatValue('armor') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * armorMult,
     );
   }
 
@@ -438,7 +438,7 @@ export class RockyFieldEnemy extends EnemyBase {
   calculateAttackRating() {
     const statMultiplier = this.getStatMultiplier();
     return Math.floor(
-      scaleStat(this.getStatValue('attackRating') * statMultiplier, this.level, 0, 0, 0, this.baseScale)
+      scaleStat(this.getStatValue('attackRating') * statMultiplier, this.level, 0, 0, 0, this.baseScale),
     );
   }
 
@@ -489,7 +489,7 @@ export class RockyFieldEnemy extends EnemyBase {
     const resistanceMult = this.getSpecialMultiplier('resistanceMultiplier');
     return Math.floor(
       scaleStat(this.getStatValue(`${id}Resistance`) * statMultiplier, this.level, 0, 0, 0, this.baseScale) *
-        resistanceMult
+        resistanceMult,
     );
   }
 

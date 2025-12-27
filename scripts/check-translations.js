@@ -76,7 +76,7 @@ function checkTranslations() {
     const totalKeys = lang.keys.length;
     const hasDupes = totalKeys !== uniqueKeys;
     console.log(
-      `  ${lang.filename.padEnd(10)} ${totalKeys} keys (${uniqueKeys} unique)${hasDupes ? ' ⚠️  DUPLICATES!' : ''}`
+      `  ${lang.filename.padEnd(10)} ${totalKeys} keys (${uniqueKeys} unique)${hasDupes ? ' ⚠️  DUPLICATES!' : ''}`,
     );
   });
 

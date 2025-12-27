@@ -559,8 +559,6 @@ export const DRUID_SKILLS = {
     icon: () => 'cosmic-harmony',
     description: () => t('skill.cosmicHarmony'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-      elementalDamagePercent: scaleDownFlat(level, 3),
-    }),
+    effect: (level) => ({ elementalDamagePercent: scaleDownFlat(level, 3) }),
   },
 };

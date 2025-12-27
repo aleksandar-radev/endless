@@ -1,13 +1,11 @@
 // Game logic and persistent state for buildings
 import { buildingsData } from './constants/buildings.js';
 import { dataManager, hero, inventory, statistics, ascension } from './globals.js';
-import {
-  updateResources,
+import { updateResources,
   formatNumber,
   updatePlayerLife,
   initializeSkillTreeStructure,
-  updateTabIndicators,
-} from './ui/ui.js';
+  updateTabIndicators } from './ui/ui.js';
 import { showOfflineBonusesModal } from './ui/buildingUi.js';
 import { fetchTrustedUtcTime } from './api.js';
 import { getTimeNow } from './common.js';
@@ -21,7 +19,9 @@ const refundPercent = 0.9;
 
 // Represents a single building instance (with state)
 export class Building {
-  constructor({ id, level = 0, placedAt = null, lastBonusTime = null, lastBonusTimeLocal = null, totalEarned = 0 }) {
+  constructor({
+    id, level = 0, placedAt = null, lastBonusTime = null, lastBonusTimeLocal = null, totalEarned = 0,
+  }) {
     const data = buildingsData[id];
     if (!data) throw new Error(`Unknown building id: ${id}`);
     this.id = id;
@@ -124,7 +124,9 @@ export class Building {
     // Returns the total cost for upgrading 'amount' levels from current level
     const costs = {};
     const startLevel = this.level;
-    for (const [type, { base, increment, cap }] of Object.entries(this.costStructure)) {
+    for (const [type, {
+      base, increment, cap,
+    }] of Object.entries(this.costStructure)) {
       // Formula: base * amount + increment * (amount * (2 * startLevel + amount - 1) / 2)
       let total = base * amount + increment * ((amount * (2 * startLevel + amount - 1)) / 2);
       if (cap !== null && cap !== undefined) {
@@ -170,7 +172,9 @@ export class Building {
     const currentLevel = this.level;
     const remainingLevel = currentLevel - levelsToRefund;
     const refund = {};
-    for (const [type, { base, increment, cap }] of Object.entries(this.costStructure)) {
+    for (const [type, {
+      base, increment, cap,
+    }] of Object.entries(this.costStructure)) {
       let totalAtCurrent = base * currentLevel + increment * ((currentLevel * (currentLevel - 1)) / 2);
       let totalAtRemaining = base * remainingLevel + increment * ((remainingLevel * (remainingLevel - 1)) / 2);
       if (cap !== null && cap !== undefined) {
@@ -354,7 +358,9 @@ export class BuildingManager {
   }
 
   // --- Bonus collection logic ---
-  async collectBonuses({ showOfflineModal = false, extraBonuses = [], extraCollectFn } = {}) {
+  async collectBonuses({
+    showOfflineModal = false, extraBonuses = [], extraCollectFn,
+  } = {}) {
     const nowLocal = Date.now();
     const nowServer = await getTimeNow();
     let now = nowServer;

@@ -91,8 +91,8 @@ export function updatePrestigeBonuses() {
   const bonuses = prestige.getBonuses();
   list.innerHTML = Object.keys(bonuses).length
     ? Object.entries(bonuses)
-        .map(([stat, val]) => `<li>${formatStatName(stat)} ${formatPrestigeBonus(stat, val)}</li>`)
-        .join('')
+      .map(([stat, val]) => `<li>${formatStatName(stat)} ${formatPrestigeBonus(stat, val)}</li>`)
+      .join('')
     : `<li>${t('prestige.noBonuses')}</li>`;
 }
 
@@ -130,7 +130,9 @@ function openPrestigeModal() {
     </div>
   `;
 
-  const modal = createModal({ id: 'prestige-modal', className: 'prestige-modal', content });
+  const modal = createModal({
+    id: 'prestige-modal', className: 'prestige-modal', content,
+  });
   const cardsContainer = modal.querySelector('.prestige-cards');
   const performBtn = modal.querySelector('#prestige-perform-btn');
   const crystalsTotalEl = modal.querySelector('#prestige-crystals-total');
@@ -308,5 +310,7 @@ function openPrestigeDetailModal(entry) {
       ${stats}
     </ul>
   </div>`;
-  createModal({ id: 'prestige-detail-modal', className: 'prestige-history-modal', content });
+  createModal({
+    id: 'prestige-detail-modal', className: 'prestige-history-modal', content,
+  });
 }

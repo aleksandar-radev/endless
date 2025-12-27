@@ -1,13 +1,11 @@
 /**
  * Manages boss properties and state.
  */
-import {
-  percentIncreasedByLevel,
+import { percentIncreasedByLevel,
   scaleStat,
   computeScaledReward,
   xpDiminishingFactor,
-  setStepFunctionMetadata,
-} from './common.js';
+  setStepFunctionMetadata } from './common.js';
 import { BOSSES } from './constants/bosses.js';
 import { hero, options } from './globals.js';
 import { battleLog } from './battleLog.js';
@@ -195,7 +193,7 @@ class Boss extends EnemyBase {
       tp('battleLog.encounteredBoss', {
         level: formatNumberValue(this.level, options?.shortNumbers),
         name: t(this.name),
-      })
+      }),
     );
   }
 
@@ -277,7 +275,7 @@ class Boss extends EnemyBase {
       val *
         (this.baseData.multiplier?.evasion || 1) *
         (Number.isFinite(this.regionMultiplier?.evasion) ? this.regionMultiplier.evasion : 1) *
-        attackRatingAndEvasionScale
+        attackRatingAndEvasionScale,
     );
   }
 
@@ -291,7 +289,7 @@ class Boss extends EnemyBase {
       val *
         (this.baseData.multiplier?.attackRating || 1) *
         (Number.isFinite(this.regionMultiplier?.attackRating) ? this.regionMultiplier.attackRating : 1) *
-        attackRatingAndEvasionScale
+        attackRatingAndEvasionScale,
     );
   }
 
@@ -308,7 +306,7 @@ class Boss extends EnemyBase {
       val *
         (this.baseData.multiplier?.[`${type}Damage`] || 1) *
         (Number.isFinite(this.regionMultiplier?.[`${type}Damage`]) ? this.regionMultiplier[`${type}Damage`] : 1) *
-        (1 - dmgRed)
+        (1 - dmgRed),
     );
   }
 
@@ -322,7 +320,7 @@ class Boss extends EnemyBase {
     return Math.floor(
       val *
         (this.baseData.multiplier?.[`${type}Resistance`] || 1) *
-        (Number.isFinite(this.regionMultiplier?.[`${type}Resistance`]) ? this.regionMultiplier[`${type}Resistance`] : 1)
+        (Number.isFinite(this.regionMultiplier?.[`${type}Resistance`]) ? this.regionMultiplier[`${type}Resistance`] : 1),
     );
   }
 

@@ -37,17 +37,17 @@ export function renderLeaderboardTable(leaderboardData, currentUsername) {
       </thead>
       <tbody>
         ${leaderboardData
-          .map((entry, i) => {
-            const isCurrentUser = entry.user?.username === currentUsername;
-            return `
+    .map((entry, i) => {
+      const isCurrentUser = entry.user?.username === currentUsername;
+      return `
             <tr${isCurrentUser ? ' class="highlight-user"' : ''}>
               <td>${i + 1}</td>
               <td>${entry.user?.username ?? t('leaderboard.unknown')}</td>
               <td>${entry.highestLevel ?? 0}</td>
             </tr>
           `;
-          })
-          .join('')}
+    })
+    .join('')}
       </tbody>
     </table>
   `;

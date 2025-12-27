@@ -7,20 +7,48 @@ export const MAX_CONVERSION_PERCENT = 150;
 export const RESOURCE_CONVERSION_MAX_PERCENT = 80;
 
 const TYPE_STYLES = {
-  damage: { abbr: 'DM', color: '#f2b94b', text: '#241b02' },
-  life: { abbr: 'HP', color: '#d54b4b', text: '#240000' },
-  mana: { abbr: 'MP', color: '#3c73f0', text: '#01153a' },
-  armor: { abbr: 'AR', color: '#9fa6b2', text: '#111417' },
-  attackRating: { abbr: 'AK', color: '#f4d35e', text: '#352400' },
-  evasion: { abbr: 'EV', color: '#2ecc71', text: '#00240f' },
-  lifeRegen: { abbr: 'RG', color: '#1fab5c', text: '#001b0b' },
-  fireResistance: { abbr: 'FR', color: '#ff7a3a', text: '#2a0c00' },
-  coldResistance: { abbr: 'CR', color: '#59a3ff', text: '#001a3d' },
-  airResistance: { abbr: 'AI', color: '#a87bff', text: '#1d0040' },
-  earthResistance: { abbr: 'ER', color: '#c18f58', text: '#271200' },
-  lightningResistance: { abbr: 'LG', color: '#f6d55c', text: '#352200' },
-  waterResistance: { abbr: 'WT', color: '#4fb3bf', text: '#001d1f' },
-  allResistance: { abbr: 'AL', color: '#8681ff', text: '#0a063d' },
+  damage: {
+    abbr: 'DM', color: '#f2b94b', text: '#241b02',
+  },
+  life: {
+    abbr: 'HP', color: '#d54b4b', text: '#240000',
+  },
+  mana: {
+    abbr: 'MP', color: '#3c73f0', text: '#01153a',
+  },
+  armor: {
+    abbr: 'AR', color: '#9fa6b2', text: '#111417',
+  },
+  attackRating: {
+    abbr: 'AK', color: '#f4d35e', text: '#352400',
+  },
+  evasion: {
+    abbr: 'EV', color: '#2ecc71', text: '#00240f',
+  },
+  lifeRegen: {
+    abbr: 'RG', color: '#1fab5c', text: '#001b0b',
+  },
+  fireResistance: {
+    abbr: 'FR', color: '#ff7a3a', text: '#2a0c00',
+  },
+  coldResistance: {
+    abbr: 'CR', color: '#59a3ff', text: '#001a3d',
+  },
+  airResistance: {
+    abbr: 'AI', color: '#a87bff', text: '#1d0040',
+  },
+  earthResistance: {
+    abbr: 'ER', color: '#c18f58', text: '#271200',
+  },
+  lightningResistance: {
+    abbr: 'LG', color: '#f6d55c', text: '#352200',
+  },
+  waterResistance: {
+    abbr: 'WT', color: '#4fb3bf', text: '#001d1f',
+  },
+  allResistance: {
+    abbr: 'AL', color: '#8681ff', text: '#0a063d',
+  },
 };
 
 const getTypeStyle = (key) => {
@@ -162,7 +190,7 @@ const CONVERSION_RUNES = Object.keys(TYPE_DATA).flatMap((from) =>
         },
         icon: hasPairIcon ? `${BASE}/icons/runes/${from}_to_${to}.svg` : createConversionIcon(from, to),
       };
-    })
+    }),
 );
 
 const UNIQUE_RUNES = [

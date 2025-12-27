@@ -18,7 +18,13 @@ export const PROGRESSION_QUESTS = [
     },
     type: 'level',
     target: 5,
-    reward: { gold: 200, crystals: 1, item: { rarity: 'rare', type: 'random', tier: 1 } },
+    reward: {
+      gold: 200,
+      crystals: 1,
+      item: {
+        rarity: 'rare', type: 'random', tier: 1,
+      },
+    },
   },
   {
     id: 'level_10',
@@ -31,7 +37,13 @@ export const PROGRESSION_QUESTS = [
     },
     type: 'level',
     target: 10,
-    reward: { gold: 500, crystals: 1, item: { rarity: 'rare', type: 'random', tier: 1 } },
+    reward: {
+      gold: 500,
+      crystals: 1,
+      item: {
+        rarity: 'rare', type: 'random', tier: 1,
+      },
+    },
   },
   {
     id: 'level_25',

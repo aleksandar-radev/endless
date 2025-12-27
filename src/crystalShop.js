@@ -1,5 +1,4 @@
-import {
-  dataManager,
+import { dataManager,
   hero,
   options,
   skillTree,
@@ -8,10 +7,8 @@ import {
   game,
   training,
   soulShop,
-  ascension,
-} from './globals.js';
-import {
-  updateResources,
+  ascension } from './globals.js';
+import { updateResources,
   initializeSkillTreeUI,
   updateActionBar,
   updateSkillTreeValues,
@@ -19,8 +16,7 @@ import {
   showToast,
   updateStageUI,
   formatNumber,
-  updatePlayerLife,
-} from './ui/ui.js';
+  updatePlayerLife } from './ui/ui.js';
 import { t, tp } from './i18n.js';
 import { updateAscensionUI } from './ui/ascensionUi.js';
 import { selectBoss } from './ui/bossUi.js';
@@ -321,8 +317,8 @@ export default class CrystalShop {
     upgradesContainer.innerHTML = `
       <div class="crystal-upgrades-grid">
         ${Object.entries(CRYSTAL_UPGRADE_CONFIG)
-          .map(([stat, config]) => this.createCrystalUpgradeButton(stat, config))
-          .join('')}
+    .map(([stat, config]) => this.createCrystalUpgradeButton(stat, config))
+    .join('')}
       </div>
     `;
     this.setupCrystalUpgradeHandlers();
@@ -339,8 +335,8 @@ export default class CrystalShop {
     upgradesContainer.innerHTML = `
       <div class="crystal-upgrades-grid">
         ${Object.entries(CRYSTAL_UPGRADE_CONFIG)
-          .map(([stat, config]) => this.createCrystalUpgradeButton(stat, config))
-          .join('')}
+    .map(([stat, config]) => this.createCrystalUpgradeButton(stat, config))
+    .join('')}
       </div>
     `;
     this.setupCrystalUpgradeHandlers();
@@ -640,8 +636,8 @@ export default class CrystalShop {
         <p>${oneTimeBonusText}</p>
         <p>${t('ascension.upgrade.cost')}: <span class="modal-total-cost">${reduced}</span> ${t('resource.crystal.name')}</p>
         <div class="modal-status">${
-          purchased ? '<span style="color:#10b981;font-weight:bold;">' + t('common.purchased') + '</span>' : ''
-        }</div>
+  purchased ? '<span style="color:#10b981;font-weight:bold;">' + t('common.purchased') + '</span>' : ''
+}</div>
       `;
       buyBtn.style.display = purchased ? 'none' : '';
       buyBtn.disabled = purchased;
@@ -734,7 +730,7 @@ export default class CrystalShop {
       const cap = config.maxLevel ?? AUTO_SALVAGE_MAX_LEVEL;
       const ascRedLocal = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
       const nextCostVal = Math.round(
-        Math.floor(config.baseCost + (config.costIncrement || 0) * level) * (1 - ascRedLocal)
+        Math.floor(config.baseCost + (config.costIncrement || 0) * level) * (1 - ascRedLocal),
       );
       if (q('.modal-total-cost')) q('.modal-total-cost').textContent = nextCostVal;
       const isMaxed = level >= cap;
@@ -754,7 +750,7 @@ export default class CrystalShop {
       const ascRedLocal = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
       const costVal = Math.round(
         Math.floor(config.baseCost + (config.costIncrement || 0) * (this.crystalUpgrades[stat] || 0)) *
-          (1 - ascRedLocal)
+          (1 - ascRedLocal),
       );
       if (q('.modal-total-cost')) q('.modal-total-cost').textContent = costVal;
     }

@@ -31,9 +31,7 @@ export const ROCKY_FIELD_OUTSKIRTS_ENEMIES = [
       waterResistance: 1.2,
     },
     special: ['alwaysHit', 'frenzied'],
-    specialData: {
-      attackSpeedMultiplier: 1.4,
-    },
+    specialData: { attackSpeedMultiplier: 1.4 },
     runeDrop: ROCKY_FIELD_COMMON_RUNES,
     tags: ['outskirts'],
   },

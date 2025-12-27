@@ -86,17 +86,17 @@ function getRegionTooltip(region) {
     <div class="tooltip-content">${region.description}</div>
     <div><strong>${t('region.unlockLevel')}:</strong> ${region.unlockLevel}</div>
     ${region.multiplier.xp != 1
-      ? `<div><strong>${t('region.xpBonus')}:</strong> ${((region.multiplier.xp - 1) * 100).toFixed(0)}%</div>`
-      : ''}
+    ? `<div><strong>${t('region.xpBonus')}:</strong> ${((region.multiplier.xp - 1) * 100).toFixed(0)}%</div>`
+    : ''}
     ${region.multiplier.gold != 1
-      ? `<div><strong>${t('region.goldBonus')}:</strong> ${((region.multiplier.gold - 1) * 100).toFixed(0)}%</div>`
-      : ''}
+    ? `<div><strong>${t('region.goldBonus')}:</strong> ${((region.multiplier.gold - 1) * 100).toFixed(0)}%</div>`
+    : ''}
     ${region.multiplier.itemDrop != 1
-      ? `<div><strong>${t('region.itemDropBonus')}:</strong> ${((region.multiplier.itemDrop - 1) * 100).toFixed(0)}%</div>`
-      : ''}
+    ? `<div><strong>${t('region.itemDropBonus')}:</strong> ${((region.multiplier.itemDrop - 1) * 100).toFixed(0)}%</div>`
+    : ''}
     ${region.multiplier.materialDrop && region.multiplier.materialDrop != 1
-      ? `<div><strong>${t('region.materialDropBonus')}:</strong> ${((region.multiplier.materialDrop - 1) * 100).toFixed(0)}%</div>`
-      : ''}
+    ? `<div><strong>${t('region.materialDropBonus')}:</strong> ${((region.multiplier.materialDrop - 1) * 100).toFixed(0)}%</div>`
+    : ''}
   `;
 }
 

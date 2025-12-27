@@ -1,9 +1,7 @@
 // Audio manager for game sounds
 // All sounds must be imported statically at the top
 
-const SOUNDS = {
-  enemyDeath: (import.meta.env.VITE_BASE_PATH || '/') + '/sounds/enemy-death.mp3',
-};
+const SOUNDS = { enemyDeath: (import.meta.env.VITE_BASE_PATH || '/') + '/sounds/enemy-death.mp3' };
 
 class AudioManager {
   constructor() {

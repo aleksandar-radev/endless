@@ -1,5 +1,4 @@
-import {
-  updatePlayerLife,
+import { updatePlayerLife,
   updateEnemyStats,
   updateResources,
   updateStageUI,
@@ -8,11 +7,9 @@ import {
   updateTabIndicators,
   showToast,
   showDeathScreen,
-  formatNumber,
-} from './ui/ui.js';
+  formatNumber } from './ui/ui.js';
 import Enemy from './enemy.js';
-import {
-  hero,
+import { hero,
   game,
   inventory,
   crystalShop,
@@ -22,8 +19,7 @@ import {
   runtime,
   options,
   runes,
-  ascension,
-} from './globals.js';
+  ascension } from './globals.js';
 import { ITEM_RARITY, ITEM_TYPES, ALL_ITEM_TYPES } from './constants/items.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateQuestsUI } from './ui/questUi.js';
@@ -41,13 +37,11 @@ import { rollSpecialItemDrop } from './uniqueItems.js';
 import { AILMENTS } from './constants/ailments.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
-import {
-  ELEMENTS,
+import { ELEMENTS,
   BASE_MATERIAL_DROP_CHANCE,
   BASE_ITEM_DROP_CHANCE,
   MIN_DEATH_TIMER,
-  MAX_DEATH_TIMER,
-} from './constants/common.js';
+  MAX_DEATH_TIMER } from './constants/common.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 const UNIQUE_RUNE_SET = new Set(RUNES.filter((r) => r.unique).map((r) => r.id));
@@ -175,11 +169,15 @@ export function enemyAttack(currentTime) {
     if (!alwaysHit) {
       if (Math.random() * 100 > hitChance) {
         avoided = true;
-        createDamageNumber({ text: 'EVADED', isPlayer: true, color: 'var(--evade)' });
+        createDamageNumber({
+          text: 'EVADED', isPlayer: true, color: 'var(--evade)',
+        });
         battleLog.addBattle(t('battleLog.evadedAttack'));
       } else if (hero.stats.avoidChance > 0 && Math.random() < hero.stats.avoidChance) {
         avoided = true;
-        createDamageNumber({ text: 'AVOIDED', isPlayer: true, color: '#888888' });
+        createDamageNumber({
+          text: 'AVOIDED', isPlayer: true, color: '#888888',
+        });
         battleLog.addBattle(t('battleLog.avoidedAttack'));
       } else if (hero.stats.teleportDodgeChance > 0 && Math.random() < hero.stats.teleportDodgeChance) {
         const currentMana = hero.stats.currentMana || 0;
@@ -187,7 +185,9 @@ export function enemyAttack(currentTime) {
         if (cost > 0 && currentMana >= cost) {
           game.restoreMana(-cost);
           avoided = true;
-          createDamageNumber({ text: 'BLINK', isPlayer: true, color: '#00FFFF' });
+          createDamageNumber({
+            text: 'BLINK', isPlayer: true, color: '#00FFFF',
+          });
         }
       }
     }
@@ -211,7 +211,7 @@ export function enemyAttack(currentTime) {
       if (conversionPercent > 0) {
         const nonColdTotal = Math.max(
           0,
-          physicalDamage + ELEMENT_IDS.reduce((sum, id) => (id === 'cold' ? sum : sum + (elementalDamage[id] || 0)), 0)
+          physicalDamage + ELEMENT_IDS.reduce((sum, id) => (id === 'cold' ? sum : sum + (elementalDamage[id] || 0)), 0),
         );
         if (nonColdTotal > 0) {
           const convertAmount = nonColdTotal * conversionPercent;
@@ -295,16 +295,20 @@ export function enemyAttack(currentTime) {
         const healAmount = hero.calculateBlockHealing();
 
         // Show "BLOCKED" text instead of damage number
-        createDamageNumber({ text: 'BLOCKED', isPlayer: true, color: '#66bd02' });
+        createDamageNumber({
+          text: 'BLOCKED', isPlayer: true, color: '#66bd02',
+        });
         battleLog.addBattle(t('battleLog.blockedAttack'));
         if (healAmount > 0) {
-          createDamageNumber({ text: `+${Math.floor(healAmount)}`, isPlayer: true, color: '#4CAF50' });
+          createDamageNumber({
+            text: `+${Math.floor(healAmount)}`, isPlayer: true, color: '#4CAF50',
+          });
           battleLog.addBattle(tp('battleLog.healedLife', { value: formatNumber(Math.floor(healAmount)) }));
         }
       } else {
         const fireId = ELEMENTS.fire.id;
         const fireReflect = Math.floor(
-          hero.stats[`reflect${fireId.charAt(0).toUpperCase()}${fireId.slice(1)}Damage`] || 0
+          hero.stats[`reflect${fireId.charAt(0).toUpperCase()}${fireId.slice(1)}Damage`] || 0,
         );
         if (fireReflect > 1) {
           game.damageEnemy(fireReflect, false, null, 'reflectFireDamage');
@@ -328,7 +332,9 @@ export function enemyAttack(currentTime) {
           const healAmount = Math.floor((totalDamage * lifeStealPercent) / 100);
           const healed = enemy.heal(healAmount);
           if (healed > 0) {
-            createDamageNumber({ text: `+${Math.floor(healed)}`, isPlayer: false, color: '#4CAF50' });
+            createDamageNumber({
+              text: `+${Math.floor(healed)}`, isPlayer: false, color: '#4CAF50',
+            });
             updateEnemyStats();
           }
         }
@@ -381,7 +387,9 @@ export function playerAttack(currentTime) {
       createDamageNumber({ text: 'MISS', color: '#888888' });
       battleLog.addBattle(t('battleLog.missedAttack'));
     } else {
-      let { damage, isCritical, breakdown } = hero.calculateDamageAgainst(enemy, {});
+      let {
+        damage, isCritical, breakdown,
+      } = hero.calculateDamageAgainst(enemy, {});
 
       const isFrozen = enemy.frozenUntil && enemy.frozenUntil > currentTime;
       if (isFrozen && hero.stats.extraDamageAgainstFrozenEnemies > 0) {
@@ -457,7 +465,9 @@ export function playerAttack(currentTime) {
       if (lifeDisplayAmount >= 1) {
         const lifeColor = totalLifeChange >= 0 ? '#4CAF50' : '#FF5252';
         const lifeSign = totalLifeChange >= 0 ? '+' : '-';
-        createDamageNumber({ text: `${lifeSign}${lifeDisplayAmount}`, isPlayer: true, color: lifeColor });
+        createDamageNumber({
+          text: `${lifeSign}${lifeDisplayAmount}`, isPlayer: true, color: lifeColor,
+        });
       }
       game.healPlayer(totalLifeChange);
 
@@ -496,7 +506,9 @@ export function playerAttack(currentTime) {
       const manaRestore = (manaPerHit > 0 ? manaPerHit : 0) + manaStealAmount + omniStealAmount;
       const manaDisplayAmount = Math.floor(Math.abs(manaRestore));
       if (manaRestore > 0 && manaDisplayAmount >= 1) {
-        createDamageNumber({ text: `+${manaDisplayAmount}`, isPlayer: true, color: '#1E90FF' });
+        createDamageNumber({
+          text: `+${manaDisplayAmount}`, isPlayer: true, color: '#1E90FF',
+        });
       }
       if (manaRestore !== 0) {
         game.restoreMana(manaRestore);
@@ -528,7 +540,9 @@ export function playerAttack(currentTime) {
     if (manaPerHit < 0) {
       const manaCostDisplay = Math.floor(Math.abs(manaPerHit));
       if (manaCostDisplay >= 1) {
-        createDamageNumber({ text: `-${manaCostDisplay}`, isPlayer: true, color: '#1E90FF' });
+        createDamageNumber({
+          text: `-${manaCostDisplay}`, isPlayer: true, color: '#1E90FF',
+        });
       }
       game.restoreMana(manaPerHit);
     }
@@ -653,7 +667,9 @@ export async function defeatEnemy(source) {
     baseExpGained = enemy.xp;
     baseGoldGained = enemy.gold;
 
-    const { crystals, gold, materials, souls } = enemy.reward;
+    const {
+      crystals, gold, materials, souls,
+    } = enemy.reward;
     let text = 'Boss defeated! ';
     if (gold) {
       hero.gainGold(gold);
@@ -740,9 +756,7 @@ export async function defeatEnemy(source) {
       statistics.set('highestBossLevel', null, hero.bossLevel);
     }
     document.dispatchEvent(
-      new CustomEvent('bossKilled', {
-        detail: { level: hero.bossLevel },
-      })
+      new CustomEvent('bossKilled', { detail: { level: hero.bossLevel } }),
     );
   } else if (initialFightMode === 'explore') {
     baseExpGained = enemy.xp;

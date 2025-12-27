@@ -69,7 +69,9 @@ export function distributeMaterials(total, opts = {}) {
     }
     const fraction = exact - base;
     if (fraction > 0) {
-      fractional.push({ id: mats[i].id, fraction, jitter: Math.random() });
+      fractional.push({
+        id: mats[i].id, fraction, jitter: Math.random(),
+      });
     }
   }
 

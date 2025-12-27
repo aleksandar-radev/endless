@@ -4,15 +4,13 @@ import { getClassSpecializations, getSpecialization } from '../constants/special
 import { SKILL_LEVEL_TIERS, getSpellDamageTypes, SPECIALIZATION_UNLOCK_LEVEL } from '../skillTree.js';
 import { SKILLS_MAX_QTY } from '../constants/limits.js';
 import { skillTree, hero, crystalShop, options, dataManager } from '../globals.js';
-import {
-  formatNumber,
+import { formatNumber,
   formatStatName,
   hideTooltip,
   positionTooltip,
   showToast,
   showTooltip,
-  updateResources,
-} from './ui.js';
+  updateResources } from './ui.js';
 import { t } from '../i18n.js';
 import { createModal, closeModal } from './modal.js';
 
@@ -237,7 +235,9 @@ function openSpecializationSelectionModal(spec) {
     </div>
   `;
 
-  const modal = createModal({ id: 'spec-selection-modal', className: 'class-preview-modal', content });
+  const modal = createModal({
+    id: 'spec-selection-modal', className: 'class-preview-modal', content,
+  });
 
   // Render skills grid
   const skillsContainer = modal.querySelector('.skill-row');
@@ -757,11 +757,11 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNe
   let html = `
       <strong>${skill.name()} [${typeBadge}]</strong><br>
       ${skill
-        .description()
-        .split('\n')
-        .map((line) => line.trim())
-        .filter((line) => line)
-        .join('<br>')}
+    .description()
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line)
+    .join('<br>')}
       <br>
       ${t('skillTree.level')}: ${currentLevel}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
     `;
@@ -881,7 +881,7 @@ function getDisplayedSummonStats(rawSummonStats) {
       if (typeof summonStats[key] === 'number') {
         summonStats[key] *= summonDamageMultiplier;
       }
-    }
+    },
   );
 
   return summonStats;
@@ -911,17 +911,17 @@ function showClassSelection() {
       </div>
       <div class="base-stats" style="margin-top: 15px;">
         ${Object.entries(pathData.baseStats())
-          .map(([stat, value]) => {
-            const label = formatBaseStatLabel(stat);
-            let displayValue = value;
-            if (stat.endsWith('Percent')) {
-              displayValue = `${value}%`;
-            }
-            if (!shouldShowStatValue(stat)) return `<div>${label}</div>`;
-            const prefix = value > 0 ? '+' : '';
-            return `<div>${label}: ${prefix}${displayValue}</div>`;
-          })
-          .join('')}
+    .map(([stat, value]) => {
+      const label = formatBaseStatLabel(stat);
+      let displayValue = value;
+      if (stat.endsWith('Percent')) {
+        displayValue = `${value}%`;
+      }
+      if (!shouldShowStatValue(stat)) return `<div>${label}</div>`;
+      const prefix = value > 0 ? '+' : '';
+      return `<div>${label}: ${prefix}${displayValue}</div>`;
+    })
+    .join('')}
       </div>
     `;
 
@@ -958,8 +958,8 @@ function openClassPreview(pathId) {
         <h3>${t('skillTree.availableSpecializations')}</h3>
         <div class="specializations-preview-grid">
           ${Object.values(specializations)
-            .map(
-              (spec) => `
+    .map(
+      (spec) => `
             <div class="specialization-preview-card" style="display: flex; align-items: flex-start; gap: 10px; text-align: left;">
               <img src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}" alt="${spec.name()}" class="character-avatar spec-preview-avatar" style="width: 60px; height: 106px; flex-shrink: 0; object-fit: cover; border-radius: 6px; border: 2px solid var(--accent);" />
               <div>
@@ -967,9 +967,9 @@ function openClassPreview(pathId) {
                 <p class="spec-preview-desc">${spec.description()}</p>
               </div>
             </div>
-          `
-            )
-            .join('')}
+          `,
+    )
+    .join('')}
         </div>
       </div>
     `;
@@ -988,7 +988,9 @@ function openClassPreview(pathId) {
       </div>
     </div>
   `;
-  const modal = createModal({ id: 'class-preview-modal', className: 'class-preview-modal', content });
+  const modal = createModal({
+    id: 'class-preview-modal', className: 'class-preview-modal', content,
+  });
   buildClassPreviewTree(pathId, modal.querySelector('.class-preview-tree'));
   modal.querySelectorAll('.select-class-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -1087,7 +1089,7 @@ function renderSkillToggleSection(
   isCheckedFn,
   onToggleFn,
   wrapperClass,
-  styleOptions = {}
+  styleOptions = {},
 ) {
   const container = document.getElementById('skills-tab-content') || document.getElementById('skill-tree-container');
   let section = document.getElementById(containerId);
@@ -1167,7 +1169,9 @@ function renderAutoCastToggles() {
       }
     },
     'auto-cast-switch',
-    { marginTop: '32px', wrapperAlignItems: 'center', wrapperMarginBottom: '6px' }
+    {
+      marginTop: '32px', wrapperAlignItems: 'center', wrapperMarginBottom: '6px',
+    },
   );
 }
 
@@ -1249,7 +1253,7 @@ function renderDisplayToggles() {
       skillTree.setDisplay(skill.id, e.target.checked);
       updateActionBar();
     },
-    'display-switch'
+    'display-switch',
   );
 }
 
@@ -1287,7 +1291,7 @@ function setupSkillTreeFloatingHeader(container, header) {
     const headerGap = getNumericVar(
       containerStyles,
       '--skill-tree-header-gap',
-      parseFloat(headerStyles.marginBottom) || 0
+      parseFloat(headerStyles.marginBottom) || 0,
     );
     const fixedOffset = getNumericVar(containerStyles, '--skill-tree-header-fixed-offset', 0);
     const headerHeight = header.offsetHeight;
@@ -1557,7 +1561,7 @@ export function updateSkillTreeValues() {
   // Check if we need to re-render specialization skills due to visibility changes
   if (skillTree.selectedSpecialization) {
     const renderedSpecSkills = new Set(
-      Array.from(container.querySelectorAll('.skill-node.specialization-node')).map((n) => n.dataset.skillId)
+      Array.from(container.querySelectorAll('.skill-node.specialization-node')).map((n) => n.dataset.skillId),
     );
     const spec = getSpecialization(skillTree.selectedPath.name, skillTree.selectedSpecialization.id);
     const allSpecSkills = spec?.skills || {};
@@ -1575,7 +1579,7 @@ export function updateSkillTreeValues() {
   // Check if we need to re-render normal skills due to visibility changes
   if (skillTree.selectedPath) {
     const renderedSkills = new Set(
-      Array.from(container.querySelectorAll('.skill-node:not(.specialization-node)')).map((n) => n.dataset.skillId)
+      Array.from(container.querySelectorAll('.skill-node:not(.specialization-node)')).map((n) => n.dataset.skillId),
     );
     const allSkills = SKILL_TREES[skillTree.selectedPath.name] || {};
     const needsRender = Object.entries(allSkills).some(([skillId, skillData]) => {

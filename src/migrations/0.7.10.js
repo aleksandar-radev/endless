@@ -21,7 +21,7 @@ export function run(rawData) {
 
     if (Array.isArray(data.inventory.autoSalvageRarities)) {
       data.inventory.autoSalvageRarities = data.inventory.autoSalvageRarities.map((r) =>
-        r?.toUpperCase() === 'UNIQUE' ? 'EPIC' : r
+        r?.toUpperCase() === 'UNIQUE' ? 'EPIC' : r,
       );
     }
   }

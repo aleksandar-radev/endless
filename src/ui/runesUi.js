@@ -320,7 +320,9 @@ function createTabsBar() {
     btn.appendChild(count);
 
     const tabLabel = isUnlocked
-      ? tp('runes.tabTooltip', { tab: i + 1, used: filled, capacity })
+      ? tp('runes.tabTooltip', {
+        tab: i + 1, used: filled, capacity,
+      })
       : t('runes.tabLockedTooltip');
     btn.setAttribute('aria-label', tabLabel);
     btn.setAttribute('title', tabLabel);
@@ -568,7 +570,7 @@ function openRuneContextMenu(source, index, rune, x, y) {
       id: 'inspect-rune',
       className: 'inventory-modal',
       content: `<div class="inventory-modal-content"><button class="modal-close">&times;</button>${getRuneTooltip(
-        rune
+        rune,
       )}</div>`,
     });
     dialog.querySelector('.modal-close').onclick = () => closeModal('inspect-rune');

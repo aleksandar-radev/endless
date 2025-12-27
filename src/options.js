@@ -1,5 +1,4 @@
-import {
-  crystalShop,
+import { crystalShop,
   dataManager,
   game,
   setGlobals,
@@ -8,13 +7,11 @@ import {
   statistics,
   ascension,
   runes,
-  skillTree,
-} from './globals.js';
+  skillTree } from './globals.js';
 import { CLASS_PATHS } from './constants/skills.js';
 import { initializeBuildingsUI } from './ui/buildingUi.js';
 import { crypt } from './functions.js';
-import {
-  showConfirmDialog,
+import { showConfirmDialog,
   showToast,
   updateStageUI,
   updateResources,
@@ -23,8 +20,7 @@ import {
   showTooltip,
   positionTooltip,
   hideTooltip,
-  initializeSkillTreeStructure,
-} from './ui/ui.js';
+  initializeSkillTreeStructure } from './ui/ui.js';
 import { updateBuffIndicators } from './ui/skillTreeUi.js';
 import { closeModal, createModal } from './ui/modal.js';
 import Enemy from './enemy.js';
@@ -34,13 +30,11 @@ import upcommingChanges from './upcoming.js';
 import { audioManager } from './audio.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { setLanguage, t, tp } from './i18n.js';
-import {
-  SOUL_SHOP_MAX_QTY,
+import { SOUL_SHOP_MAX_QTY,
   CRYSTAL_SHOP_MAX_QTY,
   TRAINING_MAX_QTY,
   BUILDING_MAX_QTY,
-  GLOBAL_MAX_QTY,
-} from './constants/limits.js';
+  GLOBAL_MAX_QTY } from './constants/limits.js';
 
 const html = String.raw;
 
@@ -1284,7 +1278,9 @@ export class Options {
         let pathName = s ? (CLASS_PATHS[s.path]?.name() ?? s.path) : null;
         if (pathName === null) pathName = 'Peasant';
         let text = s
-          ? tp('options.saveSlot.occupied', { slot: i + 1, path: pathName, level: s.level })
+          ? tp('options.saveSlot.occupied', {
+            slot: i + 1, path: pathName, level: s.level,
+          })
           : tp('options.saveSlot.placeholder', { slot: i + 1 });
         const classes = [];
         if (s) classes.push('used-slot');
@@ -1300,7 +1296,7 @@ export class Options {
 
   refreshBackupSelect(
     selectEl = document.getElementById('backup-save-select'),
-    applyBtn = document.getElementById('backup-save-apply')
+    applyBtn = document.getElementById('backup-save-apply'),
   ) {
     if (!selectEl) return;
 
@@ -1386,7 +1382,7 @@ export class Options {
     changelogBtn.onclick = async () => {
       // Get all changelog versions, sorted descending
       const versions = Object.keys(CHANGELOG).sort((a, b) =>
-        b.localeCompare(a, undefined, { numeric: true, sensitivity: 'base' })
+        b.localeCompare(a, undefined, { numeric: true, sensitivity: 'base' }),
       );
       let content = '<div class="changelog-modal-content">';
       content += '<button class="modal-close">✖</button>';
@@ -1507,7 +1503,9 @@ export class Options {
     const formatDateWithTimezone = (dateStr) => {
       if (!dateStr) return t('options.cloud.unknown');
       const date = new Date(dateStr);
-      const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      const options = {
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+      };
       return date.toLocaleString(undefined, options);
     };
 

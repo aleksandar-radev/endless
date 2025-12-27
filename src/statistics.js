@@ -115,9 +115,7 @@ export function buildStatisticsDisplayEntries(source = {}) {
     {
       id: 'stat-total-crystals',
       type: 'text',
-      text: tp('statistics.totalCrystalsEarned', {
-        value: formatNumber(stats.totalCrystalsEarned || 0),
-      }),
+      text: tp('statistics.totalCrystalsEarned', { value: formatNumber(stats.totalCrystalsEarned || 0) }),
     },
     {
       id: 'stat-total-souls',
@@ -138,9 +136,7 @@ export function buildStatisticsDisplayEntries(source = {}) {
     {
       id: 'stat-total-materials-found',
       type: 'text',
-      text: tp('statistics.totalMaterialsFound', {
-        value: formatNumber(stats.totalMaterialsFound || 0),
-      }),
+      text: tp('statistics.totalMaterialsFound', { value: formatNumber(stats.totalMaterialsFound || 0) }),
     },
     {
       id: 'stat-highest-stage',
@@ -157,9 +153,7 @@ export function buildStatisticsDisplayEntries(source = {}) {
     {
       id: 'stat-total-enemies-killed',
       type: 'text',
-      text: tp('statistics.totalEnemiesKilled', {
-        value: formatNumber(stats.totalEnemiesKilled || 0),
-      }),
+      text: tp('statistics.totalEnemiesKilled', { value: formatNumber(stats.totalEnemiesKilled || 0) }),
     },
     {
       id: 'stat-enemies-killed-by-region',
@@ -182,9 +176,7 @@ export function buildStatisticsDisplayEntries(source = {}) {
     {
       id: 'stat-highest-boss-level',
       type: 'text',
-      text: tp('statistics.highestBossLevel', {
-        value: formatNumber(stats.highestBossLevel || 0),
-      }),
+      text: tp('statistics.highestBossLevel', { value: formatNumber(stats.highestBossLevel || 0) }),
     },
     {
       id: 'stat-bosses-killed',
@@ -199,9 +191,7 @@ export function buildStatisticsDisplayEntries(source = {}) {
     {
       id: 'stat-highest-damage',
       type: 'text',
-      text: tp('statistics.highestDamageDealt', {
-        value: formatNumber(Math.floor(stats.highestDamageDealt || 0)),
-      }),
+      text: tp('statistics.highestDamageDealt', { value: formatNumber(Math.floor(stats.highestDamageDealt || 0)) }),
     },
   ];
 }
@@ -251,7 +241,9 @@ export default class Statistics {
     this.heroLevel = 1;
     this.rockyFieldHighestStages = createRockyFieldRegionMap();
     this.rockyFieldEnemiesKilledByRegion = createRockyFieldRegionMap();
-    this.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
+    this.offlineRates = {
+      xp: 0, gold: 0, items: 0, materials: 0,
+    };
     const now = Date.now();
     this.lastFightActive = now;
     this.lastFightActiveLocal = now;
@@ -260,7 +252,7 @@ export default class Statistics {
     if (typeof this.rockyFieldHighestStage === 'number') {
       this.rockyFieldHighestStages.outskirts = Math.max(
         this.rockyFieldHighestStages.outskirts || 0,
-        this.rockyFieldHighestStage
+        this.rockyFieldHighestStage,
       );
       delete this.rockyFieldHighestStage;
     }
@@ -341,7 +333,9 @@ export default class Statistics {
     this.heroLevel = 1;
     this.rockyFieldHighestStages = createRockyFieldRegionMap();
     this.rockyFieldEnemiesKilledByRegion = createRockyFieldRegionMap();
-    this.offlineRates = { xp: 0, gold: 0, items: 0, materials: 0 };
+    this.offlineRates = {
+      xp: 0, gold: 0, items: 0, materials: 0,
+    };
     const now = Date.now();
     this.lastFightActive = now;
     this.lastFightActiveLocal = now;

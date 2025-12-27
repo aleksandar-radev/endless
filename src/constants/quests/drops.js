@@ -18,7 +18,11 @@ export const DROP_QUESTS = [
     },
     type: 'item_drop',
     target: 5,
-    reward: { item: { rarity: 'rare', type: 'random', tier: 2 } },
+    reward: {
+      item: {
+        rarity: 'rare', type: 'random', tier: 2,
+      },
+    },
   },
   {
     id: 'itemdrop_25',
@@ -31,7 +35,11 @@ export const DROP_QUESTS = [
     },
     type: 'item_drop',
     target: 25,
-    reward: { item: { rarity: 'epic', type: 'random', tier: 2 } },
+    reward: {
+      item: {
+        rarity: 'epic', type: 'random', tier: 2,
+      },
+    },
   },
   {
     id: 'itemdrop_60',
@@ -44,7 +52,11 @@ export const DROP_QUESTS = [
     },
     type: 'item_drop',
     target: 60,
-    reward: { item: { rarity: 'epic', type: 'random', tier: 3 } },
+    reward: {
+      item: {
+        rarity: 'epic', type: 'random', tier: 3,
+      },
+    },
   },
   {
     id: 'itemdrop_150',
@@ -57,7 +69,11 @@ export const DROP_QUESTS = [
     },
     type: 'item_drop',
     target: 150,
-    reward: { item: { rarity: 'legendary', type: 'random', tier: 3 } },
+    reward: {
+      item: {
+        rarity: 'legendary', type: 'random', tier: 3,
+      },
+    },
   },
   {
     id: 'itemdrop_300',
@@ -70,7 +86,11 @@ export const DROP_QUESTS = [
     },
     type: 'item_drop',
     target: 300,
-    reward: { item: { rarity: 'legendary', type: 'random', tier: 4 } },
+    reward: {
+      item: {
+        rarity: 'legendary', type: 'random', tier: 4,
+      },
+    },
   },
   {
     id: 'itemdrop_750',
@@ -83,7 +103,11 @@ export const DROP_QUESTS = [
     },
     type: 'item_drop',
     target: 750,
-    reward: { item: { rarity: 'mythic', type: 'random', tier: 5 } },
+    reward: {
+      item: {
+        rarity: 'mythic', type: 'random', tier: 5,
+      },
+    },
   },
   {
     id: 'itemdrop_1500',
@@ -96,7 +120,11 @@ export const DROP_QUESTS = [
     },
     type: 'item_drop',
     target: 1500,
-    reward: { item: { rarity: 'mythic', type: 'random', tier: 5 } },
+    reward: {
+      item: {
+        rarity: 'mythic', type: 'random', tier: 5,
+      },
+    },
   },
   {
     id: 'itemdrop_3000',
@@ -109,7 +137,11 @@ export const DROP_QUESTS = [
     },
     type: 'item_drop',
     target: 3000,
-    reward: { item: { rarity: 'mythic', type: 'random', tier: 6 } },
+    reward: {
+      item: {
+        rarity: 'mythic', type: 'random', tier: 6,
+      },
+    },
   },
   {
     id: 'itemdrop_6000',
@@ -122,7 +154,11 @@ export const DROP_QUESTS = [
     },
     type: 'item_drop',
     target: 6000,
-    reward: { item: { rarity: 'mythic', type: 'random', tier: 7 } },
+    reward: {
+      item: {
+        rarity: 'mythic', type: 'random', tier: 7,
+      },
+    },
   },
   // Material Drop Quests
   {
@@ -136,7 +172,11 @@ export const DROP_QUESTS = [
     },
     type: 'material_drop',
     target: 5,
-    reward: { item: { rarity: 'rare', type: 'random', tier: 1 } },
+    reward: {
+      item: {
+        rarity: 'rare', type: 'random', tier: 1,
+      },
+    },
   },
   {
     id: 'matdrop_25',
@@ -149,7 +189,11 @@ export const DROP_QUESTS = [
     },
     type: 'material_drop',
     target: 25,
-    reward: { item: { rarity: 'epic', type: 'random', tier: 1 } },
+    reward: {
+      item: {
+        rarity: 'epic', type: 'random', tier: 1,
+      },
+    },
   },
   {
     id: 'matdrop_60',
@@ -162,7 +206,11 @@ export const DROP_QUESTS = [
     },
     type: 'material_drop',
     target: 60,
-    reward: { item: { rarity: 'epic', type: 'random', tier: 2 } },
+    reward: {
+      item: {
+        rarity: 'epic', type: 'random', tier: 2,
+      },
+    },
   },
   {
     id: 'matdrop_150',
@@ -175,7 +223,11 @@ export const DROP_QUESTS = [
     },
     type: 'material_drop',
     target: 150,
-    reward: { item: { rarity: 'legendary', type: 'random', tier: 3 } },
+    reward: {
+      item: {
+        rarity: 'legendary', type: 'random', tier: 3,
+      },
+    },
   },
   {
     id: 'matdrop_300',
@@ -188,7 +240,11 @@ export const DROP_QUESTS = [
     },
     type: 'material_drop',
     target: 300,
-    reward: { item: { rarity: 'legendary', type: 'random', tier: 3 } },
+    reward: {
+      item: {
+        rarity: 'legendary', type: 'random', tier: 3,
+      },
+    },
   },
   {
     id: 'matdrop_750',
@@ -201,7 +257,11 @@ export const DROP_QUESTS = [
     },
     type: 'material_drop',
     target: 750,
-    reward: { item: { rarity: 'mythic', type: 'random', tier: 3 } },
+    reward: {
+      item: {
+        rarity: 'mythic', type: 'random', tier: 3,
+      },
+    },
   },
   {
     id: 'matdrop_1500',
@@ -214,7 +274,11 @@ export const DROP_QUESTS = [
     },
     type: 'material_drop',
     target: 1500,
-    reward: { item: { rarity: 'mythic', type: 'random', tier: 4 } },
+    reward: {
+      item: {
+        rarity: 'mythic', type: 'random', tier: 4,
+      },
+    },
   },
   {
     id: 'matdrop_3000',
@@ -227,7 +291,11 @@ export const DROP_QUESTS = [
     },
     type: 'material_drop',
     target: 3000,
-    reward: { item: { rarity: 'mythic', type: 'random', tier: 5 } },
+    reward: {
+      item: {
+        rarity: 'mythic', type: 'random', tier: 5,
+      },
+    },
   },
   {
     id: 'matdrop_6000',
@@ -240,7 +308,11 @@ export const DROP_QUESTS = [
     },
     type: 'material_drop',
     target: 6000,
-    reward: { item: { rarity: 'mythic', type: 'random', tier: 6 } },
+    reward: {
+      item: {
+        rarity: 'mythic', type: 'random', tier: 6,
+      },
+    },
   },
 ].map((q) => {
   const quest = { icon: DROP_ICONS[q.type] };

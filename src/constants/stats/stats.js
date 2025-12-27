@@ -13,7 +13,9 @@ export const STATS = {
 // div -> divisor
 // dec -> decimalPlaces
 export function createStat(props = {}) {
-  const { sub, div, dec, show, ...rest } = props;
+  const {
+    sub, div, dec, show, ...rest
+  } = props;
   return {
     base: 0,
     ...(sub && { subcategory: sub }),

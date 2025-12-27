@@ -130,7 +130,9 @@ export const ITEM_ICONS = {
 };
 
 export const ITEM_RARITY = {
-  NORMAL: { name: t('NORMAL'), color: 'var(--item-normal)', chance: 130, statMultiplier: 1, totalStats: 3 },
+  NORMAL: {
+    name: t('NORMAL'), color: 'var(--item-normal)', chance: 130, statMultiplier: 1, totalStats: 3,
+  },
   MAGIC: {
     get name() {
       return t('MAGIC');

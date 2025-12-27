@@ -2,8 +2,7 @@ import Enemy from '../enemy.js';
 import { ROCKY_FIELD_REGIONS, RockyFieldEnemy, getRockyFieldEnemies } from '../rockyField.js';
 import { formatNamedType, formatStatName as formatStatNameBase } from '../format.js';
 import { formatNumber as formatNumberInternal } from '../utils/numberFormatter.js';
-import {
-  game,
+import { game,
   hero,
   skillTree,
   quests,
@@ -13,8 +12,7 @@ import {
   options,
   crystalShop,
   training,
-  soulShop,
-} from '../globals.js';
+  soulShop } from '../globals.js';
 import { AILMENTS } from '../constants/ailments.js';
 import { t, tp } from '../i18n.js';
 import { updateQuestsUI } from './questUi.js';
@@ -23,12 +21,10 @@ import { TabIndicatorManager } from './tabIndicatorManager.js';
 import { initializeBossRegionUI, selectBoss, updateBossUI, updateBossRegionSelector } from './bossUi.js';
 import { ELEMENTS } from '../constants/common.js';
 import { updateRegionUI, updateRegionSelectorButton } from '../region.js';
-import {
-  calculateArmorReduction,
+import { calculateArmorReduction,
   calculateEvasionChance,
   calculateHitChance,
-  calculateResistanceReduction,
-} from '../combat.js';
+  calculateResistanceReduction } from '../combat.js';
 import { renderRunesUI } from './runesUi.js';
 import { createModal, closeModal } from './modal.js';
 export {
@@ -357,19 +353,19 @@ export function updatePlayerLife() {
   const lifePercentage = (stats.currentLife / stats.life) * 100;
   document.getElementById('life-fill').style.width = `${lifePercentage}%`;
   document.getElementById('life-text').textContent = `${formatNumber(
-    Math.max(0, Math.floor(stats.currentLife))
+    Math.max(0, Math.floor(stats.currentLife)),
   )} / ${formatNumber(Math.floor(stats.life))}`;
 
   const manaPercentage = (stats.currentMana / stats.mana) * 100;
   document.getElementById('mana-fill').style.width = `${manaPercentage}%`;
   document.getElementById('mana-text').textContent = `${formatNumber(
-    Math.max(0, Math.floor(stats.currentMana))
+    Math.max(0, Math.floor(stats.currentMana)),
   )} / ${formatNumber(Math.floor(stats.mana))}`;
 
   const xpPercentage = (hero.exp / hero.getExpToNextLevel()) * 100;
   document.getElementById('xp-fill').style.width = `${xpPercentage}%`;
   document.getElementById('xp-text').textContent = `${formatNumber(
-    Math.max(0, Math.floor(hero.exp))
+    Math.max(0, Math.floor(hero.exp)),
   )} / ${formatNumber(Math.floor(hero.getExpToNextLevel()))} XP`;
 
   updateHeroAilmentIcons();
@@ -383,7 +379,7 @@ export function updateEnemyStats() {
   const lifePercentage = Math.max(0, (enemy.currentLife / enemy.life) * 100);
   document.getElementById('enemy-life-fill').style.width = `${lifePercentage}%`;
   document.getElementById('enemy-life-text').textContent = `${formatNumber(
-    Math.max(0, Math.floor(enemy.currentLife))
+    Math.max(0, Math.floor(enemy.currentLife)),
   )} / ${formatNumber(Math.floor(enemy.life))}`;
 
   // Main stats
@@ -508,9 +504,7 @@ function updateAilmentIcons() {
       isActive: enemy.frozenUntil > Date.now(),
       getTooltip: () => {
         const remainingMs = Math.max(0, enemy.frozenUntil - Date.now());
-        return tp('ailment.freeze.tooltip', {
-          duration: (remainingMs / 1000).toFixed(1),
-        });
+        return tp('ailment.freeze.tooltip', { duration: (remainingMs / 1000).toFixed(1) });
       },
     },
     {
@@ -518,9 +512,7 @@ function updateAilmentIcons() {
       isActive: enemy.stunnedUntil > Date.now(),
       getTooltip: () => {
         const remainingMs = Math.max(0, enemy.stunnedUntil - Date.now());
-        return tp('ailment.stun.tooltip', {
-          duration: (remainingMs / 1000).toFixed(1),
-        });
+        return tp('ailment.stun.tooltip', { duration: (remainingMs / 1000).toFixed(1) });
       },
     },
     {
@@ -559,9 +551,7 @@ function updateHeroAilmentIcons() {
       id: 'warmup',
       isActive: !!hero.ailments[AILMENTS.warmup.id],
       getTooltip: () =>
-        tp('ailment.warmup.tooltip', {
-          duration: ((hero.ailments[AILMENTS.warmup.id]?.duration || 0) / 1000).toFixed(1),
-        }),
+        tp('ailment.warmup.tooltip', { duration: ((hero.ailments[AILMENTS.warmup.id]?.duration || 0) / 1000).toFixed(1) }),
     },
   ];
 
@@ -880,8 +870,8 @@ export function openRockyFieldRegionSelectionDialog() {
         <div class="region-dialog-item-header">
           <span class="region-dialog-item-name">${region.name}</span>
           ${region.unlockStage
-            ? html`<span class="region-dialog-item-unlock">${t('rockyField.unlockStage')}: ${region.unlockStage}</span>`
-            : ''}
+    ? html`<span class="region-dialog-item-unlock">${t('rockyField.unlockStage')}: ${region.unlockStage}</span>`
+    : ''}
           ${isCurrent ? html`<span class="region-dialog-item-current">${t('region.current')}</span>` : ''}
           ${!isUnlocked ? html`<span class="region-dialog-item-locked">🔒</span>` : ''}
         </div>

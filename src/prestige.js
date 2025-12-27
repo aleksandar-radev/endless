@@ -1,5 +1,4 @@
-import {
-  hero,
+import { hero,
   dataManager,
   setGlobals,
   prestige as prestigeState,
@@ -8,8 +7,7 @@ import {
   game,
   runtime,
   ascension,
-  runes,
-} from './globals.js';
+  runes } from './globals.js';
 import { BASE_RUNE_SLOTS } from './runes.js';
 import { PRESTIGE_BONUSES, STARTING_CRYSTALS_BONUS } from './constants/prestigeBonuses.js';
 import { formatStatName } from './ui/ui.js';
@@ -117,7 +115,7 @@ export default class Prestige {
       ? `${Math.round(clampedStartPercentile * 100)}%`
       : `${startMinScaled} - ${startMaxScaled}`;
     card.descriptions.push(
-      `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`
+      `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`,
     );
     card.rollPercentiles.push(clampedStartPercentile);
     return card;

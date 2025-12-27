@@ -366,8 +366,8 @@ export default class SoulShop {
     upgradesContainer.innerHTML = `
       <div class="soul-upgrades-grid">
         ${Object.entries(SOUL_UPGRADE_CONFIG)
-          .map(([stat, config]) => this.createSoulUpgradeButton(stat, config))
-          .join('')}
+    .map(([stat, config]) => this.createSoulUpgradeButton(stat, config))
+    .join('')}
       </div>
     `;
     this.setupSoulUpgradeHandlers();
@@ -558,12 +558,16 @@ export default class SoulShop {
       .map(([stat, config]) => {
         const baseLevel = this.soulUpgrades[stat] || 0;
         const levelsLeft = this.getLevelsLeft(config, baseLevel);
-        return { stat, config, baseLevel, levelsLeft };
+        return {
+          stat, config, baseLevel, levelsLeft,
+        };
       })
       .filter(({ levelsLeft }) => levelsLeft > 0);
 
     if (entries.length === 0) {
-      return { totalCost: 0, purchases: [], affordable: false };
+      return {
+        totalCost: 0, purchases: [], affordable: false,
+      };
     }
 
     let totalCost = 0;
@@ -574,35 +578,47 @@ export default class SoulShop {
       const availableSouls = Number.isFinite(rawSouls) ? Math.max(0, Math.floor(rawSouls)) : Number.MAX_SAFE_INTEGER;
       const perChunk = entries.length > 0 ? Math.floor(availableSouls / entries.length) : 0;
       if (perChunk <= 0) {
-        return { totalCost: 0, purchases: [], affordable: false };
+        return {
+          totalCost: 0, purchases: [], affordable: false,
+        };
       }
       entries.forEach(({ stat, baseLevel }) => {
         const { qty, totalCost: cost } = this.getMaxPurchasable(stat, 'max', baseLevel, perChunk);
         if (qty > 0 && Number.isFinite(cost)) {
           totalCost += cost;
-          purchases.push({ stat, qty, cost, baseLevel });
+          purchases.push({
+            stat, qty, cost, baseLevel,
+          });
         }
       });
     } else {
       const numericQty = Number(qtySetting);
       const desired = Number.isFinite(numericQty) ? Math.max(0, numericQty) : 0;
-      entries.forEach(({ stat, baseLevel, levelsLeft }) => {
+      entries.forEach(({
+        stat, baseLevel, levelsLeft,
+      }) => {
         const qty = Math.min(desired, levelsLeft, SOUL_SHOP_MAX_QTY);
         if (qty <= 0) return;
         const cost = this.calculateTotalCost(stat, qty, baseLevel);
         if (!Number.isFinite(cost)) return;
         totalCost += cost;
-        purchases.push({ stat, qty, cost, baseLevel });
+        purchases.push({
+          stat, qty, cost, baseLevel,
+        });
       });
     }
 
     const affordable = hero.souls >= totalCost && purchases.length > 0;
-    return { totalCost, purchases, affordable };
+    return {
+      totalCost, purchases, affordable,
+    };
   }
 
   updateBulkCost() {
     if (!this.bulkBuyBtn || !this.bulkCostEl) return;
-    const { totalCost, purchases, affordable } = this.calculateBulkCostAndPurchases(this.quickQty);
+    const {
+      totalCost, purchases, affordable,
+    } = this.calculateBulkCostAndPurchases(this.quickQty);
     const costValue = purchases.length > 0 ? totalCost : 0;
     this.bulkCostEl.textContent = `${t('soulShop.cost')}: ${formatNumber(costValue)} ${t('resource.souls.name')}`;
     this.bulkCostEl.classList.toggle('unaffordable', !affordable);
@@ -610,14 +626,18 @@ export default class SoulShop {
   }
 
   bulkBuyAll() {
-    const { totalCost, purchases, affordable } = this.calculateBulkCostAndPurchases(this.quickQty);
+    const {
+      totalCost, purchases, affordable,
+    } = this.calculateBulkCostAndPurchases(this.quickQty);
     if (purchases.length === 0) return;
     if (!affordable) {
       showToast(t('soulShop.notEnoughSoulsBulk'), 'error');
       return;
     }
     if (totalCost > 0) hero.souls -= totalCost;
-    purchases.forEach(({ stat, qty, baseLevel }) => {
+    purchases.forEach(({
+      stat, qty, baseLevel,
+    }) => {
       const startingLevel = baseLevel ?? (this.soulUpgrades[stat] || 0);
       this.soulUpgrades[stat] = startingLevel + qty;
     });
@@ -826,8 +846,8 @@ export default class SoulShop {
         <p>${oneTimeBonusText}</p>
         <p>${t('soulShop.cost')}: <span class="modal-total-cost">${config.baseCost}</span> ${t('resource.souls.name')}</p>
         <div class="modal-status">${
-          purchased ? '<span style="color:#10b981;font-weight:bold;">' + t('common.purchased') + '</span>' : ''
-        }</div>
+  purchased ? '<span style="color:#10b981;font-weight:bold;">' + t('common.purchased') + '</span>' : ''
+}</div>
       `;
       buyBtn.style.display = purchased ? 'none' : '';
       buyBtn.disabled = purchased;

@@ -5,22 +5,14 @@ import { ascension, skillTree } from '../../globals.js';
 const html = String.raw;
 
 export const ATTRIBUTES = {
-  strength: {
-    effects: {
-      damagePerPoint: 0.3,
-    },
-  },
+  strength: { effects: { damagePerPoint: 0.3 } },
   agility: {
     effects: {
       attackRatingPerPoint: 4,
       damagePerPoint: 0.1,
     },
   },
-  vitality: {
-    effects: {
-      lifePerPoint: 6,
-    },
-  },
+  vitality: { effects: { lifePerPoint: 6 } },
   wisdom: {
     effects: {
       manaPerPoint: 3,
@@ -33,16 +25,8 @@ export const ATTRIBUTES = {
       thornsDamagePerPoint: 0,
     },
   },
-  dexterity: {
-    effects: {
-      evasionPerPoint: 4,
-    },
-  },
-  intelligence: {
-    effects: {
-      elementalDamagePerPoint: 0.067,
-    },
-  },
+  dexterity: { effects: { evasionPerPoint: 4 } },
+  intelligence: { effects: { elementalDamagePerPoint: 0.067 } },
   perseverance: {
     effects: {
       lifeRegenPerPoint: 0.5,
@@ -156,9 +140,7 @@ const CUSTOM_DESCRIPTIONS = {
     let thornsBonus = '';
 
     if (totalThornsPerPoint > 0) {
-      thornsBonus = tp('tooltip.endurance.thornsBonus', {
-        thornsDamage: Number(totalThornsPerPoint.toFixed(2)),
-      });
+      thornsBonus = tp('tooltip.endurance.thornsBonus', { thornsDamage: Number(totalThornsPerPoint.toFixed(2)) });
     }
 
     return tp('tooltip.endurance', { armor: Number(armor.toFixed(2)), thornsBonus });
@@ -171,9 +153,7 @@ const CUSTOM_DESCRIPTIONS = {
   intelligence: () => {
     const bonus = ascension?.getBonuses?.()?.intelligenceEffectiveness || 0;
     const val = ATTRIBUTES.intelligence.effects.elementalDamagePerPoint * (1 + bonus);
-    return tp('tooltip.intelligence', {
-      elementalDamage: Number(val.toFixed(3)),
-    });
+    return tp('tooltip.intelligence', { elementalDamage: Number(val.toFixed(3)) });
   },
   perseverance: () => {
     const bonus = ascension?.getBonuses?.()?.perseveranceEffectiveness || 0;
@@ -205,7 +185,9 @@ const CUSTOM_DESCRIPTIONS = {
     const baseCap = 50;
     const ascCap = Math.floor(asc.critChanceCap || 0);
     const currentCap = baseCap + ascCap;
-    return tp('tooltip.critChance', { baseCap, ascCap, currentCap });
+    return tp('tooltip.critChance', {
+      baseCap, ascCap, currentCap,
+    });
   },
   critDamage: () => t('tooltip.critDamage'),
   lifeSteal: () => t('tooltip.lifeSteal'),
@@ -221,7 +203,9 @@ const CUSTOM_DESCRIPTIONS = {
     const baseCap = 50;
     const ascCap = Math.floor(asc.blockChanceCap || 0);
     const currentCap = baseCap + ascCap;
-    return tp('tooltip.blockChance', { baseCap, ascCap, currentCap });
+    return tp('tooltip.blockChance', {
+      baseCap, ascCap, currentCap,
+    });
   },
   evasion: () => t('tooltip.evasion'),
   fireResistance: () => tp('tooltip.fireResistance', { icon: ELEMENTS.fire.icon }),

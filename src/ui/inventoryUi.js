@@ -60,7 +60,7 @@ function getPreferredSlotForItem(itemData) {
   const eligibleSlots = Object.keys(SLOT_REQUIREMENTS).filter((s) => SLOT_REQUIREMENTS[s].includes(itemData.type));
   if (eligibleSlots.length === 0) return null;
   const emptyValid = eligibleSlots.find(
-    (slot) => !inventory.equippedItems[slot] && inventory.canEquipInSlot(itemData, slot)
+    (slot) => !inventory.equippedItems[slot] && inventory.canEquipInSlot(itemData, slot),
   );
   if (emptyValid) return emptyValid;
   return eligibleSlots.find((slot) => inventory.canEquipInSlot(itemData, slot)) || null;
@@ -145,13 +145,13 @@ export function initializeInventoryUI(inv) {
       <h3 class="options-title">${t('inventory.options')}</h3>
       <div class="salvage-options-inline">
         ${RARITY_ORDER.map((rarity) => {
-          const selectedRarities = inv.autoSalvageRarities || [];
-          const autoSalvageLevel = crystalShop?.crystalUpgrades?.autoSalvage || 0;
-          const isChecked = selectedRarities.includes(rarity);
-          const atCap = selectedRarities.length >= autoSalvageLevel;
-          const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
-          const inputId = `auto-salvage-inline-${rarity}`;
-          return html`
+    const selectedRarities = inv.autoSalvageRarities || [];
+    const autoSalvageLevel = crystalShop?.crystalUpgrades?.autoSalvage || 0;
+    const isChecked = selectedRarities.includes(rarity);
+    const atCap = selectedRarities.length >= autoSalvageLevel;
+    const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
+    const inputId = `auto-salvage-inline-${rarity}`;
+    return html`
             <div class="salvage-inline-row">
               <button class="salvage-btn-inline" data-rarity="${rarity}">
                 ${tp('inventory.salvageRarityItems', { rarity: t('rarity.' + rarity.toLowerCase()) })}
@@ -171,7 +171,7 @@ export function initializeInventoryUI(inv) {
               </div>
             </div>
           `;
-        }).join('')}
+  }).join('')}
         <div class="salvage-all-inline-row">
           <button id="salvage-all-inline-btn" class="salvage-all-btn">${t('inventory.allItems')}</button>
         </div>
@@ -188,9 +188,9 @@ export function initializeInventoryUI(inv) {
           />
           <span
             class="toggle-btn${inv.salvageUpgradeMaterials ? ' checked' : ''}${!crystalShop?.crystalUpgrades
-              ?.salvageMaterials
-              ? ' disabled'
-              : ''}"
+  ?.salvageMaterials
+  ? ' disabled'
+  : ''}"
           ></span>
           <label for="salvage-material-toggle-inline">${t('inventory.upgradeMaterials')}</label>
         </div>
@@ -317,7 +317,7 @@ export function initializeInventoryUI(inv) {
       const itemData = inventory.getItemById(selectedItemEl.dataset.itemId);
 
       const equippedSlot = Object.entries(inventory.equippedItems).find(
-        ([slot, equipped]) => equipped && equipped.id === itemData.id
+        ([slot, equipped]) => equipped && equipped.id === itemData.id,
       )?.[0];
 
       if (equippedSlot) {
@@ -365,7 +365,7 @@ export function initializeInventoryUI(inv) {
     const itemData = inventory.getItemById(selectedItemEl.dataset.itemId);
 
     const equippedSlot = Object.entries(inventory.equippedItems).find(
-      ([slot, equipped]) => equipped && equipped.id === itemData.id
+      ([slot, equipped]) => equipped && equipped.id === itemData.id,
     )?.[0];
 
     if (equippedSlot) {
@@ -552,11 +552,11 @@ export function showSalvageModal(inv) {
         <h3>${t('inventory.salvage')}</h3>
         <div class="salvage-options-modal">
           ${RARITY_ORDER.map((rarity) => {
-            const isChecked = selectedRarities.includes(rarity);
-            const atCap = selectedRarities.length >= autoSalvageLevel;
-            const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
-            const inputId = `auto-salvage-toggle-${rarity}`;
-            return html`
+    const isChecked = selectedRarities.includes(rarity);
+    const atCap = selectedRarities.length >= autoSalvageLevel;
+    const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
+    const inputId = `auto-salvage-toggle-${rarity}`;
+    return html`
               <div class="salvage-row">
                 <button class="salvage-btn-modal" data-rarity="${rarity}">
                   ${tp('inventory.salvageRarityItems', { rarity: t('rarity.' + rarity.toLowerCase()) })}
@@ -574,7 +574,7 @@ export function showSalvageModal(inv) {
                 <label for="${inputId}" class="auto-salvage-toggle-text">${t('inventory.auto')}</label>
               </div>
             `;
-          }).join('')}
+  }).join('')}
           <div class="salvage-all-row">
             <button id="salvage-all-btn" class="salvage-all-btn">${t('inventory.allItems')}</button>
           </div>
@@ -603,9 +603,9 @@ export function showSalvageModal(inv) {
               />
               <span
                 class="toggle-btn${inv.salvageUpgradeMaterials ? ' checked' : ''}${!crystalShop?.crystalUpgrades
-                  ?.salvageMaterials
-                  ? ' disabled'
-                  : ''}"
+  ?.salvageMaterials
+  ? ' disabled'
+  : ''}"
               ></span>
               <label for="salvage-material-toggle-main">${t('inventory.upgradeMaterials')}</label>
             </div>
@@ -1167,7 +1167,7 @@ export function handleDrop(e) {
   if (slot) {
     // Add inventory check to prevent dropping on current slot
     const currentSlot = Object.entries(inventory.equippedItems).find(
-      ([_, equippedItem]) => equippedItem?.id === item.id
+      ([_, equippedItem]) => equippedItem?.id === item.id,
     )?.[0];
 
     if (currentSlot === slot.dataset.slot) {
@@ -1216,7 +1216,7 @@ export function setupItemDragAndTooltip(root = getInventoryTab()) {
       if (!itemData) return;
 
       const equippedSlot = Object.entries(inventory.equippedItems).find(
-        ([slot, equippedItem]) => equippedItem?.id === itemData.id
+        ([slot, equippedItem]) => equippedItem?.id === itemData.id,
       )?.[0];
 
       if (equippedSlot) {
@@ -1669,7 +1669,7 @@ function openItemContextMenu(itemEl, x, y) {
 
   menu.querySelector('[data-action="equip"]').onclick = () => {
     const equippedSlot = Object.entries(inventory.equippedItems).find(
-      ([slot, equipped]) => equipped && equipped.id === itemData.id
+      ([slot, equipped]) => equipped && equipped.id === itemData.id,
     )?.[0];
 
     if (equippedSlot) {
@@ -1788,7 +1788,7 @@ function openMaterialContextMenu(mat, x, y) {
         qty,
         'material-context-menu',
         `Used ${qty} ${t(matDef.name || mat.name || '')}${qty > 1 ? 's' : ''}`,
-        false
+        false,
       );
     }
     closeMaterialContextMenu();

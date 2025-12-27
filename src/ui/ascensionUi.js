@@ -60,7 +60,7 @@ function renderAscension() {
   tabs.innerHTML = Object.entries(ascension.categories)
     .map(
       ([key, cat]) =>
-        `<button class="ascension-tab ${key === activeCategory ? 'active' : ''}" data-cat="${key}">${cat.label}</button>`
+        `<button class="ascension-tab ${key === activeCategory ? 'active' : ''}" data-cat="${key}">${cat.label}</button>`,
     )
     .join('');
   tabs.querySelectorAll('.ascension-tab').forEach((b) => {
@@ -123,7 +123,9 @@ function openAscensionModal() {
       </div>
     </div>
   `;
-  const modal = createModal({ id: 'ascension-modal', className: 'ascension-modal', content });
+  const modal = createModal({
+    id: 'ascension-modal', className: 'ascension-modal', content,
+  });
   modal.querySelector('#ascension-confirm-btn').onclick = async () => {
     await ascension.ascend();
   };
@@ -139,10 +141,14 @@ function openAscensionInfoModal() {
       <h2>${t('ascension.info.title')}</h2>
       <p>${t('ascension.info.requirement')}</p>
       <p>${t('ascension.info.points')}</p>
-      <p>${tp('ascension.info.current', { prestiges: prestige.prestigeCount, crystals: totalCrystals, points: earned })}</p>
+      <p>${tp('ascension.info.current', {
+    prestiges: prestige.prestigeCount, crystals: totalCrystals, points: earned,
+  })}</p>
     </div>
   `;
-  const modal = createModal({ id: 'ascension-info-modal', className: 'ascension-modal', content });
+  const modal = createModal({
+    id: 'ascension-info-modal', className: 'ascension-modal', content,
+  });
   modal.querySelector('.modal-close').onclick = () => closeModal('ascension-info-modal');
 }
 
@@ -165,18 +171,18 @@ function openUpgradeInfoModal(key) {
       <h2>${title}</h2>
       <p>${tip}</p>
       <p>${t('ascension.upgrade.currentLevel')}: <span class="modal-level">${formatNumber(level)}</span>${
-        max !== Infinity ? `/<span class=\"modal-max\">${formatNumber(max)}</span>` : ''
-      }</p>
+  max !== Infinity ? `/<span class=\"modal-max\">${formatNumber(max)}</span>` : ''
+}</p>
       <p>${t('ascension.upgrade.currentBonus')}: <span class="modal-bonus">${getAscensionBonusText(
-        key,
-        cfg,
-        level
-      )}</span></p>
+  key,
+  cfg,
+  level,
+)}</span></p>
       <p>${t('ascension.upgrade.nextLevelBonus')}: <span class="modal-next-bonus">${getAscensionBonusText(
-        key,
-        cfg,
-        level + 1
-      )}</span></p>
+  key,
+  cfg,
+  level + 1,
+)}</span></p>
       <p>${t('ascension.upgrade.totalCost')}: <span class="modal-total-cost"></span> ${t('ascension.points')} (<span class="modal-qty">1</span>)</p>
       ${controlsMarkup}
       <div class="modal-controls">
@@ -184,7 +190,9 @@ function openUpgradeInfoModal(key) {
       </div>
     </div>
   `;
-  const modal = createModal({ id: 'ascension-upgrade-modal', className: 'ascension-modal', content });
+  const modal = createModal({
+    id: 'ascension-upgrade-modal', className: 'ascension-modal', content,
+  });
   let selectedQty = 1;
   const getBulkCost = (qty) => {
     let points = ascension.points;

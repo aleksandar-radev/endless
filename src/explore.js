@@ -1,11 +1,9 @@
 import { ALL_ITEM_TYPES } from './constants/items.js';
 import { getCurrentRegion, getRegionEnemies } from './region.js';
-import {
-  ENEMY_RARITY,
+import { ENEMY_RARITY,
   MOB_REGION_SCALING_MULTIPLIER,
   MOB_REWARD_STAGE_SCALING_PERCENT,
-  MOB_STAGE_SCALING_PERCENT,
-} from './constants/enemies.js';
+  MOB_STAGE_SCALING_PERCENT } from './constants/enemies.js';
 import { computeScaledReward, xpDiminishingFactor } from './common.js';
 import { hero, options } from './globals.js';
 import { battleLog } from './battleLog.js';
@@ -170,7 +168,7 @@ class Enemy extends EnemyBase {
         rarity: rarityName,
         level: formatNumberValue(this.level, options?.shortNumbers),
         name: t(this.name),
-      })
+      }),
     );
   }
 
@@ -196,7 +194,7 @@ class Enemy extends EnemyBase {
       ENEMY_RARITY.RARE.color,
       ENEMY_RARITY.EPIC.color,
       ENEMY_RARITY.LEGENDARY.color,
-      ENEMY_RARITY.MYTHIC.color
+      ENEMY_RARITY.MYTHIC.color,
     );
     // Add the new color class
     enemySection.classList.add(this.color);
@@ -306,7 +304,7 @@ class Enemy extends EnemyBase {
       scaled *
         this.getRegionMultiplier('armor') *
         (this.rarityData.multiplier.armor || 1) *
-        (this.baseData.multiplier?.armor || 1)
+        (this.baseData.multiplier?.armor || 1),
     );
   }
 
@@ -319,7 +317,7 @@ class Enemy extends EnemyBase {
         this.getRegionMultiplier('evasion') *
         (this.rarityData.multiplier.evasion || 1) *
         (this.baseData.multiplier?.evasion || 1) *
-        attackRatingAndEvasionScale
+        attackRatingAndEvasionScale,
     );
   }
 
@@ -332,7 +330,7 @@ class Enemy extends EnemyBase {
         this.getRegionMultiplier('attackRating') *
         (this.rarityData.multiplier.attackRating || 1) *
         (this.baseData.multiplier?.attackRating || 1) *
-        attackRatingAndEvasionScale
+        attackRatingAndEvasionScale,
     );
   }
 
