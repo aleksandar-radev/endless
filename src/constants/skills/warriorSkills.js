@@ -363,9 +363,19 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.bladeStorm'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 20, 5, 0.5),
-      damagePercent: scaleDownFlat(level, 2),
-      armorPenetrationPercent: Math.min(scaleDownFlat(level, 1), 40),
+      damage: getFlatBonus(level, { basePerLevel: 15, milestoneInterval: 50, milestoneMultiplier: 1.3 }),
+      damagePercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.2, 
+        earlyGameScale: 1.0,
+        earlyGameType: 'sqrt' 
+      }) / 100,
+      armorPenetrationPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.1, 
+        earlyGameScale: 0.8,
+        earlyGameType: 'log' 
+      }) / 100,
     }),
   },
   ironFortress: {
@@ -377,9 +387,14 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.ironFortress'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: scaleUpFlat(level, 15, 5, 0.5),
-      lifePercent: scaleDownFlat(level, 1.5),
-      allResistance: scaleUpFlat(level, 10, 5, 0.5),
+      armor: getFlatBonus(level, { basePerLevel: 12, milestoneInterval: 50, milestoneMultiplier: 1.25 }),
+      lifePercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.15, 
+        earlyGameScale: 1.0,
+        earlyGameType: 'log' 
+      }) / 100,
+      allResistance: getFlatBonus(level, { basePerLevel: 8, milestoneInterval: 50, milestoneMultiplier: 1.25 }),
     }),
   },
 
@@ -393,9 +408,19 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.titanStrength'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strength: scaleUpFlat(level, 6),
-      strengthPercent: scaleDownFlat(level, 1.3),
-      damagePercent: scaleDownFlat(level, 1.3),
+      strength: getFlatBonus(level, { basePerLevel: 5, milestoneInterval: 50, milestoneMultiplier: 1.2 }),
+      strengthPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.13, 
+        earlyGameScale: 0.9,
+        earlyGameType: 'log' 
+      }) / 100,
+      damagePercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.13, 
+        earlyGameScale: 0.9,
+        earlyGameType: 'log' 
+      }) / 100,
     }),
   },
   heroicStand: {
@@ -410,9 +435,24 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.heroicStand'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armorPercent: scaleDownFlat(level, 3),
-      lifeRegenPercent: scaleDownFlat(level, 2),
-      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level, 1) * 0.015, 3),
+      armorPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.3, 
+        earlyGameScale: 1.5,
+        earlyGameType: 'sqrt' 
+      }) / 100,
+      lifeRegenPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.2, 
+        earlyGameScale: 1.0,
+        earlyGameType: 'sqrt' 
+      }) / 100,
+      lifeRegenOfTotalPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.015, 
+        earlyGameScale: 0.6,
+        earlyGameType: 'log' 
+      }) / 100,
     }),
   },
 
@@ -426,9 +466,22 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.legendaryWarlord'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      critChance: Math.min(scaleDownFlat(level, 0.1), 20),
-      critDamage: scaleDownFlat(level, 0.012),
-      damagePercent: scaleDownFlat(level, 2.5),
+      critChance: getChanceBonus(level, { 
+        perLevel: 0.05, 
+        maxChance: 20 
+      }),
+      critDamage: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.012, 
+        earlyGameScale: 0.8,
+        earlyGameType: 'log' 
+      }) / 100,
+      damagePercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.25, 
+        earlyGameScale: 1.2,
+        earlyGameType: 'log' 
+      }) / 100,
     }),
   },
   eternalGuardian: {
