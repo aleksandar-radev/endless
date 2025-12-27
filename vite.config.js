@@ -6,13 +6,15 @@ export default defineConfig(({ mode }) => {
   const isProduction = mode === 'production';
   const isDebugBuild = mode === 'debug' || env.VITE_DEBUG_BUILD === 'true';
   const shouldObfuscate = isProduction && !isDebugBuild;
-  const shouldMinify = isProduction && !isDebugBuild;
+  // Disable minification when obfuscating to prevent breaking the string array rotation
+  const shouldMinify = isProduction && !isDebugBuild && !shouldObfuscate;
 
   return {
     base: env.VITE_BASE_PATH || './',
     plugins: [
       shouldObfuscate &&
         obfuscatorPlugin({
+          exclude: [/node_modules/],
           options: {
             rotateStringArray: true,
             stringArray: true,
