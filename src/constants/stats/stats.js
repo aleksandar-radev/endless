@@ -54,7 +54,7 @@ export function getStatDecimalPlaces(statKey, fallback = 0) {
 }
 
 export function itemTierScaling(tier = 1) {
-  return Math.pow(ITEM_FLAT_REGION_SCALING_MULTIPLIER, Math.max(0, tier - 1));
+  return ITEM_FLAT_REGION_SCALING_MULTIPLIER ** Math.max(0, tier - 1);
 }
 
 /**
@@ -68,7 +68,7 @@ export function createTierScaling(start, end, power = 1) {
   const scaling = {};
   for (let t = 1; t <= 12; t++) {
     const progress = (t - 1) / 11;
-    const value = start + (end - start) * Math.pow(progress, power);
+    const value = start + (end - start) * (progress ** power);
     scaling[t] = Number(value.toFixed(2));
   }
   return scaling;
