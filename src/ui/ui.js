@@ -570,20 +570,6 @@ function updateHeroAilmentIcons() {
   });
 }
 
-export function updateEnemyStatLabels() {
-  ELEMENT_IDS.forEach((el) => {
-    const dmg = document.querySelector(`.enemy-${el}-damage`);
-    if (dmg) {
-      dmg.innerHTML = `${formatStatName(`${el}Damage`)}: <span id="enemy-${el}-damage-value"></span>`;
-    }
-    const res = document.querySelector(`.enemy-${el}-resistance`);
-    if (res) {
-      res.innerHTML = `${formatStatName(`${el}Resistance`)}: <span id="enemy-${el}-resistance-value"></span>`;
-    }
-  });
-  updateEnemyStats();
-}
-
 /**
  * Start/stop the game loop
  */
@@ -1201,7 +1187,7 @@ export function updateStageControlsInlineVisibility() {
   startRow.className = 'option-row';
   startRow.innerHTML = html`
     <label class="starting-stage-label">${t('options.startingStage')}:</label>
-    <input type="number" class="starting-stage-input" min="0" max="${startMax}" value="${startVal}" />
+    <input type="number" class="starting-stage-input" min="1" max="${startMax}" value="${startVal}" />
     <div class="min-max-btn-group">
       <button class="min-btn" type="button" data-i18n="common.min">${t('common.min')}</button>
       <button class="max-btn" type="button" data-i18n="common.max">${t('common.max')}</button>
@@ -1245,7 +1231,7 @@ export function updateStageControlsInlineVisibility() {
     startMinBtn.onmouseenter = () => startMinBtn.classList.add('hover');
     startMinBtn.onmouseleave = () => startMinBtn.classList.remove('hover');
     startMinBtn.onclick = () => {
-      startInput.value = 0;
+      startInput.value = 1;
       startInput.dispatchEvent(new Event('input'));
       applyInlineStartingStage(true);
     };

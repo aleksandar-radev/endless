@@ -91,32 +91,32 @@ const TYPE_DATA = {
   fireResistance: {
     stat: 'fireResistance',
     labelKey: 'fireResistance',
-    icon: `${BASE}/icons/fire.svg`,
+    icon: `${BASE}/icons/fire.png`,
   },
   coldResistance: {
     stat: 'coldResistance',
     labelKey: 'coldResistance',
-    icon: `${BASE}/icons/cold.svg`,
+    icon: `${BASE}/icons/cold.png`,
   },
   airResistance: {
     stat: 'airResistance',
     labelKey: 'airResistance',
-    icon: `${BASE}/icons/air.svg`,
+    icon: `${BASE}/icons/air.png`,
   },
   earthResistance: {
     stat: 'earthResistance',
     labelKey: 'earthResistance',
-    icon: `${BASE}/icons/earth.svg`,
+    icon: `${BASE}/icons/earth.png`,
   },
   lightningResistance: {
     stat: 'lightningResistance',
     labelKey: 'lightningResistance',
-    icon: `${BASE}/icons/lightning.svg`,
+    icon: `${BASE}/icons/lightning.png`,
   },
   waterResistance: {
     stat: 'waterResistance',
     labelKey: 'waterResistance',
-    icon: `${BASE}/icons/water.svg`,
+    icon: `${BASE}/icons/water.png`,
   },
   allResistance: {
     stat: 'allResistance',
@@ -129,7 +129,7 @@ Object.values(ELEMENTS).forEach(({ id }) => {
   TYPE_DATA[id] = {
     stat: `${id}Damage`,
     labelKey: `${id}Damage`,
-    icon: `${BASE}/icons/${id}.svg`,
+    icon: `${BASE}/icons/${id}.png`,
   };
 });
 

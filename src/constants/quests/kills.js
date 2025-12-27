@@ -97,7 +97,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 25000,
     reward: { gold: 200000, crystals: 5 },
-    icon: `<img src="${BASE}/icons/earth.svg" class="icon" alt="earth"/>`,
+    icon: `<img src="${BASE}/icons/earth.png" class="icon" alt="earth"/>`,
   },
   {
     id: 'kill50000',
@@ -107,7 +107,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 50000,
     reward: { gold: 400000, crystals: 8 },
-    icon: `<img src="${BASE}/icons/earth.svg" class="icon" alt="earth"/>`,
+    icon: `<img src="${BASE}/icons/earth.png" class="icon" alt="earth"/>`,
   },
   {
     id: 'kill100000',

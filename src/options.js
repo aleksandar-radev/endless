@@ -9,7 +9,7 @@ import {
   updateStageUI,
   updateResources,
   updatePlayerLife,
-  updateEnemyStatLabels,
+  updateEnemyStats,
   showTooltip,
   positionTooltip,
   hideTooltip,
@@ -112,7 +112,7 @@ export class Options {
     // Enable auto inventory sorting
     this.autoSortInventory = data.autoSortInventory ?? false;
     // Add advanced tooltips option
-    this.showAdvancedTooltips = data.showAdvancedTooltips ?? false;
+    this.showAdvancedTooltips = data.showAdvancedTooltips ?? true;
     // Add advanced attribute tooltips option
     this.showAdvancedAttributeTooltips = data.showAdvancedAttributeTooltips ?? false;
     // Show rate counters bar
@@ -174,8 +174,6 @@ export class Options {
     this.showStageControlsInline = data.showStageControlsInline ?? false;
     // Show roll quality percentiles instead of min/max ranges
     this.showRollPercentiles = data.showRollPercentiles ?? false;
-    // Scaling system selection (dev only)
-    this.scalingSystem = data.scalingSystem || 'simple';
     // Temporary developer access deadline and modal acknowledgement
     this.devAccessDeadline = data.devAccessDeadline || null;
     this.devAccessModalDismissed = data.devAccessModalDismissed ?? false;
@@ -360,8 +358,6 @@ export class Options {
     // --- Game Options Content ---
     const gameContent = document.createElement('div');
     gameContent.className = 'options-content active';
-    // Development only option (now at the top)
-    gameContent.appendChild(this._createScalingSystemOption());
     gameContent.appendChild(this._createAdvancedTooltipsOption());
     gameContent.appendChild(this._createAdvancedAttributeTooltipsOption());
     gameContent.appendChild(this._createRollPercentilesOption());
@@ -1670,7 +1666,7 @@ export class Options {
         type="number"
         id="starting-stage-input"
         class="starting-stage-input"
-        min="0"
+        min="1"
         max="${max}"
         value="${value}"
       />
@@ -1728,7 +1724,7 @@ export class Options {
       minBtn.onmouseenter = () => minBtn.classList.add('hover');
       minBtn.onmouseleave = () => minBtn.classList.remove('hover');
       minBtn.onclick = () => {
-        input.value = 0;
+        input.value = 1;
         input.dispatchEvent(new Event('input'));
         applyStartingStage(true);
       };
@@ -1836,7 +1832,7 @@ export class Options {
       this.shortElementalNames = checkbox.checked;
       dataManager.saveGame();
       updateStatsAndAttributesUI(true);
-      updateEnemyStatLabels();
+      updateEnemyStats();
     });
     return wrapper;
   }
@@ -1938,45 +1934,6 @@ export class Options {
       dataManager.saveGame();
       updateStatsAndAttributesUI(true);
     });
-    return wrapper;
-  }
-
-  /**
-   * Creates the scaling system selection dropdown (dev only)
-   */
-  _createScalingSystemOption() {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'option-row';
-    wrapper.innerHTML = html`
-      <label for="scaling-system-select" style="color: #ff6b35;" data-i18n="options.scalingSystem">${t('options.scalingSystem')}:</label>
-      <select id="scaling-system-select" class="common-select">
-        <option value="simple">${t('options.scalingSystem.simple')}</option>
-        <option value="legacy">${t('options.scalingSystem.legacy')}</option>
-      </select>
-      <button id="scaling-reload-btn" class="common-action-btn" style="display:none;">${t('options.scalingSystem.reload')}</button>
-    `;
-
-    const label = wrapper.querySelector('label');
-    const select = wrapper.querySelector('select');
-    const reloadBtn = wrapper.querySelector('#scaling-reload-btn');
-
-    // Manually attach tooltip since we can't easily inject into OPTION_TOOLTIPS const
-    label.addEventListener('mouseenter', (e) => showTooltip(t('options.scalingSystem.tooltip'), e));
-    label.addEventListener('mousemove', positionTooltip);
-    label.addEventListener('mouseleave', hideTooltip);
-
-    select.value = this.scalingSystem;
-    select.addEventListener('change', () => {
-      this.scalingSystem = select.value;
-      dataManager.saveGame({ force: true });
-      showToast(t('versionModal.refreshPrompt'), 'info');
-      reloadBtn.style.display = 'inline-block';
-    });
-
-    reloadBtn.addEventListener('click', () => {
-      window.location.reload();
-    });
-
     return wrapper;
   }
 

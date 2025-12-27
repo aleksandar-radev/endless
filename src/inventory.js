@@ -18,6 +18,7 @@ import { getCurrentRegion } from './region.js';
 import { computeSetBonuses } from './uniqueItems.js';
 import { MATERIALS } from './constants/materials.js';
 import { getDivisor, getStatDecimalPlaces, STATS } from './constants/stats/stats.js';
+import { rollRandomSubtype } from './constants/itemSubtypes.js';
 import {
   ITEM_RARITY,
   RARITY_ORDER,
@@ -1256,7 +1257,12 @@ export default class Inventory {
     if (!rarity) {
       rarity = this.generateRarity();
     }
-    return new Item(type, level, rarity, tier);
+
+    // Roll for subtype
+    const subtype = rollRandomSubtype(type);
+    const metaData = subtype ? { subtype } : {};
+
+    return new Item(type, level, rarity, tier, null, metaData);
   }
 
   generateRarity() {

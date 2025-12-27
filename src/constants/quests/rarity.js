@@ -3,8 +3,8 @@ const BASE = import.meta.env.VITE_BASE_PATH;
 const RARITY_ICONS = {
   rare: `<img src="${BASE}/icons/star.svg" class="icon" alt="rare"/>`,
   epic: `<img src="${BASE}/icons/moon.svg" class="icon" alt="epic"/>`,
-  legendary: `<img src="${BASE}/icons/earth.svg" class="icon" alt="legendary"/>`,
-  mythic: `<img src="${BASE}/icons/fire.svg" class="icon" alt="mythic"/>`,
+  legendary: `<img src="${BASE}/icons/earth.png" class="icon" alt="legendary"/>`,
+  mythic: `<img src="${BASE}/icons/fire.png" class="icon" alt="mythic"/>`,
 };
 // Rarity kill quests
 export const RARITY_QUESTS = [
