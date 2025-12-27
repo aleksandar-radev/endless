@@ -250,3 +250,104 @@ export function createPercentScaleFunction(startPercent, interval, increasePerIn
   const fn = (level) => percentIncreasedByLevel(startPercent, level, interval, increasePerInterval, maxPercent);
   return setStepFunctionMetadata(fn, interval, 1);
 }
+
+/**
+ * Calculate percentage bonus with smooth transition from logarithmic to linear scaling.
+ * Phase 1 (Early Game): Non-linear growth (logarithmic) to make skills feel powerful immediately
+ * Phase 2 (End Game): Linear growth after softcap for infinite progression
+ * 
+ * The function ensures a smooth, continuous transition at the softcap level by matching
+ * the slope of the logarithmic curve to the linear slope at the transition point.
+ * 
+ * @param {number} level - The current skill level (>= 1)
+ * @param {number} baseValue - The starting value at level 1 (e.g., 5 for 5%)
+ * @param {number} growthFactor - Controls the growth rate in the logarithmic phase (higher = faster growth)
+ * @param {number} softcapLevel - The level at which to transition to linear growth (e.g., 200)
+ * @param {number} linearSlope - The per-level increase after softcap (e.g., 0.5 for +0.5% per level)
+ * @returns {number} The calculated percentage bonus
+ */
+export function getDamagePercent(level, baseValue = 5, growthFactor = 10, softcapLevel = 200, linearSlope = 0.5) {
+  if (level <= 0) return 0;
+  if (level === 1) return baseValue;
+  
+  if (level <= softcapLevel) {
+    // Phase 1: Logarithmic growth
+    // Using natural logarithm for smooth, diminishing returns
+    return baseValue + growthFactor * Math.log(level);
+  } else {
+    // Phase 2: Linear growth
+    // Calculate the value at softcap to ensure continuity
+    const valueAtSoftcap = baseValue + growthFactor * Math.log(softcapLevel);
+    // Add linear growth for levels beyond softcap
+    return valueAtSoftcap + linearSlope * (level - softcapLevel);
+  }
+}
+
+/**
+ * Calculate flat damage with linear growth and milestone bonuses.
+ * The damage increases linearly each level, with multiplicative bonuses at milestone intervals.
+ * 
+ * @param {number} level - The current skill level (>= 1)
+ * @param {number} baseDamage - The starting damage at level 1
+ * @param {number} perLevelIncrease - The flat increase per level
+ * @param {number} milestoneInterval - How often milestone bonuses occur (e.g., every 50 levels)
+ * @param {number} milestoneMultiplier - The multiplier applied at each milestone (e.g., 1.2 for 20% increase)
+ * @returns {number} The calculated flat damage
+ */
+export function getFlatDamage(
+  level, 
+  baseDamage = 10, 
+  perLevelIncrease = 1, 
+  milestoneInterval = 50, 
+  milestoneMultiplier = 1.2
+) {
+  if (level <= 0) return 0;
+  
+  // Base damage plus linear growth
+  let damage = baseDamage + (level - 1) * perLevelIncrease;
+  
+  // Apply milestone multipliers
+  if (milestoneInterval > 0 && level >= milestoneInterval) {
+    const milestonesPassed = Math.floor(level / milestoneInterval);
+    // Each milestone multiplies the total damage
+    damage *= Math.pow(milestoneMultiplier, milestonesPassed);
+  }
+  
+  return damage;
+}
+
+/**
+ * Calculate chance-based stats (like crit chance) with linear scaling and a hard cap.
+ * 
+ * @param {number} level - The current skill level (>= 1)
+ * @param {number} baseChance - The starting chance at level 1 (as a percentage, e.g., 1 for 1%)
+ * @param {number} levelsPerIncrease - How many levels for each increment (e.g., 10 levels per 1%)
+ * @param {number} maxChance - The maximum chance cap (e.g., 75 for 75% max)
+ * @returns {number} The calculated chance percentage
+ */
+export function getChanceStat(level, baseChance = 1, levelsPerIncrease = 10, maxChance = 75) {
+  if (level <= 0) return 0;
+  
+  const increments = Math.floor((level - 1) / levelsPerIncrease);
+  const chance = baseChance + increments;
+  
+  return Math.min(chance, maxChance);
+}
+
+/**
+ * Calculate synergy bonus from one skill to another.
+ * Returns a percentage multiplier based on the source skill's level.
+ * 
+ * @param {number} sourceLevel - The level of the skill providing the synergy
+ * @param {number} baseBonus - The starting bonus percentage at level 1 (e.g., 2 for 2%)
+ * @param {number} perLevelBonus - The bonus increase per level (e.g., 0.5 for +0.5% per level)
+ * @param {number} maxBonus - The maximum synergy bonus percentage (e.g., 100 for 100% = double effect)
+ * @returns {number} The synergy bonus as a percentage (e.g., 50 means +50% effectiveness)
+ */
+export function getSynergyBonus(sourceLevel, baseBonus = 2, perLevelBonus = 0.5, maxBonus = 100) {
+  if (sourceLevel <= 0) return 0;
+  
+  const bonus = baseBonus + (sourceLevel - 1) * perLevelBonus;
+  
+  return Math.min(bonus, maxBonus);
+}
