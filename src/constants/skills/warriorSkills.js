@@ -1,7 +1,6 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { scaleDownFlat } from '../../common.js';
-import { scaleUpFlat } from '../../common.js';
+import { getFlatDamage, getDamagePercent, getSynergyBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Warrior skills extracted from skills.js
@@ -17,8 +16,7 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.bash'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 3, 5, 0.2),
-      damagePercent: scaleDownFlat(level, 2),
+      damage: getFlatDamage(level, 3, 0.5, 50, 1.2),
     }),
   },
   toughness: {
@@ -30,9 +28,8 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.toughness'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: scaleUpFlat(level, 3, 5, 0.2),
-      armorPercent: scaleDownFlat(level, 2.5),
-      extraDamageFromArmorPercent: Math.min(0.014 * scaleDownFlat(level), 1.5),
+      armor: getFlatDamage(level, 5, 1, 50, 1.2),
+      extraDamageFromArmorPercent: Math.min(getDamagePercent(level, 0.5, 0.5, 200, 0.1) / 100, 1.5),
     }),
   },
 
@@ -49,8 +46,8 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.powerStrike'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 6, 4, 0.2),
-      damagePercent: scaleDownFlat(level, 8, 5),
+      damage: getFlatDamage(level, 10, 1.5, 50, 1.2),
+      damagePercent: getDamagePercent(level, 10, 15, 200, 0.5),
     }),
   },
   ironWill: {
@@ -62,10 +59,16 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.ironWill'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      vitality: scaleUpFlat(level, 4, 8, 0.2),
-      perseverance: scaleUpFlat(level, 4, 8, 0.2),
-      extraDamageFromLifePercent: Math.min(0.2 * scaleDownFlat(level), 25),
+      vitality: getFlatDamage(level, 5, 1, 50, 1.15),
+      perseverance: getFlatDamage(level, 5, 1, 50, 1.15),
+      extraDamageFromLifePercent: Math.min(getDamagePercent(level, 1, 2, 200, 0.2) / 100, 25),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'toughness',
+        calculateBonus: (sourceLevel) => getSynergyBonus(sourceLevel, 1, 0.3, 50),
+      },
+    ],
   },
 
   // Tier 2 Skills
@@ -81,9 +84,15 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.battleCry'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 3, 5, 0.2),
-      damagePercent: scaleDownFlat(level, 2.5),
+      damage: getFlatDamage(level, 5, 1, 50, 1.2),
+      damagePercent: getDamagePercent(level, 8, 12, 200, 0.5),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'bash',
+        calculateBonus: (sourceLevel) => getSynergyBonus(sourceLevel, 2, 0.5, 75),
+      },
+    ],
   },
   fortitude: {
     id: 'fortitude',
@@ -94,8 +103,8 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.fortitude'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level) * 0.0075, 1.5),
-      lifeRegenPercent: scaleDownFlat(level, 1),
+      lifeRegenOfTotalPercent: Math.min(getDamagePercent(level, 0.3, 0.5, 200, 0.05) / 100, 1.5),
+      lifeRegen: getFlatDamage(level, 2, 0.5, 50, 1.15),
     }),
   },
 
@@ -112,8 +121,8 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.groundSlam'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 3, 5, 0.3),
-      damagePercent: scaleDownFlat(level, 16),
+      damage: getFlatDamage(level, 8, 1.2, 50, 1.2),
+      damagePercent: getDamagePercent(level, 20, 20, 200, 0.8),
     }),
   },
 
@@ -127,9 +136,17 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.armorBreaker'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armorPenetration: scaleUpFlat(level, 15, 4, 0.5),
-      armorPenetrationPercent: Math.min(0.35 * scaleDownFlat(level), 40),
+      armorPenetration: getFlatDamage(level, 20, 2, 50, 1.15),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'powerStrike',
+        calculateBonus: (sourceLevel) => getSynergyBonus(sourceLevel, 1.5, 0.4, 60),
+        additionalEffects: (sourceLevel) => ({
+          armorPenetration: getFlatDamage(sourceLevel, 5, 0.5, 50, 1.1),
+        }),
+      },
+    ],
   },
 
   // Tier 4 Skills
@@ -145,9 +162,15 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.shieldWall'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      extraDamageFromArmorPercent: Math.min(0.03 * scaleDownFlat(level), 2.5),
-      armorPercent: scaleDownFlat(level, 4),
+      extraDamageFromArmorPercent: Math.min(getDamagePercent(level, 1, 2, 200, 0.15) / 100, 2.5),
+      armor: getFlatDamage(level, 10, 2, 50, 1.2),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'toughness',
+        calculateBonus: (sourceLevel) => getSynergyBonus(sourceLevel, 2, 0.5, 80),
+      },
+    ],
   },
 
   // Tier 5 Skills
@@ -161,8 +184,7 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.berserk'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamage: scaleUpFlat(level, 4, 5, 0.5),
-      fireDamagePercent: scaleDownFlat(level, 7),
+      fireDamage: getFlatDamage(level, 6, 1.5, 50, 1.2),
     }),
   },
 
@@ -175,9 +197,17 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.lastStand'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeedPercent: Math.min(scaleDownFlat(level, 0.65), 75),
-      attackRatingPercent: scaleDownFlat(level, 6),
+      attackRating: getFlatDamage(level, 10, 2, 50, 1.15),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'ironWill',
+        calculateBonus: (sourceLevel) => getSynergyBonus(sourceLevel, 1.5, 0.4, 70),
+        additionalEffects: (sourceLevel) => ({
+          attackSpeed: Math.min(getDamagePercent(sourceLevel, 0.5, 1, 200, 0.05) / 100, 0.75),
+        }),
+      },
+    ],
   },
 
   // Tier 6 Skills
@@ -190,11 +220,10 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.warlordWarrior'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifePercent: scaleDownFlat(level, 1),
-      extraDamageFromLifePercent: Math.min(0.008 * scaleDownFlat(level), 1),
-      strengthPercent: scaleDownFlat(level, 1.5),
-      vitalityPercent: scaleDownFlat(level, 1.5),
-      endurancePercent: scaleDownFlat(level, 1.5),
+      strength: getFlatDamage(level, 8, 1.5, 50, 1.15),
+      vitality: getFlatDamage(level, 8, 1.5, 50, 1.15),
+      endurance: getFlatDamage(level, 8, 1.5, 50, 1.15),
+      extraDamageFromLifePercent: Math.min(getDamagePercent(level, 0.4, 1, 200, 0.1) / 100, 1),
     }),
   },
 
@@ -208,9 +237,9 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.unstoppableForce'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: scaleDownFlat(level, 2),
-      attackRatingPercent: scaleDownFlat(level, 3),
-      critDamage: Math.min(scaleDownFlat(level, 0.006), 1),
+      damage: getFlatDamage(level, 15, 3, 50, 1.2),
+      attackRating: getFlatDamage(level, 15, 3, 50, 1.15),
+      critDamage: Math.min(getDamagePercent(level, 0.3, 0.5, 200, 0.05) / 100, 1),
     }),
   },
   unyieldingDefense: {
@@ -225,10 +254,19 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.unyieldingDefense'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armorPercent: scaleDownFlat(level, 1.5),
-      blockChance: Math.min(scaleDownFlat(level, 0.1), 10),
-      allResistancePercent: scaleDownFlat(level, 2.5),
+      armor: getFlatDamage(level, 20, 4, 50, 1.2),
+      allResistance: getFlatDamage(level, 15, 3, 50, 1.15),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'shieldWall',
+        calculateBonus: (sourceLevel) => getSynergyBonus(sourceLevel, 2, 0.5, 80),
+      },
+      {
+        sourceSkillId: 'fortitude',
+        calculateBonus: (sourceLevel) => getSynergyBonus(sourceLevel, 1.5, 0.4, 60),
+      },
+    ],
   },
 
   // Tier 2000 Skills
@@ -244,10 +282,20 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.bladeStorm'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 20, 5, 0.5),
-      damagePercent: scaleDownFlat(level, 2),
-      armorPenetrationPercent: Math.min(scaleDownFlat(level, 1), 40),
+      damage: getFlatDamage(level, 30, 5, 50, 1.2),
+      damagePercent: getDamagePercent(level, 15, 25, 200, 1),
+      armorPenetration: getFlatDamage(level, 20, 3, 50, 1.15),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'powerStrike',
+        calculateBonus: (sourceLevel) => getSynergyBonus(sourceLevel, 2, 0.6, 100),
+      },
+      {
+        sourceSkillId: 'groundSlam',
+        calculateBonus: (sourceLevel) => getSynergyBonus(sourceLevel, 1.5, 0.5, 80),
+      },
+    ],
   },
   ironFortress: {
     id: 'ironFortress',
@@ -258,10 +306,15 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.ironFortress'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: scaleUpFlat(level, 15, 5, 0.5),
-      lifePercent: scaleDownFlat(level, 1.5),
-      allResistance: scaleUpFlat(level, 10, 5, 0.5),
+      armor: getFlatDamage(level, 25, 4, 50, 1.2),
+      allResistance: getFlatDamage(level, 15, 3, 50, 1.15),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'toughness',
+        calculateBonus: (sourceLevel) => getSynergyBonus(sourceLevel, 2, 0.5, 90),
+      },
+    ],
   },
 
   // Tier 3000 Skills
@@ -274,10 +327,15 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.titanStrength'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strength: scaleUpFlat(level, 6),
-      strengthPercent: scaleDownFlat(level, 1.3),
-      damagePercent: scaleDownFlat(level, 1.3),
+      strength: getFlatDamage(level, 10, 2, 50, 1.15),
+      damage: getFlatDamage(level, 20, 4, 50, 1.2),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'warlord',
+        calculateBonus: (sourceLevel) => getSynergyBonus(sourceLevel, 2, 0.6, 100),
+      },
+    ],
   },
   heroicStand: {
     id: 'heroicStand',
@@ -291,10 +349,16 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.heroicStand'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armorPercent: scaleDownFlat(level, 3),
-      lifeRegenPercent: scaleDownFlat(level, 2),
-      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level, 1) * 0.015, 3),
+      armor: getFlatDamage(level, 30, 5, 50, 1.2),
+      lifeRegen: getFlatDamage(level, 15, 3, 50, 1.2),
+      lifeRegenOfTotalPercent: Math.min(getDamagePercent(level, 0.5, 1, 200, 0.1) / 100, 3),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'fortitude',
+        calculateBonus: (sourceLevel) => getSynergyBonus(sourceLevel, 2, 0.6, 100),
+      },
+    ],
   },
 
   // Tier 5000 Skills
@@ -307,10 +371,19 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.legendaryWarlord'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      critChance: Math.min(scaleDownFlat(level, 0.1), 20),
-      critDamage: scaleDownFlat(level, 0.012),
-      damagePercent: scaleDownFlat(level, 2.5),
+      damage: getFlatDamage(level, 30, 6, 50, 1.2),
+      critDamage: Math.min(getDamagePercent(level, 0.5, 1.5, 200, 0.1) / 100, 2),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'unstoppableForce',
+        calculateBonus: (sourceLevel) => getSynergyBonus(sourceLevel, 2.5, 0.8, 150),
+      },
+      {
+        sourceSkillId: 'titanStrength',
+        calculateBonus: (sourceLevel) => getSynergyBonus(sourceLevel, 2, 0.6, 120),
+      },
+    ],
   },
   eternalGuardian: {
     id: 'eternalGuardian',
@@ -324,8 +397,8 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.eternalGuardian'),
     maxLevel: () => 350,
     effect: (level) => ({
-      reduceEnemyAttackSpeedPercent: Math.min(scaleDownFlat(level, 0.1), 15),
-      reduceEnemyDamagePercent: Math.min(scaleDownFlat(level, 0.075), 10),
+      reduceEnemyAttackSpeedPercent: Math.min(getDamagePercent(level, 2, 3, 200, 0.2), 15),
+      reduceEnemyDamagePercent: Math.min(getDamagePercent(level, 1.5, 2, 200, 0.15), 10),
     }),
   },
 
@@ -336,7 +409,7 @@ export const WARRIOR_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: 5 + scaleDownFlat(level, 4),
+        percentOfPlayerDamage: 5 + getDamagePercent(level, 5, 8, 200, 0.5),
         attackSpeed: hero.stats.attackSpeed,
         canCrit: true,
       };
