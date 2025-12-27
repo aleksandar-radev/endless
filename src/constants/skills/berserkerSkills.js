@@ -1,6 +1,6 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { scaleDownFlat, scaleUpFlat } from '../../common.js';
+import { getPercentBonus, getFlatBonus, getChanceBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Berserker skills extracted from skills.js
@@ -16,9 +16,8 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.frenzy'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 5),
-      damagePercent: scaleDownFlat(level, 3),
-      lifePerHit: scaleUpFlat(level, -1),
+      damage: getFlatBonus(level, { basePerLevel: 4, milestoneInterval: 50, milestoneMultiplier: 1.2 }),
+      lifePerHit: getFlatBonus(level, { basePerLevel: -0.8, milestoneInterval: 50, milestoneMultiplier: 1.15 }),
     }),
   },
   toughSkin: {
@@ -30,10 +29,20 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.toughSkin'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: scaleUpFlat(level, 5, 7, 0.2),
-      armorPercent: scaleDownFlat(level, 2),
-      allResistance: scaleUpFlat(level, 4, 5, 0.2),
-      allResistancePercent: scaleDownFlat(level, 2),
+      armor: getFlatBonus(level, { basePerLevel: 4, milestoneInterval: 50, milestoneMultiplier: 1.2 }),
+      armorPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.2, 
+        earlyGameScale: 1.0,
+        earlyGameType: 'log' 
+      }) / 100,
+      allResistance: getFlatBonus(level, { basePerLevel: 3, milestoneInterval: 50, milestoneMultiplier: 1.2 }),
+      allResistancePercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.2, 
+        earlyGameScale: 1.0,
+        earlyGameType: 'log' 
+      }) / 100,
     }),
   },
 
@@ -50,9 +59,14 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.recklessSwing'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 14, 3, 0.4),
-      damagePercent: scaleDownFlat(level, 10),
-      lifePerHit: scaleUpFlat(level, -8, 3, 0.4),
+      damage: getFlatBonus(level, { basePerLevel: 12, milestoneInterval: 50, milestoneMultiplier: 1.3 }),
+      damagePercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.5, 
+        earlyGameScale: 1.5,
+        earlyGameType: 'sqrt' 
+      }) / 100,
+      lifePerHit: getFlatBonus(level, { basePerLevel: -6, milestoneInterval: 50, milestoneMultiplier: 1.3 }),
     }),
   },
   battleCry: {
@@ -67,9 +81,24 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.battleCry'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: scaleDownFlat(level, 0.5),
-      attackSpeedPercent: Math.min(scaleDownFlat(level, 0.5), 75),
-      lifeSteal: Math.min(scaleDownFlat(level, 0.01), 4),
+      damagePercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.05, 
+        earlyGameScale: 0.8,
+        earlyGameType: 'sqrt' 
+      }) / 100,
+      attackSpeedPercent: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.05, 
+        earlyGameScale: 0.8,
+        earlyGameType: 'log' 
+      }) / 100,
+      lifeSteal: getPercentBonus(level, { 
+        softcapLevel: 200, 
+        linearSlope: 0.01, 
+        earlyGameScale: 0.6,
+        earlyGameType: 'log' 
+      }) / 100,
     }),
   },
 
