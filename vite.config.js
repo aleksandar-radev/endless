@@ -1,63 +1,60 @@
 import { defineConfig, loadEnv } from 'vite';
-import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
+import vitePluginBundleObfuscator from 'vite-plugin-bundle-obfuscator';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const isProduction = mode === 'production';
   const isDebugBuild = mode === 'debug' || env.VITE_DEBUG_BUILD === 'true';
+
   const shouldObfuscate = isProduction && !isDebugBuild;
-  // Disable minification when obfuscating to prevent breaking the string array rotation
-  const shouldMinify = isProduction && !isDebugBuild && !shouldObfuscate;
+  const shouldMinify = isProduction && !isDebugBuild;
 
   return {
     base: env.VITE_BASE_PATH || './',
-    plugins: [
-      shouldObfuscate &&
-        obfuscatorPlugin({
-          exclude: [/node_modules/],
-          options: {
-            rotateStringArray: true,
-            stringArray: true,
-            stringArrayThreshold: 1,
-            identifierNamesGenerator: 'hexadecimal',
-            compact: false,
-            deadCodeInjection: false,
-            controlFlowFlattening: false,
-          },
-        }),
-    ].filter(Boolean),
 
     build: {
-      outDir: 'dist',
-      emptyOutDir: true,
-      sourcemap: isDebugBuild,
-      minify: shouldMinify ? 'terser' : false,
-      terserOptions: shouldMinify
-        ? {
-          compress: {
-            drop_console: true,
-            drop_debugger: true,
-            passes: 3,
-          },
-          mangle: true,
-          format: {
-            comments: false,
-            beautify: false,
-            max_line_len: false,
-          },
-        }
-        : undefined,
+      minify: shouldMinify ? 'terser' : 'esbuild',
+      terserOptions: shouldMinify ? {
+        compress: { drop_console: true, drop_debugger: true },
+        format: { comments: false },
+      } : undefined,
+
       rollupOptions: {
         output: {
           manualChunks(id) {
-            const normalizedId = String(id).replace(/\\/g, '/');
-            if (normalizedId.includes('/node_modules/')) return 'vendor';
-            if (normalizedId.includes('/src/languages/')) return 'languages';
-            return undefined;
+            if (id.includes('node_modules')) {
+              return 'vendor';
+            }
+            if (id.includes('/src/languages/')) {
+              return 'languages';
+            }
           },
         },
       },
     },
-    server: { open: true },
+
+    plugins: [
+      shouldObfuscate && vitePluginBundleObfuscator({
+        enable: true,
+        log: true,
+        autoExcludeNodeModules: true, // CRITICAL: Keeps libraries safe
+
+        options: {
+          controlFlowFlattening: false,
+          deadCodeInjection: false,
+          selfDefending: false,
+          identifierNamesGenerator: 'mangled',
+          splitStrings: false,
+          compact: true,
+          stringArray: true,
+          stringArrayEncoding: ['rc4'],
+          stringArrayThreshold: 1, // Only encrypt 100% of strings to save size
+          debugProtection: false,
+          // debugProtectionInterval: 10000,
+          renameGlobals: false,
+          renameProperties: false,
+        },
+      }),
+    ],
   };
 });
