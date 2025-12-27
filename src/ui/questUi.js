@@ -133,23 +133,22 @@ export function openQuestModal(quest) {
           tierLabel,
           rarity: rarityHtml,
           tier: tierHtml,
-        })}</span>`,
+        })}</span>`
       );
     } else if (key === 'materials' && Array.isArray(value)) {
       value.forEach(({ id, qty }) => {
         const matDef = MATERIALS[id] || Object.values(MATERIALS).find((m) => m.id === id);
         rewardParts.push(
-          `<span style=\"color:#fff;font-weight:bold;\">${formatNumber(qty)} ${matDef?.name || id}</span>`,
+          `<span style=\"color:#fff;font-weight:bold;\">${formatNumber(qty)} ${matDef?.name || id}</span>`
         );
       });
     } else {
-      rewardParts.push(
-        `<span style=\"color:${color};font-weight:bold;\">${formatNumber(value)} ${rewardName}</span>`,
-      );
+      rewardParts.push(`<span style=\"color:${color};font-weight:bold;\">${formatNumber(value)} ${rewardName}</span>`);
     }
   }
   const rewardHtml = rewardParts.join(', ');
-  modal.querySelector('#quest-modal-reward').innerHTML = `${t('quests.modal.progress')}: ${progressHtml}<br>${t('quests.modal.reward')}: ${rewardHtml}`;
+  modal.querySelector('#quest-modal-reward').innerHTML =
+    `${t('quests.modal.progress')}: ${progressHtml}<br>${t('quests.modal.reward')}: ${rewardHtml}`;
 
   // Claim button logic
   const claimBtn = modal.querySelector('#quest-claim-btn');

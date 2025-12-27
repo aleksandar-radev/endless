@@ -4,7 +4,9 @@ const tier = 1;
 
 export const FOREST_ENEMIES = [
   {
-    get name() { return t('Mossback'); },
+    get name() {
+      return t('Mossback');
+    },
 
     image: '/enemies/mossback.jpg',
     tier: tier,
@@ -30,10 +32,12 @@ export const FOREST_ENEMIES = [
     },
 
     materialDropWeights: {},
-    tags: [ 'enchanted_forest' ],
+    tags: ['enchanted_forest'],
   },
   {
-    get name() { return t('Thornling'); },
+    get name() {
+      return t('Thornling');
+    },
 
     image: '/enemies/thornling.jpg',
     tier: tier,
@@ -58,10 +62,12 @@ export const FOREST_ENEMIES = [
       itemDrop: 1.1,
     },
     materialDropWeights: {},
-    tags: [ 'enchanted_forest' ],
+    tags: ['enchanted_forest'],
   },
   {
-    get name() { return t('Barkhide'); },
+    get name() {
+      return t('Barkhide');
+    },
 
     image: '/enemies/barkhide.jpg',
     tier: tier,
@@ -86,10 +92,12 @@ export const FOREST_ENEMIES = [
       materialDrop: 1.1,
     },
     materialDropWeights: {},
-    tags: [ 'enchanted_forest' ],
+    tags: ['enchanted_forest'],
   },
   {
-    get name() { return t('Sylvan Wisp'); },
+    get name() {
+      return t('Sylvan Wisp');
+    },
 
     image: '/enemies/sylvan-wisp.jpg',
     tier: tier,
@@ -118,6 +126,6 @@ export const FOREST_ENEMIES = [
     },
 
     materialDropWeights: {},
-    tags: [ 'enchanted_forest' ],
+    tags: ['enchanted_forest'],
   },
 ];

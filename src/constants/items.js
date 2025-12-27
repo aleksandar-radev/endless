@@ -43,8 +43,26 @@ export const SLOT_REQUIREMENTS = {
   belt: [ITEM_IDS.BELT],
   legs: [ITEM_IDS.PANTS],
   boots: [ITEM_IDS.BOOTS],
-  weapon: [ITEM_IDS.SWORD, ITEM_IDS.AXE, ITEM_IDS.MACE, ITEM_IDS.DAGGER, ITEM_IDS.WAND, ITEM_IDS.STAFF, ITEM_IDS.SHIELD, ITEM_IDS.BOW],
-  offhand: [ITEM_IDS.SWORD, ITEM_IDS.AXE, ITEM_IDS.DAGGER, ITEM_IDS.WAND, ITEM_IDS.SHIELD, ITEM_IDS.ARROWS, ITEM_IDS.MACE, ITEM_IDS.STAFF],
+  weapon: [
+    ITEM_IDS.SWORD,
+    ITEM_IDS.AXE,
+    ITEM_IDS.MACE,
+    ITEM_IDS.DAGGER,
+    ITEM_IDS.WAND,
+    ITEM_IDS.STAFF,
+    ITEM_IDS.SHIELD,
+    ITEM_IDS.BOW,
+  ],
+  offhand: [
+    ITEM_IDS.SWORD,
+    ITEM_IDS.AXE,
+    ITEM_IDS.DAGGER,
+    ITEM_IDS.WAND,
+    ITEM_IDS.SHIELD,
+    ITEM_IDS.ARROWS,
+    ITEM_IDS.MACE,
+    ITEM_IDS.STAFF,
+  ],
   gloves: [ITEM_IDS.GLOVES],
   amulet: [ITEM_IDS.AMULET],
   ring1: [ITEM_IDS.RING],
@@ -53,7 +71,6 @@ export const SLOT_REQUIREMENTS = {
 
 export const TWO_HANDED_TYPES = [ITEM_IDS.MACE, ITEM_IDS.STAFF, ITEM_IDS.BOW];
 export const DUAL_WIELD_TYPES = [ITEM_IDS.SWORD, ITEM_IDS.AXE, ITEM_IDS.DAGGER, ITEM_IDS.WAND, ITEM_IDS.SHIELD];
-
 
 export const ITEM_TYPES = {
   weapon: {
@@ -89,11 +106,7 @@ export const ITEM_TYPES = {
 };
 
 export const ALL_ITEM_TYPES = [
-  ...new Set([
-    ...ITEM_TYPES.weapon.items,
-    ...ITEM_TYPES.armor.items,
-    ...ITEM_TYPES.jewelry.items,
-  ]),
+  ...new Set([...ITEM_TYPES.weapon.items, ...ITEM_TYPES.armor.items, ...ITEM_TYPES.jewelry.items]),
 ];
 
 export const ITEM_ICONS = {
@@ -118,13 +131,69 @@ export const ITEM_ICONS = {
 
 export const ITEM_RARITY = {
   NORMAL: { name: t('NORMAL'), color: 'var(--item-normal)', chance: 130, statMultiplier: 1, totalStats: 3 },
-  MAGIC: { get name() { return t('MAGIC'); }, color: 'var(--item-magic)', chance: 40, statMultiplier: 1, totalStats: 4 },
-  RARE: { get name() { return t('RARE'); }, color: 'var(--item-rare)', chance: 18, statMultiplier: 1, totalStats: 5 },
-  EPIC: { get name() { return t('EPIC'); }, color: 'var(--item-epic)', chance: 6, statMultiplier: 1, totalStats: 6 },
-  LEGENDARY: { get name() { return t('LEGENDARY'); }, color: 'var(--item-legendary)', chance: 2, statMultiplier: 1, totalStats: 7 },
-  MYTHIC: { get name() { return t('MYTHIC'); }, color: 'var(--item-mythic)', chance: 1, statMultiplier: 1, totalStats: 8 },
-  UNIQUE: { get name() { return t('UNIQUE'); }, color: 'var(--item-unique)', chance: 0, statMultiplier: 1, totalStats: 0 },
-  SET: { get name() { return t('SET'); }, color: 'var(--item-set)', chance: 0, statMultiplier: 1, totalStats: 0 },
+  MAGIC: {
+    get name() {
+      return t('MAGIC');
+    },
+    color: 'var(--item-magic)',
+    chance: 40,
+    statMultiplier: 1,
+    totalStats: 4,
+  },
+  RARE: {
+    get name() {
+      return t('RARE');
+    },
+    color: 'var(--item-rare)',
+    chance: 18,
+    statMultiplier: 1,
+    totalStats: 5,
+  },
+  EPIC: {
+    get name() {
+      return t('EPIC');
+    },
+    color: 'var(--item-epic)',
+    chance: 6,
+    statMultiplier: 1,
+    totalStats: 6,
+  },
+  LEGENDARY: {
+    get name() {
+      return t('LEGENDARY');
+    },
+    color: 'var(--item-legendary)',
+    chance: 2,
+    statMultiplier: 1,
+    totalStats: 7,
+  },
+  MYTHIC: {
+    get name() {
+      return t('MYTHIC');
+    },
+    color: 'var(--item-mythic)',
+    chance: 1,
+    statMultiplier: 1,
+    totalStats: 8,
+  },
+  UNIQUE: {
+    get name() {
+      return t('UNIQUE');
+    },
+    color: 'var(--item-unique)',
+    chance: 0,
+    statMultiplier: 1,
+    totalStats: 0,
+  },
+  SET: {
+    get name() {
+      return t('SET');
+    },
+    color: 'var(--item-set)',
+    chance: 0,
+    statMultiplier: 1,
+    totalStats: 0,
+  },
 };
 
 export const RARITY_ORDER = [

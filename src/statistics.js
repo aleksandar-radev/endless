@@ -17,9 +17,7 @@ function createRockyFieldRegionMap(source = {}) {
 
 export function formatSeparatedStat(labelText, segments) {
   const separator = '<span class="stage-separator breakable-separator">|||</span>';
-  const formattedSegments = segments
-    .map((segment) => `<span class="stage-value">${segment}</span>`)
-    .join(separator);
+  const formattedSegments = segments.map((segment) => `<span class="stage-value">${segment}</span>`).join(separator);
   return `${labelText} ${formattedSegments}`;
 }
 
@@ -262,7 +260,7 @@ export default class Statistics {
     if (typeof this.rockyFieldHighestStage === 'number') {
       this.rockyFieldHighestStages.outskirts = Math.max(
         this.rockyFieldHighestStages.outskirts || 0,
-        this.rockyFieldHighestStage,
+        this.rockyFieldHighestStage
       );
       delete this.rockyFieldHighestStage;
     }
@@ -288,19 +286,13 @@ export default class Statistics {
     if (!Number.isFinite(this.lastFightActiveLocal)) {
       this.lastFightActiveLocal = Date.now();
     }
-    this._statsUiRefresh = createDeferredRunner(
-      () => this.updateStatisticsUI(),
-      STATISTICS_UPDATE_DEBOUNCE_MS,
-    );
+    this._statsUiRefresh = createDeferredRunner(() => this.updateStatisticsUI(), STATISTICS_UPDATE_DEBOUNCE_MS);
     this._queueUiUpdate(true);
   }
 
   _queueUiUpdate(immediate = false) {
     if (!this._statsUiRefresh) {
-      this._statsUiRefresh = createDeferredRunner(
-        () => this.updateStatisticsUI(),
-        STATISTICS_UPDATE_DEBOUNCE_MS,
-      );
+      this._statsUiRefresh = createDeferredRunner(() => this.updateStatisticsUI(), STATISTICS_UPDATE_DEBOUNCE_MS);
     }
     if (immediate) {
       this._statsUiRefresh.flush();

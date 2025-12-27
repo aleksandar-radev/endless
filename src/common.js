@@ -12,7 +12,7 @@ let pendingPromise = null;
 export async function getTimeNow() {
   const now = Date.now();
   // If we have a recent API value (within 15s), return cached value + elapsed
-  if (lastApiTime && (now - lastApiTimestamp < 15000)) {
+  if (lastApiTime && now - lastApiTimestamp < 15000) {
     // Add elapsed time since last API poll
     return lastApiTime + (now - lastApiTimestamp);
   }
@@ -67,7 +67,7 @@ export function scaleStat(
   increasePerLevel = 0,
   bonusInterval = 1,
   bonusIncrease = 0,
-  basePercentGain = 0.3,
+  basePercentGain = 0.3
 ) {
   if (base <= 0) return 0; // Avoid scaling if base is zero or negative
   if (bonusInterval == 0) bonusInterval = 1; // Avoid division by zero
@@ -116,13 +116,7 @@ setStepFunctionMetadata(xpDiminishingFactor, 20, 1);
 // 0.6 means ~40% reduction in the per-level growth slope.
 export const XP_GOLD_GROWTH_MULTIPLIER = 0.6;
 
-export function computeScaledReward(
-  baseAtLevel1,
-  level,
-  basePercent,
-  levelBonus,
-  diminishingFactor = 1,
-) {
+export function computeScaledReward(baseAtLevel1, level, basePercent, levelBonus, diminishingFactor = 1) {
   if (!Number.isFinite(baseAtLevel1) || baseAtLevel1 <= 0) {
     return 0;
   }
@@ -137,15 +131,7 @@ export function computeScaledReward(
   return baseAtLevel1 * levelScale * growth * diminishing;
 }
 
-export function scaleDownFlat(
-  level,
-  start = 1,
-  interval = 10,
-  max_level = 200,
-  final_percent = 0.2,
-  flat,
-  min,
-) {
+export function scaleDownFlat(level, start = 1, interval = 10, max_level = 200, final_percent = 0.2, flat, min) {
   if (flat === undefined) flat = (start * (1 - final_percent)) / (max_level / interval);
   if (min === undefined) min = start * final_percent;
 
@@ -159,13 +145,13 @@ export function scaleDownFlat(
     const k = Math.floor((level - 1) / interval);
     const rem = level - k * interval;
     // Sum for full intervals
-    const sumFull = interval * k * (2 * start - flat * (k - 1)) / 2;
+    const sumFull = (interval * k * (2 * start - flat * (k - 1))) / 2;
     // Sum for remaining levels
     const sumRem = rem * Math.max(start - flat * k, min);
     return sumFull + sumRem;
   } else {
     // Sum up to min, then add min for remaining levels
-    const sumToMin = interval * stepsToMin * (2 * start - flat * (stepsToMin - 1)) / 2;
+    const sumToMin = (interval * stepsToMin * (2 * start - flat * (stepsToMin - 1))) / 2;
     const remLevels = level - levelsToMin;
 
     return sumToMin + remLevels * min;
@@ -181,12 +167,7 @@ export function scaleDownFlat(
  * @param {number} flat - Flat percent increase per interval (e.g. 0.1 for +10% per interval). Default: 0.1
  * @returns {number} The scaled value at the given level.
  */
-export function scaleUpFlat(
-  level,
-  start = 1,
-  interval = 10,
-  flat = 0.1,
-) {
+export function scaleUpFlat(level, start = 1, interval = 10, flat = 0.1) {
   if (level <= 0) return 0;
 
   // k = number of full intervals completed
@@ -194,7 +175,7 @@ export function scaleUpFlat(
   const rem = level - k * interval;
   // Each interval increases the multiplier by flat
   // Sum for full intervals (arithmetic series of multipliers)
-  const sumFull = interval * k * (2 * 1 + flat * (k - 1)) / 2;
+  const sumFull = (interval * k * (2 * 1 + flat * (k - 1))) / 2;
   // Sum for remaining levels (all at last multiplier)
   const sumRem = rem * (1 + flat * k);
   return start * (sumFull + sumRem);
@@ -213,13 +194,7 @@ export function scaleUpFlat(
  * @param {number} minPercent - Minimum allowed percent (fraction). Default 0.
  * @returns {number} Reduced percentage as fraction, clamped to [minPercent, startPercent].
  */
-export function percentReducedByLevel(
-  startPercent,
-  level,
-  interval = 20,
-  reducePerInterval = 0.01,
-  minPercent = 0,
-) {
+export function percentReducedByLevel(startPercent, level, interval = 20, reducePerInterval = 0.01, minPercent = 0) {
   // startPercent may be any numeric starting value (not forced to be a fraction).
   if (interval <= 0) interval = 1; // avoid division by zero
   const sp = startPercent;
@@ -254,7 +229,7 @@ export function percentIncreasedByLevel(
   level,
   interval = 20,
   increasePerInterval = 0.01,
-  maxPercent = 1,
+  maxPercent = 1
 ) {
   // startPercent may be any numeric starting value (not forced to be a fraction).
   if (interval <= 0) interval = 1; // avoid division by zero
@@ -271,12 +246,7 @@ export function percentIncreasedByLevel(
   return Math.min(mp, Math.max(increased, sp));
 }
 
-export function createPercentScaleFunction(
-  startPercent,
-  interval,
-  increasePerInterval,
-  maxPercent,
-) {
+export function createPercentScaleFunction(startPercent, interval, increasePerInterval, maxPercent) {
   const fn = (level) => percentIncreasedByLevel(startPercent, level, interval, increasePerInterval, maxPercent);
   return setStepFunctionMetadata(fn, interval, 1);
 }

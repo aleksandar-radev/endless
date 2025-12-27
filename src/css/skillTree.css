@@ -126,7 +126,11 @@
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s,
+    transform 0.2s;
   outline: none;
 }
 
@@ -163,7 +167,11 @@
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s,
+    transform 0.2s;
 }
 
 .skill-bulk-controls button:hover:not(:disabled) {
@@ -578,7 +586,9 @@
   font-weight: 600;
   cursor: pointer;
   margin-top: 1rem;
-  transition: background 0.2s, opacity 0.2s;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
 }
 
 .skill-modal-content .modal-buy:hover:not(:disabled) {

@@ -60,7 +60,7 @@ function renderAscension() {
   tabs.innerHTML = Object.entries(ascension.categories)
     .map(
       ([key, cat]) =>
-        `<button class="ascension-tab ${key === activeCategory ? 'active' : ''}" data-cat="${key}">${cat.label}</button>`,
+        `<button class="ascension-tab ${key === activeCategory ? 'active' : ''}" data-cat="${key}">${cat.label}</button>`
     )
     .join('');
   tabs.querySelectorAll('.ascension-tab').forEach((b) => {
@@ -165,18 +165,18 @@ function openUpgradeInfoModal(key) {
       <h2>${title}</h2>
       <p>${tip}</p>
       <p>${t('ascension.upgrade.currentLevel')}: <span class="modal-level">${formatNumber(level)}</span>${
-  max !== Infinity ? `/<span class=\"modal-max\">${formatNumber(max)}</span>` : ''
-}</p>
+        max !== Infinity ? `/<span class=\"modal-max\">${formatNumber(max)}</span>` : ''
+      }</p>
       <p>${t('ascension.upgrade.currentBonus')}: <span class="modal-bonus">${getAscensionBonusText(
-  key,
-  cfg,
-  level,
-)}</span></p>
+        key,
+        cfg,
+        level
+      )}</span></p>
       <p>${t('ascension.upgrade.nextLevelBonus')}: <span class="modal-next-bonus">${getAscensionBonusText(
-  key,
-  cfg,
-  level + 1,
-)}</span></p>
+        key,
+        cfg,
+        level + 1
+      )}</span></p>
       <p>${t('ascension.upgrade.totalCost')}: <span class="modal-total-cost"></span> ${t('ascension.points')} (<span class="modal-qty">1</span>)</p>
       ${controlsMarkup}
       <div class="modal-controls">
@@ -278,9 +278,7 @@ function getAscensionPerLevelBonusText(key, cfg) {
   const useFractional = isPercent(target);
   const definedDecimals = target ? getStatDecimalPlaces(target, undefined) : undefined;
   const decimals =
-    definedDecimals !== undefined
-      ? definedDecimals
-      : (isPercent(target) ? 1 : Number.isInteger(base) ? 0 : 2);
+    definedDecimals !== undefined ? definedDecimals : isPercent(target) ? 1 : Number.isInteger(base) ? 0 : 2;
   const value = useFractional ? base * 100 : base;
   return `+${formatNumber(value.toFixed(decimals))}${isPercent(target) ? ' %' : ''}`;
 }
@@ -295,9 +293,7 @@ function getAscensionBonusText(key, cfg, level) {
   const useFractional = isPercent(target);
   const definedDecimals = target ? getStatDecimalPlaces(target, undefined) : undefined;
   const decimals =
-    definedDecimals !== undefined
-      ? definedDecimals
-      : (isPercent(target) ? 1 : Number.isInteger(total) ? 0 : 2);
+    definedDecimals !== undefined ? definedDecimals : isPercent(target) ? 1 : Number.isInteger(total) ? 0 : 2;
   const value = useFractional ? total * 100 : total;
   return `+${formatNumber(value.toFixed(decimals))}${isPercent(target) ? ' %' : ''}`;
 }

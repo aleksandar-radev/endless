@@ -4,8 +4,12 @@ import { t } from '../i18n.js';
 export const buildingsData = {
   crystalLab: {
     id: 'crystalLab',
-    get name() { return t('Crystal Lab'); },
-    get description() { return t('Generates crystals over time.'); },
+    get name() {
+      return t('Crystal Lab');
+    },
+    get description() {
+      return t('Generates crystals over time.');
+    },
     image: '/buildings/crystal-lab.png',
     effect: { type: 'crystal', amount: 1, interval: 60 * 60 },
     costStructure: {
@@ -17,8 +21,12 @@ export const buildingsData = {
   },
   goldMine: {
     id: 'goldMine',
-    get name() { return t('Gold Mine'); },
-    get description() { return t('Produces gold every few minutes.');},
+    get name() {
+      return t('Gold Mine');
+    },
+    get description() {
+      return t('Produces gold every few minutes.');
+    },
     image: '/buildings/gold-mine.png',
     effect: { type: 'gold', amount: 10, interval: 60 },
     costStructure: {
@@ -29,8 +37,12 @@ export const buildingsData = {
   },
   soulForge: {
     id: 'soulForge',
-    get name() { return t('Soul Forge'); },
-    get description() { return t('Converts resources into souls.');},
+    get name() {
+      return t('Soul Forge');
+    },
+    get description() {
+      return t('Converts resources into souls.');
+    },
     image: '/buildings/soul-forge.png',
     effect: { type: 'soul', amount: 5, interval: 60 * 60 },
     costStructure: {
@@ -43,8 +55,12 @@ export const buildingsData = {
   },
   experienceWorkshop: {
     id: 'experienceWorkshop',
-    get name() { return t('Experience Workshop'); },
-    get description() { return t('buildings.experienceWorkshop.description');},
+    get name() {
+      return t('Experience Workshop');
+    },
+    get description() {
+      return t('buildings.experienceWorkshop.description');
+    },
     image: '/buildings/experience-workshop.png',
     effect: {
       type: 'level',
@@ -61,8 +77,12 @@ export const buildingsData = {
   },
   materialDepot: {
     id: 'materialDepot',
-    get name() { return t('Material Depot'); },
-    get description() { return t('Generates a random material every 10 minutes.'); },
+    get name() {
+      return t('Material Depot');
+    },
+    get description() {
+      return t('Generates a random material every 10 minutes.');
+    },
     image: '/buildings/material-depot.png',
     effect: {
       type: 'material',

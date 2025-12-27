@@ -26,8 +26,7 @@ export const DRUID_SKILLS = {
     icon: () => 'summon-pest',
     description: () => t('skill.summonPest'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-    }),
+    effect: (level) => ({}),
   },
   barkSkin: {
     id: 'barkSkin',
@@ -145,8 +144,7 @@ export const DRUID_SKILLS = {
     icon: () => 'sproutling',
     description: () => t('skill.sproutling'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-    }),
+    effect: (level) => ({}),
   },
 
   // Tier 25 Skills
@@ -169,8 +167,7 @@ export const DRUID_SKILLS = {
     icon: () => 'companion',
     description: () => t('skill.animalCompanion'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-    }),
+    effect: (level) => ({}),
   },
 
   // Summoner specialization bonus skill
@@ -194,8 +191,7 @@ export const DRUID_SKILLS = {
     description: () => t('skill.summonTreant'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     isVisible: () => hero.stats.summonerExtraSummonUnlocked > 0,
-    effect: (level) => ({
-    }),
+    effect: (level) => ({}),
   },
   naturalGrowth: {
     id: 'naturalGrowth',
@@ -282,8 +278,7 @@ export const DRUID_SKILLS = {
     icon: () => 'spirit-bear',
     description: () => t('skill.spiritBear'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-    }),
+    effect: (level) => ({}),
   },
   stoneform: {
     id: 'stoneform',
@@ -537,8 +532,7 @@ export const DRUID_SKILLS = {
     icon: () => 'primeval-guardian',
     description: () => t('skill.primevalGuardian'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-    }),
+    effect: (level) => ({}),
   },
 
   // Tier 5000 Skills

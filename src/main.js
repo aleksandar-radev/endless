@@ -36,9 +36,7 @@ import { applyTranslations, setLanguage, t } from './i18n.js';
 import { getGameInfo } from './api.js';
 import { createModal } from './ui/modal.js';
 import { collectOfflineFightRewards } from './offlineFight.js';
-import {
-  ensureDevAccessRuntimeState,
-} from './migrations/0.8.15.js';
+import { ensureDevAccessRuntimeState } from './migrations/0.8.15.js';
 
 window.qwe = console.log;
 window.qw = console.log;
@@ -87,7 +85,6 @@ window.setLanguage = setLanguage;
   } else if (game.fightMode === 'rockyField') {
     game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);
   }
-
 
   initializeUI();
   crystalShop.initializeCrystalShopUI();
@@ -152,31 +149,38 @@ window.setLanguage = setLanguage;
                   </div>
             </div>
           `;
-          createModal({ id: 'new-version-modal', className: 'new-version-modal', content: contentHtml, onClose: () => {} });
+          createModal({
+            id: 'new-version-modal',
+            className: 'new-version-modal',
+            content: contentHtml,
+            onClose: () => {},
+          });
           setTimeout(() => {
             const okBtn = document.getElementById('new-version-modal-ok');
             const actionBtn = document.getElementById('new-version-modal-action');
-            if (okBtn) okBtn.addEventListener('click', () => {
-              const modal = document.getElementById('new-version-modal');
-              if (modal) modal.remove();
-            });
-            if (actionBtn) actionBtn.addEventListener('click', () => {
-              if (isDesktopApp) {
-                try {
-                  window.close();
-                } catch (e) {
-                  // ignore; user can close manually
+            if (okBtn)
+              okBtn.addEventListener('click', () => {
+                const modal = document.getElementById('new-version-modal');
+                if (modal) modal.remove();
+              });
+            if (actionBtn)
+              actionBtn.addEventListener('click', () => {
+                if (isDesktopApp) {
+                  try {
+                    window.close();
+                  } catch (e) {
+                    // ignore; user can close manually
+                  }
+                } else {
+                  // Try to perform a normal reload; this will refresh the page and pick up the new version
+                  try {
+                    window.location.reload();
+                  } catch (e) {
+                    // Fallback: set href to force navigation
+                    window.location.href = window.location.href;
+                  }
                 }
-              } else {
-                // Try to perform a normal reload; this will refresh the page and pick up the new version
-                try {
-                  window.location.reload();
-                } catch (e) {
-                  // Fallback: set href to force navigation
-                  window.location.href = window.location.href;
-                }
-              }
-            });
+              });
           }, 0);
         }
       } catch (e) {
@@ -256,9 +260,10 @@ window.setLanguage = setLanguage;
     backdrop.addEventListener('click', closeSidebar);
 
     // Close sidebar when a tab is clicked (mobile/dialog mode)
-    document.querySelectorAll('.tab-btn').forEach(btn => {
+    document.querySelectorAll('.tab-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
-        if (window.innerWidth <= 1300) { // Match the media query breakpoint for sidebar visibility
+        if (window.innerWidth <= 1300) {
+          // Match the media query breakpoint for sidebar visibility
           closeSidebar();
         }
       });

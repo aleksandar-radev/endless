@@ -90,7 +90,7 @@ function findPropertyRanges(source, key) {
   // while respecting strings/brackets.
   const ranges = [];
 
-  const keyRegex = new RegExp(`^\\s+['\"]${escapeRegExp(key)}['\"]\\s*:`,'gm');
+  const keyRegex = new RegExp(`^\\s+['\"]${escapeRegExp(key)}['\"]\\s*:`, 'gm');
   let match;
 
   while ((match = keyRegex.exec(source)) !== null) {
@@ -125,7 +125,7 @@ function findPropertyRanges(source, key) {
         continue;
       }
 
-      if (ch === '\'' || ch === '"' || ch === '`') {
+      if (ch === "'" || ch === '"' || ch === '`') {
         inString = ch;
         continue;
       }
@@ -188,15 +188,15 @@ function main() {
   const defaultConfigPath = path.resolve(repoRoot, 'scripts', 'translation-usage.config.json');
   const configPath = args.config
     ? path.resolve(repoRoot, args.config)
-    : (fs.existsSync(defaultConfigPath) ? defaultConfigPath : null);
-  const config = configPath ? (safeReadJson(configPath) || {}) : {};
+    : fs.existsSync(defaultConfigPath)
+      ? defaultConfigPath
+      : null;
+  const config = configPath ? safeReadJson(configPath) || {} : {};
 
   const languagesDir = path.resolve(repoRoot, config.languagesDir || 'src/languages');
   const languageFiles = config.languageFiles || ['en.js', 'es.js', 'zh.js'];
 
-  const candidates = Array.isArray(report.likelyUnusedKeys)
-    ? report.likelyUnusedKeys
-    : [];
+  const candidates = Array.isArray(report.likelyUnusedKeys) ? report.likelyUnusedKeys : [];
 
   const normalizeKey = (k) => String(k).trim().replace(/\s+/g, ' ');
   const onlySet = new Set((args.only || []).map(normalizeKey));

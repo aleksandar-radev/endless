@@ -148,7 +148,7 @@ class Game {
       tp('battleLog.receivedDamage', {
         value: formatNumber(Math.floor(damage)),
         breakdown: formatDamageBreakdown(breakdown),
-      }) + t('battleLog.autoAttack'),
+      }) + t('battleLog.autoAttack')
     );
     if (hero.stats.currentLife <= 0) {
       // check if ressurection will proc
@@ -173,9 +173,8 @@ class Game {
       playerDeath();
     }
 
-
     if (heal > 0 && hero.stats.healDamagesEnemiesPercent > 0) {
-      const healDmg = heal * (hero.stats.healDamagesEnemiesPercent);
+      const healDmg = heal * hero.stats.healDamagesEnemiesPercent;
       game.damageEnemy(healDmg, false, null, 'healDamage');
     }
 
@@ -202,14 +201,7 @@ class Game {
     }
   }
 
-  damageEnemy(
-    damage,
-    isCritical = false,
-    breakdown = null,
-    skillName = null,
-    summonName = null,
-    extraOptions = {},
-  ) {
+  damageEnemy(damage, isCritical = false, breakdown = null, skillName = null, summonName = null, extraOptions = {}) {
     // bail out if we've already defeated this enemy this tick
     if (this._justDefeated) return;
 
@@ -236,11 +228,12 @@ class Game {
         critical: isCritical ? t('battleLog.critical') : '',
       });
     } else {
-      message = tp('battleLog.dealtDamage', {
-        value: formatNumber(damage),
-        breakdown: formatDamageBreakdown(breakdown),
-        critical: isCritical ? t('battleLog.critical') : '',
-      }) + t('battleLog.autoAttack');
+      message =
+        tp('battleLog.dealtDamage', {
+          value: formatNumber(damage),
+          breakdown: formatDamageBreakdown(breakdown),
+          critical: isCritical ? t('battleLog.critical') : '',
+        }) + t('battleLog.autoAttack');
     }
     battleLog.addBattle(message);
 

@@ -1,7 +1,7 @@
 import { ELEMENTS } from '../constants/common.js';
 
 export default {
-  'attributes': 'Atributos',
+  attributes: 'Atributos',
   'app.title': 'Endless',
   'tab.battle': 'Batalla',
   'tab.stats': 'Estadísticas',
@@ -88,7 +88,8 @@ export default {
   'combat.regionLabel': 'REGIÓN:',
   'death.message': '¡Has muerto! Reviviendo en <span id="revive-countdown">10</span>',
   'leaderboard.noData': 'No hay datos de clasificación disponibles.',
-  'leaderboard.updateMessage': 'Para verte en la clasificación, debes reiniciar tu progreso debido a una nueva actualización.',
+  'leaderboard.updateMessage':
+    'Para verte en la clasificación, debes reiniciar tu progreso debido a una nueva actualización.',
   'leaderboard.rank': 'Rango',
   'leaderboard.username': 'Nombre de usuario',
   'leaderboard.highestLevel': 'Nivel más alto',
@@ -169,7 +170,8 @@ export default {
   'ascension.tooltip.flatAllDamage': 'Añade +30 daño a todos los tipos por nivel.',
   'ascension.tooltip.totalDamagePercent': 'Incrementa el daño total un 25% por nivel.',
   'ascension.tooltip.elementalDamagePercent': 'Incrementa el daño elemental un 30% por nivel.',
-  'ascension.tooltip.resourceDamageCapPerLevel': 'Aumenta el límite para todos los bonos de "ExtraDamageFrom{source}" por nivel. El límite predeterminado es 1,000 del estado fuente por nivel de héroe.',
+  'ascension.tooltip.resourceDamageCapPerLevel':
+    'Aumenta el límite para todos los bonos de "ExtraDamageFrom{source}" por nivel. El límite predeterminado es 1,000 del estado fuente por nivel de héroe.',
   'ascension.tooltip.armor': 'Incrementa la armadura en 500 por nivel.',
   'ascension.tooltip.evasion': 'Incrementa la evasión en 500 por nivel.',
   'ascension.tooltip.armorPercent': 'Incrementa la armadura un 50% por nivel.',
@@ -204,11 +206,13 @@ export default {
   'ascension.tooltip.buildingCostReduction': 'Reduce el costo de mejorar edificios (todos los recursos).',
   'ascension.tooltip.crystalShopCostReduction': 'Reduce costos en la tienda de cristales.',
   'ascension.tooltip.soulShopCostReduction': 'Reduce costos en la tienda de almas.',
-  'ascension.tooltip.soulShopLevelCap': 'Aumenta el límite de nivel de todas las mejoras de la tienda de almas en 50 por nivel.',
+  'ascension.tooltip.soulShopLevelCap':
+    'Aumenta el límite de nivel de todas las mejoras de la tienda de almas en 50 por nivel.',
   'ascension.tooltip.attackSpeedCap': 'Aumenta el límite de velocidad de ataque 0.1 por nivel.',
   'ascension.tooltip.critChanceCap': 'Aumenta el límite de crítico en 2% por nivel.',
   'ascension.tooltip.blockChanceCap': 'Aumenta el límite de bloqueo en 2% por nivel.',
-  'ascension.tooltip.itemPercentCapPercent': 'Aumenta los límites de bonos porcentuales en objetos en 5% por nivel. Siempre cuesta 1 punto.',
+  'ascension.tooltip.itemPercentCapPercent':
+    'Aumenta los límites de bonos porcentuales en objetos en 5% por nivel. Siempre cuesta 1 punto.',
   'ascension.tooltip.resurrectionChanceCap': 'Aumenta el límite de resurrección en 5% por nivel.',
   'ascension.tooltip.crystalGainPercent': 'Gana más cristales de todas las fuentes.',
   'ascension.tooltip.critChance': 'Añade probabilidad de crítico.',
@@ -230,8 +234,10 @@ export default {
   'ascension.modal.cancel': 'Cancelar',
   'ascension.info.title': 'Información de Ascensión',
   'ascension.info.requirement': 'Requiere al menos 20 prestigios para ascender.',
-  'ascension.info.points': 'Obtén un punto de ascensión por cada 100 cristales iniciales de las bonificaciones de prestigio. Así, 20 prestigios con un total de 3000 cristales iniciales te darán 30 puntos en total.',
-  'ascension.info.current': 'Actualmente tienes {prestiges} prestigios y {crystals} cristales iniciales, por lo que obtendrías {points} puntos.',
+  'ascension.info.points':
+    'Obtén un punto de ascensión por cada 100 cristales iniciales de las bonificaciones de prestigio. Así, 20 prestigios con un total de 3000 cristales iniciales te darán 30 puntos en total.',
+  'ascension.info.current':
+    'Actualmente tienes {prestiges} prestigios y {crystals} cristales iniciales, por lo que obtendrías {points} puntos.',
   'common.close': 'Cerrar',
   'common.apply': 'Aplicar',
   'common.cancel': 'Cancelar',
@@ -249,7 +255,8 @@ export default {
   'versionModal.yourVersion': 'Tu versión',
   'versionModal.refreshPrompt': 'Actualiza la página para que los cambios surtan efecto',
   'versionModal.refreshNow': 'Actualizar ahora',
-  'versionModal.desktopPrompt': 'Cierra la aplicación para aplicar la actualización. Se actualizará automáticamente. Después de unos 10 segundos puedes abrirla de nuevo.',
+  'versionModal.desktopPrompt':
+    'Cierra la aplicación para aplicar la actualización. Se actualizará automáticamente. Después de unos 10 segundos puedes abrirla de nuevo.',
   'versionModal.closeApp': 'Cerrar la aplicación',
   'versionModal.ok': 'Aceptar',
   'aria.openMenu': 'Abrir menú',
@@ -358,7 +365,8 @@ export default {
   'inventory.youHaveAmount': 'Tienes {amount}',
   'inventory.noEligibleEquippedItems': 'No hay objetos equipados aptos.',
   'inventory.selectItemToUpgrade': 'Selecciona un objeto equipado para mejorar:',
-  'inventory.upgradeInfo': 'Puedes mejorar objetos hasta el número de niveles disponible según la etapa más alta alcanzada en esta región.',
+  'inventory.upgradeInfo':
+    'Puedes mejorar objetos hasta el número de niveles disponible según la etapa más alta alcanzada en esta región.',
   'inventory.upgradeAction': 'Mejorar',
   'inventory.upgradeAllToMax': 'Mejorar todo al máximo',
   'inventory.costValue': 'Costo: {cost}',
@@ -367,7 +375,8 @@ export default {
   'inventory.selectItemToEnchant': 'Selecciona un objeto equipado para encantar (aumentar rareza):',
   'inventory.enchantedItemToast': 'Encantaste {item} a {rarity}',
   'inventory.selectItemAndStatTransmute': 'Selecciona un objeto y atributo para transmutar.',
-  'inventory.orbRestrictionUniqueSet': 'Las orbes de Transmutación y Alternación no se pueden usar en objetos únicos o de conjunto.',
+  'inventory.orbRestrictionUniqueSet':
+    'Las orbes de Transmutación y Alternación no se pueden usar en objetos únicos o de conjunto.',
   'inventory.selectedItemLabel': 'Objeto seleccionado: {item}',
 
   'inventory.noStatsToTransmute': 'No hay atributos para transmutar.',
@@ -390,8 +399,10 @@ export default {
   'inventory.salvageValue': 'Valor de reciclaje:',
   'inventory.autoSalvageLimitOne': 'Solo puedes reciclar automáticamente {count} rareza.',
   'inventory.autoSalvageLimit': 'Solo puedes reciclar automáticamente {count} rarezas.',
-  'inventory.unlockSalvageMaterials': 'Desbloquea esta opción comprando la mejora de materiales de reciclaje en la tienda de cristales.',
-  'inventory.cannotEquipOffhandTwoHanded': 'No se puede equipar un objeto secundario mientras se usa un arma de dos manos.',
+  'inventory.unlockSalvageMaterials':
+    'Desbloquea esta opción comprando la mejora de materiales de reciclaje en la tienda de cristales.',
+  'inventory.cannotEquipOffhandTwoHanded':
+    'No se puede equipar un objeto secundario mientras se usa un arma de dos manos.',
   'inventory.cannotEquipTwoShields': 'No se pueden equipar dos escudos al mismo tiempo.',
   'inventory.arrowsRequireBow': 'Las flechas requieren un arco equipado.',
   'inventory.offhandUnequippedTwoHanded': 'El objeto de la mano secundaria se desequipó por usar un arma de dos manos.',
@@ -426,7 +437,8 @@ export default {
   'options.advancedAttributeTooltips': 'Mostrar descripciones avanzadas de atributos',
   'options.advancedAttributeTooltips.tooltip': 'Muestra detalles extra de los atributos en las descripciones',
   'options.rollPercentiles': 'Mostrar percentil de tiradas',
-  'options.rollPercentiles.tooltip': 'Mostrar la calidad de la tirada (0–100%) en lugar de los rangos mín/máx en objetos y cartas de prestigio.',
+  'options.rollPercentiles.tooltip':
+    'Mostrar la calidad de la tirada (0–100%) en lugar de los rangos mín/máx en objetos y cartas de prestigio.',
   'options.showRateCounters': 'Mostrar barra de contadores',
   'options.showRateCounters.tooltip': 'Alterna la barra de contadores de recursos',
   'options.rateCountersPeriod': 'Periodo de contadores (seg)',
@@ -471,10 +483,12 @@ export default {
   'options.cloud.gold': 'Oro',
   'options.cloud.crystals': 'Cristales',
   'options.cloud.souls': 'Almas',
-  'options.cloud.overwritePrompt': '¿Estás seguro de que quieres sobrescribir tu guardado local con este guardado en la nube? Esto no se puede deshacer.',
+  'options.cloud.overwritePrompt':
+    '¿Estás seguro de que quieres sobrescribir tu guardado local con este guardado en la nube? Esto no se puede deshacer.',
   'options.cloud.loadFailed': 'Error al cargar desde la nube',
   'options.resetAllProgress': 'Reiniciar todo el progreso',
-  'options.resetProgressConfirm': '¿Estás seguro de que quieres reiniciar todo el progreso? ¡Esto no se puede deshacer!',
+  'options.resetProgressConfirm':
+    '¿Estás seguro de que quieres reiniciar todo el progreso? ¡Esto no se puede deshacer!',
   'options.resetProgressError': 'Ocurrió un error al reiniciar el progreso.',
   'options.changelog.view': 'Ver registro de cambios',
   'options.changelog.title': 'Registro de cambios',
@@ -504,7 +518,8 @@ export default {
   'options.showAllStats': 'Mostrar todas las stats',
   'options.showAllStats.tooltip': 'Muestra todas las stats disponibles',
   'options.quickBuy': 'Habilitar compra rápida',
-  'options.quickBuy.tooltip': 'Habilita los controles de compra rápida para entrenamiento, la tienda de almas y el árbol de habilidades',
+  'options.quickBuy.tooltip':
+    'Habilita los controles de compra rápida para entrenamiento, la tienda de almas y el árbol de habilidades',
   'options.bulkBuy': 'Habilitar modo masivo (Entrenamiento, Habilidades, Tienda de almas)',
   'options.bulkBuy.tooltip': 'Habilita acciones masivas en entrenamiento, el árbol de habilidades y la tienda de almas',
   'options.numericPurchaseInputs': 'Habilitar entradas numéricas de compra',
@@ -538,7 +553,8 @@ export default {
   'options.backup.empty': 'No hay copias de seguridad disponibles',
   'options.backup.noPath': 'Sin ruta seleccionada',
   'options.backup.option': '{date} · Ranura {slot} · {path} · Nivel {level}',
-  'options.backup.confirm': '¿Restaurar la copia de seguridad del {date} para la ranura {slot}? Esto sobrescribirá tu guardado actual de esa ranura.',
+  'options.backup.confirm':
+    '¿Restaurar la copia de seguridad del {date} para la ranura {slot}? Esto sobrescribirá tu guardado actual de esa ranura.',
   'options.toast.backupRestored': '¡Copia de seguridad restaurada! Recargando…',
   'options.toast.backupRestoreFailed': 'No se pudo restaurar la copia de seguridad.',
   'options.toast.backupUnavailable': 'No se encontró la copia de seguridad.',
@@ -697,7 +713,7 @@ export default {
   'Adds 50000 gold per coin to your total.': 'Añade 50000 de oro por moneda a tu total.',
   'Freaky Gold Coins': 'Monedas de oro monstruosas',
   'Adds 1000000 gold per coin to your total.': 'Añade 1000000 de oro por moneda a tu total.',
-  'Elixir': 'Elixir',
+  Elixir: 'Elixir',
   'Grants 2 skill points.': 'Otorga 2 puntos de habilidad.',
   'Crystalized Rock': 'Roca cristalizada',
   'Gives 1 crystal.': 'Da 1 cristal.',
@@ -719,17 +735,23 @@ export default {
   'Potion of Perseverance': 'Poción de perseverancia',
   'Increases perseverance by 1.': 'Aumenta la perseverancia en 1.',
   'Armor Upgrade Stone': 'Piedra de mejora de armadura',
-  "Upgrade the level of an equipped armor item. Requires a quantity equal to the item's tier for each level.": 'Mejora el nivel de una armadura equipada. Requiere una cantidad igual al rango del objeto por cada nivel.',
+  "Upgrade the level of an equipped armor item. Requires a quantity equal to the item's tier for each level.":
+    'Mejora el nivel de una armadura equipada. Requiere una cantidad igual al rango del objeto por cada nivel.',
   'Jewelry Upgrade Gem': 'Gema de mejora de joyería',
-  "Upgrade the level of an equipped jewelry item. Requires a quantity equal to the item's tier for each level.": 'Mejora el nivel de una joya equipada. Requiere una cantidad igual al rango del objeto por cada nivel.',
+  "Upgrade the level of an equipped jewelry item. Requires a quantity equal to the item's tier for each level.":
+    'Mejora el nivel de una joya equipada. Requiere una cantidad igual al rango del objeto por cada nivel.',
   'Weapon Upgrade Core': 'Núcleo de mejora de arma',
-  "Upgrade the level of an equipped weapon. Requires a quantity equal to the item's tier for each level.": 'Mejora el nivel de un arma equipada. Requiere una cantidad igual al rango del objeto por cada nivel.',
+  "Upgrade the level of an equipped weapon. Requires a quantity equal to the item's tier for each level.":
+    'Mejora el nivel de un arma equipada. Requiere una cantidad igual al rango del objeto por cada nivel.',
   'Enchantment Scroll': 'Pergamino de encantamiento',
-  'Increases the rarity of an equipped item. (cannot be used on mythic items)': 'Aumenta la rareza de un objeto equipado (no puede usarse en objetos míticos).',
+  'Increases the rarity of an equipped item. (cannot be used on mythic items)':
+    'Aumenta la rareza de un objeto equipado (no puede usarse en objetos míticos).',
   'Alternation Orb': 'Orbe de alteración',
-  'Re-rolls the value of one chosen stat on an equipped item.': 'Reasigna el valor de una estadística elegida en un objeto equipado.',
+  'Re-rolls the value of one chosen stat on an equipped item.':
+    'Reasigna el valor de una estadística elegida en un objeto equipado.',
   'skill.frenzy': 'Aumenta el daño pero drena vida por golpe mientras está activo.',
-  'skill.toughSkin': 'Aumenta la armadura, el porcentaje de armadura y todas las resistencias para reducir el daño recibido.',
+  'skill.toughSkin':
+    'Aumenta la armadura, el porcentaje de armadura y todas las resistencias para reducir el daño recibido.',
   'skill.recklessSwing': 'Lanza un golpe poderoso que aumenta el daño a costa de vida por golpe.',
   'skill.battleCry': 'Lanza un grito de batalla que aumenta temporalmente el daño.',
   'skill.berserkersRage': 'Aumenta enormemente el daño de frío con posibilidad de infligir doble daño.',
@@ -740,7 +762,8 @@ export default {
   'skill.unbridledFury': 'Incrementa el daño y restaura maná y vida por golpe.',
   'skill.undyingRage': 'Otorga posibilidad de resurrección con velocidad de ataque y penetración de armadura extra.',
   'skill.warlord': 'Aumenta fuerza, probabilidad crítica, velocidad de ataque y daño.',
-  'skill.warlordWarrior': 'Aumenta la vida y añade daño basado en la vida mientras mejora fuerza, vitalidad y resistencia.',
+  'skill.warlordWarrior':
+    'Aumenta la vida y añade daño basado en la vida mientras mejora fuerza, vitalidad y resistencia.',
   'skill.rageOverflow': 'Libera furia para aumentar daño y añadir robo de vida.',
   'skill.crushingBlows': 'Aumenta daño crítico, penetración de armadura y daño plano.',
   'skill.bloodFrenzy': 'Aumenta enormemente velocidad de ataque, daño y vida por golpe.',
@@ -760,10 +783,12 @@ export default {
   'skill.hurricane': 'Desata aguas torrenciales que infligen daño de agua y frío.',
   'skill.spiritBear': 'Invoca un oso espectral que inflige daño de tierra.',
   'skill.stoneform': 'Endurece tu piel, aumentando armadura, resistencia y daño de tierra.',
-  'skill.snakeForm': 'Cámbiate en serpiente, obteniendo Daño de Tierra y bonificaciones de Veneno. Otorga una probabilidad fija de Veneno del 20%. Solo puedes desbloquear una forma a la vez.',
+  'skill.snakeForm':
+    'Cámbiate en serpiente, obteniendo Daño de Tierra y bonificaciones de Veneno. Otorga una probabilidad fija de Veneno del 20%. Solo puedes desbloquear una forma a la vez.',
   'skill.spiritLink': 'Aumenta robo de vida y maná por golpe.',
   'skill.totalPotentialDamage': 'Daño Potencial Total',
-  'skillTree.mobileTooltipNotice': 'Los detalles de las habilidades están ocultos en móvil cuando la compra rápida está habilitada. Para ver los efectos de las habilidades, desactiva la compra rápida en Opciones.',
+  'skillTree.mobileTooltipNotice':
+    'Los detalles de las habilidades están ocultos en móvil cuando la compra rápida está habilitada. Para ver los efectos de las habilidades, desactiva la compra rápida en Opciones.',
   'skillTree.mobileTooltipNotice.goToOptions': 'Ir a Opciones',
   'skill.moonfury': 'Te potencia bajo la luna, aumentando daño de frío y agua.',
   'skill.earthsEmbrace': 'Abraza la tierra para obtener armadura, vida y resistencias.',
@@ -833,8 +858,7 @@ export default {
   'skill.divineShield': 'Crea un escudo que aumenta armadura, porcentaje de armadura y probabilidad de bloqueo.',
   'skill.auraOfLight': 'Aumenta vida, porcentaje de armadura y todas las resistencias.',
 
-  'skill.thornedBulwark':
-    'La Resistencia otorga 0.3 de daño de espinas por punto cuando se aprende esta pasiva.',
+  'skill.thornedBulwark': 'La Resistencia otorga 0.3 de daño de espinas por punto cuando se aprende esta pasiva.',
   'skill.wrathOfTheHeavens': 'Invoca energía sagrada, reforzando los daños de rayo y fuego.',
   'skill.beaconOfFaith': 'Aumenta vida y regeneración convirtiendo vida en daño extra.',
   'skill.holyBarrier': 'Crea una barrera que aumenta vitalidad y otorga posibilidad de resurrección.',
@@ -855,7 +879,8 @@ export default {
 
   'skill.poisonAffinity': 'Profundiza tu afinidad con el veneno, aumentando el daño de tierra y su porcentaje.',
   'skill.poisonDagger': 'Añade daño y velocidad de ataque a los ataques.',
-  'skill.shadowForm': 'Aumenta probabilidad de crítico, daño crítico y agilidad. (cap de crítico 20%, daño crítico x3).',
+  'skill.shadowForm':
+    'Aumenta probabilidad de crítico, daño crítico y agilidad. (cap de crítico 20%, daño crítico x3).',
   'skill.flurry': 'Desata una serie de ataques rápidos con daño extra.',
   'skill.precision': 'Aumenta puntuación de ataque y agilidad.',
   'skill.backstab': 'Un ataque devastador por la espalda que inflige gran daño y roba recursos.',
@@ -868,7 +893,8 @@ export default {
   'skill.venomousAssault': 'Ataca con veneno, añadiendo daño de tierra y su %.',
   'skill.phantomStrike': 'Golpea desde las sombras infligiendo daño e ignorando armadura.',
   'skill.silentExecution': 'Aumenta crítico, daño doble y velocidad de ataque.',
-  'skill.eclipseForm': 'Incrementa la puntuación de ataque y el daño, añadiendo daño extra basado en la puntuación de ataque.',
+  'skill.eclipseForm':
+    'Incrementa la puntuación de ataque y el daño, añadiendo daño extra basado en la puntuación de ataque.',
   'skill.perfectDodge': 'Otorga bloqueo y evasión aumentada.',
   'skill.kingOfThieves': 'Suprema maestría del sigilo, otorgando oro, destreza y agilidad.',
   'skill.nightfallAssassin': 'Desata precisión letal con más daño y crítico.',
@@ -925,20 +951,24 @@ export default {
   'tooltip.pattern.chance': 'Probabilidad de {action}.',
   'tooltip.pattern.default': 'Descripción de {stat}.',
   'tooltip.strength': 'Cada punto incrementa:<br />• Daño en {damage}<br />',
-  'tooltip.agility': 'Cada punto incrementa:<br />• Puntuación de Ataque en {attackRating}<br />• Daño en {damage}<br />',
+  'tooltip.agility':
+    'Cada punto incrementa:<br />• Puntuación de Ataque en {attackRating}<br />• Daño en {damage}<br />',
   'tooltip.vitality': 'Cada punto incrementa:<br />• Vida en {life}<br />',
   'tooltip.wisdom': 'Cada punto incrementa:<br />• Maná en {mana}<br />• Regeneración de Maná en {manaRegen}<br />',
   'tooltip.endurance': 'Cada punto incrementa:<br />• Armadura en {armor}<br />{thornsBonus}',
   'tooltip.endurance.thornsBonus': '• Daño de espinas en {thornsDamage}<br />',
   'tooltip.dexterity': 'Cada punto incrementa:<br />• Evasión en {evasion}<br />',
   'tooltip.intelligence': 'Cada punto incrementa:<br />• Daño Elemental en {elementalDamage}<br />',
-  'tooltip.perseverance': 'Cada punto incrementa:<br />• Regeneración de Maná en {manaRegen}<br />• Regeneración de Vida en {lifeRegen}<br />• Todas las Resistencias en {allResistance}<br />',
+  'tooltip.perseverance':
+    'Cada punto incrementa:<br />• Regeneración de Maná en {manaRegen}<br />• Regeneración de Vida en {lifeRegen}<br />• Todas las Resistencias en {allResistance}<br />',
   'tooltip.elementalDamage': 'Incluido en el daño base del golpe. Reducido por las resistencias enemigas.',
   'tooltip.damage': 'Daño físico base infligido a los enemigos.<br />Aumentado por Fuerza y el equipo.',
   'tooltip.attackSpeed':
     'Número de ataques por segundo.<br />La velocidad de ataque base es 1,00 ataques/s. Las bonificaciones porcentuales escalan esa base antes de sumar las bonificaciones planas.<br />Máximo: {currentCap} ataques/s (base {baseCap} + {ascCap} de Ascensión)',
-  'tooltip.attackRating': 'Determina la probabilidad de golpe contra los enemigos.<br />Etapas más altas requieren más Puntuación de Ataque.',
-  'tooltip.critChance': 'Probabilidad de infligir daño crítico.<br />Máximo: {currentCap}% (base {baseCap}% + {ascCap}% de Ascensión)',
+  'tooltip.attackRating':
+    'Determina la probabilidad de golpe contra los enemigos.<br />Etapas más altas requieren más Puntuación de Ataque.',
+  'tooltip.critChance':
+    'Probabilidad de infligir daño crítico.<br />Máximo: {currentCap}% (base {baseCap}% + {ascCap}% de Ascensión)',
   'tooltip.critDamage': 'Multiplicador de daño en golpes críticos.<br />Base: 1.33x daño',
   'tooltip.lifeSteal': 'Porcentaje del daño infligido que se recupera como vida.',
   'tooltip.manaSteal': 'Porcentaje del daño infligido que se recupera como maná.',
@@ -948,23 +978,37 @@ export default {
   'tooltip.mana': 'Puntos máximos de maná.<br />Aumentados por Sabiduría y subidas de nivel.',
   'tooltip.manaRegen': 'Cantidad de maná recuperado por segundo.',
   'tooltip.armor': 'Reduce el daño recibido.<br />La efectividad disminuye en etapas más altas.',
-  'tooltip.blockChance': 'Probabilidad de bloquear ataques entrantes.<br />Máximo: {currentCap}% (base {baseCap}% + {ascCap}% de Ascensión)',
-  'tooltip.evasion': 'Probabilidad de esquivar completamente los ataques enemigos.<br />Mayor evasión reduce la probabilidad de golpe del enemigo.',
-  'tooltip.fireResistance': 'Reduce el daño de fuego recibido de los enemigos.<br />{icon} Efectivo contra enemigos de fuego.',
-  'tooltip.coldResistance': 'Reduce el daño de frío recibido de los enemigos.<br />{icon} Efectivo contra enemigos de frío.',
-  'tooltip.airResistance': 'Reduce el daño de aire recibido de los enemigos.<br />{icon} Efectivo contra enemigos de aire.',
-  'tooltip.earthResistance': 'Reduce el daño de tierra recibido de los enemigos.<br />{icon} Efectivo contra enemigos de tierra.',
-  'tooltip.lightningResistance': 'Reduce el daño de rayo recibido de los enemigos.<br />{icon} Efectivo contra enemigos de rayo.',
-  'tooltip.waterResistance': 'Reduce el daño de agua recibido de los enemigos.<br />{icon} Efectivo contra enemigos de agua.',
-  'tooltip.allResistance': 'Reduce el daño elemental recibido de los enemigos según tu resistencia y el daño del enemigo.',
+  'tooltip.blockChance':
+    'Probabilidad de bloquear ataques entrantes.<br />Máximo: {currentCap}% (base {baseCap}% + {ascCap}% de Ascensión)',
+  'tooltip.evasion':
+    'Probabilidad de esquivar completamente los ataques enemigos.<br />Mayor evasión reduce la probabilidad de golpe del enemigo.',
+  'tooltip.fireResistance':
+    'Reduce el daño de fuego recibido de los enemigos.<br />{icon} Efectivo contra enemigos de fuego.',
+  'tooltip.coldResistance':
+    'Reduce el daño de frío recibido de los enemigos.<br />{icon} Efectivo contra enemigos de frío.',
+  'tooltip.airResistance':
+    'Reduce el daño de aire recibido de los enemigos.<br />{icon} Efectivo contra enemigos de aire.',
+  'tooltip.earthResistance':
+    'Reduce el daño de tierra recibido de los enemigos.<br />{icon} Efectivo contra enemigos de tierra.',
+  'tooltip.lightningResistance':
+    'Reduce el daño de rayo recibido de los enemigos.<br />{icon} Efectivo contra enemigos de rayo.',
+  'tooltip.waterResistance':
+    'Reduce el daño de agua recibido de los enemigos.<br />{icon} Efectivo contra enemigos de agua.',
+  'tooltip.allResistance':
+    'Reduce el daño elemental recibido de los enemigos según tu resistencia y el daño del enemigo.',
   'tooltip.lifePerHit': 'Restaura vida cada vez que tu ataque golpea a un enemigo.',
   'tooltip.manaPerHit': 'Restaura maná cada vez que tu ataque golpea a un enemigo.',
-  'tooltip.fireDamage': 'Añade daño de fuego a tus ataques.<br />{icon} Reducido por la resistencia al fuego del enemigo.',
-  'tooltip.coldDamage': 'Añade daño de frío a tus ataques.<br />{icon} Reducido por la resistencia al frío del enemigo.',
+  'tooltip.fireDamage':
+    'Añade daño de fuego a tus ataques.<br />{icon} Reducido por la resistencia al fuego del enemigo.',
+  'tooltip.coldDamage':
+    'Añade daño de frío a tus ataques.<br />{icon} Reducido por la resistencia al frío del enemigo.',
   'tooltip.airDamage': 'Añade daño de aire a tus ataques.<br />{icon} Reducido por la resistencia al aire del enemigo.',
-  'tooltip.earthDamage': 'Añade daño de tierra a tus ataques.<br />{icon} Reducido por la resistencia a tierra del enemigo.',
-  'tooltip.lightningDamage': 'Añade daño de rayo a tus ataques.<br />{icon} Reducido por la resistencia al rayo del enemigo.',
-  'tooltip.waterDamage': 'Añade daño de agua a tus ataques.<br />{icon} Reducido por la resistencia al agua del enemigo.',
+  'tooltip.earthDamage':
+    'Añade daño de tierra a tus ataques.<br />{icon} Reducido por la resistencia a tierra del enemigo.',
+  'tooltip.lightningDamage':
+    'Añade daño de rayo a tus ataques.<br />{icon} Reducido por la resistencia al rayo del enemigo.',
+  'tooltip.waterDamage':
+    'Añade daño de agua a tus ataques.<br />{icon} Reducido por la resistencia al agua del enemigo.',
   'tooltip.doubleDamageChance': 'Probabilidad de que un ataque inflija daño doble.',
   'tooltip.resurrectionChance': 'Probabilidad de revivir después de la muerte.',
   'tooltip.bonusGoldPercent': 'Aumenta el oro que sueltan los enemigos.',
@@ -976,7 +1020,8 @@ export default {
   'tooltip.allAttributes': 'Añade puntos a todos los atributos.',
   'tooltip.allAttributesPercent': 'Incrementa todos los atributos en un porcentaje.',
   'tooltip.manaShieldPercent': 'Porción del daño recibida de maná antes que de la vida.',
-  'tooltip.manaShieldDamageTakenReductionPercent': 'Reduce el daño tomado del maná cuando Escudo de Maná absorbe daño (máx 50%).',
+  'tooltip.manaShieldDamageTakenReductionPercent':
+    'Reduce el daño tomado del maná cuando Escudo de Maná absorbe daño (máx 50%).',
   'tooltip.reflectFireDamage': 'Refleja daño de fuego de vuelta a los atacantes.',
   'tooltip.thornsDamage':
     'Inflige daño de vuelta a los atacantes cuando te golpean y se beneficia de Daño %, Daño Total % y Daño de Espinas %.',
@@ -986,8 +1031,10 @@ export default {
   'tooltip.ignoreEnemyArmor': 'Los ataques ignoran completamente la armadura enemiga.',
   'tooltip.ignoreAllEnemyResistances': 'Los ataques ignoran todas las resistencias enemigas.',
   'tooltip.extraDamageAgainstFrozenEnemies': 'Aumenta el daño infligido a enemigos congelados.',
-  'tooltip.chanceToShatterEnemy': 'Probabilidad de hacer añicos a enemigos congelados al golpear, consumiendo Congelar para infligir 3x daño.',
-  'tooltip.damageTakenConvertedToColdPercent': 'Convierte un porcentaje del daño recibido que no sea de frío en daño de frío (máx 75%).',
+  'tooltip.chanceToShatterEnemy':
+    'Probabilidad de hacer añicos a enemigos congelados al golpear, consumiendo Congelar para infligir 3x daño.',
+  'tooltip.damageTakenConvertedToColdPercent':
+    'Convierte un porcentaje del daño recibido que no sea de frío en daño de frío (máx 75%).',
   'tooltip.coldDamageTakenReductionPercent': 'Reduce el daño de frío recibido por un porcentaje (máx 50%).',
   'tooltip.damageTakenReductionPercent': 'Reduce todo el daño recibido por un porcentaje (máx 60%).',
   'tooltip.stunChance': 'Probabilidad de aturdir enemigos durante 1s al infligir daño con habilidades instantáneas.',
@@ -995,7 +1042,8 @@ export default {
   'tooltip.extraMaterialDropPercent': 'Probabilidad de soltar materiales extra al matar enemigos.',
   'tooltip.extraMaterialDropMax': 'Máximo de materiales extra soltados por enemigo.',
   'tooltip.itemBonusesPercent': 'Incrementa las bonificaciones proporcionadas por los objetos.',
-  'tooltip.cooldownReductionPercent': 'Reduce el enfriamiento de las habilidades en un porcentaje (máx 80% de reducción).',
+  'tooltip.cooldownReductionPercent':
+    'Reduce el enfriamiento de las habilidades en un porcentaje (máx 80% de reducción).',
   'tooltip.manaCostReductionPercent': 'Reduce el costo de maná de las habilidades en un porcentaje.',
   'tooltip.buffDurationPercent': 'Incrementa la duración de los beneficios en un porcentaje.',
   'tooltip.lifeRegenOfTotalPercent': 'Regenera vida igual a un porcentaje de la vida total.',
@@ -1011,12 +1059,18 @@ export default {
   'tooltip.waterPenetrationPercent': 'Ignora un porcentaje de la resistencia enemiga {icon}.',
   'tooltip.elementalPenetrationPercent': 'Ignora un porcentaje de todas las resistencias elementales enemigas.',
   'tooltip.flatPenetrationPercent': 'Aumenta las bonificaciones planas de penetración de armadura y elemental.',
-  'tooltip.extraDamageFromLifePercent': 'Añade daño extra basado en un porcentaje de tu vida actual (cuenta hasta 1.000 por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
-  'tooltip.extraDamageFromArmorPercent': 'Añade daño extra basado en un porcentaje de tu armadura actual (cuenta hasta 1.000 por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
-  'tooltip.extraDamageFromManaPercent': 'Añade daño extra basado en un porcentaje de tu maná actual (cuenta hasta 1.000 por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
-  'tooltip.extraDamageFromEvasionPercent': 'Añade daño extra basado en un porcentaje de tu evasión actual (cuenta hasta 1.000 por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
-  'tooltip.extraDamageFromAttackRatingPercent': 'Añade daño extra basado en un porcentaje de tu puntuación de ataque actual (cuenta hasta 1.000 por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
-  'tooltip.extraDamageFromLifeRegenPercent': 'Añade daño extra basado en un porcentaje de tu regeneración de vida actual (cuenta hasta 1.000 por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
+  'tooltip.extraDamageFromLifePercent':
+    'Añade daño extra basado en un porcentaje de tu vida actual (cuenta hasta 1.000 por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
+  'tooltip.extraDamageFromArmorPercent':
+    'Añade daño extra basado en un porcentaje de tu armadura actual (cuenta hasta 1.000 por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
+  'tooltip.extraDamageFromManaPercent':
+    'Añade daño extra basado en un porcentaje de tu maná actual (cuenta hasta 1.000 por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
+  'tooltip.extraDamageFromEvasionPercent':
+    'Añade daño extra basado en un porcentaje de tu evasión actual (cuenta hasta 1.000 por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
+  'tooltip.extraDamageFromAttackRatingPercent':
+    'Añade daño extra basado en un porcentaje de tu puntuación de ataque actual (cuenta hasta 1.000 por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
+  'tooltip.extraDamageFromLifeRegenPercent':
+    'Añade daño extra basado en un porcentaje de tu regeneración de vida actual (cuenta hasta 1.000 por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
   'items.unique.stormlash': 'Latigazo de Tormenta',
   'items.unique.nightveilHood': 'Capucha Velo Nocturno',
   'items.unique.phoenixheartMantle': 'Manto Corazón de Fénix',
@@ -1158,9 +1212,9 @@ export default {
   'ailment.stun.tooltip': 'Aturdir: Aturdido durante {duration}s.',
   'ailment.poison.tooltip': 'Veneno: Inflige {amount} de daño de tierra durante {duration}s.',
   'ailment.warmup.tooltip': 'Calentamiento: 50% menos Oro/XP durante {duration}s',
-  'bleed': 'Sangrado',
-  'burn': 'Quemadura',
-  'poison': 'Veneno',
+  bleed: 'Sangrado',
+  burn: 'Quemadura',
+  poison: 'Veneno',
   'battleLog.critical': ' (crítico)',
   'battleLog.autoAttack': ' (ataque automático)',
   'battleLog.summonDamage': 'Invocación {summon} infligió {value} de daño{breakdown}{critical}',
@@ -1169,7 +1223,7 @@ export default {
   'battleLog.blockedAttack': 'Bloqueó el ataque',
   'battleLog.missedAttack': 'Ataque fallado',
   'battleLog.died': 'Murió',
-  'explosion': 'Explosión',
+  explosion: 'Explosión',
   'battleLog.droppedItem': 'Soltó {rarity} {type}',
   'battleLog.droppedMaterial': 'Soltó {name} x{qty}',
   'battleLog.droppedRune': 'Soltó runa: {name}',
@@ -1222,28 +1276,29 @@ export default {
   'time.secondsAgo': 'hace {count}s',
   'time.minutesAgo': 'hace {count} min',
   'time.hoursAgo': 'hace {count} h',
-  'HELMET': 'Casco',
-  'ARMOR': 'Armadura',
-  'BELT': 'Cinturón',
-  'PANTS': 'Pantalones',
-  'BOOTS': 'Botas',
-  'SWORD': 'Espada',
-  'AXE': 'Hacha',
-  'MACE': 'Maza',
-  'DAGGER': 'Daga',
-  'WAND': 'Varita',
-  'STAFF': 'Bastón',
-  'SHIELD': 'Escudo',
-  'GLOVES': 'Guantes',
-  'AMULET': 'Amuleto',
-  'RING': 'Anillo',
+  HELMET: 'Casco',
+  ARMOR: 'Armadura',
+  BELT: 'Cinturón',
+  PANTS: 'Pantalones',
+  BOOTS: 'Botas',
+  SWORD: 'Espada',
+  AXE: 'Hacha',
+  MACE: 'Maza',
+  DAGGER: 'Daga',
+  WAND: 'Varita',
+  STAFF: 'Bastón',
+  SHIELD: 'Escudo',
+  GLOVES: 'Guantes',
+  AMULET: 'Amuleto',
+  RING: 'Anillo',
   'buildings.nextBonus': 'Próxima bonificación: {time}',
   'buildings.totalEarned': 'Total ganado: {amount} {type}',
   'buildings.levelInfo': 'Nivel: <b>{level}</b> / {max}',
   'buildings.currentBonus': 'Bonificación actual: <b>{bonus}</b>',
   'buildings.upgradeAmountLine': 'Cantidad de mejora: <b>{amount}</b>',
   'buildings.totalUpgradeCost': 'Costo total de mejora: <b>{cost}</b>',
-  'buildings.bonusAfterUpgrade': 'Bonificación después de mejorar: <b>{bonus}</b> <span style="color:#aaa;font-size:0.95em;">(+{extra} {type})</span>',
+  'buildings.bonusAfterUpgrade':
+    'Bonificación después de mejorar: <b>{bonus}</b> <span style="color:#aaa;font-size:0.95em;">(+{extra} {type})</span>',
   'buildings.upgradeAmountLabel': 'Cantidad de mejora:',
   'buildings.upgrade': 'Mejorar',
   'buildings.sellRefund': 'Vender / Reembolsar (+{refund})',
@@ -1255,19 +1310,26 @@ export default {
   'buildings.offlineRewardsTitle': 'Recompensas de edificios offline',
   'buildings.offlineRewardsInfo': '¡Se obtuvieron bonificaciones mientras estabas fuera!',
   'buildings.collect': 'Recoger',
-  'buildings.offlineBonusItem': '{icon} <b>{name}</b>: +{amount} {type} <span style="color:#aaa;font-size:0.95em;">(por {times} {interval})</span>',
+  'buildings.offlineBonusItem':
+    '{icon} <b>{name}</b>: +{amount} {type} <span style="color:#aaa;font-size:0.95em;">(por {times} {interval})</span>',
 
   'prestige.levelInfo': 'Nivel {level} / {required}',
   'prestige.prestigeNow': 'Prestigiar ahora',
   'prestige.history': 'Historial',
   'prestige.noBonuses': 'Aún no hay bonificaciones de prestigio.',
   'prestige.reroll': 'Volver a tirar',
-  'prestige.bonusInfo': 'Derrota a los jefes de arena para aumentar las bonificaciones de prestigio. Bonificación actual: {bonus}%.',
-  'prestige.resetInfo': 'El prestigio inicia una nueva partida: nivel, equipo, inventario, edificios, misiones y la mayor parte del progreso se reinician. Solo se mantiene la bonificación de prestigio elegida.',
-  'prestige.optionsInfo': 'Todas las opciones, excepto las desbloqueadas en la tienda de cristales, se conservan después de prestigiar.',
-  'prestige.levelRequirementIncreaseInfo': 'Cada prestigio aumenta en 25 niveles el requisito para el siguiente prestigio.',
-  'prestige.selectionRequirementInfo': 'Debes seleccionar una de las tres opciones de prestigio para realizar el prestigio.',
-  'prestige.historyRecord': 'Se guarda un registro en el Historial de Prestigio para que puedas revisar prestigios pasados.',
+  'prestige.bonusInfo':
+    'Derrota a los jefes de arena para aumentar las bonificaciones de prestigio. Bonificación actual: {bonus}%.',
+  'prestige.resetInfo':
+    'El prestigio inicia una nueva partida: nivel, equipo, inventario, edificios, misiones y la mayor parte del progreso se reinician. Solo se mantiene la bonificación de prestigio elegida.',
+  'prestige.optionsInfo':
+    'Todas las opciones, excepto las desbloqueadas en la tienda de cristales, se conservan después de prestigiar.',
+  'prestige.levelRequirementIncreaseInfo':
+    'Cada prestigio aumenta en 25 niveles el requisito para el siguiente prestigio.',
+  'prestige.selectionRequirementInfo':
+    'Debes seleccionar una de las tres opciones de prestigio para realizar el prestigio.',
+  'prestige.historyRecord':
+    'Se guarda un registro en el Historial de Prestigio para que puedas revisar prestigios pasados.',
   'prestige.perform': 'Realizar Prestigio',
   'prestige.lock': 'Bloquear',
   'prestige.notEnoughCrystalsLock': 'No hay suficientes cristales para bloquear.',
@@ -1336,8 +1398,10 @@ export default {
   'crystalShop.upgrade.autoSalvage.bonus': 'Desguaza automáticamente objetos de rarezas seleccionadas',
   'crystalShop.upgrade.autoSalvage.bonusLabel': 'Desguaza automáticamente las rarezas seleccionadas',
   'crystalShop.upgrade.autoConsumeMaterials.label': 'Consumo Automático de Materiales',
-  'crystalShop.upgrade.autoConsumeMaterials.bonus': 'Usa automáticamente todos los materiales consumibles al recogerlos',
-  'crystalShop.upgrade.autoConsumeMaterials.bonusLabel': 'Usa automáticamente todos los materiales consumibles al recogerlos',
+  'crystalShop.upgrade.autoConsumeMaterials.bonus':
+    'Usa automáticamente todos los materiales consumibles al recogerlos',
+  'crystalShop.upgrade.autoConsumeMaterials.bonusLabel':
+    'Usa automáticamente todos los materiales consumibles al recogerlos',
   'crystalShop.upgrade.autoClaimQuests.label': 'Reclamo Automático de Misiones',
   'crystalShop.upgrade.autoClaimQuests.bonus': 'Reclama automáticamente las misiones completadas',
   'crystalShop.upgrade.autoClaimQuests.bonusLabel': 'Reclama automáticamente las misiones completadas',
@@ -1356,10 +1420,13 @@ export default {
   'crystalShop.upgrade.resetStageSkip.bonusLabel': 'Desbloquea la opción de reiniciar salto de etapas',
   'crystalShop.upgrade.resetSkillTree.label': 'Reiniciar Árbol de Habilidades',
   'crystalShop.upgrade.resetSkillTree.bonus': 'Reembolsa todos los puntos de habilidad',
-  'crystalShop.upgrade.resetSkillTree.bonusLabel': 'Reinicia tu árbol de habilidades y devuelve todos los puntos de habilidad.',
+  'crystalShop.upgrade.resetSkillTree.bonusLabel':
+    'Reinicia tu árbol de habilidades y devuelve todos los puntos de habilidad.',
   'crystalShop.upgrade.resetSpecialization.label': 'Reiniciar Especialización',
-  'crystalShop.upgrade.resetSpecialization.bonus': 'Reembolsa los puntos de especialización y desbloquea todas las rutas',
-  'crystalShop.upgrade.resetSpecialization.bonusLabel': 'Reinicia tu elección de especialización y devuelve todos los puntos de habilidad de especialización.',
+  'crystalShop.upgrade.resetSpecialization.bonus':
+    'Reembolsa los puntos de especialización y desbloquea todas las rutas',
+  'crystalShop.upgrade.resetSpecialization.bonusLabel':
+    'Reinicia tu elección de especialización y devuelve todos los puntos de habilidad de especialización.',
   'crystalShop.upgrade.resetAttributes.label': 'Reiniciar Atributos',
   'crystalShop.upgrade.resetAttributes.bonus': 'Devuelve todos los puntos de atributo asignados',
   'crystalShop.upgrade.resetAttributes.bonusLabel': 'Devuelve todos los puntos de atributo asignados',
@@ -1379,7 +1446,8 @@ export default {
   'crystalShop.upgrade.deathTimerReduction.bonusLabel': 'Reduce la cuenta regresiva de muerte en 0.5 s',
   'crystalShop.upgrade.salvageMaterials.label': 'Materiales de Desguace',
   'crystalShop.upgrade.salvageMaterials.bonus': 'Permite desguazar objetos por materiales de mejora en lugar de oro',
-  'crystalShop.upgrade.salvageMaterials.bonusLabel': 'Permite desguazar objetos por materiales de mejora en lugar de oro',
+  'crystalShop.upgrade.salvageMaterials.bonusLabel':
+    'Permite desguazar objetos por materiales de mejora en lugar de oro',
   'soulShop.upgrade.extraLife.label': 'Vida Extra',
   'soulShop.upgrade.extraLife.bonus': 'Obtén 1 resurrección por partida',
   'soulShop.upgrade.bonusGold.label': '% de Ganancia de Oro',
@@ -1398,8 +1466,9 @@ export default {
   'soulShop.cost': 'Costo',
   'soulShop.notEnoughSoulsBulk': '¡No tienes suficientes almas para comprar en masa!',
   'soulShop.bulkPurchaseSuccess': '¡Compra masiva en la tienda de almas completada!',
-  'startingCrystals': 'Cristales Iniciales',
-  'skillTree.purchaseAutoCastWarning': 'Compra la mejora de Auto Lanzamiento de Hechizos para habilitar el auto-lanzamiento.',
+  startingCrystals: 'Cristales Iniciales',
+  'skillTree.purchaseAutoCastWarning':
+    'Compra la mejora de Auto Lanzamiento de Hechizos para habilitar el auto-lanzamiento.',
   'skillTree.notEnoughMana': '¡No hay suficiente maná!',
   'skillTree.notEnoughLife': '¡No hay suficiente vida!',
   'skillTree.skillCategory.attack': 'Habilidad de Ataque',
@@ -1426,12 +1495,11 @@ export default {
   'specialization.warrior.guardian.name': 'Guardián',
   'specialization.warrior.guardian.description': 'Un guerrero defensivo especializado en protección y armadura.',
 
-
   'specialization.warrior.gladiator.name': 'Gladiador',
-  'specialization.warrior.gladiator.description': 'Un luchador equilibrado enfocado en golpes críticos y maestría en combate.',
+  'specialization.warrior.gladiator.description':
+    'Un luchador equilibrado enfocado en golpes críticos y maestría en combate.',
   'specialization.rogue.assassin.name': 'Asesino',
   'specialization.rogue.assassin.description': 'Un pícaro mortal especializado en golpes críticos.',
-
 
   'specialization.rogue.ranger.name': 'Guardabosques',
   'specialization.rogue.ranger.description': 'Un atacante preciso con alta precisión.',
@@ -1464,7 +1532,8 @@ export default {
   'specialization.elementalist.cryomancer.name': 'Criomante',
   'specialization.elementalist.cryomancer.description': 'Mago de hielo que congela y hace añicos a los enemigos.',
   'specialization.druid.shapeshifter.name': 'Cambiaformas',
-  'specialization.druid.shapeshifter.description': 'Te transformas en bestias poderosas. Solo puedes desbloquear una forma (Oso o Serpiente).',
+  'specialization.druid.shapeshifter.description':
+    'Te transformas en bestias poderosas. Solo puedes desbloquear una forma (Oso o Serpiente).',
   'specialization.druid.naturalist.name': 'Naturalista',
   'specialization.druid.naturalist.description': 'Sanador de la naturaleza con poderes de regeneración.',
   'specialization.druid.summoner.name': 'Invocador',
@@ -1476,32 +1545,36 @@ export default {
   'specialization.mage.enchanter.name': 'Encantador',
   'specialization.mage.enchanter.description': 'Especialista en mejoras que potencia el poder.',
 
-
-
   'Reinforced Equipment': 'Equipo Reforzado',
   'skill.reinforcedEquipment': 'Aumenta la efectividad de la Vida y la Armadura en los objetos.',
 
-
-
-  'Gladiator\'s Fury': 'Furia del Gladiador',
-
-
+  "Gladiator's Fury": 'Furia del Gladiador',
 
   'crystalShop.resetClassSuccess': 'Las habilidades han sido reiniciadas y todos los puntos reembolsados.',
   'crystalShop.resetSpecializationSuccess': 'La especialización ha sido reiniciada y todos los puntos reembolsados.',
   'crystalShop.resetAttributesSuccess': 'Todos los puntos de atributo han sido reembolsados.',
   'crystalShop.resetBossLevelSuccess': 'El nivel del jefe se ha reiniciado a 1.',
   'crystalShop.needCrystals': 'Necesitas {count} cristales para esta mejora',
-  'crystalShop.confirm.resetClass': '¿Estás seguro de que quieres restablecer tus habilidades y reembolsar todos los puntos de habilidad?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
-  'crystalShop.confirm.resetSpecialization': '¿Estás seguro de que quieres restablecer tu especialización y reembolsar todos los puntos de habilidad de especialización?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
-  'crystalShop.confirm.resetAttributes': '¿Estás seguro de que quieres restablecer todos los puntos de atributos asignados?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
-  'crystalShop.confirm.resetBossLevel': '¿Estás seguro de que quieres restablecer tu nivel de jefe a 1?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
-  'crystalShop.confirm.resetTraining': '¿Estás seguro de que quieres restablecer todas las mejoras de entrenamiento y reembolsar el oro gastado?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
-  'crystalShop.resetTrainingSuccess': 'Todas las mejoras de entrenamiento han sido restablecidas. Se reembolsaron {amount} de oro.',
-  'crystalShop.confirm.resetSoulShop': '¿Estás seguro de que quieres restablecer todas las mejoras de la tienda de almas y reembolsar las almas gastadas?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
-  'crystalShop.resetSoulShopSuccess': 'Todas las mejoras de la tienda de almas han sido restablecidas. Se reembolsaron {amount} Almas.',
-  'crystalShop.confirm.resetAscension': '¿Estás seguro de que quieres restablecer todas las mejoras de ascensión y reembolsar los puntos gastados?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
-  'crystalShop.resetAscensionSuccess': 'Todas las mejoras de ascensión han sido restablecidas. Se reembolsaron {amount} Puntos.',
+  'crystalShop.confirm.resetClass':
+    '¿Estás seguro de que quieres restablecer tus habilidades y reembolsar todos los puntos de habilidad?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
+  'crystalShop.confirm.resetSpecialization':
+    '¿Estás seguro de que quieres restablecer tu especialización y reembolsar todos los puntos de habilidad de especialización?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
+  'crystalShop.confirm.resetAttributes':
+    '¿Estás seguro de que quieres restablecer todos los puntos de atributos asignados?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
+  'crystalShop.confirm.resetBossLevel':
+    '¿Estás seguro de que quieres restablecer tu nivel de jefe a 1?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
+  'crystalShop.confirm.resetTraining':
+    '¿Estás seguro de que quieres restablecer todas las mejoras de entrenamiento y reembolsar el oro gastado?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
+  'crystalShop.resetTrainingSuccess':
+    'Todas las mejoras de entrenamiento han sido restablecidas. Se reembolsaron {amount} de oro.',
+  'crystalShop.confirm.resetSoulShop':
+    '¿Estás seguro de que quieres restablecer todas las mejoras de la tienda de almas y reembolsar las almas gastadas?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
+  'crystalShop.resetSoulShopSuccess':
+    'Todas las mejoras de la tienda de almas han sido restablecidas. Se reembolsaron {amount} Almas.',
+  'crystalShop.confirm.resetAscension':
+    '¿Estás seguro de que quieres restablecer todas las mejoras de ascensión y reembolsar los puntos gastados?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
+  'crystalShop.resetAscensionSuccess':
+    'Todas las mejoras de ascensión han sido restablecidas. Se reembolsaron {amount} Puntos.',
   'crystalShop.notEnoughCrystals': '¡No hay suficientes cristales!',
   'crystalShop.updateError': 'Error al actualizar la tienda. Inténtalo de nuevo.',
   'crystalShop.purchased': '¡Compraste {label}!',
@@ -1582,16 +1655,17 @@ export default {
   'stats.animatedWeaponsUnlocked': 'Armas Animadas Desbloqueadas',
 
   // Rogue Specializations
-  'Vanish': 'Desvanecer',
+  Vanish: 'Desvanecer',
   'skill.vanish': 'Probabilidad de volverse invisible y evitar ataques.',
-  'Assassinate': 'Asesinar',
+  Assassinate: 'Asesinar',
   'skill.assassinate': 'Mata instantáneamente a enemigos por debajo de un umbral de salud.',
   'Shadow Clone': 'Clon de Sombra',
   'skill.shadowClone': 'Desbloquea un clon de sombra que lucha por ti.',
   'Shadow Magic': 'Magia de las Sombras',
   'skill.shadowMagic': 'Otorga daño de tierra extra.',
   'Animal Tracking': 'Rastreo Animal',
-  'skill.animalTracking': 'Aumenta el daño contra enemigos de alta rareza. La bonificación escala con la rareza (hasta 4x para Míticos).',
+  'skill.animalTracking':
+    'Aumenta el daño contra enemigos de alta rareza. La bonificación escala con la rareza (hasta 4x para Míticos).',
   'Ranged Precision': 'Precisión a Distancia',
   'skill.rangedPrecision': 'Aumenta la puntuación de ataque y añade daño basado en ella.',
 
@@ -1609,13 +1683,13 @@ export default {
   'skill.bloodSacrifice': 'Sacrifica el 50% de tu vida actual para infligir daño basado en la cantidad sacrificada.',
   'Blood Potency': 'Potencia de Sangre',
   'skill.bloodPotency': 'Usar habilidades cuesta vida pero inflige más daño.',
-  'Hemorrhage': 'Hemorragia',
+  Hemorrhage: 'Hemorragia',
   'skill.hemorrhage': 'Probabilidad de hacer sangrar a los enemigos, causando daño en el tiempo.',
 
   // Paladin Specializations
   'Shield Mastery': 'Maestría con Escudo',
   'skill.shieldMastery': 'Permite equipar dos escudos y aumenta el daño por armadura.',
-  'Zeal': 'Celo',
+  Zeal: 'Celo',
   'skill.zeal': 'Gana acumulaciones de reducción de daño al golpear enemigos.',
   'Divine Amulet': 'Amuleto Divino',
   'skill.divineAmulet': 'Aumenta la efectividad de tu amuleto.',
@@ -1628,17 +1702,15 @@ export default {
   'skill.immortalPresence': 'Aumenta la vida y el porcentaje de vida.',
 
   // Berserker Specializations
-  'Lacerate': 'Lacerar',
+  Lacerate: 'Lacerar',
   'skill.lacerate': 'Probabilidad de hacer sangrar a los enemigos al golpear.',
-
 
   'Fatal Blow': 'Golpe Mortal',
   'skill.fatalBlow': 'Otorga una probabilidad de matar instantáneamente a los enemigos e incrementa el daño.',
 
-
   'Battle Command': 'Orden de Batalla',
   'skill.battleCommand': 'Aumenta la efectividad de todos los beneficios.',
-  'Warlord\'s Authority': 'Autoridad del Señor de la Guerra',
+  "Warlord's Authority": 'Autoridad del Señor de la Guerra',
   'skill.warlordsAuthority': 'Aumenta la efectividad de la habilidad Señor de la Guerra.',
   'Blood Bank': 'Banco de Sangre',
   'skill.bloodBank': 'La sobrecuración aumenta la vida máxima.',
@@ -1648,13 +1720,15 @@ export default {
   // Elementalist Specializations
   'Searing Heat': 'Calor Abrasador',
   'skill.searingHeat': 'Probabilidad de acumular efectos de quemadura en el suelo.',
-  'Combustion': 'Combustión',
-  'skill.combustion': 'Probabilidad de que los enemigos exploten al morir, consumiendo la quemadura para infligir 10 veces el daño de quemadura restante.',
+  Combustion: 'Combustión',
+  'skill.combustion':
+    'Probabilidad de que los enemigos exploten al morir, consumiendo la quemadura para infligir 10 veces el daño de quemadura restante.',
   'Arc Discharge': 'Descarga de Arco',
-  'skill.arcDischarge': 'Los ataques de rayo tienen probabilidad de descargar un rayo adicional que inflige el 50% de tu daño y otorga daño de rayo plano.',
+  'skill.arcDischarge':
+    'Los ataques de rayo tienen probabilidad de descargar un rayo adicional que inflige el 50% de tu daño y otorga daño de rayo plano.',
   'Static Shock': 'Choque Estático',
   'skill.staticShock': 'Aumenta tu probabilidad de aplicar shock y el bono de daño del shock.',
-  'Permafrost': 'Escarcha Perpetua',
+  Permafrost: 'Escarcha Perpetua',
   'skill.permafrost': 'Aumenta el daño de frío y el daño contra enemigos congelados.',
   'Ice Barrier': 'Barrera de Hielo',
   'skill.iceBarrier': 'Otorga probabilidad de hacer añicos a enemigos congelados y desbloquea Baluarte Glacial.',
@@ -1667,7 +1741,8 @@ export default {
   'skill.shapeshiftingMastery': 'Aumenta todos los atributos y % de atributos.',
 
   'Primal Adaptation': 'Adaptación Primitiva',
-  'skill.primalAdaptation': 'Aumenta % de daño, % de daño elemental, % de armadura, % de vida, % de regeneración de vida y % de resistencia elemental.',
+  'skill.primalAdaptation':
+    'Aumenta % de daño, % de daño elemental, % de armadura, % de vida, % de regeneración de vida y % de resistencia elemental.',
   'Elemental Harmony': 'Armonía Elemental',
 
   'skill.elementalHarmony': 'Aumenta tus bonificaciones de daño de Agua, Frío y Tierra.',
@@ -1690,7 +1765,6 @@ export default {
   'skill.manaWard': 'Reduce el daño tomado del maná cuando Escudo de Maná absorbe daño (máx 50%) y aumenta Maná %.',
   'Arcane Overload': 'Sobrecarga Arcana',
   'skill.arcaneOverload': 'Aumenta el daño extra por Maná (máx 2%) y aumenta la regeneración de maná (plana y %).',
-
 
   'Crimson Fortitude': 'Fortaleza Carmesí',
   'skill.crimsonFortitude': 'Aumenta el porcentaje de vida y desbloquea Égida Carmesí.',
@@ -1803,11 +1877,7 @@ export default {
   'stats.cloneDamagePercent': 'Efectividad de Clon %',
   'stats.damageToBossesPercent': 'Daño a Jefes %',
 
-
-
   'skill.bearForm': 'Cámbiate en oso, obteniendo Vida y Daño. Solo puedes desbloquear una forma a la vez.',
-
-
 
   'skillTree.specializationLevelReq': 'Las especializaciones requieren nivel 100.',
   'skillTree.selectClassFirst': 'Por favor, selecciona primero una clase.',
@@ -1998,8 +2068,8 @@ export default {
   'skill.heroicStand.name': 'Heroic Stand',
   'skill.legendaryWarlord.name': 'Legendary Warlord',
   'skill.eternalGuardian.name': 'Eternal Guardian',
-  'combat.changeRegionConfirm': '¿Estás seguro de que quieres cambiar a {region}? Eso reiniciará tu progreso de etapa y buscará un nuevo enemigo.',
-
+  'combat.changeRegionConfirm':
+    '¿Estás seguro de que quieres cambiar a {region}? Eso reiniciará tu progreso de etapa y buscará un nuevo enemigo.',
 
   'skillTree.passivesUnlocked': 'Pasivas Desbloqueadas',
 
@@ -2007,6 +2077,4 @@ export default {
   'skillTree.selectSpec': 'Seleccionar {name}',
   'skillTree.availableSpecializations': 'Especializaciones Disponibles',
   'skillTree.skillEffects': 'Efectos de Habilidad',
-
 };
-

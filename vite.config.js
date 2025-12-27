@@ -11,17 +11,18 @@ export default defineConfig(({ mode }) => {
   return {
     base: env.VITE_BASE_PATH || './',
     plugins: [
-      shouldObfuscate && obfuscatorPlugin({
-        options: {
-          rotateStringArray: true,
-          stringArray: true,
-          stringArrayThreshold: 1,
-          identifierNamesGenerator: 'hexadecimal',
-          compact: true,
-          deadCodeInjection: false,
-          controlFlowFlattening: false,
-        },
-      }),
+      shouldObfuscate &&
+        obfuscatorPlugin({
+          options: {
+            rotateStringArray: true,
+            stringArray: true,
+            stringArrayThreshold: 1,
+            identifierNamesGenerator: 'hexadecimal',
+            compact: true,
+            deadCodeInjection: false,
+            controlFlowFlattening: false,
+          },
+        }),
     ].filter(Boolean),
 
     build: {
@@ -29,19 +30,21 @@ export default defineConfig(({ mode }) => {
       emptyOutDir: true,
       sourcemap: isDebugBuild,
       minify: shouldMinify ? 'terser' : false,
-      terserOptions: shouldMinify ? {
-        compress: {
-          drop_console: true,
-          drop_debugger: true,
-          passes: 3,
-        },
-        mangle: true,
-        format: {
-          comments: false,
-          beautify: false,
-          max_line_len: false,
-        },
-      } : undefined,
+      terserOptions: shouldMinify
+        ? {
+            compress: {
+              drop_console: true,
+              drop_debugger: true,
+              passes: 3,
+            },
+            mangle: true,
+            format: {
+              comments: false,
+              beautify: false,
+              max_line_len: false,
+            },
+          }
+        : undefined,
       rollupOptions: {
         output: {
           manualChunks(id) {

@@ -71,16 +71,18 @@ function checkTranslations() {
 
   // Display key counts
   console.log('\n📊 Key Counts:\n');
-  languages.forEach(lang => {
+  languages.forEach((lang) => {
     const uniqueKeys = lang.keySet.size;
     const totalKeys = lang.keys.length;
     const hasDupes = totalKeys !== uniqueKeys;
-    console.log(`  ${lang.filename.padEnd(10)} ${totalKeys} keys (${uniqueKeys} unique)${hasDupes ? ' ⚠️  DUPLICATES!' : ''}`);
+    console.log(
+      `  ${lang.filename.padEnd(10)} ${totalKeys} keys (${uniqueKeys} unique)${hasDupes ? ' ⚠️  DUPLICATES!' : ''}`
+    );
   });
 
   // Check for duplicates in any file
   let hasDuplicates = false;
-  languages.forEach(lang => {
+  languages.forEach((lang) => {
     if (lang.duplicates.length > 0) {
       hasDuplicates = true;
       console.log(`\n⚠️  ${lang.filename} has ${lang.duplicates.length} duplicate key(s):`);
@@ -98,9 +100,7 @@ function checkTranslations() {
   }
 
   // Find the reference language (usually the one with the most keys)
-  const referenceLang = languages.reduce((max, lang) =>
-    lang.keySet.size > max.keySet.size ? lang : max,
-  );
+  const referenceLang = languages.reduce((max, lang) => (lang.keySet.size > max.keySet.size ? lang : max));
 
   console.log(`\n📖 Using ${referenceLang.filename} as reference (${referenceLang.keySet.size} unique keys)`);
   console.log('='.repeat(80));
@@ -109,11 +109,11 @@ function checkTranslations() {
   let hasIssues = false;
 
   // Check each language against the reference
-  languages.forEach(lang => {
+  languages.forEach((lang) => {
     if (lang.filename === referenceLang.filename) return;
 
-    const missingKeys = [...referenceLang.keySet].filter(key => !lang.keySet.has(key));
-    const extraKeys = [...lang.keySet].filter(key => !referenceLang.keySet.has(key));
+    const missingKeys = [...referenceLang.keySet].filter((key) => !lang.keySet.has(key));
+    const extraKeys = [...lang.keySet].filter((key) => !referenceLang.keySet.has(key));
 
     if (missingKeys.length > 0 || extraKeys.length > 0) {
       hasIssues = true;
@@ -121,7 +121,7 @@ function checkTranslations() {
 
       if (missingKeys.length > 0) {
         console.log(`\n  ❌ Missing ${missingKeys.length} keys:`);
-        missingKeys.slice(0, 20).forEach(key => {
+        missingKeys.slice(0, 20).forEach((key) => {
           console.log(`     - ${key}`);
         });
         if (missingKeys.length > 20) {
@@ -132,7 +132,7 @@ function checkTranslations() {
 
       if (extraKeys.length > 0) {
         console.log(`\n  ⚠️  Extra ${extraKeys.length} keys (not in reference):`);
-        extraKeys.slice(0, 10).forEach(key => {
+        extraKeys.slice(0, 10).forEach((key) => {
           console.log(`     - ${key}`);
         });
         if (extraKeys.length > 10) {

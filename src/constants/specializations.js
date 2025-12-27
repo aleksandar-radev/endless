@@ -518,7 +518,7 @@ export const SPECIALIZATIONS = {
         },
         warlordsAuthority: {
           id: 'warlordsAuthority',
-          name: () => t('Warlord\'s Authority'),
+          name: () => t("Warlord's Authority"),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[6],
           icon: () => 'warlords-authority',

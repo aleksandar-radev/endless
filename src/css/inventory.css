@@ -473,7 +473,6 @@
 .slot-indicator {
   width: 100%;
   height: 100%;
-
 }
 
 .slot-indicator img {
@@ -493,7 +492,9 @@
   background: var(--bg-panel);
   padding: 10px 20px;
   border-radius: 5px;
-  animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s;
+  animation:
+    slideIn 0.3s ease-out,
+    fadeOut 0.3s ease-in 2.7s;
   z-index: 1000;
 }
 
@@ -633,7 +634,11 @@
   border-radius: 6px;
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .set-bonus.active {
@@ -714,7 +719,10 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s;
 }
 
 .salvage-btn-inline[data-rarity='NORMAL'] {
@@ -1023,7 +1031,9 @@
   margin-left: 10px;
   color: #fff;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
 }
 
 .inventory-trash.drag-over {
@@ -1094,7 +1104,9 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, opacity 0.2s;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
 }
 
 .inventory-modal-content .modal-buy:hover:not(:disabled) {
@@ -1137,7 +1149,9 @@
   padding: 4px 8px;
   border-radius: 0.5rem;
   cursor: pointer;
-  transition: background 0.2s, opacity 0.2s;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
 }
 
 .reroll-btn:hover:not(:disabled) {
@@ -1156,7 +1170,9 @@
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
-  transition: background 0.2s, opacity 0.2s;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
 }
 
 .upgrade-item-row .upgrade-max-btn {
@@ -1166,7 +1182,10 @@
   padding: 5px 10px;
   border-radius: 0.5rem;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, opacity 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    opacity 0.2s;
 }
 
 .upgrade-item-row .upgrade-max-btn:hover:not(:disabled) {
@@ -1214,7 +1233,6 @@
   font-size: 1.25rem;
   color: var(--accent, #3b82f6);
 }
-
 
 .salvage-modal-grid {
   display: grid;
@@ -1268,7 +1286,10 @@
   font-weight: 600;
   cursor: pointer;
   margin-bottom: 2px;
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s;
   box-sizing: border-box;
   display: inline-block;
 }
@@ -1361,7 +1382,10 @@
   font-size: 1.05em;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s;
 }
 
 #salvage-selected-btn:hover {
@@ -1369,14 +1393,13 @@
   color: #fff;
 }
 
-
 /* Toggle switch for auto-salvage (reuses toggle-btn from options) */
 .toggle-label {
   cursor: pointer;
   user-select: none;
 }
 
-#salvage-modal input[type="checkbox"] {
+#salvage-modal input[type='checkbox'] {
   display: none;
 }
 
@@ -1393,8 +1416,7 @@
   vertical-align: middle;
 }
 
-
-#salvage-modal input[type="checkbox"]:checked+.toggle-btn {
+#salvage-modal input[type='checkbox']:checked + .toggle-btn {
   background: #2563eb;
   border-color: #2563eb;
 }
@@ -1412,8 +1434,7 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
 }
 
-
-#salvage-modal input[type="checkbox"]:checked+.toggle-btn::before {
+#salvage-modal input[type='checkbox']:checked + .toggle-btn::before {
   left: 25px;
 }
 

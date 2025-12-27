@@ -3,7 +3,7 @@ import { ELEMENTS } from './constants/common.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 const ELEMENT_REGEX = new RegExp(
-  `^(${ELEMENT_IDS.join('|')})(Damage|DamagePercent|Resistance|ResistancePercent|Penetration|PenetrationPercent)$`,
+  `^(${ELEMENT_IDS.join('|')})(Damage|DamagePercent|Resistance|ResistancePercent|Penetration|PenetrationPercent)$`
 );
 
 export function formatStatName(stat, shortElementalNames = false) {

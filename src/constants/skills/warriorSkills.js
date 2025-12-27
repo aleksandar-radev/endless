@@ -348,8 +348,7 @@ export const WARRIOR_SKILLS = {
     icon: () => 'animated-weapons',
     description: () => t('skill.animatedWeapons'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-    }),
+    effect: (level) => ({}),
     isVisible: () => hero.stats.animatedWeaponsUnlocked > 0,
   },
 };

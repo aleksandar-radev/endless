@@ -12,8 +12,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_rare_10',
     category: 'rarity',
-    get title() { return tp('Defeat {count} rare enemies.', { count: 10 }); },
-    get description() { return tp('Defeat {count} rare enemies.', { count: 10 }); },
+    get title() {
+      return tp('Defeat {count} rare enemies.', { count: 10 });
+    },
+    get description() {
+      return tp('Defeat {count} rare enemies.', { count: 10 });
+    },
     type: 'kill_rarity',
     rarity: 'rare',
     target: 10,
@@ -22,8 +26,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_rare_50',
     category: 'rarity',
-    get title() { return tp('Defeat {count} rare enemies.', { count: 50 }); },
-    get description() { return tp('Defeat {count} rare enemies.', { count: 50 }); },
+    get title() {
+      return tp('Defeat {count} rare enemies.', { count: 50 });
+    },
+    get description() {
+      return tp('Defeat {count} rare enemies.', { count: 50 });
+    },
     type: 'kill_rarity',
     rarity: 'rare',
     target: 50,
@@ -32,8 +40,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_rare_200',
     category: 'rarity',
-    get title() { return tp('Defeat {count} rare enemies.', { count: 200 }); },
-    get description() { return tp('Defeat {count} rare enemies.', { count: 200 }); },
+    get title() {
+      return tp('Defeat {count} rare enemies.', { count: 200 });
+    },
+    get description() {
+      return tp('Defeat {count} rare enemies.', { count: 200 });
+    },
     type: 'kill_rarity',
     rarity: 'rare',
     target: 200,
@@ -42,8 +54,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_rare_600',
     category: 'rarity',
-    get title() { return tp('Defeat {count} rare enemies.', { count: 600 }); },
-    get description() { return tp('Defeat {count} rare enemies.', { count: 600 }); },
+    get title() {
+      return tp('Defeat {count} rare enemies.', { count: 600 });
+    },
+    get description() {
+      return tp('Defeat {count} rare enemies.', { count: 600 });
+    },
     type: 'kill_rarity',
     rarity: 'rare',
     target: 600,
@@ -52,8 +68,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_rare_1500',
     category: 'rarity',
-    get title() { return tp('Defeat {count} rare enemies.', { count: 1500 }); },
-    get description() { return tp('Defeat {count} rare enemies.', { count: 1500 }); },
+    get title() {
+      return tp('Defeat {count} rare enemies.', { count: 1500 });
+    },
+    get description() {
+      return tp('Defeat {count} rare enemies.', { count: 1500 });
+    },
     type: 'kill_rarity',
     rarity: 'rare',
     target: 1500,
@@ -62,8 +82,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_rare_4000',
     category: 'rarity',
-    get title() { return tp('Defeat {count} rare enemies.', { count: 4000 }); },
-    get description() { return tp('Defeat {count} rare enemies.', { count: 4000 }); },
+    get title() {
+      return tp('Defeat {count} rare enemies.', { count: 4000 });
+    },
+    get description() {
+      return tp('Defeat {count} rare enemies.', { count: 4000 });
+    },
     type: 'kill_rarity',
     rarity: 'rare',
     target: 4000,
@@ -72,8 +96,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_rare_15000',
     category: 'rarity',
-    get title() { return tp('Defeat {count} rare enemies.', { count: 15000 }); },
-    get description() { return tp('Defeat {count} rare enemies.', { count: 15000 }); },
+    get title() {
+      return tp('Defeat {count} rare enemies.', { count: 15000 });
+    },
+    get description() {
+      return tp('Defeat {count} rare enemies.', { count: 15000 });
+    },
     type: 'kill_rarity',
     rarity: 'rare',
     target: 15000,
@@ -82,8 +110,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_rare_30000',
     category: 'rarity',
-    get title() { return tp('Defeat {count} rare enemies.', { count: 30000 }); },
-    get description() { return tp('Defeat {count} rare enemies.', { count: 30000 }); },
+    get title() {
+      return tp('Defeat {count} rare enemies.', { count: 30000 });
+    },
+    get description() {
+      return tp('Defeat {count} rare enemies.', { count: 30000 });
+    },
     type: 'kill_rarity',
     rarity: 'rare',
     target: 30000,
@@ -93,8 +125,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_epic_5',
     category: 'rarity',
-    get title() { return tp('Defeat {count} epic enemies.', { count: 5 }); },
-    get description() { return tp('Defeat {count} epic enemies.', { count: 5 }); },
+    get title() {
+      return tp('Defeat {count} epic enemies.', { count: 5 });
+    },
+    get description() {
+      return tp('Defeat {count} epic enemies.', { count: 5 });
+    },
     type: 'kill_rarity',
     rarity: 'epic',
     target: 5,
@@ -103,8 +139,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_epic_30',
     category: 'rarity',
-    get title() { return tp('Defeat {count} epic enemies.', { count: 30 }); },
-    get description() { return tp('Defeat {count} epic enemies.', { count: 30 }); },
+    get title() {
+      return tp('Defeat {count} epic enemies.', { count: 30 });
+    },
+    get description() {
+      return tp('Defeat {count} epic enemies.', { count: 30 });
+    },
     type: 'kill_rarity',
     rarity: 'epic',
     target: 30,
@@ -113,8 +153,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_epic_75',
     category: 'rarity',
-    get title() { return tp('Defeat {count} epic enemies.', { count: 75 }); },
-    get description() { return tp('Defeat {count} epic enemies.', { count: 75 }); },
+    get title() {
+      return tp('Defeat {count} epic enemies.', { count: 75 });
+    },
+    get description() {
+      return tp('Defeat {count} epic enemies.', { count: 75 });
+    },
     type: 'kill_rarity',
     rarity: 'epic',
     target: 75,
@@ -123,8 +167,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_epic_200',
     category: 'rarity',
-    get title() { return tp('Defeat {count} epic enemies.', { count: 200 }); },
-    get description() { return tp('Defeat {count} epic enemies.', { count: 200 }); },
+    get title() {
+      return tp('Defeat {count} epic enemies.', { count: 200 });
+    },
+    get description() {
+      return tp('Defeat {count} epic enemies.', { count: 200 });
+    },
     type: 'kill_rarity',
     rarity: 'epic',
     target: 200,
@@ -133,8 +181,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_epic_500',
     category: 'rarity',
-    get title() { return tp('Defeat {count} epic enemies.', { count: 500 }); },
-    get description() { return tp('Defeat {count} epic enemies.', { count: 500 }); },
+    get title() {
+      return tp('Defeat {count} epic enemies.', { count: 500 });
+    },
+    get description() {
+      return tp('Defeat {count} epic enemies.', { count: 500 });
+    },
     type: 'kill_rarity',
     rarity: 'epic',
     target: 500,
@@ -143,8 +195,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_epic_1200',
     category: 'rarity',
-    get title() { return tp('Defeat {count} epic enemies.', { count: 1200 }); },
-    get description() { return tp('Defeat {count} epic enemies.', { count: 1200 }); },
+    get title() {
+      return tp('Defeat {count} epic enemies.', { count: 1200 });
+    },
+    get description() {
+      return tp('Defeat {count} epic enemies.', { count: 1200 });
+    },
     type: 'kill_rarity',
     rarity: 'epic',
     target: 1200,
@@ -153,8 +209,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_epic_4000',
     category: 'rarity',
-    get title() { return tp('Defeat {count} epic enemies.', { count: 4000 }); },
-    get description() { return tp('Defeat {count} epic enemies.', { count: 4000 }); },
+    get title() {
+      return tp('Defeat {count} epic enemies.', { count: 4000 });
+    },
+    get description() {
+      return tp('Defeat {count} epic enemies.', { count: 4000 });
+    },
     type: 'kill_rarity',
     rarity: 'epic',
     target: 4000,
@@ -163,8 +223,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_epic_8000',
     category: 'rarity',
-    get title() { return tp('Defeat {count} epic enemies.', { count: 8000 }); },
-    get description() { return tp('Defeat {count} epic enemies.', { count: 8000 }); },
+    get title() {
+      return tp('Defeat {count} epic enemies.', { count: 8000 });
+    },
+    get description() {
+      return tp('Defeat {count} epic enemies.', { count: 8000 });
+    },
     type: 'kill_rarity',
     rarity: 'epic',
     target: 8000,
@@ -174,8 +238,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_legendary_3',
     category: 'rarity',
-    get title() { return tp('Defeat {count} legendary enemies.', { count: 3 }); },
-    get description() { return tp('Defeat {count} legendary enemies.', { count: 3 }); },
+    get title() {
+      return tp('Defeat {count} legendary enemies.', { count: 3 });
+    },
+    get description() {
+      return tp('Defeat {count} legendary enemies.', { count: 3 });
+    },
     type: 'kill_rarity',
     rarity: 'legendary',
     target: 3,
@@ -184,8 +252,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_legendary_15',
     category: 'rarity',
-    get title() { return tp('Defeat {count} legendary enemies.', { count: 15 }); },
-    get description() { return tp('Defeat {count} legendary enemies.', { count: 15 }); },
+    get title() {
+      return tp('Defeat {count} legendary enemies.', { count: 15 });
+    },
+    get description() {
+      return tp('Defeat {count} legendary enemies.', { count: 15 });
+    },
     type: 'kill_rarity',
     rarity: 'legendary',
     target: 15,
@@ -194,8 +266,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_legendary_50',
     category: 'rarity',
-    get title() { return tp('Defeat {count} legendary enemies.', { count: 50 }); },
-    get description() { return tp('Defeat {count} legendary enemies.', { count: 50 }); },
+    get title() {
+      return tp('Defeat {count} legendary enemies.', { count: 50 });
+    },
+    get description() {
+      return tp('Defeat {count} legendary enemies.', { count: 50 });
+    },
     type: 'kill_rarity',
     rarity: 'legendary',
     target: 50,
@@ -204,8 +280,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_legendary_120',
     category: 'rarity',
-    get title() { return tp('Defeat {count} legendary enemies.', { count: 120 }); },
-    get description() { return tp('Defeat {count} legendary enemies.', { count: 120 }); },
+    get title() {
+      return tp('Defeat {count} legendary enemies.', { count: 120 });
+    },
+    get description() {
+      return tp('Defeat {count} legendary enemies.', { count: 120 });
+    },
     type: 'kill_rarity',
     rarity: 'legendary',
     target: 120,
@@ -214,8 +294,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_legendary_400',
     category: 'rarity',
-    get title() { return tp('Defeat {count} legendary enemies.', { count: 400 }); },
-    get description() { return tp('Defeat {count} legendary enemies.', { count: 400 }); },
+    get title() {
+      return tp('Defeat {count} legendary enemies.', { count: 400 });
+    },
+    get description() {
+      return tp('Defeat {count} legendary enemies.', { count: 400 });
+    },
     type: 'kill_rarity',
     rarity: 'legendary',
     target: 400,
@@ -224,8 +308,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_legendary_900',
     category: 'rarity',
-    get title() { return tp('Defeat {count} legendary enemies.', { count: 900 }); },
-    get description() { return tp('Defeat {count} legendary enemies.', { count: 900 }); },
+    get title() {
+      return tp('Defeat {count} legendary enemies.', { count: 900 });
+    },
+    get description() {
+      return tp('Defeat {count} legendary enemies.', { count: 900 });
+    },
     type: 'kill_rarity',
     rarity: 'legendary',
     target: 900,
@@ -234,8 +322,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_legendary_2400',
     category: 'rarity',
-    get title() { return tp('Defeat {count} legendary enemies.', { count: 2400 }); },
-    get description() { return tp('Defeat {count} legendary enemies.', { count: 2400 }); },
+    get title() {
+      return tp('Defeat {count} legendary enemies.', { count: 2400 });
+    },
+    get description() {
+      return tp('Defeat {count} legendary enemies.', { count: 2400 });
+    },
     type: 'kill_rarity',
     rarity: 'legendary',
     target: 2400,
@@ -244,8 +336,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_legendary_5000',
     category: 'rarity',
-    get title() { return tp('Defeat {count} legendary enemies.', { count: 5000 }); },
-    get description() { return tp('Defeat {count} legendary enemies.', { count: 5000 }); },
+    get title() {
+      return tp('Defeat {count} legendary enemies.', { count: 5000 });
+    },
+    get description() {
+      return tp('Defeat {count} legendary enemies.', { count: 5000 });
+    },
     type: 'kill_rarity',
     rarity: 'legendary',
     target: 5000,
@@ -255,8 +351,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_mythic_1',
     category: 'rarity',
-    get title() { return tp('Defeat {count} mythic enemies.', { count: 1 }); },
-    get description() { return tp('Defeat {count} mythic enemies.', { count: 1 }); },
+    get title() {
+      return tp('Defeat {count} mythic enemies.', { count: 1 });
+    },
+    get description() {
+      return tp('Defeat {count} mythic enemies.', { count: 1 });
+    },
     type: 'kill_rarity',
     rarity: 'mythic',
     target: 1,
@@ -265,8 +365,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_mythic_8',
     category: 'rarity',
-    get title() { return tp('Defeat {count} mythic enemies.', { count: 8 }); },
-    get description() { return tp('Defeat {count} mythic enemies.', { count: 8 }); },
+    get title() {
+      return tp('Defeat {count} mythic enemies.', { count: 8 });
+    },
+    get description() {
+      return tp('Defeat {count} mythic enemies.', { count: 8 });
+    },
     type: 'kill_rarity',
     rarity: 'mythic',
     target: 8,
@@ -275,8 +379,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_mythic_38',
     category: 'rarity',
-    get title() { return tp('Defeat {count} mythic enemies.', { count: 38 }); },
-    get description() { return tp('Defeat {count} mythic enemies.', { count: 38 }); },
+    get title() {
+      return tp('Defeat {count} mythic enemies.', { count: 38 });
+    },
+    get description() {
+      return tp('Defeat {count} mythic enemies.', { count: 38 });
+    },
     type: 'kill_rarity',
     rarity: 'mythic',
     target: 38,
@@ -285,8 +393,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_mythic_80',
     category: 'rarity',
-    get title() { return tp('Defeat {count} mythic enemies.', { count: 80 }); },
-    get description() { return tp('Defeat {count} mythic enemies.', { count: 80 }); },
+    get title() {
+      return tp('Defeat {count} mythic enemies.', { count: 80 });
+    },
+    get description() {
+      return tp('Defeat {count} mythic enemies.', { count: 80 });
+    },
     type: 'kill_rarity',
     rarity: 'mythic',
     target: 80,
@@ -295,8 +407,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_mythic_200',
     category: 'rarity',
-    get title() { return tp('Defeat {count} mythic enemies.', { count: 200 }); },
-    get description() { return tp('Defeat {count} mythic enemies.', { count: 200 }); },
+    get title() {
+      return tp('Defeat {count} mythic enemies.', { count: 200 });
+    },
+    get description() {
+      return tp('Defeat {count} mythic enemies.', { count: 200 });
+    },
     type: 'kill_rarity',
     rarity: 'mythic',
     target: 200,
@@ -305,8 +421,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_mythic_450',
     category: 'rarity',
-    get title() { return tp('Defeat {count} mythic enemies.', { count: 450 }); },
-    get description() { return tp('Defeat {count} mythic enemies.', { count: 450 }); },
+    get title() {
+      return tp('Defeat {count} mythic enemies.', { count: 450 });
+    },
+    get description() {
+      return tp('Defeat {count} mythic enemies.', { count: 450 });
+    },
     type: 'kill_rarity',
     rarity: 'mythic',
     target: 450,
@@ -315,8 +435,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_mythic_1200',
     category: 'rarity',
-    get title() { return tp('Defeat {count} mythic enemies.', { count: 1200 }); },
-    get description() { return tp('Defeat {count} mythic enemies.', { count: 1200 }); },
+    get title() {
+      return tp('Defeat {count} mythic enemies.', { count: 1200 });
+    },
+    get description() {
+      return tp('Defeat {count} mythic enemies.', { count: 1200 });
+    },
     type: 'kill_rarity',
     rarity: 'mythic',
     target: 1200,
@@ -325,8 +449,12 @@ export const RARITY_QUESTS = [
   {
     id: 'kill_mythic_3000',
     category: 'rarity',
-    get title() { return tp('Defeat {count} mythic enemies.', { count: 3000 }); },
-    get description() { return tp('Defeat {count} mythic enemies.', { count: 3000 }); },
+    get title() {
+      return tp('Defeat {count} mythic enemies.', { count: 3000 });
+    },
+    get description() {
+      return tp('Defeat {count} mythic enemies.', { count: 3000 });
+    },
     type: 'kill_rarity',
     rarity: 'mythic',
     target: 3000,

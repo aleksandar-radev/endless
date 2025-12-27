@@ -1,11 +1,5 @@
-import {
-  ITEM_ICONS,
-  ITEM_RARITY,
-  ITEM_STAT_POOLS,
-  SLOT_REQUIREMENTS,
-  TWO_HANDED_TYPES,
-} from './constants/items.js';
-import { getDivisor, getStatDecimalPlaces, STATS, getItemTierBonus } from './constants/stats/stats.js';
+import { ITEM_ICONS, ITEM_RARITY, ITEM_STAT_POOLS, SLOT_REQUIREMENTS, TWO_HANDED_TYPES } from './constants/items.js';
+import { getDivisor, getStatDecimalPlaces, STATS, itemLevelScaling, itemTierScaling } from './constants/stats/stats.js';
 import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
 import { MISC_STATS } from './constants/stats/miscStats.js';
@@ -14,6 +8,7 @@ import { UNIQUE_PERCENT_CAP_MULTIPLIER, UNIQUE_ITEMS, ITEM_SETS } from './consta
 import { options, ascension } from './globals.js';
 import { formatStatName, formatNumber } from './ui/ui.js';
 import { t } from './i18n.js';
+import { getSubtypeConfig } from './constants/itemSubtypes.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 
@@ -30,28 +25,22 @@ const SPECIAL_PERCENT_CAPS = {
 export const AVAILABLE_STATS = Object.fromEntries(
   Object.entries(STATS)
     .filter(([_, config]) => config.item)
-    .map(([stat, config]) => [stat, config.item]),
+    .map(([stat, config]) => [stat, config.item])
 );
 
 // Precompute lookup tables so we can recover stat bounds for legacy unique/set items
 // that may lack stored roll metadata.
 const UNIQUE_ITEM_STATS = new Map(
-  UNIQUE_ITEMS.map((item) => [
-    item.id,
-    new Map((item.stats || []).map((entry) => [entry.stat, entry])),
-  ]),
+  UNIQUE_ITEMS.map((item) => [item.id, new Map((item.stats || []).map((entry) => [entry.stat, entry]))])
 );
 
 const ITEM_SET_LOOKUP = new Map(
   ITEM_SETS.map((set) => [
     set.id,
     new Map(
-      (set.items || []).map((piece) => [
-        piece.id,
-        new Map((piece.stats || []).map((entry) => [entry.stat, entry])),
-      ]),
+      (set.items || []).map((piece) => [piece.id, new Map((piece.stats || []).map((entry) => [entry.stat, entry]))])
     ),
-  ]),
+  ])
 );
 
 const RESISTANCE_STATS = [
@@ -94,10 +83,7 @@ const STAT_GROUPS = [
   { name: 'misc', order: MISC_ORDER },
 ];
 
-const HANDED_ITEM_TYPES = new Set([
-  ...SLOT_REQUIREMENTS.weapon,
-  ...SLOT_REQUIREMENTS.offhand,
-]);
+const HANDED_ITEM_TYPES = new Set([...SLOT_REQUIREMENTS.weapon, ...SLOT_REQUIREMENTS.offhand]);
 
 export default class Item {
   constructor(type, level, rarity, tier = 1, existingStats = null, metaData = {}) {
@@ -107,21 +93,43 @@ export default class Item {
     this.tier = tier;
     // Only generate new stats if no existing stats provided
     this.metaData = metaData || {};
-    // Persist the scaling system used when the item was obtained/rolled.
-    // This prevents exploits where players switch scaling systems before rerolling.
-    if (!this.metaData.scalingSystem) {
-      this.metaData.scalingSystem = options?.scalingSystem || 'simple';
-    }
-    this.nameKey = this.metaData.nameKey || null;
-    this.descriptionKey = this.metaData.descriptionKey || null;
-    this.uniqueId = this.metaData.uniqueId || null;
-    this.setId = this.metaData.setId || null;
-    this.setNameKey = this.metaData.setNameKey || null;
+
+    // Subtype support - default to item type for backward compatibility
+    this.subtype = this.metaData.subtype || this.type;
+
     this.stats = existingStats || this.generateStats();
     this.id = crypto.randomUUID();
   }
 
+  get subtypeData() {
+    return this.subtype ? getSubtypeConfig(this.type, this.subtype) : null;
+  }
+
+  get nameKey() {
+    return this.metaData.nameKey || null;
+  }
+
+  get descriptionKey() {
+    return this.metaData.descriptionKey || null;
+  }
+
+  get uniqueId() {
+    return this.metaData.uniqueId || null;
+  }
+
+  get setId() {
+    return this.metaData.setId || null;
+  }
+
+  get setNameKey() {
+    return this.metaData.setNameKey || null;
+  }
+
   isTwoHanded() {
+    // Check subtype override first
+    if (this.subtypeData?.twoHanded !== undefined) {
+      return this.subtypeData.twoHanded;
+    }
     return TWO_HANDED_TYPES.includes(this.type);
   }
 
@@ -131,62 +139,87 @@ export default class Item {
   }
 
   getLevelScale(stat, level) {
-    const scalingFn = AVAILABLE_STATS[stat].scaling;
-    if (typeof scalingFn === 'function') {
-      // Use the scaling system that was active when this item was obtained.
-      // Fallback to current options for legacy items that might lack metadata.
-      const scalingSystem = this.metaData?.scalingSystem || options?.scalingSystem || 'simple';
-      // Check if the scaling function accepts 3 parameters (level, tier, scalingSystem)
-      if (scalingFn.length >= 3) {
-        return scalingFn(level, this.tier, scalingSystem);
+    const statConfig = AVAILABLE_STATS[stat];
+    const isPercent = stat.toLowerCase().includes('percent') || stat.toLowerCase().includes('chance');
+
+    if (isPercent) {
+      if (statConfig.tierScalingMaxPercent) {
+        const maxPercent = statConfig.tierScalingMaxPercent[this.tier] || statConfig.tierScalingMaxPercent[12] || 2000;
+        return maxPercent / 100;
       }
+      return itemTierScaling(this.tier);
+    }
+
+    let scalingFn = statConfig.scaling;
+
+    // Check for item-type-specific scaling override
+    if (statConfig.overrides?.[this.type]?.scaling) {
+      scalingFn = statConfig.overrides[this.type].scaling;
+    }
+
+    if (typeof scalingFn === 'function') {
       return scalingFn(level, this.tier);
     }
-    return 1;
-  }
-
-  getTierBonus(stat) {
-    return getItemTierBonus(stat, this.tier);
+    return itemLevelScaling(level, this.tier);
   }
 
   getMultiplier() {
     return ITEM_RARITY[this.rarity].statMultiplier;
   }
 
-  calculateStatValue({ baseValue, tierBonus, multiplier, scale, stat }) {
+  calculateStatValue({ baseValue, multiplier, scale, stat }) {
     const decimals = getStatDecimalPlaces(stat);
     const handedMultiplier = this.isTwoHanded() ? 2 : 1;
-    let val = baseValue * tierBonus * multiplier * scale * handedMultiplier;
-
-    if (stat === 'attackSpeedPercent') {
-      val *= 100;
-    }
+    let val = baseValue * multiplier * scale * handedMultiplier;
 
     val = Number(val.toFixed(decimals));
 
-    const limitConfig = STATS[stat].item?.limit;
+    const statConfig = STATS[stat];
+    const limitConfig = statConfig.item?.limit;
+    const typeOverrides = statConfig.item?.overrides?.[this.type];
+
+    // Get per-stat cap (new system)
+    let baseCap = statConfig.item?.cap ?? Infinity;
+
+    // Check for per-type cap override
+    if (typeOverrides?.cap !== undefined) {
+      baseCap = typeOverrides.cap;
+    }
+
+    // Apply subtype multiplier to cap if applicable
+    if (this.subtypeData?.statMultipliers?.[stat]) {
+      const multiplier = this.subtypeData.statMultipliers[stat];
+      const capMultiplier = multiplier.min || 1; // Use min multiplier for cap
+      baseCap *= capMultiplier;
+    }
+
+    // For backward compatibility, still check limit config
     let baseLimit = Infinity;
-    if (typeof limitConfig === 'number') {
+    if (typeOverrides?.limit !== undefined) {
+      baseLimit = typeOverrides.limit;
+    } else if (typeof limitConfig === 'number') {
       baseLimit = limitConfig;
     } else if (limitConfig && typeof limitConfig === 'object') {
       baseLimit = limitConfig[this.type] ?? limitConfig.default ?? Infinity;
     }
-    if (stat === 'attackSpeedPercent') {
-      baseLimit *= 100;
-    }
+
     if (Number.isFinite(baseLimit)) {
       baseLimit *= handedMultiplier;
     }
-    const ascBonuses = ascension?.getBonuses?.() || {};
-    const percentCapMultiplier = 1 + (ascBonuses.itemPercentCapPercent || 0);
+    if (Number.isFinite(baseCap)) {
+      baseCap *= handedMultiplier;
+    }
+
+    // Use per-stat cap for percent stats, otherwise use old system
     const uniquePercentCapMultiplier = this.metaData?.unique ? UNIQUE_PERCENT_CAP_MULTIPLIER : 1;
-    const basePercentCap = SPECIAL_PERCENT_CAPS[stat] || DEFAULT_PERCENT_CAP;
-    const percentCap =
-      basePercentCap * percentCapMultiplier * handedMultiplier * uniquePercentCapMultiplier;
-    const limit = stat.toLowerCase().includes('percent')
-      ? Math.min(baseLimit, percentCap)
-      : baseLimit;
-    val = Math.min(val, limit);
+    if (stat.toLowerCase().includes('percent') || stat.toLowerCase().includes('chance')) {
+      // Use per-stat cap (no ascension multiplier anymore)
+      baseCap *= uniquePercentCapMultiplier;
+      val = Math.min(val, Math.min(baseLimit, baseCap));
+    } else {
+      // Flat stats - use limit only
+      val = Math.min(val, baseLimit);
+    }
 
     this.metaData = this.metaData || {};
     if (!this.metaData.statRolls) {
@@ -201,14 +234,69 @@ export default class Item {
   }
 
   /**
+   * Get the stat range for this item type, considering overrides.
+   * @param {string} stat
+   * @returns {{min: number, max: number, limit: number}}
+   */
+  getStatRange(stat) {
+    const statConfig = AVAILABLE_STATS[stat];
+    if (!statConfig) return null;
+
+    // Check for type-specific overrides first
+    const typeOverrides = statConfig.overrides?.[this.type];
+
+    let min = typeOverrides?.min ?? statConfig.min;
+    let max = typeOverrides?.max ?? statConfig.max;
+    let limit = typeOverrides?.limit ?? statConfig.limit;
+
+    // Apply subtype multipliers if present
+    if (this.subtypeData?.statMultipliers?.[stat]) {
+      const multiplier = this.subtypeData.statMultipliers[stat];
+      min = min * (multiplier.min || 1);
+      max = max * (multiplier.max || 1);
+    }
+
+    return { min, max, limit };
+  }
+
+  /**
    * Calculate the min and max possible value for a given stat on this item.
    * @param {string} stat
    * @returns {{min: number, max: number}}
    */
   getStatMinMax(stat) {
     const statInfo = STATS[stat];
+    const statConfig = AVAILABLE_STATS[stat];
     const decimals = getStatDecimalPlaces(stat);
     const handedMultiplier = this.isTwoHanded() ? 2 : 1;
+    const isPercentStat = stat.toLowerCase().includes('percent') || stat.toLowerCase().includes('chance');
+
+    // For percent stats in the new system (tierScalingMaxPercent)
+    if (isPercentStat && statConfig?.tierScalingMaxPercent) {
+      const tierMax = statConfig.tierScalingMaxPercent[this.tier] || statConfig.tierScalingMaxPercent[12] || 2000;
+      const minBase = statConfig.min || 1;
+      const maxBase = statConfig.max || 100;
+
+      let minVal = minBase * (tierMax / 100);
+      let maxVal = maxBase * (tierMax / 100);
+
+      // Apply subtype multiplier to max if present
+      if (this.subtypeData?.statMultipliers?.[stat]) {
+        const multiplier = this.subtypeData.statMultipliers[stat];
+        minVal = minVal * (multiplier.min || 1);
+        maxVal = maxVal * (multiplier.max || 1);
+      }
+
+      // Apply handed multiplier
+      maxVal = maxVal * handedMultiplier;
+
+      minVal = Number(minVal.toFixed(decimals));
+      maxVal = Number(maxVal.toFixed(decimals));
+
+      return { min: minVal, max: maxVal };
+    }
+
+    // Legacy handling for flat stats and old percent stat system
     const limitConfig = statInfo?.item?.limit;
     let baseLimit = Infinity;
     if (typeof limitConfig === 'number') {
@@ -216,9 +304,7 @@ export default class Item {
     } else if (limitConfig && typeof limitConfig === 'object') {
       baseLimit = limitConfig[this.type] ?? limitConfig.default ?? Infinity;
     }
-    if (stat === 'attackSpeedPercent') {
-      baseLimit *= 100;
-    }
+
     if (Number.isFinite(baseLimit)) {
       baseLimit *= handedMultiplier;
     }
@@ -226,21 +312,13 @@ export default class Item {
     const percentCapMultiplier = 1 + (ascBonuses.itemPercentCapPercent || 0);
     const uniquePercentCapMultiplier = this.metaData?.unique ? UNIQUE_PERCENT_CAP_MULTIPLIER : 1;
     const basePercentCap = SPECIAL_PERCENT_CAPS[stat] || DEFAULT_PERCENT_CAP;
-    const percentCap =
-      basePercentCap * percentCapMultiplier * handedMultiplier * uniquePercentCapMultiplier;
-    const limit = stat.toLowerCase().includes('percent')
-      ? Math.min(baseLimit, percentCap)
-      : baseLimit;
+    const percentCap = basePercentCap * percentCapMultiplier * handedMultiplier * uniquePercentCapMultiplier;
+    const limit = isPercentStat ? Math.min(baseLimit, percentCap) : baseLimit;
     const computeRangeFromBase = (minBase, maxBase) => {
-      const tierBonus = this.getTierBonus(stat);
       const multiplier = this.getMultiplier();
       const scale = this.getLevelScale(stat, this.level);
-      let minVal = minBase * tierBonus * multiplier * scale * handedMultiplier;
-      let maxVal = maxBase * tierBonus * multiplier * scale * handedMultiplier;
-      if (stat === 'attackSpeedPercent') {
-        minVal *= 100;
-        maxVal *= 100;
-      }
+      let minVal = minBase * multiplier * scale * handedMultiplier;
+      let maxVal = maxBase * multiplier * scale * handedMultiplier;
       minVal = Number(minVal.toFixed(decimals));
       maxVal = Number(maxVal.toFixed(decimals));
       minVal = Math.min(minVal, limit);
@@ -272,9 +350,9 @@ export default class Item {
       return specialRange;
     }
 
-    const statConfig = AVAILABLE_STATS[stat];
-    if (!statInfo || !statConfig) return { min: 0, max: 0 };
-    return computeRangeFromBase(statConfig.min, statConfig.max);
+    const range = this.getStatRange(stat);
+    if (!statInfo || !range) return { min: 0, max: 0 };
+    return computeRangeFromBase(range.min, range.max);
   }
 
   /**
@@ -294,40 +372,76 @@ export default class Item {
     const itemPool = ITEM_STAT_POOLS[this.type];
     const totalStatsNeeded = ITEM_RARITY[this.rarity].totalStats;
     const multiplier = this.getMultiplier();
-    const calculateStatValue = (stat, baseValue) => {
+    const calcValue = (stat, baseValue) => {
       const scale = this.getLevelScale(stat, this.level);
-      const tierBonus = this.getTierBonus(stat);
-      return this.calculateStatValue({ baseValue, tierBonus, multiplier, scale, stat });
+      return this.calculateStatValue({ baseValue, multiplier, scale, stat });
     };
 
-    // Add mandatory stats first
+    const subtypeData = this.subtypeData || {};
+    const disabledStats = new Set(subtypeData.disabledStats || []);
+    // These stats are added to the "possible" pool
+    const additionalStats = (subtypeData.additionalStats || []).filter((s) => !disabledStats.has(s));
+    const preferredStats = new Set(subtypeData.preferredStats || []);
+
+    // 1. Add mandatory stats (from Item Type)
+    // If a mandatory stat is disabled by subtype, it is skipped.
     itemPool.mandatory.forEach((stat) => {
-      const range = AVAILABLE_STATS[stat];
+      if (disabledStats.has(stat)) return;
+      const range = this.getStatRange(stat);
+      if (!range) return;
       const baseValue = Math.random() * (range.max - range.min) + range.min;
-      stats[stat] = calculateStatValue(stat, baseValue);
+      stats[stat] = calcValue(stat, baseValue);
     });
 
-    // Add random stats from possible pool until totalStatsNeeded
-    const remainingStats = totalStatsNeeded - itemPool.mandatory.length;
-    const availableStats = [...itemPool.possible].filter((stat) => !itemPool.mandatory.includes(stat));
+    // 2. Build the pool of available random stats
+    // Start with the item's standard possible stats
+    // Add additionalStats from the subtype
+    // Remove mandatory stats (already added)
+    // Remove disabled stats
+    let availableStats = [...itemPool.possible, ...additionalStats].filter(
+      (stat) => !itemPool.mandatory.includes(stat) && !disabledStats.has(stat)
+    );
+
+    // Deduplicate in case additionalStats overlaps with possible stats
+    availableStats = [...new Set(availableStats)];
+
+    let currentStatCount = Object.keys(stats).length;
     let resistanceCount = Object.keys(stats).filter((s) => RESISTANCE_STATS.includes(s)).length;
     let attributeCount = Object.keys(stats).filter((s) => ATTRIBUTE_STATS.includes(s)).length;
 
-    for (let i = 0; i < remainingStats && availableStats.length > 0; ) {
+    while (currentStatCount < totalStatsNeeded && availableStats.length > 0) {
+      // Filter eligibility based on constraints (max 3 res, max 3 attr)
       const eligibleStats = availableStats.filter(
         (s) =>
           !(RESISTANCE_STATS.includes(s) && resistanceCount >= 3) &&
-          !(ATTRIBUTE_STATS.includes(s) && attributeCount >= 3),
+          !(ATTRIBUTE_STATS.includes(s) && attributeCount >= 3)
       );
+
       if (eligibleStats.length === 0) break;
-      const stat = eligibleStats[Math.floor(Math.random() * eligibleStats.length)];
-      availableStats.splice(availableStats.indexOf(stat), 1);
-      const range = AVAILABLE_STATS[stat];
+
+      // Weighted selection
+      // Default weight = 1
+      // Preferred weight = 3
+      const weightedStats = eligibleStats.flatMap((stat) => {
+        const weight = preferredStats.has(stat) ? 3 : 1;
+        return Array(weight).fill(stat);
+      });
+
+      const stat = weightedStats[Math.floor(Math.random() * weightedStats.length)];
+
+      // Remove chosen stat from available pool so it's not picked again
+      availableStats = availableStats.filter((s) => s !== stat);
+
+      const range = this.getStatRange(stat);
+      if (!range) continue;
+
       const baseValue = Math.random() * (range.max - range.min) + range.min;
-      stats[stat] = calculateStatValue(stat, baseValue);
+      stats[stat] = calcValue(stat, baseValue);
+
       if (RESISTANCE_STATS.includes(stat)) resistanceCount++;
       if (ATTRIBUTE_STATS.includes(stat)) attributeCount++;
-      i++;
+
+      currentStatCount++;
     }
 
     return stats;
@@ -347,6 +461,14 @@ export default class Item {
         : ITEM_RARITY[this.rarity]?.name || this.rarity;
 
     const typeName = t(this.type) !== this.type ? t(this.type) : this.type;
+
+    // Add subtype name if present, but ignore if it's the same as the base type to avoid "Sword Sword"
+    const subtypeName = this.subtypeData?.nameKey && this.subtype !== this.type ? t(this.subtypeData.nameKey) : null;
+
+    if (subtypeName) {
+      return `${rarityName} ${subtypeName} ${typeName}`;
+    }
+
     return `${rarityName} ${typeName}`;
   }
 
@@ -381,9 +503,7 @@ export default class Item {
       tags.push(`<span class="item-tag item-tag-set">${t('item.tag.set')}</span>`);
     }
 
-    const descriptionLine = this.descriptionKey
-      ? `<div class="item-description">${t(this.descriptionKey)}</div>`
-      : '';
+    const descriptionLine = this.descriptionKey ? `<div class="item-description">${t(this.descriptionKey)}</div>` : '';
 
     let setSection = '';
     if (this.setId) {
@@ -396,9 +516,7 @@ export default class Item {
       const bonusHtml = bonuses
         .map((bonus) => {
           const activeClass = bonus.active ? ' active' : '';
-          const bonusName = bonus.nameKey
-            ? t(bonus.nameKey)
-            : t('item.setBonusPieces', { pieces: bonus.pieces });
+          const bonusName = bonus.nameKey ? t(bonus.nameKey) : t('item.setBonusPieces', { pieces: bonus.pieces });
           const indicator = bonus.active
             ? '<span class="set-bonus-indicator active">★</span>'
             : '<span class="set-bonus-indicator">☆</span>';
@@ -435,46 +553,46 @@ export default class Item {
         ${descriptionLine}
         <div class="item-stats">
           ${STAT_GROUPS.map((group) => {
-    const stats = group.order.filter((s) => this.stats[s] !== undefined);
-    if (stats.length === 0) return null;
-    const groupHtml = stats
-      .map((stat) => {
-        const value = this.stats[stat];
-        const statDef = STATS[stat] || {};
-        if (statDef.showValue === false) {
-          return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+            const stats = group.order.filter((s) => this.stats[s] !== undefined);
+            if (stats.length === 0) return null;
+            const groupHtml = stats
+              .map((stat) => {
+                const value = this.stats[stat];
+                const statDef = STATS[stat] || {};
+                if (statDef.showValue === false) {
+                  return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
                     <span>${formatStatName(stat)}</span>
                   </div>`;
-        }
-        const decimals = getStatDecimalPlaces(stat);
-        const formattedValue = formatNumber(value.toFixed(decimals));
-        let adv = '';
-        if (showAdvanced && statMinMax[stat]) {
-          const minRaw = statMinMax[stat].min;
-          const maxRaw = statMinMax[stat].max;
-          if (options?.showRollPercentiles) {
-            let pct = 100;
-            if (maxRaw > minRaw) {
-              pct = Math.max(0, Math.min(1, (value - minRaw) / (maxRaw - minRaw))) * 100;
-            }
-            const pctStr = `${Math.round(pct)}%`;
-            adv = `<span class="item-ref-range" style="float:right; color:#aaa; text-align:right; min-width:60px;">${pctStr}</span>`;
-          } else {
-            const min = formatNumber(minRaw.toFixed(decimals));
-            const max = formatNumber(maxRaw.toFixed(decimals));
-            adv = `<span class="item-ref-range" style="float:right; color:#aaa; text-align:right; min-width:60px;">${min} - ${max}</span>`;
-          }
-        }
-        return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                }
+                const decimals = getStatDecimalPlaces(stat);
+                const formattedValue = formatNumber(value.toFixed(decimals));
+                let adv = '';
+                if (showAdvanced && statMinMax[stat]) {
+                  const minRaw = statMinMax[stat].min;
+                  const maxRaw = statMinMax[stat].max;
+                  if (options?.showRollPercentiles) {
+                    let pct = 100;
+                    if (maxRaw > minRaw) {
+                      pct = Math.max(0, Math.min(1, (value - minRaw) / (maxRaw - minRaw))) * 100;
+                    }
+                    const pctStr = `${Math.round(pct)}%`;
+                    adv = `<span class="item-ref-range" style="float:right; color:#aaa; text-align:right; min-width:60px;">${pctStr}</span>`;
+                  } else {
+                    const min = formatNumber(minRaw.toFixed(decimals));
+                    const max = formatNumber(maxRaw.toFixed(decimals));
+                    adv = `<span class="item-ref-range" style="float:right; color:#aaa; text-align:right; min-width:60px;">${min} - ${max}</span>`;
+                  }
+                }
+                return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
                   <span>${formatStatName(stat)}: ${formattedValue}${isPercentStat(stat) ? '%' : ''}</span>
                   ${adv}
                 </div>`;
-      })
-      .join('');
-    return groupHtml;
-  })
-    .filter(Boolean)
-    .join('<hr class="item-tooltip-separator" />')}
+              })
+              .join('');
+            return groupHtml;
+          })
+            .filter(Boolean)
+            .join('<hr class="item-tooltip-separator" />')}
         </div>
         ${setSection}
       </div>
@@ -489,14 +607,14 @@ export default class Item {
     if (this.metaData) {
       if (this.metaData.statRolls && Object.keys(this.metaData.statRolls).length > 0) {
         const entries = Object.entries(this.metaData.statRolls).filter(
-          ([, data]) => data && typeof data.baseValue === 'number',
+          ([, data]) => data && typeof data.baseValue === 'number'
         );
         if (entries.length) {
           return Object.fromEntries(entries.map(([stat, data]) => [stat, data.baseValue]));
         }
       }
       const legacyEntries = Object.entries(this.metaData).filter(
-        ([key, data]) => key !== 'statRolls' && data && typeof data.baseValue === 'number',
+        ([key, data]) => key !== 'statRolls' && data && typeof data.baseValue === 'number'
       );
       if (legacyEntries.length) {
         return Object.fromEntries(legacyEntries.map(([stat, data]) => [stat, data.baseValue]));
@@ -506,13 +624,9 @@ export default class Item {
     const multiplier = this.getMultiplier();
     for (const stat of Object.keys(this.stats)) {
       const scaling = this.getLevelScale(stat, this.level);
-      const tierBonus = this.getTierBonus(stat);
       const value = this.stats[stat];
       const handedMultiplier = this.isTwoHanded() ? 2 : 1;
-      let baseValue = value / (multiplier * scaling * tierBonus * handedMultiplier);
-      if (stat === 'attackSpeedPercent') {
-        baseValue /= 100;
-      }
+      let baseValue = value / (multiplier * scaling * handedMultiplier);
       baseValues[stat] = baseValue;
     }
     return baseValues;
@@ -520,7 +634,6 @@ export default class Item {
 
   /**
    * Apply a new level to the item, scaling all stats from the provided base values.
-   * @param {Object} baseValues - base stat values keyed by stat name
    * @param {number} newLevel
    */
   applyLevelToStats(newLevel) {
@@ -528,8 +641,7 @@ export default class Item {
     const multiplier = this.getMultiplier();
     for (const stat of Object.keys(this.stats)) {
       const scale = this.getLevelScale(stat, newLevel);
-      const tierBonus = this.getTierBonus(stat);
-      this.stats[stat] = this.calculateStatValue({ baseValue: baseValues[stat], tierBonus, multiplier, scale, stat });
+      this.stats[stat] = this.calculateStatValue({ baseValue: baseValues[stat], multiplier, scale, stat });
     }
     this.level = newLevel;
     if (Array.isArray(this.metaData?.setBonuses)) {
@@ -538,10 +650,8 @@ export default class Item {
         const updatedStats = {};
         for (const [stat, baseValue] of Object.entries(bonus.baseValues)) {
           const scale = this.getLevelScale(stat, newLevel);
-          const tierBonus = this.getTierBonus(stat);
           updatedStats[stat] = this.calculateStatValue({
             baseValue,
-            tierBonus,
             multiplier,
             scale,
             stat,
@@ -564,19 +674,17 @@ export default class Item {
     const attributeCount = Object.keys(this.stats).filter((s) => ATTRIBUTE_STATS.includes(s)).length;
     const eligibleStats = availableStats.filter(
       (s) =>
-        !(RESISTANCE_STATS.includes(s) && resistanceCount >= 3) &&
-        !(ATTRIBUTE_STATS.includes(s) && attributeCount >= 3),
+        !(RESISTANCE_STATS.includes(s) && resistanceCount >= 3) && !(ATTRIBUTE_STATS.includes(s) && attributeCount >= 3)
     );
     if (eligibleStats.length === 0) return;
     const stat = eligibleStats[Math.floor(Math.random() * eligibleStats.length)];
-    const range = AVAILABLE_STATS[stat];
+    const range = this.getStatRange(stat);
+    if (!range) return;
     const baseValue = Math.random() * (range.max - range.min) + range.min;
     const multiplier = this.getMultiplier();
     const scale = this.getLevelScale(stat, this.level);
-    const tierBonus = this.getTierBonus(stat);
     this.stats[stat] = this.calculateStatValue({
       baseValue,
-      tierBonus,
       multiplier,
       scale,
       stat,

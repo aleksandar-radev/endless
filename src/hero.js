@@ -12,7 +12,12 @@ import {
   crystalShop,
   runes,
 } from './globals.js';
-import { calculateArmorReduction, calculateResistanceReduction, createCombatText, createDamageNumber } from './combat.js';
+import {
+  calculateArmorReduction,
+  calculateResistanceReduction,
+  createCombatText,
+  createDamageNumber,
+} from './combat.js';
 import { handleSavedData } from './functions.js';
 import { updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
@@ -93,10 +98,7 @@ function xpRequiredForLevels(startLevel, levels) {
   const nMinus1 = n - 1;
 
   const linearSum = n * baseLevel + (nMinus1 * n) / 2;
-  const squaresSum =
-    n * baseLevel * baseLevel +
-    baseLevel * n * nMinus1 +
-    (nMinus1 * n * (2 * n - 1)) / 6;
+  const squaresSum = n * baseLevel * baseLevel + baseLevel * n * nMinus1 + (nMinus1 * n * (2 * n - 1)) / 6;
 
   const total = 10 * n + 30 * linearSum + 2 * squaresSum;
   if (!Number.isFinite(total)) return Number.POSITIVE_INFINITY;
@@ -282,8 +284,7 @@ export default class Hero {
     this.statPoints += attributesPerLevel * levels;
 
     const runeBonuses = runes?.getBonusEffects?.() || {};
-    const skillPointsPerLevel =
-      1 + (ascBonuses.skillPointsPerLevel || 0) + (runeBonuses.skillPointsPerLevel || 0);
+    const skillPointsPerLevel = 1 + (ascBonuses.skillPointsPerLevel || 0) + (runeBonuses.skillPointsPerLevel || 0);
     skillTree.addSkillPoints(levels * skillPointsPerLevel);
 
     // Dispatch a custom event for UI updates (e.g., prestige tab)
@@ -340,7 +341,7 @@ export default class Hero {
       itemLifeEffectivenessPercent,
       itemArmorEffectivenessPercent,
       shieldEffectiveness,
-      jewelryEffectiveness,
+      jewelryEffectiveness
     );
     const trainingBonuses = training.getTrainingBonuses();
     const soulBonuses = this.getSoulShopBonuses();
@@ -355,13 +356,13 @@ export default class Hero {
       /* attributeEffects */ {},
       skillTreeBonuses,
       equipmentBonuses,
-      trainingBonuses,
+      trainingBonuses
     );
     const basePercent = this.calculatePercentBonuses(
       /* attributeEffects */ {},
       skillTreeBonuses,
       equipmentBonuses,
-      trainingBonuses,
+      trainingBonuses
     );
 
     // 3) “Lock in” each attribute (STR, VIT, etc.) so that attributeEffects sees the %-increased value
@@ -376,12 +377,7 @@ export default class Hero {
     const attributeEffects = this.calculateAttributeEffects(skillTreeBonuses);
 
     // 5) Normal flat+% pass
-    const flatValues = this.calculateFlatValues(
-      attributeEffects,
-      skillTreeBonuses,
-      equipmentBonuses,
-      trainingBonuses,
-    );
+    const flatValues = this.calculateFlatValues(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses);
     if (runes) {
       runes.applyBonuses(flatValues);
     }
@@ -389,21 +385,17 @@ export default class Hero {
       attributeEffects,
       skillTreeBonuses,
       equipmentBonuses,
-      trainingBonuses,
+      trainingBonuses
     );
 
     ATTRIBUTE_KEYS.forEach((attr) => {
       const base = (STATS[attr]?.base || 0) + (STATS[attr]?.levelUpBonus || 0) * (this.level - 1);
       const allocated = this.primaryStats[attr] || 0;
       const prestigeFlat = (prestigeBonuses[attr] || 0) + (prestigeBonuses.allAttributes || 0);
-      const prestigePercent =
-        (prestigeBonuses[`${attr}Percent`] || 0) + (prestigeBonuses.allAttributesPercent || 0);
-      const permaFlat =
-        (this.permaStats[attr] || 0) + (this.permaStats.allAttributes || 0) - prestigeFlat;
+      const prestigePercent = (prestigeBonuses[`${attr}Percent`] || 0) + (prestigeBonuses.allAttributesPercent || 0);
+      const permaFlat = (this.permaStats[attr] || 0) + (this.permaStats.allAttributes || 0) - prestigeFlat;
       const permaPercent =
-        (this.permaStats[`${attr}Percent`] || 0) +
-        (this.permaStats.allAttributesPercent || 0) -
-        prestigePercent;
+        (this.permaStats[`${attr}Percent`] || 0) + (this.permaStats.allAttributesPercent || 0) - prestigePercent;
       const itemsFlat = (equipmentBonuses[attr] || 0) + (equipmentBonuses.allAttributes || 0);
       const itemsPercent =
         (equipmentBonuses[`${attr}Percent`] || 0) / getDivisor(`${attr}Percent`) +
@@ -417,8 +409,7 @@ export default class Hero {
         (trainingBonuses[`${attr}Percent`] || 0) / getDivisor(`${attr}Percent`) +
         (trainingBonuses.allAttributesPercent || 0) / getDivisor('allAttributesPercent');
       const soulFlat = (soulBonuses[attr] || 0) + (soulBonuses.allAttributes || 0);
-      const soulPercent =
-        (soulBonuses[`${attr}Percent`] || 0) + (soulBonuses.allAttributesPercent || 0);
+      const soulPercent = (soulBonuses[`${attr}Percent`] || 0) + (soulBonuses.allAttributesPercent || 0);
 
       this.statBreakdown[attr] = {
         base,
@@ -487,9 +478,7 @@ export default class Hero {
         const flatKey = stat + 'PerPoint';
         const hasFlatKey = flatKey in attrEffects;
         const extraPerPoint =
-          attr === 'endurance' && stat === 'thornsDamage'
-            ? skillTreeBonuses.enduranceThornsDamagePerPoint || 0
-            : 0;
+          attr === 'endurance' && stat === 'thornsDamage' ? skillTreeBonuses.enduranceThornsDamagePerPoint || 0 : 0;
         if (hasFlatKey || extraPerPoint !== 0) {
           const basePerPoint = hasFlatKey ? attrEffects[flatKey] : 0;
           const perPoint = (basePerPoint + extraPerPoint) * attrMultiplier;
@@ -505,8 +494,7 @@ export default class Hero {
         const percentKey = stat + 'PercentPer';
         if (percentKey in attrEffects && attrEffects[percentKey].enabled) {
           const value = attrEffects[percentKey].value * attrMultiplier;
-          percentBonus +=
-            Math.floor((this.stats[attr] || 0) / attrEffects[percentKey].points) * value;
+          percentBonus += Math.floor((this.stats[attr] || 0) / attrEffects[percentKey].points) * value;
         }
       }
 
@@ -521,10 +509,7 @@ export default class Hero {
 
     if (distributedIntelligenceElementalDamage > 0) {
       const shareMap = getElementalShareMap();
-      const distribution = distributeElementalAmount(
-        distributedIntelligenceElementalDamage,
-        shareMap,
-      );
+      const distribution = distributeElementalAmount(distributedIntelligenceElementalDamage, shareMap);
       Object.entries(distribution).forEach(([statKey, amount]) => {
         effects[statKey] = (effects[statKey] || 0) + amount;
       });
@@ -586,8 +571,7 @@ export default class Hero {
       (skillTreeBonuses.allAttributesPercent || 0) +
       (trainingBonuses.allAttributesPercent || 0);
     const sharedPercentAttributes =
-      sharedPercentAttributesRaw / getDivisor('allAttributesPercent') +
-      prestigeAllAttributesPercent;
+      sharedPercentAttributesRaw / getDivisor('allAttributesPercent') + prestigeAllAttributesPercent;
     for (const stat of STAT_KEYS) {
       if (stat.endsWith('Percent')) {
         const statName = stat.replace('Percent', '');
@@ -646,8 +630,7 @@ export default class Hero {
     // Stormcaller: scale lightning damage bonuses at the stat level so the Stats UI reflects the effect.
     // This applies to the aggregated lightningDamage (flat) and lightningDamagePercent (fraction).
     const lightningBonusEffectiveness =
-      (percentBonuses.lightningEffectivenessPercent || 0) +
-      (soulBonuses.lightningEffectivenessPercent || 0);
+      (percentBonuses.lightningEffectivenessPercent || 0) + (soulBonuses.lightningEffectivenessPercent || 0);
     const lightningBonusEffectivenessMultiplier = Math.max(0, 1 + (lightningBonusEffectiveness || 0));
     if (Math.abs(lightningBonusEffectivenessMultiplier - 1) > 1e-9) {
       if (Number.isFinite(flatValues.lightningDamage)) {
@@ -689,10 +672,7 @@ export default class Hero {
             percent += this.stats.allResistancePercent || 0;
           }
 
-          if (
-            (stat === 'armorPenetration' || stat === 'elementalPenetration') &&
-            this.stats.flatPenetrationPercent
-          ) {
+          if ((stat === 'armorPenetration' || stat === 'elementalPenetration') && this.stats.flatPenetrationPercent) {
             percent += this.stats.flatPenetrationPercent;
           }
 
@@ -752,7 +732,7 @@ export default class Hero {
     // Bloodmage: convert mana pool into life pool. Mana bonuses apply to mana first, then convert.
     // Life% bonuses apply only to base life (not the converted mana).
     let convertedManaForBloodmage = 0;
-    const conversionPercent = (this.stats.convertManaToLifePercent || 0);
+    const conversionPercent = this.stats.convertManaToLifePercent || 0;
 
     if (conversionPercent > 0) {
       const manaToConvert = this.stats.mana || 0;
@@ -812,8 +792,7 @@ export default class Hero {
 
       const resourceCapPerLevel = Math.max(
         0,
-        BASE_EXTRA_RESOURCE_DAMAGE_CAP_PER_LEVEL +
-          (ascensionBonuses.extraResourceDamageCapPerLevel || 0),
+        BASE_EXTRA_RESOURCE_DAMAGE_CAP_PER_LEVEL + (ascensionBonuses.extraResourceDamageCapPerLevel || 0)
       );
       const maxResourceAmount = Math.max(0, this.level * resourceCapPerLevel);
       if (maxResourceAmount <= 0) return { physical: 0, elemental: 0, perElement: {} };
@@ -857,7 +836,7 @@ export default class Hero {
     const initialResourceExtraDamage = computeResourceExtraDamage(
       this.stats,
       elementalShareMap,
-      resourceExtraPhysicalShare,
+      resourceExtraPhysicalShare
     );
 
     if (initialResourceExtraDamage.physical) {
@@ -870,27 +849,16 @@ export default class Hero {
 
     // Store flat-only values for later damage calculations
     this.baseDamages.physical = Math.floor(
-      flatValues.damage +
-        (ascensionBonuses.damage || 0) +
-        (this.stats.damagePerLevel || 0) * this.level,
+      flatValues.damage + (ascensionBonuses.damage || 0) + (this.stats.damagePerLevel || 0) * this.level
     );
-    this.baseDamages.elemental = Math.floor(
-      flatValues.elementalDamage + (ascensionBonuses.elementalDamage || 0),
-    );
+    this.baseDamages.elemental = Math.floor(flatValues.elementalDamage + (ascensionBonuses.elementalDamage || 0));
     ELEMENT_IDS.forEach((id) => {
-      this.baseDamages[id] = Math.floor(
-        (flatValues[`${id}Damage`] || 0) + (ascensionBonuses[`${id}Damage`] || 0),
-      );
+      this.baseDamages[id] = Math.floor((flatValues[`${id}Damage`] || 0) + (ascensionBonuses[`${id}Damage`] || 0));
     });
 
-    const flatThornsDamage = Math.max(
-      0,
-      (flatValues.thornsDamage || 0) + (ascensionBonuses.thornsDamage || 0),
-    );
+    const flatThornsDamage = Math.max(0, (flatValues.thornsDamage || 0) + (ascensionBonuses.thornsDamage || 0));
     const combinedThornsPercent =
-      (this.stats.thornsDamagePercent || 0) +
-      (this.stats.damagePercent || 0) +
-      (this.stats.totalDamagePercent || 0);
+      (this.stats.thornsDamagePercent || 0) + (this.stats.damagePercent || 0) + (this.stats.totalDamagePercent || 0);
     const thornsMultiplier = Math.max(0, 1 + combinedThornsPercent);
     let effectiveThorns = flatThornsDamage * thornsMultiplier;
     const thornsDecimals = getStatDecimalPlaces('thornsDamage');
@@ -902,8 +870,7 @@ export default class Hero {
     this.stats.thornsDamage = effectiveThorns;
 
     this.stats.damage = Math.floor(
-      this.baseDamages.physical *
-        (1 + this.stats.totalDamagePercent + this.stats.damagePercent),
+      this.baseDamages.physical * (1 + this.stats.totalDamagePercent + this.stats.damagePercent)
     );
 
     // Special handling for elemental damages
@@ -911,10 +878,7 @@ export default class Hero {
       const base = this.baseDamages[id] + this.baseDamages.elemental;
       this.stats[`${id}Damage`] = Math.floor(
         base *
-          (1 +
-            this.stats.elementalDamagePercent +
-            this.stats[`${id}DamagePercent`] +
-            this.stats.totalDamagePercent),
+          (1 + this.stats.elementalDamagePercent + this.stats[`${id}DamagePercent`] + this.stats.totalDamagePercent)
       );
 
       // reflect damage calculation
@@ -922,10 +886,7 @@ export default class Hero {
       if (flatValues[reflectKey] > 0) {
         this.stats[reflectKey] = Math.floor(
           (flatValues[reflectKey] + base) *
-          (1 +
-            this.stats.totalDamagePercent +
-            this.stats[`${id}DamagePercent`] +
-            this.stats.elementalDamagePercent),
+            (1 + this.stats.totalDamagePercent + this.stats[`${id}DamagePercent`] + this.stats.elementalDamagePercent)
         );
       }
     });
@@ -951,30 +912,25 @@ export default class Hero {
     const finalResourceExtraDamage = computeResourceExtraDamage(
       this.stats,
       elementalShareMap,
-      resourceExtraPhysicalShare,
+      resourceExtraPhysicalShare
     );
     const basePhysicalFlatWithoutResources =
-      baseFlatDamageBeforeResources +
-      (ascensionBonuses.damage || 0) +
-      (this.stats.damagePerLevel || 0) * this.level;
+      baseFlatDamageBeforeResources + (ascensionBonuses.damage || 0) + (this.stats.damagePerLevel || 0) * this.level;
     const baseElementalFlatWithoutResources =
       baseFlatElementalBeforeResources + (ascensionBonuses.elementalDamage || 0);
 
     this.baseDamages.physical = Math.floor(
-      Math.max(0, basePhysicalFlatWithoutResources + finalResourceExtraDamage.physical),
+      Math.max(0, basePhysicalFlatWithoutResources + finalResourceExtraDamage.physical)
     );
     this.baseDamages.elemental = Math.floor(Math.max(0, baseElementalFlatWithoutResources));
     this.elementalDamageFromResources = finalResourceExtraDamage.elemental;
     this.physicalDamageFromResources = finalResourceExtraDamage.physical;
-    this.totalExtraDamageFromResources =
-      finalResourceExtraDamage.physical + finalResourceExtraDamage.elemental;
+    this.totalExtraDamageFromResources = finalResourceExtraDamage.physical + finalResourceExtraDamage.elemental;
 
-    const deltaPhysicalFlat =
-      finalResourceExtraDamage.physical - initialResourceExtraDamage.physical;
+    const deltaPhysicalFlat = finalResourceExtraDamage.physical - initialResourceExtraDamage.physical;
 
     if (Math.abs(deltaPhysicalFlat) > 1e-9) {
-      const physicalMultiplier =
-        1 + (this.stats.totalDamagePercent || 0) + (this.stats.damagePercent || 0);
+      const physicalMultiplier = 1 + (this.stats.totalDamagePercent || 0) + (this.stats.damagePercent || 0);
       const deltaPhysicalFinal = deltaPhysicalFlat * physicalMultiplier;
       this.stats.damage = (this.stats.damage || 0) + deltaPhysicalFinal;
       preConversionDamage.damage = (preConversionDamage.damage || 0) + deltaPhysicalFinal;
@@ -1071,13 +1027,13 @@ export default class Hero {
     // 1) Flat phase: build flat pools from stored flat-only values
     const flatPools = {
       physical:
-        (includePhysical ? (this.baseDamages?.physical || 0) : 0) +
-        (includePhysical ? (instantSkillBaseEffects.damage || 0) : 0),
+        (includePhysical ? this.baseDamages?.physical || 0 : 0) +
+        (includePhysical ? instantSkillBaseEffects.damage || 0 : 0),
     };
     elements.forEach((e) => {
       const key = `${e}Damage`;
-      const baseFlat = allowedElements.has(e) ? (this.baseDamages?.[e] || 0) : 0;
-      const skillFlat = allowedElements.has(e) ? (instantSkillBaseEffects[key] || 0) : 0;
+      const baseFlat = allowedElements.has(e) ? this.baseDamages?.[e] || 0 : 0;
+      const skillFlat = allowedElements.has(e) ? instantSkillBaseEffects[key] || 0 : 0;
 
       // Aggregated stats already include the effectiveness multiplier (so UI matches).
       // Apply it here only to instant-skill lightning bonus contributions.
@@ -1105,21 +1061,16 @@ export default class Hero {
       totalDamagePercent += this.stats.arenaDamagePercent;
     }
 
-    finalPools.physical = includePhysical
-      ? flatPools.physical *
-        (1 +
-          physicalPct +
-          totalDamagePercent)
-      : 0;
+    finalPools.physical = includePhysical ? flatPools.physical * (1 + physicalPct + totalDamagePercent) : 0;
 
     // elemental global percent from both sources
-    const elementalGlobalPct = (instantSkillBaseEffects.elementalDamagePercent || 0) / getDivisor('elementalDamagePercent');
+    const elementalGlobalPct =
+      (instantSkillBaseEffects.elementalDamagePercent || 0) / getDivisor('elementalDamagePercent');
     elements.forEach((e) => {
       const specificBonusPercent = instantSkillBaseEffects[`${e}DamagePercent`] || 0;
       const baseSpecificPct = specificBonusPercent / getDivisor(`${e}DamagePercent`);
-      const scaledSpecificPct = e === 'lightning'
-        ? baseSpecificPct * lightningBonusEffectivenessMultiplier
-        : baseSpecificPct;
+      const scaledSpecificPct =
+        e === 'lightning' ? baseSpecificPct * lightningBonusEffectivenessMultiplier : baseSpecificPct;
       finalPools[e] = allowedElements.has(e)
         ? flatPools[e] *
           (1 +
@@ -1172,8 +1123,7 @@ export default class Hero {
         critChance = 0;
         critDamage = 1;
       }
-      const expectedMultiplier =
-        (1 + doubleChance) * (1 + (critDamage - 1) * critChance);
+      const expectedMultiplier = (1 + doubleChance) * (1 + (critDamage - 1) * critChance);
       scalePools(expectedMultiplier);
     }
 
@@ -1246,10 +1196,11 @@ export default class Hero {
               this,
               enemy[`${id}Resistance`],
               this.stats[`${id}Penetration`],
-              this.stats[`${id}PenetrationPercent`],
+              this.stats[`${id}PenetrationPercent`]
             ),
-            breakdown[id],
-          ) / 100);
+            breakdown[id]
+          ) /
+            100);
     });
 
     let finalDamage = Object.values(reducedBreakdown).reduce((sum, val) => sum + val, 0);
@@ -1266,7 +1217,7 @@ export default class Hero {
 
         if (enemy.isBoss) rarityMult = Math.max(rarityMult, 4);
 
-        multiplier += (this.stats.damageToHighRarityEnemiesPercent * rarityMult);
+        multiplier += this.stats.damageToHighRarityEnemiesPercent * rarityMult;
       }
 
       finalDamage *= multiplier;
@@ -1296,9 +1247,7 @@ export default class Hero {
 
     let total = thornsValue;
 
-    const didDoubleDamage =
-      this.stats.doubleDamageChance &&
-      Math.random() < this.stats.doubleDamageChance;
+    const didDoubleDamage = this.stats.doubleDamageChance && Math.random() < this.stats.doubleDamageChance;
     if (didDoubleDamage) {
       total *= 2;
     }

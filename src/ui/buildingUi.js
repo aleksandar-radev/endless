@@ -24,23 +24,25 @@ function intervalToMs(interval) {
   if (interval === 'hour') return 60 * 60 * 1000;
   if (typeof interval === 'string' && interval.endsWith('min')) {
     const value = parseInt(interval);
-    return (!isNaN(value) && value > 0) ? value * 60 * 1000 : 0;
+    return !isNaN(value) && value > 0 ? value * 60 * 1000 : 0;
   }
   if (typeof interval === 'string' && interval.endsWith('sec')) {
     const value = parseInt(interval);
-    return (!isNaN(value) && value > 0) ? value * 1000 : 0;
+    return !isNaN(value) && value > 0 ? value * 1000 : 0;
   }
   return 0;
 }
 
 // Helper function to validate building state for timer display
 function isBuildingReadyForTimer(building) {
-  return building &&
-         typeof building.placedAt === 'number' &&
-         building.level > 0 &&
-         building.effect &&
-         building.effect.interval &&
-         intervalToMs(building.effect.interval) > 0;
+  return (
+    building &&
+    typeof building.placedAt === 'number' &&
+    building.level > 0 &&
+    building.effect &&
+    building.effect.interval &&
+    intervalToMs(building.effect.interval) > 0
+  );
 }
 
 function fmtDuration(ms) {
@@ -98,9 +100,7 @@ function updateBuildingCountdowns() {
     const intervalMs = intervalToMs(b.effect.interval);
 
     // Ensure lastBonusTime is valid, use current time as fallback
-    const lastBonusTime = (typeof b.lastBonusTime === 'number' && b.lastBonusTime > 0)
-      ? b.lastBonusTime
-      : now;
+    const lastBonusTime = typeof b.lastBonusTime === 'number' && b.lastBonusTime > 0 ? b.lastBonusTime : now;
 
     const nextAt = lastBonusTime + intervalMs;
     const msLeft = nextAt - now;
@@ -180,8 +180,15 @@ function createBuildingCard(building) {
     <div class="building-info">
       <div class="building-name">${building.name}</div>
       <div class="building-effect">${building.formatEffect()}</div>
-      <div class="building-earned">${tp('buildings.totalEarned', { amount: formatNumber(building.totalEarned), type: t(building.effect.displayName || building.effect.type) })}</div>
-  <div class="building-next-bonus" data-building-id="${building.id}">${tp('buildings.nextBonus', { time: '—' })}</div>
+      <div class="building-earned">
+        ${tp('buildings.totalEarned', {
+          amount: formatNumber(building.totalEarned),
+          type: t(building.effect.displayName || building.effect.type),
+        })}
+      </div>
+      <div class="building-next-bonus" data-building-id="${building.id}">
+        ${tp('buildings.nextBonus', { time: '—' })}
+      </div>
     </div>
   `;
   return el;
@@ -190,9 +197,7 @@ function createBuildingCard(building) {
 function showBuildingInfoModal(building, onUpgrade, placementOptions) {
   const canUpgrade = building.level < building.maxLevel;
 
-  let selectedAmount = options.useNumericInputs
-    ? Math.min(Math.max(options.buildingQty || 1, 1), BUILDING_MAX_QTY)
-    : 1;
+  let selectedAmount = options.useNumericInputs ? Math.min(Math.max(options.buildingQty || 1, 1), BUILDING_MAX_QTY) : 1;
   let modal;
 
   function getMaxUpgradeAmount() {
@@ -268,23 +273,34 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
           </div>
         </div>
         <div class="building-info-modal-body">
-          <div>${tp('buildings.levelInfo', { level: formatNumber(building.level), max: formatNumber(building.maxLevel) })}</div>
+          <div>
+            ${tp('buildings.levelInfo', { level: formatNumber(building.level), max: formatNumber(building.maxLevel) })}
+          </div>
           <div>${tp('buildings.currentBonus', { bonus: building.formatEffect() })}</div>
           <div>${tp('buildings.upgradeAmountLine', { amount: formatNumber(previewAmount) })}</div>
           <div>${tp('buildings.totalUpgradeCost', { cost: Building.formatCost(totalCost) })}</div>
           <div>
-            ${tp('buildings.bonusAfterUpgrade', { bonus: building.formatEffect(building.level + previewAmount), extra: formatNumber(totalBonus), type: t(building.effect.displayName || building.effect.type) })}
+            ${tp('buildings.bonusAfterUpgrade', {
+              bonus: building.formatEffect(building.level + previewAmount),
+              extra: formatNumber(totalBonus),
+              type: t(building.effect.displayName || building.effect.type),
+            })}
           </div>
         </div>
         <div class="building-info-modal-upgrade">
-          <div style="margin: 10px 0 6px 0;" data-i18n="buildings.upgradeAmountLabel">${t('buildings.upgradeAmountLabel')}</div>
+          <div style="margin: 10px 0 6px 0;" data-i18n="buildings.upgradeAmountLabel">
+            ${t('buildings.upgradeAmountLabel')}
+          </div>
           <div class="building-upgrade-amounts">${upgradeControls}</div>
-          <button class="building-upgrade-btn" ${canUpgrade && upgradeAmount > 0 && canAffordUpgrade(upgradeAmount) ? '' : 'disabled'}>
+          <button
+            class="building-upgrade-btn"
+            ${canUpgrade && upgradeAmount > 0 && canAffordUpgrade(upgradeAmount) ? '' : 'disabled'}
+          >
             ${t('buildings.upgrade')}
           </button>
           ${!placementOptions
-    ? `<button class="building-sell-btn" ${sellAmount > 0 ? '' : 'disabled'}>${tp('buildings.sellRefund', { refund: Building.formatCost(refundAmount) })}</button>`
-    : ''}
+            ? `<button class="building-sell-btn" ${sellAmount > 0 ? '' : 'disabled'}>${tp('buildings.sellRefund', { refund: Building.formatCost(refundAmount) })}</button>`
+            : ''}
         </div>
       </div>
     `;
@@ -449,7 +465,7 @@ function showSelectBuildingModal() {
   const placedIds = new Set(
     Object.values(buildings.buildings)
       .filter((b) => b.placedAt !== null)
-      .map((b) => b.id),
+      .map((b) => b.id)
   );
   Object.values(buildings.buildings)
     .filter((building) => !placedIds.has(building.id))
@@ -497,8 +513,7 @@ export function renderPurchasedBuildings() {
 export function initializeBuildingsUI() {
   const tab = document.getElementById('buildings');
   if (!tab) return;
-  tab.innerHTML =
-    `<button id="select-building-btn" class="building-select-btn" data-i18n="buildings.selectBuilding">${t('buildings.selectBuilding')}</button><div id="purchased-buildings"></div>`;
+  tab.innerHTML = `<button id="select-building-btn" class="building-select-btn" data-i18n="buildings.selectBuilding">${t('buildings.selectBuilding')}</button><div id="purchased-buildings"></div>`;
   renderPurchasedBuildings();
   // Open building selection modal
   tab.querySelector('#select-building-btn').onclick = showSelectBuildingModal;
@@ -520,53 +535,55 @@ export function showOfflineBonusesModal(bonuses, onCollect) {
     <div style="margin:12px 0 0 0;">
       <ul style="list-style:none;padding:0;">
         ${bonuses
-    .map((b) => {
-      let times = b.times;
-      let intervalKey = '';
-      if (typeof b.interval === 'number') {
-        const totalSec = b.interval * b.times;
-        if (totalSec % 3600 === 0) {
-          times = totalSec / 3600;
-          intervalKey = `time.${times > 1 ? 'hours' : 'hour'}`;
-        } else if (totalSec % 60 === 0) {
-          times = totalSec / 60;
-          intervalKey = `time.${times > 1 ? 'minutes' : 'minute'}`;
-        } else {
-          times = totalSec;
-          intervalKey = `time.${times > 1 ? 'seconds' : 'second'}`;
-        }
-      } else if (typeof b.interval === 'string') {
-        let intName = b.interval;
-        if (b.interval === 'min') {
-          intName = 'minute';
-        } else if (b.interval === 'sec') {
-          intName = 'second';
-        } else if (b.interval.endsWith('min')) {
-          const val = parseInt(b.interval) || 1;
-          times *= val;
-          intName = 'minute';
-        } else if (b.interval.endsWith('sec')) {
-          const val = parseInt(b.interval) || 1;
-          times *= val;
-          intName = 'second';
-        }
-        intervalKey = `time.${times > 1 ? intName + 's' : intName}`;
-      }
-      const line = tp('buildings.offlineBonusItem', {
-        icon: b.icon || '',
-        name: b.name,
-        amount: formatNumber(b.amount),
-        type: b.type,
-        times: formatNumber(times),
-        interval: intervalKey ? t(intervalKey) : '',
-      });
-      // Ensure each bonus is on its own line (wrap if translation didn't supply an <li>)
-      return line.includes('<li') ? line : `<li class="offline-bonus-line" style="margin:4px 0;">${line}</li>`;
-    })
-    .join('')}
+          .map((b) => {
+            let times = b.times;
+            let intervalKey = '';
+            if (typeof b.interval === 'number') {
+              const totalSec = b.interval * b.times;
+              if (totalSec % 3600 === 0) {
+                times = totalSec / 3600;
+                intervalKey = `time.${times > 1 ? 'hours' : 'hour'}`;
+              } else if (totalSec % 60 === 0) {
+                times = totalSec / 60;
+                intervalKey = `time.${times > 1 ? 'minutes' : 'minute'}`;
+              } else {
+                times = totalSec;
+                intervalKey = `time.${times > 1 ? 'seconds' : 'second'}`;
+              }
+            } else if (typeof b.interval === 'string') {
+              let intName = b.interval;
+              if (b.interval === 'min') {
+                intName = 'minute';
+              } else if (b.interval === 'sec') {
+                intName = 'second';
+              } else if (b.interval.endsWith('min')) {
+                const val = parseInt(b.interval) || 1;
+                times *= val;
+                intName = 'minute';
+              } else if (b.interval.endsWith('sec')) {
+                const val = parseInt(b.interval) || 1;
+                times *= val;
+                intName = 'second';
+              }
+              intervalKey = `time.${times > 1 ? intName + 's' : intName}`;
+            }
+            const line = tp('buildings.offlineBonusItem', {
+              icon: b.icon || '',
+              name: b.name,
+              amount: formatNumber(b.amount),
+              type: b.type,
+              times: formatNumber(times),
+              interval: intervalKey ? t(intervalKey) : '',
+            });
+            // Ensure each bonus is on its own line (wrap if translation didn't supply an <li>)
+            return line.includes('<li') ? line : `<li class="offline-bonus-line" style="margin:4px 0;">${line}</li>`;
+          })
+          .join('')}
       </ul>
     </div>
-    <div style="margin-top:18px;color:#aaa;font-size:0.98em;" data-i18n="buildings.offlineRewardsInfo">${t('buildings.offlineRewardsInfo')}</div>
+    <div style="margin-top:18px;color:#aaa;font-size:0.98em;" data-i18n="buildings.offlineRewardsInfo">
+      ${t('buildings.offlineRewardsInfo')}
+    </div>
     <button
       class="offline-bonuses-collect-btn"
       style="margin-top:24px;font-size:1.1em;padding:10px 32px;border-radius:8px;background:linear-gradient(90deg,#4e54c8,#8f94fb);color:#fff;font-weight:bold;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(78,84,200,0.15);"

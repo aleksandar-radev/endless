@@ -149,8 +149,7 @@ export const VAMPIRE_SKILLS = {
     icon: () => 'bat',
     description: () => t('skill.summonBats'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-    }),
+    effect: (level) => ({}),
   },
 
   // Tier 75 Skills
@@ -361,8 +360,7 @@ export const VAMPIRE_SKILLS = {
     icon: () => 'blood-sacrifice',
     description: () => t('skill.bloodSacrifice'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-    }),
+    effect: (level) => ({}),
     isVisible: () => hero.stats.bloodSacrificeUnlocked > 0,
   },
 };

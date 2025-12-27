@@ -211,7 +211,7 @@ export const ITEM_SUBTYPES = {
       weight: 15,
       statMultipliers: {
         fireDamage: { min: 1.2, max: 1.2 },
-        fireDamagePercent: { min: 1.4, max: 1.4 },    // 140% fire dmg%, cap 1680%
+        fireDamagePercent: { min: 1.4, max: 1.4 }, // 140% fire dmg%, cap 1680%
       },
       preferredStats: ['fireDamage', 'fireDamagePercent'], // Higher roll chance
     },
@@ -411,7 +411,7 @@ export function rollRandomSubtype(itemType) {
   // Random selection based on weight
   let random = Math.random() * totalWeight;
   for (const subtype of subtypes) {
-    random -= (subtype.weight || 0);
+    random -= subtype.weight || 0;
     if (random <= 0) return subtype.id;
   }
 

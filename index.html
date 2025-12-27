@@ -1,7 +1,6 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Endless</title>
@@ -29,150 +28,156 @@
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-L06KLWGC80"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag () {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-        gtag('config', 'G-L06KLWGC80');
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-L06KLWGC80');
     </script>
 
     <script>
-        // Only inject AdSense if not running in Electron
-        const isElectron = navigator.userAgent.includes('Electron');
-        if (!isElectron) {
-            const adScript = document.createElement('script');
-            adScript.async = true;
-            adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7168954765162007';
-            adScript.crossOrigin = 'anonymous';
-            document.head.appendChild(adScript);
-        }
+      // Only inject AdSense if not running in Electron
+      const isElectron = navigator.userAgent.includes('Electron');
+      if (!isElectron) {
+        const adScript = document.createElement('script');
+        adScript.async = true;
+        adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7168954765162007';
+        adScript.crossOrigin = 'anonymous';
+        document.head.appendChild(adScript);
+      }
     </script>
-</head>
+  </head>
 
-<body>
-    <button class="sidebar-toggle" id="sidebar-toggle" data-i18n-aria-label="aria.openMenu" aria-label=""><img
-            src="/icons/menu.svg" class="icon" data-i18n-alt="icon.menu" alt="" /></button>
+  <body>
+    <button class="sidebar-toggle" id="sidebar-toggle" data-i18n-aria-label="aria.openMenu" aria-label="">
+      <img src="/icons/menu.svg" class="icon" data-i18n-alt="icon.menu" alt="" />
+    </button>
     <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
     <div class="game-container">
-        <div class="sidebar">
-            <div class="resource-bar">
-                <div class="resource resource-gold"><span id="gold"></span><img src="/icons/gold.svg" class="icon"
-                        data-i18n-alt="resource.gold.name" alt="" /></div>
-                <div class="resource resource-crystal"><span id="crystals"></span><img src="/icons/crystal.svg"
-                        class="icon" data-i18n-alt="resource.crystal.name" alt="" /></div>
-                <div class="resource resource-souls"><span id="souls"></span><img src="/icons/soul.svg" class="icon"
-                        data-i18n-alt="resource.souls.name" alt="" /></div>
-            </div>
-
-            <div class="tab-buttons">
-                <button class="tab-btn mobile-only" data-tab="battle" data-i18n="tab.battle"
-                    style="display: none;">Battle</button>
-                <button class="tab-btn active" data-tab="stats" data-i18n="tab.stats">Stats</button>
-                <button class="tab-btn" data-tab="training" data-i18n="tab.training">Training</button>
-                <button class="tab-btn" data-tab="inventory" data-i18n="tab.inventory">Inventory</button>
-                <button class="tab-btn" data-tab="runes" data-i18n="tab.runes">Runes</button>
-                <button class="tab-btn" data-tab="skilltree" data-i18n="tab.skilltree">Skill Tree</button>
-                <button class="tab-btn" data-tab="crystalShop" data-i18n="tab.crystalShop">Crystal Shop</button>
-                <button class="tab-btn" data-tab="soulShop" data-i18n="tab.soulShop">Soul Shop</button>
-                <button class="tab-btn" data-tab="buildings" data-i18n="tab.buildings">Buildings</button>
-                <button class="tab-btn" data-tab="prestige" data-i18n="tab.prestige">Prestige</button>
-                <button class="tab-btn" data-tab="ascension" data-i18n="tab.ascension">Ascension</button>
-                <button class="tab-btn" data-tab="quests" data-i18n="tab.quests">Quests</button>
-                <button class="tab-btn" data-tab="statistics" data-i18n="tab.statistics">Statistics</button>
-                <button class="tab-btn" data-tab="battleLog" data-i18n="tab.battleLog">Battle Log</button>
-                <button class="tab-btn" data-tab="options" data-i18n="tab.options">Options</button>
-                <!-- <button class="tab-btn" data-tab="leaderboard">Leaderboard</button> -->
-                <button class="tab-btn dev-btn" id="edev-btn" style="margin-top: auto;">edev</button>
-            </div>
+      <div class="sidebar">
+        <div class="resource-bar">
+          <div class="resource resource-gold">
+            <span id="gold"></span><img src="/icons/gold.svg" class="icon" data-i18n-alt="resource.gold.name" alt="" />
+          </div>
+          <div class="resource resource-crystal">
+            <span id="crystals"></span
+            ><img src="/icons/crystal.svg" class="icon" data-i18n-alt="resource.crystal.name" alt="" />
+          </div>
+          <div class="resource resource-souls">
+            <span id="souls"></span
+            ><img src="/icons/soul.svg" class="icon" data-i18n-alt="resource.souls.name" alt="" />
+          </div>
         </div>
 
-        <div class="main-content">
-            <div class="game-panel">
-                <div id="stats" class="tab-panel active"></div>
-                <div id="training" class="tab-panel"></div>
-                <div id="crystalShop" class="tab-panel"></div>
-                <div id="inventory" class="tab-panel"></div>
-                <div id="runes" class="tab-panel"></div>
-                <div id="skilltree" class="tab-panel"></div>
-                <div id="soulShop" class="tab-panel"></div>
-                <div id="prestige" class="tab-panel"></div>
-                <div id="ascension" class="tab-panel"></div>
-                <div id="statistics" class="tab-panel"></div>
-                <div id="battleLog" class="tab-panel"></div>
-                <div id="options" class="tab-panel"></div>
-                <div id="quests" class="tab-panel"></div>
-                <div id="buildings" class="tab-panel"></div>
-                <div id="leaderboard" class="tab-panel"></div>
-            </div>
-
-            <div class="combat-panel">
-                <!-- Combat Controls Row -->
-                <div class="combat-controls-row">
-                    <div class="combat-mode-selector">
-                        <label class="combat-mode-label" data-i18n="combat.mode">MODE</label>
-                        <select id="combat-mode-select" class="combat-mode-dropdown">
-                            <option value="explore" data-i18n="region.explore">Explore</option>
-                            <option value="arena" data-i18n="region.arena">Arena</option>
-                            <option value="rockyField" data-i18n="region.rockyField">Rocky Field</option>
-                        </select>
-                    </div>
-                    <div class="combat-region-selector" id="combat-region-selector">
-                        <label class="combat-region-label" data-i18n="combat.regionLabel">REGION:</label>
-                        <button id="combat-region-select-btn" class="combat-region-dropdown">
-                        </button>
-                    </div>
-                    <button id="start-btn" class="combat-fight-btn" data-i18n="combat.fight">Fight</button>
-                    <div id="stage-display" class="combat-stage-display"><span class="stage-label"
-                            data-i18n="combat.stage">Stage</span>: <span class="stage-value">1</span></div>
-                    <div class="session-status-group"></div>
-                </div>
-
-                <div class="character-info">
-                    <div id="character-avatar"><img src="/avatars/peasant-avatar.jpg" class="icon"
-                            data-i18n-alt="icon.avatar" alt="" />
-                    </div>
-                    <div class="character-resources">
-                        <div id="character-name">
-                            <span class="character-name">Hero</span>
-                            <div class="hero-ailments"></div>
-                        </div>
-                        <div class="character-hp-mana">
-                            <div class="xp-bar">
-                                <div id="xp-fill" style="width: 0%"></div>
-                                <div id="xp-text" class="xp-text">0/66</div>
-                            </div>
-                            <div class="life-bar">
-                                <div id="life-fill"></div>
-                                <div id="life-text" class="life-text">100/100</div>
-                            </div>
-                            <div class="mana-bar">
-                                <div id="mana-fill" style="width: 100%"></div>
-                                <div id="mana-text" class="mana-text">50/50</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="action-bar">
-                    <div class="skill-slots">
-                        <!-- Skills will be added dynamically -->
-                    </div>
-                </div>
-
-                <div id="region-selector"></div>
-                <div id="region-panel-container"></div>
-                <div id="death-screen">
-                    <div class="death-message" data-i18n="death.message" data-i18n-html>
-                        You died! Reviving in <span id="revive-countdown">10</span>
-                    </div>
-                </div>
-            </div>
+        <div class="tab-buttons">
+          <button class="tab-btn mobile-only" data-tab="battle" data-i18n="tab.battle" style="display: none">
+            Battle
+          </button>
+          <button class="tab-btn active" data-tab="stats" data-i18n="tab.stats">Stats</button>
+          <button class="tab-btn" data-tab="training" data-i18n="tab.training">Training</button>
+          <button class="tab-btn" data-tab="inventory" data-i18n="tab.inventory">Inventory</button>
+          <button class="tab-btn" data-tab="runes" data-i18n="tab.runes">Runes</button>
+          <button class="tab-btn" data-tab="skilltree" data-i18n="tab.skilltree">Skill Tree</button>
+          <button class="tab-btn" data-tab="crystalShop" data-i18n="tab.crystalShop">Crystal Shop</button>
+          <button class="tab-btn" data-tab="soulShop" data-i18n="tab.soulShop">Soul Shop</button>
+          <button class="tab-btn" data-tab="buildings" data-i18n="tab.buildings">Buildings</button>
+          <button class="tab-btn" data-tab="prestige" data-i18n="tab.prestige">Prestige</button>
+          <button class="tab-btn" data-tab="ascension" data-i18n="tab.ascension">Ascension</button>
+          <button class="tab-btn" data-tab="quests" data-i18n="tab.quests">Quests</button>
+          <button class="tab-btn" data-tab="statistics" data-i18n="tab.statistics">Statistics</button>
+          <button class="tab-btn" data-tab="battleLog" data-i18n="tab.battleLog">Battle Log</button>
+          <button class="tab-btn" data-tab="options" data-i18n="tab.options">Options</button>
+          <!-- <button class="tab-btn" data-tab="leaderboard">Leaderboard</button> -->
+          <button class="tab-btn dev-btn" id="edev-btn" style="margin-top: auto">edev</button>
         </div>
+      </div>
+
+      <div class="main-content">
+        <div class="game-panel">
+          <div id="stats" class="tab-panel active"></div>
+          <div id="training" class="tab-panel"></div>
+          <div id="crystalShop" class="tab-panel"></div>
+          <div id="inventory" class="tab-panel"></div>
+          <div id="runes" class="tab-panel"></div>
+          <div id="skilltree" class="tab-panel"></div>
+          <div id="soulShop" class="tab-panel"></div>
+          <div id="prestige" class="tab-panel"></div>
+          <div id="ascension" class="tab-panel"></div>
+          <div id="statistics" class="tab-panel"></div>
+          <div id="battleLog" class="tab-panel"></div>
+          <div id="options" class="tab-panel"></div>
+          <div id="quests" class="tab-panel"></div>
+          <div id="buildings" class="tab-panel"></div>
+          <div id="leaderboard" class="tab-panel"></div>
+        </div>
+
+        <div class="combat-panel">
+          <!-- Combat Controls Row -->
+          <div class="combat-controls-row">
+            <div class="combat-mode-selector">
+              <label class="combat-mode-label" data-i18n="combat.mode">MODE</label>
+              <select id="combat-mode-select" class="combat-mode-dropdown">
+                <option value="explore" data-i18n="region.explore">Explore</option>
+                <option value="arena" data-i18n="region.arena">Arena</option>
+                <option value="rockyField" data-i18n="region.rockyField">Rocky Field</option>
+              </select>
+            </div>
+            <div class="combat-region-selector" id="combat-region-selector">
+              <label class="combat-region-label" data-i18n="combat.regionLabel">REGION:</label>
+              <button id="combat-region-select-btn" class="combat-region-dropdown"></button>
+            </div>
+            <button id="start-btn" class="combat-fight-btn" data-i18n="combat.fight">Fight</button>
+            <div id="stage-display" class="combat-stage-display">
+              <span class="stage-label" data-i18n="combat.stage">Stage</span>: <span class="stage-value">1</span>
+            </div>
+            <div class="session-status-group"></div>
+          </div>
+
+          <div class="character-info">
+            <div id="character-avatar">
+              <img src="/avatars/peasant-avatar.jpg" class="icon" data-i18n-alt="icon.avatar" alt="" />
+            </div>
+            <div class="character-resources">
+              <div id="character-name">
+                <span class="character-name">Hero</span>
+                <div class="hero-ailments"></div>
+              </div>
+              <div class="character-hp-mana">
+                <div class="xp-bar">
+                  <div id="xp-fill" style="width: 0%"></div>
+                  <div id="xp-text" class="xp-text">0/66</div>
+                </div>
+                <div class="life-bar">
+                  <div id="life-fill"></div>
+                  <div id="life-text" class="life-text">100/100</div>
+                </div>
+                <div class="mana-bar">
+                  <div id="mana-fill" style="width: 100%"></div>
+                  <div id="mana-text" class="mana-text">50/50</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="action-bar">
+            <div class="skill-slots">
+              <!-- Skills will be added dynamically -->
+            </div>
+          </div>
+
+          <div id="region-selector"></div>
+          <div id="region-panel-container"></div>
+          <div id="death-screen">
+            <div class="death-message" data-i18n="death.message" data-i18n-html>
+              You died! Reviving in <span id="revive-countdown">10</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div id="tooltip" class="tooltip hidden"></div>
 
     <script type="module" src="/src/main.js"></script>
-</body>
-
+  </body>
 </html>

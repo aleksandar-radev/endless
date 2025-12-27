@@ -6,7 +6,12 @@ import { DEFENSE_STATS } from '../constants/stats/defenseStats.js';
 import { MISC_STATS } from '../constants/stats/miscStats.js';
 import { formatStatName } from '../ui/ui.js';
 import { getAttributeTooltip, ATTRIBUTES } from '../constants/stats/attributes.js';
-import { calculateArmorReduction, calculateEvasionChance, calculateHitChance, calculateResistanceReduction } from '../combat.js';
+import {
+  calculateArmorReduction,
+  calculateEvasionChance,
+  calculateHitChance,
+  calculateResistanceReduction,
+} from '../combat.js';
 import { createModal } from './modal.js';
 import { t, tp } from '../i18n.js';
 import { updateInventoryGrid } from './inventoryUi.js';
@@ -60,10 +65,7 @@ function appendDamagePercentBonus(el, key) {
   if (!config || !el) return;
 
   const additiveKeys = Array.isArray(config) ? config : config.additive || [];
-  const additiveTotal = additiveKeys.reduce(
-    (sum, statKey) => sum + (hero.stats?.[statKey] || 0),
-    0,
-  );
+  const additiveTotal = additiveKeys.reduce((sum, statKey) => sum + (hero.stats?.[statKey] || 0), 0);
 
   let totalPercent = additiveTotal;
   let decimalKeys = [...additiveKeys];
@@ -78,10 +80,7 @@ function appendDamagePercentBonus(el, key) {
   if (!Number.isFinite(totalPercent)) return;
 
   const normalized = Math.abs(totalPercent) < 1e-6 ? 0 : totalPercent;
-  const decimals = decimalKeys.reduce(
-    (max, statKey) => Math.max(max, getStatDecimalPlaces(statKey)),
-    0,
-  );
+  const decimals = decimalKeys.reduce((max, statKey) => Math.max(max, getStatDecimalPlaces(statKey)), 0);
   const formattedPercent = (normalized * 100).toFixed(decimals);
   el.textContent = `${el.textContent} (${formattedPercent}%)`;
 }
@@ -133,32 +132,25 @@ function updateRateCounters() {
     return;
   }
   const damageRate = sessionDamage / elapsed;
-  dmgEls.forEach((el) =>
-    (el.textContent = formatRateLine(
-      'counters.damage',
-      formatNumber((damageRate * ratePeriod).toFixed(1)),
-    )));
+  dmgEls.forEach(
+    (el) => (el.textContent = formatRateLine('counters.damage', formatNumber((damageRate * ratePeriod).toFixed(1))))
+  );
   const xpRate = (statistics.totalExpFromCombat - startExp) / elapsed;
-  xpEls.forEach((el) =>
-    (el.textContent = formatRateLine('counters.xp', formatNumber((xpRate * ratePeriod).toFixed(1)))));
+  xpEls.forEach(
+    (el) => (el.textContent = formatRateLine('counters.xp', formatNumber((xpRate * ratePeriod).toFixed(1))))
+  );
   const goldRate = (statistics.totalGoldFromCombat - startGold) / elapsed;
-  goldEls.forEach((el) =>
-    (el.textContent = formatRateLine(
-      'counters.gold',
-      formatNumber((goldRate * ratePeriod).toFixed(1)),
-    )));
+  goldEls.forEach(
+    (el) => (el.textContent = formatRateLine('counters.gold', formatNumber((goldRate * ratePeriod).toFixed(1))))
+  );
   const itemRate = (statistics.totalItemsFound - startItems) / elapsed;
-  itemsEls.forEach((el) =>
-    (el.textContent = formatRateLine(
-      'counters.items',
-      formatNumber((itemRate * ratePeriod).toFixed(1)),
-    )));
+  itemsEls.forEach(
+    (el) => (el.textContent = formatRateLine('counters.items', formatNumber((itemRate * ratePeriod).toFixed(1))))
+  );
   const matRate = (statistics.totalMaterialsDropped - startMaterialsDropped) / elapsed;
-  matEls.forEach((el) =>
-    (el.textContent = formatRateLine(
-      'counters.materials',
-      formatNumber((matRate * ratePeriod).toFixed(1)),
-    )));
+  matEls.forEach(
+    (el) => (el.textContent = formatRateLine('counters.materials', formatNumber((matRate * ratePeriod).toFixed(1))))
+  );
   // Only expose offlineRates after at least 60s spent in fights (eligibility)
   // But preserve existing rates if offline rewards are being collected
   if (!statistics.preserveOfflineRates) {
@@ -208,36 +200,33 @@ function getAdvancedAttributeTooltip(attr) {
 
   const baseTooltip = getAttributeTooltip(attr);
   const ascKey = `${attr}EffectPercent`;
-  const bonusMultiplier = (ascension?.getBonuses?.()?.[ascKey] || 0);
+  const bonusMultiplier = ascension?.getBonuses?.()?.[ascKey] || 0;
 
   let ascInfo = '';
 
   if (bonusMultiplier > 0) {
-
     const effects = ATTRIBUTES[attr]?.effects || {};
 
     const extraTexts = Object.entries(effects).map(([statKey, baseVal]) => {
-
       const extra = baseVal * bonusMultiplier;
 
       const statName = formatStatName(statKey.replace('PerPoint', ''));
 
       return `+${formatNumber(extra.toFixed(2))} ${statName}`;
-
     });
 
     const extraStr = extraTexts.length ? ` (${extraTexts.join(', ')})` : '';
 
     ascInfo = `<div style="margin-top: 4px; font-size: 0.9em; color: #a8e6cf;"><em>${t('stats.tooltip.ascensionBaseBonus')}:</em> +${(bonusMultiplier * 100).toFixed(0)}%<p>${extraStr}</p></div>`;
-
   }
 
   return html`
     <strong>${formatStatName(attr)}</strong><br />
-    <div style="margin-bottom:8px; font-size:0.9em; color:#aaa; border-bottom: 1px solid #444; padding-bottom: 4px;">${baseTooltip}</div>
-    ${lines}
-    ${ascInfo}
-    <hr style="border:none; border-top:1px solid #444; margin:4px 0">
+    <div style="margin-bottom:8px; font-size:0.9em; color:#aaa; border-bottom: 1px solid #444; padding-bottom: 4px;">
+      ${baseTooltip}
+    </div>
+    ${lines} ${ascInfo}
+    <hr style="border:none; border-top:1px solid #444; margin:4px 0" />
     <em>Total Flat:</em> ${formatNumber(totalFlat)}<br />
     <em>Total %:</em> ${(totalPercent * 100).toFixed(1)}%<br />
     <strong>Total:</strong> ${formatNumber(finalValue)}
@@ -324,7 +313,9 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     statsContainer.className = 'stats-container';
     // Header: level, EXP
     const headerHtml = html`
-      <div><strong>${t('skillTree.level')}:</strong> <span id="level-value">${formatNumber(hero.level || 1)}</span></div>
+      <div>
+        <strong>${t('skillTree.level')}:</strong> <span id="level-value">${formatNumber(hero.level || 1)}</span>
+      </div>
       <div>
         <strong>${t('stats.exp')}:</strong> <span id="exp-value">${formatNumber(hero.exp || 0)}</span> /
         <span id="exp-to-next-level-value">${formatNumber(hero.getExpToNextLevel() || 100)}</span>
@@ -340,10 +331,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
         <button class="subtab-btn active" data-subtab="offense">${t('stats.offense')}</button>
         <button class="subtab-btn" data-subtab="defense">${t('stats.defense')}</button>
         <button class="subtab-btn" data-subtab="misc">${t('stats.misc')}</button>
-        <button
-          class="elemental-allocation-btn stats-elemental-btn"
-          data-i18n="training.elementalDistributionButton"
-        >
+        <button class="elemental-allocation-btn stats-elemental-btn" data-i18n="training.elementalDistributionButton">
           ${t('training.elementalDistributionButton')}
         </button>
         <button class="split-view-btn" id="split-view-btn">${t('stats.splitView')}</button>
@@ -398,7 +386,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           } else {
             formattedValue = formatNumber(statValue.toFixed(decimals));
           }
-          
+
           // Truncate to 12 digits (excluding separators, decimals, and percent sign)
           const strippedValue = formattedValue.replace(/[,\.%]/g, '');
           if (strippedValue.length > 12) {
@@ -412,7 +400,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
               return truncated + (divisor !== 1 ? '%' : '') + '...';
             }
           }
-          
+
           return formattedValue;
         }
 
@@ -459,7 +447,8 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           const lbl = document.createElement('span');
           lbl.className = 'stat-label';
           const lblText = formatStatName(key);
-          if (lblText && lblText.includes('<')) lbl.innerHTML = lblText; else lbl.textContent = lblText;
+          if (lblText && lblText.includes('<')) lbl.innerHTML = lblText;
+          else lbl.textContent = lblText;
 
           const showValue = statsDef[key].showValue !== false;
           const span = document.createElement('span');
@@ -478,7 +467,9 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
             appendDamagePercentBonus(span, key);
           }
           targetPanel.appendChild(row);
-          lbl.addEventListener('mouseenter', (e) => showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e));
+          lbl.addEventListener('mouseenter', (e) =>
+            showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e)
+          );
           lbl.addEventListener('mousemove', positionTooltip);
           lbl.addEventListener('mouseleave', hideTooltip);
         });
@@ -507,7 +498,8 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           const lbl = document.createElement('span');
           lbl.className = 'stat-label';
           const lblText = formatStatName(key);
-          if (lblText && lblText.includes('<')) lbl.innerHTML = lblText; else lbl.textContent = lblText;
+          if (lblText && lblText.includes('<')) lbl.innerHTML = lblText;
+          else lbl.textContent = lblText;
           const span = document.createElement('span');
           span.id = `${key}-value`;
           span.textContent = formatDisplayValue(key, hero.stats[key]);
@@ -516,7 +508,9 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           row.appendChild(span);
           panel.appendChild(row);
 
-          lbl.addEventListener('mouseenter', (e) => showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e));
+          lbl.addEventListener('mouseenter', (e) =>
+            showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e)
+          );
           lbl.addEventListener('mousemove', positionTooltip);
           lbl.addEventListener('mouseleave', hideTooltip);
         });
@@ -613,12 +607,13 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     if (attackRatingEl) {
       attackRatingEl.textContent = formatNumber(hero.stats.attackRating);
       if (enemy) {
-        const hitPct = calculateHitChance(
-          hero.stats.attackRating,
-          enemy.evasion,
-          undefined,
-          hero.stats.chanceToHitPercent || 0,
-        ).toFixed(2) + '%';
+        const hitPct =
+          calculateHitChance(
+            hero.stats.attackRating,
+            enemy.evasion,
+            undefined,
+            hero.stats.chanceToHitPercent || 0
+          ).toFixed(2) + '%';
         attackRatingEl.appendChild(document.createTextNode(` (${hitPct})`));
       }
     }
@@ -682,19 +677,19 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
       </div>
       <div class="attributes-body">
         ${Object.entries(hero.stats)
-    .map(([stat, value]) => {
-      if (!ATTRIBUTES[stat]) return '';
+          .map(([stat, value]) => {
+            if (!ATTRIBUTES[stat]) return '';
 
-      const displayName = t(stat);
-      return `
+            const displayName = t(stat);
+            return `
             <div class="attribute-row">
               <button class="allocate-btn" data-stat="${stat}">+</button>
               <strong>${displayName}:</strong>
               <span id="${stat}-value">${formatNumber(hero.stats[stat])}</span>
             </div>
           `;
-    })
-    .join('')}
+          })
+          .join('')}
       </div>
     `;
 
@@ -765,9 +760,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     // Add attributes container to the grid
     statsGrid.appendChild(attributesContainer);
   } else {
-    document.getElementById('attributes').textContent = `${t('attributes')} (+${formatNumber(
-      hero.statPoints,
-    )})`;
+    document.getElementById('attributes').textContent = `${t('attributes')} (+${formatNumber(hero.statPoints)})`;
     // Update all attribute values dynamically (works with showAllStats)
     Object.keys(hero.stats).forEach((stat) => {
       if (!ATTRIBUTES[stat]) return;
@@ -871,7 +864,6 @@ function openSplitView() {
   }
 
   document.querySelectorAll('.tab-buttons .tab-btn').forEach((btn) => {
-
     const tab = btn.dataset.tab;
     // Allow inventory, runes, skill tree, ascension and soul shop in split view
     if (!['inventory', 'runes', 'skilltree', 'ascension', 'soulShop'].includes(tab)) return;

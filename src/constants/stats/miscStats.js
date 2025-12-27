@@ -1,499 +1,265 @@
-import { itemLevelScaling } from './itemScaling.js';
+import { itemLevelScaling, createTierScaling, createStat, createPercentStat, createHiddenStat } from './stats.js';
 
-// Misc stat scaling values. These follow the same diminishing pattern used for
-// other item stats, starting higher and slowly tapering off.
-const FLAT_SCALING = {
-  start: 0.0012 * 2,
-  end: 0.0012 * 0.5,
-  tierStart: 0.1,
-  tierEnd: 0.05,
-  isPercent: false,
-};
-const PERCENT_SCALING = {
-  start: 0.00025 * 2,
-  end: 0.00025 * 0.5,
-  tierStart: 0.1,
-  tierEnd: 0.05,
-  isPercent: true,
-};
-const STAT_SCALING = {
-  start: 0.006,
-  end: 0.001,
-  tierStart: 0.1,
-  tierEnd: 0.05,
-  isPercent: false,
-};
+const rewardTierScalingMaxPercent = createTierScaling(20, 400, 1.2);
+const dropTierScalingMaxPercent = createTierScaling(13, 200, 1.2);
+const attributeTierScalingMaxPercent = createTierScaling(12, 200, 1.2);
 
 const STATS_MIN = 8;
 const STATS_MAX = 15;
-const STATS_MIN_PERCENT = 6;
-const STATS_MAX_PERCENT = 12;
 
-const miscScaling = (level, tier, config = FLAT_SCALING, scalingSystem = 'simple') =>
-  itemLevelScaling(level, tier, { ...config, scalingSystem });
+const miscScaling = (level, tier) => itemLevelScaling(level, tier);
 
-// Miscellaneous stats
 export const MISC_STATS = {
-  // MANA
-  mana: {
+  mana: createStat({
     base: 50,
     levelUpBonus: 0,
     training: { cost: 50, bonus: 1, maxLevel: Infinity },
-    item: { min: 25, max: 70, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
+    item: { min: 25, max: 70, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry', 'magic'],
-    showInUI: true,
-    subcategory: 'resources',
-  },
-  manaPerLevel: {
-    base: 0,
-    decimalPlaces: 1,
-  },
-  manaPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 3, max: 8, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
+    show: true,
+    sub: 'resources',
+  }),
+  manaPerLevel: createStat({
+    dec: 1,
+  }),
+  manaPercent: createPercentStat({
+    item: { tierScalingMaxPercent: createTierScaling(8, 100, 1.2) },
     itemTags: ['misc', 'jewelry', 'magic'],
-  },
-  // MANA REGEN
-  manaRegen: {
-    base: 0,
-    decimalPlaces: 1,
+  }),
+  manaRegen: createStat({
+    dec: 1,
     training: { cost: 300, bonus: 0.1, maxLevel: 8000 },
-    item: { min: 2, max: 4, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
+    item: { min: 2, max: 4, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry', 'magic'],
-    showInUI: true,
-    subcategory: 'resources',
-  },
-  manaRegenPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 4, max: 10, limit: 50, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem) },
+    show: true,
+    sub: 'resources',
+  }),
+  manaRegenPercent: createPercentStat({
+    item: {
+      tierScalingMaxPercent: createTierScaling(10, 100, 1.2),
+    },
     itemTags: ['jewelry', 'magic'],
-  },
-  // MANA PER HIT
-  manaPerHit: {
-    base: 0,
-    decimalPlaces: 1,
-    item: { min: 3, max: 6, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
+  }),
+  manaPerHit: createStat({
+    dec: 1,
+    item: { min: 3, max: 6, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry', 'magic'],
-    showInUI: true,
-    subcategory: 'resources',
-  },
-  manaPerHitPercent: {
-    base: 0,
-    divisor: 100,
-  },
-  // MANA STEAL
-  manaSteal: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
-    item: { min: 0.5, max: 1.25, limit: 5, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, CHANCE_SCALING, scalingSystem) },
-    showInUI: true,
-    subcategory: 'attack',
-  },
-  manaStealPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+    show: true,
+    sub: 'resources',
+  }),
+  manaPerHitPercent: createStat({
+    div: 100,
+  }),
+  manaSteal: createPercentStat({
+    dec: 2,
+    item: { tierScalingMaxPercent: createTierScaling(1.25, 10, 1.2) },
+    show: true,
+    sub: 'attack',
+  }),
+  manaStealPercent: createPercentStat({
     forceNotShow: true,
-  },
-  // STATS
-  strength: {
-    base: 0,
-    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem) },
+  }),
+  strength: createStat({
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'stat', 'axe', 'mace'],
-  },
-  strengthPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+  }),
+  strengthPercent: createPercentStat({
     item: {
-      min: STATS_MIN_PERCENT,
-      max: STATS_MAX_PERCENT,
-      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem),
+      tierScalingMaxPercent: attributeTierScalingMaxPercent,
     },
     itemTags: ['misc', 'axe', 'mace'],
-  },
-  agility: {
-    base: 0,
-    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem) },
+  }),
+  agility: createStat({
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'stat', 'axe', 'mace'],
-  },
-  agilityPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+  }),
+  agilityPercent: createPercentStat({
     item: {
-      min: STATS_MIN_PERCENT,
-      max: STATS_MAX_PERCENT,
-      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem),
+      tierScalingMaxPercent: attributeTierScalingMaxPercent,
     },
     itemTags: ['misc', 'axe', 'mace'],
-  },
-  vitality: {
-    base: 0,
-    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem) },
+  }),
+  vitality: createStat({
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'stat'],
-  },
-  vitalityPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+  }),
+  vitalityPercent: createPercentStat({
     item: {
-      min: STATS_MIN_PERCENT,
-      max: STATS_MAX_PERCENT,
-      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem),
+      tierScalingMaxPercent: attributeTierScalingMaxPercent,
     },
     itemTags: ['misc'],
-  },
-  wisdom: {
-    base: 0,
-    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem) },
+  }),
+  wisdom: createStat({
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry', 'stat', 'magic'],
-  },
-  wisdomPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+  }),
+  wisdomPercent: createPercentStat({
     item: {
-      min: STATS_MIN_PERCENT,
-      max: STATS_MAX_PERCENT,
-      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem),
+      tierScalingMaxPercent: attributeTierScalingMaxPercent,
     },
     itemTags: ['misc', 'jewelry', 'magic'],
-  },
-  endurance: {
-    base: 0,
-    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem) },
+  }),
+  endurance: createStat({
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry', 'stat'],
-  },
-  endurancePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+  }),
+  endurancePercent: createPercentStat({
     item: {
-      min: STATS_MIN_PERCENT,
-      max: STATS_MAX_PERCENT,
-      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem),
+      tierScalingMaxPercent: attributeTierScalingMaxPercent,
     },
     itemTags: ['misc', 'jewelry'],
-  },
-  dexterity: {
-    base: 0,
-    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem) },
+  }),
+  dexterity: createStat({
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry', 'stat'],
-  },
-  dexterityPercent: {
-    base: 0,
-    divisor: 100,
+  }),
+  dexterityPercent: createStat({
+    div: 100,
     item: {
-      min: STATS_MIN_PERCENT,
-      max: STATS_MAX_PERCENT,
-      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem),
+      tierScalingMaxPercent: attributeTierScalingMaxPercent,
     },
     itemTags: ['misc', 'jewelry'],
-  },
-  intelligence: {
-    base: 0,
-    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem) },
+  }),
+  intelligence: createStat({
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry', 'stat', 'magic'],
-  },
-  intelligencePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+  }),
+  intelligencePercent: createPercentStat({
     item: {
-      min: STATS_MIN_PERCENT,
-      max: STATS_MAX_PERCENT,
-      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem),
+      tierScalingMaxPercent: attributeTierScalingMaxPercent,
     },
     itemTags: ['misc', 'jewelry', 'magic'],
-  },
-  perseverance: {
-    base: 0,
-    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem) },
+  }),
+  perseverance: createStat({
+    item: { min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier) },
     itemTags: ['misc', 'jewelry', 'stat'],
-  },
-  perseverancePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+  }),
+  perseverancePercent: createPercentStat({
     item: {
-      min: STATS_MIN_PERCENT,
-      max: STATS_MAX_PERCENT,
-      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem),
+      tierScalingMaxPercent: attributeTierScalingMaxPercent,
     },
     itemTags: ['misc', 'jewelry'],
-  },
-  enduranceThornsDamagePerPoint: {
-    base: 0,
-    decimalPlaces: 1,
-    subcategory: 'defense',
-  },
-
-  // SUMMONS
-  summonsCanCrit: {
-    base: 0,
-    showValue: false,
-    displayed: false,
-  },
-  // BONUS GOLD
-  bonusGoldPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 5, max: 20, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
+  }),
+  enduranceThornsDamagePerPoint: createStat({
+    dec: 1,
+    sub: 'defense',
+  }),
+  summonsCanCrit: createHiddenStat(),
+  bonusGoldPercent: createPercentStat({
+    item: {
+      tierScalingMaxPercent: rewardTierScalingMaxPercent,
+    },
     itemTags: ['misc', 'jewelry'],
-    showInUI: true,
-    subcategory: 'rewards',
-  },
-  // BONUS EXPERIENCE
-  bonusExperiencePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 5, max: 15, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
+    show: true,
+    sub: 'rewards',
+  }),
+  bonusExperiencePercent: createPercentStat({
+    item: {
+      tierScalingMaxPercent: rewardTierScalingMaxPercent,
+    },
     itemTags: ['misc', 'jewelry'],
-    showInUI: true,
-    subcategory: 'rewards',
-  },
-  // COOLDOWN REDUCTION
-  cooldownReductionPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    showInUI: true,
-    subcategory: 'misc',
-  },
-  cooldownReductionCapPercent: {
+    show: true,
+    sub: 'rewards',
+  }),
+  cooldownReductionPercent: createPercentStat({
+    show: true,
+    sub: 'misc',
+  }),
+  cooldownReductionCapPercent: createStat({
     base: 80,
-    divisor: 100,
-    subcategory: 'misc',
-  },
-  // MANA COST REDUCTION
-  manaCostReductionPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  // BUFF DURATION
-  buffDurationPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    showInUI: true,
-    subcategory: 'misc',
-  },
-  // BUFF EFFECTIVENESS
-  buffEffectivenessPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'misc',
-  },
-  // ITEM BONUSES
-  itemBonusesPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  // ITEM QUANTITY
-  itemQuantityPercent: {
-    base: 0,
-    divisor: 100,
-    item: { min: 4, max: 13, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
+    div: 100,
+    sub: 'misc',
+  }),
+  manaCostReductionPercent: createPercentStat(),
+  buffDurationPercent: createPercentStat({
+    show: true,
+    sub: 'misc',
+  }),
+  buffEffectivenessPercent: createPercentStat({
+    sub: 'misc',
+  }),
+  itemBonusesPercent: createPercentStat(),
+  itemQuantityPercent: createStat({
+    div: 100,
+    item: {
+      tierScalingMaxPercent: dropTierScalingMaxPercent,
+    },
     itemTags: ['misc', 'jewelry', 'gloves'],
-    showInUI: true,
-    subcategory: 'rewards',
-  },
-  // ITEM RARITY
-  itemRarityPercent: {
-    base: 0,
-    divisor: 100,
-    item: { min: 4, max: 13, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
+    show: true,
+    sub: 'rewards',
+  }),
+  itemRarityPercent: createStat({
+    div: 100,
+    item: {
+      tierScalingMaxPercent: dropTierScalingMaxPercent,
+    },
     itemTags: ['misc', 'jewelry', 'gloves'],
-    showInUI: true,
-    subcategory: 'rewards',
-  },
-  // MATERIAL QUANTITY
-  materialQuantityPercent: {
-    base: 0,
-    divisor: 100,
-    item: { min: 4, max: 13, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, FLAT_SCALING, scalingSystem) },
+    show: true,
+    sub: 'rewards',
+  }),
+  materialQuantityPercent: createStat({
+    div: 100,
+    item: {
+      tierScalingMaxPercent: dropTierScalingMaxPercent,
+    },
     itemTags: ['jewelry', 'ring', 'amulet'],
-    showInUI: true,
-    subcategory: 'rewards',
-  },
-  // Only from materials. permanent skill points
-  skillPoints: {
-    base: 0,
-    showInUI: true,
-    subcategory: 'rewards',
-  },
-  /**
-   * Chance (%) to drop extra materials on enemy kill.
-   * Only increased via Soul Shop.
-   */
-  extraMaterialDropPercent: {
-    base: 0,
-    divisor: 100,
-  },
-  /**
-   * Max number of extra materials dropped per enemy kill.
-   * Only increased via Soul Shop.
-   */
-  extraMaterialDropMax: {
+    show: true,
+    sub: 'rewards',
+  }),
+  skillPoints: createStat({
+    show: true,
+    sub: 'rewards',
+  }),
+  extraMaterialDropPercent: createStat({
+    div: 100,
+  }),
+  extraMaterialDropMax: createStat({
     base: 1,
-  },
-  manaRegenOfTotalPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
+  }),
+  manaRegenOfTotalPercent: createPercentStat({
+    dec: 2,
     training: { cost: 1000, bonus: 0.01, maxLevel: 100 },
-    item: { min: 0.01, max: 0.05, max: 1, scaling: (level, tier, scalingSystem) => miscScaling(level, tier, PERCENT_SCALING, scalingSystem) },
+    item: { tierScalingMaxPercent: createTierScaling(0.05, 1, 1.2) },
     itemTags: ['staff'],
-  },
-  allAttributes: {
-    base: 0,
+  }),
+  allAttributes: createStat({
     item: {
       min: 4,
       max: 8,
-      limit: Infinity,
-      scaling: (level, tier, scalingSystem) => miscScaling(level, tier, STAT_SCALING, scalingSystem),
+      scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['defense', 'jewelry', 'gloves', 'misc'],
-  },
-  allAttributesPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  // DUAL WIELD 2H
-  canDualWieldTwoHanded: {
-    base: 0,
-    showValue: false,
-    displayed: false,
-  },
-  // WEAPON EFFECTIVENESS
-  weaponEffectiveness: {
-    base: 0,
-    decimalPlaces: 1,
-  },
-  // JEWELRY EFFECTIVENESS
-  jewelryEffectiveness: {
-    base: 0,
-    decimalPlaces: 1,
-  },
-  // BOSS LOOT
-  allowBossLoot: {
-    base: 0,
-    showValue: false,
-    displayed: false,
+  }),
+  allAttributesPercent: createPercentStat(),
+  canDualWieldTwoHanded: createHiddenStat(),
+  weaponEffectiveness: createStat({
+    dec: 1,
+  }),
+  jewelryEffectiveness: createStat({
+    dec: 1,
+  }),
+  allowBossLoot: createHiddenStat({
     itemTags: [],
-  },
-  // ANIMATED WEAPONS
-  animatedWeaponsUnlocked: {
-    base: 0,
-    showValue: false,
-    displayed: false,
-  },
-  // ROGUE CLONE
-  cloneUnlocked: {
-    base: 0,
-    showValue: false,
-    displayed: false,
-  },
-  // NIGHTSTALKER
-  nightStalkerBuffEffectivenessPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  // PALADIN EQUIPMENT
-  canUseTwoShields: {
-    base: 0,
-    showValue: false,
-    displayed: false,
-  },
-  amuletEffectivenessPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  ringEffectivenessPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  // BERSERKER
-  uncappedAttackSpeed: {
-    base: 0,
-    showValue: false,
-    displayed: false,
-  },
-  warlordEffectivenessPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  overhealToLife: {
-    base: 0,
-    showValue: false,
-    displayed: false,
-  },
-  overhealPercent: {
-    base: 0,
-    divisor: 100,
-  },
-  bloodSacrificeUnlocked: {
-    base: 0,
-    showValue: false,
-    displayed: false,
-  },
-  // DRUID
-  shapeshiftUnlocked: {
-    base: 0,
-    showValue: false,
-    displayed: false,
-  },
-  // MAGE
-  reduceEnemyResistancesPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  convertManaToLifePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  weaponIllusionUnlocked: {
-    base: 0,
-    showValue: false,
-    displayed: false,
-  },
-  // ELEMENTALIST (CRYOMANCER)
-  glacialBulwarkUnlocked: {
-    base: 0,
-    showValue: false,
-    displayed: false,
-  },
-  weaponBuffEffectivenessPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  crimsonAegisSkillUnlocked: {
-    base: 0,
-    showValue: false,
-    displayed: false,
-  },
-  bloodSiphonSkillUnlocked: {
-    base: 0,
-    showValue: false,
-    displayed: false,
-  },
+  }),
+  animatedWeaponsUnlocked: createHiddenStat(),
+  cloneUnlocked: createHiddenStat(),
+  nightStalkerBuffEffectivenessPercent: createPercentStat(),
+  canUseTwoShields: createHiddenStat(),
+  amuletEffectivenessPercent: createPercentStat(),
+  ringEffectivenessPercent: createPercentStat(),
+  uncappedAttackSpeed: createHiddenStat(),
+  warlordEffectivenessPercent: createPercentStat(),
+  overhealToLife: createHiddenStat(),
+  overhealPercent: createStat({
+    div: 100,
+  }),
+  bloodSacrificeUnlocked: createHiddenStat(),
+  shapeshiftUnlocked: createHiddenStat(),
+  reduceEnemyResistancesPercent: createPercentStat(),
+  convertManaToLifePercent: createPercentStat(),
+  weaponIllusionUnlocked: createHiddenStat(),
+  glacialBulwarkUnlocked: createHiddenStat(),
+  weaponBuffEffectivenessPercent: createPercentStat(),
+  crimsonAegisSkillUnlocked: createHiddenStat(),
+  bloodSiphonSkillUnlocked: createHiddenStat(),
 };

@@ -11,7 +11,6 @@
   margin: 0 auto;
 }
 
-
 .soulShop-controls {
   display: flex;
   flex-wrap: wrap;
@@ -36,7 +35,11 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s,
+    transform 0.2s;
   outline: none;
 }
 
@@ -68,7 +71,11 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s,
+    transform 0.2s;
 }
 
 .soulShop-bulk-controls button:hover:not(:disabled) {
@@ -110,7 +117,9 @@
   align-items: flex-start;
   gap: 0.2rem;
   cursor: pointer;
-  transition: background 0.2s, border 0.2s;
+  transition:
+    background 0.2s,
+    border 0.2s;
 }
 
 .soul-upgrade-btn.purchased {
@@ -214,7 +223,9 @@
   font-weight: 600;
   cursor: pointer;
   margin-top: 1rem;
-  transition: background 0.2s, opacity 0.2s;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
 }
 
 .soulShop-modal-content .modal-buy:hover:not(:disabled) {

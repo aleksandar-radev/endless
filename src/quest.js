@@ -99,10 +99,7 @@ export class Quest {
         inventory.addMaterial({ id, qty });
         const matDef = MATERIALS[id] || Object.values(MATERIALS).find((m) => m.id === id);
         if (matDef) {
-          showToast(
-            `You received ${qty} ${matDef.name}${qty > 1 ? 's' : ''}!`,
-            'normal',
-          );
+          showToast(`You received ${qty} ${matDef.name}${qty > 1 ? 's' : ''}!`, 'normal');
         }
       });
     }

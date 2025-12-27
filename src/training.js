@@ -63,9 +63,7 @@ export default class Training {
       });
     }
     this.activeSection = SECTION_DEFS[0].key;
-    this.quickQty = options.useNumericInputs
-      ? Math.min(options.trainingQuickQty || 1, TRAINING_MAX_QTY)
-      : 1;
+    this.quickQty = options.useNumericInputs ? Math.min(options.trainingQuickQty || 1, TRAINING_MAX_QTY) : 1;
   }
 
   _ensureResourceExtraDamageSplitStructure() {
@@ -90,9 +88,7 @@ export default class Training {
       this.trainingBonuses[stat] = 0;
     });
     this.goldSpent = 0;
-    this.quickQty = options.useNumericInputs
-      ? Math.min(options.trainingQuickQty || 1, TRAINING_MAX_QTY)
-      : 1;
+    this.quickQty = options.useNumericInputs ? Math.min(options.trainingQuickQty || 1, TRAINING_MAX_QTY) : 1;
   }
 
   initializeTrainingUI() {
@@ -128,7 +124,7 @@ export default class Training {
       <button class="training-section-btn${this.activeSection === sec.key ? ' active' : ''}" data-section="${sec.key}" data-i18n="${sec.labelKey}">
         ${t(sec.labelKey)}
       </button>
-    `,
+    `
     ).join('');
 
     const controlsWrapper = document.createElement('div');
@@ -224,11 +220,20 @@ export default class Training {
         <div class="training-modal-content">
           <button class="modal-close">&times;</button>
           <h2 class="modal-title"></h2>
-          <p>${t('ascension.upgrade.currentLevel')}: <span class="modal-level"></span>/<span class="modal-max-level"></span></p>
+          <p>
+            ${t('ascension.upgrade.currentLevel')}: <span class="modal-level"></span>/<span
+              class="modal-max-level"
+            ></span>
+          </p>
           <p>${t('ascension.upgrade.currentBonus')}: <span class="modal-bonus"></span></p>
           <p>${t('ascension.upgrade.nextLevelBonus')}: <span class="modal-next-bonus"></span></p>
           <p>${t('crystalShop.modal.totalBonus')}: <span class="modal-total-bonus"></span></p>
-          <p>${t('training.totalCost')}: <span class="modal-total-cost"></span> ${t('resource.gold.name')} (<span class="modal-qty">1</span>)</p>
+          <p>
+            ${t('training.totalCost')}: <span class="modal-total-cost"></span> ${t('resource.gold.name')} (<span
+              class="modal-qty"
+              >1</span
+            >)
+          </p>
           <div class="modal-controls">${controlsMarkup}</div>
           <input type="range" class="modal-slider" min="0" max="1" value="1" step="1" />
           <button class="modal-buy">${t('crystalShop.modal.buy')}</button>
@@ -268,10 +273,7 @@ export default class Training {
       // Slider input
       const slider = this.modal.querySelector('.modal-slider');
       slider.addEventListener('input', (e) => {
-        this.selectedQty = Math.min(
-          parseInt(e.target.value, 10) || 0,
-          TRAINING_MAX_QTY,
-        );
+        this.selectedQty = Math.min(parseInt(e.target.value, 10) || 0, TRAINING_MAX_QTY);
         e.target.value = this.selectedQty;
         const input = this.modal.querySelector('.modal-qty-input');
         if (input) input.value = this.selectedQty;
@@ -312,17 +314,15 @@ export default class Training {
     m.querySelector('.modal-bonus').innerHTML = this.getBonusText(
       stat,
       STATS[stat].training,
-      this.upgradeLevels[stat] || 0,
+      this.upgradeLevels[stat] || 0
     );
     m.querySelector('.modal-next-bonus').innerHTML = this.getBonusText(
       stat,
       STATS[stat].training,
-      (this.upgradeLevels[stat] || 0) + 1,
+      (this.upgradeLevels[stat] || 0) + 1
     );
     // Reset to default quantity
-    this.selectedQty = options.useNumericInputs
-      ? Math.min(options.trainingQty || 1, TRAINING_MAX_QTY)
-      : 1;
+    this.selectedQty = options.useNumericInputs ? Math.min(options.trainingQty || 1, TRAINING_MAX_QTY) : 1;
     const qtyInput = m.querySelector('.modal-qty-input');
     if (qtyInput) qtyInput.value = this.selectedQty;
     this.updateModalDetails();
@@ -365,7 +365,7 @@ export default class Training {
         cost += increase * n;
       } else {
         const rPow = Math.pow(rate, n);
-        cost += increase * (rPow - 1) / (rate - 1);
+        cost += (increase * (rPow - 1)) / (rate - 1);
         increase *= rPow;
       }
       level += n;
@@ -381,7 +381,7 @@ export default class Training {
       } else {
         const rPow = Math.pow(rate, n);
         total = n * cost + increase * ((rPow - 1) / (rate - 1) ** 2 - n / (rate - 1));
-        cost += increase * (rPow - 1) / (rate - 1);
+        cost += (increase * (rPow - 1)) / (rate - 1);
         increase *= rPow;
       }
       level += n;
@@ -550,10 +550,7 @@ export default class Training {
         const levelsLeft = maxLevel - level;
         if (this.quickQty === 'max') {
           const { qty: affordableQty } = this.getMaxPurchasable('max', level, maxLevel, config.training);
-          qty =
-            affordableQty > 0
-              ? Math.min(affordableQty, TRAINING_MAX_QTY)
-              : Math.min(1, levelsLeft);
+          qty = affordableQty > 0 ? Math.min(affordableQty, TRAINING_MAX_QTY) : Math.min(1, levelsLeft);
           totalCost = this.calculateTotalCost(config.training, qty, level);
           if (affordableQty <= 0) disabled = true;
         } else {
@@ -675,10 +672,7 @@ export default class Training {
       let totalCost;
       if (this.quickQty === 'max') {
         const { qty: affordableQty } = this.getMaxPurchasable('max', level, maxLevel, config.training);
-        desiredQty =
-          affordableQty > 0
-            ? Math.min(affordableQty, TRAINING_MAX_QTY)
-            : Math.min(1, levelsLeft);
+        desiredQty = affordableQty > 0 ? Math.min(affordableQty, TRAINING_MAX_QTY) : Math.min(1, levelsLeft);
         totalCost = this.calculateTotalCost(config.training, desiredQty, level);
         if (affordableQty <= 0) disabled = true;
         if (hero.gold < totalCost) {
@@ -700,8 +694,13 @@ export default class Training {
 
     return html`
       <button data-stat="${stat}" ${disabled ? ' disabled' : ''}>
-        <span class="upgrade-name">${formatStatName(stat)} (${t('common.lvl')} ${formatNumber(level)}${isMaxed ? ' / ' + t('common.max') : ''})</span>
-        <span class="upgrade-bonus ${bonusClass}">${bonus}${isMaxed ? ' <strong>' + t('common.max') + '</strong>' : ''}</span>
+        <span class="upgrade-name"
+          >${formatStatName(stat)} (${t('common.lvl')}
+          ${formatNumber(level)}${isMaxed ? ' / ' + t('common.max') : ''})</span
+        >
+        <span class="upgrade-bonus ${bonusClass}"
+          >${bonus}${isMaxed ? ' <strong>' + t('common.max') + '</strong>' : ''}</span
+        >
         ${costLine}
       </button>
     `;
@@ -866,16 +865,13 @@ export default class Training {
               <span class="elemental-allocation"></span>
             </div>
           </div>
-        `,
+        `
       ).join('');
       const content = html`
         <div class="elemental-distribution-modal-content">
           <button class="modal-close">&times;</button>
           <h2 data-i18n="training.elementalDistributionTitle">${t('training.elementalDistributionTitle')}</h2>
-          <p
-            class="elemental-distribution-description"
-            data-i18n="training.elementalDistributionDescription"
-          >
+          <p class="elemental-distribution-description" data-i18n="training.elementalDistributionDescription">
             ${t('training.elementalDistributionDescription')}
           </p>
           <div class="elemental-distribution-row elemental-distribution-resource-split" data-stat="damage">
@@ -891,34 +887,20 @@ export default class Training {
             </div>
           </div>
           <div class="elemental-distribution-totals">
-            <p
-              class="elemental-total"
-              data-i18n="training.elementalDistributionTrainingTotal"
-            >
+            <p class="elemental-total" data-i18n="training.elementalDistributionTrainingTotal">
               ${tp('training.elementalDistributionTrainingTotal', { amount: formatNumber(0) })}
             </p>
-            <p
-              class="elemental-intelligence-total"
-              data-i18n="training.elementalDistributionIntelligenceTotal"
-            >
+            <p class="elemental-intelligence-total" data-i18n="training.elementalDistributionIntelligenceTotal">
               ${tp('training.elementalDistributionIntelligenceTotal', { amount: formatNumber(0) })}
             </p>
-            <p
-              class="elemental-extra-total"
-              data-i18n="training.elementalDistributionResourceElementalTotal"
-            >
+            <p class="elemental-extra-total" data-i18n="training.elementalDistributionResourceElementalTotal">
               ${tp('training.elementalDistributionResourceElementalTotal', { amount: formatNumber(0) })}
             </p>
-            <p
-              class="physical-extra-total"
-              data-i18n="training.elementalDistributionResourcePhysicalTotal"
-            >
+            <p class="physical-extra-total" data-i18n="training.elementalDistributionResourcePhysicalTotal">
               ${tp('training.elementalDistributionResourcePhysicalTotal', { amount: formatNumber(0) })}
             </p>
           </div>
-          <div class="elemental-distribution-rows">
-            ${rowsMarkup}
-          </div>
+          <div class="elemental-distribution-rows">${rowsMarkup}</div>
           <div class="elemental-distribution-actions">
             <button class="elemental-distribution-even" data-i18n="training.elementalDistributionReset">
               ${t('training.elementalDistributionReset')}
@@ -937,25 +919,23 @@ export default class Training {
           this.resetElementalDistribution();
         });
       }
-      this.elementalModal
-        .querySelectorAll('.elemental-distribution-row input[type="range"]')
-        .forEach((input) => {
-          const row = input.closest('.elemental-distribution-row');
-          const stat = row?.dataset.stat;
-          input.addEventListener('input', () => {
-            if (!stat) return;
-            if (stat === 'damage') {
-              this.resourceExtraDamagePhysicalSharePercent = Number(input.value);
-              this._ensureResourceExtraDamageSplitStructure();
-            } else {
-              this.elementalDistribution[stat] = Number(input.value);
-            }
-            this.updateTrainingBonuses();
-            hero?.queueRecalculateFromAttributes?.();
-            dataManager.saveGame();
-            this.updateElementalDistributionUI();
-          });
+      this.elementalModal.querySelectorAll('.elemental-distribution-row input[type="range"]').forEach((input) => {
+        const row = input.closest('.elemental-distribution-row');
+        const stat = row?.dataset.stat;
+        input.addEventListener('input', () => {
+          if (!stat) return;
+          if (stat === 'damage') {
+            this.resourceExtraDamagePhysicalSharePercent = Number(input.value);
+            this._ensureResourceExtraDamageSplitStructure();
+          } else {
+            this.elementalDistribution[stat] = Number(input.value);
+          }
+          this.updateTrainingBonuses();
+          hero?.queueRecalculateFromAttributes?.();
+          dataManager.saveGame();
+          this.updateElementalDistributionUI();
         });
+      });
     }
     this.updateElementalDistributionUI();
     if (this.elementalModal) {
@@ -1074,7 +1054,7 @@ export default class Training {
         currentLevel,
         currentLevel + desiredLevels,
         config,
-        gold,
+        gold
       ));
     }
 

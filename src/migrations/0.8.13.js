@@ -28,8 +28,7 @@ function convertFlatToBasePercent(value) {
 }
 
 function mergeConvertedRoll(flatRoll, existingPercent) {
-  const result =
-    existingPercent && typeof existingPercent === 'object' ? { ...existingPercent } : {};
+  const result = existingPercent && typeof existingPercent === 'object' ? { ...existingPercent } : {};
 
   if (!flatRoll || typeof flatRoll !== 'object') {
     return result;

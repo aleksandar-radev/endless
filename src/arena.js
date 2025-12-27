@@ -1,7 +1,8 @@
 /**
  * Manages boss properties and state.
  */
-import { percentIncreasedByLevel,
+import {
+  percentIncreasedByLevel,
   scaleStat,
   computeScaledReward,
   xpDiminishingFactor,
@@ -102,11 +103,7 @@ function applyRegionVariance(region, multipliers = {}) {
         scaleStatWithVariance(`${id}Damage`, boostedDamageRange[0], boostedDamageRange[1]);
         scaleStatWithVariance(`${id}Resistance`, boostedResistanceRange[0], boostedResistanceRange[1]);
       } else {
-        scaleStatWithVariance(
-          `${id}Resistance`,
-          nonBoostedResistanceRange[0],
-          nonBoostedResistanceRange[1],
-        );
+        scaleStatWithVariance(`${id}Resistance`, nonBoostedResistanceRange[0], nonBoostedResistanceRange[1]);
       }
     });
   } else if (config.type === 'armor') {
@@ -147,8 +144,7 @@ class Boss extends EnemyBase {
     }
     this.region = getCurrentBossRegion();
     const multiplier = this.region?.multiplier;
-    const baseRegionMultiplier =
-      typeof multiplier === 'function' ? multiplier() : multiplier ? { ...multiplier } : {};
+    const baseRegionMultiplier = typeof multiplier === 'function' ? multiplier() : multiplier ? { ...multiplier } : {};
     this.regionMultiplier = applyRegionVariance(this.region, baseRegionMultiplier);
     const regionBossIds = this.region?.bosses;
     let availableBosses =
@@ -199,7 +195,7 @@ class Boss extends EnemyBase {
       tp('battleLog.encounteredBoss', {
         level: formatNumberValue(this.level, options?.shortNumbers),
         name: t(this.name),
-      }),
+      })
     );
   }
 
@@ -229,7 +225,6 @@ class Boss extends EnemyBase {
     const regionMultiplier = Number.isFinite(this.regionMultiplier?.gold) ? this.regionMultiplier.gold : 1;
     return val * (this.baseData.multiplier?.gold || 1) * regionMultiplier;
   }
-
 
   calculateAttackSpeed() {
     const baseSpeed =
@@ -280,9 +275,9 @@ class Boss extends EnemyBase {
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     return Math.floor(
       val *
-      (this.baseData.multiplier?.evasion || 1) *
-      (Number.isFinite(this.regionMultiplier?.evasion) ? this.regionMultiplier.evasion : 1) *
-      attackRatingAndEvasionScale,
+        (this.baseData.multiplier?.evasion || 1) *
+        (Number.isFinite(this.regionMultiplier?.evasion) ? this.regionMultiplier.evasion : 1) *
+        attackRatingAndEvasionScale
     );
   }
 
@@ -294,9 +289,9 @@ class Boss extends EnemyBase {
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     return Math.floor(
       val *
-      (this.baseData.multiplier?.attackRating || 1) *
-      (Number.isFinite(this.regionMultiplier?.attackRating) ? this.regionMultiplier.attackRating : 1) *
-      attackRatingAndEvasionScale,
+        (this.baseData.multiplier?.attackRating || 1) *
+        (Number.isFinite(this.regionMultiplier?.attackRating) ? this.regionMultiplier.attackRating : 1) *
+        attackRatingAndEvasionScale
     );
   }
 
@@ -311,9 +306,9 @@ class Boss extends EnemyBase {
     const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
     return Math.floor(
       val *
-      (this.baseData.multiplier?.[`${type}Damage`] || 1) *
-      (Number.isFinite(this.regionMultiplier?.[`${type}Damage`]) ? this.regionMultiplier[`${type}Damage`] : 1) *
-      (1 - dmgRed),
+        (this.baseData.multiplier?.[`${type}Damage`] || 1) *
+        (Number.isFinite(this.regionMultiplier?.[`${type}Damage`]) ? this.regionMultiplier[`${type}Damage`] : 1) *
+        (1 - dmgRed)
     );
   }
 
@@ -326,10 +321,8 @@ class Boss extends EnemyBase {
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     return Math.floor(
       val *
-      (this.baseData.multiplier?.[`${type}Resistance`] || 1) *
-      (Number.isFinite(this.regionMultiplier?.[`${type}Resistance`])
-        ? this.regionMultiplier[`${type}Resistance`]
-        : 1),
+        (this.baseData.multiplier?.[`${type}Resistance`] || 1) *
+        (Number.isFinite(this.regionMultiplier?.[`${type}Resistance`]) ? this.regionMultiplier[`${type}Resistance`] : 1)
     );
   }
 

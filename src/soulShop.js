@@ -199,7 +199,7 @@ export const SOUL_UPGRADE_CONFIG = {
   /**
    * Extra Material Drop Chance
    * Each level increases the chance to gain an additional material drop.
-  */
+   */
   extraMaterialDropPercent: {
     label: 'soulShop.upgrade.extraMaterialDropPercent.label',
     bonus: 0.01, // 1% per level
@@ -212,7 +212,7 @@ export const SOUL_UPGRADE_CONFIG = {
   /**
    * Extra Material Drop Max
    * Each level increases the maximum number of extra material drops per kill.
-  */
+   */
   extraMaterialDropMax: {
     label: 'soulShop.upgrade.extraMaterialDropMax.label',
     bonus: 1, // +1 max per level
@@ -230,12 +230,8 @@ export default class SoulShop {
     handleSavedData(savedData, this);
     this.modal = null;
     this.currentStat = null;
-    this.selectedQty = options.useNumericInputs
-      ? Math.min(options.soulShopQty || 1, SOUL_SHOP_MAX_QTY)
-      : 1;
-    this.quickQty = options.useNumericInputs
-      ? Math.min(options.soulShopQuickQty || 1, SOUL_SHOP_MAX_QTY)
-      : 1;
+    this.selectedQty = options.useNumericInputs ? Math.min(options.soulShopQty || 1, SOUL_SHOP_MAX_QTY) : 1;
+    this.quickQty = options.useNumericInputs ? Math.min(options.soulShopQuickQty || 1, SOUL_SHOP_MAX_QTY) : 1;
     this.bulkBuyBtn = null;
     this.bulkCostEl = null;
   }
@@ -245,7 +241,7 @@ export default class SoulShop {
    * @param {object} config - The upgrade config object
    * @param {number} level - The current level (0-based)
    * @returns {number} Integer cost
-  */
+   */
   getSoulUpgradeCost(config, level = 0) {
     const multiplier = this.getCostMultiplier();
     const base = config.baseCost + (config.costIncrement || 0) * level;
@@ -370,8 +366,8 @@ export default class SoulShop {
     upgradesContainer.innerHTML = `
       <div class="soul-upgrades-grid">
         ${Object.entries(SOUL_UPGRADE_CONFIG)
-    .map(([stat, config]) => this.createSoulUpgradeButton(stat, config))
-    .join('')}
+          .map(([stat, config]) => this.createSoulUpgradeButton(stat, config))
+          .join('')}
       </div>
     `;
     this.setupSoulUpgradeHandlers();
@@ -394,37 +390,27 @@ export default class SoulShop {
       const maxLevel = isMultiLevel ? this.getUpgradeMaxLevel(config) : Infinity;
       const levelsLeft = Math.max(0, maxLevel - baseLevel);
       let qty = 1;
-      let cost = isOneTime || isMultiple
-        ? Math.round(config.baseCost)
-        : this.getSoulUpgradeCost(config, baseLevel);
+      let cost = isOneTime || isMultiple ? Math.round(config.baseCost) : this.getSoulUpgradeCost(config, baseLevel);
       let disabled = alreadyPurchased;
       let unaffordable = false;
       if (options?.quickBuy && !alreadyPurchased) {
         if (isMultiLevel || isMultiple) {
           if (this.quickQty === 'max') {
             const { qty: affordableQty, totalCost } = this.getBulkCost(stat, 'max', hero.souls);
-            qty =
+            qty = affordableQty > 0 ? Math.min(affordableQty, SOUL_SHOP_MAX_QTY) : Math.min(1, levelsLeft);
+            cost =
               affordableQty > 0
-                ? Math.min(affordableQty, SOUL_SHOP_MAX_QTY)
-                : Math.min(1, levelsLeft);
-            cost = affordableQty > 0
-              ? totalCost
-              : isMultiple
-                ? Math.round(config.baseCost) * qty
-                : this.calculateTotalCost(stat, qty, baseLevel);
+                ? totalCost
+                : isMultiple
+                  ? Math.round(config.baseCost) * qty
+                  : this.calculateTotalCost(stat, qty, baseLevel);
             if (affordableQty <= 0 || hero.souls < cost) {
               disabled = true;
               unaffordable = true;
             }
           } else {
-            qty = Math.min(
-              this.quickQty,
-              isMultiLevel ? levelsLeft : SOUL_SHOP_MAX_QTY,
-              SOUL_SHOP_MAX_QTY,
-            );
-            cost = isMultiple
-              ? Math.round(config.baseCost) * qty
-              : this.calculateTotalCost(stat, qty, baseLevel);
+            qty = Math.min(this.quickQty, isMultiLevel ? levelsLeft : SOUL_SHOP_MAX_QTY, SOUL_SHOP_MAX_QTY);
+            cost = isMultiple ? Math.round(config.baseCost) * qty : this.calculateTotalCost(stat, qty, baseLevel);
             if (qty <= 0 || hero.souls < cost) {
               disabled = true;
               unaffordable = true;
@@ -512,10 +498,7 @@ export default class SoulShop {
       const levelsLeft = isMultiLevel ? this.getLevelsLeft(config, baseLevel) : Infinity;
       if (this.quickQty === 'max') {
         const { qty: affordableQty, totalCost } = this.getBulkCost(stat, 'max', hero.souls);
-        qty =
-          affordableQty > 0
-            ? Math.min(affordableQty, SOUL_SHOP_MAX_QTY)
-            : Math.min(1, levelsLeft);
+        qty = affordableQty > 0 ? Math.min(affordableQty, SOUL_SHOP_MAX_QTY) : Math.min(1, levelsLeft);
         cost = affordableQty > 0 ? totalCost : this.calculateTotalCost(stat, qty, baseLevel);
         if (affordableQty <= 0 || hero.souls < cost) {
           disabled = true;
@@ -559,8 +542,7 @@ export default class SoulShop {
         return { qty, totalCost: 0 };
       }
       const maxQty = Math.floor(availableSouls / unitCost);
-      const parsedDesired =
-        typeof desiredQty === 'number' ? desiredQty : parseInt(desiredQty, 10);
+      const parsedDesired = typeof desiredQty === 'number' ? desiredQty : parseInt(desiredQty, 10);
       const qty =
         desiredQty === 'max'
           ? Math.min(maxQty, SOUL_SHOP_MAX_QTY)
@@ -760,14 +742,10 @@ export default class SoulShop {
       onClose: () => closeModal('#soulShop-modal'),
     });
     this.modal.querySelector('.modal-close').onclick = () => closeModal('#soulShop-modal');
-    this.modal.querySelector('.modal-buy').onclick = () =>
-      this.buyBulk(this.currentStat, this.selectedQty);
+    this.modal.querySelector('.modal-buy').onclick = () => this.buyBulk(this.currentStat, this.selectedQty);
     const slider = this.modal.querySelector('.modal-slider');
     slider.addEventListener('input', (e) => {
-      this.selectedQty = Math.min(
-        parseInt(e.target.value, 10) || 0,
-        SOUL_SHOP_MAX_QTY,
-      );
+      this.selectedQty = Math.min(parseInt(e.target.value, 10) || 0, SOUL_SHOP_MAX_QTY);
       e.target.value = this.selectedQty;
       const input = this.modal.querySelector('.modal-qty-input');
       if (input) {
@@ -789,9 +767,7 @@ export default class SoulShop {
     const controls = m.querySelector('.modal-controls');
     const buyBtn = m.querySelector('.modal-buy');
     const slider = m.querySelector('.modal-slider');
-    this.selectedQty = options.useNumericInputs
-      ? Math.min(options.soulShopQty || 1, SOUL_SHOP_MAX_QTY)
-      : 1;
+    this.selectedQty = options.useNumericInputs ? Math.min(options.soulShopQty || 1, SOUL_SHOP_MAX_QTY) : 1;
     // Multi-level (increasing cost): any with numeric bonus and not oneTime
     const isMultiLevel = typeof config.bonus === 'number' && !config.oneTime;
     if (isMultiLevel) {
@@ -845,20 +821,20 @@ export default class SoulShop {
     } else if (config.oneTime) {
       controls.style.display = 'none';
       const purchased = !!this.soulUpgrades[stat];
-      const oneTimeBonusText = typeof config.bonus === 'string' ? t(config.bonus) : (config.bonus || '');
+      const oneTimeBonusText = typeof config.bonus === 'string' ? t(config.bonus) : config.bonus || '';
       fields.innerHTML = `
         <p>${oneTimeBonusText}</p>
         <p>${t('soulShop.cost')}: <span class="modal-total-cost">${config.baseCost}</span> ${t('resource.souls.name')}</p>
         <div class="modal-status">${
-  purchased ? '<span style="color:#10b981;font-weight:bold;">' + t('common.purchased') + '</span>' : ''
-}</div>
+          purchased ? '<span style="color:#10b981;font-weight:bold;">' + t('common.purchased') + '</span>' : ''
+        }</div>
       `;
       buyBtn.style.display = purchased ? 'none' : '';
       buyBtn.disabled = purchased;
       if (slider) slider.style.display = 'none';
     } else if (config.multiple) {
       controls.style.display = 'none';
-      const multipleBonusText = typeof config.bonus === 'string' ? t(config.bonus) : (config.bonus || '');
+      const multipleBonusText = typeof config.bonus === 'string' ? t(config.bonus) : config.bonus || '';
       fields.innerHTML = `
         <p>${multipleBonusText}</p>
         <p>${t('soulShop.cost')}: <span class="modal-total-cost">${config.baseCost}</span> ${t('resource.souls.name')}</p>
@@ -882,12 +858,7 @@ export default class SoulShop {
       const baseLevel = this.soulUpgrades[stat] || 0;
       const maxLevel = this.getUpgradeMaxLevel(config);
       const levelsLeft = this.getLevelsLeft(config, baseLevel);
-      const { qty: affordableQty, totalCost: maxCost } = this.getMaxPurchasable(
-        stat,
-        'max',
-        baseLevel,
-        hero.souls,
-      );
+      const { qty: affordableQty, totalCost: maxCost } = this.getMaxPurchasable(stat, 'max', baseLevel, hero.souls);
       let qty =
         this.selectedQty === 'max'
           ? affordableQty > 0
@@ -895,9 +866,7 @@ export default class SoulShop {
             : Math.min(1, levelsLeft)
           : Math.min(this.selectedQty, levelsLeft, SOUL_SHOP_MAX_QTY);
       const totalCost =
-        this.selectedQty === 'max' && affordableQty > 0
-          ? maxCost
-          : this.calculateTotalCost(stat, qty, baseLevel);
+        this.selectedQty === 'max' && affordableQty > 0 ? maxCost : this.calculateTotalCost(stat, qty, baseLevel);
       const affordable = hero.souls >= totalCost && qty > 0 && qty <= affordableQty;
       let bonus = config.bonus || 0;
       if (config.stat && config.stat.endsWith('Percent')) {

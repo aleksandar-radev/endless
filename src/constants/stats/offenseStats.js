@@ -1,73 +1,117 @@
-import { itemLevelScaling } from './itemScaling.js';
-
-// Scaling configuration shared across offensive stats.
-// Values gradually reduce from `start` to `end` over the first 2000 levels with
-// slight boosts for higher tier items.
-const FLAT_SCALING = { start: 0.04, end: 0.01, tierStart: 0.1, tierEnd: 0.05, isPercent: false };
-const PERCENT_SCALING = {
-  start: 0.002,
-  end: 0.0005,
-  tierStart: 0.1,
-  tierEnd: 0.05,
-  isPercent: true,
-};
-const CHANCE_SCALING = {
-  start: 0.0012,
-  end: 0.0003,
-  tierStart: 0.1,
-  tierEnd: 0.05,
-  isPercent: true,
-};
+import { itemLevelScaling, createTierScaling, createStat, createPercentStat, createHiddenStat } from './stats.js';
+import { ELEMENTS } from '../common.js';
 
 const ELEMENTAL_DAMAGE_MIN = 8;
 const ELEMENTAL_DAMAGE_MAX = 20;
-const ELEMENTAL_DAMAGE_PERCENT_MIN = 14;
-const ELEMENTAL_DAMAGE_PERCENT_MAX = 28;
 
-const offenseScaling = (level, tier, config = FLAT_SCALING, scalingSystem = 'simple') =>
-  itemLevelScaling(level, tier, { ...config, scalingSystem });
+const WAND_ELEMENTAL_FLAT_MULTIPLIER = 1.4;
+const STAFF_ELEMENTAL_FLAT_MULTIPLIER = 1.75;
+const WAND_ELEMENTAL_PERCENT_MULTIPLIER = 1.25;
+const STAFF_ELEMENTAL_PERCENT_MULTIPLIER = 1.45;
 
-// Offense stats
+const tierScalingMaxPercent = createTierScaling(100, 2000, 1.2);
+
+const offenseScaling = (level, tier) => itemLevelScaling(level, tier);
+
+const createElementalDamageConfig = () => ({
+  min: ELEMENTAL_DAMAGE_MIN,
+  max: ELEMENTAL_DAMAGE_MAX,
+  scaling: (level, tier) => offenseScaling(level, tier),
+  overrides: {
+    WAND: {
+      min: Math.round(ELEMENTAL_DAMAGE_MIN * WAND_ELEMENTAL_FLAT_MULTIPLIER),
+      max: Math.round(ELEMENTAL_DAMAGE_MAX * WAND_ELEMENTAL_FLAT_MULTIPLIER),
+    },
+    STAFF: {
+      min: Math.round(ELEMENTAL_DAMAGE_MIN * STAFF_ELEMENTAL_FLAT_MULTIPLIER),
+      max: Math.round(ELEMENTAL_DAMAGE_MAX * STAFF_ELEMENTAL_FLAT_MULTIPLIER),
+    },
+  },
+});
+
+const createElementalDamagePercentConfig = () => ({
+  tierScalingMaxPercent,
+  overrides: {
+    WAND: {
+      min: 1,
+      max: Math.round(100 * WAND_ELEMENTAL_PERCENT_MULTIPLIER),
+    },
+    STAFF: {
+      min: 1,
+      max: Math.round(100 * STAFF_ELEMENTAL_PERCENT_MULTIPLIER),
+    },
+  },
+});
+
+const generateElementalOffenseStats = () => {
+  const stats = {};
+  Object.keys(ELEMENTS).forEach((element) => {
+    stats[`${element}Damage`] = createStat({
+      item: createElementalDamageConfig(),
+      itemTags: ['sword', 'dagger', 'gloves', 'magic'],
+      show: true,
+      sub: 'elemental',
+    });
+    stats[`${element}DamagePercent`] = createPercentStat({
+      item: createElementalDamagePercentConfig(),
+      itemTags: ['sword', 'dagger', 'jewelry', 'gloves', 'magic'],
+      sub: 'elemental',
+    });
+    stats[`${element}Penetration`] = createStat({
+      sub: 'elemental',
+    });
+    stats[`${element}PenetrationPercent`] = createPercentStat({
+      sub: 'elemental',
+    });
+  });
+  return stats;
+};
+
 export const OFFENSE_STATS = {
-  // DAMAGE
-  damage: {
+  damage: createStat({
     base: 10,
     training: { cost: 100, bonus: 1, maxLevel: Infinity },
-    item: { min: 10, max: 28, limit: Infinity, scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
-    itemTags: ['offense'],
-    showInUI: true,
-    subcategory: 'attack',
-  },
-  damagePerLevel: {
-    base: 0,
-    decimalPlaces: 1,
-  },
-  damagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 15, max: 36, limit: Infinity, scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, PERCENT_SCALING, scalingSystem) },
+    item: {
+      min: 10,
+      max: 28,
+      scaling: (level, tier) => offenseScaling(level, tier),
+      overrides: {
+        AXE: { min: 14, max: 35 },
+        MACE: { min: 16, max: 38 },
+        DAGGER: { min: 6, max: 18 },
+        BOW: { min: 8, max: 24 },
+      },
+    },
+    itemTags: ['offense', 'sword', 'axe', 'mace', 'dagger', 'bow'],
+    show: true,
+    sub: 'attack',
+  }),
+  damagePerLevel: createStat({
+    dec: 1,
+  }),
+  damagePercent: createPercentStat({
+    item: {
+      tierScalingMaxPercent,
+      overrides: {
+        WAND: { min: 0, max: 0 },
+        STAFF: { min: 0, max: 0 },
+      },
+    },
     itemTags: ['offense', 'gloves'],
-    subcategory: 'attack',
-  },
-  totalDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'attack',
-  },
-  // ATTACK SPEED
-  attackSpeed: {
+    sub: 'attack',
+  }),
+  totalDamagePercent: createPercentStat({
+    sub: 'attack',
+  }),
+  attackSpeed: createStat({
     base: 1,
-    decimalPlaces: 2,
-    showInUI: true,
-    subcategory: 'attack',
+    dec: 2,
+    show: true,
+    sub: 'attack',
     cap: 5,
-  },
-  attackSpeedPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
+  }),
+  attackSpeedPercent: createPercentStat({
+    dec: 2,
     training: {
       cost: 400,
       costIncrease: 600,
@@ -77,19 +121,14 @@ export const OFFENSE_STATS = {
       maxLevel: 100,
     }, // max bonus: 50% -> +0.5 attacks/s on the 1.0 base before other flats
     item: {
-      min: 0.05,
-      max: 0.25,
-      limit: { SWORD: 1, AXE: 0.8, MACE: 0.75, DAGGER: 1.2, GLOVES: 0.5 },
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, PERCENT_SCALING, scalingSystem),
+      tierScalingMaxPercent: createTierScaling(50, 150, 1),
     },
     itemTags: ['offense', 'gloves'],
     forceNotShow: true,
-  },
-  // CRIT CHANCE
-  critChance: {
+  }),
+  critChance: createPercentStat({
     base: 5,
-    divisor: 100,
-    decimalPlaces: 2,
+    dec: 2,
     training: {
       cost: 550,
       costIncrease: 600,
@@ -99,31 +138,29 @@ export const OFFENSE_STATS = {
       maxLevel: 250,
     }, // max bonus: 25
     item: {
-      min: 1,
-      max: 5,
-      limit: 20,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, CHANCE_SCALING, scalingSystem),
+      tierScalingMaxPercent: createTierScaling(5, 100, 1.2),
+      overrides: {
+        DAGGER: { min: 1, max: 120 },
+        WAND: { min: 1, max: 110 },
+        STAFF: { min: 1, max: 105 },
+      },
     },
     itemTags: ['offense', 'jewelry', 'gloves', 'wand', 'staff'],
-    showInUI: true,
-    subcategory: 'attack',
+    show: true,
+    sub: 'attack',
     cap: 50,
-  },
-  critChanceCap: {
+  }),
+  critChanceCap: createStat({
     base: 50,
-    divisor: 100,
-    subcategory: 'attack',
-  },
-  critChancePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+    div: 100,
+    sub: 'attack',
+  }),
+  critChancePercent: createPercentStat({
     forceNotShow: true,
-  },
-  // CRIT DAMAGE
-  critDamage: {
+  }),
+  critDamage: createStat({
     base: 1.33,
-    decimalPlaces: 2,
+    dec: 2,
     training: {
       cost: 750,
       costIncrease: 800,
@@ -132,93 +169,63 @@ export const OFFENSE_STATS = {
       bonus: 0.01,
       maxLevel: 250,
     }, // max bonus: 2.5
-    item: { min: 0.02, max: 0.1, limit: 2, scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, CHANCE_SCALING, scalingSystem) },
+    item: { min: 0.02, max: 0.1, limit: 2, scaling: (level, tier) => offenseScaling(level, tier) },
     itemTags: ['offense', 'jewelry', 'gloves', 'wand', 'staff'],
-    showInUI: true,
-    subcategory: 'attack',
-  },
-  critDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+    show: true,
+    sub: 'attack',
+  }),
+  critDamagePercent: createPercentStat({
     forceNotShow: true,
-  },
-  // ATTACK RATING
-  attackRating: {
+  }),
+  attackRating: createStat({
     base: 100,
     training: { cost: 160, bonus: 10, maxLevel: Infinity },
-    item: { min: 60, max: 140, limit: Infinity, scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
+    item: { min: 60, max: 140, scaling: (level, tier) => offenseScaling(level, tier) },
     itemTags: ['offense', 'jewelry', 'gloves'],
-    showInUI: true,
-    subcategory: 'attack',
-  },
-  attackRatingPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 10, max: 30, limit: Infinity, scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, PERCENT_SCALING, scalingSystem) },
+    show: true,
+    sub: 'attack',
+  }),
+  attackRatingPercent: createPercentStat({
+    item: { tierScalingMaxPercent: createTierScaling(30, 600, 1.2) },
     itemTags: ['offense', 'gloves'],
-    subcategory: 'attack',
-  },
-  chanceToHitPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 5, max: 10, limit: 12, scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, CHANCE_SCALING, scalingSystem) },
+    sub: 'attack',
+  }),
+  chanceToHitPercent: createPercentStat({
+    item: { tierScalingMaxPercent: createTierScaling(10, 50, 1.1) },
     itemTags: ['offense', 'magic', 'gloves'],
-    showInUI: true,
-    subcategory: 'attack',
-  },
-  // LIFE STEAL
-  lifeSteal: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
+    show: true,
+    sub: 'attack',
+  }),
+  lifeSteal: createPercentStat({
+    dec: 2,
     training: { cost: 800, bonus: 0.01, maxLevel: 100 }, // max bonus: 1
-    item: { min: 0.5, max: 1.25, limit: 5, scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, CHANCE_SCALING, scalingSystem) },
-    showInUI: true,
-    subcategory: 'attack',
-  },
-  lifeStealPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+    item: { tierScalingMaxPercent: createTierScaling(1.25, 10, 1.2) },
+    show: true,
+    sub: 'attack',
+  }),
+  lifeStealPercent: createPercentStat({
     forceNotShow: true,
-  },
-  // OMNI STEAL
-  omniSteal: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
-    item: { min: 0.3, max: 0.7, limit: 2.5, scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, CHANCE_SCALING, scalingSystem) },
-    showInUI: true,
-    subcategory: 'attack',
-  },
-  omniStealPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+  }),
+  omniSteal: createPercentStat({
+    dec: 2,
+    item: { tierScalingMaxPercent: createTierScaling(0.7, 5.0, 1.1) },
+    show: true,
+    sub: 'attack',
+  }),
+  omniStealPercent: createPercentStat({
     forceNotShow: true,
-  },
-  // LIFE PER HIT
-  lifePerHit: {
-    base: 0,
-    decimalPlaces: 1,
-    item: { min: 1, max: 7, limit: Infinity, scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
+  }),
+  lifePerHit: createStat({
+    dec: 1,
+    item: { min: 1, max: 7, scaling: (level, tier) => offenseScaling(level, tier) },
     itemTags: ['offense'],
-    showInUI: true,
-    subcategory: 'attack',
-  },
-  lifePerHitPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+    show: true,
+    sub: 'attack',
+  }),
+  lifePerHitPercent: createPercentStat({
     forceNotShow: true,
-  },
-  doubleDamageChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+  }),
+  doubleDamageChance: createPercentStat({
     training: {
       cost: 550,
       costIncrease: 600,
@@ -228,572 +235,174 @@ export const OFFENSE_STATS = {
       maxLevel: 200,
     }, // max bonus: 20
     item: {
-      min: 2,
-      max: 5,
-      limit: 25,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, CHANCE_SCALING, scalingSystem),
+      tierScalingMaxPercent: createTierScaling(5, 50, 1.0),
     },
     itemTags: ['offense', 'gloves', 'jewelry', 'wand', 'staff'],
-    showInUI: true,
-    subcategory: 'attack',
-  },
-  // FIRE DAMAGE
-  fireDamage: {
-    base: 0,
-    item: {
-      min: ELEMENTAL_DAMAGE_MIN,
-      max: ELEMENTAL_DAMAGE_MAX,
-      limit: Infinity,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, FLAT_SCALING, scalingSystem),
-    },
-    itemTags: ['sword', 'dagger', 'gloves', 'magic'],
-    showInUI: true,
-    subcategory: 'elemental',
-  },
-  fireDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: {
-      min: ELEMENTAL_DAMAGE_PERCENT_MIN,
-      max: ELEMENTAL_DAMAGE_PERCENT_MAX,
-      limit: Infinity,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, PERCENT_SCALING, scalingSystem),
-    },
-    itemTags: ['sword', 'dagger', 'jewelry', 'gloves', 'magic'],
-    subcategory: 'elemental',
-  },
-  // COLD DAMAGE
-  coldDamage: {
-    base: 0,
-    item: {
-      min: ELEMENTAL_DAMAGE_MIN,
-      max: ELEMENTAL_DAMAGE_MAX,
-      limit: Infinity,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, FLAT_SCALING, scalingSystem),
-    },
-    itemTags: ['sword', 'dagger', 'gloves', 'magic'],
-    showInUI: true,
-    subcategory: 'elemental',
-  },
-  coldDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: {
-      min: ELEMENTAL_DAMAGE_PERCENT_MIN,
-      max: ELEMENTAL_DAMAGE_PERCENT_MAX,
-      limit: Infinity,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, PERCENT_SCALING, scalingSystem),
-    },
-    itemTags: ['sword', 'dagger', 'jewelry', 'gloves', 'magic'],
-    subcategory: 'elemental',
-  },
-  // AIR DAMAGE
-  airDamage: {
-    base: 0,
-    item: {
-      min: ELEMENTAL_DAMAGE_MIN,
-      max: ELEMENTAL_DAMAGE_MAX,
-      limit: Infinity,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, FLAT_SCALING, scalingSystem),
-    },
-    itemTags: ['sword', 'dagger', 'gloves', 'magic'],
-    showInUI: true,
-    subcategory: 'elemental',
-  },
-  airDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: {
-      min: ELEMENTAL_DAMAGE_PERCENT_MIN,
-      max: ELEMENTAL_DAMAGE_PERCENT_MAX,
-      limit: Infinity,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, PERCENT_SCALING, scalingSystem),
-    },
-    itemTags: ['sword', 'dagger', 'jewelry', 'gloves', 'magic'],
-    subcategory: 'elemental',
-  },
-  // EARTH DAMAGE
-  earthDamage: {
-    base: 0,
-    item: {
-      min: ELEMENTAL_DAMAGE_MIN,
-      max: ELEMENTAL_DAMAGE_MAX,
-      limit: Infinity,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, FLAT_SCALING, scalingSystem),
-    },
-    itemTags: ['sword', 'dagger', 'gloves', 'magic'],
-    showInUI: true,
-    subcategory: 'elemental',
-  },
-  earthDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: {
-      min: ELEMENTAL_DAMAGE_PERCENT_MIN,
-      max: ELEMENTAL_DAMAGE_PERCENT_MAX,
-      limit: Infinity,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, PERCENT_SCALING, scalingSystem),
-    },
-    itemTags: ['sword', 'dagger', 'jewelry', 'gloves', 'magic'],
-    subcategory: 'elemental',
-  },
-  // LIGHTNING DAMAGE
-  lightningDamage: {
-    base: 0,
-    item: {
-      min: ELEMENTAL_DAMAGE_MIN,
-      max: ELEMENTAL_DAMAGE_MAX,
-      limit: Infinity,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, FLAT_SCALING, scalingSystem),
-    },
-    itemTags: ['sword', 'dagger', 'gloves', 'magic'],
-    showInUI: true,
-    subcategory: 'elemental',
-  },
-  lightningDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: {
-      min: ELEMENTAL_DAMAGE_PERCENT_MIN,
-      max: ELEMENTAL_DAMAGE_PERCENT_MAX,
-      limit: Infinity,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, PERCENT_SCALING, scalingSystem),
-    },
-    itemTags: ['sword', 'dagger', 'jewelry', 'gloves', 'magic'],
-    subcategory: 'elemental',
-  },
-  // WATER DAMAGE
-  waterDamage: {
-    base: 0,
-    item: {
-      min: ELEMENTAL_DAMAGE_MIN,
-      max: ELEMENTAL_DAMAGE_MAX,
-      limit: Infinity,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, FLAT_SCALING, scalingSystem),
-    },
-    itemTags: ['sword', 'dagger', 'gloves', 'magic'],
-    showInUI: true,
-    subcategory: 'elemental',
-  },
-  waterDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: {
-      min: ELEMENTAL_DAMAGE_PERCENT_MIN,
-      max: ELEMENTAL_DAMAGE_PERCENT_MAX,
-      limit: Infinity,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, PERCENT_SCALING, scalingSystem),
-    },
-    itemTags: ['sword', 'dagger', 'jewelry', 'gloves', 'magic'],
-    subcategory: 'elemental',
-  },
-  elementalDamage: {
-    base: 0,
-    decimalPlaces: 1,
+    show: true,
+    sub: 'attack',
+  }),
+  ...generateElementalOffenseStats(),
+  elementalDamage: createStat({
+    dec: 1,
     training: { cost: 90, bonus: 1, maxLevel: Infinity },
-    item: { min: 1, max: 3, limit: Infinity, scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
+    item: { min: 1, max: 3, scaling: (level, tier) => offenseScaling(level, tier) },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
-    subcategory: 'elemental',
-  },
-  elementalDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 2, max: 7, limit: Infinity, scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, PERCENT_SCALING, scalingSystem) },
+    sub: 'elemental',
+  }),
+  elementalDamagePercent: createPercentStat({
+    item: { tierScalingMaxPercent: createTierScaling(7, 100, 1.1) },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
-    subcategory: 'elemental',
-  },
-  percentOfPlayerDamage: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+    sub: 'elemental',
+  }),
+  percentOfPlayerDamage: createPercentStat({
     forceNotShow: true,
-  },
-  armorPenetration: {
-    base: 0,
+  }),
+  armorPenetration: createStat({
     training: { cost: 50, bonus: 10, maxLevel: Infinity },
     item: {
       min: 10,
       max: 25,
-      limit: Infinity,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, FLAT_SCALING, scalingSystem),
+      scaling: (level, tier) => offenseScaling(level, tier),
     },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
-    subcategory: 'attack',
-  },
-  armorPenetrationPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'attack',
-  },
-  firePenetration: {
-    base: 0,
-    subcategory: 'elemental',
-  },
-  firePenetrationPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  coldPenetration: {
-    base: 0,
-    subcategory: 'elemental',
-  },
-  coldPenetrationPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  airPenetration: {
-    base: 0,
-    subcategory: 'elemental',
-  },
-  airPenetrationPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  earthPenetration: {
-    base: 0,
-    subcategory: 'elemental',
-  },
-  earthPenetrationPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  lightningPenetration: {
-    base: 0,
-    subcategory: 'elemental',
-  },
-  lightningPenetrationPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  waterPenetration: {
-    base: 0,
-    subcategory: 'elemental',
-  },
-  waterPenetrationPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  elementalPenetration: {
-    base: 0,
+    sub: 'attack',
+  }),
+  armorPenetrationPercent: createPercentStat({
+    sub: 'attack',
+  }),
+  elementalPenetration: createStat({
     training: { cost: 50, bonus: 10, maxLevel: Infinity },
     item: {
       min: 10,
       max: 25,
-      limit: Infinity,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, FLAT_SCALING, scalingSystem),
+      scaling: (level, tier) => offenseScaling(level, tier),
     },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic', 'elemental'],
-    subcategory: 'elemental',
-  },
-  flatPenetrationPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'attack',
-  },
-  elementalPenetrationPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  ignoreEnemyArmor: {
-    base: 0,
-    showValue: false,
-  },
-  ignoreAllEnemyResistances: {
-    base: 0,
-    showValue: false,
-  },
-  attackNeverMiss: {
-    base: 0,
-  },
-  reduceEnemyDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
+    sub: 'elemental',
+  }),
+  flatPenetrationPercent: createPercentStat({
+    sub: 'attack',
+  }),
+  elementalPenetrationPercent: createPercentStat({
+    sub: 'elemental',
+  }),
+  ignoreEnemyArmor: createHiddenStat(),
+  ignoreAllEnemyResistances: createHiddenStat(),
+  attackNeverMiss: createStat(),
+  reduceEnemyDamagePercent: createPercentStat({
+    dec: 2,
     cap: 50,
-  },
-  reduceEnemyHpPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
+  }),
+  reduceEnemyHpPercent: createPercentStat({
+    dec: 2,
     cap: 50,
-  },
-  reduceEnemyAttackSpeedPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
+  }),
+  reduceEnemyAttackSpeedPercent: createPercentStat({
+    dec: 2,
     cap: 50,
-  },
-  extraDamageFromLifePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
-  },
-  extraDamageFromArmorPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
-  },
-  extraDamageFromManaPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
-  },
-  extraDamageFromLifeRegenPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
-  },
-  extraDamageFromEvasionPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
-  },
-  extraDamageFromAttackRatingPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
+  }),
+  extraDamageFromLifePercent: createPercentStat({
+    dec: 2,
+  }),
+  extraDamageFromArmorPercent: createPercentStat({
+    dec: 2,
+  }),
+  extraDamageFromManaPercent: createPercentStat({
+    dec: 2,
+  }),
+  extraDamageFromLifeRegenPercent: createPercentStat({
+    dec: 2,
+  }),
+  extraDamageFromEvasionPercent: createPercentStat({
+    dec: 2,
+  }),
+  extraDamageFromAttackRatingPercent: createPercentStat({
+    dec: 2,
     item: {
-      min: 0.1,
-      max: 0.3,
-      limit: 0.5,
-      scaling: (level, tier, scalingSystem) => offenseScaling(level, tier, CHANCE_SCALING, scalingSystem),
+      tierScalingMaxPercent: createTierScaling(0.3, 1.5, 1.0),
     },
-  },
-  extraEvasionFromLifePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
-  },
-  extraDamageFromAllResistancesPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
-  },
-  // RETALIATION
-  retaliateWhenHit: {
-    base: 0,
-    showValue: false,
-  },
-  // ARENA DAMAGE
-  arenaDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'attack',
-  },
-  // ANIMATED WEAPONS
-  animatedWeaponsDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  // ROGUE CLONE
-  cloneDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  // STEALTH
-  avoidChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+  }),
+  extraEvasionFromLifePercent: createPercentStat({
+    dec: 2,
+  }),
+  extraDamageFromAllResistancesPercent: createPercentStat({
+    dec: 2,
+  }),
+  retaliateWhenHit: createHiddenStat(),
+  arenaDamagePercent: createPercentStat({
+    sub: 'attack',
+  }),
+  animatedWeaponsDamagePercent: createPercentStat(),
+  cloneDamagePercent: createPercentStat(),
+  avoidChance: createPercentStat({
     forceNotShow: true,
-  },
-  // EXECUTE
-  executeThresholdPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'attack',
-  },
-  // RARE ENEMY DAMAGE
-  damageToHighRarityEnemiesPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  // HEAL DAMAGES ENEMIES
-  healDamagesEnemiesPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  // BATS HEAL
-  batsHealPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  // BLEED
-  bleedChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'attack',
-  },
-  bleedDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  overkillDamagePercent: {
-    base: 0,
-    divisor: 100,
-  },
-  burnChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  burnDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  poisonChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  poisonDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  explosionChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  extraDamageAgainstBurningEnemies: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  // STORMCALLER
-  lightningEffectivenessPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  arcDischargeChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  shockChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  shockEffectiveness: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  // CRYOMANCER
-  freezeChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  stunChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'attack',
-  },
-  extraDamageAgainstFrozenEnemies: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  chanceToShatterEnemy: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
-  },
-  // DRUID SUMMONS
-  summonDamageBuffPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  summonAttackSpeedBuffPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  summonerExtraSummonUnlocked: {
-    base: 0,
-    showValue: false,
-  },
-  naturalistInstantSkillsUnlocked: {
-    base: 0,
-    showValue: false,
-  },
-  // MAGE
-  teleportDodgeChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'defense',
-  },
-  manaToLifeTransferPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  damageToBossesPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  bloodSacrificeEffectiveness: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  instaKillPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
-  },
+  }),
+  executeThresholdPercent: createPercentStat({
+    sub: 'attack',
+  }),
+  damageToHighRarityEnemiesPercent: createPercentStat(),
+  healDamagesEnemiesPercent: createPercentStat(),
+  batsHealPercent: createPercentStat(),
+  bleedChance: createPercentStat({
+    sub: 'attack',
+  }),
+  bleedDamagePercent: createPercentStat({
+    dec: 0,
+  }),
+  overkillDamagePercent: createStat({
+    div: 100,
+  }),
+  burnChance: createPercentStat({
+    sub: 'elemental',
+  }),
+  burnDamagePercent: createPercentStat({
+    sub: 'elemental',
+  }),
+  poisonChance: createPercentStat({
+    sub: 'elemental',
+  }),
+  poisonDamagePercent: createPercentStat({
+    sub: 'elemental',
+  }),
+  explosionChance: createPercentStat({
+    sub: 'elemental',
+  }),
+  extraDamageAgainstBurningEnemies: createPercentStat({
+    sub: 'elemental',
+  }),
+  lightningEffectivenessPercent: createPercentStat({
+    sub: 'elemental',
+  }),
+  arcDischargeChance: createPercentStat({
+    sub: 'elemental',
+  }),
+  shockChance: createPercentStat({
+    sub: 'elemental',
+  }),
+  shockEffectiveness: createPercentStat(),
+  freezeChance: createPercentStat({
+    sub: 'elemental',
+  }),
+  stunChance: createPercentStat({
+    sub: 'attack',
+  }),
+  extraDamageAgainstFrozenEnemies: createPercentStat({
+    sub: 'elemental',
+  }),
+  chanceToShatterEnemy: createPercentStat({
+    sub: 'elemental',
+  }),
+  summonDamageBuffPercent: createPercentStat(),
+  summonAttackSpeedBuffPercent: createPercentStat(),
+  summonerExtraSummonUnlocked: createHiddenStat(),
+  naturalistInstantSkillsUnlocked: createHiddenStat(),
+  teleportDodgeChance: createPercentStat({
+    sub: 'defense',
+  }),
+  manaToLifeTransferPercent: createPercentStat(),
+  damageToBossesPercent: createPercentStat(),
+  bloodSacrificeEffectiveness: createPercentStat(),
+  instaKillPercent: createPercentStat({
+    dec: 2,
+  }),
 };
-

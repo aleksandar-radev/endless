@@ -6,7 +6,6 @@ dotenv.config();
 dotenv.config({ path: '.env.electron', override: false });
 console.log('VITE_ENV:', process.env.VITE_ENV);
 
-
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -36,10 +35,12 @@ function createWindow() {
 
   // Disable right-click context menu and F12
   win.webContents.on('before-input-event', (event, input) => {
-    if (input.key === 'F12' ||
-        (input.control && input.shift && input.key === 'I') ||
-        (input.control && input.shift && input.key === 'C') ||
-        (input.control && input.shift && input.key === 'J')) {
+    if (
+      input.key === 'F12' ||
+      (input.control && input.shift && input.key === 'I') ||
+      (input.control && input.shift && input.key === 'C') ||
+      (input.control && input.shift && input.key === 'J')
+    ) {
       event.preventDefault();
     }
   });

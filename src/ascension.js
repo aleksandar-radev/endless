@@ -507,7 +507,9 @@ export default class Ascension {
     ascensionState.points = saved.points;
     ascensionState.upgrades = saved.upgrades;
     // Ensure rune slot bonuses from ascension are applied after restore
-    try { runes.ensureEquipSlots(BASE_RUNE_SLOTS + (ascensionState.getBonuses().runeSlots || 0)); } catch {}
+    try {
+      runes.ensureEquipSlots(BASE_RUNE_SLOTS + (ascensionState.getBonuses().runeSlots || 0));
+    } catch {}
     const ascBonuses = ascensionState.getBonuses();
     hero.gold += ascBonuses.startingGold || 0;
     hero.crystals = (hero.crystals || 0) + 100 + (ascBonuses.startingCrystals || 0);

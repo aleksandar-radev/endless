@@ -4,7 +4,15 @@ import { getClassSpecializations, getSpecialization } from '../constants/special
 import { SKILL_LEVEL_TIERS, getSpellDamageTypes, SPECIALIZATION_UNLOCK_LEVEL } from '../skillTree.js';
 import { SKILLS_MAX_QTY } from '../constants/limits.js';
 import { skillTree, hero, crystalShop, options, dataManager } from '../globals.js';
-import { formatNumber, formatStatName, hideTooltip, positionTooltip, showToast, showTooltip, updateResources } from './ui.js';
+import {
+  formatNumber,
+  formatStatName,
+  hideTooltip,
+  positionTooltip,
+  showToast,
+  showTooltip,
+  updateResources,
+} from './ui.js';
 import { t } from '../i18n.js';
 import { createModal, closeModal } from './modal.js';
 
@@ -64,8 +72,7 @@ function updateSkillBulkCostDisplay() {
 function resolveSkillCategoryLabel(skill) {
   if (!skill) return '';
   const categorySource = skill.skill_type ?? skill.skillType;
-  const resolvedCategory =
-    typeof categorySource === 'function' ? categorySource() : categorySource;
+  const resolvedCategory = typeof categorySource === 'function' ? categorySource() : categorySource;
   if (!resolvedCategory) return '';
   const normalized = `${resolvedCategory}`.toLowerCase();
   const translationKey = SKILL_CATEGORY_TRANSLATIONS[normalized];
@@ -161,7 +168,7 @@ function showSkillTreeWithTabs() {
     container.appendChild(specializationsContent);
 
     // Tab click handlers
-    tabsContainer.querySelectorAll('.skill-tree-tab').forEach(tab => {
+    tabsContainer.querySelectorAll('.skill-tree-tab').forEach((tab) => {
       tab.addEventListener('click', () => {
         const tabName = tab.dataset.tab;
         console.log('Tab clicked:', tabName);
@@ -193,24 +200,39 @@ function openSpecializationSelectionModal(spec) {
   const content = html`
     <div class="class-preview-wrapper">
       <button class="modal-close">&times;</button>
-      <div class="class-preview-header" style="display: flex; flex-direction: row; gap: 20px; align-items: flex-start; text-align: left;">
-        <img src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}" alt="${spec.name()}" class="character-avatar spec-preview-avatar" style="width: 72px; height: 128px; object-fit: cover; border-radius: 8px; border: 2px solid var(--accent);" />
+      <div
+        class="class-preview-header"
+        style="display: flex; flex-direction: row; gap: 20px; align-items: flex-start; text-align: left;"
+      >
+        <img
+          src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}"
+          alt="${spec.name()}"
+          class="character-avatar spec-preview-avatar"
+          style="width: 72px; height: 128px; object-fit: cover; border-radius: 8px; border: 2px solid var(--accent);"
+        />
         <div style="flex: 1;">
-            <h2 style="color: var(--accent); margin-top: 0;">${spec.name()}</h2>
-            <p style="color: #ccc; margin-bottom: 10px;">${spec.description()}</p>
-            <div class="base-stats" style="font-size: 0.9em; color: #aaa; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
-              ${baseStatsHtml}
-            </div>
+          <h2 style="color: var(--accent); margin-top: 0;">${spec.name()}</h2>
+          <p style="color: #ccc; margin-bottom: 10px;">${spec.description()}</p>
+          <div
+            class="base-stats"
+            style="font-size: 0.9em; color: #aaa; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;"
+          >
+            ${baseStatsHtml}
+          </div>
         </div>
       </div>
-      
+
       <div class="specialization-skills-preview" style="margin-top: 20px;">
-        <h3 style="color: var(--accent); margin-bottom: 15px; text-align: center;">${t('skillTree.passivesUnlocked')}</h3>
+        <h3 style="color: var(--accent); margin-bottom: 15px; text-align: center;">
+          ${t('skillTree.passivesUnlocked')}
+        </h3>
         <div class="skill-row" style="flex-wrap: wrap; justify-content: center; gap: 15px;"></div>
       </div>
 
       <div class="class-preview-footer" style="flex-direction: column; gap: 10px; margin-top: 30px;">
-        <button class="select-class-btn" style="width: 100%;">${t('skillTree.selectSpec', { name: spec.name() })}</button>
+        <button class="select-class-btn" style="width: 100%;">
+          ${t('skillTree.selectSpec', { name: spec.name() })}
+        </button>
       </div>
     </div>
   `;
@@ -219,7 +241,7 @@ function openSpecializationSelectionModal(spec) {
 
   // Render skills grid
   const skillsContainer = modal.querySelector('.skill-row');
-  Object.values(spec.skills).forEach(skill => {
+  Object.values(spec.skills).forEach((skill) => {
     const skillEl = createPreviewSkillElement(skill);
     skillsContainer.appendChild(skillEl);
   });
@@ -243,7 +265,7 @@ function switchSkillTreeTab(tabName) {
   const container = document.getElementById('skill-tree-container');
 
   // Update tab buttons
-  container.querySelectorAll('.skill-tree-tab').forEach(tab => {
+  container.querySelectorAll('.skill-tree-tab').forEach((tab) => {
     tab.classList.toggle('active', tab.dataset.tab === tabName);
   });
 
@@ -286,7 +308,7 @@ function initializeSkillsTab() {
   }, {});
 
   Object.entries(skills).forEach(([skillId, skillData]) => {
-    const isVisible = typeof skillData.isVisible === 'function' ? skillData.isVisible() : (skillData.isVisible !== false);
+    const isVisible = typeof skillData.isVisible === 'function' ? skillData.isVisible() : skillData.isVisible !== false;
     if (!isVisible) return;
 
     if (noLvlRestriction || (skillData.requiredLevel() <= hero.level && levelGroups[skillData.requiredLevel()])) {
@@ -351,7 +373,7 @@ function initializeSpecializationsTab() {
     let quickControls = '';
     if (showQtyControls) {
       if (options.useNumericInputs) {
-        const val = skillTree.quickQty === 'max' ? (options.skillQuickQty || 1) : skillTree.quickQty;
+        const val = skillTree.quickQty === 'max' ? options.skillQuickQty || 1 : skillTree.quickQty;
         quickControls = `
         <div class="skill-qty-controls">
           <input type="number" class="skill-qty-input input-number" min="1" value="${val}" />
@@ -377,7 +399,10 @@ function initializeSpecializationsTab() {
       </div>`;
     }
 
-    const controlsMarkup = quickControls || bulkControls ? `<div class="skill-header-controls" style="display: flex; gap: 10px;">${quickControls}${bulkControls}</div>` : '';
+    const controlsMarkup =
+      quickControls || bulkControls
+        ? `<div class="skill-header-controls" style="display: flex; gap: 10px;">${quickControls}${bulkControls}</div>`
+        : '';
 
     const header = document.createElement('div');
     header.className = 'selected-specialization-header';
@@ -460,7 +485,8 @@ function initializeSpecializationsTab() {
     }, {});
 
     Object.entries(skills).forEach(([skillId, skillData]) => {
-      const isVisible = typeof skillData.isVisible === 'function' ? skillData.isVisible() : (skillData.isVisible !== false);
+      const isVisible =
+        typeof skillData.isVisible === 'function' ? skillData.isVisible() : skillData.isVisible !== false;
       if (!isVisible) return;
 
       const reqLevel = skillData.requiredLevel();
@@ -480,7 +506,7 @@ function initializeSpecializationsTab() {
         levelLabel.textContent = `Level ${reqLevel}`;
         skillsContainer.appendChild(levelLabel);
 
-        groupSkills.forEach(skill => {
+        groupSkills.forEach((skill) => {
           const skillEl = createSpecializationSkillElement(skill);
           rowElement.appendChild(skillEl);
         });
@@ -503,7 +529,7 @@ function initializeSpecializationsTab() {
   const specializationsGrid = document.createElement('div');
   specializationsGrid.className = 'specializations-grid';
 
-  Object.values(specializations).forEach(spec => {
+  Object.values(specializations).forEach((spec) => {
     const specCard = document.createElement('div');
     specCard.className = 'specialization-card';
 
@@ -563,9 +589,7 @@ function createSpecializationSkillElement(baseSkill) {
       class="skill-icon"
       style="background-image: url('${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg')"
     ></div>
-    <div class="skill-level">
-      ${skill.level || 0}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
-    </div>
+    <div class="skill-level">${skill.level || 0}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}</div>
   `;
 
   skillElement.addEventListener('mouseenter', (e) => {
@@ -670,7 +694,7 @@ function updateSpecSkillModalDetails() {
   // Use specialization points for calculation
   const maxQty = skillTree.calculateMaxPurchasable(skill, skillTree.specializationPoints);
   const actualQty = selectedSpecSkillQty === 'max' ? maxQty : Math.min(qty, maxQty);
-  const displayQty = selectedSpecSkillQty === 'max' ? maxQty : (isNaN(qty) ? 0 : qty);
+  const displayQty = selectedSpecSkillQty === 'max' ? maxQty : isNaN(qty) ? 0 : qty;
 
   specSkillModal.querySelector('.modal-level').textContent = currentLevel;
   specSkillModal.querySelector('.modal-max-level').textContent = maxLevel === Infinity ? '∞' : maxLevel;
@@ -706,7 +730,8 @@ function updateSpecSkillModalDetails() {
       }
       const decimals = getStatDecimals(stat);
       const formattedCurr = typeof currVal === 'number' ? currVal.toFixed(decimals) : currVal;
-      const formattedDiff = (typeof currVal === 'number' && typeof nextVal === 'number') ? ` (${formatSignedValue(diff, decimals)})` : '';
+      const formattedDiff =
+        typeof currVal === 'number' && typeof nextVal === 'number' ? ` (${formatSignedValue(diff, decimals)})` : '';
       effectsEl.innerHTML += `
           <p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>
         `;
@@ -732,11 +757,11 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNe
   let html = `
       <strong>${skill.name()} [${typeBadge}]</strong><br>
       ${skill
-    .description()
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line)
-    .join('<br>')}
+        .description()
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line)
+        .join('<br>')}
       <br>
       ${t('skillTree.level')}: ${currentLevel}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
     `;
@@ -798,7 +823,7 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNe
         return;
       }
       const decimals = getStatDecimals(stat);
-      const formattedValue = (typeof value === 'number') ? `: ${value.toFixed(decimals)}` : '';
+      const formattedValue = typeof value === 'number' ? `: ${value.toFixed(decimals)}` : '';
 
       html += `${formatStatName(stat)}${formattedValue}<br />`;
     });
@@ -814,7 +839,10 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNe
       }
 
       const formattedValue = formatSignedValue(value, decimals, false);
-      const bonus = (typeof value === 'number' && typeof currentValue === 'number') ? ` <span class="bonus">(${formatSignedValue(difference, decimals)})</span>` : '';
+      const bonus =
+        typeof value === 'number' && typeof currentValue === 'number'
+          ? ` <span class="bonus">(${formatSignedValue(difference, decimals)})</span>`
+          : '';
       html += `${formatStatName(stat)}: ${formattedValue}${bonus}<br />`;
     });
   }
@@ -848,23 +876,16 @@ function getDisplayedSummonStats(rawSummonStats) {
     summonStats.percentOfPlayerDamage *= summonDamageMultiplier;
   }
 
-  [
-    'damage',
-    'fireDamage',
-    'coldDamage',
-    'airDamage',
-    'earthDamage',
-    'lightningDamage',
-    'waterDamage',
-  ].forEach((key) => {
-    if (typeof summonStats[key] === 'number') {
-      summonStats[key] *= summonDamageMultiplier;
+  ['damage', 'fireDamage', 'coldDamage', 'airDamage', 'earthDamage', 'lightningDamage', 'waterDamage'].forEach(
+    (key) => {
+      if (typeof summonStats[key] === 'number') {
+        summonStats[key] *= summonDamageMultiplier;
+      }
     }
-  });
+  );
 
   return summonStats;
 }
-
 
 function showClassSelection() {
   const classSelection = document.getElementById('class-selection');
@@ -890,17 +911,17 @@ function showClassSelection() {
       </div>
       <div class="base-stats" style="margin-top: 15px;">
         ${Object.entries(pathData.baseStats())
-    .map(([stat, value]) => {
-      const label = formatBaseStatLabel(stat);
-      let displayValue = value;
-      if (stat.endsWith('Percent')) {
-        displayValue = `${value}%`;
-      }
-      if (!shouldShowStatValue(stat)) return `<div>${label}</div>`;
-      const prefix = value > 0 ? '+' : '';
-      return `<div>${label}: ${prefix}${displayValue}</div>`;
-    })
-    .join('')}
+          .map(([stat, value]) => {
+            const label = formatBaseStatLabel(stat);
+            let displayValue = value;
+            if (stat.endsWith('Percent')) {
+              displayValue = `${value}%`;
+            }
+            if (!shouldShowStatValue(stat)) return `<div>${label}</div>`;
+            const prefix = value > 0 ? '+' : '';
+            return `<div>${label}: ${prefix}${displayValue}</div>`;
+          })
+          .join('')}
       </div>
     `;
 
@@ -936,7 +957,9 @@ function openClassPreview(pathId) {
       <div class="class-preview-specializations">
         <h3>${t('skillTree.availableSpecializations')}</h3>
         <div class="specializations-preview-grid">
-          ${Object.values(specializations).map(spec => `
+          ${Object.values(specializations)
+            .map(
+              (spec) => `
             <div class="specialization-preview-card" style="display: flex; align-items: flex-start; gap: 10px; text-align: left;">
               <img src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}" alt="${spec.name()}" class="character-avatar spec-preview-avatar" style="width: 60px; height: 106px; flex-shrink: 0; object-fit: cover; border-radius: 6px; border: 2px solid var(--accent);" />
               <div>
@@ -944,7 +967,9 @@ function openClassPreview(pathId) {
                 <p class="spec-preview-desc">${spec.description()}</p>
               </div>
             </div>
-          `).join('')}
+          `
+            )
+            .join('')}
         </div>
       </div>
     `;
@@ -1062,7 +1087,7 @@ function renderSkillToggleSection(
   isCheckedFn,
   onToggleFn,
   wrapperClass,
-  styleOptions = {},
+  styleOptions = {}
 ) {
   const container = document.getElementById('skills-tab-content') || document.getElementById('skill-tree-container');
   let section = document.getElementById(containerId);
@@ -1142,7 +1167,7 @@ function renderAutoCastToggles() {
       }
     },
     'auto-cast-switch',
-    { marginTop: '32px', wrapperAlignItems: 'center', wrapperMarginBottom: '6px' },
+    { marginTop: '32px', wrapperAlignItems: 'center', wrapperMarginBottom: '6px' }
   );
 }
 
@@ -1224,7 +1249,7 @@ function renderDisplayToggles() {
       skillTree.setDisplay(skill.id, e.target.checked);
       updateActionBar();
     },
-    'display-switch',
+    'display-switch'
   );
 }
 
@@ -1262,7 +1287,7 @@ function setupSkillTreeFloatingHeader(container, header) {
     const headerGap = getNumericVar(
       containerStyles,
       '--skill-tree-header-gap',
-      parseFloat(headerStyles.marginBottom) || 0,
+      parseFloat(headerStyles.marginBottom) || 0
     );
     const fixedOffset = getNumericVar(containerStyles, '--skill-tree-header-fixed-offset', 0);
     const headerHeight = header.offsetHeight;
@@ -1380,7 +1405,7 @@ export function updateSkillTreeValues() {
     let quickControls = '';
     if (showQtyControls) {
       if (options.useNumericInputs) {
-        const val = skillTree.quickQty === 'max' ? (options.skillQuickQty || 1) : skillTree.quickQty;
+        const val = skillTree.quickQty === 'max' ? options.skillQuickQty || 1 : skillTree.quickQty;
         quickControls = `
         <div class="skill-qty-controls">
           <input type="number" class="skill-qty-input input-number" min="1" value="${val}" />
@@ -1406,7 +1431,8 @@ export function updateSkillTreeValues() {
       </div>`;
     }
 
-    const controlsMarkup = quickControls || bulkControls ? `<div class="skill-header-controls">${quickControls}${bulkControls}</div>` : '';
+    const controlsMarkup =
+      quickControls || bulkControls ? `<div class="skill-header-controls">${quickControls}${bulkControls}</div>` : '';
 
     const specTabActive = document.getElementById('specializations-tab-content')?.classList.contains('active');
     const pointsLabel = specTabActive ? t('skillTree.specializationPoints') : t('skillTree.availablePoints');
@@ -1483,7 +1509,7 @@ export function updateSkillTreeValues() {
         const input = qtyControls.querySelector('.skill-qty-input');
         const maxBtn = qtyControls.querySelector('button[data-qty="max"]');
         if (input && document.activeElement !== input) {
-          const val = skillTree.quickQty === 'max' ? (options.skillQuickQty || 1) : skillTree.quickQty;
+          const val = skillTree.quickQty === 'max' ? options.skillQuickQty || 1 : skillTree.quickQty;
           input.value = val;
         }
         if (maxBtn) {
@@ -1530,11 +1556,14 @@ export function updateSkillTreeValues() {
 
   // Check if we need to re-render specialization skills due to visibility changes
   if (skillTree.selectedSpecialization) {
-    const renderedSpecSkills = new Set(Array.from(container.querySelectorAll('.skill-node.specialization-node')).map(n => n.dataset.skillId));
+    const renderedSpecSkills = new Set(
+      Array.from(container.querySelectorAll('.skill-node.specialization-node')).map((n) => n.dataset.skillId)
+    );
     const spec = getSpecialization(skillTree.selectedPath.name, skillTree.selectedSpecialization.id);
     const allSpecSkills = spec?.skills || {};
     const needsSpecRender = Object.entries(allSpecSkills).some(([skillId, skillData]) => {
-      const isVisible = typeof skillData.isVisible === 'function' ? skillData.isVisible() : (skillData.isVisible !== false);
+      const isVisible =
+        typeof skillData.isVisible === 'function' ? skillData.isVisible() : skillData.isVisible !== false;
       return isVisible && !renderedSpecSkills.has(skillId);
     });
 
@@ -1545,10 +1574,13 @@ export function updateSkillTreeValues() {
 
   // Check if we need to re-render normal skills due to visibility changes
   if (skillTree.selectedPath) {
-    const renderedSkills = new Set(Array.from(container.querySelectorAll('.skill-node:not(.specialization-node)')).map(n => n.dataset.skillId));
+    const renderedSkills = new Set(
+      Array.from(container.querySelectorAll('.skill-node:not(.specialization-node)')).map((n) => n.dataset.skillId)
+    );
     const allSkills = SKILL_TREES[skillTree.selectedPath.name] || {};
     const needsRender = Object.entries(allSkills).some(([skillId, skillData]) => {
-      const isVisible = typeof skillData.isVisible === 'function' ? skillData.isVisible() : (skillData.isVisible !== false);
+      const isVisible =
+        typeof skillData.isVisible === 'function' ? skillData.isVisible() : skillData.isVisible !== false;
       const levelMet = skillData.requiredLevel() <= hero.level;
       return isVisible && levelMet && !renderedSkills.has(skillId);
     });
@@ -1599,7 +1631,8 @@ function initializeSkillModal() {
         <p>Available Points: <span class="modal-available-points"></span></p>
         <p>Skill Point Cost: <span class="modal-sp-cost"></span></p>
         <p class="modal-mana-row">
-          ${t(hero.stats.convertManaToLifePercent >= 1 ? 'skillTree.lifeCost' : 'skillTree.manaCost')}: <span class="modal-current-mana-cost"></span> (<span class="modal-next-mana-cost"></span>)
+          ${t(hero.stats.convertManaToLifePercent >= 1 ? 'skillTree.lifeCost' : 'skillTree.manaCost')}:
+          <span class="modal-current-mana-cost"></span> (<span class="modal-next-mana-cost"></span>)
         </p>
         <p class="modal-cooldown-row">
           Cooldown: <span class="modal-current-cooldown"></span> (<span class="modal-next-cooldown"></span>)
@@ -1708,7 +1741,8 @@ function openSkillModal(skillId) {
     }
     const decimals = getStatDecimals(stat);
     const formattedCurr = typeof currVal === 'number' ? currVal.toFixed(decimals) : currVal;
-    const formattedDiff = (typeof currVal === 'number' && typeof nextVal === 'number') ? ` (${formatSignedValue(diff, decimals)})` : '';
+    const formattedDiff =
+      typeof currVal === 'number' && typeof nextVal === 'number' ? ` (${formatSignedValue(diff, decimals)})` : '';
     effectsEl.innerHTML += `
       <p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>
     `;
@@ -1733,7 +1767,7 @@ function updateSkillModalDetails() {
   const futureLevel = currentLevel + actualQty;
   // Quantity used for displaying cost should reflect the selected amount,
   // even if unaffordable (except 'max', which depends on affordability).
-  const displayQty = selectedSkillQty === 'max' ? maxQty : (isNaN(qty) ? 0 : qty);
+  const displayQty = selectedSkillQty === 'max' ? maxQty : isNaN(qty) ? 0 : qty;
 
   // Update modal fields
   skillModal.querySelector('.modal-level').textContent = currentLevel;
@@ -1792,7 +1826,8 @@ function updateSkillModalDetails() {
     }
     const decimals = getStatDecimals(stat);
     const formattedCurr = typeof currVal === 'number' ? currVal.toFixed(decimals) : currVal;
-    const formattedDiff = (typeof currVal === 'number' && typeof futureVal === 'number') ? ` (${formatSignedValue(diff, decimals)})` : '';
+    const formattedDiff =
+      typeof currVal === 'number' && typeof futureVal === 'number' ? ` (${formatSignedValue(diff, decimals)})` : '';
     effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>`;
   });
 
@@ -1811,7 +1846,8 @@ function updateSkillModalDetails() {
       }
       const decimals = getStatDecimals(stat);
       const formattedCurr = typeof currVal === 'number' ? currVal.toFixed(decimals) : currVal;
-      const formattedDiff = (typeof currVal === 'number' && typeof futureVal === 'number') ? ` (${formatSignedValue(diff, decimals)})` : '';
+      const formattedDiff =
+        typeof currVal === 'number' && typeof futureVal === 'number' ? ` (${formatSignedValue(diff, decimals)})` : '';
       effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>`;
     });
   } else {
@@ -2056,8 +2092,7 @@ function createSkillTooltip(skillId) {
   if (skill?.type && skill.type() === 'instant' && skillTree.isDamageSkill?.(effects)) {
     // Compute allowedDamageTypes for spells, same as useInstantSkill
     const skillTypeSource = skill?.skill_type ?? skill?.skillType;
-    const resolvedSkillType =
-      typeof skillTypeSource === 'function' ? skillTypeSource() : skillTypeSource;
+    const resolvedSkillType = typeof skillTypeSource === 'function' ? skillTypeSource() : skillTypeSource;
     const skillType = (resolvedSkillType || 'attack').toLowerCase();
     const isSpell = skillType === 'spell';
 
@@ -2104,12 +2139,16 @@ export function updateBuffIndicators() {
 
     // Handle active states for all skill types
     const isActive =
-      (skill.type() === 'buff' || skill.type() === 'summon') && skillTree.activeBuffs.has(skillId) || (skill.type() === 'toggle' && skill.active);
+      ((skill.type() === 'buff' || skill.type() === 'summon') && skillTree.activeBuffs.has(skillId)) ||
+      (skill.type() === 'toggle' && skill.active);
 
     slot.classList.toggle('active', isActive);
 
     // Show cooldown for both buff and instant skills
-    if ((skill.type() === 'buff' || skill.type() === 'instant' || skill.type() === 'summon') && skill?.cooldownEndTime) {
+    if (
+      (skill.type() === 'buff' || skill.type() === 'instant' || skill.type() === 'summon') &&
+      skill?.cooldownEndTime
+    ) {
       const remaining = skill.cooldownEndTime - Date.now();
       if (remaining > 0) {
         const percentage = Math.min((remaining / skillTree.getSkillCooldown(skill)) * 100, 100);

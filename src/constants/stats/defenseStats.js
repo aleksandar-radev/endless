@@ -1,68 +1,61 @@
-import { itemLevelScaling } from './itemScaling.js';
+import { itemLevelScaling, createTierScaling, createStat, createPercentStat, createHiddenStat } from './stats.js';
+import { ELEMENTS } from '../common.js';
 
-// Base scaling configurations. Values are slowly reduced towards `end` over the
-// first 2000 levels to provide diminishing returns. Higher tier items receive a
-// bonus via itemLevelScaling's tier handling.
-const FLAT_SCALING = { start: 0.05, end: 0.02, tierStart: 0.1, tierEnd: 0.05, isPercent: false };
-const PERCENT_SCALING = {
-  start: 0.002,
-  end: 0.0001,
-  tierStart: 0.1,
-  tierEnd: 0.05,
-  isPercent: true,
+const resistanceTierScalingMaxPercent = createTierScaling(18, 250, 1.2);
+
+const defenseScaling = (level, tier) => itemLevelScaling(level, tier);
+
+const generateElementalDefenseStats = () => {
+  const stats = {};
+  Object.keys(ELEMENTS).forEach((element) => {
+    stats[`${element}Resistance`] = createStat({
+      training: { cost: 100, bonus: 3, maxLevel: Infinity },
+      item: { min: 25, max: 60, scaling: (level, tier) => defenseScaling(level, tier) },
+      itemTags: ['defense', 'jewelry'],
+      show: true,
+      sub: 'elemental',
+    });
+
+    stats[`${element}ResistancePercent`] = createPercentStat({
+      item: { tierScalingMaxPercent: resistanceTierScalingMaxPercent },
+      itemTags: ['defense', 'jewelry'],
+      sub: 'elemental',
+    });
+  });
+  return stats;
 };
-const CHANCE_SCALING = {
-  start: 0.0012,
-  end: 0.0003,
-  tierStart: 0.1,
-  tierEnd: 0.05,
-  isPercent: true,
-};
 
-const defenseScaling = (level, tier, config = FLAT_SCALING, scalingSystem = 'simple') =>
-  itemLevelScaling(level, tier, { ...config, scalingSystem });
-
-// Defense stats
 export const DEFENSE_STATS = {
-  // LIFE
-  life: {
+  life: createStat({
     base: 100,
     levelUpBonus: 1,
     training: { cost: 80, bonus: 8, maxLevel: Infinity },
-    item: { min: 30, max: 80, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
+    item: { min: 30, max: 80, scaling: (level, tier) => defenseScaling(level, tier) },
     itemTags: ['defense'],
-    showInUI: true,
-    subcategory: 'defense',
-  },
-  lifePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 6, max: 15, scaling: (level, tier) => defenseScaling(level, tier, PERCENT_SCALING) },
+    show: true,
+    sub: 'defense',
+  }),
+  lifePercent: createPercentStat({
+    item: {
+      tierScalingMaxPercent: createTierScaling(15, 250, 1.1),
+    },
     itemTags: ['belt', 'pants'],
-  },
-  // ARMOR
-  armor: {
-    base: 0,
+  }),
+  armor: createStat({
     training: { cost: 100, bonus: 4, maxLevel: Infinity },
-    item: { min: 25, max: 60, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
+    item: { min: 25, max: 60, scaling: (level, tier) => defenseScaling(level, tier) },
     itemTags: ['defense'],
-    showInUI: true,
-    subcategory: 'defense',
-  },
-  armorPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 8, max: 18, scaling: (level, tier) => defenseScaling(level, tier, PERCENT_SCALING) },
+    show: true,
+    sub: 'defense',
+  }),
+  armorPercent: createPercentStat({
+    item: {
+      tierScalingMaxPercent: resistanceTierScalingMaxPercent,
+    },
     itemTags: ['armor', 'shield'],
-    subcategory: 'defense',
-  },
-  // BLOCK CHANCE
-  blockChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
+    sub: 'defense',
+  }),
+  blockChance: createPercentStat({
     training: {
       cost: 400,
       costIncrease: 600,
@@ -70,275 +63,119 @@ export const DEFENSE_STATS = {
       costThresholds: [{ level: 50, costIncreaseMultiplier: 1.018 }],
       bonus: 0.05,
       maxLevel: 300,
-    }, // max bonus: 15
-    item: { min: 2, max: 5, limit: 25, scaling: (level, tier) => defenseScaling(level, tier, CHANCE_SCALING) },
+    }, // max bonus: 15%
+    item: {
+      tierScalingMaxPercent: createTierScaling(5, 50, 0.8),
+    },
     itemTags: ['shield'],
-    showInUI: true,
-    subcategory: 'defense',
+    show: true,
+    sub: 'defense',
     cap: 50,
-  },
-  blockChancePercent: {
-    base: 0,
-    divisor: 100,
-  },
-  // LIFE REGEN
-  lifeRegen: {
-    base: 0,
-    decimalPlaces: 1,
+  }),
+  blockChancePercent: createStat({
+    div: 100,
+  }),
+  lifeRegen: createStat({
+    dec: 1,
     training: { cost: 100, bonus: 1, maxLevel: Infinity },
-    item: { min: 3, max: 8, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
+    item: { min: 3, max: 8, scaling: (level, tier) => defenseScaling(level, tier) },
     itemTags: ['belt', 'pants'],
-    showInUI: true,
-    subcategory: 'defense',
-  },
-  lifeRegenPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 8, max: 18, scaling: (level, tier) => defenseScaling(level, tier, PERCENT_SCALING) },
+    show: true,
+    sub: 'defense',
+  }),
+  lifeRegenPercent: createPercentStat({
+    item: {
+      tierScalingMaxPercent: resistanceTierScalingMaxPercent,
+    },
     itemTags: ['belt'],
-  },
-  lifeRegenOfTotalPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 2,
+  }),
+  lifeRegenOfTotalPercent: createPercentStat({
+    dec: 2,
     training: { cost: 1000, bonus: 0.01, maxLevel: 100 },
-    item: { min: 0.01, max: 0.05, limit: 1.23, scaling: (level, tier) => defenseScaling(level, tier, PERCENT_SCALING) },
+    item: { tierScalingMaxPercent: createTierScaling(0.05, 1, 0.9) },
     itemTags: ['belt'],
-  },
-  // THORNS
-  thornsDamage: {
-    base: 0,
-    decimalPlaces: 1,
+  }),
+  thornsDamage: createStat({
+    dec: 1,
     training: { cost: 100, bonus: 2, maxLevel: Infinity },
-    item: { min: 15, max: 40, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
+    item: { min: 15, max: 40, scaling: (level, tier) => defenseScaling(level, tier) },
     itemTags: ['shield', 'armor'],
-    showInUI: true,
-    subcategory: 'defense',
-  },
-  thornsDamagePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 8, max: 18, scaling: (level, tier) => defenseScaling(level, tier, PERCENT_SCALING) },
+    show: true,
+    sub: 'defense',
+  }),
+  thornsDamagePercent: createPercentStat({
+    item: { tierScalingMaxPercent: createTierScaling(18, 250, 1.2) },
     itemTags: ['shield', 'armor'],
-    subcategory: 'defense',
-  },
-  // RESURRECTION
-  resurrectionChance: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 3, max: 8, limit: 40, scaling: (level, tier) => defenseScaling(level, tier, CHANCE_SCALING) },
+    sub: 'defense',
+  }),
+  resurrectionChance: createPercentStat({
+    item: { tierScalingMaxPercent: createTierScaling(8, 40, 0.7) },
     itemTags: ['amulet'],
-    subcategory: 'defense',
-  },
-  reflectFireDamage: {
-    base: 0,
-  },
-  // EVASION
-  evasion: {
-    base: 0,
-    decimalPlaces: 1,
+    sub: 'defense',
+  }),
+  reflectFireDamage: createStat(),
+  evasion: createStat({
+    dec: 1,
     training: { cost: 100, bonus: 3, maxLevel: Infinity },
-    item: { min: 30, max: 75, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
+    item: { min: 30, max: 75, scaling: (level, tier) => defenseScaling(level, tier) },
     itemTags: ['defense'],
-    showInUI: true,
-    subcategory: 'defense',
-  },
-  evasionPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 8, max: 18, scaling: (level, tier) => defenseScaling(level, tier, PERCENT_SCALING) },
+    show: true,
+    sub: 'defense',
+  }),
+  evasionPercent: createPercentStat({
+    item: {
+      tierScalingMaxPercent: resistanceTierScalingMaxPercent,
+    },
     itemTags: ['boots', 'helmet'],
-    subcategory: 'defense',
-  },
-  // ELEMENTAL RESISTANCES
-  fireResistance: {
-    base: 0,
-    training: { cost: 100, bonus: 3, maxLevel: Infinity },
-    item: { min: 25, max: 60, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
+    sub: 'defense',
+  }),
+  ...generateElementalDefenseStats(),
+  allResistance: createStat({
+    item: { min: 8, max: 20, scaling: (level, tier) => defenseScaling(level, tier) },
     itemTags: ['defense', 'jewelry'],
-    showInUI: true,
-    subcategory: 'elemental',
-  },
-  fireResistancePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 8, max: 18, scaling: (level, tier) => defenseScaling(level, tier, PERCENT_SCALING) },
+    sub: 'elemental',
+  }),
+  allResistancePercent: createPercentStat({
+    item: { tierScalingMaxPercent: createTierScaling(7, 100, 1.2) },
     itemTags: ['defense', 'jewelry'],
-    subcategory: 'elemental',
-  },
-  coldResistance: {
-    base: 0,
-    training: { cost: 100, bonus: 3, maxLevel: Infinity },
-    item: { min: 25, max: 60, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
-    itemTags: ['defense', 'jewelry'],
-    showInUI: true,
-    subcategory: 'elemental',
-  },
-  coldResistancePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 8, max: 18, scaling: (level, tier) => defenseScaling(level, tier, PERCENT_SCALING) },
-    itemTags: ['defense', 'jewelry'],
-    subcategory: 'elemental',
-  },
-  airResistance: {
-    base: 0,
-    training: { cost: 100, bonus: 3, maxLevel: Infinity },
-    item: { min: 25, max: 60, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
-    itemTags: ['defense', 'jewelry'],
-    showInUI: true,
-    subcategory: 'elemental',
-  },
-  airResistancePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 8, max: 18, scaling: (level, tier) => defenseScaling(level, tier, PERCENT_SCALING) },
-    itemTags: ['defense', 'jewelry'],
-    subcategory: 'elemental',
-  },
-  earthResistance: {
-    base: 0,
-    training: { cost: 100, bonus: 3, maxLevel: Infinity },
-    item: { min: 25, max: 60, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
-    itemTags: ['defense', 'jewelry'],
-    showInUI: true,
-    subcategory: 'elemental',
-  },
-  earthResistancePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 8, max: 18, scaling: (level, tier) => defenseScaling(level, tier, PERCENT_SCALING) },
-    itemTags: ['defense', 'jewelry'],
-    subcategory: 'elemental',
-  },
-  lightningResistance: {
-    base: 0,
-    training: { cost: 100, bonus: 3, maxLevel: Infinity },
-    item: { min: 25, max: 60, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
-    itemTags: ['defense', 'jewelry'],
-    showInUI: true,
-    subcategory: 'elemental',
-  },
-  lightningResistancePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 8, max: 18, scaling: (level, tier) => defenseScaling(level, tier, PERCENT_SCALING) },
-    itemTags: ['defense', 'jewelry'],
-    subcategory: 'elemental',
-  },
-  waterResistance: {
-    base: 0,
-    training: { cost: 100, bonus: 3, maxLevel: Infinity },
-    item: { min: 25, max: 60, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
-    itemTags: ['defense', 'jewelry'],
-    showInUI: true,
-    subcategory: 'elemental',
-  },
-  waterResistancePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 8, max: 18, scaling: (level, tier) => defenseScaling(level, tier, PERCENT_SCALING) },
-    itemTags: ['defense', 'jewelry'],
-    subcategory: 'elemental',
-  },
-  allResistance: {
-    base: 0,
-    item: { min: 8, max: 20, scaling: (level, tier, scalingSystem) => defenseScaling(level, tier, FLAT_SCALING, scalingSystem) },
-    itemTags: ['defense', 'jewelry'],
-    subcategory: 'elemental',
-  },
-  allResistancePercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    item: { min: 2, max: 7, scaling: (level, tier) => defenseScaling(level, tier, PERCENT_SCALING) },
-    itemTags: ['defense', 'jewelry'],
-    subcategory: 'elemental',
-  },
-  manaShieldPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-  },
-  manaShieldDamageTakenReductionPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'defense',
-  },
-  // ARENA DAMAGE REDUCTION
-  arenaDamageReductionPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'defense',
+    sub: 'elemental',
+  }),
+  manaShieldPercent: createPercentStat(),
+  manaShieldDamageTakenReductionPercent: createPercentStat({
+    sub: 'defense',
+  }),
+  arenaDamageReductionPercent: createPercentStat({
+    sub: 'defense',
     cap: 80,
-  },
-  // ITEM LIFE EFFECTIVENESS
-  itemLifeEffectivenessPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'defense',
-  },
-  // ITEM ARMOR EFFECTIVENESS
-  itemArmorEffectivenessPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'defense',
-  },
-  // SHIELD EFFECTIVENESS
-  shieldEffectiveness: {
-    base: 0,
-    decimalPlaces: 1,
-    subcategory: 'defense',
-  },
-  // DIVINE PROTECTION BUFF EFFECTIVENESS
-  divineProtectionBuffEffectivenessPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'defense',
-  },
-  // DAMAGE TAKEN CONVERSIONS / MITIGATION
-  damageTakenConvertedToColdPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
+  }),
+  itemLifeEffectivenessPercent: createPercentStat({
+    sub: 'defense',
+  }),
+  itemArmorEffectivenessPercent: createPercentStat({
+    sub: 'defense',
+  }),
+  shieldEffectiveness: createStat({
+    dec: 1,
+    sub: 'defense',
+  }),
+  divineProtectionBuffEffectivenessPercent: createPercentStat({
+    sub: 'defense',
+  }),
+  damageTakenConvertedToColdPercent: createPercentStat({
+    sub: 'elemental',
     cap: 75,
-  },
-  coldDamageTakenReductionPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
+  }),
+  coldDamageTakenReductionPercent: createPercentStat({
+    sub: 'elemental',
     cap: 50,
-  },
-  elementalDamageTakenReductionPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    subcategory: 'elemental',
+  }),
+  elementalDamageTakenReductionPercent: createPercentStat({
+    sub: 'elemental',
     cap: 80,
-  },
-  damageTakenReductionPercent: {
-    base: 0,
-    divisor: 100,
-    decimalPlaces: 1,
-    showInUI: true,
-    subcategory: 'defense',
+  }),
+  damageTakenReductionPercent: createPercentStat({
+    show: true,
+    sub: 'defense',
     cap: 80,
-  },
+  }),
 };

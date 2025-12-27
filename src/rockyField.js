@@ -283,10 +283,7 @@ export function getRockyFieldRunePercent(regionId, stage) {
   const regionBase = regionRange.max;
   const regionNorm = (regionBase - REGION_DIFFICULTY_MIN) / REGION_DIFFICULTY_RANGE;
   const synergy = stageNorm * regionNorm;
-  const difficulty = Math.min(
-    1,
-    STAGE_WEIGHT * stageNorm + REGION_WEIGHT * regionNorm + SYNERGY_WEIGHT * synergy,
-  );
+  const difficulty = Math.min(1, STAGE_WEIGHT * stageNorm + REGION_WEIGHT * regionNorm + SYNERGY_WEIGHT * synergy);
 
   const highStart = Math.max(regionRange.min, HIGH_CONVERSION_START);
   if (regionRange.max >= highStart && Math.random() < HIGH_CONVERSION_CHANCE) {
@@ -297,7 +294,7 @@ export function getRockyFieldRunePercent(regionId, stage) {
 
   const lowBandWeight = Math.max(
     LOW_BAND_WEIGHT_MIN,
-    Math.min(LOW_BAND_WEIGHT_MAX, LOW_BAND_WEIGHT_MAX - difficulty * 0.1),
+    Math.min(LOW_BAND_WEIGHT_MAX, LOW_BAND_WEIGHT_MAX - difficulty * 0.1)
   );
   if (Math.random() < lowBandWeight) {
     return rollLowBandPercent(regionRange);
@@ -360,7 +357,7 @@ export class RockyFieldEnemy extends EnemyBase {
         rarity: rarityName,
         level: formatNumberValue(this.level, options?.shortNumbers),
         name: t(this.name),
-      }),
+      })
     );
   }
 
@@ -417,17 +414,19 @@ export class RockyFieldEnemy extends EnemyBase {
   calculateDamage() {
     const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
     const statMultiplier = this.getStatMultiplier();
-    return Math.floor(Math.max(
-      scaleStat(this.getStatValue('damage') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * (1 - dmgRed),
-      1,
-    ));
+    return Math.floor(
+      Math.max(
+        scaleStat(this.getStatValue('damage') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * (1 - dmgRed),
+        1
+      )
+    );
   }
 
   calculateArmor() {
     const statMultiplier = this.getStatMultiplier();
     const armorMult = this.getSpecialMultiplier('armorMultiplier');
     return Math.floor(
-      scaleStat(this.getStatValue('armor') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * armorMult,
+      scaleStat(this.getStatValue('armor') * statMultiplier, this.level, 0, 0, 0, this.baseScale) * armorMult
     );
   }
 
@@ -438,7 +437,9 @@ export class RockyFieldEnemy extends EnemyBase {
 
   calculateAttackRating() {
     const statMultiplier = this.getStatMultiplier();
-    return Math.floor(scaleStat(this.getStatValue('attackRating') * statMultiplier, this.level, 0, 0, 0, this.baseScale));
+    return Math.floor(
+      scaleStat(this.getStatValue('attackRating') * statMultiplier, this.level, 0, 0, 0, this.baseScale)
+    );
   }
 
   calculateXP() {
@@ -470,26 +471,16 @@ export class RockyFieldEnemy extends EnemyBase {
 
     const enemyElMult = this.getMultiplierValue(enemyMultipliers, `${id}Damage`);
     const regionElMult = this.getMultiplierValue(regionMultipliers, `${id}Damage`);
-    const hasElementalDamage =
-      enemyElMult !== 1 || regionElMult !== 1 || this.getStatValue(`${id}Damage`) > 0;
+    const hasElementalDamage = enemyElMult !== 1 || regionElMult !== 1 || this.getStatValue(`${id}Damage`) > 0;
 
     // If an elemental multiplier is present but no explicit base value,
     // use the physical damage base as the template for elemental damage.
-    const baseDamageForElement = hasElementalDamage
-      ? this.getStatValue('damage') * enemyElMult * regionElMult
-      : 0;
+    const baseDamageForElement = hasElementalDamage ? this.getStatValue('damage') * enemyElMult * regionElMult : 0;
 
     const configuredElementDamage = this.getStatValue(`${id}Damage`);
     const elementDamage = Math.max(baseDamageForElement, configuredElementDamage);
 
-    const dmgBase = scaleStat(
-      elementDamage * statMultiplier,
-      this.level,
-      0,
-      0,
-      0,
-      this.baseScale,
-    );
+    const dmgBase = scaleStat(elementDamage * statMultiplier, this.level, 0, 0, 0, this.baseScale);
     return elementDamage > 0 ? Math.floor(Math.max(dmgBase * (1 - dmgRed), 1)) : 0;
   }
 
@@ -497,14 +488,8 @@ export class RockyFieldEnemy extends EnemyBase {
     const statMultiplier = this.getStatMultiplier();
     const resistanceMult = this.getSpecialMultiplier('resistanceMultiplier');
     return Math.floor(
-      scaleStat(
-        this.getStatValue(`${id}Resistance`) * statMultiplier,
-        this.level,
-        0,
-        0,
-        0,
-        this.baseScale,
-      ) * resistanceMult,
+      scaleStat(this.getStatValue(`${id}Resistance`) * statMultiplier, this.level, 0, 0, 0, this.baseScale) *
+        resistanceMult
     );
   }
 

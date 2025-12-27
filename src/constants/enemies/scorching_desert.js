@@ -98,7 +98,6 @@ export const DESERT_ENEMIES = [
 
     materialDropWeights: {},
     tags: ['scorching_desert'],
-
   },
   {
     name: t('Dune Blazer'),
@@ -132,6 +131,5 @@ export const DESERT_ENEMIES = [
 
     materialDropWeights: {},
     tags: ['scorching_desert'],
-
   },
 ];

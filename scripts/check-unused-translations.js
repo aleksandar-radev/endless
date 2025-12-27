@@ -27,10 +27,7 @@ const DEFAULT_CONFIG = {
   languagesDir: 'src/languages',
   languageFiles: ['en.js', 'es.js', 'zh.js'],
   referenceLanguageFile: 'en.js',
-  scan: [
-    { dir: 'src', exts: ['.js'] },
-    { file: 'index.html' },
-  ],
+  scan: [{ dir: 'src', exts: ['.js'] }, { file: 'index.html' }],
   ignoreKeys: [],
   // Regex strings. Example: '^stats\\.'
   ignoreKeyPatterns: [],
@@ -145,7 +142,7 @@ function extractUsedKeysFromContent(content, allKeys) {
     let i = 0;
     while (i < src.length) {
       const ch = src[i];
-      if (ch === '\'' || ch === '"') {
+      if (ch === "'" || ch === '"') {
         const quote = ch;
         i += 1;
         let buf = '';
@@ -289,7 +286,9 @@ function main() {
   const defaultConfigPath = path.resolve(repoRoot, 'scripts', 'translation-usage.config.json');
   const configPath = args.config
     ? path.resolve(repoRoot, args.config)
-    : (fs.existsSync(defaultConfigPath) ? defaultConfigPath : null);
+    : fs.existsSync(defaultConfigPath)
+      ? defaultConfigPath
+      : null;
 
   const fileConfig = configPath ? safeReadJson(configPath) : null;
   const config = { ...DEFAULT_CONFIG, ...(fileConfig || {}) };
@@ -315,9 +314,7 @@ function main() {
   const scanFilesAll = collectScanFiles(repoRoot, config.scan || DEFAULT_CONFIG.scan);
   const scanFiles = scanFilesAll.filter((absPath) => {
     const normalized = path.resolve(absPath);
-    const langDirWithSep = languagesDirAbs.endsWith(path.sep)
-      ? languagesDirAbs
-      : (languagesDirAbs + path.sep);
+    const langDirWithSep = languagesDirAbs.endsWith(path.sep) ? languagesDirAbs : languagesDirAbs + path.sep;
     return !normalized.startsWith(langDirWithSep);
   });
 
@@ -342,14 +339,10 @@ function main() {
 
   const missingKeys = [...usedKeys].filter((k) => !allKeys.has(k) && !isIgnored(k)).sort();
 
-  const potentiallyUnused = [...allKeys]
-    .filter((k) => !usedKeys.has(k) && !isIgnored(k))
-    .sort();
+  const potentiallyUnused = [...allKeys].filter((k) => !usedKeys.has(k) && !isIgnored(k)).sort();
 
   const dynamicPrefixList = [...dynamicPrefixes].sort();
-  const dynamicCoveredUnused = potentiallyUnused.filter((k) =>
-    dynamicPrefixList.some((p) => p && k.startsWith(p)),
-  );
+  const dynamicCoveredUnused = potentiallyUnused.filter((k) => dynamicPrefixList.some((p) => p && k.startsWith(p)));
   const likelyUnused = potentiallyUnused.filter((k) => !dynamicCoveredUnused.includes(k));
 
   const result = {

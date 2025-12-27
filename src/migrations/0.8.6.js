@@ -6,4 +6,3 @@ export function run(rawData) {
   // Version will be set by DataManager after migrations complete
   return { data, result: true };
 }
-

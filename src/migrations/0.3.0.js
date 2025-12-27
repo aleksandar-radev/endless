@@ -6,4 +6,3 @@ export function run(rawData) {
     result: true,
   };
 }
-

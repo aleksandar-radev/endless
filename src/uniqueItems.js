@@ -146,7 +146,7 @@ export function createSetItemsById(id, tier = 1, level = 1) {
   const normalizedLevel = normalizeLevel(level);
   const rolledBonuses = rollSetBonusValues(setDefinition, normalizedTier, normalizedLevel);
   return setDefinition.items.map((piece) =>
-    createSetPieceItem(setDefinition, piece, normalizedTier, normalizedLevel, rolledBonuses),
+    createSetPieceItem(setDefinition, piece, normalizedTier, normalizedLevel, rolledBonuses)
   );
 }
 
@@ -178,7 +178,7 @@ export function computeSetBonuses(equippedItems = []) {
     const piecesEquipped = items.length;
     const normalizedTier = Math.max(
       1,
-      Math.round(items.reduce((sum, item) => sum + (item.tier || 1), 0) / items.length),
+      Math.round(items.reduce((sum, item) => sum + (item.tier || 1), 0) / items.length)
     );
 
     const storedBonuses = items[0]?.metaData?.setBonuses;
@@ -188,7 +188,7 @@ export function computeSetBonuses(equippedItems = []) {
     const baseBonuses = cloneSetBonuses(
       storedBonuses && storedBonuses.length
         ? storedBonuses
-        : rollSetBonusValues(definition, normalizedTier, averageLevel),
+        : rollSetBonusValues(definition, normalizedTier, averageLevel)
     );
 
     baseBonuses.forEach((bonus) => {
@@ -233,9 +233,7 @@ export function getSpecialItemDropChances(tier) {
 export function createRandomUniqueItem(tier = 1, level = 1, preferredType = null) {
   const normalizedTier = Math.max(1, Math.round(tier));
   const normalizedLevel = normalizeLevel(level);
-  const pool = preferredType
-    ? UNIQUE_ITEMS.filter((item) => item.type === preferredType)
-    : UNIQUE_ITEMS;
+  const pool = preferredType ? UNIQUE_ITEMS.filter((item) => item.type === preferredType) : UNIQUE_ITEMS;
   const candidates = pool.length ? pool : UNIQUE_ITEMS;
   if (!candidates.length) return null;
   const definition = candidates[Math.floor(Math.random() * candidates.length)];
@@ -253,9 +251,7 @@ export function createRandomSetPiece(tier = 1, level = 1, preferredType = null) 
       }
     });
   });
-  const candidates = pairs.length
-    ? pairs
-    : ITEM_SETS.flatMap((set) => set.items.map((piece) => ({ set, piece })));
+  const candidates = pairs.length ? pairs : ITEM_SETS.flatMap((set) => set.items.map((piece) => ({ set, piece })));
   if (!candidates.length) return null;
   const selection = candidates[Math.floor(Math.random() * candidates.length)];
   const bonuses = rollSetBonusValues(selection.set, normalizedTier, normalizedLevel);

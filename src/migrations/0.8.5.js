@@ -10,9 +10,7 @@ export async function run(data) {
       // Only persist conversion percent override for conversion runes
       const base = RUNES.find((x) => x.id === r.id);
       if (base?.conversion) {
-        const percent = typeof r?.conversion?.percent === 'number'
-          ? r.conversion.percent
-          : base.conversion.percent;
+        const percent = typeof r?.conversion?.percent === 'number' ? r.conversion.percent : base.conversion.percent;
         minimal.conversion = { percent };
       }
       return minimal;
@@ -28,4 +26,3 @@ export async function run(data) {
 
   return { data, result: true };
 }
-

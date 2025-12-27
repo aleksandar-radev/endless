@@ -30,7 +30,10 @@
   font-weight: 600;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s,
+    transform 0.1s;
 }
 
 .prestige-header button#prestige-now-btn:hover {
@@ -54,7 +57,11 @@
   font-weight: 600;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    box-shadow 0.2s,
+    transform 0.1s;
 }
 
 .prestige-header button#prestige-history-btn:hover {
@@ -87,7 +94,9 @@
   flex-direction: column;
   gap: 0.7rem;
   border-radius: 0.8rem;
-  box-shadow: 0 2px 12px 0 rgba(78, 140, 255, 0.10), 0 1px 4px rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 2px 12px 0 rgba(78, 140, 255, 0.1),
+    0 1px 4px rgba(0, 0, 0, 0.08);
   padding: 1.2rem 1.5rem;
 }
 
@@ -104,7 +113,10 @@
   border-left: 4px solid var(--accent, #4e8cff);
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.09);
   position: relative;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
   overflow: visible;
 }
 
@@ -119,7 +131,9 @@
 .prestige-bonuses-list li:hover {
   background: linear-gradient(90deg, rgba(255, 233, 176, 0.19) 0%, rgba(78, 140, 255, 0.19) 100%);
   color: #fffbe6;
-  box-shadow: 0 4px 18px 0 rgba(78, 140, 255, 0.16), 0 2px 8px rgba(0, 0, 0, 0.13);
+  box-shadow:
+    0 4px 18px 0 rgba(78, 140, 255, 0.16),
+    0 2px 8px rgba(0, 0, 0, 0.13);
   transform: translateY(-2px) scale(1.03);
 }
 
@@ -261,12 +275,18 @@
 }
 
 .prestige-card {
-  background: linear-gradient(135deg, rgba(34, 40, 60, 0.98) 60%, rgba(78, 140, 255, 0.10) 100%);
+  background: linear-gradient(135deg, rgba(34, 40, 60, 0.98) 60%, rgba(78, 140, 255, 0.1) 100%);
   border-radius: 0.75rem;
   padding: 1rem 1.5rem;
   cursor: pointer;
-  box-shadow: 0 4px 24px 0 rgba(78, 140, 255, 0.10), 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: background 0.2s, border 0.2s, transform 0.1s, box-shadow 0.2s;
+  box-shadow:
+    0 4px 24px 0 rgba(78, 140, 255, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+  transition:
+    background 0.2s,
+    border 0.2s,
+    transform 0.1s,
+    box-shadow 0.2s;
   margin-bottom: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -331,7 +351,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(circle at 80% 10%, rgba(255, 233, 176, 0.10) 0%, transparent 70%);
+  background: radial-gradient(circle at 80% 10%, rgba(255, 233, 176, 0.1) 0%, transparent 70%);
   z-index: 0;
 }
 
@@ -339,7 +359,9 @@
   background: linear-gradient(135deg, rgba(78, 140, 255, 0.18) 0%, rgba(34, 40, 60, 1) 100%);
   border-color: var(--accent-hover, #3566b8);
   transform: translateY(-2px) scale(1.04);
-  box-shadow: 0 8px 32px 0 rgba(78, 140, 255, 0.18), 0 2px 8px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 8px 32px 0 rgba(78, 140, 255, 0.18),
+    0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .prestige-card ul {
@@ -358,14 +380,16 @@
   font-size: 1.08rem;
   margin-bottom: 0;
   color: #ffe9b0;
-  background: linear-gradient(90deg, rgba(78, 140, 255, 0.10) 0%, rgba(255, 233, 176, 0.10) 100%);
+  background: linear-gradient(90deg, rgba(78, 140, 255, 0.1) 0%, rgba(255, 233, 176, 0.1) 100%);
   border-left: 4px solid var(--accent, #4e8cff);
   border-radius: 0.4rem;
   padding: 0.35rem 0.75rem 0.55rem 0.75rem;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
   font-family: 'Cinzel', 'Georgia', serif;
   letter-spacing: 0.01em;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
   overflow: visible;
   display: flex;
   align-items: center;
@@ -385,7 +409,9 @@
   border-radius: 999px;
   pointer-events: none;
   opacity: 1;
-  transition: width 0.2s ease, opacity 0.2s ease;
+  transition:
+    width 0.2s ease,
+    opacity 0.2s ease;
 }
 
 /* Main text left, reference range right */
@@ -429,7 +455,9 @@
   font-size: 2rem;
   color: var(--accent, #4e8cff);
   cursor: pointer;
-  transition: color 0.2s, background 0.2s;
+  transition:
+    color 0.2s,
+    background 0.2s;
   z-index: 2;
 }
 
@@ -460,19 +488,25 @@
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.09);
   font-family: 'Cinzel', 'Georgia', serif;
   letter-spacing: 0.01em;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    box-shadow 0.2s,
+    transform 0.1s;
 }
 
 .prestige-history-list li:hover {
   background: linear-gradient(90deg, rgba(255, 233, 176, 0.19) 0%, rgba(78, 140, 255, 0.19) 100%);
   color: #fffbe6;
-  box-shadow: 0 4px 18px 0 rgba(78, 140, 255, 0.16), 0 2px 8px rgba(0, 0, 0, 0.13);
+  box-shadow:
+    0 4px 18px 0 rgba(78, 140, 255, 0.16),
+    0 2px 8px rgba(0, 0, 0, 0.13);
   transform: translateY(-2px) scale(1.02);
 }
 
 .prestige-stat-list li {
   list-style: none;
-  background: linear-gradient(90deg, rgba(78, 140, 255, 0.10) 0%, rgba(255, 233, 176, 0.10) 100%);
+  background: linear-gradient(90deg, rgba(78, 140, 255, 0.1) 0%, rgba(255, 233, 176, 0.1) 100%);
   padding: 0.35rem 0.75rem;
   border-left: 4px solid var(--accent, #4e8cff);
   border-radius: 0.4rem;
@@ -481,7 +515,9 @@
   font-family: 'Cinzel', 'Georgia', serif;
   letter-spacing: 0.01em;
   font-size: 1.05rem;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .prestige-stat-list li:hover {
@@ -508,11 +544,10 @@
 }
 
 .breakable-separator::after {
-  content: "\200B";
+  content: '\200B';
 }
 
 @media (max-width: 700px) {
-
   .prestige-modal-content,
   .prestige-history-modal-content {
     max-width: 98vw;

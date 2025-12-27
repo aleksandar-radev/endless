@@ -1,8 +1,26 @@
-import { game, hero, inventory, training, skillTree, dataManager, statistics, runes, ascension, prestige } from './globals.js';
+import {
+  game,
+  hero,
+  inventory,
+  training,
+  skillTree,
+  dataManager,
+  statistics,
+  runes,
+  ascension,
+  prestige,
+} from './globals.js';
 import { MATERIALS } from './constants/materials.js';
 import { RUNES, MAX_CONVERSION_PERCENT, MIN_CONVERSION_PERCENT } from './constants/runes.js';
 import SimpleCrypto from 'simple-crypto-js';
-import { initializeSkillTreeStructure, showToast, updatePlayerLife, updateResources, updateStageUI, updateTabIndicators } from './ui/ui.js';
+import {
+  initializeSkillTreeStructure,
+  showToast,
+  updatePlayerLife,
+  updateResources,
+  updateStageUI,
+  updateTabIndicators,
+} from './ui/ui.js';
 import { createImageDropdownFromData } from './ui/imageDropdown.js';
 import { ITEM_ICONS, ITEM_RARITY, ITEM_TYPES, ALL_ITEM_TYPES } from './constants/items.js';
 import { updateRegionUI } from './region.js';
@@ -143,7 +161,6 @@ export function initDebugging() {
             updateDebugUI();
           }
         }, 0);
-
       } else {
         createDebugUI();
         createModifyUI();
@@ -738,7 +755,7 @@ export function createModifyUI(container = document.body) {
       inventory.addItemToInventory(newItem);
     }
     showToast(
-      `Added 10x ${itemType} (levels ${baseLevel} to ${baseLevel + 4500}, ${rarity}, tier ${tier}) to inventory`,
+      `Added 10x ${itemType} (levels ${baseLevel} to ${baseLevel + 4500}, ${rarity}, tier ${tier}) to inventory`
     );
   });
   addItemControlsDiv.appendChild(add10ItemsBtn);
@@ -892,8 +909,7 @@ export function createModifyUI(container = document.body) {
       return;
     }
     const percent =
-      Math.floor(Math.random() * (MAX_CONVERSION_PERCENT - MIN_CONVERSION_PERCENT + 1)) +
-      MIN_CONVERSION_PERCENT;
+      Math.floor(Math.random() * (MAX_CONVERSION_PERCENT - MIN_CONVERSION_PERCENT + 1)) + MIN_CONVERSION_PERCENT;
     const rune = runes.addRune(id, percent);
     if (rune) {
       renderRunesUI();
@@ -1176,10 +1192,7 @@ export function createModifyUI(container = document.body) {
         return;
       }
       const currentSlot = dataManager.getCurrentSlot();
-      const toCopy =
-        slotKeys.length > 1
-          ? { slots, currentSlot }
-          : slots[currentSlot] || slots[slotKeys[0]];
+      const toCopy = slotKeys.length > 1 ? { slots, currentSlot } : slots[currentSlot] || slots[slotKeys[0]];
       await navigator.clipboard.writeText(JSON.stringify(toCopy, null, 2));
       showToast('Decrypted save copied to clipboard!');
     } catch (e) {
@@ -1251,9 +1264,7 @@ export function createModifyUI(container = document.body) {
       }
       const currentSlot = dataManager.getCurrentSlot();
       if (slotKeys.length > 1) {
-        await navigator.clipboard.writeText(
-          JSON.stringify({ slots, currentSlot }, null, 2),
-        );
+        await navigator.clipboard.writeText(JSON.stringify({ slots, currentSlot }, null, 2));
       } else {
         const enc = slots[currentSlot] || slots[slotKeys[0]];
         await navigator.clipboard.writeText('"' + enc + '"');

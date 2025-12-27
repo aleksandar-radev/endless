@@ -10,8 +10,12 @@ export const DROP_QUESTS = [
   {
     id: 'itemdrop_5',
     category: 'drops',
-    get title() { return tp('Find {count} items.', { count: 5 }); },
-    get description() { return tp('Find {count} items.', { count: 5 }); },
+    get title() {
+      return tp('Find {count} items.', { count: 5 });
+    },
+    get description() {
+      return tp('Find {count} items.', { count: 5 });
+    },
     type: 'item_drop',
     target: 5,
     reward: { item: { rarity: 'rare', type: 'random', tier: 2 } },
@@ -19,8 +23,12 @@ export const DROP_QUESTS = [
   {
     id: 'itemdrop_25',
     category: 'drops',
-    get title() { return tp('Find {count} items.', { count: 25 }); },
-    get description() { return tp('Find {count} items.', { count: 25 }); },
+    get title() {
+      return tp('Find {count} items.', { count: 25 });
+    },
+    get description() {
+      return tp('Find {count} items.', { count: 25 });
+    },
     type: 'item_drop',
     target: 25,
     reward: { item: { rarity: 'epic', type: 'random', tier: 2 } },
@@ -28,8 +36,12 @@ export const DROP_QUESTS = [
   {
     id: 'itemdrop_60',
     category: 'drops',
-    get title() { return tp('Find {count} items.', { count: 60 }); },
-    get description() { return tp('Find {count} items.', { count: 60 }); },
+    get title() {
+      return tp('Find {count} items.', { count: 60 });
+    },
+    get description() {
+      return tp('Find {count} items.', { count: 60 });
+    },
     type: 'item_drop',
     target: 60,
     reward: { item: { rarity: 'epic', type: 'random', tier: 3 } },
@@ -37,8 +49,12 @@ export const DROP_QUESTS = [
   {
     id: 'itemdrop_150',
     category: 'drops',
-    get title() { return tp('Find {count} items.', { count: 150 }); },
-    get description() { return tp('Find {count} items.', { count: 150 }); },
+    get title() {
+      return tp('Find {count} items.', { count: 150 });
+    },
+    get description() {
+      return tp('Find {count} items.', { count: 150 });
+    },
     type: 'item_drop',
     target: 150,
     reward: { item: { rarity: 'legendary', type: 'random', tier: 3 } },
@@ -46,8 +62,12 @@ export const DROP_QUESTS = [
   {
     id: 'itemdrop_300',
     category: 'drops',
-    get title() { return tp('Find {count} items.', { count: 300 }); },
-    get description() { return tp('Find {count} items.', { count: 300 }); },
+    get title() {
+      return tp('Find {count} items.', { count: 300 });
+    },
+    get description() {
+      return tp('Find {count} items.', { count: 300 });
+    },
     type: 'item_drop',
     target: 300,
     reward: { item: { rarity: 'legendary', type: 'random', tier: 4 } },
@@ -55,8 +75,12 @@ export const DROP_QUESTS = [
   {
     id: 'itemdrop_750',
     category: 'drops',
-    get title() { return tp('Find {count} items.', { count: 750 }); },
-    get description() { return tp('Find {count} items.', { count: 750 }); },
+    get title() {
+      return tp('Find {count} items.', { count: 750 });
+    },
+    get description() {
+      return tp('Find {count} items.', { count: 750 });
+    },
     type: 'item_drop',
     target: 750,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 5 } },
@@ -64,8 +88,12 @@ export const DROP_QUESTS = [
   {
     id: 'itemdrop_1500',
     category: 'drops',
-    get title() { return tp('Find {count} items.', { count: '1,500' }); },
-    get description() { return tp('Find {count} items.', { count: '1,500' }); },
+    get title() {
+      return tp('Find {count} items.', { count: '1,500' });
+    },
+    get description() {
+      return tp('Find {count} items.', { count: '1,500' });
+    },
     type: 'item_drop',
     target: 1500,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 5 } },
@@ -73,8 +101,12 @@ export const DROP_QUESTS = [
   {
     id: 'itemdrop_3000',
     category: 'drops',
-    get title() { return tp('Find {count} items.', { count: '3,000' }); },
-    get description() { return tp('Find {count} items.', { count: '3,000' }); },
+    get title() {
+      return tp('Find {count} items.', { count: '3,000' });
+    },
+    get description() {
+      return tp('Find {count} items.', { count: '3,000' });
+    },
     type: 'item_drop',
     target: 3000,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 6 } },
@@ -82,8 +114,12 @@ export const DROP_QUESTS = [
   {
     id: 'itemdrop_6000',
     category: 'drops',
-    get title() { return tp('Find {count} items.', { count: '6,000' }); },
-    get description() { return tp('Find {count} items.', { count: '6,000' }); },
+    get title() {
+      return tp('Find {count} items.', { count: '6,000' });
+    },
+    get description() {
+      return tp('Find {count} items.', { count: '6,000' });
+    },
     type: 'item_drop',
     target: 6000,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 7 } },
@@ -92,8 +128,12 @@ export const DROP_QUESTS = [
   {
     id: 'matdrop_5',
     category: 'drops',
-    get title() { return tp('Collect {count} materials.', { count: 5 }); },
-    get description() { return tp('Collect {count} materials.', { count: 5 }); },
+    get title() {
+      return tp('Collect {count} materials.', { count: 5 });
+    },
+    get description() {
+      return tp('Collect {count} materials.', { count: 5 });
+    },
     type: 'material_drop',
     target: 5,
     reward: { item: { rarity: 'rare', type: 'random', tier: 1 } },
@@ -101,8 +141,12 @@ export const DROP_QUESTS = [
   {
     id: 'matdrop_25',
     category: 'drops',
-    get title() { return tp('Collect {count} materials.', { count: 25 }); },
-    get description() { return tp('Collect {count} materials.', { count: 25 }); },
+    get title() {
+      return tp('Collect {count} materials.', { count: 25 });
+    },
+    get description() {
+      return tp('Collect {count} materials.', { count: 25 });
+    },
     type: 'material_drop',
     target: 25,
     reward: { item: { rarity: 'epic', type: 'random', tier: 1 } },
@@ -110,8 +154,12 @@ export const DROP_QUESTS = [
   {
     id: 'matdrop_60',
     category: 'drops',
-    get title() { return tp('Collect {count} materials.', { count: 60 }); },
-    get description() { return tp('Collect {count} materials.', { count: 60 }); },
+    get title() {
+      return tp('Collect {count} materials.', { count: 60 });
+    },
+    get description() {
+      return tp('Collect {count} materials.', { count: 60 });
+    },
     type: 'material_drop',
     target: 60,
     reward: { item: { rarity: 'epic', type: 'random', tier: 2 } },
@@ -119,8 +167,12 @@ export const DROP_QUESTS = [
   {
     id: 'matdrop_150',
     category: 'drops',
-    get title() { return tp('Collect {count} materials.', { count: 150 }); },
-    get description() { return tp('Collect {count} materials.', { count: 150 }); },
+    get title() {
+      return tp('Collect {count} materials.', { count: 150 });
+    },
+    get description() {
+      return tp('Collect {count} materials.', { count: 150 });
+    },
     type: 'material_drop',
     target: 150,
     reward: { item: { rarity: 'legendary', type: 'random', tier: 3 } },
@@ -128,8 +180,12 @@ export const DROP_QUESTS = [
   {
     id: 'matdrop_300',
     category: 'drops',
-    get title() { return tp('Collect {count} materials.', { count: 300 }); },
-    get description() { return tp('Collect {count} materials.', { count: 300 }); },
+    get title() {
+      return tp('Collect {count} materials.', { count: 300 });
+    },
+    get description() {
+      return tp('Collect {count} materials.', { count: 300 });
+    },
     type: 'material_drop',
     target: 300,
     reward: { item: { rarity: 'legendary', type: 'random', tier: 3 } },
@@ -137,8 +193,12 @@ export const DROP_QUESTS = [
   {
     id: 'matdrop_750',
     category: 'drops',
-    get title() { return tp('Collect {count} materials.', { count: 750 }); },
-    get description() { return tp('Collect {count} materials.', { count: 750 }); },
+    get title() {
+      return tp('Collect {count} materials.', { count: 750 });
+    },
+    get description() {
+      return tp('Collect {count} materials.', { count: 750 });
+    },
     type: 'material_drop',
     target: 750,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 3 } },
@@ -146,8 +206,12 @@ export const DROP_QUESTS = [
   {
     id: 'matdrop_1500',
     category: 'drops',
-    get title() { return tp('Collect {count} materials.', { count: '1,500' }); },
-    get description() { return tp('Collect {count} materials.', { count: '1,500' }); },
+    get title() {
+      return tp('Collect {count} materials.', { count: '1,500' });
+    },
+    get description() {
+      return tp('Collect {count} materials.', { count: '1,500' });
+    },
     type: 'material_drop',
     target: 1500,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 4 } },
@@ -155,8 +219,12 @@ export const DROP_QUESTS = [
   {
     id: 'matdrop_3000',
     category: 'drops',
-    get title() { return tp('Collect {count} materials.', { count: '3,000' }); },
-    get description() { return tp('Collect {count} materials.', { count: '3,000' }); },
+    get title() {
+      return tp('Collect {count} materials.', { count: '3,000' });
+    },
+    get description() {
+      return tp('Collect {count} materials.', { count: '3,000' });
+    },
     type: 'material_drop',
     target: 3000,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 5 } },
@@ -164,8 +232,12 @@ export const DROP_QUESTS = [
   {
     id: 'matdrop_6000',
     category: 'drops',
-    get title() { return tp('Collect {count} materials.', { count: '6,000' }); },
-    get description() { return tp('Collect {count} materials.', { count: '6,000' }); },
+    get title() {
+      return tp('Collect {count} materials.', { count: '6,000' });
+    },
+    get description() {
+      return tp('Collect {count} materials.', { count: '6,000' });
+    },
     type: 'material_drop',
     target: 6000,
     reward: { item: { rarity: 'mythic', type: 'random', tier: 6 } },

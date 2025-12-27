@@ -464,7 +464,7 @@ export class DataManager {
       document.dispatchEvent(
         new CustomEvent('dataManager:saved', {
           detail: { timestamp },
-        }),
+        })
       );
     }
   }
@@ -493,10 +493,7 @@ export class DataManager {
                 for (let i = 0; i < MAX_SLOTS; i++) {
                   const slotData = result.data.slots[i];
                   if (slotData) {
-                    localStorage.setItem(
-                      `gameProgress_${i}`,
-                      crypt.encrypt(JSON.stringify(slotData)),
-                    );
+                    localStorage.setItem(`gameProgress_${i}`, crypt.encrypt(JSON.stringify(slotData)));
                   }
                 }
               }

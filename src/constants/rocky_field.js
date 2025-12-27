@@ -24,8 +24,6 @@ export const ROCKY_FIELD_BASE_STATS = {
   waterResistance: 300,
 };
 
-
-
 export const ROCKY_FIELD_ENEMIES = [
   ...ROCKY_FIELD_OUTSKIRTS_ENEMIES,
   ...ROCKY_FIELD_BOULDERS_ENEMIES,

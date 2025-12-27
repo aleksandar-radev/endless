@@ -142,31 +142,28 @@ const getConversionMaxPercent = (fromKey) => {
   return MAX_CONVERSION_PERCENT;
 };
 
-const CONVERSION_RUNES = Object.keys(TYPE_DATA)
-  .flatMap((from) =>
-    Object.keys(TYPE_DATA)
-      .filter((to) => to !== from)
-      .map((to) => {
-        const fromInfo = TYPE_DATA[from];
-        const toInfo = TYPE_DATA[to];
-        const hasPairIcon = hasElementalIcon(from) && hasElementalIcon(to);
-        const maxPercent = getConversionMaxPercent(from);
-        return {
-          id: `${from}_to_${to}`,
-          fromKey: fromInfo.labelKey,
-          toKey: toInfo.labelKey,
-          conversion: {
-            from: fromInfo.stat,
-            to: toInfo.stat,
-            percent: MIN_CONVERSION_PERCENT,
-            ...(maxPercent !== MAX_CONVERSION_PERCENT ? { maxPercent } : {}),
-          },
-          icon: hasPairIcon
-            ? `${BASE}/icons/runes/${from}_to_${to}.svg`
-            : createConversionIcon(from, to),
-        };
-      }),
-  );
+const CONVERSION_RUNES = Object.keys(TYPE_DATA).flatMap((from) =>
+  Object.keys(TYPE_DATA)
+    .filter((to) => to !== from)
+    .map((to) => {
+      const fromInfo = TYPE_DATA[from];
+      const toInfo = TYPE_DATA[to];
+      const hasPairIcon = hasElementalIcon(from) && hasElementalIcon(to);
+      const maxPercent = getConversionMaxPercent(from);
+      return {
+        id: `${from}_to_${to}`,
+        fromKey: fromInfo.labelKey,
+        toKey: toInfo.labelKey,
+        conversion: {
+          from: fromInfo.stat,
+          to: toInfo.stat,
+          percent: MIN_CONVERSION_PERCENT,
+          ...(maxPercent !== MAX_CONVERSION_PERCENT ? { maxPercent } : {}),
+        },
+        icon: hasPairIcon ? `${BASE}/icons/runes/${from}_to_${to}.svg` : createConversionIcon(from, to),
+      };
+    })
+);
 
 const UNIQUE_RUNES = [
   {

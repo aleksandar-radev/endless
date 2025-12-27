@@ -4,7 +4,9 @@ import { ROCKY_FIELD_ALL_RUNES } from '../rocky_field_runes.js';
 export const ROCKY_FIELD_CLIFFS_ENEMIES = [
   {
     id: 'cliff_gargoyle',
-    get name() { return t('Cliff Gargoyle'); },
+    get name() {
+      return t('Cliff Gargoyle');
+    },
     image: '/enemies/cliff-gargoyle.jpg',
     multiplier: {
       life: 1.1,

@@ -23,7 +23,12 @@ import { TabIndicatorManager } from './tabIndicatorManager.js';
 import { initializeBossRegionUI, selectBoss, updateBossUI, updateBossRegionSelector } from './bossUi.js';
 import { ELEMENTS } from '../constants/common.js';
 import { updateRegionUI, updateRegionSelectorButton } from '../region.js';
-import { calculateArmorReduction, calculateEvasionChance, calculateHitChance, calculateResistanceReduction } from '../combat.js';
+import {
+  calculateArmorReduction,
+  calculateEvasionChance,
+  calculateHitChance,
+  calculateResistanceReduction,
+} from '../combat.js';
 import { renderRunesUI } from './runesUi.js';
 import { createModal, closeModal } from './modal.js';
 export {
@@ -67,7 +72,9 @@ export function initializeUI() {
     {
       selector: '.resource-gold',
       tooltip: () => html`
-        <div class="tooltip-header">${t('resource.gold.name')} <img src="${BASE}/icons/gold.svg" class="icon" alt="${t('resource.gold.name')}"/></div>
+        <div class="tooltip-header">
+          ${t('resource.gold.name')} <img src="${BASE}/icons/gold.svg" class="icon" alt="${t('resource.gold.name')}" />
+        </div>
         <div class="tooltip-desc">${t('resource.gold.desc')}</div>
         <div class="tooltip-note"></div>
       `,
@@ -75,7 +82,10 @@ export function initializeUI() {
     {
       selector: '.resource-crystal',
       tooltip: () => html`
-        <div class="tooltip-header">${t('resource.crystal.name')} <img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('resource.crystal.name')}"/></div>
+        <div class="tooltip-header">
+          ${t('resource.crystal.name')}
+          <img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('resource.crystal.name')}" />
+        </div>
         <div class="tooltip-desc">${t('resource.crystal.desc')}</div>
         <div class="tooltip-note"></div>
       `,
@@ -83,7 +93,10 @@ export function initializeUI() {
     {
       selector: '.resource-souls',
       tooltip: () => html`
-        <div class="tooltip-header">${t('resource.souls.name')} <img src="${BASE}/icons/soul.svg" class="icon" alt="${t('resource.souls.name')}"/></div>
+        <div class="tooltip-header">
+          ${t('resource.souls.name')}
+          <img src="${BASE}/icons/soul.svg" class="icon" alt="${t('resource.souls.name')}" />
+        </div>
         <div class="tooltip-desc">${t('resource.souls.desc')}</div>
         <div class="tooltip-note"></div>
       `,
@@ -135,7 +148,6 @@ export function initializeUI() {
   try {
     const statusGroup = document.querySelector('.session-status-group');
     if (statusGroup && !statusGroup.querySelector('.offline-eligibility-indicator')) {
-
       const indicator = document.createElement('span');
       indicator.className = 'offline-eligibility-indicator offline-not-eligible tooltip-target';
       indicator.innerHTML = '<span class="icon">✖</span>';
@@ -345,19 +357,19 @@ export function updatePlayerLife() {
   const lifePercentage = (stats.currentLife / stats.life) * 100;
   document.getElementById('life-fill').style.width = `${lifePercentage}%`;
   document.getElementById('life-text').textContent = `${formatNumber(
-    Math.max(0, Math.floor(stats.currentLife)),
+    Math.max(0, Math.floor(stats.currentLife))
   )} / ${formatNumber(Math.floor(stats.life))}`;
 
   const manaPercentage = (stats.currentMana / stats.mana) * 100;
   document.getElementById('mana-fill').style.width = `${manaPercentage}%`;
   document.getElementById('mana-text').textContent = `${formatNumber(
-    Math.max(0, Math.floor(stats.currentMana)),
+    Math.max(0, Math.floor(stats.currentMana))
   )} / ${formatNumber(Math.floor(stats.mana))}`;
 
   const xpPercentage = (hero.exp / hero.getExpToNextLevel()) * 100;
   document.getElementById('xp-fill').style.width = `${xpPercentage}%`;
   document.getElementById('xp-text').textContent = `${formatNumber(
-    Math.max(0, Math.floor(hero.exp)),
+    Math.max(0, Math.floor(hero.exp))
   )} / ${formatNumber(Math.floor(hero.getExpToNextLevel()))} XP`;
 
   updateHeroAilmentIcons();
@@ -371,7 +383,7 @@ export function updateEnemyStats() {
   const lifePercentage = Math.max(0, (enemy.currentLife / enemy.life) * 100);
   document.getElementById('enemy-life-fill').style.width = `${lifePercentage}%`;
   document.getElementById('enemy-life-text').textContent = `${formatNumber(
-    Math.max(0, Math.floor(enemy.currentLife)),
+    Math.max(0, Math.floor(enemy.currentLife))
   )} / ${formatNumber(Math.floor(enemy.life))}`;
 
   // Main stats
@@ -393,12 +405,7 @@ export function updateEnemyStats() {
     const alwaysEvade = enemy.special?.includes('alwaysEvade');
     const reduction = alwaysEvade
       ? 100
-      : calculateEvasionChance(
-        enemy.evasion,
-        hero.stats.attackRating,
-        undefined,
-        hero.stats.chanceToHitPercent || 0,
-      );
+      : calculateEvasionChance(enemy.evasion, hero.stats.attackRating, undefined, hero.stats.chanceToHitPercent || 0);
     evasion.textContent = `${formatNumber(Math.floor(enemy.evasion || 0))} (${Math.floor(reduction)}%)`;
   }
   const atkRating = document.getElementById('enemy-attack-rating-value');
@@ -413,10 +420,7 @@ export function updateEnemyStats() {
   ELEMENT_IDS.forEach((id) => {
     const resEl = document.getElementById(`enemy-${id}-resistance-value`);
     if (resEl) {
-      const reduction = calculateResistanceReduction(
-        enemy[`${id}Resistance`],
-        hero.stats[`${id}Damage`],
-      );
+      const reduction = calculateResistanceReduction(enemy[`${id}Resistance`], hero.stats[`${id}Damage`]);
       resEl.textContent = `${formatNumber(Math.floor(enemy[`${id}Resistance`] || 0))} (${Math.floor(reduction)}%)`;
     }
   });
@@ -470,18 +474,20 @@ function updateAilmentIcons() {
     {
       id: 'bleed',
       isActive: !!enemy.ailments[AILMENTS.bleed.id],
-      getTooltip: () => tp('ailment.bleed.tooltip', {
-        amount: formatNumber(Math.floor(enemy.ailments[AILMENTS.bleed.id]?.damagePool || 0)),
-        duration: ((enemy.ailments[AILMENTS.bleed.id]?.duration || 0) / 1000).toFixed(1),
-      }),
+      getTooltip: () =>
+        tp('ailment.bleed.tooltip', {
+          amount: formatNumber(Math.floor(enemy.ailments[AILMENTS.bleed.id]?.damagePool || 0)),
+          duration: ((enemy.ailments[AILMENTS.bleed.id]?.duration || 0) / 1000).toFixed(1),
+        }),
     },
     {
       id: 'burn',
       isActive: !!enemy.ailments[AILMENTS.burn.id],
-      getTooltip: () => tp('ailment.burn.tooltip', {
-        amount: formatNumber(Math.floor(enemy.ailments[AILMENTS.burn.id]?.damagePool || 0)),
-        duration: ((enemy.ailments[AILMENTS.burn.id]?.duration || 0) / 1000).toFixed(1),
-      }),
+      getTooltip: () =>
+        tp('ailment.burn.tooltip', {
+          amount: formatNumber(Math.floor(enemy.ailments[AILMENTS.burn.id]?.damagePool || 0)),
+          duration: ((enemy.ailments[AILMENTS.burn.id]?.duration || 0) / 1000).toFixed(1),
+        }),
     },
     {
       id: 'shock',
@@ -520,10 +526,11 @@ function updateAilmentIcons() {
     {
       id: 'poison',
       isActive: !!enemy.ailments[AILMENTS.poison.id],
-      getTooltip: () => tp('ailment.poison.tooltip', {
-        amount: formatNumber(Math.floor(enemy.ailments[AILMENTS.poison.id]?.damagePool || 0)),
-        duration: ((enemy.ailments[AILMENTS.poison.id]?.duration || 0) / 1000).toFixed(1),
-      }),
+      getTooltip: () =>
+        tp('ailment.poison.tooltip', {
+          amount: formatNumber(Math.floor(enemy.ailments[AILMENTS.poison.id]?.damagePool || 0)),
+          duration: ((enemy.ailments[AILMENTS.poison.id]?.duration || 0) / 1000).toFixed(1),
+        }),
     },
   ];
 
@@ -551,9 +558,10 @@ function updateHeroAilmentIcons() {
     {
       id: 'warmup',
       isActive: !!hero.ailments[AILMENTS.warmup.id],
-      getTooltip: () => tp('ailment.warmup.tooltip', {
-        duration: ((hero.ailments[AILMENTS.warmup.id]?.duration || 0) / 1000).toFixed(1),
-      }),
+      getTooltip: () =>
+        tp('ailment.warmup.tooltip', {
+          duration: ((hero.ailments[AILMENTS.warmup.id]?.duration || 0) / 1000).toFixed(1),
+        }),
     },
   ];
 
@@ -589,7 +597,8 @@ export function updateStageUI() {
   if (stageDisplay && game.fightMode === 'arena') {
     if (label) {
       const val = t('combat.bossLevel');
-      if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
+      if (val && val.includes('<')) label.innerHTML = val;
+      else label.textContent = val;
     }
     if (value) value.textContent = formatNumber(hero.bossLevel);
     return;
@@ -597,7 +606,8 @@ export function updateStageUI() {
   if (stageDisplay && game.fightMode === 'rockyField') {
     if (label) {
       const val = t('combat.stage');
-      if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
+      if (val && val.includes('<')) label.innerHTML = val;
+      else label.textContent = val;
     }
     if (value) value.textContent = formatNumber(game.rockyFieldStage);
     return;
@@ -605,7 +615,8 @@ export function updateStageUI() {
   if (stageDisplay) {
     if (label) {
       const val = t('combat.stage');
-      if (val && val.includes('<')) label.innerHTML = val; else label.textContent = val;
+      if (val && val.includes('<')) label.innerHTML = val;
+      else label.textContent = val;
     }
     if (value) value.textContent = formatNumber(game.stage);
   }
@@ -635,7 +646,6 @@ function updateCombatRegionDropdownVisibility() {
     regionSelector.style.display = 'none';
   }
 }
-
 
 export function showToast(message, type = 'normal', duration = 3000) {
   if (!options?.showInfoMessages) return;
@@ -805,8 +815,7 @@ export function showConfirmDialog(message, options = {}) {
 }
 
 // Helper function to convert camelCase to Title Case with spaces and translate stat names
-export const formatStatName = (stat) =>
-  formatStatNameBase(stat, options?.shortElementalNames);
+export const formatStatName = (stat) => formatStatNameBase(stat, options?.shortElementalNames);
 
 /**
  * Update tab indicators based on current game state.
@@ -858,7 +867,7 @@ function getRockyFieldRegionTooltip(region) {
 export function openRockyFieldRegionSelectionDialog() {
   const html = String.raw;
 
-  const regionItems = ROCKY_FIELD_REGIONS.map(region => {
+  const regionItems = ROCKY_FIELD_REGIONS.map((region) => {
     const hasEnemies = getRockyFieldEnemies(region.id).length > 0;
     const unlocked = !region.unlockStage || game.rockyFieldHighestStage >= region.unlockStage;
     const isUnlocked = hasEnemies && unlocked;
@@ -870,7 +879,9 @@ export function openRockyFieldRegionSelectionDialog() {
       <div class="region-dialog-item ${disabledClass} ${selectedClass}" data-region-id="${region.id}">
         <div class="region-dialog-item-header">
           <span class="region-dialog-item-name">${region.name}</span>
-          ${region.unlockStage ? html`<span class="region-dialog-item-unlock">${t('rockyField.unlockStage')}: ${region.unlockStage}</span>` : ''}
+          ${region.unlockStage
+            ? html`<span class="region-dialog-item-unlock">${t('rockyField.unlockStage')}: ${region.unlockStage}</span>`
+            : ''}
           ${isCurrent ? html`<span class="region-dialog-item-current">${t('region.current')}</span>` : ''}
           ${!isUnlocked ? html`<span class="region-dialog-item-locked">🔒</span>` : ''}
         </div>
@@ -882,9 +893,7 @@ export function openRockyFieldRegionSelectionDialog() {
     <div class="modal-content region-selection-modal">
       <button class="modal-close">×</button>
       <h2 class="modal-title">${t('region.selectRegion')}</h2>
-      <div class="region-dialog-list">
-        ${regionItems}
-      </div>
+      <div class="region-dialog-list">${regionItems}</div>
     </div>
   `;
 
@@ -896,9 +905,9 @@ export function openRockyFieldRegionSelectionDialog() {
   });
 
   // Add click handlers and tooltips to region items
-  document.querySelectorAll('#rocky-field-region-selection-dialog .region-dialog-item').forEach(item => {
+  document.querySelectorAll('#rocky-field-region-selection-dialog .region-dialog-item').forEach((item) => {
     const regionId = item.dataset.regionId;
-    const region = ROCKY_FIELD_REGIONS.find(r => r.id === regionId);
+    const region = ROCKY_FIELD_REGIONS.find((r) => r.id === regionId);
 
     if (region) {
       const tooltipContent = getRockyFieldRegionTooltip(region);
@@ -911,9 +920,7 @@ export function openRockyFieldRegionSelectionDialog() {
         item.addEventListener('click', async () => {
           if (regionId !== game.rockyFieldRegion) {
             hideTooltip();
-            const confirmed = await showConfirmDialog(
-              tp('combat.changeRegionConfirm', { region: region.name }),
-            );
+            const confirmed = await showConfirmDialog(tp('combat.changeRegionConfirm', { region: region.name }));
             if (!confirmed) return;
             game.rockyFieldRegion = regionId;
             game.rockyFieldStage = 1;
@@ -931,7 +938,7 @@ export function openRockyFieldRegionSelectionDialog() {
 
 export function updateRockyFieldRegionSelector() {
   // Update the region selector button for rocky field mode
-  const currentRegion = ROCKY_FIELD_REGIONS.find(r => r.id === game.rockyFieldRegion);
+  const currentRegion = ROCKY_FIELD_REGIONS.find((r) => r.id === game.rockyFieldRegion);
   if (currentRegion) {
     updateRegionSelectorButton('rockyField', currentRegion.name, openRockyFieldRegionSelectionDialog);
   }
@@ -955,9 +962,8 @@ export function updateRockyFieldRegionSelector() {
 
     if (hasEnemies && unlocked) {
       btn.onclick = async () => {
-        const confirmed = await showConfirmDialog(
-          tp('combat.changeRegionConfirm', { region: region.name }),
-        );        if (!confirmed) return;
+        const confirmed = await showConfirmDialog(tp('combat.changeRegionConfirm', { region: region.name }));
+        if (!confirmed) return;
         game.rockyFieldRegion = region.id;
         game.rockyFieldStage = 1;
         game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);
@@ -992,7 +998,9 @@ function renderRegionPanel(region) {
               class="enemy-stats-caret"
               aria-label="${t('enemy.stats.toggle')}"
               title="${t('enemy.stats.toggle')}"
-            >▾</button>
+            >
+              ▾
+            </button>
           </div>
         </div>
         <div class="enemy-life-bar">
@@ -1035,27 +1043,39 @@ function renderRegionPanel(region) {
           <div class="enemy-elements-header enemy-elements-col">${t('enemy.stats.dmgShort')}</div>
           <div class="enemy-elements-header enemy-elements-col">${t('enemy.stats.resShort')}</div>
 
-          <div class="enemy-elements-element enemy-fire-damage">${ELEMENTS.fire.icon}<span class="enemy-elements-name">${t('fire')}</span></div>
+          <div class="enemy-elements-element enemy-fire-damage">
+            ${ELEMENTS.fire.icon}<span class="enemy-elements-name">${t('fire')}</span>
+          </div>
           <div class="enemy-elements-value enemy-fire-damage" id="enemy-fire-damage-value"></div>
           <div class="enemy-elements-value enemy-fire-resistance" id="enemy-fire-resistance-value"></div>
 
-          <div class="enemy-elements-element enemy-cold-damage">${ELEMENTS.cold.icon}<span class="enemy-elements-name">${t('cold')}</span></div>
+          <div class="enemy-elements-element enemy-cold-damage">
+            ${ELEMENTS.cold.icon}<span class="enemy-elements-name">${t('cold')}</span>
+          </div>
           <div class="enemy-elements-value enemy-cold-damage" id="enemy-cold-damage-value"></div>
           <div class="enemy-elements-value enemy-cold-resistance" id="enemy-cold-resistance-value"></div>
 
-          <div class="enemy-elements-element enemy-air-damage">${ELEMENTS.air.icon}<span class="enemy-elements-name">${t('air')}</span></div>
+          <div class="enemy-elements-element enemy-air-damage">
+            ${ELEMENTS.air.icon}<span class="enemy-elements-name">${t('air')}</span>
+          </div>
           <div class="enemy-elements-value enemy-air-damage" id="enemy-air-damage-value"></div>
           <div class="enemy-elements-value enemy-air-resistance" id="enemy-air-resistance-value"></div>
 
-          <div class="enemy-elements-element enemy-earth-damage">${ELEMENTS.earth.icon}<span class="enemy-elements-name">${t('earth')}</span></div>
+          <div class="enemy-elements-element enemy-earth-damage">
+            ${ELEMENTS.earth.icon}<span class="enemy-elements-name">${t('earth')}</span>
+          </div>
           <div class="enemy-elements-value enemy-earth-damage" id="enemy-earth-damage-value"></div>
           <div class="enemy-elements-value enemy-earth-resistance" id="enemy-earth-resistance-value"></div>
 
-          <div class="enemy-elements-element enemy-lightning-damage">${ELEMENTS.lightning.icon}<span class="enemy-elements-name">${t('lightning')}</span></div>
+          <div class="enemy-elements-element enemy-lightning-damage">
+            ${ELEMENTS.lightning.icon}<span class="enemy-elements-name">${t('lightning')}</span>
+          </div>
           <div class="enemy-elements-value enemy-lightning-damage" id="enemy-lightning-damage-value"></div>
           <div class="enemy-elements-value enemy-lightning-resistance" id="enemy-lightning-resistance-value"></div>
 
-          <div class="enemy-elements-element enemy-water-damage">${ELEMENTS.water.icon}<span class="enemy-elements-name">${t('water')}</span></div>
+          <div class="enemy-elements-element enemy-water-damage">
+            ${ELEMENTS.water.icon}<span class="enemy-elements-name">${t('water')}</span>
+          </div>
           <div class="enemy-elements-value enemy-water-damage" id="enemy-water-damage-value"></div>
           <div class="enemy-elements-value enemy-water-resistance" id="enemy-water-resistance-value"></div>
         </div>
@@ -1065,7 +1085,7 @@ function renderRegionPanel(region) {
         <div class="enemy-rewards-row">
           <div class="enemy-reward-item">
             <div class="enemy-reward-label">
-              <img src="${BASE}/icons/gold.svg" class="icon" alt="${t('resource.gold.name')}"/>
+              <img src="${BASE}/icons/gold.svg" class="icon" alt="${t('resource.gold.name')}" />
               ${t('resource.gold.name')}
             </div>
             <div class="enemy-reward-value" id="enemy-gold-value"></div>
@@ -1336,10 +1356,20 @@ export function updateStageControlsInlineVisibility() {
   resetRow.className = 'option-row';
   resetRow.innerHTML = html`
     <label class="reset-stage-skip-label">${t('options.resetStageSkipAt')}:</label>
-    <input type="number" class="reset-stage-skip-input" min="0" value="${resetVal}" ${resetPurchased ? '' : 'disabled'} />
+    <input
+      type="number"
+      class="reset-stage-skip-input"
+      min="0"
+      value="${resetVal}"
+      ${resetPurchased ? '' : 'disabled'}
+    />
     <div class="min-max-btn-group">
-      <button class="min-btn" type="button" ${resetPurchased ? '' : 'disabled'} data-i18n="common.min">${t('common.min')}</button>
-      <button class="max-btn" type="button" ${resetPurchased ? '' : 'disabled'} data-i18n="common.max">${t('common.max')}</button>
+      <button class="min-btn" type="button" ${resetPurchased ? '' : 'disabled'} data-i18n="common.min">
+        ${t('common.min')}
+      </button>
+      <button class="max-btn" type="button" ${resetPurchased ? '' : 'disabled'} data-i18n="common.max">
+        ${t('common.max')}
+      </button>
     </div>
   `;
   const resetInput = resetRow.querySelector('input');
@@ -1375,9 +1405,7 @@ export function updateStageControlsInlineVisibility() {
     resetMaxBtn.onmouseleave = () => resetMaxBtn.classList.remove('hover');
     resetMaxBtn.onclick = () => {
       if (resetMaxBtn.disabled) return;
-      const highest = Math.max(
-        ...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0),
-      );
+      const highest = Math.max(...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0));
       resetInput.value = highest || 0;
       resetInput.dispatchEvent(new Event('input'));
       applyInlineResetStageSkip();
@@ -1404,11 +1432,9 @@ export function updateStageControlsInlineVisibility() {
   const stageLockRow = document.createElement('div');
   stageLockRow.className = 'option-row';
   stageLockRow.innerHTML = html`
-    <label
-      for="inline-stage-lock-input"
-      class="stage-lock-label"
-      data-i18n="options.stageLockStage"
-    >${t('options.stageLockStage')}:</label>
+    <label for="inline-stage-lock-input" class="stage-lock-label" data-i18n="options.stageLockStage"
+      >${t('options.stageLockStage')}:</label
+    >
     <input
       type="number"
       id="inline-stage-lock-input"
@@ -1418,18 +1444,12 @@ export function updateStageControlsInlineVisibility() {
       ${stageLockPurchased ? '' : 'disabled'}
     />
     <div class="min-max-btn-group">
-      <button
-        class="min-btn"
-        type="button"
-        ${stageLockPurchased ? '' : 'disabled'}
-        data-i18n="common.min"
-      >${t('common.min')}</button>
-      <button
-        class="max-btn"
-        type="button"
-        ${stageLockPurchased ? '' : 'disabled'}
-        data-i18n="common.max"
-      >${t('common.max')}</button>
+      <button class="min-btn" type="button" ${stageLockPurchased ? '' : 'disabled'} data-i18n="common.min">
+        ${t('common.min')}
+      </button>
+      <button class="max-btn" type="button" ${stageLockPurchased ? '' : 'disabled'} data-i18n="common.max">
+        ${t('common.max')}
+      </button>
     </div>
   `;
   const stageLockInput = stageLockRow.querySelector('.stage-lock-input');
@@ -1465,9 +1485,7 @@ export function updateStageControlsInlineVisibility() {
     stageLockMaxBtn.onmouseleave = () => stageLockMaxBtn.classList.remove('hover');
     stageLockMaxBtn.onclick = () => {
       if (stageLockMaxBtn.disabled || !stageLockInput) return;
-      const highest = Math.max(
-        ...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0),
-      );
+      const highest = Math.max(...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0));
       stageLockInput.value = highest || 0;
       stageLockInput.dispatchEvent(new Event('input'));
       applyInlineStageLock();

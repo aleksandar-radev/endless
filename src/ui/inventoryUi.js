@@ -15,7 +15,8 @@ let showingInventoryTargets = false;
 const html = String.raw;
 const BASE = import.meta.env.VITE_BASE_PATH;
 
-let sortMode = (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) || 'type-rarity-level';
+let sortMode =
+  (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) || 'type-rarity-level';
 
 const sortModeShortText = {
   'type-rarity-level': t('inventory.typeRarityLevel'),
@@ -56,12 +57,10 @@ if (typeof document !== 'undefined') {
 
 function getPreferredSlotForItem(itemData) {
   if (!itemData) return null;
-  const eligibleSlots = Object.keys(SLOT_REQUIREMENTS).filter((s) =>
-    SLOT_REQUIREMENTS[s].includes(itemData.type),
-  );
+  const eligibleSlots = Object.keys(SLOT_REQUIREMENTS).filter((s) => SLOT_REQUIREMENTS[s].includes(itemData.type));
   if (eligibleSlots.length === 0) return null;
   const emptyValid = eligibleSlots.find(
-    (slot) => !inventory.equippedItems[slot] && inventory.canEquipInSlot(itemData, slot),
+    (slot) => !inventory.equippedItems[slot] && inventory.canEquipInSlot(itemData, slot)
   );
   if (emptyValid) return emptyValid;
   return eligibleSlots.find((slot) => inventory.canEquipInSlot(itemData, slot)) || null;
@@ -93,46 +92,86 @@ export function initializeInventoryUI(inv) {
             <div class="equipment-slot" data-slot="ring2"><div class="slot-indicator">${ITEM_ICONS.RING}</div></div>
             <div class="equipment-slot" data-slot="boots"><div class="slot-indicator">${ITEM_ICONS.BOOTS}</div></div>
           </div>
-          <div class="character-preview"><img src="${BASE}/icons/account.svg" class="icon" alt="${t('icon.avatar')}"/></div>
+          <div class="character-preview">
+            <img src="${BASE}/icons/account.svg" class="icon" alt="${t('icon.avatar')}" />
+          </div>
         </div>
       </div>
       <div class="inventory-controls">
         <div class="inventory-tabs">
-          <button id="items-tab" class="inventory-btn active" data-i18n="inventory.items">${t('inventory.items')}</button>
-          <button id="materials-tab" class="inventory-btn" data-i18n="inventory.materials">${t('inventory.materials')}</button>
+          <button id="items-tab" class="inventory-btn active" data-i18n="inventory.items">
+            ${t('inventory.items')}
+          </button>
+          <button id="materials-tab" class="inventory-btn" data-i18n="inventory.materials">
+            ${t('inventory.materials')}
+          </button>
         </div>
         <div class="sort-row">
-          <div id="sort-inventory" class="inventory-btn sort-btn" aria-label="${t('inventory.sort')}"><span role="img" aria-label="${t('inventory.sort')}"><img src="${BASE}/icons/refresh.svg" class="icon" alt="${t('inventory.sort')}"/></span></div>
-          <button id="desktop-equip-btn" class="inventory-btn desktop-equip-btn desktop-only" style="display: none" data-i18n="inventory.equip">${t('inventory.equip')}</button>
-          <button id="mobile-equip-btn" class="inventory-btn mobile-equip-btn" style="display: none" data-i18n="inventory.equip">${t('inventory.equip')}</button>
+          <div id="sort-inventory" class="inventory-btn sort-btn" aria-label="${t('inventory.sort')}">
+            <span role="img" aria-label="${t('inventory.sort')}"
+              ><img src="${BASE}/icons/refresh.svg" class="icon" alt="${t('inventory.sort')}"
+            /></span>
+          </div>
+          <button
+            id="desktop-equip-btn"
+            class="inventory-btn desktop-equip-btn desktop-only"
+            style="display: none"
+            data-i18n="inventory.equip"
+          >
+            ${t('inventory.equip')}
+          </button>
+          <button
+            id="mobile-equip-btn"
+            class="inventory-btn mobile-equip-btn"
+            style="display: none"
+            data-i18n="inventory.equip"
+          >
+            ${t('inventory.equip')}
+          </button>
         </div>
       </div>
       <div class="search-container">
-        <input type="text" id="inventory-filter" class="inventory-btn filter-input" data-i18n-placeholder="inventory.searchItems" placeholder="${t('inventory.searchItems')}" />
-        <span class="search-icon"><img src="${BASE}/icons/search.svg" class="icon" alt="${t('icon.search')}"/></span>
+        <input
+          type="text"
+          id="inventory-filter"
+          class="inventory-btn filter-input"
+          data-i18n-placeholder="inventory.searchItems"
+          placeholder="${t('inventory.searchItems')}"
+        />
+        <span class="search-icon"><img src="${BASE}/icons/search.svg" class="icon" alt="${t('icon.search')}" /></span>
       </div>
     </div>
     <div class="inventory-options-panel desktop-only">
       <h3 class="options-title">${t('inventory.options')}</h3>
       <div class="salvage-options-inline">
-        ${RARITY_ORDER.map(rarity => {
-    const selectedRarities = inv.autoSalvageRarities || [];
-    const autoSalvageLevel = crystalShop?.crystalUpgrades?.autoSalvage || 0;
-    const isChecked = selectedRarities.includes(rarity);
-    const atCap = selectedRarities.length >= autoSalvageLevel;
-    const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
-    const inputId = `auto-salvage-inline-${rarity}`;
-    return html`
-  <div class="salvage-inline-row">
-        <button class="salvage-btn-inline" data-rarity="${rarity}">${tp('inventory.salvageRarityItems', { rarity: t('rarity.' + rarity.toLowerCase()) })}</button>
-        <div class="auto-salvage-inline-toggle">
-          <input id="${inputId}" name="${inputId}" type="checkbox" class="auto-salvage-toggle-inline" data-rarity="${rarity}" ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} />
-          <span class="toggle-btn${isChecked ? ' checked' : ''}${isDisabled ? ' disabled' : ''}"></span>
-          <label for="${inputId}" class="auto-salvage-toggle-text">${t('inventory.auto')}</label>
-        </div>
-      </div>
-    `;
-  }).join('')}
+        ${RARITY_ORDER.map((rarity) => {
+          const selectedRarities = inv.autoSalvageRarities || [];
+          const autoSalvageLevel = crystalShop?.crystalUpgrades?.autoSalvage || 0;
+          const isChecked = selectedRarities.includes(rarity);
+          const atCap = selectedRarities.length >= autoSalvageLevel;
+          const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
+          const inputId = `auto-salvage-inline-${rarity}`;
+          return html`
+            <div class="salvage-inline-row">
+              <button class="salvage-btn-inline" data-rarity="${rarity}">
+                ${tp('inventory.salvageRarityItems', { rarity: t('rarity.' + rarity.toLowerCase()) })}
+              </button>
+              <div class="auto-salvage-inline-toggle">
+                <input
+                  id="${inputId}"
+                  name="${inputId}"
+                  type="checkbox"
+                  class="auto-salvage-toggle-inline"
+                  data-rarity="${rarity}"
+                  ${isChecked ? 'checked' : ''}
+                  ${isDisabled ? 'disabled' : ''}
+                />
+                <span class="toggle-btn${isChecked ? ' checked' : ''}${isDisabled ? ' disabled' : ''}"></span>
+                <label for="${inputId}" class="auto-salvage-toggle-text">${t('inventory.auto')}</label>
+              </div>
+            </div>
+          `;
+        }).join('')}
         <div class="salvage-all-inline-row">
           <button id="salvage-all-inline-btn" class="salvage-all-btn">${t('inventory.allItems')}</button>
         </div>
@@ -140,8 +179,19 @@ export function initializeInventoryUI(inv) {
       <div class="salvage-material-inline">
         <div class="salvage-reward-title">${t('inventory.salvageReward')}</div>
         <div class="salvage-material-toggle-container">
-          ${t('inventory.gold')}<input id="salvage-material-toggle-inline" name="salvage-material-toggle-inline" type="checkbox" class="salvage-material-toggle-inline" ${inv.salvageUpgradeMaterials ? 'checked' : ''} />
-          <span class="toggle-btn${inv.salvageUpgradeMaterials ? ' checked' : ''}${!crystalShop?.crystalUpgrades?.salvageMaterials ? ' disabled' : ''}"></span>
+          ${t('inventory.gold')}<input
+            id="salvage-material-toggle-inline"
+            name="salvage-material-toggle-inline"
+            type="checkbox"
+            class="salvage-material-toggle-inline"
+            ${inv.salvageUpgradeMaterials ? 'checked' : ''}
+          />
+          <span
+            class="toggle-btn${inv.salvageUpgradeMaterials ? ' checked' : ''}${!crystalShop?.crystalUpgrades
+              ?.salvageMaterials
+              ? ' disabled'
+              : ''}"
+          ></span>
           <label for="salvage-material-toggle-inline">${t('inventory.upgradeMaterials')}</label>
         </div>
       </div>
@@ -161,7 +211,9 @@ export function initializeInventoryUI(inv) {
         </select>
       </div>
     </div>
-    <button id="open-salvage-modal" class="inventory-btn mobile-only-btn" data-i18n="inventory.options">${t('inventory.options')}</button>
+    <button id="open-salvage-modal" class="inventory-btn mobile-only-btn" data-i18n="inventory.options">
+      ${t('inventory.options')}
+    </button>
   `;
   inventoryTab.appendChild(topSection);
 
@@ -265,7 +317,7 @@ export function initializeInventoryUI(inv) {
       const itemData = inventory.getItemById(selectedItemEl.dataset.itemId);
 
       const equippedSlot = Object.entries(inventory.equippedItems).find(
-        ([slot, equipped]) => equipped && equipped.id === itemData.id,
+        ([slot, equipped]) => equipped && equipped.id === itemData.id
       )?.[0];
 
       if (equippedSlot) {
@@ -313,7 +365,7 @@ export function initializeInventoryUI(inv) {
     const itemData = inventory.getItemById(selectedItemEl.dataset.itemId);
 
     const equippedSlot = Object.entries(inventory.equippedItems).find(
-      ([slot, equipped]) => equipped && equipped.id === itemData.id,
+      ([slot, equipped]) => equipped && equipped.id === itemData.id
     )?.[0];
 
     if (equippedSlot) {
@@ -414,7 +466,7 @@ function setupInlineOptionsPanel(inv, root) {
         }
         if (!selected.includes(rarity)) selected.push(rarity);
       } else {
-        selected = selected.filter(r => r !== rarity);
+        selected = selected.filter((r) => r !== rarity);
       }
       inv.setAutoSalvageRarities(selected);
       syncToggleState();
@@ -499,37 +551,62 @@ export function showSalvageModal(inv) {
       <div class="salvage-modal-sidebar">
         <h3>${t('inventory.salvage')}</h3>
         <div class="salvage-options-modal">
-          ${RARITY_ORDER.map(rarity => {
-    const isChecked = selectedRarities.includes(rarity);
-    const atCap = selectedRarities.length >= autoSalvageLevel;
-    const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
-    const inputId = `auto-salvage-toggle-${rarity}`;
-    return html`
-  <div class="salvage-row">
-        <button class="salvage-btn-modal" data-rarity="${rarity}">${tp('inventory.salvageRarityItems', { rarity: t('rarity.' + rarity.toLowerCase()) })}</button>
-        <input id="${inputId}" name="${inputId}" type="checkbox" class="auto-salvage-toggle" data-rarity="${rarity}" ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} />
-        <span class="toggle-btn${isChecked ? ' checked' : ''}${isDisabled ? ' disabled' : ''}"></span>
-        <label for="${inputId}" class="auto-salvage-toggle-text">${t('inventory.auto')}</label>
-      </div>
-    `;
-  }).join('')}
+          ${RARITY_ORDER.map((rarity) => {
+            const isChecked = selectedRarities.includes(rarity);
+            const atCap = selectedRarities.length >= autoSalvageLevel;
+            const isDisabled = autoSalvageLevel === 0 || (atCap && !isChecked);
+            const inputId = `auto-salvage-toggle-${rarity}`;
+            return html`
+              <div class="salvage-row">
+                <button class="salvage-btn-modal" data-rarity="${rarity}">
+                  ${tp('inventory.salvageRarityItems', { rarity: t('rarity.' + rarity.toLowerCase()) })}
+                </button>
+                <input
+                  id="${inputId}"
+                  name="${inputId}"
+                  type="checkbox"
+                  class="auto-salvage-toggle"
+                  data-rarity="${rarity}"
+                  ${isChecked ? 'checked' : ''}
+                  ${isDisabled ? 'disabled' : ''}
+                />
+                <span class="toggle-btn${isChecked ? ' checked' : ''}${isDisabled ? ' disabled' : ''}"></span>
+                <label for="${inputId}" class="auto-salvage-toggle-text">${t('inventory.auto')}</label>
+              </div>
+            `;
+          }).join('')}
           <div class="salvage-all-row">
             <button id="salvage-all-btn" class="salvage-all-btn">${t('inventory.allItems')}</button>
           </div>
         </div>
         <div class="inventory-trash-row">
           <div class="inventory-trash">
-            <span class="inventory-trash-icon"><img src="${BASE}/icons/delete.svg" class="icon" alt="${t('icon.delete')}"/></span>
+            <span class="inventory-trash-icon"
+              ><img src="${BASE}/icons/delete.svg" class="icon" alt="${t('icon.delete')}"
+            /></span>
             <div class="inventory-trash-label">${t('inventory.dragItemHere')}</div>
           </div>
-          <button id="salvage-selected-btn" class="inventory-btn" style="display: none;">${t('inventory.salvage')}</button>
+          <button id="salvage-selected-btn" class="inventory-btn" style="display: none;">
+            ${t('inventory.salvage')}
+          </button>
         </div>
         <div class="salvage-material-row">
           <div>
             <div class="salvage-reward-title">${t('inventory.salvageReward')}</div>
             <div class="salvage-material-toggle-container">
-              ${t('inventory.gold')}<input id="salvage-material-toggle-main" name="salvage-material-toggle-main" type="checkbox" class="salvage-material-toggle" ${inv.salvageUpgradeMaterials ? 'checked' : ''} />
-              <span class="toggle-btn${inv.salvageUpgradeMaterials ? ' checked' : ''}${!crystalShop?.crystalUpgrades?.salvageMaterials ? ' disabled' : ''}"></span>
+              ${t('inventory.gold')}<input
+                id="salvage-material-toggle-main"
+                name="salvage-material-toggle-main"
+                type="checkbox"
+                class="salvage-material-toggle"
+                ${inv.salvageUpgradeMaterials ? 'checked' : ''}
+              />
+              <span
+                class="toggle-btn${inv.salvageUpgradeMaterials ? ' checked' : ''}${!crystalShop?.crystalUpgrades
+                  ?.salvageMaterials
+                  ? ' disabled'
+                  : ''}"
+              ></span>
               <label for="salvage-material-toggle-main">${t('inventory.upgradeMaterials')}</label>
             </div>
           </div>
@@ -550,7 +627,7 @@ export function showSalvageModal(inv) {
           </select>
         </div>
       </div>
-      
+
       <div class="inventory-modal-full-content"></div>
     </div>
   `;
@@ -643,7 +720,7 @@ export function showSalvageModal(inv) {
         }
         if (!selected.includes(rarity)) selected.push(rarity);
       } else {
-        selected = selected.filter(r => r !== rarity);
+        selected = selected.filter((r) => r !== rarity);
       }
       inv.setAutoSalvageRarities(selected);
       syncToggleState();
@@ -758,7 +835,9 @@ export function showSalvageModal(inv) {
   trash.addEventListener('mouseenter', (e) => {
     const tooltipContent = html`
       <div class="item-tooltip tooltip-center">
-        <div class="tooltip-trash-icon"><img src="${BASE}/icons/delete.svg" class="icon" alt="${t('icon.delete')}"/></div>
+        <div class="tooltip-trash-icon">
+          <img src="${BASE}/icons/delete.svg" class="icon" alt="${t('icon.delete')}" />
+        </div>
         <b>${t('inventory.salvageItem')}</b>
         <div class="tooltip-trash-desc">${t('inventory.dragDropToSalvage')}</div>
       </div>
@@ -804,8 +883,7 @@ export function updateInventoryGrid(inv) {
     wrapper.className = `inventory-item rarity-${item.rarity.toLowerCase()}`;
     wrapper.draggable = true;
     wrapper.dataset.itemId = item.id;
-    const displayName =
-      typeof item.getDisplayName === 'function' ? item.getDisplayName() : item.name || '';
+    const displayName = typeof item.getDisplayName === 'function' ? item.getDisplayName() : item.name || '';
     if (displayName) {
       wrapper.setAttribute('aria-label', displayName);
     }
@@ -823,8 +901,7 @@ export function updateInventoryGrid(inv) {
     newItem.className = 'inventory-item';
     newItem.draggable = true;
     newItem.dataset.itemId = item.id;
-    const equippedDisplayName =
-      typeof item.getDisplayName === 'function' ? item.getDisplayName() : item.name || '';
+    const equippedDisplayName = typeof item.getDisplayName === 'function' ? item.getDisplayName() : item.name || '';
     if (equippedDisplayName) {
       newItem.setAttribute('aria-label', equippedDisplayName);
     }
@@ -894,12 +971,10 @@ function applyFilter(inv, root = getInventoryTab()) {
         // Free text: match name, formatted stat names, or stat values
         const term = token.toLowerCase();
         // Match item name
-        match = (item.name && item.name.toLowerCase().includes(term));
+        match = item.name && item.name.toLowerCase().includes(term);
         // Match formatted stat names (e.g., "Crit Damage")
         if (!match && item.stats) {
-          match = Object.keys(item.stats).some((s) =>
-            formatStatName(s).toLowerCase().includes(term),
-          );
+          match = Object.keys(item.stats).some((s) => formatStatName(s).toLowerCase().includes(term));
         }
         // Match stat values (e.g., "10")
         if (!match && item.stats) {
@@ -1001,7 +1076,9 @@ export function setupDragAndDrop(root = getInventoryTab()) {
     trash.addEventListener('mouseenter', (e) => {
       const tooltipContent = html`
         <div class="item-tooltip" style="text-align:center;">
-          <div style="font-size:2em;"><img src="${BASE}/icons/delete.svg" class="icon" alt="${t('icon.delete')}"/></div>
+          <div style="font-size:2em;">
+            <img src="${BASE}/icons/delete.svg" class="icon" alt="${t('icon.delete')}" />
+          </div>
           <b>${t('inventory.salvageItem')}</b>
           <div style="margin-top:4px;font-size:0.95em;">${t('inventory.dragDropToSalvage')}</div>
         </div>
@@ -1090,7 +1167,7 @@ export function handleDrop(e) {
   if (slot) {
     // Add inventory check to prevent dropping on current slot
     const currentSlot = Object.entries(inventory.equippedItems).find(
-      ([_, equippedItem]) => equippedItem?.id === item.id,
+      ([_, equippedItem]) => equippedItem?.id === item.id
     )?.[0];
 
     if (currentSlot === slot.dataset.slot) {
@@ -1111,7 +1188,6 @@ export function handleDrop(e) {
 
   hero.queueRecalculateFromAttributes();
   dataManager.saveGame();
-
 
   updateInventoryGrid();
 }
@@ -1140,7 +1216,7 @@ export function setupItemDragAndTooltip(root = getInventoryTab()) {
       if (!itemData) return;
 
       const equippedSlot = Object.entries(inventory.equippedItems).find(
-        ([slot, equippedItem]) => equippedItem?.id === itemData.id,
+        ([slot, equippedItem]) => equippedItem?.id === itemData.id
       )?.[0];
 
       if (equippedSlot) {
@@ -1292,7 +1368,9 @@ export function updateMaterialsGrid(inv, root = getInventoryTab()) {
   materialsContainer.innerHTML = '';
   for (let i = 0; i < MATERIALS_SLOTS; i++) {
     const mat = inv.materials[i];
-    const icon = MATERIALS[mat?.id]?.icon || `<img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('inventory.materials')}"/>`;
+    const icon =
+      MATERIALS[mat?.id]?.icon ||
+      `<img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('inventory.materials')}"/>`;
     const cell = document.createElement('div');
     cell.classList.add('materials-cell');
     if (mat) {
@@ -1313,8 +1391,7 @@ export function updateMaterialsGrid(inv, root = getInventoryTab()) {
         let tooltipContent = `<div class="item-tooltip"><b>${
           matDef.icon || icon
         } ${t(matDef.name || mat.name || '')} &times; ${mat.qty}</b>`;
-        if (matDef.description)
-          tooltipContent += `<div style="margin-top:4px;">${t(matDef.description)}</div>`;
+        if (matDef.description) tooltipContent += `<div style="margin-top:4px;">${t(matDef.description)}</div>`;
         tooltipContent += '</div>';
         showTooltip(tooltipContent, e, 'flex-tooltip');
       });
@@ -1592,7 +1669,7 @@ function openItemContextMenu(itemEl, x, y) {
 
   menu.querySelector('[data-action="equip"]').onclick = () => {
     const equippedSlot = Object.entries(inventory.equippedItems).find(
-      ([slot, equipped]) => equipped && equipped.id === itemData.id,
+      ([slot, equipped]) => equipped && equipped.id === itemData.id
     )?.[0];
 
     if (equippedSlot) {
@@ -1711,7 +1788,7 @@ function openMaterialContextMenu(mat, x, y) {
         qty,
         'material-context-menu',
         `Used ${qty} ${t(matDef.name || mat.name || '')}${qty > 1 ? 's' : ''}`,
-        false,
+        false
       );
     }
     closeMaterialContextMenu();

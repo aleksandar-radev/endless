@@ -75,7 +75,7 @@ export function distributeMaterials(total, opts = {}) {
 
   let remaining = qty - allocated;
   if (remaining > 0 && fractional.length > 0) {
-    fractional.sort((a, b) => (b.fraction - a.fraction) || (a.jitter - b.jitter));
+    fractional.sort((a, b) => b.fraction - a.fraction || a.jitter - b.jitter);
     const assignCount = Math.min(remaining, fractional.length);
     for (let i = 0; i < assignCount; i++) {
       const { id } = fractional[i];
@@ -96,4 +96,3 @@ export function distributeMaterials(total, opts = {}) {
 
   return counts;
 }
-

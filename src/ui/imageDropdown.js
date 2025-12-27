@@ -36,7 +36,7 @@ function createOptionNode(text, iconUrl, disabled) {
 }
 
 function closeAll(except) {
-  document.querySelectorAll('.img-dd-container.open').forEach(c => {
+  document.querySelectorAll('.img-dd-container.open').forEach((c) => {
     if (c === except) return;
     c.classList.remove('open');
     const opts = c.querySelector('.img-dd-options');
@@ -149,7 +149,10 @@ export function createImageDropdownFromData(items, initialId = null, onChange = 
     const open = container.classList.contains('open');
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
-      if (!open) { selected.click(); return; }
+      if (!open) {
+        selected.click();
+        return;
+      }
       if (!visibleItems.length) return;
       const idx = visibleItems.findIndex((i) => i.id === currentId);
       let next = idx;
@@ -161,10 +164,14 @@ export function createImageDropdownFromData(items, initialId = null, onChange = 
       opts[next] && opts[next].scrollIntoView({ block: 'nearest' });
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      if (!open) selected.click(); else { container.classList.remove('open'); optionsPane.style.display='none'; }
+      if (!open) selected.click();
+      else {
+        container.classList.remove('open');
+        optionsPane.style.display = 'none';
+      }
     } else if (e.key === 'Escape') {
       container.classList.remove('open');
-      optionsPane.style.display='none';
+      optionsPane.style.display = 'none';
     }
   });
 

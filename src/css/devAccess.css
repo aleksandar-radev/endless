@@ -44,7 +44,9 @@
   background: #2563eb;
   color: #ffffff;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.1s ease;
 }
 
 .dev-access-modal__confirm:hover {

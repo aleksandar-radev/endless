@@ -9,8 +9,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'gold_1000',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} gold.', { count: '1,000' }); },
-    get description() { return tp('Earn a total of {count} gold.', { count: '1,000' }); },
+    get title() {
+      return tp('Earn a total of {count} gold.', { count: '1,000' });
+    },
+    get description() {
+      return tp('Earn a total of {count} gold.', { count: '1,000' });
+    },
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 1000,
@@ -19,8 +23,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'gold_5000',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} gold.', { count: '5,000' }); },
-    get description() { return tp('Earn a total of {count} gold.', { count: '5,000' }); },
+    get title() {
+      return tp('Earn a total of {count} gold.', { count: '5,000' });
+    },
+    get description() {
+      return tp('Earn a total of {count} gold.', { count: '5,000' });
+    },
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 5000,
@@ -29,8 +37,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'gold_15000',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} gold.', { count: '15,000' }); },
-    get description() { return tp('Earn a total of {count} gold.', { count: '15,000' }); },
+    get title() {
+      return tp('Earn a total of {count} gold.', { count: '15,000' });
+    },
+    get description() {
+      return tp('Earn a total of {count} gold.', { count: '15,000' });
+    },
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 15000,
@@ -39,8 +51,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'gold_50000',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} gold.', { count: '50,000' }); },
-    get description() { return tp('Earn a total of {count} gold.', { count: '50,000' }); },
+    get title() {
+      return tp('Earn a total of {count} gold.', { count: '50,000' });
+    },
+    get description() {
+      return tp('Earn a total of {count} gold.', { count: '50,000' });
+    },
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 50000,
@@ -49,8 +65,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'gold_150000',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} gold.', { count: '150,000' }); },
-    get description() { return tp('Earn a total of {count} gold.', { count: '150,000' }); },
+    get title() {
+      return tp('Earn a total of {count} gold.', { count: '150,000' });
+    },
+    get description() {
+      return tp('Earn a total of {count} gold.', { count: '150,000' });
+    },
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 150000,
@@ -59,8 +79,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'gold_500000',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} gold.', { count: '500,000' }); },
-    get description() { return tp('Earn a total of {count} gold.', { count: '500,000' }); },
+    get title() {
+      return tp('Earn a total of {count} gold.', { count: '500,000' });
+    },
+    get description() {
+      return tp('Earn a total of {count} gold.', { count: '500,000' });
+    },
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 500000,
@@ -69,8 +93,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'gold_1500000',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} gold.', { count: '1,500,000' }); },
-    get description() { return tp('Earn a total of {count} gold.', { count: '1,500,000' }); },
+    get title() {
+      return tp('Earn a total of {count} gold.', { count: '1,500,000' });
+    },
+    get description() {
+      return tp('Earn a total of {count} gold.', { count: '1,500,000' });
+    },
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 1500000,
@@ -79,8 +107,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'gold_5000000',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} gold.', { count: '5,000,000' }); },
-    get description() { return tp('Earn a total of {count} gold.', { count: '5,000,000' }); },
+    get title() {
+      return tp('Earn a total of {count} gold.', { count: '5,000,000' });
+    },
+    get description() {
+      return tp('Earn a total of {count} gold.', { count: '5,000,000' });
+    },
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 5000000,
@@ -89,8 +121,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'gold_15000000',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} gold.', { count: '15,000,000' }); },
-    get description() { return tp('Earn a total of {count} gold.', { count: '15,000,000' }); },
+    get title() {
+      return tp('Earn a total of {count} gold.', { count: '15,000,000' });
+    },
+    get description() {
+      return tp('Earn a total of {count} gold.', { count: '15,000,000' });
+    },
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 15000000,
@@ -99,8 +135,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'gold_50000000',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} gold.', { count: '50,000,000' }); },
-    get description() { return tp('Earn a total of {count} gold.', { count: '50,000,000' }); },
+    get title() {
+      return tp('Earn a total of {count} gold.', { count: '50,000,000' });
+    },
+    get description() {
+      return tp('Earn a total of {count} gold.', { count: '50,000,000' });
+    },
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 50000000,
@@ -109,8 +149,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'gold_100000000',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} gold.', { count: '100,000,000' }); },
-    get description() { return tp('Earn a total of {count} gold.', { count: '100,000,000' }); },
+    get title() {
+      return tp('Earn a total of {count} gold.', { count: '100,000,000' });
+    },
+    get description() {
+      return tp('Earn a total of {count} gold.', { count: '100,000,000' });
+    },
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 100000000,
@@ -119,8 +163,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'gold_250000000',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} gold.', { count: '250,000,000' }); },
-    get description() { return tp('Earn a total of {count} gold.', { count: '250,000,000' }); },
+    get title() {
+      return tp('Earn a total of {count} gold.', { count: '250,000,000' });
+    },
+    get description() {
+      return tp('Earn a total of {count} gold.', { count: '250,000,000' });
+    },
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 250000000,
@@ -129,8 +177,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'gold_500000000',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} gold.', { count: '500,000,000' }); },
-    get description() { return tp('Earn a total of {count} gold.', { count: '500,000,000' }); },
+    get title() {
+      return tp('Earn a total of {count} gold.', { count: '500,000,000' });
+    },
+    get description() {
+      return tp('Earn a total of {count} gold.', { count: '500,000,000' });
+    },
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 500000000,
@@ -139,8 +191,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'gold_1000000000',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} gold.', { count: '1,000,000,000' }); },
-    get description() { return tp('Earn a total of {count} gold.', { count: '1,000,000,000' }); },
+    get title() {
+      return tp('Earn a total of {count} gold.', { count: '1,000,000,000' });
+    },
+    get description() {
+      return tp('Earn a total of {count} gold.', { count: '1,000,000,000' });
+    },
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 1000000000,
@@ -150,8 +206,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'crystals_5',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} crystals.', { count: 5 }); },
-    get description() { return tp('Earn a total of {count} crystals.', { count: 5 }); },
+    get title() {
+      return tp('Earn a total of {count} crystals.', { count: 5 });
+    },
+    get description() {
+      return tp('Earn a total of {count} crystals.', { count: 5 });
+    },
     type: 'resource',
     resource: 'crystals',
     target: 5,
@@ -160,8 +220,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'crystals_10',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} crystals.', { count: 10 }); },
-    get description() { return tp('Earn a total of {count} crystals.', { count: 10 }); },
+    get title() {
+      return tp('Earn a total of {count} crystals.', { count: 10 });
+    },
+    get description() {
+      return tp('Earn a total of {count} crystals.', { count: 10 });
+    },
     type: 'resource',
     resource: 'crystals',
     target: 10,
@@ -170,8 +234,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'crystals_25',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} crystals.', { count: 25 }); },
-    get description() { return tp('Earn a total of {count} crystals.', { count: 25 }); },
+    get title() {
+      return tp('Earn a total of {count} crystals.', { count: 25 });
+    },
+    get description() {
+      return tp('Earn a total of {count} crystals.', { count: 25 });
+    },
     type: 'resource',
     resource: 'crystals',
     target: 25,
@@ -180,8 +248,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'crystals_50',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} crystals.', { count: 50 }); },
-    get description() { return tp('Earn a total of {count} crystals.', { count: 50 }); },
+    get title() {
+      return tp('Earn a total of {count} crystals.', { count: 50 });
+    },
+    get description() {
+      return tp('Earn a total of {count} crystals.', { count: 50 });
+    },
     type: 'resource',
     resource: 'crystals',
     target: 50,
@@ -190,8 +262,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'crystals_100',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} crystals.', { count: 100 }); },
-    get description() { return tp('Earn a total of {count} crystals.', { count: 100 }); },
+    get title() {
+      return tp('Earn a total of {count} crystals.', { count: 100 });
+    },
+    get description() {
+      return tp('Earn a total of {count} crystals.', { count: 100 });
+    },
     type: 'resource',
     resource: 'crystals',
     target: 100,
@@ -200,8 +276,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'crystals_250',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} crystals.', { count: 250 }); },
-    get description() { return tp('Earn a total of {count} crystals.', { count: 250 }); },
+    get title() {
+      return tp('Earn a total of {count} crystals.', { count: 250 });
+    },
+    get description() {
+      return tp('Earn a total of {count} crystals.', { count: 250 });
+    },
     type: 'resource',
     resource: 'crystals',
     target: 250,
@@ -210,8 +290,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'crystals_500',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} crystals.', { count: 500 }); },
-    get description() { return tp('Earn a total of {count} crystals.', { count: 500 }); },
+    get title() {
+      return tp('Earn a total of {count} crystals.', { count: 500 });
+    },
+    get description() {
+      return tp('Earn a total of {count} crystals.', { count: 500 });
+    },
     type: 'resource',
     resource: 'crystals',
     target: 500,
@@ -220,8 +304,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'crystals_1000',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} crystals.', { count: '1,000' }); },
-    get description() { return tp('Earn a total of {count} crystals.', { count: '1,000' }); },
+    get title() {
+      return tp('Earn a total of {count} crystals.', { count: '1,000' });
+    },
+    get description() {
+      return tp('Earn a total of {count} crystals.', { count: '1,000' });
+    },
     type: 'resource',
     resource: 'crystals',
     target: 1000,
@@ -230,8 +318,12 @@ export const RESOURCE_QUESTS = [
   {
     id: 'crystals_2000',
     category: 'resources',
-    get title() { return tp('Earn a total of {count} crystals.', { count: '2,000' }); },
-    get description() { return tp('Earn a total of {count} crystals.', { count: '2,000' }); },
+    get title() {
+      return tp('Earn a total of {count} crystals.', { count: '2,000' });
+    },
+    get description() {
+      return tp('Earn a total of {count} crystals.', { count: '2,000' });
+    },
     type: 'resource',
     resource: 'crystals',
     target: 2000,

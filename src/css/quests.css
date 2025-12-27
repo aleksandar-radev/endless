@@ -15,7 +15,9 @@
   border-radius: 4px;
   background-color: #222;
   cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
 }
 
 .quest-item.ready {
@@ -88,7 +90,9 @@
   font-weight: bold;
   cursor: pointer;
   font-size: 1em;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .quest-tab.active {
@@ -111,7 +115,9 @@
   cursor: pointer;
   font-size: 1em;
   margin-bottom: 4px;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .quest-claimable-btn:hover {
@@ -167,7 +173,7 @@
 }
 
 /* Hide overflowed content except the claim button */
-#claimable-quests-list .quest-item>*:not(.quest-icon):not(.modal-btn) {
+#claimable-quests-list .quest-item > *:not(.quest-icon):not(.modal-btn) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -182,7 +188,9 @@
   font-weight: bold;
   cursor: pointer;
   font-size: 1em;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
   margin-left: 16px;
 }
 
@@ -248,7 +256,9 @@
   font-weight: 600;
   cursor: pointer;
   margin-top: 1rem;
-  transition: background 0.2s, opacity 0.2s;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
 }
 
 .quest-modal-content .modal-buy:hover:not(:disabled) {

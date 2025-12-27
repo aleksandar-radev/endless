@@ -9,7 +9,9 @@ export function initializeBattleLogUI() {
 
   panel.innerHTML = html`<div class="battle-log-wrapper">
     <div class="battle-log-tabs">
-      <button class="battle-log-tab active" data-log="battle" data-i18n="battleLog.battle">${t('battleLog.battle')}</button>
+      <button class="battle-log-tab active" data-log="battle" data-i18n="battleLog.battle">
+        ${t('battleLog.battle')}
+      </button>
       <button class="battle-log-tab" data-log="drops" data-i18n="battleLog.drops">${t('battleLog.drops')}</button>
     </div>
     <div class="battle-log-controls">

@@ -131,7 +131,9 @@
   font-weight: 600;
   cursor: pointer;
   margin-top: 1rem;
-  transition: background 0.2s, opacity 0.2s;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
 }
 
 .crystalShop-modal-content .modal-buy:hover:not(:disabled) {

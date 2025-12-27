@@ -100,8 +100,7 @@ export const ROGUE_SKILLS = {
     icon: () => 'flurry',
     description: () => t('skill.flurry'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: () => ({
-    }),
+    effect: () => ({}),
   },
   precision: {
     id: 'precision',
@@ -367,8 +366,7 @@ export const ROGUE_SKILLS = {
     icon: () => 'clone-mastery',
     description: () => t('skill.shadowClone'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-    }),
+    effect: (level) => ({}),
     isVisible: () => hero.stats.cloneUnlocked > 0,
   },
 };

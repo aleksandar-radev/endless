@@ -84,7 +84,6 @@ export const GOLDEN_STEPPE_ENEMIES = [
 
     materialDropWeights: {},
     tags: ['golden_steppe'],
-
   },
   {
     name: t('Radiant Lion'),
@@ -111,6 +110,5 @@ export const GOLDEN_STEPPE_ENEMIES = [
 
     materialDropWeights: {},
     tags: ['golden_steppe'],
-
   },
 ];

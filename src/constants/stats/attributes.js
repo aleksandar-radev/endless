@@ -228,8 +228,7 @@ const CUSTOM_DESCRIPTIONS = {
   coldResistance: () => tp('tooltip.coldResistance', { icon: ELEMENTS.cold.icon }),
   airResistance: () => tp('tooltip.airResistance', { icon: ELEMENTS.air.icon }),
   earthResistance: () => tp('tooltip.earthResistance', { icon: ELEMENTS.earth.icon }),
-  lightningResistance: () =>
-    tp('tooltip.lightningResistance', { icon: ELEMENTS.lightning.icon }),
+  lightningResistance: () => tp('tooltip.lightningResistance', { icon: ELEMENTS.lightning.icon }),
   waterResistance: () => tp('tooltip.waterResistance', { icon: ELEMENTS.water.icon }),
   allResistance: () => t('tooltip.allResistance'),
   lifePerHit: () => t('tooltip.lifePerHit'),
@@ -277,28 +276,20 @@ const CUSTOM_DESCRIPTIONS = {
   reduceEnemyDamagePercent: () => t('tooltip.reduceEnemyDamagePercent'),
   reduceEnemyHpPercent: () => t('tooltip.reduceEnemyHpPercent'),
   reduceEnemyAttackSpeedPercent: () => t('tooltip.reduceEnemyAttackSpeedPercent'),
-  firePenetrationPercent: () =>
-    tp('tooltip.firePenetrationPercent', { icon: ELEMENTS.fire.icon }),
-  coldPenetrationPercent: () =>
-    tp('tooltip.coldPenetrationPercent', { icon: ELEMENTS.cold.icon }),
-  airPenetrationPercent: () =>
-    tp('tooltip.airPenetrationPercent', { icon: ELEMENTS.air.icon }),
-  earthPenetrationPercent: () =>
-    tp('tooltip.earthPenetrationPercent', { icon: ELEMENTS.earth.icon }),
-  lightningPenetrationPercent: () =>
-    tp('tooltip.lightningPenetrationPercent', { icon: ELEMENTS.lightning.icon }),
-  waterPenetrationPercent: () =>
-    tp('tooltip.waterPenetrationPercent', { icon: ELEMENTS.water.icon }),
+  firePenetrationPercent: () => tp('tooltip.firePenetrationPercent', { icon: ELEMENTS.fire.icon }),
+  coldPenetrationPercent: () => tp('tooltip.coldPenetrationPercent', { icon: ELEMENTS.cold.icon }),
+  airPenetrationPercent: () => tp('tooltip.airPenetrationPercent', { icon: ELEMENTS.air.icon }),
+  earthPenetrationPercent: () => tp('tooltip.earthPenetrationPercent', { icon: ELEMENTS.earth.icon }),
+  lightningPenetrationPercent: () => tp('tooltip.lightningPenetrationPercent', { icon: ELEMENTS.lightning.icon }),
+  waterPenetrationPercent: () => tp('tooltip.waterPenetrationPercent', { icon: ELEMENTS.water.icon }),
   flatPenetrationPercent: () => t('tooltip.flatPenetrationPercent'),
   elementalPenetrationPercent: () => t('tooltip.elementalPenetrationPercent'),
   extraDamageFromLifePercent: () => t('tooltip.extraDamageFromLifePercent'),
   extraDamageFromArmorPercent: () => t('tooltip.extraDamageFromArmorPercent'),
   extraDamageFromManaPercent: () => t('tooltip.extraDamageFromManaPercent'),
   extraDamageFromEvasionPercent: () => t('tooltip.extraDamageFromEvasionPercent'),
-  extraDamageFromAttackRatingPercent: () =>
-    t('tooltip.extraDamageFromAttackRatingPercent'),
-  extraDamageFromLifeRegenPercent: () =>
-    t('tooltip.extraDamageFromLifeRegenPercent'),
+  extraDamageFromAttackRatingPercent: () => t('tooltip.extraDamageFromAttackRatingPercent'),
+  extraDamageFromLifeRegenPercent: () => t('tooltip.extraDamageFromLifeRegenPercent'),
 };
 
 export const getAttributeTooltip = (stat) => {

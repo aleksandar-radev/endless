@@ -27,9 +27,7 @@ export const ITEM_FLAT_REGION_SCALING_MULTIPLIER = 3;
 // e.g., 0.008 means each level increases flat stats by 0.8% of the base value
 export const ITEM_FLAT_STAGE_SCALING_PERCENT = 0.025;
 
-const ELEMENTAL_DAMAGE_STATS = Object.keys(ELEMENTS).map(
-  (el) => `${el}Damage`,
-);
+const ELEMENTAL_DAMAGE_STATS = Object.keys(ELEMENTS).map((el) => `${el}Damage`);
 
 export const ENEMY_RARITY = {
   NORMAL: {
@@ -256,9 +254,7 @@ export function applyDefaultEnemyStats(enemy) {
     merged.multiplier[key] = a + b;
   });
 
-  const statsToConvert = Object.keys(defaults).filter(
-    (stat) => stat !== 'tier' && stat !== 'multiplier',
-  );
+  const statsToConvert = Object.keys(defaults).filter((stat) => stat !== 'tier' && stat !== 'multiplier');
 
   for (const stat of statsToConvert) {
     if (enemy[stat] !== undefined) {
@@ -272,10 +268,7 @@ export function applyDefaultEnemyStats(enemy) {
   }
 
   for (const stat of ELEMENTAL_DAMAGE_STATS) {
-    if (
-      (enemy.multiplier && enemy.multiplier[stat] !== undefined) ||
-      enemy[stat] !== undefined
-    ) {
+    if ((enemy.multiplier && enemy.multiplier[stat] !== undefined) || enemy[stat] !== undefined) {
       merged[stat] = merged.damage;
     }
   }

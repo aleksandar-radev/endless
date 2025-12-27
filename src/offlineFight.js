@@ -53,12 +53,9 @@ export async function collectOfflineFightRewards() {
   }
 
   const bonuses = [];
-  if (xp > 0)
-    bonuses.push({ name: t('combat.fight'), type: 'XP', amount: xp, times, interval });
-  if (gold > 0)
-    bonuses.push({ name: t('combat.fight'), type: t('resource.gold.name'), amount: gold, times, interval });
-  if (items > 0)
-    bonuses.push({ name: t('combat.fight'), type: t('inventory.items'), amount: items, times, interval });
+  if (xp > 0) bonuses.push({ name: t('combat.fight'), type: 'XP', amount: xp, times, interval });
+  if (gold > 0) bonuses.push({ name: t('combat.fight'), type: t('resource.gold.name'), amount: gold, times, interval });
+  if (items > 0) bonuses.push({ name: t('combat.fight'), type: t('inventory.items'), amount: items, times, interval });
   if (matsQty > 0)
     bonuses.push({ name: t('combat.fight'), type: t('inventory.materials'), amount: matsQty, times, interval });
 
@@ -119,7 +116,7 @@ export async function collectOfflineFightRewards() {
         }
         let rem = overflow - allocated;
         if (rem > 0 && fractional.length > 0) {
-          fractional.sort((a, b) => (b.fraction - a.fraction) || (a.jitter - b.jitter));
+          fractional.sort((a, b) => b.fraction - a.fraction || a.jitter - b.jitter);
           const assignCount = Math.min(rem, fractional.length);
           for (let i = 0; i < assignCount; i++) {
             const { entry } = fractional[i];
@@ -140,7 +137,11 @@ export async function collectOfflineFightRewards() {
         // Aggregate salvage outputs
         let totalGold = 0;
         let crystals = 0;
-        const matsAgg = { [MATERIALS.armor_upgrade_stone.id]: 0, [MATERIALS.weapon_upgrade_core.id]: 0, [MATERIALS.jewelry_upgrade_gem.id]: 0 };
+        const matsAgg = {
+          [MATERIALS.armor_upgrade_stone.id]: 0,
+          [MATERIALS.weapon_upgrade_core.id]: 0,
+          [MATERIALS.jewelry_upgrade_gem.id]: 0,
+        };
         const armorTypes = ITEM_TYPES.armor.items.length;
         const weaponTypes = ITEM_TYPES.weapon.items.length;
         const jewelryTypes = ITEM_TYPES.jewelry.items.length;
@@ -153,12 +154,14 @@ export async function collectOfflineFightRewards() {
           if (!inventory.salvageUpgradeMaterials) {
             // Gold salvage per item for this rarity
             const rarityIndex = Math.max(0, RARITY_ORDER.indexOf(rarityName));
-            const goldPer = Math.floor(25 * level * (Math.max(rarityIndex / 2 + 1, 1)) * Math.max(region.tier * 3, 1));
+            const goldPer = Math.floor(25 * level * Math.max(rarityIndex / 2 + 1, 1) * Math.max(region.tier * 3, 1));
             totalGold += goldPer * count;
           } else {
             // Materials salvage: split by category proportions and apply qty formula per item
             const rarityAmounts = { NORMAL: 1, MAGIC: 1.5, RARE: 2, EPIC: 2.5, LEGENDARY: 3, MYTHIC: 3.5 };
-            const qtyPer = Math.floor((rarityAmounts[rarityName] || 1) * Math.max(level / 200, 1) * Math.max(region.tier, 1));
+            const qtyPer = Math.floor(
+              (rarityAmounts[rarityName] || 1) * Math.max(level / 200, 1) * Math.max(region.tier, 1)
+            );
             if (qtyPer > 0) {
               const armorCount = Math.floor((armorTypes / totalTypes) * count);
               const weaponCount = Math.floor((weaponTypes / totalTypes) * count);
@@ -174,7 +177,9 @@ export async function collectOfflineFightRewards() {
         if (!inventory.salvageUpgradeMaterials && totalGold > 0) hero.gainGold(totalGold);
         if (inventory.salvageUpgradeMaterials) {
           // Remove zero entries
-          Object.keys(matsAgg).forEach((k) => { if (!matsAgg[k]) delete matsAgg[k]; });
+          Object.keys(matsAgg).forEach((k) => {
+            if (!matsAgg[k]) delete matsAgg[k];
+          });
           inventory.bulkAddMaterials(matsAgg);
         }
       }

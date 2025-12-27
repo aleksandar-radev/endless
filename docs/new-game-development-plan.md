@@ -1,12 +1,14 @@
 # New Game Development Plan
 
 ## Vision and Goals
+
 - Deliver a multiplayer-ready idle/RPG hybrid that modernizes the existing Endless gameplay loop (regions, staged combat, prestige layers, crystal and soul economies, rocky fields, etc.) while making all combat logic authoritative on the server.
 - Unify heroes and enemies into a single "character" entity model capable of holding shared stats (life, mana, attack, defense), attributes, skills, buffs, equipment, and status effects.
 - Maintain parity with current progression features (skill tree paths, buildings, training, quests, bosses, rocky field side mode, crystal shop, soul shop, runes, unique items) to give players familiar goals while enabling future content drops.
 - Prioritize performance, cheat resistance, and scalable multiplayer touchpoints (leaderboards, synchronous/async PvP, co-op raids/world bosses).
 
 ## Phase 0 – Discovery and Requirements
+
 1. **Inventory existing systems**
    - Review current combat flow (`combat.js`, `game.js`, `boss.js`, `region.js`) to document required interactions, tick timing, damage calculations, battle logging, boss mechanics, and Rocky Field variant fights.
    - Catalogue progression layers: hero leveling and training, buildings, prestige/ascension, crystal and soul shops, runes, unique items, quests, statistics tracking, offline fight resolution, and data migration expectations.
@@ -20,6 +22,7 @@
    - Determine hosting topology (monorepo vs. multi-repo, containerization, CI/CD, observability tools).
 
 ## Phase 1 – Domain Modeling & Backend Foundations
+
 1. **Domain definitions**
    - `Character` aggregate: stats, attributes, derived combat values, equipment slots, skill loadout, buffs/debuffs, AI behavior profile.
    - `ProgressionProfile`: stage/region state, crystal & soul currencies, building levels, training allocations, quest progress, prestige history.
@@ -39,6 +42,7 @@
    - Use deterministic RNG seeds per encounter to permit client-side replays without revealing hidden rolls.
 
 ## Phase 2 – Persistence, Migration, and Save Strategy
+
 1. **Schema design**
    - Normalize characters, inventories, and encounter history; use JSONB for flexible stat snapshots.
    - Introduce versioned migrations mirroring current `migrations/` process to safely upgrade live data.
@@ -49,6 +53,7 @@
    - Provide queued simulations for offline fights similar to `offlineFight.js`, executed server-side with rewards granted on next login.
 
 ## Phase 3 – Gameplay Systems Parity
+
 1. **Combat engine**
    - Reimplement action timing (attack delays, regen ticks every 200ms), buff interactions (mana shield, crit multipliers), damage breakdown logging, and defeat flow (stage increment, Rocky Field progression, boss selection).
    - Support skill activations, auto-cast toggles, buff durations, DOTs, life steal, resurrection logic.
@@ -61,6 +66,7 @@
    - Recreate drop tables, currency sinks, and scaling curves. Use analytics to ensure pacing matches existing game while enabling tuning via config files.
 
 ## Phase 4 – Frontend (Vue.js) Implementation
+
 1. **Client architecture**
    - Vue 3 + TypeScript + Pinia store; UI components map to existing tabs (Stats, Inventory, Skill Tree, Shops, Quests, Battle Log).
    - Thin client: UI dispatches commands/events to backend, renders state streamed from authoritative services.
@@ -72,6 +78,7 @@
    - Responsive layout, keyboard navigation for key actions, audio toggles equivalent to current `audio.js` behavior.
 
 ## Phase 5 – Multiplayer Features
+
 1. **Leaderboards**
    - Aggregated stats (highest stage per region tier, Rocky Field best, fastest boss kills) updated via event pipeline.
 2. **PvP**
@@ -84,6 +91,7 @@
    - Guild/clan system, chat moderation tools, friend lists.
 
 ## Phase 6 – Tooling, QA, and Launch
+
 1. **Developer tooling**
    - Monorepo with linting, type checking, unit/integration tests, load testing harness for combat service.
    - Balancing dashboards for tuning stats, droprates, and economy multipliers.
@@ -95,11 +103,13 @@
    - Observability: structured logs, metrics (tick duration, encounter throughput), alerts for save backlog or queue saturation.
 
 ## Phase 7 – Post-Launch Iteration
+
 - Live-ops roadmap: new regions, seasonal events, alternate progression (roguelike shards), cosmetic monetization.
 - Telemetry-driven balancing: collect anonymized data, feed into dashboards, adjust configs without redeploying code.
 - Community feedback loop: in-game surveys, roadmap visibility, rapid hotfix path for economy exploits.
 
 ## Risks & Mitigations
+
 - **Complex migration of legacy save data** → build import tool that reads existing JSON saves, maps to new schema, and validates via integration tests.
 - **Performance regressions** → define SLOs (combat tick < 10ms, API p95 < 150ms), instrument profilers, apply caching.
 - **Cheating & exploits** → enforce server-side validation, secure randomness, detect anomalies with heuristics.

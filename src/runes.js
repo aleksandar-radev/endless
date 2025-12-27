@@ -23,9 +23,7 @@ const clampConversionPercent = (base, percent) => {
   const max = getConversionMaxPercent(base);
   const min = MIN_CONVERSION_PERCENT;
   if (typeof percent !== 'number') {
-    const fallback = typeof base.conversion.percent === 'number'
-      ? base.conversion.percent
-      : min;
+    const fallback = typeof base.conversion.percent === 'number' ? base.conversion.percent : min;
     return Math.min(max, Math.max(min, fallback));
   }
   if (percent > max) return max;
@@ -57,10 +55,7 @@ export default class Runes {
 
     this.equipped = normalize(savedData.equipped || []);
     if (this.equipped.length < BASE_RUNE_SLOTS) {
-      this.equipped = [
-        ...this.equipped,
-        ...new Array(BASE_RUNE_SLOTS - this.equipped.length).fill(null),
-      ];
+      this.equipped = [...this.equipped, ...new Array(BASE_RUNE_SLOTS - this.equipped.length).fill(null)];
     }
     const normalizedInventory = normalize(savedData.inventory || []);
     this.inventory = new Array(INVENTORY_SLOTS).fill(null);
@@ -80,10 +75,7 @@ export default class Runes {
       }
       this.equipped.length = count;
     } else if (this.equipped.length < count) {
-      this.equipped = [
-        ...this.equipped,
-        ...new Array(count - this.equipped.length).fill(null),
-      ];
+      this.equipped = [...this.equipped, ...new Array(count - this.equipped.length).fill(null)];
     }
   }
 
@@ -101,9 +93,7 @@ export default class Runes {
     const rune = RUNES_BY_ID.get(id);
     if (!rune) return null;
     const limit = FROZEN_RUNE_SLOTS + this.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
-    let idx = this.inventory.findIndex(
-      (r, slotIdx) => slotIdx >= FROZEN_RUNE_SLOTS && slotIdx < limit && r === null,
-    );
+    let idx = this.inventory.findIndex((r, slotIdx) => slotIdx >= FROZEN_RUNE_SLOTS && slotIdx < limit && r === null);
     if (idx === -1) {
       idx = this.inventory.findIndex((r) => r === null);
     }
@@ -112,7 +102,7 @@ export default class Runes {
     if (rune.conversion) {
       const percent = clampConversionPercent(
         rune,
-        typeof percentOverride === 'number' ? percentOverride : rune.conversion.percent,
+        typeof percentOverride === 'number' ? percentOverride : rune.conversion.percent
       );
       if (typeof percent === 'number') {
         inst.conversion = { percent };
@@ -167,8 +157,7 @@ export default class Runes {
   unequip(slotIndex, inventoryIndex) {
     const rune = this.equipped[slotIndex];
     if (!rune) return;
-    const dest =
-      inventoryIndex !== undefined ? inventoryIndex : this.inventory.findIndex((r) => r === null);
+    const dest = inventoryIndex !== undefined ? inventoryIndex : this.inventory.findIndex((r) => r === null);
     if (dest === -1) return;
     const previous = this.inventory[dest];
     this.inventory[dest] = rune;
@@ -180,10 +169,7 @@ export default class Runes {
     if (!this.isValidInventoryIndex(fromIndex) || !this.isValidInventoryIndex(toIndex)) return;
     const targetTab = this.getTabIndexForSlot(toIndex);
     if (targetTab === null && !this.isFrozenIndex(toIndex)) return;
-    [this.inventory[fromIndex], this.inventory[toIndex]] = [
-      this.inventory[toIndex],
-      this.inventory[fromIndex],
-    ];
+    [this.inventory[fromIndex], this.inventory[toIndex]] = [this.inventory[toIndex], this.inventory[fromIndex]];
   }
 
   moveRuneToTab(fromIndex, tabIndex) {
@@ -203,10 +189,7 @@ export default class Runes {
 
   moveEquipped(fromIndex, toIndex) {
     if (fromIndex === toIndex) return;
-    [this.equipped[fromIndex], this.equipped[toIndex]] = [
-      this.equipped[toIndex],
-      this.equipped[fromIndex],
-    ];
+    [this.equipped[fromIndex], this.equipped[toIndex]] = [this.equipped[toIndex], this.equipped[fromIndex]];
   }
 
   salvage(index) {
@@ -252,15 +235,13 @@ export default class Runes {
       if (isUniqueA && !isUniqueB) return -1;
       if (!isUniqueA && isUniqueB) return 1;
       if (!isUniqueA && !isUniqueB) {
-        const percentA = baseA?.conversion ? resolveRunePercent(a, baseA) ?? 0 : 0;
-        const percentB = baseB?.conversion ? resolveRunePercent(b, baseB) ?? 0 : 0;
+        const percentA = baseA?.conversion ? (resolveRunePercent(a, baseA) ?? 0) : 0;
+        const percentB = baseB?.conversion ? (resolveRunePercent(b, baseB) ?? 0) : 0;
         if (percentA !== percentB) {
           return percentB - percentA;
         }
       }
-      return getRuneName(a, shortElementalNames).localeCompare(
-        getRuneName(b, shortElementalNames),
-      );
+      return getRuneName(a, shortElementalNames).localeCompare(getRuneName(b, shortElementalNames));
     });
     for (let i = start; i < end; i++) {
       this.inventory[i] = slice[i - start] || null;

@@ -22,25 +22,25 @@ import { createModal, closeModal } from './ui/modal.js';
 export function updateRegionSelectorButton(fightMode, regionName, clickHandler) {
   const regionSelectorDiv = document.getElementById('combat-region-selector');
   const button = document.getElementById('combat-region-select-btn');
-  
+
   // Only update if we're in the correct mode
   if (game.fightMode !== fightMode) {
     return;
   }
-  
+
   // Show region selector
   if (regionSelectorDiv) {
     regionSelectorDiv.style.display = 'flex';
   }
-  
+
   // Update button text and click handler
   if (button) {
     button.textContent = regionName;
-    
+
     // Remove all existing listeners and add new one
     const newButton = button.cloneNode(true);
     button.parentNode.replaceChild(newButton, button);
-    
+
     newButton.addEventListener('click', clickHandler);
   }
 }
@@ -86,17 +86,17 @@ function getRegionTooltip(region) {
     <div class="tooltip-content">${region.description}</div>
     <div><strong>${t('region.unlockLevel')}:</strong> ${region.unlockLevel}</div>
     ${region.multiplier.xp != 1
-    ? `<div><strong>${t('region.xpBonus')}:</strong> ${((region.multiplier.xp - 1) * 100).toFixed(0)}%</div>`
-    : ''}
+      ? `<div><strong>${t('region.xpBonus')}:</strong> ${((region.multiplier.xp - 1) * 100).toFixed(0)}%</div>`
+      : ''}
     ${region.multiplier.gold != 1
-    ? `<div><strong>${t('region.goldBonus')}:</strong> ${((region.multiplier.gold - 1) * 100).toFixed(0)}%</div>`
-    : ''}
+      ? `<div><strong>${t('region.goldBonus')}:</strong> ${((region.multiplier.gold - 1) * 100).toFixed(0)}%</div>`
+      : ''}
     ${region.multiplier.itemDrop != 1
-    ? `<div><strong>${t('region.itemDropBonus')}:</strong> ${((region.multiplier.itemDrop - 1) * 100).toFixed(0)}%</div>`
-    : ''}
+      ? `<div><strong>${t('region.itemDropBonus')}:</strong> ${((region.multiplier.itemDrop - 1) * 100).toFixed(0)}%</div>`
+      : ''}
     ${region.multiplier.materialDrop && region.multiplier.materialDrop != 1
-    ? `<div><strong>${t('region.materialDropBonus')}:</strong> ${((region.multiplier.materialDrop - 1) * 100).toFixed(0)}%</div>`
-    : ''}
+      ? `<div><strong>${t('region.materialDropBonus')}:</strong> ${((region.multiplier.materialDrop - 1) * 100).toFixed(0)}%</div>`
+      : ''}
   `;
 }
 
@@ -105,7 +105,7 @@ export function openRegionSelectionDialog() {
   const unlocked = getUnlockedRegions(hero);
   const currentRegion = getCurrentRegion();
 
-  const regionItems = REGIONS.map(region => {
+  const regionItems = REGIONS.map((region) => {
     const isUnlocked = unlocked.includes(region);
     const isCurrent = region.id === currentRegion.id;
     const disabledClass = !isUnlocked ? 'disabled' : '';
@@ -127,9 +127,7 @@ export function openRegionSelectionDialog() {
     <div class="modal-content region-selection-modal">
       <button class="modal-close">×</button>
       <h2 class="modal-title">${t('region.selectRegion')}</h2>
-      <div class="region-dialog-list">
-        ${regionItems}
-      </div>
+      <div class="region-dialog-list">${regionItems}</div>
     </div>
   `;
 
@@ -141,9 +139,9 @@ export function openRegionSelectionDialog() {
   });
 
   // Add click handlers and tooltips to region items
-  document.querySelectorAll('.region-dialog-item').forEach(item => {
+  document.querySelectorAll('.region-dialog-item').forEach((item) => {
     const regionId = item.dataset.regionId;
-    const region = REGIONS.find(r => r.id === regionId);
+    const region = REGIONS.find((r) => r.id === regionId);
 
     if (region) {
       const tooltipContent = getRegionTooltip(region);

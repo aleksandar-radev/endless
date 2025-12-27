@@ -1,5 +1,15 @@
-
-import { crystalShop, dataManager, game, setGlobals, training, soulShop, statistics, ascension, runes, skillTree } from './globals.js';
+import {
+  crystalShop,
+  dataManager,
+  game,
+  setGlobals,
+  training,
+  soulShop,
+  statistics,
+  ascension,
+  runes,
+  skillTree,
+} from './globals.js';
 import { CLASS_PATHS } from './constants/skills.js';
 import { initializeBuildingsUI } from './ui/buildingUi.js';
 import { crypt } from './functions.js';
@@ -49,25 +59,20 @@ const OPTION_TOOLTIPS = {
   stageSkipLabel: () => html`${t('options.stageSkip.tooltip')}`,
   stageSkipInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnCrystal')}`,
   stageLockToggleLabel: () => html`${t('options.stageLock.tooltip')}`,
-  stageLockToggle: (isPurchased) =>
-    html`${isPurchased() ? '' : t('options.stageLock.disabledTooltip')}`,
+  stageLockToggle: (isPurchased) => html`${isPurchased() ? '' : t('options.stageLock.disabledTooltip')}`,
   stageLockStageLabel: () => html`${t('options.stageLockStage.tooltip')}`,
-  stageLockStageInput: (isPurchased) =>
-    html`${isPurchased() ? '' : t('options.stageLock.disabledTooltip')}`,
+  stageLockStageInput: (isPurchased) => html`${isPurchased() ? '' : t('options.stageLock.disabledTooltip')}`,
   arenaBossSkipLabel: () => html`${t('options.arenaBossSkip.tooltip')}`,
   arenaBossSkipInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnAscensionAndRunes')}`,
   resetStageSkipLabel: () => html`${t('options.resetStageSkip.tooltip')}`,
   resetStageSkipInput: (isPurchased) =>
-    html`${isPurchased()
-      ? t('options.resetStageSkip.enabledTooltip')
-      : t('options.resetStageSkip.disabledTooltip')}`,
+    html`${isPurchased() ? t('options.resetStageSkip.enabledTooltip') : t('options.resetStageSkip.disabledTooltip')}`,
   startingStageLabel: () => html`${t('options.startingStage.tooltip')}`,
   startingStageInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnCrystal')}`,
   shortElementalNamesLabel: () => html`${t('options.shortElementalNames.tooltip')}`,
   showSkillCooldownsLabel: () => html`${t('options.showSkillCooldowns.tooltip')}`,
   showAllStatsLabel: () => html`${t('options.showAllStats.tooltip')}`,
-  quickBuyLabel: () =>
-    html`${t('options.quickBuy.tooltip')}`,
+  quickBuyLabel: () => html`${t('options.quickBuy.tooltip')}`,
   bulkBuyLabel: () => html`${t('options.bulkBuy.tooltip')}`,
   numericInputLabel: () => html`${t('options.numericPurchaseInputs.tooltip')}`,
   autoSortInventoryLabel: () => html`${t('options.autoSortInventory.tooltip')}`,
@@ -128,34 +133,17 @@ export class Options {
     // Use numeric inputs for bulk purchases
     this.useNumericInputs = data.useNumericInputs ?? false;
     // Default quantities for bulk purchases
-    this.soulShopQty =
-      typeof data.soulShopQty === 'number'
-        ? Math.min(data.soulShopQty, SOUL_SHOP_MAX_QTY)
-        : 1;
+    this.soulShopQty = typeof data.soulShopQty === 'number' ? Math.min(data.soulShopQty, SOUL_SHOP_MAX_QTY) : 1;
     this.soulShopQuickQty =
-      typeof data.soulShopQuickQty === 'number'
-        ? Math.min(data.soulShopQuickQty, SOUL_SHOP_MAX_QTY)
-        : 1;
+      typeof data.soulShopQuickQty === 'number' ? Math.min(data.soulShopQuickQty, SOUL_SHOP_MAX_QTY) : 1;
     this.crystalShopQty =
-      typeof data.crystalShopQty === 'number'
-        ? Math.min(data.crystalShopQty, CRYSTAL_SHOP_MAX_QTY)
-        : 1;
-    this.trainingQty =
-      typeof data.trainingQty === 'number'
-        ? Math.min(data.trainingQty, TRAINING_MAX_QTY)
-        : 1;
+      typeof data.crystalShopQty === 'number' ? Math.min(data.crystalShopQty, CRYSTAL_SHOP_MAX_QTY) : 1;
+    this.trainingQty = typeof data.trainingQty === 'number' ? Math.min(data.trainingQty, TRAINING_MAX_QTY) : 1;
     this.trainingQuickQty =
-      typeof data.trainingQuickQty === 'number'
-        ? Math.min(data.trainingQuickQty, TRAINING_MAX_QTY)
-        : 1;
+      typeof data.trainingQuickQty === 'number' ? Math.min(data.trainingQuickQty, TRAINING_MAX_QTY) : 1;
     this.skillQuickQty =
-      typeof data.skillQuickQty === 'number'
-        ? Math.max(1, Math.min(data.skillQuickQty, GLOBAL_MAX_QTY))
-        : 1;
-    this.buildingQty =
-      typeof data.buildingQty === 'number'
-        ? Math.min(data.buildingQty, BUILDING_MAX_QTY)
-        : 1;
+      typeof data.skillQuickQty === 'number' ? Math.max(1, Math.min(data.skillQuickQty, GLOBAL_MAX_QTY)) : 1;
+    this.buildingQty = typeof data.buildingQty === 'number' ? Math.min(data.buildingQty, BUILDING_MAX_QTY) : 1;
     // Preferred language, default to English
     this.language = data.language || 'en';
     // Use short elemental stat names
@@ -189,7 +177,6 @@ export class Options {
     audioManager.setVolume(this.soundVolume);
   }
 
-
   /**
    * Creates the language selection dropdown.
    */
@@ -203,7 +190,9 @@ export class Options {
         <option value="es">Español</option>
         <option value="zh">中文</option>
       </select>
-      <button id="language-reload-btn" class="common-action-btn" style="display:none;">${t('options.lang.reload')}</button>
+      <button id="language-reload-btn" class="common-action-btn" style="display:none;">
+        ${t('options.lang.reload')}
+      </button>
     `;
     const label = wrapper.querySelector('label');
     const select = wrapper.querySelector('select');
@@ -270,9 +259,7 @@ export class Options {
         return;
       }
 
-      const confirmed = await showConfirmDialog(
-        tp('options.backup.confirm', { date: backup.date, slot: slot + 1 }),
-      );
+      const confirmed = await showConfirmDialog(tp('options.backup.confirm', { date: backup.date, slot: slot + 1 }));
       if (!confirmed) return;
 
       const restored = dataManager.restoreBackup(slot, timestamp);
@@ -403,12 +390,18 @@ export class Options {
     const suggestionsRow = document.createElement('div');
     suggestionsRow.innerHTML = html`
       ${t('options.currentVersion')} ${this.version}.
-      <br>
-      <br>
+      <br />
+      <br />
       ${t('options.suggestionsPrompt')}
-      <br>
-      <br>
-      ${t('options.desktopDownload')} <a style="color:#fff; background:#0078d7; padding:2px 8px; border-radius:4px; text-decoration:none; font-weight:bold;" target="_blank" href="https://github.com/aleksandar-radev/endless/releases">${t('options.here')}</a>.
+      <br />
+      <br />
+      ${t('options.desktopDownload')}
+      <a
+        style="color:#fff; background:#0078d7; padding:2px 8px; border-radius:4px; text-decoration:none; font-weight:bold;"
+        target="_blank"
+        href="https://github.com/aleksandar-radev/endless/releases"
+        >${t('options.here')}</a
+      >.
     `;
     generalContent.appendChild(suggestionsRow);
     generalContent.appendChild(this._createResetButton());
@@ -674,15 +667,10 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="stage-skip-input" class="stage-skip-label" data-i18n="options.stageSkipPerKill">Stage Skip per Kill:</label>
-      <input
-        type="number"
-        id="stage-skip-input"
-        class="stage-skip-input"
-        min="0"
-        max="${max}"
-        value="${value}"
-      />
+      <label for="stage-skip-input" class="stage-skip-label" data-i18n="options.stageSkipPerKill"
+        >Stage Skip per Kill:</label
+      >
+      <input type="number" id="stage-skip-input" class="stage-skip-input" min="0" max="${max}" value="${value}" />
       <div class="min-max-btn-group">
         <button class="min-btn" type="button" data-i18n="common.min">Min</button>
         <button class="max-btn" type="button" data-i18n="common.max">Max</button>
@@ -853,9 +841,7 @@ export class Options {
       maxBtn.onmouseleave = () => maxBtn.classList.remove('hover');
       maxBtn.onclick = () => {
         if (maxBtn.disabled) return;
-        const highest = Math.max(
-          ...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0),
-        );
+        const highest = Math.max(...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0));
         input.value = highest || 0;
         input.dispatchEvent(new Event('input'));
         applyStageLock();
@@ -890,15 +876,10 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="boss-skip-input" class="boss-skip-label" data-i18n="options.arenaBossSkipPerKill">Boss Skip per Kill:</label>
-      <input
-        type="number"
-        id="boss-skip-input"
-        class="boss-skip-input"
-        min="0"
-        max="${max}"
-        value="${value}"
-      />
+      <label for="boss-skip-input" class="boss-skip-label" data-i18n="options.arenaBossSkipPerKill"
+        >Boss Skip per Kill:</label
+      >
+      <input type="number" id="boss-skip-input" class="boss-skip-input" min="0" max="${max}" value="${value}" />
       <div class="min-max-btn-group">
         <button class="min-btn" type="button" data-i18n="common.min">Min</button>
         <button class="max-btn" type="button" data-i18n="common.max">Max</button>
@@ -1086,7 +1067,9 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="reset-stage-skip-input" class="reset-stage-skip-label" data-i18n="options.resetStageSkipAt">Reset Stage Skip At:</label>
+      <label for="reset-stage-skip-input" class="reset-stage-skip-label" data-i18n="options.resetStageSkipAt"
+        >Reset Stage Skip At:</label
+      >
       <input
         type="number"
         id="reset-stage-skip-input"
@@ -1141,9 +1124,7 @@ export class Options {
       maxBtn.onclick = () => {
         if (maxBtn.disabled) return;
         // Use highest stage reached across all tiers as a sensible maximum
-        const highest = Math.max(
-          ...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0),
-        );
+        const highest = Math.max(...Array.from({ length: 12 }, (_, i) => statistics.highestStages[i + 1] || 0));
         input.value = highest || 0;
         input.dispatchEvent(new Event('input'));
         applyResetStageSkip();
@@ -1300,7 +1281,7 @@ export class Options {
     const summaries = dataManager.getSlotSummaries();
     const optionsHtml = summaries
       .map((s, i) => {
-        let pathName = s ? CLASS_PATHS[s.path]?.name() ?? s.path : null;
+        let pathName = s ? (CLASS_PATHS[s.path]?.name() ?? s.path) : null;
         if (pathName === null) pathName = 'Peasant';
         let text = s
           ? tp('options.saveSlot.occupied', { slot: i + 1, path: pathName, level: s.level })
@@ -1319,7 +1300,7 @@ export class Options {
 
   refreshBackupSelect(
     selectEl = document.getElementById('backup-save-select'),
-    applyBtn = document.getElementById('backup-save-apply'),
+    applyBtn = document.getElementById('backup-save-apply')
   ) {
     if (!selectEl) return;
 
@@ -1382,14 +1363,11 @@ export class Options {
     resetButton.textContent = t('options.resetAllProgress');
     resetButton.onclick = async () => {
       try {
-        const confirmed = await showConfirmDialog(
-          t('options.resetProgressConfirm'),
-        );
+        const confirmed = await showConfirmDialog(t('options.resetProgressConfirm'));
         if (confirmed) {
           game.resetAllProgress();
         }
       } catch (error) {
-
         console.error('Error resetting progress:', error);
         alert(t('options.resetProgressError'));
       }
@@ -1407,7 +1385,9 @@ export class Options {
     changelogBtn.textContent = t('options.changelog.view');
     changelogBtn.onclick = async () => {
       // Get all changelog versions, sorted descending
-      const versions = Object.keys(CHANGELOG).sort((a, b) => b.localeCompare(a, undefined, { numeric: true, sensitivity: 'base' }));
+      const versions = Object.keys(CHANGELOG).sort((a, b) =>
+        b.localeCompare(a, undefined, { numeric: true, sensitivity: 'base' })
+      );
       let content = '<div class="changelog-modal-content">';
       content += '<button class="modal-close">✖</button>';
       content += `<h2>${t('options.changelog.title')}</h2>`;
@@ -1428,7 +1408,9 @@ export class Options {
           }
           const expanded = i === 0 ? 'expanded' : '';
           const versionLabel =
-            i === 0 ? `${version} <span class="changelog-current">(${t('options.changelog.current')})</span>` : `${version}`;
+            i === 0
+              ? `${version} <span class="changelog-current">(${t('options.changelog.current')})</span>`
+              : `${version}`;
           content += `
             <div class="changelog-entry ${expanded}">
               <div class="changelog-header" data-index="${i}">
@@ -1542,8 +1524,7 @@ export class Options {
 
     if (!userSession) {
       const loginUrl = import.meta.env.VITE_LOGIN_URL;
-      cloudSaveStatus.innerHTML =
-        `<span class="login-status">${t('options.cloud.notLoggedIn')}</span><div><button id="login-btn" class="login-link">${t('options.cloud.login')}</button></div>`;
+      cloudSaveStatus.innerHTML = `<span class="login-status">${t('options.cloud.notLoggedIn')}</span><div><button id="login-btn" class="login-link">${t('options.cloud.login')}</button></div>`;
       cloudSaveStatus.className = 'not-logged-in';
       cloudSaveBtn.disabled = true;
       cloudSaveBtn.classList.add('disabled');
@@ -1661,7 +1642,9 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="starting-stage-input" class="starting-stage-label" data-i18n="options.startingStage">Starting Stage:</label>
+      <label for="starting-stage-input" class="starting-stage-label" data-i18n="options.startingStage"
+        >Starting Stage:</label
+      >
       <input
         type="number"
         id="starting-stage-input"
@@ -1811,7 +1794,12 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="short-elemental-names-toggle" class="short-elemental-names-toggle-label" data-i18n="options.shortElementalNames">Use Short Elemental Stat Names:</label>
+      <label
+        for="short-elemental-names-toggle"
+        class="short-elemental-names-toggle-label"
+        data-i18n="options.shortElementalNames"
+        >Use Short Elemental Stat Names:</label
+      >
       <input
         type="checkbox"
         id="short-elemental-names-toggle"
@@ -1841,7 +1829,9 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="short-numbers-toggle" class="short-numbers-toggle-label" data-i18n="options.shortNumbers">Use Short Number Notation:</label>
+      <label for="short-numbers-toggle" class="short-numbers-toggle-label" data-i18n="options.shortNumbers"
+        >Use Short Number Notation:</label
+      >
       <input
         type="checkbox"
         id="short-numbers-toggle"
@@ -1880,7 +1870,12 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="show-skill-cooldowns-toggle" class="show-skill-cooldowns-toggle-label" data-i18n="options.showSkillCooldowns">Show Skill Cooldown Numbers:</label>
+      <label
+        for="show-skill-cooldowns-toggle"
+        class="show-skill-cooldowns-toggle-label"
+        data-i18n="options.showSkillCooldowns"
+        >Show Skill Cooldown Numbers:</label
+      >
       <input
         type="checkbox"
         id="show-skill-cooldowns-toggle"
@@ -1912,7 +1907,9 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="show-all-stats-toggle" class="show-all-stats-toggle-label" data-i18n="options.showAllStats">Show All Stats:</label>
+      <label for="show-all-stats-toggle" class="show-all-stats-toggle-label" data-i18n="options.showAllStats"
+        >Show All Stats:</label
+      >
       <input
         type="checkbox"
         id="show-all-stats-toggle"
@@ -1944,13 +1941,10 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="quick-buy-toggle" class="quick-buy-toggle-label" data-i18n="options.quickBuy">Enable Quick Buy:</label>
-      <input
-        type="checkbox"
-        id="quick-buy-toggle"
-        class="quick-buy-toggle"
-        ${this.quickBuy ? 'checked' : ''}
-      />
+      <label for="quick-buy-toggle" class="quick-buy-toggle-label" data-i18n="options.quickBuy"
+        >Enable Quick Buy:</label
+      >
+      <input type="checkbox" id="quick-buy-toggle" class="quick-buy-toggle" ${this.quickBuy ? 'checked' : ''} />
       <span class="toggle-btn"></span>
     `;
     const label = wrapper.querySelector('.quick-buy-toggle-label');
@@ -1979,12 +1973,7 @@ export class Options {
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
       <label for="bulk-buy-toggle" class="bulk-buy-toggle-label" data-i18n="options.bulkBuy">Enable Bulk Buy:</label>
-      <input
-        type="checkbox"
-        id="bulk-buy-toggle"
-        class="bulk-buy-toggle"
-        ${this.bulkBuy ? 'checked' : ''}
-      />
+      <input type="checkbox" id="bulk-buy-toggle" class="bulk-buy-toggle" ${this.bulkBuy ? 'checked' : ''} />
       <span class="toggle-btn"></span>
     `;
     const label = wrapper.querySelector('.bulk-buy-toggle-label');
@@ -2012,7 +2001,9 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="numeric-input-toggle" class="numeric-input-toggle-label" data-i18n="options.numericPurchaseInputs">Enable Numeric Purchase Inputs:</label>
+      <label for="numeric-input-toggle" class="numeric-input-toggle-label" data-i18n="options.numericPurchaseInputs"
+        >Enable Numeric Purchase Inputs:</label
+      >
       <input
         type="checkbox"
         id="numeric-input-toggle"
@@ -2060,7 +2051,12 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="auto-sort-inventory-toggle" class="auto-sort-inventory-toggle-label" data-i18n="options.autoSortInventory">Auto Sort Inventory:</label>
+      <label
+        for="auto-sort-inventory-toggle"
+        class="auto-sort-inventory-toggle-label"
+        data-i18n="options.autoSortInventory"
+        >Auto Sort Inventory:</label
+      >
       <input
         type="checkbox"
         id="auto-sort-inventory-toggle"
@@ -2105,7 +2101,9 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="enemy-stats-toggle" class="enemy-stats-toggle-label" data-i18n="options.showEnemyStats">Show Enemy Stats:</label>
+      <label for="enemy-stats-toggle" class="enemy-stats-toggle-label" data-i18n="options.showEnemyStats"
+        >Show Enemy Stats:</label
+      >
       <input
         type="checkbox"
         id="enemy-stats-toggle"
@@ -2146,7 +2144,12 @@ export class Options {
     const wrapper = document.createElement('div');
     wrapper.className = 'option-row';
     wrapper.innerHTML = html`
-      <label for="stage-controls-inline-toggle" class="stage-controls-inline-toggle-label" data-i18n="options.stageControlsInline">Show Stage Controls Under Enemy:</label>
+      <label
+        for="stage-controls-inline-toggle"
+        class="stage-controls-inline-toggle-label"
+        data-i18n="options.stageControlsInline"
+        >Show Stage Controls Under Enemy:</label
+      >
       <input
         type="checkbox"
         id="stage-controls-inline-toggle"

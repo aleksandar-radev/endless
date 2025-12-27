@@ -63,9 +63,9 @@ export default class Prestige {
   }
 
   _createCard(bonusesPerCard, scalingFactor) {
-    const startingCrystalsBase = Math.floor(
-      Math.random() * (STARTING_CRYSTALS_BONUS.max - STARTING_CRYSTALS_BONUS.min + 1),
-    ) + STARTING_CRYSTALS_BONUS.min;
+    const startingCrystalsBase =
+      Math.floor(Math.random() * (STARTING_CRYSTALS_BONUS.max - STARTING_CRYSTALS_BONUS.min + 1)) +
+      STARTING_CRYSTALS_BONUS.min;
     const startingCrystals = Math.floor(startingCrystalsBase * scalingFactor);
     const shuffled = [...PRESTIGE_BONUSES].sort(() => 0.5 - Math.random());
     const picked = shuffled.slice(0, bonusesPerCard);
@@ -110,14 +110,15 @@ export default class Prestige {
     const main = `${formatStatName(STARTING_CRYSTALS_BONUS.stat)}: +${startingCrystals}`;
     const startMinScaled = Math.floor(refStartMin * scalingFactor);
     const startMaxScaled = Math.floor(refStartMax * scalingFactor);
-    const startPercentile = startMaxScaled > startMinScaled
-      ? (startingCrystals - startMinScaled) / (startMaxScaled - startMinScaled)
-      : 1;
+    const startPercentile =
+      startMaxScaled > startMinScaled ? (startingCrystals - startMinScaled) / (startMaxScaled - startMinScaled) : 1;
     const clampedStartPercentile = Math.max(0, Math.min(1, startPercentile));
     const right = options?.showRollPercentiles
       ? `${Math.round(clampedStartPercentile * 100)}%`
       : `${startMinScaled} - ${startMaxScaled}`;
-    card.descriptions.push(`<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`);
+    card.descriptions.push(
+      `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`
+    );
     card.rollPercentiles.push(clampedStartPercentile);
     return card;
   }
@@ -197,7 +198,7 @@ export default class Prestige {
 
   getCardValueRerollCost(card) {
     const rerolls = card?.valueRerolls || 0;
-    return CARD_VALUE_REROLL_BASE_COST + (rerolls * CARD_VALUE_REROLL_INCREMENT);
+    return CARD_VALUE_REROLL_BASE_COST + rerolls * CARD_VALUE_REROLL_INCREMENT;
   }
 
   rerollCardValues(index) {
@@ -215,9 +216,9 @@ export default class Prestige {
 
     Object.keys(card.baseBonuses).forEach((stat) => {
       if (stat === STARTING_CRYSTALS_BONUS.stat) {
-        const baseValue = Math.floor(
-          Math.random() * (STARTING_CRYSTALS_BONUS.max - STARTING_CRYSTALS_BONUS.min + 1),
-        ) + STARTING_CRYSTALS_BONUS.min;
+        const baseValue =
+          Math.floor(Math.random() * (STARTING_CRYSTALS_BONUS.max - STARTING_CRYSTALS_BONUS.min + 1)) +
+          STARTING_CRYSTALS_BONUS.min;
         card.baseBonuses[stat] = baseValue;
       } else {
         const def = PRESTIGE_BONUSES.find((p) => p.stat === stat);
@@ -235,7 +236,7 @@ export default class Prestige {
   }
 
   getCurrentLevelRequirement() {
-    const req = LEVEL_REQUIREMENT + (this.prestigeCount * LEVEL_REQUIREMENT_INCREASE);
+    const req = LEVEL_REQUIREMENT + this.prestigeCount * LEVEL_REQUIREMENT_INCREASE;
     return Math.min(req, 1000);
   }
 
@@ -249,9 +250,7 @@ export default class Prestige {
   }
 
   canPrestige() {
-    return (
-      hero.level >= this.getCurrentLevelRequirement()
-    );
+    return hero.level >= this.getCurrentLevelRequirement();
   }
 
   getBonuses() {
@@ -270,11 +269,7 @@ export default class Prestige {
     const scalingFactor = getBossScalingFactor(highestBossLevel);
 
     // If there are pending cards, rescale them and return
-    if (
-      this.pendingCards &&
-      Array.isArray(this.pendingCards) &&
-      this.pendingCards.length === count
-    ) {
+    if (this.pendingCards && Array.isArray(this.pendingCards) && this.pendingCards.length === count) {
       this.pendingCards.forEach((card) => {
         this._refreshCardFromBase(card, scalingFactor);
       });
@@ -385,7 +380,9 @@ export default class Prestige {
     hero.souls += ascBonuses.startingSouls || 0;
 
     // Recalculate attributes to reflect ascension bonuses applied
-    try { hero.queueRecalculateFromAttributes(); } catch {}
+    try {
+      hero.queueRecalculateFromAttributes();
+    } catch {}
 
     await dataManager.saveGame({ force: true });
     window.location.reload();

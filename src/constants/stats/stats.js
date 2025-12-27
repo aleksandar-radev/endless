@@ -1,13 +1,44 @@
-export { itemLevelScaling } from './itemScaling.js';
 import { OFFENSE_STATS } from './offenseStats.js';
 import { DEFENSE_STATS } from './defenseStats.js';
 import { MISC_STATS } from './miscStats.js';
+import { ITEM_FLAT_REGION_SCALING_MULTIPLIER, ITEM_FLAT_STAGE_SCALING_PERCENT } from '../enemies.js';
 
 export const STATS = {
   ...OFFENSE_STATS,
   ...DEFENSE_STATS,
   ...MISC_STATS,
 };
+
+// sub -> subcategory
+// div -> divisor
+// dec -> decimalPlaces
+export function createStat(props = {}) {
+  const { sub, div, dec, show, ...rest } = props;
+  return {
+    base: 0,
+    ...(sub && { subcategory: sub }),
+    ...(div && { divisor: div }),
+    ...(dec !== undefined && { decimalPlaces: dec }),
+    ...(show && { showInUI: show }),
+    ...rest,
+  };
+}
+
+export function createPercentStat(props = {}) {
+  return createStat({
+    div: 100,
+    dec: 1,
+    ...props,
+  });
+}
+
+export function createHiddenStat(props = {}) {
+  return createStat({
+    showValue: false,
+    displayed: false,
+    ...props,
+  });
+}
 
 export function getDivisor(statKey) {
   const divisor = STATS?.[statKey]?.divisor;
@@ -20,74 +51,53 @@ export function getStatDecimalPlaces(statKey, fallback = 0) {
   return decimals === undefined ? fallback : decimals;
 }
 
-// Base tier bonus configuration by stat bonus type.
-// Higher tiers receive significantly larger multipliers.
-const ITEM_BASE_BONUS = {
-  flat: { base: 1, step: 1, growth: 0.2 },
-  percent: { base: 0.4, step: 0.2, growth: 0.06 },
-  chance: { base: 0.6, step: 0.6, growth: 0.12 },
-};
+/**
+ * Compute the tier-based scaling multiplier.
+ * Tier scaling: multiply by ITEM_FLAT_REGION_SCALING_MULTIPLIER for each tier above 1.
+ *
+ * @param {number} tier - Item tier (1-based).
+ * @returns {number} Scaling factor for the given tier.
+ */
+export function itemTierScaling(tier = 1) {
+  return Math.pow(ITEM_FLAT_REGION_SCALING_MULTIPLIER, Math.max(0, tier - 1));
+}
 
 /**
- * Calculate base item bonus for a given tier and bonus type.
- * Uses an increasing arithmetic series with a small growth factor
- * so higher tiers get disproportionately larger bonuses.
+ * Generate a tier scaling map (1-12) by interpolating between start and end values.
+ * @param {number} start - Max value at Tier 1.
+ * @param {number} end - Max value at Tier 12.
+ * @param {number} [power=1] - Curve factor (1 = linear, >1 = exponential growth, <1 = diminishing growth).
+ * @returns {Object} A map of tier numbers to max percentages.
  */
-export function calculateItemBaseBonus(tier, type = 'flat') {
-  const cfg = ITEM_BASE_BONUS[type] || ITEM_BASE_BONUS.flat;
-  const { base, step, growth } = cfg;
-  if (!tier || tier <= 1) return base;
-  const steps = tier - 1;
-  const constPart = steps * step;
-  const growingPart = growth * ((steps - 1) * steps) / 2;
-  return Number((base + constPart + growingPart).toFixed(3));
-}
-
-function getBonusType(stat) {
-  const s = stat.toLowerCase();
-  if (s.includes('percent')) return 'percent';
-  if (s.includes('chance') || s.includes('steal')) return 'chance';
-  return 'flat';
-}
-
-// Public helper to fetch tier bonus for a given stat
-export function getItemTierBonus(stat, tier) {
-  return calculateItemBaseBonus(tier, getBonusType(stat));
-}
-
-// Linear decay parameters
-const MAX_LEVEL = 50000;
-const FINAL_PERCENT = 0.05; // 5% of original multiplier at MAX_LEVEL
-
-/**
- * Sum of diminishing flat bonuses until a minimum value,
- * then adds that minimum for remaining levels.
- */
-export function scaleDownFlatSum(
-  level,
-  start = 1,
-  flat = (1 - FINAL_PERCENT) / (MAX_LEVEL / 10),
-  interval = 10,
-  min = FINAL_PERCENT,
-) {
-  if (level <= 0) return 0;
-  // How many intervals before reaching min
-  const stepsToMin = Math.floor((start - min) / flat);
-  const levelsToMin = stepsToMin * interval;
-  if (level <= levelsToMin) {
-    // All levels above min, use arithmetic series sum
-    const k = Math.floor((level - 1) / interval);
-    const rem = level - k * interval;
-    // Sum for full intervals
-    const sumFull = (interval * k * (2 * start - flat * (k - 1))) / 2;
-    // Sum for remaining levels
-    const sumRem = rem * Math.max(start - flat * k, min);
-    return sumFull + sumRem;
-  } else {
-    // Sum up to min, then add min for remaining levels
-    const sumToMin =
-      (interval * stepsToMin * (2 * start - flat * (stepsToMin - 1))) / 2;
-    const remLevels = level - levelsToMin;
-    return sumToMin + remLevels * min;
+export function createTierScaling(start, end, power = 1) {
+  const scaling = {};
+  for (let t = 1; t <= 12; t++) {
+    const progress = (t - 1) / 11;
+    const value = start + (end - start) * Math.pow(progress, power);
+    scaling[t] = Number(value.toFixed(2));
   }
+  return scaling;
+}
+
+/**
+ * Compute a scaling multiplier for item flat stats.
+ *
+ * Flat values scale by:
+ * - Tier: exponential based on ITEM_FLAT_REGION_SCALING_MULTIPLIER
+ * - Level: linear based on ITEM_FLAT_STAGE_SCALING_PERCENT
+ *
+ * @param {number} level - Item level.
+ * @param {number} [tier=1] - Item tier (1-based).
+ * @returns {number} Scaling factor to multiply base stat values by.
+ */
+export function itemLevelScaling(level, tier = 1) {
+  // Tier scaling
+  const tierScale = itemTierScaling(tier);
+
+  if (level <= 1) return tierScale;
+
+  // Level scaling: percentage increase per level from base
+  const levelScale = 1 + (level - 1) * ITEM_FLAT_STAGE_SCALING_PERCENT;
+
+  return tierScale * levelScale;
 }

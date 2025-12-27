@@ -3,6 +3,7 @@
  *
  * ESLint configuration file.
  */
+import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default [
   {
@@ -25,6 +26,8 @@ export default [
       semi: ['error', 'always'],
       'object-curly-spacing': ['error', 'always'],
       'comma-dangle': ['error', 'always-multiline'],
+      'max-len': ['error', { code: 120, ignoreUrls: true, ignoreStrings: true, ignoreTemplateLiterals: true }],
     },
   },
+  eslintConfigPrettier,
 ];

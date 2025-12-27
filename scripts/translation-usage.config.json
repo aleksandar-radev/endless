@@ -1,28 +1,16 @@
 {
   "languagesDir": "src/languages",
-  "languageFiles": [
-    "en.js",
-    "es.js",
-    "zh.js"
-  ],
+  "languageFiles": ["en.js", "es.js", "zh.js"],
   "referenceLanguageFile": "en.js",
   "scan": [
     {
       "dir": "src",
-      "exts": [
-        ".js"
-      ]
+      "exts": [".js"]
     },
     {
       "file": "index.html"
     }
   ],
   "ignoreKeys": [],
-  "ignoreKeyPatterns": [
-    "^stats\\.",
-    "^quests\\.tab\\.",
-    "^ascension\\.tooltip\\.",
-    "^rarity\\.",
-    "^time\\."
-  ]
+  "ignoreKeyPatterns": ["^stats\\.", "^quests\\.tab\\.", "^ascension\\.tooltip\\.", "^rarity\\.", "^time\\."]
 }

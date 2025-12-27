@@ -1,7 +1,7 @@
 import { ELEMENTS } from '../constants/common.js';
 
 export default {
-  'attributes': 'Attributes',
+  attributes: 'Attributes',
   'app.title': 'Endless',
   'tab.battle': 'Battle',
   'tab.stats': 'Stats',
@@ -87,10 +87,12 @@ export default {
   'combat.bossLevel': 'Boss Level',
   'combat.mode': 'MODE',
   'combat.regionLabel': 'REGION:',
-  'combat.changeRegionConfirm': 'Are you sure you want to change to {region}? That will reset your stage progress and will find you a new enemy',
+  'combat.changeRegionConfirm':
+    'Are you sure you want to change to {region}? That will reset your stage progress and will find you a new enemy',
   'death.message': 'You died! Reviving in <span id="revive-countdown">10</span>',
   'leaderboard.noData': 'No leaderboard data available.',
-  'leaderboard.updateMessage': 'In order to see yourself in leaderboard, you have to reset your progress, because of a new update.',
+  'leaderboard.updateMessage':
+    'In order to see yourself in leaderboard, you have to reset your progress, because of a new update.',
   'leaderboard.rank': 'Rank',
   'leaderboard.username': 'Username',
   'leaderboard.highestLevel': 'Highest Level',
@@ -171,7 +173,8 @@ export default {
   'ascension.tooltip.flatAllDamage': 'Adds +30 damage to all damage types per level.',
   'ascension.tooltip.totalDamagePercent': 'Increases total damage by 25% per level.',
   'ascension.tooltip.elementalDamagePercent': 'Increases all elemental damage by 30% per level.',
-  'ascension.tooltip.resourceDamageCapPerLevel': 'Raises the cap for all "ExtraDamageFrom{source}" bonuses per level. The default cap is 1,000 of the source stat per hero level.',
+  'ascension.tooltip.resourceDamageCapPerLevel':
+    'Raises the cap for all "ExtraDamageFrom{source}" bonuses per level. The default cap is 1,000 of the source stat per hero level.',
   // Counters bar / offline eligibility
   'counters.offline': 'Offline',
   'counters.eligible': 'Eligible',
@@ -261,8 +264,10 @@ export default {
   'ascension.modal.cancel': 'Cancel',
   'ascension.info.title': 'Ascension Info',
   'ascension.info.requirement': 'Requires at least 20 prestiges to ascend.',
-  'ascension.info.points': 'Gain one ascension point for every 100 starting crystals from prestige bonuses. So 20 prestiges with total of 3000 starting crystals will get you 30 points total.',
-  'ascension.info.current': 'You currently have {prestiges} prestiges and {crystals} starting crystals, so you would earn {points} points.',
+  'ascension.info.points':
+    'Gain one ascension point for every 100 starting crystals from prestige bonuses. So 20 prestiges with total of 3000 starting crystals will get you 30 points total.',
+  'ascension.info.current':
+    'You currently have {prestiges} prestiges and {crystals} starting crystals, so you would earn {points} points.',
   'common.close': 'Close',
   'common.apply': 'Apply',
   'common.cancel': 'Cancel',
@@ -280,7 +285,8 @@ export default {
   'versionModal.yourVersion': 'Your version',
   'versionModal.refreshPrompt': 'Refresh the page for the changes to take effect',
   'versionModal.refreshNow': 'Refresh now',
-  'versionModal.desktopPrompt': 'Close the app to apply the update. It will update automatically. After about 10 seconds you can open it again.',
+  'versionModal.desktopPrompt':
+    'Close the app to apply the update. It will update automatically. After about 10 seconds you can open it again.',
   'versionModal.closeApp': 'Close the app',
   'versionModal.ok': 'OK',
   'aria.openMenu': 'Open menu',
@@ -389,7 +395,8 @@ export default {
   'inventory.youHaveAmount': 'You have {amount}',
   'inventory.noEligibleEquippedItems': 'No eligible equipped items.',
   'inventory.selectItemToUpgrade': 'Select an equipped item to upgrade:',
-  'inventory.upgradeInfo': 'You can upgrade items up to the number of levels available based on the highest stage reached in this region.',
+  'inventory.upgradeInfo':
+    'You can upgrade items up to the number of levels available based on the highest stage reached in this region.',
   'inventory.upgradeAction': 'Upgrade',
   'inventory.upgradeAllToMax': 'Upgrade All to Max',
   'inventory.costValue': 'Cost: {cost}',
@@ -421,7 +428,8 @@ export default {
   'inventory.salvageValue': 'Salvage Value:',
   'inventory.autoSalvageLimitOne': 'You can only auto-salvage {count} rarity.',
   'inventory.autoSalvageLimit': 'You can only auto-salvage {count} rarities.',
-  'inventory.unlockSalvageMaterials': 'Unlock this option by purchasing the Salvage Materials upgrade in the Crystal Shop.',
+  'inventory.unlockSalvageMaterials':
+    'Unlock this option by purchasing the Salvage Materials upgrade in the Crystal Shop.',
   'inventory.cannotEquipOffhandTwoHanded': 'Cannot equip an off-hand item while using a two-handed weapon.',
   'inventory.cannotEquipTwoShields': 'Cannot equip two shields at the same time.',
   'inventory.arrowsRequireBow': 'Arrows require a Bow equipped.',
@@ -457,7 +465,8 @@ export default {
   'options.advancedAttributeTooltips': 'Show Advanced Attribute Tooltips',
   'options.advancedAttributeTooltips.tooltip': 'Display extra attribute details in tooltips',
   'options.rollPercentiles': 'Show Roll Percentiles',
-  'options.rollPercentiles.tooltip': 'Display roll quality (0–100%) instead of min/max ranges on items and prestige cards.',
+  'options.rollPercentiles.tooltip':
+    'Display roll quality (0–100%) instead of min/max ranges on items and prestige cards.',
   'options.showRateCounters': 'Show Counters Bar',
   'options.showRateCounters.tooltip': 'Toggle the resource rate counters bar',
   'options.rateCountersPeriod': 'Counters Period (sec)',
@@ -502,7 +511,8 @@ export default {
   'options.cloud.gold': 'Gold',
   'options.cloud.crystals': 'Crystals',
   'options.cloud.souls': 'Souls',
-  'options.cloud.overwritePrompt': 'Are you sure you want to overwrite your local save with this cloud save? This cannot be undone.',
+  'options.cloud.overwritePrompt':
+    'Are you sure you want to overwrite your local save with this cloud save? This cannot be undone.',
   'options.cloud.loadFailed': 'Failed to load from cloud',
   'options.resetAllProgress': 'Reset All Progress',
   'options.resetProgressConfirm': 'Are you sure you want to reset all progress? This cannot be undone!',
@@ -570,7 +580,8 @@ export default {
   'options.backup.empty': 'No backups available',
   'options.backup.noPath': 'No path selected',
   'options.backup.option': '{date} · Slot {slot} · {path} · Level {level}',
-  'options.backup.confirm': 'Restore backup from {date} for slot {slot}? This will overwrite your current save for that slot.',
+  'options.backup.confirm':
+    'Restore backup from {date} for slot {slot}? This will overwrite your current save for that slot.',
   'options.toast.backupRestored': 'Backup restored! Reloading…',
   'options.toast.backupRestoreFailed': 'Failed to restore backup.',
   'options.toast.backupUnavailable': 'Backup not found.',
@@ -727,7 +738,7 @@ export default {
   'Adds 50000 gold per coin to your total.': 'Adds 50000 gold per coin to your total.',
   'Freaky Gold Coins': 'Freaky Gold Coins',
   'Adds 1000000 gold per coin to your total.': 'Adds 1000000 gold per coin to your total.',
-  'Elixir': 'Elixir',
+  Elixir: 'Elixir',
   'Grants 2 skill points.': 'Grants 2 skill points.',
   'Crystalized Rock': 'Crystalized Rock',
   'Gives 1 crystal.': 'Gives 1 crystal.',
@@ -749,15 +760,20 @@ export default {
   'Potion of Perseverance': 'Potion of Perseverance',
   'Increases perseverance by 1.': 'Increases perseverance by 1.',
   'Armor Upgrade Stone': 'Armor Upgrade Stone',
-  'Upgrade the level of an equipped armor item. Requires a quantity equal to the item\'s tier for each level.': 'Upgrade the level of an equipped armor item. Requires a quantity equal to the item\'s tier for each level.',
+  "Upgrade the level of an equipped armor item. Requires a quantity equal to the item's tier for each level.":
+    "Upgrade the level of an equipped armor item. Requires a quantity equal to the item's tier for each level.",
   'Jewelry Upgrade Gem': 'Jewelry Upgrade Gem',
-  'Upgrade the level of an equipped jewelry item. Requires a quantity equal to the item\'s tier for each level.': 'Upgrade the level of an equipped jewelry item. Requires a quantity equal to the item\'s tier for each level.',
+  "Upgrade the level of an equipped jewelry item. Requires a quantity equal to the item's tier for each level.":
+    "Upgrade the level of an equipped jewelry item. Requires a quantity equal to the item's tier for each level.",
   'Weapon Upgrade Core': 'Weapon Upgrade Core',
-  'Upgrade the level of an equipped weapon. Requires a quantity equal to the item\'s tier for each level.': 'Upgrade the level of an equipped weapon. Requires a quantity equal to the item\'s tier for each level.',
+  "Upgrade the level of an equipped weapon. Requires a quantity equal to the item's tier for each level.":
+    "Upgrade the level of an equipped weapon. Requires a quantity equal to the item's tier for each level.",
   'Enchantment Scroll': 'Enchantment Scroll',
-  'Increases the rarity of an equipped item. (cannot be used on mythic items)': 'Increases the rarity of an equipped item. (cannot be used on mythic items)',
+  'Increases the rarity of an equipped item. (cannot be used on mythic items)':
+    'Increases the rarity of an equipped item. (cannot be used on mythic items)',
   'Alternation Orb': 'Alternation Orb',
-  'Re-rolls the value of one chosen stat on an equipped item.': 'Re-rolls the value of one chosen stat on an equipped item.',
+  'Re-rolls the value of one chosen stat on an equipped item.':
+    'Re-rolls the value of one chosen stat on an equipped item.',
   // Skill Names
   'skill.drainingTouch.name': 'Draining Touch',
   'skill.frenzy.name': 'Frenzy',
@@ -968,7 +984,8 @@ export default {
   'skill.hurricane': 'Calls forth surging waters that deal water and cold damage.',
   'skill.spiritBear': 'Summons a spectral bear dealing earth damage.',
   'skill.stoneform': 'Hardens your skin, boosting armor, resistance, and earth damage.',
-  'skill.snakeForm': 'Shapeshift into a snake, gaining Earth Damage and Poison bonuses. Grants a flat 20% Poison Chance. You can only unlock one shapeshift skill.',
+  'skill.snakeForm':
+    'Shapeshift into a snake, gaining Earth Damage and Poison bonuses. Grants a flat 20% Poison Chance. You can only unlock one shapeshift skill.',
   'skill.spiritLink': 'Increases life steal and mana per hit.',
   'skill.totalPotentialDamage': 'Total Potential Damage',
   'skill.moonfury': 'Empowers you under the moon, boosting cold and water damage.',
@@ -978,7 +995,7 @@ export default {
   'skill.spiritBond': 'Boosts life and mana regeneration, adding damage from life regen.',
   'skill.wildGrowth': 'Greatly increases life regeneration and life percent for allies.',
   'skill.ancientRoots': 'Increases armor, life percent, and earth damage.',
-  'skill.furyOfTheWilds': 'Unleashes nature\'s wrath with extra damage plus cold and water damage.',
+  'skill.furyOfTheWilds': "Unleashes nature's wrath with extra damage plus cold and water damage.",
   'skill.natureEternal': 'Increases vitality, endurance, and perseverance.',
   'skill.primevalGuardian': 'Summons an ancient guardian that deals heavy earth damage.',
   'skill.cosmicHarmony': 'Balances energies, increasing elemental damage.',
@@ -1039,8 +1056,7 @@ export default {
   'skill.divineShield': 'Creates a shield that raises armor, armor percent, and block chance.',
   'skill.auraOfLight': 'Increases life, armor percent, and all resistance.',
 
-  'skill.thornedBulwark':
-    'Unlocks endurance to grant 0.3 thorns damage per point when this passive is learned.',
+  'skill.thornedBulwark': 'Unlocks endurance to grant 0.3 thorns damage per point when this passive is learned.',
   'skill.wrathOfTheHeavens': 'Calls down holy energy to amplify lightning and fire damage.',
   'skill.beaconOfFaith': 'Boosts life and life regeneration while converting life into extra damage.',
   'skill.holyBarrier': 'Creates a barrier that boosts vitality and grants a resurrection chance.',
@@ -1061,7 +1077,8 @@ export default {
 
   'skill.poisonAffinity': 'Deepens your bond with toxins, increasing earth damage and earth damage percent.',
   'skill.poisonDagger': 'Adds damage and attack speed to attacks.',
-  'skill.shadowForm': 'Increases crit chance, crit damage, and agility. (Crit chance capped at 20%, crit damage capped at 3)',
+  'skill.shadowForm':
+    'Increases crit chance, crit damage, and agility. (Crit chance capped at 20%, crit damage capped at 3)',
   'skill.flurry': 'Unleash a series of rapid attacks, dealing bonus damage.',
   'skill.precision': 'Increases attack rating and agility.',
   'skill.backstab': 'A devastating attack from behind, dealing massive damage and stealing resources.',
@@ -1137,13 +1154,15 @@ export default {
   'tooltip.endurance.thornsBonus': '• Thorns Damage by {thornsDamage}<br />',
   'tooltip.dexterity': 'Each point increases:<br />• Evasion by {evasion}<br />',
   'tooltip.intelligence': 'Each point increases:<br />• Elemental Damage by {elementalDamage}<br />',
-  'tooltip.perseverance': 'Each point increases:<br />• Mana Regeneration by {manaRegen}<br />• Life Regeneration by {lifeRegen}<br />• All Resistances by {allResistance}<br />',
+  'tooltip.perseverance':
+    'Each point increases:<br />• Mana Regeneration by {manaRegen}<br />• Life Regeneration by {lifeRegen}<br />• All Resistances by {allResistance}<br />',
   'tooltip.elementalDamage': 'Included in base hit damage. Reduced by enemy resistances.',
   'tooltip.damage': 'Base physical damage dealt to enemies.<br />Increased by Strength and equipment.',
   'tooltip.attackSpeed':
     'Number of attacks per second.<br />Base attack speed is 1.00 attacks/s. Percentage bonuses scale that base before flat bonuses are added.<br />Max: {currentCap} attacks/s (base {baseCap} + {ascCap} from Ascension)',
   'tooltip.attackRating': 'Determines hit chance against enemies.<br />Higher stages require more Attack Rating.',
-  'tooltip.critChance': 'Chance to deal critical damage.<br />Max: {currentCap}% (base {baseCap}% + {ascCap}% from Ascension)',
+  'tooltip.critChance':
+    'Chance to deal critical damage.<br />Max: {currentCap}% (base {baseCap}% + {ascCap}% from Ascension)',
   'tooltip.critDamage': 'Damage multiplier on critical hits.<br />Base: 1.33x damage',
   'tooltip.lifeSteal': 'Percentage of damage dealt recovered as life.',
   'tooltip.manaSteal': 'Percentage of damage dealt recovered as mana.',
@@ -1153,22 +1172,26 @@ export default {
   'tooltip.mana': 'Maximum mana points.<br />Increased by Wisdom and level ups.',
   'tooltip.manaRegen': 'Amount of mana recovered per second.',
   'tooltip.armor': 'Reduces incoming damage.<br />Effectiveness decreases in higher stages.',
-  'tooltip.blockChance': 'Chance to block incoming attacks.<br />Max: {currentCap}% (base {baseCap}% + {ascCap}% from Ascension)',
+  'tooltip.blockChance':
+    'Chance to block incoming attacks.<br />Max: {currentCap}% (base {baseCap}% + {ascCap}% from Ascension)',
   'tooltip.evasion': 'Chance to dodge enemy attacks completely.<br />Higher evasion reduces enemy hit chance.',
   'tooltip.fireResistance': 'Reduces fire damage taken from enemies.<br />{icon} Effective against fire enemies.',
   'tooltip.coldResistance': 'Reduces cold damage taken from enemies.<br />{icon} Effective against cold enemies.',
   'tooltip.airResistance': 'Reduces air damage taken from enemies.<br />{icon} Effective against air enemies.',
   'tooltip.earthResistance': 'Reduces earth damage taken from enemies.<br />{icon} Effective against earth enemies.',
-  'tooltip.lightningResistance': 'Reduces lightning damage taken from enemies.<br />{icon} Effective against lightning enemies.',
+  'tooltip.lightningResistance':
+    'Reduces lightning damage taken from enemies.<br />{icon} Effective against lightning enemies.',
   'tooltip.waterResistance': 'Reduces water damage taken from enemies.<br />{icon} Effective against water enemies.',
-  'tooltip.allResistance': "Reduces elemental damage taken from enemies based on your resistance and the enemy's damage.",
+  'tooltip.allResistance':
+    "Reduces elemental damage taken from enemies based on your resistance and the enemy's damage.",
   'tooltip.lifePerHit': 'Restores life whenever your attack hits an enemy.',
   'tooltip.manaPerHit': 'Restores mana whenever your attack hits an enemy.',
   'tooltip.fireDamage': 'Adds fire damage to your attacks.<br />{icon} Reduced by enemy fire resistance.',
   'tooltip.coldDamage': 'Adds cold damage to your attacks.<br />{icon} Reduced by enemy cold resistance.',
   'tooltip.airDamage': 'Adds air damage to your attacks.<br />{icon} Reduced by enemy air resistance.',
   'tooltip.earthDamage': 'Adds earth damage to your attacks.<br />{icon} Reduced by enemy earth resistance.',
-  'tooltip.lightningDamage': 'Adds lightning damage to your attacks.<br />{icon} Reduced by enemy lightning resistance.',
+  'tooltip.lightningDamage':
+    'Adds lightning damage to your attacks.<br />{icon} Reduced by enemy lightning resistance.',
   'tooltip.waterDamage': 'Adds water damage to your attacks.<br />{icon} Reduced by enemy water resistance.',
   'tooltip.doubleDamageChance': 'Chance for an attack to deal double damage.',
   'tooltip.resurrectionChance': 'Chance to revive after death.',
@@ -1181,7 +1204,8 @@ export default {
   'tooltip.allAttributes': 'Adds points to all attributes.',
   'tooltip.allAttributesPercent': 'Increases all attributes by a percentage.',
   'tooltip.manaShieldPercent': 'Portion of damage taken from mana before life.',
-  'tooltip.manaShieldDamageTakenReductionPercent': 'Reduces damage taken from mana when Mana Shield absorbs damage (max 50%).',
+  'tooltip.manaShieldDamageTakenReductionPercent':
+    'Reduces damage taken from mana when Mana Shield absorbs damage (max 50%).',
   'tooltip.reflectFireDamage': 'Reflects fire damage back to attackers.',
   'tooltip.thornsDamage':
     'Deals damage back to attackers when hit and scales with Damage %, Total Damage %, and Thorns Damage % bonuses.',
@@ -1192,7 +1216,8 @@ export default {
   'tooltip.ignoreAllEnemyResistances': 'Attacks ignore all enemy resistances.',
   'tooltip.extraDamageAgainstFrozenEnemies': 'Increases damage dealt to frozen enemies.',
   'tooltip.chanceToShatterEnemy': 'Chance to shatter frozen enemies on hit, consuming Freeze to deal 3x damage.',
-  'tooltip.damageTakenConvertedToColdPercent': 'Converts a percentage of non-cold damage taken into cold damage (max 75%).',
+  'tooltip.damageTakenConvertedToColdPercent':
+    'Converts a percentage of non-cold damage taken into cold damage (max 75%).',
   'tooltip.coldDamageTakenReductionPercent': 'Reduces cold damage taken by a percentage (max 50%).',
   'tooltip.damageTakenReductionPercent': 'Reduces all damage taken by a percentage (max 60%).',
   'tooltip.stunChance': 'Chance to stun enemies for 1s when dealing damage with instant skills.',
@@ -1216,12 +1241,18 @@ export default {
   'tooltip.waterPenetrationPercent': 'Ignores a percentage of enemy {icon} resistance.',
   'tooltip.elementalPenetrationPercent': 'Ignores a percentage of all enemy elemental resistances.',
   'tooltip.flatPenetrationPercent': 'Increases flat armor and elemental penetration bonuses.',
-  'tooltip.extraDamageFromLifePercent': 'Adds extra damage based on a percentage of your current life (counts up to 1,000 per hero level, increased by ascension upgrades) — the bonus is split between physical and elemental based on your Elemental Allocation settings.',
-  'tooltip.extraDamageFromArmorPercent': 'Adds extra damage based on a percentage of your current armor (counts up to 1,000 per hero level, increased by ascension upgrades) — the bonus is split between physical and elemental based on your Elemental Allocation settings.',
-  'tooltip.extraDamageFromManaPercent': 'Adds extra damage based on a percentage of your current mana (counts up to 1,000 per hero level, increased by ascension upgrades) — the bonus is split between physical and elemental based on your Elemental Allocation settings.',
-  'tooltip.extraDamageFromEvasionPercent': 'Adds extra damage based on a percentage of your current evasion (counts up to 1,000 per hero level, increased by ascension upgrades) — the bonus is split between physical and elemental based on your Elemental Allocation settings.',
-  'tooltip.extraDamageFromAttackRatingPercent': 'Adds extra damage based on a percentage of your current attack rating (counts up to 1,000 per hero level, increased by ascension upgrades) — the bonus is split between physical and elemental based on your Elemental Allocation settings.',
-  'tooltip.extraDamageFromLifeRegenPercent': 'Adds extra damage based on a percentage of your current life regeneration (counts up to 1,000 per hero level, increased by ascension upgrades) — the bonus is split between physical and elemental based on your Elemental Allocation settings.',
+  'tooltip.extraDamageFromLifePercent':
+    'Adds extra damage based on a percentage of your current life (counts up to 1,000 per hero level, increased by ascension upgrades) — the bonus is split between physical and elemental based on your Elemental Allocation settings.',
+  'tooltip.extraDamageFromArmorPercent':
+    'Adds extra damage based on a percentage of your current armor (counts up to 1,000 per hero level, increased by ascension upgrades) — the bonus is split between physical and elemental based on your Elemental Allocation settings.',
+  'tooltip.extraDamageFromManaPercent':
+    'Adds extra damage based on a percentage of your current mana (counts up to 1,000 per hero level, increased by ascension upgrades) — the bonus is split between physical and elemental based on your Elemental Allocation settings.',
+  'tooltip.extraDamageFromEvasionPercent':
+    'Adds extra damage based on a percentage of your current evasion (counts up to 1,000 per hero level, increased by ascension upgrades) — the bonus is split between physical and elemental based on your Elemental Allocation settings.',
+  'tooltip.extraDamageFromAttackRatingPercent':
+    'Adds extra damage based on a percentage of your current attack rating (counts up to 1,000 per hero level, increased by ascension upgrades) — the bonus is split between physical and elemental based on your Elemental Allocation settings.',
+  'tooltip.extraDamageFromLifeRegenPercent':
+    'Adds extra damage based on a percentage of your current life regeneration (counts up to 1,000 per hero level, increased by ascension upgrades) — the bonus is split between physical and elemental based on your Elemental Allocation settings.',
   'items.unique.stormlash': 'Stormlash',
   'items.unique.nightveilHood': 'Nightveil Hood',
   'items.unique.phoenixheartMantle': 'Phoenixheart Mantle',
@@ -1363,9 +1394,9 @@ export default {
   'ailment.stun.tooltip': 'Stun: Stunned for {duration}s.',
   'ailment.poison.tooltip': 'Poison: Deals {amount} earth damage over {duration}s.',
   'ailment.warmup.tooltip': 'Warming up: 50% reduced Gold/XP for {duration}s',
-  'bleed': 'Bleed',
-  'burn': 'Burn',
-  'poison': 'Poison',
+  bleed: 'Bleed',
+  burn: 'Burn',
+  poison: 'Poison',
   'battleLog.critical': ' (critical)',
   'battleLog.autoAttack': ' (auto attack)',
   'battleLog.summonDamage': 'Summon {summon} dealt {value} damage{breakdown}{critical}',
@@ -1374,7 +1405,7 @@ export default {
   'battleLog.blockedAttack': 'Blocked attack',
   'battleLog.missedAttack': 'Missed attack',
   'battleLog.died': 'Died',
-  'explosion': 'Explosion',
+  explosion: 'Explosion',
   'battleLog.droppedItem': 'Dropped {rarity} {type}',
   'battleLog.droppedMaterial': 'Dropped {name} x{qty}',
   'battleLog.droppedRune': 'Dropped rune: {name}',
@@ -1398,28 +1429,29 @@ export default {
   'statistics.rockyFieldHighestStages': 'Rocky Field Highest Stage by Region:',
   'statistics.totalTimeInFights': 'Total Time In Fights: {hours}h {minutes}m {seconds}s',
   'statistics.tierAbbr': 'T',
-  'HELMET': 'Helmet',
-  'ARMOR': 'Armor',
-  'BELT': 'Belt',
-  'PANTS': 'Pants',
-  'BOOTS': 'Boots',
-  'SWORD': 'Sword',
-  'AXE': 'Axe',
-  'MACE': 'Mace',
-  'DAGGER': 'Dagger',
-  'WAND': 'Wand',
-  'STAFF': 'Staff',
-  'SHIELD': 'Shield',
-  'GLOVES': 'Gloves',
-  'AMULET': 'Amulet',
-  'RING': 'Ring',
+  HELMET: 'Helmet',
+  ARMOR: 'Armor',
+  BELT: 'Belt',
+  PANTS: 'Pants',
+  BOOTS: 'Boots',
+  SWORD: 'Sword',
+  AXE: 'Axe',
+  MACE: 'Mace',
+  DAGGER: 'Dagger',
+  WAND: 'Wand',
+  STAFF: 'Staff',
+  SHIELD: 'Shield',
+  GLOVES: 'Gloves',
+  AMULET: 'Amulet',
+  RING: 'Ring',
   'buildings.nextBonus': 'Next bonus: {time}',
   'buildings.totalEarned': 'Total Earned: {amount} {type}',
   'buildings.levelInfo': 'Level: <b>{level}</b> / {max}',
   'buildings.currentBonus': 'Current Bonus: <b>{bonus}</b>',
   'buildings.upgradeAmountLine': 'Upgrade Amount: <b>{amount}</b>',
   'buildings.totalUpgradeCost': 'Total Upgrade Cost: <b>{cost}</b>',
-  'buildings.bonusAfterUpgrade': 'Bonus After Upgrade: <b>{bonus}</b> <span style="color:#aaa;font-size:0.95em;">(+{extra} {type})</span>',
+  'buildings.bonusAfterUpgrade':
+    'Bonus After Upgrade: <b>{bonus}</b> <span style="color:#aaa;font-size:0.95em;">(+{extra} {type})</span>',
   'buildings.upgradeAmountLabel': 'Upgrade Amount:',
   'buildings.upgrade': 'Upgrade',
   'buildings.sellRefund': 'Sell / Refund (+{refund})',
@@ -1431,7 +1463,8 @@ export default {
   'buildings.offlineRewardsTitle': 'Offline Building Rewards',
   'buildings.offlineRewardsInfo': 'Bonuses were earned while you were away!',
   'buildings.collect': 'Collect',
-  'buildings.offlineBonusItem': '{icon} <b>{name}</b>: +{amount} {type} <span style="color:#aaa;font-size:0.95em;">(for {times} {interval})</span>',
+  'buildings.offlineBonusItem':
+    '{icon} <b>{name}</b>: +{amount} {type} <span style="color:#aaa;font-size:0.95em;">(for {times} {interval})</span>',
 
   'prestige.levelInfo': 'Level {level} / {required}',
   'prestige.prestigeNow': 'Prestige Now',
@@ -1439,9 +1472,12 @@ export default {
   'prestige.noBonuses': 'No prestige bonuses yet.',
   'prestige.reroll': 'Reroll',
   'prestige.bonusInfo': 'Defeat arena bosses to boost prestige bonuses. Current bonus: {bonus}%.',
-  'prestige.resetInfo': 'Prestige starts a fresh run: level, equipment, inventory, buildings, quests and most progress are reset. Only chosen Prestige bonus is kept.',
-  'prestige.optionsInfo': 'All options apart from ones that are unlocked from crystal shop are preserved after a prestige.',
-  'prestige.levelRequirementIncreaseInfo': 'Each prestige increases the level requirement for the next prestige by 25 levels.',
+  'prestige.resetInfo':
+    'Prestige starts a fresh run: level, equipment, inventory, buildings, quests and most progress are reset. Only chosen Prestige bonus is kept.',
+  'prestige.optionsInfo':
+    'All options apart from ones that are unlocked from crystal shop are preserved after a prestige.',
+  'prestige.levelRequirementIncreaseInfo':
+    'Each prestige increases the level requirement for the next prestige by 25 levels.',
   'prestige.selectionRequirementInfo': 'Select one of the three prestige options to perform the prestige.',
   'prestige.historyRecord': 'A record is saved to Prestige History so you can review past prestiges.',
   'prestige.perform': 'Perform Prestige',
@@ -1535,7 +1571,8 @@ export default {
   'crystalShop.upgrade.resetSkillTree.bonusLabel': 'Reset your skill tree and refund all skill points.',
   'crystalShop.upgrade.resetSpecialization.label': 'Reset Specialization',
   'crystalShop.upgrade.resetSpecialization.bonus': 'Refund specialization points and unlock all paths',
-  'crystalShop.upgrade.resetSpecialization.bonusLabel': 'Reset your specialization choice and refund all specialization skill points.',
+  'crystalShop.upgrade.resetSpecialization.bonusLabel':
+    'Reset your specialization choice and refund all specialization skill points.',
   'crystalShop.upgrade.resetAttributes.label': 'Reset Attributes',
   'crystalShop.upgrade.resetAttributes.bonus': 'Refund all allocated attribute points',
   'crystalShop.upgrade.resetAttributes.bonusLabel': 'Refund all allocated attribute points',
@@ -1577,7 +1614,7 @@ export default {
   'soulShop.cost': 'Cost',
   'soulShop.notEnoughSoulsBulk': 'Not enough souls to bulk buy!',
   'soulShop.bulkPurchaseSuccess': 'Soul shop bulk purchase successful!',
-  'startingCrystals': 'Starting Crystals',
+  startingCrystals: 'Starting Crystals',
   'skillTree.purchaseAutoCastWarning': 'Purchase Auto Spell Cast upgrade to enable auto-casting.',
   'skillTree.notEnoughMana': 'Not enough mana!',
   'skillTree.notEnoughLife': 'Not enough life!',
@@ -1605,12 +1642,10 @@ export default {
   'specialization.warrior.guardian.name': 'Guardian',
   'specialization.warrior.guardian.description': 'A defensive warrior specializing in protection and armor.',
 
-
   'specialization.warrior.gladiator.name': 'Gladiator',
   'specialization.warrior.gladiator.description': 'A balanced fighter focused on critical strikes and combat mastery.',
   'specialization.rogue.assassin.name': 'Assassin',
   'specialization.rogue.assassin.description': 'A deadly rogue specializing in critical strikes.',
-
 
   'specialization.rogue.ranger.name': 'Ranger',
   'specialization.rogue.ranger.description': 'A precise attacker with high accuracy.',
@@ -1643,7 +1678,8 @@ export default {
   'specialization.elementalist.cryomancer.name': 'Cryomancer',
   'specialization.elementalist.cryomancer.description': 'Ice mage freezing and shattering enemies.',
   'specialization.druid.shapeshifter.name': 'Shapeshifter',
-  'specialization.druid.shapeshifter.description': 'Unlocks shapeshifting skills. You can only unlock one shapeshift skill.',
+  'specialization.druid.shapeshifter.description':
+    'Unlocks shapeshifting skills. You can only unlock one shapeshift skill.',
   'specialization.druid.naturalist.name': 'Naturalist',
   'specialization.druid.naturalist.description': 'Nature healer with regeneration powers.',
   'specialization.druid.summoner.name': 'Summoner',
@@ -1655,31 +1691,32 @@ export default {
   'specialization.mage.enchanter.name': 'Enchanter',
   'specialization.mage.enchanter.description': 'Buff specialist enhancing power.',
 
-
-
   'Reinforced Equipment': 'Reinforced Equipment',
   'skill.reinforcedEquipment': 'Increases the effectiveness of Life and Armor on items.',
 
-
-
-  'Gladiator\'s Fury': 'Gladiator\'s Fury',
-
-
+  "Gladiator's Fury": "Gladiator's Fury",
 
   'crystalShop.resetClassSuccess': 'Skills have been reset and all points refunded.',
   'crystalShop.resetSpecializationSuccess': 'Specialization has been reset and all points refunded.',
   'crystalShop.resetAttributesSuccess': 'All attribute points have been refunded.',
   'crystalShop.resetBossLevelSuccess': 'Boss level has been reset to 1.',
   'crystalShop.needCrystals': 'Need {count} crystals for this upgrade',
-  'crystalShop.confirm.resetClass': 'Are you sure you want to reset your skills, class selection, and specialization? This will refund all points.<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
-  'crystalShop.confirm.resetSpecialization': 'Are you sure you want to reset your specialization and refund all specialization skill points?<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
-  'crystalShop.confirm.resetAttributes': 'Are you sure you want to reset all allocated attribute points?<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
-  'crystalShop.confirm.resetBossLevel': 'Are you sure you want to reset your boss level to 1?<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
-  'crystalShop.confirm.resetTraining': 'Are you sure you want to reset all training upgrades and refund the gold spent?<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
+  'crystalShop.confirm.resetClass':
+    'Are you sure you want to reset your skills, class selection, and specialization? This will refund all points.<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
+  'crystalShop.confirm.resetSpecialization':
+    'Are you sure you want to reset your specialization and refund all specialization skill points?<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
+  'crystalShop.confirm.resetAttributes':
+    'Are you sure you want to reset all allocated attribute points?<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
+  'crystalShop.confirm.resetBossLevel':
+    'Are you sure you want to reset your boss level to 1?<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
+  'crystalShop.confirm.resetTraining':
+    'Are you sure you want to reset all training upgrades and refund the gold spent?<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
   'crystalShop.resetTrainingSuccess': 'All training upgrades have been reset. Refunded {amount} Gold.',
-  'crystalShop.confirm.resetSoulShop': 'Are you sure you want to reset all soul shop upgrades and refund the souls spent?<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
+  'crystalShop.confirm.resetSoulShop':
+    'Are you sure you want to reset all soul shop upgrades and refund the souls spent?<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
   'crystalShop.resetSoulShopSuccess': 'All soul shop upgrades have been reset. Refunded {amount} Souls.',
-  'crystalShop.confirm.resetAscension': 'Are you sure you want to reset all ascension upgrades and refund the points spent?<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
+  'crystalShop.confirm.resetAscension':
+    'Are you sure you want to reset all ascension upgrades and refund the points spent?<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
   'crystalShop.resetAscensionSuccess': 'All ascension upgrades have been reset. Refunded {amount} Points.',
   'crystalShop.notEnoughCrystals': 'Not enough crystals!',
   'crystalShop.updateError': 'Error updating shop. Please try again.',
@@ -1713,12 +1750,8 @@ export default {
   'rune.crystalGain.name': 'Crystal Hoarder Rune',
   'rune.crystalGain.desc': '+100% crystals gained.',
 
-
-
   'skill.bearForm': 'Shapeshift into a bear, gaining Life and Damage. You can only unlock one shapeshift skill.',
-  'Nature\'s Blessing': 'Nature\'s Blessing',
-
-
+  "Nature's Blessing": "Nature's Blessing",
 
   'skillTree.specializationLevelReq': 'Specializations require Level 100.',
   'skillTree.selectClassFirst': 'Please select a class first.',
@@ -1737,7 +1770,6 @@ export default {
   // Warrior Specialization Skills
   'Armored Offense': 'Armored Offense',
   'skill.armoredOffense': 'Increases damage based on your armor.',
-
 
   'Animated Weapons': 'Animated Weapons',
   'Spiritual Weapons': 'Spiritual Weapons',
@@ -1780,16 +1812,17 @@ export default {
   'stats.animatedWeaponsUnlocked': 'Animated Weapons Unlocked',
 
   // Rogue Specializations
-  'Vanish': 'Vanish',
+  Vanish: 'Vanish',
   'skill.vanish': 'Chance to become invisible and avoid attacks.',
-  'Assassinate': 'Assassinate',
+  Assassinate: 'Assassinate',
   'skill.assassinate': 'Instantly kills enemies below a health threshold.',
   'Shadow Clone': 'Shadow Clone',
   'skill.shadowClone': 'Unlocks a shadow clone that fights for you.',
   'Shadow Magic': 'Shadow Magic',
   'skill.shadowMagic': 'Grants extra earth damage.',
   'Animal Tracking': 'Animal Tracking',
-  'skill.animalTracking': 'Increases damage against rare enemies and above. Damage bonus scales with rarity (up to 4x for Mythic).',
+  'skill.animalTracking':
+    'Increases damage against rare enemies and above. Damage bonus scales with rarity (up to 4x for Mythic).',
   'Ranged Precision': 'Ranged Precision',
   'skill.rangedPrecision': 'Increases attack rating and adds damage based on attack rating.',
 
@@ -1806,13 +1839,13 @@ export default {
   'skill.bloodSacrifice': 'Sacrifice 50% of your current life to deal damage based on the amount sacrificed.',
   'Blood Potency': 'Blood Potency',
   'skill.bloodPotency': 'Using skills costs life but deals more damage.',
-  'Hemorrhage': 'Hemorrhage',
+  Hemorrhage: 'Hemorrhage',
   'skill.hemorrhage': 'Chance to bleed enemies, dealing damage over time.',
 
   // Paladin Specializations
   'Shield Mastery': 'Shield Mastery',
   'skill.shieldMastery': 'Allows equipping two shields and increases damage from armor.',
-  'Zeal': 'Zeal',
+  Zeal: 'Zeal',
   'skill.zeal': 'Gain damage reduction stacks when hitting enemies.',
   'Divine Amulet': 'Divine Amulet',
   'skill.divineAmulet': 'Increases effectiveness of your amulet.',
@@ -1825,15 +1858,14 @@ export default {
   'skill.immortalPresence': 'Increases life and life percent.',
 
   // Berserker Specializations
-  'Lacerate': 'Lacerate',
+  Lacerate: 'Lacerate',
   'skill.lacerate': 'Chance to cause enemies to bleed on hit.',
-
 
   'Fatal Blow': 'Fatal Blow',
   'skill.fatalBlow': 'Grants a chance to instantly kill enemies and increases damage.',
   'Battle Command': 'Battle Command',
   'skill.battleCommand': 'Increases the effectiveness of all buffs.',
-  'Warlord\'s Authority': 'Warlord\'s Authority',
+  "Warlord's Authority": "Warlord's Authority",
   'skill.warlordsAuthority': 'Increases the effectiveness of the Warlord skill.',
   'Blood Bank': 'Blood Bank',
   'skill.bloodBank': 'Overhealing increases max life.',
@@ -1843,13 +1875,14 @@ export default {
   // Elementalist Specializations
   'Searing Heat': 'Searing Heat',
   'skill.searingHeat': 'Chance to stack burn effects on the ground.',
-  'Combustion': 'Combustion',
+  Combustion: 'Combustion',
   'skill.combustion': 'Chance for enemies to explode on death, consuming burn to deal 10x remaining burn damage.',
   'Arc Discharge': 'Arc Discharge',
-  'skill.arcDischarge': 'Lightning attacks have a chance to discharge an extra bolt dealing 50% of your damage and grants flat lightning damage.',
+  'skill.arcDischarge':
+    'Lightning attacks have a chance to discharge an extra bolt dealing 50% of your damage and grants flat lightning damage.',
   'Static Shock': 'Static Shock',
   'skill.staticShock': 'Increases your chance to shock enemies and the damage bonus from shock.',
-  'Permafrost': 'Permafrost',
+  Permafrost: 'Permafrost',
   'skill.permafrost': 'Increases cold damage and damage dealt to frozen enemies.',
   'Ice Barrier': 'Ice Barrier',
   'skill.iceBarrier': 'Grants a chance to shatter frozen enemies and unlocks Glacial Bulwark.',
@@ -1860,7 +1893,8 @@ export default {
   'skill.shapeshiftingMastery': 'Increases all attributes and all attributes %.',
 
   'Primal Adaptation': 'Primal Adaptation',
-  'skill.primalAdaptation': 'Increases damage %, elemental damage %, armor %, life %, life regen %, and elemental resistance %.',
+  'skill.primalAdaptation':
+    'Increases damage %, elemental damage %, armor %, life %, life regen %, and elemental resistance %.',
   'Elemental Harmony': 'Elemental Harmony',
 
   'skill.elementalHarmony': 'Increases your Water, Cold, and Earth damage bonuses.',
@@ -1883,7 +1917,6 @@ export default {
   'skill.manaWard': 'Reduces damage taken from mana when Mana Shield absorbs damage (max 50%) and increases Mana %.',
   'Arcane Overload': 'Arcane Overload',
   'skill.arcaneOverload': 'Increases extra damage from Mana (max 2%) and increases Mana Regeneration (flat and %).',
-
 
   'Crimson Fortitude': 'Crimson Fortitude',
   'skill.crimsonFortitude': 'Increases life percentage and unlocks Crimson Aegis.',
@@ -2001,8 +2034,7 @@ export default {
   'skillTree.selectSpec': 'Select {name}',
   'skillTree.availableSpecializations': 'Available Specializations',
   'skillTree.skillEffects': 'Skill Effects',
-  'skillTree.mobileTooltipNotice': 'Skill details are hidden on mobile when Quick Buy is enabled. To view skill effects, disable Quick Buy in Options.',
+  'skillTree.mobileTooltipNotice':
+    'Skill details are hidden on mobile when Quick Buy is enabled. To view skill effects, disable Quick Buy in Options.',
   'skillTree.mobileTooltipNotice.goToOptions': 'Go to Options',
-
 };
-

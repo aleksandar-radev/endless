@@ -1,10 +1,6 @@
 import Item, { AVAILABLE_STATS } from './item.js';
 import { game, hero, statistics, dataManager, crystalShop, options } from './globals.js';
-import {
-  showToast,
-  updateResources,
-  formatStatName,
-} from './ui/ui.js';
+import { showToast, updateResources, formatStatName } from './ui/ui.js';
 import { t, tp } from './i18n.js';
 import { createModal, closeModal } from './ui/modal.js';
 import {
@@ -216,22 +212,20 @@ export default class Inventory {
   }) {
     const html = String.raw;
     let content = html`
-    <div class="inventory-modal-content">
-      <button class="modal-close">&times;</button>
-      <h2>${t(matDef.name || mat.name || '')}</h2>
-      <p>${t(matDef.description || '')}</p>
-      <p>${tp('inventory.youHaveAmount', { amount: `<b class="material-qty">${mat.qty}</b>` })}</p>
-      ${titleExtra}
-      <div class="equipped-item-list">
-        ${equipped.length === 0
-    ? `<div style="color:#f55;">${emptyMsg}</div>`
-    : equipped.map(itemRowHtml).join('')}
+      <div class="inventory-modal-content">
+        <button class="modal-close">&times;</button>
+        <h2>${t(matDef.name || mat.name || '')}</h2>
+        <p>${t(matDef.description || '')}</p>
+        <p>${tp('inventory.youHaveAmount', { amount: `<b class="material-qty">${mat.qty}</b>` })}</p>
+        ${titleExtra}
+        <div class="equipped-item-list">
+          ${equipped.length === 0 ? `<div style="color:#f55;">${emptyMsg}</div>` : equipped.map(itemRowHtml).join('')}
+        </div>
+        <div class="modal-controls">
+          <button id="material-use-cancel">${t('common.cancel')}</button>
+        </div>
       </div>
-      <div class="modal-controls">
-        <button id="material-use-cancel">${t('common.cancel')}</button>
-      </div>
-    </div>
-  `;
+    `;
     const dialog = createModal({
       id,
       className: 'inventory-modal',
@@ -244,15 +238,7 @@ export default class Inventory {
     return dialog;
   }
 
-  handleMaterialUsed(
-    inventory,
-    mat,
-    matDef,
-    qty,
-    dialogId,
-    toastMsg,
-    closeDialog = true,
-  ) {
+  handleMaterialUsed(inventory, mat, matDef, qty, dialogId, toastMsg, closeDialog = true) {
     mat.qty -= qty;
     if (mat.qty <= 0) {
       const idx = inventory.materials.findIndex((m) => m && m.id === mat.id);
@@ -327,15 +313,7 @@ export default class Inventory {
             from: oldLevel,
             to: item.level,
           });
-          this.handleMaterialUsed(
-            this,
-            mat,
-            matDef,
-            matsUsed,
-            'material-upgrade-dialog',
-            toastMsg,
-            false,
-          );
+          this.handleMaterialUsed(this, mat, matDef, matsUsed, 'material-upgrade-dialog', toastMsg, false);
           if (mat.qty > 0) {
             this.openMaterialDialog(mat);
           } else {
@@ -395,15 +373,7 @@ export default class Inventory {
                 from: oldLevel,
                 to: item.level,
               });
-              this.handleMaterialUsed(
-                this,
-                mat,
-                matDef,
-                matsUsed,
-                'material-upgrade-dialog',
-                toastMsg,
-                false,
-              );
+              this.handleMaterialUsed(this, mat, matDef, matsUsed, 'material-upgrade-dialog', toastMsg, false);
               upgradedAny = true;
               if (mat.qty <= 0) break;
             }
@@ -462,15 +432,7 @@ export default class Inventory {
             item: item.type,
             rarity: rarityName,
           });
-          this.handleMaterialUsed(
-            this,
-            mat,
-            matDef,
-            1,
-            'material-enchant-dialog',
-            toastMsg,
-            false,
-          );
+          this.handleMaterialUsed(this, mat, matDef, 1, 'material-enchant-dialog', toastMsg, false);
 
           const qtyEl = dialog.querySelector('.material-qty');
           if (qtyEl) qtyEl.textContent = mat.qty;
@@ -519,27 +481,32 @@ export default class Inventory {
           <span class="alternation-icon">${item.getIcon()}</span>
           <span><b>${item.type}</b> (Lvl ${item.level})</span>
           <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
-        </div>`,
+        </div>`
         )
         .join('');
 
-      const content = html`
-        <div class="inventory-modal-content">
-          <button class="modal-close">&times;</button>
-          <h2>${t(matDef.name || mat.name || '')}</h2>
-          <p>${t(matDef.description || '')}</p>
-          <p>${tp('inventory.youHaveAmount', { amount: `<b class="material-qty">${mat.qty}</b>` })}</p>
-          <p>${t('inventory.selectItemAndStatTransmute')}</p>
-          <p>${t('inventory.orbRestrictionUniqueSet')}</p>
-          <p>${tp('inventory.selectedItemLabel', { item: `<span id="transmutation-selected-name">${t('common.none')}</span>` })}</p>
-          <div id="transmutation-item-list">
-            ${equipped.length === 0 ? `<div style="color:#f55;">${t('inventory.noEligibleEquippedItems')}</div>` : itemRows}
-          </div>
-          <div id="transmutation-selected-item" style="margin-top:10px;"></div>
-          <div class="modal-controls">
-            <button id="material-use-cancel">${t('common.cancel')}</button>
-          </div>
-        </div>`;
+      const content = html` <div class="inventory-modal-content">
+        <button class="modal-close">&times;</button>
+        <h2>${t(matDef.name || mat.name || '')}</h2>
+        <p>${t(matDef.description || '')}</p>
+        <p>${tp('inventory.youHaveAmount', { amount: `<b class="material-qty">${mat.qty}</b>` })}</p>
+        <p>${t('inventory.selectItemAndStatTransmute')}</p>
+        <p>${t('inventory.orbRestrictionUniqueSet')}</p>
+        <p>
+          ${tp('inventory.selectedItemLabel', {
+            item: `<span id="transmutation-selected-name">${t('common.none')}</span>`,
+          })}
+        </p>
+        <div id="transmutation-item-list">
+          ${equipped.length === 0
+            ? `<div style="color:#f55;">${t('inventory.noEligibleEquippedItems')}</div>`
+            : itemRows}
+        </div>
+        <div id="transmutation-selected-item" style="margin-top:10px;"></div>
+        <div class="modal-controls">
+          <button id="material-use-cancel">${t('common.cancel')}</button>
+        </div>
+      </div>`;
 
       const dialog = createModal({
         id: 'material-transmute-dialog',
@@ -657,15 +624,7 @@ export default class Inventory {
                 item: item.type,
               });
             }
-            this.handleMaterialUsed(
-              this,
-              mat,
-              matDef,
-              1,
-              'material-transmute-dialog',
-              msg,
-              false,
-            );
+            this.handleMaterialUsed(this, mat, matDef, 1, 'material-transmute-dialog', msg, false);
             dialog.querySelector('.material-qty').textContent = mat.qty;
             renderSelected(idx);
             if (mat.qty <= 0) {
@@ -680,9 +639,7 @@ export default class Inventory {
       dialog.querySelectorAll('.transmutation-item').forEach((row) => {
         const idx = parseInt(row.dataset.idx, 10);
         row.onclick = () => {
-          dialog
-            .querySelectorAll('.transmutation-item')
-            .forEach((r) => r.classList.remove('selected'));
+          dialog.querySelectorAll('.transmutation-item').forEach((r) => r.classList.remove('selected'));
           row.classList.add('selected');
           renderSelected(idx);
         };
@@ -706,27 +663,32 @@ export default class Inventory {
           <span class="alternation-icon">${item.getIcon()}</span>
           <span><b>${item.type}</b> (Lvl ${item.level})</span>
           <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
-        </div>`,
+        </div>`
         )
         .join('');
 
-      const content = html`
-        <div class="inventory-modal-content">
-          <button class="modal-close">&times;</button>
-          <h2>${t(matDef.name || mat.name || '')}</h2>
-          <p>${t(matDef.description || '')}</p>
-          <p>${tp('inventory.youHaveAmount', { amount: `<b class="material-qty">${mat.qty}</b>` })}</p>
-          <p>${t('inventory.selectItemAndStatReroll')}</p>
-          <p>${t('inventory.orbRestrictionUniqueSet')}</p>
-          <p>${tp('inventory.selectedItemLabel', { item: `<span id="alternation-selected-name">${t('common.none')}</span>` })}</p>
-          <div id="alternation-item-list">
-            ${equipped.length === 0 ? `<div style="color:#f55;">${t('inventory.noEligibleEquippedItems')}</div>` : itemRows}
-          </div>
-          <div id="alternation-selected-item" style="margin-top:10px;"></div>
-          <div class="modal-controls">
-            <button id="material-use-cancel">${t('common.cancel')}</button>
-          </div>
-        </div>`;
+      const content = html` <div class="inventory-modal-content">
+        <button class="modal-close">&times;</button>
+        <h2>${t(matDef.name || mat.name || '')}</h2>
+        <p>${t(matDef.description || '')}</p>
+        <p>${tp('inventory.youHaveAmount', { amount: `<b class="material-qty">${mat.qty}</b>` })}</p>
+        <p>${t('inventory.selectItemAndStatReroll')}</p>
+        <p>${t('inventory.orbRestrictionUniqueSet')}</p>
+        <p>
+          ${tp('inventory.selectedItemLabel', {
+            item: `<span id="alternation-selected-name">${t('common.none')}</span>`,
+          })}
+        </p>
+        <div id="alternation-item-list">
+          ${equipped.length === 0
+            ? `<div style="color:#f55;">${t('inventory.noEligibleEquippedItems')}</div>`
+            : itemRows}
+        </div>
+        <div id="alternation-selected-item" style="margin-top:10px;"></div>
+        <div class="modal-controls">
+          <button id="material-use-cancel">${t('common.cancel')}</button>
+        </div>
+      </div>`;
 
       const dialog = createModal({
         id: 'material-reroll-dialog',
@@ -781,9 +743,7 @@ export default class Inventory {
                   adv = `<span class="item-ref-range" style="color:#aaa;">${min} - ${max}</span>`;
                 }
               }
-              const rerollAttrs = isMaxRoll
-                ? `disabled title="${t('inventory.maxRollLockedTooltip')}"`
-                : '';
+              const rerollAttrs = isMaxRoll ? `disabled title="${t('inventory.maxRollLockedTooltip')}"` : '';
               if (statDef.showValue === false) {
                 return `<div class="stat-row" data-stat="${stat}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
                 <div style="flex:1;display:flex;justify-content:space-between;align-items:center;gap:8px;">
@@ -839,15 +799,7 @@ export default class Inventory {
               stat: formatStatName(statToReroll),
               item: item.type,
             });
-            this.handleMaterialUsed(
-              this,
-              mat,
-              matDef,
-              1,
-              'material-reroll-dialog',
-              toastMsg,
-              false,
-            );
+            this.handleMaterialUsed(this, mat, matDef, 1, 'material-reroll-dialog', toastMsg, false);
             dialog.querySelector('.material-qty').textContent = mat.qty;
             renderSelected(idx);
             const postRollRange = item.getStatMinMax(statToReroll);
@@ -872,9 +824,7 @@ export default class Inventory {
       dialog.querySelectorAll('.alternation-item').forEach((row) => {
         const idx = parseInt(row.dataset.idx, 10);
         row.onclick = () => {
-          dialog
-            .querySelectorAll('.alternation-item')
-            .forEach((r) => r.classList.remove('selected'));
+          dialog.querySelectorAll('.alternation-item').forEach((r) => r.classList.remove('selected'));
           row.classList.add('selected');
           renderSelected(idx);
         };
@@ -887,26 +837,26 @@ export default class Inventory {
     // Default: show quantity modal
     const html = String.raw;
     const content = html`
-    <div class="inventory-modal-content">
-      <button class="modal-close">&times;</button>
-      <h2>${t(matDef.name || mat.name || '')}</h2>
-      <p>${t(matDef.description || '')}</p>
-      <p>${tp('inventory.youHaveAmount', { amount: `<b>${mat.qty}</b>` })}</p>
-      <label for="material-use-qty">${t('inventory.quantityLabel')}</label>
-      <input
-        id="material-use-qty"
-        style="padding: 5px; border-radius: 10px;"
-        type="number"
-        min="1"
-        max="${Math.min(mat.qty, INVENTORY_MAX_QTY)}"
-        value="${Math.min(mat.qty, INVENTORY_MAX_QTY)}"
-      />
-      <div class="modal-controls">
-        <button class="modal-buy" id="material-use-btn">${t('inventory.use')}</button>
-        <button id="material-use-cancel">${t('common.cancel')}</button>
+      <div class="inventory-modal-content">
+        <button class="modal-close">&times;</button>
+        <h2>${t(matDef.name || mat.name || '')}</h2>
+        <p>${t(matDef.description || '')}</p>
+        <p>${tp('inventory.youHaveAmount', { amount: `<b>${mat.qty}</b>` })}</p>
+        <label for="material-use-qty">${t('inventory.quantityLabel')}</label>
+        <input
+          id="material-use-qty"
+          style="padding: 5px; border-radius: 10px;"
+          type="number"
+          min="1"
+          max="${Math.min(mat.qty, INVENTORY_MAX_QTY)}"
+          value="${Math.min(mat.qty, INVENTORY_MAX_QTY)}"
+        />
+        <div class="modal-controls">
+          <button class="modal-buy" id="material-use-btn">${t('inventory.use')}</button>
+          <button id="material-use-cancel">${t('common.cancel')}</button>
+        </div>
       </div>
-    </div>
-  `;
+    `;
     const dialog = createModal({
       id: 'material-use-dialog',
       className: 'inventory-modal',
@@ -929,14 +879,7 @@ export default class Inventory {
         quantity: useQty,
         item: materialName,
       });
-      this.handleMaterialUsed(
-        this,
-        mat,
-        matDef,
-        useQty,
-        'material-use-dialog',
-        toastMsg,
-      );
+      this.handleMaterialUsed(this, mat, matDef, useQty, 'material-use-dialog', toastMsg);
     };
     useBtn.onclick = useHandler;
     dialog.querySelector('#material-use-cancel').onclick = () => closeModal('material-use-dialog');
@@ -952,7 +895,9 @@ export default class Inventory {
   }
 
   getItemSalvageValue(item) {
-    return Math.floor(25 * item.level * (Math.max(RARITY_ORDER.indexOf(item.rarity) / 2 + 1, 1)) * Math.max(item.tier * 3, 1));
+    return Math.floor(
+      25 * item.level * Math.max(RARITY_ORDER.indexOf(item.rarity) / 2 + 1, 1) * Math.max(item.tier * 3, 1)
+    );
   }
 
   getItemSalvageMaterial(item) {
@@ -974,11 +919,7 @@ export default class Inventory {
     } else {
       id = MATERIALS.armor_upgrade_stone.id;
     }
-    const qty = Math.floor(
-      (rarityAmounts[item.rarity] || 1) *
-      Math.max(item.level / 200, 1) *
-      Math.max(item.tier, 1),
-    );
+    const qty = Math.floor((rarityAmounts[item.rarity] || 1) * Math.max(item.level / 200, 1) * Math.max(item.tier, 1));
     return { id, qty };
   }
 
@@ -1019,14 +960,13 @@ export default class Inventory {
         tp('inventory.gainedResource', {
           amount: crystalsGained,
           resource: t('resource.crystal.name'),
-        }),
+        })
       );
     }
     showToast(messages.join(', '), 'success');
     if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
       const sortMode =
-        (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) ||
-        'type-rarity-level';
+        (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) || 'type-rarity-level';
       sortInventory(sortMode);
     } else {
       updateInventoryGrid();
@@ -1081,15 +1021,14 @@ export default class Inventory {
           tp('inventory.gainedResource', {
             amount: crystalsGained,
             resource: t('resource.crystal.name'),
-          }),
+          })
         );
       }
       showToast(messages.join(', '), 'success');
       if (!skipInventoryUpdates) {
         if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
           const sortMode =
-            (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) ||
-            'type-rarity-level';
+            (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) || 'type-rarity-level';
           sortInventory(sortMode);
         } else {
           updateInventoryGrid();
@@ -1143,14 +1082,13 @@ export default class Inventory {
           tp('inventory.gainedResource', {
             amount: crystalsGained,
             resource: t('resource.crystal.name'),
-          }),
+          })
         );
       }
       showToast(messages.join(', '), 'success');
       if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
         const sortMode =
-          (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) ||
-          'type-rarity-level';
+          (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) || 'type-rarity-level';
         sortInventory(sortMode);
       } else {
         updateInventoryGrid();
@@ -1169,11 +1107,7 @@ export default class Inventory {
   }
 
   isUpgradeMaterial(mat) {
-    return (
-      mat.id === 'armor_upgrade_stone' ||
-      mat.id === 'weapon_upgrade_core' ||
-      mat.id === 'jewelry_upgrade_gem'
-    );
+    return mat.id === 'armor_upgrade_stone' || mat.id === 'weapon_upgrade_core' || mat.id === 'jewelry_upgrade_gem';
   }
 
   handleRingSlotDrop(draggedRing, targetSlot) {
@@ -1277,10 +1211,7 @@ export default class Inventory {
     const rarityBonus = hero.stats.itemRarityPercent || 0;
     const entries = Object.entries(ITEM_RARITY).map(([key, config]) => {
       const rarityIndex = RARITY_ORDER.indexOf(config.name);
-      const weight =
-        config.chance *
-        (1 + boostFactor * rarityIndex) *
-        (1 + rarityBonus * rarityIndex);
+      const weight = config.chance * (1 + boostFactor * rarityIndex) * (1 + rarityBonus * rarityIndex);
       return { key, weight };
     });
 
@@ -1323,8 +1254,7 @@ export default class Inventory {
     this.hasNewItems = true; // Set flag when new item is added and kept
     if (crystalShop.crystalUpgrades.autoSortInventory && options.autoSortInventory) {
       const sortMode =
-        (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) ||
-        'type-rarity-level';
+        (typeof localStorage !== 'undefined' && localStorage.getItem('inventorySortMode')) || 'type-rarity-level';
       sortInventory(sortMode);
     } else {
       updateInventoryGrid();
@@ -1385,7 +1315,7 @@ export default class Inventory {
     }
 
     if (item.type === 'SHIELD') {
-      const otherSlot = slotName === 'weapon' ? 'offhand' : (slotName === 'offhand' ? 'weapon' : null);
+      const otherSlot = slotName === 'weapon' ? 'offhand' : slotName === 'offhand' ? 'weapon' : null;
       if (otherSlot) {
         const otherItem = this.equippedItems[otherSlot];
         if (otherItem && otherItem.type === 'SHIELD' && otherItem.id !== item.id) {
@@ -1498,7 +1428,7 @@ export default class Inventory {
           showToast(t('inventory.cannotEquipOffhandTwoHanded'), 'error');
         }
       } else if (item.type === 'SHIELD') {
-        const otherSlot = slot === 'weapon' ? 'offhand' : (slot === 'offhand' ? 'weapon' : null);
+        const otherSlot = slot === 'weapon' ? 'offhand' : slot === 'offhand' ? 'weapon' : null;
         if (otherSlot) {
           const otherItem = this.equippedItems[otherSlot];
           if (otherItem && otherItem.type === 'SHIELD' && otherItem.id !== item.id) {
@@ -1512,7 +1442,7 @@ export default class Inventory {
     }
 
     const sourceSlot = Object.entries(this.equippedItems).find(
-      ([slotName, equipped]) => equipped && equipped.id === item.id,
+      ([slotName, equipped]) => equipped && equipped.id === item.id
     )?.[0];
     const movingBetweenSlots = sourceSlot && sourceSlot !== slot;
     const isTwoHandedWeapon = slot === 'weapon' && this.isTwoHanded(item);
@@ -1683,7 +1613,7 @@ export default class Inventory {
     itemLifeEffectivenessPercent = 0,
     itemArmorEffectivenessPercent = 0,
     shieldEffectiveness = 0,
-    jewelryEffectiveness = 0,
+    jewelryEffectiveness = 0
   ) {
     // Ensure bonuses are up-to-date
     this.updateItemBonuses({

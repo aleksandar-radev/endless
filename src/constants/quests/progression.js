@@ -10,8 +10,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'level_5',
     category: 'progression',
-    get title() { return tp('Reach level {level}.', { level: 5 }); },
-    get description() { return tp('Reach level {level}.', { level: 5 }); },
+    get title() {
+      return tp('Reach level {level}.', { level: 5 });
+    },
+    get description() {
+      return tp('Reach level {level}.', { level: 5 });
+    },
     type: 'level',
     target: 5,
     reward: { gold: 200, crystals: 1, item: { rarity: 'rare', type: 'random', tier: 1 } },
@@ -19,8 +23,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'level_10',
     category: 'progression',
-    get title() { return tp('Reach level {level}.', { level: 10 }); },
-    get description() { return tp('Reach level {level}.', { level: 10 }); },
+    get title() {
+      return tp('Reach level {level}.', { level: 10 });
+    },
+    get description() {
+      return tp('Reach level {level}.', { level: 10 });
+    },
     type: 'level',
     target: 10,
     reward: { gold: 500, crystals: 1, item: { rarity: 'rare', type: 'random', tier: 1 } },
@@ -28,8 +36,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'level_25',
     category: 'progression',
-    get title() { return tp('Reach level {level}.', { level: 25 }); },
-    get description() { return tp('Reach level {level}.', { level: 25 }); },
+    get title() {
+      return tp('Reach level {level}.', { level: 25 });
+    },
+    get description() {
+      return tp('Reach level {level}.', { level: 25 });
+    },
     type: 'level',
     target: 25,
     reward: { gold: 1000, crystals: 1 },
@@ -37,8 +49,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'level_50',
     category: 'progression',
-    get title() { return tp('Reach level {level}.', { level: 50 }); },
-    get description() { return tp('Reach level {level}.', { level: 50 }); },
+    get title() {
+      return tp('Reach level {level}.', { level: 50 });
+    },
+    get description() {
+      return tp('Reach level {level}.', { level: 50 });
+    },
     type: 'level',
     target: 50,
     reward: { gold: 2000, crystals: 2 },
@@ -46,8 +62,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'level_75',
     category: 'progression',
-    get title() { return tp('Reach level {level}.', { level: 75 }); },
-    get description() { return tp('Reach level {level}.', { level: 75 }); },
+    get title() {
+      return tp('Reach level {level}.', { level: 75 });
+    },
+    get description() {
+      return tp('Reach level {level}.', { level: 75 });
+    },
     type: 'level',
     target: 75,
     reward: { gold: 5000, crystals: 2 },
@@ -55,8 +75,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'level_100',
     category: 'progression',
-    get title() { return tp('Reach level {level}.', { level: 100 }); },
-    get description() { return tp('Reach level {level}.', { level: 100 }); },
+    get title() {
+      return tp('Reach level {level}.', { level: 100 });
+    },
+    get description() {
+      return tp('Reach level {level}.', { level: 100 });
+    },
     type: 'level',
     target: 100,
     reward: { gold: 10000, crystals: 3 },
@@ -64,8 +88,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'level_150',
     category: 'progression',
-    get title() { return tp('Reach level {level}.', { level: 150 }); },
-    get description() { return tp('Reach level {level}.', { level: 150 }); },
+    get title() {
+      return tp('Reach level {level}.', { level: 150 });
+    },
+    get description() {
+      return tp('Reach level {level}.', { level: 150 });
+    },
     type: 'level',
     target: 150,
     reward: { gold: 20000, crystals: 5 },
@@ -73,8 +101,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'level_200',
     category: 'progression',
-    get title() { return tp('Reach level {level}.', { level: 200 }); },
-    get description() { return tp('Reach level {level}.', { level: 200 }); },
+    get title() {
+      return tp('Reach level {level}.', { level: 200 });
+    },
+    get description() {
+      return tp('Reach level {level}.', { level: 200 });
+    },
     type: 'level',
     target: 200,
     reward: { gold: 40000, crystals: 8 },
@@ -82,8 +114,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'level_300',
     category: 'progression',
-    get title() { return tp('Reach level {level}.', { level: 300 }); },
-    get description() { return tp('Reach level {level}.', { level: 300 }); },
+    get title() {
+      return tp('Reach level {level}.', { level: 300 });
+    },
+    get description() {
+      return tp('Reach level {level}.', { level: 300 });
+    },
     type: 'level',
     target: 300,
     reward: { gold: 80000, crystals: 12 },
@@ -91,8 +127,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'level_500',
     category: 'progression',
-    get title() { return tp('Reach level {level}.', { level: 500 }); },
-    get description() { return tp('Reach level {level}.', { level: 500 }); },
+    get title() {
+      return tp('Reach level {level}.', { level: 500 });
+    },
+    get description() {
+      return tp('Reach level {level}.', { level: 500 });
+    },
     type: 'level',
     target: 500,
     reward: { gold: 150000, crystals: 20 },
@@ -100,8 +140,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'level_750',
     category: 'progression',
-    get title() { return tp('Reach level {level}.', { level: 750 }); },
-    get description() { return tp('Reach level {level}.', { level: 750 }); },
+    get title() {
+      return tp('Reach level {level}.', { level: 750 });
+    },
+    get description() {
+      return tp('Reach level {level}.', { level: 750 });
+    },
     type: 'level',
     target: 750,
     reward: { gold: 300000, crystals: 30 },
@@ -109,8 +153,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'level_1000',
     category: 'progression',
-    get title() { return tp('Reach level {level}.', { level: 1000 }); },
-    get description() { return tp('Reach level {level}.', { level: 1000 }); },
+    get title() {
+      return tp('Reach level {level}.', { level: 1000 });
+    },
+    get description() {
+      return tp('Reach level {level}.', { level: 1000 });
+    },
     type: 'level',
     target: 1000,
     reward: { gold: 600000, crystals: 50 },
@@ -119,8 +167,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'damage_1000',
     category: 'progression',
-    get title() { return tp('Deal {amount} damage in a single hit.', { amount: '1,000' }); },
-    get description() { return tp('Deal {amount} damage in a single hit.', { amount: '1,000' }); },
+    get title() {
+      return tp('Deal {amount} damage in a single hit.', { amount: '1,000' });
+    },
+    get description() {
+      return tp('Deal {amount} damage in a single hit.', { amount: '1,000' });
+    },
     type: 'damage',
     target: 1000,
     reward: { crystals: 1 },
@@ -128,8 +180,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'damage_10000',
     category: 'progression',
-    get title() { return tp('Deal {amount} damage in a single hit.', { amount: '10,000' }); },
-    get description() { return tp('Deal {amount} damage in a single hit.', { amount: '10,000' }); },
+    get title() {
+      return tp('Deal {amount} damage in a single hit.', { amount: '10,000' });
+    },
+    get description() {
+      return tp('Deal {amount} damage in a single hit.', { amount: '10,000' });
+    },
     type: 'damage',
     target: 10000,
     reward: { crystals: 2 },
@@ -137,8 +193,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'damage_100000',
     category: 'progression',
-    get title() { return tp('Deal {amount} damage in a single hit.', { amount: '100,000' }); },
-    get description() { return tp('Deal {amount} damage in a single hit.', { amount: '100,000' }); },
+    get title() {
+      return tp('Deal {amount} damage in a single hit.', { amount: '100,000' });
+    },
+    get description() {
+      return tp('Deal {amount} damage in a single hit.', { amount: '100,000' });
+    },
     type: 'damage',
     target: 100000,
     reward: { crystals: 3 },
@@ -146,8 +206,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'damage_1000000',
     category: 'progression',
-    get title() { return tp('Deal {amount} damage in a single hit.', { amount: '1,000,000' }); },
-    get description() { return tp('Deal {amount} damage in a single hit.', { amount: '1,000,000' }); },
+    get title() {
+      return tp('Deal {amount} damage in a single hit.', { amount: '1,000,000' });
+    },
+    get description() {
+      return tp('Deal {amount} damage in a single hit.', { amount: '1,000,000' });
+    },
     type: 'damage',
     target: 1000000,
     reward: { crystals: 5 },
@@ -155,8 +219,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'damage_5000000',
     category: 'progression',
-    get title() { return tp('Deal {amount} damage in a single hit.', { amount: '5,000,000' }); },
-    get description() { return tp('Deal {amount} damage in a single hit.', { amount: '5,000,000' }); },
+    get title() {
+      return tp('Deal {amount} damage in a single hit.', { amount: '5,000,000' });
+    },
+    get description() {
+      return tp('Deal {amount} damage in a single hit.', { amount: '5,000,000' });
+    },
     type: 'damage',
     target: 5000000,
     reward: { crystals: 8 },
@@ -164,8 +232,12 @@ export const PROGRESSION_QUESTS = [
   {
     id: 'damage_10000000',
     category: 'progression',
-    get title() { return tp('Deal {amount} damage in a single hit.', { amount: '10,000,000' }); },
-    get description() { return tp('Deal {amount} damage in a single hit.', { amount: '10,000,000' }); },
+    get title() {
+      return tp('Deal {amount} damage in a single hit.', { amount: '10,000,000' });
+    },
+    get description() {
+      return tp('Deal {amount} damage in a single hit.', { amount: '10,000,000' });
+    },
     type: 'damage',
     target: 10000000,
     reward: { crystals: 12 },

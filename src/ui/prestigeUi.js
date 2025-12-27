@@ -18,7 +18,7 @@ function updateButtonState() {
   } else {
     btn.classList.add('disabled');
   }
-};
+}
 
 function updateLevelInfo() {
   const tab = document.getElementById('prestige');
@@ -29,7 +29,6 @@ function updateLevelInfo() {
   const required = prestige.getCurrentLevelRequirement();
   levelInfo.textContent = tp('prestige.levelInfo', { level, required });
 }
-
 
 export function initializePrestigeUI() {
   const tab = document.getElementById('prestige');
@@ -92,8 +91,8 @@ export function updatePrestigeBonuses() {
   const bonuses = prestige.getBonuses();
   list.innerHTML = Object.keys(bonuses).length
     ? Object.entries(bonuses)
-      .map(([stat, val]) => `<li>${formatStatName(stat)} ${formatPrestigeBonus(stat, val)}</li>`)
-      .join('')
+        .map(([stat, val]) => `<li>${formatStatName(stat)} ${formatPrestigeBonus(stat, val)}</li>`)
+        .join('')
     : `<li>${t('prestige.noBonuses')}</li>`;
 }
 
@@ -108,16 +107,22 @@ function openPrestigeModal() {
       <button class="modal-close">&times;</button>
       <div class="prestige-cards"></div>
       <div class="modal-controls">
-        <button id="prestige-reroll-btn">${t('prestige.reroll')} (60<img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('resource.crystal.name')}"/>)</button>
+        <button id="prestige-reroll-btn">
+          ${t('prestige.reroll')} (60<img
+            src="${BASE}/icons/crystal.svg"
+            class="icon"
+            alt="${t('resource.crystal.name')}"
+          />)
+        </button>
         <span id="prestige-crystals-total" class="prestige-crystals-total" style="margin-left:10px;"></span>
       </div>
       <div class="prestige-info-message" style="margin-top: 10px; color: #9ac7fcff; font-size: 1.05em;">
-      <p class="prestige-info prestige-bonus-info">${tp('prestige.bonusInfo', { bonus: bonusPercent })}</p>
-      <p class="prestige-info">${t('prestige.resetInfo')}</p>
-      <p class="prestige-info">${t('prestige.optionsInfo')}</p>
-      <p class="prestige-info">${t('prestige.levelRequirementIncreaseInfo')}</p>
-      <p class="prestige-info">${t('prestige.selectionRequirementInfo')}</p>
-      <div class="prestige-info-cta">${t('prestige.historyRecord')}</div>
+        <p class="prestige-info prestige-bonus-info">${tp('prestige.bonusInfo', { bonus: bonusPercent })}</p>
+        <p class="prestige-info">${t('prestige.resetInfo')}</p>
+        <p class="prestige-info">${t('prestige.optionsInfo')}</p>
+        <p class="prestige-info">${t('prestige.levelRequirementIncreaseInfo')}</p>
+        <p class="prestige-info">${t('prestige.selectionRequirementInfo')}</p>
+        <div class="prestige-info-cta">${t('prestige.historyRecord')}</div>
       </div>
       <div class="modal-footer" style="margin-top: 12px; text-align: center;">
         <button id="prestige-perform-btn" class="disabled">${t('prestige.perform')}</button>
@@ -156,7 +161,9 @@ function openPrestigeModal() {
         return html`
           <div class="prestige-card-wrapper" data-idx="${i}">
             <div class="prestige-card ${c.locked ? 'locked' : ''} ${selectedIdx === i ? 'selected' : ''}">
-              <ul>${descriptionItems}</ul>
+              <ul>
+                ${descriptionItems}
+              </ul>
             </div>
             <div class="prestige-card-actions">
               <button class="prestige-lock-btn">${lockLabel}</button>
@@ -259,19 +266,15 @@ export function formatPrestigeBonus(stat, value) {
 function openPrestigeHistoryModal() {
   const history = prestige.history || [];
   const items = history
-    .map(
-      (h, i) =>
-        `<li data-idx="${i}">#${h.number} - ${new Date(h.timestamp).toLocaleString()}</li>`,
-    )
+    .map((h, i) => `<li data-idx="${i}">#${h.number} - ${new Date(h.timestamp).toLocaleString()}</li>`)
     .join('');
-  const content = html`
-    <div class="prestige-history-modal-content">
-      <button class="modal-close">&times;</button>
-      <h2 data-i18n="prestige.historyTitle">${t('prestige.historyTitle')}</h2>
-      <ul class="prestige-history-list">
-        ${items || `<li>${t('prestige.noPrestiges')}</li>`}
-      </ul>
-    </div>`;
+  const content = html` <div class="prestige-history-modal-content">
+    <button class="modal-close">&times;</button>
+    <h2 data-i18n="prestige.historyTitle">${t('prestige.historyTitle')}</h2>
+    <ul class="prestige-history-list">
+      ${items || `<li>${t('prestige.noPrestiges')}</li>`}
+    </ul>
+  </div>`;
   const modal = createModal({
     id: 'prestige-history-modal',
     className: 'prestige-history-modal',
@@ -297,12 +300,13 @@ function openPrestigeDetailModal(entry) {
       return `<li>${statEntry.text}</li>`;
     })
     .join('');
-  const content = html`
-    <div class="prestige-history-modal-content">
-      <button class="modal-close">&times;</button>
-      <h2>${tp('prestige.entryTitle', { number: entry.number })}</h2>
-      <div>${tp('prestige.timeLabel', { time: new Date(entry.timestamp).toLocaleString() })}</div>
-      <ul class="prestige-stat-list">${stats}</ul>
-    </div>`;
+  const content = html` <div class="prestige-history-modal-content">
+    <button class="modal-close">&times;</button>
+    <h2>${tp('prestige.entryTitle', { number: entry.number })}</h2>
+    <div>${tp('prestige.timeLabel', { time: new Date(entry.timestamp).toLocaleString() })}</div>
+    <ul class="prestige-stat-list">
+      ${stats}
+    </ul>
+  </div>`;
   createModal({ id: 'prestige-detail-modal', className: 'prestige-history-modal', content });
 }

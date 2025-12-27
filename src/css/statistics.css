@@ -42,5 +42,5 @@
 }
 
 .breakable-separator::after {
-  content: "\200B";
+  content: '\200B';
 }

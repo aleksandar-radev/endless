@@ -3,6 +3,7 @@
 This document captures lessons from the current Endless codebase and extends them for the new server-authoritative architecture. High performance is crucial both for responsive gameplay and for resisting cheating via consistent authoritative simulations.
 
 ## Current Game Insights
+
 - **Tick cadence**: `game.js` and `combat.js` rely on 200 ms regen intervals and attack timers; any new engine must support configurable tick rates while keeping per-tick work O(players + encounters).
 - **Save throttling**: `dataManager.js` enforces a 5s local save interval, deduplicates snapshots (`_lastSerializedSnapshot`), and defers writes with promises. We should mimic throttled saves server-side to balance durability and throughput.
 - **Offline fight handling**: `offlineFight.js` batches simulations and rewards, showing need for background workers that can run encounters without blocking the main loop.
@@ -10,6 +11,7 @@ This document captures lessons from the current Endless codebase and extends the
 - **UI update batching**: UI modules (e.g., `ui/ui.js`, `ui/statsAndAttributesUi.js`) update DOM in targeted ways; Vue client should adopt similar fine-grained reactivity to avoid unnecessary re-renders.
 
 ## Backend Performance Principles
+
 1. **Deterministic Simulation**
    - Use fixed-step combat loop with precomputed turn order, caching derived stats per encounter.
    - Keep RNG seed per encounter, enabling replays and debugging without recomputation.
@@ -32,6 +34,7 @@ This document captures lessons from the current Endless codebase and extends the
    - Alert thresholds aligned with SLA (combat tick < 10ms, API p95 < 150ms).
 
 ## Frontend Performance Principles
+
 1. **Reactive Stores**
    - Pinia modules subscribe to WebSocket patches, update only necessary observables (similar to targeted `updatePlayerLife`, `updateResources`).
 2. **Virtualized Lists**
@@ -44,16 +47,19 @@ This document captures lessons from the current Endless codebase and extends the
    - Use vector or compressed sprites; lazy-load audio similar to `audio.js` to avoid blocking main thread.
 
 ## Multiplayer & Real-time Considerations
+
 - **World Boss Scaling**: Partition boss HP pools per shard; use CRDT or consistent hashing to aggregate contributions without a single bottleneck.
 - **Leaderboards**: Maintain incremental aggregates via Redis sorted sets, flush to SQL periodically.
 - **PvP**: For synchronous matches, enforce turn deadlines via server timers; disconnect/resync logic handled by authoritative state.
 
 ## Testing & Monitoring
+
 - Load-test combat service with synthetic encounters (mirroring `enemy.js`/`hero.js` stat ranges) to ensure stability under peak.
 - Chaos testing for queue delays, DB outages, and network partition to guarantee graceful degradation.
 - Benchmark serialization/deserialization for save payloads; ensure encryption/signature overhead mirrors current `crypt` usage without significant latency.
 
 ## Optimization Backlog
+
 - Build automated regression benchmarks comparing new engine outputs to legacy combat logs for correctness and timing.
 - Explore SIMD or WebAssembly modules for tight loops (damage calculation, RNG) if CPU hotspots emerge.
 - Investigate delta compression for long-running world boss updates to reduce bandwidth.

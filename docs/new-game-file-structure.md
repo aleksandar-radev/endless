@@ -176,6 +176,7 @@ endless-next/
 ```
 
 ## Key Principles
+
 - **Separation of concerns**: each service focuses on a narrow responsibility while shared libraries keep domain math consistent.
 - **Shared domain package**: ensures front and back agree on stat names, skill ids, translation keys, and damage formulas.
 - **Config-driven balance**: regions, bosses, skills, and progression scalars live in data files so designers can tweak without code changes.

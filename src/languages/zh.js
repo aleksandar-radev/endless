@@ -1,7 +1,7 @@
 import { ELEMENTS } from '../constants/common.js';
 
 export default {
-  'attributes': '属性',
+  attributes: '属性',
   'app.title': '无尽',
   'tab.battle': '战斗',
   'tab.stats': '统计',
@@ -198,7 +198,8 @@ export default {
   'ascension.tooltip.flatAllDamage': '每级为所有伤害类型增加30伤害。',
   'ascension.tooltip.totalDamagePercent': '每级提高总伤害25%。',
   'ascension.tooltip.elementalDamagePercent': '每级提高元素伤害30%。',
-  'ascension.tooltip.resourceDamageCapPerLevel': '每级提升所有「ExtraDamageFrom{source}」加成的上限。默认上限为每英雄等级1,000点源属性。',
+  'ascension.tooltip.resourceDamageCapPerLevel':
+    '每级提升所有「ExtraDamageFrom{source}」加成的上限。默认上限为每英雄等级1,000点源属性。',
   'ascension.tooltip.armor': '每级增加500护甲。',
   'ascension.tooltip.evasion': '每级增加500闪避。',
   'ascension.tooltip.armorPercent': '每级提高护甲50%。',
@@ -259,7 +260,8 @@ export default {
   'ascension.modal.cancel': '取消',
   'ascension.info.title': '飞升信息',
   'ascension.info.requirement': '需要至少 20 次转生才能飞升。',
-  'ascension.info.points': '每 100 个来自转生奖励的初始水晶获得 1 个飞升点。因此，20 次转生并拥有总共 3000 个初始水晶将获得 30 个飞升点。',
+  'ascension.info.points':
+    '每 100 个来自转生奖励的初始水晶获得 1 个飞升点。因此，20 次转生并拥有总共 3000 个初始水晶将获得 30 个飞升点。',
   'ascension.info.current': '你目前有 {prestiges} 次转生和 {crystals} 个初始水晶，因此将获得 {points} 点。',
   'common.close': '关闭',
   'common.apply': '应用',
@@ -468,7 +470,6 @@ export default {
   'options.showEnemyStats.tooltip': '战斗中显示敌人属性',
   'options.stageControlsInline.tooltip': '在探索和岩石原野中，将阶段控制显示在敌人下方',
   'options.basedOnAscensionAndRunes': '(基于飞升与符文)',
-
 
   'options.lang.reload': '重新加载',
   'options.soundVolume': '音量',
@@ -724,7 +725,7 @@ export default {
   'Adds 50000 gold per coin to your total.': '每枚可增加50000金币。',
   'Freaky Gold Coins': '奇异金币',
   'Adds 1000000 gold per coin to your total.': '每枚可增加1000000金币。',
-  'Elixir': '灵药',
+  Elixir: '灵药',
   'Grants 2 skill points.': '获得2点技能点。',
   'Crystalized Rock': '结晶岩石',
   'Gives 1 crystal.': '给予1个水晶。',
@@ -746,13 +747,17 @@ export default {
   'Potion of Perseverance': '毅力药水',
   'Increases perseverance by 1.': '毅力+1。',
   'Armor Upgrade Stone': '护甲升级石',
-  'Upgrade the level of an equipped armor item. Requires a quantity equal to the item\'s tier for each level.': '升级已装备护甲的等级。每级需要与物品阶级相同数量的石头。',
+  "Upgrade the level of an equipped armor item. Requires a quantity equal to the item's tier for each level.":
+    '升级已装备护甲的等级。每级需要与物品阶级相同数量的石头。',
   'Jewelry Upgrade Gem': '饰品升级宝石',
-  'Upgrade the level of an equipped jewelry item. Requires a quantity equal to the item\'s tier for each level.': '升级已装备饰品的等级。每级需要与物品阶级相同数量的宝石。',
+  "Upgrade the level of an equipped jewelry item. Requires a quantity equal to the item's tier for each level.":
+    '升级已装备饰品的等级。每级需要与物品阶级相同数量的宝石。',
   'Weapon Upgrade Core': '武器升级核心',
-  'Upgrade the level of an equipped weapon. Requires a quantity equal to the item\'s tier for each level.': '升级已装备武器的等级。每级需要与物品阶级相同数量的核心。',
+  "Upgrade the level of an equipped weapon. Requires a quantity equal to the item's tier for each level.":
+    '升级已装备武器的等级。每级需要与物品阶级相同数量的核心。',
   'Enchantment Scroll': '附魔卷轴',
-  'Increases the rarity of an equipped item. (cannot be used on mythic items)': '提高已装备物品的稀有度。（无法用于神话物品）',
+  'Increases the rarity of an equipped item. (cannot be used on mythic items)':
+    '提高已装备物品的稀有度。（无法用于神话物品）',
   'Alternation Orb': '变换之球',
   'Re-rolls the value of one chosen stat on an equipped item.': '重新随机已装备物品的一项指定属性值。',
   'skill.drainingTouch': '以风属性伤害汲取法力。',
@@ -956,7 +961,8 @@ export default {
   'tooltip.endurance.thornsBonus': '• 反伤 {thornsDamage}<br />',
   'tooltip.dexterity': '每点增加：<br />• 闪避 {evasion}<br />',
   'tooltip.intelligence': '每点增加：<br />• 元素伤害 {elementalDamage}<br />',
-  'tooltip.perseverance': '每点增加：<br />• 法力回复 {manaRegen}<br />• 生命回复 {lifeRegen}<br />• 全部抗性 {allResistance}<br />',
+  'tooltip.perseverance':
+    '每点增加：<br />• 法力回复 {manaRegen}<br />• 生命回复 {lifeRegen}<br />• 全部抗性 {allResistance}<br />',
   'tooltip.elementalDamage': '包含在基础命中伤害中。受敌人抗性减免。',
   'tooltip.damage': '对敌人的基础物理伤害。<br />受力量和装备提升。',
   'tooltip.attackSpeed':
@@ -1002,8 +1008,7 @@ export default {
   'tooltip.manaShieldPercent': '在扣除生命前由法力承担的伤害比例。',
   'tooltip.manaShieldDamageTakenReductionPercent': '当法力护盾吸收伤害时，按百分比减少由法力承担的伤害（最高 50%）。',
   'tooltip.reflectFireDamage': '将火焰伤害反射给攻击者。',
-  'tooltip.thornsDamage':
-    '受到攻击时对攻击者造成伤害，并同时受益于伤害%、总伤害%与反伤%的加成。',
+  'tooltip.thornsDamage': '受到攻击时对攻击者造成伤害，并同时受益于伤害%、总伤害%与反伤%的加成。',
   'tooltip.thornsDamagePercent': '按百分比提高反射伤害。',
   'tooltip.attackNeverMiss': '攻击必定命中目标。',
   'tooltip.chanceToHitPercent': '为命中率提供固定加成。',
@@ -1035,12 +1040,18 @@ export default {
   'tooltip.waterPenetrationPercent': '无视敌人 {icon} 抗性的百分比。',
   'tooltip.elementalPenetrationPercent': '无视敌人所有元素抗性的百分比。',
   'tooltip.flatPenetrationPercent': '提高护甲穿透和元素穿透的平值加成。',
-  'tooltip.extraDamageFromLifePercent': '基于当前生命百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
-  'tooltip.extraDamageFromArmorPercent': '基于当前护甲百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
-  'tooltip.extraDamageFromManaPercent': '基于当前法力百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
-  'tooltip.extraDamageFromEvasionPercent': '基于当前闪避百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
-  'tooltip.extraDamageFromAttackRatingPercent': '基于当前攻击评分百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
-  'tooltip.extraDamageFromLifeRegenPercent': '基于当前生命回复百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
+  'tooltip.extraDamageFromLifePercent':
+    '基于当前生命百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
+  'tooltip.extraDamageFromArmorPercent':
+    '基于当前护甲百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
+  'tooltip.extraDamageFromManaPercent':
+    '基于当前法力百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
+  'tooltip.extraDamageFromEvasionPercent':
+    '基于当前闪避百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
+  'tooltip.extraDamageFromAttackRatingPercent':
+    '基于当前攻击评分百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
+  'tooltip.extraDamageFromLifeRegenPercent':
+    '基于当前生命回复百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
   'items.unique.stormlash': '风暴鞭斩',
   'items.unique.nightveilHood': '夜幕兜帽',
   'items.unique.phoenixheartMantle': '凤凰之心披风',
@@ -1089,26 +1100,26 @@ export default {
   'bossRegion.twilightFrontier.name': '暮光前线',
   'bossRegion.twilightFrontier.desc': '电光暮色让竞技场晋升再多跳过 1 个首领等级，风暴强化雷电与冰霜伤害。',
   'bossRegion.voidscarredWastes.name': '虚痕荒原',
-  'bossRegion.voidscarredWastes.desc': '被虚空之火灼烧的裂隙扭曲现实，每次胜利跃升 2 个额外的首领等级，熔沙与震裂的大地惩罚毫无准备者。',
+  'bossRegion.voidscarredWastes.desc':
+    '被虚空之火灼烧的裂隙扭曲现实，每次胜利跃升 2 个额外的首领等级，熔沙与震裂的大地惩罚毫无准备者。',
   'bossRegion.celestialCrucible.name': '天辉熔炉',
-  'bossRegion.celestialCrucible.desc': '星光熔炉以炽烈之怒淬炼首领力量，每次击杀跃升 3 个额外的首领等级，元素力量冲向宇宙极限。',
+  'bossRegion.celestialCrucible.desc':
+    '星光熔炉以炽烈之怒淬炼首领力量，每次击杀跃升 3 个额外的首领等级，元素力量冲向宇宙极限。',
   'bossRegion.paradoxRealm.name': '悖论领域',
-  'bossRegion.paradoxRealm.desc': '折叠的时空让你每胜一场跃升 5 个额外的首领等级；混沌能量强化所有属性并释放不可预知的狂潮。',
+  'bossRegion.paradoxRealm.desc':
+    '折叠的时空让你每胜一场跃升 5 个额外的首领等级；混沌能量强化所有属性并释放不可预知的狂潮。',
   'rockyField.region.outskirts.name': '外围荒地',
   'rockyField.region.outskirts.desc':
     '松散岩兽能抵御土与水的攻击，却惧怕火焰与闪电；它们以快 40% 的速度扑击且永不落空。',
   'rockyField.region.boulders.name': '巨岩盆地',
-  'rockyField.region.boulders.desc':
-    '熔岩巨石族强化火与土抗性，却畏惧寒冷或水流；它们蜷缩在四倍护甲与抗性之后。',
+  'rockyField.region.boulders.desc': '熔岩巨石族强化火与土抗性，却畏惧寒冷或水流；它们蜷缩在四倍护甲与抗性之后。',
   'rockyField.region.caves.name': '隐蔽洞窟',
-  'rockyField.region.caves.desc':
-    '霜寒潜伏者倾泻寒霜与水流伤害，坚守两者抗性，并反弹每次攻击的 1.5%。',
+  'rockyField.region.caves.desc': '霜寒潜伏者倾泻寒霜与水流伤害，坚守两者抗性，并反弹每次攻击的 1.5%。',
   'rockyField.region.cliffs.name': '峭壁悬崖',
   'rockyField.region.cliffs.desc':
     '风暴哨卫依靠空气与闪电护幕生存，仍畏惧土或水的反击；每次命中都会撕走你 10% 的生命并吸收 20% 的伤害回复。',
   'rockyField.region.valley.name': '寂静山谷',
-  'rockyField.region.valley.desc':
-    '被侵蚀的守卫浸染水与土之术，护甲与抗性翻倍，攻击永不落空且无法被吸取生命。',
+  'rockyField.region.valley.desc': '被侵蚀的守卫浸染水与土之术，护甲与抗性翻倍，攻击永不落空且无法被吸取生命。',
   'rockyField.region.summit.name': '疾风峰顶',
   'rockyField.region.summit.desc':
     '风暴铸成的灵体在疾风护盾下释放雷霆弹幕；它们永不落空、攻速翻倍、汲取 5% 生命并反弹 0.7% 的伤害。',
@@ -1173,9 +1184,9 @@ export default {
   'ailment.stun.tooltip': '眩晕：眩晕 {duration} 秒。',
   'ailment.poison.tooltip': '中毒：在 {duration} 秒内造成 {amount} 点大地伤害。',
   'ailment.warmup.tooltip': '热身：在 {duration} 秒内金币/经验减少 50%',
-  'bleed': '流血',
-  'burn': '燃烧',
-  'poison': '中毒',
+  bleed: '流血',
+  burn: '燃烧',
+  poison: '中毒',
 
   'battleLog.critical': ' (暴击)',
   'battleLog.autoAttack': '（普通攻击）',
@@ -1185,7 +1196,7 @@ export default {
   'battleLog.blockedAttack': '格挡了攻击',
   'battleLog.missedAttack': '攻击未命中',
   'battleLog.died': '死亡',
-  'explosion': '爆炸',
+  explosion: '爆炸',
   'battleLog.droppedItem': '掉落 {rarity} {type}',
   'battleLog.droppedMaterial': '掉落 {name} x{qty}',
   'battleLog.droppedRune': '掉落符文：{name}',
@@ -1209,28 +1220,29 @@ export default {
   'statistics.rockyFieldHighestStages': '岩石场各地区最高阶段：',
   'statistics.totalTimeInFights': '战斗总时间：{hours}小时 {minutes}分 {seconds}秒',
   'statistics.tierAbbr': '阶',
-  'HELMET': '头盔',
-  'ARMOR': '护甲',
-  'BELT': '腰带',
-  'PANTS': '裤子',
-  'BOOTS': '靴子',
-  'SWORD': '剑',
-  'AXE': '斧头',
-  'MACE': '钉锤',
-  'DAGGER': '匕首',
-  'WAND': '魔杖',
-  'STAFF': '法杖',
-  'SHIELD': '盾牌',
-  'GLOVES': '手套',
-  'AMULET': '护身符',
-  'RING': '戒指',
+  HELMET: '头盔',
+  ARMOR: '护甲',
+  BELT: '腰带',
+  PANTS: '裤子',
+  BOOTS: '靴子',
+  SWORD: '剑',
+  AXE: '斧头',
+  MACE: '钉锤',
+  DAGGER: '匕首',
+  WAND: '魔杖',
+  STAFF: '法杖',
+  SHIELD: '盾牌',
+  GLOVES: '手套',
+  AMULET: '护身符',
+  RING: '戒指',
   'buildings.nextBonus': '下个奖励：{time}',
   'buildings.totalEarned': '总收益：{amount} {type}',
   'buildings.levelInfo': '等级：<b>{level}</b> / {max}',
   'buildings.currentBonus': '当前加成：<b>{bonus}</b>',
   'buildings.upgradeAmountLine': '升级数量：<b>{amount}</b>',
   'buildings.totalUpgradeCost': '总升级成本：<b>{cost}</b>',
-  'buildings.bonusAfterUpgrade': '升级后加成：<b>{bonus}</b> <span style="color:#aaa;font-size:0.95em;">(+{extra} {type})</span>',
+  'buildings.bonusAfterUpgrade':
+    '升级后加成：<b>{bonus}</b> <span style="color:#aaa;font-size:0.95em;">(+{extra} {type})</span>',
   'buildings.upgradeAmountLabel': '升级数量：',
   'buildings.upgrade': '升级',
   'buildings.sellRefund': '出售 / 退款 (+{refund})',
@@ -1242,7 +1254,8 @@ export default {
   'buildings.offlineRewardsTitle': '离线建筑奖励',
   'buildings.offlineRewardsInfo': '你离线期间获得了奖励！',
   'buildings.collect': '领取',
-  'buildings.offlineBonusItem': '{icon} <b>{name}</b>: +{amount} {type} <span style="color:#aaa;font-size:0.95em;">(持续 {times} {interval})</span>',
+  'buildings.offlineBonusItem':
+    '{icon} <b>{name}</b>: +{amount} {type} <span style="color:#aaa;font-size:0.95em;">(持续 {times} {interval})</span>',
   'prestige.levelInfo': '等级 {level} / {required}',
   'prestige.prestigeNow': '立即声望',
   'prestige.history': '历史',
@@ -1383,7 +1396,7 @@ export default {
   'soulShop.cost': '花费',
   'soulShop.notEnoughSoulsBulk': '灵魂不足，无法批量购买！',
   'soulShop.bulkPurchaseSuccess': '灵魂商店批量购买成功！',
-  'startingCrystals': '初始水晶',
+  startingCrystals: '初始水晶',
   'skillTree.purchaseAutoCastWarning': '购买自动施法升级以启用自动施法。',
   'skillTree.notEnoughMana': '法力不足！',
   'skillTree.notEnoughLife': '生命不足！',
@@ -1457,21 +1470,28 @@ export default {
   'specialization.mage.enchanter.description': '专精增益、强化力量的施法者。',
   'Reinforced Equipment': '强化装备',
   'skill.reinforcedEquipment': '提高物品上生命和护甲的效果。',
-  'Gladiator\'s Fury': '角斗士之怒',
+  "Gladiator's Fury": '角斗士之怒',
   'crystalShop.resetClassSuccess': '技能已重置，所有点数已返还。',
   'crystalShop.resetSpecializationSuccess': '专精已重置，所有点数已返还。',
   'crystalShop.resetAttributesSuccess': '所有属性点已返还。',
   'crystalShop.resetBossLevelSuccess': '首领等级已重置为1。',
   'crystalShop.needCrystals': '此升级需要{count}水晶',
-  'crystalShop.confirm.resetClass': '确定要重置技能并返还所有技能点吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
-  'crystalShop.confirm.resetSpecialization': '确定要重置专精并返还所有专精技能点吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
-  'crystalShop.confirm.resetAttributes': '确定要重置所有已分配的属性点吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
-  'crystalShop.confirm.resetBossLevel': '确定要将你的首领等级重置为1吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
-  'crystalShop.confirm.resetTraining': '确定要重置所有训练升级并返还花费的金币吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
+  'crystalShop.confirm.resetClass':
+    '确定要重置技能并返还所有技能点吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
+  'crystalShop.confirm.resetSpecialization':
+    '确定要重置专精并返还所有专精技能点吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
+  'crystalShop.confirm.resetAttributes':
+    '确定要重置所有已分配的属性点吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
+  'crystalShop.confirm.resetBossLevel':
+    '确定要将你的首领等级重置为1吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
+  'crystalShop.confirm.resetTraining':
+    '确定要重置所有训练升级并返还花费的金币吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
   'crystalShop.resetTrainingSuccess': '所有训练升级已重置，返还{amount}金币。',
-  'crystalShop.confirm.resetSoulShop': '确定要重置所有灵魂商店升级并返还花费的灵魂吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
+  'crystalShop.confirm.resetSoulShop':
+    '确定要重置所有灵魂商店升级并返还花费的灵魂吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
   'crystalShop.resetSoulShopSuccess': '所有灵魂商店升级已重置，返还{amount}灵魂。',
-  'crystalShop.confirm.resetAscension': '确定要重置所有飞升升级并返还已花费的点数吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
+  'crystalShop.confirm.resetAscension':
+    '确定要重置所有飞升升级并返还已花费的点数吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
   'crystalShop.resetAscensionSuccess': '所有飞升升级已重置，返还{amount}点。',
   'crystalShop.notEnoughCrystals': '水晶不足！',
   'crystalShop.updateError': '更新商店出错。请重试。',
@@ -1509,7 +1529,7 @@ export default {
   'rune.crystalGain.desc': '水晶获取+100%。',
   'stats.tooltip.ascensionBaseBonus': '基础加成 (飞升)',
   'skill.bearForm': '变身为熊，获得生命值和伤害。只能解锁一种形态。',
-  'Nature\'s Blessing': '自然祝福',
+  "Nature's Blessing": '自然祝福',
   'skillTree.specializationLevelReq': '专精需要等级 100。',
   'skillTree.selectClassFirst': '请先选择一个职业。',
   'skillTree.noSpecializationsAvailable': '此职业暂无可用的专精。',
@@ -1566,9 +1586,9 @@ export default {
   'stats.animatedWeaponsUnlocked': '活化武器解锁',
 
   // Rogue Specializations
-  'Vanish': '消失',
+  Vanish: '消失',
   'skill.vanish': '有几率隐身并躲避攻击。',
-  'Assassinate': '暗杀',
+  Assassinate: '暗杀',
   'skill.assassinate': '瞬间击杀生命值低于一定比例的敌人。',
   'Shadow Clone': '分身精通',
   'skill.shadowClone': '提高分身的效力。',
@@ -1594,13 +1614,13 @@ export default {
 
   'Blood Potency': '鲜血潜能',
   'skill.bloodPotency': '使用技能消耗生命但造成更多伤害。',
-  'Hemorrhage': '大出血',
+  Hemorrhage: '大出血',
   'skill.hemorrhage': '有几率使敌人流血，造成持续伤害。',
 
   // Paladin Specializations
   'Shield Mastery': '盾牌精通',
   'skill.shieldMastery': '允许装备两面盾牌并增加来自护甲的伤害。',
-  'Zeal': '狂热',
+  Zeal: '狂热',
   'skill.zeal': '攻击敌人时获得伤害减免层数。',
   'Divine Amulet': '神圣护身符',
   'skill.divineAmulet': '提高护身符的效果。',
@@ -1613,15 +1633,14 @@ export default {
   'skill.immortalPresence': '提升生命与生命百分比。',
 
   // Berserker Specializations
-  'Lacerate': '撕裂',
+  Lacerate: '撕裂',
   'skill.lacerate': '击中时有几率使敌人流血。',
-
 
   'Fatal Blow': '致命一击',
   'skill.fatalBlow': '有几率瞬间击杀敌人并提高伤害。',
   'Battle Command': '战斗指挥',
   'skill.battleCommand': '提高所有增益效果的效力。',
-  'Warlord\'s Authority': '督军权威',
+  "Warlord's Authority": '督军权威',
   'skill.warlordsAuthority': '提高督军技能的效果。',
   'Blood Bank': '血库',
   'skill.bloodBank': '溢出的治疗量增加最大生命值。',
@@ -1631,13 +1650,13 @@ export default {
   // Elementalist Specializations
   'Searing Heat': '灼热',
   'skill.searingHeat': '有几率在地面叠加燃烧效果。',
-  'Combustion': '燃烧',
+  Combustion: '燃烧',
   'skill.combustion': '敌人死亡时有几率爆炸，消耗燃烧状态并造成剩余燃烧伤害 10 倍的伤害。',
   'Arc Discharge': '电弧放电',
   'skill.arcDischarge': '闪电攻击有几率触发额外电弧，造成你伤害的 50%，并提供额外的闪电伤害。',
   'Static Shock': '静电冲击',
   'skill.staticShock': '提高你施加感电的几率，并增强感电带来的伤害加成。',
-  'Permafrost': '永冻',
+  Permafrost: '永冻',
   'skill.permafrost': '提高冰冷伤害，并提高对冻结敌人造成的伤害。',
   'Ice Barrier': '寒冰护盾',
   'skill.iceBarrier': '获得粉碎冻结敌人的几率，并解锁冰川壁垒。',
@@ -1673,7 +1692,6 @@ export default {
   'skill.manaWard': '当法力护盾吸收伤害时，降低由法力承担的伤害（最高 50%），并提高法力%。',
   'Arcane Overload': '奥术过载',
   'skill.arcaneOverload': '提高来自法力的额外伤害（最高 2%），并提高法力回复（固定值与%）。',
-
 
   'Crimson Fortitude': '猩红坚韧',
   'skill.crimsonFortitude': '增加生命百分比并解锁猩红神盾。',
@@ -1968,10 +1986,8 @@ export default {
   'skillTree.availableSpecializations': '可用专精',
   'skillTree.skillEffects': '技能效果',
 
-
   'options.saveSlot.label': '存档槽：',
   'options.saveSlot.placeholder': '存档槽 {slot} - 空',
   'options.saveSlot.occupied': '存档槽 {slot} - {path} 等级 {level}',
   'options.saveSlot.current': ' (当前)',
 };
-

@@ -89,7 +89,6 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
     },
     materialDropWeights: {},
     tags: ['obsidian_spire'],
-
   },
   {
     name: t('Flame Djinn'),
@@ -118,6 +117,5 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
     },
     materialDropWeights: {},
     tags: ['obsidian_spire'],
-
   },
 ];

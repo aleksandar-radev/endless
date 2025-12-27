@@ -1,7 +1,13 @@
 // Game logic and persistent state for buildings
 import { buildingsData } from './constants/buildings.js';
 import { dataManager, hero, inventory, statistics, ascension } from './globals.js';
-import { updateResources, formatNumber, updatePlayerLife, initializeSkillTreeStructure, updateTabIndicators } from './ui/ui.js';
+import {
+  updateResources,
+  formatNumber,
+  updatePlayerLife,
+  initializeSkillTreeStructure,
+  updateTabIndicators,
+} from './ui/ui.js';
 import { showOfflineBonusesModal } from './ui/buildingUi.js';
 import { fetchTrustedUtcTime } from './api.js';
 import { getTimeNow } from './common.js';
@@ -15,14 +21,7 @@ const refundPercent = 0.9;
 
 // Represents a single building instance (with state)
 export class Building {
-  constructor({
-    id,
-    level = 0,
-    placedAt = null,
-    lastBonusTime = null,
-    lastBonusTimeLocal = null,
-    totalEarned = 0,
-  }) {
+  constructor({ id, level = 0, placedAt = null, lastBonusTime = null, lastBonusTimeLocal = null, totalEarned = 0 }) {
     const data = buildingsData[id];
     if (!data) throw new Error(`Unknown building id: ${id}`);
     this.id = id;
@@ -127,7 +126,7 @@ export class Building {
     const startLevel = this.level;
     for (const [type, { base, increment, cap }] of Object.entries(this.costStructure)) {
       // Formula: base * amount + increment * (amount * (2 * startLevel + amount - 1) / 2)
-      let total = base * amount + increment * (amount * (2 * startLevel + amount - 1) / 2);
+      let total = base * amount + increment * ((amount * (2 * startLevel + amount - 1)) / 2);
       if (cap !== null && cap !== undefined) {
         // Cap applies per level, so max cost for this upgrade is cap * amount
         total = Math.min(total, cap * amount);
@@ -172,8 +171,8 @@ export class Building {
     const remainingLevel = currentLevel - levelsToRefund;
     const refund = {};
     for (const [type, { base, increment, cap }] of Object.entries(this.costStructure)) {
-      let totalAtCurrent = base * currentLevel + increment * (currentLevel * (currentLevel - 1) / 2);
-      let totalAtRemaining = base * remainingLevel + increment * (remainingLevel * (remainingLevel - 1) / 2);
+      let totalAtCurrent = base * currentLevel + increment * ((currentLevel * (currentLevel - 1)) / 2);
+      let totalAtRemaining = base * remainingLevel + increment * ((remainingLevel * (remainingLevel - 1)) / 2);
       if (cap !== null && cap !== undefined) {
         totalAtCurrent = Math.min(totalAtCurrent, cap * currentLevel);
         totalAtRemaining = Math.min(totalAtRemaining, cap * remainingLevel);
@@ -378,9 +377,9 @@ export class BuildingManager {
       let elapsedMs = now - lastBonusTime;
       if (!Number.isFinite(elapsedMs)) elapsedMs = 0;
       if (elapsedMs < 0) {
-        const fallbackElapsed = nowLocal - (Number.isFinite(b.lastBonusTimeLocal)
-          ? b.lastBonusTimeLocal
-          : this.lastActiveLocal ?? nowLocal);
+        const fallbackElapsed =
+          nowLocal -
+          (Number.isFinite(b.lastBonusTimeLocal) ? b.lastBonusTimeLocal : (this.lastActiveLocal ?? nowLocal));
         if (Number.isFinite(fallbackElapsed) && fallbackElapsed > 0) {
           elapsedMs = fallbackElapsed;
         } else {
@@ -440,7 +439,8 @@ export class BuildingManager {
               const randId = ids[Math.floor(Math.random() * ids.length)];
               materialAggregateOnline[randId] = (materialAggregateOnline[randId] || 0) + totalBonus;
             } else if (b.effect.materialId) {
-              materialAggregateOnline[b.effect.materialId] = (materialAggregateOnline[b.effect.materialId] || 0) + totalBonus;
+              materialAggregateOnline[b.effect.materialId] =
+                (materialAggregateOnline[b.effect.materialId] || 0) + totalBonus;
             }
           }
           // Increment total earned for this building
@@ -525,7 +525,9 @@ export class BuildingManager {
         updateResources();
         dataManager.saveGame(); // Save after collecting bonuses
         // Reset rate counters so offline rewards don't inflate per-period metrics
-        try { document.dispatchEvent(new Event('resetRateCounters')); } catch {}
+        try {
+          document.dispatchEvent(new Event('resetRateCounters'));
+        } catch {}
       });
       changed = true; // Modal will result in a change
     } else if (!isFirstCollect && changed) {

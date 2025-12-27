@@ -211,9 +211,7 @@ export default class CrystalShop {
     handleSavedData(savedData, this);
     this.modal = null;
     this.currentStat = null;
-    this.selectedQty = options.useNumericInputs
-      ? Math.min(options.crystalShopQty || 1, CRYSTAL_SHOP_MAX_QTY)
-      : 1;
+    this.selectedQty = options.useNumericInputs ? Math.min(options.crystalShopQty || 1, CRYSTAL_SHOP_MAX_QTY) : 1;
   }
 
   getCrystalReductionNumerator() {
@@ -323,8 +321,8 @@ export default class CrystalShop {
     upgradesContainer.innerHTML = `
       <div class="crystal-upgrades-grid">
         ${Object.entries(CRYSTAL_UPGRADE_CONFIG)
-    .map(([stat, config]) => this.createCrystalUpgradeButton(stat, config))
-    .join('')}
+          .map(([stat, config]) => this.createCrystalUpgradeButton(stat, config))
+          .join('')}
       </div>
     `;
     this.setupCrystalUpgradeHandlers();
@@ -341,8 +339,8 @@ export default class CrystalShop {
     upgradesContainer.innerHTML = `
       <div class="crystal-upgrades-grid">
         ${Object.entries(CRYSTAL_UPGRADE_CONFIG)
-    .map(([stat, config]) => this.createCrystalUpgradeButton(stat, config))
-    .join('')}
+          .map(([stat, config]) => this.createCrystalUpgradeButton(stat, config))
+          .join('')}
       </div>
     `;
     this.setupCrystalUpgradeHandlers();
@@ -357,9 +355,7 @@ export default class CrystalShop {
       if (!config) return;
       const level = this.crystalUpgrades[stat] || 0;
       const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
-      const cost = Math.round(
-        Math.floor(config.baseCost + (config.costIncrement || 0) * level) * (1 - ascRed),
-      );
+      const cost = Math.round(Math.floor(config.baseCost + (config.costIncrement || 0) * level) * (1 - ascRed));
       const alreadyPurchased = config.oneTime && this.crystalUpgrades[stat];
       const isMaxed = config.maxLevel ? level >= config.maxLevel : false;
       const costEl = button.querySelector('.upgrade-cost');
@@ -382,9 +378,7 @@ export default class CrystalShop {
     let alreadyPurchased = config.oneTime && this.crystalUpgrades[stat];
     const level = this.crystalUpgrades[stat] || 0;
     const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
-    const cost = Math.round(
-      Math.floor(config.baseCost + (config.costIncrement || 0) * level) * (1 - ascRed),
-    );
+    const cost = Math.round(Math.floor(config.baseCost + (config.costIncrement || 0) * level) * (1 - ascRed));
     let isMaxed = false;
     if (config.maxLevel) {
       isMaxed = level >= config.maxLevel;
@@ -455,9 +449,7 @@ export default class CrystalShop {
     }
     let confirmed;
     if (stat === 'resetSkillTree') {
-      confirmed = await showConfirmDialog(
-        tp('crystalShop.confirm.resetClass', { count: cost }),
-      );
+      confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetClass', { count: cost }));
       if (!confirmed) return;
       hero.crystals -= cost;
       skillTree.resetSkillTree();
@@ -466,9 +458,7 @@ export default class CrystalShop {
       initializeSkillTreeUI();
       showToast(t('crystalShop.resetClassSuccess'), 'success');
     } else if (stat === 'resetSpecialization') {
-      confirmed = await showConfirmDialog(
-        tp('crystalShop.confirm.resetSpecialization', { count: cost }),
-      );
+      confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetSpecialization', { count: cost }));
       if (!confirmed) return;
       hero.crystals -= cost;
       skillTree.resetSpecialization();
@@ -477,18 +467,14 @@ export default class CrystalShop {
       initializeSkillTreeUI();
       showToast(t('crystalShop.resetSpecializationSuccess'), 'success');
     } else if (stat === 'resetAttributes') {
-      confirmed = await showConfirmDialog(
-        tp('crystalShop.confirm.resetAttributes', { count: cost }),
-      );
+      confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetAttributes', { count: cost }));
       if (!confirmed) return;
       hero.crystals -= cost;
       hero.resetAttributes();
       updateStatsAndAttributesUI();
       showToast(t('crystalShop.resetAttributesSuccess'), 'success');
     } else if (stat === 'resetArenaLevel') {
-      confirmed = await showConfirmDialog(
-        tp('crystalShop.confirm.resetBossLevel', { count: cost }),
-      );
+      confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetBossLevel', { count: cost }));
       if (!confirmed) return;
       hero.crystals -= cost;
       hero.bossLevel = 1;
@@ -498,9 +484,7 @@ export default class CrystalShop {
       updateStageUI();
       showToast(t('crystalShop.resetBossLevelSuccess'), 'success');
     } else if (stat === 'resetTraining') {
-      confirmed = await showConfirmDialog(
-        tp('crystalShop.confirm.resetTraining', { count: cost }),
-      );
+      confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetTraining', { count: cost }));
       if (!confirmed) return;
       hero.crystals -= cost;
       const refund = training.goldSpent || 0;
@@ -511,31 +495,22 @@ export default class CrystalShop {
       training.updateTrainingUI('gold-upgrades');
       hero.queueRecalculateFromAttributes();
       updateStatsAndAttributesUI();
-      showToast(
-        tp('crystalShop.resetTrainingSuccess', { amount: formatNumber(refund) }),
-        'success',
-      );
+      showToast(tp('crystalShop.resetTrainingSuccess', { amount: formatNumber(refund) }), 'success');
     } else if (stat === 'resetSoulShop') {
-      confirmed = await showConfirmDialog(
-        tp('crystalShop.confirm.resetSoulShop', { count: cost }),
-      );
+      confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetSoulShop', { count: cost }));
       if (!confirmed) return;
       hero.crystals -= cost;
-      const refund = Object.entries(soulShop.soulUpgrades || {}).reduce(
-        (total, [key, value]) => {
-          const config = SOUL_UPGRADE_CONFIG[key];
-          if (!config) return total;
-          if (config.oneTime) return total + Math.round(config.baseCost);
-          if (config.multiple)
-            return total + Math.round(config.baseCost) * (value || 0);
-          let c = 0;
-          for (let i = 0; i < (value || 0); i++) {
-            c += soulShop.getSoulUpgradeCost(config, i);
-          }
-          return total + c;
-        },
-        0,
-      );
+      const refund = Object.entries(soulShop.soulUpgrades || {}).reduce((total, [key, value]) => {
+        const config = SOUL_UPGRADE_CONFIG[key];
+        if (!config) return total;
+        if (config.oneTime) return total + Math.round(config.baseCost);
+        if (config.multiple) return total + Math.round(config.baseCost) * (value || 0);
+        let c = 0;
+        for (let i = 0; i < (value || 0); i++) {
+          c += soulShop.getSoulUpgradeCost(config, i);
+        }
+        return total + c;
+      }, 0);
       const prevSelectedQty = soulShop.selectedQty;
       const prevQuickQty = soulShop.quickQty;
       soulShop.resetSoulShop();
@@ -546,14 +521,9 @@ export default class CrystalShop {
       hero.queueRecalculateFromAttributes();
       updateStatsAndAttributesUI();
       updatePlayerLife();
-      showToast(
-        tp('crystalShop.resetSoulShopSuccess', { amount: formatNumber(refund) }),
-        'success',
-      );
+      showToast(tp('crystalShop.resetSoulShopSuccess', { amount: formatNumber(refund) }), 'success');
     } else if (stat === 'resetAscension') {
-      confirmed = await showConfirmDialog(
-        tp('crystalShop.confirm.resetAscension', { count: cost }),
-      );
+      confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetAscension', { count: cost }));
       if (!confirmed) return;
       hero.crystals -= cost;
       // Calculate total points spent so far and refund them
@@ -578,10 +548,7 @@ export default class CrystalShop {
       updateStatsAndAttributesUI();
       updatePlayerLife();
       updateAscensionUI?.();
-      showToast(
-        tp('crystalShop.resetAscensionSuccess', { amount: formatNumber(refundPts) }),
-        'success',
-      );
+      showToast(tp('crystalShop.resetAscensionSuccess', { amount: formatNumber(refundPts) }), 'success');
     }
     updateResources();
     dataManager.saveGame();
@@ -593,7 +560,15 @@ export default class CrystalShop {
    */
   async openUpgradeModal(stat) {
     if (
-      ['resetSkillTree', 'resetSpecialization', 'resetAttributes', 'resetArenaLevel', 'resetTraining', 'resetSoulShop', 'resetAscension'].includes(stat)
+      [
+        'resetSkillTree',
+        'resetSpecialization',
+        'resetAttributes',
+        'resetArenaLevel',
+        'resetTraining',
+        'resetSoulShop',
+        'resetAscension',
+      ].includes(stat)
     ) {
       await this.confirmReset(stat);
       return;
@@ -607,9 +582,7 @@ export default class CrystalShop {
     const fields = m.querySelector('.modal-fields');
     const controls = m.querySelector('.modal-controls');
     const buyBtn = m.querySelector('.modal-buy');
-    this.selectedQty = options.useNumericInputs
-      ? Math.min(options.crystalShopQty || 1, CRYSTAL_SHOP_MAX_QTY)
-      : 1;
+    this.selectedQty = options.useNumericInputs ? Math.min(options.crystalShopQty || 1, CRYSTAL_SHOP_MAX_QTY) : 1;
 
     if (config.bulkModal) {
       const maxLevelText = config.maxLevel ? ' / <span class="modal-max-level"></span>' : '';
@@ -660,15 +633,15 @@ export default class CrystalShop {
     } else if (config.oneTime) {
       controls.style.display = 'none';
       const purchased = !!this.crystalUpgrades[stat];
-      const oneTimeBonusText = typeof config.bonus === 'string' ? t(config.bonus) : (config.bonus || '');
+      const oneTimeBonusText = typeof config.bonus === 'string' ? t(config.bonus) : config.bonus || '';
       const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
       const reduced = Math.round(config.baseCost * (1 - ascRed));
       fields.innerHTML = `
         <p>${oneTimeBonusText}</p>
         <p>${t('ascension.upgrade.cost')}: <span class="modal-total-cost">${reduced}</span> ${t('resource.crystal.name')}</p>
         <div class="modal-status">${
-  purchased ? '<span style="color:#10b981;font-weight:bold;">' + t('common.purchased') + '</span>' : ''
-}</div>
+          purchased ? '<span style="color:#10b981;font-weight:bold;">' + t('common.purchased') + '</span>' : ''
+        }</div>
       `;
       buyBtn.style.display = purchased ? 'none' : '';
       buyBtn.disabled = purchased;
@@ -681,7 +654,7 @@ export default class CrystalShop {
         const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
         const nextCost = Math.round((config.baseCost + (config.costIncrement || 0) * level) * (1 - ascRed));
         const isMaxed = level >= cap;
-        const autoSalvageBonus = typeof config.bonus === 'string' ? t(config.bonus) : (config.bonus || '');
+        const autoSalvageBonus = typeof config.bonus === 'string' ? t(config.bonus) : config.bonus || '';
         fields.innerHTML = `
           <p>${autoSalvageBonus}</p>
           <p>${t('ascension.upgrade.currentLevel')}: <span class="modal-level">${level}</span> / <span class="modal-max-level">${cap}</span></p>
@@ -690,7 +663,7 @@ export default class CrystalShop {
         buyBtn.disabled = isMaxed;
         buyBtn.style.display = isMaxed ? 'none' : '';
       } else {
-        const multipleBonus = typeof config.bonus === 'string' ? t(config.bonus) : (config.bonus || '');
+        const multipleBonus = typeof config.bonus === 'string' ? t(config.bonus) : config.bonus || '';
         const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
         const reduced = Math.round(config.baseCost * (1 - ascRed));
         fields.innerHTML = `
@@ -761,7 +734,7 @@ export default class CrystalShop {
       const cap = config.maxLevel ?? AUTO_SALVAGE_MAX_LEVEL;
       const ascRedLocal = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
       const nextCostVal = Math.round(
-        Math.floor(config.baseCost + (config.costIncrement || 0) * level) * (1 - ascRedLocal),
+        Math.floor(config.baseCost + (config.costIncrement || 0) * level) * (1 - ascRedLocal)
       );
       if (q('.modal-total-cost')) q('.modal-total-cost').textContent = nextCostVal;
       const isMaxed = level >= cap;
@@ -781,7 +754,7 @@ export default class CrystalShop {
       const ascRedLocal = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
       const costVal = Math.round(
         Math.floor(config.baseCost + (config.costIncrement || 0) * (this.crystalUpgrades[stat] || 0)) *
-          (1 - ascRedLocal),
+          (1 - ascRedLocal)
       );
       if (q('.modal-total-cost')) q('.modal-total-cost').textContent = costVal;
     }
@@ -816,7 +789,8 @@ export default class CrystalShop {
     const prevLevel = baseLevel;
     const cap = config.maxLevel ?? Infinity;
     const levelsLeft = Math.max(0, cap - baseLevel);
-    const desiredQty = qty === 'max' ? Math.min(levelsLeft, CRYSTAL_SHOP_MAX_QTY) : Math.min(qty, levelsLeft, CRYSTAL_SHOP_MAX_QTY);
+    const desiredQty =
+      qty === 'max' ? Math.min(levelsLeft, CRYSTAL_SHOP_MAX_QTY) : Math.min(qty, levelsLeft, CRYSTAL_SHOP_MAX_QTY);
     const { qty: count, totalCost } = this._getAffordablePurchase(config, baseLevel, hero.crystals, desiredQty);
 
     if (count > 0) {
@@ -938,7 +912,7 @@ export default class CrystalShop {
    * Routes to resets, bulk, one-time or multiple handlers.
    * @param {string} stat
    * @param {number|'max'} qty
-  */
+   */
   async buyBulk(stat, qty) {
     const config = CRYSTAL_UPGRADE_CONFIG[stat];
     if (!config) return;
@@ -946,7 +920,15 @@ export default class CrystalShop {
 
     // special resets use confirm dialog
     if (
-      ['resetSkillTree', 'resetSpecialization', 'resetAttributes', 'resetArenaLevel', 'resetTraining', 'resetSoulShop', 'resetAscension'].includes(stat)
+      [
+        'resetSkillTree',
+        'resetSpecialization',
+        'resetAttributes',
+        'resetArenaLevel',
+        'resetTraining',
+        'resetSoulShop',
+        'resetAscension',
+      ].includes(stat)
     ) {
       await this.confirmReset(stat);
       return;

@@ -69,7 +69,7 @@
   overflow-y: auto;
 }
 
-.log-list>* {
+.log-list > * {
   user-select: text;
 }
 

@@ -1,19 +1,8 @@
 import Boss from '../boss.js';
 import { game } from '../globals.js';
-import {
-  hideTooltip,
-  positionTooltip,
-  showTooltip,
-  updateEnemyStats,
-  updateStageUI,
-} from './ui.js';
+import { hideTooltip, positionTooltip, showTooltip, updateEnemyStats, updateStageUI } from './ui.js';
 import { tp } from '../i18n.js';
-import {
-  getBossRegions,
-  getCurrentBossRegion,
-  getUnlockedBossRegions,
-  setCurrentBossRegion,
-} from '../bossRegion.js';
+import { getBossRegions, getCurrentBossRegion, getUnlockedBossRegions, setCurrentBossRegion } from '../bossRegion.js';
 import { createModal, closeModal } from './modal.js';
 import { updateRegionSelectorButton } from '../region.js';
 
@@ -52,40 +41,40 @@ export function openBossRegionSelectionDialog() {
     visible.push(nextLocked);
   }
 
-  const regionItems = visible.map(region => {
-    const isUnlocked = unlocked.includes(region);
-    const isCurrent = region.id === currentRegion.id;
-    const disabledClass = !isUnlocked ? 'disabled' : '';
-    const selectedClass = isCurrent ? 'selected' : '';
+  const regionItems = visible
+    .map((region) => {
+      const isUnlocked = unlocked.includes(region);
+      const isCurrent = region.id === currentRegion.id;
+      const disabledClass = !isUnlocked ? 'disabled' : '';
+      const selectedClass = isCurrent ? 'selected' : '';
 
-    const unlockHints = [];
-    if (Number.isFinite(region?.unlockLevel) && region.unlockLevel > 1) {
-      unlockHints.push(`Lv ${region.unlockLevel}`);
-    }
-    if (Number.isFinite(region?.unlockBossLevel) && region.unlockBossLevel > 0) {
-      unlockHints.push(`Boss Lv ${region.unlockBossLevel}`);
-    }
-    const unlockText = unlockHints.join(' • ');
+      const unlockHints = [];
+      if (Number.isFinite(region?.unlockLevel) && region.unlockLevel > 1) {
+        unlockHints.push(`Lv ${region.unlockLevel}`);
+      }
+      if (Number.isFinite(region?.unlockBossLevel) && region.unlockBossLevel > 0) {
+        unlockHints.push(`Boss Lv ${region.unlockBossLevel}`);
+      }
+      const unlockText = unlockHints.join(' • ');
 
-    return html`
-      <div class="region-dialog-item ${disabledClass} ${selectedClass}" data-region-id="${region.id}">
-        <div class="region-dialog-item-header">
-          <span class="region-dialog-item-name">${region.name}</span>
-          ${unlockText ? html`<span class="region-dialog-item-unlock">${unlockText}</span>` : ''}
-          ${isCurrent ? html`<span class="region-dialog-item-current">${tp('region.current')}</span>` : ''}
-          ${!isUnlocked ? html`<span class="region-dialog-item-locked">🔒</span>` : ''}
+      return html`
+        <div class="region-dialog-item ${disabledClass} ${selectedClass}" data-region-id="${region.id}">
+          <div class="region-dialog-item-header">
+            <span class="region-dialog-item-name">${region.name}</span>
+            ${unlockText ? html`<span class="region-dialog-item-unlock">${unlockText}</span>` : ''}
+            ${isCurrent ? html`<span class="region-dialog-item-current">${tp('region.current')}</span>` : ''}
+            ${!isUnlocked ? html`<span class="region-dialog-item-locked">🔒</span>` : ''}
+          </div>
         </div>
-      </div>
-    `;
-  }).join('');
+      `;
+    })
+    .join('');
 
   const content = html`
     <div class="modal-content region-selection-modal">
       <button class="modal-close">×</button>
       <h2 class="modal-title">${tp('region.selectRegion')}</h2>
-      <div class="region-dialog-list">
-        ${regionItems}
-      </div>
+      <div class="region-dialog-list">${regionItems}</div>
     </div>
   `;
 
@@ -97,9 +86,9 @@ export function openBossRegionSelectionDialog() {
   });
 
   // Add click handlers and tooltips to region items
-  document.querySelectorAll('#boss-region-selection-dialog .region-dialog-item').forEach(item => {
+  document.querySelectorAll('#boss-region-selection-dialog .region-dialog-item').forEach((item) => {
     const regionId = item.dataset.regionId;
-    const region = regions.find(r => r.id === regionId);
+    const region = regions.find((r) => r.id === regionId);
 
     if (region) {
       const isUnlocked = unlocked.includes(region);
@@ -184,7 +173,7 @@ export function updateBossRegionSelector() {
   // Update the region selector button for arena mode
   const currentRegion = getCurrentBossRegion();
   updateRegionSelectorButton('arena', currentRegion.name, openBossRegionSelectionDialog);
-  
+
   renderBossRegionButtons();
 }
 

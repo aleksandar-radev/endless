@@ -20,9 +20,7 @@ export function t(key) {
 
 export function tp(key, params = {}) {
   let str = t(key);
-  return str.replace(/\{(\w+)\}/g, (_, k) =>
-    Object.prototype.hasOwnProperty.call(params, k) ? params[k] : `{${k}}`,
-  );
+  return str.replace(/\{(\w+)\}/g, (_, k) => (Object.prototype.hasOwnProperty.call(params, k) ? params[k] : `{${k}}`));
 }
 
 export function applyTranslations() {
@@ -106,4 +104,3 @@ export function applyTranslations() {
 export function getCurrentLanguage() {
   return currentLang;
 }
-

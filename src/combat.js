@@ -11,7 +11,19 @@ import {
   formatNumber,
 } from './ui/ui.js';
 import Enemy from './enemy.js';
-import { hero, game, inventory, crystalShop, statistics, skillTree, dataManager, runtime, options, runes, ascension } from './globals.js';
+import {
+  hero,
+  game,
+  inventory,
+  crystalShop,
+  statistics,
+  skillTree,
+  dataManager,
+  runtime,
+  options,
+  runes,
+  ascension,
+} from './globals.js';
 import { ITEM_RARITY, ITEM_TYPES, ALL_ITEM_TYPES } from './constants/items.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateQuestsUI } from './ui/questUi.js';
@@ -29,7 +41,13 @@ import { rollSpecialItemDrop } from './uniqueItems.js';
 import { AILMENTS } from './constants/ailments.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
-import { ELEMENTS, BASE_MATERIAL_DROP_CHANCE, BASE_ITEM_DROP_CHANCE, MIN_DEATH_TIMER, MAX_DEATH_TIMER } from './constants/common.js';
+import {
+  ELEMENTS,
+  BASE_MATERIAL_DROP_CHANCE,
+  BASE_ITEM_DROP_CHANCE,
+  MIN_DEATH_TIMER,
+  MAX_DEATH_TIMER,
+} from './constants/common.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 const UNIQUE_RUNE_SET = new Set(RUNES.filter((r) => r.unique).map((r) => r.id));
@@ -152,11 +170,7 @@ export function enemyAttack(currentTime) {
 
     let avoided = false;
 
-    const hitChance = calculateHitChance(
-      enemy.attackRating,
-      hero.stats.evasion,
-      alwaysHit ? 1 : undefined,
-    );
+    const hitChance = calculateHitChance(enemy.attackRating, hero.stats.evasion, alwaysHit ? 1 : undefined);
 
     if (!alwaysHit) {
       if (Math.random() * 100 > hitChance) {
@@ -186,11 +200,7 @@ export function enemyAttack(currentTime) {
 
       const elementalDamage = {};
       ELEMENT_IDS.forEach((id) => {
-        const reduction =
-          calculateResistanceReduction(
-            hero.stats[`${id}Resistance`],
-            enemy[`${id}Damage`],
-          ) / 100;
+        const reduction = calculateResistanceReduction(hero.stats[`${id}Resistance`], enemy[`${id}Damage`]) / 100;
         elementalDamage[id] = enemy[`${id}Damage`] * (1 - reduction);
       });
 
@@ -201,8 +211,7 @@ export function enemyAttack(currentTime) {
       if (conversionPercent > 0) {
         const nonColdTotal = Math.max(
           0,
-          physicalDamage +
-            ELEMENT_IDS.reduce((sum, id) => (id === 'cold' ? sum : sum + (elementalDamage[id] || 0)), 0),
+          physicalDamage + ELEMENT_IDS.reduce((sum, id) => (id === 'cold' ? sum : sum + (elementalDamage[id] || 0)), 0)
         );
         if (nonColdTotal > 0) {
           const convertAmount = nonColdTotal * conversionPercent;
@@ -225,14 +234,14 @@ export function enemyAttack(currentTime) {
       }
 
       if (coldReductionPercent > 0 && elementalDamage.cold > 0) {
-        elementalDamage.cold *= (1 - coldReductionPercent);
+        elementalDamage.cold *= 1 - coldReductionPercent;
       }
 
       if (hero.stats.elementalDamageTakenReductionPercent > 0) {
         const reduction = hero.stats.elementalDamageTakenReductionPercent;
         ELEMENT_IDS.forEach((id) => {
           if (elementalDamage[id] > 0) {
-            elementalDamage[id] *= (1 - reduction);
+            elementalDamage[id] *= 1 - reduction;
           }
         });
       }
@@ -263,10 +272,8 @@ export function enemyAttack(currentTime) {
       const breakdown = { physical: physicalDamage, ...elementalDamage };
 
       if (enemySpecials.includes('percentLifeOnHit')) {
-        const percentLife = Number.isFinite(enemySpecialData.percentLifeOnHit)
-          ? enemySpecialData.percentLifeOnHit
-          : 5;
-        const extraDamage = Math.floor((hero.stats.life || 0) * percentLife / 100);
+        const percentLife = Number.isFinite(enemySpecialData.percentLifeOnHit) ? enemySpecialData.percentLifeOnHit : 5;
+        const extraDamage = Math.floor(((hero.stats.life || 0) * percentLife) / 100);
         if (extraDamage > 0) {
           totalDamage += extraDamage;
         }
@@ -297,7 +304,7 @@ export function enemyAttack(currentTime) {
       } else {
         const fireId = ELEMENTS.fire.id;
         const fireReflect = Math.floor(
-          hero.stats[`reflect${fireId.charAt(0).toUpperCase()}${fireId.slice(1)}Damage`] || 0,
+          hero.stats[`reflect${fireId.charAt(0).toUpperCase()}${fireId.slice(1)}Damage`] || 0
         );
         if (fireReflect > 1) {
           game.damageEnemy(fireReflect, false, null, 'reflectFireDamage');
@@ -318,7 +325,7 @@ export function enemyAttack(currentTime) {
           const lifeStealPercent = Number.isFinite(enemySpecialData.lifeStealPercent)
             ? enemySpecialData.lifeStealPercent
             : 20;
-          const healAmount = Math.floor(totalDamage * lifeStealPercent / 100);
+          const healAmount = Math.floor((totalDamage * lifeStealPercent) / 100);
           const healed = enemy.heal(healAmount);
           if (healed > 0) {
             createDamageNumber({ text: `+${Math.floor(healed)}`, isPlayer: false, color: '#4CAF50' });
@@ -363,12 +370,7 @@ export function playerAttack(currentTime) {
     const alwaysEvade = enemy.special?.includes('alwaysEvade');
     const hitChance = alwaysEvade
       ? 0
-      : calculateHitChance(
-        heroAttackRating,
-        enemy.evasion,
-        undefined,
-        hero.stats.chanceToHitPercent || 0,
-      );
+      : calculateHitChance(heroAttackRating, enemy.evasion, undefined, hero.stats.chanceToHitPercent || 0);
 
     const roll = Math.random() * 100;
     const neverMiss = hero.stats.attackNeverMiss > 0 && !alwaysEvade;
@@ -413,7 +415,7 @@ export function playerAttack(currentTime) {
 
       // Extra Damage Against Burning Enemies
       if (game.currentEnemy.ailments[AILMENTS.burn.id] && hero.stats.extraDamageAgainstBurningEnemies > 0) {
-        const multiplier = (1 + hero.stats.extraDamageAgainstBurningEnemies);
+        const multiplier = 1 + hero.stats.extraDamageAgainstBurningEnemies;
         damage *= multiplier;
         if (breakdown) {
           Object.keys(breakdown).forEach((k) => {
@@ -430,7 +432,7 @@ export function playerAttack(currentTime) {
 
       // Execute Check
       if (hero.stats.executeThresholdPercent > 0) {
-        const threshold = enemy.life * (hero.stats.executeThresholdPercent);
+        const threshold = enemy.life * hero.stats.executeThresholdPercent;
         if (enemy.currentLife <= threshold) {
           damage = enemy.life; // Ensure kill
           createCombatText('EXECUTE!', true);
@@ -461,15 +463,15 @@ export function playerAttack(currentTime) {
 
       // On-hit Effects
       if (hero.stats.bleedChance > 0 && Math.random() < hero.stats.bleedChance) {
-        const physicalDealt = breakdown ? (breakdown.physical || 0) : damage;
-        const bleedDmg = physicalDealt * ((hero.stats.bleedDamagePercent || 0));
+        const physicalDealt = breakdown ? breakdown.physical || 0 : damage;
+        const bleedDmg = physicalDealt * (hero.stats.bleedDamagePercent || 0);
         if (bleedDmg > 0) {
           game.currentEnemy.applyBleed(bleedDmg);
         }
       }
 
       if (hero.stats.burnChance > 0 && Math.random() < hero.stats.burnChance) {
-        const fireDealt = breakdown ? (breakdown.fire || 0) : 0;
+        const fireDealt = breakdown ? breakdown.fire || 0 : 0;
         const burnShare = AILMENTS.burn.baseDamageMultiplier + (hero.stats.burnDamagePercent || 0);
         const burnDmg = fireDealt * burnShare;
         if (burnDmg > 0) {
@@ -516,10 +518,8 @@ export function playerAttack(currentTime) {
       }
 
       if (enemySpecials.includes('thornsAura')) {
-        const thornsPercent = Number.isFinite(enemySpecialData.thornsPercent)
-          ? enemySpecialData.thornsPercent
-          : 10;
-        const thornsDamage = Math.floor(damage * thornsPercent / 100);
+        const thornsPercent = Number.isFinite(enemySpecialData.thornsPercent) ? enemySpecialData.thornsPercent : 10;
+        const thornsDamage = Math.floor((damage * thornsPercent) / 100);
         if (thornsDamage > 0) {
           game.damagePlayer(thornsDamage, { thornsDamage });
         }
@@ -742,7 +742,7 @@ export async function defeatEnemy(source) {
     document.dispatchEvent(
       new CustomEvent('bossKilled', {
         detail: { level: hero.bossLevel },
-      }),
+      })
     );
   } else if (initialFightMode === 'explore') {
     baseExpGained = enemy.xp;
@@ -930,8 +930,8 @@ export async function defeatEnemy(source) {
   // Apply warmup reduction if active
   if (hero.ailments[AILMENTS.warmup.id]) {
     const reduction = AILMENTS.warmup.goldXpReduction;
-    expMultiplier *= (1 - reduction);
-    goldMultiplier *= (1 - reduction);
+    expMultiplier *= 1 - reduction;
+    goldMultiplier *= 1 - reduction;
   }
 
   const expGained = Math.floor(baseExpGained * expMultiplier);
@@ -1040,7 +1040,7 @@ function showLootNotification(item) {
 }
 
 export function calculateHitChance(attackRating, evasion, cap = 0.9, bonus = 0) {
-  let raw = 1.5 * attackRating / (attackRating + evasion);
+  let raw = (1.5 * attackRating) / (attackRating + evasion);
   raw = Math.max(0.1, raw); // Ensure raw chance is never below 10%
   raw = Math.max(0, raw) + bonus;
   const capped = Math.max(1 - cap, Math.min(raw, cap));

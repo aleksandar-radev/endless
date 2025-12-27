@@ -97,9 +97,7 @@ export default class SkillTree {
     this.updateSpecializationPoints();
 
     // Quick allocation quantity for skills (used by quick skill allocation UI)
-    this.quickQty = options.useNumericInputs
-      ? Math.min(options.skillQuickQty || 1, SKILLS_MAX_QTY)
-      : 1;
+    this.quickQty = options.useNumericInputs ? Math.min(options.skillQuickQty || 1, SKILLS_MAX_QTY) : 1;
   }
 
   getPathBonuses() {
@@ -122,7 +120,14 @@ export default class SkillTree {
 
     const allBonuses = {};
 
-    ;[pathBonuses, passiveBonuses, activeBuffEffects, toggleBonuses, specializationBonuses, specializationBaseBonuses].forEach((bonus) => {
+    [
+      pathBonuses,
+      passiveBonuses,
+      activeBuffEffects,
+      toggleBonuses,
+      specializationBonuses,
+      specializationBaseBonuses,
+    ].forEach((bonus) => {
       Object.entries(bonus).forEach(([stat, value]) => {
         allBonuses[stat] = (allBonuses[stat] || 0) + value;
       });
@@ -214,9 +219,10 @@ export default class SkillTree {
       const skill = this.getSkill(skillId);
       if (skill && skill.type() === 'toggle' && skillData.active) {
         const cost = this.getSkillManaCost(skill);
-        const affordable = hero.stats.convertManaToLifePercent > 0
-          ? (hero.stats.currentLife + hero.stats.currentMana) >= cost
-          : hero.stats.currentMana >= cost;
+        const affordable =
+          hero.stats.convertManaToLifePercent > 0
+            ? hero.stats.currentLife + hero.stats.currentMana >= cost
+            : hero.stats.currentMana >= cost;
         if (skillData.affordable !== affordable) {
           skillData.affordable = affordable;
           changed = true;
@@ -480,8 +486,7 @@ export default class SkillTree {
     // Set new level and deduct points
     const newLevel = currentLevel + allowedQty;
     const isToggle = skill.type() === 'toggle';
-    const shouldAutoEnableToggle =
-      isToggle && (currentLevel > 0 ? wasActive : crystalShop.hasAutoSpellCastUpgrade());
+    const shouldAutoEnableToggle = isToggle && (currentLevel > 0 ? wasActive : crystalShop.hasAutoSpellCastUpgrade());
     const isActive = isToggle ? shouldAutoEnableToggle : false;
     const isAffordable =
       isToggle && isActive ? hero.stats.currentMana >= this.getSkillManaCost(skill, newLevel) : false;
@@ -802,7 +807,7 @@ export default class SkillTree {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.manaCost) return 0;
     return Math.floor(
-      skill.manaCost(effectiveLevel) - (skill.manaCost(effectiveLevel) * (hero.stats.manaCostReductionPercent || 0)),
+      skill.manaCost(effectiveLevel) - skill.manaCost(effectiveLevel) * (hero.stats.manaCostReductionPercent || 0)
     );
   }
 
@@ -822,9 +827,7 @@ export default class SkillTree {
   getSkillDuration(skill, level = 0) {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.duration) return 0;
-    return Math.floor(
-      skill.duration(effectiveLevel) + (skill.duration(effectiveLevel) * hero.stats.buffDurationPercent),
-    );
+    return Math.floor(skill.duration(effectiveLevel) + skill.duration(effectiveLevel) * hero.stats.buffDurationPercent);
   }
 
   evaluateLifeCost(effects, { includePerHit = false } = {}) {
@@ -882,8 +885,7 @@ export default class SkillTree {
 
     const skill = this.getSkill(skillId);
     const baseEffects = { ...this.getSkillEffect(skillId) };
-    const scaledLifePerHitFromStats =
-      (hero.stats.lifePerHit || 0) * (1 + (hero.stats.lifePerHitPercent || 0));
+    const scaledLifePerHitFromStats = (hero.stats.lifePerHit || 0) * (1 + (hero.stats.lifePerHitPercent || 0));
 
     let manaCost = this.getSkillManaCost(skill);
     if (hero.stats.convertManaToLifePercent > 0 && manaCost > hero.stats.currentMana) {
@@ -896,9 +898,8 @@ export default class SkillTree {
       const lifeCost = hero.stats.currentLife * 0.5;
       baseEffects.life = (baseEffects.life || 0) - lifeCost;
       const effectiveness = 1 + (hero.stats.bloodSacrificeEffectiveness || 0);
-      baseEffects.damage = (baseEffects.damage || 0) + (lifeCost * effectiveness);
-    };
-
+      baseEffects.damage = (baseEffects.damage || 0) + lifeCost * effectiveness;
+    }
 
     if (!isAutoCast && manaCost && hero.stats.currentMana < manaCost) {
       showManaWarning();
@@ -909,10 +910,13 @@ export default class SkillTree {
     const totalLifePerHitEffect = (baseEffects.lifePerHit || 0) + scaledLifePerHitFromStats;
     const includePerHit =
       dealsDamageForCost && typeof totalLifePerHitEffect === 'number' && totalLifePerHitEffect !== 0;
-    const lifeCostCheck = this.evaluateLifeCost({
-      ...baseEffects,
-      ...(includePerHit ? { lifePerHit: totalLifePerHitEffect } : {}),
-    }, { includePerHit });
+    const lifeCostCheck = this.evaluateLifeCost(
+      {
+        ...baseEffects,
+        ...(includePerHit ? { lifePerHit: totalLifePerHitEffect } : {}),
+      },
+      { includePerHit }
+    );
     if (lifeCostCheck.hasCost && !lifeCostCheck.willSurvive) {
       if (!isAutoCast) {
         showLifeWarning();
@@ -924,8 +928,7 @@ export default class SkillTree {
 
     const manaPerHit = (hero.stats.manaPerHit || 0) * (1 + (hero.stats.manaPerHitPercent || 0));
     const skillTypeSource = skill?.skill_type ?? skill?.skillType;
-    const resolvedSkillType =
-      typeof skillTypeSource === 'function' ? skillTypeSource() : skillTypeSource;
+    const resolvedSkillType = typeof skillTypeSource === 'function' ? skillTypeSource() : skillTypeSource;
     const skillType = (resolvedSkillType || 'attack').toLowerCase();
     const isSpell = skillType === 'spell';
     const dealsDamage = dealsDamageForCost;
@@ -948,11 +951,11 @@ export default class SkillTree {
         const hitChance = alwaysEvade
           ? 0
           : calculateHitChance(
-            hero.stats.attackRating,
-            game.currentEnemy.evasion,
-            undefined,
-            hero.stats.chanceToHitPercent || 0,
-          );
+              hero.stats.attackRating,
+              game.currentEnemy.evasion,
+              undefined,
+              hero.stats.chanceToHitPercent || 0
+            );
         const roll = Math.random() * 100;
         const neverMiss = hero.stats.attackNeverMiss > 0 && !alwaysEvade;
 
@@ -1286,8 +1289,8 @@ export default class SkillTree {
     this.activeBuffs.forEach((buffData, skillId) => {
       if (!buffData.summonStats) return;
       if (buffData.nextAttackTime <= now) {
-      // Calculate summon damage as % of player's damage
-        const canCrit = (buffData?.summonStats?.canCrit || false) || (hero.stats.summonsCanCrit || 0) > 0;
+        // Calculate summon damage as % of player's damage
+        const canCrit = buffData?.summonStats?.canCrit || false || (hero.stats.summonsCanCrit || 0) > 0;
         const playerDamage = hero.calculateTotalDamage({}, { canCrit });
         let damage = 0;
         damage += buffData.summonStats.damage || 0;
@@ -1307,14 +1310,14 @@ export default class SkillTree {
         damage += playerDamage.damage * ((buffData.summonStats.percentOfPlayerDamage || 0) / d);
 
         if (skillId === 'animatedWeapons') {
-          damage *= (hero.stats.animatedWeaponsDamagePercent) || 1;
+          damage *= hero.stats.animatedWeaponsDamagePercent || 1;
         }
         if (skillId === 'shadowClone') {
-          damage *= (hero.stats.cloneDamagePercent) || 1;
+          damage *= hero.stats.cloneDamagePercent || 1;
         }
 
         if (skillId === 'summonBats' && hero.stats.batsHealPercent) {
-          game.healPlayer(damage * (hero.stats.batsHealPercent));
+          game.healPlayer(damage * hero.stats.batsHealPercent);
         }
 
         if (buffData.summonStats.lifePerHit) {
@@ -1504,9 +1507,10 @@ export default class SkillTree {
         }
 
         const manaCost = this.getSkillManaCost(skillData, skillData.level);
-        skillData.affordable = hero.stats.convertManaToLifePercent > 0
-          ? (hero.stats.currentLife + hero.stats.currentMana) >= manaCost
-          : hero.stats.currentMana >= manaCost;
+        skillData.affordable =
+          hero.stats.convertManaToLifePercent > 0
+            ? hero.stats.currentLife + hero.stats.currentMana >= manaCost
+            : hero.stats.currentMana >= manaCost;
       }
     });
 
@@ -1549,7 +1553,10 @@ export default class SkillTree {
         // Only cast if not on cooldown and enough mana
         if (!skillData.cooldownEndTime || skillData.cooldownEndTime <= Date.now()) {
           const cost = this.getSkillManaCost(skill);
-          const affordable = hero.stats.convertManaToLifePercent > 0 ? (hero.stats.currentLife + hero.stats.currentMana) >= cost : hero.stats.currentMana >= cost;
+          const affordable =
+            hero.stats.convertManaToLifePercent > 0
+              ? hero.stats.currentLife + hero.stats.currentMana >= cost
+              : hero.stats.currentMana >= cost;
           if (affordable) {
             this.useInstantSkill(skillId, true);
           }
@@ -1558,7 +1565,10 @@ export default class SkillTree {
         // Only cast if not active, not on cooldown, and enough mana
         if (!skillData.active && (!skillData.cooldownEndTime || skillData.cooldownEndTime <= Date.now())) {
           const cost = this.getSkillManaCost(skill);
-          const affordable = hero.stats.convertManaToLifePercent > 0 ? (hero.stats.currentLife + hero.stats.currentMana) >= cost : hero.stats.currentMana >= cost;
+          const affordable =
+            hero.stats.convertManaToLifePercent > 0
+              ? hero.stats.currentLife + hero.stats.currentMana >= cost
+              : hero.stats.currentMana >= cost;
           if (affordable) {
             this.activateSkill(skillId, true);
           }

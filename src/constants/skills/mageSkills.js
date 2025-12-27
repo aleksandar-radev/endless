@@ -257,8 +257,7 @@ export const MAGE_SKILLS = {
     icon: () => 'summon-elemental',
     description: () => t('skill.summonElemental'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-    }),
+    effect: (level) => ({}),
   },
 
   // Tier 200 Skills
@@ -350,7 +349,6 @@ export const MAGE_SKILLS = {
       };
     },
   },
-
 
   // Tier 3000 Skills
   manaOverflow: {
@@ -444,8 +442,7 @@ export const MAGE_SKILLS = {
     icon: () => 'weapon-illusion',
     description: () => t('skill.weaponIllusion'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({
-    }),
+    effect: (level) => ({}),
     isVisible: () => hero.stats.weaponIllusionUnlocked > 0,
   },
 };

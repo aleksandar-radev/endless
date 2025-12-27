@@ -54,10 +54,8 @@ export function run(rawData) {
     }
   }
 
-
   return {
     data,
     result: true,
   };
 }
-

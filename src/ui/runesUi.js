@@ -1,12 +1,6 @@
 import { runes, dataManager, hero, options, training, soulShop } from '../globals.js';
 import { t, tp } from '../i18n.js';
-import {
-  getRuneName,
-  getRuneDescription,
-  getRuneIcon,
-  FROZEN_RUNE_SLOTS,
-  INVENTORY_TAB_COUNT,
-} from '../runes.js';
+import { getRuneName, getRuneDescription, getRuneIcon, FROZEN_RUNE_SLOTS, INVENTORY_TAB_COUNT } from '../runes.js';
 import { showTooltip, positionTooltip, hideTooltip, showToast } from './ui.js';
 import { createModal, closeModal } from './modal.js';
 
@@ -28,9 +22,7 @@ export function renderRunesUI() {
   runeFilterCache.clear();
 
   const unlockedTabs =
-    typeof runes.getUnlockedTabCount === 'function'
-      ? runes.getUnlockedTabCount()
-      : INVENTORY_TAB_COUNT;
+    typeof runes.getUnlockedTabCount === 'function' ? runes.getUnlockedTabCount() : INVENTORY_TAB_COUNT;
   if (activeTab >= unlockedTabs) {
     activeTab = Math.max(0, unlockedTabs - 1);
   }
@@ -44,9 +36,9 @@ export function renderRunesUI() {
     if (!isValid) {
       selectedRune = null;
     } else if (
-      typeof runes.isFrozenIndex === 'function'
-      && typeof runes.getTabIndexForSlot === 'function'
-      && !runes.isFrozenIndex(index)
+      typeof runes.isFrozenIndex === 'function' &&
+      typeof runes.getTabIndexForSlot === 'function' &&
+      !runes.isFrozenIndex(index)
     ) {
       const tabIndex = runes.getTabIndexForSlot(index);
       if (tabIndex !== null && tabIndex !== activeTab) {
@@ -97,7 +89,9 @@ export function renderRunesUI() {
         training.updateTrainingAffordability('gold-upgrades');
         soulShop.updateSoulShopAffordability();
         // Update Arena Boss Skip option max when unique rune effects change
-        try { options.updateArenaBossSkipOption?.(); } catch {}
+        try {
+          options.updateArenaBossSkipOption?.();
+        } catch {}
         selectedRune = null;
         renderRunesUI();
         dataManager.saveGame();
@@ -190,8 +184,7 @@ export function renderRunesUI() {
   equipBtn = document.createElement('button');
   equipBtn.className = 'inventory-btn equip-btn';
   equipBtn.textContent = t('inventory.equip');
-  equipBtn.style.display =
-    selectedRune && selectedRune.source === 'inventory' ? 'inline-block' : 'none';
+  equipBtn.style.display = selectedRune && selectedRune.source === 'inventory' ? 'inline-block' : 'none';
   equipBtn.onclick = () => {
     if (!selectedRune || selectedRune.source !== 'inventory') return;
     equipSelectedRune();
@@ -256,9 +249,7 @@ function updateRuneFilterHighlights(root = document) {
 
   const tabButtons = root.querySelectorAll('.rune-tab-button');
   const hasTabBounds = typeof runes.getTabBounds === 'function';
-  const fallbackTabSize = hasTabBounds
-    ? 0
-    : Math.ceil(runes.inventory.length / INVENTORY_TAB_COUNT);
+  const fallbackTabSize = hasTabBounds ? 0 : Math.ceil(runes.inventory.length / INVENTORY_TAB_COUNT);
   tabButtons.forEach((btn) => {
     btn.classList.remove('filter-match');
     if (!filterActive) return;
@@ -293,9 +284,7 @@ function createTabsBar() {
   const tabs = document.createElement('div');
   tabs.className = 'rune-tabs';
   const unlockedTabs =
-    typeof runes.getUnlockedTabCount === 'function'
-      ? runes.getUnlockedTabCount()
-      : INVENTORY_TAB_COUNT;
+    typeof runes.getUnlockedTabCount === 'function' ? runes.getUnlockedTabCount() : INVENTORY_TAB_COUNT;
   for (let i = 0; i < INVENTORY_TAB_COUNT; i++) {
     const btn = document.createElement('button');
     btn.type = 'button';
@@ -475,7 +464,9 @@ function equipSelectedRune() {
   hero.queueRecalculateFromAttributes();
   training.updateTrainingAffordability('gold-upgrades');
   soulShop.updateSoulShopAffordability();
-  try { options.updateArenaBossSkipOption?.(); } catch {}
+  try {
+    options.updateArenaBossSkipOption?.();
+  } catch {}
   selectedRune = null;
   renderRunesUI();
   dataManager.saveGame();
@@ -502,7 +493,9 @@ function handleDrop(e) {
   hero.queueRecalculateFromAttributes();
   training.updateTrainingAffordability('gold-upgrades');
   soulShop.updateSoulShopAffordability();
-  try { options.updateArenaBossSkipOption?.(); } catch {}
+  try {
+    options.updateArenaBossSkipOption?.();
+  } catch {}
   selectedRune = null;
   renderRunesUI();
   dataManager.saveGame();
@@ -540,17 +533,12 @@ function openRuneContextMenu(source, index, rune, x, y) {
     placeholder.selected = true;
     select.appendChild(placeholder);
     const unlockedTabs =
-      typeof runes.getUnlockedTabCount === 'function'
-        ? runes.getUnlockedTabCount()
-        : INVENTORY_TAB_COUNT;
+      typeof runes.getUnlockedTabCount === 'function' ? runes.getUnlockedTabCount() : INVENTORY_TAB_COUNT;
     for (let tab = 0; tab < INVENTORY_TAB_COUNT; tab++) {
       const option = document.createElement('option');
       option.value = tab;
-      const isUnlocked =
-        typeof runes.isTabUnlocked === 'function' ? runes.isTabUnlocked(tab) : tab < unlockedTabs;
-      option.textContent = isUnlocked
-        ? `${tab + 1}`
-        : tp('runes.lockedTabOption', { tab: tab + 1 });
+      const isUnlocked = typeof runes.isTabUnlocked === 'function' ? runes.isTabUnlocked(tab) : tab < unlockedTabs;
+      option.textContent = isUnlocked ? `${tab + 1}` : tp('runes.lockedTabOption', { tab: tab + 1 });
       option.disabled = !isUnlocked;
       select.appendChild(option);
     }
@@ -580,7 +568,7 @@ function openRuneContextMenu(source, index, rune, x, y) {
       id: 'inspect-rune',
       className: 'inventory-modal',
       content: `<div class="inventory-modal-content"><button class="modal-close">&times;</button>${getRuneTooltip(
-        rune,
+        rune
       )}</div>`,
     });
     dialog.querySelector('.modal-close').onclick = () => closeModal('inspect-rune');
@@ -597,9 +585,11 @@ function openRuneContextMenu(source, index, rune, x, y) {
       soulShop.updateSoulShopAffordability();
     }
     if (crystals > 0) {
-      showToast(`Salvaged rune for ${crystals} crystal${crystals > 1 ? 's' : ''}`,'success');
+      showToast(`Salvaged rune for ${crystals} crystal${crystals > 1 ? 's' : ''}`, 'success');
     }
-    try { options.updateArenaBossSkipOption?.(); } catch {}
+    try {
+      options.updateArenaBossSkipOption?.();
+    } catch {}
     selectedRune = null;
     renderRunesUI();
     dataManager.saveGame();

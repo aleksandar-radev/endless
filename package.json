@@ -13,6 +13,7 @@
     "preview": "vite preview",
     "preview:debug": "vite preview --mode debug",
     "lint": "eslint . --ext .js",
+    "format": "prettier --write .",
     "electron": "electron electron-main.js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
@@ -29,6 +30,8 @@
     "electron": "^38.1.2",
     "electron-builder": "^26.0.12",
     "eslint": "^9.36.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.7.4",
     "terser": "^5.44.0",
     "vite": "^7.1.7",
     "vite-plugin-javascript-obfuscator": "3.1.0"

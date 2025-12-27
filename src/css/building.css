@@ -55,7 +55,9 @@
   cursor: pointer;
   margin: 18px 0 10px 0;
   box-shadow: 0 2px 8px rgba(78, 84, 200, 0.15);
-  transition: background 0.2s, transform 0.1s;
+  transition:
+    background 0.2s,
+    transform 0.1s;
 }
 
 .building-select-btn:hover {
@@ -190,25 +192,23 @@
 
 /* Limit to at most 3 buildings per row. Children will size to 1/3 of the
    container minus gaps. Use responsive fallbacks for smaller viewports. */
-.choose-building-list>* {
+.choose-building-list > * {
   box-sizing: border-box;
   flex: 0 0 calc((100% - 36px) / 3);
   max-width: calc((100% - 36px) / 3);
 }
 
 @media (max-width: 900px) {
-
   /* At medium widths use 2 per row */
-  .choose-building-list>* {
+  .choose-building-list > * {
     flex: 0 0 calc((100% - 18px) / 2);
     max-width: calc((100% - 18px) / 2);
   }
 }
 
 @media (max-width: 600px) {
-
   /* On small screens use a single column */
-  .choose-building-list>* {
+  .choose-building-list > * {
     flex: 0 0 100%;
     max-width: 100%;
   }
@@ -324,7 +324,9 @@
   font-weight: bold;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(78, 84, 200, 0.2);
-  transition: background 0.2s, transform 0.1s;
+  transition:
+    background 0.2s,
+    transform 0.1s;
 }
 
 .modal.building-info-modal .building-upgrade-btn:hover {
@@ -424,7 +426,7 @@
   opacity: 1;
 }
 
-.offline-bonuses-modal-content>div:last-child {
+.offline-bonuses-modal-content > div:last-child {
   margin-top: 18px;
   color: #aaa;
   font-size: 0.98em;

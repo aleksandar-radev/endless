@@ -10,9 +10,7 @@ export const REGIONS = [
       return t('Enchanted Forest');
     },
     get description() {
-      return t(
-        'Enemies resist earth but are weak to fire and lightning. Crystalized Rock drops most often here.',
-      );
+      return t('Enemies resist earth but are weak to fire and lightning. Crystalized Rock drops most often here.');
     },
     allowedTags: ['enchanted_forest'],
     get enemyNames() {
@@ -60,9 +58,7 @@ export const REGIONS = [
       return t('Crystal Cave');
     },
     get description() {
-      return t(
-        'Enemies resist lightning but are weak to water and earth. Crystalized Rock is the common reward.',
-      );
+      return t('Enemies resist lightning but are weak to water and earth. Crystalized Rock is the common reward.');
     },
     allowedTags: ['crystal_cave'],
     get enemyNames() {
@@ -110,9 +106,7 @@ export const REGIONS = [
       return t('Frozen Tundra');
     },
     get description() {
-      return t(
-        'Enemies resist cold but are weak to fire and lightning. Stat potions of every type drop frequently.',
-      );
+      return t('Enemies resist cold but are weak to fire and lightning. Stat potions of every type drop frequently.');
     },
     allowedTags: ['frozen_tundra'],
     get enemyNames() {
@@ -167,9 +161,7 @@ export const REGIONS = [
       return t('Scorching Desert');
     },
     get description() {
-      return t(
-        'Enemies resist fire but are weak to water and cold. Elixirs are the standout loot.',
-      );
+      return t('Enemies resist fire but are weak to water and cold. Elixirs are the standout loot.');
     },
     allowedTags: ['scorching_desert'],
     get enemyNames() {
@@ -212,7 +204,7 @@ export const REGIONS = [
     },
     get description() {
       return t(
-        'Enemies resist water but are weak to lightning and air. Gold Coins up to Freaky Gold Coins are common finds.',
+        'Enemies resist water but are weak to lightning and air. Gold Coins up to Freaky Gold Coins are common finds.'
       );
     },
     allowedTags: ['murky_swamp'],
@@ -271,9 +263,7 @@ export const REGIONS = [
       return t('Skyrealm Peaks');
     },
     get description() {
-      return t(
-        'Enemies resist air but are weak to earth and water. All stat potions drop regularly.',
-      );
+      return t('Enemies resist air but are weak to earth and water. All stat potions drop regularly.');
     },
     allowedTags: ['skyrealm_peaks'],
     get enemyNames() {
@@ -328,9 +318,7 @@ export const REGIONS = [
       return t('Abyssal Depths');
     },
     get description() {
-      return t(
-        'Enemies resist cold but are weak to fire and earth. Enormous and Freaky Gold Coins pile up here.',
-      );
+      return t('Enemies resist cold but are weak to fire and earth. Enormous and Freaky Gold Coins pile up here.');
     },
     allowedTags: ['abyssal_depths'],
     get enemyNames() {
@@ -380,14 +368,12 @@ export const REGIONS = [
     },
     get description() {
       return t(
-        'Enemies resist fire but are weak to water and cold. Weapon Upgrade Cores, Armor Upgrade Stones, and Jewelry Upgrade Gems drop often.',
+        'Enemies resist fire but are weak to water and cold. Weapon Upgrade Cores, Armor Upgrade Stones, and Jewelry Upgrade Gems drop often.'
       );
     },
     allowedTags: ['volcanic_rift'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('volcanic_rift'))).map(
-        (e) => e.name,
-      );
+      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('volcanic_rift')).map((e) => e.name);
     },
     multiplier: {
       life: 9,
@@ -433,15 +419,11 @@ export const REGIONS = [
       return t('Sunken Ruins');
     },
     get description() {
-      return t(
-        'Enemies resist water but are weak to lightning and fire. Elixirs and Crystalized Rock wash ashore.',
-      );
+      return t('Enemies resist water but are weak to lightning and fire. Elixirs and Crystalized Rock wash ashore.');
     },
     allowedTags: ['sunken_ruins'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('sunken_ruins'))).map(
-        (e) => e.name,
-      );
+      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('sunken_ruins')).map((e) => e.name);
     },
     multiplier: {
       life: 15,
@@ -487,15 +469,11 @@ export const REGIONS = [
       return t('Haunted Moor');
     },
     get description() {
-      return t(
-        'Enemies resist air but are weak to fire and earth. Greater and Huge Experience Potions are plentiful.',
-      );
+      return t('Enemies resist air but are weak to fire and earth. Greater and Huge Experience Potions are plentiful.');
     },
     allowedTags: ['haunted_moor'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('haunted_moor'))).map(
-        (e) => e.name,
-      );
+      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('haunted_moor')).map((e) => e.name);
     },
     multiplier: {
       life: 25,
@@ -540,15 +518,11 @@ export const REGIONS = [
       return t('Golden Steppe');
     },
     get description() {
-      return t(
-        'Enemies resist earth but are weak to water and cold. Expect lots of bonus gold and material drops.',
-      );
+      return t('Enemies resist earth but are weak to water and cold. Expect lots of bonus gold and material drops.');
     },
     allowedTags: ['golden_steppe'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('golden_steppe'))).map(
-        (e) => e.name,
-      );
+      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('golden_steppe')).map((e) => e.name);
     },
     multiplier: {
       life: 30,
@@ -573,8 +547,7 @@ export const REGIONS = [
       lightningDamage: 30,
       waterDamage: 30,
     },
-    materialDropWeights: {
-    },
+    materialDropWeights: {},
     combatProfile: {
       primaryElement: 'earth',
       averageElements: ['fire', 'air', 'lightning'],
@@ -592,14 +565,12 @@ export const REGIONS = [
     },
     get description() {
       return t(
-        'Enemies resist lightning but are weak to water and earth. Enchantment Scrolls plus Alternation and Transmutation Orbs drop here.',
+        'Enemies resist lightning but are weak to water and earth. Enchantment Scrolls plus Alternation and Transmutation Orbs drop here.'
       );
     },
     allowedTags: ['obsidian_spire'],
     get enemyNames() {
-      return ENEMY_LIST.filter((e) => e.tags && (e.tags.includes('obsidian_spire'))).map(
-        (e) => e.name,
-      );
+      return ENEMY_LIST.filter((e) => e.tags && e.tags.includes('obsidian_spire')).map((e) => e.name);
     },
     multiplier: {
       life: 50,

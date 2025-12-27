@@ -1,4 +1,3 @@
-
 import { TWO_HANDED_TYPES } from '../constants/items.js';
 import { getStatDecimalPlaces } from '../constants/stats/stats.js';
 

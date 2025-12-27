@@ -20,7 +20,6 @@ export async function fetchLeaderboardData() {
  * @returns {string} HTML string for the leaderboard table
  */
 export function renderLeaderboardTable(leaderboardData, currentUsername) {
-
   if (!leaderboardData || leaderboardData.length === 0) {
     return `<div>${t('leaderboard.noData')}</div>`;
   }
@@ -30,24 +29,29 @@ export function renderLeaderboardTable(leaderboardData, currentUsername) {
     ${options.resetRequired == true ? updateMessage : ''}
     <table>
       <thead>
-        <tr><th>${t('leaderboard.rank')}</th><th>${t('leaderboard.username')}</th><th>${t('leaderboard.highestLevel')}</th></tr>
+        <tr>
+          <th>${t('leaderboard.rank')}</th>
+          <th>${t('leaderboard.username')}</th>
+          <th>${t('leaderboard.highestLevel')}</th>
+        </tr>
       </thead>
       <tbody>
-        ${leaderboardData.map((entry, i) => {
-    const isCurrentUser = entry.user?.username === currentUsername;
-    return `
+        ${leaderboardData
+          .map((entry, i) => {
+            const isCurrentUser = entry.user?.username === currentUsername;
+            return `
             <tr${isCurrentUser ? ' class="highlight-user"' : ''}>
               <td>${i + 1}</td>
               <td>${entry.user?.username ?? t('leaderboard.unknown')}</td>
               <td>${entry.highestLevel ?? 0}</td>
             </tr>
           `;
-  }).join('')}
+          })
+          .join('')}
       </tbody>
     </table>
   `;
 }
-
 
 export function initializeLeaderboardUI() {
   const leaderboardTab = document.getElementById('leaderboard');
@@ -60,7 +64,7 @@ export function setupLeaderboardTabLazyLoad() {
   const leaderboardTab = document.getElementById('leaderboard');
   let leaderboardInstance = null;
 
-  document.querySelectorAll('.tab-btn').forEach(btn => {
+  document.querySelectorAll('.tab-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       if (btn.dataset.tab === 'leaderboard') {
         if (!leaderboardInstance) {

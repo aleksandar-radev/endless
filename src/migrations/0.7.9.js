@@ -21,15 +21,14 @@ export function run(rawData) {
 
     if (Array.isArray(data.inventory.autoSalvageRarities)) {
       data.inventory.autoSalvageRarities = data.inventory.autoSalvageRarities.map((r) =>
-        r?.toUpperCase() === 'UNIQUE' ? 'EPIC' : r,
+        r?.toUpperCase() === 'UNIQUE' ? 'EPIC' : r
       );
     }
   }
 
   if (data.statistics) {
     if (data.statistics.itemsFound?.unique != null) {
-      data.statistics.itemsFound.epic =
-        (data.statistics.itemsFound.epic || 0) + data.statistics.itemsFound.unique;
+      data.statistics.itemsFound.epic = (data.statistics.itemsFound.epic || 0) + data.statistics.itemsFound.unique;
       delete data.statistics.itemsFound.unique;
     }
 
