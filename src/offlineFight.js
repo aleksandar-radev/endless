@@ -1,4 +1,5 @@
 import { hero, inventory, statistics, game, dataManager } from './globals.js';
+import { levelsAffordable } from './hero.js';
 import { getTimeNow } from './common.js';
 import { ITEM_TYPES, ALL_ITEM_TYPES, ITEM_RARITY, RARITY_ORDER } from './constants/items.js';
 import { getCurrentRegion } from './region.js';
@@ -52,9 +53,11 @@ export async function collectOfflineFightRewards() {
     interval = 'min';
   }
 
+  const levelsGained = levelsAffordable(hero.level, xp);
+
   const bonuses = [];
   if (xp > 0) bonuses.push({
-    name: t('combat.fight'), type: 'XP', amount: xp, times, interval,
+    name: t('combat.fight'), type: 'XP', amount: xp, times, interval, levelsGained,
   });
   if (gold > 0) bonuses.push({
     name: t('combat.fight'), type: t('resource.gold.name'), amount: gold, times, interval,
@@ -208,5 +211,7 @@ export async function collectOfflineFightRewards() {
     statistics.lastFightActiveLocal = refreshedLocal;
   };
 
-  return { bonuses, apply };
+  return {
+    bonuses, apply, levelsGained, timeInfo: { times, interval },
+  };
 }

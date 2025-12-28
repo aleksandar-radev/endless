@@ -3,6 +3,7 @@ import { formatNumber } from './ui.js';
 import { quests } from '../globals.js';
 import { MATERIALS } from '../constants/materials.js';
 import { t, tp } from '../i18n.js';
+import { getDivisor, getStatDecimalPlaces } from '../constants/stats/stats.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 
@@ -139,16 +140,33 @@ export function openQuestModal(quest) {
       value.forEach(({ id, qty }) => {
         const matDef = MATERIALS[id] || Object.values(MATERIALS).find((m) => m.id === id);
         rewardParts.push(
-          `<span style=\"color:#fff;font-weight:bold;\">${formatNumber(qty)} ${matDef?.name || id}</span>`,
+          `<span style=\"color:#fff;font-weight:bold;\">${matDef?.name || id}: ${formatNumber(qty)}</span>`,
         );
       });
+    } else if (key === 'bonuses' && typeof value === 'object') {
+      for (const [bonusKey, bonusValue] of Object.entries(value)) {
+        const bonusName = t(bonusKey) || bonusKey.charAt(0).toUpperCase() + bonusKey.slice(1);
+        const divisor = getDivisor(bonusKey);
+        const decimals = getStatDecimalPlaces(bonusKey);
+        let formattedValue;
+
+        if (divisor !== 1) {
+          formattedValue = formatNumber((bonusValue * divisor).toFixed(decimals)) + '%';
+        } else {
+          formattedValue = formatNumber(bonusValue.toFixed(decimals));
+        }
+
+        rewardParts.push(
+          `<span style="color:#fff;font-weight:bold;">${bonusName}: ${formattedValue}</span>`,
+        );
+      }
     } else {
-      rewardParts.push(`<span style=\"color:${color};font-weight:bold;\">${formatNumber(value)} ${rewardName}</span>`);
+      rewardParts.push(`<span style=\"color:${color};font-weight:bold;\">${rewardName}: ${formatNumber(value)}</span>`);
     }
   }
-  const rewardHtml = rewardParts.join(', ');
+  const rewardHtml = rewardParts.join('<br>');
   modal.querySelector('#quest-modal-reward').innerHTML =
-    `${t('quests.modal.progress')}: ${progressHtml}<br>${t('quests.modal.reward')}: ${rewardHtml}`;
+    `${t('quests.modal.progress')}: ${progressHtml}<br>${t('quests.modal.reward')}:<br>${rewardHtml}`;
 
   // Claim button logic
   const claimBtn = modal.querySelector('#quest-claim-btn');

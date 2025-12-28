@@ -521,7 +521,7 @@ export function initializeBuildingsUI() {
   startBuildingCountdowns();
 }
 
-export function showOfflineBonusesModal(bonuses, onCollect) {
+export function showOfflineBonusesModal(bonuses, onCollect, options = {}) {
   let collected = false;
   function doCollect() {
     if (!collected) {
@@ -529,64 +529,76 @@ export function showOfflineBonusesModal(bonuses, onCollect) {
       if (typeof onCollect === 'function') onCollect();
     }
   }
+
+  const { offlineDurationMs, xpLevelsGained } = options;
+  let durationStr = '';
+  if (offlineDurationMs && offlineDurationMs > 0) {
+    const totalSec = Math.floor(offlineDurationMs / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    const parts = [];
+    if (h > 0) parts.push(`${h}h`);
+    if (m > 0) parts.push(`${m}m`);
+    if (s > 0 || parts.length === 0) parts.push(`${s}s`);
+    durationStr = parts.join(' ');
+  }
+
   let htmlContent = html` <div class="offline-bonuses-modal-content">
     <button class="modal-close">×</button>
     <h2 data-i18n="buildings.offlineRewardsTitle">${t('buildings.offlineRewardsTitle')}</h2>
+    ${
+  durationStr
+    ? `<div style="margin-bottom:15px; font-size:1.1em; color:#ccc;">
+          ${t('buildings.offlineTime') || 'Offline Time'}: <span style="color:#fff; font-weight:bold;">${durationStr}</span>
+       </div>`
+    : ''
+}
     <div style="margin:12px 0 0 0;">
-      <ul style="list-style:none;padding:0;">
+      <ul style="list-style:none;padding:0; max-height: 40vh; overflow-y: auto;">
         ${bonuses
     .map((b) => {
-      let times = b.times;
-      let intervalKey = '';
-      if (typeof b.interval === 'number') {
-        const totalSec = b.interval * b.times;
-        if (totalSec % 3600 === 0) {
-          times = totalSec / 3600;
-          intervalKey = `time.${times > 1 ? 'hours' : 'hour'}`;
-        } else if (totalSec % 60 === 0) {
-          times = totalSec / 60;
-          intervalKey = `time.${times > 1 ? 'minutes' : 'minute'}`;
-        } else {
-          times = totalSec;
-          intervalKey = `time.${times > 1 ? 'seconds' : 'second'}`;
-        }
-      } else if (typeof b.interval === 'string') {
-        let intName = b.interval;
-        if (b.interval === 'min') {
-          intName = 'minute';
-        } else if (b.interval === 'sec') {
-          intName = 'second';
-        } else if (b.interval.endsWith('min')) {
-          const val = parseInt(b.interval) || 1;
-          times *= val;
-          intName = 'minute';
-        } else if (b.interval.endsWith('sec')) {
-          const val = parseInt(b.interval) || 1;
-          times *= val;
-          intName = 'second';
-        }
-        intervalKey = `time.${times > 1 ? intName + 's' : intName}`;
+      let extraInfo = '';
+      if (b.type === 'XP' && xpLevelsGained > 0) {
+        extraInfo = ` <span style="color:#ffd700; font-weight:bold;">(+${xpLevelsGained} ${t('skillTree.level') || 'Levels'})</span>`;
+      } else if (b.levelsGained > 0) {
+        // Fallback if levelsGained is attached to the bonus object itself
+        extraInfo = ` <span style="color:#ffd700; font-weight:bold;">(+${b.levelsGained} ${t('skillTree.level') || 'Levels'})</span>`;
       }
-      const line = tp('buildings.offlineBonusItem', {
-        icon: b.icon || '',
-        name: b.name,
-        amount: formatNumber(b.amount),
-        type: b.type,
-        times: formatNumber(times),
-        interval: intervalKey ? t(intervalKey) : '',
-      });
-      // Ensure each bonus is on its own line (wrap if translation didn't supply an <li>)
-      return line.includes('<li') ? line : `<li class="offline-bonus-line" style="margin:4px 0;">${line}</li>`;
+
+      // Use icon if available, otherwise no icon
+      const iconHtml = b.icon
+        ? `<img src="${import.meta.env.VITE_BASE_PATH + b.icon}" style="width:24px;height:24px;vertical-align:middle;margin-right:8px;" />`
+        : '';
+
+      return `<li class="offline-bonus-line" style="
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.05);
+        margin-bottom: 6px;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      ">
+        ${iconHtml}
+        <div style="flex: 1;">
+          <span style="font-weight:bold; color:#fff;">${b.name}</span>:
+          <span style="color:#eee; margin-left:4px;">+${formatNumber(b.amount)} ${b.type}</span>
+          ${extraInfo}
+        </div>
+      </li>`;
     })
     .join('')}
       </ul>
     </div>
-    <div style="margin-top:18px;color:#aaa;font-size:0.98em;" data-i18n="buildings.offlineRewardsInfo">
+    <div style="margin-top:18px;color:#aaa;font-size:0.9em;" data-i18n="buildings.offlineRewardsInfo">
       ${t('buildings.offlineRewardsInfo')}
     </div>
     <button
       class="offline-bonuses-collect-btn"
-      style="margin-top:24px;font-size:1.1em;padding:10px 32px;border-radius:8px;background:linear-gradient(90deg,#4e54c8,#8f94fb);color:#fff;font-weight:bold;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(78,84,200,0.15);"
+      style="margin-top:24px;font-size:1.1em;padding:10px 32px;border-radius:8px;background:linear-gradient(90deg,#4e54c8,#8f94fb);color:#fff;font-weight:bold;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(78,84,200,0.15); transition: transform 0.1s;"
+      onmouseover="this.style.transform='scale(1.05)'"
+      onmouseout="this.style.transform='scale(1)'"
       data-i18n="buildings.collect"
     >
       ${t('buildings.collect')}

@@ -14,6 +14,7 @@ export default function run() {
       <li>Item flat values now scale 0.8% per level based on the base value at level 1.</li>
       <li>Item percent values now scale 0.1% per level based on the base value at level 1.</li>
       <li>Reworked scaling of enemies and added the option to switch to legacy scaling system.</li>
+      <li><strong>Quest Bonuses System:</strong> Quests now provide permanent bonuses for the current prestige run!</li>
     </ul>
   
     <span style="color:#FF8A00;">Skill System</span>

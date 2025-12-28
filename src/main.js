@@ -281,6 +281,8 @@ window.setLanguage = setLanguage;
       await buildings.collectBonuses({
         showOfflineModal: true,
         extraBonuses: fightRewards?.bonuses || [],
+        offlineTime: fightRewards?.timeInfo,
+        xpLevelsGained: fightRewards?.levelsGained,
         extraCollectFn: async () => {
           if (fightRewards?.apply) await fightRewards.apply();
           // Clear the preserve flag after offline rewards have been applied

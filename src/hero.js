@@ -101,7 +101,7 @@ function xpRequiredForLevels(startLevel, levels) {
   return Math.round(total);
 }
 
-function levelsAffordable(startLevel, availableExp) {
+export function levelsAffordable(startLevel, availableExp) {
   if (availableExp <= 0) return 0;
   const firstLevelCost = xpRequiredForLevels(startLevel, 1);
   if (availableExp < firstLevelCost) return 0;
@@ -342,6 +342,7 @@ export default class Hero {
     const trainingBonuses = training.getTrainingBonuses();
     const soulBonuses = this.getSoulShopBonuses();
     const prestigeBonuses = prestige?.bonuses || {};
+    const questsBonuses = quests?.getQuestsBonuses?.() || {};
     this.statBreakdown = {};
 
     // 1) Build primary (flat) stats
@@ -359,6 +360,7 @@ export default class Hero {
       skillTreeBonuses,
       equipmentBonuses,
       trainingBonuses,
+      questsBonuses,
     );
 
     // 3) “Lock in” each attribute (STR, VIT, etc.) so that attributeEffects sees the %-increased value
@@ -382,6 +384,7 @@ export default class Hero {
       skillTreeBonuses,
       equipmentBonuses,
       trainingBonuses,
+      questsBonuses,
     );
 
     ATTRIBUTE_KEYS.forEach((attr) => {
@@ -389,9 +392,11 @@ export default class Hero {
       const allocated = this.primaryStats[attr] || 0;
       const prestigeFlat = (prestigeBonuses[attr] || 0) + (prestigeBonuses.allAttributes || 0);
       const prestigePercent = (prestigeBonuses[`${attr}Percent`] || 0) + (prestigeBonuses.allAttributesPercent || 0);
-      const permaFlat = (this.permaStats[attr] || 0) + (this.permaStats.allAttributes || 0) - prestigeFlat;
+      const questsFlat = (questsBonuses[attr] || 0) + (questsBonuses.allAttributes || 0);
+      const questsPercent = (questsBonuses[`${attr}Percent`] || 0) + (questsBonuses.allAttributesPercent || 0);
+      const permaFlat = (this.permaStats[attr] || 0) + (this.permaStats.allAttributes || 0) - prestigeFlat - questsFlat;
       const permaPercent =
-        (this.permaStats[`${attr}Percent`] || 0) + (this.permaStats.allAttributesPercent || 0) - prestigePercent;
+        (this.permaStats[`${attr}Percent`] || 0) + (this.permaStats.allAttributesPercent || 0) - prestigePercent - questsPercent;
       const itemsFlat = (equipmentBonuses[attr] || 0) + (equipmentBonuses.allAttributes || 0);
       const itemsPercent =
         (equipmentBonuses[`${attr}Percent`] || 0) / getDivisor(`${attr}Percent`) +
@@ -412,6 +417,7 @@ export default class Hero {
         allocated,
         perma: permaFlat,
         prestige: prestigeFlat,
+        quests: questsFlat,
         items: itemsFlat,
         skills: skillsFlat,
         training: trainingFlat,
@@ -419,6 +425,7 @@ export default class Hero {
         percent: {
           perma: permaPercent,
           prestige: prestigePercent,
+          quests: questsPercent,
           items: itemsPercent,
           skills: skillsPercent,
           training: trainingPercent,
@@ -427,7 +434,7 @@ export default class Hero {
       };
     });
 
-    this.applyFinalCalculations(flatValues, percentBonuses, soulBonuses);
+    this.applyFinalCalculations(flatValues, percentBonuses, soulBonuses, questsBonuses);
 
     updatePlayerLife();
     updateStatsAndAttributesUI();
@@ -555,28 +562,30 @@ export default class Hero {
     return flatValues;
   }
 
-  calculatePercentBonuses(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses) {
+  calculatePercentBonuses(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses, questsBonuses = {}) {
     const percentBonuses = {};
     const ascensionBonuses = ascension?.getBonuses() || {};
     const prestigeBonuses = prestige?.bonuses || {};
     const prestigeAllAttributesPercent = prestigeBonuses.allAttributesPercent || 0;
+    const questsAllAttributesPercent = questsBonuses.allAttributesPercent || 0;
     const sharedPercentAttributesRaw =
       (this.primaryStats.allAttributesPercent ?? 0) +
-      ((this.permaStats.allAttributesPercent || 0) - prestigeAllAttributesPercent) +
+      ((this.permaStats.allAttributesPercent || 0) - prestigeAllAttributesPercent - questsAllAttributesPercent) +
       (equipmentBonuses.allAttributesPercent || 0) +
       (skillTreeBonuses.allAttributesPercent || 0) +
       (trainingBonuses.allAttributesPercent || 0);
     const sharedPercentAttributes =
-      sharedPercentAttributesRaw / getDivisor('allAttributesPercent') + prestigeAllAttributesPercent;
+      sharedPercentAttributesRaw / getDivisor('allAttributesPercent') + prestigeAllAttributesPercent + questsAllAttributesPercent;
     for (const stat of STAT_KEYS) {
       if (stat.endsWith('Percent')) {
         const statName = stat.replace('Percent', '');
         const prestigePercent = prestigeBonuses[stat] || 0;
+        const questsPercent = questsBonuses[stat] || 0;
         const raw =
           (STATS[stat]?.base || 0) +
           (attributeEffects[stat] || 0) +
           (this.primaryStats[stat] ?? 0) +
-          ((this.permaStats[stat] || 0) - prestigePercent) +
+          ((this.permaStats[stat] || 0) - prestigePercent - questsPercent) +
           (skillTreeBonuses[stat] || 0) +
           (equipmentBonuses[stat] || 0) +
           (trainingBonuses[stat] || 0);
@@ -585,6 +594,7 @@ export default class Hero {
           value += sharedPercentAttributes;
         }
         value += prestigePercent;
+        value += questsPercent;
         value += ascensionBonuses[stat] || 0;
         percentBonuses[stat] = value;
       }
@@ -617,7 +627,7 @@ export default class Hero {
     return bonuses;
   }
 
-  applyFinalCalculations(flatValues, percentBonuses, soulBonuses) {
+  applyFinalCalculations(flatValues, percentBonuses, soulBonuses, questsBonuses = {}) {
     // Apply percent bonuses to all stats that have them
     const ascensionBonuses = ascension?.getBonuses() || {};
     const prestigeBonuses = prestige?.bonuses || {};
@@ -715,10 +725,13 @@ export default class Hero {
 
       const divisor = getDivisor(stat);
       const prestigeBonus = prestigeBonuses[stat] || 0;
+      const questsBonus = questsBonuses[stat] || 0;
+      const totalBonusToExclude = prestigeBonus + questsBonus;
       if (divisor !== 1) {
-        // Prestige bonuses are stored as fractions already (e.g. 0.05 for 5%),
+        // Prestige/quest bonuses are stored as fractions already (e.g. 0.05 for 5% in percent stats),
         // so exclude them from divisor scaling and add them back after scaling.
-        this.stats[stat] = prestigeBonus ? (value - prestigeBonus) / divisor + prestigeBonus : value / divisor;
+        // Flat bonuses (strength, life) are also stored as-is and not divided by divisor.
+        this.stats[stat] = (value - totalBonusToExclude) / divisor + totalBonusToExclude;
       } else {
         this.stats[stat] = value;
       }

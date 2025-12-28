@@ -359,7 +359,7 @@ export class BuildingManager {
 
   // --- Bonus collection logic ---
   async collectBonuses({
-    showOfflineModal = false, extraBonuses = [], extraCollectFn,
+    showOfflineModal = false, extraBonuses = [], extraCollectFn, offlineTime, xpLevelsGained,
   } = {}) {
     const nowLocal = Date.now();
     const nowServer = await getTimeNow();
@@ -370,6 +370,7 @@ export class BuildingManager {
         now = this.lastActive + localElapsed;
       }
     }
+    const offlineDurationMs = Math.max(0, now - (this.lastActive || now));
     let offlineBonuses = [];
     const isFirstCollect = showOfflineModal;
     let changed = false;
@@ -469,9 +470,11 @@ export class BuildingManager {
     }
     if (isFirstCollect && (offlineBonuses.length > 0 || extraBonuses.length > 0)) {
       // Only show modal if there are actual bonuses to collect
-      showOfflineBonusesModal([...offlineBonuses, ...extraBonuses], async () => {
-        // On collect: actually add the bonuses and update lastBonusTime
-        const materialAggregateOffline = {};
+      showOfflineBonusesModal(
+        [...offlineBonuses, ...extraBonuses],
+        async () => {
+          // On collect: actually add the bonuses and update lastBonusTime
+          const materialAggregateOffline = {};
         let materialDroppedTotal = 0;
         for (const b of offlineBonuses) {
           if (b.type === 'gold') hero.gainGold(b.amount);
@@ -534,7 +537,11 @@ export class BuildingManager {
         try {
           document.dispatchEvent(new Event('resetRateCounters'));
         } catch {}
-      });
+      },
+      {
+ offlineTime, xpLevelsGained, offlineDurationMs,
+},
+      );
       changed = true; // Modal will result in a change
     } else if (!isFirstCollect && changed) {
       this.lastActive = now;
