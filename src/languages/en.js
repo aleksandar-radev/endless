@@ -48,6 +48,7 @@ export default {
   'skillTree.cooldown': 'Cooldown',
   'skillTree.duration': 'Duration',
   'skillTree.level': 'Level',
+  'skillTree.synergies': 'Synergies',
   'skillTree.autoCastSettings': 'Auto-Cast Settings',
   'skillTree.slotDisplaySettings': 'Slot Display Settings',
   'skillTree.availablePoints': 'Available Skill Points',

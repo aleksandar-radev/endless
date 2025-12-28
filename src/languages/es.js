@@ -48,6 +48,7 @@ export default {
   'skillTree.cooldown': 'Tiempo de reutilización',
   'skillTree.duration': 'Duración',
   'skillTree.level': 'Nivel',
+  'skillTree.synergies': 'Sinergias',
   'skillTree.autoCastSettings': 'Configuración de Auto-Lanzamiento',
   'skillTree.slotDisplaySettings': 'Configuración de Visualización de Ranuras',
   'skillTree.shapeshiftExclusiveWarning': 'Solo puedes desbloquear una de estas formas.',
