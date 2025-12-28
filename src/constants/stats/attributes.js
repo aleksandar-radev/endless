@@ -1,6 +1,7 @@
 import { ELEMENTS } from '../common.js';
 import { t, tp } from '../../i18n.js';
 import { ascension, skillTree } from '../../globals.js';
+import { STATS } from './stats.js';
 
 const html = String.raw;
 
@@ -124,7 +125,10 @@ const CUSTOM_DESCRIPTIONS = {
   attackSpeed: () => t('tooltip.attackSpeed'),
   attackRating: () => t('tooltip.attackRating'),
   critChance: () => t('tooltip.critChance'),
-  critChanceCap: () => t('tooltip.critChanceCap'),
+  critChanceCap: () => {
+    const baseCap = STATS.critChanceCap?.base || 50;
+    return tp('tooltip.critChanceCap', { baseCap });
+  },
   critDamage: () => t('tooltip.critDamage'),
   lifeSteal: () => t('tooltip.lifeSteal'),
   manaSteal: () => t('tooltip.manaSteal'),
@@ -140,7 +144,10 @@ const CUSTOM_DESCRIPTIONS = {
   armor: () => t('tooltip.armor'),
   armorPercent: () => t('tooltip.armorPercent'),
   blockChance: () => t('tooltip.blockChance'),
-  blockChanceCap: () => t('tooltip.blockChanceCap'),
+  blockChanceCap: () => {
+    const cap = STATS.blockChance?.cap || 50;
+    return tp('tooltip.blockChanceCap', { cap });
+  },
   evasion: () => t('tooltip.evasion'),
   evasionPercent: () => t('tooltip.evasionPercent'),
   fireResistance: () => t('tooltip.fireResistance'),
@@ -208,9 +215,18 @@ const CUSTOM_DESCRIPTIONS = {
   ignoreAllEnemyResistances: () => t('tooltip.ignoreAllEnemyResistances'),
   extraDamageAgainstFrozenEnemies: () => t('tooltip.extraDamageAgainstFrozenEnemies'),
   chanceToShatterEnemy: () => t('tooltip.chanceToShatterEnemy'),
-  damageTakenConvertedToColdPercent: () => t('tooltip.damageTakenConvertedToColdPercent'),
-  coldDamageTakenReductionPercent: () => t('tooltip.coldDamageTakenReductionPercent'),
-  damageTakenReductionPercent: () => t('tooltip.damageTakenReductionPercent'),
+  damageTakenConvertedToColdPercent: () => {
+    const cap = STATS.damageTakenConvertedToColdPercent?.cap || 75;
+    return tp('tooltip.damageTakenConvertedToColdPercent', { cap });
+  },
+  coldDamageTakenReductionPercent: () => {
+    const cap = STATS.coldDamageTakenReductionPercent?.cap || 50;
+    return tp('tooltip.coldDamageTakenReductionPercent', { cap });
+  },
+  damageTakenReductionPercent: () => {
+    const cap = STATS.damageTakenReductionPercent?.cap || 80;
+    return tp('tooltip.damageTakenReductionPercent', { cap });
+  },
   stunChance: () => t('tooltip.stunChance'),
   percentOfPlayerDamage: () => t('tooltip.percentOfPlayerDamage'),
   extraMaterialDropMax: () => t('tooltip.extraMaterialDropMax'),
@@ -220,9 +236,18 @@ const CUSTOM_DESCRIPTIONS = {
   buffDurationPercent: () => t('tooltip.buffDurationPercent'),
   lifeRegenOfTotalPercent: () => t('tooltip.lifeRegenOfTotalPercent'),
   manaRegenOfTotalPercent: () => t('tooltip.manaRegenOfTotalPercent'),
-  reduceEnemyDamagePercent: () => t('tooltip.reduceEnemyDamagePercent'),
-  reduceEnemyHpPercent: () => t('tooltip.reduceEnemyHpPercent'),
-  reduceEnemyAttackSpeedPercent: () => t('tooltip.reduceEnemyAttackSpeedPercent'),
+  reduceEnemyDamagePercent: () => {
+    const cap = STATS.reduceEnemyDamagePercent?.cap || 50;
+    return tp('tooltip.reduceEnemyDamagePercent', { cap });
+  },
+  reduceEnemyHpPercent: () => {
+    const cap = STATS.reduceEnemyHpPercent?.cap || 50;
+    return tp('tooltip.reduceEnemyHpPercent', { cap });
+  },
+  reduceEnemyAttackSpeedPercent: () => {
+    const cap = STATS.reduceEnemyAttackSpeedPercent?.cap || 50;
+    return tp('tooltip.reduceEnemyAttackSpeedPercent', { cap });
+  },
   firePenetrationPercent: () => t('tooltip.firePenetrationPercent'),
   coldPenetrationPercent: () => t('tooltip.coldPenetrationPercent'),
   airPenetrationPercent: () => t('tooltip.airPenetrationPercent'),
