@@ -2112,6 +2112,26 @@ function createSkillTooltip(skillId) {
     }
   }
 
+  // Add synergies
+  if (skill.synergies && Array.isArray(skill.synergies) && skill.synergies.length > 0) {
+    tooltip += `<div class="tooltip-synergies"><u>${t('skillTree.synergies')}:</u>`;
+    skill.synergies.forEach(synergy => {
+      const sourceSkill = skillTree.getSkill(synergy.sourceSkillId);
+      if (!sourceSkill) return;
+      
+      const sourceLevel = skillTree.skills[synergy.sourceSkillId]?.level || 0;
+      const synergyBonus = sourceLevel > 0 && synergy.calculateBonus ? synergy.calculateBonus(sourceLevel) : 0;
+      const synergyIcon = sourceSkill.icon ? sourceSkill.icon() : 'unknown';
+      
+      tooltip += `<div class="tooltip-synergy">
+        <img src="${import.meta.env.VITE_BASE_PATH}/skills/${synergyIcon}.jpg" alt="${sourceSkill.name()}" class="synergy-icon" />
+        <span class="synergy-name">${sourceSkill.name()}</span>
+        <span class="synergy-bonus">${synergyBonus > 0 ? `+${synergyBonus.toFixed(1)}%` : '(0%)'}</span>
+      </div>`;
+    });
+    tooltip += '</div>';
+  }
+
   return tooltip;
 }
 

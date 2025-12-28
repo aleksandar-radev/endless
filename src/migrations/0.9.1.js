@@ -1,8 +1,10 @@
+import { SKILL_POINT_COST_PER_LEVEL } from '../skillTree.js';
+
 export const run = (rawData) => {
   const data = JSON.parse(JSON.stringify(rawData || {}));
 
   // Migration for skill system overhaul
-  // The skill cost structure changed from progressive (1 + level/50) to flat (1 per level)
+  // The skill cost structure changed from progressive (1 + level/50) to flat per level
   // This means players should get refunded skill points based on the old cost structure
   
   if (data.skillTree && data.skillTree.skills) {
@@ -16,7 +18,7 @@ export const run = (rawData) => {
         // This is more complex, but we'll refund the difference
         for (let i = 0; i < level; i++) {
           const oldCost = 1 + Math.floor(i / 50);
-          const newCost = 1;
+          const newCost = SKILL_POINT_COST_PER_LEVEL;
           refundPoints += (oldCost - newCost);
         }
       }
@@ -29,7 +31,7 @@ export const run = (rawData) => {
         if (level > 0) {
           for (let i = 0; i < level; i++) {
             const oldCost = 1 + Math.floor(i / 50);
-            const newCost = 1;
+            const newCost = SKILL_POINT_COST_PER_LEVEL;
             refundPoints += (oldCost - newCost);
           }
         }

@@ -25,6 +25,7 @@ export const SKILL_LEVEL_TIERS = [1, 10, 25, 60, 150, 400, 750, 1200, 2000, 3000
 export const DEFAULT_MAX_SKILL_LEVEL = Infinity;
 export const SPECIALIZATION_POINT_INTERVAL = 50;
 export const SPECIALIZATION_UNLOCK_LEVEL = 100;
+export const SKILL_POINT_COST_PER_LEVEL = 1;
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 export function getSpellDamageTypes(effects) {
@@ -349,7 +350,7 @@ export default class SkillTree {
     }
 
     const currentLevel = this.skills[skillId]?.level || 0;
-    const cost = 1; // Flat cost of 1 skill point per level
+    const cost = SKILL_POINT_COST_PER_LEVEL;
     // Prevent leveling skill above hero level
     if (currentLevel >= hero.level) {
       if (showWarning) {
@@ -379,8 +380,8 @@ export default class SkillTree {
     const levels = Math.floor(qty);
     if (levels <= 0) return 0;
 
-    // Flat cost: 1 skill point per level
-    return levels;
+    // Flat cost per level
+    return levels * SKILL_POINT_COST_PER_LEVEL;
   }
 
   calculateTotalSpentSkillPoints() {
