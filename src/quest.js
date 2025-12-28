@@ -103,6 +103,12 @@ export class Quest {
         }
       });
     }
+    if (this.reward.bonuses && typeof this.reward.bonuses === 'object') {
+      Object.entries(this.reward.bonuses).forEach(([stat, value]) => {
+        hero.permaStats[stat] = (hero.permaStats[stat] || 0) + value;
+      });
+      hero.queueRecalculateFromAttributes();
+    }
     showToast(`Quest "${this.title}" claimed!`, 'normal');
     updateResources();
 
@@ -130,6 +136,18 @@ export default class QuestTracker {
   claim(id) {
     const q = this.quests.find((quest) => quest.id === id);
     return q ? q.claim() : null;
+  }
+
+  getQuestsBonuses() {
+    const bonuses = {};
+    this.quests.forEach((quest) => {
+      if (quest.claimed && quest.reward.bonuses) {
+        Object.entries(quest.reward.bonuses).forEach(([stat, value]) => {
+          bonuses[stat] = (bonuses[stat] || 0) + value;
+        });
+      }
+    });
+    return bonuses;
   }
 
   toJSON() {
