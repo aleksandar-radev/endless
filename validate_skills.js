@@ -42,11 +42,11 @@ function analyzeSkillFile(filename) {
   
   // Check imports
   const hasOldImports = /import.*scaleDownFlat|import.*scaleUpFlat/.test(content);
-  const hasNewImports = /import.*getFlatDamage|import.*getDamagePercent|import.*getSynergyBonus/.test(content);
+  const hasNewImports = /import.*getScalingFlat|import.*getScalingPercent|import.*getScalingSynergy/.test(content);
   
   // Count function usage
   const oldFunctionCount = (content.match(/scaleDownFlat\(|scaleUpFlat\(/g) || []).length;
-  const newFunctionCount = (content.match(/getFlatDamage\(|getDamagePercent\(|getSynergyBonus\(/g) || []).length;
+  const newFunctionCount = (content.match(/getScalingFlat\(|getScalingPercent\(|getScalingSynergy\(/g) || []).length;
   
   // Count skill types
   const passiveCount = (content.match(/type: \(\) => 'passive'/g) || []).length;
