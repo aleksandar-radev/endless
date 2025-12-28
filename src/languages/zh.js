@@ -1349,6 +1349,7 @@ export default {
   'buildings.selectBuilding': '选择一个建筑',
   'buildings.selectToPlace': '选择要放置的建筑',
   'buildings.offlineRewardsTitle': '离线建筑奖励',
+  'buildings.offlineTime': '离线时间',
   'buildings.offlineRewardsInfo': '你离线期间获得了奖励！',
   'buildings.collect': '领取',
   'buildings.offlineBonusItem':

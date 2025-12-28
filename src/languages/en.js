@@ -1553,6 +1553,7 @@ export default {
   'buildings.selectBuilding': 'Select a building',
   'buildings.selectToPlace': 'Select a building to place',
   'buildings.offlineRewardsTitle': 'Offline Building Rewards',
+  'buildings.offlineTime': 'Offline Time',
   'buildings.offlineRewardsInfo': 'Bonuses were earned while you were away!',
   'buildings.collect': 'Collect',
   'buildings.offlineBonusItem':

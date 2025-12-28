@@ -1392,6 +1392,7 @@ export default {
   'buildings.selectBuilding': 'Seleccionar un edificio',
   'buildings.selectToPlace': 'Selecciona un edificio para colocar',
   'buildings.offlineRewardsTitle': 'Recompensas de edificios offline',
+  'buildings.offlineTime': 'Tiempo desconectado',
   'buildings.offlineRewardsInfo': '¡Se obtuvieron bonificaciones mientras estabas fuera!',
   'buildings.collect': 'Recoger',
   'buildings.offlineBonusItem':
