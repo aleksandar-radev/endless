@@ -57,7 +57,7 @@
 
 /* Skill Tree Styling */
 .skill-tree-container {
-  --skill-tree-base-padding: 20px;
+  --skill-tree-base-padding: 10px;
   --skill-tree-header-fixed-offset: 12px;
   --skill-tree-header-gap: 12px;
   --skill-tree-floating-header-space: 0px;
