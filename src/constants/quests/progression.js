@@ -126,7 +126,7 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 200,
     reward: {
- gold: 40000, crystals: 8, bonuses: { allAttributesPercent: 0.01 },
+ gold: 40000, crystals: 8, bonuses: { allAttributesPercent: 1 },
 },
   },
   {
@@ -154,7 +154,7 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 500,
     reward: {
- gold: 150000, crystals: 20, bonuses: { lifePercent: 0.02 },
+ gold: 150000, crystals: 20, bonuses: { lifePercent: 2 },
 },
   },
   {
@@ -221,7 +221,7 @@ export const PROGRESSION_QUESTS = [
     },
     type: 'damage',
     target: 100000,
-    reward: { crystals: 3, bonuses: { critDamagePercent: 0.05 } },
+    reward: { crystals: 3, bonuses: { critDamagePercent: 5 } },
   },
   {
     id: 'damage_1000000',
@@ -234,7 +234,7 @@ export const PROGRESSION_QUESTS = [
     },
     type: 'damage',
     target: 1000000,
-    reward: { crystals: 5, bonuses: { damagePercent: 0.03 } },
+    reward: { crystals: 5, bonuses: { damagePercent: 3 } },
   },
   {
     id: 'damage_5000000',
