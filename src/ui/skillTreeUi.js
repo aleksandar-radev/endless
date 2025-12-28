@@ -47,6 +47,8 @@ const SKILL_TYPE_TRANSLATIONS = {
   toggle: 'skill.type.toggle',
 };
 
+const SKILL_PURCHASE_QTYS = [1, 10, 50];
+
 let cleanupSkillTreeHeaderFloating = null;
 let updateSkillTreeHeaderFloating = null;
 let skillBulkButton = null;
@@ -601,6 +603,7 @@ function createSpecializationSkillElement(baseSkill) {
     showTooltip(updateSpecializationTooltipContent(skill.id), e);
   });
   skillElement.addEventListener('mousemove', positionTooltip);
+  skillElement.addEventListener('mouseleave', hideTooltip);
 
 
   skillElement.addEventListener('click', (e) => {
@@ -642,10 +645,7 @@ function initializeSpecSkillModal() {
         <div class="effects-list"></div>
       </div>
       <div class="modal-controls">
-        <button data-qty="1">+1</button>
-        <button data-qty="5">+5</button>
-        <button data-qty="25">+25</button>
-        <button class="max-btn" data-qty="max">${t('common.max')}</button>
+        <!-- Controls rendered dynamically -->
       </div>
       <button class="modal-buy">Buy</button>
     </div>
@@ -656,13 +656,83 @@ function initializeSpecSkillModal() {
     content,
     onClose: closeSpecSkillModal,
   });
-  specSkillModal.querySelectorAll('.modal-controls button').forEach((btn) => {
-    btn.onclick = () => {
-      selectedSpecSkillQty = btn.dataset.qty;
-      updateSpecSkillModalDetails();
-    };
-  });
   specSkillModal.querySelector('.modal-buy').onclick = () => buySpecSkillBulk();
+}
+
+function renderGenericSkillModalControls(container, optionsObj) {
+  const {
+    currentQty,
+    onQtyChange,
+    updateDetails,
+    isNumeric,
+  } = optionsObj;
+
+  container.innerHTML = '';
+
+  if (isNumeric) {
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.className = 'skill-qty-input input-number';
+    input.min = '1';
+    const val = currentQty() === 'max' ? 1 : currentQty();
+    input.value = val;
+
+    input.oninput = () => {
+      let v = parseInt(input.value, 10);
+      if (isNaN(v) || v < 1) v = 1;
+      onQtyChange(v);
+      container.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+      updateDetails();
+    };
+    container.appendChild(input);
+
+    const maxBtn = document.createElement('button');
+    maxBtn.className = 'max-btn' + (currentQty() === 'max' ? ' active' : '');
+    maxBtn.dataset.qty = 'max';
+    maxBtn.textContent = t('common.max');
+    maxBtn.onclick = () => {
+      onQtyChange('max');
+      container.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+      maxBtn.classList.add('active');
+      updateDetails();
+    };
+    container.appendChild(maxBtn);
+  } else {
+    SKILL_PURCHASE_QTYS.forEach((q) => {
+      const btn = document.createElement('button');
+      btn.dataset.qty = q;
+      btn.textContent = '+' + q;
+      if (currentQty() == q) btn.classList.add('active');
+      btn.onclick = () => {
+        onQtyChange(q);
+        container.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        updateDetails();
+      };
+      container.appendChild(btn);
+    });
+
+    const maxBtn = document.createElement('button');
+    maxBtn.className = 'max-btn' + (currentQty() === 'max' ? ' active' : '');
+    maxBtn.dataset.qty = 'max';
+    maxBtn.textContent = t('common.max');
+    maxBtn.onclick = () => {
+      onQtyChange('max');
+      container.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+      maxBtn.classList.add('active');
+      updateDetails();
+    };
+    container.appendChild(maxBtn);
+  }
+}
+
+function renderSpecSkillModalControls() {
+  renderGenericSkillModalControls(specSkillModal.querySelector('.modal-controls'), {
+    currentQty: () => selectedSpecSkillQty,
+    onQtyChange: (q) => { selectedSpecSkillQty = q; },
+    updateDetails: updateSpecSkillModalDetails,
+    isNumeric: options.useNumericInputs,
+  });
 }
 
 function openSpecializationSkillModal(skillId) {
@@ -681,6 +751,7 @@ function openSpecializationSkillModal(skillId) {
   specSkillModal.querySelector('.modal-available-points').textContent = formatNumber(skillTree.specializationPoints);
 
   selectedSpecSkillQty = 1;
+  renderSpecSkillModalControls();
   updateSpecSkillModalDetails();
   specSkillModal.classList.remove('hidden');
 }
@@ -707,12 +778,24 @@ function updateSpecSkillModalDetails() {
   const displayCost = skillTree.calculateSkillPointCost(currentLevel, displayQty);
   specSkillModal.querySelector('.modal-sp-cost').textContent = displayCost + ' SP';
 
-  specSkillModal.querySelectorAll('.modal-controls button').forEach((btn) => {
-    const v = btn.dataset.qty;
-    const rawQty = v === 'max' ? maxQty : parseInt(v, 10);
-    const btnCost = skillTree.calculateSkillPointCost(currentLevel, isNaN(rawQty) ? 0 : rawQty);
-    btn.textContent = (v === 'max' ? t('common.max') : '+' + v) + ' (' + btnCost + ' SP)';
-  });
+  if (options.useNumericInputs) {
+    const maxBtn = specSkillModal.querySelector('.max-btn');
+    if (maxBtn) {
+      const btnCost = skillTree.calculateSkillPointCost(currentLevel, maxQty);
+      maxBtn.textContent = t('common.max') + ' (' + btnCost + ' SP)';
+    }
+    const input = specSkillModal.querySelector('.skill-qty-input');
+    if (input && selectedSpecSkillQty === 'max') {
+      input.value = maxQty;
+    }
+  } else {
+    specSkillModal.querySelectorAll('.modal-controls button').forEach((btn) => {
+      const v = btn.dataset.qty;
+      const rawQty = v === 'max' ? maxQty : parseInt(v, 10);
+      const btnCost = skillTree.calculateSkillPointCost(currentLevel, isNaN(rawQty) ? 0 : rawQty);
+      btn.textContent = (v === 'max' ? t('common.max') : '+' + v) + ' (' + btnCost + ' SP)';
+    });
+  }
 
   const buyBtn = specSkillModal.querySelector('.modal-buy');
   buyBtn.disabled = actualQty <= 0;
@@ -1654,10 +1737,7 @@ function initializeSkillModal() {
         <div class="effects-list"></div>
       </div>
       <div class="modal-controls">
-        <button data-qty="1">+1</button>
-        <button data-qty="5">+5</button>
-        <button data-qty="25">+25</button>
-        <button class="max-btn" data-qty="max">${t('common.max')}</button>
+        <!-- Controls rendered dynamically -->
       </div>
       <button class="modal-buy">Buy</button>
     </div>
@@ -1669,14 +1749,17 @@ function initializeSkillModal() {
     content,
     onClose: closeSkillModal,
   });
-  // Attach quantity controls and buy handler
-  skillModal.querySelectorAll('.modal-controls button').forEach((btn) => {
-    btn.onclick = () => {
-      selectedSkillQty = btn.dataset.qty;
-      updateSkillModalDetails();
-    };
-  });
+  // Attach buy handler
   skillModal.querySelector('.modal-buy').onclick = () => buySkillBulk();
+}
+
+function renderSkillModalControls() {
+  renderGenericSkillModalControls(skillModal.querySelector('.modal-controls'), {
+    currentQty: () => selectedSkillQty,
+    onQtyChange: (q) => { selectedSkillQty = q; },
+    updateDetails: updateSkillModalDetails,
+    isNumeric: options.useNumericInputs,
+  });
 }
 
 function openSkillModal(skillId) {
@@ -1757,6 +1840,7 @@ function openSkillModal(skillId) {
   });
 
   selectedSkillQty = 1;
+  renderSkillModalControls();
   updateSkillModalDetails();
   skillModal.classList.remove('hidden');
 }
@@ -1787,12 +1871,25 @@ function updateSkillModalDetails() {
   const displayCost = skillTree.calculateSkillPointCost(currentLevel, displayQty);
   const totalCost = skillTree.calculateSkillPointCost(currentLevel, actualQty);
   skillModal.querySelector('.modal-sp-cost').textContent = displayCost + ' SP';
-  skillModal.querySelectorAll('.modal-controls button').forEach((btn) => {
-    const v = btn.dataset.qty;
-    const rawQty = v === 'max' ? maxQty : parseInt(v, 10);
-    const btnCost = skillTree.calculateSkillPointCost(currentLevel, isNaN(rawQty) ? 0 : rawQty);
-    btn.textContent = (v === 'max' ? t('common.max') : '+' + v) + ' (' + btnCost + ' SP)';
-  });
+
+  if (options.useNumericInputs) {
+    const maxBtn = skillModal.querySelector('.max-btn');
+    if (maxBtn) {
+      const btnCost = skillTree.calculateSkillPointCost(currentLevel, maxQty);
+      maxBtn.textContent = t('common.max') + ' (' + btnCost + ' SP)';
+    }
+    const input = skillModal.querySelector('.skill-qty-input');
+    if (input && selectedSkillQty === 'max') {
+      input.value = maxQty;
+    }
+  } else {
+    skillModal.querySelectorAll('.modal-controls button').forEach((btn) => {
+      const v = btn.dataset.qty;
+      const rawQty = v === 'max' ? maxQty : parseInt(v, 10);
+      const btnCost = skillTree.calculateSkillPointCost(currentLevel, isNaN(rawQty) ? 0 : rawQty);
+      btn.textContent = (v === 'max' ? t('common.max') : '+' + v) + ' (' + btnCost + ' SP)';
+    });
+  }
 
   // Update cost and stats
   const currMana = skillTree.getSkillManaCost(skill, currentLevel);
