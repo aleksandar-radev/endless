@@ -85,7 +85,7 @@ export const KILL_QUESTS = [
     },
     type: 'kill',
     target: 1000,
-    reward: { gold: 10000, crystals: 1 },
+    reward: { gold: 10000, crystals: 1, bonuses: { damagePercent: 0.01 } },
     icon: `<img src="${BASE}/icons/skull.svg" class="icon" alt="skull"/>`,
   },
   {
@@ -99,7 +99,7 @@ export const KILL_QUESTS = [
     },
     type: 'kill',
     target: 2500,
-    reward: { gold: 30000, crystals: 4 },
+    reward: { gold: 30000, crystals: 4, bonuses: { bonusGoldPercent: 0.02 } },
     icon: `<img src="${BASE}/icons/skull.svg" class="icon" alt="skull"/>`,
   },
   {
@@ -113,7 +113,7 @@ export const KILL_QUESTS = [
     },
     type: 'kill',
     target: 5000,
-    reward: { gold: 60000, crystals: 2 },
+    reward: { gold: 60000, crystals: 2, bonuses: { critChance: 1 } },
     icon: `<img src="${BASE}/icons/skull.svg" class="icon" alt="skull"/>`,
   },
   {
@@ -127,7 +127,7 @@ export const KILL_QUESTS = [
     },
     type: 'kill',
     target: 10000,
-    reward: { gold: 100000, crystals: 3 },
+    reward: { gold: 100000, crystals: 3, bonuses: { bonusExperiencePercent: 0.02 } },
     icon: `<img src="${BASE}/icons/skull.svg" class="icon" alt="skull"/>`,
   },
   {
@@ -141,7 +141,7 @@ export const KILL_QUESTS = [
     },
     type: 'kill',
     target: 25000,
-    reward: { gold: 200000, crystals: 5 },
+    reward: { gold: 200000, crystals: 5, bonuses: { life: 50 } },
     icon: `<img src="${BASE}/icons/earth.png" class="icon" alt="earth"/>`,
   },
   {
@@ -155,7 +155,7 @@ export const KILL_QUESTS = [
     },
     type: 'kill',
     target: 50000,
-    reward: { gold: 400000, crystals: 8 },
+    reward: { gold: 400000, crystals: 8, bonuses: { itemRarityPercent: 0.01 } },
     icon: `<img src="${BASE}/icons/earth.png" class="icon" alt="earth"/>`,
   },
   {
@@ -169,7 +169,7 @@ export const KILL_QUESTS = [
     },
     type: 'kill',
     target: 100000,
-    reward: { gold: 700000, crystals: 12 },
+    reward: { gold: 700000, crystals: 12, bonuses: { damagePercent: 0.02, strength: 10 } },
     icon: `<img src="${BASE}/icons/moon.svg" class="icon" alt="night"/>`,
   },
   {
@@ -183,7 +183,7 @@ export const KILL_QUESTS = [
     },
     type: 'kill',
     target: 250000,
-    reward: { gold: 2000000, crystals: 20 },
+    reward: { gold: 2000000, crystals: 20, bonuses: { materialQuantityPercent: 0.03 } },
     icon: `<img src="${BASE}/icons/moon.svg" class="icon" alt="night"/>`,
   },
   {
