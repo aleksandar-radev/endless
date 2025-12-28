@@ -728,7 +728,7 @@ export default class Hero {
       const questsBonus = questsBonuses[stat] || 0;
       const totalBonusToExclude = prestigeBonus + questsBonus;
       if (divisor !== 1) {
-        // Prestige/quests bonuses are stored as fractions already (e.g. 0.05 for 5% in percent stats),
+        // Prestige/quest bonuses are stored as fractions already (e.g. 0.05 for 5% in percent stats),
         // so exclude them from divisor scaling and add them back after scaling.
         // Flat bonuses (strength, life) are also stored as-is and not divided by divisor.
         this.stats[stat] = (value - totalBonusToExclude) / divisor + totalBonusToExclude;
