@@ -263,6 +263,11 @@ function formatInterval(interval) {
 }
 
 export class BuildingManager {
+  buildings = {};
+  placedBuildings = [null, null, null, null, null];
+  lastActive = null;
+  lastActiveLocal = null;
+
   constructor() {
     throw new Error('Use BuildingManager.create() instead');
   }
@@ -565,11 +570,6 @@ export class BuildingManager {
       out.buildings[id] = this.buildings[id].toJSON();
     }
     return out;
-  }
-
-  // Static: load from JSON
-  static fromJSON(json) {
-    return new BuildingManager(json);
   }
 }
 
