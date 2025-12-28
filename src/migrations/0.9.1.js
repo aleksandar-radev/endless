@@ -10,7 +10,8 @@ export const run = (rawData) => {
   if (data.skillTree && data.skillTree.skills) {
     let refundPoints = 0;
     
-    // Calculate refund based on old cost structure
+    // Calculate refund based on old cost structure for regular skills only
+    // Specialization skills use a different point system and should not be refunded
     Object.values(data.skillTree.skills).forEach((skill) => {
       const level = skill.level || 0;
       if (level > 0) {
@@ -23,20 +24,6 @@ export const run = (rawData) => {
         }
       }
     });
-    
-    // Refund specialization skills as well
-    if (data.skillTree.specializationSkills) {
-      Object.values(data.skillTree.specializationSkills).forEach((skill) => {
-        const level = skill.level || 0;
-        if (level > 0) {
-          for (let i = 0; i < level; i++) {
-            const oldCost = 1 + Math.floor(i / 50);
-            const newCost = SKILL_POINT_COST_PER_LEVEL;
-            refundPoints += (oldCost - newCost);
-          }
-        }
-      });
-    }
     
     // Add refunded points
     if (refundPoints > 0) {
