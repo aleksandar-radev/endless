@@ -990,21 +990,8 @@ export default {
   'tooltip.blockChance': 'El porcentaje de probabilidad de bloquear un ataque, reduciendo su daño.',
   'tooltip.blockChanceCap': 'El límite máximo para tu Probabilidad de Bloqueo (predeterminado 75%).',
   'tooltip.evasion': 'Una puntuación que otorga la probabilidad de evitar completamente los ataques entrantes.',
-  'tooltip.fireResistance':
-    'Reduce el daño de fuego recibido de los enemigos.<br />{icon} Efectivo contra enemigos de fuego.',
-  'tooltip.coldResistance':
-    'Reduce el daño de frío recibido de los enemigos.<br />{icon} Efectivo contra enemigos de frío.',
-  'tooltip.airResistance':
-    'Reduce el daño de aire recibido de los enemigos.<br />{icon} Efectivo contra enemigos de aire.',
-  'tooltip.earthResistance':
-    'Reduce el daño de tierra recibido de los enemigos.<br />{icon} Efectivo contra enemigos de tierra.',
-  'tooltip.lightningResistance':
-    'Reduce el daño de rayo recibido de los enemigos.<br />{icon} Efectivo contra enemigos de rayo.',
-  'tooltip.waterResistance':
-    'Reduce el daño de agua recibido de los enemigos.<br />{icon} Efectivo contra enemigos de agua.',
-  'tooltip.allResistance':
-    'Reduce el daño elemental recibido de los enemigos según tu resistencia y el daño del enemigo.',
-  'tooltip.lifePerHit': 'Restaura vida cuando tus ataques (tanto ataques automáticos como habilidades) golpean a un enemigo.',
+  'tooltip.evasionPercent': 'Aumenta tu puntuación de Evasión en un porcentaje.',
+  'tooltip.thornsDamage': 'Inflige daño físico de vuelta a los enemigos cuando te golpean.',
   'tooltip.manaPerHit': 'Restaura una cantidad fija de Maná cada vez que golpeas a un enemigo.',
   'tooltip.arenaDamagePercent': 'Aumenta el daño que infliges en Arena en un porcentaje (100% significa daño doble)',
   'tooltip.executeThresholdPercent': 'Ejecuta al enemigo cuando golpea si su vida está por debajo del umbral. (50% significa que si el enemigo cae por debajo del 50% de vida y es golpeado, muere)',
