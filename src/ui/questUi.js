@@ -32,7 +32,7 @@ export function updateQuestsUI() {
     claimableBtn.style.backgroundColor = '';
   } else {
     claimableBtn.innerHTML = `<img src="${BASE}/icons/close.svg" class="icon" alt="${t('common.close')}"/>`;
-    claimableBtn.style.backgroundColor = '#dc2626'; // red-600
+    claimableBtn.style.backgroundColor = 'var(--danger)';
   }
   claimableBtn.style.marginRight = '12px';
   claimableBtn.onclick = () => openClaimableQuestsModal();
@@ -104,14 +104,14 @@ export function openQuestModal(quest) {
   modal.querySelector('#quest-modal-desc').textContent = quest.description;
   // Add progress display in green
   const progress = quest.getProgress();
-  const progressHtml = `<span style=\"color:#22c55e;font-weight:bold;\">${formatNumber(progress)}/${formatNumber(quest.target)}</span>`;
+  const progressHtml = `<span style=\"color:var(--success);font-weight:bold;\">${formatNumber(progress)}/${formatNumber(quest.target)}</span>`;
   // Add reward display: gold in yellow, crystals in blue, others default
   let rewardParts = [];
   for (const [key, value] of Object.entries(quest.reward)) {
     let color = '';
     if (key === 'gold') color = 'var(--gold)';
     else if (key === 'crystals') color = 'var(--crystals)';
-    else color = '#fff';
+    else color = 'var(--text)';
 
     const rewardName =
       key === 'gold'
@@ -129,7 +129,7 @@ export function openQuestModal(quest) {
       const tierHtml = `<span style='color:var(--crystals)'>${value.tier}</span>`;
 
       rewardParts.push(
-        `<span style="color:#fff;font-weight:bold;">${tp('quests.modal.randomItemReward', {
+        `<span style="color:var(--text);font-weight:bold;">${tp('quests.modal.randomItemReward', {
           rarityLabel,
           tierLabel,
           rarity: rarityHtml,
@@ -140,7 +140,7 @@ export function openQuestModal(quest) {
       value.forEach(({ id, qty }) => {
         const matDef = MATERIALS[id] || Object.values(MATERIALS).find((m) => m.id === id);
         rewardParts.push(
-          `<span style=\"color:#fff;font-weight:bold;\">${matDef?.name || id}: ${formatNumber(qty)}</span>`,
+          `<span style=\"color:var(--text);font-weight:bold;\">${matDef?.name || id}: ${formatNumber(qty)}</span>`,
         );
       });
     } else if (key === 'bonuses' && typeof value === 'object') {
@@ -157,7 +157,7 @@ export function openQuestModal(quest) {
         }
 
         rewardParts.push(
-          `<span style="color:#fff;font-weight:bold;">${bonusName}: ${formattedValue}</span>`,
+          `<span style="color:var(--text);font-weight:bold;">${bonusName}: ${formattedValue}</span>`,
         );
       }
     } else {
@@ -173,7 +173,7 @@ export function openQuestModal(quest) {
   claimBtn.disabled = !quest.isComplete() || quest.claimed;
   if (quest.claimed) {
     claimBtn.textContent = t('quests.modal.claimed');
-    claimBtn.style.backgroundColor = '#22c55e'; // green
+    claimBtn.style.backgroundColor = 'var(--success)';
     claimBtn.disabled = true;
   } else {
     claimBtn.textContent = t('quests.modal.claimReward');
@@ -224,7 +224,7 @@ function openClaimableQuestsModal() {
   const claimAllBtn = modal.querySelector('#claim-all-btn');
   const claimable = quests.quests.filter((q) => q.isComplete() && !q.claimed);
   if (claimable.length === 0) {
-    listDiv.innerHTML = `<p style="color:#aaa;">${t('quests.noQuestsReadyToClaim')}</p>`;
+    listDiv.innerHTML = `<p style="color:var(--text-muted);">${t('quests.noQuestsReadyToClaim')}</p>`;
     claimAllBtn.disabled = true;
   } else {
     claimAllBtn.disabled = false;

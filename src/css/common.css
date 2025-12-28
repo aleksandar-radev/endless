@@ -8,7 +8,15 @@
   --stun: var(--gold);
   --crystals: #38bdf8;
   --text: #ffffff;
+  --text-secondary: #ccc;
+  --text-muted: #aaa;
   --life: #ef4444;
+  --danger: var(--life);
+  --success: #22c55e;
+  --warning: #f97316;
+  --border: #444;
+  --text-description: #ddd;
+  --ascension: #a8e6cf;
   /* Element icon gradients */
   --grad-fire: linear-gradient(135deg, #ff6b6b 0%, #ffb86b 100%);
   --grad-cold: linear-gradient(135deg, #9be7ff 0%, #60a5fa 100%);
@@ -198,7 +206,7 @@ body.dev-active .game-container {
   pointer-events: none;
   transition: opacity 0.2s;
   opacity: 0;
-  max-width: calc(100vw - 20px);
+  max-width: 350px;
   word-wrap: break-word;
   white-space: normal;
   z-index: 1100;

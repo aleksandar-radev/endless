@@ -237,16 +237,16 @@ function getAdvancedAttributeTooltip(attr) {
 
     const extraStr = extraTexts.length ? ` (${extraTexts.join(', ')})` : '';
 
-    ascInfo = `<div style="margin-top: 4px; font-size: 0.9em; color: #a8e6cf;"><em>${t('stats.tooltip.ascensionBaseBonus')}:</em> +${(bonusMultiplier * 100).toFixed(0)}%<p>${extraStr}</p></div>`;
+    ascInfo = `<div style="margin-top: 4px; font-size: 0.9em; color: var(--ascension);"><em>${t('stats.tooltip.ascensionBaseBonus')}:</em> +${(bonusMultiplier * 100).toFixed(0)}%<p>${extraStr}</p></div>`;
   }
 
   return html`
     <strong>${formatStatName(attr)}</strong><br />
-    <div style="margin-bottom:8px; font-size:0.9em; color:#aaa; border-bottom: 1px solid #444; padding-bottom: 4px;">
+    <div style="margin-bottom:8px; font-size:0.9em; color:var(--text-muted); border-bottom: 1px solid var(--border); padding-bottom: 4px;">
       ${baseTooltip}
     </div>
     ${lines} ${ascInfo}
-    <hr style="border:none; border-top:1px solid #444; margin:4px 0" />
+    <hr style="border:none; border-top:1px solid var(--border); margin:4px 0" />
     <em>Total Flat:</em> ${formatNumber(totalFlat)}<br />
     <em>Total %:</em> ${(totalPercent * 100).toFixed(1)}%<br />
     <strong>Total:</strong> ${formatNumber(finalValue)}

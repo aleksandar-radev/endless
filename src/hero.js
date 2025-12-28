@@ -19,7 +19,7 @@ import { updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { ATTRIBUTES } from './constants/stats/attributes.js';
 import { SOUL_UPGRADE_CONFIG } from './soulShop.js';
-import { ELEMENTS } from './constants/common.js';
+import { ELEMENTS, BASE_EXTRA_RESOURCE_DAMAGE_CAP_PER_LEVEL } from './constants/common.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
 import { STATS, getDivisor, getStatDecimalPlaces } from './constants/stats/stats.js';
 import { AILMENTS } from './constants/ailments.js';
@@ -39,8 +39,6 @@ const RESISTANCE_SET = new Set(RESISTANCE_KEYS);
 const STAT_KEYS = Object.keys(STATS);
 
 export const STATS_ON_LEVEL_UP = 3;
-
-const BASE_EXTRA_RESOURCE_DAMAGE_CAP_PER_LEVEL = 500;
 
 function getResourceExtraDamagePhysicalShare() {
   if (typeof training?.getResourceExtraDamagePhysicalShare === 'function') {
