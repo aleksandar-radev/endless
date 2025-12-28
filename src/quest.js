@@ -103,7 +103,7 @@ export class Quest {
         }
       });
     }
-    if (this.reward.bonuses && typeof this.reward.bonuses === 'object') {
+    if (this.reward.bonuses && typeof this.reward.bonuses === 'object' && this.reward.bonuses !== null) {
       // Quest bonuses are added to hero.permaStats and will be used in stat calculations
       // They are automatically reset on prestige because setGlobals({ reset: true }) 
       // creates a new hero with fresh permaStats, and only prestige bonuses are re-applied

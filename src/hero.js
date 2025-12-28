@@ -360,6 +360,7 @@ export default class Hero {
       skillTreeBonuses,
       equipmentBonuses,
       trainingBonuses,
+      questsBonuses,
     );
 
     // 3) “Lock in” each attribute (STR, VIT, etc.) so that attributeEffects sees the %-increased value
@@ -383,6 +384,7 @@ export default class Hero {
       skillTreeBonuses,
       equipmentBonuses,
       trainingBonuses,
+      questsBonuses,
     );
 
     ATTRIBUTE_KEYS.forEach((attr) => {
@@ -432,7 +434,7 @@ export default class Hero {
       };
     });
 
-    this.applyFinalCalculations(flatValues, percentBonuses, soulBonuses);
+    this.applyFinalCalculations(flatValues, percentBonuses, soulBonuses, questsBonuses);
 
     updatePlayerLife();
     updateStatsAndAttributesUI();
@@ -560,11 +562,10 @@ export default class Hero {
     return flatValues;
   }
 
-  calculatePercentBonuses(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses) {
+  calculatePercentBonuses(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses, questsBonuses = {}) {
     const percentBonuses = {};
     const ascensionBonuses = ascension?.getBonuses() || {};
     const prestigeBonuses = prestige?.bonuses || {};
-    const questsBonuses = quests?.getQuestsBonuses?.() || {};
     const prestigeAllAttributesPercent = prestigeBonuses.allAttributesPercent || 0;
     const questsAllAttributesPercent = questsBonuses.allAttributesPercent || 0;
     const sharedPercentAttributesRaw =
@@ -626,11 +627,10 @@ export default class Hero {
     return bonuses;
   }
 
-  applyFinalCalculations(flatValues, percentBonuses, soulBonuses) {
+  applyFinalCalculations(flatValues, percentBonuses, soulBonuses, questsBonuses = {}) {
     // Apply percent bonuses to all stats that have them
     const ascensionBonuses = ascension?.getBonuses() || {};
     const prestigeBonuses = prestige?.bonuses || {};
-    const questsBonuses = quests?.getQuestsBonuses?.() || {};
     this.damageConversionDeltas = {};
 
     // Stormcaller: scale lightning damage bonuses at the stat level so the Stats UI reflects the effect.
@@ -731,11 +731,7 @@ export default class Hero {
         // Prestige/quests bonuses are stored as fractions already (e.g. 0.05 for 5% in percent stats),
         // so exclude them from divisor scaling and add them back after scaling.
         // Flat bonuses (strength, life) are also stored as-is and not divided by divisor.
-        if (totalBonusToExclude > 0) {
-          this.stats[stat] = (value - totalBonusToExclude) / divisor + totalBonusToExclude;
-        } else {
-          this.stats[stat] = value / divisor;
-        }
+        this.stats[stat] = (value - totalBonusToExclude) / divisor + totalBonusToExclude;
       } else {
         this.stats[stat] = value;
       }
