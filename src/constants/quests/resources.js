@@ -74,7 +74,7 @@ export const RESOURCE_QUESTS = [
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 150000,
-    reward: { crystals: 4 },
+    reward: { crystals: 4, bonuses: { bonusGoldPercent: 0.01 } },
   },
   {
     id: 'gold_500000',
@@ -102,7 +102,7 @@ export const RESOURCE_QUESTS = [
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 1500000,
-    reward: { crystals: 6 },
+    reward: { crystals: 6, bonuses: { bonusGoldPercent: 0.02 } },
   },
   {
     id: 'gold_5000000',
@@ -144,7 +144,7 @@ export const RESOURCE_QUESTS = [
     type: 'resource',
     resource: 'totalGoldEarned',
     target: 50000000,
-    reward: { crystals: 12 },
+    reward: { crystals: 12, bonuses: { bonusGoldPercent: 0.05 } },
   },
   {
     id: 'gold_100000000',

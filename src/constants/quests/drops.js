@@ -73,6 +73,7 @@ export const DROP_QUESTS = [
       item: {
         rarity: 'legendary', type: 'random', tier: 3,
       },
+      bonuses: { itemQuantityPercent: 0.01 },
     },
   },
   {
@@ -107,6 +108,7 @@ export const DROP_QUESTS = [
       item: {
         rarity: 'mythic', type: 'random', tier: 5,
       },
+      bonuses: { itemRarityPercent: 0.02 },
     },
   },
   {
@@ -227,6 +229,7 @@ export const DROP_QUESTS = [
       item: {
         rarity: 'legendary', type: 'random', tier: 3,
       },
+      bonuses: { materialQuantityPercent: 0.01 },
     },
   },
   {
@@ -261,6 +264,7 @@ export const DROP_QUESTS = [
       item: {
         rarity: 'mythic', type: 'random', tier: 3,
       },
+      bonuses: { materialQuantityPercent: 0.02 },
     },
   },
   {

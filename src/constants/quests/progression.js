@@ -69,7 +69,7 @@ export const PROGRESSION_QUESTS = [
     },
     type: 'level',
     target: 50,
-    reward: { gold: 2000, crystals: 2 },
+    reward: { gold: 2000, crystals: 2, bonuses: { vitality: 5 } },
   },
   {
     id: 'level_75',
@@ -95,7 +95,7 @@ export const PROGRESSION_QUESTS = [
     },
     type: 'level',
     target: 100,
-    reward: { gold: 10000, crystals: 3 },
+    reward: { gold: 10000, crystals: 3, bonuses: { allAttributes: 3 } },
   },
   {
     id: 'level_150',
@@ -121,7 +121,7 @@ export const PROGRESSION_QUESTS = [
     },
     type: 'level',
     target: 200,
-    reward: { gold: 40000, crystals: 8 },
+    reward: { gold: 40000, crystals: 8, bonuses: { allAttributesPercent: 0.01 } },
   },
   {
     id: 'level_300',
@@ -147,7 +147,7 @@ export const PROGRESSION_QUESTS = [
     },
     type: 'level',
     target: 500,
-    reward: { gold: 150000, crystals: 20 },
+    reward: { gold: 150000, crystals: 20, bonuses: { lifePercent: 0.02 } },
   },
   {
     id: 'level_750',
@@ -213,7 +213,7 @@ export const PROGRESSION_QUESTS = [
     },
     type: 'damage',
     target: 100000,
-    reward: { crystals: 3 },
+    reward: { crystals: 3, bonuses: { critDamagePercent: 0.05 } },
   },
   {
     id: 'damage_1000000',
@@ -226,7 +226,7 @@ export const PROGRESSION_QUESTS = [
     },
     type: 'damage',
     target: 1000000,
-    reward: { crystals: 5 },
+    reward: { crystals: 5, bonuses: { damagePercent: 0.03 } },
   },
   {
     id: 'damage_5000000',
@@ -252,7 +252,7 @@ export const PROGRESSION_QUESTS = [
     },
     type: 'damage',
     target: 10000000,
-    reward: { crystals: 12 },
+    reward: { crystals: 12, bonuses: { attackSpeed: 0.1 } },
   },
 ].map((q) => {
   const quest = { icon: PROGRESSION_ICONS[q.type] };
