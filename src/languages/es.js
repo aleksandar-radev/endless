@@ -1074,11 +1074,11 @@ export default {
   'tooltip.extraDamageFromManaPercent':
     'Añade daño extra basado en un porcentaje de tu maná actual (cuenta hasta {resourceDamageCap} por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
   'tooltip.extraDamageFromEvasionPercent':
-    'Añade daño extra basado en un porcentaje de tu evasión actual (cuenta hasta 1.000 por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
+    'Añade daño extra basado en un porcentaje de tu evasión actual (cuenta hasta {resourceDamageCap} por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
   'tooltip.extraDamageFromAttackRatingPercent':
-    'Añade daño extra basado en un porcentaje de tu puntuación de ataque actual (cuenta hasta 1.000 por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
+    'Añade daño extra basado en un porcentaje de tu puntuación de ataque actual (cuenta hasta {resourceDamageCap} por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
   'tooltip.extraDamageFromLifeRegenPercent':
-    'Añade daño extra basado en un porcentaje de tu regeneración de vida actual (cuenta hasta 1.000 por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
+    'Añade daño extra basado en un porcentaje de tu regeneración de vida actual (cuenta hasta {resourceDamageCap} por nivel del héroe, aumentado por mejoras de ascensión) — la bonificación se divide entre físico y elemental según tu configuración de Asignación elemental.',
   'tooltip.attackRatingPercent': 'Aumenta tu Puntuación de Ataque en un porcentaje.',
   'tooltip.extraEvasionFromLifePercent': 'Añade Evasión extra igual a un porcentaje de tu Vida máxima.',
   'tooltip.extraDamageFromAllResistancesPercent':

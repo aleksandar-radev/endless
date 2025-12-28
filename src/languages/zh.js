@@ -1075,17 +1075,17 @@ export default {
   'tooltip.reduceEnemyAttackSpeedPercent': '按百分比减少敌人的攻击速度（最高 {cap}%）。',
   'tooltip.flatPenetrationPercent': '提高护甲穿透和元素穿透的平值加成。',
   'tooltip.extraDamageFromLifePercent':
-    '基于当前生命百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
+    '基于当前生命百分比的额外伤害（每级最多计入 {resourceDamageCap}，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
   'tooltip.extraDamageFromArmorPercent':
-    '基于当前护甲百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
+    '基于当前护甲百分比的额外伤害（每级最多计入 {resourceDamageCap}，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
   'tooltip.extraDamageFromManaPercent':
-    '基于当前法力百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
+    '基于当前法力百分比的额外伤害（每级最多计入 {resourceDamageCap}，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
   'tooltip.extraDamageFromEvasionPercent':
-    '基于当前闪避百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
+    '基于当前闪避百分比的额外伤害（每级最多计入 {resourceDamageCap}，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
   'tooltip.extraDamageFromAttackRatingPercent':
-    '基于当前攻击评分百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
+    '基于当前攻击评分百分比的额外伤害（每级最多计入 {resourceDamageCap}，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
   'tooltip.extraDamageFromLifeRegenPercent':
-    '基于当前生命回复百分比的额外伤害（每级最多计入 1,000，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
+    '基于当前生命回复百分比的额外伤害（每级最多计入 {resourceDamageCap}，飞升升级可提高上限）——加成会根据你的“元素分配”设置在物理与元素之间分配。',
   'tooltip.attackRatingPercent': '按百分比提升你的攻击评分。',
   'tooltip.extraEvasionFromLifePercent': '增加相当于最大生命值百分比的额外闪避。',
   'tooltip.extraDamageFromAllResistancesPercent': '基于总元素抗性百分比的额外伤害。',
