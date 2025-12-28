@@ -1,8 +1,5 @@
-import { ELEMENTS } from '../common.js';
 import { t, tp } from '../../i18n.js';
-import { ascension, skillTree } from '../../globals.js';
-
-const html = String.raw;
+import { STATS } from './stats.js';
 
 export const ATTRIBUTES = {
   strength: { effects: { damagePerPoint: 0.3 } },
@@ -101,128 +98,97 @@ const generateDescription = (stat) => {
 };
 
 const CUSTOM_DESCRIPTIONS = {
-  strength: () => {
-    const bonus = ascension?.getBonuses?.()?.strengthEffectiveness || 0;
-    const val = ATTRIBUTES.strength.effects.damagePerPoint * (1 + bonus);
-    return tp('tooltip.strength', { damage: Number(val.toFixed(2)) });
-  },
-  agility: () => {
-    const bonus = ascension?.getBonuses?.()?.agilityEffectiveness || 0;
-    const ar = ATTRIBUTES.agility.effects.attackRatingPerPoint * (1 + bonus);
-    const dmg = ATTRIBUTES.agility.effects.damagePerPoint * (1 + bonus);
-    return tp('tooltip.agility', {
-      attackRating: Number(ar.toFixed(2)),
-      damage: Number(dmg.toFixed(2)),
-    });
-  },
-  vitality: () => {
-    const bonus = ascension?.getBonuses?.()?.vitalityEffectiveness || 0;
-    const val = ATTRIBUTES.vitality.effects.lifePerPoint * (1 + bonus);
-    return tp('tooltip.vitality', { life: Number(val.toFixed(2)) });
-  },
-  wisdom: () => {
-    const bonus = ascension?.getBonuses?.()?.wisdomEffectiveness || 0;
-    const mana = ATTRIBUTES.wisdom.effects.manaPerPoint * (1 + bonus);
-    const regen = ATTRIBUTES.wisdom.effects.manaRegenPerPoint * (1 + bonus);
-    return tp('tooltip.wisdom', {
-      mana: Number(mana.toFixed(2)),
-      manaRegen: Number(regen.toFixed(3)),
-    });
-  },
-  endurance: () => {
-    const bonus = ascension?.getBonuses?.()?.enduranceEffectiveness || 0;
-    const armor = ATTRIBUTES.endurance.effects.armorPerPoint * (1 + bonus);
-    const skillBonuses = skillTree?.getAllSkillTreeBonuses?.() || {};
-    const baseThorns = ATTRIBUTES.endurance.effects.thornsDamagePerPoint || 0;
-    // Assuming thorns per point from skills also gets scaled by effectiveness?
-    // Usually effectiveness scales the attribute's *output*.
-    const totalThornsPerPoint = (baseThorns + (skillBonuses.enduranceThornsDamagePerPoint || 0)) * (1 + bonus);
-    let thornsBonus = '';
-
-    if (totalThornsPerPoint > 0) {
-      thornsBonus = tp('tooltip.endurance.thornsBonus', { thornsDamage: Number(totalThornsPerPoint.toFixed(2)) });
-    }
-
-    return tp('tooltip.endurance', { armor: Number(armor.toFixed(2)), thornsBonus });
-  },
-  dexterity: () => {
-    const bonus = ascension?.getBonuses?.()?.dexterityEffectiveness || 0;
-    const val = ATTRIBUTES.dexterity.effects.evasionPerPoint * (1 + bonus);
-    return tp('tooltip.dexterity', { evasion: Number(val.toFixed(2)) });
-  },
-  intelligence: () => {
-    const bonus = ascension?.getBonuses?.()?.intelligenceEffectiveness || 0;
-    const val = ATTRIBUTES.intelligence.effects.elementalDamagePerPoint * (1 + bonus);
-    return tp('tooltip.intelligence', { elementalDamage: Number(val.toFixed(3)) });
-  },
-  perseverance: () => {
-    const bonus = ascension?.getBonuses?.()?.perseveranceEffectiveness || 0;
-    const mr = ATTRIBUTES.perseverance.effects.manaRegenPerPoint * (1 + bonus);
-    const lr = ATTRIBUTES.perseverance.effects.lifeRegenPerPoint * (1 + bonus);
-    const res = ATTRIBUTES.perseverance.effects.allResistancePerPoint * (1 + bonus);
-    return tp('tooltip.perseverance', {
-      manaRegen: Number(mr.toFixed(3)),
-      lifeRegen: Number(lr.toFixed(2)),
-      allResistance: Number(res.toFixed(2)),
-    });
-  },
+  strength: () => t('tooltip.strength'),
+  agility: () => t('tooltip.agility'),
+  vitality: () => t('tooltip.vitality'),
+  wisdom: () => t('tooltip.wisdom'),
+  endurance: () => t('tooltip.endurance'),
+  dexterity: () => t('tooltip.dexterity'),
+  intelligence: () => t('tooltip.intelligence'),
+  perseverance: () => t('tooltip.perseverance'),
+  strengthPercent: () => t('tooltip.strengthPercent'),
+  agilityPercent: () => t('tooltip.agilityPercent'),
+  vitalityPercent: () => t('tooltip.vitalityPercent'),
+  wisdomPercent: () => t('tooltip.wisdomPercent'),
+  endurancePercent: () => t('tooltip.endurancePercent'),
+  dexterityPercent: () => t('tooltip.dexterityPercent'),
+  intelligencePercent: () => t('tooltip.intelligencePercent'),
+  perseverancePercent: () => t('tooltip.perseverancePercent'),
   elementalDamage: () => t('tooltip.elementalDamage'),
   damage: () => t('tooltip.damage'),
-  attackSpeed: () => {
-    const asc = ascension?.getBonuses?.() || {};
-    const baseCap = 5;
-    const ascCap = Number((asc.attackSpeedCap || 0).toFixed(2));
-    const currentCap = Number((baseCap + ascCap).toFixed(2));
-    return tp('tooltip.attackSpeed', {
-      baseCap,
-      ascCap,
-      currentCap,
-    });
-  },
+  damagePercent: () => t('tooltip.damagePercent'),
+  totalDamagePercent: () => t('tooltip.totalDamagePercent'),
+  attackSpeed: () => t('tooltip.attackSpeed'),
   attackRating: () => t('tooltip.attackRating'),
-  critChance: () => {
-    const asc = ascension?.getBonuses?.() || {};
-    const baseCap = 50;
-    const ascCap = Math.floor(asc.critChanceCap || 0);
-    const currentCap = baseCap + ascCap;
-    return tp('tooltip.critChance', {
-      baseCap, ascCap, currentCap,
-    });
+  critChance: () => t('tooltip.critChance'),
+  critChanceCap: () => {
+    const baseCap = STATS.critChanceCap?.base || 50;
+    return tp('tooltip.critChanceCap', { baseCap });
   },
   critDamage: () => t('tooltip.critDamage'),
   lifeSteal: () => t('tooltip.lifeSteal'),
   manaSteal: () => t('tooltip.manaSteal'),
   omniSteal: () => t('tooltip.omniSteal'),
   life: () => t('tooltip.life'),
+  lifePercent: () => t('tooltip.lifePercent'),
   lifeRegen: () => t('tooltip.lifeRegen'),
+  lifeRegenPercent: () => t('tooltip.lifeRegenPercent'),
   mana: () => t('tooltip.mana'),
+  manaPercent: () => t('tooltip.manaPercent'),
   manaRegen: () => t('tooltip.manaRegen'),
+  manaRegenPercent: () => t('tooltip.manaRegenPercent'),
   armor: () => t('tooltip.armor'),
-  blockChance: () => {
-    const asc = ascension?.getBonuses?.() || {};
-    const baseCap = 50;
-    const ascCap = Math.floor(asc.blockChanceCap || 0);
-    const currentCap = baseCap + ascCap;
-    return tp('tooltip.blockChance', {
-      baseCap, ascCap, currentCap,
-    });
+  armorPercent: () => t('tooltip.armorPercent'),
+  blockChance: () => t('tooltip.blockChance'),
+  blockChanceCap: () => {
+    const cap = STATS.blockChance?.cap || 50;
+    return tp('tooltip.blockChanceCap', { cap });
   },
   evasion: () => t('tooltip.evasion'),
-  fireResistance: () => tp('tooltip.fireResistance', { icon: ELEMENTS.fire.icon }),
-  coldResistance: () => tp('tooltip.coldResistance', { icon: ELEMENTS.cold.icon }),
-  airResistance: () => tp('tooltip.airResistance', { icon: ELEMENTS.air.icon }),
-  earthResistance: () => tp('tooltip.earthResistance', { icon: ELEMENTS.earth.icon }),
-  lightningResistance: () => tp('tooltip.lightningResistance', { icon: ELEMENTS.lightning.icon }),
-  waterResistance: () => tp('tooltip.waterResistance', { icon: ELEMENTS.water.icon }),
+  evasionPercent: () => t('tooltip.evasionPercent'),
+  fireResistance: () => t('tooltip.fireResistance'),
+  fireResistancePercent: () => t('tooltip.fireResistancePercent'),
+  coldResistance: () => t('tooltip.coldResistance'),
+  coldResistancePercent: () => t('tooltip.coldResistancePercent'),
+  airResistance: () => t('tooltip.airResistance'),
+  airResistancePercent: () => t('tooltip.airResistancePercent'),
+  earthResistance: () => t('tooltip.earthResistance'),
+  earthResistancePercent: () => t('tooltip.earthResistancePercent'),
+  lightningResistance: () => t('tooltip.lightningResistance'),
+  lightningResistancePercent: () => t('tooltip.lightningResistancePercent'),
+  waterResistance: () => t('tooltip.waterResistance'),
+  waterResistancePercent: () => t('tooltip.waterResistancePercent'),
   allResistance: () => t('tooltip.allResistance'),
+  allResistancePercent: () => t('tooltip.allResistancePercent'),
   lifePerHit: () => t('tooltip.lifePerHit'),
   manaPerHit: () => t('tooltip.manaPerHit'),
-  fireDamage: () => tp('tooltip.fireDamage', { icon: ELEMENTS.fire.icon }),
-  coldDamage: () => tp('tooltip.coldDamage', { icon: ELEMENTS.cold.icon }),
-  airDamage: () => tp('tooltip.airDamage', { icon: ELEMENTS.air.icon }),
-  earthDamage: () => tp('tooltip.earthDamage', { icon: ELEMENTS.earth.icon }),
-  lightningDamage: () => tp('tooltip.lightningDamage', { icon: ELEMENTS.lightning.icon }),
-  waterDamage: () => tp('tooltip.waterDamage', { icon: ELEMENTS.water.icon }),
+  fireDamage: () => t('tooltip.fireDamage'),
+  fireDamagePercent: () => t('tooltip.fireDamagePercent'),
+  firePenetration: () => t('tooltip.firePenetration'),
+  firePenetrationPercent: () => t('tooltip.firePenetrationPercent'),
+  coldDamage: () => t('tooltip.coldDamage'),
+  coldDamagePercent: () => t('tooltip.coldDamagePercent'),
+  coldPenetration: () => t('tooltip.coldPenetration'),
+  coldPenetrationPercent: () => t('tooltip.coldPenetrationPercent'),
+  airDamage: () => t('tooltip.airDamage'),
+  airDamagePercent: () => t('tooltip.airDamagePercent'),
+  airPenetration: () => t('tooltip.airPenetration'),
+  airPenetrationPercent: () => t('tooltip.airPenetrationPercent'),
+  earthDamage: () => t('tooltip.earthDamage'),
+  earthDamagePercent: () => t('tooltip.earthDamagePercent'),
+  earthPenetration: () => t('tooltip.earthPenetration'),
+  earthPenetrationPercent: () => t('tooltip.earthPenetrationPercent'),
+  lightningDamage: () => t('tooltip.lightningDamage'),
+  lightningDamagePercent: () => t('tooltip.lightningDamagePercent'),
+  lightningPenetration: () => t('tooltip.lightningPenetration'),
+  lightningPenetrationPercent: () => t('tooltip.lightningPenetrationPercent'),
+  waterDamage: () => t('tooltip.waterDamage'),
+  waterDamagePercent: () => t('tooltip.waterDamagePercent'),
+  waterPenetration: () => t('tooltip.waterPenetration'),
+  waterPenetrationPercent: () => t('tooltip.waterPenetrationPercent'),
+  elementalDamagePercent: () => t('tooltip.elementalDamagePercent'),
+  elementalPenetration: () => t('tooltip.elementalPenetration'),
+  elementalPenetrationPercent: () => t('tooltip.elementalPenetrationPercent'),
   doubleDamageChance: () => t('tooltip.doubleDamageChance'),
   resurrectionChance: () => t('tooltip.resurrectionChance'),
   bonusGoldPercent: () => t('tooltip.bonusGoldPercent'),
@@ -230,6 +196,7 @@ const CUSTOM_DESCRIPTIONS = {
   itemQuantityPercent: () => t('tooltip.itemQuantityPercent'),
   materialQuantityPercent: () => t('tooltip.materialQuantityPercent'),
   itemRarityPercent: () => t('tooltip.itemRarityPercent'),
+  extraMaterialDropPercent: () => t('tooltip.extraMaterialDropPercent'),
   skillPoints: () => t('tooltip.skillPoints'),
   allAttributes: () => t('tooltip.allAttributes'),
   allAttributesPercent: () => t('tooltip.allAttributesPercent'),
@@ -244,12 +211,20 @@ const CUSTOM_DESCRIPTIONS = {
   ignoreAllEnemyResistances: () => t('tooltip.ignoreAllEnemyResistances'),
   extraDamageAgainstFrozenEnemies: () => t('tooltip.extraDamageAgainstFrozenEnemies'),
   chanceToShatterEnemy: () => t('tooltip.chanceToShatterEnemy'),
-  damageTakenConvertedToColdPercent: () => t('tooltip.damageTakenConvertedToColdPercent'),
-  coldDamageTakenReductionPercent: () => t('tooltip.coldDamageTakenReductionPercent'),
-  damageTakenReductionPercent: () => t('tooltip.damageTakenReductionPercent'),
+  damageTakenConvertedToColdPercent: () => {
+    const cap = STATS.damageTakenConvertedToColdPercent?.cap || 75;
+    return tp('tooltip.damageTakenConvertedToColdPercent', { cap });
+  },
+  coldDamageTakenReductionPercent: () => {
+    const cap = STATS.coldDamageTakenReductionPercent?.cap || 50;
+    return tp('tooltip.coldDamageTakenReductionPercent', { cap });
+  },
+  damageTakenReductionPercent: () => {
+    const cap = STATS.damageTakenReductionPercent?.cap || 80;
+    return tp('tooltip.damageTakenReductionPercent', { cap });
+  },
   stunChance: () => t('tooltip.stunChance'),
   percentOfPlayerDamage: () => t('tooltip.percentOfPlayerDamage'),
-  extraMaterialDropPercent: () => t('tooltip.extraMaterialDropPercent'),
   extraMaterialDropMax: () => t('tooltip.extraMaterialDropMax'),
   itemBonusesPercent: () => t('tooltip.itemBonusesPercent'),
   cooldownReductionPercent: () => t('tooltip.cooldownReductionPercent'),
@@ -257,15 +232,24 @@ const CUSTOM_DESCRIPTIONS = {
   buffDurationPercent: () => t('tooltip.buffDurationPercent'),
   lifeRegenOfTotalPercent: () => t('tooltip.lifeRegenOfTotalPercent'),
   manaRegenOfTotalPercent: () => t('tooltip.manaRegenOfTotalPercent'),
-  reduceEnemyDamagePercent: () => t('tooltip.reduceEnemyDamagePercent'),
-  reduceEnemyHpPercent: () => t('tooltip.reduceEnemyHpPercent'),
-  reduceEnemyAttackSpeedPercent: () => t('tooltip.reduceEnemyAttackSpeedPercent'),
-  firePenetrationPercent: () => tp('tooltip.firePenetrationPercent', { icon: ELEMENTS.fire.icon }),
-  coldPenetrationPercent: () => tp('tooltip.coldPenetrationPercent', { icon: ELEMENTS.cold.icon }),
-  airPenetrationPercent: () => tp('tooltip.airPenetrationPercent', { icon: ELEMENTS.air.icon }),
-  earthPenetrationPercent: () => tp('tooltip.earthPenetrationPercent', { icon: ELEMENTS.earth.icon }),
-  lightningPenetrationPercent: () => tp('tooltip.lightningPenetrationPercent', { icon: ELEMENTS.lightning.icon }),
-  waterPenetrationPercent: () => tp('tooltip.waterPenetrationPercent', { icon: ELEMENTS.water.icon }),
+  reduceEnemyDamagePercent: () => {
+    const cap = STATS.reduceEnemyDamagePercent?.cap || 50;
+    return tp('tooltip.reduceEnemyDamagePercent', { cap });
+  },
+  reduceEnemyHpPercent: () => {
+    const cap = STATS.reduceEnemyHpPercent?.cap || 50;
+    return tp('tooltip.reduceEnemyHpPercent', { cap });
+  },
+  reduceEnemyAttackSpeedPercent: () => {
+    const cap = STATS.reduceEnemyAttackSpeedPercent?.cap || 50;
+    return tp('tooltip.reduceEnemyAttackSpeedPercent', { cap });
+  },
+  firePenetrationPercent: () => t('tooltip.firePenetrationPercent'),
+  coldPenetrationPercent: () => t('tooltip.coldPenetrationPercent'),
+  airPenetrationPercent: () => t('tooltip.airPenetrationPercent'),
+  earthPenetrationPercent: () => t('tooltip.earthPenetrationPercent'),
+  lightningPenetrationPercent: () => t('tooltip.lightningPenetrationPercent'),
+  waterPenetrationPercent: () => t('tooltip.waterPenetrationPercent'),
   flatPenetrationPercent: () => t('tooltip.flatPenetrationPercent'),
   elementalPenetrationPercent: () => t('tooltip.elementalPenetrationPercent'),
   extraDamageFromLifePercent: () => t('tooltip.extraDamageFromLifePercent'),
