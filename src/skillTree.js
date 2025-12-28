@@ -23,6 +23,7 @@ export const SKILL_LEVEL_TIERS = [1, 10, 25, 60, 150, 400, 750, 1200, 2000, 3000
 export const DEFAULT_MAX_SKILL_LEVEL = Infinity;
 export const SPECIALIZATION_POINT_INTERVAL = 50;
 export const SPECIALIZATION_UNLOCK_LEVEL = 100;
+export const SKILL_POINT_COST_PER_LEVEL = 1;
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 export function getSpellDamageTypes(effects) {
@@ -345,7 +346,7 @@ export default class SkillTree {
     }
 
     const currentLevel = this.skills[skillId]?.level || 0;
-    const cost = 1 + Math.floor(currentLevel / 50);
+    const cost = SKILL_POINT_COST_PER_LEVEL;
     // Prevent leveling skill above hero level
     if (currentLevel >= hero.level) {
       if (showWarning) {
@@ -375,12 +376,8 @@ export default class SkillTree {
     const levels = Math.floor(qty);
     if (levels <= 0) return 0;
 
-    const startLevel = Math.max(0, Math.floor(currentLevel));
-    const qtyBig = BigInt(levels);
-    const baseCost = qtyBig;
-    const bandIncrements = floorSumBigInt(qtyBig, 50n, 1n, BigInt(startLevel));
-    const totalCost = Number(baseCost + bandIncrements);
-    return Number.isFinite(totalCost) ? totalCost : Infinity;
+    // Flat cost per level
+    return levels * SKILL_POINT_COST_PER_LEVEL;
   }
 
   calculateTotalSpentSkillPoints() {
@@ -837,7 +834,54 @@ export default class SkillTree {
   getSkillEffect(skillId, level = 0) {
     const skill = this.getSkill(skillId);
     if (!skill) return {};
-    return skill.effect(level || skill.level || 0);
+    const baseEffects = skill.effect(level || skill.level || 0);
+
+    // Apply synergies if any
+    if (skill.synergies) {
+      return this.applySkillSynergies(skill, baseEffects);
+    }
+
+    return baseEffects;
+  }
+
+  applySkillSynergies(skill, baseEffects) {
+    if (!skill.synergies || !Array.isArray(skill.synergies)) {
+      return baseEffects;
+    }
+
+    const modifiedEffects = { ...baseEffects };
+    let totalSynergyBonus = 0;
+
+    for (const synergy of skill.synergies) {
+      const sourceSkillId = synergy.sourceSkillId;
+      const sourceLevel = this.skills[sourceSkillId]?.level || 0;
+
+      if (sourceLevel <= 0) continue;
+
+      // Calculate synergy bonus percentage
+      const synergyBonus = synergy.calculateBonus ?
+        synergy.calculateBonus(sourceLevel) : 0;
+
+      totalSynergyBonus += synergyBonus;
+
+      // Add any additional effects from the synergy
+      if (synergy.additionalEffects) {
+        const additionalEffects = synergy.additionalEffects(sourceLevel);
+        Object.entries(additionalEffects).forEach(([stat, value]) => {
+          modifiedEffects[stat] = (modifiedEffects[stat] || 0) + value;
+        });
+      }
+    }
+
+    // Apply total synergy bonus as a percentage multiplier to all base effects
+    if (totalSynergyBonus > 0) {
+      const multiplier = 1 + (totalSynergyBonus / 100);
+      Object.keys(baseEffects).forEach((stat) => {
+        modifiedEffects[stat] = baseEffects[stat] * multiplier;
+      });
+    }
+
+    return modifiedEffects;
   }
 
   getSpecializationSkillEffect(skillId, level = 0) {

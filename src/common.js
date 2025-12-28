@@ -250,3 +250,122 @@ export function createPercentScaleFunction(startPercent, interval, increasePerIn
   const fn = (level) => percentIncreasedByLevel(startPercent, level, interval, increasePerInterval, maxPercent);
   return setStepFunctionMetadata(fn, interval, 1);
 }
+
+/**
+ * Calculate percentage bonus with smooth transition from power curve to linear scaling.
+ * Phase 1 (Early Game): Power curve (square root-like) for better retention than logarithmic
+ * Phase 2 (End Game): Linear growth after softcap for infinite progression
+ *
+ * The function automatically calculates the growth factor to ensure a smooth transition
+ * at the softcap level by matching the derivative of the power curve to the linear slope.
+ *
+ * @param {Object} params - Configuration object
+ * @param {number} params.level - The current skill level (>= 1)
+ * @param {number} [params.base=10] - The starting value at level 1
+ * @param {number} [params.softcap=2000] - The level at which to transition to linear growth
+ * @param {number} [params.linear=0.5] - The per-level increase after softcap
+ * @param {number} [params.power=0.6] - Power factor (0.5 = square root, 0.7 = stronger feel)
+ * @returns {number} The calculated percentage bonus
+ */
+export function getScalingPercent({
+ level, base = 10, softcap = 2000, linear = 0.5, power = 0.6,
+}) {
+  if (level <= 0) return 0;
+  if (level === 1) return base;
+
+  // AUTO-CALCULATION:
+  // Calculate 'growthFactor' automatically so the curve hits the exact
+  // speed of 'linear' at the moment of the softcap.
+  // This guarantees a perfectly smooth transition.
+  // Formula derived from derivative matching: A = m / (p * S^(p-1))
+  const growthFactor = linear / (power * Math.pow(softcap, power - 1));
+
+  if (level <= softcap) {
+    // Phase 1: Power Curve (Square Root)
+    // Much better retention than Log()
+    return base + growthFactor * (Math.pow(level, power) - 1);
+  } else {
+    // Phase 2: Linear growth
+    // Calculate the exact value at softcap
+    const valueAtSoftcap = base + growthFactor * (Math.pow(softcap, power) - 1);
+
+    // Continue linearly from there
+    return valueAtSoftcap + linear * (level - softcap);
+  }
+}
+
+/**
+ * Calculate flat stat with linear growth and milestone bonuses.
+ * The value increases linearly each level, with additive bonuses at milestone intervals.
+ *
+ * @param {Object} params - Configuration object
+ * @param {number} params.level - The current skill level (>= 1)
+ * @param {number} [params.base=10] - The starting value at level 1
+ * @param {number} [params.increment=1] - The flat increase per level
+ * @param {number} [params.interval=50] - How often milestone bonuses occur (e.g., every 50 levels)
+ * @param {number} [params.bonus=0.2] - The additive bonus per milestone (e.g., 0.2 for +20% per milestone)
+ * @returns {number} The calculated flat value
+ */
+export function getScalingFlat({
+ level, base = 10, increment = 1, interval = 50, bonus = 0.2,
+}) {
+  if (level <= 0) return 0;
+
+  // 1. Calculate Standard Linear Value
+  let value = base + (level - 1) * increment;
+
+  // 2. Calculate Milestone Modifier linearly
+  if (interval > 0 && level >= interval) {
+    const milestonesPassed = Math.floor(level / interval);
+
+    // Instead of Math.pow, we simply add the bonuses together
+    // 5 milestones passed = 1 + (5 * 0.2) = 2.0x multiplier
+    const totalMultiplier = 1 + (milestonesPassed * bonus);
+
+    value *= totalMultiplier;
+  }
+
+  return value;
+}
+
+/**
+ * Calculate chance-based stats (like crit chance) with linear scaling and a hard cap.
+ *
+ * @param {Object} params - Configuration object
+ * @param {number} params.level - The current skill level (>= 1)
+ * @param {number} [params.base=1] - The starting chance at level 1 (as a percentage, e.g., 1 for 1%)
+ * @param {number} [params.levelsPerPoint=10] - How many levels for each increment (e.g., 10 levels per 1%)
+ * @param {number} [params.cap=75] - The maximum chance cap (e.g., 75 for 75% max)
+ * @returns {number} The calculated chance percentage
+ */
+export function getScalingChance({
+ level, base = 1, levelsPerPoint = 10, cap = 75,
+}) {
+  if (level <= 0) return 0;
+
+  const increments = Math.floor((level - 1) / levelsPerPoint);
+  const chance = base + increments;
+
+  return Math.min(chance, cap);
+}
+
+/**
+ * Calculate synergy bonus from one skill to another.
+ * Returns a percentage multiplier based on the source skill's level.
+ *
+ * @param {Object} params - Configuration object
+ * @param {number} params.level - The level of the skill providing the synergy
+ * @param {number} [params.base=1] - The starting bonus percentage at level 1 (e.g., 1 for 1%)
+ * @param {number} [params.increment=1] - The bonus increase per level (e.g., 1 for +1% per level)
+ * @param {number} [params.cap=100] - The maximum synergy bonus percentage (e.g., 100 for 100% = double effect)
+ * @returns {number} The synergy bonus as a percentage (e.g., 50 means +50% effectiveness)
+ */
+export function getScalingSynergy({
+ level, base = 1, increment = 1, cap = 100,
+}) {
+  if (level <= 0) return 0;
+
+  const bonus = base + (level - 1) * increment;
+
+  return Math.min(bonus, cap);
+}

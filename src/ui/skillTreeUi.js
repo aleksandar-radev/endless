@@ -934,6 +934,30 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNe
     });
   }
 
+  // Add synergies
+  if (skill.synergies && Array.isArray(skill.synergies) && skill.synergies.length > 0) {
+    html += `<br /><u>${t('skillTree.synergies')}:</u><br />`;
+    skill.synergies.forEach(synergy => {
+      const sourceSkill = skillTree.getSkill(synergy.sourceSkillId);
+      if (!sourceSkill) return;
+
+      const sourceLevel = skillTree.skills[synergy.sourceSkillId]?.level || 0;
+      const synergyBonus = sourceLevel > 0 && synergy.calculateBonus ? synergy.calculateBonus(sourceLevel) : 0;
+
+      // Calculate bonus per level (difference between current and next level)
+      const nextLevelBonus = synergy.calculateBonus ? synergy.calculateBonus(sourceLevel + 1) : 0;
+      const bonusPerLevel = sourceLevel > 0 ? (nextLevelBonus - synergyBonus).toFixed(2) : synergy.calculateBonus ? synergy.calculateBonus(1).toFixed(2) : '0';
+
+      const synergyIcon = sourceSkill.icon ? sourceSkill.icon() : 'unknown';
+
+      html += `<div class="tooltip-synergy">
+        <img src="${import.meta.env.VITE_BASE_PATH}/skills/${synergyIcon}.jpg" alt="${sourceSkill.name()}" class="synergy-icon" />
+        <span class="synergy-name">${sourceSkill.name()}</span>
+        <span class="synergy-bonus">${synergyBonus > 0 ? `+${synergyBonus.toFixed(1)}%` : '(0%)'} (+${bonusPerLevel}% per level)</span>
+      </div>`;
+    });
+  }
+
   return html;
 }
 
@@ -1736,6 +1760,10 @@ function initializeSkillModal() {
         <h3>Effects</h3>
         <div class="effects-list"></div>
       </div>
+      <div class="modal-skill-synergies" style="display: none;">
+        <h3>${t('skillTree.synergies')}</h3>
+        <div class="synergies-list"></div>
+      </div>
       <div class="modal-controls">
         <!-- Controls rendered dynamically -->
       </div>
@@ -1838,6 +1866,37 @@ function openSkillModal(skillId) {
       <p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>
     `;
   });
+
+  // Populate synergies
+  const synergiesSection = skillModal.querySelector('.modal-skill-synergies');
+  const synergiesList = skillModal.querySelector('.synergies-list');
+  if (skill.synergies && Array.isArray(skill.synergies) && skill.synergies.length > 0) {
+    synergiesSection.style.display = '';
+    synergiesList.innerHTML = '';
+    skill.synergies.forEach(synergy => {
+      const sourceSkill = skillTree.getSkill(synergy.sourceSkillId);
+      if (!sourceSkill) return;
+
+      const sourceLevel = skillTree.skills[synergy.sourceSkillId]?.level || 0;
+      const synergyBonus = sourceLevel > 0 && synergy.calculateBonus ? synergy.calculateBonus(sourceLevel) : 0;
+
+      // Calculate bonus per level
+      const nextLevelBonus = synergy.calculateBonus ? synergy.calculateBonus(sourceLevel + 1) : 0;
+      const bonusPerLevel = sourceLevel > 0 ? (nextLevelBonus - synergyBonus).toFixed(2) : synergy.calculateBonus ? synergy.calculateBonus(1).toFixed(2) : '0';
+
+      const synergyIcon = sourceSkill.icon ? sourceSkill.icon() : 'unknown';
+
+      synergiesList.innerHTML += `
+        <div class="tooltip-synergy">
+          <img src="${import.meta.env.VITE_BASE_PATH}/skills/${synergyIcon}.jpg" alt="${sourceSkill.name()}" class="synergy-icon" />
+          <span class="synergy-name">${sourceSkill.name()}</span>
+          <span class="synergy-bonus">${synergyBonus > 0 ? `+${synergyBonus.toFixed(1)}%` : '(0%)'} (+${bonusPerLevel}% per level)</span>
+        </div>
+      `;
+    });
+  } else {
+    synergiesSection.style.display = 'none';
+  }
 
   selectedSkillQty = 1;
   renderSkillModalControls();

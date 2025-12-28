@@ -15,6 +15,77 @@ export default function run() {
       <li>Item percent values now scale 0.1% per level based on the base value at level 1.</li>
       <li>Reworked scaling of enemies and added the option to switch to legacy scaling system.</li>
     </ul>
+  
+    <span style="color:#FF8A00;">Skill System</span>
+    <ul>
+      <li>
+        <strong>Skill Point Cost:</strong> Changed from progressive cost (+1 every 50 levels) to flat 1 skill point per level.
+        All existing characters will receive a refund for the difference.
+      </li>
+      <li>
+        <strong>New Scaling System:</strong> Skills now use improved scaling formulas:
+        <ul>
+          <li>Percentage bonuses transition smoothly from logarithmic growth (early game) to linear growth (end game) after level X</li>
+          <li>Flat damage scales linearly with milestone multipliers every X levels</li>
+          <li>Chance-based stats have clear caps and linear progression</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Synergy System:</strong> Skills can now synergize with each other, providing percentage bonuses and additional effects.
+      </li>
+    </ul>
+
+    <span style="color:#FF8A00;">Weapon Subtype System</span>
+    <ul>
+      <li>
+        <strong>Item Subtype System:</strong> Weapons now have unique variants!
+      </li>
+      <li>
+        <strong>Weighted Drop System:</strong> Different subtypes have different drop rates
+        <ul>
+          <li>Common subtypes (30% weight): Short Sword, Hatchet, Knife, etc.</li>
+          <li>Uncommon subtypes (20-25% weight): Rapier, Battle Axe, Long Bow</li>
+          <li>Rare subtypes (15% weight): Greatsword, Greataxe, War Hammer, Crossbow</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Stat Multipliers:</strong> Subtypes modify stats and caps
+        <ul>
+          <li>Greatsword: +50% flat damage, +20% damage%, -30% attack speed</li>
+          <li>Short Sword: -20% flat damage, +30% attack speed, +10% crit</li>
+          <li>Fire Wand: +20% fire damage, +40% fire damage%</li>
+          <li>Stiletto: -25% flat damage, +30% crit chance, +15% crit damage</li>
+        </ul>
+      </li>
+    </ul>
+
+        <span style="color:#FF8A00;">Percent Stat Rebalance</span>
+    <ul>
+      <li>
+        <strong>Decoupled Scaling:</strong> Percent stats NO LONGER scale with item level
+        <ul>
+          <li>Flat stats (damage, life, armor) scale infinitely with level</li>
+          <li>Percent stats (damagePercent, lifePercent, etc.) scale ONLY with tier</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Tier-Based Scaling:</strong> Explicit percent ranges per tier (12 tiers total)
+        <ul>
+          <li>Tier 1-3: 100%, 200%, 300%</li>
+          <li>Tier 4-6: 450%, 600%, 750%</li>
+          <li>Tier 7-9: 900%, 1100%, 1300%</li>
+          <li>Tier 10-12: 1550%, 1750%, 2000%</li>
+        </ul>
+      </li>
+
+        <strong>Dynamic Caps:</strong> No hardcoded percent caps - all depend on tier scaling
+        <ul>
+          <li>Tier 12 items can reach 2000% in any percent stat</li>
+          <li>Caps scale naturally with tier progression</li>
+          <li>Subtype multipliers can push beyond base tier limits (Greatsword at T12: 2400% damage%)</li>
+        </ul>
+      </li>
+    </ul>
 
     <span style="color:#FF8A00;">Improvements</span>
     <ul>
