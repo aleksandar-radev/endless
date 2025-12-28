@@ -771,12 +771,10 @@ export default class Inventory {
             const statToReroll = e.currentTarget.dataset.stat;
             const range = AVAILABLE_STATS[statToReroll];
             const baseValue = Math.random() * (range.max - range.min) + range.min;
-            const tierBonus = item.getTierBonus(statToReroll);
             const multiplier = item.getMultiplier();
             const scale = item.getLevelScale(statToReroll, item.level);
             item.stats[statToReroll] = item.calculateStatValue({
               baseValue,
-              tierBonus,
               multiplier,
               scale,
               stat: statToReroll,

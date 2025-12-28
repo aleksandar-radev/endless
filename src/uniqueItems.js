@@ -34,11 +34,9 @@ function buildItemWithStats(definition, level, tier, rarity, extraMeta = {}) {
     stat, min, max,
   }) => {
     const baseValue = rollInRange(min, max);
-    const tierBonus = helper.getTierBonus(stat);
     const scale = helper.getLevelScale(stat, normalizedLevel);
     const value = helper.calculateStatValue({
       baseValue,
-      tierBonus,
       multiplier,
       scale,
       stat,
@@ -71,11 +69,9 @@ function rollSetBonusValues(setDefinition, tier, level) {
       stat, min, max,
     }) => {
       const baseValue = rollInRange(min, max);
-      const tierBonus = helper.getTierBonus(stat);
       const scale = helper.getLevelScale(stat, normalizedLevel);
       const value = helper.calculateStatValue({
         baseValue,
-        tierBonus,
         multiplier,
         scale,
         stat,
