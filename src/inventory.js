@@ -90,8 +90,6 @@ export default class Inventory {
       this.materials = new Array(MATERIALS_SLOTS).fill(null);
     }
 
-    initializeInventoryUI(this);
-
     this.removeTooltip = this.removeTooltip.bind(this);
     window.addEventListener('mouseout', (e) => {
       if (e.relatedTarget === null) this.removeTooltip();

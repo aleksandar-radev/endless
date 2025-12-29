@@ -16,7 +16,8 @@ import { game,
   options,
   dataManager,
   buildings,
-  training } from './globals.js';
+  training,
+  inventory } from './globals.js';
 import { updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { initializeBuildingsUI, renderPurchasedBuildings } from './ui/buildingUi.js';
@@ -33,6 +34,7 @@ import { getGameInfo } from './api.js';
 import { createModal } from './ui/modal.js';
 import { collectOfflineFightRewards } from './offlineFight.js';
 import { ensureDevAccessRuntimeState } from './migrations/0.8.15.js';
+import { initializeInventoryUI } from './ui/inventoryUi.js';
 
 window.qwe = console.log;
 window.qw = console.log;
@@ -94,6 +96,7 @@ window.setLanguage = setLanguage;
   initializeAscensionUI();
   initializeBattleLogUI();
   initializeRunesUI();
+  initializeInventoryUI(inventory);
 
   // Apply translations after UI components are initialized
   applyTranslations();
