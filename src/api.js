@@ -60,14 +60,6 @@ export async function loadGameData(userId, premium = 'no') {
   };
 }
 
-export async function getLeaderboard() {
-  const response = await apiFetch('/game-data/leaderboard?gameName=' + gameName);
-  if (!response.ok) {
-    throw new Error('Failed to fetch leaderboard');
-  }
-  return await response.json();
-}
-
 export async function logout() {
   const response = await apiFetch('/user/logout', { method: 'POST' });
   if (!response.ok) {

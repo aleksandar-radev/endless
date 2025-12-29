@@ -26,7 +26,6 @@ import { initializeBattleLogUI } from './ui/battleLogUi.js';
 import { initializeAscensionUI } from './ui/ascensionUi.js';
 import { initializeRunesUI } from './ui/runesUi.js';
 import Enemy from './enemy.js';
-import { setupLeaderboardTabLazyLoad } from './ui/leaderboardUi.js';
 import Boss from './boss.js';
 import { RockyFieldEnemy } from './rockyField.js';
 import { applyTranslations, setLanguage, t } from './i18n.js';
@@ -213,8 +212,6 @@ window.setLanguage = setLanguage;
   updateTabIndicators();
 
   updateRegionUI();
-
-  setupLeaderboardTabLazyLoad();
 
   if (game.activeTab === 'battle' && window.innerWidth > 900) {
     game.activeTab = 'stats';

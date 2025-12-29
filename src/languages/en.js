@@ -92,15 +92,6 @@ export default {
   'combat.changeRegionConfirm':
     'Are you sure you want to change to {region}? That will reset your stage progress and will find you a new enemy',
   'death.message': 'You died! Reviving in <span id="revive-countdown">10</span>',
-  'leaderboard.noData': 'No leaderboard data available.',
-  'leaderboard.updateMessage':
-    'In order to see yourself in leaderboard, you have to reset your progress, because of a new update.',
-  'leaderboard.rank': 'Rank',
-  'leaderboard.username': 'Username',
-  'leaderboard.highestLevel': 'Highest Level',
-  'leaderboard.unknown': 'Unknown',
-  'leaderboard.loading': 'Loading...',
-  'leaderboard.error': 'Failed to load leaderboard.',
   'ascension.ascendNow': 'Ascend Now',
   'ascension.points': 'Points',
   'ascension.needPrestiges': 'Need at least 20 prestiges to ascend.',
