@@ -15,6 +15,9 @@ export default function run() {
       <li>Item percent values now scale 0.1% per level based on the base value at level 1.</li>
       <li>Reworked scaling of enemies and added the option to switch to legacy scaling system.</li>
       <li><strong>Quest Bonuses System:</strong> Quests now provide permanent bonuses for the current prestige run!</li>
+      <li>Changes to attributes: Vitality now provides 5 life (6 before) and 0.25 life regen per point, and perseverance is reduced to 0.25 life regen per point (0.5 before).</li>
+      <li>Combined training, crystal shop and soul shop tabs into a single "Shop" tab with 3 subtabs.</li>
+      <li>Removed life steal from training.</li>
     </ul>
   
     <span style="color:#FF8A00;">Skill System</span>
@@ -161,6 +164,7 @@ export default function run() {
       <li>Fixed potential damage calculation for skills (doesn't include crit and double damage chance)</li>
       <li>Fixed tooltip for starting souls ascension bonus.</li>
       <li>Fixed display values for all cost reduction ascension upgrades. (1% instead of 0.01)</li>
+      <li>Fixed descriptions of all tooltips for all stats.</li>
     </ul>
   `;
 }
