@@ -514,9 +514,10 @@ export default class Item {
     this.stats[stat] = this.scaleStat({ stat });
     return stat;
   }
-}
 
-function selectRandomStat(type, subtypeData, currentStats, excludeStat = null) {
+
+
+selectRandomStat(type, subtypeData, currentStats, excludeStat = null) {
   const itemStatPool = ITEM_STAT_POOLS[type];
   if (!itemStatPool) return null;
 
@@ -554,4 +555,5 @@ function selectRandomStat(type, subtypeData, currentStats, excludeStat = null) {
   });
 
   return weightedStats[Math.floor(Math.random() * weightedStats.length)];
+}
 }
