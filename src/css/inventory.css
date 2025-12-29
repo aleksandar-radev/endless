@@ -1561,3 +1561,14 @@
 .salvage-row .toggle-btn {
   margin: 0.25em;
 }
+
+.item-tooltip-salvage {
+  margin-top: 8px;
+  color: #fff;
+  background: rgba(224, 192, 96, 0.8);
+  border-top: 1px solid #e0c060;
+  padding: 6px 8px 4px 8px;
+  border-radius: 0 0 8px 8px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px #7a5c1c;
+}

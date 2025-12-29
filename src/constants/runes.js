@@ -84,7 +84,7 @@ const TYPE_DATA = {
   damage: {
     stat: 'damage',
     labelKey: 'damage',
-    icon: `${BASE}/icons/sword.svg`,
+    icon: `${BASE}/icons/sword.png`,
   },
   life: {
     stat: 'life',
@@ -99,17 +99,17 @@ const TYPE_DATA = {
   armor: {
     stat: 'armor',
     labelKey: 'armor',
-    icon: `${BASE}/icons/armor.svg`,
+    icon: `${BASE}/icons/armor.png`,
   },
   attackRating: {
     stat: 'attackRating',
     labelKey: 'attackRating',
-    icon: `${BASE}/icons/sword.svg`,
+    icon: `${BASE}/icons/sword.png`,
   },
   evasion: {
     stat: 'evasion',
     labelKey: 'evasion',
-    icon: `${BASE}/icons/boots.svg`,
+    icon: `${BASE}/icons/boots.png`,
   },
   lifeRegen: {
     stat: 'lifeRegen',
@@ -149,7 +149,7 @@ const TYPE_DATA = {
   allResistance: {
     stat: 'allResistance',
     labelKey: 'allResistance',
-    icon: `${BASE}/icons/shield.svg`,
+    icon: `${BASE}/icons/shield.png`,
   },
 };
 

@@ -1,5 +1,7 @@
 import { ITEM_IDS } from './items.js';
 
+const BASE = import.meta.env.VITE_BASE_PATH;
+
 export const ITEM_SUBTYPES = {
   [ITEM_IDS.SWORD]: {
     [ITEM_IDS.SWORD]: {
@@ -10,6 +12,7 @@ export const ITEM_SUBTYPES = {
       // disabledStats: ['critChance'],
       // additionalStats: ['critChance'],
       // prefferedStats: ['critChance'],
+      icon: `<img src="${BASE}/icons/sword.png" />`,
     },
     SHORT_SWORD: {
       id: 'SHORT_SWORD',

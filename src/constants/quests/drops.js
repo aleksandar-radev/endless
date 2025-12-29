@@ -1,7 +1,7 @@
 import { tp } from '../../i18n.js';
 const BASE = import.meta.env.VITE_BASE_PATH;
 const DROP_ICONS = {
-  item_drop: `<img src="${BASE}/icons/armor.svg" class="icon" alt="item drop"/>`,
+  item_drop: `<img src="${BASE}/icons/armor.png" class="icon" alt="item drop"/>`,
   material_drop: `<img src="${BASE}/icons/armor-upgrade-stone.svg" class="icon" alt="material drop"/>`,
 };
 // Item and material drop quests

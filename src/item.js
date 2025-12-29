@@ -454,6 +454,9 @@ export default class Item {
   }
 
   getIcon() {
+    if (this.subtypeData?.icon) {
+      return this.subtypeData.icon;
+    }
     return ITEM_ICONS[this.type] || `<img src="${BASE}/icons/help.svg" class="icon" alt="?"/>`;
   }
 

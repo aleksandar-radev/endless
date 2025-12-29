@@ -18,6 +18,8 @@ export default function run() {
       <li>Changes to attributes: Vitality now provides 5 life (6 before) and 0.25 life regen per point, and perseverance is reduced to 0.25 life regen per point (0.5 before).</li>
       <li>Combined training, crystal shop and soul shop tabs into a single "Shop" tab with 3 subtabs.</li>
       <li>Removed life steal from training.</li>
+      <li>Changed icons for all elements (fire, cold, lightning, earth, water, air).</li>
+      <li>Changed icons for all items.</li>
     </ul>
   
     <span style="color:#FF8A00;">Skill System</span>

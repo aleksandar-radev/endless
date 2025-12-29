@@ -20,7 +20,7 @@ export const KILL_QUESTS = [
       },
       bonuses: { damagePercent: 1 },
     },
-    icon: `<img src="${BASE}/icons/sword.svg" class="icon" alt="kills"/>`,
+    icon: `<img src="${BASE}/icons/sword.png" class="icon" alt="kills"/>`,
   },
   {
     id: 'kill10',
@@ -40,7 +40,7 @@ export const KILL_QUESTS = [
         rarity: 'rare', type: 'random', tier: 1,
       },
     },
-    icon: `<img src="${BASE}/icons/sword.svg" class="icon" alt="kills"/>`,
+    icon: `<img src="${BASE}/icons/sword.png" class="icon" alt="kills"/>`,
   },
   {
     id: 'kill50',
@@ -54,7 +54,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 50,
     reward: { gold: 1500, crystals: 2 },
-    icon: `<img src="${BASE}/icons/sword.svg" class="icon" alt="kills"/>`,
+    icon: `<img src="${BASE}/icons/sword.png" class="icon" alt="kills"/>`,
   },
   {
     id: 'kill250',
