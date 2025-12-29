@@ -2,6 +2,8 @@ import { ITEM_IDS } from './items.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 
+const twoHandedMultiplier = 2;
+
 export const ITEM_SUBTYPES = {
   [ITEM_IDS.SWORD]: {
     [ITEM_IDS.SWORD]: {
@@ -53,6 +55,7 @@ export const ITEM_SUBTYPES = {
       nameKey: 'items.subtypes.greatsword',
       weight: 15,
       twoHanded: true,
+      allStatMultiplier: twoHandedMultiplier,
       statMultipliers: {
         damage: { min: 1.5, max: 1.5 },
         damagePercent: { min: 1.2, max: 1.2 },
@@ -92,6 +95,7 @@ export const ITEM_SUBTYPES = {
       nameKey: 'items.subtypes.greataxe',
       weight: 15,
       twoHanded: true,
+      allStatMultiplier: twoHandedMultiplier,
       statMultipliers: {
         damage: { min: 1.3, max: 1.3 },
         damagePercent: { min: 1.15, max: 1.15 },
@@ -150,6 +154,7 @@ export const ITEM_SUBTYPES = {
       nameKey: 'items.subtypes.warHammer',
       weight: 20,
       twoHanded: true,
+      allStatMultiplier: twoHandedMultiplier,
       statMultipliers: {
         damage: { min: 1.4, max: 1.4 },
         damagePercent: { min: 1.1, max: 1.1 },
@@ -180,6 +185,7 @@ export const ITEM_SUBTYPES = {
       nameKey: 'items.subtypes.longBow',
       weight: 25,
       twoHanded: true,
+      allStatMultiplier: twoHandedMultiplier,
       statMultipliers: {
         damage: { min: 1.3, max: 1.3 },
         damagePercent: { min: 1.1, max: 1.1 },
@@ -192,6 +198,7 @@ export const ITEM_SUBTYPES = {
       nameKey: 'items.subtypes.crossbow',
       weight: 20,
       twoHanded: true,
+      allStatMultiplier: twoHandedMultiplier,
       statMultipliers: {
         damage: { min: 1.4, max: 1.4 },
         damagePercent: { min: 1.15, max: 1.15 },
@@ -262,6 +269,7 @@ export const ITEM_SUBTYPES = {
       nameKey: 'items.subtypes.fireStaff',
       weight: 15,
       twoHanded: true,
+      allStatMultiplier: twoHandedMultiplier,
       statMultipliers: {
         fireDamage: { min: 1.25, max: 1.25 },
         fireDamagePercent: { min: 1.5, max: 1.5 },
@@ -273,6 +281,7 @@ export const ITEM_SUBTYPES = {
       nameKey: 'items.subtypes.frostStaff',
       weight: 15,
       twoHanded: true,
+      allStatMultiplier: twoHandedMultiplier,
       statMultipliers: {
         coldDamage: { min: 1.25, max: 1.25 },
         coldDamagePercent: { min: 1.5, max: 1.5 },
@@ -284,6 +293,7 @@ export const ITEM_SUBTYPES = {
       nameKey: 'items.subtypes.stormStaff',
       weight: 15,
       twoHanded: true,
+      allStatMultiplier: twoHandedMultiplier,
       statMultipliers: {
         lightningDamage: { min: 1.25, max: 1.25 },
         lightningDamagePercent: { min: 1.5, max: 1.5 },
@@ -295,6 +305,7 @@ export const ITEM_SUBTYPES = {
       nameKey: 'items.subtypes.earthStaff',
       weight: 15,
       twoHanded: true,
+      allStatMultiplier: twoHandedMultiplier,
       statMultipliers: {
         earthDamage: { min: 1.25, max: 1.25 },
         earthDamagePercent: { min: 1.5, max: 1.5 },

@@ -1,4 +1,4 @@
-import { itemLevelScaling, createTierScaling, createStat, createPercentStat, createHiddenStat } from './stats.js';
+import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat, createHiddenStat } from './stats.js';
 import { ELEMENTS } from '../common.js';
 
 const ELEMENTAL_DAMAGE_MIN = 8;
@@ -11,7 +11,7 @@ const STAFF_ELEMENTAL_PERCENT_MULTIPLIER = 1.45;
 
 const tierScalingMaxPercent = createTierScaling(100, 2000, 1.2);
 
-const offenseScaling = (level, tier) => itemLevelScaling(level, tier);
+const offenseScaling = (level, tier) => itemStatScaleFactor(level, tier);
 
 const createElementalDamageConfig = () => ({
   min: ELEMENTAL_DAMAGE_MIN,
@@ -160,7 +160,7 @@ export const OFFENSE_STATS = {
       maxLevel: 250,
     }, // max bonus: 2.5
     item: {
-      min: 0.02, max: 0.1, limit: 2, scaling: (level, tier) => offenseScaling(level, tier),
+      min: 0.02, max: 0.1, scaling: (level, tier) => offenseScaling(level, tier),
     },
     itemTags: ['offense', 'jewelry', 'gloves', 'wand', 'staff'],
     show: true,

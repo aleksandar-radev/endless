@@ -1,7 +1,7 @@
 import { OFFENSE_STATS } from './offenseStats.js';
 import { DEFENSE_STATS } from './defenseStats.js';
 import { MISC_STATS } from './miscStats.js';
-import { ITEM_FLAT_REGION_SCALING_MULTIPLIER, ITEM_FLAT_STAGE_SCALING_PERCENT } from '../enemies.js';
+import { ITEM_FLAT_TIER_SCALING_MULTIPLIER, ITEM_FLAT_STAGE_SCALING_PERCENT } from '../enemies.js';
 
 export const STATS = {
   ...OFFENSE_STATS,
@@ -53,9 +53,6 @@ export function getStatDecimalPlaces(statKey, fallback = 0) {
   return decimals === undefined ? fallback : decimals;
 }
 
-export function itemTierScaling(tier = 1) {
-  return ITEM_FLAT_REGION_SCALING_MULTIPLIER ** Math.max(0, tier - 1);
-}
 
 /**
  * Generate a tier scaling map (1-12) by interpolating between start and end values.
@@ -74,7 +71,11 @@ export function createTierScaling(start, end, power = 1) {
   return scaling;
 }
 
-export function itemLevelScaling(level, tier = 1) {
+export function itemTierScaling(tier = 1) {
+  return ITEM_FLAT_TIER_SCALING_MULTIPLIER ** Math.max(0, tier - 1);
+}
+
+export function itemStatScaleFactor(level, tier = 1) {
   const tierScale = itemTierScaling(tier);
   if (level <= 1) return tierScale;
   const levelScale = 1 + (level - 1) * ITEM_FLAT_STAGE_SCALING_PERCENT;

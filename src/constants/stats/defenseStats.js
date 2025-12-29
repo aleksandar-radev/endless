@@ -1,9 +1,9 @@
-import { itemLevelScaling, createTierScaling, createStat, createPercentStat, createHiddenStat } from './stats.js';
+import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat } from './stats.js';
 import { ELEMENTS } from '../common.js';
 
 const resistanceTierScalingMaxPercent = createTierScaling(18, 250, 1.2);
 
-const defenseScaling = (level, tier) => itemLevelScaling(level, tier);
+const defenseScaling = (level, tier) => itemStatScaleFactor(level, tier);
 
 const generateElementalDefenseStats = () => {
   const stats = {};

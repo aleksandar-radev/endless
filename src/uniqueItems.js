@@ -25,7 +25,7 @@ function buildItemWithStats(definition, level, tier, rarity, extraMeta = {}) {
   const normalizedTier = Math.max(1, Math.round(tier));
   const normalizedLevel = normalizeLevel(level);
   const helper = new Item(definition.type, normalizedLevel, rarity, normalizedTier, {}, { ...extraMeta });
-  const multiplier = helper.getMultiplier();
+  const multiplier = helper.getRarityMultiplier();
   const stats = {};
 
   const statRolls = {};
@@ -34,7 +34,8 @@ function buildItemWithStats(definition, level, tier, rarity, extraMeta = {}) {
     stat, min, max,
   }) => {
     const baseValue = rollInRange(min, max);
-    const scale = helper.getLevelScale(stat, normalizedLevel);
+    const scale = helper.scaleStat(stat, normalizedLevel);
+    // todo change
     const value = helper.calculateStatValue({
       baseValue,
       multiplier,
@@ -60,7 +61,7 @@ function rollSetBonusValues(setDefinition, tier, level) {
   const normalizedTier = Math.max(1, Math.round(tier));
   const normalizedLevel = normalizeLevel(level);
   const helper = new Item(setDefinition.items[0]?.type || 'ARMOR', normalizedLevel, 'SET', normalizedTier, {}, {});
-  const multiplier = helper.getMultiplier();
+  const multiplier = helper.getRarityMultiplier();
 
   return setDefinition.setBonuses.map((bonus) => {
     const stats = {};
@@ -69,7 +70,8 @@ function rollSetBonusValues(setDefinition, tier, level) {
       stat, min, max,
     }) => {
       const baseValue = rollInRange(min, max);
-      const scale = helper.getLevelScale(stat, normalizedLevel);
+      const scale = helper.scaleStat(stat, normalizedLevel);
+    // todo change
       const value = helper.calculateStatValue({
         baseValue,
         multiplier,

@@ -1,8 +1,6 @@
 import { ITEM_IDS } from './items.js';
 import { STATS } from './stats/stats.js';
 
-export const UNIQUE_PERCENT_CAP_MULTIPLIER = 2;
-
 export const UNIQUE_ITEMS = [
   {
     id: 'stormlash',

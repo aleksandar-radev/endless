@@ -1399,6 +1399,7 @@
   user-select: none;
 }
 
+#inventory input[type='checkbox'],
 #salvage-modal input[type='checkbox'] {
   display: none;
 }
@@ -1416,6 +1417,7 @@
   vertical-align: middle;
 }
 
+#inventory input[type='checkbox']:checked+.toggle-btn,
 #salvage-modal input[type='checkbox']:checked+.toggle-btn {
   background: #2563eb;
   border-color: #2563eb;
@@ -1434,6 +1436,7 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
 }
 
+#inventory input[type='checkbox']:checked+.toggle-btn::before,
 #salvage-modal input[type='checkbox']:checked+.toggle-btn::before {
   left: 25px;
 }

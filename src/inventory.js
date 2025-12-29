@@ -709,7 +709,7 @@ export default class Inventory {
               const statDef = STATS[stat] || {};
               const decimals = getStatDecimalPlaces(stat);
               const formattedValue = value.toFixed(decimals);
-              const { max: maxRoll } = item.getStatMinMax(stat);
+              const { max: maxRoll } = item.getStatRange(stat);
               let isMaxRoll = false;
               if (Number.isFinite(maxRoll)) {
                 const normalizedMax = Number(maxRoll.toFixed(decimals));
@@ -771,6 +771,7 @@ export default class Inventory {
             const baseValue = Math.random() * (range.max - range.min) + range.min;
             const multiplier = item.getMultiplier();
             const scale = item.getLevelScale(statToReroll, item.level);
+    // todo change
             item.stats[statToReroll] = item.calculateStatValue({
               baseValue,
               multiplier,
@@ -790,7 +791,7 @@ export default class Inventory {
             this.handleMaterialUsed(this, mat, matDef, 1, 'material-reroll-dialog', toastMsg, false);
             dialog.querySelector('.material-qty').textContent = mat.qty;
             renderSelected(idx);
-            const postRollRange = item.getStatMinMax(statToReroll);
+            const postRollRange = item.getStatRange(statToReroll);
             if (postRollRange && Number.isFinite(postRollRange.max)) {
               const decimals = getStatDecimalPlaces(statToReroll);
               const maxValue = Number(postRollRange.max.toFixed(decimals));
