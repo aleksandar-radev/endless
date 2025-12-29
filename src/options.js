@@ -122,6 +122,7 @@ export class Options {
     this.language = data.language || 'en';
     this.shortElementalNames = data.shortElementalNames ?? false;
     this.shortNumbers = data.shortNumbers ?? false;
+    this.enableEnemyRarityBonus = data.enableEnemyRarityBonus ?? true;
     this.showSkillCooldowns = data.showSkillCooldowns ?? false;
     this.showInfoMessages = data.showInfoMessages ?? true;
     this.showNotifications = data.showNotifications ?? true;
@@ -681,6 +682,15 @@ export class Options {
         labelText: 'Show Combat Texts:',
         tooltipKey: 'showCombatTextLabel',
         stateKey: 'showCombatText',
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'enable-enemy-rarity-bonus-toggle',
+        i18nKey: 'options.enableEnemyRarityBonus',
+        labelText: 'Enable Specialization Rarity Bonus:',
+        tooltipKey: 'enableEnemyRarityBonusLabel',
+        stateKey: 'enableEnemyRarityBonus',
       }),
     );
     gameContent.appendChild(

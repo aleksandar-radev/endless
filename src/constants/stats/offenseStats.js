@@ -192,9 +192,6 @@ export const OFFENSE_STATS = {
   }),
   lifeSteal: createPercentStat({
     dec: 2,
-    training: {
-      cost: 800, bonus: 0.01, maxLevel: 100,
-    }, // max bonus: 1
     item: { tierScalingMaxPercent: createTierScaling(1.25, 10, 1.2) },
     show: true,
     sub: 'attack',

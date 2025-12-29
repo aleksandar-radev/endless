@@ -189,6 +189,11 @@ export const MISC_STATS = {
     show: true,
     sub: 'rewards',
   }),
+  enemyRarityPercent: createStat({
+    div: 100,
+    show: true,
+    sub: 'rewards',
+  }),
   materialQuantityPercent: createStat({
     div: 100,
     item: { tierScalingMaxPercent: dropTierScalingMaxPercent },
