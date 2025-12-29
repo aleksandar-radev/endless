@@ -276,7 +276,7 @@ export default class Item {
     let currentStatCount = Object.keys(stats).length;
 
     while (currentStatCount < totalStatsNeeded) {
-      const stat = selectRandomStat(this.type, this.subtypeData, stats);
+      const stat = this.selectRandomStat(this.type, this.subtypeData, stats);
       if (!stat) break;
 
       stats[stat] = this.scaleStat({ stat });
@@ -508,7 +508,7 @@ export default class Item {
   }
 
   addRandomStat(excludeStat = null) {
-    const stat = selectRandomStat(this.type, this.subtypeData, this.stats, excludeStat);
+    const stat = this.selectRandomStat(this.type, this.subtypeData, this.stats, excludeStat);
     if (!stat) return;
 
     this.stats[stat] = this.scaleStat({ stat });
