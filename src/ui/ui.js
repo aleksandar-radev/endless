@@ -51,14 +51,14 @@ export function switchShopSubTab(subTabName) {
   // Update specific shop UI if needed
   if (subTabName === 'training') {
     if (training) {
-        training.updateTrainingAffordability('gold-upgrades');
-        training.updateTrainingAffordability('crystal-upgrades');
+      training.updateTrainingAffordability('gold-upgrades');
+      training.updateTrainingAffordability('crystal-upgrades');
     }
   }
 
   if (subTabName === 'soulShop') {
     if (soulShop) {
-        soulShop.updateSoulShopAffordability();
+      soulShop.updateSoulShopAffordability();
     }
   }
 }
@@ -361,12 +361,12 @@ export function switchTab(tabName) {
 
   // If switching to shop, handle sub-tab
   if (actualTab === 'shop') {
-     if (!targetSubTab) {
-       // If no specific sub-tab requested, use the currently active one or default to training
-       const activeSubTab = document.querySelector('.shop-tab-panel.active');
-       targetSubTab = activeSubTab ? activeSubTab.id : 'training';
-     }
-     switchShopSubTab(targetSubTab);
+    if (!targetSubTab) {
+      // If no specific sub-tab requested, use the currently active one or default to training
+      const activeSubTab = document.querySelector('.shop-tab-panel.active');
+      targetSubTab = activeSubTab ? activeSubTab.id : 'training';
+    }
+    switchShopSubTab(targetSubTab);
   }
 
   game.activeTab = actualTab;

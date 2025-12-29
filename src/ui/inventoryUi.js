@@ -1476,28 +1476,28 @@ export function sortInventory(mode = 'type-rarity-level') {
   // Sort logic based on mode
   nonPersistentItems.sort((a, b) => {
     switch (mode) {
-      case 'type-rarity-level':
-        return typeOrder(a, b) || rarityOrder(a, b) || levelOrder(a, b);
-      case 'type-level-rarity':
-        return typeOrder(a, b) || levelOrder(a, b) || rarityOrder(a, b);
-      case 'rarity-level':
-        return rarityOrder(a, b) || levelOrder(a, b);
-      case 'level-rarity':
-        return levelOrder(a, b) || rarityOrder(a, b);
-      case 'tier-rarity-level':
-        return tierOrder(a, b) || rarityOrder(a, b) || levelOrder(a, b);
-      case 'tier-level-rarity':
-        return tierOrder(a, b) || levelOrder(a, b) || rarityOrder(a, b);
-      case 'type-tier-rarity':
-        return typeOrder(a, b) || tierOrder(a, b) || rarityOrder(a, b);
-      case 'type-tier-level':
-        return typeOrder(a, b) || tierOrder(a, b) || levelOrder(a, b);
-      case 'rarity-tier-level':
-        return rarityOrder(a, b) || tierOrder(a, b) || levelOrder(a, b);
-      case 'level-tier-rarity':
-        return levelOrder(a, b) || tierOrder(a, b) || rarityOrder(a, b);
-      default:
-        return rarityOrder(a, b) || levelOrder(a, b);
+    case 'type-rarity-level':
+      return typeOrder(a, b) || rarityOrder(a, b) || levelOrder(a, b);
+    case 'type-level-rarity':
+      return typeOrder(a, b) || levelOrder(a, b) || rarityOrder(a, b);
+    case 'rarity-level':
+      return rarityOrder(a, b) || levelOrder(a, b);
+    case 'level-rarity':
+      return levelOrder(a, b) || rarityOrder(a, b);
+    case 'tier-rarity-level':
+      return tierOrder(a, b) || rarityOrder(a, b) || levelOrder(a, b);
+    case 'tier-level-rarity':
+      return tierOrder(a, b) || levelOrder(a, b) || rarityOrder(a, b);
+    case 'type-tier-rarity':
+      return typeOrder(a, b) || tierOrder(a, b) || rarityOrder(a, b);
+    case 'type-tier-level':
+      return typeOrder(a, b) || tierOrder(a, b) || levelOrder(a, b);
+    case 'rarity-tier-level':
+      return rarityOrder(a, b) || tierOrder(a, b) || levelOrder(a, b);
+    case 'level-tier-rarity':
+      return levelOrder(a, b) || tierOrder(a, b) || rarityOrder(a, b);
+    default:
+      return rarityOrder(a, b) || levelOrder(a, b);
     }
   });
 

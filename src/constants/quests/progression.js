@@ -70,8 +70,8 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 50,
     reward: {
- gold: 2000, crystals: 2, bonuses: { vitality: 5 },
-},
+      gold: 2000, crystals: 2, bonuses: { vitality: 5 },
+    },
   },
   {
     id: 'level_75',
@@ -98,8 +98,8 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 100,
     reward: {
- gold: 10000, crystals: 3, bonuses: { allAttributes: 3 },
-},
+      gold: 10000, crystals: 3, bonuses: { allAttributes: 3 },
+    },
   },
   {
     id: 'level_150',
@@ -126,8 +126,8 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 200,
     reward: {
- gold: 40000, crystals: 8, bonuses: { allAttributesPercent: 1 },
-},
+      gold: 40000, crystals: 8, bonuses: { allAttributesPercent: 1 },
+    },
   },
   {
     id: 'level_300',
@@ -154,8 +154,8 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 500,
     reward: {
- gold: 150000, crystals: 20, bonuses: { lifePercent: 2 },
-},
+      gold: 150000, crystals: 20, bonuses: { lifePercent: 2 },
+    },
   },
   {
     id: 'level_750',

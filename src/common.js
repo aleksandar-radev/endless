@@ -268,7 +268,7 @@ export function createPercentScaleFunction(startPercent, interval, increasePerIn
  * @returns {number} The calculated percentage bonus
  */
 export function getScalingPercent({
- level, base = 10, softcap = 2000, linear = 0.5, power = 0.6,
+  level, base = 10, softcap = 2000, linear = 0.5, power = 0.6,
 }) {
   if (level <= 0) return 0;
   if (level === 1) return base;
@@ -307,7 +307,7 @@ export function getScalingPercent({
  * @returns {number} The calculated flat value
  */
 export function getScalingFlat({
- level, base = 10, increment = 1, interval = 50, bonus = 0.2,
+  level, base = 10, increment = 1, interval = 50, bonus = 0.2,
 }) {
   if (level <= 0) return 0;
 
@@ -339,7 +339,7 @@ export function getScalingFlat({
  * @returns {number} The calculated chance percentage
  */
 export function getScalingChance({
- level, base = 1, levelsPerPoint = 10, cap = 75,
+  level, base = 1, levelsPerPoint = 10, cap = 75,
 }) {
   if (level <= 0) return 0;
 
@@ -361,7 +361,7 @@ export function getScalingChance({
  * @returns {number} The synergy bonus as a percentage (e.g., 50 means +50% effectiveness)
  */
 export function getScalingSynergy({
- level, base = 1, increment = 1, cap = 100,
+  level, base = 1, increment = 1, cap = 100,
 }) {
   if (level <= 0) return 0;
 

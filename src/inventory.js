@@ -771,7 +771,7 @@ export default class Inventory {
             const baseValue = Math.random() * (range.max - range.min) + range.min;
             const multiplier = item.getMultiplier();
             const scale = item.getLevelScale(statToReroll, item.level);
-    // todo change
+            // todo change
             item.stats[statToReroll] = item.calculateStatValue({
               baseValue,
               multiplier,

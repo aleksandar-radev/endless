@@ -114,10 +114,10 @@ export default class Item {
 
     const { min, max } = this.getStatRange(stat);
 
-      if (statConfig.tierScalingMaxPercent) {
-        const percentStatScaled = (Math.random() * (max * this.getRarityMultiplier() - 1) + 1);
-        return percentStatScaled;
-      }
+    if (statConfig.tierScalingMaxPercent) {
+      const percentStatScaled = (Math.random() * (max * this.getRarityMultiplier() - 1) + 1);
+      return percentStatScaled;
+    }
 
     const flatScaled =  Math.random() * (max - min) + min;
     return flatScaled * statConfig.scaling(level, this.tier);
@@ -209,23 +209,23 @@ export default class Item {
 
     let statDefinition;
     // handle unique special ranges
-      const uniqueId = this.metaData?.uniqueId;
-      if (uniqueId) {
-        statDefinition = UNIQUE_ITEM_STATS.get(uniqueId)?.get(stat);
-      }
+    const uniqueId = this.metaData?.uniqueId;
+    if (uniqueId) {
+      statDefinition = UNIQUE_ITEM_STATS.get(uniqueId)?.get(stat);
+    }
 
-      // handle set piece special ranges
-      const setId = this.metaData?.setId;
-      const pieceId = this.metaData?.setPieceId;
-      if (setId || pieceId) {
-        const pieceStats = ITEM_SET_LOOKUP.get(setId);
-        statDefinition = pieceStats.get(pieceId)?.get(stat);
-      };
+    // handle set piece special ranges
+    const setId = this.metaData?.setId;
+    const pieceId = this.metaData?.setPieceId;
+    if (setId || pieceId) {
+      const pieceStats = ITEM_SET_LOOKUP.get(setId);
+      statDefinition = pieceStats.get(pieceId)?.get(stat);
+    };
 
-      if (statDefinition) {
-        min = statDefinition.min;
-        max = statDefinition.max;
-      };
+    if (statDefinition) {
+      min = statDefinition.min;
+      max = statDefinition.max;
+    };
 
     // Apply subtype multipliers if present
     if (this.subtypeData?.statMultipliers?.[stat]) {
@@ -517,43 +517,43 @@ export default class Item {
 
 
 
-selectRandomStat(type, subtypeData, currentStats, excludeStat = null) {
-  const itemStatPool = ITEM_STAT_POOLS[type];
-  if (!itemStatPool) return null;
+  selectRandomStat(type, subtypeData, currentStats, excludeStat = null) {
+    const itemStatPool = ITEM_STAT_POOLS[type];
+    if (!itemStatPool) return null;
 
-  const disabledStats = new Set(subtypeData.disabledStats || []);
-  const additionalStats = (subtypeData.additionalStats || []).filter((s) => !disabledStats.has(s));
-  const preferredStats = new Set(subtypeData.preferredStats || []);
+    const disabledStats = new Set(subtypeData.disabledStats || []);
+    const additionalStats = (subtypeData.additionalStats || []).filter((s) => !disabledStats.has(s));
+    const preferredStats = new Set(subtypeData.preferredStats || []);
 
-  // Base pool: possible + additional
-  // Exclude mandatory (assumed added) and disabled
-  let availableStats = [...new Set([...itemStatPool.possible, ...additionalStats])].filter(
-    (stat) => !itemStatPool.mandatory.includes(stat) && !disabledStats.has(stat),
-  );
+    // Base pool: possible + additional
+    // Exclude mandatory (assumed added) and disabled
+    let availableStats = [...new Set([...itemStatPool.possible, ...additionalStats])].filter(
+      (stat) => !itemStatPool.mandatory.includes(stat) && !disabledStats.has(stat),
+    );
 
-  // Filter out existing stats and excluded stat
-  availableStats = availableStats.filter((stat) => !currentStats[stat] && stat !== excludeStat);
+    // Filter out existing stats and excluded stat
+    availableStats = availableStats.filter((stat) => !currentStats[stat] && stat !== excludeStat);
 
-  if (availableStats.length === 0) return null;
+    if (availableStats.length === 0) return null;
 
-  const currentStatKeys = Object.keys(currentStats);
-  const resistanceCount = currentStatKeys.filter((s) => RESISTANCE_STATS.includes(s)).length;
-  const attributeCount = currentStatKeys.filter((s) => ATTRIBUTE_STATS.includes(s)).length;
+    const currentStatKeys = Object.keys(currentStats);
+    const resistanceCount = currentStatKeys.filter((s) => RESISTANCE_STATS.includes(s)).length;
+    const attributeCount = currentStatKeys.filter((s) => ATTRIBUTE_STATS.includes(s)).length;
 
-  // Filter eligibility based on constraints (max 3 res, max 3 attr)
-  const eligibleStats = availableStats.filter(
-    (s) =>
-      !(RESISTANCE_STATS.includes(s) && resistanceCount >= 3) &&
+    // Filter eligibility based on constraints (max 3 res, max 3 attr)
+    const eligibleStats = availableStats.filter(
+      (s) =>
+        !(RESISTANCE_STATS.includes(s) && resistanceCount >= 3) &&
       !(ATTRIBUTE_STATS.includes(s) && attributeCount >= 3),
-  );
+    );
 
-  if (eligibleStats.length === 0) return null;
+    if (eligibleStats.length === 0) return null;
 
-  const weightedStats = eligibleStats.flatMap((stat) => {
-    const weight = preferredStats.has(stat) ? 3 : 1;
-    return Array(weight).fill(stat);
-  });
+    const weightedStats = eligibleStats.flatMap((stat) => {
+      const weight = preferredStats.has(stat) ? 3 : 1;
+      return Array(weight).fill(stat);
+    });
 
-  return weightedStats[Math.floor(Math.random() * weightedStats.length)];
-}
+    return weightedStats[Math.floor(Math.random() * weightedStats.length)];
+  }
 }

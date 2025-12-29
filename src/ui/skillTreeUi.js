@@ -937,7 +937,7 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNe
   // Add synergies
   if (skill.synergies && Array.isArray(skill.synergies) && skill.synergies.length > 0) {
     html += `<br /><u>${t('skillTree.synergies')}:</u><br />`;
-    skill.synergies.forEach(synergy => {
+    skill.synergies.forEach((synergy) => {
       const sourceSkill = skillTree.getSkill(synergy.sourceSkillId);
       if (!sourceSkill) return;
 
@@ -1873,7 +1873,7 @@ function openSkillModal(skillId) {
   if (skill.synergies && Array.isArray(skill.synergies) && skill.synergies.length > 0) {
     synergiesSection.style.display = '';
     synergiesList.innerHTML = '';
-    skill.synergies.forEach(synergy => {
+    skill.synergies.forEach((synergy) => {
       const sourceSkill = skillTree.getSkill(synergy.sourceSkillId);
       if (!sourceSkill) return;
 

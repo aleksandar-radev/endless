@@ -16,10 +16,10 @@ export const WARRIOR_SKILLS = {
     description: () => t('skill.bash'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-damage: getScalingFlat({
- level, base: 3, increment: 0.5, interval: 50, bonus: 0.2,
-}),
-}),
+      damage: getScalingFlat({
+        level, base: 3, increment: 0.5, interval: 50, bonus: 0.2,
+      }),
+    }),
   },
   toughness: {
     id: 'toughness',
@@ -31,11 +31,11 @@ damage: getScalingFlat({
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: getScalingFlat({
- level, base: 5, increment: 1, interval: 50, bonus: 0.2,
-}),
+        level, base: 5, increment: 1, interval: 50, bonus: 0.2,
+      }),
       extraDamageFromArmorPercent: Math.min(getScalingPercent({
- level, base: 0.5, softcap: 2000, linear: 0.1, power: 0.6,
-}) / 100, 1.5),
+        level, base: 0.5, softcap: 2000, linear: 0.1, power: 0.6,
+      }) / 100, 1.5),
     }),
   },
 
@@ -53,11 +53,11 @@ damage: getScalingFlat({
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getScalingFlat({
- level, base: 10, increment: 1.5, interval: 50, bonus: 0.2,
-}),
+        level, base: 10, increment: 1.5, interval: 50, bonus: 0.2,
+      }),
       damagePercent: getScalingPercent({
- level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
-}),
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
   ironWill: {
@@ -70,21 +70,21 @@ damage: getScalingFlat({
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       vitality: getScalingFlat({
- level, base: 5, increment: 1, interval: 50, bonus: 0.15,
-}),
+        level, base: 5, increment: 1, interval: 50, bonus: 0.15,
+      }),
       perseverance: getScalingFlat({
- level, base: 5, increment: 1, interval: 50, bonus: 0.15,
-}),
+        level, base: 5, increment: 1, interval: 50, bonus: 0.15,
+      }),
       extraDamageFromLifePercent: Math.min(getScalingPercent({
- level, base: 1, softcap: 2000, linear: 0.2, power: 0.6,
-}) / 100, 25),
+        level, base: 1, softcap: 2000, linear: 0.2, power: 0.6,
+      }) / 100, 25),
     }),
     synergies: [
       {
         sourceSkillId: 'toughness',
         calculateBonus: (sourceLevel) => getScalingSynergy({
- level: sourceLevel, base: 1, increment: 0.3, cap: 50,
-}),
+          level: sourceLevel, base: 1, increment: 0.3, cap: 50,
+        }),
       },
     ],
   },
@@ -103,18 +103,18 @@ damage: getScalingFlat({
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getScalingFlat({
- level, base: 5, increment: 1, interval: 50, bonus: 0.2,
-}),
+        level, base: 5, increment: 1, interval: 50, bonus: 0.2,
+      }),
       damagePercent: getScalingPercent({
- level, base: 8, softcap: 2000, linear: 0.5, power: 0.6,
-}),
+        level, base: 8, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
     synergies: [
       {
         sourceSkillId: 'bash',
         calculateBonus: (sourceLevel) => getScalingSynergy({
- level: sourceLevel, base: 2, increment: 0.5, cap: 75,
-}),
+          level: sourceLevel, base: 2, increment: 0.5, cap: 75,
+        }),
       },
     ],
   },
@@ -128,11 +128,11 @@ damage: getScalingFlat({
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeRegenOfTotalPercent: Math.min(getScalingPercent({
- level, base: 0.3, softcap: 2000, linear: 0.05, power: 0.6,
-}) / 100, 1.5),
+        level, base: 0.3, softcap: 2000, linear: 0.05, power: 0.6,
+      }) / 100, 1.5),
       lifeRegen: getScalingFlat({
- level, base: 2, increment: 0.5, interval: 50, bonus: 0.15,
-}),
+        level, base: 2, increment: 0.5, interval: 50, bonus: 0.15,
+      }),
     }),
   },
 
@@ -150,11 +150,11 @@ damage: getScalingFlat({
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getScalingFlat({
- level, base: 8, increment: 1.2, interval: 50, bonus: 0.2,
-}),
+        level, base: 8, increment: 1.2, interval: 50, bonus: 0.2,
+      }),
       damagePercent: getScalingPercent({
- level, base: 20, softcap: 2000, linear: 0.8, power: 0.6,
-}),
+        level, base: 20, softcap: 2000, linear: 0.8, power: 0.6,
+      }),
     }),
   },
 
@@ -168,21 +168,21 @@ damage: getScalingFlat({
     description: () => t('skill.armorBreaker'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-armorPenetration: getScalingFlat({
- level, base: 20, increment: 2, interval: 50, bonus: 0.15,
-}),
-}),
+      armorPenetration: getScalingFlat({
+        level, base: 20, increment: 2, interval: 50, bonus: 0.15,
+      }),
+    }),
     synergies: [
       {
         sourceSkillId: 'powerStrike',
         calculateBonus: (sourceLevel) => getScalingSynergy({
- level: sourceLevel, base: 1.5, increment: 0.4, cap: 60,
-}),
+          level: sourceLevel, base: 1.5, increment: 0.4, cap: 60,
+        }),
         additionalEffects: (sourceLevel) => ({
-armorPenetration: getScalingFlat({
- level: sourceLevel, base: 5, increment: 0.5, interval: 50, bonus: 0.10000000000000009,
-}),
-}),
+          armorPenetration: getScalingFlat({
+            level: sourceLevel, base: 5, increment: 0.5, interval: 50, bonus: 0.10000000000000009,
+          }),
+        }),
       },
     ],
   },
@@ -201,18 +201,18 @@ armorPenetration: getScalingFlat({
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       extraDamageFromArmorPercent: Math.min(getScalingPercent({
- level, base: 1, softcap: 2000, linear: 0.15, power: 0.6,
-}) / 100, 2.5),
+        level, base: 1, softcap: 2000, linear: 0.15, power: 0.6,
+      }) / 100, 2.5),
       armor: getScalingFlat({
- level, base: 10, increment: 2, interval: 50, bonus: 0.2,
-}),
+        level, base: 10, increment: 2, interval: 50, bonus: 0.2,
+      }),
     }),
     synergies: [
       {
         sourceSkillId: 'toughness',
         calculateBonus: (sourceLevel) => getScalingSynergy({
- level: sourceLevel, base: 2, increment: 0.5, cap: 80,
-}),
+          level: sourceLevel, base: 2, increment: 0.5, cap: 80,
+        }),
       },
     ],
   },
@@ -228,10 +228,10 @@ armorPenetration: getScalingFlat({
     description: () => t('skill.berserk'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-fireDamage: getScalingFlat({
- level, base: 6, increment: 1.5, interval: 50, bonus: 0.2,
-}),
-}),
+      fireDamage: getScalingFlat({
+        level, base: 6, increment: 1.5, interval: 50, bonus: 0.2,
+      }),
+    }),
   },
 
   lastStand: {
@@ -243,21 +243,21 @@ fireDamage: getScalingFlat({
     description: () => t('skill.lastStand'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-attackRating: getScalingFlat({
- level, base: 10, increment: 2, interval: 50, bonus: 0.15,
-}),
-}),
+      attackRating: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.15,
+      }),
+    }),
     synergies: [
       {
         sourceSkillId: 'ironWill',
         calculateBonus: (sourceLevel) => getScalingSynergy({
- level: sourceLevel, base: 1.5, increment: 0.4, cap: 70,
-}),
+          level: sourceLevel, base: 1.5, increment: 0.4, cap: 70,
+        }),
         additionalEffects: (sourceLevel) => ({
-attackSpeed: Math.min(getScalingPercent({
- level: sourceLevel, base: 0.5, softcap: 2000, linear: 0.05, power: 0.6,
-}) / 100, 0.75),
-}),
+          attackSpeed: Math.min(getScalingPercent({
+            level: sourceLevel, base: 0.5, softcap: 2000, linear: 0.05, power: 0.6,
+          }) / 100, 0.75),
+        }),
       },
     ],
   },
@@ -273,17 +273,17 @@ attackSpeed: Math.min(getScalingPercent({
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strength: getScalingFlat({
- level, base: 8, increment: 1.5, interval: 50, bonus: 0.15,
-}),
+        level, base: 8, increment: 1.5, interval: 50, bonus: 0.15,
+      }),
       vitality: getScalingFlat({
- level, base: 8, increment: 1.5, interval: 50, bonus: 0.15,
-}),
+        level, base: 8, increment: 1.5, interval: 50, bonus: 0.15,
+      }),
       endurance: getScalingFlat({
- level, base: 8, increment: 1.5, interval: 50, bonus: 0.15,
-}),
+        level, base: 8, increment: 1.5, interval: 50, bonus: 0.15,
+      }),
       extraDamageFromLifePercent: Math.min(getScalingPercent({
- level, base: 0.4, softcap: 2000, linear: 0.1, power: 0.6,
-}) / 100, 1),
+        level, base: 0.4, softcap: 2000, linear: 0.1, power: 0.6,
+      }) / 100, 1),
     }),
   },
 
@@ -298,14 +298,14 @@ attackSpeed: Math.min(getScalingPercent({
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getScalingFlat({
- level, base: 15, increment: 3, interval: 50, bonus: 0.2,
-}),
+        level, base: 15, increment: 3, interval: 50, bonus: 0.2,
+      }),
       attackRating: getScalingFlat({
- level, base: 15, increment: 3, interval: 50, bonus: 0.15,
-}),
+        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      }),
       critDamage: Math.min(getScalingPercent({
- level, base: 0.3, softcap: 2000, linear: 0.05, power: 0.6,
-}) / 100, 1),
+        level, base: 0.3, softcap: 2000, linear: 0.05, power: 0.6,
+      }) / 100, 1),
     }),
   },
   unyieldingDefense: {
@@ -321,24 +321,24 @@ attackSpeed: Math.min(getScalingPercent({
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: getScalingFlat({
- level, base: 20, increment: 4, interval: 50, bonus: 0.2,
-}),
+        level, base: 20, increment: 4, interval: 50, bonus: 0.2,
+      }),
       allResistance: getScalingFlat({
- level, base: 15, increment: 3, interval: 50, bonus: 0.15,
-}),
+        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      }),
     }),
     synergies: [
       {
         sourceSkillId: 'shieldWall',
         calculateBonus: (sourceLevel) => getScalingSynergy({
- level: sourceLevel, base: 2, increment: 0.5, cap: 80,
-}),
+          level: sourceLevel, base: 2, increment: 0.5, cap: 80,
+        }),
       },
       {
         sourceSkillId: 'fortitude',
         calculateBonus: (sourceLevel) => getScalingSynergy({
- level: sourceLevel, base: 1.5, increment: 0.4, cap: 60,
-}),
+          level: sourceLevel, base: 1.5, increment: 0.4, cap: 60,
+        }),
       },
     ],
   },
@@ -357,27 +357,27 @@ attackSpeed: Math.min(getScalingPercent({
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getScalingFlat({
- level, base: 30, increment: 5, interval: 50, bonus: 0.2,
-}),
+        level, base: 30, increment: 5, interval: 50, bonus: 0.2,
+      }),
       damagePercent: getScalingPercent({
- level, base: 15, softcap: 2000, linear: 1, power: 0.6,
-}),
+        level, base: 15, softcap: 2000, linear: 1, power: 0.6,
+      }),
       armorPenetration: getScalingFlat({
- level, base: 20, increment: 3, interval: 50, bonus: 0.15,
-}),
+        level, base: 20, increment: 3, interval: 50, bonus: 0.15,
+      }),
     }),
     synergies: [
       {
         sourceSkillId: 'powerStrike',
         calculateBonus: (sourceLevel) => getScalingSynergy({
- level: sourceLevel, base: 2, increment: 0.6, cap: 100,
-}),
+          level: sourceLevel, base: 2, increment: 0.6, cap: 100,
+        }),
       },
       {
         sourceSkillId: 'groundSlam',
         calculateBonus: (sourceLevel) => getScalingSynergy({
- level: sourceLevel, base: 1.5, increment: 0.5, cap: 80,
-}),
+          level: sourceLevel, base: 1.5, increment: 0.5, cap: 80,
+        }),
       },
     ],
   },
@@ -391,18 +391,18 @@ attackSpeed: Math.min(getScalingPercent({
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: getScalingFlat({
- level, base: 25, increment: 4, interval: 50, bonus: 0.2,
-}),
+        level, base: 25, increment: 4, interval: 50, bonus: 0.2,
+      }),
       allResistance: getScalingFlat({
- level, base: 15, increment: 3, interval: 50, bonus: 0.15,
-}),
+        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      }),
     }),
     synergies: [
       {
         sourceSkillId: 'toughness',
         calculateBonus: (sourceLevel) => getScalingSynergy({
- level: sourceLevel, base: 2, increment: 0.5, cap: 90,
-}),
+          level: sourceLevel, base: 2, increment: 0.5, cap: 90,
+        }),
       },
     ],
   },
@@ -418,18 +418,18 @@ attackSpeed: Math.min(getScalingPercent({
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strength: getScalingFlat({
- level, base: 10, increment: 2, interval: 50, bonus: 0.15,
-}),
+        level, base: 10, increment: 2, interval: 50, bonus: 0.15,
+      }),
       damage: getScalingFlat({
- level, base: 20, increment: 4, interval: 50, bonus: 0.2,
-}),
+        level, base: 20, increment: 4, interval: 50, bonus: 0.2,
+      }),
     }),
     synergies: [
       {
         sourceSkillId: 'warlord',
         calculateBonus: (sourceLevel) => getScalingSynergy({
- level: sourceLevel, base: 2, increment: 0.6, cap: 100,
-}),
+          level: sourceLevel, base: 2, increment: 0.6, cap: 100,
+        }),
       },
     ],
   },
@@ -446,21 +446,21 @@ attackSpeed: Math.min(getScalingPercent({
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: getScalingFlat({
- level, base: 30, increment: 5, interval: 50, bonus: 0.2,
-}),
+        level, base: 30, increment: 5, interval: 50, bonus: 0.2,
+      }),
       lifeRegen: getScalingFlat({
- level, base: 15, increment: 3, interval: 50, bonus: 0.2,
-}),
+        level, base: 15, increment: 3, interval: 50, bonus: 0.2,
+      }),
       lifeRegenOfTotalPercent: Math.min(getScalingPercent({
- level, base: 0.5, softcap: 2000, linear: 0.1, power: 0.6,
-}) / 100, 3),
+        level, base: 0.5, softcap: 2000, linear: 0.1, power: 0.6,
+      }) / 100, 3),
     }),
     synergies: [
       {
         sourceSkillId: 'fortitude',
         calculateBonus: (sourceLevel) => getScalingSynergy({
- level: sourceLevel, base: 2, increment: 0.6, cap: 100,
-}),
+          level: sourceLevel, base: 2, increment: 0.6, cap: 100,
+        }),
       },
     ],
   },
@@ -476,24 +476,24 @@ attackSpeed: Math.min(getScalingPercent({
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getScalingFlat({
- level, base: 30, increment: 6, interval: 50, bonus: 0.2,
-}),
+        level, base: 30, increment: 6, interval: 50, bonus: 0.2,
+      }),
       critDamage: Math.min(getScalingPercent({
- level, base: 0.5, softcap: 2000, linear: 0.1, power: 0.6,
-}) / 100, 2),
+        level, base: 0.5, softcap: 2000, linear: 0.1, power: 0.6,
+      }) / 100, 2),
     }),
     synergies: [
       {
         sourceSkillId: 'unstoppableForce',
         calculateBonus: (sourceLevel) => getScalingSynergy({
- level: sourceLevel, base: 2.5, increment: 0.8, cap: 150,
-}),
+          level: sourceLevel, base: 2.5, increment: 0.8, cap: 150,
+        }),
       },
       {
         sourceSkillId: 'titanStrength',
         calculateBonus: (sourceLevel) => getScalingSynergy({
- level: sourceLevel, base: 2, increment: 0.6, cap: 120,
-}),
+          level: sourceLevel, base: 2, increment: 0.6, cap: 120,
+        }),
       },
     ],
   },
@@ -510,11 +510,11 @@ attackSpeed: Math.min(getScalingPercent({
     maxLevel: () => 350,
     effect: (level) => ({
       reduceEnemyAttackSpeedPercent: Math.min(getScalingPercent({
- level, base: 2, softcap: 2000, linear: 0.2, power: 0.6,
-}), 15),
+        level, base: 2, softcap: 2000, linear: 0.2, power: 0.6,
+      }), 15),
       reduceEnemyDamagePercent: Math.min(getScalingPercent({
- level, base: 1.5, softcap: 2000, linear: 0.15, power: 0.6,
-}), 10),
+        level, base: 1.5, softcap: 2000, linear: 0.15, power: 0.6,
+      }), 10),
     }),
   },
 
@@ -526,8 +526,8 @@ attackSpeed: Math.min(getScalingPercent({
     summonStats: (level) => {
       return {
         percentOfPlayerDamage: 5 + getScalingPercent({
- level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
-}),
+          level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+        }),
         attackSpeed: hero.stats.attackSpeed,
         canCrit: true,
       };

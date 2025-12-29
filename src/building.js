@@ -480,72 +480,72 @@ export class BuildingManager {
         async () => {
           // On collect: actually add the bonuses and update lastBonusTime
           const materialAggregateOffline = {};
-        let materialDroppedTotal = 0;
-        for (const b of offlineBonuses) {
-          if (b.type === 'gold') hero.gainGold(b.amount);
-          else if (b.type === 'crystal') hero.gainCrystals(b.amount);
-          else if (b.type === 'soul') hero.gainSouls(b.amount);
-          else if (b.building.effect.type === 'level') {
-            hero.levelUp(b.amount);
+          let materialDroppedTotal = 0;
+          for (const b of offlineBonuses) {
+            if (b.type === 'gold') hero.gainGold(b.amount);
+            else if (b.type === 'crystal') hero.gainCrystals(b.amount);
+            else if (b.type === 'soul') hero.gainSouls(b.amount);
+            else if (b.building.effect.type === 'level') {
+              hero.levelUp(b.amount);
 
-            updateStatsAndAttributesUI();
-            hero.queueRecalculateFromAttributes();
-            updatePlayerLife();
-            initializeSkillTreeStructure();
-            dataManager.saveGame();
-            updateRegionUI();
-            updateTabIndicators();
-            statistics.updateStatisticsUI();
-          } else if (b.building.effect.type === 'material') {
-            if (b.materialIds) {
-              const ids = b.materialIds;
-              const randId = ids[Math.floor(Math.random() * ids.length)];
-              materialAggregateOffline[randId] = (materialAggregateOffline[randId] || 0) + b.amount;
-              materialDroppedTotal += b.amount;
-            } else if (b.random && b.weighted) {
-              const distr = distributeMaterials(b.amount);
-              for (const [id, qty] of Object.entries(distr)) {
-                materialAggregateOffline[id] = (materialAggregateOffline[id] || 0) + qty;
-                materialDroppedTotal += qty;
+              updateStatsAndAttributesUI();
+              hero.queueRecalculateFromAttributes();
+              updatePlayerLife();
+              initializeSkillTreeStructure();
+              dataManager.saveGame();
+              updateRegionUI();
+              updateTabIndicators();
+              statistics.updateStatisticsUI();
+            } else if (b.building.effect.type === 'material') {
+              if (b.materialIds) {
+                const ids = b.materialIds;
+                const randId = ids[Math.floor(Math.random() * ids.length)];
+                materialAggregateOffline[randId] = (materialAggregateOffline[randId] || 0) + b.amount;
+                materialDroppedTotal += b.amount;
+              } else if (b.random && b.weighted) {
+                const distr = distributeMaterials(b.amount);
+                for (const [id, qty] of Object.entries(distr)) {
+                  materialAggregateOffline[id] = (materialAggregateOffline[id] || 0) + qty;
+                  materialDroppedTotal += qty;
+                }
+              } else if (b.random) {
+                const ids = Object.keys(MATERIALS);
+                const randId = ids[Math.floor(Math.random() * ids.length)];
+                materialAggregateOffline[randId] = (materialAggregateOffline[randId] || 0) + b.amount;
+                materialDroppedTotal += b.amount;
+              } else if (b.materialId) {
+                materialAggregateOffline[b.materialId] = (materialAggregateOffline[b.materialId] || 0) + b.amount;
+                materialDroppedTotal += b.amount;
               }
-            } else if (b.random) {
-              const ids = Object.keys(MATERIALS);
-              const randId = ids[Math.floor(Math.random() * ids.length)];
-              materialAggregateOffline[randId] = (materialAggregateOffline[randId] || 0) + b.amount;
-              materialDroppedTotal += b.amount;
-            } else if (b.materialId) {
-              materialAggregateOffline[b.materialId] = (materialAggregateOffline[b.materialId] || 0) + b.amount;
-              materialDroppedTotal += b.amount;
             }
+            // Increment total earned for this building
+            b.building.totalEarned += b.amount;
+            if (!Number.isFinite(b.building.lastBonusTime)) {
+              b.building.lastBonusTime = now;
+            }
+            b.building.lastBonusTime += b.timesRaw * b.intervalMs;
+            if (!Number.isFinite(b.building.lastBonusTimeLocal)) {
+              b.building.lastBonusTimeLocal = nowLocal;
+            }
+            b.building.lastBonusTimeLocal += b.timesRaw * b.intervalMs;
           }
-          // Increment total earned for this building
-          b.building.totalEarned += b.amount;
-          if (!Number.isFinite(b.building.lastBonusTime)) {
-            b.building.lastBonusTime = now;
-          }
-          b.building.lastBonusTime += b.timesRaw * b.intervalMs;
-          if (!Number.isFinite(b.building.lastBonusTimeLocal)) {
-            b.building.lastBonusTimeLocal = nowLocal;
-          }
-          b.building.lastBonusTimeLocal += b.timesRaw * b.intervalMs;
-        }
-        if (materialDroppedTotal > 0) {
+          if (materialDroppedTotal > 0) {
           // Count as found via buildings; we keep dropped stat for combat elsewhere
-          inventory.bulkAddMaterials(materialAggregateOffline);
-        }
-        if (typeof extraCollectFn === 'function') await extraCollectFn();
-        this.lastActive = await fetchTrustedUtcTime();
-        this.lastActiveLocal = Date.now();
-        updateResources();
-        dataManager.saveGame(); // Save after collecting bonuses
-        // Reset rate counters so offline rewards don't inflate per-period metrics
-        try {
-          document.dispatchEvent(new Event('resetRateCounters'));
-        } catch {}
-      },
-      {
- offlineTime, xpLevelsGained, offlineDurationMs,
-},
+            inventory.bulkAddMaterials(materialAggregateOffline);
+          }
+          if (typeof extraCollectFn === 'function') await extraCollectFn();
+          this.lastActive = await fetchTrustedUtcTime();
+          this.lastActiveLocal = Date.now();
+          updateResources();
+          dataManager.saveGame(); // Save after collecting bonuses
+          // Reset rate counters so offline rewards don't inflate per-period metrics
+          try {
+            document.dispatchEvent(new Event('resetRateCounters'));
+          } catch {}
+        },
+        {
+          offlineTime, xpLevelsGained, offlineDurationMs,
+        },
       );
       changed = true; // Modal will result in a change
     } else if (!isFirstCollect && changed) {

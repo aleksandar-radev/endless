@@ -784,20 +784,20 @@ export default class SkillTree {
 
     // Handle different skill types
     switch (skill.type()) {
-      case 'buff':
-      case 'summon':
-        this.activateSkill(skillId);
-        break;
-      case 'toggle':
-        this.skills[skillId].active = !this.skills[skillId].active;
-        this.skills[skillId].affordable = this.skills[skillId].active
-          ? hero.stats.currentMana >= this.getSkillManaCost(skill)
-          : false;
-        hero.queueRecalculateFromAttributes();
-        break;
-      case 'instant':
-        this.useInstantSkill(skillId);
-        break;
+    case 'buff':
+    case 'summon':
+      this.activateSkill(skillId);
+      break;
+    case 'toggle':
+      this.skills[skillId].active = !this.skills[skillId].active;
+      this.skills[skillId].affordable = this.skills[skillId].active
+        ? hero.stats.currentMana >= this.getSkillManaCost(skill)
+        : false;
+      hero.queueRecalculateFromAttributes();
+      break;
+    case 'instant':
+      this.useInstantSkill(skillId);
+      break;
     }
 
     updateActionBar();

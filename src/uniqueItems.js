@@ -71,7 +71,7 @@ function rollSetBonusValues(setDefinition, tier, level) {
     }) => {
       const baseValue = rollInRange(min, max);
       const scale = helper.scaleStat(stat, normalizedLevel);
-    // todo change
+      // todo change
       const value = helper.calculateStatValue({
         baseValue,
         multiplier,
