@@ -3,11 +3,7 @@ import { game, hero, statistics, dataManager, crystalShop, options } from './glo
 import { showToast, updateResources, formatStatName } from './ui/ui.js';
 import { t, tp } from './i18n.js';
 import { createModal, closeModal } from './ui/modal.js';
-import { initializeInventoryUI,
-  updateInventoryGrid,
-  updateMaterialsGrid,
-  sortInventory,
-  sortMaterials } from './ui/inventoryUi.js';
+import { updateInventoryGrid, updateMaterialsGrid, sortInventory, sortMaterials } from './ui/inventoryUi.js';
 import { getCurrentRegion } from './region.js';
 import { computeSetBonuses } from './uniqueItems.js';
 import { MATERIALS } from './constants/materials.js';
@@ -66,7 +62,15 @@ export default class Inventory {
       Object.entries(savedData.equippedItems).forEach(([slot, item]) => {
         if (item) {
           // Pass existing stats when creating item
-          this.equippedItems[slot] = new Item(item.type, item.level, item.rarity, item.tier, item.stats, item.metaData);
+          this.equippedItems[slot] = new Item({
+            type: item.type,
+            subtype: item.subtype,
+            level: item.level,
+            rarity: item.rarity,
+            tier: item.tier,
+            existingStats: item.stats,
+            metaData: item.metaData,
+          });
           this.equippedItems[slot].id = item.id;
         }
       });
@@ -75,7 +79,15 @@ export default class Inventory {
       this.inventoryItems = savedData.inventoryItems.map((item) => {
         if (item) {
           // Pass existing stats when creating item
-          const restoredItem = new Item(item.type, item.level, item.rarity, item.tier, item.stats, item.metaData);
+          const restoredItem = new Item({
+            type: item.type,
+            subtype: item.subtype,
+            level: item.level,
+            rarity: item.rarity,
+            tier: item.tier,
+            existingStats: item.stats,
+            metaData: item.metaData,
+          });
           restoredItem.id = item.id;
           return restoredItem;
         }
@@ -771,7 +783,6 @@ export default class Inventory {
             const baseValue = Math.random() * (range.max - range.min) + range.min;
             const multiplier = item.getMultiplier();
             const scale = item.getLevelScale(statToReroll, item.level);
-            // todo change
             item.stats[statToReroll] = item.calculateStatValue({
               baseValue,
               multiplier,
@@ -1181,11 +1192,16 @@ export default class Inventory {
       rarity = this.generateRarity();
     }
 
-    // Roll for subtype
     const subtype = rollRandomSubtype(type);
-    const metaData = subtype ? { subtype } : {};
 
-    return new Item(type, level, rarity, tier, null, metaData);
+    return new Item({
+      type,
+      subtype,
+      level,
+      rarity,
+      tier,
+      existingStats: null,
+    });
   }
 
   generateRarity() {

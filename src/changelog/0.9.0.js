@@ -20,6 +20,7 @@ export default function run() {
       <li>Removed life steal from training.</li>
       <li>Changed icons for all elements (fire, cold, lightning, earth, water, air).</li>
       <li>Changed icons for all items.</li>
+      <li>Enchantment scroll removed from drops. It can be obtainable only from quests now.</li>
     </ul>
   
     <span style="color:#FF8A00;">Skill System</span>

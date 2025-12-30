@@ -328,7 +328,7 @@ export const MATERIALS = {
     get description() {
       return t('Increases the rarity of an equipped item. (cannot be used on mythic items)');
     },
-    dropChance: 0.5,
+    dropChance: 0,
     sort: 700,
     onUse: (hero, qty = 1) => {
       // Custom modal logic handled in inventory UI

@@ -1274,7 +1274,7 @@ export function setupItemDragAndTooltip(root = getInventoryTab()) {
         const { id, qty } = inventory.getItemSalvageMaterial(itemData);
         tooltipContent += `<div style="margin-top:8px;
           color:#fff;
-          background: rgba(224, 192, 96, 0.6);
+          background: rgba(224, 192, 96, 0.8);
           border-top:1px solid #e0c060;
           padding:6px 8px 4px 8px;
           border-radius:0 0 8px 8px;
@@ -1286,7 +1286,7 @@ export function setupItemDragAndTooltip(root = getInventoryTab()) {
         let goldGained = inventory.getItemSalvageValue(itemData);
         tooltipContent += `<div style="margin-top:8px;
           color:#fff;
-          background: rgba(224, 192, 96, 0.6);
+          background: rgba(224, 192, 96, 0.8);
           border-top:1px solid #e0c060;
           padding:6px 8px 4px 8px;
           border-radius:0 0 8px 8px;
@@ -1707,7 +1707,7 @@ function openItemContextMenu(itemEl, x, y) {
       const { id, qty } = inventory.getItemSalvageMaterial(itemData);
       inspectContent += `<div style="margin-top:8px;
         color:#fff;
-        background: rgba(224, 192, 96, 0.6);
+        background: rgba(224, 192, 96, 0.8);
         border-top:1px solid #e0c060;
         padding:6px 8px 4px 8px;
         border-radius:0 0 8px 8px;
@@ -1719,7 +1719,7 @@ function openItemContextMenu(itemEl, x, y) {
       let goldGained = inventory.getItemSalvageValue(itemData);
       inspectContent += `<div style="margin-top:8px;
         color:#fff;
-        background: rgba(224, 192, 96, 0.6);
+        background: rgba(224, 192, 96, 0.8);
         border-top:1px solid #e0c060;
         padding:6px 8px 4px 8px;
         border-radius:0 0 8px 8px;

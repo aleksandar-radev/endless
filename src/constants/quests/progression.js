@@ -56,7 +56,9 @@ export const PROGRESSION_QUESTS = [
     },
     type: 'level',
     target: 25,
-    reward: { gold: 1000, crystals: 1 },
+    reward: {
+      gold: 1000, crystals: 1, materials: [{ id: 'enchantment_scroll', qty: 1 }],
+    },
   },
   {
     id: 'level_50',
@@ -70,7 +72,7 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 50,
     reward: {
-      gold: 2000, crystals: 2, bonuses: { vitality: 5 },
+      gold: 2000, crystals: 2, bonuses: { vitality: 5 }, materials: [{ id: 'enchantment_scroll', qty: 2 }],
     },
   },
   {
@@ -98,7 +100,7 @@ export const PROGRESSION_QUESTS = [
     type: 'level',
     target: 100,
     reward: {
-      gold: 10000, crystals: 3, bonuses: { allAttributes: 3 },
+      gold: 10000, crystals: 3, bonuses: { allAttributes: 3 }, materials: [{ id: 'enchantment_scroll', qty: 3 }],
     },
   },
   {
@@ -221,7 +223,9 @@ export const PROGRESSION_QUESTS = [
     },
     type: 'damage',
     target: 100000,
-    reward: { crystals: 3, bonuses: { critDamagePercent: 5 } },
+    reward: {
+      crystals: 3, bonuses: { critDamagePercent: 5 }, materials: [{ id: 'enchantment_scroll', qty: 3 }],
+    },
   },
   {
     id: 'damage_1000000',

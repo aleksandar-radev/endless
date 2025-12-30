@@ -41,7 +41,9 @@ export const RARITY_QUESTS = [
     type: 'kill_rarity',
     rarity: 'rare',
     target: 50,
-    reward: { gold: 1500, crystals: 1 },
+    reward: {
+      gold: 1500, crystals: 1, materials: [{ id: 'enchantment_scroll', qty: 2 }],
+    },
   },
   {
     id: 'kill_rare_200',
@@ -160,7 +162,9 @@ export const RARITY_QUESTS = [
     type: 'kill_rarity',
     rarity: 'epic',
     target: 30,
-    reward: { gold: 6000, crystals: 2 },
+    reward: {
+      gold: 6000, crystals: 2, materials: [{ id: 'enchantment_scroll', qty: 3 }],
+    },
   },
   {
     id: 'kill_epic_75',
@@ -279,6 +283,7 @@ export const RARITY_QUESTS = [
       item: {
         rarity: 'legendary', type: 'random', tier: 1,
       },
+      materials: [{ id: 'enchantment_scroll', qty: 5 }],
     },
   },
   {
@@ -378,7 +383,9 @@ export const RARITY_QUESTS = [
     type: 'kill_rarity',
     rarity: 'mythic',
     target: 1,
-    reward: { gold: 5000, crystals: 3 },
+    reward: {
+      gold: 5000, crystals: 3, materials: [{ id: 'enchantment_scroll', qty: 10 }],
+    },
   },
   {
     id: 'kill_mythic_8',

@@ -30,11 +30,6 @@ export const PRESTIGE_BONUSES = [
     max: 0.075,
   },
   {
-    stat: 'cooldownReductionPercent',
-    min: 0.02,
-    max: 0.05,
-  },
-  {
     stat: 'buffDurationPercent',
     min: 0.02,
     max: 0.05,

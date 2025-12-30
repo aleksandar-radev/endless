@@ -24,24 +24,14 @@ function normalizeLevel(level) {
 function buildItemWithStats(definition, level, tier, rarity, extraMeta = {}) {
   const normalizedTier = Math.max(1, Math.round(tier));
   const normalizedLevel = normalizeLevel(level);
-  const helper = new Item(definition.type, normalizedLevel, rarity, normalizedTier, {}, { ...extraMeta });
-  const multiplier = helper.getRarityMultiplier();
+  const newItem = new Item(definition.type, normalizedLevel, rarity, normalizedTier, {}, { ...extraMeta });
   const stats = {};
 
   const statRolls = {};
 
-  definition.stats.forEach(({
-    stat, min, max,
-  }) => {
-    const baseValue = rollInRange(min, max);
-    const scale = helper.scaleStat(stat, normalizedLevel);
-    // todo change
-    const value = helper.calculateStatValue({
-      baseValue,
-      multiplier,
-      scale,
-      stat,
-    });
+  definition.stats.forEach(({ stat }) => {
+    const baseValue = newItem.rollStat(stat);
+    const value = newItem.calculateStat(stat, baseValue, normalizedLevel);
     stats[stat] = value;
 
     statRolls[stat] = { baseValue };
@@ -60,8 +50,7 @@ function buildItemWithStats(definition, level, tier, rarity, extraMeta = {}) {
 function rollSetBonusValues(setDefinition, tier, level) {
   const normalizedTier = Math.max(1, Math.round(tier));
   const normalizedLevel = normalizeLevel(level);
-  const helper = new Item(setDefinition.items[0]?.type || 'ARMOR', normalizedLevel, 'SET', normalizedTier, {}, {});
-  const multiplier = helper.getRarityMultiplier();
+  const newItem = new Item(setDefinition.items[0]?.type || 'ARMOR', normalizedLevel, 'SET', normalizedTier, {}, {});
 
   return setDefinition.setBonuses.map((bonus) => {
     const stats = {};
@@ -70,14 +59,7 @@ function rollSetBonusValues(setDefinition, tier, level) {
       stat, min, max,
     }) => {
       const baseValue = rollInRange(min, max);
-      const scale = helper.scaleStat(stat, normalizedLevel);
-      // todo change
-      const value = helper.calculateStatValue({
-        baseValue,
-        multiplier,
-        scale,
-        stat,
-      });
+      const value = newItem.calculateStat(stat, baseValue, normalizedLevel);
       stats[stat] = value;
       baseValues[stat] = baseValue;
     });

@@ -19,6 +19,7 @@ import { updateResources,
   updatePlayerLife } from './ui/ui.js';
 import { t, tp } from './i18n.js';
 import { updateAscensionUI } from './ui/ascensionUi.js';
+import { initializeInventoryUI } from './ui/inventoryUi.js';
 import { selectBoss } from './ui/bossUi.js';
 import { handleSavedData } from './functions.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
@@ -817,6 +818,9 @@ export default class CrystalShop {
       // Non-fatal: keep purchase flow even if UI update fails
       console.warn('Failed to sync options after crystal purchase:', e);
     }
+    if (stat === 'autoSalvage') {
+      initializeInventoryUI(inventory);
+    }
     this._commitChanges(false);
     this.updateModalDetails();
     showToast(tp('crystalShop.upgraded', { label, count }), count > 0 ? 'success' : 'error');
@@ -848,8 +852,11 @@ export default class CrystalShop {
       initializeSkillTreeUI();
     }
 
-    if (stat === 'salvageMaterials' && options.salvageMaterialsEnabled) {
-      inventory.setSalvageUpgradeMaterials(true);
+    if (stat === 'salvageMaterials') {
+      if (options.salvageMaterialsEnabled) {
+        inventory.setSalvageUpgradeMaterials(true);
+      }
+      initializeInventoryUI(inventory);
     }
 
     if (stat === 'resetStageSkip') {

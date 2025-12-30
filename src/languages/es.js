@@ -266,41 +266,41 @@ export default {
   'combatMode.subAreaFormat': '{name} [{type}]',
   'combatMode.subAreaType.region': 'Región',
   'Enchanted Forest': 'Bosque Encantado',
-  'Enemies resist earth but are weak to fire and lightning. Crystalized Rock drops most often here.':
+  'enchanted_forest.description':
     'Los enemigos resisten la tierra pero son débiles al fuego y al rayo. La Roca cristalizada cae aquí con más frecuencia.',
   'Crystal Cave': 'Cueva de Cristal',
-  'Enemies resist lightning but are weak to water and earth. Crystalized Rock is the common reward.':
+  'crystal_cave.description':
     'Los enemigos resisten el rayo pero son débiles al agua y a la tierra. La Roca cristalizada es la recompensa habitual.',
   'Frozen Tundra': 'Tundra Helada',
-  'Enemies resist cold but are weak to fire and lightning. Stat potions of every type drop frequently.':
+  'frozen_tundra.description':
     'Los enemigos resisten el frío pero son débiles al fuego y al rayo. Las pociones de estadísticas de todo tipo caen a menudo.',
   'Scorching Desert': 'Desierto Abrasador',
-  'Enemies resist fire but are weak to water and cold. Elixirs are the standout loot.':
+  'scorching_desert.description':
     'Los enemigos resisten el fuego pero son débiles al agua y al frío. Los Elixires son el botín destacado.',
   'Murky Swamp': 'Pantano Turbio',
-  'Enemies resist water but are weak to lightning and air. Gold Coins up to Freaky Gold Coins are common finds.':
+  'murky_swamp.description':
     'Los enemigos resisten el agua pero son débiles al rayo y al aire. Las Monedas de oro hasta Monedas de oro monstruosas son hallazgos comunes.',
   'Skyrealm Peaks': 'Picos del Reino Celeste',
-  'Enemies resist air but are weak to earth and water. All stat potions drop regularly.':
+  'skyrealm_peaks.description':
     'Los enemigos resisten el aire pero son débiles a la tierra y al agua. Todas las pociones de atributo caen con regularidad.',
   'Abyssal Depths': 'Profundidades Abisales',
-  'Enemies resist cold but are weak to fire and earth. Enormous and Freaky Gold Coins pile up here.':
+  'abyssal_depths.description':
     'Los enemigos resisten el frío pero son débiles al fuego y a la tierra. Aquí se acumulan Monedas de oro enormes y Monedas de oro monstruosas.',
   'Volcanic Rift': 'Grieta Volcánica',
-  'Enemies resist fire but are weak to water and cold. Weapon Upgrade Cores, Armor Upgrade Stones, and Jewelry Upgrade Gems drop often.':
+  'volcanic_rift.description':
     'Los enemigos resisten el fuego pero son débiles al agua y al frío. Caen a menudo Núcleos de mejora de arma, Piedras de mejora de armadura y Gemas de mejora de joyería.',
   'Sunken Ruins': 'Ruinas Sumergidas',
-  'Enemies resist water but are weak to lightning and fire. Elixirs and Crystalized Rock wash ashore.':
+  'sunken_ruins.description':
     'Los enemigos resisten el agua pero son débiles al rayo y al fuego. Los Elixires y la Roca cristalizada llegan arrastrados por la marea.',
   'Haunted Moor': 'Páramo Embrujado',
-  'Enemies resist air but are weak to fire and earth. Greater and Huge Experience Potions are plentiful.':
+  'haunted_moor.description':
     'Los enemigos resisten el aire pero son débiles al fuego y a la tierra. Abundan las Pociones de experiencia mayor y enorme.',
   'Golden Steppe': 'Estepa Dorada',
-  'Enemies resist earth but are weak to water and cold. Expect lots of bonus gold and material drops.':
+  'golden_steppe.description':
     'Los enemigos resisten la tierra pero son débiles al agua y al frío. Espera muchas bonificaciones de oro y materiales.',
   'Obsidian Spire': 'Aguja de Obsidiana',
-  'Enemies resist lightning but are weak to water and earth. Enchantment Scrolls plus Alternation and Transmutation Orbs drop here.':
-    'Los enemigos resisten el rayo pero son débiles al agua y a la tierra. Aquí caen Pergaminos de encantamiento más Orbes de alteración y transmutación.',
+  'obsidian_spire.description':
+    'Los enemigos resisten el rayo pero son débiles al agua y a la tierra. Aquí caen Orbes de alteración y transmutación.',
   'battleLog.battle': 'Batalla',
   'battleLog.drops': 'Botín',
   'battleLog.reset': 'Reiniciar',

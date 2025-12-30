@@ -162,6 +162,17 @@ export const MISC_STATS = {
   cooldownReductionPercent: createPercentStat({
     show: true,
     sub: 'misc',
+    item: {
+      min: 1,
+      max: 5,
+      overrides: {
+        WAND: { min: 2, max: 10 },
+        STAFF: { min: 4, max: 20 },
+        AMULET: { min: 3, max: 15 },
+        RING: { min: 1, max: 5 },
+      },
+    },
+    itemTags: ['magic', 'jewelry'],
   }),
   cooldownReductionCapPercent: createStat({
     base: 80,

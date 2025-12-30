@@ -290,41 +290,41 @@ export default {
   'combatMode.subAreaFormat': '{name} [{type}]',
   'combatMode.subAreaType.region': '区域',
   'Enchanted Forest': '魔法森林',
-  'Enemies resist earth but are weak to fire and lightning. Crystalized Rock drops most often here.':
+  'enchanted_forest.description':
     '敌人抗土，但怕火与雷。这里最常掉落结晶岩石。',
   'Crystal Cave': '水晶洞穴',
-  'Enemies resist lightning but are weak to water and earth. Crystalized Rock is the common reward.':
+  'crystal_cave.description':
     '敌人抗雷，但怕水与土。结晶岩石是常见奖励。',
   'Frozen Tundra': '冰封苔原',
-  'Enemies resist cold but are weak to fire and lightning. Stat potions of every type drop frequently.':
+  'frozen_tundra.description':
     '敌人抗寒，但怕火与雷。各类属性药水常常掉落。',
   'Scorching Desert': '灼热沙漠',
-  'Enemies resist fire but are weak to water and cold. Elixirs are the standout loot.':
+  'scorching_desert.description':
     '敌人抗火，但怕水与寒。灵药是这里的特色战利品。',
   'Murky Swamp': '阴暗沼泽',
-  'Enemies resist water but are weak to lightning and air. Gold Coins up to Freaky Gold Coins are common finds.':
+  'murky_swamp.description':
     '敌人抗水，但怕雷与风。从金币到奇异金币都很常见。',
   'Skyrealm Peaks': '天界群峰',
-  'Enemies resist air but are weak to earth and water. All stat potions drop regularly.':
+  'skyrealm_peaks.description':
     '敌人抗风，但怕土与水。各类属性药水会频繁掉落。',
   'Abyssal Depths': '深渊深处',
-  'Enemies resist cold but are weak to fire and earth. Enormous and Freaky Gold Coins pile up here.':
+  'abyssal_depths.description':
     '敌人抗寒，但怕火与土。巨额金币和奇异金币在此堆积。',
   'Volcanic Rift': '火山裂谷',
-  'Enemies resist fire but are weak to water and cold. Weapon Upgrade Cores, Armor Upgrade Stones, and Jewelry Upgrade Gems drop often.':
+  'volcanic_rift.description':
     '敌人抗火，但怕水与寒。武器升级核心、护甲升级石和饰品升级宝石经常掉落。',
   'Sunken Ruins': '沉没遗迹',
-  'Enemies resist water but are weak to lightning and fire. Elixirs and Crystalized Rock wash ashore.':
+  'sunken_ruins.description':
     '敌人抗水，但怕雷与火。灵药和结晶岩石会被潮水冲上岸。',
   'Haunted Moor': '闹鬼荒原',
-  'Enemies resist air but are weak to fire and earth. Greater and Huge Experience Potions are plentiful.':
+  'haunted_moor.description':
     '敌人抗风，但怕火与土。大量高级和巨型经验药水随处可见。',
   'Golden Steppe': '黄金草原',
-  'Enemies resist earth but are weak to water and cold. Expect lots of bonus gold and material drops.':
+  'golden_steppe.description':
     '敌人抗土，但怕水与寒。额外的金币和材料掉落非常多。',
   'Obsidian Spire': '黑曜尖塔',
-  'Enemies resist lightning but are weak to water and earth. Enchantment Scrolls plus Alternation and Transmutation Orbs drop here.':
-    '敌人抗雷，但怕水与土。附魔卷轴以及变换之球与转化之球都会掉落。',
+  'obsidian_spire.description':
+    '敌人抗雷，但怕水与土。变换之球与转化之球都会掉落。',
   'battleLog.battle': '战斗',
   'battleLog.drops': '掉落',
   'battleLog.reset': '重置',

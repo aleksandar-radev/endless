@@ -4,7 +4,8 @@ import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
 import { MISC_STATS } from './constants/stats/miscStats.js';
 import { ATTRIBUTES } from './constants/stats/attributes.js';
-import { UNIQUE_ITEMS, ITEM_SETS } from './constants/uniqueSets.js';
+import { SET_ITEMS } from './constants/setItems.js';
+import { UNIQUE_ITEMS } from './constants/uniqueItems.js';
 import { options, ascension } from './globals.js';
 import { formatStatName, formatNumber } from './ui/ui.js';
 import { t } from './i18n.js';
@@ -18,21 +19,6 @@ export const AVAILABLE_STATS = Object.fromEntries(
   Object.entries(STATS)
     .filter(([_, config]) => config.item)
     .map(([stat, config]) => [stat, config.item]),
-);
-
-// Precompute lookup tables so we can recover stat bounds for legacy unique/set items
-// that may lack stored roll metadata.
-const UNIQUE_ITEM_STATS = new Map(
-  UNIQUE_ITEMS.map((item) => [item.id, new Map((item.stats || []).map((entry) => [entry.stat, entry]))]),
-);
-
-const ITEM_SET_LOOKUP = new Map(
-  ITEM_SETS.map((set) => [
-    set.id,
-    new Map(
-      (set.items || []).map((piece) => [piece.id, new Map((piece.stats || []).map((entry) => [entry.stat, entry]))]),
-    ),
-  ]),
 );
 
 const RESISTANCE_STATS = [
@@ -61,15 +47,34 @@ const STAT_GROUPS = [
 const HANDED_ITEM_TYPES = new Set([...SLOT_REQUIREMENTS.weapon, ...SLOT_REQUIREMENTS.offhand]);
 
 export default class Item {
-  constructor(type, level, rarity, tier = 1, existingStats = null, metaData = {}) {
+  constructor({
+    type,
+    subtype = null,
+    level,
+    rarity,
+    tier = 1,
+    existingStats = null,
+    metaData = {},
+  }) {
     this.type = type;
     this.level = level;
     this.rarity = rarity.toUpperCase();
     this.tier = tier;
     this.metaData = metaData || {};
-    this.subtype = this.metaData.subtype || this.type;
+    this.metaData.baseStats = this.metaData.baseStats || {};
+    this.subtype = subtype || type;
     this.stats = existingStats || this.generateStats();
     this.id = crypto.randomUUID();
+
+    // handle legacy items
+    if (!Object.keys(this.metaData.baseStats).length) {
+      // !That rerolls the actual values
+      this.setBaseStatValues();
+    }
+    //cleanup
+    if (this.metaData.statRolls) {
+      delete this.metaData.statRolls;
+    }
   }
 
   get subtypeData() {
@@ -120,77 +125,12 @@ export default class Item {
     }
 
     const flatScaled =  Math.random() * (max - min) + min;
+    this.metaData.baseStats[stat] = flatScaled;
     return flatScaled * statConfig.scaling(level, this.tier);
   }
 
   getRarityMultiplier() {
     return ITEM_RARITY[this.rarity].statMultiplier;
-  }
-
-  calculateStatValue({
-    baseValue, multiplier, scale, stat,
-  }) {
-    const decimals = getStatDecimalPlaces(stat);
-    const handedMultiplier = this.isTwoHanded() ? 2 : 1;
-    let val = baseValue * multiplier * scale * handedMultiplier;
-
-    val = Number(val.toFixed(decimals));
-
-    const statConfig = STATS[stat];
-    const limitConfig = statConfig.item?.limit;
-    const typeOverrides = statConfig.item?.overrides?.[this.type];
-
-    // Get per-stat cap (new system)
-    let baseCap = statConfig.item?.cap ?? Infinity;
-
-    // Check for per-type cap override
-    if (typeOverrides?.cap !== undefined) {
-      baseCap = typeOverrides.cap;
-    }
-
-    // Apply subtype multiplier to cap if applicable
-    if (this.subtypeData?.statMultipliers?.[stat]) {
-      const multiplier = this.subtypeData.statMultipliers[stat];
-      const capMultiplier = multiplier.min || 1; // Use min multiplier for cap
-      baseCap *= capMultiplier;
-    }
-
-    // For backward compatibility, still check limit config
-    let baseLimit = Infinity;
-    if (typeOverrides?.limit !== undefined) {
-      baseLimit = typeOverrides.limit;
-    } else if (typeof limitConfig === 'number') {
-      baseLimit = limitConfig;
-    } else if (limitConfig && typeof limitConfig === 'object') {
-      baseLimit = limitConfig[this.type] ?? limitConfig.default ?? Infinity;
-    }
-
-    if (Number.isFinite(baseLimit)) {
-      baseLimit *= handedMultiplier;
-    }
-    if (Number.isFinite(baseCap)) {
-      baseCap *= handedMultiplier;
-    }
-
-    // Use per-stat cap for percent stats, otherwise use old system
-    if (stat.toLowerCase().includes('percent') || stat.toLowerCase().includes('chance')) {
-      // Use per-stat cap (no ascension multiplier anymore)
-      val = Math.min(val, Math.min(baseLimit, baseCap));
-    } else {
-      // Flat stats - use limit only
-      val = Math.min(val, baseLimit);
-    }
-
-    this.metaData = this.metaData || {};
-    if (!this.metaData.statRolls) {
-      this.metaData.statRolls = {};
-    }
-    this.metaData.statRolls[stat] = {
-      ...(this.metaData.statRolls[stat] || {}),
-      baseValue,
-    };
-
-    return val;
   }
 
   /**
@@ -211,21 +151,27 @@ export default class Item {
     // handle unique special ranges
     const uniqueId = this.metaData?.uniqueId;
     if (uniqueId) {
-      statDefinition = UNIQUE_ITEM_STATS.get(uniqueId)?.get(stat);
+      statDefinition = UNIQUE_ITEMS[uniqueId]?.stats?.[stat];
     }
 
     // handle set piece special ranges
     const setId = this.metaData?.setId;
     const pieceId = this.metaData?.setPieceId;
-    if (setId || pieceId) {
-      const pieceStats = ITEM_SET_LOOKUP.get(setId);
-      statDefinition = pieceStats.get(pieceId)?.get(stat);
-    };
+    if (setId && pieceId) {
+      const set = SET_ITEMS[setId];
+      const piece = set?.items?.find((i) => i.id === pieceId);
+      statDefinition = piece?.stats?.[stat];
+    }
 
     if (statDefinition) {
-      min = statDefinition.min;
-      max = statDefinition.max;
-    };
+      if (statDefinition.minMultiplier !== undefined) {
+        min *= statDefinition.minMultiplier;
+      }
+
+      if (statDefinition.maxMultiplier !== undefined) {
+        max *= statDefinition.maxMultiplier;
+      }
+    }
 
     // Apply subtype multipliers if present
     if (this.subtypeData?.statMultipliers?.[stat]) {
@@ -243,17 +189,9 @@ export default class Item {
     const percentCapMultiplier = 1 + (ascBonuses.itemPercentCapPercent || 0);
     max *= percentCapMultiplier;
 
-    // handle unique item cap increase
-    const uniquePercentCapMultiplier = this.metaData?.unique ? UNIQUE_PERCENT_CAP_MULTIPLIER : 1;
-    max *= uniquePercentCapMultiplier;
-
     return { min, max };
   }
 
-  /**
-   * Get min/max for all stats on this item.
-   * @returns {Object} { stat: {min, max}, ... }
-   */
   getAllStatsRanges() {
     const result = {};
     for (const stat of Object.keys(this.stats)) {
@@ -441,70 +379,20 @@ export default class Item {
     `;
   }
 
-  /**
-   * Reverse-engineer the base (unscaled) stat values for this item.
-   * @returns {Object} base stat values keyed by stat name
-   */
-  getBaseStatValues() {
-    if (this.metaData) {
-      if (this.metaData.statRolls && Object.keys(this.metaData.statRolls).length > 0) {
-        const entries = Object.entries(this.metaData.statRolls).filter(
-          ([, data]) => data && typeof data.baseValue === 'number',
-        );
-        if (entries.length) {
-          return Object.fromEntries(entries.map(([stat, data]) => [stat, data.baseValue]));
-        }
-      }
-      const legacyEntries = Object.entries(this.metaData).filter(
-        ([key, data]) => key !== 'statRolls' && data && typeof data.baseValue === 'number',
-      );
-      if (legacyEntries.length) {
-        return Object.fromEntries(legacyEntries.map(([stat, data]) => [stat, data.baseValue]));
-      }
-    }
-    const baseValues = {};
-    const rarityMultiplier = this.getRarityMultiplier();
-    for (const stat of Object.keys(this.stats)) {
-      const scaling = this.scaleStat([{ stat }]);
-      const value = this.stats[stat];
-      const handedMultiplier = this.isTwoHanded() ? 2 : 1;
-      let baseValue = value / (rarityMultiplier * scaling * handedMultiplier);
-      baseValues[stat] = baseValue;
-    }
-    return baseValues;
+  // Iterate all stats and populate the metaData.baseStats[stat] through the scaleStat method
+  setBaseStatValues() {
+    Object.keys(this.stats).forEach((stat) => {
+      this.scaleStat({ stat });
+    });
   }
 
-  /**
-   * Apply a new level to the item, scaling all stats from the provided base values.
-   * @param {number} newLevel
-   */
   applyLevelToStats(newLevel) {
-    const baseValues = this.getBaseStatValues();
-    const rarityMultiplier = this.getRarityMultiplier();
-    for (const stat of Object.keys(this.stats)) {
-      const scale = this.scaleStat(stat, newLevel);
-      this.stats[stat] = this.calculateStatValue({
-        baseValue: baseValues[stat], rarityMultiplier, scale, stat,
-      });
-    }
+    Object.keys(this.stats).forEach((stat) => {
+      const statConfig = AVAILABLE_STATS[stat];
+      if (statConfig.tierScalingMaxPercent) return; // skip percentage based stats
+      this.stats[stat] = this.metaData.baseStats[stat] * statConfig.scaling(newLevel, this.tier);
+    });
     this.level = newLevel;
-    if (Array.isArray(this.metaData?.setBonuses)) {
-      const bonuses = this.metaData.setBonuses.map((bonus) => {
-        if (!bonus || !bonus.baseValues) return bonus;
-        const updatedStats = {};
-        for (const [stat, baseValue] of Object.entries(bonus.baseValues)) {
-          const scale = this.scaleStat(stat, newLevel);
-          updatedStats[stat] = this.calculateStatValue({
-            baseValue,
-            multiplier,
-            scale,
-            stat,
-          });
-        }
-        return { ...bonus, stats: updatedStats };
-      });
-      this.metaData.setBonuses = bonuses;
-    }
   }
 
   addRandomStat(excludeStat = null) {
@@ -514,8 +402,6 @@ export default class Item {
     this.stats[stat] = this.scaleStat({ stat });
     return stat;
   }
-
-
 
   selectRandomStat(type, subtypeData, currentStats, excludeStat = null) {
     const itemStatPool = ITEM_STAT_POOLS[type];

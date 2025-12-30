@@ -201,12 +201,42 @@ class Enemy extends EnemyBase {
   }
 
   generateRarity() {
-    const random = Math.random() * 1000; // 0 to 1000
-    if (random < ENEMY_RARITY.NORMAL.threshold) return ENEMY_RARITY.NORMAL.type;
-    if (random < ENEMY_RARITY.RARE.threshold) return ENEMY_RARITY.RARE.type;
-    if (random < ENEMY_RARITY.EPIC.threshold) return ENEMY_RARITY.EPIC.type;
-    if (random < ENEMY_RARITY.LEGENDARY.threshold) return ENEMY_RARITY.LEGENDARY.type;
-    return ENEMY_RARITY.MYTHIC.type;
+    // Base weights derived from thresholds (0-1000 range)
+    const weights = [
+      {
+        type: ENEMY_RARITY.NORMAL.type, weight: 800, rank: 0,
+      },
+      {
+        type: ENEMY_RARITY.RARE.type, weight: 100, rank: 1,
+      },
+      {
+        type: ENEMY_RARITY.EPIC.type, weight: 60, rank: 2,
+      },
+      {
+        type: ENEMY_RARITY.LEGENDARY.type, weight: 30, rank: 3,
+      },
+      {
+        type: ENEMY_RARITY.MYTHIC.type, weight: 10, rank: 4,
+      },
+    ];
+
+    const rarityBonus = hero.stats.enemyRarityPercent || 0;
+
+    let totalWeight = 0;
+    const adjustedWeights = weights.map((entry) => {
+      // Increase weight of higher rarities based on rank and bonus
+      const bonusMultiplier = 1 + rarityBonus * entry.rank;
+      const newWeight = entry.weight * bonusMultiplier;
+      totalWeight += newWeight;
+      return { ...entry, weight: newWeight };
+    });
+
+    let random = Math.random() * totalWeight;
+    for (const entry of adjustedWeights) {
+      if (random < entry.weight) return entry.type;
+      random -= entry.weight;
+    }
+    return ENEMY_RARITY.NORMAL.type;
   }
 
   getRarityColor(rarity) {

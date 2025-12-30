@@ -823,6 +823,33 @@ function updateSpecSkillModalDetails() {
           <p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>
         `;
     });
+
+    const damageEffects = effectsCurrent;
+    const skill = skillTree.getSpecializationSkill(currentSpecSkillId);
+    if (skill?.type && skill.type() === 'instant' && skillTree.isDamageSkill?.(damageEffects)) {
+      const skillTypeSource = skill?.skill_type ?? skill?.skillType;
+      const resolvedSkillType = typeof skillTypeSource === 'function' ? skillTypeSource() : skillTypeSource;
+      const skillType = (resolvedSkillType || 'attack').toLowerCase();
+      const isSpell = skillType === 'spell';
+
+      let effectiveDamageEffects = damageEffects;
+      if (isSpell) {
+        const allowedDamageTypes = getSpellDamageTypes(damageEffects);
+        effectiveDamageEffects = {
+          ...damageEffects,
+          ...(allowedDamageTypes.length ? { allowedDamageTypes } : {}),
+        };
+      }
+
+      const damagePreview = hero.calculateTotalDamage(effectiveDamageEffects, { includeRandom: false });
+
+      if (damagePreview?.damage > 0) {
+        effectsEl.innerHTML += `<div style="margin-top: 10px; border-top: 1px solid #444; padding-top: 5px;">
+            <strong>${t('skill.totalPotentialDamage')}: ${formatNumber(damagePreview.damage)}</strong>
+            ${formatDamageBreakdown(damagePreview.breakdown)}
+          </div>`;
+      }
+    }
   }
 }
 
@@ -834,6 +861,18 @@ function buySpecSkillBulk() {
     updateSkillTreeValues();
     updateSpecSkillModalDetails();
   }
+}
+
+function formatDamageBreakdown(breakdown) {
+  if (!breakdown || Object.keys(breakdown).length === 0) return '';
+  let html = '<div class="damage-breakdown" style="font-size: 0.9em; margin-top: 4px; color: #aaa;">';
+  Object.entries(breakdown).forEach(([type, value]) => {
+    if (value > 0) {
+      html += `<div>${formatStatName(type + 'Damage')}: ${formatNumber(value)}</div>`;
+    }
+  });
+  html += '</div>';
+  return html;
 }
 
 function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNext) {
@@ -956,6 +995,30 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNe
         <span class="synergy-bonus">${synergyBonus > 0 ? `+${synergyBonus.toFixed(1)}%` : '(0%)'} (+${bonusPerLevel}% per level)</span>
       </div>`;
     });
+  }
+
+  if (skill?.type && skill.type() === 'instant' && skillTree.isDamageSkill?.(effectsCurrent)) {
+    // Compute allowedDamageTypes for spells, same as useInstantSkill
+    const skillTypeSource = skill?.skill_type ?? skill?.skillType;
+    const resolvedSkillType = typeof skillTypeSource === 'function' ? skillTypeSource() : skillTypeSource;
+    const skillType = (resolvedSkillType || 'attack').toLowerCase();
+    const isSpell = skillType === 'spell';
+
+    let damageEffects = effectsCurrent;
+    if (isSpell) {
+      const allowedDamageTypes = getSpellDamageTypes(effectsCurrent);
+      damageEffects = {
+        ...effectsCurrent,
+        ...(allowedDamageTypes.length ? { allowedDamageTypes } : {}),
+      };
+    }
+
+    const damagePreview = hero.calculateTotalDamage(damageEffects, { includeRandom: false });
+
+    if (damagePreview?.damage > 0) {
+      html += `<div class="tooltip-total-damage">${t('skill.totalPotentialDamage')}: ${formatNumber(damagePreview.damage)}</div>`;
+      html += formatDamageBreakdown(damagePreview.breakdown);
+    }
   }
 
   return html;
@@ -1994,6 +2057,34 @@ function updateSkillModalDetails() {
       typeof currVal === 'number' && typeof futureVal === 'number' ? ` (${formatSignedValue(diff, decimals)})` : '';
     effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>`;
   });
+
+  // Calculate and display Total Potential Damage
+  const damageEffects = skillTree.getSkillEffect(currentSkillId, currentLevel);
+  if (skill?.type && skill.type() === 'instant' && skillTree.isDamageSkill?.(damageEffects)) {
+    // Compute allowedDamageTypes for spells, same as useInstantSkill
+    const skillTypeSource = skill?.skill_type ?? skill?.skillType;
+    const resolvedSkillType = typeof skillTypeSource === 'function' ? skillTypeSource() : skillTypeSource;
+    const skillType = (resolvedSkillType || 'attack').toLowerCase();
+    const isSpell = skillType === 'spell';
+
+    let effectiveDamageEffects = damageEffects;
+    if (isSpell) {
+      const allowedDamageTypes = getSpellDamageTypes(damageEffects);
+      effectiveDamageEffects = {
+        ...damageEffects,
+        ...(allowedDamageTypes.length ? { allowedDamageTypes } : {}),
+      };
+    }
+
+    const damagePreview = hero.calculateTotalDamage(effectiveDamageEffects, { includeRandom: false });
+
+    if (damagePreview?.damage > 0) {
+      effectsEl.innerHTML += `<div style="margin-top: 10px; border-top: 1px solid #444; padding-top: 5px;">
+        <strong>${t('skill.totalPotentialDamage')}: ${formatNumber(damagePreview.damage)}</strong>
+        ${formatDamageBreakdown(damagePreview.breakdown)}
+      </div>`;
+    }
+  }
 
   // --- Show summon stats if this is a summon skill ---
   if (skill.type() === 'summon') {

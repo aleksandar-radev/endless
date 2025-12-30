@@ -53,7 +53,9 @@ export const KILL_QUESTS = [
     },
     type: 'kill',
     target: 50,
-    reward: { gold: 1500, crystals: 2 },
+    reward: {
+      gold: 1500, crystals: 2, materials: [{ id: 'enchantment_scroll', qty: 1 }],
+    },
     icon: `<img src="${BASE}/icons/sword.png" class="icon" alt="kills"/>`,
   },
   {
@@ -72,6 +74,7 @@ export const KILL_QUESTS = [
       item: {
         rarity: 'rare', type: 'random', tier: 1,
       },
+      materials: [{ id: 'enchantment_scroll', qty: 2 }],
     },
     icon: `<img src="${BASE}/icons/strength-potion.svg" class="icon" alt="crit"/>`,
   },
@@ -87,7 +90,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 1000,
     reward: {
-      gold: 10000, crystals: 1, bonuses: { damagePercent: 1 },
+      gold: 10000, crystals: 1, bonuses: { damagePercent: 1 }, materials: [{ id: 'enchantment_scroll', qty: 3 }],
     },
     icon: `<img src="${BASE}/icons/skull.svg" class="icon" alt="skull"/>`,
   },
@@ -119,7 +122,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 5000,
     reward: {
-      gold: 60000, crystals: 2, bonuses: { critChance: 1 },
+      gold: 60000, crystals: 2, bonuses: { critChance: 1 }, materials: [{ id: 'enchantment_scroll', qty: 5 }],
     },
     icon: `<img src="${BASE}/icons/skull.svg" class="icon" alt="skull"/>`,
   },
@@ -151,7 +154,7 @@ export const KILL_QUESTS = [
     type: 'kill',
     target: 25000,
     reward: {
-      gold: 200000, crystals: 5, bonuses: { life: 50 },
+      gold: 200000, crystals: 5, bonuses: { life: 50 }, materials: [{ id: 'enchantment_scroll', qty: 10 }],
     },
     icon: `<img src="${BASE}/icons/earth.png" class="icon" alt="earth"/>`,
   },

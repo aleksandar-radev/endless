@@ -296,41 +296,41 @@ export default {
   'combatMode.subAreaFormat': '{name} [{type}]',
   'combatMode.subAreaType.region': 'Region',
   'Enchanted Forest': 'Enchanted Forest',
-  'Enemies resist earth but are weak to fire and lightning. Crystalized Rock drops most often here.':
+  'enchanted_forest.description':
     'Enemies resist earth but are weak to fire and lightning. Crystalized Rock drops most often here.',
   'Crystal Cave': 'Crystal Cave',
-  'Enemies resist lightning but are weak to water and earth. Crystalized Rock is the common reward.':
+  'crystal_cave.description':
     'Enemies resist lightning but are weak to water and earth. Crystalized Rock is the common reward.',
   'Frozen Tundra': 'Frozen Tundra',
-  'Enemies resist cold but are weak to fire and lightning. Stat potions of every type drop frequently.':
+  'frozen_tundra.description':
     'Enemies resist cold but are weak to fire and lightning. Stat potions of every type drop frequently.',
   'Scorching Desert': 'Scorching Desert',
-  'Enemies resist fire but are weak to water and cold. Elixirs are the standout loot.':
+  'scorching_desert.description':
     'Enemies resist fire but are weak to water and cold. Elixirs are the standout loot.',
   'Murky Swamp': 'Murky Swamp',
-  'Enemies resist water but are weak to lightning and air. Gold Coins up to Freaky Gold Coins are common finds.':
+  'murky_swamp.description':
     'Enemies resist water but are weak to lightning and air. Gold Coins up to Freaky Gold Coins are common finds.',
   'Skyrealm Peaks': 'Skyrealm Peaks',
-  'Enemies resist air but are weak to earth and water. All stat potions drop regularly.':
+  'skyrealm_peaks.description':
     'Enemies resist air but are weak to earth and water. All stat potions drop regularly.',
   'Abyssal Depths': 'Abyssal Depths',
-  'Enemies resist cold but are weak to fire and earth. Enormous and Freaky Gold Coins pile up here.':
+  'abyssal_depths.description':
     'Enemies resist cold but are weak to fire and earth. Enormous and Freaky Gold Coins pile up here.',
   'Volcanic Rift': 'Volcanic Rift',
-  'Enemies resist fire but are weak to water and cold. Weapon Upgrade Cores, Armor Upgrade Stones, and Jewelry Upgrade Gems drop often.':
+  'volcanic_rift.description':
     'Enemies resist fire but are weak to water and cold. Weapon Upgrade Cores, Armor Upgrade Stones, and Jewelry Upgrade Gems drop often.',
   'Sunken Ruins': 'Sunken Ruins',
-  'Enemies resist water but are weak to lightning and fire. Elixirs and Crystalized Rock wash ashore.':
+  'sunken_ruins.description':
     'Enemies resist water but are weak to lightning and fire. Elixirs and Crystalized Rock wash ashore.',
   'Haunted Moor': 'Haunted Moor',
-  'Enemies resist air but are weak to fire and earth. Greater and Huge Experience Potions are plentiful.':
+  'haunted_moor.description':
     'Enemies resist air but are weak to fire and earth. Greater and Huge Experience Potions are plentiful.',
   'Golden Steppe': 'Golden Steppe',
-  'Enemies resist earth but are weak to water and cold. Expect lots of bonus gold and material drops.':
+  'golden_steppe.description':
     'Enemies resist earth but are weak to water and cold. Expect lots of bonus gold and material drops.',
   'Obsidian Spire': 'Obsidian Spire',
-  'Enemies resist lightning but are weak to water and earth. Enchantment Scrolls plus Alternation and Transmutation Orbs drop here.':
-    'Enemies resist lightning but are weak to water and earth. Enchantment Scrolls plus Alternation and Transmutation Orbs drop here.',
+  'obsidian_spire.description':
+    'Enemies resist lightning but are weak to water and earth. Alternation and Transmutation Orbs drop here.',
   'battleLog.battle': 'Battle',
   'battleLog.drops': 'Drops',
   'battleLog.reset': 'Reset',

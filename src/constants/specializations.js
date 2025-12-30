@@ -190,7 +190,10 @@ export const SPECIALIZATIONS = {
           icon: () => 'animal-tracking',
           description: () => t('skill.animalTracking'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-          effect: (level) => ({ damageToHighRarityEnemiesPercent: scaleDownFlat(level, 10) }),
+          effect: (level) => ({
+            damageToHighRarityEnemiesPercent: scaleDownFlat(level, 10),
+            enemyRarityPercent: scaleUpFlat(level, 20, 20, 0.5),
+          }),
         },
         rangedPrecision: {
           id: 'rangedPrecision',
