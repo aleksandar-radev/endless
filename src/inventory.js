@@ -9,10 +9,12 @@ import { computeSetBonuses } from './uniqueItems.js';
 import { MATERIALS } from './constants/materials.js';
 import { getDivisor, getStatDecimalPlaces, STATS } from './constants/stats/stats.js';
 import { rollRandomSubtype } from './constants/itemSubtypes.js';
-import { ITEM_RARITY,
+import { ITEM_IDS, ITEM_RARITY,
+  JEWELRY_TYPES,
   RARITY_ORDER,
   SLOT_REQUIREMENTS,
   TWO_HANDED_TYPES,
+  WEAPON_TYPES,
   getSlotsByCategory,
   getTypesByCategory } from './constants/items.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
@@ -1544,8 +1546,7 @@ export default class Inventory {
     });
 
     const equippedItems = Object.values(this.equippedItems).filter(Boolean);
-    const WEAPON_TYPES = ['SWORD', 'AXE', 'MACE', 'DAGGER', 'SPEAR', 'BOW', 'STAFF', 'WAND'];
-    const JEWELRY_TYPES = ['AMULET', 'RING'];
+
 
     // Calculate bonuses from all equipped items
     equippedItems.forEach((item) => {
@@ -1553,7 +1554,7 @@ export default class Inventory {
       if (weaponEffectiveness > 0 && WEAPON_TYPES.includes(item.type)) {
         multiplier += weaponEffectiveness / 100;
       }
-      if (shieldEffectiveness > 0 && item.type === 'SHIELD') {
+      if (shieldEffectiveness > 0 && item.type === ITEM_IDS.SHIELD) {
         multiplier += shieldEffectiveness / 100;
       }
       if (jewelryEffectiveness > 0 && JEWELRY_TYPES.includes(item.type)) {

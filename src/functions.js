@@ -18,7 +18,7 @@ import { initializeSkillTreeStructure,
   updateStageUI,
   updateTabIndicators } from './ui/ui.js';
 import { createImageDropdownFromData } from './ui/imageDropdown.js';
-import { ITEM_ICONS, ITEM_RARITY, ITEM_TYPES, ALL_ITEM_TYPES } from './constants/items.js';
+import { ITEM_ICONS, ITEM_RARITY, ALL_ITEM_TYPES } from './constants/items.js';
 import { updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { createCombatText } from './combat.js';
