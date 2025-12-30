@@ -5,100 +5,9 @@ import { closeModal, createModal } from './ui/modal.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { t } from './i18n.js';
 import { SOUL_SHOP_MAX_QTY } from './constants/limits.js';
-import { floorSumBigInt } from './utils/bulkMath.js';
+import { calcLinearSum, solveLinear } from './utils/bulkMath.js';
 
 const html = String.raw;
-
-const gcdBigInt = (a, b) => {
-  let x = a < 0n ? -a : a;
-  let y = b < 0n ? -b : b;
-  while (y !== 0n) {
-    const temp = x % y;
-    x = y;
-    y = temp;
-  }
-  return x;
-};
-
-const reduceFraction = ({ num, den }) => {
-  if (den < 0n) {
-    num = -num;
-    den = -den;
-  }
-  if (num === 0n) return { num: 0n, den: 1n };
-  const divisor = gcdBigInt(num < 0n ? -num : num, den);
-  return { num: num / divisor, den: den / divisor };
-};
-
-const decimalToFraction = (value) => {
-  if (!Number.isFinite(value)) return { num: 0n, den: 1n };
-  if (value === 0) return { num: 0n, den: 1n };
-  const sign = value < 0 ? -1n : 1n;
-  let str = Math.abs(value).toString();
-  if (str.includes('e') || str.includes('E')) {
-    const [mantissa, exponentPart] = str.toLowerCase().split('e');
-    const exponent = parseInt(exponentPart, 10) || 0;
-    let [intPart, fracPart = ''] = mantissa.split('.');
-    fracPart = fracPart.replace(/0+$/, '');
-    const digits = fracPart.length;
-    const numeratorStr = (intPart + fracPart).replace(/^0+/, '') || '0';
-    let numerator = BigInt(numeratorStr);
-    let denominator = BigInt('1' + '0'.repeat(digits));
-    if (exponent > 0) {
-      numerator *= BigInt('1' + '0'.repeat(exponent));
-    } else if (exponent < 0) {
-      denominator *= BigInt('1' + '0'.repeat(-exponent));
-    }
-    numerator *= sign;
-    return reduceFraction({ num: numerator, den: denominator });
-  }
-  if (!str.includes('.')) {
-    return { num: BigInt(str) * sign, den: 1n };
-  }
-  str = str.replace(/0+$/, '');
-  if (str.endsWith('.')) str = str.slice(0, -1);
-  if (!str || str === '0') return { num: 0n, den: 1n };
-  const [intPart, fracPart] = str.split('.');
-  const denominator = BigInt('1' + '0'.repeat(fracPart.length));
-  const numerator = BigInt((intPart + fracPart).replace(/^0+/, '') || '0') * sign;
-  return reduceFraction({ num: numerator, den: denominator });
-};
-
-const multiplyFractions = (a, b) => {
-  if (!a || !b) return { num: 0n, den: 1n };
-  if (a.num === 0n || b.num === 0n) return { num: 0n, den: 1n };
-  return reduceFraction({ num: a.num * b.num, den: a.den * b.den });
-};
-
-const addFractions = (a, b) => {
-  if (!a) return b;
-  if (!b) return a;
-  const num = a.num * b.den + b.num * a.den;
-  const den = a.den * b.den;
-  return reduceFraction({ num, den });
-};
-
-const lcmBigInt = (a, b) => {
-  if (a === 0n || b === 0n) return 0n;
-  return (a / gcdBigInt(a, b)) * b;
-};
-
-const sumRoundedArithmetic = (startFrac, stepFrac, count) => {
-  if (count <= 0n) return 0n;
-  if (!startFrac || !stepFrac) return 0n;
-  const denBase = lcmBigInt(startFrac.den, stepFrac.den) || 1n;
-  const startNum = startFrac.num * (denBase / startFrac.den);
-  const stepNum = stepFrac.num * (denBase / stepFrac.den);
-  if (stepNum === 0n) {
-    const rounded = (2n * startNum + denBase) / (2n * denBase);
-    return rounded * count;
-  }
-  const two = 2n;
-  const m = two * denBase;
-  const a = two * stepNum;
-  const b = two * startNum + denBase;
-  return floorSumBigInt(count, m, a, b);
-};
 
 export const SOUL_UPGRADE_CONFIG = {
   // One-time purchase
@@ -230,8 +139,10 @@ export default class SoulShop {
     handleSavedData(savedData, this);
     this.modal = null;
     this.currentStat = null;
-    this.selectedQty = options.useNumericInputs ? Math.min(options.soulShopQty || 1, SOUL_SHOP_MAX_QTY) : 1;
-    this.quickQty = options.useNumericInputs ? Math.min(options.soulShopQuickQty || 1, SOUL_SHOP_MAX_QTY) : 1;
+    const initialSelectedQty = options.soulShopQty || 1;
+    this.selectedQty = initialSelectedQty === 'max' ? 'max' : Math.min(initialSelectedQty, SOUL_SHOP_MAX_QTY);
+    const initialQuickQty = options.soulShopQuickQty || 1;
+    this.quickQty = initialQuickQty === 'max' ? 'max' : Math.min(initialQuickQty, SOUL_SHOP_MAX_QTY);
     this.bulkBuyBtn = null;
     this.bulkCostEl = null;
   }
@@ -281,7 +192,7 @@ export default class SoulShop {
       controlBar.className = 'soulShop-controls';
       shopContainer.insertBefore(controlBar, upgradesContainer);
 
-      if (options?.quickBuy) {
+      if (options?.quickBuy || options?.bulkBuy) {
         const qtyControls = document.createElement('div');
         qtyControls.className = 'soulShop-qty-controls';
         if (options.useNumericInputs) {
@@ -306,6 +217,7 @@ export default class SoulShop {
           maxBtn.onclick = () => {
             this.quickQty = 'max';
             maxBtn.classList.add('active');
+            if (input) input.value = SOUL_SHOP_MAX_QTY;
             this.updateSoulShopUI();
             if (options?.bulkBuy) this.updateBulkCost();
             dataManager.saveGame();
@@ -668,23 +580,17 @@ export default class SoulShop {
 
     if (targetQty <= 0) return { qty: 0, totalCost: 0 };
 
-    let low = 0;
-    let high = targetQty;
-    let bestQty = 0;
-    let bestCost = 0;
-    while (low <= high) {
-      const mid = Math.floor((low + high) / 2);
-      const cost = this.calculateTotalCost(stat, mid, baseLevel);
-      if (cost <= availableSouls) {
-        bestQty = mid;
-        bestCost = cost;
-        low = mid + 1;
-      } else {
-        high = mid - 1;
-      }
-    }
+    const increment = config.costIncrement || 0;
+    const multiplier = this.getCostMultiplier();
+    const SCALE = 10000; // Precision scale for float math
+    const baseScaled = Math.round(config.baseCost * multiplier * SCALE);
+    const incScaled = Math.round(increment * multiplier * SCALE);
 
-    return { qty: bestQty, totalCost: bestCost };
+    const bestQty = solveLinear(baseLevel, availableSouls, baseScaled, incScaled, SCALE);
+    const finalQty = Math.min(bestQty, targetQty);
+    const totalCost = this.calculateTotalCost(stat, finalQty, baseLevel);
+
+    return { qty: finalQty, totalCost };
   }
 
   calculateTotalCost(stat, qty, baseLevel = this.soulUpgrades[stat] || 0) {
@@ -698,36 +604,12 @@ export default class SoulShop {
     const multiplier = this.getCostMultiplier();
     if (multiplier <= 0) return 0;
 
-    if (increment === 0) {
-      const costPerLevel = Math.round((config.baseCost + increment * baseLevel) * multiplier);
-      const totalConst = BigInt(costPerLevel) * BigInt(Math.floor(qty));
-      if (totalConst > BigInt(Number.MAX_SAFE_INTEGER)) return Infinity;
-      return Number(totalConst);
-    }
+    // Use scaled integer math for precision
+    const SCALE = 10000;
+    const baseScaled = Math.round(config.baseCost * multiplier * SCALE);
+    const incScaled = Math.round(increment * multiplier * SCALE);
 
-    const qtyInt = BigInt(Math.floor(qty));
-    if (qtyInt <= 0n) return 0;
-
-    if (!config._baseCostFraction) {
-      config._baseCostFraction = decimalToFraction(config.baseCost);
-    }
-    if (!config._incrementFraction) {
-      config._incrementFraction = decimalToFraction(increment);
-    }
-    const baseCostFrac = config._baseCostFraction;
-    const incrementFrac = config._incrementFraction;
-    const baseLevelFrac = { num: BigInt(baseLevel), den: 1n };
-    const multiplierFrac = decimalToFraction(multiplier);
-
-    const levelOffset = multiplyFractions(incrementFrac, baseLevelFrac);
-    const baseValue = addFractions(baseCostFrac, levelOffset);
-    const startValue = multiplyFractions(baseValue, multiplierFrac);
-    const stepValue = multiplyFractions(incrementFrac, multiplierFrac);
-
-    const totalBigInt = sumRoundedArithmetic(startValue, stepValue, qtyInt);
-    const total = Number(totalBigInt);
-    if (!Number.isFinite(total) || total > Number.MAX_SAFE_INTEGER) return Infinity;
-    return total;
+    return calcLinearSum(baseLevel, qty, baseScaled, incScaled, SCALE);
   }
 
   setupSoulUpgradeHandlers() {

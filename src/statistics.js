@@ -3,6 +3,8 @@ import { formatNumber, formatStatName } from './ui/ui.js';
 import { t, tp } from './i18n.js';
 import { ROCKY_FIELD_REGIONS } from './rockyField.js';
 import { createDeferredRunner } from './utils/debounce.js';
+import { RARITY_KEYS } from './constants/items.js';
+import { ENEMY_RARITY_TYPES } from './constants/enemies.js';
 
 const ROCKY_FIELD_REGION_IDS = ROCKY_FIELD_REGIONS.map((region) => region.id);
 const STATISTICS_UPDATE_DEBOUNCE_MS = 1000;
@@ -72,14 +74,12 @@ export function buildStatisticsDisplayEntries(source = {}) {
     return `${region.name}: ${value}`;
   });
 
-  const rarityOrderItems = ['normal', 'magic', 'rare', 'epic', 'legendary', 'mythic'];
-  const itemsByRaritySegments = rarityOrderItems.map((rarity) => {
+  const itemsByRaritySegments = Object.keys(RARITY_KEYS).map((rarity) => {
     const value = formatNumber(itemsFound?.[rarity] || 0);
     return `${formatStatName(rarity)}: ${value}`;
   });
 
-  const rarityOrderEnemies = ['normal', 'rare', 'epic', 'legendary', 'mythic'];
-  const enemiesByRaritySegments = rarityOrderEnemies.map((rarity) => {
+  const enemiesByRaritySegments = ENEMY_RARITY_TYPES.map((rarity) => {
     const value = formatNumber(enemiesKilled?.[rarity] || 0);
     return `${formatStatName(rarity)}: ${value}`;
   });
@@ -269,8 +269,8 @@ export default class Statistics {
       this.totalEnemiesKilled = this.enemiesKilled.total;
       delete this.enemiesKilled.total;
     }
-    const rarityKeys = ['normal', 'magic', 'rare', 'epic', 'legendary', 'mythic', 'unique', 'set'];
-    rarityKeys.forEach((key) => {
+
+    Object.keys(RARITY_KEYS).forEach((key) => {
       if (this.itemsFound[key] == null) this.itemsFound[key] = 0;
       if (this.enemiesKilled[key] == null) this.enemiesKilled[key] = 0;
     });

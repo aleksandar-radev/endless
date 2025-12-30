@@ -182,6 +182,8 @@ export const ENEMY_RARITY = {
   },
 };
 
+export const ENEMY_RARITY_TYPES = Object.keys(ENEMY_RARITY);
+
 export function getEnemyStatMultiplier(tier) {
   return tier ** 2;
 }

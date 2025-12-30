@@ -17,6 +17,7 @@ import { AILMENTS } from '../constants/ailments.js';
 import { t, tp } from '../i18n.js';
 import { updateQuestsUI } from './questUi.js';
 import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
+import { updateBuildingAffordability } from './buildingUi.js';
 import { TabIndicatorManager } from './tabIndicatorManager.js';
 import { initializeBossRegionUI, selectBoss, updateBossUI, updateBossRegionSelector } from './bossUi.js';
 import { ELEMENTS, BREAKPOINTS, IS_MOBILE_OR_TABLET } from '../constants/common.js';
@@ -392,6 +393,8 @@ export function updateResources() {
 
   // Update other stats
   document.getElementById('gold').textContent = formatNumber(hero.gold || 0);
+
+  updateBuildingAffordability();
 }
 
 export function updatePlayerLife() {

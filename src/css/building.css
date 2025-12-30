@@ -480,3 +480,100 @@
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 8px;
 }
+
+.buildings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.building-controls-wrapper {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.building-qty-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.building-qty-controls button {
+  background: #2d303c;
+  color: #fff;
+  border: 1px solid #4e54c8;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.building-qty-controls button.active {
+  background: #4e54c8;
+}
+
+.building-qty-controls button:hover:not(.active) {
+  background: #34374d;
+}
+
+.building-qty-input {
+  width: auto;
+  min-width: 60px;
+  max-width: 120px;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #4e54c8;
+  background: #2d303c;
+  color: #fff;
+}
+
+.building-upgrade-cost {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: #fbbf24;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.building-upgrade-cost.unaffordable {
+  color: #a0a7b4;
+}
+
+.building-bulk-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.building-bulk-buy-btn {
+  background: #2d303c;
+  color: #fff;
+  border: 2px solid #4e54c8;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.building-bulk-buy-btn:hover:not(:disabled) {
+  background: #34374d;
+}
+
+.building-bulk-buy-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.building-bulk-cost {
+  color: #fbbf24;
+  font-size: 0.9rem;
+}
+
+.building-bulk-cost.unaffordable {
+  color: #a0a7b4;
+}

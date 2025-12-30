@@ -201,15 +201,20 @@ export const ITEM_RARITY = {
   },
 };
 
+export const RARITY_KEYS = Object.keys(ITEM_RARITY).reduce((acc, key) => {
+  acc[key] = key;
+  return acc;
+}, {});
+
 export const RARITY_ORDER = [
-  ITEM_RARITY.NORMAL.name,
-  ITEM_RARITY.MAGIC.name,
-  ITEM_RARITY.RARE.name,
-  ITEM_RARITY.EPIC.name,
-  ITEM_RARITY.LEGENDARY.name,
-  ITEM_RARITY.MYTHIC.name,
-  ITEM_RARITY.UNIQUE.name,
-  ITEM_RARITY.SET.name,
+  RARITY_KEYS.NORMAL,
+  RARITY_KEYS.MAGIC,
+  RARITY_KEYS.RARE,
+  RARITY_KEYS.EPIC,
+  RARITY_KEYS.LEGENDARY,
+  RARITY_KEYS.MYTHIC,
+  RARITY_KEYS.UNIQUE,
+  RARITY_KEYS.SET,
 ];
 
 export const ITEM_STAT_POOLS = {

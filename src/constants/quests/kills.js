@@ -1,4 +1,5 @@
 import { tp } from '../../i18n.js';
+import { RARITY_KEYS } from '../items.js';
 const BASE = import.meta.env.VITE_BASE_PATH;
 // Kill quests
 export const KILL_QUESTS = [
@@ -16,7 +17,7 @@ export const KILL_QUESTS = [
     reward: {
       gold: 150,
       item: {
-        uniqueId: 'ribbonweave_vestments', rarity: 'unique', tier: 1, level: 1,
+        uniqueId: 'ribbonweave_vestments', rarity: RARITY_KEYS.UNIQUE, tier: 1, level: 1,
       },
       bonuses: { damagePercent: 1 },
     },

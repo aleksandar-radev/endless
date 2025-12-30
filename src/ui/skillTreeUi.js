@@ -452,8 +452,7 @@ function initializeSpecializationsTab() {
         maxBtn.onclick = () => {
           skillTree.quickQty = 'max';
           maxBtn.classList.add('active');
-          const maxValue = Math.min(options.skillQuickQty || 1, SKILLS_MAX_QTY);
-          input.value = maxValue;
+          if (input) input.value = SKILLS_MAX_QTY;
           updateSkillTreeValues();
           dataManager.saveGame();
         };
@@ -1645,8 +1644,7 @@ export function updateSkillTreeValues() {
           skillTree.quickQty = 'max';
           maxBtn.classList.add('active');
           // Update the input field to show the max value without rebuilding the entire UI
-          const maxValue = Math.min(options.skillQuickQty || 1, SKILLS_MAX_QTY);
-          input.value = maxValue;
+          if (input) input.value = SKILLS_MAX_QTY;
           updateSkillBulkCostDisplay();
           dataManager.saveGame();
         };

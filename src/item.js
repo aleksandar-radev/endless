@@ -1,4 +1,4 @@
-import { ITEM_ICONS, ITEM_RARITY, ITEM_STAT_POOLS, SLOT_REQUIREMENTS, TWO_HANDED_TYPES } from './constants/items.js';
+import { ITEM_ICONS, ITEM_RARITY, ITEM_STAT_POOLS, RARITY_KEYS, SLOT_REQUIREMENTS, TWO_HANDED_TYPES } from './constants/items.js';
 import { getDivisor, getStatDecimalPlaces, STATS } from './constants/stats/stats.js';
 import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
@@ -277,9 +277,9 @@ export default class Item {
     const levelDetails = `${t('item.level')}: ${formatNumber(this.level)}, ${t('item.tier')}: ${formatNumber(this.tier)}${handedLabel ? `, ${handedLabel}` : ''}`;
 
     const tags = [];
-    if (this.rarity === 'UNIQUE') {
+    if (this.rarity === RARITY_KEYS.UNIQUE) {
       tags.push(`<span class="item-tag item-tag-unique">${t('item.tag.unique')}</span>`);
-    } else if (this.rarity === 'SET') {
+    } else if (this.rarity === RARITY_KEYS.SET) {
       tags.push(`<span class="item-tag item-tag-set">${t('item.tag.set')}</span>`);
     }
 

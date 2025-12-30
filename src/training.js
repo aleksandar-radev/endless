@@ -11,6 +11,7 @@ import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { t, tp } from './i18n.js';
+import { calcLinearSum, solveLinear, calcGeometricSum, solveGeometric } from './utils/bulkMath.js';
 
 const html = String.raw;
 
@@ -69,7 +70,8 @@ export default class Training {
       });
     }
     this.activeSection = SECTION_DEFS[0].key;
-    this.quickQty = options.useNumericInputs ? Math.min(options.trainingQuickQty || 1, TRAINING_MAX_QTY) : 1;
+    const initialQty = options.trainingQuickQty || 1;
+    this.quickQty = initialQty === 'max' ? 'max' : Math.min(initialQty, TRAINING_MAX_QTY);
   }
 
   _ensureResourceExtraDamageSplitStructure() {
@@ -137,7 +139,7 @@ export default class Training {
     controlsWrapper.className = 'training-controls-wrapper';
     nav.appendChild(controlsWrapper);
 
-    if (options?.quickBuy) {
+    if (options?.quickBuy || options?.bulkBuy) {
       const qtyControls = document.createElement('div');
       qtyControls.className = 'training-qty-controls';
       if (options.useNumericInputs) {
@@ -161,6 +163,7 @@ export default class Training {
         maxBtn.onclick = () => {
           this.quickQty = 'max';
           maxBtn.classList.add('active');
+          if (input) input.value = TRAINING_MAX_QTY;
           this.updateTrainingUI('gold-upgrades');
           dataManager.saveGame();
         };
@@ -340,81 +343,86 @@ export default class Training {
   }
 
   calculateTotalCost(config, qty, baseLevel) {
-    let cost = Number(config.cost);
-    let increase = Number(config.costIncrease ?? config.cost);
-    let rate = Number(config.costIncreaseMultiplier ?? 1);
+    if (qty <= 0) return 0;
+
+    // Base parameters
+    let currentBase = Number(config.cost);
+    let currentInc = Number(config.costIncrease ?? config.cost);
+    let currentMult = Number(config.costIncreaseMultiplier ?? 1);
+
     const thresholds = (config.costThresholds || []).slice().sort((a, b) => a.level - b.level);
-    let idx = 0;
-    let level = 0;
-
-    const applyThresholds = () => {
-      while (idx < thresholds.length && level >= thresholds[idx].level) {
-        const t = thresholds[idx];
-        if (t.cost !== undefined) cost = Number(t.cost);
-        if (t.costMultiplier !== undefined) cost *= Number(t.costMultiplier);
-        if (t.costIncrease !== undefined) increase = Number(t.costIncrease);
-        if (t.costIncreaseMultiplier !== undefined) rate = Number(t.costIncreaseMultiplier);
-        idx++;
-      }
-    };
-
-    applyThresholds();
-
-    const advance = (n) => {
-      if (n <= 0) return;
-      if (!isFinite(cost) || !isFinite(increase) || !isFinite(rate)) {
-        cost = Infinity;
-        increase = Infinity;
-        return;
-      }
-      if (Math.abs(rate - 1) < 1e-9) {
-        cost += increase * n;
-      } else {
-        const rPow = Math.pow(rate, n);
-        cost += (increase * (rPow - 1)) / (rate - 1);
-        increase *= rPow;
-      }
-      level += n;
-    };
-
-    const sumAndAdvance = (n) => {
-      if (n <= 0) return 0;
-      if (!isFinite(cost) || !isFinite(increase) || !isFinite(rate)) return Infinity;
-      let total;
-      if (Math.abs(rate - 1) < 1e-9) {
-        total = n * cost + (increase * n * (n - 1)) / 2;
-        cost += increase * n;
-      } else {
-        const rPow = Math.pow(rate, n);
-        total = n * cost + increase * ((rPow - 1) / (rate - 1) ** 2 - n / (rate - 1));
-        cost += (increase * (rPow - 1)) / (rate - 1);
-        increase *= rPow;
-      }
-      level += n;
-      return total;
-    };
-
-    while (baseLevel > 0 && isFinite(cost)) {
-      const nextLevel = idx < thresholds.length ? thresholds[idx].level : Infinity;
-      const step = Math.min(baseLevel, nextLevel - level);
-      advance(step);
-      baseLevel -= step;
-      if (level === nextLevel) applyThresholds();
-    }
-
-    if (!isFinite(cost)) return Infinity;
-
     let totalCost = 0;
-    let remaining = qty;
-    while (remaining > 0 && isFinite(cost)) {
-      const nextLevel = idx < thresholds.length ? thresholds[idx].level : Infinity;
-      const step = Math.min(remaining, nextLevel - level);
-      totalCost += sumAndAdvance(step);
-      remaining -= step;
-      if (level === nextLevel) applyThresholds();
+    let currentLevel = baseLevel;
+    let remainingQty = qty;
+    let tIdx = 0;
+    // State variables
+    let simLevel = 0;
+    let simCost = Number(config.cost);
+    let simInc = Number(config.costIncrease ?? config.cost);
+    let simMult = Number(config.costIncreaseMultiplier ?? 1);
+
+    // Helper to apply thresholds at a specific level
+    const applyThresholds = (lvl) => {
+      while (tIdx < thresholds.length && lvl >= thresholds[tIdx].level) {
+        const t = thresholds[tIdx];
+        if (t.cost !== undefined) simCost = Number(t.cost);
+        if (t.costMultiplier !== undefined) simCost *= Number(t.costMultiplier);
+        if (t.costIncrease !== undefined) simInc = Number(t.costIncrease);
+        if (t.costIncreaseMultiplier !== undefined) simMult = Number(t.costIncreaseMultiplier);
+        tIdx++;
+      }
+    };
+
+    // 1. Fast-forward to baseLevel
+    while (simLevel < baseLevel) {
+      applyThresholds(simLevel);
+      const nextT = tIdx < thresholds.length ? thresholds[tIdx].level : Infinity;
+      const limit = Math.min(baseLevel, nextT);
+      const count = limit - simLevel;
+
+      if (count > 0) {
+        if (Math.abs(simMult - 1) < 1e-9) {
+          simCost += simInc * count;
+        } else {
+
+          simCost *= Math.pow(simMult, count);
+          simInc *= Math.pow(simMult, count);
+        }
+        simLevel += count;
+      }
     }
 
-    if (!isFinite(totalCost)) return Infinity;
+    // 2. Calculate cost for requested qty
+    currentLevel = baseLevel;
+    remainingQty = qty;
+
+    while (remainingQty > 0) {
+      applyThresholds(currentLevel);
+      const nextT = tIdx < thresholds.length ? thresholds[tIdx].level : Infinity;
+      const limit = Math.min(currentLevel + remainingQty, nextT);
+      const count = limit - currentLevel;
+
+      if (count > 0) {
+        let segmentCost = 0;
+        if (Math.abs(simMult - 1) < 1e-9) {
+          segmentCost = calcLinearSum(0, count, simCost, simInc);
+          simCost += simInc * count;
+        } else {
+          segmentCost = calcGeometricSum(0, count, simCost, simMult);
+
+          const factor = Math.pow(simMult, count);
+          simCost *= factor;
+          simInc *= factor;
+        }
+
+        totalCost += segmentCost;
+        currentLevel += count;
+        remainingQty -= count;
+      }
+
+      if (!Number.isFinite(totalCost)) return Infinity;
+    }
+
     const bonus = runes?.getBonusEffects?.() || {};
     const runeReduction = bonus.trainingCostReduction || 0;
     const ascRed = ascension?.getBonuses?.()?.trainingCostReduction || 0;
@@ -423,40 +431,116 @@ export default class Training {
   }
 
   getMaxPurchasable(selectedQty, baseLevel, maxLevel, config, availableGold = hero.gold) {
-    // Limit max upgrades per call to 10,000
     const MAX_BULK = TRAINING_MAX_QTY;
     let safeMaxLevel = maxLevel === Infinity || !isFinite(maxLevel) ? baseLevel + MAX_BULK : maxLevel;
     let maxPossible = Math.min(safeMaxLevel - baseLevel, MAX_BULK);
-    let qty = selectedQty === 'max' ? 0 : selectedQty;
-    let totalCost = 0;
+    let targetQty = selectedQty === 'max' ? maxPossible : Math.min(selectedQty, maxPossible);
 
-    if (selectedQty === 'max') {
-      let gold = availableGold;
-      let low = 0;
-      let high = maxPossible;
-      let best = 0;
-      while (low <= high) {
-        let mid = Math.floor((low + high) / 2);
-        let cost = this.calculateTotalCost(config, mid, baseLevel);
-        if (!isFinite(cost)) {
-          high = mid - 1;
-          continue;
-        }
-        if (cost <= gold) {
-          best = mid;
-          low = mid + 1;
-        } else {
-          high = mid - 1;
-        }
+    if (targetQty <= 0) return { qty: 0, totalCost: 0 };
+
+    // Reduction
+    const bonus = runes?.getBonusEffects?.() || {};
+    const runeReduction = bonus.trainingCostReduction || 0;
+    const ascRed = ascension?.getBonuses?.()?.trainingCostReduction || 0;
+    const reduction = runeReduction + ascRed;
+    const budget = availableGold / (1 - reduction); // Effective budget before reduction
+
+    // Simulation setup (same as calculateTotalCost)
+    let simLevel = 0;
+    let simCost = Number(config.cost);
+    let simInc = Number(config.costIncrease ?? config.cost);
+    let simMult = Number(config.costIncreaseMultiplier ?? 1);
+    const thresholds = (config.costThresholds || []).slice().sort((a, b) => a.level - b.level);
+    let tIdx = 0;
+
+    const applyThresholds = (lvl) => {
+      while (tIdx < thresholds.length && lvl >= thresholds[tIdx].level) {
+        const t = thresholds[tIdx];
+        if (t.cost !== undefined) simCost = Number(t.cost);
+        if (t.costMultiplier !== undefined) simCost *= Number(t.costMultiplier);
+        if (t.costIncrease !== undefined) simInc = Number(t.costIncrease);
+        if (t.costIncreaseMultiplier !== undefined) simMult = Number(t.costIncreaseMultiplier);
+        tIdx++;
       }
-      qty = best;
-      totalCost = this.calculateTotalCost(config, qty, baseLevel);
-    } else {
-      qty = Math.min(qty, maxPossible);
-      totalCost = this.calculateTotalCost(config, qty, baseLevel);
+    };
+
+    // 1. Fast-forward to baseLevel
+    while (simLevel < baseLevel) {
+      applyThresholds(simLevel);
+      const nextT = tIdx < thresholds.length ? thresholds[tIdx].level : Infinity;
+      const limit = Math.min(baseLevel, nextT);
+      const count = limit - simLevel;
+      if (count > 0) {
+        if (Math.abs(simMult - 1) < 1e-9) {
+          simCost += simInc * count;
+        } else {
+          const factor = Math.pow(simMult, count);
+          simCost *= factor;
+          simInc *= factor;
+        }
+        simLevel += count;
+      }
     }
 
-    return { qty, totalCost };
+    // 2. Solve for max qty
+    let currentLevel = baseLevel;
+    let remainingBudget = budget;
+    let totalPurchased = 0;
+    let remainingTarget = targetQty;
+
+    while (remainingTarget > 0 && remainingBudget > 0) {
+      applyThresholds(currentLevel);
+      const nextT = tIdx < thresholds.length ? thresholds[tIdx].level : Infinity;
+      // Max we can buy in this segment based on level caps
+      const segmentMax = Math.min(remainingTarget, nextT - currentLevel);
+
+      if (segmentMax <= 0) break; // Should not happen if logic is correct
+
+      let count = 0;
+      let cost = 0;
+
+      if (Math.abs(simMult - 1) < 1e-9) {
+        // Linear
+        // Check if we can afford the whole segment
+        const segmentCost = calcLinearSum(0, segmentMax, simCost, simInc);
+        if (segmentCost <= remainingBudget) {
+          count = segmentMax;
+          cost = segmentCost;
+        } else {
+          // Solve for partial
+          count = solveLinear(0, remainingBudget, simCost, simInc);
+          count = Math.min(count, segmentMax);
+          cost = calcLinearSum(0, count, simCost, simInc);
+        }
+        // Update state
+        simCost += simInc * count;
+      } else {
+        // Geometric
+        const segmentCost = calcGeometricSum(0, segmentMax, simCost, simMult);
+        if (segmentCost <= remainingBudget) {
+          count = segmentMax;
+          cost = segmentCost;
+          // Update state
+          const factor = Math.pow(simMult, count);
+          simCost *= factor;
+          simInc *= factor;
+        } else {
+          count = solveGeometric(0, remainingBudget, simCost, simMult);
+          count = Math.min(count, segmentMax);
+          cost = calcGeometricSum(0, count, simCost, simMult);
+        }
+      }
+
+      totalPurchased += count;
+      remainingBudget -= cost;
+      currentLevel += count;
+      remainingTarget -= count;
+
+      if (count < segmentMax) break;
+    }
+
+    const finalCost = this.calculateTotalCost(config, totalPurchased, baseLevel);
+    return { qty: totalPurchased, totalCost: finalCost };
   }
 
   updateModalDetails() {

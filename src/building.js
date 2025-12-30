@@ -346,6 +346,83 @@ export class BuildingManager {
     return this.buildings[buildingId].upgrade();
   }
 
+  calculateBulkCostAndUpgrades(qtySetting) {
+    const placed = this.getPlacedBuildings().filter((b) => b !== null && b.level < b.maxLevel);
+    if (placed.length === 0) return {
+      totalCosts: {}, upgrades: [], affordable: true,
+    };
+
+    const upgrades = [];
+    const totalCosts = {};
+
+    if (qtySetting === 'max') {
+      placed.forEach((b) => {
+        const amt = b.getMaxUpgradeAmount(hero);
+        if (amt > 0) {
+          const cost = b.getUpgradeCost(amt);
+          upgrades.push({
+            id: b.id, qty: amt, cost,
+          });
+          for (const [type, val] of Object.entries(cost)) {
+            totalCosts[type] = (totalCosts[type] || 0) + val;
+          }
+        }
+      });
+    } else {
+      const qty = parseInt(qtySetting, 10) || 1;
+      placed.forEach((b) => {
+        const levelsLeft = b.maxLevel - b.level;
+        const amt = Math.min(qty, levelsLeft);
+        if (amt > 0) {
+          const cost = b.getUpgradeCost(amt);
+          upgrades.push({
+            id: b.id, qty: amt, cost,
+          });
+          for (const [type, val] of Object.entries(cost)) {
+            totalCosts[type] = (totalCosts[type] || 0) + val;
+          }
+        }
+      });
+    }
+
+    let affordable = true;
+    for (const [type, totalVal] of Object.entries(totalCosts)) {
+      const playerRes = hero[type + 's'] !== undefined ? hero[type + 's'] : hero[type];
+      if (playerRes < totalVal) {
+        affordable = false;
+        break;
+      }
+    }
+
+    return {
+      totalCosts, upgrades, affordable,
+    };
+  }
+
+  bulkUpgradeAll(qtySetting) {
+    const {
+      totalCosts, upgrades, affordable,
+    } = this.calculateBulkCostAndUpgrades(qtySetting);
+    if (upgrades.length === 0) return false;
+    if (!affordable) return false;
+
+    // Deduct all costs
+    for (const [type, totalVal] of Object.entries(totalCosts)) {
+      if (hero[type + 's'] !== undefined) hero[type + 's'] -= totalVal;
+      else if (hero[type] !== undefined) hero[type] -= totalVal;
+    }
+
+    // Apply upgrades
+    upgrades.forEach((u) => {
+      const b = this.buildings[u.id];
+      for (let i = 0; i < u.qty; i++) {
+        b.upgrade();
+      }
+    });
+
+    return true;
+  }
+
   // Get building at a map placeholder
   getBuildingAt(placeholderIdx) {
     const id = this.placedBuildings[placeholderIdx];

@@ -189,9 +189,72 @@ function createBuildingCard(building) {
       <div class="building-next-bonus" data-building-id="${building.id}">
         ${tp('buildings.nextBonus', { time: '—' })}
       </div>
+      <div class="building-upgrade-cost" data-building-id="${building.id}"></div>
     </div>
   `;
   return el;
+}
+
+export function updateBuildingAffordability() {
+  const nodes = document.querySelectorAll('.building-upgrade-cost');
+  if (!nodes.length) return;
+
+  nodes.forEach((el) => {
+    const id = el.dataset.buildingId;
+    const building = buildings?.buildings?.[id];
+    if (!building) return;
+
+    if (options?.quickBuy) {
+      const rawQty = options.buildingQty || 1;
+      const maxLevelGain = Math.max(building.maxLevel - building.level, 0);
+      const maxAffordable = building.getMaxUpgradeAmount(hero);
+      const qty = rawQty === 'max' ? Math.min(maxLevelGain, maxAffordable) : parseInt(rawQty, 10) || 1;
+      const amt = Math.min(qty, maxLevelGain);
+
+      if (amt > 0) {
+        const totalCost = building.getUpgradeCost(amt);
+        const costStr = Building.formatCost(totalCost);
+        el.innerHTML = `${t('ascension.upgrade.cost') || 'Cost'}: <b>${costStr}</b> (${formatNumber(amt)})`;
+
+        // Check affordability
+        let canAfford = true;
+        for (const [type, value] of Object.entries(totalCost)) {
+          const playerRes = hero[type + 's'] !== undefined ? hero[type + 's'] : hero[type];
+          if (playerRes < value) {
+            canAfford = false;
+            break;
+          }
+        }
+        el.classList.toggle('unaffordable', !canAfford);
+        el.style.display = '';
+      } else if (building.level >= building.maxLevel) {
+        el.textContent = t('common.max');
+        el.classList.remove('unaffordable');
+        el.style.display = '';
+      } else {
+        el.style.display = 'none';
+      }
+    } else {
+      el.style.display = 'none';
+    }
+  });
+
+  updateBuildingBulkCost();
+}
+
+export function updateBuildingBulkCost() {
+  const bulkBtn = document.querySelector('.building-bulk-buy-btn');
+  const bulkCostEl = document.querySelector('.building-bulk-cost');
+  if (!bulkBtn || !bulkCostEl) return;
+
+  const {
+    totalCosts, upgrades, affordable,
+  } = buildings.calculateBulkCostAndUpgrades(options.buildingQty);
+  const costStr = Building.formatCost(totalCosts);
+
+  bulkCostEl.textContent = costStr ? `${t('ascension.upgrade.totalCost') || 'Total Cost'}: ${costStr}` : '';
+  bulkCostEl.classList.toggle('unaffordable', !affordable);
+  bulkBtn.disabled = upgrades.length === 0 || !affordable;
 }
 
 function showBuildingInfoModal(building, onUpgrade, placementOptions) {
@@ -503,17 +566,126 @@ export function renderPurchasedBuildings() {
     .forEach((building) => {
       const card = createBuildingCard(building);
       card.style.cursor = 'pointer';
-      card.onclick = () => showBuildingInfoModal(building, renderPurchasedBuildings);
+      card.onclick = () => {
+        if (options?.quickBuy) {
+          const rawQty = options.buildingQty || 1;
+          const maxLevelGain = Math.min(Math.max(building.maxLevel - building.level, 0), BUILDING_MAX_QTY);
+          const maxAffordable = building.getMaxUpgradeAmount(hero);
+          const qty = rawQty === 'max' ? Math.min(maxLevelGain, maxAffordable) : parseInt(rawQty, 10) || 1;
+          const amt = Math.min(qty, maxLevelGain, maxAffordable);
+
+          if (amt > 0) {
+            const totalCost = building.getUpgradeCost(amt);
+            // Deduct resources
+            for (const [type, value] of Object.entries(totalCost)) {
+              if (hero[type + 's'] !== undefined) hero[type + 's'] -= value;
+              else if (hero[type] !== undefined) hero[type] -= value;
+            }
+            for (let i = 0; i < amt; ++i) {
+              if (building.level < building.maxLevel) {
+                if (buildings.upgradeBuilding) buildings.upgradeBuilding(building.id);
+              }
+            }
+            updateResources();
+            renderPurchasedBuildings();
+            if (dataManager) dataManager.saveGame();
+            showToast(tp('buildings.upgraded', { name: building.name, count: formatNumber(amt) }));
+          } else if (building.level >= building.maxLevel) {
+            showToast(t('buildings.maxLevelReached'), 'info');
+          } else {
+            showToast(t('buildings.notEnoughResources'), 'error');
+          }
+        } else {
+          showBuildingInfoModal(building, renderPurchasedBuildings);
+        }
+      };
       purchased.appendChild(card);
     });
   // Update countdowns after (re)render
   updateBuildingCountdowns();
+  updateBuildingAffordability();
 }
 
 export function initializeBuildingsUI() {
   const tab = document.getElementById('buildings');
   if (!tab) return;
-  tab.innerHTML = `<button id="select-building-btn" class="building-select-btn" data-i18n="buildings.selectBuilding">${t('buildings.selectBuilding')}</button><div id="purchased-buildings"></div>`;
+  tab.innerHTML = html`
+    <div class="buildings-header">
+      <button id="select-building-btn" class="building-select-btn" data-i18n="buildings.selectBuilding">${t('buildings.selectBuilding')}</button>
+      <div class="building-controls-wrapper"></div>
+    </div>
+    <div id="purchased-buildings"></div>
+  `;
+
+  const controlsWrapper = tab.querySelector('.building-controls-wrapper');
+  if (options?.quickBuy || options?.bulkBuy) {
+    const qtyControls = document.createElement('div');
+    qtyControls.className = 'building-qty-controls';
+    const currentQty = options.buildingQty || 1;
+    if (options.useNumericInputs) {
+      qtyControls.innerHTML = html`
+        <input type="number" class="building-qty-input input-number" min="1" max="${BUILDING_MAX_QTY}" value="${currentQty}" />
+        <button data-qty="max" class="${currentQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
+      `;
+      controlsWrapper.appendChild(qtyControls);
+      const input = qtyControls.querySelector('.building-qty-input');
+      const maxBtn = qtyControls.querySelector('button[data-qty="max"]');
+      input.oninput = () => {
+        let val = parseInt(input.value, 10);
+        if (isNaN(val) || val < 1) val = 1;
+        if (val > BUILDING_MAX_QTY) val = BUILDING_MAX_QTY;
+        options.buildingQty = val;
+        maxBtn.classList.remove('active');
+        dataManager.saveGame();
+        updateBuildingAffordability();
+      };
+      maxBtn.onclick = () => {
+        options.buildingQty = 'max';
+        maxBtn.classList.add('active');
+        if (input) input.value = BUILDING_MAX_QTY;
+        dataManager.saveGame();
+        updateBuildingAffordability();
+      };
+    } else {
+      qtyControls.innerHTML = html`
+        <button data-qty="1" class="${currentQty === 1 ? 'active' : ''}">1</button>
+        <button data-qty="10" class="${currentQty === 10 ? 'active' : ''}">10</button>
+        <button data-qty="50" class="${currentQty === 50 ? 'active' : ''}">50</button>
+        <button data-qty="max" class="${currentQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
+      `;
+      controlsWrapper.appendChild(qtyControls);
+      qtyControls.querySelectorAll('button').forEach((btn) => {
+        btn.onclick = () => {
+          const qty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+          options.buildingQty = qty;
+          qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          dataManager.saveGame();
+          updateBuildingAffordability();
+        };
+      });
+    }
+  }
+
+  if (options?.bulkBuy) {
+    const bulkControls = document.createElement('div');
+    bulkControls.className = 'building-bulk-controls';
+    bulkControls.innerHTML = html`
+      <button class="building-bulk-buy-btn">${t('common.bulkBuy') || 'Bulk Buy'}</button>
+      <span class="building-bulk-cost"></span>
+    `;
+    controlsWrapper.appendChild(bulkControls);
+    const bulkBtn = bulkControls.querySelector('.building-bulk-buy-btn');
+    bulkBtn.onclick = () => {
+      if (buildings.bulkUpgradeAll(options.buildingQty)) {
+        updateResources();
+        renderPurchasedBuildings();
+        if (dataManager) dataManager.saveGame();
+        showToast(t('buildings.bulkUpgradeSuccess') || 'All buildings upgraded!', 'success');
+      }
+    };
+  }
+
   renderPurchasedBuildings();
   // Open building selection modal
   tab.querySelector('#select-building-btn').onclick = showSelectBuildingModal;

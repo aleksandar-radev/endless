@@ -405,7 +405,7 @@ export default class Inventory {
     // Enchantment Scroll
     if (matDef.isCustom && matDef.id === 'enchantment_scroll') {
       const equipped = Object.entries(this.equippedItems)
-        .filter(([slot, item]) => item && !['MYTHIC', 'SET', 'UNIQUE'].includes(item.rarity))
+        .filter(([slot, item]) => item && ![RARITY_KEYS.UNIQUE, RARITY_KEYS.SET, RARITY_KEYS.MYTHIC].includes(item.rarity))
         .map(([slot, item]) => ({ slot, item }));
 
       this.showEquippedItemsModal({
@@ -478,7 +478,7 @@ export default class Inventory {
     // Transmutation Orb
     if (matDef.isCustom && matDef.id === 'transmutation_orb') {
       const equipped = Object.entries(this.equippedItems)
-        .filter(([slot, item]) => item && !['SET', 'UNIQUE'].includes(item.rarity))
+        .filter(([slot, item]) => item && ![RARITY_KEYS.UNIQUE, RARITY_KEYS.SET].includes(item.rarity))
         .map(([slot, item]) => ({ slot, item }));
 
       const html = String.raw;
@@ -658,7 +658,7 @@ export default class Inventory {
     // Alternation Orb
     if (matDef.isCustom && matDef.id === 'alternation_orb') {
       const equipped = Object.entries(this.equippedItems)
-        .filter(([slot, item]) => item && !['SET', 'UNIQUE'].includes(item.rarity))
+        .filter(([slot, item]) => item && ![RARITY_KEYS.SET, RARITY_KEYS.UNIQUE].includes(item.rarity))
         .map(([slot, item]) => ({ slot, item }));
 
       const html = String.raw;

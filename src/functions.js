@@ -27,11 +27,10 @@ import { updateAscensionUI } from './ui/ascensionUi.js';
 import { getRuneName } from './runes.js';
 import { t, tp } from './i18n.js';
 import { createModal, closeModal } from './ui/modal.js';
-import { createSetItemsById,
-  createUniqueItemById,
-  getItemSetDefinitions,
-  getUniqueItemDefinitions } from './uniqueItems.js';
+import { createSetItemsById, createUniqueItemById } from './uniqueItems.js';
 import { isDevAccessWindowActive } from './migrations/0.8.15.js';
+import { UNIQUE_ITEMS } from './constants/uniqueItems.js';
+import { SET_ITEMS } from './constants/setItems.js';
 
 export const crypt = new SimpleCrypto(import.meta.env.VITE_ENCRYPT_KEY);
 
@@ -935,9 +934,7 @@ export function createModifyUI(container = document.body) {
   uniqueDiv.style.alignItems = 'center';
   uniqueDiv.style.flexWrap = 'wrap';
 
-  const uniqueDefs = getUniqueItemDefinitions();
-  const uniqueMap = new Map(uniqueDefs.map((def) => [def.id, def]));
-  const uniqueItems = uniqueDefs
+  const uniqueItems = Object.values(UNIQUE_ITEMS)
     .map((def) => ({
       id: def.id,
       text: t(def.nameKey),
@@ -995,7 +992,7 @@ export function createModifyUI(container = document.body) {
     }
     const tier = Math.min(12, Math.max(1, Math.round(parseInt(uniqueTierInput.value, 10) || 1)));
     const level = Math.max(0, Math.round(parseInt(uniqueLevelInput.value, 10) || 1));
-    const uniqueDef = uniqueMap.get(id);
+    const uniqueDef = UNIQUE_ITEMS[id];
     const item = createUniqueItemById(id, tier, level);
     if (!item) {
       showToast(t('debug.invalidUnique'), 'error');
@@ -1018,9 +1015,7 @@ export function createModifyUI(container = document.body) {
   setDiv.style.alignItems = 'center';
   setDiv.style.flexWrap = 'wrap';
 
-  const setDefs = getItemSetDefinitions();
-  const setMap = new Map(setDefs.map((set) => [set.id, set]));
-  const setItems = setDefs
+  const setItems = Object.values(SET_ITEMS)
     .map((set) => ({ id: set.id, text: t(set.nameKey) }))
     .sort((a, b) => a.text.localeCompare(b.text));
 
@@ -1074,7 +1069,7 @@ export function createModifyUI(container = document.body) {
     }
     const tier = Math.min(12, Math.max(1, Math.round(parseInt(setTierInput.value, 10) || 1)));
     const level = Math.max(0, Math.round(parseInt(setLevelInput.value, 10) || 1));
-    const setDef = setMap.get(id);
+    const setDef = SET_ITEMS[id];
     const items = createSetItemsById(id, tier, level);
     if (!items.length) {
       showToast(t('debug.invalidSet'), 'error');

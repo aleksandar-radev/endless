@@ -28,7 +28,7 @@ import { CRYSTAL_SHOP_MAX_QTY } from './constants/limits.js';
 import { SOUL_UPGRADE_CONFIG } from './soulShop.js';
 import { runes } from './globals.js';
 import { BASE_RUNE_SLOTS } from './runes.js';
-import { floorSumBigInt } from './utils/bulkMath.js';
+import { calcLinearSum, solveLinear } from './utils/bulkMath.js';
 
 const html = String.raw;
 
@@ -220,78 +220,32 @@ export default class CrystalShop {
   calculateTotalCost(config, qty, baseLevel) {
     if (!qty || qty <= 0) return 0;
 
-    const numerator = this.getCrystalReductionNumerator();
-    const qtyBig = BigInt(qty);
-    const baseLevelBig = BigInt(baseLevel);
-    const numeratorBig = BigInt(numerator);
-    const hundred = 100n;
-    const baseCostBig = BigInt(Math.floor(config.baseCost));
-    const costIncrement = config.costIncrement ?? 0;
+    const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
+    const multiplier = 1 - ascRed;
+    const SCALE = 10000;
 
-    if (Number.isInteger(costIncrement)) {
-      const incrementBig = BigInt(Math.trunc(costIncrement));
-      const startFloor = baseCostBig + incrementBig * baseLevelBig;
-      const a = incrementBig * numeratorBig;
-      const b = startFloor * numeratorBig + 50n;
-      return Number(floorSumBigInt(qtyBig, hundred, a, b));
-    }
+    const baseScaled = Math.round(config.baseCost * multiplier * SCALE);
+    const incScaled = Math.round((config.costIncrement || 0) * multiplier * SCALE);
 
-    const denom = Math.round(1 / costIncrement);
-    const denomBig = BigInt(denom);
-    const c = baseCostBig * numeratorBig + 50n;
-
-    let remaining = qtyBig;
-    let total = 0n;
-    let levelBig = baseLevelBig;
-    let currentV = levelBig / denomBig;
-    const offset = Number(levelBig % denomBig);
-
-    if (offset !== 0 && remaining > 0n) {
-      const firstLen = remaining < BigInt(denom - offset) ? remaining : BigInt(denom - offset);
-      const costPer = (c + numeratorBig * currentV) / hundred;
-      total += costPer * firstLen;
-      remaining -= firstLen;
-      levelBig += firstLen;
-      currentV = levelBig / denomBig;
-    }
-
-    const fullBlocks = remaining / denomBig;
-    if (fullBlocks > 0n) {
-      const sumFloors = floorSumBigInt(fullBlocks, hundred, numeratorBig, numeratorBig * currentV + c);
-      total += denomBig * sumFloors;
-      currentV += fullBlocks;
-      remaining -= fullBlocks * denomBig;
-    }
-
-    if (remaining > 0n) {
-      const costPer = (c + numeratorBig * currentV) / hundred;
-      total += costPer * remaining;
-    }
-
-    return Number(total);
+    return calcLinearSum(baseLevel, qty, baseScaled, incScaled, SCALE);
   }
 
   _getAffordablePurchase(config, baseLevel, crystals, desiredQty) {
     if (!desiredQty || desiredQty <= 0) return { qty: 0, totalCost: 0 };
     const maxQty = Math.max(0, Math.min(desiredQty, CRYSTAL_SHOP_MAX_QTY));
-    let low = 0;
-    let high = Math.floor(maxQty);
-    let bestQty = 0;
-    let bestCost = 0;
 
-    while (low <= high) {
-      const mid = Math.floor((low + high) / 2);
-      const cost = this.calculateTotalCost(config, mid, baseLevel);
-      if (cost <= crystals) {
-        bestQty = mid;
-        bestCost = cost;
-        low = mid + 1;
-      } else {
-        high = mid - 1;
-      }
-    }
+    const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
+    const multiplier = 1 - ascRed;
+    const SCALE = 10000;
 
-    return { qty: bestQty, totalCost: bestCost };
+    const baseScaled = Math.round(config.baseCost * multiplier * SCALE);
+    const incScaled = Math.round((config.costIncrement || 0) * multiplier * SCALE);
+
+    const bestQty = solveLinear(baseLevel, crystals, baseScaled, incScaled, SCALE);
+    const finalQty = Math.min(bestQty, Math.floor(maxQty));
+    const totalCost = this.calculateTotalCost(config, finalQty, baseLevel);
+
+    return { qty: finalQty, totalCost };
   }
 
   resetCrystalShop() {

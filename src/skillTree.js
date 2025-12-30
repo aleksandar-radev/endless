@@ -96,7 +96,8 @@ export default class SkillTree {
     this.updateSpecializationPoints();
 
     // Quick allocation quantity for skills (used by quick skill allocation UI)
-    this.quickQty = options.useNumericInputs ? Math.min(options.skillQuickQty || 1, SKILLS_MAX_QTY) : 1;
+    const initialQuickQty = options.skillQuickQty || 1;
+    this.quickQty = initialQuickQty === 'max' ? 'max' : Math.min(initialQuickQty, SKILLS_MAX_QTY);
   }
 
   getPathBonuses() {

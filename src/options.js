@@ -108,17 +108,48 @@ export class Options {
     const bulkValue = data.bulkBuy ?? data.bulkTraining ?? false;
     this.bulkBuy = typeof bulkValue === 'boolean' ? bulkValue : bulkValue === 'true';
     this.useNumericInputs = data.useNumericInputs ?? false;
-    this.soulShopQty = typeof data.soulShopQty === 'number' ? Math.min(data.soulShopQty, SOUL_SHOP_MAX_QTY) : 1;
+    this.soulShopQty =
+      data.soulShopQty === 'max'
+        ? 'max'
+        : typeof data.soulShopQty === 'number'
+          ? Math.min(data.soulShopQty, SOUL_SHOP_MAX_QTY)
+          : 1;
     this.soulShopQuickQty =
-      typeof data.soulShopQuickQty === 'number' ? Math.min(data.soulShopQuickQty, SOUL_SHOP_MAX_QTY) : 1;
+      data.soulShopQuickQty === 'max'
+        ? 'max'
+        : typeof data.soulShopQuickQty === 'number'
+          ? Math.min(data.soulShopQuickQty, SOUL_SHOP_MAX_QTY)
+          : 1;
     this.crystalShopQty =
-      typeof data.crystalShopQty === 'number' ? Math.min(data.crystalShopQty, CRYSTAL_SHOP_MAX_QTY) : 1;
-    this.trainingQty = typeof data.trainingQty === 'number' ? Math.min(data.trainingQty, TRAINING_MAX_QTY) : 1;
+      data.crystalShopQty === 'max'
+        ? 'max'
+        : typeof data.crystalShopQty === 'number'
+          ? Math.min(data.crystalShopQty, CRYSTAL_SHOP_MAX_QTY)
+          : 1;
+    this.trainingQty =
+      data.trainingQty === 'max'
+        ? 'max'
+        : typeof data.trainingQty === 'number'
+          ? Math.min(data.trainingQty, TRAINING_MAX_QTY)
+          : 1;
     this.trainingQuickQty =
-      typeof data.trainingQuickQty === 'number' ? Math.min(data.trainingQuickQty, TRAINING_MAX_QTY) : 1;
+      data.trainingQuickQty === 'max'
+        ? 'max'
+        : typeof data.trainingQuickQty === 'number'
+          ? Math.min(data.trainingQuickQty, TRAINING_MAX_QTY)
+          : 1;
     this.skillQuickQty =
-      typeof data.skillQuickQty === 'number' ? Math.max(1, Math.min(data.skillQuickQty, GLOBAL_MAX_QTY)) : 1;
-    this.buildingQty = typeof data.buildingQty === 'number' ? Math.min(data.buildingQty, BUILDING_MAX_QTY) : 1;
+      data.skillQuickQty === 'max'
+        ? 'max'
+        : typeof data.skillQuickQty === 'number'
+          ? Math.max(1, Math.min(data.skillQuickQty, GLOBAL_MAX_QTY))
+          : 1;
+    this.buildingQty =
+      data.buildingQty === 'max'
+        ? 'max'
+        : typeof data.buildingQty === 'number'
+          ? Math.min(data.buildingQty, BUILDING_MAX_QTY)
+          : 1;
     this.language = data.language || 'en';
     this.shortElementalNames = data.shortElementalNames ?? false;
     this.shortNumbers = data.shortNumbers ?? false;
@@ -396,6 +427,7 @@ export class Options {
           if (training) training.initializeTrainingUI();
           if (soulShop) soulShop.initializeSoulShopUI();
           initializeSkillTreeStructure();
+          initializeBuildingsUI();
         },
       }),
     );
@@ -410,6 +442,7 @@ export class Options {
           if (training) training.initializeTrainingUI();
           if (soulShop) soulShop.initializeSoulShopUI();
           initializeSkillTreeStructure();
+          initializeBuildingsUI();
         },
       }),
     );

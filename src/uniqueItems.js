@@ -1,260 +1,215 @@
-import Item from './item.js';
-import { UNIQUE_ITEMS, ITEM_SETS } from './constants/uniqueSets.js';
+import Item, { AVAILABLE_STATS } from './item.js';
+import { SET_ITEMS } from './constants/setItems.js';
+import { UNIQUE_ITEMS } from './constants/uniqueItems.js';
+import { ITEM_IDS } from './constants/items.js';
 
-const UNIQUE_MAP = new Map(UNIQUE_ITEMS.map((item) => [item.id, item]));
-const SET_MAP = new Map(ITEM_SETS.map((set) => [set.id, set]));
+const DROP_CHANCES = {
+  SET: 1 / 200,    // 0.5%
+  UNIQUE: 1 / 250, // 0.4%
+};
 
-const MIN_SPECIAL_TIER = 1;
-const MAX_SPECIAL_TIER = 12;
-const SET_MIN_DENOMINATOR = 176;
-const SET_MAX_DENOMINATOR = 400;
-const UNIQUE_MIN_DENOMINATOR = 200;
-const UNIQUE_MAX_DENOMINATOR = 320;
+export function rollSpecialItemDrop({
+  tier = 1, level = 1, preferredType = null,
+} = {}) {
+  if (Math.random() < DROP_CHANCES.UNIQUE) {
+    const item = createRandomUniqueItem(tier, level, preferredType);
+    if (item) return { item, rarity: RARITY_KEYS.UNIQUE };
+  }
 
-function rollInRange(min, max) {
-  if (min === max) return min;
-  return min + Math.random() * (max - min);
+  if (Math.random() < DROP_CHANCES.SET) {
+    const item = createRandomSetPiece(tier, level, preferredType);
+    if (item) return { item, rarity: RARITY_KEYS.SET };
+  }
+
+  return null;
 }
 
-function normalizeLevel(level) {
-  if (Number.isNaN(level) || !Number.isFinite(level)) return 0;
-  return Math.max(0, Math.round(level));
+function applyDefinitionStats(item, statsDefinition) {
+  if (!statsDefinition) return;
+  Object.keys(statsDefinition).forEach((stat) => {
+    // scaleStat uses the item's tier/level and respects the definition's multipliers
+    // because getStatRange (called by scaleStat) looks up the definition in UNIQUE_ITEMS/SET_ITEMS
+    // via item.metaData.uniqueId or item.metaData.setId
+    item.stats[stat] = item.scaleStat({ stat });
+  });
 }
 
-function buildItemWithStats(definition, level, tier, rarity, extraMeta = {}) {
-  const normalizedTier = Math.max(1, Math.round(tier));
-  const normalizedLevel = normalizeLevel(level);
-  const newItem = new Item(definition.type, normalizedLevel, rarity, normalizedTier, {}, { ...extraMeta });
-  const stats = {};
-
-  const statRolls = {};
-
-  definition.stats.forEach(({ stat }) => {
-    const baseValue = newItem.rollStat(stat);
-    const value = newItem.calculateStat(stat, baseValue, normalizedLevel);
-    stats[stat] = value;
-
-    statRolls[stat] = { baseValue };
+function calculateSetBonusValues(setDefinition, tier, level) {
+  // Create a temporary dummy item to leverage the scaling logic in Item.js
+  const dummyItem = new Item({
+    type: ITEM_IDS.HELMET,
+    level,
+    rarity: 'SET',
+    tier,
   });
 
-  const metaData = {
-    ...extraMeta,
-    statRolls: {
-      ...(extraMeta.statRolls || {}),
-      ...statRolls,
-    },
-  };
-  return new Item(definition.type, normalizedLevel, rarity, normalizedTier, stats, metaData);
-}
-
-function rollSetBonusValues(setDefinition, tier, level) {
-  const normalizedTier = Math.max(1, Math.round(tier));
-  const normalizedLevel = normalizeLevel(level);
-  const newItem = new Item(setDefinition.items[0]?.type || 'ARMOR', normalizedLevel, 'SET', normalizedTier, {}, {});
-
-  return setDefinition.setBonuses.map((bonus) => {
+  return (setDefinition.setBonuses || []).map((bonus) => {
     const stats = {};
-    const baseValues = {};
-    (bonus.stats || []).forEach(({
-      stat, min, max,
-    }) => {
-      const baseValue = rollInRange(min, max);
-      const value = newItem.calculateStat(stat, baseValue, normalizedLevel);
-      stats[stat] = value;
-      baseValues[stat] = baseValue;
+    Object.entries(bonus.stats || {}).forEach(([stat, range]) => {
+      const statConfig = AVAILABLE_STATS[stat];
+      if (!statConfig) return;
+
+      let min = range.minMultiplier || 1;
+      let max = range.maxMultiplier || 1;
+
+      const baseMin = statConfig.min || 1;
+      const baseMax = statConfig.tierScalingMaxPercent?.[tier] || statConfig.max || 1;
+
+      const absMin = baseMin * min;
+      const absMax = baseMax * max;
+
+      const val = Math.random() * (absMax - absMin) + absMin;
+
+      stats[stat] = val * statConfig.scaling(level, tier);
     });
 
     return {
       pieces: bonus.pieces,
       nameKey: bonus.nameKey,
       stats,
-      baseValues,
       active: false,
     };
   });
 }
 
-function cloneSetBonuses(bonuses) {
-  return (bonuses || []).map((bonus) => ({
-    ...bonus,
-    stats: { ...(bonus.stats || {}) },
-    baseValues: { ...(bonus.baseValues || {}) },
-    active: Boolean(bonus.active),
-  }));
-}
-
-export function getUniqueItemDefinitions() {
-  return UNIQUE_ITEMS;
-}
-
-export function getItemSetDefinitions() {
-  return ITEM_SETS;
-}
-
 export function createUniqueItemById(id, tier = 1, level = 1) {
-  const definition = UNIQUE_MAP.get(id);
+  const definition = UNIQUE_ITEMS[id];
   if (!definition) return null;
-  const normalizedTier = Math.max(1, Math.round(tier));
-  const normalizedLevel = normalizeLevel(level);
-  const meta = {
-    ...('nameKey' in definition ? { nameKey: definition.nameKey } : {}),
-    uniqueId: definition.id,
-    unique: true,
-  };
-  return buildItemWithStats(definition, normalizedLevel, normalizedTier, 'UNIQUE', meta);
+
+  const item = new Item({
+    type: definition.type,
+    level,
+    rarity: RARITY_KEYS.UNIQUE,
+    tier,
+    existingStats: {},
+    metaData: {
+      uniqueId: definition.id,
+      nameKey: definition.nameKey,
+      unique: true,
+    },
+  });
+
+  applyDefinitionStats(item, definition.stats);
+  return item;
 }
 
-function createSetPieceItem(setDefinition, pieceDefinition, tier, level, rolledBonuses) {
-  const normalizedTier = Math.max(1, Math.round(tier));
-  const normalizedLevel = normalizeLevel(level);
-  const meta = {
-    nameKey: pieceDefinition.nameKey,
-    descriptionKey: pieceDefinition.descriptionKey,
-    setId: setDefinition.id,
-    setNameKey: setDefinition.nameKey,
-    setPieceId: pieceDefinition.id,
-    setTotalPieces: setDefinition.items.length,
-    setPiecesEquipped: 0,
-    setBonuses: cloneSetBonuses(rolledBonuses),
-    set: true,
-  };
-  return buildItemWithStats(pieceDefinition, normalizedLevel, normalizedTier, 'SET', meta);
+export function createRandomUniqueItem(tier = 1, level = 1, preferredType = null) {
+  const allDefs = Object.values(UNIQUE_ITEMS);
+  const pool = preferredType ? allDefs.filter((i) => i.type === preferredType) : allDefs;
+  const candidates = pool.length ? pool : allDefs;
+
+  if (!candidates.length) return null;
+  const pick = candidates[Math.floor(Math.random() * candidates.length)];
+  return createUniqueItemById(pick.id, tier, level);
 }
 
-export function createSetItemsById(id, tier = 1, level = 1) {
-  const setDefinition = SET_MAP.get(id);
-  if (!setDefinition) return [];
-  const normalizedTier = Math.max(1, Math.round(tier));
-  const normalizedLevel = normalizeLevel(level);
-  const rolledBonuses = rollSetBonusValues(setDefinition, normalizedTier, normalizedLevel);
-  return setDefinition.items.map((piece) =>
-    createSetPieceItem(setDefinition, piece, normalizedTier, normalizedLevel, rolledBonuses),
-  );
+function createSetPiece(setDef, pieceDef, tier, level, setBonuses) {
+  const item = new Item({
+    type: pieceDef.type,
+    level,
+    rarity: 'SET',
+    tier,
+    existingStats: {},
+    metaData: {
+      setId: setDef.id,
+      setNameKey: setDef.nameKey,
+      setPieceId: pieceDef.id,
+      nameKey: pieceDef.nameKey,
+      descriptionKey: pieceDef.descriptionKey,
+      setTotalPieces: setDef.items.length,
+      setPiecesEquipped: 0,
+      setBonuses: JSON.parse(JSON.stringify(setBonuses)),
+      set: true,
+    },
+  });
+
+  applyDefinitionStats(item, pieceDef.stats);
+  return item;
+}
+
+export function createSetItemsById(setId, tier = 1, level = 1) {
+  const setDef = SET_ITEMS[setId];
+  if (!setDef) return [];
+
+  const rolledBonuses = calculateSetBonusValues(setDef, tier, level);
+  return setDef.items.map((piece) => createSetPiece(setDef, piece, tier, level, rolledBonuses));
+}
+
+export function createRandomSetPiece(tier = 1, level = 1, preferredType = null) {
+  const allSets = Object.values(SET_ITEMS);
+  const candidates = [];
+
+  allSets.forEach((set) => {
+    set.items.forEach((piece) => {
+      if (!preferredType || piece.type === preferredType) {
+        candidates.push({ set, piece });
+      }
+    });
+  });
+
+  if (!candidates.length && preferredType) {
+    allSets.forEach((set) => {
+      set.items.forEach((piece) => candidates.push({ set, piece }));
+    });
+  }
+
+  if (!candidates.length) return null;
+
+  const { set, piece } = candidates[Math.floor(Math.random() * candidates.length)];
+
+  const bonuses = calculateSetBonusValues(set, tier, level);
+  return createSetPiece(set, piece, tier, level, bonuses);
 }
 
 export function computeSetBonuses(equippedItems = []) {
   const totalBonuses = {};
-  const grouped = new Map();
+  const setsFound = new Map();
 
   equippedItems.forEach((item) => {
-    if (!item?.metaData?.setId) {
-      if (item?.metaData) {
-        item.metaData.setPiecesEquipped = 0;
-        if (Array.isArray(item.metaData.setBonuses)) {
-          item.metaData.setBonuses = cloneSetBonuses(item.metaData.setBonuses);
-        }
-      }
-      return;
-    }
+    if (!item?.metaData?.setId) return;
+
     const setId = item.metaData.setId;
-    if (!grouped.has(setId)) {
-      const setDef = SET_MAP.get(setId);
-      if (!setDef) return;
-      grouped.set(setId, { definition: setDef, items: [] });
+    if (!setsFound.has(setId)) {
+      setsFound.set(setId, []);
     }
-    grouped.get(setId).items.push(item);
+    setsFound.get(setId).push(item);
   });
 
-  grouped.forEach(({ definition, items }) => {
-    if (!items.length) return;
+  setsFound.forEach((items, setId) => {
+    const setDef = SET_ITEMS[setId];
+    if (!setDef) return;
+
     const piecesEquipped = items.length;
-    const normalizedTier = Math.max(
-      1,
-      Math.round(items.reduce((sum, item) => sum + (item.tier || 1), 0) / items.length),
-    );
 
-    const storedBonuses = items[0]?.metaData?.setBonuses;
-    const averageLevel = items.length
-      ? items.reduce((sum, item) => sum + normalizeLevel(item.level), 0) / items.length
-      : 0;
-    const baseBonuses = cloneSetBonuses(
-      storedBonuses && storedBonuses.length
-        ? storedBonuses
-        : rollSetBonusValues(definition, normalizedTier, averageLevel),
-    );
+    // Determine the bonuses to use.
+    // We use the bonuses stored on the FIRST item as the "source of truth" for the set stats
+    // to avoid recalculating random values and to keep consistency.
+    // If missing, we fallback to calculating based on average level.
+    let activeBonuses = items[0].metaData.setBonuses;
 
-    baseBonuses.forEach((bonus) => {
+    if (!activeBonuses || !activeBonuses.length) {
+      const avgTier = Math.max(1, Math.round(items.reduce((s, i) => s + (i.tier || 1), 0) / piecesEquipped));
+      const avgLevel = items.reduce((s, i) => s + (i.level || 1), 0) / piecesEquipped;
+      activeBonuses = calculateSetBonusValues(setDef, avgTier, avgLevel);
+    } else {
+      activeBonuses = JSON.parse(JSON.stringify(activeBonuses));
+    }
+
+    activeBonuses.forEach((bonus) => {
       const isActive = piecesEquipped >= bonus.pieces;
       bonus.active = isActive;
-      if (isActive) {
-        Object.entries(bonus.stats || {}).forEach(([stat, value]) => {
+
+      if (isActive && bonus.stats) {
+        Object.entries(bonus.stats).forEach(([stat, value]) => {
           totalBonuses[stat] = (totalBonuses[stat] || 0) + value;
         });
       }
     });
 
     items.forEach((item) => {
-      if (!item.metaData) item.metaData = {};
       item.metaData.setPiecesEquipped = piecesEquipped;
-      item.metaData.setTotalPieces = definition.items.length;
-      item.metaData.setBonuses = cloneSetBonuses(baseBonuses);
+      item.metaData.setBonuses = JSON.parse(JSON.stringify(activeBonuses));
     });
   });
-
   return totalBonuses;
-}
-
-function interpolateDenominator(tier, minDenominator, maxDenominator) {
-  const clampedTier = Math.min(MAX_SPECIAL_TIER, Math.max(MIN_SPECIAL_TIER, Math.round(tier)));
-  if (MAX_SPECIAL_TIER === MIN_SPECIAL_TIER) {
-    return maxDenominator;
-  }
-  const progress = (clampedTier - MIN_SPECIAL_TIER) / (MAX_SPECIAL_TIER - MIN_SPECIAL_TIER);
-  return minDenominator + progress * (maxDenominator - minDenominator);
-}
-
-export function getSpecialItemDropChances(tier) {
-  const setDenominator = interpolateDenominator(tier, SET_MIN_DENOMINATOR, SET_MAX_DENOMINATOR);
-  const uniqueDenominator = interpolateDenominator(tier, UNIQUE_MIN_DENOMINATOR, UNIQUE_MAX_DENOMINATOR);
-  return {
-    set: setDenominator > 0 ? 1 / setDenominator : 0,
-    unique: uniqueDenominator > 0 ? 1 / uniqueDenominator : 0,
-  };
-}
-
-export function createRandomUniqueItem(tier = 1, level = 1, preferredType = null) {
-  const normalizedTier = Math.max(1, Math.round(tier));
-  const normalizedLevel = normalizeLevel(level);
-  const pool = preferredType ? UNIQUE_ITEMS.filter((item) => item.type === preferredType) : UNIQUE_ITEMS;
-  const candidates = pool.length ? pool : UNIQUE_ITEMS;
-  if (!candidates.length) return null;
-  const definition = candidates[Math.floor(Math.random() * candidates.length)];
-  return createUniqueItemById(definition.id, normalizedTier, normalizedLevel);
-}
-
-export function createRandomSetPiece(tier = 1, level = 1, preferredType = null) {
-  const normalizedTier = Math.max(1, Math.round(tier));
-  const normalizedLevel = normalizeLevel(level);
-  const pairs = [];
-  ITEM_SETS.forEach((set) => {
-    set.items.forEach((piece) => {
-      if (!preferredType || piece.type === preferredType) {
-        pairs.push({ set, piece });
-      }
-    });
-  });
-  const candidates = pairs.length ? pairs : ITEM_SETS.flatMap((set) => set.items.map((piece) => ({ set, piece })));
-  if (!candidates.length) return null;
-  const selection = candidates[Math.floor(Math.random() * candidates.length)];
-  const bonuses = rollSetBonusValues(selection.set, normalizedTier, normalizedLevel);
-  return createSetPieceItem(selection.set, selection.piece, normalizedTier, normalizedLevel, bonuses);
-}
-
-export function rollSpecialItemDrop({
-  tier = 1, level = 1, preferredType = null,
-} = {}) {
-  const { set: setChance, unique: uniqueChance } = getSpecialItemDropChances(tier);
-  if (uniqueChance > 0 && Math.random() < uniqueChance) {
-    const uniqueItem = createRandomUniqueItem(tier, level, preferredType);
-    if (uniqueItem) {
-      return { item: uniqueItem, rarity: 'UNIQUE' };
-    }
-  }
-  if (setChance > 0 && Math.random() < setChance) {
-    const setItem = createRandomSetPiece(tier, level, preferredType);
-    if (setItem) {
-      return { item: setItem, rarity: 'SET' };
-    }
-  }
-  return null;
 }
