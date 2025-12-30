@@ -1,7 +1,7 @@
 import Item, { AVAILABLE_STATS } from './item.js';
 import { SET_ITEMS } from './constants/setItems.js';
 import { UNIQUE_ITEMS } from './constants/uniqueItems.js';
-import { ITEM_IDS } from './constants/items.js';
+import { ITEM_IDS, RARITY_KEYS } from './constants/items.js';
 
 const DROP_CHANCES = {
   SET: 1 / 200,    // 0.5%

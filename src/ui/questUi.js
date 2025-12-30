@@ -151,7 +151,7 @@ export function openQuestModal(quest) {
         let formattedValue;
 
         if (divisor !== 1) {
-          formattedValue = formatNumber((bonusValue * divisor).toFixed(decimals)) + '%';
+          formattedValue = formatNumber((bonusValue).toFixed(decimals)) + '%';
         } else {
           formattedValue = formatNumber(bonusValue.toFixed(decimals));
         }
