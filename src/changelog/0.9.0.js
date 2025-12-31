@@ -145,8 +145,10 @@ export default function run() {
       <li>Slightly reduced the drop chance of items and materials.</li>
       <li>Redesigned the enemy stats panel and added XP/Gold reward preview.</li>
       <li>
-        Added a death penalty. When you die, an ailment gets applied to the hero, reducing gold and xp gains by 50% for
-        the next 20 seconds. Also, the minimum death timer is now 2 seconds and the maximum is 30 seconds.
+        Added a death penalty. When you die, an ailment (warmup) gets applied to the hero, reducing gold and xp gains by 50% for the next 30 seconds.
+      </li>
+      <li>
+        The minimum death timer is now 2 seconds and the maximum is 30 seconds.
       </li>
       <li>Added a new item type: Dagger.</li>
       <li>Increased inventory capacity to 210 slots and material capacity to 120 slots for better grid alignment.</li>

@@ -36,7 +36,7 @@ export const AILMENTS = {
   },
   warmup: {
     id: 'warmup',
-    duration: 20000, // 20 seconds
+    duration: 30000, // 30 seconds
     goldXpReduction: 0.5, // 50% reduction
   },
 };
