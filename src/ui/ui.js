@@ -62,6 +62,15 @@ export function switchShopSubTab(subTabName) {
       soulShop.updateSoulShopAffordability();
     }
   }
+
+  if (subTabName === 'buildings') {
+    // Update building purchase affordabilities when switching to Buildings subtab
+    try {
+      updateBuildingAffordability();
+    } catch (e) {
+      console.warn('Failed to update building affordability:', e);
+    }
+  }
 }
 
 export {
@@ -305,7 +314,7 @@ export function switchTab(tabName) {
   // Handle Legacy Tabs
   let actualTab = tabName;
   let targetSubTab = null;
-  if (['training', 'crystalShop', 'soulShop'].includes(tabName)) {
+  if (['training', 'crystalShop', 'soulShop', 'buildings'].includes(tabName)) {
     actualTab = 'shop';
     targetSubTab = tabName;
   }

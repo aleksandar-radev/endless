@@ -16,6 +16,7 @@ import { updateInventoryGrid } from './inventoryUi.js';
 import { renderRunesUI } from './runesUi.js';
 import { updateAscensionUI } from './ascensionUi.js';
 import { updateSkillTreeValues } from './skillTreeUi.js';
+import { updateBuildingAffordability } from './buildingUi.js';
 import { ELEMENTS } from '../constants/common.js';
 
 const html = String.raw;
@@ -875,6 +876,8 @@ function openSplitView() {
       updateSkillTreeValues();
     } else if (tab === 'soulShop') {
       soulShop?.updateSoulShopAffordability();
+    } else if (tab === 'buildings') {
+      updateBuildingAffordability();
     }
 
     splitState.currentRight = tab;
@@ -885,8 +888,8 @@ function openSplitView() {
 
   document.querySelectorAll('.tab-buttons .tab-btn').forEach((btn) => {
     const tab = btn.dataset.tab;
-    // Allow inventory, runes, skill tree, ascension and soul shop in split view
-    if (!['inventory', 'runes', 'skilltree', 'ascension', 'soulShop'].includes(tab)) return;
+    // Allow inventory, runes, skill tree, ascension, soul shop and buildings in split view
+    if (!['inventory', 'runes', 'skilltree', 'ascension', 'soulShop', 'buildings'].includes(tab)) return;
     const clone = document.createElement('button');
     clone.className = 'subtab-btn';
     clone.dataset.tab = tab;

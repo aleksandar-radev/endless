@@ -154,6 +154,7 @@ export class TabIndicatorManager {
     // Training and CrystalShop tabs don't need indicators per requirements
     this.clearIndicatorOnly('training');
     this.clearIndicatorOnly('crystalShop');
+    this.clearIndicatorOnly('buildings');
     this.clearIndicatorOnly('options');
   }
   /**
