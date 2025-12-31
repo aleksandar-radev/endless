@@ -2,7 +2,7 @@ import { hero, inventory, dataManager, crystalShop } from '../globals.js';
 import { ITEM_SLOTS, MATERIALS_SLOTS, PERSISTENT_SLOTS, requestMaterialsUiRefresh } from '../inventory.js';
 import { MATERIALS } from '../constants/materials.js';
 import { hideTooltip, positionTooltip, showToast, showTooltip } from '../ui/ui.js';
-import { ITEM_RARITY, RARITY_ORDER, SLOT_REQUIREMENTS, ITEM_IDS, ITEM_ICONS } from '../constants/items.js';
+import { ITEM_RARITY, RARITY_ORDER, SLOT_REQUIREMENTS, ITEM_IDS, ITEM_ICONS, WEAPON_TYPES } from '../constants/items.js';
 import { closeModal, createModal } from './modal.js';
 import { formatStatName } from './ui.js';
 import { t, tp } from '../i18n.js';
@@ -1671,45 +1671,62 @@ function openItemContextMenu(itemEl, x, y) {
   menu.className = 'item-context-menu';
   menu.style.left = `${x}px`;
   menu.style.top = `${y}px`;
+
+  const equippedSlot = Object.entries(inventory.equippedItems).find(
+    ([slot, equipped]) => equipped && equipped.id === itemData.id,
+  )?.[0];
+
+  let equipButtons = '';
+  if (equippedSlot) {
+    equipButtons = `<button data-action="unequip">${t('inventory.unequip')}</button>`;
+  } else if (itemData.type === ITEM_IDS.RING) {
+    equipButtons = `
+      <button data-action="equip-slot" data-slot="ring1">${t('inventory.equipLeft')}</button>
+      <button data-action="equip-slot" data-slot="ring2">${t('inventory.equipRight')}</button>
+    `;
+  } else if (WEAPON_TYPES.includes(itemData.type)) {
+    equipButtons = `<button data-action="equip-slot" data-slot="weapon">${t('inventory.equipLeft')}</button>`;
+    if (inventory.canEquipInSlot(itemData, 'offhand')) {
+      equipButtons += `<button data-action="equip-slot" data-slot="offhand">${t('inventory.equipRight')}</button>`;
+    }
+  } else {
+    equipButtons = `<button data-action="equip">${t('inventory.equip')}</button>`;
+  }
+
   menu.innerHTML = `
-    <button data-action="equip">${t('inventory.equip')}</button>
+    ${equipButtons}
     <button data-action="inspect">${t('inventory.inspect')}</button>
     <button data-action="salvage">${t('inventory.salvage')}</button>
   `;
   document.body.appendChild(menu);
 
-  menu.querySelector('[data-action="equip"]').onclick = () => {
-    const equippedSlot = Object.entries(inventory.equippedItems).find(
-      ([slot, equipped]) => equipped && equipped.id === itemData.id,
-    )?.[0];
-
-    if (equippedSlot) {
-      inventory.equipItem(itemData, equippedSlot);
-      hero.queueRecalculateFromAttributes();
-      updateInventoryGrid();
-      clearMobileSelection();
-      closeItemContextMenu();
-      return;
-    }
-
-    if (itemData.type === ITEM_IDS.RING) {
-      const emptyRingSlots = ['ring1', 'ring2'].filter((s) => !inventory.equippedItems[s]);
-      const slot = emptyRingSlots[0] || 'ring1';
+  const handleEquip = (slot) => {
+    if (slot) {
       inventory.equipItem(itemData, slot);
       hero.queueRecalculateFromAttributes();
       updateInventoryGrid();
       clearMobileSelection();
-    } else {
-      const slot = getPreferredSlotForItem(itemData);
-      if (slot) {
-        inventory.equipItem(itemData, slot);
-        hero.queueRecalculateFromAttributes();
-        updateInventoryGrid();
-      }
-      clearMobileSelection();
     }
     closeItemContextMenu();
   };
+
+  const unequipBtn = menu.querySelector('[data-action="unequip"]');
+  if (unequipBtn) {
+    unequipBtn.onclick = () => handleEquip(equippedSlot);
+  }
+
+  const equipBtn = menu.querySelector('[data-action="equip"]');
+  if (equipBtn) {
+    equipBtn.onclick = () => {
+      const slot = getPreferredSlotForItem(itemData);
+      handleEquip(slot);
+    };
+  }
+
+  menu.querySelectorAll('[data-action="equip-slot"]').forEach((btn) => {
+    btn.onclick = () => handleEquip(btn.dataset.slot);
+  });
+
   menu.querySelector('[data-action="inspect"]').onclick = () => {
     let inspectContent = itemData.getTooltipHTML();
 

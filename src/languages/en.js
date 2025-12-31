@@ -167,6 +167,10 @@ export default {
   'ascension.tooltip.flatAllDamage': 'Adds +30 damage to all damage types per level.',
   'ascension.tooltip.totalDamagePercent': 'Increases total damage by 25% per level.',
   'ascension.tooltip.elementalDamagePercent': 'Increases all elemental damage by 30% per level.',
+  'ascension.upgrade.flatThornsDamage': 'Thorns Damage',
+  'ascension.upgrade.thornsDamagePercent': 'Thorns Damage %',
+  'ascension.tooltip.flatThornsDamage': 'Adds +20 thorns damage per level.',
+  'ascension.tooltip.thornsDamagePercent': 'Increases thorns damage by 25% per level.',
   'ascension.tooltip.resourceDamageCapPerLevel':
     'Raises the cap for all "ExtraDamageFrom{source}" bonuses per level. The default cap is 1,000 of the source stat per hero level.',
   // Counters bar / offline eligibility
@@ -342,6 +346,9 @@ export default {
   'inventory.options': 'Salvage Options',
   'inventory.searchItems': 'Search items...',
   'inventory.equip': 'Equip',
+  'inventory.unequip': 'Unequip',
+  'inventory.equipLeft': 'Equip Left Hand',
+  'inventory.equipRight': 'Equip Right Hand',
   'inventory.inspect': 'Inspect',
   'inventory.use': 'Use',
   'inventory.sortItemsBy': 'Sort items by',

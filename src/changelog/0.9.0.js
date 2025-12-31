@@ -151,14 +151,9 @@ export default function run() {
       <li>Added a new item type: Dagger.</li>
       <li>Increased inventory capacity to 210 slots and material capacity to 120 slots for better grid alignment.</li>
       <li>Improved item tooltip layout to better handle multiple items and prevent off-screen clipping.</li>
-    </ul>
-
-    <span style="color:#FF8A00;">Technical</span>
-    <ul>
-      <li>
-        Added a scaling system configuration flag to easily switch between the new simplified scaling and the legacy
-        scaling system if needed.
-      </li>
+      <li>Improved equipping control: right-clicking weapons or rings now allows choosing which hand/slot to equip them in.</li>
+      <li>Added "Equip left hand" and "Equip right hand" in inventory context menu for items (right click on item).</li>
+      <li>Added thorns damage and thornsDamage% in ascension bonuses.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
