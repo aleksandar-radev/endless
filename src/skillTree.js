@@ -67,9 +67,14 @@ export default class SkillTree {
         return;
       }
 
+      // Prevent saved serialized data from overwriting function-based properties
+      // (e.g., synergy.calculateBonus functions are lost when serialized). Strip
+      // out any `synergies` or other complex fields from saved data before merging.
+      const { synergies: _discardedSynergies, ...sanitizedSkillData } = skillData || {};
+
       this.skills[skillId] = {
         ...skill,
-        ...skillData,
+        ...sanitizedSkillData,
         affordable: true,
       };
     });
@@ -81,9 +86,11 @@ export default class SkillTree {
         // Initialize any missing skills from the spec definition
         Object.entries(spec.skills).forEach(([skillId, skillDef]) => {
           const savedSkill = this.specializationSkills[skillId] || {};
+          // Sanitize saved specialization skill data to avoid overriding function fields
+          const { synergies: _discardedSpecSynergies, ...sanitizedSavedSkill } = savedSkill;
           this.specializationSkills[skillId] = {
             ...skillDef,
-            ...savedSkill,
+            ...sanitizedSavedSkill,
           };
         });
       }

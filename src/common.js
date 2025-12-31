@@ -366,6 +366,7 @@ export function getScalingSynergy({
   if (level <= 0) return 0;
 
   const bonus = base + (level - 1) * increment;
+  const result = Math.min(bonus, cap);
 
-  return Math.min(bonus, cap);
+  return result;
 }
