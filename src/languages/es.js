@@ -37,6 +37,7 @@ export default {
   'tab.statistics': 'Estadísticas',
   'tab.battleLog': 'Registro de Batalla',
   'tab.options': 'Opciones de Desguace',
+  'tab.mainOptions': 'Opciones',
   'tab.buildings': 'Edificios',
   'tab.prestige': 'Prestigio',
   'tab.ascension': 'Ascensión',

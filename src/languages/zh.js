@@ -37,6 +37,7 @@ export default {
   'tab.statistics': '统计',
   'tab.battleLog': '战斗日志',
   'tab.options': '分解选项',
+  'tab.mainOptions': '选项',
   'tab.buildings': '建筑',
   'tab.prestige': '声望',
   'tab.ascension': '飞升',

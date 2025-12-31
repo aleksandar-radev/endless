@@ -37,6 +37,7 @@ export default {
   'tab.statistics': 'Statistics',
   'tab.battleLog': 'Battle Log',
   'tab.options': 'Salvage Options',
+  'tab.mainOptions': 'Options',
   'tab.buildings': 'Buildings',
   'tab.prestige': 'Prestige',
   'tab.ascension': 'Ascension',
