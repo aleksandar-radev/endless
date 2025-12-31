@@ -917,10 +917,25 @@
 
 .flex-tooltip {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   background: unset;
   z-index: 1001;
+  flex-wrap: nowrap;
+  gap: 8px;
+  max-width: none !important;
+}
+
+.flex-tooltip .item-tooltip {
+  min-width: 320px;
+  max-width: 400px;
+  margin: 0;
+}
+
+.tooltip-equipped-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .filter-input {

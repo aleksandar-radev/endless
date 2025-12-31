@@ -1267,12 +1267,12 @@ export function setupItemDragAndTooltip(root = getInventoryTab()) {
       if (!itemData) return;
 
       // Create tooltip content for hovered item
-      let tooltipContent = `<div>${itemData.getTooltipHTML()}`;
+      let hoveredItemContent = `<div>${itemData.getTooltipHTML()}`;
 
       // --- Add salvage value to all item tooltips (always shown now) ---
       if (inventory.salvageUpgradeMaterials) {
         const { id, qty } = inventory.getItemSalvageMaterial(itemData);
-        tooltipContent += `<div style="margin-top:8px;
+        hoveredItemContent += `<div style="margin-top:8px;
           color:#fff;
           background: rgba(224, 192, 96, 0.8);
           border-top:1px solid #e0c060;
@@ -1284,7 +1284,7 @@ export function setupItemDragAndTooltip(root = getInventoryTab()) {
         </div>`;
       } else {
         let goldGained = inventory.getItemSalvageValue(itemData);
-        tooltipContent += `<div style="margin-top:8px;
+        hoveredItemContent += `<div style="margin-top:8px;
           color:#fff;
           background: rgba(224, 192, 96, 0.8);
           border-top:1px solid #e0c060;
@@ -1295,7 +1295,7 @@ export function setupItemDragAndTooltip(root = getInventoryTab()) {
           <b>${t('inventory.salvageValue')}</b> ${goldGained} ${t('inventory.gold').toLowerCase()}
         </div>`;
       }
-      tooltipContent += '</div>';
+      hoveredItemContent += '</div>';
 
       // Check if the item is in the inventory
       const isInInventory = inventory.inventoryItems.some((inventoryItem) => inventoryItem?.id === itemData.id);
@@ -1308,13 +1308,24 @@ export function setupItemDragAndTooltip(root = getInventoryTab()) {
         }
       }
 
-      // Add equipped items tooltips (no salvage value for these)
+      // Construct the full tooltip content
+      let tooltipContent = hoveredItemContent;
+
+      // Add equipped items tooltips (no salvage value for these) in a right-hand column
       if (equippedItems.length > 0) {
+        let equippedColumnContent = '';
+        let hasEquippedItemsToShow = false;
+
         equippedItems.forEach((equippedItem) => {
           if (equippedItem && equippedItem.id !== itemData.id) {
-            tooltipContent += `<div>${equippedItem.getTooltipHTML(true)}</div>`;
+            equippedColumnContent += `<div>${equippedItem.getTooltipHTML(true)}</div>`;
+            hasEquippedItemsToShow = true;
           }
         });
+
+        if (hasEquippedItemsToShow) {
+          tooltipContent += `<div class="tooltip-equipped-column">${equippedColumnContent}</div>`;
+        }
       }
 
       showTooltip(tooltipContent, e, 'flex-tooltip');

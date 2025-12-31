@@ -147,6 +147,7 @@ export default function run() {
       </li>
       <li>Added a new item type: Dagger.</li>
       <li>Increased inventory capacity to 210 slots and material capacity to 120 slots for better grid alignment.</li>
+      <li>Improved item tooltip layout to better handle multiple items and prevent off-screen clipping.</li>
     </ul>
 
     <span style="color:#FF8A00;">Technical</span>

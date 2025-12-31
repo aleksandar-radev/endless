@@ -788,18 +788,40 @@ export function positionTooltip(event) {
   let top = event.clientY + offset;
   let left = event.clientX + offset;
 
-  // Adjust position if tooltip goes off-screen
+  // Vertical adjustment
   if (top + tooltipRect.height > window.innerHeight) {
     top = event.clientY - tooltipRect.height - offset;
-  }
-  if (left + tooltipRect.width > window.innerWidth) {
-    left = event.clientX - tooltipRect.width - offset;
+    // If it now goes off top
+    if (top < offset) {
+      // Pin to top edge if it doesn't fit
+      top = offset;
+    }
   }
 
-  // Ensure tooltip doesn't go off the top or left edge
-  if (top < offset) {
-    top = offset;
+  // Horizontal adjustment
+  // First check if it fits to the right
+  if (left + tooltipRect.width > window.innerWidth) {
+    // Try to flip to left
+    const leftSide = event.clientX - tooltipRect.width - offset;
+
+    // Check if left side fits
+    if (leftSide >= offset) {
+      left = leftSide;
+    } else {
+      // Doesn't fit on left either.
+      // Pick the side with more space or pin to left edge if it's huge
+      if (tooltipRect.width > window.innerWidth - offset * 2) {
+        // Too big for screen, pin to left
+        left = offset;
+      } else {
+        // Fits on screen but not relative to mouse?
+        // Align to right edge of screen
+        left = window.innerWidth - tooltipRect.width - offset;
+      }
+    }
   }
+
+  // Final safety check for left edge
   if (left < offset) {
     left = offset;
   }

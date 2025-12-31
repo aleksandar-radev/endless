@@ -195,7 +195,23 @@ export default class Item {
   getAllStatsRanges() {
     const result = {};
     for (const stat of Object.keys(this.stats)) {
-      result[stat] = this.getStatRange(stat);
+      const rawRange = this.getStatRange(stat) || { min: 0, max: 0 };
+      const statConfig = AVAILABLE_STATS[stat] || {};
+
+      // Percentage-based stats use a different formula: they range from 1 up to (max * rarityMultiplier)
+      if (statConfig.tierScalingMaxPercent) {
+        result[stat] = {
+          min: 1,
+          max: (rawRange.max || 1) * this.getRarityMultiplier(),
+        };
+      } else {
+        // Flat stats should be scaled according to the item's level and tier
+        const scaling = typeof statConfig.scaling === 'function' ? statConfig.scaling(this.level, this.tier) : 1;
+        result[stat] = {
+          min: (rawRange.min || 0) * scaling,
+          max: (rawRange.max || 0) * scaling,
+        };
+      }
     }
     return result;
   }

@@ -11,6 +11,7 @@ import { getDivisor, getStatDecimalPlaces, STATS } from './constants/stats/stats
 import { rollRandomSubtype } from './constants/itemSubtypes.js';
 import { ITEM_IDS, ITEM_RARITY,
   JEWELRY_TYPES,
+  RARITY_KEYS,
   RARITY_ORDER,
   SLOT_REQUIREMENTS,
   TWO_HANDED_TYPES,
