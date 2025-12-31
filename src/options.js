@@ -75,6 +75,7 @@ const OPTION_TOOLTIPS = {
   stageControlsInlineLabel: () => html`${t('options.stageControlsInline.tooltip')}`,
   shortNumbersLabel: () => html`${t('options.shortNumbers.tooltip')}`,
   rollPercentilesLabel: () => html`${t('options.rollPercentiles.tooltip')}`,
+  enableEnemyRarityBonusLabel: () => html`${t('options.enableEnemyRarityBonus.tooltip')}`,
 };
 
 function attachTooltip(el, key, ...params) {

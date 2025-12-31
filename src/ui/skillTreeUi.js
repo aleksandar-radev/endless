@@ -1,4 +1,4 @@
-import { STATS, getStatDecimalPlaces } from '../constants/stats/stats.js';
+import { STATS, getStatDecimalPlaces, getDivisor } from '../constants/stats/stats.js';
 import { CLASS_PATHS, SKILL_TREES } from '../constants/skills.js';
 import { getClassSpecializations, getSpecialization } from '../constants/specializations.js';
 import { SKILL_LEVEL_TIERS, getSpellDamageTypes, SPECIALIZATION_UNLOCK_LEVEL } from '../skillTree.js';
@@ -2103,6 +2103,43 @@ function updateSkillModalDetails() {
         typeof currVal === 'number' && typeof futureVal === 'number' ? ` (${formatSignedValue(diff, decimals)})` : '';
       effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>`;
     });
+
+    const statsForCalc = skill.summonStats(currentLevel);
+    const canCrit = statsForCalc.canCrit || false || (hero.stats.summonsCanCrit || 0) > 0;
+    const playerDamage = hero.calculateTotalDamage({}, { includeRandom: false, canCrit });
+    let damage = 0;
+    damage += statsForCalc.damage || 0;
+    damage += statsForCalc.fireDamage || 0;
+    damage += statsForCalc.coldDamage || 0;
+    damage += statsForCalc.airDamage || 0;
+    damage += statsForCalc.earthDamage || 0;
+    damage += statsForCalc.lightningDamage || 0;
+    damage += statsForCalc.waterDamage || 0;
+
+    if (canCrit) {
+      const critChance = Math.max(0, Math.min(1, hero.stats.critChance || 0));
+      const critDamage = Math.max(0, hero.stats.critDamage || 1);
+      const expectedMultiplier = 1 + (critDamage - 1) * critChance;
+      damage *= expectedMultiplier;
+    }
+
+    const d = getDivisor('percentOfPlayerDamage');
+    damage += playerDamage.damage * ((statsForCalc.percentOfPlayerDamage || 0) / d);
+
+    if (currentSkillId === 'animatedWeapons') {
+      damage *= hero.stats.animatedWeaponsDamagePercent || 1;
+    }
+    if (currentSkillId === 'shadowClone') {
+      damage *= hero.stats.cloneDamagePercent || 1;
+    }
+    const summonDamageMultiplier = 1 + (hero.stats.summonDamageBuffPercent || 0);
+    damage *= summonDamageMultiplier;
+
+    if (damage > 0) {
+      effectsEl.innerHTML += `<div style="margin-top: 10px; border-top: 1px solid #444; padding-top: 5px;">
+        <strong>${t('skill.totalPotentialDamage')}: ${formatNumber(Math.floor(damage))}</strong>
+      </div>`;
+    }
   } else {
     const title = skillModal.querySelector('.modal-skill-effects h3');
     title.innerHTML = t('skillTree.skillEffects');
@@ -2340,6 +2377,41 @@ function createSkillTooltip(skillId) {
       tooltip += `<div>${formatStatName(stat)}: ${value.toFixed(decimals)}</div>`;
     });
     tooltip += '</div>';
+
+    const statsForCalc = skill.summonStats(level);
+    const canCrit = statsForCalc.canCrit || false || (hero.stats.summonsCanCrit || 0) > 0;
+    const playerDamage = hero.calculateTotalDamage({}, { includeRandom: false, canCrit });
+    let damage = 0;
+    damage += statsForCalc.damage || 0;
+    damage += statsForCalc.fireDamage || 0;
+    damage += statsForCalc.coldDamage || 0;
+    damage += statsForCalc.airDamage || 0;
+    damage += statsForCalc.earthDamage || 0;
+    damage += statsForCalc.lightningDamage || 0;
+    damage += statsForCalc.waterDamage || 0;
+
+    if (canCrit) {
+      const critChance = Math.max(0, Math.min(1, hero.stats.critChance || 0));
+      const critDamage = Math.max(0, hero.stats.critDamage || 1);
+      const expectedMultiplier = 1 + (critDamage - 1) * critChance;
+      damage *= expectedMultiplier;
+    }
+
+    const d = getDivisor('percentOfPlayerDamage');
+    damage += playerDamage.damage * ((statsForCalc.percentOfPlayerDamage || 0) / d);
+
+    if (skillId === 'animatedWeapons') {
+      damage *= hero.stats.animatedWeaponsDamagePercent || 1;
+    }
+    if (skillId === 'shadowClone') {
+      damage *= hero.stats.cloneDamagePercent || 1;
+    }
+    const summonDamageMultiplier = 1 + (hero.stats.summonDamageBuffPercent || 0);
+    damage *= summonDamageMultiplier;
+
+    if (damage > 0) {
+      tooltip += `<div class="tooltip-total-damage">${t('skill.totalPotentialDamage')}: ${formatNumber(Math.floor(damage))}</div>`;
+    }
   }
 
   if (skill?.type && skill.type() === 'instant' && skillTree.isDamageSkill?.(effects)) {

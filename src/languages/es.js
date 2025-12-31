@@ -521,6 +521,8 @@ export default {
   'options.autoSortInventory.disabledTooltip': 'Compra en la tienda de cristales para habilitar',
   'options.showEnemyStats': 'Mostrar stats del enemigo',
   'options.showEnemyStats.tooltip': 'Muestra las stats del enemigo durante el combate',
+  'options.enableEnemyRarityBonus': 'Habilitar bonificación de rareza de enemigo',
+  'options.enableEnemyRarityBonus.tooltip': 'Habilita la estadística de bonificación de rareza de los enemigos. Hace que los enemigos de mayor rareza aparezcan con más frecuencia',
   'options.showInfoMessages': 'Mostrar mensajes informativos',
   'options.showInfoMessages.tooltip': 'Muestra mensajes informativos durante el juego',
   'options.showNotifications': 'Mostrar notificaciones',

@@ -547,6 +547,8 @@ export default {
   'options.autoSortInventory.tooltip': 'Automatically sort inventory when items are added',
   'options.showEnemyStats': 'Show Enemy Stats',
   'options.showEnemyStats.tooltip': 'Display enemy stats during combat',
+  'options.enableEnemyRarityBonus': 'Enable Enemy Rarity Bonus',
+  'options.enableEnemyRarityBonus.tooltip': 'Enables the enemy rarity bonus stat. It makes higher rarity enemies appear more frequently',
   'options.showInfoMessages': 'Show Info Messages',
   'options.showInfoMessages.tooltip': 'Display informational messages during gameplay',
   'options.showNotifications': 'Show Notifications',
