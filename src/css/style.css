@@ -797,6 +797,8 @@
 /* Shop Sub-tabs */
 .shop-tab-buttons {
   display: flex;
+  flex-wrap: wrap;
+  /* allow buttons to wrap to a new row on small screens */
   gap: 10px;
   margin-bottom: 15px;
   padding: 0 10px;
@@ -813,6 +815,8 @@
   font-weight: 600;
   border-bottom: 3px solid transparent;
   transition: all 0.2s;
+  white-space: nowrap;
+  /* avoid label wrapping inside the button */
 }
 
 .shop-tab-btn:hover {
@@ -832,6 +836,19 @@
 .shop-tab-panel.active {
   display: block;
   animation: fadeIn 0.3s ease-out;
+}
+
+/* Reduce button padding and gap on narrow screens so more tabs fit per row */
+@media (max-width: 520px) {
+  .shop-tab-buttons {
+    gap: 8px;
+    padding: 0 6px;
+  }
+
+  .shop-tab-btn {
+    padding: 8px 12px;
+    font-size: 0.95rem;
+  }
 }
 
 @keyframes fadeIn {

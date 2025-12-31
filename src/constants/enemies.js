@@ -196,7 +196,7 @@ export function applyDefaultEnemyStats(enemy) {
   const defaults = {
     tier: tier,
     life: 18 * multiplier,
-    damage: 1 * multiplier,
+    damage: 1.75 * multiplier,
     attackSpeed: 1,
     attackRating: 5 * multiplier,
     armor: 7 * multiplier,
@@ -205,6 +205,7 @@ export function applyDefaultEnemyStats(enemy) {
     xp: 6 * multiplier,
     gold: 7 * multiplier,
 
+    // always 0
     fireDamage: 0 * multiplier,
     coldDamage: 0 * multiplier,
     airDamage: 0 * multiplier,
