@@ -144,8 +144,29 @@ export default class Item {
 
     const typeOverrides = statConfig.overrides?.[this.type];
 
-    let min = (typeOverrides?.min ?? statConfig.min) || 1;
-    let max = (typeOverrides?.max ?? statConfig.max) || statConfig.tierScalingMaxPercent[this.tier];
+    // Determine min: prefer explicit override, then stat-level min, otherwise default to 1
+    let min;
+    if (typeOverrides?.min !== undefined) {
+      min = typeOverrides.min;
+    } else if (statConfig.min !== undefined) {
+      min = statConfig.min;
+    } else {
+      min = 1;
+    }
+
+    // Determine max: check override max, then override tierScalingMaxPercent, then stat max, then stat tierScalingMaxPercent
+    let max;
+    if (typeOverrides?.max !== undefined) {
+      max = typeOverrides.max;
+    } else if (typeOverrides?.tierScalingMaxPercent !== undefined) {
+      max = typeOverrides.tierScalingMaxPercent[this.tier];
+    } else if (statConfig.max !== undefined) {
+      max = statConfig.max;
+    } else if (statConfig.tierScalingMaxPercent !== undefined) {
+      max = statConfig.tierScalingMaxPercent[this.tier];
+    } else {
+      max = min;
+    }
 
     let statDefinition;
     // handle unique special ranges

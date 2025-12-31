@@ -70,8 +70,8 @@ export const OFFENSE_STATS = {
       cost: 100, bonus: 1, maxLevel: Infinity,
     },
     item: {
-      min: 10,
-      max: 28,
+      min: 5,
+      max: 16,
       scaling: (level, tier) => offenseScaling(level, tier),
       overrides: {
         AXE: { min: 14, max: 35 },
@@ -235,7 +235,7 @@ export const OFFENSE_STATS = {
       cost: 90, bonus: 1, maxLevel: Infinity,
     },
     item: {
-      min: 1, max: 3, scaling: (level, tier) => offenseScaling(level, tier),
+      min: 1, max: 4, scaling: (level, tier) => offenseScaling(level, tier),
     },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
     sub: 'elemental',
