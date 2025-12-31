@@ -37,49 +37,11 @@ import { SOUL_SHOP_MAX_QTY,
 
 const html = String.raw;
 
-const OPTION_TOOLTIPS = {
-  languageLabel: () => html`${t('options.language.tooltip')}`,
-  languageSelect: () => html`${t('options.languageSelect.tooltip')}`,
-  soundVolumeLabel: () => html`${t('options.soundVolumeLabel.tooltip')}`,
-  soundVolumeSlider: () => html`${t('options.soundVolume.tooltip')}`,
-  advancedTooltipsLabel: () => html`${t('options.advancedTooltips.tooltip')}`,
-  advancedAttrTooltipsLabel: () => html`${t('options.advancedAttributeTooltips.tooltip')}`,
-  showRateCountersLabel: () => html`${t('options.showRateCounters.tooltip')}`,
-  rateCountersPeriodLabel: () => html`${t('options.rateCountersPeriod.tooltip')}`,
-  showInfoMessagesLabel: () => html`${t('options.showInfoMessages.tooltip')}`,
-  showNotificationsLabel: () => html`${t('options.showNotifications.tooltip')}`,
-  showCombatTextLabel: () => html`${t('options.showCombatText.tooltip')}`,
-  stageSkipLabel: () => html`${t('options.stageSkip.tooltip')}`,
-  stageSkipInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnCrystal')}`,
-  stageLockToggleLabel: () => html`${t('options.stageLock.tooltip')}`,
-  stageLockToggle: (isPurchased) => html`${isPurchased() ? '' : t('options.stageLock.disabledTooltip')}`,
-  stageLockStageLabel: () => html`${t('options.stageLockStage.tooltip')}`,
-  stageLockStageInput: (isPurchased) => html`${isPurchased() ? '' : t('options.stageLock.disabledTooltip')}`,
-  arenaBossSkipLabel: () => html`${t('options.arenaBossSkip.tooltip')}`,
-  arenaBossSkipInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnAscensionAndRunes')}`,
-  resetStageSkipLabel: () => html`${t('options.resetStageSkip.tooltip')}`,
-  resetStageSkipInput: (isPurchased) =>
-    html`${isPurchased() ? t('options.resetStageSkip.enabledTooltip') : t('options.resetStageSkip.disabledTooltip')}`,
-  startingStageLabel: () => html`${t('options.startingStage.tooltip')}`,
-  startingStageInput: (getMax) => html`${t('options.max')}: ${getMax()} ${t('options.basedOnCrystal')}`,
-  shortElementalNamesLabel: () => html`${t('options.shortElementalNames.tooltip')}`,
-  showSkillCooldownsLabel: () => html`${t('options.showSkillCooldowns.tooltip')}`,
-  showAllStatsLabel: () => html`${t('options.showAllStats.tooltip')}`,
-  quickBuyLabel: () => html`${t('options.quickBuy.tooltip')}`,
-  bulkBuyLabel: () => html`${t('options.bulkBuy.tooltip')}`,
-  numericInputLabel: () => html`${t('options.numericPurchaseInputs.tooltip')}`,
-  autoSortInventoryLabel: () => html`${t('options.autoSortInventory.tooltip')}`,
-  autoSortInventoryToggle: (isPurchased) =>
-    html`${isPurchased() ? '' : t('options.autoSortInventory.disabledTooltip')}`,
-  enemyStatsLabel: () => html`${t('options.showEnemyStats.tooltip')}`,
-  stageControlsInlineLabel: () => html`${t('options.stageControlsInline.tooltip')}`,
-  shortNumbersLabel: () => html`${t('options.shortNumbers.tooltip')}`,
-  rollPercentilesLabel: () => html`${t('options.rollPercentiles.tooltip')}`,
-  enableEnemyRarityBonusLabel: () => html`${t('options.enableEnemyRarityBonus.tooltip')}`,
-};
-
-function attachTooltip(el, key, ...params) {
-  el.addEventListener('mouseenter', (e) => showTooltip(OPTION_TOOLTIPS[key](...params), e));
+function attachTooltip(el, generator) {
+  el.addEventListener('mouseenter', (e) => {
+    const content = typeof generator === 'function' ? generator() : generator;
+    if (content) showTooltip(content, e);
+  });
   el.addEventListener('mousemove', positionTooltip);
   el.addEventListener('mouseleave', hideTooltip);
 }
@@ -188,8 +150,8 @@ export class Options {
     const label = wrapper.querySelector('label');
     const select = wrapper.querySelector('select');
     const reloadBtn = wrapper.querySelector('#language-reload-btn');
-    attachTooltip(label, 'languageLabel');
-    attachTooltip(select, 'languageSelect');
+    attachTooltip(label, () => html`${t('options.language.tooltip')}`);
+    attachTooltip(select, () => html`${t('options.languageSelect.tooltip')}`);
     select.value = this.language;
     select.addEventListener('change', () => {
       this.language = select.value;
@@ -238,7 +200,7 @@ export class Options {
       }
 
       if (slot !== dataManager.getCurrentSlot()) {
-        showToast(tp('options.toast.backupWrongSlot', { slot: slot + 1 }), 'error');
+        showToast(tp('options.toast.backupUnavailable', { slot: slot + 1 }), 'error');
         return;
       }
 
@@ -287,8 +249,8 @@ export class Options {
     const label = wrapper.querySelector('.sound-volume-label');
     const slider = wrapper.querySelector('input');
     const valueLabel = wrapper.querySelector('.sound-volume-value');
-    attachTooltip(label, 'soundVolumeLabel');
-    attachTooltip(slider, 'soundVolumeSlider');
+    attachTooltip(label, () => html`${t('options.soundVolumeLabel.tooltip')}`);
+    attachTooltip(slider, () => html`${t('options.soundVolume.tooltip')}`);
     slider.addEventListener('input', () => {
       let val = parseFloat(slider.value);
       if (isNaN(val) || val < 0) val = 0;
@@ -333,7 +295,6 @@ export class Options {
         id: 'advanced-tooltips-toggle',
         i18nKey: 'options.advancedTooltips',
         labelText: 'Show Advanced Item Tooltips:',
-        tooltipKey: 'advancedTooltipsLabel',
         stateKey: 'showAdvancedTooltips',
       }),
     );
@@ -342,7 +303,6 @@ export class Options {
         id: 'advanced-attr-tooltips-toggle',
         i18nKey: 'options.advancedAttributeTooltips',
         labelText: 'Show Advanced Attribute Tooltips:',
-        tooltipKey: 'advancedAttrTooltipsLabel',
         stateKey: 'showAdvancedAttributeTooltips',
         onChange: () => updateStatsAndAttributesUI(true),
       }),
@@ -352,7 +312,6 @@ export class Options {
         id: 'roll-percentiles-toggle',
         i18nKey: 'options.rollPercentiles',
         labelText: 'Show Roll Percentiles:',
-        tooltipKey: 'rollPercentilesLabel',
         stateKey: 'showRollPercentiles',
       }),
     );
@@ -361,7 +320,6 @@ export class Options {
         id: 'enemy-stats-toggle',
         i18nKey: 'options.showEnemyStats',
         labelText: 'Show Enemy Stats:',
-        tooltipKey: 'enemyStatsLabel',
         stateKey: 'showEnemyStats',
         onChange: () => {
           const stats = document.querySelector('.enemy-stats');
@@ -380,7 +338,6 @@ export class Options {
         id: 'show-all-stats-toggle',
         i18nKey: 'options.showAllStats',
         labelText: 'Show All Stats:',
-        tooltipKey: 'showAllStatsLabel',
         stateKey: 'showAllStats',
         onChange: () => updateStatsAndAttributesUI(true),
       }),
@@ -390,7 +347,6 @@ export class Options {
         id: 'short-elemental-names-toggle',
         i18nKey: 'options.shortElementalNames',
         labelText: 'Use Short Elemental Stat Names:',
-        tooltipKey: 'shortElementalNamesLabel',
         stateKey: 'shortElementalNames',
         onChange: () => {
           updateStatsAndAttributesUI(true);
@@ -403,7 +359,6 @@ export class Options {
         id: 'short-numbers-toggle',
         i18nKey: 'options.shortNumbers',
         labelText: 'Use Short Number Notation:',
-        tooltipKey: 'shortNumbersLabel',
         stateKey: 'shortNumbers',
         onChange: () => {
           updateResources();
@@ -422,7 +377,6 @@ export class Options {
         id: 'quick-buy-toggle',
         i18nKey: 'options.quickBuy',
         labelText: 'Enable Quick Buy:',
-        tooltipKey: 'quickBuyLabel',
         stateKey: 'quickBuy',
         onChange: () => {
           if (training) training.initializeTrainingUI();
@@ -437,7 +391,6 @@ export class Options {
         id: 'bulk-buy-toggle',
         i18nKey: 'options.bulkBuy',
         labelText: 'Enable Bulk Buy:',
-        tooltipKey: 'bulkBuyLabel',
         stateKey: 'bulkBuy',
         onChange: () => {
           if (training) training.initializeTrainingUI();
@@ -452,7 +405,6 @@ export class Options {
         id: 'numeric-input-toggle',
         i18nKey: 'options.numericPurchaseInputs',
         labelText: 'Enable Numeric Purchase Inputs:',
-        tooltipKey: 'numericInputLabel',
         stateKey: 'useNumericInputs',
         onChange: () => {
           if (!this.useNumericInputs) {
@@ -482,11 +434,13 @@ export class Options {
         id: 'auto-sort-inventory-toggle',
         i18nKey: 'options.autoSortInventory',
         labelText: 'Auto Sort Inventory:',
-        tooltipKey: 'autoSortInventoryLabel',
         stateKey: 'autoSortInventory',
         disabled: !crystalShop.crystalUpgrades?.autoSortInventory,
         onCreated: (wrapper, checkbox) => {
-          attachTooltip(checkbox, 'autoSortInventoryToggle', () => !!crystalShop.crystalUpgrades?.autoSortInventory);
+          attachTooltip(checkbox, () => {
+            const isPurchased = !!crystalShop.crystalUpgrades?.autoSortInventory;
+            return html`${isPurchased ? '' : t('options.autoSortInventory.disabledTooltip')}`;
+          });
           this._autoSortInventoryToggle = checkbox;
           this._autoSortInventoryWrapper = wrapper;
           this.updateAutoSortInventoryOption();
@@ -498,7 +452,6 @@ export class Options {
         id: 'stage-controls-inline-toggle',
         i18nKey: 'options.stageControlsInline',
         labelText: 'Show Stage Controls Under Enemy:',
-        tooltipKey: 'stageControlsInlineLabel',
         stateKey: 'showStageControlsInline',
         onChange: () => {
           try {
@@ -512,9 +465,11 @@ export class Options {
         id: 'starting-stage-input',
         i18nKey: 'options.startingStage',
         labelText: 'Starting Stage:',
-        tooltipKey: 'startingStageLabel',
-        inputTooltipKey: 'startingStageInput',
-        inputTooltipParams: [() => 1 + (crystalShop.crystalUpgrades?.startingStage || 0)],
+        tooltip: 'options.startingStage.tooltip',
+        inputTooltip: () => {
+          const max = 1 + (crystalShop.crystalUpgrades?.startingStage || 0);
+          return html`${t('options.max')}: ${max} ${t('options.basedOnCrystal')}`;
+        },
         stateKey: 'startingStage',
         min: 1,
         max: () => 1 + (crystalShop.crystalUpgrades?.startingStage || 0),
@@ -544,9 +499,11 @@ export class Options {
         id: 'stage-skip-input',
         i18nKey: 'options.stageSkipPerKill',
         labelText: 'Stage Skip per Kill:',
-        tooltipKey: 'stageSkipLabel',
-        inputTooltipKey: 'stageSkipInput',
-        inputTooltipParams: [() => crystalShop.crystalUpgrades?.stageSkip || 0],
+        tooltip: 'options.stageSkip.tooltip',
+        inputTooltip: () => {
+          const max = crystalShop.crystalUpgrades?.stageSkip || 0;
+          return html`${t('options.max')}: ${max} ${t('options.basedOnCrystal')}`;
+        },
         stateKey: 'stageSkip',
         max: () => crystalShop.crystalUpgrades?.stageSkip || 0,
         showMinMax: true,
@@ -568,11 +525,13 @@ export class Options {
         id: 'stage-lock-toggle',
         i18nKey: 'options.stageLock',
         labelText: 'Stage Lock:',
-        tooltipKey: 'stageLockToggleLabel',
         stateKey: 'stageLockEnabled',
         disabled: !crystalShop.crystalUpgrades?.stageLock,
         onCreated: (wrapper, checkbox) => {
-          attachTooltip(checkbox, 'stageLockToggle', () => !!crystalShop.crystalUpgrades?.stageLock);
+          attachTooltip(checkbox, () => {
+            const isPurchased = !!crystalShop.crystalUpgrades?.stageLock;
+            return html`${isPurchased ? '' : t('options.stageLock.disabledTooltip')}`;
+          });
           this._stageLockToggle = checkbox;
           this._stageLockToggleWrapper = wrapper;
           this.updateStageLockOption();
@@ -584,9 +543,10 @@ export class Options {
         id: 'stage-lock-input',
         i18nKey: 'options.stageLockStage',
         labelText: 'Lock at Stage:',
-        tooltipKey: 'stageLockStageLabel',
-        inputTooltipKey: 'stageLockStageInput',
-        inputTooltipParams: [() => !!crystalShop.crystalUpgrades?.stageLock],
+        inputTooltip: () => {
+          const isPurchased = !!crystalShop.crystalUpgrades?.stageLock;
+          return html`${isPurchased ? '' : t('options.stageLock.disabledTooltip')}`;
+        },
         stateKey: 'stageLock',
         showMinMax: true,
         disabled: !crystalShop.crystalUpgrades?.stageLock,
@@ -612,12 +572,12 @@ export class Options {
         id: 'boss-skip-input',
         i18nKey: 'options.arenaBossSkipPerKill',
         labelText: 'Boss Skip per Kill:',
-        tooltipKey: 'arenaBossSkipLabel',
-        inputTooltipKey: 'arenaBossSkipInput',
-        inputTooltipParams: [() => {
+        tooltip: 'options.arenaBossSkip.tooltip',
+        inputTooltip: () => {
           const rb = runes?.getBonusEffects?.() || {};
-          return (ascension.getBonuses()?.arenaBossSkip || 0) + (rb.arenaBossSkip || 0);
-        }],
+          const max = (ascension.getBonuses()?.arenaBossSkip || 0) + (rb.arenaBossSkip || 0);
+          return html`${t('options.max')}: ${max} ${t('options.basedOnAscensionAndRunes')}`;
+        },
         stateKey: 'arenaBossSkip',
         max: () => {
           const rb = runes?.getBonusEffects?.() || {};
@@ -641,9 +601,11 @@ export class Options {
         id: 'reset-stage-skip-input',
         i18nKey: 'options.resetStageSkipAt',
         labelText: 'Reset Stage Skip At:',
-        tooltipKey: 'resetStageSkipLabel',
-        inputTooltipKey: 'resetStageSkipInput',
-        inputTooltipParams: [() => !!crystalShop.crystalUpgrades?.resetStageSkip],
+        tooltip: 'options.resetStageSkip.tooltip',
+        inputTooltip: () => {
+          const isPurchased = !!crystalShop.crystalUpgrades?.resetStageSkip;
+          return html`${isPurchased ? t('options.resetStageSkip.enabledTooltip') : t('options.resetStageSkip.disabledTooltip')}`;
+        },
         stateKey: 'resetStageSkip',
         disabled: !crystalShop.crystalUpgrades?.resetStageSkip,
         showMinMax: true,
@@ -669,7 +631,6 @@ export class Options {
         id: 'rate-counters-toggle',
         i18nKey: 'options.showRateCounters',
         labelText: 'Show Counters Bar:',
-        tooltipKey: 'showRateCountersLabel',
         stateKey: 'showRateCounters',
         onChange: () => {
           document.dispatchEvent(new CustomEvent('toggleRateCounters', { detail: this.showRateCounters }));
@@ -681,7 +642,6 @@ export class Options {
         id: 'rate-counters-period',
         i18nKey: 'options.rateCountersPeriod',
         labelText: 'Counters Period (sec):',
-        tooltipKey: 'rateCountersPeriodLabel',
         stateKey: 'rateCountersPeriod',
         min: 1,
         onApply: (v, f, changed) => {
@@ -696,7 +656,6 @@ export class Options {
         id: 'show-info-messages-toggle',
         i18nKey: 'options.showInfoMessages',
         labelText: 'Show Info Messages:',
-        tooltipKey: 'showInfoMessagesLabel',
         stateKey: 'showInfoMessages',
       }),
     );
@@ -705,7 +664,6 @@ export class Options {
         id: 'show-notifications-toggle',
         i18nKey: 'options.showNotifications',
         labelText: 'Show Notifications:',
-        tooltipKey: 'showNotificationsLabel',
         stateKey: 'showNotifications',
       }),
     );
@@ -714,7 +672,6 @@ export class Options {
         id: 'show-combat-text-toggle',
         i18nKey: 'options.showCombatText',
         labelText: 'Show Combat Texts:',
-        tooltipKey: 'showCombatTextLabel',
         stateKey: 'showCombatText',
       }),
     );
@@ -723,7 +680,6 @@ export class Options {
         id: 'enable-enemy-rarity-bonus-toggle',
         i18nKey: 'options.enableEnemyRarityBonus',
         labelText: 'Enable Specialization Rarity Bonus:',
-        tooltipKey: 'enableEnemyRarityBonusLabel',
         stateKey: 'enableEnemyRarityBonus',
       }),
     );
@@ -732,7 +688,6 @@ export class Options {
         id: 'show-skill-cooldowns-toggle',
         i18nKey: 'options.showSkillCooldowns',
         labelText: 'Show Skill Cooldown Numbers:',
-        tooltipKey: 'showSkillCooldownsLabel',
         stateKey: 'showSkillCooldowns',
         onChange: () => updateBuffIndicators(),
       }),
@@ -797,9 +752,8 @@ export class Options {
     id,
     i18nKey,
     labelText,
-    tooltipKey,
-    inputTooltipKey,
-    inputTooltipParams = [],
+    tooltip,
+    inputTooltip,
     stateKey,
     min = 0,
     max,
@@ -841,8 +795,15 @@ export class Options {
     const label = wrapper.querySelector('label');
     const input = wrapper.querySelector('input');
 
-    if (tooltipKey) attachTooltip(label, tooltipKey);
-    if (inputTooltipKey) attachTooltip(input, inputTooltipKey, ...inputTooltipParams);
+    if (tooltip) {
+      attachTooltip(label, typeof tooltip === 'function' ? tooltip : () => html`${t(tooltip)}`);
+    } else if (i18nKey) {
+      attachTooltip(label, () => html`${t(i18nKey + '.tooltip')}`);
+    }
+
+    if (inputTooltip) {
+      attachTooltip(input, inputTooltip);
+    }
 
     const getSafeValue = () => {
       let val = parseInt(input.value, 10);
@@ -911,8 +872,7 @@ export class Options {
     id,
     i18nKey,
     labelText,
-    tooltipKey,
-    tooltipParams = [],
+    tooltip,
     stateKey,
     onChange,
     disabled = false,
@@ -935,8 +895,10 @@ export class Options {
     const label = wrapper.querySelector('label');
     const checkbox = wrapper.querySelector('input');
     const toggleBtn = wrapper.querySelector('.toggle-btn');
-    if (tooltipKey) {
-      attachTooltip(label, tooltipKey, ...tooltipParams);
+    if (tooltip) {
+      attachTooltip(label, typeof tooltip === 'function' ? tooltip : () => html`${t(tooltip)}`);
+    } else if (i18nKey) {
+      attachTooltip(label, () => html`${t(i18nKey + '.tooltip')}`);
     }
     toggleBtn.addEventListener('click', () => {
       if (checkbox.disabled) return;
@@ -1494,7 +1456,6 @@ export class Options {
     });
   }
 
-
   /**
    * Updates the starting stage input's max, title, and value if needed.
    * Call this whenever crystalShop.crystalUpgrades.startingStage changes.
@@ -1536,14 +1497,6 @@ export class Options {
     }
   }
 
-
-
-
-
-
-
-
-
   updateAutoSortInventoryOption() {
     if (!this._autoSortInventoryToggle) return;
     const purchased = !!crystalShop.crystalUpgrades?.autoSortInventory;
@@ -1551,7 +1504,4 @@ export class Options {
     const toggleBtn = this._autoSortInventoryWrapper?.querySelector('.toggle-btn');
     if (toggleBtn) toggleBtn.classList.toggle('disabled', !purchased);
   }
-
-
-
 }

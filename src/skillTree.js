@@ -1284,19 +1284,27 @@ export default class SkillTree {
 
       const summonAttackSpeedBonus = hero.stats.summonAttackSpeedBuffPercent || 0;
       const effectiveAttackSpeed = (summonStats.baseAttackSpeed || 1) * (1 + summonAttackSpeedBonus);
-      this.activeBuffs.set(skillId, {
+
+      const buffData = {
         endTime: now + this.getSkillDuration(skill),
         summonStats,
         nextAttackTime: now + 1000 / effectiveAttackSpeed,
         skillId,
         effects: {},
-      });
+      };
+
+      if (!this.activeBuffs.has(skillId)) {
+        this.activeBuffs.set(skillId, []);
+      }
+      // For summons, we append to allow stacking
+      this.activeBuffs.get(skillId).push(buffData);
     } else {
       // Store buff data
-      this.activeBuffs.set(skillId, {
+      // For regular buffs, we overwrite (refresh)
+      this.activeBuffs.set(skillId, [{
         endTime: buffEndTime,
         effects: this.getSkillEffect(skillId, skill.level),
-      });
+      }]);
     }
 
     // Set cooldown and active state
@@ -1341,19 +1349,33 @@ export default class SkillTree {
   getActiveBuffEffects() {
     const effects = {};
     const buffMultiplier = 1 + (hero.stats.buffEffectivenessPercent || 0);
+    const now = Date.now();
 
-    this.activeBuffs.forEach((buffData, skillId) => {
-      if (buffData.endTime <= Date.now()) {
+    this.activeBuffs.forEach((instances, skillId) => {
+      // Filter out expired instances
+      // If instances is not an array (legacy safety), wrap it
+      const list = Array.isArray(instances) ? instances : [instances];
+
+      const activeInstances = list.filter((inst) => inst.endTime > now);
+
+      if (activeInstances.length === 0) {
         this.deactivateSkill(skillId);
         return;
+      }
+
+      // Update map if some expired but not all
+      if (activeInstances.length < list.length) {
+        this.activeBuffs.set(skillId, activeInstances);
       }
 
       const skill = this.getSkill(skillId);
       const isBuff = skill && skill.type() === 'buff';
       const multiplier = isBuff ? buffMultiplier : 1;
 
-      Object.entries(buffData.effects).forEach(([stat, value]) => {
-        effects[stat] = (effects[stat] || 0) + value * multiplier;
+      activeInstances.forEach((buffData) => {
+        Object.entries(buffData.effects).forEach(([stat, value]) => {
+          effects[stat] = (effects[stat] || 0) + value * multiplier;
+        });
       });
     });
 
@@ -1384,62 +1406,67 @@ export default class SkillTree {
 
   processSummons() {
     const now = Date.now();
-    this.activeBuffs.forEach((buffData, skillId) => {
-      if (!buffData.summonStats) return;
-      if (buffData.nextAttackTime <= now) {
-        // Calculate summon damage as % of player's damage
-        const canCrit = buffData?.summonStats?.canCrit || false || (hero.stats.summonsCanCrit || 0) > 0;
-        const playerDamage = hero.calculateTotalDamage({}, { canCrit });
-        let damage = 0;
-        damage += buffData.summonStats.damage || 0;
-        damage += buffData.summonStats.fireDamage || 0;
-        damage += buffData.summonStats.coldDamage || 0;
-        damage += buffData.summonStats.airDamage || 0;
-        damage += buffData.summonStats.earthDamage || 0;
-        damage += buffData.summonStats.lightningDamage || 0;
-        damage += buffData.summonStats.waterDamage || 0;
+    this.activeBuffs.forEach((instances, skillId) => {
+      const list = Array.isArray(instances) ? instances : [instances];
 
-        if (playerDamage.isCritical) {
-          damage *= hero.stats.critDamage;
+      list.forEach((buffData) => {
+        if (buffData.endTime <= now) return; // Ignore expired
+        if (!buffData.summonStats) return;
+        if (buffData.nextAttackTime <= now) {
+          // Calculate summon damage as % of player's damage
+          const canCrit = buffData?.summonStats?.canCrit || false || (hero.stats.summonsCanCrit || 0) > 0;
+          const playerDamage = hero.calculateTotalDamage({}, { canCrit });
+          let damage = 0;
+          damage += buffData.summonStats.damage || 0;
+          damage += buffData.summonStats.fireDamage || 0;
+          damage += buffData.summonStats.coldDamage || 0;
+          damage += buffData.summonStats.airDamage || 0;
+          damage += buffData.summonStats.earthDamage || 0;
+          damage += buffData.summonStats.lightningDamage || 0;
+          damage += buffData.summonStats.waterDamage || 0;
+
+          if (playerDamage.isCritical) {
+            damage *= hero.stats.critDamage;
+          }
+
+          // in the % damage, the crit damage is already factored in
+          const d = getDivisor('percentOfPlayerDamage');
+          damage += playerDamage.damage * ((buffData.summonStats.percentOfPlayerDamage || 0) / d);
+
+          if (skillId === 'animatedWeapons') {
+            damage *= hero.stats.animatedWeaponsDamagePercent || 1;
+          }
+          if (skillId === 'shadowClone') {
+            damage *= hero.stats.cloneDamagePercent || 1;
+          }
+
+          if (skillId === 'summonBats' && hero.stats.batsHealPercent) {
+            game.healPlayer(damage * hero.stats.batsHealPercent);
+          }
+
+          if (buffData.summonStats.lifePerHit) {
+            game.healPlayer(buffData.summonStats.lifePerHit);
+          }
+          if (buffData.summonStats.manaPerHit) {
+            game.restoreMana(buffData.summonStats.manaPerHit);
+          }
+
+          const skill = this.getSkill(skillId);
+          const summonName = typeof skill?.name === 'function' ? skill.name() : null;
+
+          // Apply summon damage bonus (if any) after all damage components are combined.
+          const summonDamageMultiplier = 1 + (hero.stats.summonDamageBuffPercent || 0);
+          damage *= summonDamageMultiplier;
+
+          game.damageEnemy(damage, canCrit ? playerDamage.isCritical : false, null, null, summonName);
+
+          // Schedule next attack
+          const baseAttackSpeed = buffData?.summonStats?.baseAttackSpeed || buffData?.summonStats?.attackSpeed || 1;
+          const summonAttackSpeedBonus = hero.stats.summonAttackSpeedBuffPercent || 0;
+          const effectiveAttackSpeed = baseAttackSpeed * (1 + summonAttackSpeedBonus);
+          buffData.nextAttackTime = now + 1000 / effectiveAttackSpeed;
         }
-
-        // in the % damage, the crit damage is already factored in
-        const d = getDivisor('percentOfPlayerDamage');
-        damage += playerDamage.damage * ((buffData.summonStats.percentOfPlayerDamage || 0) / d);
-
-        if (skillId === 'animatedWeapons') {
-          damage *= hero.stats.animatedWeaponsDamagePercent || 1;
-        }
-        if (skillId === 'shadowClone') {
-          damage *= hero.stats.cloneDamagePercent || 1;
-        }
-
-        if (skillId === 'summonBats' && hero.stats.batsHealPercent) {
-          game.healPlayer(damage * hero.stats.batsHealPercent);
-        }
-
-        if (buffData.summonStats.lifePerHit) {
-          game.healPlayer(buffData.summonStats.lifePerHit);
-        }
-        if (buffData.summonStats.manaPerHit) {
-          game.restoreMana(buffData.summonStats.manaPerHit);
-        }
-
-        const skill = this.getSkill(skillId);
-        const summonName = typeof skill?.name === 'function' ? skill.name() : null;
-
-        // Apply summon damage bonus (if any) after all damage components are combined.
-        const summonDamageMultiplier = 1 + (hero.stats.summonDamageBuffPercent || 0);
-        damage *= summonDamageMultiplier;
-
-        game.damageEnemy(damage, canCrit ? playerDamage.isCritical : false, null, null, summonName);
-
-        // Schedule next attack
-        const baseAttackSpeed = buffData?.summonStats?.baseAttackSpeed || buffData?.summonStats?.attackSpeed || 1;
-        const summonAttackSpeedBonus = hero.stats.summonAttackSpeedBuffPercent || 0;
-        const effectiveAttackSpeed = baseAttackSpeed * (1 + summonAttackSpeedBonus);
-        buffData.nextAttackTime = now + 1000 / effectiveAttackSpeed;
-      }
+      });
     });
   }
 

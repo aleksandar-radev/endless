@@ -1180,3 +1180,17 @@
     white-space: nowrap;
   }
 }
+
+.stack-count {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  font-size: 10px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 10;
+  border: 1px solid var(--accent);
+}

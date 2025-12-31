@@ -2469,6 +2469,27 @@ export function updateBuffIndicators() {
 
     slot.classList.toggle('active', isActive);
 
+    // Update stack count for summons
+    let stackCountEl = slot.querySelector('.stack-count');
+    if (!stackCountEl) {
+      stackCountEl = document.createElement('div');
+      stackCountEl.className = 'stack-count';
+      slot.appendChild(stackCountEl);
+    }
+
+    if (skill.type() === 'summon' && skillTree.activeBuffs.has(skillId)) {
+      const instances = skillTree.activeBuffs.get(skillId);
+      const count = Array.isArray(instances) ? instances.length : 1;
+      if (count >= 1) {
+        stackCountEl.textContent = count;
+        stackCountEl.style.display = 'block';
+      } else {
+        stackCountEl.style.display = 'none';
+      }
+    } else {
+      stackCountEl.style.display = 'none';
+    }
+
     // Show cooldown for both buff and instant skills
     if (
       (skill.type() === 'buff' || skill.type() === 'instant' || skill.type() === 'summon') &&
