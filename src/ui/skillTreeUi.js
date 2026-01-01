@@ -886,11 +886,85 @@ function formatDamageBreakdown(breakdown) {
   let html = '<div class="damage-breakdown" style="font-size: 0.9em; margin-top: 4px; color: #aaa;">';
   Object.entries(breakdown).forEach(([type, value]) => {
     if (value > 0) {
-      html += `<div>${formatStatName(type + 'Damage')}: ${formatNumber(value)}</div>`;
+      html += `<div>${formatStatName(type + 'Damage')}: ${formatNumber(value.toFixed(2))}</div>`;
     }
   });
   html += '</div>';
   return html;
+}
+
+function calculateSummonDamage(skill, level) {
+  if (!skill || typeof skill.summonStats !== 'function') return null;
+
+  const statsForCalc = skill.summonStats(level);
+  const canCrit = statsForCalc.canCrit || false || (hero.stats.summonsCanCrit || 0) > 0;
+
+  // Base player damage to be scaled
+  const playerDamageObj = hero.calculateTotalDamage({}, { includeRandom: false, canCrit });
+
+  let totalDamage = 0;
+  let breakdown = {};
+
+  // Base summon damage types
+  if (statsForCalc.damage > 0) {
+    totalDamage += statsForCalc.damage;
+    breakdown.physical = (breakdown.physical || 0) + statsForCalc.damage;
+  }
+
+  const elements = ['fire', 'cold', 'air', 'earth', 'lightning', 'water'];
+  elements.forEach((el) => {
+    const key = el + 'Damage';
+    if (statsForCalc[key] > 0) {
+      totalDamage += statsForCalc[key];
+      breakdown[el] = (breakdown[el] || 0) + statsForCalc[key];
+    }
+  });
+
+  // Percent of Player Damage
+  if (statsForCalc.percentOfPlayerDamage > 0) {
+    const d = getDivisor('percentOfPlayerDamage');
+    const ratio = statsForCalc.percentOfPlayerDamage / d;
+
+    if (ratio > 0) {
+      totalDamage += playerDamageObj.damage * ratio;
+      if (playerDamageObj.breakdown) {
+        Object.entries(playerDamageObj.breakdown).forEach(([k, v]) => {
+          breakdown[k] = (breakdown[k] || 0) + v * ratio;
+        });
+      } else {
+        breakdown.physical = (breakdown.physical || 0) + playerDamageObj.damage * ratio;
+      }
+    }
+  }
+
+  // Multipliers
+  let multiplier = 1;
+
+  if (canCrit) {
+    const critChance = Math.max(0, Math.min(1, hero.stats.critChance || 0));
+    const critDamage = Math.max(0, hero.stats.critDamage || 1);
+    const expectedMultiplier = 1 + (critDamage - 1) * critChance;
+    multiplier *= expectedMultiplier;
+  }
+
+  if (skill.id === 'animatedWeapons') {
+    multiplier *= hero.stats.animatedWeaponsDamagePercent || 1;
+  }
+  if (skill.id === 'shadowClone') {
+    multiplier *= hero.stats.cloneDamagePercent || 1;
+  }
+  const summonDamageMultiplier = 1 + (hero.stats.summonDamageBuffPercent || 0);
+  multiplier *= summonDamageMultiplier;
+
+  // Apply multipliers
+  if (multiplier !== 1) {
+    totalDamage *= multiplier;
+    Object.keys(breakdown).forEach((k) => {
+      breakdown[k] *= multiplier;
+    });
+  }
+
+  return { damage: Math.floor(totalDamage), breakdown };
 }
 
 function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNext) {
@@ -971,6 +1045,12 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNe
 
       html += `${formatStatName(stat)}${formattedValue}<br />`;
     });
+
+    const summonDamage = calculateSummonDamage(skill, currentLevel);
+    if (summonDamage && summonDamage.damage > 0) {
+      html += `<div class="tooltip-total-damage">${t('skill.totalPotentialDamage')}: ${formatNumber(summonDamage.damage)}</div>`;
+      html += formatDamageBreakdown(summonDamage.breakdown);
+    }
   } else if (!isMaxed) {
     html += `<br /><u>${t('skillTree.nextLevelEffects')}:</u><br />`;
     Object.entries(effectsNext).forEach(([stat, value]) => {
@@ -2112,40 +2192,11 @@ function updateSkillModalDetails() {
       effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>`;
     });
 
-    const statsForCalc = skill.summonStats(currentLevel);
-    const canCrit = statsForCalc.canCrit || false || (hero.stats.summonsCanCrit || 0) > 0;
-    const playerDamage = hero.calculateTotalDamage({}, { includeRandom: false, canCrit });
-    let damage = 0;
-    damage += statsForCalc.damage || 0;
-    damage += statsForCalc.fireDamage || 0;
-    damage += statsForCalc.coldDamage || 0;
-    damage += statsForCalc.airDamage || 0;
-    damage += statsForCalc.earthDamage || 0;
-    damage += statsForCalc.lightningDamage || 0;
-    damage += statsForCalc.waterDamage || 0;
-
-    if (canCrit) {
-      const critChance = Math.max(0, Math.min(1, hero.stats.critChance || 0));
-      const critDamage = Math.max(0, hero.stats.critDamage || 1);
-      const expectedMultiplier = 1 + (critDamage - 1) * critChance;
-      damage *= expectedMultiplier;
-    }
-
-    const d = getDivisor('percentOfPlayerDamage');
-    damage += playerDamage.damage * ((statsForCalc.percentOfPlayerDamage || 0) / d);
-
-    if (currentSkillId === 'animatedWeapons') {
-      damage *= hero.stats.animatedWeaponsDamagePercent || 1;
-    }
-    if (currentSkillId === 'shadowClone') {
-      damage *= hero.stats.cloneDamagePercent || 1;
-    }
-    const summonDamageMultiplier = 1 + (hero.stats.summonDamageBuffPercent || 0);
-    damage *= summonDamageMultiplier;
-
-    if (damage > 0) {
+    const summonDamage = calculateSummonDamage(skill, currentLevel);
+    if (summonDamage && summonDamage.damage > 0) {
       effectsEl.innerHTML += `<div style="margin-top: 10px; border-top: 1px solid #444; padding-top: 5px;">
-        <strong>${t('skill.totalPotentialDamage')}: ${formatNumber(Math.floor(damage))}</strong>
+        <strong>${t('skill.totalPotentialDamage')}: ${formatNumber(summonDamage.damage)}</strong>
+        ${formatDamageBreakdown(summonDamage.breakdown)}
       </div>`;
     }
   } else {
@@ -2386,39 +2437,9 @@ function createSkillTooltip(skillId) {
     });
     tooltip += '</div>';
 
-    const statsForCalc = skill.summonStats(level);
-    const canCrit = statsForCalc.canCrit || false || (hero.stats.summonsCanCrit || 0) > 0;
-    const playerDamage = hero.calculateTotalDamage({}, { includeRandom: false, canCrit });
-    let damage = 0;
-    damage += statsForCalc.damage || 0;
-    damage += statsForCalc.fireDamage || 0;
-    damage += statsForCalc.coldDamage || 0;
-    damage += statsForCalc.airDamage || 0;
-    damage += statsForCalc.earthDamage || 0;
-    damage += statsForCalc.lightningDamage || 0;
-    damage += statsForCalc.waterDamage || 0;
-
-    if (canCrit) {
-      const critChance = Math.max(0, Math.min(1, hero.stats.critChance || 0));
-      const critDamage = Math.max(0, hero.stats.critDamage || 1);
-      const expectedMultiplier = 1 + (critDamage - 1) * critChance;
-      damage *= expectedMultiplier;
-    }
-
-    const d = getDivisor('percentOfPlayerDamage');
-    damage += playerDamage.damage * ((statsForCalc.percentOfPlayerDamage || 0) / d);
-
-    if (skillId === 'animatedWeapons') {
-      damage *= hero.stats.animatedWeaponsDamagePercent || 1;
-    }
-    if (skillId === 'shadowClone') {
-      damage *= hero.stats.cloneDamagePercent || 1;
-    }
-    const summonDamageMultiplier = 1 + (hero.stats.summonDamageBuffPercent || 0);
-    damage *= summonDamageMultiplier;
-
-    if (damage > 0) {
-      tooltip += `<div class="tooltip-total-damage">${t('skill.totalPotentialDamage')}: ${formatNumber(Math.floor(damage))}</div>`;
+    const summonDamage = calculateSummonDamage(skill, level);
+    if (summonDamage && summonDamage.damage > 0) {
+      tooltip += `<div class="tooltip-total-damage">${t('skill.totalPotentialDamage')}: ${formatNumber(summonDamage.damage)}</div>`;
     }
   }
 
