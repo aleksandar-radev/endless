@@ -215,6 +215,22 @@ function showSkillTreeWithTabs() {
         switchSkillTreeTab(tabName);
       });
     });
+  } else if (hero.level >= SPECIALIZATION_UNLOCK_LEVEL && !tabsContainer.querySelector('[data-tab="specializations"]')) {
+    const specButton = document.createElement('button');
+    specButton.className = 'skill-tree-tab';
+    specButton.dataset.tab = 'specializations';
+    specButton.textContent = t('skillTree.tabs.specializations');
+
+    const optionsTab = tabsContainer.querySelector('[data-tab="options"]');
+    if (optionsTab) {
+      tabsContainer.insertBefore(specButton, optionsTab);
+    } else {
+      tabsContainer.appendChild(specButton);
+    }
+
+    specButton.addEventListener('click', () => {
+      switchSkillTreeTab('specializations');
+    });
   }
 
   initializeSkillsTab();
