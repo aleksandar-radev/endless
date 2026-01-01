@@ -152,6 +152,7 @@ function showSkillTreeWithTabs() {
     if (hero.level >= SPECIALIZATION_UNLOCK_LEVEL) {
       tabsHtml += `<button class="skill-tree-tab" data-tab="specializations">${t('skillTree.tabs.specializations')}</button>`;
     }
+    tabsHtml += `<button class="skill-tree-tab" data-tab="options">${t('skillTree.tabs.options')}</button>`;
     tabsContainer.innerHTML = tabsHtml;
 
     container.appendChild(tabsContainer);
@@ -168,6 +169,12 @@ function showSkillTreeWithTabs() {
     specializationsContent.id = 'specializations-tab-content';
     container.appendChild(specializationsContent);
 
+    // Options tab content
+    const optionsContent = document.createElement('div');
+    optionsContent.className = 'skill-tree-tab-content';
+    optionsContent.id = 'options-tab-content';
+    container.appendChild(optionsContent);
+
     // Tab click handlers
     tabsContainer.querySelectorAll('.skill-tree-tab').forEach((tab) => {
       tab.addEventListener('click', () => {
@@ -182,6 +189,7 @@ function showSkillTreeWithTabs() {
   if (hero.level >= SPECIALIZATION_UNLOCK_LEVEL) {
     initializeSpecializationsTab();
   }
+  initializeOptionsTab();
 }
 
 function openSpecializationSelectionModal(spec) {
@@ -275,13 +283,18 @@ function switchSkillTreeTab(tabName) {
   // Update tab contents
   const skillsContent = document.getElementById('skills-tab-content');
   const specializationsContent = document.getElementById('specializations-tab-content');
+  const optionsContent = document.getElementById('options-tab-content');
+
+  skillsContent.classList.remove('active');
+  specializationsContent.classList.remove('active');
+  optionsContent.classList.remove('active');
 
   if (tabName === 'skills') {
     skillsContent.classList.add('active');
-    specializationsContent.classList.remove('active');
-  } else {
-    skillsContent.classList.remove('active');
+  } else if (tabName === 'specializations') {
     specializationsContent.classList.add('active');
+  } else if (tabName === 'options') {
+    optionsContent.classList.add('active');
   }
   updateSkillTreeValues();
 }
@@ -339,9 +352,15 @@ function initializeSkillsTab() {
   });
 
   updateSkillTreeValues();
+  setupSkillTreeFloatingHeader(skillsContent, skillPointsHeader);
+}
+
+function initializeOptionsTab() {
+  const optionsContent = document.getElementById('options-tab-content');
+  if (!optionsContent) return;
+  // Initialize content if empty or needed
   renderAutoCastToggles();
   renderDisplayToggles();
-  setupSkillTreeFloatingHeader(skillsContent, skillPointsHeader);
 }
 
 function initializeSpecializationsTab() {
@@ -1264,7 +1283,7 @@ function renderSkillToggleSection(
   wrapperClass,
   styleOptions = {},
 ) {
-  const container = document.getElementById('skills-tab-content') || document.getElementById('skill-tree-container');
+  const container = document.getElementById('options-tab-content') || document.getElementById('skills-tab-content') || document.getElementById('skill-tree-container');
   let section = document.getElementById(containerId);
   if (section) section.remove();
 

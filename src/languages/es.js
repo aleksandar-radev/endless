@@ -1571,6 +1571,7 @@ export default {
   'skillTree.bulkAllocateSuccess': '¡Asignación masiva de habilidades completada!',
   'skillTree.tabs.skills': 'Habilidades',
   'skillTree.tabs.specializations': 'Especializaciones',
+  'skillTree.tabs.options': 'Opciones',
   'skillTree.selectSpecialization': 'Selecciona una especialización',
   'skillTree.specializationPoints': 'Puntos de Especialización',
 

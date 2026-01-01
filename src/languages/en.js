@@ -1728,6 +1728,7 @@ export default {
   'skillTree.bulkAllocateSuccess': 'Bulk skill allocation successful!',
   'skillTree.tabs.skills': 'Skills',
   'skillTree.tabs.specializations': 'Specializations',
+  'skillTree.tabs.options': 'Options',
   'skillTree.selectSpecialization': 'Select a Specialization',
   'skillTree.specializationPoints': 'Specialization Points',
 

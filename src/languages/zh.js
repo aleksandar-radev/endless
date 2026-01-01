@@ -1517,6 +1517,7 @@ export default {
   'skillTree.bulkAllocateSuccess': '技能点批量分配成功！',
   'skillTree.tabs.skills': '技能',
   'skillTree.tabs.specializations': '专精',
+  'skillTree.tabs.options': '选项',
   'skillTree.selectSpecialization': '选择一个专精',
   'skillTree.specializationPoints': '专精点数',
   'specialization.warrior.guardian.name': '守护者',
