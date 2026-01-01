@@ -1325,7 +1325,7 @@ export default class Inventory {
       const otherSlot = slotName === 'weapon' ? 'offhand' : slotName === 'offhand' ? 'weapon' : null;
       if (otherSlot) {
         const otherItem = this.equippedItems[otherSlot];
-        if (otherItem && otherItem.type === 'SHIELD' && otherItem.id !== item.id) {
+        if (otherItem && otherItem.type === 'SHIELD' && otherItem.id !== item.id && !hero.stats.canUseTwoShields) {
           return false;
         }
       }
