@@ -898,7 +898,7 @@ export default class Inventory {
 
   getItemSalvageValue(item) {
     return Math.floor(
-      250 * itemStatScaleFactor(item.level, item.tier) * Math.max(RARITY_ORDER.indexOf(item.rarity) / 2 + 1, 1),
+      250 * itemStatScaleFactor(item.level, item.tier * 1.5) * Math.max(RARITY_ORDER.indexOf(item.rarity) / 2 + 1, 1),
     );
   }
 
