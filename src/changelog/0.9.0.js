@@ -156,6 +156,7 @@ export default function run() {
       <li>Improved equipping control: right-clicking weapons or rings now allows choosing which hand/slot to equip them in.</li>
       <li>Added "Equip left hand" and "Equip right hand" in inventory context menu for items (right click on item).</li>
       <li>Added thorns damage and thornsDamage% in ascension bonuses.</li>
+      <li style="color:#00AA00;">Continuous Play (auto-continue after death) is now the default behavior and the crystal shop upgrade has been removed.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

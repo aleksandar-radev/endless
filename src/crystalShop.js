@@ -35,14 +35,6 @@ const html = String.raw;
 const AUTO_SALVAGE_MAX_LEVEL = 8;
 
 const CRYSTAL_UPGRADE_CONFIG = {
-  continuousPlay: {
-    label: 'crystalShop.upgrade.continuousPlay.label',
-    bonus: 'crystalShop.upgrade.continuousPlay.bonus',
-    bonusLabel: 'crystalShop.upgrade.continuousPlay.bonusLabel',
-    baseCost: 6,
-    oneTime: true,
-    category: 'auto',
-  },
   autoSpellCast: {
     label: 'crystalShop.upgrade.autoSpellCast.label',
     bonus: 'crystalShop.upgrade.autoSpellCast.bonus',

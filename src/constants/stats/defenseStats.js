@@ -120,6 +120,7 @@ export const DEFENSE_STATS = {
     itemTags: ['shield', 'armor'],
     sub: 'defense',
   }),
+  thornsOnMiss: createStat({ sub: 'defense' }),
   resurrectionChance: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(8, 40, 0.7) },
     itemTags: ['amulet'],

@@ -339,6 +339,14 @@ export function enemyAttack(currentTime) {
           }
         }
       }
+    } else if (hero.stats.thornsOnMiss) {
+      const thornsResult = hero.calculateTotalThornsDamage(0);
+      if (thornsResult && thornsResult.damage > 0) {
+        game.damageEnemy(thornsResult.damage, thornsResult.isCritical, null, 'thornsDamage', null, {
+          color: '#FFFFFF',
+          source: 'thornsDamage',
+        });
+      }
     }
 
     if (!game.gameStarted || hero.stats.currentLife <= 0) {
@@ -559,7 +567,6 @@ export function playerAttack(currentTime) {
 // Remove any duplicate definitions and keep this single version
 export function playerDeath() {
   statistics.increment('deaths');
-  const shouldContinue = crystalShop.crystalUpgrades.continuousPlay;
   game.gameStarted = false;
 
   const timerReduction = (crystalShop.crystalUpgrades.deathTimerReduction || 0) * 0.5;
@@ -582,13 +589,6 @@ export function playerDeath() {
   }
 
   showDeathScreen(deathTimer, () => {
-    if (!shouldContinue) {
-      if (startBtn) {
-        startBtn.textContent = 'Fight';
-        startBtn.style.backgroundColor = '#059669';
-      }
-    }
-
     if (game.fightMode === 'arena') {
       // If in arena, reset boss state and player health
       game.resetAllLife(); // <-- Ensure player health is reset
@@ -628,14 +628,12 @@ export function playerDeath() {
     // Apply warmup ailment
     hero.applyWarmup();
 
-    // If continuing, restart the game state
-    if (shouldContinue) {
-      game.gameStarted = true;
-      const currentTime = Date.now();
-      game.lastPlayerAttack = currentTime;
-      if (game.currentEnemy) {
-        game.currentEnemy.lastAttack = currentTime;
-      }
+    // Always restart the game state (Continuous Play default)
+    game.gameStarted = true;
+    const currentTime = Date.now();
+    game.lastPlayerAttack = currentTime;
+    if (game.currentEnemy) {
+      game.currentEnemy.lastAttack = currentTime;
     }
 
     // Re-enable the fight/stop button now that death screen finished
