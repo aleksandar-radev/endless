@@ -105,7 +105,9 @@ export function initializeUI() {
   tabIndicatorManager = new TabIndicatorManager();
 
   document.querySelectorAll('.tab-btn').forEach((btn) => {
-    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    if (btn.dataset.tab) {
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    }
   });
   initializeShopUI();
   document.getElementById('start-btn').addEventListener('click', () => toggleGame());

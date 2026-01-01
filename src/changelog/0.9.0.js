@@ -22,7 +22,7 @@ export default function run() {
       <li>Changed icons for all items.</li>
       <li>Enchantment scroll removed from drops. It can be obtainable only from quests now.</li>
       <li>Buildings tab now has quick buy feature.</li>
-      <li>Cooldown reduction and buff duration removed from prestige bonuses. CD can now appear on items. (ring, amulet, wand/staff)</li>
+      <li>Cooldown reduction and buff duration removed from prestige bonuses. They can now appear on items. (ring, amulet, wand/staff)</li>
       <li>Summons can now stack, so the more cd/duration you have, the more summons you can have at the same time.</li>
     </ul>
   

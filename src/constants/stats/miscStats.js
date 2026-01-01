@@ -167,8 +167,8 @@ export const MISC_STATS = {
       overrides: {
         WAND: { tierScalingMaxPercent: createTierScaling(10, 10, 1) },
         STAFF: { tierScalingMaxPercent: createTierScaling(20, 20, 1) },
-        AMULET: { tierScalingMaxPercent: createTierScaling(15, 15, 1) },
-        RING: { tierScalingMaxPercent: createTierScaling(5, 5, 1) },
+        AMULET: { tierScalingMaxPercent: createTierScaling(15, 25, 1) },
+        RING: { tierScalingMaxPercent: createTierScaling(5, 10, 1) },
       },
     },
     itemTags: ['magic', 'jewelry'],
@@ -182,6 +182,14 @@ export const MISC_STATS = {
   buffDurationPercent: createPercentStat({
     show: true,
     sub: 'misc',
+    item: {
+      tierScalingMaxPercent: createTierScaling(20, 50, 1),
+      overrides: {
+        AMULET: { tierScalingMaxPercent: createTierScaling(40, 80, 1) },
+        RING: { tierScalingMaxPercent: createTierScaling(20, 50, 1) },
+      },
+    },
+    itemTags: ['jewelry'],
   }),
   buffEffectivenessPercent: createPercentStat({ sub: 'misc' }),
   itemBonusesPercent: createPercentStat(),
