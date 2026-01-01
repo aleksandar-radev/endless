@@ -1739,10 +1739,10 @@ export default {
   'skillTree.specializationPoints': 'Specialization Points',
 
   'specialization.warrior.guardian.name': 'Guardian',
-  'specialization.warrior.guardian.description': 'A defensive warrior specializing in protection and armor.',
+  'specialization.warrior.guardian.description': 'A defensive warrior specializing in Life and Armor.',
 
   'specialization.warrior.gladiator.name': 'Gladiator',
-  'specialization.warrior.gladiator.description': 'A balanced fighter focused on critical strikes and combat mastery.',
+  'specialization.warrior.gladiator.description': 'A champion specializing in Arena combat.',
   'specialization.rogue.assassin.name': 'Assassin',
   'specialization.rogue.assassin.description': 'A deadly rogue specializing in critical strikes.',
 
@@ -1751,7 +1751,7 @@ export default {
   'specialization.rogue.shadowdancer.name': 'Shadowdancer',
   'specialization.rogue.shadowdancer.description': 'An evasive rogue who uses tricks to avoid damage.',
   'specialization.warrior.weaponmaster.name': 'Weaponmaster',
-  'specialization.warrior.weaponmaster.description': 'A weapon specialist focused on raw damage.',
+  'specialization.warrior.weaponmaster.description': 'A master of arms specializing in weapon mastery.',
   'specialization.vampire.bloodlord.name': 'Bloodlord',
   'specialization.vampire.bloodlord.description': 'Master of life-stealing attacks.',
   'specialization.vampire.nightstalker.name': 'Nightstalker',
@@ -1868,7 +1868,7 @@ export default {
 
   // Warrior Specialization Skills
   'Armored Offense': 'Armored Offense',
-  'skill.armoredOffense': 'Increases damage based on your armor.',
+  'skill.armoredOffense': 'Increases damage based on your Armor and Life.',
 
   'Animated Weapons': 'Animated Weapons',
   'Spiritual Weapons': 'Spiritual Weapons',
@@ -1880,7 +1880,7 @@ export default {
   'Arena Dominance': 'Arena Dominance',
   'skill.arenaDominance': 'Increases damage dealt in the arena.',
   'Arena Resilience': 'Arena Resilience',
-  'skill.arenaResilience': 'Temporarily increases arena damage reduction (Max 80%).',
+  'skill.arenaResilience': 'Increases arena damage reduction.',
 
   // New Stats
   'stats.retaliateWhenHit': 'Retaliate When Hit',

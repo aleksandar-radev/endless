@@ -1521,9 +1521,10 @@ export default {
   'skillTree.selectSpecialization': '选择一个专精',
   'skillTree.specializationPoints': '专精点数',
   'specialization.warrior.guardian.name': '守护者',
-  'specialization.warrior.guardian.description': '专注于防护和护甲的防御型战士。',
+  'specialization.warrior.guardian.description': '专注于生命和护甲的防御型战士。',
+
   'specialization.warrior.gladiator.name': '角斗士',
-  'specialization.warrior.gladiator.description': '专注于暴击和战斗精通的平衡型战士。',
+  'specialization.warrior.gladiator.description': '专注于竞技场战斗的冠军。',
   'specialization.rogue.assassin.name': '刺客',
   'specialization.rogue.assassin.description': '专精暴击的致命盗贼。',
   'specialization.rogue.ranger.name': '游侠',
@@ -1531,7 +1532,7 @@ export default {
   'specialization.rogue.shadowdancer.name': '影舞者',
   'specialization.rogue.shadowdancer.description': '使用诡计躲避伤害的闪避型盗贼。',
   'specialization.warrior.weaponmaster.name': '武器大师',
-  'specialization.warrior.weaponmaster.description': '专注于纯粹伤害的武器专家。',
+  'specialization.warrior.weaponmaster.description': '专注于武器掌握的武器大师。',
   'specialization.vampire.bloodlord.name': '血领主',
   'specialization.vampire.bloodlord.description': '精通吸血攻击的大师。',
   'specialization.vampire.nightstalker.name': '夜行者',
@@ -1643,8 +1644,8 @@ export default {
   'quests.modal.claim': '领取',
   'quests.modal.randomItemReward': '随机物品（{rarityLabel}：{rarity}，{tierLabel}：{tier}）',
   // Warrior Specialization Skills
-  'Armored Offense': '装甲攻势',
-  'skill.armoredOffense': '根据你的护甲增加伤害。',
+  'Armored Offense': '装甲进攻',
+  'skill.armoredOffense': '根据你的护甲和生命增加伤害。',
   'Animated Weapons': '活化武器',
   'Spiritual Weapons': '灵魂武器',
   'skill.animatedWeapons': '解锁为你而战的活化武器。',
@@ -1655,7 +1656,7 @@ export default {
   'Arena Dominance': '竞技场主宰',
   'skill.arenaDominance': '增加在竞技场中造成的伤害。',
   'Arena Resilience': '竞技场韧性',
-  'skill.arenaResilience': '暂时增加竞技场伤害减免（最高80%）。',
+  'skill.arenaResilience': '增加竞技场伤害减免。',
 
   // New Stats
   'stats.retaliateWhenHit': '受击反击',

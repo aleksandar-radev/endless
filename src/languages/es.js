@@ -1576,11 +1576,10 @@ export default {
   'skillTree.specializationPoints': 'Puntos de Especialización',
 
   'specialization.warrior.guardian.name': 'Guardián',
-  'specialization.warrior.guardian.description': 'Un guerrero defensivo especializado en protección y armadura.',
+  'specialization.warrior.guardian.description': 'Un guerrero defensivo especializado en Vida y Armadura.',
 
   'specialization.warrior.gladiator.name': 'Gladiador',
-  'specialization.warrior.gladiator.description':
-    'Un luchador equilibrado enfocado en golpes críticos y maestría en combate.',
+  'specialization.warrior.gladiator.description': 'Un campeón especializado en el combate en la Arena.',
   'specialization.rogue.assassin.name': 'Asesino',
   'specialization.rogue.assassin.description': 'Un pícaro mortal especializado en golpes críticos.',
 
@@ -1589,7 +1588,7 @@ export default {
   'specialization.rogue.shadowdancer.name': 'Danzante de Sombras',
   'specialization.rogue.shadowdancer.description': 'Un pícaro evasivo que usa trucos para evitar el daño.',
   'specialization.warrior.weaponmaster.name': 'Maestro de Armas',
-  'specialization.warrior.weaponmaster.description': 'Un especialista en armas enfocado en daño bruto.',
+  'specialization.warrior.weaponmaster.description': 'Un maestro de armas especializado en el dominio de las armas.',
   'specialization.vampire.bloodlord.name': 'Señor de la Sangre',
   'specialization.vampire.bloodlord.description': 'Maestro de ataques de robo de vida.',
   'specialization.vampire.nightstalker.name': 'Acechador Nocturno',
@@ -1696,7 +1695,7 @@ export default {
 
   // Warrior Specialization Skills
   'Armored Offense': 'Ofensiva Acorazada',
-  'skill.armoredOffense': 'Aumenta el daño basado en tu armadura.',
+  'skill.armoredOffense': 'Aumenta el daño basado en tu Armadura y Vida.',
   'Animated Weapons': 'Armas Animadas',
   'Spiritual Weapons': 'Armas Espirituales',
   'skill.animatedWeapons': 'Desbloquea armas animadas que luchan por ti.',
@@ -1707,7 +1706,7 @@ export default {
   'Arena Dominance': 'Dominio de la Arena',
   'skill.arenaDominance': 'Aumenta el daño infligido en la arena.',
   'Arena Resilience': 'Resiliencia de la Arena',
-  'skill.arenaResilience': 'Aumenta temporalmente la reducción de daño en arena (Máx 80%).',
+  'skill.arenaResilience': 'Aumenta la reducción de daño en la arena.',
 
   // New Stats
   'stats.retaliateWhenHit': 'Contraatacar al ser golpeado',
