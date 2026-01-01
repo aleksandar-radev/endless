@@ -1308,10 +1308,6 @@ function renderSkillToggleSection(
 }
 
 function renderAutoCastToggles() {
-  if (!crystalShop.hasAutoSpellCastUpgrade()) {
-    document.getElementById('auto-cast-section')?.remove();
-    return;
-  }
 
   // Only show if there are any instant/buff skills unlocked
   const eligibleSkills = Object.entries(skillTree.skills)
@@ -1332,14 +1328,7 @@ function renderAutoCastToggles() {
     eligibleSkills,
     (skillId) => skillTree.isAutoCastEnabled(skillId),
     (skill, e) => {
-      // Only allow toggling if upgrade is owned
-      if (crystalShop.hasAutoSpellCastUpgrade()) {
-        skillTree.setAutoCast(skill.id, e.target.checked);
-      } else {
-        e.preventDefault();
-        showToast(t('skillTree.purchaseAutoCastWarning'), 'warning');
-        e.target.checked = false;
-      }
+      skillTree.setAutoCast(skill.id, e.target.checked);
     },
     'auto-cast-switch',
     {

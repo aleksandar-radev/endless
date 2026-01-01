@@ -487,7 +487,7 @@ export default class SkillTree {
     // Set new level and deduct points
     const newLevel = currentLevel + allowedQty;
     const isToggle = skill.type() === 'toggle';
-    const shouldAutoEnableToggle = isToggle && (currentLevel > 0 ? wasActive : crystalShop.hasAutoSpellCastUpgrade());
+    const shouldAutoEnableToggle = isToggle && (currentLevel > 0 ? wasActive : true);
     const isActive = isToggle ? shouldAutoEnableToggle : false;
     const isAffordable =
       isToggle && isActive ? hero.stats.currentMana >= this.getSkillManaCost(skill, newLevel) : false;
@@ -504,9 +504,7 @@ export default class SkillTree {
       delete this.skills[skillId].affordable;
     }
 
-    if (crystalShop.hasAutoSpellCastUpgrade()) {
-      this.autoCastSettings[skillId] = true;
-    }
+    this.autoCastSettings[skillId] = true;
 
     this.skillPoints -= totalCost;
     if (!skipUpdates) {
@@ -1615,41 +1613,13 @@ export default class SkillTree {
     return allowedQty;
   }
 
-  enableAutoCastForAllSkills() {
-    let togglesActivated = false;
-
-    Object.entries(this.skills).forEach(([skillId, skillData]) => {
-      this.autoCastSettings[skillId] = true;
-
-      if (typeof skillData.type === 'function' && skillData.type() === 'toggle') {
-        if (!skillData.active) {
-          skillData.active = true;
-          togglesActivated = true;
-        }
-
-        const manaCost = this.getSkillManaCost(skillData, skillData.level);
-        skillData.affordable =
-          hero.stats.convertManaToLifePercent > 0
-            ? hero.stats.currentLife + hero.stats.currentMana >= manaCost
-            : hero.stats.currentMana >= manaCost;
-      }
-    });
-
-    if (togglesActivated) {
-      hero.queueRecalculateFromAttributes();
-      updateActionBar();
-    }
-
-    dataManager.saveGame();
-  }
-
   setAutoCast(skillId, enabled) {
     this.autoCastSettings[skillId] = enabled;
     dataManager.saveGame();
   }
 
   isAutoCastEnabled(skillId) {
-    return !!this.autoCastSettings[skillId];
+    return skillId in this.autoCastSettings ? !!this.autoCastSettings[skillId] : true;
   }
 
   // --- Slot display settings (default ON) ---

@@ -15,7 +15,7 @@ export default function run() {
       <li>Item percent values now scale 0.1% per level based on the base value at level 1.</li>
       <li>Reworked scaling of enemies and added the option to switch to legacy scaling system.</li>
       <li><strong>Quest Bonuses System:</strong> Quests now provide permanent bonuses for the current prestige run!</li>
-      <li>Changes to attributes: Vitality now provides 5 life (6 before) and 0.25 life regen per point, and perseverance is reduced to 0.25 life regen per point (0.5 before).</li>
+      <li>Changes to attributes: Vitality now provides 5 life (6 before) and 0.25 life regen per point, and perseverance is reduced to 0.25 life regen per point (0.5 before). Wisdom now provides 0.08 compared to 0.05 mana regeneration per point. And endurance now provides 0.1 thorns damage per point. Dexterity provides 1 attack rating per point in addition to its previous effects.</li>
       <li>Combined training, crystal shop, soul shop and buildings tabs into a single "Shop" tab with 4 subtabs.</li>
       <li>Removed life steal from training.</li>
       <li>Changed icons for all elements (fire, cold, lightning, earth, water, air).</li>
@@ -156,8 +156,9 @@ export default function run() {
       <li>Improved item tooltip layout to better handle multiple items and prevent off-screen clipping.</li>
       <li>Improved equipping control: right-clicking weapons or rings now allows choosing which hand/slot to equip them in.</li>
       <li>Added "Equip left hand" and "Equip right hand" in inventory context menu for items (right click on item).</li>
+      <li>Paladin skill thornedBulwark now provides 0.2 bonus to thorns damage per point in endurance. (because endurance has 0.1 inherently)</li>
       <li>Added thorns damage and thornsDamage% in ascension bonuses.</li>
-      <li style="color:#00AA00;">Continuous Play (auto-continue after death) is now the default behavior and the crystal shop upgrade has been removed.</li>
+      <li style="color:#00AA00;">Continuous Play (auto-continue after death) is now the default behavior and the crystal shop upgrade has been removed; the Auto Spell Cast crystal upgrade has also been removed — spells now auto-cast by default.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

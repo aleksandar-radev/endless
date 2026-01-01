@@ -1479,9 +1479,6 @@ export default {
   'Collect {count} materials.': 'Recoge {count} materiales.',
   'Reach stage {target} (Tier {tier})': 'Alcanza la etapa {target} (Nivel {tier})',
   'Reach stage {target} in tier {tier}.': 'Alcanza la etapa {target} en el nivel {tier}.',
-  'crystalShop.upgrade.autoSpellCast.label': 'Lanzamiento Automático',
-  'crystalShop.upgrade.autoSpellCast.bonus': 'Lanza automáticamente habilidades instantáneas y de mejora',
-  'crystalShop.upgrade.autoSpellCast.bonusLabel': 'Lanza automáticamente habilidades instantáneas y de mejora',
   'crystalShop.upgrade.autoSalvage.label': 'Desguace Automático',
   'crystalShop.upgrade.autoSalvage.bonus': 'Desguaza automáticamente objetos de rarezas seleccionadas',
   'crystalShop.upgrade.autoSalvage.bonusLabel': 'Desguaza automáticamente las rarezas seleccionadas',
@@ -1555,8 +1552,6 @@ export default {
   'soulShop.notEnoughSoulsBulk': '¡No tienes suficientes almas para comprar en masa!',
   'soulShop.bulkPurchaseSuccess': '¡Compra masiva en la tienda de almas completada!',
   startingCrystals: 'Cristales Iniciales',
-  'skillTree.purchaseAutoCastWarning':
-    'Compra la mejora de Auto Lanzamiento de Hechizos para habilitar el auto-lanzamiento.',
   'skillTree.notEnoughMana': '¡No hay suficiente maná!',
   'skillTree.notEnoughLife': '¡No hay suficiente vida!',
   'skillTree.skillCategory.attack': 'Habilidad de Ataque',

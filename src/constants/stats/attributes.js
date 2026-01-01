@@ -17,16 +17,16 @@ export const ATTRIBUTES = {
   wisdom: {
     effects: {
       manaPerPoint: 3,
-      manaRegenPerPoint: 0.05,
+      manaRegenPerPoint: 0.08,
     },
   },
   endurance: {
     effects: {
       armorPerPoint: 4,
-      thornsDamagePerPoint: 0,
+      thornsDamagePerPoint: 0.1,
     },
   },
-  dexterity: { effects: { evasionPerPoint: 4 } },
+  dexterity: { effects: { evasionPerPoint: 4, attackRatingPerPoint: 1 } },
   intelligence: { effects: { elementalDamagePerPoint: 0.067 } },
   perseverance: {
     effects: {

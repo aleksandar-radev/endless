@@ -35,14 +35,6 @@ const html = String.raw;
 const AUTO_SALVAGE_MAX_LEVEL = 8;
 
 const CRYSTAL_UPGRADE_CONFIG = {
-  autoSpellCast: {
-    label: 'crystalShop.upgrade.autoSpellCast.label',
-    bonus: 'crystalShop.upgrade.autoSpellCast.bonus',
-    bonusLabel: 'crystalShop.upgrade.autoSpellCast.bonusLabel',
-    baseCost: 40,
-    oneTime: true,
-    category: 'auto',
-  },
   autoSalvage: {
     label: 'crystalShop.upgrade.autoSalvage.label',
     bonus: 'crystalShop.upgrade.autoSalvage.bonus',
@@ -793,10 +785,7 @@ export default class CrystalShop {
     this._commitChanges();
     showToast(tp('crystalShop.purchased', { label }), 'success');
 
-    if (stat === 'autoSpellCast') {
-      skillTree.enableAutoCastForAllSkills();
-      initializeSkillTreeUI();
-    }
+
 
     if (stat === 'salvageMaterials') {
       if (options.salvageMaterialsEnabled) {
@@ -929,9 +918,5 @@ export default class CrystalShop {
     if (config.multiple) {
       await this._handleMultiplePurchase(stat, config);
     }
-  }
-
-  hasAutoSpellCastUpgrade() {
-    return !!this.crystalUpgrades.autoSpellCast;
   }
 }
