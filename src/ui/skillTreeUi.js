@@ -34,6 +34,38 @@ const formatBaseStatLabel = (stat) => {
   return label;
 };
 
+function renderBaseStatsList(stats) {
+  return Object.entries(stats)
+    .map(([stat, value]) => {
+      const label = formatBaseStatLabel(stat);
+      let displayValue = value;
+      if (stat.endsWith('Percent')) {
+        displayValue = `${value}%`;
+      }
+      if (!shouldShowStatValue(stat)) return `<div>${label}</div>`;
+      const prefix = value > 0 ? '+' : '';
+      return `<div>${label}: ${prefix}${displayValue}</div>`;
+    })
+    .join('');
+}
+
+function buildSkillNodeElement(skill, { classes = 'skill-node', levelText } = {}) {
+  const skillElement = document.createElement('div');
+  skillElement.className = classes;
+  skillElement.dataset.skillId = skill.id;
+  skillElement.dataset.skillType = skill.type();
+  skillElement.innerHTML = html`
+    <div
+      class="skill-icon"
+      style="background-image: url('${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg')"
+    ></div>
+    <div class="skill-level">
+      ${levelText ?? ''}
+    </div>
+  `;
+  return skillElement;
+}
+
 const SKILL_CATEGORY_TRANSLATIONS = {
   attack: 'skillTree.skillCategory.attack',
   spell: 'skillTree.skillCategory.spell',
@@ -193,18 +225,7 @@ function showSkillTreeWithTabs() {
 }
 
 function openSpecializationSelectionModal(spec) {
-  const baseStatsHtml = Object.entries(spec.baseStats())
-    .map(([stat, value]) => {
-      const label = formatBaseStatLabel(stat);
-      let displayValue = value;
-      if (stat.endsWith('Percent')) {
-        displayValue = `${value}%`;
-      }
-      if (!shouldShowStatValue(stat)) return `<div>${label}</div>`;
-      const prefix = value > 0 ? '+' : '';
-      return `<div>${label}: ${prefix}${displayValue}</div>`;
-    })
-    .join('');
+  const baseStatsHtml = renderBaseStatsList(spec.baseStats());
 
   const content = html`
     <div class="class-preview-wrapper">
@@ -378,18 +399,7 @@ function initializeSpecializationsTab() {
   if (skillTree.selectedSpecialization) {
     const spec = getSpecialization(skillTree.selectedPath.name, skillTree.selectedSpecialization.id);
 
-    const baseStatsHtml = Object.entries(spec.baseStats())
-      .map(([stat, value]) => {
-        const label = formatBaseStatLabel(stat);
-        let displayValue = value;
-        if (stat.endsWith('Percent')) {
-          displayValue = `${value}%`;
-        }
-        if (!shouldShowStatValue(stat)) return `<div>${label}</div>`;
-        const prefix = value > 0 ? '+' : '';
-        return `<div>${label}: ${prefix}${displayValue}</div>`;
-      })
-      .join('');
+    const baseStatsHtml = renderBaseStatsList(spec.baseStats());
 
     const showQtyControls = options?.quickBuy || options?.bulkBuy;
     let quickControls = '';
@@ -554,18 +564,7 @@ function initializeSpecializationsTab() {
     const specCard = document.createElement('div');
     specCard.className = 'specialization-card';
 
-    const baseStatsHtml = Object.entries(spec.baseStats())
-      .map(([stat, value]) => {
-        const label = formatBaseStatLabel(stat);
-        let displayValue = value;
-        if (stat.endsWith('Percent')) {
-          displayValue = `${value}%`;
-        }
-        if (!shouldShowStatValue(stat)) return `<div>${label}</div>`;
-        const prefix = value > 0 ? '+' : '';
-        return `<div>${label}: ${prefix}${displayValue}</div>`;
-      })
-      .join('');
+    const baseStatsHtml = renderBaseStatsList(spec.baseStats());
 
     specCard.innerHTML = `
       <div style="display: flex; align-items: flex-start; gap: 15px;">
@@ -600,20 +599,11 @@ function createSpecializationSkillElement(baseSkill) {
   // Fallback if not initialized yet (should not happen if logic is correct)
   if (!skill) skill = { ...baseSkill, level: 0 };
 
-  const skillElement = document.createElement('div');
-  skillElement.className = 'skill-node specialization-node';
-  skillElement.dataset.skillId = skill.id;
-  skillElement.dataset.skillType = skill.type();
-
-  skillElement.innerHTML = html`
-    <div
-      class="skill-icon"
-      style="background-image: url('${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg')"
-    ></div>
-    <div class="skill-level">
-      ${skill.level || 0}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
-    </div>
-  `;
+  const levelText = `${skill.level || 0}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}`;
+  const skillElement = buildSkillNodeElement(skill, {
+    classes: 'skill-node specialization-node',
+    levelText,
+  });
 
   // Tooltip
   skillElement.addEventListener('mouseenter', (e) => {
@@ -1182,18 +1172,7 @@ function showClassSelection() {
         </div>
       </div>
       <div class="base-stats" style="margin-top: 15px;">
-        ${Object.entries(pathData.baseStats())
-    .map(([stat, value]) => {
-      const label = formatBaseStatLabel(stat);
-      let displayValue = value;
-      if (stat.endsWith('Percent')) {
-        displayValue = `${value}%`;
-      }
-      if (!shouldShowStatValue(stat)) return `<div>${label}</div>`;
-      const prefix = value > 0 ? '+' : '';
-      return `<div>${label}: ${prefix}${displayValue}</div>`;
-    })
-    .join('')}
+        ${renderBaseStatsList(pathData.baseStats())}
       </div>
     `;
 
@@ -2232,20 +2211,8 @@ function buySkillBulk() {
 function createSkillElement(baseSkill) {
   let skill = skillTree.getSkill(baseSkill.id);
 
-  const skillElement = document.createElement('div');
-  skillElement.className = 'skill-node';
-  skillElement.dataset.skillId = skill.id;
-  skillElement.dataset.skillType = skill.type();
-
-  skillElement.innerHTML = html`
-    <div
-      class="skill-icon"
-      style="background-image: url('${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg')"
-    ></div>
-    <div class="skill-level">
-      ${skillTree.skills[skill.id]?.level || 0}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
-    </div>
-  `;
+  const levelText = `${skillTree.skills[skill.id]?.level || 0}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}`;
+  const skillElement = buildSkillNodeElement(skill, { levelText });
 
   skillElement.addEventListener('mouseenter', (e) => {
     if (IS_MOBILE_OR_TABLET()) return;

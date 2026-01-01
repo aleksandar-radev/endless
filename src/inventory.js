@@ -7,7 +7,7 @@ import { updateInventoryGrid, updateMaterialsGrid, sortInventory, sortMaterials 
 import { getCurrentRegion } from './region.js';
 import { computeSetBonuses } from './item.js';
 import { MATERIALS } from './constants/materials.js';
-import { getDivisor, getStatDecimalPlaces, STATS } from './constants/stats/stats.js';
+import { getDivisor, getStatDecimalPlaces, STATS, itemStatScaleFactor } from './constants/stats/stats.js';
 import { rollRandomSubtype } from './constants/itemSubtypes.js';
 import { ITEM_IDS, ITEM_RARITY,
   JEWELRY_TYPES,
@@ -898,7 +898,7 @@ export default class Inventory {
 
   getItemSalvageValue(item) {
     return Math.floor(
-      25 * item.level * Math.max(RARITY_ORDER.indexOf(item.rarity) / 2 + 1, 1) * Math.max(item.tier * 3, 1),
+      250 * itemStatScaleFactor(item.level, item.tier) * Math.max(RARITY_ORDER.indexOf(item.rarity) / 2 + 1, 1),
     );
   }
 
