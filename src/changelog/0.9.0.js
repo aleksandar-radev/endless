@@ -159,6 +159,7 @@ export default function run() {
       <li>Paladin skill thornedBulwark now provides 0.2 bonus to thorns damage per point in endurance. (because endurance has 0.1 inherently)</li>
       <li>Added thorns damage and thornsDamage% in ascension bonuses.</li>
       <li style="color:#00AA00;">Continuous Play (auto-continue after death) is now the default behavior and the crystal shop upgrade has been removed; the Auto Spell Cast crystal upgrade has also been removed — spells now auto-cast by default.</li>
+      <li>Allowed Alternation Orbs to be used on Unique and Set items.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

@@ -659,7 +659,7 @@ export default class Inventory {
     // Alternation Orb
     if (matDef.isCustom && matDef.id === 'alternation_orb') {
       const equipped = Object.entries(this.equippedItems)
-        .filter(([slot, item]) => item && ![RARITY_KEYS.SET, RARITY_KEYS.UNIQUE].includes(item.rarity))
+        .filter(([slot, item]) => item)
         .map(([slot, item]) => ({ slot, item }));
 
       const html = String.raw;
@@ -680,7 +680,6 @@ export default class Inventory {
         <p>${t(matDef.description || '')}</p>
         <p>${tp('inventory.youHaveAmount', { amount: `<b class="material-qty">${mat.qty}</b>` })}</p>
         <p>${t('inventory.selectItemAndStatReroll')}</p>
-        <p>${t('inventory.orbRestrictionUniqueSet')}</p>
         <p>
           ${tp('inventory.selectedItemLabel', { item: `<span id="alternation-selected-name">${t('common.none')}</span>` })}
         </p>
