@@ -5,7 +5,7 @@ import { t, tp } from './i18n.js';
 import { createModal, closeModal } from './ui/modal.js';
 import { updateInventoryGrid, updateMaterialsGrid, sortInventory, sortMaterials } from './ui/inventoryUi.js';
 import { getCurrentRegion } from './region.js';
-import { computeSetBonuses } from './uniqueItems.js';
+import { computeSetBonuses } from './item.js';
 import { MATERIALS } from './constants/materials.js';
 import { getDivisor, getStatDecimalPlaces, STATS } from './constants/stats/stats.js';
 import { rollRandomSubtype } from './constants/itemSubtypes.js';

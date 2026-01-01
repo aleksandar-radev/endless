@@ -33,7 +33,7 @@ import { RockyFieldEnemy, getRockyFieldRunePercent } from './rockyField.js';
 import { renderRunesUI } from './ui/runesUi.js';
 import { getRuneName, getRuneIcon } from './runes.js';
 import { RUNES } from './constants/runes.js';
-import { rollSpecialItemDrop } from './uniqueItems.js';
+import { rollSpecialItemDrop } from './item.js';
 import { AILMENTS } from './constants/ailments.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;

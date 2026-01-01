@@ -7,7 +7,7 @@ import { t } from './i18n.js';
 import { distributeMaterials } from './materialsUtil.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
 import { MATERIALS } from './constants/materials.js';
-import { rollSpecialItemDrop } from './uniqueItems.js';
+import { rollSpecialItemDrop } from './item.js';
 
 export async function collectOfflineFightRewards() {
   const nowLocal = Date.now();

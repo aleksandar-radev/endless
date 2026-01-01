@@ -3,7 +3,7 @@ import { QUEST_DEFINITIONS } from './constants/quests.js';
 import { hero, statistics, dataManager, inventory } from './globals.js';
 import { showToast, updateResources, updateTabIndicators } from './ui/ui.js';
 import { MATERIALS } from './constants/materials.js';
-import { createUniqueItemById } from './uniqueItems.js';
+import { createUniqueItemById } from './item.js';
 import { t } from './i18n.js';
 
 export class Quest {

@@ -27,7 +27,7 @@ import { updateAscensionUI } from './ui/ascensionUi.js';
 import { getRuneName } from './runes.js';
 import { t, tp } from './i18n.js';
 import { createModal, closeModal } from './ui/modal.js';
-import { createSetItemsById, createUniqueItemById } from './uniqueItems.js';
+import { createSetItemsById, createUniqueItemById } from './item.js';
 import { isDevAccessWindowActive } from './migrations/0.8.15.js';
 import { UNIQUE_ITEMS } from './constants/uniqueItems.js';
 import { SET_ITEMS } from './constants/setItems.js';

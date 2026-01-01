@@ -60,7 +60,8 @@ function calculateSetBonusValues(setDefinition, tier, level) {
 
       const val = Math.random() * (absMax - absMin) + absMin;
 
-      stats[stat] = val * statConfig.scaling(level, tier);
+      const scaling = typeof statConfig.scaling === 'function' ? statConfig.scaling(level, tier) : 1;
+      stats[stat] = val * scaling;
     });
 
     return {
