@@ -13,7 +13,7 @@ export const ATTRIBUTES = {
       damagePerPoint: 0.1,
     },
   },
-  vitality: { effects: { lifePerPoint: 5, lifeRegenPerPoint: 0.25 } },
+  vitality: { effects: { lifePerPoint: 6, lifeRegenPerPoint: 0.1 } },
   wisdom: {
     effects: {
       manaPerPoint: 3,
@@ -30,7 +30,7 @@ export const ATTRIBUTES = {
   intelligence: { effects: { elementalDamagePerPoint: 0.067 } },
   perseverance: {
     effects: {
-      lifeRegenPerPoint: 0.25,
+      lifeRegenPerPoint: 0.2,
       manaRegenPerPoint: 0.05,
       allResistancePerPoint: 3,
     },
