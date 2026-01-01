@@ -104,6 +104,7 @@ export default function run() {
       <li>Most if not all texts are not translated for all existing languagese correctly.</li>
       <li>Slight performance improvements.</li>
       <li>Elemental Allocation now includes a Physical % split for resource-based extra damage bonuses.</li>
+      <li>Moved Elemental Allocation button to Stats tab only (removed from Training subtab).</li>
       <li>Life steal, mana steal and omni steal now cannot appear on items.</li>
       <li>
         Reduced exploration item and material bonuses across every region, with higher tiers receiving the largest cuts.

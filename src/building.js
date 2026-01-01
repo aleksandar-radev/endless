@@ -20,13 +20,12 @@ const refundPercent = 0.9;
 // Represents a single building instance (with state)
 export class Building {
   constructor({
-    id, level = 0, placedAt = null, lastBonusTime = null, lastBonusTimeLocal = null, totalEarned = 0,
+    id, level = 0, lastBonusTime = null, lastBonusTimeLocal = null, totalEarned = 0,
   }) {
     const data = buildingsData[id];
     if (!data) throw new Error(`Unknown building id: ${id}`);
     this.id = id;
     this.level = level;
-    this.placedAt = placedAt; // index of map placeholder, or null if not placed
 
     this.icon = data.icon;
     this.image = data.image;
@@ -55,7 +54,6 @@ export class Building {
   static async create({
     id,
     level = 0,
-    placedAt = null,
     lastBonusTime = null,
     lastBonusTimeLocal = null,
     totalEarned = 0,
@@ -66,7 +64,6 @@ export class Building {
     return new Building({
       id,
       level,
-      placedAt,
       lastBonusTime: serverNow,
       lastBonusTimeLocal: localNow,
       totalEarned,
@@ -213,7 +210,6 @@ export class Building {
     return {
       id: this.id,
       level: this.level,
-      placedAt: this.placedAt,
       lastBonusTime: this.lastBonusTime,
       lastBonusTimeLocal: this.lastBonusTimeLocal,
       totalEarned: this.totalEarned,
@@ -264,7 +260,6 @@ function formatInterval(interval) {
 
 export class BuildingManager {
   buildings = {};
-  placedBuildings = [null, null, null, null, null];
   lastActive = null;
   lastActiveLocal = null;
 
@@ -275,7 +270,6 @@ export class BuildingManager {
   static async create(saved = null) {
     const manager = Object.create(BuildingManager.prototype);
     manager.buildings = {};
-    manager.placedBuildings = [null, null, null, null, null];
     const localNow = Date.now();
     const savedOffset =
       Number.isFinite(saved?.lastActive) && Number.isFinite(saved?.lastActiveLocal)
@@ -295,50 +289,15 @@ export class BuildingManager {
       manager.buildings[id] = await Building.create({
         id,
         level: bSave?.level || 0,
-        placedAt: bSave?.placedAt ?? null,
         lastBonusTime: bSave?.lastBonusTime ?? manager.lastActive,
         lastBonusTimeLocal: bSave?.lastBonusTimeLocal ?? inferLocal(bSave?.lastBonusTime ?? manager.lastActive),
         totalEarned: bSave?.totalEarned || 0,
       });
-      if (manager.buildings[id].placedAt !== null) {
-        manager.placedBuildings[manager.buildings[id].placedAt] = id;
-      }
     }
 
     // Warm the trusted time cache in the background (do not block game load).
     getTimeNow().catch(() => {});
     return manager;
-  }
-
-  // Place a building at a map placeholder (returns true if successful)
-  async placeBuilding(buildingId, placeholderIdx) {
-    // Remove any building currently at this spot
-    const prevId = this.placedBuildings[placeholderIdx];
-    if (prevId) this.buildings[prevId].placedAt = null;
-    // Remove this building from any previous spot
-    const b = this.buildings[buildingId];
-    if (b.placedAt !== null) this.placedBuildings[b.placedAt] = null;
-    b.placedAt = placeholderIdx;
-    this.placedBuildings[placeholderIdx] = buildingId;
-    // Set lastBonusTime to now when placed
-    const serverNow = await getTimeNow();
-    const localNow = Date.now();
-    b.lastBonusTime = serverNow;
-    b.lastBonusTimeLocal = localNow;
-  }
-
-  // Remove a building from the map
-  async unplaceBuilding(buildingId) {
-    const b = this.buildings[buildingId];
-    if (b.placedAt !== null) {
-      this.placedBuildings[b.placedAt] = null;
-      b.placedAt = null;
-      b.level = 0; // Reset level when unplaced
-      const serverNow = await getTimeNow();
-      const localNow = Date.now();
-      b.lastBonusTime = serverNow; // Optionally reset lastBonusTime
-      b.lastBonusTimeLocal = localNow;
-    }
   }
 
   // Upgrade a building
@@ -347,7 +306,7 @@ export class BuildingManager {
   }
 
   calculateBulkCostAndUpgrades(qtySetting) {
-    const placed = this.getPlacedBuildings().filter((b) => b !== null && b.level < b.maxLevel);
+    const placed = this.getAllBuildings().filter((b) => b !== null && b.level < b.maxLevel);
     if (placed.length === 0) return {
       totalCosts: {}, upgrades: [], affordable: true,
     };
@@ -423,17 +382,6 @@ export class BuildingManager {
     return true;
   }
 
-  // Get building at a map placeholder
-  getBuildingAt(placeholderIdx) {
-    const id = this.placedBuildings[placeholderIdx];
-    return id ? this.buildings[id] : null;
-  }
-
-  // Get all placed buildings
-  getPlacedBuildings() {
-    return this.placedBuildings.map((id, idx) => (id ? this.buildings[id] : null));
-  }
-
   // Get all buildings (array)
   getAllBuildings() {
     return Object.values(this.buildings);
@@ -458,7 +406,7 @@ export class BuildingManager {
     let changed = false;
     // Aggregate materials across buildings to minimize UI updates
     const materialAggregateOnline = {};
-    for (const b of this.getPlacedBuildings()) {
+    for (const b of this.getAllBuildings()) {
       if (!b || b.level <= 0) continue;
       const intervalMs = intervalToMs(b.effect?.interval);
       if (!intervalMs) continue;
@@ -639,7 +587,6 @@ export class BuildingManager {
   toJSON() {
     const out = {
       buildings: {},
-      placedBuildings: [...this.placedBuildings],
       lastActive: this.lastActive,
       lastActiveLocal: this.lastActiveLocal,
     };

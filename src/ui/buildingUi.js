@@ -37,7 +37,6 @@ function intervalToMs(interval) {
 function isBuildingReadyForTimer(building) {
   return (
     building &&
-    typeof building.placedAt === 'number' &&
     building.level > 0 &&
     building.effect &&
     building.effect.interval &&
@@ -204,36 +203,39 @@ export function updateBuildingAffordability() {
     const building = buildings?.buildings?.[id];
     if (!building) return;
 
+    let amt = 1;
     if (options?.quickBuy) {
       const rawQty = options.buildingQty || 1;
       const maxLevelGain = Math.max(building.maxLevel - building.level, 0);
       const maxAffordable = building.getMaxUpgradeAmount(hero);
       const qty = rawQty === 'max' ? Math.min(maxLevelGain, maxAffordable) : parseInt(rawQty, 10) || 1;
-      const amt = Math.min(qty, maxLevelGain);
+      amt = Math.min(qty, maxLevelGain);
+      if (amt <= 0 && building.level < building.maxLevel) amt = 1; // Show cost for 1 if can't afford desired
+    } else {
+      // Default to 1 if quickBuy is off
+      amt = 1;
+    }
 
-      if (amt > 0) {
-        const totalCost = building.getUpgradeCost(amt);
-        const costStr = Building.formatCost(totalCost);
-        el.innerHTML = `${t('ascension.upgrade.cost') || 'Cost'}: <b>${costStr}</b> (${formatNumber(amt)})`;
+    if (amt > 0 && building.level < building.maxLevel) {
+      const totalCost = building.getUpgradeCost(amt);
+      const costStr = Building.formatCost(totalCost);
+      el.innerHTML = `${t('ascension.upgrade.cost') || 'Cost'}: <b>${costStr}</b>${options?.quickBuy ? ` (${formatNumber(amt)})` : ''}`;
 
-        // Check affordability
-        let canAfford = true;
-        for (const [type, value] of Object.entries(totalCost)) {
-          const playerRes = hero[type + 's'] !== undefined ? hero[type + 's'] : hero[type];
-          if (playerRes < value) {
-            canAfford = false;
-            break;
-          }
+      // Check affordability
+      let canAfford = true;
+      for (const [type, value] of Object.entries(totalCost)) {
+        const playerRes = hero[type + 's'] !== undefined ? hero[type + 's'] : hero[type];
+        if (playerRes < value) {
+          canAfford = false;
+          break;
         }
-        el.classList.toggle('unaffordable', !canAfford);
-        el.style.display = '';
-      } else if (building.level >= building.maxLevel) {
-        el.textContent = t('common.max');
-        el.classList.remove('unaffordable');
-        el.style.display = '';
-      } else {
-        el.style.display = 'none';
       }
+      el.classList.toggle('unaffordable', !canAfford);
+      el.style.display = '';
+    } else if (building.level >= building.maxLevel) {
+      el.textContent = t('common.max');
+      el.classList.remove('unaffordable');
+      el.style.display = '';
     } else {
       el.style.display = 'none';
     }
@@ -257,7 +259,7 @@ export function updateBuildingBulkCost() {
   bulkBtn.disabled = upgrades.length === 0 || !affordable;
 }
 
-function showBuildingInfoModal(building, onUpgrade, placementOptions) {
+function showBuildingInfoModal(building, onUpgrade) {
   const canUpgrade = building.level < building.maxLevel;
 
   let selectedAmount = options.useNumericInputs ? Math.min(Math.max(options.buildingQty || 1, 1), BUILDING_MAX_QTY) : 1;
@@ -361,9 +363,7 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
           >
             ${t('buildings.upgrade')}
           </button>
-          ${!placementOptions
-    ? `<button class="building-sell-btn" ${sellAmount > 0 ? '' : 'disabled'}>${tp('buildings.sellRefund', { refund: Building.formatCost(refundAmount) })}</button>`
-    : ''}
+          <button class="building-sell-btn" ${sellAmount > 0 ? '' : 'disabled'}>${tp('buildings.sellRefund', { refund: Building.formatCost(refundAmount) })}</button>
         </div>
       </div>
     `;
@@ -446,52 +446,34 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
         }
       }
       updateResources(); // Update UI after upgrade
-      if (upgraded && placementOptions) {
-        // If in placement mode and this is the first upgrade, place the building
-        if (building.placedAt == null) {
-          buildings.placeBuilding(building.id, placementOptions.placeholderIdx);
-          if (typeof placementOptions.onPlaced === 'function') placementOptions.onPlaced();
-          // Update main buildings tab after first placement
-          renderPurchasedBuildings();
-        }
-        // If building is now level 1 or higher, switch to normal modal (show sell/refund)
-        if (building.level > 0) {
-          closeModal('building-info-modal');
-          showBuildingInfoModal(building, onUpgrade, null);
-          return;
-        }
-      }
       if (upgraded) renderPurchasedBuildings();
       if (upgraded && typeof onUpgrade === 'function') onUpgrade();
       if (dataManager) dataManager.saveGame();
       rerenderModal();
     };
-    if (!placementOptions) {
-      modal.querySelector('.building-sell-btn').onclick = () => {
-        const sellAmount = getSellAmount();
-        if (sellAmount <= 0) return;
-        showConfirmDialog(tp('buildings.removeConfirm', { name: building.name })).then((confirmed) => {
-          if (confirmed) {
-            building.refundToHero(sellAmount);
-            if (building.level <= 0) {
-              buildings.unplaceBuilding(building.id);
-              closeModal('building-info-modal');
-            } else {
-              selectedAmount = Math.max(1, Math.min(selectedAmount, building.level));
-              if (options.useNumericInputs) {
-                options.buildingQty = selectedAmount;
-              }
-              rerenderModal();
+    modal.querySelector('.building-sell-btn').onclick = () => {
+      const sellAmount = getSellAmount();
+      if (sellAmount <= 0) return;
+      showConfirmDialog(tp('buildings.removeConfirm', { name: building.name })).then((confirmed) => {
+        if (confirmed) {
+          building.refundToHero(sellAmount);
+          if (building.level <= 0) {
+            // buildings.unplaceBuilding(building.id); // No longer needed as we don't use placement
+            closeModal('building-info-modal');
+          } else {
+            selectedAmount = Math.max(1, Math.min(selectedAmount, building.level));
+            if (options.useNumericInputs) {
+              options.buildingQty = selectedAmount;
             }
-            if (typeof onUpgrade === 'function') onUpgrade();
-            if (dataManager) dataManager.saveGame();
-            renderPurchasedBuildings();
+            rerenderModal();
           }
-        });
-      };
-    }
+          if (typeof onUpgrade === 'function') onUpgrade();
+          if (dataManager) dataManager.saveGame();
+          renderPurchasedBuildings();
+        }
+      });
+    };
     modal.querySelector('.modal-close').onclick = () => {
-      // If in placement mode and not upgraded, do not place the building
       closeModal('building-info-modal');
     };
   }
@@ -505,64 +487,11 @@ function showBuildingInfoModal(building, onUpgrade, placementOptions) {
   rerenderModal();
 }
 
-function showSelectBuildingModal() {
-  const placeholderIdx = buildings.placedBuildings.findIndex((id) => id === null);
-  if (placeholderIdx === -1) {
-    showToast(t('buildings.noSlots'));
-    return;
-  }
-  const content = html`
-    <div class="building-choose-modal-content">
-      <button class="modal-close">×</button>
-      <h3 data-i18n="buildings.selectToPlace">${t('buildings.selectToPlace')}</h3>
-      <div class="choose-building-list"></div>
-    </div>
-  `;
-  const modal = createModal({
-    id: 'building-choose-modal',
-    className: 'building-modal building-choose-building-modal',
-    content,
-    onClose: null,
-  });
-  const list = modal.querySelector('.choose-building-list');
-  const placedIds = new Set(
-    Object.values(buildings.buildings)
-      .filter((b) => b.placedAt !== null)
-      .map((b) => b.id),
-  );
-  Object.values(buildings.buildings)
-    .filter((building) => !placedIds.has(building.id))
-    .forEach((building) => {
-      const el = document.createElement('div');
-      el.className = 'building-card';
-      el.style.cursor = 'pointer';
-      el.innerHTML = `
-        <div class="building-image">
-          <img src="${import.meta.env.VITE_BASE_PATH + building.image}" alt="${building.name}" class="building-img" />
-        </div>
-        <div class="building-info">
-          <div class="building-name">${building.name}</div>
-          <div class="building-desc">${building.description}</div>
-        </div>
-      `;
-      el.onclick = () => {
-        closeModal('building-choose-modal');
-        showBuildingInfoModal(building, renderPurchasedBuildings, {
-          placeholderIdx,
-          onPlaced: renderPurchasedBuildings,
-        });
-      };
-      list.appendChild(el);
-    });
-  modal.querySelector('.modal-close').onclick = () => closeModal('building-choose-modal');
-}
-
 export function renderPurchasedBuildings() {
   const purchased = document.getElementById('purchased-buildings');
   if (!purchased) return;
   purchased.innerHTML = '';
   Object.values(buildings.buildings)
-    .filter((building) => building.placedAt !== null)
     .forEach((building) => {
       const card = createBuildingCard(building);
       card.style.cursor = 'pointer';
@@ -611,7 +540,6 @@ export function initializeBuildingsUI() {
   if (!tab) return;
   tab.innerHTML = html`
     <div class="buildings-header">
-      <button id="select-building-btn" class="building-select-btn" data-i18n="buildings.selectBuilding">${t('buildings.selectBuilding')}</button>
       <div class="building-controls-wrapper"></div>
     </div>
     <div id="purchased-buildings"></div>
@@ -687,8 +615,6 @@ export function initializeBuildingsUI() {
   }
 
   renderPurchasedBuildings();
-  // Open building selection modal
-  tab.querySelector('#select-building-btn').onclick = showSelectBuildingModal;
   // Start live countdowns
   startBuildingCountdowns();
 }

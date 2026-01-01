@@ -607,17 +607,8 @@ export default class Training {
       .filter(([stat, config]) => config.training && section.stats.includes(stat))
       .map(([stat, config]) => this.createUpgradeButton(stat, config))
       .join('');
-    if (section.key === 'offense') {
-      const control = document.createElement('div');
-      control.className = 'elemental-allocation-control';
-      const btn = document.createElement('button');
-      btn.className = 'elemental-allocation-btn';
-      btn.dataset.i18n = 'training.elementalDistributionButton';
-      btn.textContent = t('training.elementalDistributionButton');
-      btn.onclick = () => this.openElementalDistributionModal();
-      control.appendChild(btn);
-      trainingGrid.appendChild(control);
-    }
+    // Elemental allocation button removed from training subtab — the control is now available only in the Stats tab.
+    // (Button kept in `statsAndAttributesUi.js`.)
     if (options?.bulkBuy) this.updateBulkCost();
   }
 
