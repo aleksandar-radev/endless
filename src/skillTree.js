@@ -1500,7 +1500,29 @@ export default class SkillTree {
     this.selectedSpecialization = null;
     this.specializationSkills = {};
     this.updateSpecializationPoints();
-    hero.queueRecalculateFromAttributes();
+    hero.recalculateFromAttributes();
+
+    // Check for main skills that are no longer visible (e.g. specialized skills)
+    let refundedPoints = 0;
+    Object.keys(this.skills).forEach((skillId) => {
+      const skill = this.getSkill(skillId);
+      if (skill && !this.isSkillVisible(skill)) {
+        // This skill is no longer visible, refund it
+        const level = this.skills[skillId].level || 0;
+        if (level > 0) {
+          refundedPoints += this.calculateSkillPointCost(0, level);
+        }
+        delete this.skills[skillId];
+        delete this.autoCastSettings[skillId]; // cleanup
+        delete this.displaySettings[skillId]; // cleanup
+      }
+    });
+
+    if (refundedPoints > 0) {
+      this.addSkillPoints(refundedPoints);
+      showToast(t('skillTree.specializationSkillsRefunded', { points: refundedPoints }), 'info');
+    }
+
     inventory.validateEquipment();
     updateActionBar();
     updateSkillTreeValues();
