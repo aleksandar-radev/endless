@@ -17,7 +17,7 @@ export const MOB_REGION_SCALING_MULTIPLIER = 5;
 
 // Percentage increase per stage based on the base value at stage 1
 // e.g., 0.1 means each stage increases mob stats by 10% of the base (stage 1) value
-export const MOB_STAGE_SCALING_PERCENT = 0.1;
+export const MOB_STAGE_SCALING_PERCENT = 0.2;
 export const MOB_REWARD_STAGE_SCALING_PERCENT = MOB_STAGE_SCALING_PERCENT * 0.85;
 
 // e.g., 3x means tier 2 items have 3x the flat stats of tier 1 items at the same level
