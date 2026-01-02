@@ -702,6 +702,11 @@ export default class Hero {
       // Apply caps
       let cap = STATS[stat]?.cap;
       if (stat === 'blockChance') {
+        const hasShield = Object.values(inventory.equippedItems).some((i) => i && i.type === 'SHIELD');
+        if (!hasShield) {
+          this.stats[stat] = 0;
+          continue;
+        }
         cap = (cap || 50) + ((ascensionBonuses.blockChanceCap || 0) | 0);
       }
       if (stat === 'critChance') {

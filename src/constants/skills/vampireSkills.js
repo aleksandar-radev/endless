@@ -353,7 +353,7 @@ export const VAMPIRE_SKILLS = {
     id: 'bloodSacrifice',
     name: () => t('skill.bloodSacrifice.name'),
     type: () => 'instant',
-    skill_type: 'attack',
+    skill_type: 'spell',
     manaCost: () => 0,
     cooldown: () => 5000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],

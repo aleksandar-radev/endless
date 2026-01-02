@@ -99,6 +99,7 @@ export default function run() {
 
     <span style="color:#FF8A00;">Improvements</span>
     <ul>
+      <li>Block chance stays at 0 when no shield is equipped.</li>
       <li>Improved overall design and especially mobile experience.</li>
       <li>Added total potential damage to summon skill tooltips and details.</li>
       <li>Most if not all texts are not translated for all existing languagese correctly.</li>

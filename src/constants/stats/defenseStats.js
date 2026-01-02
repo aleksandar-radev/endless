@@ -1,4 +1,4 @@
-import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat } from './stats.js';
+import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat, createHiddenStat } from './stats.js';
 import { ELEMENTS } from '../common.js';
 
 const resistanceTierScalingMaxPercent = createTierScaling(18, 250, 1.2);
@@ -120,7 +120,7 @@ export const DEFENSE_STATS = {
     itemTags: ['shield', 'armor'],
     sub: 'defense',
   }),
-  thornsOnMiss: createStat({ sub: 'defense' }),
+  thornsOnMiss: createHiddenStat({ sub: 'defense' }),
   resurrectionChance: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(8, 40, 0.7) },
     itemTags: ['amulet'],
