@@ -499,11 +499,6 @@
   margin-right: 40px;
 }
 
-.class-path img {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
-  background: #222;
-}
-
 #class-selection {
   display: grid;
   grid-template-columns: 1fr 1fr;
