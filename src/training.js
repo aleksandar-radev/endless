@@ -37,6 +37,7 @@ const ELEMENTAL_TRAINING_STATS = [
 ];
 
 const DEFAULT_RESOURCE_EXTRA_PHYSICAL_SHARE_PERCENT = 50;
+const DEFAULT_RESOURCE_EXTRA_THORNS_SHARE_PERCENT = 0;
 
 export default class Training {
   constructor(savedData = null) {
@@ -45,6 +46,7 @@ export default class Training {
     this.goldSpent = 0;
     this.elementalDistribution = {};
     this.resourceExtraDamagePhysicalSharePercent = DEFAULT_RESOURCE_EXTRA_PHYSICAL_SHARE_PERCENT;
+    this.resourceExtraDamageThornsSharePercent = DEFAULT_RESOURCE_EXTRA_THORNS_SHARE_PERCENT;
     Object.entries(STATS).forEach(([stat, config]) => {
       if (config.training) {
         this.upgradeLevels[stat] = 0;
@@ -75,17 +77,39 @@ export default class Training {
   }
 
   _ensureResourceExtraDamageSplitStructure() {
-    const value = Number(this.resourceExtraDamagePhysicalSharePercent);
-    if (!Number.isFinite(value)) {
+    const p = Number(this.resourceExtraDamagePhysicalSharePercent);
+    const t = Number(this.resourceExtraDamageThornsSharePercent);
+    if (!Number.isFinite(p)) {
       this.resourceExtraDamagePhysicalSharePercent = DEFAULT_RESOURCE_EXTRA_PHYSICAL_SHARE_PERCENT;
-      return;
+    } else {
+      this.resourceExtraDamagePhysicalSharePercent = Math.max(0, Math.min(100, p));
     }
-    this.resourceExtraDamagePhysicalSharePercent = Math.max(0, Math.min(100, value));
+    if (!Number.isFinite(t)) {
+      this.resourceExtraDamageThornsSharePercent = DEFAULT_RESOURCE_EXTRA_THORNS_SHARE_PERCENT;
+    } else {
+      this.resourceExtraDamageThornsSharePercent = Math.max(0, Math.min(100, t));
+    }
+  }
+
+  getResourceExtraDamageShares() {
+    this._ensureResourceExtraDamageSplitStructure();
+    const p = Number(this.resourceExtraDamagePhysicalSharePercent || 0) / 100;
+    const t = Number(this.resourceExtraDamageThornsSharePercent || 0) / 100;
+    const sum = p + t;
+    if (sum <= 1 || sum <= 0) {
+      return { physical: p, thorns: t };
+    }
+    // If both sliders sum to more than 100% scale them down proportionally so total <= 100%
+    const scale = 1 / sum;
+    return { physical: p * scale, thorns: t * scale };
   }
 
   getResourceExtraDamagePhysicalShare() {
-    this._ensureResourceExtraDamageSplitStructure();
-    return (this.resourceExtraDamagePhysicalSharePercent || 0) / 100;
+    return this.getResourceExtraDamageShares().physical;
+  }
+
+  getResourceExtraDamageThornsShare() {
+    return this.getResourceExtraDamageShares().thorns;
   }
 
   reset() {
@@ -914,7 +938,11 @@ export default class Training {
   _getTotalResourceExtraDamage() {
     const total = Number(hero?.totalExtraDamageFromResources);
     if (Number.isFinite(total)) return total;
-    return this._getElementalResourceExtraTotal() + this._getPhysicalResourceExtraTotal();
+    return (
+      this._getElementalResourceExtraTotal() +
+      this._getPhysicalResourceExtraTotal() +
+      (hero?.thornsDamageFromResources || 0)
+    );
   }
 
   _getElementalDistributionShares() {
@@ -964,12 +992,9 @@ export default class Training {
           <div class="elemental-distribution-row" data-stat="${stat}">
             <div class="elemental-row-header">
               <span class="elemental-label">${formatStatName(stat)}</span>
-              <span class="elemental-share"></span>
+              <span class="elemental-meta"><span class="elemental-share"></span><span class="elemental-allocation"></span></span>
             </div>
             <input type="range" min="0" max="100" step="1" />
-            <div class="elemental-row-footer">
-              <span class="elemental-allocation"></span>
-            </div>
           </div>
         `,
       ).join('');
@@ -977,21 +1002,6 @@ export default class Training {
         <div class="elemental-distribution-modal-content">
           <button class="modal-close">&times;</button>
           <h2 data-i18n="training.elementalDistributionTitle">${t('training.elementalDistributionTitle')}</h2>
-          <p class="elemental-distribution-description" data-i18n="training.elementalDistributionDescription">
-            ${t('training.elementalDistributionDescription')}
-          </p>
-          <div class="elemental-distribution-row elemental-distribution-resource-split" data-stat="damage">
-            <div class="elemental-row-header">
-              <span class="elemental-label" data-i18n="training.elementalDistributionResourcePhysicalLabel">
-                ${t('training.elementalDistributionResourcePhysicalLabel')}
-              </span>
-              <span class="elemental-share resource-physical-share"></span>
-            </div>
-            <input class="resource-physical-slider" type="range" min="0" max="100" step="1" />
-            <div class="elemental-row-footer">
-              <span class="elemental-allocation resource-physical-amount"></span>
-            </div>
-          </div>
           <div class="elemental-distribution-totals">
             <p class="elemental-total" data-i18n="training.elementalDistributionTrainingTotal">
               ${tp('training.elementalDistributionTrainingTotal', { amount: formatNumber(0) })}
@@ -1005,7 +1015,33 @@ export default class Training {
             <p class="physical-extra-total" data-i18n="training.elementalDistributionResourcePhysicalTotal">
               ${tp('training.elementalDistributionResourcePhysicalTotal', { amount: formatNumber(0) })}
             </p>
+            <p class="thorns-extra-total" data-i18n="training.elementalDistributionResourceThornsTotal">
+              ${tp('training.elementalDistributionResourceThornsTotal', { amount: formatNumber(0) })}
+            </p>
           </div>
+
+          <div class="elemental-distribution-row elemental-distribution-resource-split" data-stat="damage">
+            <div class="elemental-row-header">
+              <span class="elemental-label" data-i18n="training.elementalDistributionResourcePhysicalLabel">
+                ${t('training.elementalDistributionResourcePhysicalLabel')}
+              </span>
+              <span class="elemental-meta"><span class="elemental-share resource-physical-share"></span><span class="elemental-allocation resource-physical-amount"></span></span>
+            </div>
+            <input class="resource-physical-slider" type="range" min="0" max="100" step="1" />
+          </div>
+
+          <div class="elemental-distribution-row elemental-distribution-resource-split" data-stat="thorns">
+            <div class="elemental-row-header">
+              <span class="elemental-label" data-i18n="training.elementalDistributionResourceThornsLabel">
+                ${t('training.elementalDistributionResourceThornsLabel')}
+              </span>
+              <span class="elemental-meta"><span class="elemental-share resource-thorns-share"></span><span class="elemental-allocation resource-thorns-amount"></span></span>
+            </div>
+            <input class="resource-thorns-slider" type="range" min="0" max="100" step="1" />
+          </div>
+
+          <hr class="elemental-distribution-separator" style="border:none;border-top:4px solid #c08686ff;" />
+
           <div class="elemental-distribution-rows">${rowsMarkup}</div>
           <div class="elemental-distribution-actions">
             <button class="elemental-distribution-even" data-i18n="training.elementalDistributionReset">
@@ -1033,6 +1069,9 @@ export default class Training {
           if (stat === 'damage') {
             this.resourceExtraDamagePhysicalSharePercent = Number(input.value);
             this._ensureResourceExtraDamageSplitStructure();
+          } else if (stat === 'thorns') {
+            this.resourceExtraDamageThornsSharePercent = Number(input.value);
+            this._ensureResourceExtraDamageSplitStructure();
           } else {
             this.elementalDistribution[stat] = Number(input.value);
           }
@@ -1056,8 +1095,12 @@ export default class Training {
     const intelligenceTotal = this._getElementalIntelligenceTotal();
     const totalResourceExtra = this._getTotalResourceExtraDamage();
     const resourcePhysicalShare = this.getResourceExtraDamagePhysicalShare();
+    const resourceThornsShare = this.getResourceExtraDamageThornsShare();
     const resourcePhysicalTotal = totalResourceExtra * resourcePhysicalShare;
-    const resourceElementalTotal = totalResourceExtra - resourcePhysicalTotal;
+    const resourceThornsTotal = totalResourceExtra * resourceThornsShare;
+    let resourceElementalTotal = totalResourceExtra - resourcePhysicalTotal - resourceThornsTotal;
+    resourceElementalTotal = Math.max(0, resourceElementalTotal);
+
     const combinedTotal = trainingTotal + intelligenceTotal + resourceElementalTotal;
     const shares = this._getElementalDistributionShares();
     const totalEl = modal.querySelector('.elemental-total');
@@ -1078,6 +1121,11 @@ export default class Training {
       physicalEl.textContent = tp('training.elementalDistributionResourcePhysicalTotal', { amount: formatNumber(Number(resourcePhysicalTotal.toFixed(2))) });
     }
 
+    const thornsEl = modal.querySelector('.thorns-extra-total');
+    if (thornsEl) {
+      thornsEl.textContent = tp('training.elementalDistributionResourceThornsTotal', { amount: formatNumber(Number(resourceThornsTotal.toFixed(2))) });
+    }
+
     const physicalSlider = modal.querySelector('.resource-physical-slider');
     if (physicalSlider) {
       physicalSlider.value = String(Number(this.resourceExtraDamagePhysicalSharePercent || 0));
@@ -1092,9 +1140,23 @@ export default class Training {
       physicalAmountEl.textContent = tp('training.elementalDistributionAmount', { amount: formatNumber(Number(allocation.toFixed(2))) });
     }
 
+    const thornsSlider = modal.querySelector('.resource-thorns-slider');
+    if (thornsSlider) {
+      thornsSlider.value = String(Number(this.resourceExtraDamageThornsSharePercent || 0));
+    }
+    const thornsShareEl = modal.querySelector('.resource-thorns-share');
+    if (thornsShareEl) {
+      thornsShareEl.textContent = tp('training.elementalDistributionShare', { percent: formatNumber(Number(this.resourceExtraDamageThornsSharePercent || 0).toFixed(1)) });
+    }
+    const thornsAmountEl = modal.querySelector('.resource-thorns-amount');
+    if (thornsAmountEl) {
+      const allocation = totalResourceExtra * resourceThornsShare;
+      thornsAmountEl.textContent = tp('training.elementalDistributionAmount', { amount: formatNumber(Number(allocation.toFixed(2))) });
+    }
+
     modal.querySelectorAll('.elemental-distribution-row').forEach((row) => {
       const stat = row.dataset.stat;
-      if (stat === 'damage') return;
+      if (stat === 'damage' || stat === 'thorns') return;
       const slider = row.querySelector('input[type="range"]');
       const shareEl = row.querySelector('.elemental-share');
       const amountEl = row.querySelector('.elemental-allocation');

@@ -99,6 +99,7 @@ export default function run() {
 
     <span style="color:#FF8A00;">Improvements</span>
     <ul>
+      <li>Elemental allocation changed to "Damage Allocation" and it now also includes thorns damage.</li>
       <li>Equipping bow makes the enemy attack with a delay of 1.5 seconds.</li>
       <li>Removed "Elemental Damage %" from ascension upgrades.</li>
       <li>Throns damage no longer benefits from damage % bonuses. Only total damage %.</li>

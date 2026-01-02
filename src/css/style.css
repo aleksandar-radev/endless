@@ -855,3 +855,33 @@
     opacity: 1;
   }
 }
+
+.elemental-row-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.elemental-label {
+  display: flex;
+  align-items: center;
+}
+
+.elemental-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.elemental-share {
+  color: #ccc;
+  white-space: nowrap;
+}
+
+.elemental-allocation {
+  text-align: right;
+  min-width: 64px;
+  font-variant-numeric: tabular-nums;
+}

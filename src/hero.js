@@ -48,6 +48,14 @@ function getResourceExtraDamagePhysicalShare() {
   return 0.5;
 }
 
+function getResourceExtraDamageThornsShare() {
+  if (typeof training?.getResourceExtraDamageThornsShare === 'function') {
+    const share = Number(training.getResourceExtraDamageThornsShare());
+    if (Number.isFinite(share)) return Math.max(0, Math.min(1, share));
+  }
+  return 0;
+}
+
 function getElementalShareMap() {
   let shareMap = null;
   if (typeof training?.getElementalDistributionShares === 'function') {
@@ -806,9 +814,9 @@ export default class Hero {
       pendingDamageAdditions = runes.applyPreDamageConversions(this.stats) || {};
     }
 
-    const computeResourceExtraDamage = (statsSnapshot, shareMap, physicalShare = 0.5) => {
+    const computeResourceExtraDamage = (statsSnapshot, shareMap, physicalShare = 0.5, thornsShare = 0) => {
       if (!statsSnapshot) return {
-        physical: 0, elemental: 0, perElement: {},
+        physical: 0, elemental: 0, thorns: 0, perElement: {},
       };
 
       const resourceCapPerLevel = Math.max(
@@ -817,7 +825,7 @@ export default class Hero {
       );
       const maxResourceAmount = Math.max(0, this.level * resourceCapPerLevel);
       if (maxResourceAmount <= 0) return {
-        physical: 0, elemental: 0, perElement: {},
+        physical: 0, elemental: 0, thorns: 0, perElement: {},
       };
 
       const capResource = (value) => Math.min(Math.max(value || 0, 0), maxResourceAmount);
@@ -842,16 +850,19 @@ export default class Hero {
         (statsSnapshot.extraDamageFromAllResistancesPercent || 0) * allResistances;
 
       if (!totalExtra) return {
-        physical: 0, elemental: 0, perElement: {},
+        physical: 0, elemental: 0, thorns: 0, perElement: {},
       };
 
-      const clampedShare = Math.max(0, Math.min(1, Number(physicalShare) || 0));
-      const physical = totalExtra * clampedShare;
-      const totalElemental = totalExtra - physical;
+      const clampedPhysical = Math.max(0, Math.min(1, Number(physicalShare) || 0));
+      const clampedThorns = Math.max(0, Math.min(1, Number(thornsShare) || 0));
+      const physical = totalExtra * clampedPhysical;
+      const thorns = totalExtra * clampedThorns;
+      let totalElemental = totalExtra - physical - thorns;
+      totalElemental = Math.max(0, totalElemental);
       const perElement = distributeElementalAmount(totalElemental, shareMap);
 
       return {
-        physical, elemental: totalElemental, perElement,
+        physical, elemental: totalElemental, thorns, perElement,
       };
     };
 
@@ -860,14 +871,19 @@ export default class Hero {
 
     const elementalShareMap = getElementalShareMap();
     const resourceExtraPhysicalShare = getResourceExtraDamagePhysicalShare();
+    const resourceExtraThornsShare = getResourceExtraDamageThornsShare();
     const initialResourceExtraDamage = computeResourceExtraDamage(
       this.stats,
       elementalShareMap,
       resourceExtraPhysicalShare,
+      resourceExtraThornsShare,
     );
 
     if (initialResourceExtraDamage.physical) {
       flatValues.damage += initialResourceExtraDamage.physical;
+    }
+    if (initialResourceExtraDamage.thorns) {
+      flatValues.thornsDamage = (flatValues.thornsDamage || 0) + initialResourceExtraDamage.thorns;
     }
     Object.entries(initialResourceExtraDamage.perElement).forEach(([statKey, amount]) => {
       if (!amount) return;
@@ -938,6 +954,7 @@ export default class Hero {
       this.stats,
       elementalShareMap,
       resourceExtraPhysicalShare,
+      resourceExtraThornsShare,
     );
     const basePhysicalFlatWithoutResources =
       baseFlatDamageBeforeResources + (ascensionBonuses.damage || 0) + (this.stats.damagePerLevel || 0) * this.level;
@@ -950,15 +967,24 @@ export default class Hero {
     this.baseDamages.elemental = Math.floor(Math.max(0, baseElementalFlatWithoutResources));
     this.elementalDamageFromResources = finalResourceExtraDamage.elemental;
     this.physicalDamageFromResources = finalResourceExtraDamage.physical;
-    this.totalExtraDamageFromResources = finalResourceExtraDamage.physical + finalResourceExtraDamage.elemental;
+    this.thornsDamageFromResources = finalResourceExtraDamage.thorns;
+    this.totalExtraDamageFromResources = finalResourceExtraDamage.physical + finalResourceExtraDamage.elemental + (finalResourceExtraDamage.thorns || 0);
 
     const deltaPhysicalFlat = finalResourceExtraDamage.physical - initialResourceExtraDamage.physical;
+    const deltaThornsFlat = (finalResourceExtraDamage.thorns || 0) - (initialResourceExtraDamage.thorns || 0);
 
     if (Math.abs(deltaPhysicalFlat) > 1e-9) {
       const physicalMultiplier = 1 + (this.stats.totalDamagePercent || 0) + (this.stats.damagePercent || 0);
       const deltaPhysicalFinal = deltaPhysicalFlat * physicalMultiplier;
       this.stats.damage = (this.stats.damage || 0) + deltaPhysicalFinal;
       preConversionDamage.damage = (preConversionDamage.damage || 0) + deltaPhysicalFinal;
+    }
+
+    if (Math.abs(deltaThornsFlat) > 1e-9) {
+      const combinedThornsPercent = (this.stats.thornsDamagePercent || 0) + (this.stats.totalDamagePercent || 0);
+      const thornsMultiplier = Math.max(0, 1 + combinedThornsPercent);
+      const deltaThornsFinal = deltaThornsFlat * thornsMultiplier;
+      this.stats.thornsDamage = (this.stats.thornsDamage || 0) + deltaThornsFinal;
     }
 
     ELEMENT_IDS.forEach((id) => {
