@@ -878,7 +878,7 @@ export default class Hero {
 
     const flatThornsDamage = Math.max(0, (flatValues.thornsDamage || 0) + (ascensionBonuses.thornsDamage || 0));
     const combinedThornsPercent =
-      (this.stats.thornsDamagePercent || 0) + (this.stats.damagePercent || 0) + (this.stats.totalDamagePercent || 0);
+      (this.stats.thornsDamagePercent || 0) + (this.stats.totalDamagePercent || 0);
     const thornsMultiplier = Math.max(0, 1 + combinedThornsPercent);
     let effectiveThorns = flatThornsDamage * thornsMultiplier;
     const thornsDecimals = getStatDecimalPlaces('thornsDamage');

@@ -1051,7 +1051,7 @@ export default {
   'tooltip.manaShieldPercent': '在扣除生命前由法力承担的伤害比例。',
   'tooltip.manaShieldDamageTakenReductionPercent': '当法力护盾吸收伤害时，按百分比减少由法力承担的伤害（最高 50%）。',
   'tooltip.reflectFireDamage': '将受到的一部分火焰伤害反射给攻击者。',
-  'tooltip.thornsDamage': '受到攻击时对攻击者造成伤害，并同时受益于伤害%、总伤害%与反伤%的加成。',
+  'tooltip.thornsDamage': '受到攻击时对攻击者造成伤害，并同时受益于总伤害%与反伤%的加成。',
   'tooltip.thornsDamagePercent': '按百分比提高反射伤害。',
   'tooltip.thornsOnMiss': '即使闪避攻击也能造成反伤。',
   'tooltip.attackNeverMiss': '攻击必定命中目标。',

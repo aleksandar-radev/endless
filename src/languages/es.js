@@ -1041,7 +1041,7 @@ export default {
     'Reduce el daño tomado del maná cuando Escudo de Maná absorbe daño (máx 50%).',
   'tooltip.reflectFireDamage': 'Refleja una porción del daño de Fuego recibido de vuelta al atacante.',
   'tooltip.thornsDamage':
-    'Inflige daño de vuelta a los atacantes cuando te golpean y se beneficia de Daño %, Daño Total % y Daño de Espinas %.',
+    'Inflige daño de vuelta a los atacantes cuando te golpean y se beneficia de Daño Total % y Daño de Espinas %.',
   'tooltip.thornsDamagePercent': 'Incrementa el daño reflejado en un porcentaje.',
   'tooltip.thornsOnMiss': 'Inflige daño de espinas incluso cuando evades un ataque.',
   'tooltip.attackNeverMiss': 'Los ataques siempre golpean el objetivo.',
