@@ -90,13 +90,13 @@ export default class Prestige {
         const right = options?.showRollPercentiles
           ? `${Math.round(clampedPercentile * 100)}%`
           : `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
-        desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+        desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
       } else {
         const main = `${formatStatName(b.stat)}: +${Math.round(value)}`;
         const right = options?.showRollPercentiles
           ? `${Math.round(clampedPercentile * 100)}%`
           : `${Math.round(refMin)} - ${Math.round(refMax)}`;
-        desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+        desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
       }
       card.descriptions.push(desc);
       card.rollPercentiles.push(clampedPercentile);
@@ -115,7 +115,7 @@ export default class Prestige {
       ? `${Math.round(clampedStartPercentile * 100)}%`
       : `${startMinScaled} - ${startMaxScaled}`;
     card.descriptions.push(
-      `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`,
+      `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`,
     );
     card.rollPercentiles.push(clampedStartPercentile);
     return card;
@@ -166,7 +166,7 @@ export default class Prestige {
           const right = options?.showRollPercentiles
             ? `${Math.round(percentile * 100)}%`
             : `${(refMin * 100).toFixed(1)}% - ${(refMax * 100).toFixed(1)}%`;
-          desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+          desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
         } else {
           desc = `${formatStatName(stat)}: +${scaledPct}%`;
         }
@@ -178,7 +178,7 @@ export default class Prestige {
           const right = options?.showRollPercentiles
             ? `${Math.round(percentile * 100)}%`
             : `${Math.round(refMin)} - ${Math.round(refMax)}`;
-          desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" class="icon" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
+          desc = `<span class=\"prestige-main\"><img src="${BASE}/icons/star.svg" alt=""/>${main}</span><span class=\"prestige-ref\">(${right})</span>`;
         } else {
           desc = `${formatStatName(stat)}: +${Math.round(scaledValue)}`;
         }

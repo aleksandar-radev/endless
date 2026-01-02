@@ -3,27 +3,27 @@ const BASE = import.meta.env.VITE_BASE_PATH;
 export const ELEMENTS = {
   fire: {
     id: 'fire',
-    icon: `<img src="${BASE}/icons/fire.png" class="icon" alt="fire"/>`,
+    icon: `<img src="${BASE}/icons/fire.png" alt="fire"/>`,
   },
   cold: {
     id: 'cold',
-    icon: `<img src="${BASE}/icons/cold.png" class="icon" alt="cold"/>`,
+    icon: `<img src="${BASE}/icons/cold.png" alt="cold"/>`,
   },
   air: {
     id: 'air',
-    icon: `<img src="${BASE}/icons/air.png" class="icon" alt="air"/>`,
+    icon: `<img src="${BASE}/icons/air.png" alt="air"/>`,
   },
   earth: {
     id: 'earth',
-    icon: `<img src="${BASE}/icons/earth.png" class="icon" alt="earth"/>`,
+    icon: `<img src="${BASE}/icons/earth.png" alt="earth"/>`,
   },
   lightning: {
     id: 'lightning',
-    icon: `<img src="${BASE}/icons/lightning.png" class="icon" alt="lightning"/>`,
+    icon: `<img src="${BASE}/icons/lightning.png" alt="lightning"/>`,
   },
   water: {
     id: 'water',
-    icon: `<img src="${BASE}/icons/water.png" class="icon" alt="water"/>`,
+    icon: `<img src="${BASE}/icons/water.png" alt="water"/>`,
   },
 };
 

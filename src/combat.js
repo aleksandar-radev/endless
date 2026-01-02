@@ -1023,7 +1023,7 @@ function showRuneNotification(rune) {
   notification.className = 'loot-notification';
   notification.style.color = '#4db34d';
   const name = getRuneName(rune, options.shortElementalNames);
-  notification.innerHTML = `Found: <img src="${getRuneIcon(rune)}" class="icon" alt="rune"/> ${name}`;
+  notification.innerHTML = `Found: <img src="${getRuneIcon(rune)}" alt="rune"/> ${name}`;
   document.body.appendChild(notification);
 
   setTimeout(() => notification.remove(), 3000);
@@ -1160,7 +1160,7 @@ export function createDamageNumber({
     : '';
 
   const criticalMarkup = isCritical
-    ? `<img src="${BASE}/icons/critical.svg" class="icon" alt="${t('icon.critical')}"/>`
+    ? `<img src="${BASE}/icons/critical.svg" alt="${t('icon.critical')}"/>`
     : '';
 
   const contentParts = [];

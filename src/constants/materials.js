@@ -10,7 +10,7 @@ export const MATERIALS = {
     get name() {
       return t('Experience Potion');
     },
-    icon: `<img src="${BASE}/icons/experience-potion-small.svg" class="icon" alt="potion"/>`,
+    icon: `<img src="${BASE}/icons/experience-potion-small.svg" alt="potion"/>`,
     get description() {
       return t('Grants 1000 experience when used.');
     },
@@ -25,7 +25,7 @@ export const MATERIALS = {
     get name() {
       return t('Greater Experience Potion');
     },
-    icon: `<img src="${BASE}/icons/experience-potion.svg" class="icon" alt="potion"/>`,
+    icon: `<img src="${BASE}/icons/experience-potion.svg" alt="potion"/>`,
     get description() {
       return t('Grants 5% experience when used.');
     },
@@ -41,7 +41,7 @@ export const MATERIALS = {
     get name() {
       return t('Huge Experience Potion');
     },
-    icon: `<img src="${BASE}/icons/experience-potion-big.svg" class="icon" alt="potion"/>`,
+    icon: `<img src="${BASE}/icons/experience-potion-big.svg" alt="potion"/>`,
     get description() {
       return t('Grants 15% experience when used.');
     },
@@ -57,7 +57,7 @@ export const MATERIALS = {
     get name() {
       return t('Gold Coins');
     },
-    icon: `<img src="${BASE}/icons/gold-coin.svg" class="icon" alt="gold"/>`,
+    icon: `<img src="${BASE}/icons/gold-coin.svg" alt="gold"/>`,
     get description() {
       return t('Adds 1000 gold per coin to your total.');
     },
@@ -72,7 +72,7 @@ export const MATERIALS = {
     get name() {
       return t('Large Gold Coins');
     },
-    icon: `<img src="${BASE}/icons/large-gold-coin.svg" class="icon" alt="gold"/>`,
+    icon: `<img src="${BASE}/icons/large-gold-coin.svg" alt="gold"/>`,
     get description() {
       return t('Adds 10000 gold per coin to your total.');
     },
@@ -87,7 +87,7 @@ export const MATERIALS = {
     get name() {
       return t('Enormous Gold Coins');
     },
-    icon: `<img src="${BASE}/icons/enormous-gold-coin.svg" class="icon" alt="gold"/>`,
+    icon: `<img src="${BASE}/icons/enormous-gold-coin.svg" alt="gold"/>`,
     get description() {
       return t('Adds 50000 gold per coin to your total.');
     },
@@ -102,7 +102,7 @@ export const MATERIALS = {
     get name() {
       return t('Freaky Gold Coins');
     },
-    icon: `<img src="${BASE}/icons/freaky-gold-coin.svg" class="icon" alt="gold"/>`,
+    icon: `<img src="${BASE}/icons/freaky-gold-coin.svg" alt="gold"/>`,
     get description() {
       return t('Adds 1000000 gold per coin to your total.');
     },
@@ -117,7 +117,7 @@ export const MATERIALS = {
     get name() {
       return t('Elixir');
     },
-    icon: `<img src="${BASE}/icons/experience-potion.svg" class="icon" alt="elixir"/>`,
+    icon: `<img src="${BASE}/icons/experience-potion.svg" alt="elixir"/>`,
     get description() {
       return t('Grants 2 skill points.');
     },
@@ -134,7 +134,7 @@ export const MATERIALS = {
     get name() {
       return t('Crystalized Rock');
     },
-    icon: `<img src="${BASE}/icons/crystal.svg" class="icon" alt="crystal"/>`,
+    icon: `<img src="${BASE}/icons/crystal.svg" alt="crystal"/>`,
     get description() {
       return t('Gives 1 crystal.');
     },
@@ -149,7 +149,7 @@ export const MATERIALS = {
     get name() {
       return t('Potion of Strength');
     },
-    icon: `<img src="${BASE}/icons/strength-potion.svg" class="icon" alt="strength"/>`,
+    icon: `<img src="${BASE}/icons/strength-potion.svg" alt="strength"/>`,
     get description() {
       return t('Increases strength by 1.');
     },
@@ -164,7 +164,7 @@ export const MATERIALS = {
     get name() {
       return t('Potion of Agility');
     },
-    icon: `<img src="${BASE}/icons/agility-potion.svg" class="icon" alt="speed"/>`,
+    icon: `<img src="${BASE}/icons/agility-potion.svg" alt="speed"/>`,
     get description() {
       return t('Increases agility by 1.');
     },
@@ -179,7 +179,7 @@ export const MATERIALS = {
     get name() {
       return t('Potion of Vitality');
     },
-    icon: `<img src="${BASE}/icons/vitality-potion.svg" class="icon" alt="vitality"/>`,
+    icon: `<img src="${BASE}/icons/vitality-potion.svg" alt="vitality"/>`,
     get description() {
       return t('Increases vitality by 1.');
     },
@@ -194,7 +194,7 @@ export const MATERIALS = {
     get name() {
       return t('Potion of Endurance');
     },
-    icon: `<img src="${BASE}/icons/endurance-potion.svg" class="icon" alt="endurance"/>`,
+    icon: `<img src="${BASE}/icons/endurance-potion.svg" alt="endurance"/>`,
     get description() {
       return t('Increases endurance by 1.');
     },
@@ -209,7 +209,7 @@ export const MATERIALS = {
     get name() {
       return t('Potion of Wisdom');
     },
-    icon: `<img src="${BASE}/icons/wisdom-potion.svg" class="icon" alt="wisdom"/>`,
+    icon: `<img src="${BASE}/icons/wisdom-potion.svg" alt="wisdom"/>`,
     get description() {
       return t('Increases wisdom by 1.');
     },
@@ -224,7 +224,7 @@ export const MATERIALS = {
     get name() {
       return t('Potion of Dexterity');
     },
-    icon: `<img src="${BASE}/icons/dexterity-potion.svg" class="icon" alt="dexterity"/>`,
+    icon: `<img src="${BASE}/icons/dexterity-potion.svg" alt="dexterity"/>`,
     get description() {
       return t('Increases dexterity by 1.');
     },
@@ -239,7 +239,7 @@ export const MATERIALS = {
     get name() {
       return t('Potion of Intelligence');
     },
-    icon: `<img src="${BASE}/icons/intelligence-potion.svg" class="icon" alt="intelligence"/>`,
+    icon: `<img src="${BASE}/icons/intelligence-potion.svg" alt="intelligence"/>`,
     get description() {
       return t('Increases intelligence by 1.');
     },
@@ -254,7 +254,7 @@ export const MATERIALS = {
     get name() {
       return t('Potion of Perseverance');
     },
-    icon: `<img src="${BASE}/icons/perseverance-potion.svg" class="icon" alt="perseverance"/>`,
+    icon: `<img src="${BASE}/icons/perseverance-potion.svg" alt="perseverance"/>`,
     get description() {
       return t('Increases perseverance by 1.');
     },
@@ -269,7 +269,7 @@ export const MATERIALS = {
     get name() {
       return t('Armor Upgrade Stone');
     },
-    icon: `<img src="${BASE}/icons/armor-upgrade-stone.svg" class="icon" alt="armor"/>`,
+    icon: `<img src="${BASE}/icons/armor-upgrade-stone.svg" alt="armor"/>`,
     get description() {
       return t(
         "Upgrade the level of an equipped armor item. Requires a quantity equal to the item's tier for each level.",
@@ -288,7 +288,7 @@ export const MATERIALS = {
     get name() {
       return t('Jewelry Upgrade Gem');
     },
-    icon: `<img src="${BASE}/icons/jewelry-upgrade-gem.svg" class="icon" alt="ring"/>`,
+    icon: `<img src="${BASE}/icons/jewelry-upgrade-gem.svg" alt="ring"/>`,
     get description() {
       return t(
         "Upgrade the level of an equipped jewelry item. Requires a quantity equal to the item's tier for each level.",
@@ -307,7 +307,7 @@ export const MATERIALS = {
     get name() {
       return t('Weapon Upgrade Core');
     },
-    icon: `<img src="${BASE}/icons/weapon-upgrade-core.svg" class="icon" alt="weapon"/>`,
+    icon: `<img src="${BASE}/icons/weapon-upgrade-core.svg" alt="weapon"/>`,
     get description() {
       return t("Upgrade the level of an equipped weapon. Requires a quantity equal to the item's tier for each level.");
     },
@@ -324,7 +324,7 @@ export const MATERIALS = {
     get name() {
       return t('Enchantment Scroll');
     },
-    icon: `<img src="${BASE}/icons/enchantment-scroll.svg" class="icon" alt="scroll"/>`,
+    icon: `<img src="${BASE}/icons/enchantment-scroll.svg" alt="scroll"/>`,
     get description() {
       return t('Increases the rarity of an equipped item. (cannot be used on mythic items)');
     },
@@ -340,7 +340,7 @@ export const MATERIALS = {
     get name() {
       return t('Alternation Orb');
     },
-    icon: `<img src="${BASE}/icons/alternation-orb.svg" class="icon" alt="orb"/>`,
+    icon: `<img src="${BASE}/icons/alternation-orb.svg" alt="orb"/>`,
     get description() {
       return t('Re-rolls the value of one chosen stat on an equipped item.');
     },
@@ -356,7 +356,7 @@ export const MATERIALS = {
     get name() {
       return t('Transmutation Orb');
     },
-    icon: `<img src="${BASE}/icons/transmutation-orb.svg" class="icon" alt="orb"/>`,
+    icon: `<img src="${BASE}/icons/transmutation-orb.svg" alt="orb"/>`,
     get description() {
       return t('Replaces one chosen stat on an equipped item with a random new stat.');
     },

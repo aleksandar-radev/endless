@@ -358,8 +358,10 @@ body.dev-active .game-container {
 }
 
 /* Generic icon styling for inline SVG images */
-img.icon {
+img {
   width: 24px;
   height: 24px;
   vertical-align: middle;
+  border-radius: 3px;
+  object-fit: cover;
 }

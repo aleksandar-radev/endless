@@ -1,8 +1,8 @@
 import { tp } from '../../i18n.js';
 const BASE = import.meta.env.VITE_BASE_PATH;
 const RESOURCE_ICONS = {
-  totalGoldEarned: `<img src="${BASE}/icons/gold-coin.svg" class="icon" alt="gold"/>`,
-  crystals: `<img src="${BASE}/icons/crystal.svg" class="icon" alt="crystal"/>`,
+  totalGoldEarned: `<img src="${BASE}/icons/gold-coin.svg" alt="gold"/>`,
+  crystals: `<img src="${BASE}/icons/crystal.svg" alt="crystal"/>`,
 };
 // Resource quests
 export const RESOURCE_QUESTS = [

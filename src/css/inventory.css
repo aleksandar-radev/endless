@@ -956,11 +956,6 @@
   pointer-events: none;
 }
 
-.search-icon img.icon {
-  width: 24px;
-  height: 24px;
-}
-
 .search-container {
   position: relative;
   display: flex;

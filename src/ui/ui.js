@@ -118,7 +118,7 @@ export function initializeUI() {
       selector: '.resource-gold',
       tooltip: () => html`
         <div class="tooltip-header">
-          ${t('resource.gold.name')} <img src="${BASE}/icons/gold.svg" class="icon" alt="${t('resource.gold.name')}" />
+          ${t('resource.gold.name')} <img src="${BASE}/icons/gold.svg" alt="${t('resource.gold.name')}" />
         </div>
         <div class="tooltip-desc">${t('resource.gold.desc')}</div>
         <div class="tooltip-note"></div>
@@ -129,7 +129,7 @@ export function initializeUI() {
       tooltip: () => html`
         <div class="tooltip-header">
           ${t('resource.crystal.name')}
-          <img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('resource.crystal.name')}" />
+          <img src="${BASE}/icons/crystal.svg" alt="${t('resource.crystal.name')}" />
         </div>
         <div class="tooltip-desc">${t('resource.crystal.desc')}</div>
         <div class="tooltip-note"></div>
@@ -140,7 +140,7 @@ export function initializeUI() {
       tooltip: () => html`
         <div class="tooltip-header">
           ${t('resource.souls.name')}
-          <img src="${BASE}/icons/soul.svg" class="icon" alt="${t('resource.souls.name')}" />
+          <img src="${BASE}/icons/soul.svg" alt="${t('resource.souls.name')}" />
         </div>
         <div class="tooltip-desc">${t('resource.souls.desc')}</div>
         <div class="tooltip-note"></div>
@@ -195,7 +195,7 @@ export function initializeUI() {
     if (statusGroup && !statusGroup.querySelector('.offline-eligibility-indicator')) {
       const indicator = document.createElement('span');
       indicator.className = 'offline-eligibility-indicator offline-not-eligible tooltip-target';
-      indicator.innerHTML = '<span class="icon">✖</span>';
+      indicator.innerHTML = '<span>✖</span>';
       statusGroup.appendChild(indicator);
 
       const ensureBaseline = () => {
@@ -244,7 +244,7 @@ export function initializeUI() {
 
       const saveIndicator = document.createElement('span');
       saveIndicator.className = 'save-status-indicator';
-      saveIndicator.innerHTML = '<span class="icon">💾</span><span class="label"></span>';
+      saveIndicator.innerHTML = '<span>💾</span><span class="label"></span>';
       statusGroup.appendChild(saveIndicator);
 
       const saveLabel = saveIndicator.querySelector('.label');
@@ -1163,7 +1163,7 @@ function renderRegionPanel(region) {
         <div class="enemy-rewards-row">
           <div class="enemy-reward-item">
             <div class="enemy-reward-label">
-              <img src="${BASE}/icons/gold.svg" class="icon" alt="${t('resource.gold.name')}" />
+              <img src="${BASE}/icons/gold.svg" alt="${t('resource.gold.name')}" />
               ${t('resource.gold.name')}
             </div>
             <div class="enemy-reward-value" id="enemy-gold-value"></div>

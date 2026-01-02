@@ -110,7 +110,7 @@ function openPrestigeModal() {
         <button id="prestige-reroll-btn">
           ${t('prestige.reroll')} (60<img
             src="${BASE}/icons/crystal.svg"
-            class="icon"
+           
             alt="${t('resource.crystal.name')}"
           />)
         </button>
@@ -138,7 +138,7 @@ function openPrestigeModal() {
   const crystalsTotalEl = modal.querySelector('#prestige-crystals-total');
   const updateModalCrystals = () => {
     if (!crystalsTotalEl) return;
-    crystalsTotalEl.innerHTML = `${tp('prestige.totalCrystals', { count: formatNumber(hero.crystals || 0) })} <img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('resource.crystal.name')}"/>`;
+    crystalsTotalEl.innerHTML = `${tp('prestige.totalCrystals', { count: formatNumber(hero.crystals || 0) })} <img src="${BASE}/icons/crystal.svg" alt="${t('resource.crystal.name')}"/>`;
   };
   let selectedIdx = null;
 
@@ -146,10 +146,10 @@ function openPrestigeModal() {
     cardsContainer.innerHTML = cards
       .map((c, i) => {
         const lockLabel = c.locked
-          ? `<img src="${BASE}/icons/lock.svg" class="icon" alt="${t('prestige.lock')}"/>`
-          : `${t('prestige.lock')} (20<img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('resource.crystal.name')}"/>)`;
+          ? `<img src="${BASE}/icons/lock.svg" alt="${t('prestige.lock')}"/>`
+          : `${t('prestige.lock')} (20<img src="${BASE}/icons/crystal.svg" alt="${t('resource.crystal.name')}"/>)`;
         const rerollCost = formatNumber(prestige.getCardValueRerollCost(c));
-        const rerollLabel = `${t('prestige.rerollValues')} (${rerollCost}<img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('resource.crystal.name')}"/>)`;
+        const rerollLabel = `${t('prestige.rerollValues')} (${rerollCost}<img src="${BASE}/icons/crystal.svg" alt="${t('resource.crystal.name')}"/>)`;
         const descriptionItems = c.descriptions
           .map((d, idx) => {
             const percent = c.rollPercentiles?.[idx];
@@ -193,7 +193,7 @@ function openPrestigeModal() {
         const cardEl = wrapper.querySelector('.prestige-card');
         if (card.locked) {
           card.locked = false;
-          btn.innerHTML = `${t('prestige.lock')} (20<img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('resource.crystal.name')}"/>)`;
+          btn.innerHTML = `${t('prestige.lock')} (20<img src="${BASE}/icons/crystal.svg" alt="${t('resource.crystal.name')}"/>)`;
           cardEl.classList.remove('locked');
         } else {
           if (hero.crystals < 20) {
@@ -204,7 +204,7 @@ function openPrestigeModal() {
           updateResources();
           updateModalCrystals();
           card.locked = true;
-          btn.innerHTML = `<img src="${BASE}/icons/lock.svg" class="icon" alt="${t('prestige.lock')}"/>`;
+          btn.innerHTML = `<img src="${BASE}/icons/lock.svg" alt="${t('prestige.lock')}"/>`;
           cardEl.classList.add('locked');
         }
       });

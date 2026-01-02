@@ -93,7 +93,7 @@ export function initializeInventoryUI(inv) {
             <div class="equipment-slot" data-slot="boots"><div class="slot-indicator">${ITEM_ICONS.BOOTS}</div></div>
           </div>
           <div class="character-preview">
-            <img src="${BASE}/icons/account.svg" class="icon" alt="${t('icon.avatar')}" />
+            <img src="${BASE}/icons/account.svg" alt="${t('icon.avatar')}" />
           </div>
         </div>
       </div>
@@ -109,7 +109,7 @@ export function initializeInventoryUI(inv) {
         <div class="sort-row">
           <div id="sort-inventory" class="inventory-btn sort-btn" aria-label="${t('inventory.sort')}">
             <span role="img" aria-label="${t('inventory.sort')}"
-              ><img src="${BASE}/icons/refresh.svg" class="icon" alt="${t('inventory.sort')}"
+              ><img src="${BASE}/icons/refresh.svg" alt="${t('inventory.sort')}"
             /></span>
           </div>
           <button
@@ -138,7 +138,7 @@ export function initializeInventoryUI(inv) {
           data-i18n-placeholder="inventory.searchItems"
           placeholder="${t('inventory.searchItems')}"
         />
-        <span class="search-icon"><img src="${BASE}/icons/search.svg" class="icon" alt="${t('icon.search')}" /></span>
+        <span class="search-icon"><img src="${BASE}/icons/search.svg" alt="${t('icon.search')}" /></span>
       </div>
     </div>
     <div class="inventory-options-panel desktop-only">
@@ -582,7 +582,7 @@ export function showSalvageModal(inv) {
         <div class="inventory-trash-row">
           <div class="inventory-trash">
             <span class="inventory-trash-icon"
-              ><img src="${BASE}/icons/delete.svg" class="icon" alt="${t('icon.delete')}"
+              ><img src="${BASE}/icons/delete.svg" alt="${t('icon.delete')}"
             /></span>
             <div class="inventory-trash-label">${t('inventory.dragItemHere')}</div>
           </div>
@@ -836,7 +836,7 @@ export function showSalvageModal(inv) {
     const tooltipContent = html`
       <div class="item-tooltip tooltip-center">
         <div class="tooltip-trash-icon">
-          <img src="${BASE}/icons/delete.svg" class="icon" alt="${t('icon.delete')}" />
+          <img src="${BASE}/icons/delete.svg" alt="${t('icon.delete')}" />
         </div>
         <b>${t('inventory.salvageItem')}</b>
         <div class="tooltip-trash-desc">${t('inventory.dragDropToSalvage')}</div>
@@ -1077,7 +1077,7 @@ export function setupDragAndDrop(root = getInventoryTab()) {
       const tooltipContent = html`
         <div class="item-tooltip" style="text-align:center;">
           <div style="font-size:2em;">
-            <img src="${BASE}/icons/delete.svg" class="icon" alt="${t('icon.delete')}" />
+            <img src="${BASE}/icons/delete.svg" alt="${t('icon.delete')}" />
           </div>
           <b>${t('inventory.salvageItem')}</b>
           <div style="margin-top:4px;font-size:0.95em;">${t('inventory.dragDropToSalvage')}</div>
@@ -1381,7 +1381,7 @@ export function updateMaterialsGrid(inv, root = getInventoryTab()) {
     const mat = inv.materials[i];
     const icon =
       MATERIALS[mat?.id]?.icon ||
-      `<img src="${BASE}/icons/crystal.svg" class="icon" alt="${t('inventory.materials')}"/>`;
+      `<img src="${BASE}/icons/crystal.svg" alt="${t('inventory.materials')}"/>`;
     const cell = document.createElement('div');
     cell.classList.add('materials-cell');
     if (mat) {
