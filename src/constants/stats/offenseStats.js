@@ -159,9 +159,7 @@ export const OFFENSE_STATS = {
       bonus: 0.01,
       maxLevel: 250,
     }, // max bonus: 2.5
-    item: {
-      min: 0.02, max: 0.1, scaling: (level, tier) => offenseScaling(level, tier),
-    },
+    item: { tierScalingMaxPercent: createTierScaling(1, 12, 1) },
     itemTags: ['offense', 'jewelry', 'gloves', 'wand', 'staff'],
     show: true,
     sub: 'attack',

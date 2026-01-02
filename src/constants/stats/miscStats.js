@@ -31,7 +31,7 @@ export const MISC_STATS = {
   manaRegen: createStat({
     dec: 1,
     training: {
-      cost: 300, bonus: 0.1, maxLevel: 8000,
+      cost: 300, bonus: 0.1, maxLevel: Infinity,
     },
     item: {
       min: 2, max: 4, scaling: (level, tier) => miscScaling(level, tier),

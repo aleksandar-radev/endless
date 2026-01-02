@@ -800,11 +800,18 @@ export default class SoulShop {
       }
       const slider = q('.modal-slider');
       if (slider) {
-        slider.max = Math.min(levelsLeft, SOUL_SHOP_MAX_QTY);
-        slider.value =
-          this.selectedQty === 'max'
-            ? Math.min(levelsLeft, SOUL_SHOP_MAX_QTY)
-            : Math.min(this.selectedQty, levelsLeft, SOUL_SHOP_MAX_QTY);
+        const maxSliderVal = Math.min(levelsLeft, SOUL_SHOP_MAX_QTY, affordableQty);
+        slider.max = Math.max(0, maxSliderVal);
+        slider.disabled = maxSliderVal <= 0;
+        if (maxSliderVal <= 0) {
+          slider.value = 0;
+        } else {
+          const val =
+            this.selectedQty === 'max'
+              ? maxSliderVal
+              : Math.min(this.selectedQty, maxSliderVal);
+          slider.value = val;
+        }
       }
       const input = q('.modal-qty-input');
       if (input && this.selectedQty !== 'max') input.value = this.selectedQty;
