@@ -277,7 +277,7 @@ function openSpecializationSelectionModal(spec) {
 
       <div class="class-preview-footer" style="flex-direction: column; gap: 10px; margin-top: 30px;">
         <button class="select-class-btn" style="width: 100%;">
-          ${t('skillTree.selectSpec', { name: spec.name() })}
+          ${t('skillTree.selectSpec')}
         </button>
       </div>
     </div>
@@ -594,7 +594,7 @@ function initializeSpecializationsTab() {
         </div>
       </div>
       
-      <button class="select-spec-btn">Select Specialization</button>
+      <button class="select-spec-btn">${t('skillTree.selectSpecialization')}</button>
     `;
 
     const selectBtn = specCard.querySelector('.select-spec-btn');
