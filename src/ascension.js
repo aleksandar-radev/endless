@@ -38,11 +38,6 @@ export const ASCENSION_CATEGORIES = {
         bonus: 0.25,
         stat: 'totalDamagePercent',
       },
-      elementalDamagePercent: {
-        label: t('ascension.upgrade.elementalDamagePercent'),
-        bonus: 0.3,
-        stat: 'elementalDamagePercent',
-      },
       resourceDamageCapPerLevel: {
         label: t('ascension.upgrade.resourceDamageCapPerLevel'),
         bonus: 10,
@@ -54,11 +49,6 @@ export const ASCENSION_CATEGORIES = {
         label: t('ascension.upgrade.flatThornsDamage'),
         bonus: 300,
         stat: 'thornsDamage',
-      },
-      thornsDamagePercent: {
-        label: t('ascension.upgrade.thornsDamagePercent'),
-        bonus: 0.25,
-        stat: 'thornsDamagePercent',
       },
       critChance: {
         label: t('ascension.upgrade.critChance'),

@@ -59,6 +59,7 @@ const generateElementalOffenseStats = () => {
     });
     stats[`${element}Penetration`] = createStat({ sub: 'elemental' });
     stats[`${element}PenetrationPercent`] = createPercentStat({ sub: 'elemental' });
+    stats[`${element}EffectivenessPercent`] = createPercentStat({ sub: 'elemental' });
   });
   return stats;
 };
@@ -286,6 +287,8 @@ export const OFFENSE_STATS = {
     dec: 2,
     cap: 50,
   }),
+  // Flat milliseconds delay applied to enemy attack interval when bows are equipped.
+  enemyAttackDelayMs: createHiddenStat(),
   extraDamageFromLifePercent: createPercentStat({ dec: 2 }),
   extraDamageFromArmorPercent: createPercentStat({ dec: 2 }),
   extraDamageFromManaPercent: createPercentStat({ dec: 2 }),
@@ -315,7 +318,6 @@ export const OFFENSE_STATS = {
   poisonDamagePercent: createPercentStat({ sub: 'elemental' }),
   explosionChance: createPercentStat({ sub: 'elemental' }),
   extraDamageAgainstBurningEnemies: createPercentStat({ sub: 'elemental' }),
-  lightningEffectivenessPercent: createPercentStat({ sub: 'elemental' }),
   arcDischargeChance: createPercentStat({ sub: 'elemental' }),
   shockChance: createPercentStat({ sub: 'elemental' }),
   shockEffectiveness: createPercentStat(),

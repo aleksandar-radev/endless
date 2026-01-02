@@ -35,6 +35,9 @@ export const BASE_EXTRA_RESOURCE_DAMAGE_CAP_PER_LEVEL = 500;
 export const MIN_DEATH_TIMER = 2; // Minimum death timer in seconds
 export const MAX_DEATH_TIMER = 30; // Maximum death timer in seconds
 
+// Bow/equipment: how many milliseconds to add to enemy attack interval when a bow is equipped
+export const BOW_ENEMY_ATTACK_DELAY_MS = 1500; // ms
+
 export const BREAKPOINTS = {
   MOBILE: 768,
   TABLET: 900,

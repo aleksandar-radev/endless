@@ -18,6 +18,7 @@ import { ITEM_IDS, ITEM_RARITY,
   WEAPON_TYPES,
   getSlotsByCategory,
   getTypesByCategory } from './constants/items.js';
+import { BOW_ENEMY_ATTACK_DELAY_MS } from './constants/common.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { ENEMY_RARITY } from './constants/enemies.js';
 import { INVENTORY_MAX_QTY } from './constants/limits.js';
@@ -104,6 +105,9 @@ export default class Inventory {
       this.inventoryItems = new Array(ITEM_SLOTS).fill(null);
       this.materials = new Array(MATERIALS_SLOTS).fill(null);
     }
+
+    // Track whether a bow was equipped last time we updated bonuses so we only reset timers on transitions
+    this._wasBowEquipped = false;
 
     this.removeTooltip = this.removeTooltip.bind(this);
     window.addEventListener('mouseout', (e) => {
@@ -1612,6 +1616,24 @@ export default class Inventory {
         this.equipmentBonuses[stat] += value;
       }
     });
+
+    // If a bow is equipped, apply a flat BOW_ENEMY_ATTACK_DELAY_MS enemy attack delay to make ranged attacks feel delayed.
+    const hasBowEquipped = Object.values(equippedItems).some((it) => it && it.type === ITEM_IDS.BOW);
+    if (hasBowEquipped) {
+      if (this.equipmentBonuses.enemyAttackDelayMs !== undefined) {
+        this.equipmentBonuses.enemyAttackDelayMs += BOW_ENEMY_ATTACK_DELAY_MS;
+      } else {
+        this.equipmentBonuses.enemyAttackDelayMs = BOW_ENEMY_ATTACK_DELAY_MS;
+      }
+    }
+
+    // If bow was just equipped this update, reset enemy attack timer so the delay feels immediate
+    if (hasBowEquipped && !this._wasBowEquipped) {
+      if (game && game.currentEnemy) {
+        game.currentEnemy.lastAttack = Date.now();
+      }
+    }
+    this._wasBowEquipped = hasBowEquipped;
   }
 
   getEquipmentBonuses(

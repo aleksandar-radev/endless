@@ -148,7 +148,8 @@ export function enemyAttack(currentTime) {
       break;
     }
 
-    const timeBetweenAttacks = 1000 / attackSpeed;
+    const bowDelayMs = hero.stats.enemyAttackDelayMs || 0;
+    const timeBetweenAttacks = 1000 / attackSpeed + bowDelayMs;
     if (currentTime - enemy.lastAttack < timeBetweenAttacks) {
       break;
     }

@@ -64,5 +64,23 @@ export const run = (rawData) => {
     }
   }
 
+  if (data.ascension && data.ascension.upgrades) {
+    let refund = 0;
+
+    if (data.ascension.upgrades.thornsDamagePercent) {
+      refund += data.ascension.upgrades.thornsDamagePercent; // Cost was 1 per level
+      delete data.ascension.upgrades.thornsDamagePercent;
+    }
+
+    if (data.ascension.upgrades.elementalDamagePercent) {
+      refund += data.ascension.upgrades.elementalDamagePercent; // Cost was 1 per level
+      delete data.ascension.upgrades.elementalDamagePercent;
+    }
+
+    if (refund > 0) {
+      data.ascension.points = (data.ascension.points || 0) + refund;
+    }
+  }
+
   return { data, result: true };
 };
