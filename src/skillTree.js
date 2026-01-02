@@ -1675,8 +1675,11 @@ export default class SkillTree {
           }
         }
       } else if (skill.type() === 'buff' || skill.type() === 'summon') {
-        // Only cast if not active, not on cooldown, and enough mana
-        if (!skillData.active && (!skillData.cooldownEndTime || skillData.cooldownEndTime <= Date.now())) {
+        // Only cast if not active (unless it's a summon), not on cooldown, and enough mana
+        const shouldCast = (!skillData.active || skill.type() === 'summon') &&
+          (!skillData.cooldownEndTime || skillData.cooldownEndTime <= Date.now());
+
+        if (shouldCast) {
           const cost = this.getSkillManaCost(skill);
           const affordable =
             hero.stats.convertManaToLifePercent > 0
