@@ -921,7 +921,7 @@ export default class Inventory {
     } else {
       id = MATERIALS.armor_upgrade_stone.id;
     }
-    const qty = Math.floor((rarityAmounts[item.rarity] || 1) * Math.max(item.level / 200, 1) * Math.max(item.tier, 1));
+    const qty = Math.floor((rarityAmounts[item.rarity] || 1) * Math.max(item.tier, 1));
     return { id, qty };
   }
 
