@@ -41,6 +41,14 @@ export default {
   'tab.buildings': '建筑',
   'tab.prestige': '声望',
   'tab.ascension': '飞升',
+  'tab.journal': '日志',
+  'journal.tabs.quests': '任务',
+  'journal.tabs.achievements': '成就',
+  'journal.tabs.statistics': '统计',
+  'achievements.title': '成就',
+  'achievements.totalBonus': '总加成',
+  'achievements.showClaimed': '显示已领取',
+  'achievements.hideClaimed': '隐藏已领取',
   'skillTree.currentEffects': '当前效果',
   'skillTree.nextLevelEffects': '下一级效果',
   'skillTree.summonStats': '召唤属性',
@@ -94,6 +102,26 @@ export default {
   'training.elementalDistributionResourceThornsLabel': '资源额外分配（反伤 %）',
   'training.elementalDistributionReset': '重置为平均',
   'training.elementalDistributionTrainingTotal': '训练总元素伤害：{amount}',
+  'common.reward': '奖励',
+  'common.claim': '领取',
+  'common.claimed': '已领取',
+
+  // 成就
+  // Reach Level 50
+  'achievements.data.reach_level_50.title': '身经百战',
+  'achievements.data.reach_level_50.desc': '英雄等级达到 50 级',
+  // One Shot Kill
+  'achievements.data.one_shot_kill.title': '一拳超人',
+  'achievements.data.one_shot_kill.desc': '一击秒杀满血敌人',
+  // Zero to Hero
+  'achievements.data.zero_to_hero.title': '一步登天',
+  'achievements.data.zero_to_hero.desc': '在一次击杀中从 0% 经验升至下一级',
+  // Summon One Shot
+  'achievements.data.summon_one_shot.title': '掌控者',
+  'achievements.data.summon_one_shot.desc': '让召唤物一击秒杀满血敌人',
+  // Earn 1B Gold
+  'achievements.data.earn_1b_gold.title': '亿万富翁',
+  'achievements.data.earn_1b_gold.desc': '获得 1,000,000,000 金币',
   'training.elementalDistributionIntelligenceTotal': '智力总元素伤害：{amount}',
   'training.elementalDistributionResourceElementalTotal': '资源额外伤害（元素）：{amount}',
   'training.elementalDistributionResourcePhysicalTotal': '资源额外伤害（物理）：{amount}',

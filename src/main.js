@@ -86,7 +86,6 @@ window.setLanguage = setLanguage;
   initializeUI();
   crystalShop.initializeCrystalShopUI();
   soulShop.initializeSoulShopUI();
-  statistics.initializeStatisticsUI();
   options.initializeOptionsUI();
   training.initializeTrainingUI();
   initializeSkillTreeUI();

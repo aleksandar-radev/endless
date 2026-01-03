@@ -19,6 +19,7 @@ import { hero,
   runtime,
   options,
   runes,
+  achievements,
   ascension } from './globals.js';
 import { ITEM_RARITY, ITEM_TYPES, ALL_ITEM_TYPES } from './constants/items.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
@@ -663,7 +664,18 @@ export async function defeatEnemy(source) {
   audioManager.play('enemyDeath');
 
   if (initialFightMode === 'arena') {
+    // Check for "Zero to Hero" achievement
+    const startLevel = hero.level;
+    const startExp = hero.exp;
     baseExpGained = enemy.xp;
+
+    // Grant XP
+    hero.gainExp(baseExpGained);
+
+    if (hero.level > startLevel && startExp === 0) {
+      achievements.trigger('xp', { leveledUpFromZero: true });
+    }
+
     baseGoldGained = enemy.gold;
 
     const {
@@ -758,7 +770,17 @@ export async function defeatEnemy(source) {
       new CustomEvent('bossKilled', { detail: { level: hero.bossLevel } }),
     );
   } else if (initialFightMode === 'explore') {
+    // Check for "Zero to Hero" achievement
+    const startLevel = hero.level;
+    const startExp = hero.exp;
     baseExpGained = enemy.xp;
+
+    hero.gainExp(baseExpGained);
+
+    if (hero.level > startLevel && startExp === 0) {
+      achievements.trigger('xp', { leveledUpFromZero: true });
+    }
+
     baseGoldGained = enemy.gold;
 
     const dropChance = enemy.calculateDropChance() * (1 + hero.stats.itemQuantityPercent);

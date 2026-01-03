@@ -5,7 +5,7 @@ import { updatePlayerLife,
   updateBuffIndicators,
   formatNumber } from './ui/ui.js';
 import { playerAttack, enemyAttack, playerDeath, defeatEnemy, createDamageNumber, createCombatText } from './combat.js';
-import { game, hero, crystalShop, skillTree, statistics, dataManager, setGlobals, options } from './globals.js';
+import { game, hero, crystalShop, skillTree, statistics, dataManager, setGlobals, options, achievements } from './globals.js';
 import { AILMENTS } from './constants/ailments.js';
 import Enemy from './enemy.js';
 import { RockyFieldEnemy } from './rockyField.js';
@@ -204,6 +204,13 @@ class Game {
   damageEnemy(damage, isCritical = false, breakdown = null, skillName = null, summonName = null, extraOptions = {}) {
     // bail out if we've already defeated this enemy this tick
     if (this._justDefeated) return;
+
+    if (this.currentEnemy && this.currentEnemy.currentLife === this.currentEnemy.life && damage >= this.currentEnemy.life) {
+      achievements.trigger('kill', {
+        isOneShot: true,
+        sourceType: summonName ? 'summon' : 'player',
+      });
+    }
 
     if (damage > 0 && this.currentEnemy?.ailments[AILMENTS.shock.id]?.duration > 0) {
       const shockBonusBase = AILMENTS.shock.baseDamageTakenBonus;

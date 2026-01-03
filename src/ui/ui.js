@@ -12,10 +12,12 @@ import { game,
   options,
   crystalShop,
   training,
-  soulShop } from '../globals.js';
+  soulShop,
+  achievements } from '../globals.js';
 import { AILMENTS } from '../constants/ailments.js';
 import { t, tp } from '../i18n.js';
 import { updateQuestsUI } from './questUi.js';
+import { initializeJournalUI, updateJournalUI } from './journalUi.js';
 import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
 import { updateBuildingAffordability } from './buildingUi.js';
 import { TabIndicatorManager } from './tabIndicatorManager.js';
@@ -159,6 +161,7 @@ export function initializeUI() {
 
   updateStageUI();
   updateQuestsUI();
+  initializeJournalUI();
 
   // Setup combat mode dropdown
   const combatModeSelect = document.getElementById('combat-mode-select');
@@ -357,8 +360,8 @@ export function switchTab(tabName) {
   if (actualTab === 'stats') {
     updateStatsAndAttributesUI();
   }
-  if (actualTab === 'quests') {
-    updateQuestsUI();
+  if (actualTab === 'journal') {
+    updateJournalUI();
   }
   if (actualTab === 'inventory') {
     // Clear new items flag when visiting inventory.
@@ -916,12 +919,15 @@ export function updateTabIndicators(previousTab = null) {
 
   // Count claimable quests
   const claimableQuests = quests?.quests?.filter((q) => q.isComplete(statistics) && !q.claimed).length || 0;
+  // Count claimable achievements
+  const claimableAchievements = achievements?.achievements?.filter((a) => a.isComplete() && !a.claimed).length || 0;
 
   const state = {
     unallocatedStatPoints: hero?.statPoints || 0,
     hasNewInventoryItems: inventory?.hasNewItems || false,
     unallocatedSkillPoints: skillTree?.skillPoints || 0,
     claimableQuests,
+    claimableAchievements,
     currentTab: game?.activeTab || 'stats',
   };
 

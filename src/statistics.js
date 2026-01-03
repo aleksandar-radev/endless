@@ -345,9 +345,9 @@ export default class Statistics {
   /**
    * Initialize statistics UI (no reset button logic here).
    */
-  initializeStatisticsUI() {
+  initializeStatisticsUI(targetContainer = null) {
     // Create statistics UI structure dynamically
-    const statisticsTab = document.getElementById('statistics');
+    const statisticsTab = targetContainer || document.getElementById('statistics') || document.getElementById('journal-statistics');
     if (!statisticsTab) return;
     statisticsTab.innerHTML = '';
     const container = document.createElement('div');

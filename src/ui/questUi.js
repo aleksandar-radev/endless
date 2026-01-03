@@ -8,7 +8,8 @@ import { getDivisor, getStatDecimalPlaces } from '../constants/stats/stats.js';
 const BASE = import.meta.env.VITE_BASE_PATH;
 
 export function updateQuestsUI() {
-  const panel = document.getElementById('quests');
+  const panel = document.getElementById('journal-quests');
+  if (!panel) return;
   panel.innerHTML = '';
 
   // Gather unique categories from quests

@@ -8,6 +8,7 @@ import { hero,
   runes,
   training,
   crystalShop,
+  achievements,
   soulShop } from './globals.js';
 import { handleSavedData } from './functions.js';
 import { showToast } from './ui/ui.js';
@@ -493,7 +494,23 @@ export default class Ascension {
       };
     }
 
+    // Ensure we lock in any currently met achievements before resetting stats
+    achievements.checkForCompletion();
+
+    const preservedAchievements = achievements.toJSON();
+
     await setGlobals({ reset: true });
+
+    // Restore achievements
+    if (achievements && preservedAchievements) {
+      Object.entries(preservedAchievements).forEach(([id, data]) => {
+        const ach = achievements.achievements.find((a) => a.id === id);
+        if (ach) {
+          ach.claimed = data.claimed;
+          ach.reached = data.reached;
+        }
+      });
+    }
     // Reapply preserved options after reset
     Object.assign(options, preservedOptions);
     // Reapply preserved runes after reset

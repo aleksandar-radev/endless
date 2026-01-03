@@ -9,6 +9,8 @@ import { game,
   prestige,
   ascension,
   crystalShop,
+  achievements,
+  quests,
   runes } from './globals.js';
 import { calculateArmorReduction,
   calculateResistanceReduction,
@@ -168,13 +170,12 @@ export default class Hero {
       perseverance: 0,
     };
 
-    // persistent stats, that are not being reset (usually from elixirs, achievements, etc.)
+    // stats obtained by materials (elixirs, potions, etc.)
     this.permaStats = {};
     for (const [stat, config] of Object.entries(STATS)) {
       this.permaStats[stat] = 0;
     }
 
-    // Gets recalculated every time something changes
     this.stats = {};
     for (const [stat, config] of Object.entries(STATS)) {
       this.stats[stat] = config.base;
@@ -349,27 +350,62 @@ export default class Hero {
     const soulBonuses = this.getSoulShopBonuses();
     const prestigeBonuses = prestige?.bonuses || {};
     const questsBonuses = quests?.getQuestsBonuses?.() || {};
-    this.statBreakdown = {};
+    const achievementsBonuses = achievements?.getBonuses?.() || {};
+    const ascensionBonuses = ascension?.getBonuses?.() || {};
 
-    // 1) Build primary (flat) stats
-    this.calculatePrimaryStats(skillTreeBonuses, equipmentBonuses, trainingBonuses);
+    // --- Unified Bonus Aggregation ---
+    const unifiedBonuses = {};
 
-    // 2) Get base flatValues & percentBonuses WITHOUT any attributeEffects
-    const baseFlat = this.calculateFlatValues(
-      /* attributeEffects */ {},
-      skillTreeBonuses,
-      equipmentBonuses,
-      trainingBonuses,
-    );
-    const basePercent = this.calculatePercentBonuses(
-      /* attributeEffects */ {},
-      skillTreeBonuses,
-      equipmentBonuses,
-      trainingBonuses,
+    // Helper: Normalize value to Fraction (e.g. 5 -> 0.05) if needed
+    const getNorm = (raw, statKey, isFractionSource = false) => {
+      if (!raw || typeof raw !== 'number') return 0;
+      if (isFractionSource) return raw;
+      return raw / getDivisor(statKey);
+    };
+
+    const addBonusesToUnified = (target, source, isFractionSource = false) => {
+      if (!source) return;
+      for (const [key, value] of Object.entries(source)) {
+        if (!value) continue;
+        if (key.endsWith('Percent')) {
+          const norm = getNorm(value, key, isFractionSource);
+          target[key] = (target[key] || 0) + norm;
+        } else {
+          target[key] = (target[key] || 0) + value;
+        }
+      }
+    };
+
+    // Aggregate all sources
+    addBonusesToUnified(unifiedBonuses, this.permaStats, false);
+    addBonusesToUnified(unifiedBonuses, equipmentBonuses, false);
+    addBonusesToUnified(unifiedBonuses, skillTreeBonuses, false);
+    addBonusesToUnified(unifiedBonuses, trainingBonuses, false);
+    addBonusesToUnified(unifiedBonuses, questsBonuses, false);
+    addBonusesToUnified(unifiedBonuses, achievementsBonuses, true);
+    addBonusesToUnified(unifiedBonuses, prestigeBonuses, true);
+    addBonusesToUnified(unifiedBonuses, ascensionBonuses, true);
+    addBonusesToUnified(unifiedBonuses, soulBonuses, true);
+
+    // Generate Stat Breakdown
+    this.generateStatBreakdown(
+      prestigeBonuses,
       questsBonuses,
+      achievementsBonuses,
+      equipmentBonuses,
+      skillTreeBonuses,
+      trainingBonuses,
+      soulBonuses,
     );
 
-    // 3) “Lock in” each attribute (STR, VIT, etc.) so that attributeEffects sees the %-increased value
+    // 1) Build primary stats using unified bonuses
+    this.calculatePrimaryStats(unifiedBonuses);
+
+    // 2) Get base flat and percent bonuses
+    const baseFlat = this.calculateFlatValues(unifiedBonuses);
+    const basePercent = this.filterPercentBonuses(unifiedBonuses);
+
+    // 3) "Lock in" attributes
     ATTRIBUTE_KEYS.forEach((attr) => {
       const pct = basePercent[`${attr}Percent`] || 0;
       let v = baseFlat[attr] * (1 + pct);
@@ -377,90 +413,104 @@ export default class Hero {
       this.stats[attr] = decimals > 0 ? Number(v.toFixed(decimals)) : Math.floor(v);
     });
 
-    // 4) Now calculate all attributeEffects off those updated attribute stats
+    // 4) Calculate Attribute Effects
     const attributeEffects = this.calculateAttributeEffects(skillTreeBonuses);
 
-    // 5) Normal flat+% pass
-    const flatValues = this.calculateFlatValues(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses);
+    // 5) Final Pass: separate or merged? Merging is cleaner for calculateFlatValues.
+    const finalBonuses = { ...unifiedBonuses };
+    // Add attribute effects to final bonuses (treated as flat/integer sources usually, but they are calculated values)
+    // The calculateAttributeEffects returns values that match STAT definitions.
+    // e.g. 'damagePercent' -> 50 (meaning 50%).
+    // So we treat them as Integer Source (false) so they get normalized if they are percents.
+    addBonusesToUnified(finalBonuses, attributeEffects, false);
+
+    const flatValues = this.calculateFlatValues(finalBonuses);
     if (runes) {
       runes.applyBonuses(flatValues);
     }
-    const percentBonuses = this.calculatePercentBonuses(
-      attributeEffects,
-      skillTreeBonuses,
-      equipmentBonuses,
-      trainingBonuses,
-      questsBonuses,
-    );
 
-    ATTRIBUTE_KEYS.forEach((attr) => {
-      const base = (STATS[attr]?.base || 0) + (STATS[attr]?.levelUpBonus || 0) * (this.level - 1);
-      const allocated = this.primaryStats[attr] || 0;
-      const prestigeFlat = (prestigeBonuses[attr] || 0) + (prestigeBonuses.allAttributes || 0);
-      const prestigePercent = (prestigeBonuses[`${attr}Percent`] || 0) + (prestigeBonuses.allAttributesPercent || 0);
-      const questsFlat = (questsBonuses[attr] || 0) + (questsBonuses.allAttributes || 0);
-      const questsPercent = (questsBonuses[`${attr}Percent`] || 0) + (questsBonuses.allAttributesPercent || 0);
-      const permaFlat = (this.permaStats[attr] || 0) + (this.permaStats.allAttributes || 0) - prestigeFlat - questsFlat;
-      const permaPercent =
-        (this.permaStats[`${attr}Percent`] || 0) + (this.permaStats.allAttributesPercent || 0) - prestigePercent - questsPercent;
-      const itemsFlat = (equipmentBonuses[attr] || 0) + (equipmentBonuses.allAttributes || 0);
-      const itemsPercent =
-        (equipmentBonuses[`${attr}Percent`] || 0) / getDivisor(`${attr}Percent`) +
-        (equipmentBonuses.allAttributesPercent || 0) / getDivisor('allAttributesPercent');
-      const skillsFlat = (skillTreeBonuses[attr] || 0) + (skillTreeBonuses.allAttributes || 0);
-      const skillsPercent =
-        (skillTreeBonuses[`${attr}Percent`] || 0) / getDivisor(`${attr}Percent`) +
-        (skillTreeBonuses.allAttributesPercent || 0) / getDivisor('allAttributesPercent');
-      const trainingFlat = (trainingBonuses[attr] || 0) + (trainingBonuses.allAttributes || 0);
-      const trainingPercent =
-        (trainingBonuses[`${attr}Percent`] || 0) / getDivisor(`${attr}Percent`) +
-        (trainingBonuses.allAttributesPercent || 0) / getDivisor('allAttributesPercent');
-      const soulFlat = (soulBonuses[attr] || 0) + (soulBonuses.allAttributes || 0);
-      const soulPercent = (soulBonuses[`${attr}Percent`] || 0) + (soulBonuses.allAttributesPercent || 0);
+    const finalPercentBonuses = this.filterPercentBonuses(finalBonuses);
 
-      this.statBreakdown[attr] = {
-        base,
-        allocated,
-        perma: permaFlat,
-        prestige: prestigeFlat,
-        quests: questsFlat,
-        items: itemsFlat,
-        skills: skillsFlat,
-        training: trainingFlat,
-        soul: soulFlat,
-        percent: {
-          perma: permaPercent,
-          prestige: prestigePercent,
-          quests: questsPercent,
-          items: itemsPercent,
-          skills: skillsPercent,
-          training: trainingPercent,
-          soul: soulPercent,
-        },
-      };
-    });
+    // applyFinalCalculations now only needs the aggregated values
+    this.applyFinalCalculations(flatValues, finalPercentBonuses);
 
-    this.applyFinalCalculations(flatValues, percentBonuses, soulBonuses, questsBonuses);
+    // Assign calculated percentage bonuses to stats so they are available for UI and logic
+    Object.assign(this.stats, finalPercentBonuses);
 
-    updatePlayerLife();
     updateStatsAndAttributesUI();
     dataManager.saveGame();
   }
 
-  calculatePrimaryStats(skillTreeBonuses, equipmentBonuses, trainingBonuses) {
-    const sharedFlatAttributes =
-      (this.permaStats.allAttributes || 0) +
-      (equipmentBonuses.allAttributes || 0) +
-      (skillTreeBonuses.allAttributes || 0) +
-      (trainingBonuses.allAttributes || 0);
+  generateStatBreakdown(prestigeBonuses, questsBonuses, achievementsBonuses, equipmentBonuses, skillTreeBonuses, trainingBonuses, soulBonuses) {
+    const getNorm = (raw, statKey, isFractionSource = false) => {
+      if (!raw || typeof raw !== 'number') return 0;
+      if (isFractionSource) return raw;
+      return raw / getDivisor(statKey);
+    };
+
+    const getSourceValues = (source, attr, isFraction = false) => {
+      const flat = (source[attr] || 0) + (source.allAttributes || 0);
+      const percent =
+        getNorm(source[`${attr}Percent`], `${attr}Percent`, isFraction) +
+        getNorm(source.allAttributesPercent, 'allAttributesPercent', isFraction);
+      return { flat, percent };
+    };
+
+    ATTRIBUTE_KEYS.forEach((attr) => {
+      const base = (STATS[attr]?.base || 0) + (STATS[attr]?.levelUpBonus || 0) * (this.level - 1);
+      const allocated = this.primaryStats[attr] || 0;
+
+      const prestigeVals = getSourceValues(prestigeBonuses, attr, true);
+      const questsVals = getSourceValues(questsBonuses, attr, false);
+      const achievementsVals = getSourceValues(achievementsBonuses, attr, true);
+      const permaVals = getSourceValues(this.permaStats, attr, false);
+      const itemsVals = getSourceValues(equipmentBonuses, attr, false);
+      const skillsVals = getSourceValues(skillTreeBonuses, attr, false);
+      const trainingVals = getSourceValues(trainingBonuses, attr, false);
+      const soulVals = getSourceValues(soulBonuses, attr, true);
+
+      this.statBreakdown[attr] = {
+        base,
+        allocated,
+        perma: permaVals.flat,
+        prestige: prestigeVals.flat,
+        quests: questsVals.flat,
+        achievements: achievementsVals.flat,
+        items: itemsVals.flat,
+        skills: skillsVals.flat,
+        training: trainingVals.flat,
+        soul: soulVals.flat,
+        percent: {
+          perma: permaVals.percent,
+          prestige: prestigeVals.percent,
+          quests: questsVals.percent,
+          achievements: achievementsVals.percent,
+          items: itemsVals.percent,
+          skills: skillsVals.percent,
+          training: trainingVals.percent,
+          soul: soulVals.percent,
+        },
+      };
+    });
+  }
+
+  filterPercentBonuses(bonuses) {
+    const result = {};
+    for (const [key, val] of Object.entries(bonuses)) {
+      if (key.endsWith('Percent')) {
+        result[key] = val;
+      }
+    }
+    return result;
+  }
+
+  calculatePrimaryStats(unifiedBonuses) {
+    const sharedFlatAttributes = unifiedBonuses.allAttributes || 0;
 
     ATTRIBUTE_KEYS.forEach((attr) => {
       this.stats[attr] =
         (this.primaryStats[attr] || 0) +
-        (this.permaStats[attr] || 0) +
-        (equipmentBonuses[attr] || 0) +
-        (skillTreeBonuses[attr] || 0) +
-        (trainingBonuses[attr] || 0) +
+        (unifiedBonuses[attr] || 0) +
         sharedFlatAttributes;
     });
   }
@@ -477,13 +527,11 @@ export default class Hero {
       let flatBonus = 0;
       let percentBonus = 0;
 
-      // Check each attribute for contributions to this stat
       for (const attr of ATTRIBUTE_KEYS) {
         const attrEffects = ATTRIBUTES[attr].effects;
         if (!attrEffects) continue;
         const attrMultiplier = 1 + (ascensionBonuses[`${attr}EffectPercent`] || 0);
 
-        // Flat per-point bonus (e.g., damagePerPoint, lifePerPoint, etc.)
         const flatKey = stat + 'PerPoint';
         const hasFlatKey = flatKey in attrEffects;
         const extraPerPoint =
@@ -499,7 +547,6 @@ export default class Hero {
           }
         }
 
-        // Percent per N points bonus (e.g., damagePercentPer, lifePercentPer, etc.)
         const percentKey = stat + 'PercentPer';
         if (percentKey in attrEffects && attrEffects[percentKey].enabled) {
           const value = attrEffects[percentKey].value * attrMultiplier;
@@ -536,31 +583,23 @@ export default class Hero {
     return effects;
   }
 
-  calculateFlatValues(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses) {
+  calculateFlatValues(unifiedBonuses) {
     const flatValues = {};
-    const sharedFlatAttributes =
-      (this.permaStats.allAttributes || 0) +
-      (equipmentBonuses.allAttributes || 0) +
-      (skillTreeBonuses.allAttributes || 0) +
-      (trainingBonuses.allAttributes || 0);
+    const sharedFlatAttributes = unifiedBonuses.allAttributes || 0;
 
     for (const stat of STAT_KEYS) {
       let value =
         (this.primaryStats[stat] ?? 0) +
-        (this.permaStats[stat] ?? 0) +
         (STATS[stat].base ?? 0) +
-        (attributeEffects[stat] ?? 0) +
         (STATS[stat].levelUpBonus ?? 0) * (this.level - 1) +
-        (trainingBonuses[stat] ?? 0) +
-        (equipmentBonuses[stat] ?? 0) +
-        (skillTreeBonuses[stat] ?? 0);
+        (unifiedBonuses[stat] ?? 0);
 
       if (ATTRIBUTE_SET.has(stat)) {
         value += sharedFlatAttributes;
       }
 
       if (RESISTANCE_SET.has(stat)) {
-        value += this.permaStats.allResistance || 0;
+        value += unifiedBonuses.allResistance || 0;
       }
 
       flatValues[stat] = value;
@@ -568,45 +607,7 @@ export default class Hero {
     return flatValues;
   }
 
-  calculatePercentBonuses(attributeEffects, skillTreeBonuses, equipmentBonuses, trainingBonuses, questsBonuses = {}) {
-    const percentBonuses = {};
-    const ascensionBonuses = ascension?.getBonuses() || {};
-    const prestigeBonuses = prestige?.bonuses || {};
-    const prestigeAllAttributesPercent = prestigeBonuses.allAttributesPercent || 0;
-    const questsAllAttributesPercent = questsBonuses.allAttributesPercent || 0;
-    const sharedPercentAttributesRaw =
-      (this.primaryStats.allAttributesPercent ?? 0) +
-      ((this.permaStats.allAttributesPercent || 0) - prestigeAllAttributesPercent - questsAllAttributesPercent) +
-      (equipmentBonuses.allAttributesPercent || 0) +
-      (skillTreeBonuses.allAttributesPercent || 0) +
-      (trainingBonuses.allAttributesPercent || 0);
-    const sharedPercentAttributes =
-      sharedPercentAttributesRaw / getDivisor('allAttributesPercent') + prestigeAllAttributesPercent + questsAllAttributesPercent;
-    for (const stat of STAT_KEYS) {
-      if (stat.endsWith('Percent')) {
-        const statName = stat.replace('Percent', '');
-        const prestigePercent = prestigeBonuses[stat] || 0;
-        const questsPercent = questsBonuses[stat] || 0;
-        const raw =
-          (STATS[stat]?.base || 0) +
-          (attributeEffects[stat] || 0) +
-          (this.primaryStats[stat] ?? 0) +
-          ((this.permaStats[stat] || 0) - prestigePercent - questsPercent) +
-          (skillTreeBonuses[stat] || 0) +
-          (equipmentBonuses[stat] || 0) +
-          (trainingBonuses[stat] || 0);
-        let value = raw / getDivisor(stat);
-        if (ATTRIBUTE_SET.has(statName)) {
-          value += sharedPercentAttributes;
-        }
-        value += prestigePercent;
-        value += questsPercent;
-        value += ascensionBonuses[stat] || 0;
-        percentBonuses[stat] = value;
-      }
-    }
-    return percentBonuses;
-  }
+
 
   /**
    * Returns all soul shop bonuses as an object, mapping stat names to their total bonus.
@@ -633,21 +634,19 @@ export default class Hero {
     return bonuses;
   }
 
-  applyFinalCalculations(flatValues, percentBonuses, soulBonuses, questsBonuses = {}) {
-    // Apply percent bonuses to all stats that have them
-    const ascensionBonuses = ascension?.getBonuses() || {};
+  applyFinalCalculations(flatValues, percentBonuses) {
     const prestigeBonuses = prestige?.bonuses || {};
-    this.damageConversionDeltas = {};
+    const ascensionBonuses = ascension?.getBonuses() || {};
 
-    // Scale elemental damage bonuses at the stat level so the Stats UI reflects the effect.
-    // This applies to the aggregated [element]Damage (flat) and [element]DamagePercent (fraction).
+    const getFlat = (source, key) => source[key] || 0;
+
+    // 1. Handle Percent Stats and Effectiveness Scaling
     ELEMENT_IDS.forEach((id) => {
       const effectivenessKey = `${id}EffectivenessPercent`;
       const damageKey = `${id}Damage`;
       const damagePercentKey = `${id}DamagePercent`;
 
-      const effectiveness =
-        (percentBonuses[effectivenessKey] || 0) + (soulBonuses[effectivenessKey] || 0);
+      const effectiveness = percentBonuses[effectivenessKey] || 0;
       const multiplier = Math.max(0, 1 + (effectiveness || 0));
 
       if (Math.abs(multiplier - 1) > 1e-9) {
@@ -656,108 +655,57 @@ export default class Hero {
         }
 
         const pSpecific = percentBonuses[damagePercentKey] || 0;
-        const sSpecific = soulBonuses[damagePercentKey] || 0;
+
         const pShared = (percentBonuses.elementalDamagePercent || 0) + (percentBonuses.totalDamagePercent || 0);
-        const sShared = (soulBonuses.elementalDamagePercent || 0) + (soulBonuses.totalDamagePercent || 0);
-        const sharedBase = pShared + sShared;
+        const sharedBase = pShared;
 
         percentBonuses[damagePercentKey] =
           pSpecific * multiplier +
-          (sSpecific + sharedBase) * (multiplier - 1);
+          sharedBase * (multiplier - 1);
       }
     });
 
     for (const stat of STAT_KEYS) {
-      if (stat.endsWith('Percent')) {
-        let percentValue = percentBonuses[stat] || 0;
-        percentValue += soulBonuses[stat] || 0;
-        this.stats[stat] = percentValue;
-        percentBonuses[stat] = percentValue;
+      if (stat.endsWith('Percent')) continue;
+
+      let value = flatValues[stat] || 0;
+
+      // Update flatValues so downstream logic (Resource Damage) sees the full flat amount
+      flatValues[stat] = value;
+
+      // Apply Percent Multiplier
+      const percentStatKey = `${stat}Percent`;
+      let percentAdd = percentBonuses[percentStatKey] || 0;
+
+      if (Math.abs(percentAdd) > 1e-9) {
+        value *= (1 + percentAdd);
       }
-    }
-
-    for (const stat of STAT_KEYS) {
-      let value;
-      if (!stat.endsWith('Percent')) {
-        // Use Math.floor for integer stats, Number.toFixed for decimals
-        if (stat === 'attackSpeed') {
-          // Attack speed percent bonuses scale the pre-percent total (base 1.0 plus flat additions).
-          const flatBase = flatValues.attackSpeed + (ascensionBonuses.attackSpeed || 0);
-          const attackSpeedPercent = percentBonuses.attackSpeedPercent || 0;
-          value = flatBase * (1 + attackSpeedPercent);
-        } else {
-          let percent = percentBonuses[stat + 'Percent'] || 0;
-          if (RESISTANCE_SET.has(stat)) {
-            percent += this.stats.allResistancePercent || 0;
-          }
-
-          if ((stat === 'armorPenetration' || stat === 'elementalPenetration') && this.stats.flatPenetrationPercent) {
-            percent += this.stats.flatPenetrationPercent;
-          }
-
-          value = flatValues[stat] + (ascensionBonuses[stat] || 0);
-          if (percent) value *= 1 + percent;
-        }
-        if (stat === 'mana') {
-          value += (this.stats.manaPerLevel || 0) * (this.level - 1);
-        }
-
-        // Apply soul shop bonuses (flat only, percent handled in first loop)
-        if (soulBonuses[stat]) {
-          value += soulBonuses[stat];
-        }
-      } else {
-        value = (percentBonuses[stat] || 0) * getDivisor(stat);
-      }
-
-      // Apply decimal places
-      const decimals = getStatDecimalPlaces(stat);
-      value = decimals > 0 ? Number(value.toFixed(decimals)) : Math.floor(value);
-
-      // Apply caps
-      let cap = STATS[stat]?.cap;
-      if (stat === 'blockChance') {
-        const hasShield = Object.values(inventory.equippedItems).some((i) => i && i.type === 'SHIELD');
-        if (!hasShield) {
-          this.stats[stat] = 0;
-          continue;
-        }
-        cap = (cap || 50) + ((ascensionBonuses.blockChanceCap || 0) | 0);
-      }
-      if (stat === 'critChance') {
-        cap = (flatValues.critChanceCap || cap || 50) + (ascensionBonuses.critChanceCap || 0);
-      }
-      if (stat === 'attackSpeed') {
-        if (this.stats.uncappedAttackSpeed) {
-          cap = Infinity;
-        } else {
-          cap = (cap || 5) + (ascensionBonuses.attackSpeedCap || 0);
-        }
-      }
-
-      if (cap !== undefined && Number.isFinite(cap)) {
-        value = Math.min(value, cap);
-      }
-
-      if (stat === 'extraMaterialDropMax') value = Math.max(value, 1); // Always at least 1
 
       const divisor = getDivisor(stat);
-      const prestigeBonus = prestigeBonuses[stat] || 0;
-      const questsBonus = questsBonuses[stat] || 0;
-      const totalBonusToExclude = prestigeBonus + questsBonus;
-      if (divisor !== 1) {
-        // Prestige/quest bonuses are stored as fractions already (e.g. 0.05 for 5% in percent stats),
-        // so exclude them from divisor scaling and add them back after scaling.
-        // Flat bonuses (strength, life) are also stored as-is and not divided by divisor.
-        this.stats[stat] = (value - totalBonusToExclude) / divisor + totalBonusToExclude;
+      if (divisor > 1) {
+        value /= divisor;
+      }
+
+      // Caps and Rounding
+      if (value < 0 && stat !== 'lifeRegeneration') value = 0;
+      if (stat === 'blockChance' && value > 75) value = 75;
+      if (stat.endsWith('Resistance')) {
+        if (value > 75) value = 75;
+      }
+      if (stat === 'damageReduction') {
+        if (value > 90) value = 90;
+      }
+
+      const decimals = getStatDecimalPlaces(stat);
+      if (decimals === 0) {
+        this.stats[stat] = Math.floor(value);
       } else {
-        this.stats[stat] = value;
+        this.stats[stat] = Number(value.toFixed(decimals));
       }
     }
 
-    // Apply specific stat interactions
-    // Bloodmage: convert mana pool into life pool. Mana bonuses apply to mana first, then convert.
-    // Life% bonuses apply only to base life (not the converted mana).
+    // --- Specific Interactions ---
+
     let convertedManaForBloodmage = 0;
     const conversionPercent = this.stats.convertManaToLifePercent || 0;
 

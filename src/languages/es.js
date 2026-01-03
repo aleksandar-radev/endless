@@ -41,6 +41,14 @@ export default {
   'tab.buildings': 'Edificios',
   'tab.prestige': 'Prestigio',
   'tab.ascension': 'Ascensión',
+  'tab.journal': 'Diario',
+  'journal.tabs.quests': 'Misiones',
+  'journal.tabs.achievements': 'Logros',
+  'journal.tabs.statistics': 'Estadísticas',
+  'achievements.title': 'Logros',
+  'achievements.totalBonus': 'Bonificación Total',
+  'achievements.showClaimed': 'Mostrar Reclamados',
+  'achievements.hideClaimed': 'Ocultar Reclamados',
   'skillTree.currentEffects': 'Efectos actuales',
   'skillTree.nextLevelEffects': 'Efectos del siguiente nivel',
   'skillTree.summonStats': 'Estadísticas de invocación',
@@ -94,6 +102,26 @@ export default {
   'combat.regionLabel': 'REGIÓN:',
   'death.message': '¡Has muerto! Reviviendo en <span id="revive-countdown">10</span>',
   'ascension.ascendNow': 'Ascender ahora',
+  'common.reward': 'Recompensa',
+  'common.claim': 'Reclamar',
+  'common.claimed': 'Reclamado',
+
+  // Logros
+  // Reach Level 50
+  'achievements.data.reach_level_50.title': 'Héroe Experimentado',
+  'achievements.data.reach_level_50.desc': 'Alcanza el nivel de héroe 50',
+  // One Shot Kill
+  'achievements.data.one_shot_kill.title': 'Un Solo Golpe',
+  'achievements.data.one_shot_kill.desc': 'Mata a un enemigo con salud máxima de un solo golpe',
+  // Zero to Hero
+  'achievements.data.zero_to_hero.title': 'Crecimiento Instantáneo',
+  'achievements.data.zero_to_hero.desc': 'Sube de nivel desde 0% de XP en una sola muerte',
+  // Summon One Shot
+  'achievements.data.summon_one_shot.title': 'Maestro de Esbirros',
+  'achievements.data.summon_one_shot.desc': 'Haz que una invocación mate a un enemigo con salud máxima de un solo golpe',
+  // Earn 1B Gold
+  'achievements.data.earn_1b_gold.title': 'Multimillonario',
+  'achievements.data.earn_1b_gold.desc': 'Gana 1,000,000,000 de oro',
   'ascension.points': 'Puntos',
   'ascension.needPrestiges': 'Necesitas al menos 20 prestigios para ascender.',
   'ascension.upgrade.lvl': 'Nvl',

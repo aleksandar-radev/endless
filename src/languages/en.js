@@ -41,6 +41,14 @@ export default {
   'tab.buildings': 'Buildings',
   'tab.prestige': 'Prestige',
   'tab.ascension': 'Ascension',
+  'tab.journal': 'Journal',
+  'journal.tabs.quests': 'Quests',
+  'journal.tabs.achievements': 'Achievements',
+  'journal.tabs.statistics': 'Statistics',
+  'achievements.title': 'Achievements',
+  'achievements.totalBonus': 'Total Bonus',
+  'achievements.showClaimed': 'Show Claimed',
+  'achievements.hideClaimed': 'Hide Claimed',
   'skillTree.currentEffects': 'Current Effects',
   'skillTree.nextLevelEffects': 'Next Level Effects',
   'skillTree.summonStats': 'Summon Stats',
@@ -272,6 +280,9 @@ export default {
   'common.close': 'Close',
   'common.apply': 'Apply',
   'common.cancel': 'Cancel',
+  'common.reward': 'Reward',
+  'common.claim': 'Claim',
+  'common.claimed': 'Claimed',
   'common.none': 'None',
   'common.lvl': 'Lvl',
   'common.max': 'Max',
@@ -2141,4 +2152,25 @@ export default {
   'skillTree.mobileTooltipNotice':
     'Skill details are hidden on mobile when Quick Buy is enabled. To view skill effects, disable Quick Buy in Options.',
   'skillTree.mobileTooltipNotice.goToOptions': 'Go to Options',
+
+  'common.reward': 'Reward',
+  'common.claim': 'Claim',
+  'common.claimed': 'Claimed',
+
+  // Achievements
+  // Reach Level 50
+  'achievements.data.reach_level_50.title': 'Seasoned Hero',
+  'achievements.data.reach_level_50.desc': 'Reach Hero Level 50',
+  // One Shot Kill
+  'achievements.data.one_shot_kill.title': 'One Punch',
+  'achievements.data.one_shot_kill.desc': 'Kill an enemy with max health in a single hit',
+  // Zero to Hero
+  'achievements.data.zero_to_hero.title': 'Instant Growth',
+  'achievements.data.zero_to_hero.desc': 'Level up from 0% XP in a single kill',
+  // Summon One Shot
+  'achievements.data.summon_one_shot.title': 'Minion Master',
+  'achievements.data.summon_one_shot.desc': 'Have a summon kill an enemy with max health in a single hit',
+  // Earn 1B Gold
+  'achievements.data.earn_1b_gold.title': 'Billionaire',
+  'achievements.data.earn_1b_gold.desc': 'Earn 1,000,000,000 Gold',
 };

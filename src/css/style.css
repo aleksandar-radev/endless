@@ -1,6 +1,7 @@
 :root {
   --primary-color: #2c3e50;
   --secondary-color: #34495e;
+  --bg-base: #4a5d70;
 
   --fire: rgb(228, 85, 85);
   --cold: rgb(85, 170, 228);
@@ -884,4 +885,261 @@
   text-align: right;
   min-width: 64px;
   font-variant-numeric: tabular-nums;
+}
+
+/* Journal Tabs */
+.journal-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding: 0 10px;
+  border-bottom: 2px solid var(--bg-element);
+}
+
+.journal-tab-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  position: relative;
+  transition: color 0.2s, background-color 0.2s;
+  border-radius: 5px 5px 0 0;
+}
+
+.journal-tab-btn:hover {
+  background-color: var(--bg-element);
+  color: var(--text);
+}
+
+.journal-tab-btn.active {
+  color: var(--text);
+  background-color: var(--bg-element);
+  border-bottom: 2px solid var(--accent);
+  margin-bottom: -2px;
+}
+
+/* Journal Tab Notification Dot */
+.journal-tab-btn::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  display: none;
+  z-index: 10;
+}
+
+.journal-tab-btn.has-indicator::after {
+  display: block;
+}
+
+/* Ensure journal content logic handles panels similarly */
+.journal-content .journal-panel {
+  display: none;
+}
+
+.journal-content .journal-panel.active {
+  display: block;
+}
+
+/* Achievements UI */
+.achievements-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px;
+}
+
+.achievements-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  background-color: var(--bg-element);
+  border-radius: 8px;
+  font-weight: bold;
+  color: var(--accent);
+  align-items: center;
+}
+
+.toggle-claimed-btn {
+  background-color: var(--bg-base);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-size: 0.9em;
+  margin-left: 15px;
+  transition: all 0.2s;
+}
+
+.toggle-claimed-btn:hover {
+  background-color: var(--bg-element-light, #4b5563);
+  border-color: var(--accent);
+  color: white;
+}
+
+.achievement-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.achievement-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: var(--bg-element);
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.achievement-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-alpha-20);
+  background-color: var(--bg-element-light);
+}
+
+.achievement-item.claimed {
+  opacity: 0.7;
+  border-color: var(--success);
+}
+
+.achievement-item.claimed::before {
+  content: "✓";
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  color: var(--success);
+  font-size: 1.5rem;
+  opacity: 0.2;
+}
+
+.achievement-item.ready {
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 10px var(--accent-alpha-20);
+}
+
+.achievement-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-base);
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.achievement-item.ready .achievement-icon {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.achievement-item.claimed .achievement-icon {
+  color: var(--success);
+  border-color: var(--success);
+}
+
+.achievement-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.achievement-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+.achievement-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.achievement-reward {
+  font-size: 0.85rem;
+  color: var(--accent-light);
+  margin-top: 4px;
+}
+
+.achievement-progress-bar-container {
+  margin-top: 8px;
+  background-color: var(--bg-base);
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.achievement-progress-bar {
+  height: 100%;
+  background-color: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.achievement-progress-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #fff;
+  text-shadow: 0 0 2px black;
+  font-weight: bold;
+}
+
+.achievement-action {
+  min-width: 80px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.claim-btn {
+  background-color: var(--accent);
+  color: var(--primary-color);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.claim-btn:hover:not(:disabled) {
+  background-color: var(--accent-light);
+  transform: scale(1.05);
+}
+
+.claim-btn:disabled {
+  background-color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.claimed-text {
+  color: var(--success);
+  font-weight: bold;
+  font-size: 0.9rem;
 }

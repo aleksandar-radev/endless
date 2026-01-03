@@ -13,6 +13,7 @@ export class TabIndicatorManager {
     this.previousStatPoints = 0;
     this.previousSkillPoints = 0;
     this.previousClaimableQuests = 0;
+    this.previousClaimableAchievements = 0;
 
     // Find all tab buttons
     const tabButtons = Array.from(document.querySelectorAll(`${tabsContainerSelector} .tab-btn`));
@@ -138,17 +139,21 @@ export class TabIndicatorManager {
       this.previousSkillPoints = unallocatedSkillPoints;
     }
 
-    // Quests tab: show indicator when there are claimable quests
-    // Reset cleared status if claimable quests increased from previous value (quest completed)
-    if (claimableQuests > this.previousClaimableQuests) {
-      this.resetClearedStatus('quests');
+    // Quests & Achievements (Journal)
+    const claimableAchievements = state.claimableAchievements || 0;
+
+    // Reset cleared status if counts increased
+    if (claimableQuests > this.previousClaimableQuests || claimableAchievements > this.previousClaimableAchievements) {
+      this.resetClearedStatus('journal');
     }
     this.previousClaimableQuests = claimableQuests;
+    this.previousClaimableAchievements = claimableAchievements;
 
-    if (claimableQuests > 0 && !this.clearedIndicators.has('quests')) {
-      this.showIndicator('quests');
+    const totalClaimableJournal = claimableQuests + claimableAchievements;
+    if (totalClaimableJournal > 0 && !this.clearedIndicators.has('journal')) {
+      this.showIndicator('journal');
     } else {
-      this.clearIndicatorOnly('quests');
+      this.clearIndicatorOnly('journal');
     }
 
     // Training and CrystalShop tabs don't need indicators per requirements

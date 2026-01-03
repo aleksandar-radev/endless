@@ -7,6 +7,7 @@ import { hero,
   game,
   runtime,
   ascension,
+  achievements,
   runes } from './globals.js';
 import { BASE_RUNE_SLOTS } from './runes.js';
 import { PRESTIGE_BONUSES, STARTING_CRYSTALS_BONUS } from './constants/prestigeBonuses.js';
@@ -341,7 +342,24 @@ export default class Prestige {
       };
     }
 
+    // Ensure we lock in any currently met achievements before resetting stats
+    achievements.checkForCompletion();
+
+    const preservedAchievements = achievements.toJSON();
+
     await setGlobals({ reset: true });
+
+    // Restore achievements
+    if (achievements && preservedAchievements) {
+      // Restore both claimed and reached status
+      Object.entries(preservedAchievements).forEach(([id, data]) => {
+        const ach = achievements.achievements.find((a) => a.id === id);
+        if (ach) {
+          ach.claimed = data.claimed;
+          ach.reached = data.reached;
+        }
+      });
+    }
 
     // Reapply preserved options onto the new options instance
     Object.assign(options, preservedOptions);
@@ -384,17 +402,5 @@ export default class Prestige {
 
     await dataManager.saveGame({ force: true });
     window.location.reload();
-
-    // game.currentEnemy = new Enemy(game.stage);
-    // hero.queueRecalculateFromAttributes();
-    // updateResources();
-    // updateStageUI();
-    // updateRegionUI();
-    // updateStatsAndAttributesUI();
-    // showToast('Prestige complete!');
-    // dataManager.saveGame();
-    // // Clear pending cards after prestige
-    // this.pendingCards = null;
-    // this.pendingStartingCrystals = null;
   }
 }
