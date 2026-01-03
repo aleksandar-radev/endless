@@ -71,7 +71,7 @@ export default {
   'training.elementalDistributionDescription':
     'Adjust how elemental damage from training and intelligence is distributed, and how resource-based extra damage is split between physical, thorns and elemental.',
   'training.elementalDistributionResourceThornsTotal': 'Resource Extra Damage (Thorns): {amount}',
-  'training.elementalDistributionResourceThornsLabel': 'Resource Extra Split (Thorns %)',
+
   'training.elementalDistributionReset': 'Reset to Even',
   'training.elementalDistributionTrainingTotal': 'Total Training Damage: {amount}',
   'training.elementalDistributionIntelligenceTotal': 'Total Intelligence Damage: {amount}',
@@ -710,6 +710,7 @@ export default {
   itemQuantityPercent: 'Item Drop Quantity %',
   materialQuantityPercent: 'Material Drop Quantity %',
   itemRarityPercent: 'Item Drop Rarity %',
+  enemyRarityPercent: 'Enemy Rarity %',
   doubleDamageChance: 'Double Damage Chance',
   resurrectionChance: 'Resurrection Chance',
   reflectFireDamage: 'Reflect Fire Damage',
@@ -1328,6 +1329,11 @@ export default {
   'tooltip.explosionChance': 'Chance for enemies to explode on death, dealing damage to nearby enemies.',
   'tooltip.extraDamageAgainstBurningEnemies': 'Increases damage dealt to enemies that are currently burning.',
   'tooltip.lightningEffectivenessPercent': 'Increases the effectiveness of Lightning-based status effects.',
+  'tooltip.fireEffectivenessPercent': 'Increases the effectiveness of Fire-based status effects.',
+  'tooltip.coldEffectivenessPercent': 'Increases the effectiveness of Cold-based status effects.',
+  'tooltip.airEffectivenessPercent': 'Increases the effectiveness of Air-based status effects.',
+  'tooltip.earthEffectivenessPercent': 'Increases the effectiveness of Earth-based status effects.',
+  'tooltip.waterEffectivenessPercent': 'Increases the effectiveness of Water-based status effects.',
   'tooltip.arcDischargeChance': 'Chance to trigger an Arc Discharge when hitting enemies.',
   'tooltip.shockChance': 'Chance to shock enemies, increasing the damage they take.',
   'tooltip.shockEffectiveness': 'Increases the damage amplification from Shock effects.',
@@ -2153,9 +2159,6 @@ export default {
     'Skill details are hidden on mobile when Quick Buy is enabled. To view skill effects, disable Quick Buy in Options.',
   'skillTree.mobileTooltipNotice.goToOptions': 'Go to Options',
 
-  'common.reward': 'Reward',
-  'common.claim': 'Claim',
-  'common.claimed': 'Claimed',
 
   // Achievements
   // Reach Level 50
