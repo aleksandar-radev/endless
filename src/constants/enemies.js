@@ -198,9 +198,9 @@ export function applyDefaultEnemyStats(enemy) {
     life: 18 * multiplier,
     damage: 1.75 * multiplier,
     attackSpeed: 1,
-    attackRating: 5 * multiplier,
-    armor: 7 * multiplier,
-    evasion: 5 * multiplier,
+    attackRating: 6 * multiplier,
+    armor: 10 * multiplier,
+    evasion: 7 * multiplier,
 
     xp: 6 * multiplier,
     gold: 7 * multiplier,
@@ -213,12 +213,12 @@ export function applyDefaultEnemyStats(enemy) {
     lightningDamage: 0 * multiplier,
     waterDamage: 0 * multiplier,
 
-    fireResistance: 3 * multiplier,
-    coldResistance: 3 * multiplier,
-    airResistance: 3 * multiplier,
-    earthResistance: 3 * multiplier,
-    lightningResistance: 3 * multiplier,
-    waterResistance: 3 * multiplier,
+    fireResistance: 7 * multiplier,
+    coldResistance: 7 * multiplier,
+    airResistance: 7 * multiplier,
+    earthResistance: 7 * multiplier,
+    lightningResistance: 7 * multiplier,
+    waterResistance: 7 * multiplier,
 
     // can be used for balancing
     // example is the damage/ele dmg

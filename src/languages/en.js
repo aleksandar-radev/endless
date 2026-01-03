@@ -608,6 +608,7 @@ export default {
   manaSteal: 'Mana Steal',
   omniSteal: 'Omni Steal',
   attackSpeed: 'Attack Speed',
+  attackSpeedPercent: 'Attack Speed %',
   attackRating: 'Attack Rating',
   attackRatingPercent: 'Attack Rating %',
   chanceToHitPercent: 'Chance to Hit %',
