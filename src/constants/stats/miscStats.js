@@ -23,7 +23,6 @@ export const MISC_STATS = {
     show: true,
     sub: 'resources',
   }),
-  manaPerLevel: createStat({ dec: 1 }),
   manaPercent: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(8, 100, 1.2) },
     itemTags: ['misc', 'jewelry', 'magic'],

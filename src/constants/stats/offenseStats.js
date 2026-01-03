@@ -85,7 +85,6 @@ export const OFFENSE_STATS = {
     show: true,
     sub: 'attack',
   }),
-  damagePerLevel: createStat({ dec: 1 }),
   damagePercent: createPercentStat({
     item: {
       tierScalingMaxPercent,
