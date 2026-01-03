@@ -432,7 +432,7 @@ export default class Hero {
     const finalPercentBonuses = this.filterPercentBonuses(finalBonuses);
 
     // applyFinalCalculations now only needs the aggregated values
-    this.applyFinalCalculations(flatValues, finalPercentBonuses);
+    this.applyFinalCalculations(flatValues, finalPercentBonuses, finalBonuses);
 
     // Assign calculated percentage bonuses to stats so they are available for UI and logic
     Object.assign(this.stats, finalPercentBonuses);
@@ -604,6 +604,22 @@ export default class Hero {
 
       flatValues[stat] = value;
     }
+
+    // --- Generic Per-Level Flat Bonus ---
+    // Safely iterate all accumulated bonuses to find any ...PerLevel keys
+    for (const key of Object.keys(unifiedBonuses)) {
+      if (key.endsWith('PerLevel') && !key.endsWith('PercentPerLevel')) {
+        const statName = key.slice(0, -8); // remove "PerLevel"
+        // Only apply if the base stat exists in flatValues (which covers all STAT_KEYS)
+        // or if we want to allow new stats. STAT_KEYS covers all defined stats.
+        if (Object.prototype.hasOwnProperty.call(flatValues, statName)) {
+          const bonus = unifiedBonuses[key] * this.level;
+          if (bonus) {
+            flatValues[statName] += bonus;
+          }
+        }
+      }
+    }
     return flatValues;
   }
 
@@ -634,11 +650,20 @@ export default class Hero {
     return bonuses;
   }
 
-  applyFinalCalculations(flatValues, percentBonuses) {
-    const prestigeBonuses = prestige?.bonuses || {};
+  applyFinalCalculations(flatValues, percentBonuses, unifiedBonuses = {}) {
     const ascensionBonuses = ascension?.getBonuses() || {};
 
-    const getFlat = (source, key) => source[key] || 0;
+    // --- Generic Per-Level Percent Bonus ---
+    for (const key of Object.keys(unifiedBonuses)) {
+      if (key.endsWith('PercentPerLevel')) {
+        const statName = key.slice(0, -15); // remove "PercentPerLevel"
+        const percentKey = statName + 'Percent';
+        const bonus = unifiedBonuses[key] * this.level;
+        if (bonus) {
+          percentBonuses[percentKey] = (percentBonuses[percentKey] || 0) + bonus;
+        }
+      }
+    }
 
     // 1. Handle Percent Stats and Effectiveness Scaling
     ELEMENT_IDS.forEach((id) => {
@@ -840,7 +865,7 @@ export default class Hero {
 
     // Store flat-only values for later damage calculations
     this.baseDamages.physical = Math.floor(
-      flatValues.damage + (ascensionBonuses.damage || 0) + (this.stats.damagePerLevel || 0) * this.level,
+      flatValues.damage + (ascensionBonuses.damage || 0),
     );
     this.baseDamages.elemental = Math.floor(flatValues.elementalDamage + (ascensionBonuses.elementalDamage || 0));
     ELEMENT_IDS.forEach((id) => {
@@ -905,7 +930,7 @@ export default class Hero {
       resourceExtraThornsShare,
     );
     const basePhysicalFlatWithoutResources =
-      baseFlatDamageBeforeResources + (ascensionBonuses.damage || 0) + (this.stats.damagePerLevel || 0) * this.level;
+      baseFlatDamageBeforeResources + (ascensionBonuses.damage || 0);
     const baseElementalFlatWithoutResources =
       baseFlatElementalBeforeResources + (ascensionBonuses.elementalDamage || 0);
 
