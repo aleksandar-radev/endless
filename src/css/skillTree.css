@@ -261,7 +261,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  margin-top: 16px;
+  margin-top: 4px;
 }
 
 .class-preview-modal h2 {
@@ -971,8 +971,8 @@
 
 /* Class Preview Specializations */
 .class-preview-specializations {
-  margin: 20px 0;
-  padding: 20px;
+  margin: 10px 0;
+  padding: 10px;
   background: var(--bg-element, #23272f);
   border-radius: 8px;
 }
@@ -1541,4 +1541,21 @@
   cursor: not-allowed;
   opacity: 0.7;
   color: #94a3b8;
+}
+
+.specialization-preview-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  text-align: left;
+  cursor: pointer;
+  border: 1px solid transparent;
+  padding: 5px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.specialization-preview-card.active {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.1);
 }

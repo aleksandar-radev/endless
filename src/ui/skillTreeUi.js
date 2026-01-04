@@ -1247,30 +1247,8 @@ function showClassSelection() {
 function openClassPreview(pathId) {
   const pathData = CLASS_PATHS[pathId];
 
-  let specializationsPreview = '';
-  const specializations = getClassSpecializations(pathId);
-  if (Object.keys(specializations).length > 0) {
-    specializationsPreview = `
-      <div class="class-preview-specializations">
-        <h3>${t('skillTree.availableSpecializations')}</h3>
-        <div class="specializations-preview-grid">
-          ${Object.values(specializations)
-    .map(
-      (spec) => `
-            <div class="specialization-preview-card" style="display: flex; align-items: flex-start; gap: 10px; text-align: left;">
-              <img src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}" alt="${spec.name()}" class="character-avatar spec-preview-avatar" style="width: 60px; height: 106px; flex-shrink: 0; object-fit: cover; border-radius: 6px; border: 2px solid var(--accent);" />
-              <div>
-                <h4 style="margin: 0; margin-bottom: 5px;">${spec.name()}</h4>
-                <p class="spec-preview-desc">${spec.description()}</p>
-              </div>
-            </div>
-          `,
-    )
-    .join('')}
-        </div>
-      </div>
-    `;
-  }
+  // Logic to track active specialization preview
+  let activeSpecId = null;
 
   const content = html`
     <div class="class-preview-wrapper">
@@ -1278,7 +1256,7 @@ function openClassPreview(pathId) {
       <div class="class-preview-header">
         <h2>${pathData.name()}</h2>
       </div>
-      ${specializationsPreview}
+      <div class="class-preview-specializations"></div>
       <div class="class-preview-tree"></div>
       <div class="class-preview-footer">
         <button class="select-class-btn">${t('skillTree.selectClass')}</button>
@@ -1288,7 +1266,63 @@ function openClassPreview(pathId) {
   const modal = createModal({
     id: 'class-preview-modal', className: 'class-preview-modal', content,
   });
-  buildClassPreviewTree(pathId, modal.querySelector('.class-preview-tree'));
+
+  const specializationsContainer = modal.querySelector('.class-preview-specializations');
+  const treeContainer = modal.querySelector('.class-preview-tree');
+  const specializations = getClassSpecializations(pathId);
+
+  // Render Specializations Section
+  const specializationsList = Object.values(specializations);
+  if (specializationsList.length > 0) {
+    // Preselect the first specialization
+    activeSpecId = specializationsList[0].id;
+
+    specializationsContainer.innerHTML = `
+      <h3>${t('skillTree.availableSpecializations')}</h3>
+      <div class="specializations-preview-grid"></div>
+    `;
+    const grid = specializationsContainer.querySelector('.specializations-preview-grid');
+
+    specializationsList.forEach((spec) => {
+      const card = document.createElement('div');
+      card.className = 'specialization-preview-card';
+      card.dataset.specId = spec.id;
+
+      // Highlight if active
+      if (activeSpecId === spec.id) {
+        card.classList.add('active');
+      }
+
+      card.innerHTML = `
+        <img src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}" alt="${spec.name()}" class="character-avatar spec-preview-avatar" style="width: 60px; height: 106px; flex-shrink: 0; object-fit: cover; border-radius: 6px; border: 2px solid var(--accent); pointer-events: none;" />
+        <div style="pointer-events: none;">
+          <h4 style="margin: 0; margin-bottom: 5px;">${spec.name()}</h4>
+          <p class="spec-preview-desc">${spec.description()}</p>
+        </div>
+      `;
+
+      card.addEventListener('click', () => {
+        if (activeSpecId === spec.id) {
+          activeSpecId = null;
+          card.classList.remove('active');
+        } else {
+          activeSpecId = spec.id;
+          // Reset others
+          grid.querySelectorAll('.specialization-preview-card').forEach((c) => {
+            c.classList.remove('active');
+          });
+          card.classList.add('active');
+        }
+        buildClassPreviewTree(pathId, treeContainer, activeSpecId);
+      });
+
+      grid.appendChild(card);
+    });
+  }
+
+  // Initial Tree Build
+  buildClassPreviewTree(pathId, treeContainer, activeSpecId);
+
   modal.querySelectorAll('.select-class-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       closeModal('class-preview-modal');
@@ -1308,8 +1342,42 @@ function selectClassPath(pathId) {
   }
 }
 
-function buildClassPreviewTree(pathId, container) {
+function buildClassPreviewTree(pathId, container, activeSpecId = null) {
   container.innerHTML = '';
+
+  // --- Render Active Specialization Skills (if any) ---
+  if (activeSpecId) {
+    const spec = getSpecialization(pathId, activeSpecId);
+    if (spec) {
+      const specHeader = document.createElement('div');
+      specHeader.innerHTML = `<h3 style="color: var(--gold); margin: 20px 0 10px;">${spec.name()} Skills</h3>`;
+      container.appendChild(specHeader);
+
+      const specSkills = spec.skills;
+      const specLevelGroups = SKILL_LEVEL_TIERS.reduce((acc, level) => {
+        acc[level] = [];
+        return acc;
+      }, {});
+
+      Object.values(specSkills).forEach((skill) => {
+        const reqLevel = skill.requiredLevel ? skill.requiredLevel() : 0;
+        // Ensure the level group exists
+        if (!specLevelGroups[reqLevel]) specLevelGroups[reqLevel] = [];
+        specLevelGroups[reqLevel].push(skill);
+      });
+
+      Object.entries(specLevelGroups).forEach(([reqLevel, groupSkills]) => {
+        if (groupSkills.length === 0) return;
+        renderSkillRow(container, reqLevel, groupSkills, true);
+      });
+
+      const separator = document.createElement('hr');
+      separator.style.cssText = 'border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;';
+      container.appendChild(separator);
+    }
+  }
+
+  // --- Render Normal Class Skills ---
   const skills = SKILL_TREES[pathId];
   const levelGroups = SKILL_LEVEL_TIERS.reduce((acc, level) => {
     acc[level] = [];
@@ -1324,19 +1392,32 @@ function buildClassPreviewTree(pathId, container) {
 
   Object.entries(levelGroups).forEach(([reqLevel, groupSkills]) => {
     if (groupSkills.length === 0) return;
-    const levelLabel = document.createElement('div');
-    levelLabel.className = 'level-requirement';
-    levelLabel.textContent = `Level ${reqLevel}`;
-    container.appendChild(levelLabel);
-
-    const rowElement = document.createElement('div');
-    rowElement.className = 'skill-row';
-    groupSkills.forEach((skill) => {
-      const skillElement = createPreviewSkillElement(skill);
-      rowElement.appendChild(skillElement);
-    });
-    container.appendChild(rowElement);
+    renderSkillRow(container, reqLevel, groupSkills, false);
   });
+}
+
+function renderSkillRow(container, reqLevel, skills, isSpec = false) {
+  const rowContainer = document.createElement('div');
+  rowContainer.className = 'skills-table-row'; // Reuse the class for side-by-side layout
+
+  const levelLabel = document.createElement('div');
+  levelLabel.className = 'level-requirement';
+  levelLabel.textContent = `Level ${reqLevel}`;
+  rowContainer.appendChild(levelLabel);
+
+  const skillsCell = document.createElement('div');
+  skillsCell.className = 'skills-cell';
+
+  skills.forEach((skill) => {
+    const skillElement = createPreviewSkillElement(skill);
+    if (isSpec) {
+      skillElement.classList.add('specialization-node');
+    }
+    skillsCell.appendChild(skillElement);
+  });
+  rowContainer.appendChild(skillsCell);
+
+  container.appendChild(rowContainer);
 }
 
 function createPreviewSkillElement(skill) {

@@ -11,7 +11,7 @@
   grid-gap: 5px;
 }
 
-.attributes-container > h3 {
+.attributes-container>h3 {
   grid-column: 1 / -1;
   /* Spans the title across both columns */
 }
@@ -176,8 +176,8 @@
 }
 
 .split-view-modal .modal-content {
-  width: 90%;
-  max-width: 1200px;
+  width: 95%;
+  height: 95%;
   display: flex;
   gap: 10px;
   border: 1px solid rgb(97, 85, 85);
@@ -228,7 +228,7 @@
   max-width: 240px;
 }
 
-.stat-row > * {
+.stat-row>* {
   /* border-bottom: 1px solid #444;
   padding-bottom: 2px; */
   border-bottom: 1px solid #696969;
@@ -291,21 +291,22 @@
 }
 
 @media (min-width: 600px) {
+
   .stat-subpanel.active,
   .stats-panel.active.default {
     grid-template-columns: max-content 1fr max-content 1fr;
   }
 
   /* Spacing between the first stat's value and second stat's label in 4-column mode */
-  .stat-subpanel.active .stat-row > :nth-child(2),
-  .stats-panel.active.default .stat-row > :nth-child(2) {
+  .stat-subpanel.active .stat-row> :nth-child(2),
+  .stats-panel.active.default .stat-row> :nth-child(2) {
     padding-right: 20px;
   }
 }
 
 /* Handle rows that use a single value element (no .stat-values wrapper)
    by placing any child that's not .stat-label into column 2. */
-.stat-subpanel .stat-row > :not(.stat-label) {
+.stat-subpanel .stat-row> :not(.stat-label) {
   justify-self: stretch;
   white-space: nowrap;
   overflow: hidden;
@@ -322,8 +323,16 @@
   z-index: 1;
 }
 
-#character-name > span.character-name {
+#character-name>span.character-name {
   font-weight: bold;
   color: rgb(219, 219, 219);
   font-size: 1.4em;
+}
+
+@media (max-width: 900px) {
+
+  #split-view-btn,
+  .split-view-btn {
+    display: none !important;
+  }
 }

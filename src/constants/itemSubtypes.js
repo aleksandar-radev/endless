@@ -175,6 +175,8 @@ export const ITEM_SUBTYPES = {
       id: 'SHORT_BOW',
       nameKey: 'items.subtypes.shortBow',
       weight: 30,
+      twoHanded: true,
+      allStatMultiplier: 1,
       statMultipliers: {
         damage: { min: 0.85, max: 0.85 },
         attackSpeedPercent: { min: 1.25, max: 1.25 },
@@ -185,7 +187,7 @@ export const ITEM_SUBTYPES = {
       nameKey: 'items.subtypes.longBow',
       weight: 25,
       twoHanded: true,
-      allStatMultiplier: twoHandedMultiplier,
+      allStatMultiplier: 1,
       statMultipliers: {
         damage: { min: 1.3, max: 1.3 },
         damagePercent: { min: 1.1, max: 1.1 },
@@ -198,7 +200,7 @@ export const ITEM_SUBTYPES = {
       nameKey: 'items.subtypes.crossbow',
       weight: 20,
       twoHanded: true,
-      allStatMultiplier: twoHandedMultiplier,
+      allStatMultiplier: 1,
       statMultipliers: {
         damage: { min: 1.4, max: 1.4 },
         damagePercent: { min: 1.15, max: 1.15 },
