@@ -49,6 +49,7 @@ export function getDivisor(statKey) {
 }
 
 export function getStatDecimalPlaces(statKey, fallback = 0) {
+  if (statKey.endsWith('PerLevel')) return 3;
   const decimals = STATS?.[statKey]?.decimalPlaces;
   return decimals === undefined ? fallback : decimals;
 }

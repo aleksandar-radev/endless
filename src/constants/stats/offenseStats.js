@@ -111,7 +111,7 @@ export const OFFENSE_STATS = {
       costIncrease: 600,
       costIncreaseMultiplier: 1.08,
       costThresholds: [{ level: 50, costIncreaseMultiplier: 1.05 }],
-      bonus: 0.5,
+      bonus: 0.25,
       maxLevel: 100,
     }, // max bonus: 50% -> +0.5 attacks/s on the 1.0 base before other flats
     item: { tierScalingMaxPercent: createTierScaling(50, 150, 1) },
@@ -126,9 +126,9 @@ export const OFFENSE_STATS = {
       costIncrease: 600,
       costIncreaseMultiplier: 1.01,
       costThresholds: [{ level: 50, costIncreaseMultiplier: 1.018 }],
-      bonus: 0.1,
-      maxLevel: 250,
-    }, // max bonus: 25
+      bonus: 0.05,
+      maxLevel: 200,
+    }, // max bonus: 10
     item: {
       tierScalingMaxPercent: createTierScaling(5, 100, 1.2),
       overrides: {
@@ -156,9 +156,9 @@ export const OFFENSE_STATS = {
       costIncrease: 800,
       costIncreaseMultiplier: 1.01,
       costThresholds: [{ level: 50, costIncreaseMultiplier: 1.018 }],
-      bonus: 0.01,
+      bonus: 0.005,
       maxLevel: 250,
-    }, // max bonus: 2.5
+    }, // max bonus: 1.25
     item: { tierScalingMaxPercent: createTierScaling(1, 12, 1) },
     itemTags: ['offense', 'jewelry', 'gloves', 'wand', 'staff'],
     show: true,
@@ -204,6 +204,9 @@ export const OFFENSE_STATS = {
   omniStealPercent: createPercentStat({ forceNotShow: true }),
   lifePerHit: createStat({
     dec: 1,
+    training: {
+      cost: 250, bonus: 1, maxLevel: Infinity,
+    },
     item: {
       min: 1, max: 7, scaling: (level, tier) => offenseScaling(level, tier),
     },
@@ -218,9 +221,9 @@ export const OFFENSE_STATS = {
       costIncrease: 600,
       costIncreaseMultiplier: 1.012,
       costThresholds: [{ level: 50, costIncreaseMultiplier: 1.025 }],
-      bonus: 0.1,
+      bonus: 0.05,
       maxLevel: 200,
-    }, // max bonus: 20
+    }, // max bonus: 10
     item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.0) },
     itemTags: ['offense', 'gloves', 'jewelry', 'wand', 'staff'],
     show: true,

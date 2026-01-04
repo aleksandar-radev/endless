@@ -973,158 +973,223 @@ function calculateSummonDamage(skill, level) {
   return { damage: Math.floor(totalDamage), breakdown };
 }
 
+function formatDamageBreakdownNew(breakdown) {
+  if (!breakdown || Object.keys(breakdown).length === 0) return '';
+  let html = '';
+  Object.entries(breakdown).forEach(([type, value]) => {
+    if (value > 0) {
+      html += `<div class="damage-breakdown-row"><span>${formatStatName(type + 'Damage')}</span><span>${formatNumber(value.toFixed(2))}</span></div>`;
+    }
+  });
+  return html;
+}
+
 function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNext) {
   const typeBadge = formatSkillTypeBadge(skill);
-  const nextLevel = currentLevel + 1;
   const isMaxed = currentLevel >= skill.maxLevel() && skill.maxLevel() !== Infinity;
+  const nextLevel = currentLevel + 1;
+  const iconUrl = `${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg`;
 
   let html = `
-      <strong>${skill.name()} [${typeBadge}]</strong><br>
-      ${skill
-    .description()
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line)
-    .join('<br>')}
-      <br>
-      ${t('skillTree.level')}: ${currentLevel}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}
-    `;
+    <div class="skill-tooltip-container">
+      <div class="skill-tooltip-header">
+        <div class="skill-tooltip-icon" style="background-image: url('${iconUrl}')"></div>
+        <div class="skill-tooltip-title-block">
+          <div class="skill-tooltip-name">${skill.name()}</div>
+          <div class="skill-tooltip-type">${typeBadge}</div>
+        </div>
+      </div>
+      
+      <div class="skill-tooltip-body">
+        <div class="skill-tooltip-description">
+          ${skill.description().replace(/\n/g, '<br>')}
+        </div>
+  `;
 
-  if (skill.manaCost) {
-    const manaCost = skillTree.getSkillManaCost(skill, currentLevel);
-    const manaCostNextLevel = skillTree.getSkillManaCost(skill, nextLevel);
-    const costLabelKey = hero.stats.convertManaToLifePercent >= 1 ? 'skillTree.lifeCost' : 'skillTree.manaCost';
-    if (manaCost) {
-      html += `<br />${t(costLabelKey)}: ${manaCost.toFixed(2)}`;
-      if (!isMaxed) {
-        const diff = manaCostNextLevel - manaCost;
-        html += ` (+${diff.toFixed(2)})`;
-      }
-    }
-  }
-  if (skill.cooldown) {
-    const cooldown = skillTree.getSkillCooldown(skill, currentLevel);
-    const cooldownNextLevel = skillTree.getSkillCooldown(skill, nextLevel);
-    if (cooldown) {
-      html += `<br />${t('skillTree.cooldown')}: ${(cooldown / 1000).toFixed(2)}s`;
-      if (!isMaxed) {
-        html += ` (${(cooldownNextLevel - cooldown) / 1000}s)`;
-      }
-    }
-  }
-  if (skill.duration) {
-    const duration = skillTree.getSkillDuration(skill, currentLevel);
-    const durationNextLevel = skillTree.getSkillDuration(skill, nextLevel);
-    if (duration) {
-      html += `<br />${t('skillTree.duration')}: ${(duration / 1000).toFixed(2)}s`;
-      if (!isMaxed) {
-        html += ` (+${(durationNextLevel - duration) / 1000}s)`;
-      }
-    }
-  }
-
-  // Current Effects
+  // Stats Section
   if (effectsCurrent && Object.keys(effectsCurrent).length > 0) {
-    html += `<br /><u>${t('skillTree.currentEffects')}:</u><br />`;
+    html += `
+      <div class="skill-tooltip-section">
+        <div class="skill-tooltip-section-title">
+          <span>${t('skillTree.currentEffects')}</span>
+          <span>${t('skillTree.level')}: ${currentLevel}${skill.maxLevel() !== Infinity ? '/' + skill.maxLevel() : ''}</span>
+        </div>
+        <div class="skill-stats-grid">
+    `;
     Object.entries(effectsCurrent).forEach(([stat, value]) => {
       if (!shouldShowStatValue(stat)) {
-        html += `${formatStatName(stat)}<br />`;
+        html += `<div class="skill-stat-row"><span class="stat-name">${formatStatName(stat)}</span></div>`;
         return;
       }
       const decimals = getStatDecimals(stat);
-      const formattedValue = formatSignedValue(value, decimals, false);
-      html += `${formatStatName(stat)}: ${formattedValue}<br />`;
+      html += `
+        <div class="skill-stat-row">
+          <span class="stat-name">${formatStatName(stat)}</span>
+          <span class="stat-value">${formatSignedValue(value, decimals, false)}</span>
+        </div>
+      `;
     });
+    html += '</div></div>';
   }
 
-  // Summon Stats or Next Level Effects
+  // Next Level Effects
+  if (!isMaxed && effectsNext && skill.type() !== 'summon') {
+    html += `
+      <div class="skill-tooltip-section">
+        <div class="skill-tooltip-section-title">
+          <span>${t('skillTree.nextLevelEffects')}</span>
+          <span>${t('skillTree.level')}: ${nextLevel}</span>
+        </div>
+        <div class="skill-stats-grid">
+    `;
+    Object.entries(effectsNext).forEach(([stat, value]) => {
+      const decimals = getStatDecimals(stat);
+      const currVal = effectsCurrent?.[stat] || 0;
+      const diff = value - currVal;
+      let bonusHtml = '';
+      if (typeof value === 'number' && typeof currVal === 'number') {
+        bonusHtml = `<span class="stat-diff">(${formatSignedValue(diff, decimals)})</span>`;
+      }
+
+      if (!shouldShowStatValue(stat)) {
+        html += `<div class="skill-stat-row"><span class="stat-name">${formatStatName(stat)}</span></div>`;
+      } else {
+        html += `
+          <div class="skill-stat-row ${bonusHtml ? 'bonus' : ''}">
+            <span class="stat-name">${formatStatName(stat)}</span>
+            <span class="stat-value">${formatSignedValue(value, decimals, false)}${bonusHtml}</span>
+          </div>
+        `;
+      }
+    });
+    html += '</div></div>';
+  }
+
+  // Summon Stats
   if (skill.type() === 'summon') {
     const summonStats = getDisplayedSummonStats(skill.summonStats(currentLevel));
-    html += `<br /><u>${t('skillTree.summonStats')}:</u><br />`;
+    html += `
+        <div class="skill-tooltip-section">
+          <div class="skill-tooltip-section-title">${t('skillTree.summonStats')}</div>
+          <div class="skill-stats-grid">
+      `;
     Object.entries(summonStats).forEach(([stat, value]) => {
       if (!shouldShowStatValue(stat)) {
-        html += `${formatStatName(stat)}<br />`;
-        return;
+        html += `<div class="skill-stat-row"><span class="stat-name">${formatStatName(stat)}</span></div>`;
+      } else {
+        const decimals = getStatDecimals(stat);
+        html += `
+              <div class="skill-stat-row">
+                <span class="stat-name">${formatStatName(stat)}</span>
+                <span class="stat-value">${typeof value === 'number' ? value.toFixed(decimals) : ''}</span>
+              </div>
+            `;
       }
-      const decimals = getStatDecimals(stat);
-      const formattedValue = typeof value === 'number' ? `: ${value.toFixed(decimals)}` : '';
-
-      html += `${formatStatName(stat)}${formattedValue}<br />`;
     });
+    html += '</div></div>';
 
     const summonDamage = calculateSummonDamage(skill, currentLevel);
     if (summonDamage && summonDamage.damage > 0) {
-      html += `<div class="tooltip-total-damage">${t('skill.totalPotentialDamage')}: ${formatNumber(summonDamage.damage)}</div>`;
-      html += formatDamageBreakdown(summonDamage.breakdown);
+      html += `
+          <div class="skill-damage-preview">
+             <div class="damage-total">
+               <span>${t('skill.totalPotentialDamage')}</span>
+               <span>${formatNumber(summonDamage.damage)}</span>
+             </div>
+             ${formatDamageBreakdownNew(summonDamage.breakdown)}
+          </div>
+        `;
     }
-  } else if (!isMaxed) {
-    html += `<br /><u>${t('skillTree.nextLevelEffects')}:</u><br />`;
-    Object.entries(effectsNext).forEach(([stat, value]) => {
-      const decimals = getStatDecimals(stat);
-      const currentValue = effectsCurrent[stat] || 0;
-      const difference = value - currentValue;
-      if (!shouldShowStatValue(stat)) {
-        html += `${formatStatName(stat)}<br />`;
-        return;
-      }
-
-      const formattedValue = formatSignedValue(value, decimals, false);
-      const bonus =
-        typeof value === 'number' && typeof currentValue === 'number'
-          ? ` <span class="bonus">(${formatSignedValue(difference, decimals)})</span>`
-          : '';
-      html += `${formatStatName(stat)}: ${formattedValue}${bonus}<br />`;
-    });
   }
 
-  // Add synergies
+  // Synergies
   if (skill.synergies && Array.isArray(skill.synergies) && skill.synergies.length > 0) {
-    html += `<br /><u>${t('skillTree.synergies')}:</u><br />`;
+    html += `<div class="skill-tooltip-section"><div class="skill-tooltip-section-title">${t('skillTree.synergies')}</div>`;
     skill.synergies.forEach((synergy) => {
       const sourceSkill = skillTree.getSkill(synergy.sourceSkillId);
       if (!sourceSkill) return;
-
       const sourceLevel = skillTree.skills[synergy.sourceSkillId]?.level || 0;
       const synergyBonus = sourceLevel > 0 && synergy.calculateBonus ? synergy.calculateBonus(sourceLevel) : 0;
-
-      // Calculate bonus per level (difference between current and next level)
       const nextLevelBonus = synergy.calculateBonus ? synergy.calculateBonus(sourceLevel + 1) : 0;
       const bonusPerLevel = sourceLevel > 0 ? (nextLevelBonus - synergyBonus).toFixed(2) : synergy.calculateBonus ? synergy.calculateBonus(1).toFixed(2) : '0';
+      const sIcon = sourceSkill.icon ? sourceSkill.icon() : 'unknown';
 
-      const synergyIcon = sourceSkill.icon ? sourceSkill.icon() : 'unknown';
-
-      html += `<div class="tooltip-synergy">
-        <img src="${import.meta.env.VITE_BASE_PATH}/skills/${synergyIcon}.jpg" alt="${sourceSkill.name()}" class="synergy-icon" />
-        <span class="synergy-name">${sourceSkill.name()}</span>
-        <span class="synergy-bonus">${synergyBonus > 0 ? `+${synergyBonus.toFixed(1)}%` : '(0%)'} (+${bonusPerLevel}% per level)</span>
-      </div>`;
+      html += `
+          <div class="skill-synergy-row">
+             <img src="${import.meta.env.VITE_BASE_PATH}/skills/${sIcon}.jpg" class="synergy-icon-small" />
+             <div class="synergy-content">
+                <span class="synergy-name">${sourceSkill.name()}</span>
+                <span class="synergy-value">
+                   ${t('common.current')}: <span>${synergyBonus > 0 ? '+' + synergyBonus.toFixed(1) + '%' : '(0%)'}</span>
+                   (+${bonusPerLevel}% ${t('skillTree.perLevel')})
+                </span>
+             </div>
+          </div>
+        `;
     });
+    html += '</div>';
   }
 
+  // Instant Damage Preview
   if (skill?.type && skill.type() === 'instant' && skillTree.isDamageSkill?.(effectsCurrent)) {
-    // Compute allowedDamageTypes for spells, same as useInstantSkill
     const skillTypeSource = skill?.skill_type ?? skill?.skillType;
     const resolvedSkillType = typeof skillTypeSource === 'function' ? skillTypeSource() : skillTypeSource;
     const skillType = (resolvedSkillType || 'attack').toLowerCase();
     const isSpell = skillType === 'spell';
-
     let damageEffects = effectsCurrent;
     if (isSpell) {
       const allowedDamageTypes = getSpellDamageTypes(effectsCurrent);
-      damageEffects = {
-        ...effectsCurrent,
-        ...(allowedDamageTypes.length ? { allowedDamageTypes } : {}),
-      };
+      damageEffects = { ...effectsCurrent, ...(allowedDamageTypes.length ? { allowedDamageTypes } : {}) };
     }
-
     const damagePreview = hero.calculateTotalDamage(damageEffects, { includeRandom: false });
-
     if (damagePreview?.damage > 0) {
-      html += `<div class="tooltip-total-damage">${t('skill.totalPotentialDamage')}: ${formatNumber(damagePreview.damage)}</div>`;
-      html += formatDamageBreakdown(damagePreview.breakdown);
+      html += `
+          <div class="skill-damage-preview">
+             <div class="damage-total">
+               <span>${t('skill.totalPotentialDamage')}</span>
+               <span>${formatNumber(damagePreview.damage)}</span>
+             </div>
+             ${formatDamageBreakdownNew(damagePreview.breakdown)}
+          </div>
+        `;
     }
   }
 
+  // Footer
+  let footerHtml = '';
+  if (skill.manaCost) {
+    const manaCost = skillTree.getSkillManaCost(skill, currentLevel);
+    const converted = hero.stats.convertManaToLifePercent >= 1;
+    const label = converted ? t('skillTree.lifeCost') : t('skillTree.manaCost');
+    const cls = converted ? 'life' : 'mana';
+    if (manaCost) {
+      const diff = !isMaxed ? skillTree.getSkillManaCost(skill, nextLevel) - manaCost : 0;
+      const diffStr = diff ? ` (+${diff.toFixed(1)})` : '';
+      footerHtml += `<div class="skill-meta-item ${cls}"><span>${label}: <span class="val">${manaCost.toFixed(1)}${diffStr}</span></span></div>`;
+    }
+  }
+  if (skill.cooldown) {
+    const cd = skillTree.getSkillCooldown(skill, currentLevel);
+    if (cd) {
+      const diff = !isMaxed ? (skillTree.getSkillCooldown(skill, nextLevel) - cd) / 1000 : 0;
+      const diffStr = diff ? ` (${diff.toFixed(2)}s)` : '';
+      footerHtml += `<div class="skill-meta-item cooldown"><span>${t('skillTree.cooldown')}: <span class="val">${(cd / 1000).toFixed(2)}s${diffStr}</span></span></div>`;
+    }
+  }
+  if (skill.duration) {
+    const dur = skillTree.getSkillDuration(skill, currentLevel);
+    if (dur) {
+      const diff = !isMaxed ? (skillTree.getSkillDuration(skill, nextLevel) - dur) / 1000 : 0;
+      const diffStr = diff ? ` (+${diff.toFixed(2)}s)` : '';
+      footerHtml += `<div class="skill-meta-item"><span>${t('skillTree.duration')}: <span class="val">${(dur / 1000).toFixed(2)}s${diffStr}</span></span></div>`;
+    }
+  }
+
+  if (footerHtml) {
+    html += `<div class="skill-tooltip-footer">${footerHtml}</div>`;
+  }
+
+  html += '</div></div>';
   return html;
 }
 

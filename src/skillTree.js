@@ -103,7 +103,7 @@ export default class SkillTree {
     this.updateSpecializationPoints();
 
     // Quick allocation quantity for skills (used by quick skill allocation UI)
-    const initialQuickQty = options.skillQuickQty || 1;
+    const initialQuickQty = options?.skillQuickQty || 1;
     this.quickQty = initialQuickQty === 'max' ? 'max' : Math.min(initialQuickQty, SKILLS_MAX_QTY);
   }
 
@@ -405,7 +405,7 @@ export default class SkillTree {
   }
 
   updateSpecializationPoints() {
-    const totalEarned = Math.floor(hero.level / SPECIALIZATION_POINT_INTERVAL);
+    const totalEarned = Math.floor((hero?.level || 1) / SPECIALIZATION_POINT_INTERVAL);
     const spent = this.calculateTotalSpentSpecializationPoints();
     this.specializationPoints = Math.max(0, totalEarned - spent);
   }

@@ -1189,3 +1189,241 @@
   z-index: 10;
   border: 1px solid var(--accent);
 }
+
+/* Skill Tooltip Styling */
+#tooltip.skill-tooltip-wrapper {
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  min-width: 320px;
+  max-width: 360px;
+}
+
+.skill-tooltip-container {
+  background: var(--bg-panel, #1a1d24);
+  border: 2px solid var(--border, #333);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  font-family: var(--font-main, sans-serif);
+  color: #e0e0e0;
+}
+
+/* Header */
+.skill-tooltip-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: linear-gradient(to right, rgba(59, 130, 246, 0.1), transparent);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.skill-tooltip-icon {
+  width: 48px;
+  height: 48px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 6px;
+  border: 1px solid var(--accent, #3b82f6);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+  flex-shrink: 0;
+}
+
+.skill-tooltip-title-block {
+  flex: 1;
+}
+
+.skill-tooltip-name {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: var(--gold, #fbbf24);
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.skill-tooltip-type {
+  font-size: 0.8em;
+  color: #94a3b8;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* Body */
+.skill-tooltip-body {
+  padding: 12px;
+}
+
+.skill-tooltip-description {
+  font-size: 0.9em;
+  color: #cbd5e1;
+  font-style: italic;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+/* Sections */
+.skill-tooltip-section {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.skill-tooltip-section:first-child {
+  margin-top: 0;
+  border-top: none;
+  padding-top: 0;
+}
+
+.skill-tooltip-section-title {
+  font-size: 0.85em;
+  font-weight: bold;
+  color: var(--accent, #3b82f6);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+}
+
+.skill-stats-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.skill-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  font-size: 0.9em;
+  color: #e2e8f0;
+}
+
+.skill-stat-row .stat-value {
+  font-weight: 600;
+  color: #fff;
+  text-align: right;
+}
+
+.skill-stat-row.bonus .stat-value {
+  color: #4ade80;
+  /* Green for upgrades */
+}
+
+.skill-stat-row .stat-diff {
+  color: #4ade80;
+  font-size: 0.9em;
+  margin-left: 6px;
+}
+
+/* Synergies */
+.skill-synergy-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
+.synergy-icon-small {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  object-fit: cover;
+}
+
+.synergy-content {
+  flex: 1;
+  font-size: 0.85em;
+  display: flex;
+  flex-direction: column;
+}
+
+.synergy-name {
+  color: #cbd5e1;
+  font-weight: bold;
+}
+
+.synergy-value {
+  color: #94a3b8;
+  font-size: 0.9em;
+}
+
+.synergy-value span {
+  color: #4ade80;
+}
+
+/* Footer / Meta Info */
+.skill-tooltip-footer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.85em;
+}
+
+.skill-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #94a3b8;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.skill-meta-item span.val {
+  color: #fff;
+  font-weight: 600;
+}
+
+.skill-meta-item.mana span.val {
+  color: #60a5fa;
+}
+
+.skill-meta-item.life span.val {
+  color: #f87171;
+}
+
+.skill-meta-item.cooldown span.val {
+  color: #facc15;
+}
+
+/* Damage Preview */
+.skill-damage-preview {
+  margin-top: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.damage-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+  color: #fbbf24;
+  margin-bottom: 4px;
+}
+
+.damage-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85em;
+  color: #94a3b8;
+  line-height: 24px;
+}

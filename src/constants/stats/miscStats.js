@@ -45,6 +45,9 @@ export const MISC_STATS = {
   }),
   manaPerHit: createStat({
     dec: 1,
+    training: {
+      cost: 1750, bonus: 1, maxLevel: Infinity,
+    },
     item: {
       min: 3, max: 6, scaling: (level, tier) => miscScaling(level, tier),
     },

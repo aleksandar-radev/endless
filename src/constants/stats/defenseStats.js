@@ -70,7 +70,7 @@ export const DEFENSE_STATS = {
       costIncreaseMultiplier: 1.01,
       costThresholds: [{ level: 50, costIncreaseMultiplier: 1.018 }],
       bonus: 0.05,
-      maxLevel: 300,
+      maxLevel: 200,
     }, // max bonus: 15%
     item: { tierScalingMaxPercent: createTierScaling(5, 50, 0.8) },
     itemTags: ['shield'],
