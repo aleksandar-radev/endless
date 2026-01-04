@@ -192,7 +192,7 @@ export default class CrystalShop {
     handleSavedData(savedData, this);
     this.modal = null;
     this.currentStat = null;
-    this.selectedQty = options.useNumericInputs ? Math.min(options.crystalShopQty || 1, CRYSTAL_SHOP_MAX_QTY) : 1;
+    this.selectedQty = options?.useNumericInputs ? Math.min(options?.crystalShopQty || 1, CRYSTAL_SHOP_MAX_QTY) : 1;
   }
 
   getCrystalReductionNumerator() {
