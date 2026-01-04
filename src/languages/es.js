@@ -961,7 +961,7 @@ export default {
   'skill.nocturnalDominion': 'Domina la noche con más daño, velocidad y vida.',
   'skill.vampireOverlord': 'Aumenta fuerza, vitalidad y daño elemental.',
   'skill.immortalSovereign': 'Se vuelve casi imparable con enormes aumentos de aire y daño.',
-  'skill.bash': 'Activo: aumenta el daño pero cuesta maná por ataque.',
+  'skill.bash': 'Canaliza tu furia en golpes devastadores.',
   'skill.toughness': 'Aumenta permanentemente armadura, % de armadura y añade daño desde armadura.',
   'skill.powerStrike': 'Golpe poderoso que inflige más daño.',
   'skill.ironWill': 'Incrementa vitalidad, regeneración y resistencias convirtiendo regeneración en daño.',
