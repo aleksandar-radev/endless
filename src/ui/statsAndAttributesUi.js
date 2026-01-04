@@ -338,7 +338,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
         <strong>${t('skillTree.level')}:</strong> <span id="level-value">${formatNumber(hero.level || 1)}</span>
       </div>
       <div>
-        <strong>${t('stats.exp')}:</strong> <span id="exp-value">${formatNumber(hero.exp || 0)}</span> /
+        <strong>${t('stats.exp')}:</strong> <span id="exp-value">${formatNumber(Math.floor(hero.exp) || 0)}</span> /
         <span id="exp-to-next-level-value">${formatNumber(hero.getExpToNextLevel() || 100)}</span>
         (<span id="exp-progress">${((hero.exp / hero.getExpToNextLevel()) * 100).toFixed(1)}%</span>)
       </div>
@@ -615,7 +615,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
 
     // Update header values
     document.getElementById('level-value').textContent = formatNumber(hero.level || 1);
-    document.getElementById('exp-value').textContent = formatNumber(hero.exp || 0);
+    document.getElementById('exp-value').textContent = formatNumber(Math.floor(hero.exp || 0));
     document.getElementById('exp-progress').textContent =
       ((hero.exp / hero.getExpToNextLevel()) * 100).toFixed(1) + '%';
     document.getElementById('exp-to-next-level-value').textContent = formatNumber(hero.getExpToNextLevel() || 100);
