@@ -57,6 +57,7 @@ export default {
   'skillTree.cooldown': 'Cooldown',
   'skillTree.duration': 'Duration',
   'skillTree.level': 'Level',
+  'skillTree.levelEffects': 'Level {level} Effects',
   'skillTree.synergies': 'Synergies',
   'skillTree.autoCastSettings': 'Auto-Cast Settings',
   'skillTree.slotDisplaySettings': 'Slot Display Settings',

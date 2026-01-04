@@ -302,7 +302,27 @@
   color: var(--accent);
   font-weight: bold;
   padding: 10px;
-  text-align: center;
+  text-align: right;
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.skills-table-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 20px;
+}
+
+.skills-cell {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
 }
 
 .skill-node {
@@ -378,7 +398,8 @@
   box-shadow: 0 0 8px rgba(255, 68, 68, 0.5);
 }
 
-.skill-row .skill-icon {
+.skill-row .skill-icon,
+.skills-cell .skill-icon {
   width: 55px;
   height: 55px;
   border: 2px solid #666;

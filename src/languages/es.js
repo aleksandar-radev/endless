@@ -57,6 +57,7 @@ export default {
   'skillTree.cooldown': 'Tiempo de reutilización',
   'skillTree.duration': 'Duración',
   'skillTree.level': 'Nivel',
+  'skillTree.levelEffects': 'Efectos de Nivel {level}',
   'skillTree.synergies': 'Sinergias',
   'skillTree.autoCastSettings': 'Configuración de Auto-Lanzamiento',
   'skillTree.slotDisplaySettings': 'Configuración de Visualización de Ranuras',

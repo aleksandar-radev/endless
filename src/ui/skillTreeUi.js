@@ -11,7 +11,7 @@ import { formatNumber,
   showToast,
   showTooltip,
   updateResources } from './ui.js';
-import { t } from '../i18n.js';
+import { t, tp } from '../i18n.js';
 import { createModal, closeModal } from './modal.js';
 import { IS_MOBILE_OR_TABLET } from '../constants/common.js';
 
@@ -371,20 +371,24 @@ function initializeSkillsTab() {
 
   Object.entries(levelGroups).forEach(([reqLevel, groupSkills]) => {
     if (groupSkills.length > 0) {
-      const rowElement = document.createElement('div');
-      rowElement.className = 'skill-row';
+      const rowContainer = document.createElement('div');
+      rowContainer.className = 'skills-table-row';
 
       const levelLabel = document.createElement('div');
       levelLabel.className = 'level-requirement';
       levelLabel.textContent = `Level ${reqLevel}`;
-      skillsContent.appendChild(levelLabel);
+      rowContainer.appendChild(levelLabel);
+
+      const skillsCell = document.createElement('div');
+      skillsCell.className = 'skills-cell';
 
       groupSkills.forEach((skill) => {
         const skillElement = createSkillElement(skill);
-        rowElement.appendChild(skillElement);
+        skillsCell.appendChild(skillElement);
       });
+      rowContainer.appendChild(skillsCell);
 
-      skillsContent.appendChild(rowElement);
+      skillsContent.appendChild(rowContainer);
     }
   });
 
@@ -545,19 +549,23 @@ function initializeSpecializationsTab() {
 
     Object.entries(levelGroups).forEach(([reqLevel, groupSkills]) => {
       if (groupSkills.length > 0) {
-        const rowElement = document.createElement('div');
-        rowElement.className = 'skill-row';
+        const rowContainer = document.createElement('div');
+        rowContainer.className = 'skills-table-row';
 
         const levelLabel = document.createElement('div');
         levelLabel.className = 'level-requirement';
         levelLabel.textContent = `Level ${reqLevel}`;
-        skillsContainer.appendChild(levelLabel);
+        rowContainer.appendChild(levelLabel);
+
+        const skillsCell = document.createElement('div');
+        skillsCell.className = 'skills-cell';
 
         groupSkills.forEach((skill) => {
           const skillEl = createSpecializationSkillElement(skill);
-          rowElement.appendChild(skillEl);
+          skillsCell.appendChild(skillEl);
         });
-        skillsContainer.appendChild(rowElement);
+        rowContainer.appendChild(skillsCell);
+        skillsContainer.appendChild(rowContainer);
       }
     });
 
@@ -807,9 +815,18 @@ function updateSpecSkillModalDetails() {
   // Render Tooltip Content
   const tooltipContainer = specSkillModal.querySelector('.skill-modal-tooltip-content');
   const effectsCurrent = skillTree.getSpecializationSkillEffect(currentSpecSkillId, currentLevel);
-  const effectsNext = skillTree.getSpecializationSkillEffect(currentSpecSkillId, currentLevel + 1);
+  // Preview Level Logic based on selected quantity
+  // reusing qty from above scope or creating a new scoped block if needed. Actually, qty is already defined at top of function.
+  // const qty = ... (duplicate)
+
+  // If max is selected, we show effects at max possible level. If numeric input is invalid/0, default to +1.
+  const additionalLevels = (isNaN(qty) || qty <= 0) ? 1 : qty;
+  const targetLevel = currentLevel + additionalLevels;
+
+  const effectsTarget = skillTree.getSpecializationSkillEffect(currentSpecSkillId, targetLevel);
+
   // generateSkillTooltipHtml handles all the heavy lifting of displaying effects, damage preview, etc.
-  tooltipContainer.innerHTML = generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNext);
+  tooltipContainer.innerHTML = generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTarget, targetLevel);
 }
 
 function buySpecSkillBulk() {
@@ -919,10 +936,10 @@ function formatDamageBreakdownNew(breakdown) {
   return html;
 }
 
-function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNext) {
+function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTarget, targetLevelInput) {
   const typeBadge = formatSkillTypeBadge(skill);
   const isMaxed = currentLevel >= skill.maxLevel() && skill.maxLevel() !== Infinity;
-  const nextLevel = currentLevel + 1;
+  const targetLevel = targetLevelInput !== undefined ? targetLevelInput : (currentLevel + 1);
   const iconUrl = `${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg`;
 
   let html = `
@@ -967,32 +984,45 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNe
     html += '</div></div>';
   }
 
-  // Next Level Effects
-  if (!isMaxed && effectsNext && skill.type() !== 'summon') {
+  // Target Level Effects
+  if ((!isMaxed || targetLevel > currentLevel) && effectsTarget && skill.type() !== 'summon') {
+    const title = targetLevel === currentLevel + 1
+      ? t('skillTree.nextLevelEffects')
+      : tp('skillTree.levelEffects', { level: targetLevel });
+
     html += `
       <div class="skill-tooltip-section">
         <div class="skill-tooltip-section-title">
-          <span>${t('skillTree.nextLevelEffects')}</span>
-          <span>${t('skillTree.level')}: ${nextLevel}</span>
+          <span>${title}</span>
+          <span>${t('skillTree.level')}: ${targetLevel}</span>
         </div>
         <div class="skill-stats-grid">
     `;
-    Object.entries(effectsNext).forEach(([stat, value]) => {
+    Object.entries(effectsTarget).forEach(([stat, value]) => {
       const decimals = getStatDecimals(stat);
       const currVal = effectsCurrent?.[stat] || 0;
       const diff = value - currVal;
-      let bonusHtml = '';
+      let diffHtml = '';
       if (typeof value === 'number' && typeof currVal === 'number') {
-        bonusHtml = `<span class="stat-diff">(${formatSignedValue(diff, decimals)})</span>`;
+        const sign = diff >= 0 ? '+' : '';
+        // Format: NewValue (+Gain)
+        // Ensure NewValue doesn't double-sign if formatSignedValue adds one.
+        // Usually formatSignedValue adds sign for everyone. value is absolute new value.
+        // We want: "124 (+2)" or "+124 (+2)".
+        // If we use formatSignedValue(value), it produces "+124".
+        // If we use diff, we want explicitly + or -.
+        // Let's use formatSignedValue for Value (standard appearance) and construct Gain manually or carefully.
+        const gainStr = `${sign}${formatNumber(diff.toFixed(decimals))}`;
+        diffHtml = ` <span class="stat-diff-total">(${gainStr})</span>`;
       }
 
       if (!shouldShowStatValue(stat)) {
         html += `<div class="skill-stat-row"><span class="stat-name">${formatStatName(stat)}</span></div>`;
       } else {
         html += `
-          <div class="skill-stat-row ${bonusHtml ? 'bonus' : ''}">
+          <div class="skill-stat-row bonus">
             <span class="stat-name">${formatStatName(stat)}</span>
-            <span class="stat-value">${formatSignedValue(value, decimals, false)}${bonusHtml}</span>
+            <span class="stat-value">${formatSignedValue(value, decimals, false)}${diffHtml}</span>
           </div>
         `;
       }
@@ -1098,7 +1128,7 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNe
     const label = converted ? t('skillTree.lifeCost') : t('skillTree.manaCost');
     const cls = converted ? 'life' : 'mana';
     if (manaCost) {
-      const diff = !isMaxed ? skillTree.getSkillManaCost(skill, nextLevel) - manaCost : 0;
+      const diff = !isMaxed ? skillTree.getSkillManaCost(skill, targetLevel) - manaCost : 0;
       const diffStr = diff ? ` (+${diff.toFixed(1)})` : '';
       footerHtml += `<div class="skill-meta-item ${cls}"><span>${label}: <span class="val">${manaCost.toFixed(1)}${diffStr}</span></span></div>`;
     }
@@ -1106,7 +1136,7 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNe
   if (skill.cooldown) {
     const cd = skillTree.getSkillCooldown(skill, currentLevel);
     if (cd) {
-      const diff = !isMaxed ? (skillTree.getSkillCooldown(skill, nextLevel) - cd) / 1000 : 0;
+      const diff = !isMaxed ? (skillTree.getSkillCooldown(skill, targetLevel) - cd) / 1000 : 0;
       const diffStr = diff ? ` (${diff.toFixed(2)}s)` : '';
       footerHtml += `<div class="skill-meta-item cooldown"><span>${t('skillTree.cooldown')}: <span class="val">${(cd / 1000).toFixed(2)}s${diffStr}</span></span></div>`;
     }
@@ -1114,7 +1144,7 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNe
   if (skill.duration) {
     const dur = skillTree.getSkillDuration(skill, currentLevel);
     if (dur) {
-      const diff = !isMaxed ? (skillTree.getSkillDuration(skill, nextLevel) - dur) / 1000 : 0;
+      const diff = !isMaxed ? (skillTree.getSkillDuration(skill, targetLevel) - dur) / 1000 : 0;
       const diffStr = diff ? ` (+${diff.toFixed(2)}s)` : '';
       footerHtml += `<div class="skill-meta-item"><span>${t('skillTree.duration')}: <span class="val">${(dur / 1000).toFixed(2)}s${diffStr}</span></span></div>`;
     }
@@ -1515,90 +1545,10 @@ function renderDisplayToggles() {
 
 function setupSkillTreeFloatingHeader(container, header) {
   cleanupSkillTreeHeaderFloating?.();
+  cleanupSkillTreeHeaderFloating = null;
   updateSkillTreeHeaderFloating = null;
 
-  if (!container || !header) {
-    cleanupSkillTreeHeaderFloating = null;
-    updateSkillTreeHeaderFloating = null;
-    return;
-  }
 
-  const tabPanel = container.closest('.tab-panel');
-  const scrollTargets = [window];
-  if (tabPanel) scrollTargets.push(tabPanel);
-
-  const getNumericVar = (styles, property, fallback = 0) => {
-    const raw = styles.getPropertyValue(property);
-    const parsed = parseFloat(raw);
-    return Number.isNaN(parsed) ? fallback : parsed;
-  };
-
-  const updateFloatingHeader = () => {
-    if (!document.body.contains(container) || !document.body.contains(header)) {
-      cleanupSkillTreeHeaderFloating?.();
-      return;
-    }
-
-    const containerRect = container.getBoundingClientRect();
-    const containerStyles = window.getComputedStyle(container);
-    const headerStyles = window.getComputedStyle(header);
-
-    const basePadding = getNumericVar(containerStyles, '--skill-tree-base-padding', 0);
-    const headerGap = getNumericVar(
-      containerStyles,
-      '--skill-tree-header-gap',
-      parseFloat(headerStyles.marginBottom) || 0,
-    );
-    const fixedOffset = getNumericVar(containerStyles, '--skill-tree-header-fixed-offset', 0);
-    const headerHeight = header.offsetHeight;
-
-    const headerTopInFlow = containerRect.top + basePadding;
-    const contentBottom = containerRect.bottom - basePadding;
-    const shouldFix = headerTopInFlow <= fixedOffset && contentBottom > fixedOffset + headerHeight;
-
-    if (shouldFix) {
-      const contentLeft = containerRect.left + basePadding;
-      const contentWidth = Math.max(containerRect.width - basePadding * 2, 0);
-      const totalSpace = headerHeight + headerGap;
-
-      header.classList.add('skill-points-header--fixed');
-      header.style.setProperty('--skill-tree-header-fixed-left', `${contentLeft}px`);
-      header.style.setProperty('--skill-tree-header-fixed-width', `${contentWidth}px`);
-      container.style.setProperty('--skill-tree-floating-header-space', `${totalSpace}px`);
-    } else {
-      header.classList.remove('skill-points-header--fixed');
-      header.style.removeProperty('--skill-tree-header-fixed-left');
-      header.style.removeProperty('--skill-tree-header-fixed-width');
-      container.style.setProperty('--skill-tree-floating-header-space', '0px');
-    }
-  };
-
-  const scrollListener = { passive: true };
-  scrollTargets.forEach((target) => target.addEventListener('scroll', updateFloatingHeader, scrollListener));
-  window.addEventListener('resize', updateFloatingHeader);
-
-  const resizeObservers = [];
-  if (typeof ResizeObserver === 'function') {
-    const observer = new ResizeObserver(updateFloatingHeader);
-    observer.observe(container);
-    observer.observe(header);
-    resizeObservers.push(observer);
-  }
-
-  updateSkillTreeHeaderFloating = updateFloatingHeader;
-  updateFloatingHeader();
-
-  cleanupSkillTreeHeaderFloating = () => {
-    scrollTargets.forEach((target) => target.removeEventListener('scroll', updateFloatingHeader));
-    window.removeEventListener('resize', updateFloatingHeader);
-    resizeObservers.forEach((observer) => observer.disconnect());
-    container.style.setProperty('--skill-tree-floating-header-space', '0px');
-    header.classList.remove('skill-points-header--fixed');
-    header.style.removeProperty('--skill-tree-header-fixed-left');
-    header.style.removeProperty('--skill-tree-header-fixed-width');
-    cleanupSkillTreeHeaderFloating = null;
-    updateSkillTreeHeaderFloating = null;
-  };
 }
 
 export function updateSkillTreeValues() {
@@ -1870,8 +1820,7 @@ export function updateSkillTreeValues() {
   renderDisplayToggles();
 }
 
-// Removed - using showSkillTreeWithTabs instead
-
+// Removed - using showSkillTreeWithTabs
 let skillModal;
 let currentSkillId;
 let selectedSkillQty = 1;
@@ -1937,7 +1886,6 @@ function updateSkillModalDetails() {
   const maxLevel = skill.maxLevel() || Infinity;
   const maxQty = skillTree.calculateMaxPurchasable(skill);
   const actualQty = selectedSkillQty === 'max' ? maxQty : Math.min(qty, maxQty);
-  const futureLevel = currentLevel + actualQty;
   // Quantity used for displaying cost should reflect the selected amount,
   // even if unaffordable (except 'max', which depends on affordability).
   const displayQty = selectedSkillQty === 'max' ? maxQty : isNaN(qty) ? 0 : qty;
@@ -1945,14 +1893,15 @@ function updateSkillModalDetails() {
   // Render Tooltip Content
   const tooltipContainer = skillModal.querySelector('.skill-modal-tooltip-content');
   const effectsCurrent = skillTree.getSkillEffect(currentSkillId, currentLevel);
-  // For the info display, we want to show the NEXT single level if we are buying, or current level.
-  // Actually, the tooltip generator standardly shows 'Current' and 'Next' (level + 1).
-  // If we are bulk buying, maybe we should show the effect at the TARGET level?
-  // For now, let's stick to the standard tooltip which shows Next Level (lvl+1).
-  // Showing the effect of +N levels might be complex for the tooltip function to handle dynamically without changes.
-  // Let's stick to the standard tooltip view.
-  const effectsNext = skillTree.getSkillEffect(currentSkillId, currentLevel + 1);
-  tooltipContainer.innerHTML = generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNext);
+
+  // Use buy quantity for preview
+  const additionalLevels = (isNaN(displayQty) || displayQty <= 0) ? 1 : displayQty;
+  const targetLevel = currentLevel + additionalLevels;
+
+  const effectsTarget = skillTree.getSkillEffect(currentSkillId, targetLevel);
+
+  // Render Tooltip
+  tooltipContainer.innerHTML = generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTarget, targetLevel);
 
   // Update modal fields
   skillModal.querySelector('.modal-available-points').textContent = skillTree.skillPoints;

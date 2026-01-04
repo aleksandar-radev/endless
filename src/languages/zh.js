@@ -57,6 +57,7 @@ export default {
   'skillTree.cooldown': '冷却时间',
   'skillTree.duration': '持续时间',
   'skillTree.level': '等级',
+  'skillTree.levelEffects': '等级 {level} 效果',
   'skillTree.synergies': '协同效应',
   'skillTree.autoCastSettings': '自动施法设置',
   'skillTree.slotDisplaySettings': '技能槽显示设置',
