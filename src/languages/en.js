@@ -62,6 +62,7 @@ export default {
   'skillTree.slotDisplaySettings': 'Slot Display Settings',
   'skillTree.perLevel': 'Per Level',
   'skillTree.availablePoints': 'Available Skill Points',
+  'skillTree.available': 'Available',
   'common.current': 'Current',
   'skillTree.shapeshiftExclusiveWarning': 'You can only unlock one shapeshift skill.',
   'training.cost': 'Cost',

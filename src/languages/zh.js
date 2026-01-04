@@ -1956,6 +1956,7 @@ export default {
   'stats.bloodSacrificeUnlocked': '鲜血献祭解锁',
   'stats.bloodSacrificeEffectiveness': '鲜血献祭效果',
   'skillTree.availablePoints': '可用技能点',
+  'skillTree.available': '可用',
   'combat.changeRegionConfirm': '你确定要切换到 {region} 吗？这会重置你的关卡进度并为你寻找新的敌人',
   'skill.drainingTouch.name': '汲取之触',
   'skill.frenzy.name': '狂乱',

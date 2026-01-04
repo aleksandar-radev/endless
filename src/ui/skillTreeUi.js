@@ -656,22 +656,17 @@ function initializeSpecSkillModal() {
   const content = html`
     <div class="skill-modal-content">
       <span class="modal-close">&times;</span>
-      <div class="modal-skill-icon"></div>
-      <h2 class="modal-skill-name"></h2>
-      <p class="modal-skill-desc"></p>
-      <div class="modal-skill-stats">
-        <p>Level: <span class="modal-level"></span>/<span class="modal-max-level"></span></p>
-        <p>Available Points: <span class="modal-available-points"></span></p>
-        <p>Skill Point Cost: <span class="modal-sp-cost"></span></p>
+      <div class="skill-modal-tooltip-content"></div>
+      <div class="skill-modal-footer">
+         <div class="skill-modal-resources">
+            <div class="modal-available-points-display">${t('skillTree.available')}: <span class="modal-available-points"></span></div>
+            <div class="modal-cost-display">${t('skillTree.cost')}: <span class="modal-sp-cost"></span></div>
+         </div>
+         <div class="modal-controls">
+           <!-- Controls rendered dynamically -->
+         </div>
+         <button class="modal-buy">Buy</button>
       </div>
-      <div class="modal-skill-effects">
-        <h3>Effects</h3>
-        <div class="effects-list"></div>
-      </div>
-      <div class="modal-controls">
-        <!-- Controls rendered dynamically -->
-      </div>
-      <button class="modal-buy">Buy</button>
     </div>
   `;
   specSkillModal = createModal({
@@ -762,18 +757,6 @@ function renderSpecSkillModalControls() {
 function openSpecializationSkillModal(skillId) {
   initializeSpecSkillModal();
   currentSpecSkillId = skillId;
-  const skill = skillTree.getSpecializationSkill(skillId);
-
-  const iconEl = specSkillModal.querySelector('.modal-skill-icon');
-  iconEl.style.backgroundImage = `url('${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg')`;
-
-  const currentLevel = skill.level || 0;
-  specSkillModal.querySelector('.modal-skill-name').textContent = skill.name();
-  specSkillModal.querySelector('.modal-skill-desc').innerHTML = skill.description().replace(/\n/g, '<br>');
-  specSkillModal.querySelector('.modal-level').textContent = currentLevel;
-  specSkillModal.querySelector('.modal-max-level').textContent = skill.maxLevel() === Infinity ? '∞' : skill.maxLevel();
-  specSkillModal.querySelector('.modal-available-points').textContent = formatNumber(skillTree.specializationPoints);
-
   selectedSpecSkillQty = 1;
   renderSpecSkillModalControls();
   updateSpecSkillModalDetails();
@@ -788,15 +771,11 @@ function updateSpecSkillModalDetails() {
   const qty = selectedSpecSkillQty === 'max' ? Infinity : parseInt(selectedSpecSkillQty, 10);
   const skill = skillTree.getSpecializationSkill(currentSpecSkillId);
   const currentLevel = skill.level || 0;
-  const maxLevel = skill.maxLevel() || Infinity;
-
   // Use specialization points for calculation
   const maxQty = skillTree.calculateMaxPurchasable(skill, skillTree.specializationPoints);
   const actualQty = selectedSpecSkillQty === 'max' ? maxQty : Math.min(qty, maxQty);
   const displayQty = selectedSpecSkillQty === 'max' ? maxQty : isNaN(qty) ? 0 : qty;
 
-  specSkillModal.querySelector('.modal-level').textContent = currentLevel;
-  specSkillModal.querySelector('.modal-max-level').textContent = maxLevel === Infinity ? '∞' : maxLevel;
   specSkillModal.querySelector('.modal-available-points').textContent = formatNumber(skillTree.specializationPoints);
 
   const displayCost = skillTree.calculateSkillPointCost(currentLevel, displayQty);
@@ -825,56 +804,12 @@ function updateSpecSkillModalDetails() {
   buyBtn.disabled = actualQty <= 0;
   buyBtn.textContent = `Buy ${displayQty} for ${displayCost} SP`;
 
-  // Update Effects
+  // Render Tooltip Content
+  const tooltipContainer = specSkillModal.querySelector('.skill-modal-tooltip-content');
   const effectsCurrent = skillTree.getSpecializationSkillEffect(currentSpecSkillId, currentLevel);
   const effectsNext = skillTree.getSpecializationSkillEffect(currentSpecSkillId, currentLevel + 1);
-  const effectsEl = specSkillModal.querySelector('.effects-list');
-  effectsEl.innerHTML = '';
-
-  if (effectsNext) {
-    Object.entries(effectsNext).forEach(([stat, nextVal]) => {
-      const currVal = effectsCurrent?.[stat] || 0;
-      const diff = nextVal - currVal;
-      if (!shouldShowStatValue(stat)) {
-        effectsEl.innerHTML += `<p>${formatStatName(stat)}</p>`;
-        return;
-      }
-      const decimals = getStatDecimals(stat);
-      const formattedCurr = typeof currVal === 'number' ? currVal.toFixed(decimals) : currVal;
-      const formattedDiff =
-        typeof currVal === 'number' && typeof nextVal === 'number' ? ` (${formatSignedValue(diff, decimals)})` : '';
-      effectsEl.innerHTML += `
-          <p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>
-        `;
-    });
-
-    const damageEffects = effectsCurrent;
-    const skill = skillTree.getSpecializationSkill(currentSpecSkillId);
-    if (skill?.type && skill.type() === 'instant' && skillTree.isDamageSkill?.(damageEffects)) {
-      const skillTypeSource = skill?.skill_type ?? skill?.skillType;
-      const resolvedSkillType = typeof skillTypeSource === 'function' ? skillTypeSource() : skillTypeSource;
-      const skillType = (resolvedSkillType || 'attack').toLowerCase();
-      const isSpell = skillType === 'spell';
-
-      let effectiveDamageEffects = damageEffects;
-      if (isSpell) {
-        const allowedDamageTypes = getSpellDamageTypes(damageEffects);
-        effectiveDamageEffects = {
-          ...damageEffects,
-          ...(allowedDamageTypes.length ? { allowedDamageTypes } : {}),
-        };
-      }
-
-      const damagePreview = hero.calculateTotalDamage(effectiveDamageEffects, { includeRandom: false });
-
-      if (damagePreview?.damage > 0) {
-        effectsEl.innerHTML += `<div style="margin-top: 10px; border-top: 1px solid #444; padding-top: 5px;">
-            <strong>${t('skill.totalPotentialDamage')}: ${formatNumber(damagePreview.damage)}</strong>
-            ${formatDamageBreakdown(damagePreview.breakdown)}
-          </div>`;
-      }
-    }
-  }
+  // generateSkillTooltipHtml handles all the heavy lifting of displaying effects, damage preview, etc.
+  tooltipContainer.innerHTML = generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNext);
 }
 
 function buySpecSkillBulk() {
@@ -1947,36 +1882,19 @@ function initializeSkillModal() {
   const content = html`
     <div class="skill-modal-content">
       <span class="modal-close">&times;</span>
-      <div class="modal-skill-icon"></div>
-      <h2 class="modal-skill-name"></h2>
-      <p class="modal-skill-desc"></p>
-      <div class="modal-skill-stats">
-        <p>Level: <span class="modal-level"></span>/<span class="modal-max-level"></span></p>
-        <p>Available Points: <span class="modal-available-points"></span></p>
-        <p>Skill Point Cost: <span class="modal-sp-cost"></span></p>
-        <p class="modal-mana-row">
-          ${t(hero.stats.convertManaToLifePercent >= 1 ? 'skillTree.lifeCost' : 'skillTree.manaCost')}:
-          <span class="modal-current-mana-cost"></span> (<span class="modal-next-mana-cost"></span>)
-        </p>
-        <p class="modal-cooldown-row">
-          Cooldown: <span class="modal-current-cooldown"></span> (<span class="modal-next-cooldown"></span>)
-        </p>
-        <p class="modal-duration-row">
-          Duration: <span class="modal-current-duration"></span> (<span class="modal-next-duration"></span>)
-        </p>
+      <div class="skill-modal-tooltip-content">
+         <!-- Tooltip injected here -->
       </div>
-      <div class="modal-skill-effects">
-        <h3>Effects</h3>
-        <div class="effects-list"></div>
+      <div class="skill-modal-footer">
+         <div class="skill-modal-resources">
+            <div class="modal-available-points-display">${t('skillTree.available')}: <span class="modal-available-points"></span></div>
+            <div class="modal-cost-display">${t('skillTree.cost')}: <span class="modal-sp-cost"></span></div>
+         </div>
+         <div class="modal-controls">
+           <!-- Controls rendered dynamically -->
+         </div>
+         <button class="modal-buy">Buy</button>
       </div>
-      <div class="modal-skill-synergies" style="display: none;">
-        <h3>${t('skillTree.synergies')}</h3>
-        <div class="synergies-list"></div>
-      </div>
-      <div class="modal-controls">
-        <!-- Controls rendered dynamically -->
-      </div>
-      <button class="modal-buy">Buy</button>
     </div>
   `;
   // Create via shared helper
@@ -2002,111 +1920,6 @@ function renderSkillModalControls() {
 function openSkillModal(skillId) {
   initializeSkillModal();
   currentSkillId = skillId;
-  const skill = skillTree.getSkill(skillId);
-
-  // Set skill icon in modal
-  const iconEl = skillModal.querySelector('.modal-skill-icon');
-  iconEl.style.backgroundImage = `url('${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg')`;
-
-  const currentLevel = skillTree.skills[skillId]?.level || 0;
-  const nextLevel = currentLevel + 1;
-  skillModal.querySelector('.modal-skill-name').textContent = skill.name();
-  skillModal.querySelector('.modal-skill-desc').innerHTML = skill.description().replace(/\n/g, '<br>');
-  skillModal.querySelector('.modal-level').textContent = currentLevel;
-  skillModal.querySelector('.modal-max-level').textContent = skill.maxLevel() === Infinity ? '∞' : skill.maxLevel();
-  skillModal.querySelector('.modal-available-points').textContent = skillTree.skillPoints;
-  const currMana = skillTree.getSkillManaCost(skill, currentLevel);
-  const nextMana = skillTree.getSkillManaCost(skill, nextLevel);
-  const manaDiff = nextMana - currMana;
-  skillModal.querySelector('.modal-current-mana-cost').textContent = currMana.toFixed(2);
-  skillModal.querySelector('.modal-next-mana-cost').textContent = `${manaDiff >= 0 ? '+' : ''}${manaDiff.toFixed(2)}`;
-  const currCd = skillTree.getSkillCooldown(skill, currentLevel);
-  const nextCd = skillTree.getSkillCooldown(skill, nextLevel);
-  skillModal.querySelector('.modal-current-cooldown').textContent = (currCd / 1000).toFixed(2) + 's';
-  skillModal.querySelector('.modal-next-cooldown').textContent = (nextCd / 1000).toFixed(2) + 's';
-  const currDur = skillTree.getSkillDuration(skill, currentLevel);
-  const nextDur = skillTree.getSkillDuration(skill, nextLevel);
-  skillModal.querySelector('.modal-current-duration').textContent = (currDur / 1000).toFixed(2) + 's';
-  skillModal.querySelector('.modal-next-duration').textContent = (nextDur / 1000).toFixed(2) + 's';
-
-  // Show or hide mana cost row
-  const manaRow = skillModal.querySelector('.modal-mana-row');
-  if (skill.manaCost) {
-    manaRow.style.display = '';
-  } else {
-    manaRow.style.display = 'none';
-  }
-
-  // Show or hide cooldown row
-  const cdRow = skillModal.querySelector('.modal-cooldown-row');
-  if (skill.cooldown) {
-    cdRow.style.display = '';
-  } else {
-    cdRow.style.display = 'none';
-  }
-
-  // Show or hide duration row
-  const durRow = skillModal.querySelector('.modal-duration-row');
-  if (skill.duration) {
-    durRow.style.display = '';
-  } else {
-    durRow.style.display = 'none';
-  }
-
-  // Populate effects
-  const effectsCurrent = skillTree.getSkillEffect(skillId, currentLevel);
-  const effectsNext = skillTree.getSkillEffect(skillId, nextLevel);
-  const effectsEl = skillModal.querySelector('.effects-list');
-  effectsEl.innerHTML = '';
-  Object.entries(effectsNext).forEach(([stat, nextVal]) => {
-    const currVal = effectsCurrent[stat] || 0;
-    const diff = nextVal - currVal;
-    if (!shouldShowStatValue(stat)) {
-      effectsEl.innerHTML += `
-      <p>${formatStatName(stat)}</p>
-    `;
-      return;
-    }
-    const decimals = getStatDecimals(stat);
-    const formattedCurr = typeof currVal === 'number' ? currVal.toFixed(decimals) : currVal;
-    const formattedDiff =
-      typeof currVal === 'number' && typeof nextVal === 'number' ? ` (${formatSignedValue(diff, decimals)})` : '';
-    effectsEl.innerHTML += `
-      <p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>
-    `;
-  });
-
-  // Populate synergies
-  const synergiesSection = skillModal.querySelector('.modal-skill-synergies');
-  const synergiesList = skillModal.querySelector('.synergies-list');
-  if (skill.synergies && Array.isArray(skill.synergies) && skill.synergies.length > 0) {
-    synergiesSection.style.display = '';
-    synergiesList.innerHTML = '';
-    skill.synergies.forEach((synergy) => {
-      const sourceSkill = skillTree.getSkill(synergy.sourceSkillId);
-      if (!sourceSkill) return;
-
-      const sourceLevel = skillTree.skills[synergy.sourceSkillId]?.level || 0;
-      const synergyBonus = sourceLevel > 0 && synergy.calculateBonus ? synergy.calculateBonus(sourceLevel) : 0;
-
-      // Calculate bonus per level
-      const nextLevelBonus = synergy.calculateBonus ? synergy.calculateBonus(sourceLevel + 1) : 0;
-      const bonusPerLevel = sourceLevel > 0 ? (nextLevelBonus - synergyBonus).toFixed(2) : synergy.calculateBonus ? synergy.calculateBonus(1).toFixed(2) : '0';
-
-      const synergyIcon = sourceSkill.icon ? sourceSkill.icon() : 'unknown';
-
-      synergiesList.innerHTML += `
-        <div class="tooltip-synergy">
-          <img src="${import.meta.env.VITE_BASE_PATH}/skills/${synergyIcon}.jpg" alt="${sourceSkill.name()}" class="synergy-icon" />
-          <span class="synergy-name">${sourceSkill.name()}</span>
-          <span class="synergy-bonus">${synergyBonus > 0 ? `+${synergyBonus.toFixed(1)}%` : '(0%)'} (+${bonusPerLevel}% per level)</span>
-        </div>
-      `;
-    });
-  } else {
-    synergiesSection.style.display = 'none';
-  }
-
   selectedSkillQty = 1;
   renderSkillModalControls();
   updateSkillModalDetails();
@@ -2129,15 +1942,23 @@ function updateSkillModalDetails() {
   // even if unaffordable (except 'max', which depends on affordability).
   const displayQty = selectedSkillQty === 'max' ? maxQty : isNaN(qty) ? 0 : qty;
 
+  // Render Tooltip Content
+  const tooltipContainer = skillModal.querySelector('.skill-modal-tooltip-content');
+  const effectsCurrent = skillTree.getSkillEffect(currentSkillId, currentLevel);
+  // For the info display, we want to show the NEXT single level if we are buying, or current level.
+  // Actually, the tooltip generator standardly shows 'Current' and 'Next' (level + 1).
+  // If we are bulk buying, maybe we should show the effect at the TARGET level?
+  // For now, let's stick to the standard tooltip which shows Next Level (lvl+1).
+  // Showing the effect of +N levels might be complex for the tooltip function to handle dynamically without changes.
+  // Let's stick to the standard tooltip view.
+  const effectsNext = skillTree.getSkillEffect(currentSkillId, currentLevel + 1);
+  tooltipContainer.innerHTML = generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNext);
+
   // Update modal fields
-  skillModal.querySelector('.modal-level').textContent = currentLevel;
-  skillModal.querySelector('.modal-max-level').textContent = maxLevel === Infinity ? '∞' : maxLevel;
   skillModal.querySelector('.modal-available-points').textContent = skillTree.skillPoints;
 
   // Update SP cost display and button labels
-  // Show true cost for the selected quantity (not clamped by affordability)
   const displayCost = skillTree.calculateSkillPointCost(currentLevel, displayQty);
-  const totalCost = skillTree.calculateSkillPointCost(currentLevel, actualQty);
   skillModal.querySelector('.modal-sp-cost').textContent = displayCost + ' SP';
 
   if (options.useNumericInputs) {
@@ -2159,115 +1980,9 @@ function updateSkillModalDetails() {
     });
   }
 
-  // Update cost and stats
-  const currMana = skillTree.getSkillManaCost(skill, currentLevel);
-  const nextMana = skillTree.getSkillManaCost(skill, futureLevel);
-  skillModal.querySelector('.modal-current-mana-cost').textContent = currMana;
-  skillModal.querySelector('.modal-next-mana-cost').textContent = nextMana;
-
-  // Show or hide mana cost row
-  const manaRow = skillModal.querySelector('.modal-mana-row');
-  if (skill.manaCost) {
-    manaRow.style.display = '';
-  } else {
-    manaRow.style.display = 'none';
-  }
-
-  // Cooldown
-  const currCd = skillTree.getSkillCooldown(skill, currentLevel) / 1000;
-  const nextCd = skillTree.getSkillCooldown(skill, futureLevel) / 1000;
-  skillModal.querySelector('.modal-current-cooldown').textContent = currCd.toFixed(2) + 's';
-  skillModal.querySelector('.modal-next-cooldown').textContent = nextCd.toFixed(2) + 's';
-
-  // Duration
-  const currDur = skillTree.getSkillDuration(skill, currentLevel) / 1000;
-  const nextDur = skillTree.getSkillDuration(skill, futureLevel) / 1000;
-  skillModal.querySelector('.modal-current-duration').textContent = currDur.toFixed(2) + 's';
-  skillModal.querySelector('.modal-next-duration').textContent = nextDur.toFixed(2) + 's';
-
-  // Effects list
-  const effectsCurrent = skillTree.getSkillEffect(currentSkillId, currentLevel);
-  const effectsFuture = skillTree.getSkillEffect(currentSkillId, futureLevel);
-  const effectsEl = skillModal.querySelector('.effects-list');
-  effectsEl.innerHTML = '';
-  Object.entries(effectsFuture).forEach(([stat, futureVal]) => {
-    const currVal = effectsCurrent[stat] || 0;
-    const diff = futureVal - currVal;
-    if (!shouldShowStatValue(stat)) {
-      effectsEl.innerHTML += `<p>${formatStatName(stat)}</p>`;
-      return;
-    }
-    const decimals = getStatDecimals(stat);
-    const formattedCurr = typeof currVal === 'number' ? currVal.toFixed(decimals) : currVal;
-    const formattedDiff =
-      typeof currVal === 'number' && typeof futureVal === 'number' ? ` (${formatSignedValue(diff, decimals)})` : '';
-    effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>`;
-  });
-
-  // Calculate and display Total Potential Damage
-  const damageEffects = skillTree.getSkillEffect(currentSkillId, currentLevel);
-  if (skill?.type && skill.type() === 'instant' && skillTree.isDamageSkill?.(damageEffects)) {
-    // Compute allowedDamageTypes for spells, same as useInstantSkill
-    const skillTypeSource = skill?.skill_type ?? skill?.skillType;
-    const resolvedSkillType = typeof skillTypeSource === 'function' ? skillTypeSource() : skillTypeSource;
-    const skillType = (resolvedSkillType || 'attack').toLowerCase();
-    const isSpell = skillType === 'spell';
-
-    let effectiveDamageEffects = damageEffects;
-    if (isSpell) {
-      const allowedDamageTypes = getSpellDamageTypes(damageEffects);
-      effectiveDamageEffects = {
-        ...damageEffects,
-        ...(allowedDamageTypes.length ? { allowedDamageTypes } : {}),
-      };
-    }
-
-    const damagePreview = hero.calculateTotalDamage(effectiveDamageEffects, { includeRandom: false });
-
-    if (damagePreview?.damage > 0) {
-      effectsEl.innerHTML += `<div style="margin-top: 10px; border-top: 1px solid #444; padding-top: 5px;">
-        <strong>${t('skill.totalPotentialDamage')}: ${formatNumber(damagePreview.damage)}</strong>
-        ${formatDamageBreakdown(damagePreview.breakdown)}
-      </div>`;
-    }
-  }
-
-  // --- Show summon stats if this is a summon skill ---
-  if (skill.type() === 'summon') {
-    const title = skillModal.querySelector('.modal-skill-effects h3');
-    title.innerHTML = 'Summon Stats';
-    const summonStatsCurrent = getDisplayedSummonStats(skill.summonStats(currentLevel));
-    const summonStatsFuture = getDisplayedSummonStats(skill.summonStats(futureLevel));
-    Object.entries(summonStatsCurrent).forEach(([stat, currVal]) => {
-      const futureVal = summonStatsFuture[stat];
-      const diff = futureVal - currVal;
-      if (!shouldShowStatValue(stat)) {
-        effectsEl.innerHTML += `<p>${formatStatName(stat)}</p>`;
-        return;
-      }
-      const decimals = getStatDecimals(stat);
-      const formattedCurr = typeof currVal === 'number' ? currVal.toFixed(decimals) : currVal;
-      const formattedDiff =
-        typeof currVal === 'number' && typeof futureVal === 'number' ? ` (${formatSignedValue(diff, decimals)})` : '';
-      effectsEl.innerHTML += `<p>${formatStatName(stat)}: ${formattedCurr}${formattedDiff}</p>`;
-    });
-
-    const summonDamage = calculateSummonDamage(skill, currentLevel);
-    if (summonDamage && summonDamage.damage > 0) {
-      effectsEl.innerHTML += `<div style="margin-top: 10px; border-top: 1px solid #444; padding-top: 5px;">
-        <strong>${t('skill.totalPotentialDamage')}: ${formatNumber(summonDamage.damage)}</strong>
-        ${formatDamageBreakdown(summonDamage.breakdown)}
-      </div>`;
-    }
-  } else {
-    const title = skillModal.querySelector('.modal-skill-effects h3');
-    title.innerHTML = t('skillTree.skillEffects');
-  }
-
   // Update buy button
   const buyBtn = skillModal.querySelector('.modal-buy');
   buyBtn.disabled = actualQty <= 0;
-  // Show intended purchase amount and its true cost even if unaffordable
   buyBtn.textContent = `Buy ${displayQty} for ${displayCost} SP`;
 }
 

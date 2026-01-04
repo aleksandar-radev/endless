@@ -1427,3 +1427,97 @@
   color: #94a3b8;
   line-height: 24px;
 }
+
+/* Modal Refactor Styling */
+.skill-modal-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+  background: var(--bg-panel, #1a1d24);
+  color: #e0e0e0;
+}
+
+.skill-modal-tooltip-content {
+  flex: 1;
+  overflow-y: auto;
+  /* Scrollbar styling for webkit */
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 transparent;
+}
+
+.skill-modal-tooltip-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.skill-modal-tooltip-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.skill-modal-tooltip-content::-webkit-scrollbar-thumb {
+  background-color: #4b5563;
+  border-radius: 3px;
+}
+
+/* Remove outer styling of tooltip when inside modal */
+.skill-modal-tooltip-content .skill-tooltip-container {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  width: 100%;
+  max-width: none;
+}
+
+.skill-modal-footer {
+  flex-shrink: 0;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.skill-modal-resources {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9em;
+  color: #aaa;
+}
+
+.skill-modal-resources span {
+  color: #fff;
+  font-weight: bold;
+}
+
+.modal-controls {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.modal-buy {
+  width: 100%;
+  padding: 10px;
+  background: var(--primary, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modal-buy:hover:not(:disabled) {
+  background: var(--primary-hover, #1d4ed8);
+}
+
+.modal-buy:disabled {
+  background: #334155;
+  cursor: not-allowed;
+  opacity: 0.7;
+  color: #94a3b8;
+}

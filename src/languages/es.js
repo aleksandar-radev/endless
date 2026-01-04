@@ -2026,6 +2026,7 @@ export default {
 
   // Warrior Specialization Skills
   'skillTree.availablePoints': 'Puntos de Habilidad Disponibles',
+  'skillTree.available': 'Disponible',
   'skill.drainingTouch.name': 'Draining Touch',
   'skill.frenzy.name': 'Frenzy',
   'skill.toughSkin.name': 'Tough Skin',
