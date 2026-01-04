@@ -1,4 +1,4 @@
-const BASE = import.meta.env.VITE_BASE_PATH;
+const BASE = (import.meta.env && import.meta.env.VITE_BASE_PATH) || '';
 
 export const ELEMENTS = {
   fire: {
