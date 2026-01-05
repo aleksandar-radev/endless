@@ -980,7 +980,6 @@ export default {
   'skill.heroicStand': 'Mantente desafiante ante la perdición.',
   'skill.legendaryWarlord': 'Comanda el campo de batalla como leyenda.',
   'skill.eternalGuardian': 'Proyecta un aura que debilita a tus enemigos.',
-  'skill.drainingTouch': 'Absorbe la esencia de tus enemigos.',
   'tooltip.pattern.percent': 'Incrementa {stat} en un porcentaje.',
   'tooltip.pattern.perLevel': '{stat} ganado por nivel.',
   'tooltip.pattern.ofTotalPercent': '{stat} basado en el total de {stat}.',
