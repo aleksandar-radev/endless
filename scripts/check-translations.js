@@ -29,7 +29,7 @@ function extractKeys(content) {
 // Read all translation files from a language folder
 function readLanguageFiles(langCode) {
   const langDir = path.join(LANGUAGES_DIR, langCode);
-  
+
   if (!fs.existsSync(langDir)) {
     console.error(`Error: Language directory ${langCode}/ not found`);
     return null;
@@ -42,8 +42,8 @@ function readLanguageFiles(langCode) {
   }
 
   const allKeys = [];
-  const files = fs.readdirSync(langDir).filter(f => f.endsWith('.js'));
-  
+  const files = fs.readdirSync(langDir).filter((f) => f.endsWith('.js'));
+
   for (const file of files) {
     const filePath = path.join(langDir, file);
     const content = fs.readFileSync(filePath, 'utf-8');

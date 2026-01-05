@@ -1,3 +1,1 @@
-export default {
-Elixir: '灵药'
-};
+export default { Elixir: '灵药' };

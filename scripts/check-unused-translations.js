@@ -77,17 +77,17 @@ function parseArgs(argv) {
 function extractTranslationKeysFromLanguageFolder(langDir) {
   // Read all .js files in the language folder
   const keys = [];
-  
+
   if (!fs.existsSync(langDir)) {
     return keys;
   }
-  
-  const files = fs.readdirSync(langDir).filter(f => f.endsWith('.js'));
-  
+
+  const files = fs.readdirSync(langDir).filter((f) => f.endsWith('.js'));
+
   for (const file of files) {
     const filePath = path.join(langDir, file);
     const content = fs.readFileSync(filePath, 'utf-8');
-    
+
     // Matches lines like:   'some.key': 'Value',  or  "some.key": ...
     const keyRegex = /^\s+['\"]([^'\"]+)['\"]\s*:/gm;
     let match;
@@ -95,7 +95,7 @@ function extractTranslationKeysFromLanguageFolder(langDir) {
       keys.push(match[1]);
     }
   }
-  
+
   return keys;
 }
 

@@ -1,3 +1,1 @@
-export default {
-Elixir: 'Elixir'
-};
+export default { Elixir: 'Elixir' };

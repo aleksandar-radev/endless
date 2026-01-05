@@ -236,8 +236,8 @@ function main() {
       continue;
     }
 
-    const files = fs.readdirSync(langDirAbs).filter(f => f.endsWith('.js'));
-    
+    const files = fs.readdirSync(langDirAbs).filter((f) => f.endsWith('.js'));
+
     for (const filename of files) {
       const abs = path.join(langDirAbs, filename);
       const before = fs.readFileSync(abs, 'utf-8');
