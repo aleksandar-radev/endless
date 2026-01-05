@@ -513,6 +513,7 @@ export function playerAttack(currentTime) {
       const arcDischargeChance = Math.max(0, Math.min(1, hero.stats.arcDischargeChance || 0));
       const didArcDischarge = arcDischargeChance > 0 && Math.random() < arcDischargeChance;
 
+      // negative manaPerHit handles elsewhere
       const manaRestore = (manaPerHit > 0 ? manaPerHit : 0) + manaStealAmount + omniStealAmount;
       const manaDisplayAmount = Math.floor(Math.abs(manaRestore));
       if (manaRestore > 0 && manaDisplayAmount >= 1) {

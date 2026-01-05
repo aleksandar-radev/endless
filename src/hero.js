@@ -712,7 +712,6 @@ export default class Hero {
       }
 
       // Caps and Rounding
-      if (value < 0 && stat !== 'lifeRegeneration') value = 0;
       if (stat === 'blockChance' && value > 75) value = 75;
       if (stat.endsWith('Resistance')) {
         if (value > 75) value = 75;
