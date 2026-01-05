@@ -4,6 +4,8 @@ import { quests } from '../globals.js';
 import { MATERIALS } from '../constants/materials.js';
 import { t, tp } from '../i18n.js';
 import { getDivisor, getStatDecimalPlaces } from '../constants/stats/stats.js';
+import { ITEM_RARITY } from '../constants/items.js';
+import { UNIQUE_ITEMS } from '../constants/uniqueItems.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 
@@ -119,29 +121,40 @@ export function openQuestModal(quest) {
         ? t('resource.gold.name')
         : key === 'crystals'
           ? t('resource.crystal.name')
-          : key.charAt(0).toUpperCase() + key.slice(1);
+          : t(key) || key.charAt(0).toUpperCase() + key.slice(1);
 
     if (key === 'item' && typeof value === 'object') {
-      // Show item reward details (rarity, tier)
-      const rarityLabel = t('quests.tab.rarity');
-      const tierLabel = t('item.tier');
-      const rarityName = t(`rarity.${value.rarity}`);
-      const rarityHtml = `<span class="item-color-${value.rarity}">${rarityName}</span>`;
-      const tierHtml = `<span style='color:var(--crystals)'>${value.tier}</span>`;
+      const rarityKey = (value.rarity || 'normal').toUpperCase();
+      const rarityData = ITEM_RARITY[rarityKey];
+      const itemColor = rarityData?.color || 'var(--text)';
 
-      rewardParts.push(
-        `<span style="color:var(--text);font-weight:bold;">${tp('quests.modal.randomItemReward', {
+      let rewardText = '';
+      if (value.uniqueId && UNIQUE_ITEMS[value.uniqueId]) {
+        rewardText = t(UNIQUE_ITEMS[value.uniqueId].nameKey);
+      } else {
+        const rarityLabel = t('quests.tab.rarity');
+        const tierLabel = t('item.tier');
+        const rarityName = t(`rarity.${value.rarity.toLowerCase()}`);
+        const rarityHtml = `<span class="item-color-${value.rarity.toLowerCase()}">${rarityName}</span>`;
+        const tierHtml = `<span style='color:var(--crystals)'>${value.tier}</span>`;
+
+        rewardText = tp('quests.modal.randomItemReward', {
           rarityLabel,
           tierLabel,
           rarity: rarityHtml,
           tier: tierHtml,
-        })}</span>`,
+        });
+      }
+
+      rewardParts.push(
+        `<span style="color:${itemColor};font-weight:bold;">${rewardText}</span>`,
       );
     } else if (key === 'materials' && Array.isArray(value)) {
       value.forEach(({ id, qty }) => {
         const matDef = MATERIALS[id] || Object.values(MATERIALS).find((m) => m.id === id);
+        const name = matDef ? matDef.name : (t(id) || id);
         rewardParts.push(
-          `<span style=\"color:var(--text);font-weight:bold;\">${matDef?.name || id}: ${formatNumber(qty)}</span>`,
+          `<span style="color:var(--text);font-weight:bold;">${name}: ${formatNumber(qty)}</span>`,
         );
       });
     } else if (key === 'bonuses' && typeof value === 'object') {
