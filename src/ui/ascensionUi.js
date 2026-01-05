@@ -60,7 +60,7 @@ function renderAscension() {
   tabs.innerHTML = Object.entries(ascension.categories)
     .map(
       ([key, cat]) =>
-        `<button class="ascension-tab ${key === activeCategory ? 'active' : ''}" data-cat="${key}">${cat.label}</button>`,
+        `<button class="ascension-tab ${key === activeCategory ? 'active' : ''}" data-cat="${key}">${t(cat.label)}</button>`,
     )
     .join('');
   tabs.querySelectorAll('.ascension-tab').forEach((b) => {
@@ -81,7 +81,8 @@ function renderAscension() {
       const levelText = cfg.maxLevel ? `${level}/${cfg.maxLevel}` : level;
       const perLevel = getAscensionPerLevelBonusText(key, cfg);
       // Show the value directly in the title like damage
-      const nameWithBonus = perLevel ? `${perLevel} ${cfg.label}` : `${cfg.label}`;
+      const translatedLabel = t(cfg.label);
+      const nameWithBonus = perLevel ? `${perLevel} ${translatedLabel}` : translatedLabel;
       return `<li data-key="${key}"><span class="ascension-upgrade-label">${nameWithBonus} — ${t('ascension.upgrade.lvl')} ${levelText}</span> <button class="ascension-upgrade-btn" ${disabledBtn}>${t('ascension.upgrade.buy')} (<span class="ascension-cost">${t('ascension.upgrade.cost')}: ${cost}</span>)</button></li>`;
     })
     .join('');
@@ -159,7 +160,8 @@ function openUpgradeInfoModal(key) {
   const level = ascension.upgrades[key] || 0;
   const max = cfg.maxLevel || Infinity;
   const perLevel = getAscensionPerLevelBonusText(key, cfg);
-  const title = perLevel ? `${perLevel} ${cfg.label}` : cfg.label;
+  const translatedLabel = t(cfg.label);
+  const title = perLevel ? `${perLevel} ${translatedLabel}` : translatedLabel;
 
   const controlsMarkup = options?.useNumericInputs
     ? '<div class="ascension-qty-controls"><input type="number" class="modal-qty-input input-number" min="1" value="1" /></div>'
