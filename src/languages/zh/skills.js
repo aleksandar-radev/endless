@@ -459,4 +459,17 @@ export default {
   'skillTree.passivesUnlocked': '已解锁被动',
   'skillTree.selectClass': '选择职业',
   'skillTree.selectSpec': '选择',
-  'skillTree.availableSpecializations': '可用专精',};
+  'skillTree.availableSpecializations': '可用专精',
+
+  // Specialization skill names
+  'skill.vanish.name': '消失',
+  'skill.assassinate.name': '暗杀',
+  'skill.hemorrhage.name': '大出血',
+  'skill.zeal.name': '狂热',
+  'skill.lacerate.name': '撕裂',
+  'skill.combustion.name': '燃烧',
+  'skill.permafrost.name': '永冻',
+
+  // Missing translation key
+  'skillTree.specializationSkillsRefunded': '专精技能已退还！返还 {points} 点数。',
+};

@@ -145,7 +145,7 @@ export const SPECIALIZATIONS = {
       skills: {
         vanish: {
           id: 'vanish',
-          name: () => t('Vanish'),
+          name: () => t('skill.vanish.name'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[4],
           icon: () => 'vanish',
@@ -155,7 +155,7 @@ export const SPECIALIZATIONS = {
         },
         assassinate: {
           id: 'assassinate',
-          name: () => t('Assassinate'),
+          name: () => t('skill.assassinate.name'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[6],
           icon: () => 'assassinate',
@@ -330,7 +330,7 @@ export const SPECIALIZATIONS = {
         },
         hemorrhage: {
           id: 'hemorrhage',
-          name: () => t('Hemorrhage'),
+          name: () => t('skill.hemorrhage.name'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[6],
           icon: () => 'hemorrhage',
@@ -368,7 +368,7 @@ export const SPECIALIZATIONS = {
         },
         zeal: {
           id: 'zeal',
-          name: () => t('Zeal'),
+          name: () => t('skill.zeal.name'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[6],
           icon: () => 'zeal',
@@ -464,7 +464,7 @@ export const SPECIALIZATIONS = {
       skills: {
         lacerate: {
           id: 'lacerate',
-          name: () => t('Lacerate'),
+          name: () => t('skill.lacerate.name'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[4],
           icon: () => 'lacerate',
@@ -588,7 +588,7 @@ export const SPECIALIZATIONS = {
         },
         combustion: {
           id: 'combustion',
-          name: () => t('Combustion'),
+          name: () => t('skill.combustion.name'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[6],
           icon: () => 'combustion',
@@ -651,7 +651,7 @@ export const SPECIALIZATIONS = {
       skills: {
         permafrost: {
           id: 'permafrost',
-          name: () => t('Permafrost'),
+          name: () => t('skill.permafrost.name'),
           type: () => 'passive',
           requiredLevel: () => SKILL_LEVEL_TIERS[4],
           icon: () => 'permafrost',

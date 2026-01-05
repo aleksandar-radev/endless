@@ -5,7 +5,7 @@ const tier = 1;
 export const FOREST_ENEMIES = [
   {
     get name() {
-      return t('Mossback');
+      return t('enemy.mossback');
     },
 
     image: '/enemies/mossback.jpg',
@@ -36,7 +36,7 @@ export const FOREST_ENEMIES = [
   },
   {
     get name() {
-      return t('Thornling');
+      return t('enemy.thornling');
     },
 
     image: '/enemies/thornling.jpg',
@@ -66,7 +66,7 @@ export const FOREST_ENEMIES = [
   },
   {
     get name() {
-      return t('Barkhide');
+      return t('enemy.barkhide');
     },
 
     image: '/enemies/barkhide.jpg',
@@ -96,7 +96,7 @@ export const FOREST_ENEMIES = [
   },
   {
     get name() {
-      return t('Sylvan Wisp');
+      return t('enemy.sylvanWisp');
     },
 
     image: '/enemies/sylvan-wisp.jpg',

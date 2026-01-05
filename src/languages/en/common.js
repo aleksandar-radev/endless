@@ -9,8 +9,10 @@ export default {
   'tab.runes': 'Runes',
   'tab.skilltree': 'Skill Tree',
   'tab.crystalShop': 'Crystal Shop',
-  'tab.soulShop': 'Soul Shop',
-  'tab.battleLog': 'Battle Log',
+  'tab.soulShop': 'Soul Shop',
+
+  'tab.battleLog': 'Battle Log',
+
   'tab.mainOptions': 'Options',
   'tab.buildings': 'Buildings',
   'tab.prestige': 'Prestige',
@@ -97,4 +99,16 @@ export default {
   'time.minutes': 'minutes',
   'time.hour': 'hour',
   'time.hours': 'hours',
+
+  // Attribute breakdown sources
+  'attributes.breakdown.allocated': 'Allocated',
+  'attributes.breakdown.potions': 'Potions',
+  'attributes.breakdown.prestige': 'Prestige',
+  'attributes.breakdown.items': 'Items',
+  'attributes.breakdown.skills': 'Skills',
+  'attributes.breakdown.training': 'Training',
+  'attributes.breakdown.soulShop': 'Soul Shop',
+  'attributes.breakdown.totalFlat': 'Total Flat',
+  'attributes.breakdown.totalPercent': 'Total %',
+  'attributes.breakdown.total': 'Total',
 };

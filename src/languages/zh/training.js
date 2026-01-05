@@ -3,7 +3,7 @@ export default {
   'training.totalCost': '总成本',
   'training.upgraded': '已将{stat}提升{count}级！',
   'training.notEnoughGold': '没有足够的金币来升级{stat}！',
-  'training.elementalDistributionButton': 'Damage Allocation',
+  'training.elementalDistributionButton': '伤害分配',
   'training.elementalDistributionTitle': '伤害分配',
 
   'training.elementalDistributionResourceThornsTotal': '资源额外伤害（反伤）：{amount}',

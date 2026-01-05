@@ -5,7 +5,7 @@ export const ROCKY_FIELD_CAVES_ENEMIES = [
   {
     id: 'cave_stalker',
     get name() {
-      return t('Cave Stalker');
+      return t('enemy.caveStalker');
     },
     image: '/enemies/cave-stalker.jpg',
     multiplier: {

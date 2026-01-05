@@ -3,8 +3,9 @@ export default {
   'training.totalCost': 'Costo total',
   'training.upgraded': '¡{stat} mejorado en {count} niveles!',
   'training.notEnoughGold': '¡No hay suficiente oro para mejorar {stat}!',
-  'training.elementalDistributionButton': 'Damage Allocation',
-  'training.elementalDistributionTitle': 'Distribución de daño',
+  'training.elementalDistributionButton': 'Asignación de Daño',
+  'training.elementalDistributionTitle': 'Distribución de daño',
+
   'training.elementalDistributionResourceThornsTotal': 'Daño extra por recursos (espinas): {amount}',
   'training.elementalDistributionReset': 'Restablecer reparto uniforme',
   'training.elementalDistributionTrainingTotal': 'Daño total de entrenamiento: {amount}',

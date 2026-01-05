@@ -115,7 +115,7 @@ export const MATERIALS = {
   elixir: {
     id: 'elixir',
     get name() {
-      return t('Elixir');
+      return t('item.elixir');
     },
     icon: `<img src="${BASE}/icons/experience-potion.svg" alt="elixir"/>`,
     get description() {
@@ -354,11 +354,11 @@ export const MATERIALS = {
   transmutation_orb: {
     id: 'transmutation_orb',
     get name() {
-      return t('Transmutation Orb');
+      return t('item.transmutationOrb');
     },
     icon: `<img src="${BASE}/icons/transmutation-orb.svg" alt="orb"/>`,
     get description() {
-      return t('Replaces one chosen stat on an equipped item with a random new stat.');
+      return t('item.transmutationOrb.description');
     },
     dropChance: 1,
     sort: 702,

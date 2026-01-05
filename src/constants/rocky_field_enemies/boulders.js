@@ -5,7 +5,7 @@ export const ROCKY_FIELD_BOULDERS_ENEMIES = [
   {
     id: 'pebble_golem',
     get name() {
-      return t('Pebble Golem');
+      return t('enemy.pebbleGolem');
     },
     image: '/enemies/pebble-golem.jpg',
     multiplier: {

@@ -189,25 +189,25 @@ function getAdvancedAttributeTooltip(attr) {
       name: 'Base', flat: Math.floor(breakdown.base), percent: 0,
     },
     {
-      name: 'Allocated', flat: Math.floor(breakdown.allocated), percent: 0,
+      name: t('attributes.breakdown.allocated'), flat: Math.floor(breakdown.allocated), percent: 0,
     },
     {
-      name: 'Potions', flat: Math.floor(breakdown.perma), percent: breakdown.percent.perma,
+      name: t('attributes.breakdown.potions'), flat: Math.floor(breakdown.perma), percent: breakdown.percent.perma,
     },
     {
-      name: 'Prestige', flat: Math.floor(breakdown.prestige), percent: breakdown.percent.prestige,
+      name: t('attributes.breakdown.prestige'), flat: Math.floor(breakdown.prestige), percent: breakdown.percent.prestige,
     },
     {
-      name: 'Items', flat: Math.floor(breakdown.items), percent: breakdown.percent.items,
+      name: t('attributes.breakdown.items'), flat: Math.floor(breakdown.items), percent: breakdown.percent.items,
     },
     {
-      name: 'Skills', flat: Math.floor(breakdown.skills), percent: breakdown.percent.skills,
+      name: t('attributes.breakdown.skills'), flat: Math.floor(breakdown.skills), percent: breakdown.percent.skills,
     },
     {
-      name: 'Training', flat: Math.floor(breakdown.training), percent: breakdown.percent.training,
+      name: t('attributes.breakdown.training'), flat: Math.floor(breakdown.training), percent: breakdown.percent.training,
     },
     {
-      name: 'Soul Shop', flat: Math.floor(breakdown.soul), percent: breakdown.percent.soul,
+      name: t('attributes.breakdown.soulShop'), flat: Math.floor(breakdown.soul), percent: breakdown.percent.soul,
     },
   ].filter((s) => s.flat || s.percent);
 
@@ -248,9 +248,9 @@ function getAdvancedAttributeTooltip(attr) {
     </div>
     ${lines} ${ascInfo}
     <hr style="border:none; border-top:1px solid var(--border); margin:4px 0" />
-    <em>Total Flat:</em> ${formatNumber(totalFlat)}<br />
-    <em>Total %:</em> ${(totalPercent * 100).toFixed(1)}%<br />
-    <strong>Total:</strong> ${formatNumber(finalValue)}
+    <em>${t('attributes.breakdown.totalFlat')}:</em> ${formatNumber(totalFlat)}<br />
+    <em>${t('attributes.breakdown.totalPercent')}:</em> ${(totalPercent * 100).toFixed(1)}%<br />
+    <strong>${t('attributes.breakdown.total')}:</strong> ${formatNumber(finalValue)}
   `;
 }
 

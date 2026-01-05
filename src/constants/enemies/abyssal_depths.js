@@ -4,7 +4,7 @@ const tier = 7;
 
 export const ABYSS_ENEMIES = [
   {
-    name: t('Abyssal Wraith'),
+    name: t('enemy.abyssalWraith'),
     image: '/enemies/abyssal-wraith.jpg',
     tier: tier,
 
@@ -31,7 +31,7 @@ export const ABYSS_ENEMIES = [
     tags: ['abyssal_depths'],
   },
   {
-    name: t('Shadowclaw'),
+    name: t('enemy.shadowclaw'),
     image: '/enemies/shadowclaw.jpg',
     tier: tier,
 
@@ -57,7 +57,7 @@ export const ABYSS_ENEMIES = [
     tags: ['abyssal_depths'],
   },
   {
-    name: t('Hellhound'),
+    name: t('enemy.hellhound'),
     image: '/enemies/hellhound.jpg',
     tier: tier,
 
@@ -84,7 +84,7 @@ export const ABYSS_ENEMIES = [
     tags: ['abyssal_depths'],
   },
   {
-    name: t('Infernal Knight'),
+    name: t('enemy.infernalKnight'),
 
     image: '/enemies/infernal-knight.jpg',
     tier: tier,

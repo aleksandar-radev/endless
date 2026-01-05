@@ -9,8 +9,10 @@ export default {
   'tab.runes': 'Runas',
   'tab.skilltree': 'Árbol de habilidades',
   'tab.crystalShop': 'Tienda de Cristales',
-  'tab.soulShop': 'Tienda de Almas',
-  'tab.battleLog': 'Registro de Batalla',
+  'tab.soulShop': 'Tienda de Almas',
+
+  'tab.battleLog': 'Registro de Batalla',
+
   'tab.mainOptions': 'Opciones',
   'tab.buildings': 'Edificios',
   'tab.prestige': 'Prestigio',
@@ -97,4 +99,16 @@ export default {
   'time.minutes': 'minutos',
   'time.hour': 'hora',
   'time.hours': 'horas',
+
+  // Attribute breakdown sources
+  'attributes.breakdown.allocated': 'Asignado',
+  'attributes.breakdown.potions': 'Pociones',
+  'attributes.breakdown.prestige': 'Prestigio',
+  'attributes.breakdown.items': 'Objetos',
+  'attributes.breakdown.skills': 'Habilidades',
+  'attributes.breakdown.training': 'Entrenamiento',
+  'attributes.breakdown.soulShop': 'Tienda de Almas',
+  'attributes.breakdown.totalFlat': 'Total Base',
+  'attributes.breakdown.totalPercent': 'Total %',
+  'attributes.breakdown.total': 'Total',
 };

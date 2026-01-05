@@ -5,7 +5,7 @@ export const ROCKY_FIELD_OUTSKIRTS_ENEMIES = [
   {
     id: 'stone_beetle',
     get name() {
-      return t('Stone Beetle');
+      return t('enemy.stoneBeetle');
     },
     image: '/enemies/stone-beetle.jpg',
     multiplier: {

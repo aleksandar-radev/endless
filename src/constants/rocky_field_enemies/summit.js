@@ -5,7 +5,7 @@ export const ROCKY_FIELD_SUMMIT_ENEMIES = [
   {
     id: 'rock_spirit',
     get name() {
-      return t('Rock Spirit');
+      return t('enemy.rockSpirit');
     },
     image: '/enemies/rock-spirit.jpg',
     multiplier: {

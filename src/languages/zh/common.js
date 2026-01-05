@@ -9,8 +9,10 @@ export default {
   'tab.runes': '符文',
   'tab.skilltree': '技能树',
   'tab.crystalShop': '水晶商店',
-  'tab.soulShop': '灵魂商店',
-  'tab.battleLog': '战斗日志',
+  'tab.soulShop': '灵魂商店',
+
+  'tab.battleLog': '战斗日志',
+
   'tab.mainOptions': '选项',
   'tab.buildings': '建筑',
   'tab.prestige': '声望',
@@ -96,4 +98,16 @@ export default {
   'time.minutes': '分钟',
   'time.hour': '小时',
   'time.hours': '小时',
+
+  // Attribute breakdown sources
+  'attributes.breakdown.allocated': '已分配',
+  'attributes.breakdown.potions': '药水',
+  'attributes.breakdown.prestige': '声望',
+  'attributes.breakdown.items': '物品',
+  'attributes.breakdown.skills': '技能',
+  'attributes.breakdown.training': '训练',
+  'attributes.breakdown.soulShop': '灵魂商店',
+  'attributes.breakdown.totalFlat': '总基础值',
+  'attributes.breakdown.totalPercent': '总百分比',
+  'attributes.breakdown.total': '总计',
 };

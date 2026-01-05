@@ -15,6 +15,7 @@ import quests from './zh/quests.js';
 import items from './zh/items.js';
 import classes from './zh/classes.js';
 import runes from './zh/runes.js';
+import { enemies } from './zh/enemies.js';
 import other from './zh/other.js';
 
 // Combine all translation modules
@@ -33,5 +34,6 @@ export default {
   ...items,
   ...classes,
   ...runes,
+  ...enemies,
   ...other,
 };

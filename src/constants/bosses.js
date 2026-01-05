@@ -61,7 +61,7 @@ function applyDefaultBossStats(boss) {
 const RAW_BOSSES = [
   {
     id: 'goblin-king',
-    name: t('Goblin King'),
+    name: t('enemy.goblinKing'),
     type: 'boss',
     image: '/enemies/goblin-king.jpg',
     attackSpeed: 1.2,
@@ -83,7 +83,7 @@ const RAW_BOSSES = [
   },
   {
     id: 'ogre-chieftain',
-    name: t('Ogre Chieftain'),
+    name: t('enemy.ogreChieftain'),
     type: 'boss',
     image: '/enemies/ogre-chieftain.jpg',
     attackSpeed: 1.5,
@@ -105,7 +105,7 @@ const RAW_BOSSES = [
   },
   {
     id: 'stone-golem',
-    name: t('Stone Golem'),
+    name: t('enemy.stoneGolem'),
     type: 'boss',
     image: '/enemies/obsidian-golem.jpg',
     damage: 25,
@@ -124,7 +124,7 @@ const RAW_BOSSES = [
   },
   {
     id: 'fire-drake',
-    name: t('Fire Drake'),
+    name: t('enemy.fireDrake'),
     type: 'boss',
     image: '/enemies/ember-drake.jpg',
     attackSpeed: 0.8,
@@ -148,7 +148,7 @@ const RAW_BOSSES = [
   },
   {
     id: 'ancient-serpent',
-    name: t('Ancient Serpent'),
+    name: t('enemy.ancientSerpent'),
     type: 'boss',
     image: '/enemies/ancient-serpent.jpg',
     attackSpeed: 1.3,
@@ -171,7 +171,7 @@ const RAW_BOSSES = [
   },
   {
     id: 'void-harbinger',
-    name: t('Void Harbinger'),
+    name: t('enemy.voidHarbinger'),
     type: 'boss',
     image: '/enemies/void-harbinger.jpg',
     attackSpeed: 1.1,
@@ -196,7 +196,7 @@ const RAW_BOSSES = [
   },
   {
     id: 'ember-sovereign',
-    name: t('Ember Sovereign'),
+    name: t('enemy.emberSovereign'),
     type: 'boss',
     image: '/enemies/ember-sovereign.jpg',
     attackSpeed: 1.15,
@@ -218,7 +218,7 @@ const RAW_BOSSES = [
   },
   {
     id: 'tempest-titan',
-    name: t('Tempest Titan'),
+    name: t('enemy.tempestTitan'),
     type: 'boss',
     image: '/enemies/tempest-titan.jpg',
     attackSpeed: 1.05,
@@ -242,7 +242,7 @@ const RAW_BOSSES = [
   },
   {
     id: 'sandstorm-emperor',
-    name: t('Sandstorm Emperor'),
+    name: t('enemy.sandstormEmperor'),
     type: 'boss',
     image: '/enemies/sandstorm-emperor.jpg',
     attackSpeed: 1.15,
@@ -266,7 +266,7 @@ const RAW_BOSSES = [
   },
   {
     id: 'radiant-phoenix',
-    name: t('Radiant Phoenix'),
+    name: t('enemy.radiantPhoenix'),
     type: 'boss',
     image: '/enemies/radiant-phoenix.jpg',
     attackSpeed: 1.3,
@@ -290,7 +290,7 @@ const RAW_BOSSES = [
   },
   {
     id: 'abyssal-leviathan',
-    name: t('Abyssal Leviathan'),
+    name: t('enemy.abyssalLeviathan'),
     type: 'boss',
     image: '/enemies/abyssal-leviathan.jpg',
     attackSpeed: 0.95,
@@ -314,7 +314,7 @@ const RAW_BOSSES = [
   },
   {
     id: 'arcane-overseer',
-    name: t('Arcane Overseer'),
+    name: t('enemy.arcaneOverseer'),
     type: 'boss',
     image: '/enemies/arcane-overseer.jpg',
     attackSpeed: 1.05,
@@ -339,7 +339,7 @@ const RAW_BOSSES = [
   },
   {
     id: 'glacial-tyrant',
-    name: t('Glacial Tyrant'),
+    name: t('enemy.glacialTyrant'),
     type: 'boss',
     image: '/enemies/glacial-tyrant.jpg',
     attackSpeed: 0.95,

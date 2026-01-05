@@ -4,7 +4,7 @@ const tier = 6;
 
 export const SKYREALM_ENEMIES = [
   {
-    name: t('Cloudstrider'),
+    name: t('enemy.cloudstrider'),
 
     image: '/enemies/cloudstrider.jpg',
     tier: tier,
@@ -37,7 +37,7 @@ export const SKYREALM_ENEMIES = [
     tags: ['skyrealm_peaks'],
   },
   {
-    name: t('Stormbringer'),
+    name: t('enemy.stormbringer'),
 
     image: '/enemies/stormbringer.jpg',
     tier: tier,
@@ -70,7 +70,7 @@ export const SKYREALM_ENEMIES = [
     tags: ['skyrealm_peaks'],
   },
   {
-    name: t('Stormsoul'),
+    name: t('enemy.stormsoul'),
 
     image: '/enemies/stormsoul.jpg',
     tier: tier,
@@ -103,7 +103,7 @@ export const SKYREALM_ENEMIES = [
     tags: ['skyrealm_peaks'],
   },
   {
-    name: t('Midas Beast'),
+    name: t('enemy.midasBeast'),
 
     image: '/enemies/midas-beast.jpg',
     tier: tier,

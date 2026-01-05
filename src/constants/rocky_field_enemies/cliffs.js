@@ -5,7 +5,7 @@ export const ROCKY_FIELD_CLIFFS_ENEMIES = [
   {
     id: 'cliff_gargoyle',
     get name() {
-      return t('Cliff Gargoyle');
+      return t('enemy.cliffGargoyle');
     },
     image: '/enemies/cliff-gargoyle.jpg',
     multiplier: {

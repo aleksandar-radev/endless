@@ -4,7 +4,7 @@ const tier = 11;
 
 export const GOLDEN_STEPPE_ENEMIES = [
   {
-    name: t('Golden Sphinx'),
+    name: t('enemy.goldenSphinx'),
 
     image: '/enemies/golden-sphinx.jpg',
     tier: tier,
@@ -32,7 +32,7 @@ export const GOLDEN_STEPPE_ENEMIES = [
     tags: ['golden_steppe'],
   },
   {
-    name: t('Aurelius'),
+    name: t('enemy.aurelius'),
 
     image: '/enemies/aurelius.jpg',
     tier: tier,
@@ -57,7 +57,7 @@ export const GOLDEN_STEPPE_ENEMIES = [
     tags: ['golden_steppe'],
   },
   {
-    name: t('Solar Phoenix'),
+    name: t('enemy.solarPhoenix'),
 
     image: '/enemies/solar-phoenix.jpg',
     tier: tier,
@@ -86,7 +86,7 @@ export const GOLDEN_STEPPE_ENEMIES = [
     tags: ['golden_steppe'],
   },
   {
-    name: t('Radiant Lion'),
+    name: t('enemy.radiantLion'),
 
     image: '/enemies/radiant-lion.jpg',
     tier: tier,

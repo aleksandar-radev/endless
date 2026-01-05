@@ -1,5 +1,23 @@
 export default {
-// Counters bar / offline eligibility
+  // Rarities
+  NORMAL: 'Normal',
+  MAGIC: 'Magic',
+  RARE: 'Rare',
+  EPIC: 'Epic',
+  LEGENDARY: 'Legendary',
+  UNIQUE: 'Unique',
+  SET: 'Set',
+  MYTHIC: 'Mythic',
+
+  // Elements
+  fire: 'Fire',
+  cold: 'Cold',
+  air: 'Air',
+  earth: 'Earth',
+  lightning: 'Lightning',
+  water: 'Water',
+
+  // Counters bar / offline eligibility
   'counters.offline': 'Offline',
   'Enchanted Forest': 'Enchanted Forest',
   'Crystal Cave': 'Crystal Cave',
@@ -27,12 +45,6 @@ export default {
   armorPercent: 'Armor %',
   evasion: 'Evasion',
   evasionPercent: 'Evasion %',
-  fire: 'Fire',
-  cold: 'Cold',
-  air: 'Air',
-  earth: 'Earth',
-  lightning: 'Lightning',
-  water: 'Water',
   strength: 'Strength',
   strengthPercent: 'Strength %',
   agility: 'Agility',
@@ -109,14 +121,6 @@ export default {
   'skill.drainingTouch.name': 'Draining Touch',
   // Item subtypes - adjectives only
   'items.subtypes.shortSword': 'Short',
-  'Void Harbinger': 'Void Harbinger',
-  'Ember Sovereign': 'Ember Sovereign',
-  'Tempest Titan': 'Tempest Titan',
-  'Sandstorm Emperor': 'Sandstorm Emperor',
-  'Radiant Phoenix': 'Radiant Phoenix',
-  'Abyssal Leviathan': 'Abyssal Leviathan',
-  'Arcane Overseer': 'Arcane Overseer',
-  'Glacial Tyrant': 'Glacial Tyrant',
   'statistics.bossesDefeated': 'Bosses Defeated: {value}',
   'statistics.deaths': 'Deaths: {value}',
   'statistics.highestBossLevel': 'Highest Boss Level: {value}',
@@ -189,8 +193,6 @@ export default {
   'stats.mana regeneration': 'Mana Regeneration',
   'stats.life regeneration': 'Life Regeneration',
   // Rogue Specializations
-  Vanish: 'Vanish',
-  Assassinate: 'Assassinate',
   'Shadow Clone': 'Shadow Clone',
   'Shadow Magic': 'Shadow Magic',
   'Animal Tracking': 'Animal Tracking',
@@ -201,16 +203,13 @@ export default {
   'Night Stalker Mastery': 'Night Stalker Mastery',
   'Blood Ritual': 'Blood Ritual',
   'Blood Potency': 'Blood Potency',
-  Hemorrhage: 'Hemorrhage',
   // Paladin Specializations
   'Shield Mastery': 'Shield Mastery',
-  Zeal: 'Zeal',
   'Divine Amulet': 'Divine Amulet',
   'Sacred Relic': 'Sacred Relic',
   'Unyielding Spirit': 'Unyielding Spirit',
   'Immortal Presence': 'Immortal Presence',
   // Berserker Specializations
-  Lacerate: 'Lacerate',
   'Fatal Blow': 'Fatal Blow',
   'Battle Command': 'Battle Command',
   "Warlord's Authority": "Warlord's Authority",
@@ -218,10 +217,8 @@ export default {
   'Giant Slayer': 'Giant Slayer',
   // Elementalist Specializations
   'Searing Heat': 'Searing Heat',
-  Combustion: 'Combustion',
   'Arc Discharge': 'Arc Discharge',
   'Static Shock': 'Static Shock',
-  Permafrost: 'Permafrost',
   'Ice Barrier': 'Ice Barrier',
   // Druid Specializations
 

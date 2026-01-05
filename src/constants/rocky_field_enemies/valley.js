@@ -5,7 +5,7 @@ export const ROCKY_FIELD_VALLEY_ENEMIES = [
   {
     id: 'valley_sentinel',
     get name() {
-      return t('Valley Sentinel');
+      return t('enemy.valleySentinel');
     },
     image: '/enemies/valley-sentinel.jpg',
     multiplier: {

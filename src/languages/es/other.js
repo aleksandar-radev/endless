@@ -1,5 +1,23 @@
 export default {
-// Logros
+  // Rarities
+  NORMAL: 'Normal',
+  MAGIC: 'Mágico',
+  RARE: 'Raro',
+  EPIC: 'Épico',
+  LEGENDARY: 'Legendario',
+  UNIQUE: 'Único',
+  SET: 'Set',
+  MYTHIC: 'Mítico',
+
+  // Elements
+  fire: 'Fuego',
+  cold: 'Frío',
+  air: 'Aire',
+  earth: 'Tierra',
+  lightning: 'Rayo',
+  water: 'Agua',
+
+  // Logros
   // Reach Level 50
   'achievements.data.reach_level_50.title': 'Héroe Experimentado',
   // One Shot Kill
@@ -36,12 +54,6 @@ export default {
   armorPercent: 'Armadura %',
   evasion: 'Evasión',
   evasionPercent: 'Evasión %',
-  fire: 'Fuego',
-  cold: 'Frío',
-  air: 'Aire',
-  earth: 'Tierra',
-  lightning: 'Rayo',
-  water: 'Agua',
   strength: 'Fuerza',
   strengthPercent: 'Fuerza %',
   agility: 'Agilidad',
@@ -117,14 +129,6 @@ export default {
     'Reasigna el valor de una estadística elegida en un objeto equipado.',
   // Item subtypes - adjectives only (Spanish grammar: adjective after noun)
   'items.subtypes.shortSword': 'Corta',
-  'Void Harbinger': 'Heraldo del Vacío',
-  'Ember Sovereign': 'Soberano Ascua',
-  'Tempest Titan': 'Titán de la Tempestad',
-  'Sandstorm Emperor': 'Emperador de la Tormenta de Arena',
-  'Radiant Phoenix': 'Fénix Radiante',
-  'Abyssal Leviathan': 'Leviatán Abismal',
-  'Arcane Overseer': 'Supervisor Arcano',
-  'Glacial Tyrant': 'Tirano Glacial',
   'statistics.bossesDefeated': 'Jefes derrotados: {value}',
   'statistics.deaths': 'Muertes: {value}',
   'statistics.highestBossLevel': 'Nivel de jefe más alto: {value}',
@@ -198,8 +202,6 @@ export default {
   'stats.mana regeneration': 'Regeneración de Maná',
   'stats.life regeneration': 'Regeneración de Vida',
   // Rogue Specializations
-  Vanish: 'Desvanecer',
-  Assassinate: 'Asesinar',
   'Shadow Clone': 'Clon de Sombra',
   'Shadow Magic': 'Magia de las Sombras',
   'Animal Tracking': 'Rastreo Animal',
@@ -210,16 +212,13 @@ export default {
   'Night Stalker Mastery': 'Maestría de Acechador Nocturno',
   'Blood Ritual': 'Ritual de Sangre',
   'Blood Potency': 'Potencia de Sangre',
-  Hemorrhage: 'Hemorragia',
   // Paladin Specializations
   'Shield Mastery': 'Maestría con Escudo',
-  Zeal: 'Celo',
   'Divine Amulet': 'Amuleto Divino',
   'Sacred Relic': 'Reliquia Sagrada',
   'Unyielding Spirit': 'Espíritu Inquebrantable',
   'Immortal Presence': 'Presencia Inmortal',
   // Berserker Specializations
-  Lacerate: 'Lacerar',
   'Fatal Blow': 'Golpe Mortal',
   'Battle Command': 'Orden de Batalla',
   "Warlord's Authority": 'Autoridad del Señor de la Guerra',
@@ -227,10 +226,8 @@ export default {
   'Giant Slayer': 'Matagigantes',
   // Elementalist Specializations
   'Searing Heat': 'Calor Abrasador',
-  Combustion: 'Combustión',
   'Arc Discharge': 'Descarga de Arco',
   'Static Shock': 'Choque Estático',
-  Permafrost: 'Escarcha Perpetua',
   'Ice Barrier': 'Barrera de Hielo',
   // Druid Specializations
 

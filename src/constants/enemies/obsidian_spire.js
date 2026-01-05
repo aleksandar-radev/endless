@@ -4,7 +4,7 @@ const tier = 12;
 
 export const OBSIDIAN_SPIRE_ENEMIES = [
   {
-    name: t('Void Sentinel'),
+    name: t('enemy.voidSentinel'),
 
     image: '/enemies/void-sentinel.jpg',
     tier: tier,
@@ -33,7 +33,7 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
     tags: ['obsidian_spire'],
   },
   {
-    name: t('Obsidian Golem'),
+    name: t('enemy.obsidianGolem'),
 
     image: '/enemies/obsidian-golem.jpg',
     tier: tier,
@@ -63,7 +63,7 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
     tags: ['obsidian_spire'],
   },
   {
-    name: t('Crimson Wisp'),
+    name: t('enemy.crimsonWisp'),
 
     image: '/enemies/crimson-wisp.jpg',
     tier: tier,
@@ -91,7 +91,7 @@ export const OBSIDIAN_SPIRE_ENEMIES = [
     tags: ['obsidian_spire'],
   },
   {
-    name: t('Flame Djinn'),
+    name: t('enemy.flameDjinn'),
 
     image: '/enemies/flame-djinn.jpg',
     tier: tier,

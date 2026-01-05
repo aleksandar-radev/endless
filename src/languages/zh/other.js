@@ -1,5 +1,23 @@
 export default {
-// Counters bar / offline eligibility
+  // Rarities
+  NORMAL: '普通',
+  MAGIC: '魔法',
+  RARE: '稀有',
+  EPIC: '史诗',
+  LEGENDARY: '传奇',
+  UNIQUE: '唯一',
+  SET: '套装',
+  MYTHIC: '神话',
+
+  // Elements
+  fire: '火',
+  cold: '冰',
+  air: '风',
+  earth: '土',
+  lightning: '雷',
+  water: '水',
+
+  // Counters bar / offline eligibility
   'counters.offline': '离线',
   // 成就
   // Reach Level 50
@@ -38,12 +56,6 @@ export default {
   armorPercent: '护甲 %',
   evasion: '闪避',
   evasionPercent: '闪避 %',
-  fire: '火',
-  cold: '冰',
-  air: '风',
-  earth: '土',
-  lightning: '雷',
-  water: '水',
   strength: '力量',
   strengthPercent: '力量 %',
   agility: '敏捷',
@@ -118,14 +130,6 @@ export default {
   'Re-rolls the value of one chosen stat on an equipped item.': '重新随机已装备物品的一项指定属性值。',
   // Item subtypes - Chinese names (adjective before noun in Chinese)
   'items.subtypes.shortSword': '短',
-  'Void Harbinger': '虚空先驱',
-  'Ember Sovereign': '余烬君主',
-  'Tempest Titan': '风暴泰坦',
-  'Sandstorm Emperor': '沙暴帝君',
-  'Radiant Phoenix': '辉耀凤凰',
-  'Abyssal Leviathan': '深渊利维坦',
-  'Arcane Overseer': '奥术监护者',
-  'Glacial Tyrant': '冰霜暴君',
   'statistics.bossesDefeated': '击败首领：{value}',
   'statistics.deaths': '死亡次数：{value}',
   'statistics.highestBossLevel': '最高首领等级：{value}',
@@ -198,8 +202,6 @@ export default {
   'stats.mana regeneration': '法力回复',
   'stats.life regeneration': '生命回复',
   // Rogue Specializations
-  Vanish: '消失',
-  Assassinate: '暗杀',
   'Shadow Clone': '影子分身',
   'Shadow Magic': '暗影魔法',
   'Animal Tracking': '动物追踪',
@@ -210,16 +212,13 @@ export default {
   'Night Stalker Mastery': '夜行者精通',
   'Blood Ritual': '鲜血仪式',
   'Blood Potency': '鲜血潜能',
-  Hemorrhage: '大出血',
   // Paladin Specializations
   'Shield Mastery': '盾牌精通',
-  Zeal: '狂热',
   'Divine Amulet': '神圣护身符',
   'Sacred Relic': '圣物',
   'Unyielding Spirit': '不屈精神',
   'Immortal Presence': '不朽存在',
   // Berserker Specializations
-  Lacerate: '撕裂',
   'Fatal Blow': '致命一击',
   'Battle Command': '战斗指挥',
   "Warlord's Authority": '督军权威',
@@ -227,10 +226,8 @@ export default {
   'Giant Slayer': '巨人杀手',
   // Elementalist Specializations
   'Searing Heat': '灼热',
-  Combustion: '燃烧',
   'Arc Discharge': '电弧放电',
   'Static Shock': '静电冲击',
-  Permafrost: '永冻',
   'Ice Barrier': '寒冰护盾',
   // Druid Specializations
 

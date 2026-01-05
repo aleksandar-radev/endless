@@ -465,4 +465,17 @@ export default {
   'skillTree.passivesUnlocked': 'Pasivas Desbloqueadas',
   'skillTree.selectClass': 'Seleccionar Clase',
   'skillTree.selectSpec': 'Seleccionar',
-  'skillTree.availableSpecializations': 'Especializaciones Disponibles',};
+  'skillTree.availableSpecializations': 'Especializaciones Disponibles',
+
+  // Specialization skill names
+  'skill.vanish.name': 'Desvanecer',
+  'skill.assassinate.name': 'Asesinar',
+  'skill.hemorrhage.name': 'Hemorragia',
+  'skill.zeal.name': 'Celo',
+  'skill.lacerate.name': 'Lacerar',
+  'skill.combustion.name': 'Combustión',
+  'skill.permafrost.name': 'Escarcha Perpetua',
+
+  // Missing translation key
+  'skillTree.specializationSkillsRefunded': '¡Habilidades de especialización reembolsadas! {points} puntos devueltos.',
+};
