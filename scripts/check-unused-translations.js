@@ -25,8 +25,8 @@ const __dirname = path.dirname(__filename);
 
 const DEFAULT_CONFIG = {
   languagesDir: 'src/languages',
-  languageFiles: ['en.js', 'es.js', 'zh.js'],
-  referenceLanguageFile: 'en.js',
+  languageFolders: ['en', 'es', 'zh'],
+  referenceLanguageFolder: 'en',
   scan: [{ dir: 'src', exts: ['.js'] }, { file: 'index.html' }],
   ignoreKeys: [],
   // Regex strings. Example: '^stats\\.'
@@ -74,15 +74,28 @@ function parseArgs(argv) {
   return args;
 }
 
-function extractTranslationKeysFromLanguageFile(content) {
-  // Matches lines like:   'some.key': 'Value',  or  "some.key": ...
-  // This intentionally mirrors the existing check-translations.js behavior but supports "..." too.
-  const keyRegex = /^\s+['\"]([^'\"]+)['\"]\s*:/gm;
+function extractTranslationKeysFromLanguageFolder(langDir) {
+  // Read all .js files in the language folder
   const keys = [];
-  let match;
-  while ((match = keyRegex.exec(content)) !== null) {
-    keys.push(match[1]);
+  
+  if (!fs.existsSync(langDir)) {
+    return keys;
   }
+  
+  const files = fs.readdirSync(langDir).filter(f => f.endsWith('.js'));
+  
+  for (const file of files) {
+    const filePath = path.join(langDir, file);
+    const content = fs.readFileSync(filePath, 'utf-8');
+    
+    // Matches lines like:   'some.key': 'Value',  or  "some.key": ...
+    const keyRegex = /^\s+['\"]([^'\"]+)['\"]\s*:/gm;
+    let match;
+    while ((match = keyRegex.exec(content)) !== null) {
+      keys.push(match[1]);
+    }
+  }
+  
   return keys;
 }
 
@@ -150,7 +163,6 @@ function extractUsedKeysFromContent(content, allKeys) {
         while (i < src.length) {
           const c = src[i];
           if (escaped) {
-            // Keep escaped chars as-is; translation keys rarely rely on escapes.
             buf += c;
             escaped = false;
             i += 1;
@@ -165,7 +177,6 @@ function extractUsedKeysFromContent(content, allKeys) {
             i += 1;
             break;
           }
-          // Avoid multiline literals; stop if line breaks appear.
           if (c === '\n' || c === '\r') {
             break;
           }
@@ -177,7 +188,6 @@ function extractUsedKeysFromContent(content, allKeys) {
       }
 
       if (ch === '`') {
-        // Template literal: only treat as static if it has no ${...}
         i += 1;
         let buf = '';
         let escaped = false;
@@ -294,11 +304,11 @@ function main() {
   const config = { ...DEFAULT_CONFIG, ...(fileConfig || {}) };
 
   const languagesDirAbs = path.resolve(repoRoot, config.languagesDir);
-  const referenceFile = config.referenceLanguageFile || config.languageFiles?.[0];
-  const referenceAbs = path.resolve(languagesDirAbs, referenceFile);
+  const referenceFolder = config.referenceLanguageFolder || config.languageFolders?.[0];
+  const referenceAbs = path.resolve(languagesDirAbs, referenceFolder);
 
-  if (!referenceFile || !fs.existsSync(referenceAbs)) {
-    const msg = `Reference language file not found: ${rel(repoRoot, referenceAbs)}`;
+  if (!referenceFolder || !fs.existsSync(referenceAbs)) {
+    const msg = `Reference language folder not found: ${rel(repoRoot, referenceAbs)}`;
     if (args.json) {
       console.log(JSON.stringify({ ok: false, error: msg }, null, 2));
     } else {
@@ -307,8 +317,7 @@ function main() {
     process.exit(1);
   }
 
-  const referenceContent = fs.readFileSync(referenceAbs, 'utf-8');
-  const allKeysList = extractTranslationKeysFromLanguageFile(referenceContent);
+  const allKeysList = extractTranslationKeysFromLanguageFolder(referenceAbs);
   const allKeys = new Set(allKeysList);
 
   const scanFilesAll = collectScanFiles(repoRoot, config.scan || DEFAULT_CONFIG.scan);
@@ -348,7 +357,7 @@ function main() {
   const result = {
     ok: missingKeys.length === 0 && potentiallyUnused.length === 0,
     configPath: configPath ? rel(repoRoot, configPath) : null,
-    referenceLanguageFile: rel(repoRoot, referenceAbs),
+    referenceLanguageFolder: rel(repoRoot, referenceAbs),
     counts: {
       totalKeysInReference: allKeys.size,
       staticallyDetectedUsedKeys: usedKeys.size,
@@ -376,7 +385,7 @@ function main() {
   } else {
     console.log('Checking translation key usage (static scan)...');
     if (result.configPath) console.log(`Config: ${result.configPath}`);
-    console.log(`Reference: ${result.referenceLanguageFile}`);
+    console.log(`Reference: ${result.referenceLanguageFolder}`);
     console.log('='.repeat(80));
     console.log(`Scanned files: ${result.counts.scannedFiles}`);
     console.log(`Keys in reference: ${result.counts.totalKeysInReference}`);

@@ -11,11 +11,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const LANGUAGES_DIR = path.join(__dirname, '..', 'src', 'languages');
-const LANGUAGE_FILES = ['en.js', 'es.js', 'zh.js'];
+const LANGUAGE_CODES = ['en', 'es', 'zh'];
 
 // Extract keys from a language file content
 function extractKeys(content) {
-  const keyRegex = /^\s+'([^']+)':/gm;
+  const keyRegex = /^\s+['"]([^'"]+)['"]:/gm;
   const keys = [];
   let match;
 
@@ -26,20 +26,33 @@ function extractKeys(content) {
   return keys;
 }
 
-// Read and parse language file
-function readLanguageFile(filename) {
-  const filePath = path.join(LANGUAGES_DIR, filename);
-
-  if (!fs.existsSync(filePath)) {
-    console.error(`Error: File ${filename} not found at ${filePath}`);
+// Read all translation files from a language folder
+function readLanguageFiles(langCode) {
+  const langDir = path.join(LANGUAGES_DIR, langCode);
+  
+  if (!fs.existsSync(langDir)) {
+    console.error(`Error: Language directory ${langCode}/ not found`);
     return null;
   }
 
-  const content = fs.readFileSync(filePath, 'utf-8');
-  const keys = extractKeys(content);
+  const stat = fs.statSync(langDir);
+  if (!stat.isDirectory()) {
+    console.error(`Error: ${langCode} is not a directory`);
+    return null;
+  }
+
+  const allKeys = [];
+  const files = fs.readdirSync(langDir).filter(f => f.endsWith('.js'));
+  
+  for (const file of files) {
+    const filePath = path.join(langDir, file);
+    const content = fs.readFileSync(filePath, 'utf-8');
+    const keys = extractKeys(content);
+    allKeys.push(...keys);
+  }
 
   // Find duplicate keys
-  const duplicates = keys.reduce((acc, key) => {
+  const duplicates = allKeys.reduce((acc, key) => {
     acc[key] = (acc[key] || 0) + 1;
     return acc;
   }, {});
@@ -49,9 +62,9 @@ function readLanguageFile(filename) {
     .map(([key, count]) => ({ key, count }));
 
   return {
-    filename,
-    keys,
-    keySet: new Set(keys),
+    filename: `${langCode}/`,
+    keys: allKeys,
+    keySet: new Set(allKeys),
     duplicates: duplicateKeys,
   };
 }
@@ -62,7 +75,7 @@ function checkTranslations() {
   console.log('='.repeat(80));
 
   // Read all language files
-  const languages = LANGUAGE_FILES.map(readLanguageFile).filter(Boolean);
+  const languages = LANGUAGE_CODES.map(readLanguageFiles).filter(Boolean);
 
   if (languages.length === 0) {
     console.error('No language files found!');
