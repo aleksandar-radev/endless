@@ -216,6 +216,7 @@ export default {
   'tooltip.itemQuantityPercent': '提升敌人掉落物品的几率。',
   'tooltip.materialQuantityPercent': '增加掉落材料的数量。',
   'tooltip.itemRarityPercent': '提升掉落物品稀有度的几率。',
+  'tooltip.enemyRarityPercent': '提高遇到更高稀有度敌人的几率，因此降低遇到普通稀有度敌人的几率。',
   'tooltip.skillPoints': '从材料获得的永久技能点。',
   'tooltip.allAttributes': '为所有属性增加点数。',
   'tooltip.allAttributesPercent': '按百分比提高所有属性。',

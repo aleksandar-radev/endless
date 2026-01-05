@@ -208,6 +208,7 @@ export default {
   'tooltip.itemQuantityPercent': 'Aumenta la probabilidad de que los enemigos suelten objetos.',
   'tooltip.materialQuantityPercent': 'Aumenta la cantidad de materiales que caen.',
   'tooltip.itemRarityPercent': 'Aumenta la probabilidad de que los objetos caídos sean de mayor rareza.',
+  'tooltip.enemyRarityPercent': 'Aumenta la probabilidad de encontrar enemigos de mayor rareza y, por lo tanto, reduce la probabilidad de enemigos de rareza normal.',
   'tooltip.skillPoints': 'Puntos de habilidad permanentes obtenidos de materiales.',
   'tooltip.allAttributes': 'Añade puntos a todos los atributos.',
   'tooltip.allAttributesPercent': 'Incrementa todos los atributos en un porcentaje.',

@@ -223,6 +223,7 @@ export default {
   'tooltip.itemQuantityPercent': 'Increases the chance of enemies dropping items.',
   'tooltip.materialQuantityPercent': 'Increases the amount of materials that drop.',
   'tooltip.itemRarityPercent': 'Increases the chance of dropped items being higher rarity.',
+  'tooltip.enemyRarityPercent': 'Increases the chance to encounter higher rarity enemies and therefore lowers the chance for Normal rarity enemies.',
   'tooltip.skillPoints': 'Permanent skill points earned from materials.',
   'tooltip.allAttributes': 'Adds points to all attributes.',
   'tooltip.allAttributesPercent': 'Increases all attributes by a percentage.',
