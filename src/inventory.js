@@ -295,8 +295,8 @@ export default class Inventory {
           return `
         <div class="upgrade-item-row" data-slot="${slot}" data-idx="${idx}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
           <span style="font-size:1.5em;">${item.getIcon()}</span>
-          <span><b>${item.type}</b> (Lvl ${item.level})</span>
-          <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
+          <span><b>${t(item.type)}</b> (Lvl ${item.level})</span>
+          <span style="color:${ITEM_RARITY[item.rarity].color};">${t(`rarity.${item.rarity.toLowerCase()}`)}</span>
           <input type="number" class="upgrade-qty-input" data-idx="${idx}" min="1" max="${getMaxUpgradeForItem(item)}" value="1" aria-label="${t('inventory.upgradeQuantity')}" />
           <button class="upgrade-max-btn" data-slot="${slot}" data-idx="${idx}">${t('options.max')}</button>
           <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">${t('inventory.upgradeAction')}</button>
@@ -322,7 +322,7 @@ export default class Inventory {
           item.applyLevelToStats(oldLevel + useQty);
           const matsUsed = useQty * item.tier;
           const toastMsg = tp('inventory.upgradedItemToast', {
-            item: item.type,
+            item: t(item.type),
             from: oldLevel,
             to: item.level,
           });
@@ -382,7 +382,7 @@ export default class Inventory {
               item.applyLevelToStats(oldLevel + maxUpgrade);
               const matsUsed = maxUpgrade * item.tier;
               const toastMsg = tp('inventory.upgradedItemToast', {
-                item: item.type,
+                item: t(item.type),
                 from: oldLevel,
                 to: item.level,
               });
@@ -421,8 +421,8 @@ export default class Inventory {
         itemRowHtml: ({ slot, item }, idx) => `
         <div class="upgrade-item-row" data-slot="${slot}" data-idx="${idx}" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
           <span style="font-size:1.5em;">${item.getIcon()}</span>
-          <span><b>${item.type}</b> (Lvl ${item.level})</span>
-          <span class="item-rarity" data-rarity="${item.rarity}" style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
+          <span><b>${t(item.type)}</b> (Lvl ${item.level})</span>
+          <span class="item-rarity" data-rarity="${item.rarity}" style="color:${ITEM_RARITY[item.rarity].color};">${t(`rarity.${item.rarity.toLowerCase()}`)}</span>
           <button class="upgrade-btn" data-slot="${slot}" data-idx="${idx}">${t('inventory.enchantAction')}</button>
         </div>`,
         buttonClass: 'upgrade-btn',
@@ -442,7 +442,7 @@ export default class Inventory {
           }
           const rarityName = t(`rarity.${item.rarity.toLowerCase()}`);
           const toastMsg = tp('inventory.enchantedItemToast', {
-            item: item.type,
+            item: t(item.type),
             rarity: rarityName,
           });
           this.handleMaterialUsed(this, mat, matDef, 1, 'material-enchant-dialog', toastMsg, false);
@@ -459,7 +459,7 @@ export default class Inventory {
           if (row) {
             const raritySpan = row.querySelector('.item-rarity');
             if (raritySpan) {
-              raritySpan.textContent = item.rarity;
+              raritySpan.textContent = t(`rarity.${item.rarity.toLowerCase()}`);
               raritySpan.dataset.rarity = item.rarity;
               raritySpan.style.color = ITEM_RARITY[item.rarity].color;
             }
@@ -492,8 +492,8 @@ export default class Inventory {
           ({ slot, item }, idx) => `
         <div class="transmutation-item" data-slot="${slot}" data-idx="${idx}">
           <span class="alternation-icon">${item.getIcon()}</span>
-          <span><b>${item.type}</b> (Lvl ${item.level})</span>
-          <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
+          <span><b>${t(item.type)}</b> (Lvl ${item.level})</span>
+          <span style="color:${ITEM_RARITY[item.rarity].color};">${t(`rarity.${item.rarity.toLowerCase()}`)}</span>
         </div>`,
         )
         .join('');
@@ -544,7 +544,7 @@ export default class Inventory {
         } catch (e) {}
         let statMinMax = {};
         if (showAdvanced) {
-          statMinMax = item.getAllStatsMinMax();
+          statMinMax = item.getAllStatsRanges();
         }
         let statsHtml;
         if (statsKeys.length === 0) {
@@ -610,10 +610,11 @@ export default class Inventory {
             const orderIndex = statOrder.indexOf(statToChange);
             delete item.stats[statToChange];
             if (item.metaData) {
+              if (item.metaData.baseStats) {
+                delete item.metaData.baseStats[statToChange];
+              }
               if (item.metaData.statRolls) {
                 delete item.metaData.statRolls[statToChange];
-              } else {
-                delete item.metaData[statToChange];
               }
             }
             const newStat = item.addRandomStat(statToChange);
@@ -627,12 +628,12 @@ export default class Inventory {
               msg = tp('inventory.transmutedStatToast', {
                 oldStat: formatStatName(statToChange),
                 newStat: formatStatName(newStat),
-                item: item.type,
+                item: t(item.type),
               });
             } else {
               msg = tp('inventory.transmutedStatRemovedToast', {
                 stat: formatStatName(statToChange),
-                item: item.type,
+                item: t(item.type),
               });
             }
             this.handleMaterialUsed(this, mat, matDef, 1, 'material-transmute-dialog', msg, false);
@@ -672,8 +673,8 @@ export default class Inventory {
           ({ slot, item }, idx) => `
         <div class="alternation-item" data-slot="${slot}" data-idx="${idx}">
           <span class="alternation-icon">${item.getIcon()}</span>
-          <span><b>${item.type}</b> (Lvl ${item.level})</span>
-          <span style="color:${ITEM_RARITY[item.rarity].color};">${item.rarity}</span>
+          <span><b>${t(item.type)}</b> (Lvl ${item.level})</span>
+          <span style="color:${ITEM_RARITY[item.rarity].color};">${t(`rarity.${item.rarity.toLowerCase()}`)}</span>
         </div>`,
         )
         .join('');
@@ -714,10 +715,7 @@ export default class Inventory {
         try {
           if (options.showAdvancedTooltips) showAdvanced = true;
         } catch (e) {}
-        let statMinMax = {};
-        if (showAdvanced) {
-          statMinMax = item.getAllStatsMinMax();
-        }
+        const statMinMax = item.getAllStatsRanges();
         let statsHtml;
         if (statsEntries.length === 0) {
           statsHtml = `<div>${t('inventory.noStatsToReroll')}</div>`;
@@ -727,9 +725,9 @@ export default class Inventory {
               const statDef = STATS[stat] || {};
               const decimals = getStatDecimalPlaces(stat);
               const formattedValue = value.toFixed(decimals);
-              const { max: maxRoll } = item.getStatRange(stat);
+              const maxRoll = statMinMax[stat]?.max;
               let isMaxRoll = false;
-              if (Number.isFinite(maxRoll)) {
+              if (maxRoll !== undefined && Number.isFinite(maxRoll)) {
                 const normalizedMax = Number(maxRoll.toFixed(decimals));
                 const normalizedValue = Number(formattedValue);
                 isMaxRoll = normalizedValue >= normalizedMax;
@@ -785,39 +783,14 @@ export default class Inventory {
           btn.onclick = (e) => {
             if (mat.qty <= 0) return;
             const statToReroll = e.currentTarget.dataset.stat;
-            const range = AVAILABLE_STATS[statToReroll];
-            const baseValue = Math.random() * (range.max - range.min) + range.min;
-            const multiplier = item.getMultiplier();
-            const scale = item.getLevelScale(statToReroll, item.level);
-            item.stats[statToReroll] = item.calculateStatValue({
-              baseValue,
-              multiplier,
-              scale,
-              stat: statToReroll,
-            });
-            if (!item.metaData) item.metaData = {};
-            if (!item.metaData.statRolls) item.metaData.statRolls = {};
-            item.metaData.statRolls[statToReroll] = {
-              ...(item.metaData.statRolls[statToReroll] || {}),
-              baseValue,
-            };
+            item.stats[statToReroll] = item.scaleStat({ stat: statToReroll });
             const toastMsg = tp('inventory.rerolledStatToast', {
               stat: formatStatName(statToReroll),
-              item: item.type,
+              item: t(item.type),
             });
             this.handleMaterialUsed(this, mat, matDef, 1, 'material-reroll-dialog', toastMsg, false);
             dialog.querySelector('.material-qty').textContent = mat.qty;
             renderSelected(idx);
-            const postRollRange = item.getStatRange(statToReroll);
-            if (postRollRange && Number.isFinite(postRollRange.max)) {
-              const decimals = getStatDecimalPlaces(statToReroll);
-              const maxValue = Number(postRollRange.max.toFixed(decimals));
-              const normalized = Number(item.stats[statToReroll].toFixed(decimals));
-              if (normalized >= maxValue) {
-                e.currentTarget.disabled = true;
-                e.currentTarget.title = t('inventory.maxRollLockedTooltip');
-              }
-            }
             if (mat.qty <= 0) {
               dialog.querySelectorAll('.reroll-btn').forEach((b) => {
                 b.disabled = true;

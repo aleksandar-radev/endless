@@ -113,6 +113,7 @@ export default {
   'items.set.wardensBulwark.bonus4': '4 件：不破防线',
   'item.level': '等级',
   'item.tier': '阶级',
+  'item.equipped': '(已装备)',
   'item.oneHanded': '单手',
   'item.twoHanded': '双手',
   'item.tag.unique': '唯一',

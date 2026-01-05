@@ -115,6 +115,7 @@ export default {
   'items.set.wardensBulwark.bonus4': '4 Set: Unbreakable Stand',
   'item.level': 'Level',
   'item.tier': 'Tier',
+  'item.equipped': '(Equipped)',
   'item.oneHanded': 'One-Handed',
   'item.twoHanded': 'Two-Handed',
   'item.tag.unique': 'Unique',

@@ -116,6 +116,7 @@ export default {
   'items.set.wardensBulwark.bonus4': 'Conjunto 4: Posición Inquebrantable',
   'item.level': 'Nivel',
   'item.tier': 'Rango',
+  'item.equipped': '(Equipado)',
   'item.oneHanded': 'De una mano',
   'item.twoHanded': 'A dos manos',
   'item.tag.unique': 'Único',
