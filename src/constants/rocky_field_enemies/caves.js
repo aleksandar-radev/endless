@@ -4,9 +4,7 @@ import { ROCKY_FIELD_ALL_RUNES } from '../rocky_field_runes.js';
 export const ROCKY_FIELD_CAVES_ENEMIES = [
   {
     id: 'cave_stalker',
-    get name() {
-      return t('enemy.caveStalker');
-    },
+    nameKey: 'enemy.caveStalker',
     image: '/enemies/cave-stalker.jpg',
     multiplier: {
       life: 1,

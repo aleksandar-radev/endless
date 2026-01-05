@@ -324,7 +324,7 @@ export class RockyFieldEnemy extends EnemyBase {
     }
     this.baseData = baseData;
 
-    this.name = baseData.name;
+    this.nameKey = baseData.nameKey || baseData.name;
     this.image = baseData.image;
     this.special = Array.isArray(baseData.special) ? [...baseData.special] : [];
     this.specialData = { ...(baseData.specialData || {}) };

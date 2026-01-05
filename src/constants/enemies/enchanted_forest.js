@@ -4,9 +4,7 @@ const tier = 1;
 
 export const FOREST_ENEMIES = [
   {
-    get name() {
-      return t('enemy.mossback');
-    },
+    nameKey: 'enemy.mossback',
 
     image: '/enemies/mossback.jpg',
     tier: tier,
@@ -35,9 +33,7 @@ export const FOREST_ENEMIES = [
     tags: ['enchanted_forest'],
   },
   {
-    get name() {
-      return t('enemy.thornling');
-    },
+    nameKey: 'enemy.thornling',
 
     image: '/enemies/thornling.jpg',
     tier: tier,
@@ -65,9 +61,7 @@ export const FOREST_ENEMIES = [
     tags: ['enchanted_forest'],
   },
   {
-    get name() {
-      return t('enemy.barkhide');
-    },
+    nameKey: 'enemy.barkhide',
 
     image: '/enemies/barkhide.jpg',
     tier: tier,
@@ -95,9 +89,7 @@ export const FOREST_ENEMIES = [
     tags: ['enchanted_forest'],
   },
   {
-    get name() {
-      return t('enemy.sylvanWisp');
-    },
+    nameKey: 'enemy.sylvanWisp',
 
     image: '/enemies/sylvan-wisp.jpg',
     tier: tier,

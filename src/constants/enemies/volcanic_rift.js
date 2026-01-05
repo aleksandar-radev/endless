@@ -4,7 +4,7 @@ const tier = 8;
 
 export const VOLCANIC_RIFT_ENEMIES = [
   {
-    name: t('enemy.magmaTitan'),
+    nameKey: 'enemy.magmaTitan',
     image: '/enemies/magma-titan.jpg',
     tier: tier,
 
@@ -34,7 +34,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
     tags: ['volcanic_rift'],
   },
   {
-    name: t('enemy.lavaElemental'),
+    nameKey: 'enemy.lavaElemental',
     image: '/enemies/lava-elemental.jpg',
     tier: tier,
 
@@ -63,7 +63,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
     tags: ['volcanic_rift'],
   },
   {
-    name: t('enemy.wildfire'),
+    nameKey: 'enemy.wildfire',
     image: '/enemies/wildfire-spirit.jpg',
     tier: tier,
 
@@ -90,7 +90,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
     tags: ['volcanic_rift'],
   },
   {
-    name: t('enemy.moltenWyrm'),
+    nameKey: 'enemy.moltenWyrm',
     image: '/enemies/molten-wyrm.jpg',
     tier: tier,
 
@@ -116,7 +116,7 @@ export const VOLCANIC_RIFT_ENEMIES = [
     tags: ['volcanic_rift'],
   },
   {
-    name: t('enemy.thunderwing'),
+    nameKey: 'enemy.thunderwing',
     image: '/enemies/thunderwing.jpg',
     tier: tier,
 

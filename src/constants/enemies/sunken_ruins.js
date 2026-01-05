@@ -4,7 +4,7 @@ const tier = 9;
 
 export const SUNKEN_RUINS_ENEMIES = [
   {
-    name: t('enemy.tideGuardian'),
+    nameKey: 'enemy.tideGuardian',
 
     image: '/enemies/tide-guardian.jpg',
     tier: tier,
@@ -37,7 +37,7 @@ export const SUNKEN_RUINS_ENEMIES = [
     tags: ['sunken_ruins'],
   },
   {
-    name: t('enemy.coralSentinel'),
+    nameKey: 'enemy.coralSentinel',
 
     image: '/enemies/coral-sentinel.jpg',
     tier: tier,
@@ -67,7 +67,7 @@ export const SUNKEN_RUINS_ENEMIES = [
     tags: ['sunken_ruins'],
   },
   {
-    name: t('enemy.depthsLeviathan'),
+    nameKey: 'enemy.depthsLeviathan',
 
     image: '/enemies/depths-leviathan.jpg',
     tier: tier,
@@ -97,7 +97,7 @@ export const SUNKEN_RUINS_ENEMIES = [
     tags: ['sunken_ruins'],
   },
   {
-    name: t('enemy.arcaneConstruct'),
+    nameKey: 'enemy.arcaneConstruct',
 
     image: '/enemies/arcane-construct.jpg',
     tier: tier,

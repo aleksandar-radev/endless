@@ -4,9 +4,7 @@ import { ROCKY_FIELD_COMMON_RUNES } from '../rocky_field_runes.js';
 export const ROCKY_FIELD_OUTSKIRTS_ENEMIES = [
   {
     id: 'stone_beetle',
-    get name() {
-      return t('enemy.stoneBeetle');
-    },
+    nameKey: 'enemy.stoneBeetle',
     image: '/enemies/stone-beetle.jpg',
     multiplier: {
       life: 1.1,

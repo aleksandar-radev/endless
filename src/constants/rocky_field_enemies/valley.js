@@ -4,9 +4,7 @@ import { ROCKY_FIELD_ALL_RUNES } from '../rocky_field_runes.js';
 export const ROCKY_FIELD_VALLEY_ENEMIES = [
   {
     id: 'valley_sentinel',
-    get name() {
-      return t('enemy.valleySentinel');
-    },
+    nameKey: 'enemy.valleySentinel',
     image: '/enemies/valley-sentinel.jpg',
     multiplier: {
       life: 1.4,

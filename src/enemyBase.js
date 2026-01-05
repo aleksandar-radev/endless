@@ -4,12 +4,21 @@
  */
 import { game } from './globals.js';
 import { AILMENTS } from './constants/ailments.js';
+import { t } from './i18n.js';
 
 class EnemyBase {
   constructor() {
     this.currentLife = 0;
     this.lastAttack = Date.now();
     this.ailments = {};
+  }
+
+  get name() {
+    return this.nameKey ? t(this.nameKey) : this._name;
+  }
+
+  set name(value) {
+    this._name = value;
   }
 
   /**

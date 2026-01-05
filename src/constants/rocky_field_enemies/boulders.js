@@ -4,9 +4,7 @@ import { ROCKY_FIELD_COMMON_RUNES } from '../rocky_field_runes.js';
 export const ROCKY_FIELD_BOULDERS_ENEMIES = [
   {
     id: 'pebble_golem',
-    get name() {
-      return t('enemy.pebbleGolem');
-    },
+    nameKey: 'enemy.pebbleGolem',
     image: '/enemies/pebble-golem.jpg',
     multiplier: {
       life: 1.4,

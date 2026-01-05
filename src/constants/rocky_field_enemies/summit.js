@@ -4,9 +4,7 @@ import { ROCKY_FIELD_ALL_RUNES } from '../rocky_field_runes.js';
 export const ROCKY_FIELD_SUMMIT_ENEMIES = [
   {
     id: 'rock_spirit',
-    get name() {
-      return t('enemy.rockSpirit');
-    },
+    nameKey: 'enemy.rockSpirit',
     image: '/enemies/rock-spirit.jpg',
     multiplier: {
       life: 1.5,

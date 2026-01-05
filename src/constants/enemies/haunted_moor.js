@@ -4,7 +4,7 @@ const tier = 10;
 
 export const HAUNTED_MOOR_ENEMIES = [
   {
-    name: t('enemy.banshee'),
+    nameKey: 'enemy.banshee',
 
     image: '/enemies/banshee.jpg',
     tier: tier,
@@ -34,7 +34,7 @@ export const HAUNTED_MOOR_ENEMIES = [
     tags: ['haunted_moor'],
   },
   {
-    name: t('enemy.phantom'),
+    nameKey: 'enemy.phantom',
 
     image: '/enemies/phantom.jpg',
     tier: tier,
@@ -60,7 +60,7 @@ export const HAUNTED_MOOR_ENEMIES = [
     tags: ['haunted_moor'],
   },
   {
-    name: t('enemy.wraithLord'),
+    nameKey: 'enemy.wraithLord',
 
     image: '/enemies/wraith-lord.jpg',
     tier: tier,
@@ -91,7 +91,7 @@ export const HAUNTED_MOOR_ENEMIES = [
     tags: ['haunted_moor'],
   },
   {
-    name: t('enemy.dreadfang'),
+    nameKey: 'enemy.dreadfang',
 
     image: '/enemies/dreadfang.jpg',
     tier: tier,

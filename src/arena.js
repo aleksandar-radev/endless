@@ -157,7 +157,7 @@ class Boss extends EnemyBase {
     const baseData = availableBosses[Math.floor(Math.random() * availableBosses.length)];
     this.baseData = baseData;
     this.id = baseData.id;
-    this.name = baseData.name;
+    this.nameKey = baseData.nameKey || baseData.name;
     this.image = baseData.image;
 
     this.baseScale = stat_increase(hero.bossLevel || 1);
