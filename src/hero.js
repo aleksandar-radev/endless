@@ -437,6 +437,7 @@ export default class Hero {
     // Assign calculated percentage bonuses to stats so they are available for UI and logic
     Object.assign(this.stats, finalPercentBonuses);
 
+    updatePlayerLife();
     updateStatsAndAttributesUI();
     dataManager.saveGame();
   }
@@ -691,37 +692,70 @@ export default class Hero {
     });
 
     for (const stat of STAT_KEYS) {
-      if (stat.endsWith('Percent')) continue;
+      let value;
+      if (!stat.endsWith('Percent')) {
+        // Use Math.floor for integer stats, Number.toFixed for decimals
+        if (stat === 'attackSpeed') {
+          // Attack speed percent bonuses scale the pre-percent total (base 1.0 plus flat additions).
+          const flatBase = flatValues.attackSpeed + (ascensionBonuses.attackSpeed || 0);
+          const attackSpeedPercent = percentBonuses.attackSpeedPercent || 0;
+          value = flatBase * (1 + attackSpeedPercent);
+        } else {
+          let percent = percentBonuses[stat + 'Percent'] || 0;
+          if (RESISTANCE_SET.has(stat)) {
+            percent += this.stats.allResistancePercent || 0;
+          }
 
-      let value = flatValues[stat] || 0;
+          if ((stat === 'armorPenetration' || stat === 'elementalPenetration') && this.stats.flatPenetrationPercent) {
+            percent += this.stats.flatPenetrationPercent;
+          }
 
-      // Update flatValues so downstream logic (Resource Damage) sees the full flat amount
-      flatValues[stat] = value;
-
-      // Apply Percent Multiplier
-      const percentStatKey = `${stat}Percent`;
-      let percentAdd = percentBonuses[percentStatKey] || 0;
-
-      if (Math.abs(percentAdd) > 1e-9) {
-        value *= (1 + percentAdd);
+          value = flatValues[stat] + (ascensionBonuses[stat] || 0);
+          if (percent) value *= 1 + percent;
+        }
+        if (stat === 'mana') {
+          value += (this.stats.manaPerLevel || 0) * (this.level - 1);
+        }
+      } else {
+        value = (percentBonuses[stat] || 0) * getDivisor(stat);
       }
+
+      // Apply decimal places
+      const decimals = getStatDecimalPlaces(stat);
+      value = decimals > 0 ? Number(value.toFixed(decimals)) : Math.floor(value);
+
+      // Apply caps
+      let cap = STATS[stat]?.cap;
+      if (stat === 'blockChance') {
+        const hasShield = Object.values(inventory.equippedItems).some((i) => i && i.type === 'SHIELD');
+        if (!hasShield) {
+          this.stats[stat] = 0;
+          continue;
+        }
+        cap = (cap || 50) + ((ascensionBonuses.blockChanceCap || 0) | 0);
+      }
+      if (stat === 'critChance') {
+        cap = (flatValues.critChanceCap || cap || 50) + (ascensionBonuses.critChanceCap || 0);
+      }
+      if (stat === 'attackSpeed') {
+        if (this.stats.uncappedAttackSpeed) {
+          cap = Infinity;
+        } else {
+          cap = (cap || 5) + (ascensionBonuses.attackSpeedCap || 0);
+        }
+      }
+
+      if (cap !== undefined && Number.isFinite(cap)) {
+        value = Math.min(value, cap);
+      }
+
+      if (stat === 'extraMaterialDropMax') value = Math.max(value, 1); // Always at least 1
 
       const divisor = getDivisor(stat);
-      if (divisor > 1) {
-        value /= divisor;
-      }
-
-      // Caps and Rounding
-      if (stat === 'blockChance' && value > 75) value = 75;
-      if (stat === 'damageReduction') {
-        if (value > 90) value = 90;
-      }
-
-      const decimals = getStatDecimalPlaces(stat);
-      if (decimals === 0) {
-        this.stats[stat] = Math.floor(value);
+      if (divisor !== 1) {
+        this.stats[stat] = value / divisor;
       } else {
-        this.stats[stat] = Number(value.toFixed(decimals));
+        this.stats[stat] = value;
       }
     }
 
@@ -861,7 +895,7 @@ export default class Hero {
 
     // Store flat-only values for later damage calculations
     this.baseDamages.physical = Math.floor(
-      flatValues.damage + (ascensionBonuses.damage || 0),
+      flatValues.damage + (ascensionBonuses.damage || 0) + (this.stats.damagePerLevel || 0) * this.level,
     );
     this.baseDamages.elemental = Math.floor(flatValues.elementalDamage + (ascensionBonuses.elementalDamage || 0));
     ELEMENT_IDS.forEach((id) => {
@@ -926,7 +960,7 @@ export default class Hero {
       resourceExtraThornsShare,
     );
     const basePhysicalFlatWithoutResources =
-      baseFlatDamageBeforeResources + (ascensionBonuses.damage || 0);
+      baseFlatDamageBeforeResources + (ascensionBonuses.damage || 0) + (this.stats.damagePerLevel || 0) * this.level;
     const baseElementalFlatWithoutResources =
       baseFlatElementalBeforeResources + (ascensionBonuses.elementalDamage || 0);
 
