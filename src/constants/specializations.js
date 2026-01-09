@@ -24,13 +24,13 @@ export const SPECIALIZATIONS = {
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             armorPercentPerLevel: getScalingPercent({
-              level, base: 0.2, softcap: 2000, linear: 0.05, power: 0.81,
+              level, base: 0.02, softcap: 2000, linear: 0.005, power: 0.81,
             }),
             extraDamageFromArmorPercent: Math.min(getScalingPercent({
               level, base: 0.1, softcap: 2000, linear: 0.01, power: 0.7,
             }), 2.5),
             lifePercentPerLevel: getScalingPercent({
-              level, base: 0.2, softcap: 2000, linear: 0.05, power: 0.81,
+              level, base: 0.02, softcap: 2000, linear: 0.005, power: 0.81,
             }),
             extraDamageFromLifePercent: Math.min(getScalingPercent({
               level, base: 0.1, softcap: 2000, linear: 0.01, power: 0.7,
