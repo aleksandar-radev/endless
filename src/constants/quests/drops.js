@@ -20,7 +20,7 @@ export const DROP_QUESTS = [
     target: 5,
     reward: {
       item: {
-        rarity: 'rare', type: 'random', tier: 2,
+        rarity: 'rare', type: 'random', tier: 1,
       },
     },
   },
@@ -37,7 +37,7 @@ export const DROP_QUESTS = [
     target: 25,
     reward: {
       item: {
-        rarity: 'epic', type: 'random', tier: 2,
+        rarity: 'epic', type: 'random', tier: 1,
       },
     },
   },
@@ -54,7 +54,7 @@ export const DROP_QUESTS = [
     target: 60,
     reward: {
       item: {
-        rarity: 'epic', type: 'random', tier: 3,
+        rarity: 'epic', type: 'random', tier: 2,
       },
     },
   },
@@ -71,7 +71,7 @@ export const DROP_QUESTS = [
     target: 150,
     reward: {
       item: {
-        rarity: 'legendary', type: 'random', tier: 3,
+        rarity: 'legendary', type: 'random', tier: 2,
       },
       bonuses: { itemQuantityPercent: 1 },
     },
@@ -89,7 +89,7 @@ export const DROP_QUESTS = [
     target: 300,
     reward: {
       item: {
-        rarity: 'legendary', type: 'random', tier: 4,
+        rarity: 'legendary', type: 'random', tier: 3,
       },
     },
   },
@@ -106,7 +106,7 @@ export const DROP_QUESTS = [
     target: 750,
     reward: {
       item: {
-        rarity: 'mythic', type: 'random', tier: 5,
+        rarity: 'mythic', type: 'random', tier: 3,
       },
       bonuses: { itemRarityPercent: 2 },
     },
@@ -124,7 +124,7 @@ export const DROP_QUESTS = [
     target: 1500,
     reward: {
       item: {
-        rarity: 'mythic', type: 'random', tier: 5,
+        rarity: 'mythic', type: 'random', tier: 3,
       },
     },
   },
@@ -141,7 +141,7 @@ export const DROP_QUESTS = [
     target: 3000,
     reward: {
       item: {
-        rarity: 'mythic', type: 'random', tier: 6,
+        rarity: 'mythic', type: 'random', tier: 3,
       },
     },
   },
@@ -158,7 +158,7 @@ export const DROP_QUESTS = [
     target: 6000,
     reward: {
       item: {
-        rarity: 'mythic', type: 'random', tier: 7,
+        rarity: 'mythic', type: 'random', tier: 3,
       },
     },
   },
@@ -210,7 +210,7 @@ export const DROP_QUESTS = [
     target: 60,
     reward: {
       item: {
-        rarity: 'epic', type: 'random', tier: 2,
+        rarity: 'epic', type: 'random', tier: 1,
       },
     },
   },
@@ -227,7 +227,7 @@ export const DROP_QUESTS = [
     target: 150,
     reward: {
       item: {
-        rarity: 'legendary', type: 'random', tier: 3,
+        rarity: 'legendary', type: 'random', tier: 2,
       },
       bonuses: { materialQuantityPercent: 1 },
     },
@@ -245,7 +245,7 @@ export const DROP_QUESTS = [
     target: 300,
     reward: {
       item: {
-        rarity: 'legendary', type: 'random', tier: 3,
+        rarity: 'legendary', type: 'random', tier: 2,
       },
     },
   },
@@ -262,7 +262,7 @@ export const DROP_QUESTS = [
     target: 750,
     reward: {
       item: {
-        rarity: 'mythic', type: 'random', tier: 3,
+        rarity: 'mythic', type: 'random', tier: 2,
       },
       bonuses: { materialQuantityPercent: 2 },
     },
@@ -280,7 +280,7 @@ export const DROP_QUESTS = [
     target: 1500,
     reward: {
       item: {
-        rarity: 'mythic', type: 'random', tier: 4,
+        rarity: 'mythic', type: 'random', tier: 3,
       },
     },
   },
@@ -297,7 +297,7 @@ export const DROP_QUESTS = [
     target: 3000,
     reward: {
       item: {
-        rarity: 'mythic', type: 'random', tier: 5,
+        rarity: 'mythic', type: 'random', tier: 3,
       },
     },
   },
@@ -314,7 +314,7 @@ export const DROP_QUESTS = [
     target: 6000,
     reward: {
       item: {
-        rarity: 'mythic', type: 'random', tier: 6,
+        rarity: 'mythic', type: 'random', tier: 3,
       },
     },
   },
