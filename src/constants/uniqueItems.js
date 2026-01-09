@@ -5,6 +5,7 @@ export const UNIQUE_ITEMS = {
     id: 'stormlash',
     nameKey: 'items.unique.stormlash',
     type: ITEM_IDS.SWORD,
+    dropWeight: 8,
     stats: {
       damagePercent: { minMultiplier: -9999, maxMultiplier: -9999 },
       lightningDamage: { minMultiplier: 1.0, maxMultiplier: 2 },
@@ -18,6 +19,7 @@ export const UNIQUE_ITEMS = {
     id: 'nightveil_hood',
     nameKey: 'items.unique.nightveilHood',
     type: ITEM_IDS.HELMET,
+    dropWeight: 15,
     stats: {
       dexterity: { minMultiplier: 1.0, maxMultiplier: 1.4 },
       evasionPercent: { minMultiplier: 1.0, maxMultiplier: 1.2 },
@@ -29,6 +31,7 @@ export const UNIQUE_ITEMS = {
     id: 'phoenixheart_mantle',
     nameKey: 'items.unique.phoenixheartMantle',
     type: ITEM_IDS.ARMOR,
+    dropWeight: 12,
     stats: {
       life: { minMultiplier: 1.0, maxMultiplier: 1.6 },
       lifeRegenPercent: { minMultiplier: 0.9, maxMultiplier: 1.4 },
@@ -40,6 +43,7 @@ export const UNIQUE_ITEMS = {
     id: 'maelstrom_core',
     nameKey: 'items.unique.maelstromCore',
     type: ITEM_IDS.AMULET,
+    dropWeight: 6,
     stats: {
       lightningDamagePercent: { minMultiplier: 1.0, maxMultiplier: 1.2 },
       elementalPenetration: { minMultiplier: 0.9, maxMultiplier: 1.2 },
@@ -51,6 +55,7 @@ export const UNIQUE_ITEMS = {
     id: 'tempestbind_grips',
     nameKey: 'items.unique.tempestbindGrips',
     type: ITEM_IDS.GLOVES,
+    dropWeight: 10,
     stats: {
       attackSpeedPercent: { minMultiplier: 1.0, maxMultiplier: 1.3 },
       elementalDamage: { minMultiplier: 1.0, maxMultiplier: 1.3 },
@@ -62,6 +67,7 @@ export const UNIQUE_ITEMS = {
     id: 'riftstrider_boots',
     nameKey: 'items.unique.riftstriderBoots',
     type: ITEM_IDS.BOOTS,
+    dropWeight: 14,
     stats: {
       evasion: { minMultiplier: 1.0, maxMultiplier: 1.6 },
       allResistancePercent: { minMultiplier: 0.9, maxMultiplier: 1.2 },
@@ -73,6 +79,7 @@ export const UNIQUE_ITEMS = {
     id: 'ribbonweave_vestments',
     nameKey: 'items.unique.ribbonweaveVestments',
     type: ITEM_IDS.ARMOR,
+    dropWeight: 4,
     stats: {
       allAttributes: { minMultiplier: 0.8, maxMultiplier: 1.2 },
       allResistance: { minMultiplier: 0.5, maxMultiplier: 0.7 },

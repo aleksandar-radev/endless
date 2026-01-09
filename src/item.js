@@ -574,8 +574,18 @@ export function createRandomUniqueItem(tier = 1, level = 1, preferredType = null
   const candidates = pool.length ? pool : allDefs;
 
   if (!candidates.length) return null;
-  const pick = candidates[Math.floor(Math.random() * candidates.length)];
-  return createUniqueItemById(pick.id, tier, level);
+
+  const totalWeight = candidates.reduce((sum, item) => sum + (item.dropWeight || 1), 0);
+  let random = Math.random() * totalWeight;
+
+  for (const item of candidates) {
+    random -= (item.dropWeight || 1);
+    if (random <= 0) {
+      return createUniqueItemById(item.id, tier, level);
+    }
+  }
+
+  return createUniqueItemById(candidates[0].id, tier, level);
 }
 
 export function createSetItemsById(setId, tier = 1, level = 1) {

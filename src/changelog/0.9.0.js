@@ -6,6 +6,7 @@ export default function run() {
 
     <span style="color:#FF8A00;">Major Updates</span>
     <ul>
+      <li>Added weighted drop chances for unique items. Some unique items are now more common while others are rarer.</li>
       <li>Completely redesigned mob and item scaling for the Explore region to be simpler and more consistent.</li>
       <li>Mobs now scale 5x per region tier (multiplicative from previous tier).</li>
       <li>Mobs now scale 10% per stage based on the base value at stage 1.</li>
