@@ -75,10 +75,8 @@ export const OFFENSE_STATS = {
       max: 16,
       scaling: (level, tier) => offenseScaling(level, tier),
       overrides: {
-        AXE: { min: 14, max: 35 },
-        MACE: { min: 16, max: 38 },
-        DAGGER: { min: 6, max: 18 },
-        BOW: { min: 8, max: 24 },
+        AXE: { min: 8, max: 20 },
+        // MACE: { min: 16, max: 38 },
       },
     },
     itemTags: ['offense', 'sword', 'axe', 'mace', 'dagger', 'bow'],

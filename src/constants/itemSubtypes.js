@@ -138,7 +138,7 @@ export const ITEM_SUBTYPES = {
       id: ITEM_IDS.MACE,
       nameKey: null,
       weight: 50,
-      statMultipliers: {},
+      allStatMultiplier: twoHandedMultiplier,
     },
     CLUB: {
       id: 'CLUB',
