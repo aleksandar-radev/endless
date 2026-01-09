@@ -34,7 +34,7 @@ export const DEFENSE_STATS = {
     base: 100,
     levelUpBonus: 1,
     training: {
-      cost: 80, bonus: 8, maxLevel: Infinity,
+      cost: 160, bonus: 16, maxLevel: Infinity,
     },
     item: {
       min: 30, max: 80, scaling: (level, tier) => defenseScaling(level, tier),
@@ -49,7 +49,7 @@ export const DEFENSE_STATS = {
   }),
   armor: createStat({
     training: {
-      cost: 100, bonus: 4, maxLevel: Infinity,
+      cost: 200, bonus: 14, maxLevel: Infinity,
     },
     item: {
       min: 25, max: 60, scaling: (level, tier) => defenseScaling(level, tier),
@@ -130,7 +130,7 @@ export const DEFENSE_STATS = {
   evasion: createStat({
     dec: 1,
     training: {
-      cost: 100, bonus: 3, maxLevel: Infinity,
+      cost: 200, bonus: 14, maxLevel: Infinity,
     },
     item: {
       min: 30, max: 75, scaling: (level, tier) => defenseScaling(level, tier),

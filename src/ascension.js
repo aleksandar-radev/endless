@@ -64,7 +64,7 @@ export const ASCENSION_CATEGORIES = {
       },
       attackRating: {
         label: 'ascension.upgrade.attackRating',
-        bonus: 8000,
+        bonus: 2700,
         stat: 'attackRating',
       },
       chanceToHitPercent: {
@@ -95,12 +95,12 @@ export const ASCENSION_CATEGORIES = {
     upgrades: {
       armor: {
         label: 'ascension.upgrade.armor',
-        bonus: 500,
+        bonus: 2700,
         stat: 'armor',
       },
       evasion: {
         label: 'ascension.upgrade.evasion',
-        bonus: 500,
+        bonus: 2700,
         stat: 'evasion',
       },
       armorPercent: {
@@ -115,7 +115,7 @@ export const ASCENSION_CATEGORIES = {
       },
       allResistance: {
         label: 'ascension.upgrade.allResistance',
-        bonus: 500,
+        bonus: 2000,
         stat: 'allResistance',
       },
       allResistancePercent: {
@@ -125,27 +125,23 @@ export const ASCENSION_CATEGORIES = {
       },
       life: {
         label: 'ascension.upgrade.life',
-        bonus: 1000,
+        bonus: 4000,
         stat: 'life',
-        cost: (lvl) => 1 + lvl,
       },
       mana: {
         label: 'ascension.upgrade.mana',
-        bonus: 500,
+        bonus: 2000,
         stat: 'mana',
-        cost: (lvl) => 1 + lvl,
       },
       lifePercent: {
         label: 'ascension.upgrade.lifePercent',
         bonus: 0.2,
         stat: 'lifePercent',
-        cost: (lvl) => 1 + lvl,
       },
       manaPercent: {
         label: 'ascension.upgrade.manaPercent',
         bonus: 0.25,
         stat: 'manaPercent',
-        cost: (lvl) => 1 + lvl,
       },
       // New defensive upgrades
       blockChance: {

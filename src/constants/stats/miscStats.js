@@ -14,7 +14,7 @@ export const MISC_STATS = {
     base: 50,
     levelUpBonus: 0,
     training: {
-      cost: 50, bonus: 1, maxLevel: Infinity,
+      cost: 120, bonus: 5, maxLevel: Infinity,
     },
     item: {
       min: 25, max: 70, scaling: (level, tier) => miscScaling(level, tier),
@@ -225,6 +225,9 @@ export const MISC_STATS = {
     show: true,
     sub: 'rewards',
   }),
+  skillPointsPerLevel: createStat({ dec: 0 }),
+  attributesPerLevel: createStat({ dec: 0 }),
+  extraResourceDamageCapPerLevel: createStat({ dec: 0 }),
   extraMaterialDropPercent: createStat({ div: 100 }),
   extraMaterialDropMax: createStat({ base: 1 }),
   manaRegenOfTotalPercent: createPercentStat({

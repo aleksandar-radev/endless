@@ -68,7 +68,7 @@ export const OFFENSE_STATS = {
   damage: createStat({
     base: 10,
     training: {
-      cost: 100, bonus: 1, maxLevel: Infinity,
+      cost: 200, bonus: 1, maxLevel: Infinity,
     },
     item: {
       min: 5,
@@ -166,7 +166,7 @@ export const OFFENSE_STATS = {
   attackRating: createStat({
     base: 100,
     training: {
-      cost: 160, bonus: 10, maxLevel: Infinity,
+      cost: 320, bonus: 20, maxLevel: Infinity,
     },
     item: {
       min: 60, max: 140, scaling: (level, tier) => offenseScaling(level, tier),
