@@ -106,7 +106,7 @@ export const MATERIALS = {
     get description() {
       return t('Adds 1000000 gold per coin to your total.');
     },
-    dropChance: 0.01,
+    dropChance: 0.1,
     sort: 203,
     onUse: (hero, qty = 1) => {
       hero.gainGold(1000000 * qty);
@@ -328,7 +328,7 @@ export const MATERIALS = {
     get description() {
       return t('Increases the rarity of an equipped item. (cannot be used on mythic items)');
     },
-    dropChance: 0,
+    dropChance: 0.01,
     sort: 700,
     onUse: (hero, qty = 1) => {
       // Custom modal logic handled in inventory UI
