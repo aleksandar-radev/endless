@@ -72,6 +72,15 @@ export class Building {
 
   upgrade() {
     if (this.level < this.maxLevel) {
+      if (this.level === 0) {
+        const nowLocal = Date.now();
+        const offset =
+          Number.isFinite(this.lastBonusTime) && Number.isFinite(this.lastBonusTimeLocal)
+            ? this.lastBonusTime - this.lastBonusTimeLocal
+            : 0;
+        this.lastBonusTimeLocal = nowLocal;
+        this.lastBonusTime = nowLocal + offset;
+      }
       this.level++;
       return true;
     }
