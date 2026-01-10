@@ -798,46 +798,47 @@ export function positionTooltip(event) {
   const tooltip = document.getElementById('tooltip');
   const tooltipRect = tooltip.getBoundingClientRect();
   const offset = 10; // Offset from the mouse pointer
+  const edgeBuffer = 8; // Buffer from the screen edge
 
   let top = event.clientY + offset;
   let left = event.clientX + offset;
 
   // Vertical adjustment
-  if (top + tooltipRect.height > window.innerHeight) {
+  if (top + tooltipRect.height > window.innerHeight - edgeBuffer) {
     top = event.clientY - tooltipRect.height - offset;
     // If it now goes off top
-    if (top < offset) {
+    if (top < edgeBuffer) {
       // Pin to top edge if it doesn't fit
-      top = offset;
+      top = edgeBuffer;
     }
   }
 
   // Horizontal adjustment
   // First check if it fits to the right
-  if (left + tooltipRect.width > window.innerWidth) {
+  if (left + tooltipRect.width > window.innerWidth - edgeBuffer) {
     // Try to flip to left
     const leftSide = event.clientX - tooltipRect.width - offset;
 
     // Check if left side fits
-    if (leftSide >= offset) {
+    if (leftSide >= edgeBuffer) {
       left = leftSide;
     } else {
       // Doesn't fit on left either.
       // Pick the side with more space or pin to left edge if it's huge
-      if (tooltipRect.width > window.innerWidth - offset * 2) {
+      if (tooltipRect.width > window.innerWidth - edgeBuffer * 2) {
         // Too big for screen, pin to left
-        left = offset;
+        left = edgeBuffer;
       } else {
         // Fits on screen but not relative to mouse?
         // Align to right edge of screen
-        left = window.innerWidth - tooltipRect.width - offset;
+        left = window.innerWidth - tooltipRect.width - edgeBuffer;
       }
     }
   }
 
   // Final safety check for left edge
-  if (left < offset) {
-    left = offset;
+  if (left < edgeBuffer) {
+    left = edgeBuffer;
   }
 
   tooltip.style.top = `${top}px`;
