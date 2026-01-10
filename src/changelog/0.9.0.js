@@ -168,6 +168,7 @@ export default function run() {
       <li>Added thorns damage and thornsDamage% in ascension bonuses.</li>
       <li style="color:#00AA00;">Continuous Play (auto-continue after death) is now the default behavior and the crystal shop upgrade has been removed; the Auto Spell Cast crystal upgrade has also been removed — spells now auto-cast by default.</li>
       <li>Allowed Alternation Orbs to be used on Unique and Set items.</li>
+      <li>Added option to show/hide "0" stats in stats tab. So, you can now clearly see only the stats that have some value.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
