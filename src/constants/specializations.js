@@ -167,7 +167,9 @@ export const SPECIALIZATIONS = {
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             critDamage: level * 0.025,
-            executeThresholdPercent: Math.min(5 + getScalingPercent(level, 0.34, 3), 50),
+            executeThresholdPercent: Math.min(5 + getScalingPercent({
+              level, base: 0.34, linear: 3,
+            }), 50),
           }),
         },
       },
@@ -189,7 +191,9 @@ export const SPECIALIZATIONS = {
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             cloneUnlocked: 1,
-            cloneDamagePercent: getScalingFlat(level, 5, 10, 0.5),
+            cloneDamagePercent: getScalingFlat({
+              level, base: 5, interval: 10, bonus: 0.5, increment: 0,
+            }),
           }),
         },
         shadowMagic: {
@@ -201,8 +205,12 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.shadowMagic'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            earthDamage: level ? 20000 - 50 + getScalingFlat(level, 50, 3, 1) : 0,
-            earthDamagePercent: level ? 100 - 6 + getScalingPercent(level, 6, 4) : 0,
+            earthDamage: level ? 20000 - 50 + getScalingFlat({
+              level, base: 50, interval: 3, bonus: 1, increment: 0,
+            }) : 0,
+            earthDamagePercent: level ? 100 - 6 + getScalingPercent({
+              level, base: 6, linear: 4,
+            }) : 0,
           }),
         },
       },
@@ -226,8 +234,10 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.animalTracking'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            damageToHighRarityEnemiesPercent: getScalingPercent(level, 10),
-            enemyRarityPercent: getScalingFlat(level, 20, 20, 0.5),
+            damageToHighRarityEnemiesPercent: getScalingPercent({ level, base: 10 }),
+            enemyRarityPercent: getScalingFlat({
+              level, base: 20, interval: 20, bonus: 0.5, increment: 0,
+            }),
           }),
         },
         rangedPrecision: {
@@ -239,8 +249,10 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.rangedPrecision'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            attackRating: 20000 + getScalingFlat(level, 80, 10, 1),
-            extraDamageFromAttackRatingPercent: 0.5 + getScalingPercent(level, 0.018),
+            attackRating: 20000 + getScalingFlat({
+              level, base: 80, interval: 10, bonus: 1, increment: 0,
+            }),
+            extraDamageFromAttackRatingPercent: 0.5 + getScalingPercent({ level, base: 0.018 }),
           }),
         },
       },
@@ -262,7 +274,11 @@ export const SPECIALIZATIONS = {
           icon: () => 'vampiric-bats',
           description: () => t('skill.vampiricBats'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-          effect: (level) => ({ batsHealPercent: level ? 50 + getScalingPercent(level, 10, 5, 0.2) : 0 }),
+          effect: (level) => ({
+            batsHealPercent: level ? 50 + getScalingPercent({
+              level, base: 10, linear: 5, power: 0.2,
+            }) : 0,
+          }),
         },
         crimsonFeast: {
           id: 'crimsonFeast',
@@ -273,8 +289,10 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.crimsonFeast'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            lifeSteal: getScalingPercent(level, 0.2),
-            lifePerHit: level ? 1000 + getScalingFlat(level, 50, 10, 1) : 0,
+            lifeSteal: getScalingPercent({ level, base: 0.2 }),
+            lifePerHit: level ? 1000 + getScalingFlat({
+              level, base: 50, interval: 10, bonus: 1, increment: 0,
+            }) : 0,
           }),
         },
       },
@@ -294,7 +312,11 @@ export const SPECIALIZATIONS = {
           icon: () => 'night-stalker-mastery',
           description: () => t('skill.nightStalkerMastery'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-          effect: (level) => ({ nightStalkerBuffEffectivenessPercent: level ? 50 + getScalingFlat(level, 8) : 0 }),
+          effect: (level) => ({
+            nightStalkerBuffEffectivenessPercent: level ? 50 + getScalingFlat({
+              level, base: 8, increment: 0,
+            }) : 0,
+          }),
         },
         bloodRitual: {
           id: 'bloodRitual',
@@ -306,7 +328,9 @@ export const SPECIALIZATIONS = {
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             bloodSacrificeUnlocked: 1,
-            bloodSacrificeEffectivenessPercent: getScalingFlat(level, 5, 1, 0),
+            bloodSacrificeEffectivenessPercent: getScalingFlat({
+              level, base: 5, interval: 1, bonus: 0, increment: 0,
+            }),
           }),
         },
       },
@@ -327,9 +351,9 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.bloodPotency'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            damagePercent: getScalingPercent(level, 6),
-            attackSpeedPercent: getScalingPercent(level, 2),
-            chanceToHitPercent: Math.min(getScalingPercent(level, 0.2), 40),
+            damagePercent: getScalingPercent({ level, base: 6 }),
+            attackSpeedPercent: getScalingPercent({ level, base: 2 }),
+            chanceToHitPercent: Math.min(getScalingPercent({ level, base: 0.2 }), 40),
           }),
         },
         hemorrhage: {
@@ -341,8 +365,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.hemorrhage'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            bleedChance: Math.min(5 + getScalingPercent(level, 0.6), 80),
-            bleedDamagePercent: getScalingPercent(level, 3.4),
+            bleedChance: Math.min(5 + getScalingPercent({ level, base: 0.6 }), 80),
+            bleedDamagePercent: getScalingPercent({ level, base: 3.4 }),
           }),
         },
       },
@@ -366,8 +390,12 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.shieldMastery'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            shieldEffectivenessPercent: getScalingFlat(level, 10, 5, 0.2),
-            endurancePercent: getScalingFlat(level, 5, 5, 0.2),
+            shieldEffectivenessPercent: getScalingFlat({
+              level, base: 10, interval: 5, bonus: 0.2, increment: 0,
+            }),
+            endurancePercent: getScalingFlat({
+              level, base: 5, interval: 5, bonus: 0.2, increment: 0,
+            }),
           }),
         },
         zeal: {
@@ -379,8 +407,12 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.zeal'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            divineProtectionBuffEffectivenessPercent: level ? 50 + getScalingFlat(level, 10) : 0,
-            perseverancePercent: getScalingFlat(level, 5, 5, 0.2),
+            divineProtectionBuffEffectivenessPercent: level ? 50 + getScalingFlat({
+              level, base: 10, increment: 0,
+            }) : 0,
+            perseverancePercent: getScalingFlat({
+              level, base: 5, interval: 5, bonus: 0.2, increment: 0,
+            }),
           }),
         },
       },
@@ -400,7 +432,11 @@ export const SPECIALIZATIONS = {
           icon: () => 'divine-amulet',
           description: () => t('skill.divineAmulet'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-          effect: (level) => ({ jewelryFlatEffectivenessPercent: level ? 50 + getScalingFlat(level, 8, 8, 0.2) : 0 }),
+          effect: (level) => ({
+            jewelryFlatEffectivenessPercent: level ? 50 + getScalingFlat({
+              level, base: 8, interval: 8, bonus: 0.2, increment: 0,
+            }) : 0,
+          }),
         },
         sacredRelic: {
           id: 'sacredRelic',
@@ -411,9 +447,15 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.sacredRelic'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            attackSpeedPercent: getScalingFlat(level, 3, 10, 0.1),
-            attackRatingPercent: level ? 50 + getScalingFlat(level, 8, 10, 0.1) : 0,
-            elementalDamagePercent: level ? 40 + getScalingFlat(level, 5, 10, 0.1) : 0,
+            attackSpeedPercent: getScalingFlat({
+              level, base: 3, interval: 10, bonus: 0.1, increment: 0,
+            }),
+            attackRatingPercent: level ? 50 + getScalingFlat({
+              level, base: 8, interval: 10, bonus: 0.1, increment: 0,
+            }) : 0,
+            elementalDamagePercent: level ? 40 + getScalingFlat({
+              level, base: 5, interval: 10, bonus: 0.1, increment: 0,
+            }) : 0,
           }),
         },
       },
@@ -438,8 +480,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.unyieldingSpirit'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            endurancePercent: getScalingPercent(level, 5),
-            perseverancePercent: getScalingPercent(level, 3),
+            endurancePercent: getScalingPercent({ level, base: 5 }),
+            perseverancePercent: getScalingPercent({ level, base: 3 }),
           }),
         },
         immortalPresence: {
@@ -451,8 +493,10 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.immortalPresence'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            life: getScalingFlat(level, 50, 10, 1),
-            lifePercent: getScalingPercent(level, 3),
+            life: getScalingFlat({
+              level, base: 50, interval: 10, bonus: 1, increment: 0,
+            }),
+            lifePercent: getScalingPercent({ level, base: 3 }),
           }),
         },
       },
@@ -475,8 +519,12 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.lacerate'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            bleedChance: Math.min(getScalingPercent(level, 2, 10, 200, 0.1), 50),
-            bleedDamagePercent: getScalingFlat(level, 5, 10, 0.5),
+            bleedChance: Math.min(getScalingPercent({
+              level, base: 2, linear: 10, power: 200,
+            }), 50),
+            bleedDamagePercent: getScalingFlat({
+              level, base: 5, interval: 10, bonus: 0.5, increment: 0,
+            }),
           }),
         },
         fatalBlow: {
@@ -488,8 +536,12 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.fatalBlow'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            damagePercent: getScalingFlat(level, 5, 5, 0.5),
-            instaKillPercent: Math.min(getScalingPercent(level, 0.2, 200, 0.025), 5),
+            damagePercent: getScalingFlat({
+              level, base: 5, interval: 5, bonus: 0.5, increment: 0,
+            }),
+            instaKillPercent: Math.min(getScalingPercent({
+              level, base: 0.2, linear: 200, power: 0.025,
+            }), 5),
           }),
         },
       },
@@ -512,7 +564,11 @@ export const SPECIALIZATIONS = {
           icon: () => 'battle-command',
           description: () => t('skill.battleCommand'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-          effect: (level) => ({ buffEffectivenessPercent: getScalingFlat(level, 10, 5, 0.5) }),
+          effect: (level) => ({
+            buffEffectivenessPercent: getScalingFlat({
+              level, base: 10, interval: 5, bonus: 0.5, increment: 0,
+            }),
+          }),
         },
         warlordsAuthority: {
           id: 'warlordsAuthority',
@@ -522,7 +578,11 @@ export const SPECIALIZATIONS = {
           icon: () => 'warlords-authority',
           description: () => t('skill.warlordsAuthority'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-          effect: (level) => ({ warlordEffectivenessPercent: getScalingFlat(level, 10, 5, 0.5) }),
+          effect: (level) => ({
+            warlordEffectivenessPercent: getScalingFlat({
+              level, base: 10, interval: 5, bonus: 0.5, increment: 0,
+            }),
+          }),
         },
       },
     },
@@ -546,8 +606,10 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.bloodBank'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            overhealPercent: 20 + getScalingFlat(level, 5, 10, 0.5),
-            lifePercent: getScalingPercent(level, 1),
+            overhealPercent: 20 + getScalingFlat({
+              level, base: 5, interval: 10, bonus: 0.5, increment: 0,
+            }),
+            lifePercent: getScalingPercent({ level, base: 1 }),
           }),
         },
         giantSlayer: {
@@ -559,8 +621,10 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.giantSlayer'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            damageToHighRarityEnemiesPercent: getScalingFlat(level, 5, 10, 0.2),
-            executeThresholdPercent: Math.min(getScalingPercent(level, 0.1), 15),
+            damageToHighRarityEnemiesPercent: getScalingFlat({
+              level, base: 5, interval: 10, bonus: 0.2, increment: 0,
+            }),
+            executeThresholdPercent: Math.min(getScalingPercent({ level, base: 0.1 }), 15),
           }),
         },
       },
@@ -586,8 +650,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.searingHeat'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            burnChance: Math.min(getScalingPercent(level, 2), 60),
-            burnDamagePercent: getScalingPercent(level, 5),
+            burnChance: Math.min(getScalingPercent({ level, base: 2 }), 60),
+            burnDamagePercent: getScalingPercent({ level, base: 5 }),
           }),
         },
         combustion: {
@@ -599,8 +663,10 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.combustion'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            explosionChance: getScalingPercent(level, 1),
-            extraDamageAgainstBurningEnemies: getScalingFlat(level, 5, 5, 0.5),
+            explosionChance: getScalingPercent({ level, base: 1 }),
+            extraDamageAgainstBurningEnemies: getScalingFlat({
+              level, base: 5, interval: 5, bonus: 0.5, increment: 0,
+            }),
           }),
         },
       },
@@ -624,8 +690,10 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.arcDischarge'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            arcDischargeChance: Math.min(getScalingPercent(level, 2), 10),
-            lightningDamage: getScalingFlat(level, 4),
+            arcDischargeChance: Math.min(getScalingPercent({ level, base: 2 }), 10),
+            lightningDamage: getScalingFlat({
+              level, base: 4, increment: 0,
+            }),
           }),
         },
         staticShock: {
@@ -637,8 +705,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.staticShock'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            shockChance: Math.min(getScalingPercent(level, 1), 20),
-            shockEffectivenessPercent: getScalingPercent(level, 2),
+            shockChance: Math.min(getScalingPercent({ level, base: 1 }), 20),
+            shockEffectivenessPercent: getScalingPercent({ level, base: 2 }),
           }),
         },
       },
@@ -662,8 +730,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.permafrost'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            extraDamageAgainstFrozenEnemies: getScalingPercent(level, 1.5),
-            chanceToShatterEnemy: Math.min(getScalingPercent(level, 1), 15),
+            extraDamageAgainstFrozenEnemies: getScalingPercent({ level, base: 1.5 }),
+            chanceToShatterEnemy: Math.min(getScalingPercent({ level, base: 1 }), 15),
           }),
         },
         iceBarrier: {
@@ -675,7 +743,7 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.iceBarrier'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            coldDamagePercent: getScalingPercent(level, 2),
+            coldDamagePercent: getScalingPercent({ level, base: 2 }),
             glacialBulwarkUnlocked: 1,
           }),
         },
@@ -699,8 +767,10 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.shapeshiftingMastery'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            allAttributes: getScalingFlat(level, 4),
-            allAttributesPercent: getScalingPercent(level, 1),
+            allAttributes: getScalingFlat({
+              level, base: 4, increment: 0,
+            }),
+            allAttributesPercent: getScalingPercent({ level, base: 1 }),
           }),
         },
         primalAdaptation: {
@@ -712,12 +782,12 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.primalAdaptation'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            damagePercent: getScalingPercent(level, 0.5),
-            elementalDamagePercent: getScalingPercent(level, 0.5),
-            armorPercent: getScalingPercent(level, 0.5),
-            lifePercent: getScalingPercent(level, 0.5),
-            lifeRegenPercent: getScalingPercent(level, 0.5),
-            allResistancePercent: getScalingPercent(level, 0.5),
+            damagePercent: getScalingPercent({ level, base: 0.5 }),
+            elementalDamagePercent: getScalingPercent({ level, base: 0.5 }),
+            armorPercent: getScalingPercent({ level, base: 0.5 }),
+            lifePercent: getScalingPercent({ level, base: 0.5 }),
+            lifeRegenPercent: getScalingPercent({ level, base: 0.5 }),
+            allResistancePercent: getScalingPercent({ level, base: 0.5 }),
           }),
         },
       },
@@ -741,9 +811,9 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.elementalHarmony'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            waterDamagePercent: getScalingPercent(level, 2),
-            coldDamagePercent: getScalingPercent(level, 2),
-            earthDamagePercent: getScalingPercent(level, 2),
+            waterDamagePercent: getScalingPercent({ level, base: 2 }),
+            coldDamagePercent: getScalingPercent({ level, base: 2 }),
+            earthDamagePercent: getScalingPercent({ level, base: 2 }),
           }),
         },
         primalResilience: {
@@ -780,8 +850,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.beastFrenzy'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            summonAttackSpeedBuffPercent: Math.min(getScalingPercent(level, 1), 3),
-            summonDamageBuffPercent: getScalingPercent(level, 2),
+            summonAttackSpeedBuffPercent: Math.min(getScalingPercent({ level, base: 1 }), 3),
+            summonDamageBuffPercent: getScalingPercent({ level, base: 2 }),
           }),
         },
         wildCommunion: {
@@ -793,10 +863,10 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.wildCommunion'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            lifePercent: getScalingPercent(level, 0.5),
-            lifeRegenPercent: getScalingPercent(level, 0.5),
-            armorPercent: getScalingPercent(level, 0.5),
-            allResistancePercent: getScalingPercent(level, 0.5),
+            lifePercent: getScalingPercent({ level, base: 0.5 }),
+            lifeRegenPercent: getScalingPercent({ level, base: 0.5 }),
+            armorPercent: getScalingPercent({ level, base: 0.5 }),
+            allResistancePercent: getScalingPercent({ level, base: 0.5 }),
           }),
         },
       },
@@ -819,8 +889,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.manaWard'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            manaShieldDamageTakenReductionPercent: Math.min(getScalingPercent(level, 0.75), 50),
-            manaPercent: getScalingPercent(level, 2),
+            manaShieldDamageTakenReductionPercent: Math.min(getScalingPercent({ level, base: 0.75 }), 50),
+            manaPercent: getScalingPercent({ level, base: 2 }),
           }),
         },
         arcaneOverload: {
@@ -832,9 +902,11 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.arcaneOverload'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            extraDamageFromManaPercent: Math.min(getScalingPercent(level, 0.012), 2),
-            manaRegen: getScalingFlat(level, 0.2),
-            manaRegenPercent: getScalingPercent(level, 0.8),
+            extraDamageFromManaPercent: Math.min(getScalingPercent({ level, base: 0.012 }), 2),
+            manaRegen: getScalingFlat({
+              level, base: 0.2, increment: 0,
+            }),
+            manaRegenPercent: getScalingPercent({ level, base: 0.8 }),
           }),
         },
       },
@@ -855,7 +927,7 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.crimsonFortitude'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            lifePercent: getScalingPercent(level, 2),
+            lifePercent: getScalingPercent({ level, base: 2 }),
             crimsonAegisSkillUnlocked: 1,
           }),
         },
@@ -868,8 +940,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.sanguineLeech'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            lifeSteal: Math.min(getScalingPercent(level, 0.02), 1),
-            lifePerHitPercent: getScalingPercent(level, 2),
+            lifeSteal: Math.min(getScalingPercent({ level, base: 0.02 }), 1),
+            lifePerHitPercent: getScalingPercent({ level, base: 2 }),
             bloodSiphonSkillUnlocked: 1,
           }),
         },
@@ -894,9 +966,11 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.dancingBlades'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            allResistancePercent: getScalingFlat(level, 5, 5, 0.2),
-            extraDamageFromAllResistancesPercent: 0.5 + getScalingPercent(level, 0.01),
-            elementalDamageTakenReductionPercent: Math.min(getScalingPercent(level, 0.5), 25),
+            allResistancePercent: getScalingFlat({
+              level, base: 5, interval: 5, bonus: 0.2, increment: 0,
+            }),
+            extraDamageFromAllResistancesPercent: 0.5 + getScalingPercent({ level, base: 0.01 }),
+            elementalDamageTakenReductionPercent: Math.min(getScalingPercent({ level, base: 0.5 }), 25),
           }),
         },
         enchantedArmor: {
@@ -908,8 +982,12 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.enchantedArmor'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            weaponFlatEffectivenessPercent: getScalingFlat(level, 10, 5, 0.2),
-            jewelryFlatEffectivenessPercent: getScalingFlat(level, 10, 5, 0.2),
+            weaponFlatEffectivenessPercent: getScalingFlat({
+              level, base: 10, interval: 5, bonus: 0.2, increment: 0,
+            }),
+            jewelryFlatEffectivenessPercent: getScalingFlat({
+              level, base: 10, interval: 5, bonus: 0.2, increment: 0,
+            }),
           }),
         },
       },
