@@ -35,18 +35,6 @@
     gtag('js', new Date());
     gtag('config', 'G-L06KLWGC80');
   </script>
-
-  <script>
-    // Only inject AdSense if not running in Electron
-    const isElectron = navigator.userAgent.includes('Electron');
-    if (!isElectron) {
-      const adScript = document.createElement('script');
-      adScript.async = true;
-      adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7168954765162007';
-      adScript.crossOrigin = 'anonymous';
-      document.head.appendChild(adScript);
-    }
-  </script>
 </head>
 
 <body>
