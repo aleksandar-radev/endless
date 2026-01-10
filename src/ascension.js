@@ -280,13 +280,6 @@ export const ASCENSION_CATEGORIES = {
         cost: (lvl) => 5 + lvl * 5,
         maxLevel: 50,
       },
-      reduceEnemyAttackSpeedPercent: {
-        label: 'ascension.upgrade.reduceEnemyAttackSpeedPercent',
-        bonus: 0.01,
-        stat: 'reduceEnemyAttackSpeedPercent',
-        cost: (lvl) => 5 + lvl * 5,
-        maxLevel: 50,
-      },
       // Cost reduction upgrades (percent values; combined additively with rune bonuses)
       trainingCostReduction: {
         label: 'ascension.upgrade.trainingCostReduction',

@@ -104,6 +104,7 @@ export default function run() {
       <li>Elemental allocation changed to "Damage Allocation" and it now also includes thorns damage.</li>
       <li>Equipping bow makes the enemy attack with a delay of 1.5 seconds.</li>
       <li>Removed "Elemental Damage %" from ascension upgrades.</li>
+      <li>Removed "Reduce Enemy Attack Speed %" from ascension upgrades. Points spent are refunded.</li>
       <li>Throns damage no longer benefits from damage % bonuses. Only total damage %.</li>
       <li>Block chance stays at 0 when no shield is equipped.</li>
       <li>Improved overall design and especially mobile experience.</li>

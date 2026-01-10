@@ -242,7 +242,7 @@ export default {
   'tooltip.lifeRegenOfTotalPercent': 'Regenera vida igual a un porcentaje de la vida total.',
   'tooltip.manaRegenOfTotalPercent': 'Regenera maná igual a un porcentaje del maná total.',
   'tooltip.reduceEnemyDamagePercent': 'Reduce el daño del enemigo en un porcentaje (máx {cap}%).',
-  'tooltip.reduceEnemyHpPercent': 'Reduce la salud del enemigo en un porcentaje (máx {cap}%).',
+  'tooltip.reduceEnemyHpPercent': 'Reduce la vida del enemigo en un porcentaje (máx {cap}%).',
   'tooltip.reduceEnemyAttackSpeedPercent': 'Reduce la velocidad de ataque del enemigo en un porcentaje (máx {cap}%).',
   'tooltip.flatPenetrationPercent': 'Aumenta las bonificaciones planas de penetración de armadura y elemental.',
   'tooltip.extraDamageFromLifePercent':

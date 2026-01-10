@@ -77,6 +77,15 @@ export const run = (rawData) => {
       delete data.ascension.upgrades.elementalDamagePercent;
     }
 
+    if (data.ascension.upgrades.reduceEnemyAttackSpeedPercent) {
+      const level = data.ascension.upgrades.reduceEnemyAttackSpeedPercent;
+      // Cost formula was: 5 + lvl * 5
+      // Total spent = 5*L + 5 * (L-1)*L / 2
+      const spent = 5 * level + 5 * (level * (level - 1)) / 2;
+      refund += spent;
+      delete data.ascension.upgrades.reduceEnemyAttackSpeedPercent;
+    }
+
     if (refund > 0) {
       data.ascension.points = (data.ascension.points || 0) + refund;
     }

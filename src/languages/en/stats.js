@@ -254,7 +254,7 @@ export default {
   'tooltip.lifeRegenOfTotalPercent': 'Regenerates life equal to a percentage of total life.',
   'tooltip.manaRegenOfTotalPercent': 'Regenerates mana equal to a percentage of total mana.',
   'tooltip.reduceEnemyDamagePercent': 'Reduces enemy damage by a percentage (max {cap}%).',
-  'tooltip.reduceEnemyHpPercent': 'Reduces enemy health by a percentage (max {cap}%).',
+  'tooltip.reduceEnemyHpPercent': 'Reduces enemy max life by a percentage (max {cap}%).',
   'tooltip.reduceEnemyAttackSpeedPercent': 'Reduces enemy attack speed by a percentage (max {cap}%).',
   'tooltip.flatPenetrationPercent': 'Increases flat armor and elemental penetration bonuses.',
   'tooltip.extraDamageFromLifePercent':
