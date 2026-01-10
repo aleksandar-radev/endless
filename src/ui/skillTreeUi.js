@@ -290,7 +290,8 @@ function openSpecializationSelectionModal(spec) {
   // Render skills grid
   const skillsContainer = modal.querySelector('.skill-row');
   Object.values(spec.skills).forEach((skill) => {
-    const skillEl = createPreviewSkillElement(skill);
+    const pathId = skillTree.selectedPath ? skillTree.selectedPath.name : null;
+    const skillEl = createPreviewSkillElement(skill, pathId, spec.id);
     skillsContainer.appendChild(skillEl);
   });
 
@@ -936,7 +937,7 @@ function formatDamageBreakdownNew(breakdown) {
   return html;
 }
 
-function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTarget, targetLevelInput) {
+function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTarget, targetLevelInput, pathId = null, activeSpecId = null) {
   const typeBadge = formatSkillTypeBadge(skill);
   const isMaxed = currentLevel >= skill.maxLevel() && skill.maxLevel() !== Infinity;
   const targetLevel = targetLevelInput !== undefined ? targetLevelInput : (currentLevel + 1);
@@ -1071,7 +1072,16 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
   if (skill.synergies && Array.isArray(skill.synergies) && skill.synergies.length > 0) {
     html += `<div class="skill-tooltip-section"><div class="skill-tooltip-section-title">${t('skillTree.synergies')}</div>`;
     skill.synergies.forEach((synergy) => {
-      const sourceSkill = skillTree.getSkill(synergy.sourceSkillId);
+      let sourceSkill = skillTree.getSkill(synergy.sourceSkillId);
+      if (!sourceSkill && pathId && SKILL_TREES[pathId]) {
+        sourceSkill = SKILL_TREES[pathId][synergy.sourceSkillId];
+      }
+      if (!sourceSkill && pathId && activeSpecId) {
+        const spec = getSpecialization(pathId, activeSpecId);
+        if (spec && spec.skills[synergy.sourceSkillId]) {
+          sourceSkill = spec.skills[synergy.sourceSkillId];
+        }
+      }
       if (!sourceSkill) return;
       const sourceLevel = skillTree.skills[synergy.sourceSkillId]?.level || 0;
       const synergyBonus = sourceLevel > 0 && synergy.calculateBonus ? synergy.calculateBonus(sourceLevel) : 0;
@@ -1368,7 +1378,7 @@ function buildClassPreviewTree(pathId, container, activeSpecId = null) {
 
       Object.entries(specLevelGroups).forEach(([reqLevel, groupSkills]) => {
         if (groupSkills.length === 0) return;
-        renderSkillRow(container, reqLevel, groupSkills, true);
+        renderSkillRow(container, reqLevel, groupSkills, true, pathId);
       });
 
       const separator = document.createElement('hr');
@@ -1392,11 +1402,11 @@ function buildClassPreviewTree(pathId, container, activeSpecId = null) {
 
   Object.entries(levelGroups).forEach(([reqLevel, groupSkills]) => {
     if (groupSkills.length === 0) return;
-    renderSkillRow(container, reqLevel, groupSkills, false);
+    renderSkillRow(container, reqLevel, groupSkills, false, pathId);
   });
 }
 
-function renderSkillRow(container, reqLevel, skills, isSpec = false) {
+function renderSkillRow(container, reqLevel, skills, isSpec = false, pathId = null) {
   const rowContainer = document.createElement('div');
   rowContainer.className = 'skills-table-row'; // Reuse the class for side-by-side layout
 
@@ -1409,7 +1419,7 @@ function renderSkillRow(container, reqLevel, skills, isSpec = false) {
   skillsCell.className = 'skills-cell';
 
   skills.forEach((skill) => {
-    const skillElement = createPreviewSkillElement(skill);
+    const skillElement = createPreviewSkillElement(skill, pathId);
     if (isSpec) {
       skillElement.classList.add('specialization-node');
     }
@@ -1420,7 +1430,7 @@ function renderSkillRow(container, reqLevel, skills, isSpec = false) {
   container.appendChild(rowContainer);
 }
 
-function createPreviewSkillElement(skill) {
+function createPreviewSkillElement(skill, pathId = null) {
   const skillElement = document.createElement('div');
   skillElement.className = 'skill-node';
   skillElement.dataset.skillId = skill.id;
@@ -1434,20 +1444,20 @@ function createPreviewSkillElement(skill) {
     <div class="skill-level">0${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}</div>
   `;
 
-  skillElement.addEventListener('mouseenter', (e) => showTooltip(createPreviewTooltip(skill), e));
+  skillElement.addEventListener('mouseenter', (e) => showTooltip(createPreviewTooltip(skill, pathId), e));
   skillElement.addEventListener('mousemove', positionTooltip);
   skillElement.addEventListener('mouseleave', hideTooltip);
 
   return skillElement;
 }
 
-function createPreviewTooltip(skill) {
+function createPreviewTooltip(skill, pathId = null) {
   const currentLevel = 0;
   const effectsCurrent = skill.effect(currentLevel);
   const nextLevel = currentLevel + 1;
   const effectsNext = skill.effect(nextLevel);
 
-  return generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNext);
+  return generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNext, undefined, pathId);
 }
 
 export function initializeSkillTreeStructure() {
