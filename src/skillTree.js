@@ -991,7 +991,7 @@ export default class SkillTree {
     if (skillId === 'bloodSacrifice') {
       const lifeCost = hero.stats.currentLife * 0.5;
       baseEffects.life = (baseEffects.life || 0) - lifeCost;
-      const effectiveness = 1 + (hero.stats.bloodSacrificeEffectiveness || 0);
+      const effectiveness = 1 + (hero.stats.bloodSacrificeEffectivenessPercent || 0);
       baseEffects.damage = (baseEffects.damage || 0) + lifeCost * effectiveness;
     }
 

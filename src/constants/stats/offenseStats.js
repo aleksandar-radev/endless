@@ -48,13 +48,13 @@ const generateElementalOffenseStats = () => {
   Object.keys(ELEMENTS).forEach((element) => {
     stats[`${element}Damage`] = createStat({
       item: createElementalDamageConfig(),
-      itemTags: ['sword', 'dagger', 'gloves', 'magic'],
+      itemTags: ['sword', 'dagger', 'jewelry', 'bow', 'arrows', 'gloves', 'magic'],
       show: true,
       sub: 'elemental',
     });
     stats[`${element}DamagePercent`] = createPercentStat({
       item: createElementalDamagePercentConfig(),
-      itemTags: ['sword', 'dagger', 'jewelry', 'gloves', 'magic'],
+      itemTags: ['sword', 'dagger', 'jewelry', 'bow', 'arrows', 'gloves', 'magic'],
       sub: 'elemental',
     });
     stats[`${element}Penetration`] = createStat({ sub: 'elemental' });
@@ -79,7 +79,7 @@ export const OFFENSE_STATS = {
         // MACE: { min: 16, max: 38 },
       },
     },
-    itemTags: ['offense', 'sword', 'axe', 'mace', 'dagger', 'bow'],
+    itemTags: ['offense', 'jewelry', 'gloves'],
     show: true,
     sub: 'attack',
   }),
@@ -91,7 +91,7 @@ export const OFFENSE_STATS = {
         STAFF: { min: 0, max: 0 },
       },
     },
-    itemTags: ['offense', 'gloves'],
+    itemTags: ['offense', 'gloves', 'jewelry'],
     sub: 'attack',
   }),
   totalDamagePercent: createPercentStat({ sub: 'attack' }),
@@ -320,7 +320,7 @@ export const OFFENSE_STATS = {
   extraDamageAgainstBurningEnemies: createPercentStat({ sub: 'elemental' }),
   arcDischargeChance: createPercentStat({ sub: 'elemental' }),
   shockChance: createPercentStat({ sub: 'elemental' }),
-  shockEffectiveness: createPercentStat(),
+  shockEffectivenessPercent: createPercentStat(),
   freezeChance: createPercentStat({ sub: 'elemental' }),
   stunChance: createPercentStat({ sub: 'attack' }),
   extraDamageAgainstFrozenEnemies: createPercentStat({ sub: 'elemental' }),
@@ -332,6 +332,6 @@ export const OFFENSE_STATS = {
   teleportDodgeChance: createPercentStat({ sub: 'defense' }),
   manaToLifeTransferPercent: createPercentStat(),
   damageToBossesPercent: createPercentStat(),
-  bloodSacrificeEffectiveness: createPercentStat(),
+  bloodSacrificeEffectivenessPercent: createPercentStat(),
   instaKillPercent: createPercentStat({ dec: 2 }),
 };

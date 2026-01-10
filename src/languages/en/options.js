@@ -87,6 +87,8 @@ export default {
   'options.showSkillCooldowns.tooltip': 'Display numeric cooldown timers on skills',
   'options.showAllStats': 'Show All Stats',
   'options.showAllStats.tooltip': 'Display every available stat',
+  'options.hideZeroStats': 'Hide Zero Value Stats',
+  'options.hideZeroStats.tooltip': 'Hide stats with zero value from the stats panel',
   'options.quickBuy': 'Enable Quick Buy',
   'options.quickBuy.tooltip': 'Purchase items with a single click (skips confirmation)',
   'options.bulkBuy': 'Enable Bulk Buy',

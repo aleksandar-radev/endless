@@ -90,6 +90,8 @@ export default {
   'options.showSkillCooldowns.tooltip': 'Mostrar temporizadores numéricos de enfriamiento en habilidades',
   'options.showAllStats': 'Mostrar todas las stats',
   'options.showAllStats.tooltip': 'Mostrar todas las stats disponibles',
+  'options.hideZeroStats': 'Ocultar estadísticas con valor cero',
+  'options.hideZeroStats.tooltip': 'Oculta las estadísticas con valor cero del panel de estadísticas',
   'options.quickBuy': 'Habilitar compra rápida',
   'options.quickBuy.tooltip': 'Comprar objetos con un solo clic (omite confirmación)',
   'options.bulkBuy': 'Habilitar modo masivo (Entrenamiento, Habilidades, Tienda de almas)',

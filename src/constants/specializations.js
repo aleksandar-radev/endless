@@ -87,7 +87,7 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.weaponMastery'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            weaponEffectiveness: getScalingPercent({
+            weaponFlatEffectivenessPercent: getScalingPercent({
               level, base: 15, softcap: 2000, linear: 2, power: 0.725,
             }),
           }),
@@ -151,7 +151,11 @@ export const SPECIALIZATIONS = {
           icon: () => 'vanish',
           description: () => t('skill.vanish'),
           maxLevel: () => 400,
-          effect: (level) => ({ avoidChance: 5 + getScalingPercent(level, 0.466, 3) }),
+          effect: (level) => ({
+            avoidChance: 5 + getScalingPercent({
+              level, base: 0.466, softcap: 2000, linear: 0.1, power: 0.6,
+            }),
+          }),
         },
         assassinate: {
           id: 'assassinate',
@@ -302,7 +306,7 @@ export const SPECIALIZATIONS = {
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             bloodSacrificeUnlocked: 1,
-            bloodSacrificeEffectiveness: getScalingFlat(level, 5, 1, 0),
+            bloodSacrificeEffectivenessPercent: getScalingFlat(level, 5, 1, 0),
           }),
         },
       },
@@ -362,7 +366,7 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.shieldMastery'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            shieldEffectiveness: getScalingFlat(level, 10, 5, 0.2),
+            shieldEffectivenessPercent: getScalingFlat(level, 10, 5, 0.2),
             endurancePercent: getScalingFlat(level, 5, 5, 0.2),
           }),
         },
@@ -396,7 +400,7 @@ export const SPECIALIZATIONS = {
           icon: () => 'divine-amulet',
           description: () => t('skill.divineAmulet'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-          effect: (level) => ({ jewelryEffectiveness: level ? 50 + getScalingFlat(level, 8, 8, 0.2) : 0 }),
+          effect: (level) => ({ jewelryFlatEffectivenessPercent: level ? 50 + getScalingFlat(level, 8, 8, 0.2) : 0 }),
         },
         sacredRelic: {
           id: 'sacredRelic',
@@ -634,7 +638,7 @@ export const SPECIALIZATIONS = {
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             shockChance: Math.min(getScalingPercent(level, 1), 20),
-            shockEffectiveness: getScalingPercent(level, 2),
+            shockEffectivenessPercent: getScalingPercent(level, 2),
           }),
         },
       },
@@ -904,8 +908,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.enchantedArmor'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            weaponEffectiveness: getScalingFlat(level, 10, 5, 0.2),
-            jewelryEffectiveness: getScalingFlat(level, 10, 5, 0.2),
+            weaponFlatEffectivenessPercent: getScalingFlat(level, 10, 5, 0.2),
+            jewelryFlatEffectivenessPercent: getScalingFlat(level, 10, 5, 0.2),
           }),
         },
       },

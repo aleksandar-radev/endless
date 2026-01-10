@@ -7,7 +7,7 @@ import { updateInventoryGrid, updateMaterialsGrid, sortInventory, sortMaterials 
 import { getCurrentRegion } from './region.js';
 import { computeSetBonuses } from './item.js';
 import { MATERIALS } from './constants/materials.js';
-import { getDivisor, getStatDecimalPlaces, STATS, itemStatScaleFactor } from './constants/stats/stats.js';
+import { getDivisor, getStatDecimalPlaces, STATS, itemStatScaleFactor, isFlatStat } from './constants/stats/stats.js';
 import { rollRandomSubtype } from './constants/itemSubtypes.js';
 import { ITEM_IDS, ITEM_RARITY,
   JEWELRY_TYPES,
@@ -1511,11 +1511,18 @@ export default class Inventory {
   }
 
   updateItemBonuses({
-    weaponEffectiveness = 0,
+    weaponEffectivenessPercent = 0,
+    weaponFlatEffectivenessPercent = 0,
     itemLifeEffectivenessPercent = 0,
     itemArmorEffectivenessPercent = 0,
-    shieldEffectiveness = 0,
-    jewelryEffectiveness = 0,
+    shieldEffectivenessPercent = 0,
+    shieldFlatEffectivenessPercent = 0,
+    jewelryEffectivenessPercent = 0,
+    jewelryFlatEffectivenessPercent = 0,
+    amuletEffectivenessPercent = 0,
+    amuletFlatEffectivenessPercent = 0,
+    ringEffectivenessPercent = 0,
+    ringFlatEffectivenessPercent = 0,
   } = {}) {
     // Reset equipment bonuses
     Object.keys(this.equipmentBonuses).forEach((stat) => {
@@ -1524,18 +1531,23 @@ export default class Inventory {
 
     const equippedItems = Object.values(this.equippedItems).filter(Boolean);
 
-
     // Calculate bonuses from all equipped items
     equippedItems.forEach((item) => {
       let multiplier = 1;
-      if (weaponEffectiveness > 0 && WEAPON_TYPES.includes(item.type)) {
-        multiplier += weaponEffectiveness / 100;
+      if (weaponEffectivenessPercent > 0 && WEAPON_TYPES.includes(item.type)) {
+        multiplier += weaponEffectivenessPercent / 100;
       }
-      if (shieldEffectiveness > 0 && item.type === ITEM_IDS.SHIELD) {
-        multiplier += shieldEffectiveness / 100;
+      if (shieldEffectivenessPercent > 0 && item.type === ITEM_IDS.SHIELD) {
+        multiplier += shieldEffectivenessPercent / 100;
       }
-      if (jewelryEffectiveness > 0 && JEWELRY_TYPES.includes(item.type)) {
-        multiplier += jewelryEffectiveness / 100;
+      if (jewelryEffectivenessPercent > 0 && JEWELRY_TYPES.includes(item.type)) {
+        multiplier += jewelryEffectivenessPercent / 100;
+      }
+      if (amuletEffectivenessPercent > 0 && item.type === ITEM_IDS.AMULET) {
+        multiplier += amuletEffectivenessPercent / 100;
+      }
+      if (ringEffectivenessPercent > 0 && item.type === ITEM_IDS.RING) {
+        multiplier += ringEffectivenessPercent / 100;
       }
 
       let lifeMultiplier = 1;
@@ -1558,6 +1570,35 @@ export default class Inventory {
             effectiveValue = value * multiplier;
           } else {
             effectiveValue = Math.floor(value * multiplier);
+          }
+        }
+
+        if (weaponFlatEffectivenessPercent > 0 && WEAPON_TYPES.includes(item.type)) {
+          if (isFlatStat(stat)) {
+            effectiveValue += Math.floor(value * (weaponFlatEffectivenessPercent / 100));
+          }
+        }
+
+        if (shieldFlatEffectivenessPercent > 0 && item.type === ITEM_IDS.SHIELD) {
+          if (isFlatStat(stat)) {
+            effectiveValue += Math.floor(value * (shieldFlatEffectivenessPercent / 100));
+          }
+        }
+
+        if (isFlatStat(stat)) {
+          let jewelryMultiplier = 0;
+          if (jewelryFlatEffectivenessPercent > 0 && JEWELRY_TYPES.includes(item.type)) {
+            jewelryMultiplier += jewelryFlatEffectivenessPercent / 100;
+          }
+          if (amuletFlatEffectivenessPercent > 0 && item.type === ITEM_IDS.AMULET) {
+            jewelryMultiplier += amuletFlatEffectivenessPercent / 100;
+          }
+          if (ringFlatEffectivenessPercent > 0 && item.type === ITEM_IDS.RING) {
+            jewelryMultiplier += ringFlatEffectivenessPercent / 100;
+          }
+
+          if (jewelryMultiplier > 0) {
+            effectiveValue += Math.floor(value * jewelryMultiplier);
           }
         }
 
@@ -1610,19 +1651,33 @@ export default class Inventory {
   }
 
   getEquipmentBonuses(
-    weaponEffectiveness = 0,
+    weaponEffectivenessPercent = 0,
+    weaponFlatEffectivenessPercent = 0,
     itemLifeEffectivenessPercent = 0,
     itemArmorEffectivenessPercent = 0,
-    shieldEffectiveness = 0,
-    jewelryEffectiveness = 0,
+    shieldEffectivenessPercent = 0,
+    shieldFlatEffectivenessPercent = 0,
+    jewelryEffectivenessPercent = 0,
+    jewelryFlatEffectivenessPercent = 0,
+    amuletEffectivenessPercent = 0,
+    amuletFlatEffectivenessPercent = 0,
+    ringEffectivenessPercent = 0,
+    ringFlatEffectivenessPercent = 0,
   ) {
     // Ensure bonuses are up-to-date
     this.updateItemBonuses({
-      weaponEffectiveness,
+      weaponEffectivenessPercent,
+      weaponFlatEffectivenessPercent,
       itemLifeEffectivenessPercent,
       itemArmorEffectivenessPercent,
-      shieldEffectiveness,
-      jewelryEffectiveness,
+      shieldEffectivenessPercent,
+      shieldFlatEffectivenessPercent,
+      jewelryEffectivenessPercent,
+      jewelryFlatEffectivenessPercent,
+      amuletEffectivenessPercent,
+      amuletFlatEffectivenessPercent,
+      ringEffectivenessPercent,
+      ringFlatEffectivenessPercent,
     });
     return { ...this.equipmentBonuses };
   }

@@ -214,8 +214,8 @@ class Game {
 
     if (damage > 0 && this.currentEnemy?.ailments[AILMENTS.shock.id]?.duration > 0) {
       const shockBonusBase = AILMENTS.shock.baseDamageTakenBonus;
-      const shockEffectiveness = hero.stats.shockEffectiveness || 0;
-      const shockMultiplier = 1 + shockBonusBase * (1 + shockEffectiveness);
+      const shockEffectivenessPercent = hero.stats.shockEffectivenessPercent || 0;
+      const shockMultiplier = 1 + shockBonusBase * (1 + shockEffectivenessPercent);
       damage *= shockMultiplier;
     }
     damage = Math.floor(damage); // Ensure damage is an integer

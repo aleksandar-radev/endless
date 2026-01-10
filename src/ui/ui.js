@@ -553,8 +553,8 @@ function updateAilmentIcons() {
       isActive: !!enemy.ailments[AILMENTS.shock.id],
       getTooltip: () => {
         const shockBonusBase = AILMENTS.shock.baseDamageTakenBonus;
-        const shockEffectiveness = hero.stats.shockEffectiveness || 0;
-        const shockMultiplier = 1 + shockBonusBase * (1 + shockEffectiveness);
+        const shockEffectivenessPercent = hero.stats.shockEffectivenessPercent || 0;
+        const shockMultiplier = 1 + shockBonusBase * (1 + shockEffectivenessPercent);
         const percent = Math.round((shockMultiplier - 1) * 100);
         return tp('ailment.shock.tooltip', {
           amount: percent,

@@ -165,7 +165,11 @@ export const DEFENSE_STATS = {
   }),
   itemLifeEffectivenessPercent: createPercentStat({ sub: 'defense' }),
   itemArmorEffectivenessPercent: createPercentStat({ sub: 'defense' }),
-  shieldEffectiveness: createStat({
+  shieldEffectivenessPercent: createStat({
+    dec: 1,
+    sub: 'defense',
+  }),
+  shieldFlatEffectivenessPercent: createStat({
     dec: 1,
     sub: 'defense',
   }),

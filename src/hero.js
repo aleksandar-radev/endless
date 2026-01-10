@@ -334,17 +334,36 @@ export default class Hero {
 
   recalculateFromAttributes() {
     const skillTreeBonuses = skillTree.getAllSkillTreeBonuses();
-    const weaponEffectiveness = skillTreeBonuses.weaponEffectiveness || 0;
-    const shieldEffectiveness = skillTreeBonuses.shieldEffectiveness || 0;
-    const jewelryEffectiveness = skillTreeBonuses.jewelryEffectiveness || 0;
+    const weaponEffectivenessPercent = skillTreeBonuses.weaponEffectivenessPercent || 0;
+    const weaponFlatEffectivenessPercent = skillTreeBonuses.weaponFlatEffectivenessPercent || 0;
+
+    const shieldEffectivenessPercent = skillTreeBonuses.shieldEffectivenessPercent || 0;
+    const shieldFlatEffectivenessPercent = skillTreeBonuses.shieldFlatEffectivenessPercent || 0;
+
+    const jewelryEffectivenessPercent = skillTreeBonuses.jewelryEffectivenessPercent || 0;
+    const jewelryFlatEffectivenessPercent = skillTreeBonuses.jewelryFlatEffectivenessPercent || 0;
+
+    const amuletEffectivenessPercent = skillTreeBonuses.amuletEffectivenessPercent || 0;
+    const amuletFlatEffectivenessPercent = skillTreeBonuses.amuletFlatEffectivenessPercent || 0;
+
+    const ringEffectivenessPercent = skillTreeBonuses.ringEffectivenessPercent || 0;
+    const ringFlatEffectivenessPercent = skillTreeBonuses.ringFlatEffectivenessPercent || 0;
+
     const itemLifeEffectivenessPercent = skillTreeBonuses.itemLifeEffectivenessPercent || 0;
     const itemArmorEffectivenessPercent = skillTreeBonuses.itemArmorEffectivenessPercent || 0;
     const equipmentBonuses = inventory.getEquipmentBonuses(
-      weaponEffectiveness,
+      weaponEffectivenessPercent,
+      weaponFlatEffectivenessPercent,
       itemLifeEffectivenessPercent,
       itemArmorEffectivenessPercent,
-      shieldEffectiveness,
-      jewelryEffectiveness,
+      shieldEffectivenessPercent,
+      shieldFlatEffectivenessPercent,
+      jewelryEffectivenessPercent,
+      jewelryFlatEffectivenessPercent,
+      amuletEffectivenessPercent,
+      amuletFlatEffectivenessPercent,
+      ringEffectivenessPercent,
+      ringFlatEffectivenessPercent,
     );
     const trainingBonuses = training.getTrainingBonuses();
     const soulBonuses = this.getSoulShopBonuses();

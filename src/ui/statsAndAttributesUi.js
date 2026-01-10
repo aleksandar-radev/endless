@@ -475,18 +475,12 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           const span = document.createElement('span');
           span.id = `${key}-value`;
 
-          if (showValue) {
-            span.textContent = formatDisplayValue(key, hero.stats[key]);
-            appendDamagePercentBonus(span, key);
+          if (hero.stats[key] === 0 && options.hideZeroStats) {
+            row.classList.add('hidden');
           }
 
           row.appendChild(lbl);
           row.appendChild(span);
-
-          if (showValue) {
-            span.textContent = formatDisplayValue(key, hero.stats[key]);
-            appendDamagePercentBonus(span, key);
-          }
           targetPanel.appendChild(row);
           lbl.addEventListener('mouseenter', (e) =>
             showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e),
@@ -525,6 +519,11 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           span.id = `${key}-value`;
           span.textContent = formatDisplayValue(key, hero.stats[key]);
           appendDamagePercentBonus(span, key);
+
+          if (hero.stats[key] === 0 && options.hideZeroStats) {
+            row.classList.add('hidden');
+          }
+
           row.appendChild(lbl);
           row.appendChild(span);
           panel.appendChild(row);
@@ -564,6 +563,11 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     Object.keys(hero.stats).forEach((key) => {
       const el = document.getElementById(`${key}-value`);
       if (el) {
+        const val = hero.stats[key];
+        const row = el.closest('.stat-row');
+        if (row) {
+          row.classList.toggle('hidden', val === 0 && options.hideZeroStats);
+        }
         // Special formatting for certain stats
         if (key === 'attackSpeed') {
           el.textContent = formatNumber(hero.stats.attackSpeed.toFixed(getStatDecimalPlaces('attackSpeed')));

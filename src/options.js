@@ -53,6 +53,7 @@ export class Options {
     this.startingStage = data.startingStage || null;
     this.showEnemyStats = data.showEnemyStats ?? false;
     this.showAllStats = data.showAllStats ?? false;
+    this.hideZeroStats = data.hideZeroStats ?? false;
     this.resetRequired = data.resetRequired ?? null;
     this.stageSkip = data.stageSkip || 0;
     this.arenaBossSkip = data.arenaBossSkip || 0;
@@ -339,6 +340,15 @@ export class Options {
         i18nKey: 'options.showAllStats',
         labelText: 'Show All Stats:',
         stateKey: 'showAllStats',
+        onChange: () => updateStatsAndAttributesUI(true),
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'hide-zero-stats-toggle',
+        i18nKey: 'options.hideZeroStats',
+        labelText: 'Hide Zero Value Stats:',
+        stateKey: 'hideZeroStats',
         onChange: () => updateStatsAndAttributesUI(true),
       }),
     );

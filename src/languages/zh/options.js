@@ -85,6 +85,8 @@ export default {
   'options.showSkillCooldowns.tooltip': '在技能上显示数字冷却计时器',
   'options.showAllStats': '显示所有属性',
   'options.showAllStats.tooltip': '显示所有可用属性',
+  'options.hideZeroStats': '隐藏零值属性',
+  'options.hideZeroStats.tooltip': '在属性面板中隐藏值为零的属性',
   'options.quickBuy': '启用快速购买',
   'options.quickBuy.tooltip': '单击一次购买物品（跳过确认）',
   'options.bulkBuy': '启用批量模式（训练、技能、灵魂商店）',

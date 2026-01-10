@@ -83,3 +83,7 @@ export function itemStatScaleFactor(level, tier = 1) {
   const levelScale = 1 + (level - 1) * ITEM_FLAT_STAGE_SCALING_PERCENT;
   return tierScale * levelScale;
 }
+
+export function isFlatStat(stat) {
+  return !stat.endsWith('Percent') && !stat.endsWith('Chance');
+}
