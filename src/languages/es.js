@@ -17,6 +17,7 @@ import classes from './es/classes.js';
 import runes from './es/runes.js';
 import { enemies } from './es/enemies.js';
 import other from './es/other.js';
+import ads from './es/ads.js';
 
 // Combine all translation modules
 export default {
@@ -36,4 +37,5 @@ export default {
   ...runes,
   ...enemies,
   ...other,
+  ...ads,
 };

@@ -25,6 +25,7 @@ import { ELEMENTS, BASE_EXTRA_RESOURCE_DAMAGE_CAP_PER_LEVEL } from './constants/
 import { ENEMY_RARITY } from './constants/enemies.js';
 import { STATS, getDivisor, getStatDecimalPlaces } from './constants/stats/stats.js';
 import { AILMENTS } from './constants/ailments.js';
+import { AD_BONUS_DURATION } from './constants/ads.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 const ATTRIBUTE_KEYS = Object.keys(ATTRIBUTES);
@@ -199,6 +200,16 @@ export default class Hero {
 
     this.attributeElementalDamageFromIntelligence = 0;
 
+    this.adBonuses = {
+      active: [], // Array of { type, value, expiry }
+      history: [],
+    };
+    if (savedData && savedData.adBonuses) {
+      this.adBonuses = savedData.adBonuses;
+    }
+    // Clean up expired on load
+    this.updateAdBonuses(0);
+
     handleSavedData(savedData, this);
   }
 
@@ -214,6 +225,8 @@ export default class Hero {
   }
 
   gainExp(amount) {
+    const mult = this.getAdResourceMultiplier('xp');
+    amount = Math.floor(amount * mult);
     this.exp += amount;
     let didLevelUp = false;
     document.dispatchEvent(new CustomEvent('xpGained', { detail: amount }));
@@ -243,6 +256,8 @@ export default class Hero {
   }
 
   gainGold(amount) {
+    const mult = this.getAdResourceMultiplier('gold');
+    amount = Math.floor(amount * mult);
     statistics.increment('totalGoldEarned', null, amount);
     this.gold += amount;
     if (game.activeTab === 'training') {
@@ -732,6 +747,15 @@ export default class Hero {
           value = flatValues[stat] + (ascensionBonuses[stat] || 0);
           if (percent) value *= 1 + percent;
         }
+
+        // --- Ad Bonuses Multiplier (Applies after percetages) ---
+        // For stats that are "multiplicative to other bonuses"
+        const adMultipliers = this.getAdBonusMultipliers();
+        if (adMultipliers[stat]) {
+          value *= adMultipliers[stat];
+        }
+
+
         if (stat === 'mana') {
           value += (this.stats.manaPerLevel || 0) * (this.level - 1);
         }
@@ -797,7 +821,6 @@ export default class Hero {
       this.stats.life += transfer;
       this.stats.mana = Math.max(0, this.stats.mana - transfer);
     }
-
     if (this.stats.extraEvasionFromLifePercent > 0) {
       this.stats.evasion += this.stats.life * this.stats.extraEvasionFromLifePercent;
     }
@@ -1427,4 +1450,71 @@ export default class Hero {
       }
     });
   }
+
+
+  updateAdBonuses(dt) {
+    const now = Date.now();
+    let changed = false;
+    if (this.adBonuses.active.length > 0) {
+      const initialLen = this.adBonuses.active.length;
+      this.adBonuses.active = this.adBonuses.active.filter((b) => b.expiry > now);
+      if (this.adBonuses.active.length !== initialLen) {
+        changed = true;
+      }
+    }
+    if (changed) {
+      this.queueRecalculateFromAttributes();
+      // Notify UI about update?
+      document.dispatchEvent(new CustomEvent('adBonusesUpdated'));
+    }
+  }
+
+  activateAdBonus(bonusType, value) {
+    const now = Date.now();
+    this.adBonuses.active = this.adBonuses.active.filter((b) => b.type !== bonusType);
+
+    this.adBonuses.active.push({
+      type: bonusType,
+      value: value,
+      expiry: now + AD_BONUS_DURATION,
+      startTime: now,
+    });
+    this.queueRecalculateFromAttributes();
+    document.dispatchEvent(new CustomEvent('adBonusesUpdated'));
+    dataManager.saveGame();
+  }
+
+  getAdBonusMultipliers() {
+    const multipliers = {};
+    const getMult = (val) => 1 + (val / 100);
+
+    this.adBonuses.active.forEach((bonus) => {
+      if (bonus.type === 'totalDamagePercent') {
+        multipliers['damage'] = (multipliers['damage'] || 1) * getMult(bonus.value);
+      } else if (bonus.type === 'lifePercent') {
+        multipliers['life'] = (multipliers['life'] || 1) * getMult(bonus.value);
+      } else if (bonus.type === 'armorPercent') {
+        multipliers['armor'] = (multipliers['armor'] || 1) * getMult(bonus.value);
+      } else if (bonus.type === 'evasionPercent') {
+        multipliers['evasion'] = (multipliers['evasion'] || 1) * getMult(bonus.value);
+      }
+    });
+    return multipliers;
+  }
+
+  getAdResourceMultiplier(type) {
+    let mult = 1;
+    const now = Date.now();
+    this.adBonuses.active.forEach((bonus) => {
+      if (bonus.expiry <= now) return;
+      if (type === 'xp' && bonus.type === 'xpBonusPercent') {
+        mult *= (1 + bonus.value / 100);
+      }
+      if (type === 'gold' && bonus.type === 'goldGainPercent') {
+        mult *= (1 + bonus.value / 100);
+      }
+    });
+    return mult;
+  }
 }
+

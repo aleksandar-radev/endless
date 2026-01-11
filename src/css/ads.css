@@ -1,0 +1,291 @@
+/* src/css/ads.css */
+
+/* --- Modal Styles (Previous Config) --- */
+#ad-bonus-modal {
+  background: rgba(10, 10, 14, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+  border-radius: 16px;
+  padding: 0;
+  max-width: 900px;
+  width: 90%;
+  color: #eee;
+  font-family: 'Outfit', sans-serif;
+  overflow: hidden;
+  position: relative;
+}
+
+#ad-bonus-modal h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin: 2rem 0 1rem 0;
+  background: linear-gradient(to right, #ffd700, #ffaa00);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Close Button (X) */
+.ad-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  z-index: 10;
+}
+
+.ad-modal-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(90deg);
+}
+
+/* Cards Container */
+.bonus-cards {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem 3rem 4rem 3rem;
+  flex-wrap: wrap;
+}
+
+/* Individual Card */
+.bonus-card {
+  background: linear-gradient(145deg, rgba(30, 30, 40, 0.9), rgba(20, 20, 30, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  width: 220px;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.bonus-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255, 215, 0, 0.05), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.bonus-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  border-color: rgba(255, 215, 0, 0.5);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 215, 0, 0.2);
+}
+
+.bonus-card:hover::before {
+  opacity: 1;
+}
+
+/* Icon */
+.bonus-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+  transition: transform 0.3s ease;
+}
+
+.bonus-card:hover .bonus-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.bonus-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Description */
+.bonus-desc {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #e0e0e0;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+/* Duration */
+.bonus-duration {
+  font-size: 0.9rem;
+  color: #888;
+  margin-top: auto;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* --- Ads Tab Panel Styles --- */
+.ads-container {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ads-container h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #ffd700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+  padding-bottom: 0.5rem;
+}
+
+/* Active Bonuses Section */
+.active-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.no-active {
+  color: #777;
+  font-style: italic;
+  padding: 1rem;
+}
+
+.active-bonus-item {
+  background: rgba(255, 215, 0, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 250px;
+}
+
+.active-bonus-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.active-bonus-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.active-bonus-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.active-bonus-desc {
+  font-weight: bold;
+  color: #ffd700;
+}
+
+.active-bonus-timer {
+  font-family: monospace;
+  color: #bbb;
+}
+
+/* Available Ads Grid */
+.ads-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.ad-offer-card {
+  background: rgba(30, 30, 40, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+}
+
+.ad-offer-card:not(.disabled):hover {
+  transform: translateY(-5px);
+  border-color: #ffd700;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.ad-offer-card.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(20, 20, 25, 0.6);
+}
+
+.ad-offer-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.ad-offer-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #eee;
+  margin-bottom: 0.5rem;
+}
+
+.ad-offer-desc {
+  font-size: 0.95rem;
+  color: #aaa;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+  flex-grow: 1;
+}
+
+.ad-offer-btn {
+  background: linear-gradient(45deg, #ffd700, #ffaa00);
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 25px;
+  color: #111;
+  font-weight: bold;
+  cursor: pointer;
+  transition: filter 0.2s ease;
+  width: 100%;
+}
+
+.ad-offer-card:not(.disabled) .ad-offer-btn:hover {
+  filter: brightness(1.1);
+}
+
+.ad-offer-card.disabled .ad-offer-btn {
+  background: #444;
+  color: #777;
+  cursor: not-allowed;
+}
+
+.ad-offer-sub {
+  font-size: 0.8rem;
+  color: #ffd700;
+  margin-top: 0.5rem;
+  opacity: 0.8;
+}

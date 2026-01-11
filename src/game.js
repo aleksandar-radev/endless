@@ -310,6 +310,7 @@ class Game {
 
     // Process hero ailments (only decay warmup during combat)
     hero.processAilments(100, this.gameStarted);
+    hero.updateAdBonuses(100);
 
     if (!this.gameStarted) return;
 

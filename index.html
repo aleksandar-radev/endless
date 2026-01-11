@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="/src/css/statistics.css" />
   <link rel="stylesheet" href="/src/css/region.css" />
   <link rel="stylesheet" href="/src/css/modal.css" />
+  <link rel="stylesheet" href="/src/css/ads.css" />
   <link rel="stylesheet" href="/src/css/devAccess.css" />
   <link rel="stylesheet" href="/src/css/quests.css" />
   <link rel="stylesheet" href="/src/css/options.css" />
@@ -38,6 +39,40 @@
 </head>
 
 <body>
+  <!-- GameMonetize SDK -->
+  <script type="text/javascript">
+    window.SDK_OPTIONS = {
+      gameId: "v3boyqdzmweepdezxg00txajj74moq58",
+      onEvent: function (a) {
+        switch (a.name) {
+          case "SDK_GAME_PAUSE":
+            // Pause the game
+            if (window.game && window.game.gameStarted) {
+              window.game.toggle(); // or implement a specific pause
+              window.game.isPausedByAd = true;
+            }
+            break;
+          case "SDK_GAME_START":
+            // Resume the game
+            if (window.game && window.game.isPausedByAd) {
+              window.game.toggle();
+              window.game.isPausedByAd = false;
+            }
+            break;
+          case "SDK_READY":
+            // SDK is ready
+            break;
+        }
+      }
+    };
+    (function (a, b, c) {
+      var d = a.getElementsByTagName(b)[0];
+      var e = a.createElement(b);
+      e.async = true;
+      e.src = c + "?v=" + new Date().getTime();
+      d.parentNode.insertBefore(e, d);
+    })(document, "script", "https://api.gamemonetize.com/sdk.js");
+  </script>
   <button class="sidebar-toggle" id="sidebar-toggle" data-i18n-aria-label="aria.openMenu" aria-label="">
     <img src="/icons/menu.svg" data-i18n-alt="icon.menu" alt="" />
   </button>
@@ -70,6 +105,7 @@
         <button class="tab-btn" data-tab="journal" data-i18n="tab.journal">Journal</button>
         <button class="tab-btn" data-tab="battleLog" data-i18n="tab.battleLog">Battle Log</button>
         <button class="tab-btn" data-tab="options" data-i18n="tab.mainOptions">Options</button>
+        <button class="tab-btn" data-tab="ads">Ads</button>
         <button class="tab-btn dev-btn" id="edev-btn" style="margin-top: auto">edev</button>
       </div>
     </div>
@@ -97,6 +133,7 @@
         <div id="journal" class="tab-panel"></div>
         <div id="battleLog" class="tab-panel"></div>
         <div id="options" class="tab-panel"></div>
+        <div id="ads" class="tab-panel"></div>
 
       </div>
 

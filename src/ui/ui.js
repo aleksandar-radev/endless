@@ -22,6 +22,7 @@ import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
 import { updateBuildingAffordability } from './buildingUi.js';
 import { TabIndicatorManager } from './tabIndicatorManager.js';
 import { initializeBossRegionUI, selectBoss, updateBossUI, updateBossRegionSelector } from './bossUi.js';
+import { initializeAdUI } from './adUi.js';
 import { ELEMENTS, BREAKPOINTS, IS_MOBILE_OR_TABLET } from '../constants/common.js';
 import { updateRegionUI, updateRegionSelectorButton } from '../region.js';
 import { calculateArmorReduction,
@@ -112,6 +113,7 @@ export function initializeUI() {
     }
   });
   initializeShopUI();
+  initializeAdUI();
   document.getElementById('start-btn').addEventListener('click', () => toggleGame());
 
   // Add tooltips to resource icons
