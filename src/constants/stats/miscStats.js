@@ -180,6 +180,13 @@ export const MISC_STATS = {
     div: 100,
     sub: 'misc',
   }),
+  adDamagePercent: createPercentStat({ sub: 'rewards', show: true }),
+  adLifePercent: createPercentStat({ sub: 'rewards', show: true }),
+  adArmorPercent: createPercentStat({ sub: 'rewards', show: true }),
+  adEvasionPercent: createPercentStat({ sub: 'rewards', show: true }),
+  adAllResistancePercent: createPercentStat({ sub: 'rewards', show: true }),
+  adXpBonusPercent: createPercentStat({ sub: 'rewards', show: true }),
+  adGoldGainPercent: createPercentStat({ sub: 'rewards', show: true }),
   manaCostReductionPercent: createPercentStat(),
   buffDurationPercent: createPercentStat({
     show: true,

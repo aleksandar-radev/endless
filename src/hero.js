@@ -725,6 +725,19 @@ export default class Hero {
       }
     });
 
+
+    // Calculate Ad Multipliers once
+    const adMultipliers = this.getAdBonusMultipliers();
+
+    // Inject into percentBonuses so they are picked up by the loop and formatted correctly
+    percentBonuses['adDamagePercent'] = (adMultipliers['damage'] || 1) - 1;
+    percentBonuses['adLifePercent'] = (adMultipliers['life'] || 1) - 1;
+    percentBonuses['adArmorPercent'] = (adMultipliers['armor'] || 1) - 1;
+    percentBonuses['adEvasionPercent'] = (adMultipliers['evasion'] || 1) - 1;
+    percentBonuses['adAllResistancePercent'] = (adMultipliers['allResistance'] || 1) - 1;
+    percentBonuses['adXpBonusPercent'] = (adMultipliers['xp'] || 1) - 1;
+    percentBonuses['adGoldGainPercent'] = (adMultipliers['gold'] || 1) - 1;
+
     for (const stat of STAT_KEYS) {
       let value;
       if (!stat.endsWith('Percent')) {
@@ -750,9 +763,11 @@ export default class Hero {
 
         // --- Ad Bonuses Multiplier (Applies after percetages) ---
         // For stats that are "multiplicative to other bonuses"
-        const adMultipliers = this.getAdBonusMultipliers();
         if (adMultipliers[stat]) {
-          value *= adMultipliers[stat];
+          // Defer damage stats to the end of the function to capture all modifications (including resources)
+          if (stat !== 'damage' && !ELEMENT_IDS.some((id) => stat === `${id}Damage`)) {
+            value *= adMultipliers[stat];
+          }
         }
 
 
@@ -1090,6 +1105,19 @@ export default class Hero {
         conversionDeltas[id] = delta;
       }
     });
+    // --- Apply Final Ad Multipliers for Damage ---
+    // We deferred this to ensure it multiplies the fully calculated damage (including resource additions)
+    const finalAdMultipliers = this.getAdBonusMultipliers();
+    if (finalAdMultipliers['damage']) {
+      this.stats.damage = Math.floor((this.stats.damage || 0) * finalAdMultipliers['damage']);
+    }
+    ELEMENT_IDS.forEach((id) => {
+      const key = `${id}Damage`;
+      if (finalAdMultipliers[key]) {
+        this.stats[key] = Math.floor((this.stats[key] || 0) * finalAdMultipliers[key]);
+      }
+    });
+
     this.damageConversionDeltas = conversionDeltas;
   }
 
@@ -1488,17 +1516,41 @@ export default class Hero {
     const multipliers = {};
     const getMult = (val) => 1 + (val / 100);
 
+    // Initialize with defaults
+    multipliers['damage'] = 1;
+    multipliers['life'] = 1;
+    multipliers['armor'] = 1;
+    multipliers['evasion'] = 1;
+    multipliers['allResistance'] = 1;
+    // ... add more as needed
+
     this.adBonuses.active.forEach((bonus) => {
+      const mult = getMult(bonus.value);
+
       if (bonus.type === 'totalDamagePercent') {
-        multipliers['damage'] = (multipliers['damage'] || 1) * getMult(bonus.value);
+        multipliers['damage'] *= mult;
+        ELEMENT_IDS.forEach((el) => {
+          const key = `${el}Damage`;
+          multipliers[key] = (multipliers[key] || 1) * mult;
+        });
       } else if (bonus.type === 'lifePercent') {
-        multipliers['life'] = (multipliers['life'] || 1) * getMult(bonus.value);
+        multipliers['life'] *= mult;
       } else if (bonus.type === 'armorPercent') {
-        multipliers['armor'] = (multipliers['armor'] || 1) * getMult(bonus.value);
+        multipliers['armor'] *= mult;
       } else if (bonus.type === 'evasionPercent') {
-        multipliers['evasion'] = (multipliers['evasion'] || 1) * getMult(bonus.value);
+        multipliers['evasion'] *= mult;
+      } else if (bonus.type === 'allResistancePercent') {
+        multipliers['allResistance'] *= mult;
+        RESISTANCE_KEYS.forEach((key) => {
+          multipliers[key] = (multipliers[key] || 1) * mult;
+        });
+      } else if (bonus.type === 'xpBonusPercent') {
+        multipliers['xp'] = (multipliers['xp'] || 1) * mult;
+      } else if (bonus.type === 'goldGainPercent') {
+        multipliers['gold'] = (multipliers['gold'] || 1) * mult;
       }
     });
+
     return multipliers;
   }
 
@@ -1509,12 +1561,13 @@ export default class Hero {
       if (bonus.expiry <= now) return;
       if (type === 'xp' && bonus.type === 'xpBonusPercent') {
         mult *= (1 + bonus.value / 100);
+        this.stats.adXpBonusPercent = (mult - 1) * 100;
       }
       if (type === 'gold' && bonus.type === 'goldGainPercent') {
         mult *= (1 + bonus.value / 100);
+        this.stats.adGoldGainPercent = (mult - 1) * 100;
       }
     });
     return mult;
   }
 }
-
