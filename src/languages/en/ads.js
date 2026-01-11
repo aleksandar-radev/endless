@@ -23,4 +23,7 @@ export default {
   'ads.bonus.evasionPercent': 'Evasion',
   'ads.bonus.xpBonusPercent': 'Experience',
   'ads.bonus.goldGainPercent': 'Gold',
+  'ads.bonus.allResistancePercent': 'All Resistance',
+  'ads.blocker.title': 'Ad Blocker Detected',
+  'ads.blocker.message': 'It looks like you are using an ad blocker. To watch ads for bonuses, please disable your ad blocker for this site or whitelist it.',
 };

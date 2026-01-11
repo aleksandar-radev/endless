@@ -58,6 +58,10 @@
               window.game.toggle();
               window.game.isPausedByAd = false;
             }
+            // Trigger Ad UI callback if exists
+            if (typeof window.handleAdFinished === 'function') {
+              window.handleAdFinished();
+            }
             break;
           case "SDK_READY":
             // SDK is ready

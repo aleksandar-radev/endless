@@ -23,4 +23,7 @@ export default {
   'ads.bonus.evasionPercent': '闪避',
   'ads.bonus.xpBonusPercent': '经验',
   'ads.bonus.goldGainPercent': '金币',
+  'ads.bonus.allResistancePercent': '全抗性',
+  'ads.blocker.title': '检测到广告拦截器',
+  'ads.blocker.message': '看起来您正在使用广告拦截器。如需观看广告获取奖励，请为本站禁用广告拦截器或将其加入白名单。',
 };

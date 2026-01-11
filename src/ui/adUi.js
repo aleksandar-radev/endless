@@ -15,12 +15,33 @@ function formatTime(seconds) {
 }
 
 let updateInterval;
+let adBlockDetected = false;
+
+// Robust AdBlock detection: try to fetch known ad-serving domains
+async function checkAdBlocker() {
+  // If we are on localhost, we might still want to check, OR we can default to false.
+  // The user requested that we detect if blocked.
+  // A common ad blocker test URL:
+  const adTestUrl = 'https://imasdk.googleapis.com/js/sdkloader/ima3.js';
+
+  try {
+    const response = await fetch(adTestUrl, { method: 'HEAD', mode: 'no-cors' });
+    // If we get here, it wasn't blocked by the network layer (or at least DNS/TCP succeeded enough)
+    // Note: 'no-cors' opaque response doesn't give status, but if blocked by extension, it usually throws.
+    adBlockDetected = false;
+  } catch (e) {
+    console.warn('AdBlock check failed:', e);
+    adBlockDetected = true;
+  }
+}
 
 export function initializeAdUI() {
   const adsTab = document.getElementById('ads');
   if (!adsTab) return;
 
-  renderAdsTab();
+  checkAdBlocker().then(() => {
+    renderAdsTab();
+  });
 
   // Start timer loop
   if (updateInterval) clearInterval(updateInterval);
@@ -32,6 +53,29 @@ export function initializeAdUI() {
 function renderAdsTab() {
   const adsTab = document.getElementById('ads');
   if (!adsTab) return;
+
+  // If ad blocked, show warning
+  if (adBlockDetected) {
+    adsTab.innerHTML = `
+        <div class="ads-container">
+            <div class="ad-blocker-warning">
+                <h2>${t('ads.blocker.title')}</h2>
+                <div class="warning-icon">
+                    <img src="${BASE_PATH}/icons/disabled.png" alt="Ad Blocker Detected">
+                </div>
+                <p>${t('ads.blocker.message')}</p>
+            </div>
+            
+             <div class="active-bonuses-section" style="opacity: 0.5; pointer-events: none;">
+                <h3>${t('ads.activeBonuses.title')}</h3>
+                <div class="active-list" id="active-ad-bonuses-list">
+                    <div class="no-active">${t('ads.activeBonuses.none')}</div>
+                </div>
+            </div>
+        </div>
+      `;
+    return;
+  }
 
   const activeBonuses = hero.adBonuses.active || [];
 
@@ -51,7 +95,7 @@ function renderAdsTab() {
                 <!-- General Bonus Ad -->
                 <div class="ad-offer-card" onclick="window.showAd('bonus')">
                     <div class="ad-offer-icon">
-                        <img src="${BASE_PATH}/icons/transmutation-orb.svg" alt="Bonus">
+                        <img src="${BASE_PATH}/icons/bonus.png" alt="Bonus">
                     </div>
                     <div class="ad-offer-title">${t('ads.offer.bonus.title')}</div>
                     <div class="ad-offer-desc">${t('ads.offer.bonus.desc')}</div>
@@ -62,7 +106,7 @@ function renderAdsTab() {
                 <!-- Placeholder for future types -->
                 <div class="ad-offer-card disabled">
                     <div class="ad-offer-icon">
-                        <img src="${BASE_PATH}/icons/crystal.svg" alt="Materials">
+                        <img src="${BASE_PATH}/icons/materials.png" alt="Materials">
                     </div>
                     <div class="ad-offer-title">${t('ads.offer.material.title')}</div>
                     <div class="ad-offer-desc">${t('ads.offer.material.desc')}</div>
@@ -71,7 +115,7 @@ function renderAdsTab() {
 
                  <div class="ad-offer-card disabled">
                     <div class="ad-offer-icon">
-                         <img src="${BASE_PATH}/icons/lightning.png" alt="Energy">
+                         <img src="${BASE_PATH}/icons/energy.png" alt="Energy">
                     </div>
                     <div class="ad-offer-title">${t('ads.offer.energy.title')}</div>
                     <div class="ad-offer-desc">${t('ads.offer.energy.desc')}</div>
@@ -138,21 +182,59 @@ export function showAd(type = 'bonus') {
     return;
   }
 
+  if (adBlockDetected) {
+    alert(t('ads.blocker.message'));
+    return;
+  }
+
   if (typeof window.sdk !== 'undefined' && typeof window.sdk.showBanner !== 'undefined') {
-    const originalOnEvent = window.SDK_OPTIONS.onEvent;
-    window.SDK_OPTIONS.onEvent = function(a) {
-      originalOnEvent(a);
-      if (a.name === 'SDK_GAME_START') {
-        if (type === 'bonus') showBonusSelectionModal();
-      }
-    };
+    // Hide resource bar
+    const rateBar = document.querySelector('.rate-counters-bar');
+    if (rateBar) rateBar.style.display = 'none';
+
+    // Hook SDK_GAME_START to know when ad finished
+    // We need to be careful not to override existing hook if any,
+    // but typically we can wrap it.
+    // However, window.SDK_OPTIONS.onEvent is defined in index.html.
+    // We can't easily change it here without overwriting.
+    // A better approach is to rely on index.html calling a global function or event.
+    // BUT, for now, we will override it and call the original if present.
+
+    // NOTE: SDK_OPTIONS is configuration. The SDK might have already consumed it on init.
+    // GameMonetize SDK usually reads window.SDK_OPTIONS at startup. Changing it later might not work.
+    // BUT the onEvent is a function reference, if the SDK calls window.SDK_OPTIONS.onEvent() directly, it might work.
+    // If the SDK copied the options, then we are out of luck and need to modify index.html
+    // or set a global flag that index.html checks.
+
+    // Strategy: We set a global "pendingAdReward" flag.
+    // index.html's onEvent(SDK_GAME_START) will check this flag.
+    window.pendingAdType = type;
 
     window.sdk.showBanner();
   } else {
+    // Fallback if SDK is undefined but adBlockDetected was false (maybe just not loaded yet?)
     console.warn('GameMonetize SDK not loaded.');
-    if (type === 'bonus') showBonusSelectionModal();
+    // If we are sure it's not blocked, we might want to just show the reward?
+    // Or show error. Let's assume error/block if not present here.
+    alert('Ad SDK not ready. Please try again or check ad blocker.');
   }
 }
+
+// Function called by index.html when ad finishes (SDK_GAME_START)
+window.handleAdFinished = function() {
+  // Restore UI
+  const rateBar = document.querySelector('.rate-counters-bar');
+  if (rateBar) rateBar.style.display = '';
+
+  if (window.pendingAdType) {
+    if (window.pendingAdType === 'bonus') {
+      showBonusSelectionModal();
+    }
+    window.pendingAdType = null;
+  }
+};
+
+// Also handle if ad is skipped or fails? GameMonetize usually just resumes game.
 
 function showBonusSelectionModal() {
   const options = [];
