@@ -384,6 +384,7 @@ class Game {
       updateResources();
       updateEnemyStats();
     } else {
+      this.overkillDamage = 0;
       // Stop all active buffs when combat ends
       skillTree.stopAllBuffs();
       updateBuffIndicators();
