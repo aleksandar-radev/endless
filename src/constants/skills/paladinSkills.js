@@ -1,6 +1,6 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { scaleDownFlat, scaleUpFlat } from '../../common.js';
+import { getScalingFlat, getScalingPercent } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Paladin skills extracted from skills.js
@@ -18,8 +18,12 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.holyLight'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      life: scaleUpFlat(level, 5, 5, 0.2),
-      lifePercent: Math.min(scaleDownFlat(level, 0.065, 5, 50), 5),
+      life: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      lifePercent: Math.min(getScalingPercent({
+        level, base: 1, softcap: 2000, linear: 0.1, power: 0.6,
+      }), 5),
     }),
   },
   smite: {
@@ -32,10 +36,24 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.smite'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 1.2, 6, 0.15),
-      damagePercent: scaleDownFlat(level),
-      fireDamage: scaleUpFlat(level, 2, 5, 0.15),
-      fireDamagePercent: scaleDownFlat(level, 1.8),
+      damage: getScalingFlat({
+        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      }),
+      damagePerLevel: getScalingFlat({
+        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      damagePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      fireDamage: getScalingFlat({
+        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      }),
+      fireDamagePerLevel: getScalingFlat({
+        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      fireDamagePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
   shieldBash: {
@@ -50,8 +68,12 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.shieldBash'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: scaleUpFlat(level, 6, 5, 0.2),
-      damagePercent: scaleDownFlat(level, 8),
+      damage: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      damagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
   divineProtection: {
@@ -65,10 +87,24 @@ export const PALADIN_SKILLS = {
     effect: (level) => {
       const buffEffectiveness = 1 + (hero.stats.divineProtectionBuffEffectivenessPercent || 0);
       return {
-        armor: scaleUpFlat(level, 2) * buffEffectiveness,
-        armorPercent: scaleDownFlat(level, 2) * buffEffectiveness,
-        thornsDamage: scaleUpFlat(level, 4, 6) * buffEffectiveness,
-        thornsDamagePercent: scaleDownFlat(level, 3) * buffEffectiveness,
+        armor: getScalingFlat({
+          level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+        }) * buffEffectiveness,
+        armorPerLevel: getScalingFlat({
+          level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+        }) * buffEffectiveness,
+        armorPercent: getScalingPercent({
+          level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+        }) * buffEffectiveness,
+        thornsDamage: getScalingFlat({
+          level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+        }) * buffEffectiveness,
+        thornsDamagePerLevel: getScalingFlat({
+          level, base: 0.01, increment: 0.005, interval: 50, bonus: 0,
+        }) * buffEffectiveness,
+        thornsDamagePercent: getScalingPercent({
+          level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+        }) * buffEffectiveness,
       };
     },
   },
@@ -86,10 +122,24 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.consecration'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamage: scaleUpFlat(level, 1.5, 5, 0.2),
-      fireDamagePercent: scaleDownFlat(level, 4),
-      lightningDamage: scaleUpFlat(level, 1.5, 5, 0.2),
-      lightningDamagePercent: scaleDownFlat(level, 4),
+      fireDamage: getScalingFlat({
+        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      }),
+      fireDamagePerLevel: getScalingFlat({
+        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      fireDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      lightningDamage: getScalingFlat({
+        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      }),
+      lightningDamagePerLevel: getScalingFlat({
+        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      lightningDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
   greaterHealing: {
@@ -104,8 +154,15 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.greaterHealing'),
     maxLevel: () => Infinity,
     effect: (level) => ({
-      life: scaleUpFlat(level, 8),
-      lifePercent: Math.min(scaleDownFlat(level, 0.25), 20),
+      life: getScalingFlat({
+        level, base: 20, increment: 4, interval: 50, bonus: 0.15,
+      }),
+      lifePerLevel: getScalingFlat({
+        level, base: 0.02, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      lifePercent: Math.min(getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }), 20),
     }),
   },
 
@@ -122,9 +179,18 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.divineShield'),
     maxLevel: () => Infinity,
     effect: (level) => ({
-      armor: scaleUpFlat(level, 4),
-      armorPercent: scaleDownFlat(level, 6),
-      blockChance: Math.min(scaleDownFlat(level, 0.2), 25),
+      armor: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      armorPerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      armorPercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      blockChance: Math.min(getScalingPercent({
+        level, base: 2, softcap: 2000, linear: 0.1, power: 0.6,
+      }), 25),
     }),
   },
   auraOfLight: {
@@ -136,9 +202,21 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.auraOfLight'),
     maxLevel: () => Infinity,
     effect: (level) => ({
-      life: scaleUpFlat(level, 15),
-      lifePercent: scaleDownFlat(level, 1.2),
-      allResistance: Math.min(scaleUpFlat(level, 0.25), 30),
+      life: getScalingFlat({
+        level, base: 25, increment: 5, interval: 50, bonus: 0.15,
+      }),
+      lifePerLevel: getScalingFlat({
+        level, base: 0.025, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      lifePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      allResistance: Math.min(getScalingFlat({
+        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      }), 30),
+      allResistancePerLevel: getScalingFlat({
+        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      }),
     }),
   },
   thornedBulwark: {
@@ -164,18 +242,20 @@ export const PALADIN_SKILLS = {
     icon: () => 'wrath',
     description: () => t('skill.wrathOfTheHeavens'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const fireDamage = scaleDownFlat(level, 5);
-      const lightningDamage = scaleUpFlat(level, 5);
-      const lightningDamagePercent = scaleDownFlat(level, 3);
-      const fireDamagePercent = scaleDownFlat(level, 3);
-      return {
-        lightningDamage: lightningDamage * 4,
-        lightningDamagePercent: lightningDamagePercent * 4,
-        fireDamage: fireDamage * 4,
-        fireDamagePercent: fireDamagePercent * 4,
-      };
-    },
+    effect: (level) => ({
+      lightningDamage: getScalingFlat({
+        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      }),
+      lightningDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      fireDamage: getScalingFlat({
+        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      }),
+      fireDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+    }),
   },
   beaconOfFaith: {
     id: 'beaconOfFaith',
@@ -186,10 +266,21 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.beaconOfFaith'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      life: scaleUpFlat(level, 20),
-      lifeRegenPercent: scaleDownFlat(level, 0.5),
-      lifeRegenOfTotalPercent: Math.min(scaleDownFlat(level, 0.1), 1),
-      extraDamageFromLifePercent: Math.min(scaleDownFlat(level, 0.0065), 0.75),
+      life: getScalingFlat({
+        level, base: 30, increment: 6, interval: 50, bonus: 0.15,
+      }),
+      lifePerLevel: getScalingFlat({
+        level, base: 0.03, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      lifeRegenPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      lifeRegenOfTotalPercent: Math.min(getScalingPercent({
+        level, base: 0.1, softcap: 2000, linear: 0.01, power: 0.5,
+      }), 1),
+      extraDamageFromLifePercent: Math.min(getScalingPercent({
+        level, base: 0.1, linear: 0.05,
+      }) / 100, 0.75),
     }),
   },
 
@@ -206,9 +297,18 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.holyBarrier'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      vitality: scaleUpFlat(level, 4),
-      vitalityPercent: scaleDownFlat(level, 0.5),
-      resurrectionChance: Math.min(scaleDownFlat(level, 0.1), 20),
+      vitality: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      vitalityPerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      vitalityPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      resurrectionChance: Math.min(getScalingPercent({
+        level, base: 2, softcap: 2000, linear: 0.2, power: 0.5,
+      }), 20),
     }),
   },
 
@@ -218,9 +318,15 @@ export const PALADIN_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(scaleDownFlat(level, 1), 120),
-        damage: scaleUpFlat(level, 4),
-        attackSpeed: Math.min(Math.max(0.9, 0.7 + scaleDownFlat(level, 0.003)), 2.2),
+        percentOfPlayerDamage: Math.min(getScalingPercent({
+          level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+        }), 120),
+        damage: getScalingFlat({
+          level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+        }),
+        attackSpeed: Math.min(Math.max(0.9, 0.7 + getScalingPercent({
+          level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+        }) / 100), 2.2),
       };
     },
     manaCost: (level) => 20 + level * 0.875,
@@ -244,8 +350,15 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.divineWrath'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: scaleDownFlat(level, 5),
-      lifePerHit: scaleUpFlat(level, 2, 5, 0.2),
+      damagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      lifePerHit: getScalingFlat({
+        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      }),
+      lifePerHitPerLevel: getScalingFlat({
+        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      }),
     }),
   },
   guardianAngel: {
@@ -257,11 +370,27 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.guardianAngel'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeedPercent: scaleDownFlat(level, 0.5),
-      resurrectionChance: Math.min(scaleDownFlat(level, 0.1), 50),
-      lifeRegen: scaleUpFlat(level, 2, 5, 0.2),
-      lifeRegenPercent: scaleDownFlat(level, 0.5),
-      allResistance: scaleUpFlat(level, 8),
+      attackSpeedPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      resurrectionChance: Math.min(getScalingPercent({
+        level, base: 2, softcap: 2000, linear: 0.2, power: 0.5,
+      }), 50),
+      lifeRegen: getScalingFlat({
+        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      }),
+      lifeRegenPerLevel: getScalingFlat({
+        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      lifeRegenPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      allResistance: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      allResistancePerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.005, interval: 50, bonus: 0,
+      }),
     }),
   },
 
@@ -275,12 +404,30 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.ascension'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: scaleDownFlat(level, 0.75),
-      endurance: scaleUpFlat(level, 3),
-      endurancePercent: scaleDownFlat(level, 2),
-      vitality: scaleUpFlat(level, 3),
-      vitalityPercent: scaleDownFlat(level, 2),
-      attackRatingPercent: scaleDownFlat(level, 3),
+      elementalDamagePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      endurance: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      endurancePerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      endurancePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      vitality: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      vitalityPerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      vitalityPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      attackRatingPercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
 
@@ -294,9 +441,21 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.celestialGuard'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armorPercent: scaleDownFlat(level, 2),
-      blockChance: Math.min(scaleDownFlat(level, 0.1), 25),
-      lifeRegenPercent: scaleDownFlat(level),
+      armor: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      armorPerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      armorPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      blockChance: Math.min(getScalingPercent({
+        level, base: 2, softcap: 2000, linear: 0.1, power: 0.6,
+      }), 25),
+      lifeRegenPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
   holyCrusade: {
@@ -309,8 +468,12 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.holyCrusade'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: scaleDownFlat(level, 2),
-      fireDamagePercent: scaleDownFlat(level, 3),
+      damagePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      fireDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
 
@@ -327,9 +490,24 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.radiantAegis'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: scaleUpFlat(level, 15, 4, 0.1),
-      allResistance: scaleUpFlat(level, 12.25, 4, 0.1),
-      thornsDamage: scaleUpFlat(level, 20, 4, 1),
+      armor: getScalingFlat({
+        level, base: 35, increment: 7, interval: 50, bonus: 0.15,
+      }),
+      armorPerLevel: getScalingFlat({
+        level, base: 0.035, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      allResistance: getScalingFlat({
+        level, base: 25, increment: 5, interval: 50, bonus: 0.15,
+      }),
+      allResistancePerLevel: getScalingFlat({
+        level, base: 0.025, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      thornsDamage: getScalingFlat({
+        level, base: 50, increment: 10, interval: 50, bonus: 0.15,
+      }),
+      thornsDamagePerLevel: getScalingFlat({
+        level, base: 0.05, increment: 0.01, interval: 50, bonus: 0,
+      }),
     }),
   },
   divineJudgment: {
@@ -343,16 +521,17 @@ export const PALADIN_SKILLS = {
     icon: () => 'divine-judgment',
     description: () => t('skill.divineJudgment'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const damage = scaleUpFlat(level, 15);
-      const lightningDamagePercent = scaleDownFlat(level, 3);
-      const fireDamagePercent = scaleDownFlat(level, 3);
-      return {
-        damage: damage * 4,
-        lightningDamagePercent: lightningDamagePercent * 4,
-        fireDamagePercent: fireDamagePercent * 4,
-      };
-    },
+    effect: (level) => ({
+      damage: getScalingFlat({
+        level, base: 40, increment: 8, interval: 50, bonus: 0.15,
+      }),
+      lightningDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      fireDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+    }),
   },
 
   // Tier 3000 Skills
@@ -365,9 +544,15 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.angelicResurgence'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      resurrectionChance: Math.min(scaleDownFlat(level, 0.1), 50),
-      lifePercent: scaleDownFlat(level, 1.5),
-      attackSpeedPercent: scaleDownFlat(level, 0.5),
+      resurrectionChance: Math.min(getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.2, power: 0.5,
+      }), 50),
+      lifePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      attackSpeedPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
   sacredGround: {
@@ -382,9 +567,18 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.sacredGround'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegen: scaleUpFlat(level, 5, 5, 1),
-      lifeRegenPercent: scaleDownFlat(level, 1.5),
-      manaRegenPercent: scaleDownFlat(level),
+      lifeRegen: getScalingFlat({
+        level, base: 20, increment: 4, interval: 50, bonus: 0.15,
+      }),
+      lifeRegenPerLevel: getScalingFlat({
+        level, base: 0.02, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      lifeRegenPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      manaRegenPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
 
@@ -398,9 +592,18 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.eternalLight'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: scaleDownFlat(level, 2),
-      allResistance: scaleUpFlat(level, 15),
-      lifePercent: scaleDownFlat(level, 2),
+      elementalDamagePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      allResistance: getScalingFlat({
+        level, base: 40, increment: 8, interval: 50, bonus: 0.15,
+      }),
+      allResistancePerLevel: getScalingFlat({
+        level, base: 0.04, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      lifePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
   championOfFaith: {
@@ -413,9 +616,21 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.championOfFaith'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: scaleDownFlat(level, 3),
-      lightningDamagePercent: scaleDownFlat(level, 2.5),
-      fireDamagePercent: scaleDownFlat(level, 3),
+      damage: getScalingFlat({
+        level, base: 50, increment: 10, interval: 50, bonus: 0.15,
+      }),
+      damagePerLevel: getScalingFlat({
+        level, base: 0.05, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      damagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      lightningDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      fireDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
 };

@@ -1,6 +1,6 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { scaleDownFlat, scaleUpFlat } from '../../common.js';
+import { getScalingFlat, getScalingPercent } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Mage skills
@@ -17,14 +17,17 @@ export const MAGE_SKILLS = {
     icon: () => 'missile',
     description: () => t('skill.magicMissile'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const waterDamage = scaleUpFlat(level, 3, 6);
-      const waterDamagePercent = scaleDownFlat(level, 4);
-      return {
-        waterDamage: waterDamage * 4,
-        waterDamagePercent: waterDamagePercent * 4,
-      };
-    },
+    effect: (level) => ({
+      waterDamage: getScalingFlat({
+        level, base: 5, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      waterDamagePerLevel: getScalingFlat({
+        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      waterDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+    }),
   },
   arcaneIntellect: {
     id: 'arcaneIntellect',
@@ -35,11 +38,18 @@ export const MAGE_SKILLS = {
     description: () => t('skill.arcaneIntellect'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      manaPercent: scaleDownFlat(level, 3),
-      wisdom: scaleUpFlat(level, 3),
-      wisdomPercent: scaleDownFlat(level, 1),
-      perseverance: scaleUpFlat(level, 2),
-      perseverancePercent: scaleDownFlat(level, 1),
+      wisdom: getScalingFlat({
+        level, base: 4, increment: 1, interval: 50, bonus: 0.1,
+      }),
+      wisdomPerLevel: getScalingFlat({
+        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      perseverance: getScalingFlat({
+        level, base: 2, increment: 0.5, interval: 50, bonus: 0.1,
+      }),
+      perseverancePerLevel: getScalingFlat({
+        level, base: 0.003, increment: 0.003, interval: 50, bonus: 0,
+      }),
     }),
   },
 
@@ -55,14 +65,17 @@ export const MAGE_SKILLS = {
     icon: () => 'frost-bolt',
     description: () => t('skill.frostBolt'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const coldDamage = scaleUpFlat(level, 2);
-      const coldDamagePercent = scaleDownFlat(level, 6);
-      return {
-        coldDamage: coldDamage * 4,
-        coldDamagePercent: coldDamagePercent * 4,
-      };
-    },
+    effect: (level) => ({
+      coldDamage: getScalingFlat({
+        level, base: 10, increment: 3, interval: 50, bonus: 0.15,
+      }),
+      coldDamagePerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      coldDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+    }),
   },
   fireBlast: {
     id: 'fireBlast',
@@ -75,14 +88,17 @@ export const MAGE_SKILLS = {
     icon: () => 'fire-blast',
     description: () => t('skill.fireBlast'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const fireDamagePercent = scaleDownFlat(level, 5);
-      const fireDamage = scaleUpFlat(level, 6);
-      return {
-        fireDamagePercent: fireDamagePercent * 4,
-        fireDamage: fireDamage * 4,
-      };
-    },
+    effect: (level) => ({
+      fireDamage: getScalingFlat({
+        level, base: 15, increment: 4, interval: 50, bonus: 0.15,
+      }),
+      fireDamagePerLevel: getScalingFlat({
+        level, base: 0.015, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      fireDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+    }),
   },
 
   // Tier 25 Skills
@@ -95,10 +111,18 @@ export const MAGE_SKILLS = {
     description: () => t('skill.mindControl'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      perseverance: scaleUpFlat(level, 4),
-      wisdom: scaleUpFlat(level, 8),
-      intelligence: scaleUpFlat(level, 2),
-      intelligencePercent: scaleDownFlat(level, 0.75),
+      intelligence: getScalingFlat({
+        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      }),
+      intelligencePerLevel: getScalingFlat({
+        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      wisdom: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      wisdomPerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.005, interval: 50, bonus: 0,
+      }),
     }),
   },
   manaShield: {
@@ -112,7 +136,11 @@ export const MAGE_SKILLS = {
     icon: () => 'mana-shield',
     description: () => t('skill.manaShield'),
     maxLevel: () => 250,
-    effect: (level) => ({ manaShieldPercent: Math.min(scaleDownFlat(level, 0.75), 100) }),
+    effect: (level) => ({
+      manaShieldPercent: Math.min(getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }), 100),
+    }),
   },
   crimsonAegis: {
     id: 'crimsonAegis',
@@ -123,7 +151,11 @@ export const MAGE_SKILLS = {
     icon: () => 'crimson-aegis',
     description: () => t('skill.crimsonAegis'),
     maxLevel: () => 200,
-    effect: (level) => ({ damageTakenReductionPercent: Math.min((35 * level) / 200, 35) }),
+    effect: (level) => ({
+      damageTakenReductionPercent: Math.min(getScalingPercent({
+        level, base: 2, softcap: 200, linear: 0.15, power: 0.6,
+      }), 35),
+    }),
   },
   crimsonDrain: {
     id: 'crimsonDrain',
@@ -134,7 +166,14 @@ export const MAGE_SKILLS = {
     icon: () => 'crimson-drain',
     description: () => t('skill.crimsonDrain'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({ lifePerHit: scaleUpFlat(level, 3, 6) }),
+    effect: (level) => ({
+      lifePerHit: getScalingFlat({
+        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      }),
+      lifePerHitPerLevel: getScalingFlat({
+        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      }),
+    }),
   },
 
   // Tier 50 Skills
@@ -147,9 +186,15 @@ export const MAGE_SKILLS = {
     description: () => t('skill.resourceInfusion'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      mana: scaleUpFlat(level, 25, 7, 0.5),
-      manaRegenOfTotalPercent: Math.min(scaleDownFlat(level, 0.015), 2),
-      extraDamageFromManaPercent: Math.min(scaleDownFlat(level, 0.012), 2),
+      mana: getScalingFlat({
+        level, base: 25, increment: 5, interval: 50, bonus: 0.15,
+      }),
+      manaPerLevel: getScalingFlat({
+        level, base: 0.025, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      extraDamageFromManaPercent: Math.min(getScalingPercent({
+        level, base: 0.1, linear: 0.01,
+      }) / 100, 2),
     }),
   },
   iceStorm: {
@@ -164,9 +209,18 @@ export const MAGE_SKILLS = {
     description: () => t('skill.iceStorm'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      coldDamagePercent: scaleDownFlat(level, 5),
-      waterDamagePercent: scaleDownFlat(level, 3),
-      airDamagePercent: scaleDownFlat(level, 3),
+      coldDamage: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      coldDamagePerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      waterDamagePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      airDamagePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
   arcaneFocus: {
@@ -178,8 +232,18 @@ export const MAGE_SKILLS = {
     description: () => t('skill.arcaneFocus'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: scaleDownFlat(level, 0.75),
-      attackRating: scaleUpFlat(level, 5, 5),
+      elementalDamage: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      elementalDamagePerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      attackRating: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      attackRatingPerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      }),
     }),
   },
 
@@ -196,8 +260,15 @@ export const MAGE_SKILLS = {
     description: () => t('skill.pyroclasm'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamage: scaleUpFlat(level, 2),
-      fireDamagePercent: scaleDownFlat(level, 8),
+      fireDamage: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      fireDamagePerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      fireDamagePercent: getScalingPercent({
+        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
   timeWarp: {
@@ -211,7 +282,11 @@ export const MAGE_SKILLS = {
     icon: () => 'time-warp',
     description: () => t('skill.timeWarp'),
     maxLevel: () => 300,
-    effect: (level) => ({ attackSpeedPercent: Math.min(scaleDownFlat(level, 1), 100) }),
+    effect: (level) => ({
+      attackSpeedPercent: Math.min(getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }), 100),
+    }),
   },
 
   // Tier 100 Skills
@@ -224,7 +299,14 @@ export const MAGE_SKILLS = {
     icon: () => 'arcane-power',
     description: () => t('skill.arcanePower'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({ elementalDamagePercent: scaleDownFlat(level, 1.25) }),
+    effect: (level) => ({
+      elementalDamage: getScalingFlat({
+        level, base: 15, increment: 3, interval: 50, bonus: 0.1,
+      }),
+      elementalDamagePerLevel: getScalingFlat({
+        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      }),
+    }),
   },
   summonElemental: {
     id: 'summonElemental',
@@ -232,12 +314,22 @@ export const MAGE_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(scaleDownFlat(level, 0.8), 100),
-        damage: scaleUpFlat(level, 8, 5),
+        percentOfPlayerDamage: Math.min(getScalingPercent({
+          level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+        }), 100),
+        damage: getScalingFlat({
+          level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+        }),
         attackSpeed: 1.3,
-        fireDamage: scaleUpFlat(level, 22, 5),
-        airDamage: scaleUpFlat(level, 22, 5),
-        coldDamage: scaleUpFlat(level, 22, 5),
+        fireDamage: getScalingFlat({
+          level, base: 25, increment: 5, interval: 50, bonus: 0.15,
+        }),
+        airDamage: getScalingFlat({
+          level, base: 25, increment: 5, interval: 50, bonus: 0.15,
+        }),
+        coldDamage: getScalingFlat({
+          level, base: 25, increment: 5, interval: 50, bonus: 0.15,
+        }),
       };
     },
     manaCost: (level) => 30 + level * 1,
@@ -260,10 +352,18 @@ export const MAGE_SKILLS = {
     description: () => t('skill.archmage'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      wisdom: scaleUpFlat(level, 5),
-      wisdomPercent: scaleDownFlat(level, 4),
-      elementalDamagePercent: scaleDownFlat(level, 1),
-      manaPercent: scaleDownFlat(level, 3),
+      wisdom: getScalingFlat({
+        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      }),
+      wisdomPerLevel: getScalingFlat({
+        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      mana: getScalingFlat({
+        level, base: 50, increment: 10, interval: 50, bonus: 0.15,
+      }),
+      manaPerLevel: getScalingFlat({
+        level, base: 0.05, increment: 0.01, interval: 50, bonus: 0,
+      }),
     }),
   },
 
@@ -277,9 +377,18 @@ export const MAGE_SKILLS = {
     description: () => t('skill.arcaneMight'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: scaleDownFlat(level, 2),
-      manaRegenPercent: scaleDownFlat(level, 1.5),
-      manaPercent: scaleDownFlat(level, 2),
+      elementalDamage: getScalingFlat({
+        level, base: 30, increment: 5, interval: 50, bonus: 0.1,
+      }),
+      elementalDamagePerLevel: getScalingFlat({
+        level, base: 0.03, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      manaRegen: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      manaRegenPerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      }),
     }),
   },
   voidBlast: {
@@ -293,13 +402,17 @@ export const MAGE_SKILLS = {
     icon: () => 'void-blast',
     description: () => t('skill.voidBlast'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const waterDamage = scaleUpFlat(level, 15);
-      return {
-        waterDamage: waterDamage * 4,
-        elementalPenetrationPercent: scaleDownFlat(level, 3),
-      };
-    },
+    effect: (level) => ({
+      waterDamage: getScalingFlat({
+        level, base: 35, increment: 5, interval: 50, bonus: 0.15,
+      }),
+      waterDamagePerLevel: getScalingFlat({
+        level, base: 0.035, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      elementalPenetrationPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+    }),
   },
 
   // Tier 2000 Skills
@@ -315,8 +428,12 @@ export const MAGE_SKILLS = {
     description: () => t('skill.chronomancerSurge'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeedPercent: Math.min(scaleDownFlat(level, 1), 150),
-      cooldownReductionPercent: Math.min(scaleDownFlat(level, 0.1), 50),
+      attackSpeedPercent: Math.min(getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }), 150),
+      cooldownReductionPercent: Math.min(getScalingPercent({
+        level, base: 2, softcap: 2000, linear: 0.1, power: 0.5,
+      }), 50),
     }),
   },
   starFire: {
@@ -330,14 +447,14 @@ export const MAGE_SKILLS = {
     icon: () => 'star-fire',
     description: () => t('skill.starFire'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const fireDamagePercent = scaleDownFlat(level, 4);
-      const airDamagePercent = scaleDownFlat(level, 3);
-      return {
-        fireDamagePercent: fireDamagePercent * 4,
-        airDamagePercent: airDamagePercent * 4,
-      };
-    },
+    effect: (level) => ({
+      fireDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      airDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+    }),
   },
 
   // Tier 3000 Skills
@@ -350,9 +467,12 @@ export const MAGE_SKILLS = {
     description: () => t('skill.manaOverflow'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      mana: scaleUpFlat(level, 10),
-      manaPercent: scaleDownFlat(level, 3),
-      elementalDamagePercent: scaleDownFlat(level, 2),
+      mana: getScalingFlat({
+        level, base: 50, increment: 10, interval: 50, bonus: 0.15,
+      }),
+      manaPerLevel: getScalingFlat({
+        level, base: 0.05, increment: 0.01, interval: 50, bonus: 0,
+      }),
     }),
   },
   dimensionalRift: {
@@ -366,13 +486,12 @@ export const MAGE_SKILLS = {
     icon: () => 'dimensional-rift',
     description: () => t('skill.dimensionalRift'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const lightningDamagePercent = scaleDownFlat(level, 5);
-      return {
-        lightningDamagePercent: lightningDamagePercent * 4,
-        ignoreAllEnemyResistances: 1,
-      };
-    },
+    effect: (level) => ({
+      lightningDamagePercent: getScalingPercent({
+        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      ignoreAllEnemyResistances: 1,
+    }),
   },
 
   // Tier 5000 Skills
@@ -385,9 +504,18 @@ export const MAGE_SKILLS = {
     description: () => t('skill.supremeSorcery'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: scaleDownFlat(level, 1.5),
-      manaPercent: scaleDownFlat(level, 3),
-      wisdomPercent: scaleDownFlat(level, 3),
+      elementalDamage: getScalingFlat({
+        level, base: 50, increment: 10, interval: 50, bonus: 0.1,
+      }),
+      elementalDamagePerLevel: getScalingFlat({
+        level, base: 0.05, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      wisdom: getScalingFlat({
+        level, base: 20, increment: 4, interval: 50, bonus: 0.1,
+      }),
+      wisdomPerLevel: getScalingFlat({
+        level, base: 0.02, increment: 0.01, interval: 50, bonus: 0,
+      }),
     }),
   },
   apocalypse: {
@@ -401,16 +529,17 @@ export const MAGE_SKILLS = {
     icon: () => 'apocalypse',
     description: () => t('skill.apocalypse'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const fireDamagePercent = scaleDownFlat(level, 6);
-      const coldDamagePercent = scaleDownFlat(level, 6);
-      const lightningDamagePercent = scaleDownFlat(level, 6);
-      return {
-        fireDamagePercent: fireDamagePercent * 4,
-        coldDamagePercent: coldDamagePercent * 4,
-        lightningDamagePercent: lightningDamagePercent * 4,
-      };
-    },
+    effect: (level) => ({
+      fireDamagePercent: getScalingPercent({
+        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      coldDamagePercent: getScalingPercent({
+        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      lightningDamagePercent: getScalingPercent({
+        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+    }),
   },
 
   // Specialization Skills
@@ -420,7 +549,9 @@ export const MAGE_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: 5 + scaleDownFlat(level, 4),
+        percentOfPlayerDamage: 5 + getScalingPercent({
+          level, base: 2, softcap: 2000, linear: 0.5, power: 0.6,
+        }),
         attackSpeed: hero.stats.attackSpeed,
         canCrit: true,
       };

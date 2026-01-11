@@ -1,6 +1,6 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { scaleDownFlat, scaleUpFlat } from '../../common.js';
+import { getScalingFlat, getScalingPercent } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Elementalist skills extracted from skills.js
@@ -17,14 +17,14 @@ export const ELEMENTALIST_SKILLS = {
     icon: () => 'fireball',
     description: () => t('skill.fireball'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const fireDamage = scaleUpFlat(level, 2, 6);
-      const fireDamagePercent = scaleDownFlat(level, 4);
-      return {
-        fireDamage: fireDamage * 4,
-        fireDamagePercent: fireDamagePercent * 4,
-      };
-    },
+    effect: (level) => ({
+      fireDamage: getScalingFlat({
+        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      }),
+      fireDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+    }),
   },
   frostArmor: {
     id: 'frostArmor',
@@ -38,9 +38,18 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.frostArmor'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: scaleUpFlat(level, 4, 8),
-      armorPercent: scaleDownFlat(level, 3),
-      coldDamagePercent: scaleDownFlat(level, 2),
+      armor: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      armorPerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      armorPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      coldDamagePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
 
@@ -53,11 +62,27 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.warmth'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      manaPercent: scaleDownFlat(level, 2),
-      manaRegen: scaleUpFlat(level, 0.2),
-      manaRegenPercent: scaleDownFlat(level, 0.8),
-      wisdomPercent: scaleDownFlat(level, 0.5),
-      wisdom: scaleUpFlat(level, 2),
+      manaPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      manaRegen: getScalingFlat({
+        level, base: 1, increment: 0.2, interval: 50, bonus: 0.1,
+      }),
+      manaRegenPerLevel: getScalingFlat({
+        level, base: 0.001, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      manaRegenPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      wisdomPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      wisdom: getScalingFlat({
+        level, base: 4, increment: 1, interval: 50, bonus: 0.1,
+      }),
+      wisdomPerLevel: getScalingFlat({
+        level, base: 0.004, increment: 0.005, interval: 50, bonus: 0,
+      }),
     }),
   },
 
@@ -73,16 +98,20 @@ export const ELEMENTALIST_SKILLS = {
     icon: () => 'lightning',
     description: () => t('skill.lightningStrike'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const lightningDamage = scaleUpFlat(level, 5, 7);
-      const lightningDamagePercent = scaleDownFlat(level, 3);
-      const airDamagePercent = scaleDownFlat(level, 2);
-      return {
-        lightningDamage: lightningDamage * 4,
-        lightningDamagePercent: lightningDamagePercent * 4,
-        airDamagePercent: airDamagePercent * 4,
-      };
-    },
+    effect: (level) => ({
+      lightningDamage: getScalingFlat({
+        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      }),
+      lightningDamagePerLevel: getScalingFlat({
+        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      lightningDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      airDamagePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+    }),
   },
   elementalMastery: {
     id: 'elementalMastery',
@@ -93,9 +122,18 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.elementalMastery'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: scaleDownFlat(level, 0.75),
-      elementalPenetration: scaleUpFlat(level, 8, 5),
-      elementalPenetrationPercent: Math.min(scaleDownFlat(level, 0.1), 20),
+      elementalDamagePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      elementalPenetration: getScalingFlat({
+        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      }),
+      elementalPenetrationPerLevel: getScalingFlat({
+        level, base: 0.005, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      elementalPenetrationPercent: Math.min(getScalingPercent({
+        level, base: 1, softcap: 2000, linear: 0.1, power: 0.5,
+      }), 20),
     }),
   },
 
@@ -112,12 +150,33 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.blizzard'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      coldDamagePercent: scaleDownFlat(level, 3.5),
-      airDamagePercent: scaleDownFlat(level, 3.5),
-      lightningDamagePercent: scaleDownFlat(level, 3.5),
-      coldDamage: scaleUpFlat(level, 4),
-      airDamage: scaleUpFlat(level, 4),
-      lightningDamage: scaleUpFlat(level, 4),
+      coldDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      airDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      lightningDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      coldDamage: getScalingFlat({
+        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      }),
+      coldDamagePerLevel: getScalingFlat({
+        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      airDamage: getScalingFlat({
+        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      }),
+      airDamagePerLevel: getScalingFlat({
+        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      lightningDamage: getScalingFlat({
+        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      }),
+      lightningDamagePerLevel: getScalingFlat({
+        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      }),
     }),
   },
   fireShield: {
@@ -132,8 +191,15 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.fireShield'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      reflectFireDamage: scaleUpFlat(level, 18),
-      fireDamagePercent: scaleDownFlat(level, 2.5),
+      reflectFireDamage: getScalingFlat({
+        level, base: 20, increment: 4, interval: 50, bonus: 0.15,
+      }),
+      reflectFireDamagePerLevel: getScalingFlat({
+        level, base: 0.02, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      fireDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
   arcaneWisdom: {
@@ -145,10 +211,21 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.arcaneWisdom'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      manaPercent: scaleDownFlat(level, 1.5),
-      manaRegen: scaleUpFlat(level, 0.2),
-      manaRegenPercent: scaleDownFlat(level, 0.5),
-      manaRegenOfTotalPercent: Math.min(scaleDownFlat(level, 0.005), 1),
+      manaPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      manaRegen: getScalingFlat({
+        level, base: 2, increment: 0.5, interval: 50, bonus: 0.1,
+      }),
+      manaRegenPerLevel: getScalingFlat({
+        level, base: 0.002, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      manaRegenPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      manaRegenOfTotalPercent: Math.min(getScalingPercent({
+        level, base: 0.1, softcap: 2000, linear: 0.01, power: 0.5,
+      }), 1),
     }),
   },
 
@@ -164,14 +241,17 @@ export const ELEMENTALIST_SKILLS = {
     icon: () => 'storm',
     description: () => t('skill.elementalStorm'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const elementalDamage = scaleUpFlat(level, 2);
-      const elementalDamagePercent = scaleDownFlat(level);
-      return {
-        elementalDamage: elementalDamage * 4,
-        elementalDamagePercent: elementalDamagePercent * 4,
-      };
-    },
+    effect: (level) => ({
+      elementalDamage: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      elementalDamagePerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      elementalDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+    }),
   },
   elementalAffinity: {
     id: 'elementalAffinity',
@@ -182,10 +262,24 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.elementalAffinity'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamage: scaleUpFlat(level, 1),
-      elementalDamagePercent: scaleDownFlat(level, 0.5),
-      intelligencePercent: scaleDownFlat(level, 0.75),
-      allResistance: scaleUpFlat(level, 7),
+      elementalDamage: getScalingFlat({
+        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      }),
+      elementalDamagePerLevel: getScalingFlat({
+        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      elementalDamagePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      intelligencePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      allResistance: getScalingFlat({
+        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      }),
+      allResistancePerLevel: getScalingFlat({
+        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      }),
     }),
   },
 
@@ -202,10 +296,24 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.arcanePulse'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackRatingPercent: scaleDownFlat(level, 1.9),
-      lifePerHit: scaleUpFlat(level, 4),
-      manaPerHit: scaleUpFlat(level, 0.5),
-      attackSpeedPercent: Math.min(scaleDownFlat(level, 0.375), 50),
+      attackRatingPercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      lifePerHit: getScalingFlat({
+        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      }),
+      lifePerHitPerLevel: getScalingFlat({
+        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      manaPerHit: getScalingFlat({
+        level, base: 1, increment: 0.2, interval: 50, bonus: 0.1,
+      }),
+      manaPerHitPerLevel: getScalingFlat({
+        level, base: 0.001, increment: 0.005, interval: 50, bonus: 0,
+      }),
+      attackSpeedPercent: Math.min(getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }), 50),
     }),
   },
 
@@ -220,10 +328,24 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.elementalOverload'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: scaleDownFlat(level, 2),
-      coldDamagePercent: scaleDownFlat(level, 2),
-      airDamagePercent: scaleDownFlat(level, 2),
-      lightningDamagePercent: scaleDownFlat(level, 2),
+      fireDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      coldDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      airDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      lightningDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      elementalDamage: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      elementalDamagePerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      }),
     }),
   },
   primordialControl: {
@@ -235,10 +357,21 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.primordialControl'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      earthDamagePercent: scaleDownFlat(level, 1.5),
-      vitality: scaleUpFlat(level, 5),
-      vitalityPercent: scaleDownFlat(level, 2),
-      wisdomPercent: scaleDownFlat(level, 2),
+      earthDamagePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      vitality: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      vitalityPerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      vitalityPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      wisdomPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
 
@@ -252,11 +385,30 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.avatarOfTheElements'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: scaleDownFlat(level, 1.2),
-      elementalDamage: scaleUpFlat(level, 3),
-      allResistance: scaleUpFlat(level, 8, 5, 0.15),
-      perseverance: scaleUpFlat(level, 5, 5),
-      perseverancePercent: scaleDownFlat(level, 1.5),
+      elementalDamagePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      elementalDamage: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      elementalDamagePerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      allResistance: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      allResistancePerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      perseverance: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      perseverancePerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      perseverancePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
 
@@ -270,9 +422,21 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.elementalCorrosion'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: scaleDownFlat(level, 1.4),
-      elementalPenetrationPercent: Math.min(scaleDownFlat(level, 0.1), 20),
-      manaRegenPercent: scaleDownFlat(level, 2),
+      elementalDamagePercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      elementalPenetrationPercent: Math.min(getScalingPercent({
+        level, base: 2, softcap: 2000, linear: 0.1, power: 0.5,
+      }), 20),
+      manaRegenPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      elementalDamage: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      elementalDamagePerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      }),
     }),
   },
   volcanicWrath: {
@@ -286,16 +450,23 @@ export const ELEMENTALIST_SKILLS = {
     icon: () => 'volcanic-wrath',
     description: () => t('skill.volcanicWrath'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const fireDamagePercent = scaleDownFlat(level, 4);
-      const earthDamage = scaleUpFlat(level, 8, 4);
-      const fireDamage = scaleUpFlat(level, 6, 6, 0.15);
-      return {
-        fireDamagePercent: fireDamagePercent * 4,
-        earthDamage: earthDamage * 4,
-        fireDamage: fireDamage * 4,
-      };
-    },
+    effect: (level) => ({
+      fireDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      earthDamage: getScalingFlat({
+        level, base: 30, increment: 6, interval: 50, bonus: 0.15,
+      }),
+      earthDamagePerLevel: getScalingFlat({
+        level, base: 0.03, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      fireDamage: getScalingFlat({
+        level, base: 30, increment: 6, interval: 50, bonus: 0.15,
+      }),
+      fireDamagePerLevel: getScalingFlat({
+        level, base: 0.03, increment: 0.01, interval: 50, bonus: 0,
+      }),
+    }),
   },
 
   // Tier 2000 Skills
@@ -310,18 +481,26 @@ export const ELEMENTALIST_SKILLS = {
     icon: () => 'tempest-nova',
     description: () => t('skill.tempestNova'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const lightningDamage = scaleUpFlat(level, 10, 4);
-      const lightningDamagePercent = scaleDownFlat(level, 4);
-      const coldDamage = scaleUpFlat(level, 10, 4);
-      const coldDamagePercent = scaleDownFlat(level, 4);
-      return {
-        lightningDamage: lightningDamage * 4,
-        lightningDamagePercent: lightningDamagePercent * 4,
-        coldDamage: coldDamage * 4,
-        coldDamagePercent: coldDamagePercent * 4,
-      };
-    },
+    effect: (level) => ({
+      lightningDamage: getScalingFlat({
+        level, base: 35, increment: 7, interval: 50, bonus: 0.15,
+      }),
+      lightningDamagePerLevel: getScalingFlat({
+        level, base: 0.035, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      lightningDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      coldDamage: getScalingFlat({
+        level, base: 35, increment: 7, interval: 50, bonus: 0.15,
+      }),
+      coldDamagePerLevel: getScalingFlat({
+        level, base: 0.035, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      coldDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+    }),
   },
   earthShatter: {
     id: 'earthShatter',
@@ -334,14 +513,17 @@ export const ELEMENTALIST_SKILLS = {
     icon: () => 'earth-shatter',
     description: () => t('skill.earthShatter'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const earthDamagePercent = scaleDownFlat(level, 4);
-      const earthDamage = scaleUpFlat(level, 30, 4, 0.2);
-      return {
-        earthDamagePercent: earthDamagePercent * 8,
-        earthDamage: earthDamage * 8,
-      };
-    },
+    effect: (level) => ({
+      earthDamagePercent: getScalingPercent({
+        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      earthDamage: getScalingFlat({
+        level, base: 45, increment: 9, interval: 50, bonus: 0.15,
+      }),
+      earthDamagePerLevel: getScalingFlat({
+        level, base: 0.045, increment: 0.01, interval: 50, bonus: 0,
+      }),
+    }),
   },
 
   // Tier 3000 Skills
@@ -357,9 +539,18 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.tidalWave'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      waterDamage: scaleUpFlat(level, 15, 5, 0.2),
-      waterDamagePercent: scaleDownFlat(level, 5),
-      reduceEnemyAttackSpeedPercent: Math.min(scaleDownFlat(level, 0.1), 15),
+      waterDamage: getScalingFlat({
+        level, base: 40, increment: 8, interval: 50, bonus: 0.15,
+      }),
+      waterDamagePerLevel: getScalingFlat({
+        level, base: 0.04, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      waterDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      reduceEnemyAttackSpeedPercent: Math.min(getScalingPercent({
+        level, base: 2, softcap: 2000, linear: 0.1, power: 0.5,
+      }), 15),
     }),
   },
   stormLord: {
@@ -371,9 +562,18 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.stormLord'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lightningDamagePercent: scaleDownFlat(level, 5),
-      elementalDamage: scaleUpFlat(level, 1.4),
-      manaPercent: scaleDownFlat(level, 1.5),
+      lightningDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      elementalDamage: getScalingFlat({
+        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      }),
+      elementalDamagePerLevel: getScalingFlat({
+        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      }),
+      manaPercent: getScalingPercent({
+        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
     }),
   },
 
@@ -387,9 +587,18 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.elementalAscension'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: scaleDownFlat(level, 1.5),
-      elementalPenetrationPercent: Math.min(scaleDownFlat(level, 0.1), 15),
-      allResistance: scaleUpFlat(level, 16),
+      elementalDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      elementalPenetrationPercent: Math.min(getScalingPercent({
+        level, base: 2, softcap: 2000, linear: 0.1, power: 0.5,
+      }), 15),
+      allResistance: getScalingFlat({
+        level, base: 40, increment: 8, interval: 50, bonus: 0.15,
+      }),
+      allResistancePerLevel: getScalingFlat({
+        level, base: 0.04, increment: 0.01, interval: 50, bonus: 0,
+      }),
     }),
   },
   natureCataclysm: {
@@ -403,18 +612,23 @@ export const ELEMENTALIST_SKILLS = {
     icon: () => 'nature-cataclysm',
     description: () => t('skill.natureCataclysm'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => {
-      const fireDamagePercent = scaleDownFlat(level, 5);
-      const coldDamagePercent = scaleDownFlat(level, 5);
-      const lightningDamagePercent = scaleDownFlat(level, 5);
-      const elementalDamage = scaleUpFlat(level, 8, 4);
-      return {
-        fireDamagePercent: fireDamagePercent * 4,
-        coldDamagePercent: coldDamagePercent * 4,
-        lightningDamagePercent: lightningDamagePercent * 4,
-        elementalDamage: elementalDamage * 4,
-      };
-    },
+    effect: (level) => ({
+      fireDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      coldDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      lightningDamagePercent: getScalingPercent({
+        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+      elementalDamage: getScalingFlat({
+        level, base: 40, increment: 8, interval: 50, bonus: 0.15,
+      }),
+      elementalDamagePerLevel: getScalingFlat({
+        level, base: 0.04, increment: 0.01, interval: 50, bonus: 0,
+      }),
+    }),
   },
 
   // Specialization-unlocked skills
@@ -427,8 +641,18 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.glacialBulwark'),
     maxLevel: () => 150,
     effect: (level) => ({
-      damageTakenConvertedToColdPercent: Math.min(level * 0.5, 75),
-      coldDamageTakenReductionPercent: Math.min((50 * level) / 150, 50),
+      damageTakenConvertedToColdPercent: Math.min(getScalingPercent({
+        level, base: 1, softcap: 2000, linear: 0.1, power: 0.5,
+      }), 75),
+      coldDamageTakenReductionPercent: Math.min(getScalingPercent({
+        level, base: 1, softcap: 2000, linear: 0.1, power: 0.5,
+      }), 50),
+      armor: getScalingFlat({
+        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      armorPerLevel: getScalingFlat({
+        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      }),
     }),
     isVisible: () => hero.stats.glacialBulwarkUnlocked > 0,
   },
