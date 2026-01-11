@@ -21,6 +21,7 @@ export default {
   'ads.bonus.lifePercent': '生命',
   'ads.bonus.armorPercent': '护甲',
   'ads.bonus.evasionPercent': '闪避',
+  'ads.bonus.attackRatingPercent': '攻击准确率',
   'ads.bonus.xpBonusPercent': '经验',
   'ads.bonus.goldGainPercent': '金币',
   'ads.bonus.allResistancePercent': '全抗性',

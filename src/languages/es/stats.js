@@ -473,4 +473,12 @@ export default {
   'stats.jewelryFlatEffectivenessPercent': 'Efectividad de Joyería %',
   'tooltip.weaponFlatEffectivenessPercent': 'Aumenta la efectividad general de tus armas equipadas.',
   'tooltip.jewelryFlatEffectivenessPercent': 'Aumenta la efectividad general de tu joyería equipada.',
+  'tooltip.adDamagePercent': 'Multiplica tu daño total (después de todas las demás bonificaciones) por un porcentaje.',
+  'tooltip.adLifePercent': 'Multiplica tu vida total (después de todas las demás bonificaciones) por un porcentaje.',
+  'tooltip.adArmorPercent': 'Multiplica tu armadura total (después de todas las demás bonificaciones) por un porcentaje.',
+  'tooltip.adEvasionPercent': 'Multiplica tu evasión total (después de todas las demás bonificaciones) por un porcentaje.',
+  'tooltip.adAttackRatingPercent': 'Multiplica tu puntuación de ataque total (después de todas las demás bonificaciones) por un porcentaje.',
+  'tooltip.adAllResistancePercent': 'Multiplica todas tus resistencias totales (después de todas las demás bonificaciones) por un porcentaje.',
+  'tooltip.adXpBonusPercent': 'Multiplica tu ganancia de experiencia total (después de todas las demás bonificaciones) por un porcentaje.',
+  'tooltip.adGoldGainPercent': 'Multiplica tu ganancia de oro total (después de todas las demás bonificaciones) por un porcentaje.',
 };

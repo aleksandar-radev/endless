@@ -1,4 +1,4 @@
-export const AD_BONUS_DURATION = 5 * 60 * 1000; // 5 minutes
+export const AD_BONUS_DURATION = 10 * 60 * 1000; // 10 minutes
 
 export const AD_BONUSES = [
   {
@@ -30,6 +30,12 @@ export const AD_BONUSES = [
     value: 100, // 2x Evasion
     isMultiplicative: true,
     icon: 'agility-potion.svg',
+  },
+  {
+    type: 'attackRatingPercent',
+    value: 100, // 2x Attack Rating
+    isMultiplicative: true,
+    icon: 'precision.svg',
   },
   {
     type: 'xpBonusPercent',

@@ -21,6 +21,7 @@ export default {
   'ads.bonus.lifePercent': 'Vida',
   'ads.bonus.armorPercent': 'Armadura',
   'ads.bonus.evasionPercent': 'Evasión',
+  'ads.bonus.attackRatingPercent': 'Puntuación de Ataque',
   'ads.bonus.xpBonusPercent': 'Experiencia',
   'ads.bonus.goldGainPercent': 'Oro',
   'ads.bonus.allResistancePercent': 'Resistencia Total',

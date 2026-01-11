@@ -465,4 +465,12 @@ export default {
   'stats.extraDamageAgainstFrozenEnemies': 'Extra Damage Against Frozen Enemies',
   'stats.chanceToShatterEnemy': 'Chance to Shatter Enemy',
   'stats.damageTakenConvertedToColdPercent': 'Damage Taken Converted to Cold %',
+  'tooltip.adDamagePercent': 'Multiplies your total damage (after all other bonuses) by a percentage.',
+  'tooltip.adLifePercent': 'Multiplies your total life (after all other bonuses) by a percentage.',
+  'tooltip.adArmorPercent': 'Multiplies your total armor (after all other bonuses) by a percentage.',
+  'tooltip.adEvasionPercent': 'Multiplies your total evasion (after all other bonuses) by a percentage.',
+  'tooltip.adAttackRatingPercent': 'Multiplies your total attack rating (after all other bonuses) by a percentage.',
+  'tooltip.adAllResistancePercent': 'Multiplies your total all resistances (after all other bonuses) by a percentage.',
+  'tooltip.adXpBonusPercent': 'Multiplies your total experience gain (after all other bonuses) by a percentage.',
+  'tooltip.adGoldGainPercent': 'Multiplies your total gold gain (after all other bonuses) by a percentage.',
 };

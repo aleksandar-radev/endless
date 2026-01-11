@@ -734,6 +734,7 @@ export default class Hero {
     percentBonuses['adLifePercent'] = (adMultipliers['life'] || 1) - 1;
     percentBonuses['adArmorPercent'] = (adMultipliers['armor'] || 1) - 1;
     percentBonuses['adEvasionPercent'] = (adMultipliers['evasion'] || 1) - 1;
+    percentBonuses['adAttackRatingPercent'] = (adMultipliers['attackRating'] || 1) - 1;
     percentBonuses['adAllResistancePercent'] = (adMultipliers['allResistance'] || 1) - 1;
     percentBonuses['adXpBonusPercent'] = (adMultipliers['xp'] || 1) - 1;
     percentBonuses['adGoldGainPercent'] = (adMultipliers['gold'] || 1) - 1;
@@ -1516,38 +1517,27 @@ export default class Hero {
     const multipliers = {};
     const getMult = (val) => 1 + (val / 100);
 
-    // Initialize with defaults
-    multipliers['damage'] = 1;
-    multipliers['life'] = 1;
-    multipliers['armor'] = 1;
-    multipliers['evasion'] = 1;
-    multipliers['allResistance'] = 1;
-    // ... add more as needed
-
     this.adBonuses.active.forEach((bonus) => {
-      const mult = getMult(bonus.value);
+      let stat = bonus.type.replace('Percent', '');
 
-      if (bonus.type === 'totalDamagePercent') {
-        multipliers['damage'] *= mult;
+      // Handle Exception Mappings
+      if (bonus.type === 'totalDamagePercent') stat = 'damage';
+      else if (bonus.type === 'xpBonusPercent') stat = 'xp';
+      else if (bonus.type === 'goldGainPercent') stat = 'gold';
+
+      const mult = getMult(bonus.value);
+      multipliers[stat] = (multipliers[stat] || 1) * mult;
+
+      // Handle Expansions
+      if (stat === 'damage') {
         ELEMENT_IDS.forEach((el) => {
           const key = `${el}Damage`;
           multipliers[key] = (multipliers[key] || 1) * mult;
         });
-      } else if (bonus.type === 'lifePercent') {
-        multipliers['life'] *= mult;
-      } else if (bonus.type === 'armorPercent') {
-        multipliers['armor'] *= mult;
-      } else if (bonus.type === 'evasionPercent') {
-        multipliers['evasion'] *= mult;
-      } else if (bonus.type === 'allResistancePercent') {
-        multipliers['allResistance'] *= mult;
+      } else if (stat === 'allResistance') {
         RESISTANCE_KEYS.forEach((key) => {
           multipliers[key] = (multipliers[key] || 1) * mult;
         });
-      } else if (bonus.type === 'xpBonusPercent') {
-        multipliers['xp'] = (multipliers['xp'] || 1) * mult;
-      } else if (bonus.type === 'goldGainPercent') {
-        multipliers['gold'] = (multipliers['gold'] || 1) * mult;
       }
     });
 

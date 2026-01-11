@@ -464,4 +464,12 @@ export default {
   'stats.jewelryFlatEffectivenessPercent': '饰品效果 %',
   'tooltip.weaponFlatEffectivenessPercent': '提升所装备武器的整体效能。',
   'tooltip.jewelryFlatEffectivenessPercent': '提升所装备饰品的整体效能。',
+  'tooltip.adDamagePercent': '按百分比乘以你的总伤害（在所有其他加成之后）。',
+  'tooltip.adLifePercent': '按百分比乘以你的总生命值（在所有其他加成之后）。',
+  'tooltip.adArmorPercent': '按百分比乘以你的总护甲（在所有其他加成之后）。',
+  'tooltip.adEvasionPercent': '按百分比乘以你的总闪避（在所有其他加成之后）。',
+  'tooltip.adAttackRatingPercent': '按百分比乘以你的总攻击准确率（在所有其他加成之后）。',
+  'tooltip.adAllResistancePercent': '按百分比乘以你的所有抗性总值（在所有其他加成之后）。',
+  'tooltip.adXpBonusPercent': '按百分比乘以你的总经验获取（在所有其他加成之后）。',
+  'tooltip.adGoldGainPercent': '按百分比乘以你的总金币获取（在所有其他加成之后）。',
 };
