@@ -68,6 +68,34 @@ export async function logout() {
   return await response.json();
 }
 
+export async function login(email, password) {
+  const response = await apiFetch('/user/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || error.name || 'Failed to login');
+  }
+  return await response.json();
+}
+
+export async function register(username, email, password, confirmPassword) {
+  const response = await apiFetch('/user/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      username, email, password, confirmPassword,
+    }),
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || error.name || 'Failed to register');
+  }
+  return await response.json();
+}
+
 export async function fetchTrustedUtcTime() {
   const response = await apiFetch('/time');
   if (!response.ok) {

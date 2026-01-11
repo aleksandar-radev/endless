@@ -22,7 +22,8 @@ import { showConfirmDialog,
   hideTooltip,
   initializeSkillTreeStructure } from './ui/ui.js';
 import { updateBuffIndicators } from './ui/skillTreeUi.js';
-import { closeModal, createModal } from './ui/modal.js';
+import { createModal } from './ui/modal.js';
+import { showAuthModal } from './ui/authUi.js';
 import Enemy from './enemy.js';
 import { logout } from './api.js';
 import { CHANGELOG } from './changelog/changelog.js';
@@ -1357,7 +1358,6 @@ export class Options {
     }
 
     if (!userSession) {
-      const loginUrl = import.meta.env.VITE_LOGIN_URL;
       cloudSaveStatus.innerHTML = `<span class="login-status">${t('options.cloud.notLoggedIn')}</span><div><button id="login-btn" class="login-link">${t('options.cloud.login')}</button></div>`;
       cloudSaveStatus.className = 'not-logged-in';
       cloudSaveBtn.disabled = true;
@@ -1369,27 +1369,9 @@ export class Options {
       const loginBtn = document.getElementById('login-btn');
       if (loginBtn) {
         loginBtn.addEventListener('click', () => {
-          const onMessage = async (e) => {
-            if (e.data && e.data.type === 'cloud-login-success') {
-              removeEventListener('message', onMessage);
-              closeModal('login-modal');
-              await this._updateCloudSaveUI();
-            }
-          };
-
-          createModal({
-            id: 'login-modal',
-            className: 'login-modal',
-            content: `
-              <div class="modal-content">
-                <button class="modal-close">X</button>
-                <iframe src="${loginUrl}-mini" class="login-iframe"></iframe>
-              </div>
-            `,
-            onClose: () => removeEventListener('message', onMessage),
+          showAuthModal(async () => {
+            await this._updateCloudSaveUI();
           });
-
-          addEventListener('message', onMessage);
         });
       }
     } else {

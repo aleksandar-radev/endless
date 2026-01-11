@@ -18,6 +18,7 @@ import runes from './zh/runes.js';
 import { enemies } from './zh/enemies.js';
 import other from './zh/other.js';
 import ads from './zh/ads.js';
+import auth from './zh/auth.js';
 
 // Combine all translation modules
 export default {
@@ -38,4 +39,5 @@ export default {
   ...enemies,
   ...other,
   ...ads,
+  ...auth,
 };

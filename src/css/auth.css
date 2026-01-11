@@ -1,0 +1,187 @@
+/* Auth Modal - Premium Styling */
+
+.auth-modal-content {
+  background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-dark) 100%);
+  padding: 4rem 2rem 2rem 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow: hidden;
+}
+
+/* Tabs */
+.auth-tabs {
+  display: flex;
+  justify-content: space-between;
+  background: var(--bg-element);
+  border-radius: 8px;
+  padding: 4px;
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.auth-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  padding: 10px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.auth-tab.active {
+  background: var(--bg-panel);
+  color: var(--text);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.auth-tab:hover:not(.active) {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Forms */
+.auth-form {
+  display: none;
+  flex-direction: column;
+  gap: 1.25rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.auth-form.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Form Groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  color: var(--text-description);
+  font-weight: 500;
+  margin-left: 2px;
+}
+
+.form-group input {
+  padding: 12px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-dark);
+  color: var(--text);
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Buttons */
+.auth-submit-btn {
+  background: var(--accent);
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.auth-submit-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.15), 0 3px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.auth-submit-btn:active {
+  transform: translateY(0);
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+  transform: none;
+}
+
+/* Switch Link */
+.auth-switch {
+  text-align: center;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.switch-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 600;
+  margin-left: 4px;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.switch-btn:hover {
+  color: #60a5fa;
+  /* Lighter blue */
+  text-decoration: underline;
+}
+
+/* Close Button Override */
+.auth-modal-content .modal-close {
+  top: 15px;
+  right: 15px;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.2);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 20;
+}
+
+.auth-modal-content .modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  transform: rotate(90deg);
+}

@@ -60,7 +60,7 @@
   display: flex;
 }
 
-.options-content > #reset-progress {
+.options-content>#reset-progress {
   margin-top: auto;
 }
 
@@ -207,12 +207,10 @@
   left: -30%;
   width: 30%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.28) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.28) 50%,
+      rgba(255, 255, 255, 0) 100%);
   transform: skewX(-22deg);
   opacity: 0;
   transition:
@@ -623,7 +621,7 @@
     font-size: 0.85rem;
   }
 
-  .options-content > div:not(.option-row):not(.cloud-save-bar):not(.changelog-row) {
+  .options-content>div:not(.option-row):not(.cloud-save-bar):not(.changelog-row) {
     font-size: 0.9rem;
   }
 }
@@ -776,7 +774,7 @@
   vertical-align: middle;
 }
 
-#options input[type='checkbox']:checked + .toggle-btn {
+#options input[type='checkbox']:checked+.toggle-btn {
   background: #2563eb;
   border-color: #2563eb;
 }
@@ -794,7 +792,7 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
 }
 
-#options input[type='checkbox']:checked + .toggle-btn::before {
+#options input[type='checkbox']:checked+.toggle-btn::before {
   left: 25px;
 }
 
@@ -802,34 +800,7 @@
   box-sizing: border-box;
 }
 
-/* Login modal styles */
-.login-modal .modal-content {
-  width: 502px;
-  background: none;
-  border: none;
-  box-shadow: none;
-  padding: 0;
-}
 
-.login-modal .modal-close {
-  background-color: #2c353b;
-  border-radius: 10px;
-  top: 1rem;
-  right: 1.2rem;
-  width: 30px;
-  height: 30px;
-}
-
-.login-modal .modal-close:hover {
-  background-color: #728897;
-}
-
-.login-modal .login-iframe {
-  width: 500px;
-  height: 600px;
-  border: 1px solid rgb(100, 92, 92);
-  border-radius: 33px;
-}
 
 .rate-counters-bar {
   background: #103d86;
