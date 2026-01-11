@@ -338,3 +338,69 @@
   max-width: 600px;
   margin: 0 auto;
 }
+
+@media (max-width: 768px) {
+
+  /* Compact Ads Container */
+  .ads-container {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  /* Available Ads Grid - Full Width on Mobile */
+  .ads-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .ad-offer-card {
+    padding: 1rem;
+  }
+
+  /* Make modal scrollable and compact */
+  #ad-bonus-modal {
+    width: 95%;
+    max-height: 85vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 1rem;
+  }
+
+  /* Ensure header doesn't just stick if it's not set to sticky, but reducing margin helps */
+  #ad-bonus-modal h2 {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 1rem 0;
+  }
+
+  /* Wrapper for cards should allow wrapping and scrolling */
+  .bonus-cards {
+    padding: 0.5rem;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  /* Compact Bonus Card Selection */
+  .bonus-card {
+    width: calc(50% - 0.5rem);
+    max-width: none;
+    padding: 1rem 0.5rem;
+    min-height: auto;
+  }
+
+  .bonus-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 0.5rem;
+  }
+
+  .bonus-desc {
+    font-size: 0.9rem;
+    line-height: 1.2;
+  }
+
+  .bonus-duration {
+    font-size: 0.8rem;
+    padding: 2px 8px;
+  }
+}

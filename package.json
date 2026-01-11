@@ -10,6 +10,7 @@
     "build:production": "vite build --mode production",
     "build:debug": "vite build --mode debug",
     "build:electron": "vite build --mode electron",
+    "build:gamemonetize": "vite build --mode gamemonetize",
     "preview": "vite preview",
     "preview:debug": "vite preview --mode debug",
     "lint": "eslint .",

@@ -11,7 +11,7 @@ export const AD_BONUSES = [
     type: 'lifePercent',
     value: 100, // 2x Life
     isMultiplicative: true,
-    icon: 'vitality-potion.svg',
+    icon: 'belt.png',
   },
   {
     type: 'armorPercent',
@@ -29,24 +29,24 @@ export const AD_BONUSES = [
     type: 'evasionPercent',
     value: 100, // 2x Evasion
     isMultiplicative: true,
-    icon: 'agility-potion.svg',
+    icon: 'boots.png',
   },
   {
     type: 'attackRatingPercent',
     value: 100, // 2x Attack Rating
     isMultiplicative: true,
-    icon: 'precision.svg',
+    icon: 'bow.png',
   },
   {
     type: 'xpBonusPercent',
     value: 100, // 2x Experience
     isMultiplicative: true,
-    icon: 'experience-potion.svg',
+    icon: 'amulet.png',
   },
   {
     type: 'goldGainPercent',
     value: 100, // 2x Gold
     isMultiplicative: true,
-    icon: 'gold.svg',
+    icon: 'materials.png',
   },
 ];

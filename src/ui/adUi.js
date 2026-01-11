@@ -98,7 +98,7 @@ function renderAdsTab() {
                         <img src="${BASE_PATH}/icons/bonus.png" alt="Bonus">
                     </div>
                     <div class="ad-offer-title">${t('ads.offer.bonus.title')}</div>
-                    <div class="ad-offer-desc">${t('ads.offer.bonus.desc')}</div>
+                    <div class="ad-offer-desc">${tp('ads.offer.bonus.desc', { minutes: Math.floor(AD_BONUS_DURATION / 60000) })}</div>
                     <button class="ad-offer-btn">${t('ads.offer.bonus.btn')}</button>
                     <div class="ad-offer-sub">${t('ads.offer.bonus.sub')}</div>
                 </div>
@@ -128,7 +128,7 @@ function renderAdsTab() {
 }
 
 function renderActiveBonusItem(bonus) {
-  const originalDef = AD_BONUSES.find((d) => d.type === bonus.type) || { icon: 'star.svg' };
+  const originalDef = AD_BONUSES.find((d) => d.type === bonus.type) || { icon: 'bonus.png' };
   const now = Date.now();
   const timeLeft = Math.max(0, bonus.expiry - now);
 
@@ -151,24 +151,23 @@ function renderActiveBonusItem(bonus) {
 
 function updateAdTimers() {
   const list = document.getElementById('active-ad-bonuses-list');
-  if (!list) return;
 
-  const timers = list.querySelectorAll('.active-bonus-timer');
-  timers.forEach((t) => {
-    const expiry = parseInt(t.dataset.expiry);
-    const now = Date.now();
-    const left = Math.max(0, expiry - now);
-    if (left <= 0) {
-      t.textContent = 'Expired';
-      // Ideally re-render logic handles removal, but for visual update:
-    } else {
-      // Basic formatting mm:ss
-      const totalSeconds = Math.floor(left / 1000);
-      const m = Math.floor(totalSeconds / 60);
-      const s = totalSeconds % 60;
-      t.textContent = `${m}:${s.toString().padStart(2, '0')}`;
-    }
-  });
+  if (list) {
+    const timers = list.querySelectorAll('.active-bonus-timer');
+    timers.forEach((t) => {
+      const expiry = parseInt(t.dataset.expiry);
+      const now = Date.now();
+      const left = Math.max(0, expiry - now);
+      if (left <= 0) {
+        t.textContent = 'Expired';
+      } else {
+        const totalSeconds = Math.floor(left / 1000);
+        const m = Math.floor(totalSeconds / 60);
+        const s = totalSeconds % 60;
+        t.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+      }
+    });
+  }
 }
 
 // Global scope attachment for the onclick in HTML string
@@ -283,7 +282,7 @@ function showBonusSelectionModal() {
                         <img src="${BASE_PATH}/icons/${opt.icon}" alt="${desc}" onerror="this.parentElement.innerHTML='✨'">
                     </div>
                     <div class="bonus-desc">${desc}</div>
-                    <div class="bonus-duration">${t('ads.bonus.duration')}</div>
+                    <div class="bonus-duration">${tp('ads.bonus.duration', { minutes: Math.floor(AD_BONUS_DURATION / 60000) })}</div>
                 </div>
             `;
   };
