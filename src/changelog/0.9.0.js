@@ -25,6 +25,7 @@ export default function run() {
       <li>Cooldown reduction and buff duration removed from prestige bonuses. They can now appear on items. (ring, amulet, wand/staff)</li>
       <li>Summons can now stack, so the more cd/duration you have, the more summons you can have at the same time.</li>
       <li>Added "Achievements".</li>
+      <li>Added "Ads". You can now watch ads for bonuses like 2x damage, 2x life, etc.</li>
     </ul>
   
     <span style="color:#FF8A00;">Skill System</span>
