@@ -207,7 +207,7 @@ const UNIQUE_RUNES = [
     nameKey: 'rune.trainingCost.name',
     descKey: 'rune.trainingCost.desc',
     bonus: { trainingCostReduction: 0.25 },
-    icon: `${BASE}/icons/gold.svg`,
+    icon: `${BASE}/icons/gold.png`,
     unique: true,
   },
   {
@@ -215,7 +215,7 @@ const UNIQUE_RUNES = [
     nameKey: 'rune.soulShopCost.name',
     descKey: 'rune.soulShopCost.desc',
     bonus: { soulShopCostReduction: 0.25 },
-    icon: `${BASE}/icons/soul.svg`,
+    icon: `${BASE}/icons/soul.png`,
     unique: true,
   },
   {
@@ -223,7 +223,7 @@ const UNIQUE_RUNES = [
     nameKey: 'rune.bossSkip.name',
     descKey: 'rune.bossSkip.desc',
     bonus: { arenaBossSkip: 1 },
-    icon: `${BASE}/icons/skull.svg`,
+    icon: `${BASE}/icons/skull.png`,
     unique: true,
   },
   {
@@ -231,7 +231,7 @@ const UNIQUE_RUNES = [
     nameKey: 'rune.crystalGain.name',
     descKey: 'rune.crystalGain.desc',
     bonus: { crystalGainPercent: 1 },
-    icon: `${BASE}/icons/crystal.svg`,
+    icon: `${BASE}/icons/crystal.png`,
     unique: true,
   },
 ];

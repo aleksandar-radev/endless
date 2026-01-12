@@ -265,7 +265,7 @@ export default class Item {
     if (this.subtypeData?.icon) {
       return this.subtypeData.icon;
     }
-    return ITEM_ICONS[this.type] || `<img src="${BASE}/icons/help.svg" alt="?"/>`;
+    return ITEM_ICONS[this.type] || `<img src="${BASE}/icons/help.png" alt="?"/>`;
   }
 
   getDisplayName() {

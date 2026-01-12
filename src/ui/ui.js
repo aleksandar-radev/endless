@@ -122,7 +122,7 @@ export function initializeUI() {
       selector: '.resource-gold',
       tooltip: () => html`
         <div class="tooltip-header">
-          ${t('resource.gold.name')} <img src="${BASE}/icons/gold.svg" alt="${t('resource.gold.name')}" />
+          ${t('resource.gold.name')} <img src="${BASE}/icons/gold.png" alt="${t('resource.gold.name')}" />
         </div>
         <div class="tooltip-desc">${t('resource.gold.desc')}</div>
         <div class="tooltip-note"></div>
@@ -133,7 +133,7 @@ export function initializeUI() {
       tooltip: () => html`
         <div class="tooltip-header">
           ${t('resource.crystal.name')}
-          <img src="${BASE}/icons/crystal.svg" alt="${t('resource.crystal.name')}" />
+          <img src="${BASE}/icons/crystal.png" alt="${t('resource.crystal.name')}" />
         </div>
         <div class="tooltip-desc">${t('resource.crystal.desc')}</div>
         <div class="tooltip-note"></div>
@@ -144,7 +144,7 @@ export function initializeUI() {
       tooltip: () => html`
         <div class="tooltip-header">
           ${t('resource.souls.name')}
-          <img src="${BASE}/icons/soul.svg" alt="${t('resource.souls.name')}" />
+          <img src="${BASE}/icons/soul.png" alt="${t('resource.souls.name')}" />
         </div>
         <div class="tooltip-desc">${t('resource.souls.desc')}</div>
         <div class="tooltip-note"></div>
@@ -1172,7 +1172,7 @@ function renderRegionPanel(region) {
         <div class="enemy-rewards-row">
           <div class="enemy-reward-item">
             <div class="enemy-reward-label">
-              <img src="${BASE}/icons/gold.svg" alt="${t('resource.gold.name')}" />
+              <img src="${BASE}/icons/gold.png" alt="${t('resource.gold.name')}" />
               ${t('resource.gold.name')}
             </div>
             <div class="enemy-reward-value" id="enemy-gold-value"></div>

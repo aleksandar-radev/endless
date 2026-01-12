@@ -93,7 +93,7 @@ export const KILL_QUESTS = [
     reward: {
       gold: 10000, crystals: 1, bonuses: { damagePercent: 1 }, materials: [{ id: 'enchantment_scroll', qty: 3 }],
     },
-    icon: `<img src="${BASE}/icons/skull.svg" alt="skull"/>`,
+    icon: `<img src="${BASE}/icons/skull.png" alt="skull"/>`,
   },
   {
     id: 'kill2500',
@@ -109,7 +109,7 @@ export const KILL_QUESTS = [
     reward: {
       gold: 30000, crystals: 4, bonuses: { bonusGoldPercent: 2 },
     },
-    icon: `<img src="${BASE}/icons/skull.svg" alt="skull"/>`,
+    icon: `<img src="${BASE}/icons/skull.png" alt="skull"/>`,
   },
   {
     id: 'kill5000',
@@ -125,7 +125,7 @@ export const KILL_QUESTS = [
     reward: {
       gold: 60000, crystals: 2, bonuses: { critChance: 1 }, materials: [{ id: 'enchantment_scroll', qty: 5 }],
     },
-    icon: `<img src="${BASE}/icons/skull.svg" alt="skull"/>`,
+    icon: `<img src="${BASE}/icons/skull.png" alt="skull"/>`,
   },
   {
     id: 'kill10000',
@@ -141,7 +141,7 @@ export const KILL_QUESTS = [
     reward: {
       gold: 100000, crystals: 3, bonuses: { bonusExperiencePercent: 2 },
     },
-    icon: `<img src="${BASE}/icons/skull.svg" alt="skull"/>`,
+    icon: `<img src="${BASE}/icons/skull.png" alt="skull"/>`,
   },
   {
     id: 'kill25000',
@@ -189,7 +189,7 @@ export const KILL_QUESTS = [
     reward: {
       gold: 700000, crystals: 12, bonuses: { damagePercent: 2, strength: 10 },
     },
-    icon: `<img src="${BASE}/icons/moon.svg" alt="night"/>`,
+    icon: `<img src="${BASE}/icons/moon.png" alt="night"/>`,
   },
   {
     id: 'kill250000',
@@ -205,7 +205,7 @@ export const KILL_QUESTS = [
     reward: {
       gold: 2000000, crystals: 20, bonuses: { materialQuantityPercent: 3 },
     },
-    icon: `<img src="${BASE}/icons/moon.svg" alt="night"/>`,
+    icon: `<img src="${BASE}/icons/moon.png" alt="night"/>`,
   },
   {
     id: 'kill500000',

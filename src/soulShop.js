@@ -341,7 +341,7 @@ export default class SoulShop {
       if (costEl) {
         costEl.innerHTML = alreadyPurchased
           ? t('common.purchased')
-          : `${formatNumber(cost)} ${t('resource.souls.name')}<img style="width: 20px; height: 20px;" src="${BASE}/icons/soul.svg" alt="${t('resource.souls.name')}">(${formatNumber(qty)})`;
+          : `${formatNumber(cost)} ${t('resource.souls.name')}<img style="width: 20px; height: 20px;" src="${BASE}/icons/soul.png" alt="${t('resource.souls.name')}">(${formatNumber(qty)})`;
         costEl.classList.toggle('unaffordable', unaffordable);
       }
       if (bonusEl) bonusEl.classList.toggle('unaffordable', unaffordable);
@@ -434,7 +434,7 @@ export default class SoulShop {
       <button class="soul-upgrade-btn ${alreadyPurchased ? 'purchased' : ''}" data-stat="${stat}" ${disabled ? 'disabled' : ''}>
         <span class="upgrade-name">${label} ${isOneTime ? '' : isMultiple ? '' : `(${t('common.lvl')} ${formatNumber(level)})`}</span>
         <span class="upgrade-bonus ${bonusClass}">${bonus}</span>
-        <span class="upgrade-cost ${bonusClass}">${alreadyPurchased ? t('common.purchased') : `${formatNumber(cost)} ${t('resource.souls.name')}<img style="width: 20px; height: 20px;" src="${BASE}/icons/soul.svg" alt="${t('resource.souls.name')}">(${formatNumber(qty)})`}</span>
+        <span class="upgrade-cost ${bonusClass}">${alreadyPurchased ? t('common.purchased') : `${formatNumber(cost)} ${t('resource.souls.name')}<img style="width: 20px; height: 20px;" src="${BASE}/icons/soul.png" alt="${t('resource.souls.name')}">(${formatNumber(qty)})`}</span>
       </button>
     `;
   }

@@ -57,7 +57,7 @@ export const MATERIALS = {
     get name() {
       return t('Gold Coins');
     },
-    icon: `<img src="${BASE}/icons/gold-coin.svg" alt="gold"/>`,
+    icon: `<img src="${BASE}/icons/gold-coin.png" alt="gold"/>`,
     get description() {
       return t('Adds 1000 gold per coin to your total.');
     },
@@ -72,7 +72,7 @@ export const MATERIALS = {
     get name() {
       return t('Large Gold Coins');
     },
-    icon: `<img src="${BASE}/icons/large-gold-coin.svg" alt="gold"/>`,
+    icon: `<img src="${BASE}/icons/large-gold-coin.png" alt="gold"/>`,
     get description() {
       return t('Adds 10000 gold per coin to your total.');
     },
@@ -87,7 +87,7 @@ export const MATERIALS = {
     get name() {
       return t('Enormous Gold Coins');
     },
-    icon: `<img src="${BASE}/icons/enormous-gold-coin.svg" alt="gold"/>`,
+    icon: `<img src="${BASE}/icons/enormous-gold-coin.png" alt="gold"/>`,
     get description() {
       return t('Adds 50000 gold per coin to your total.');
     },
@@ -102,7 +102,7 @@ export const MATERIALS = {
     get name() {
       return t('Freaky Gold Coins');
     },
-    icon: `<img src="${BASE}/icons/freaky-gold-coin.svg" alt="gold"/>`,
+    icon: `<img src="${BASE}/icons/freaky-gold-coin.png" alt="gold"/>`,
     get description() {
       return t('Adds 1000000 gold per coin to your total.');
     },
@@ -134,7 +134,7 @@ export const MATERIALS = {
     get name() {
       return t('Crystalized Rock');
     },
-    icon: `<img src="${BASE}/icons/crystal.svg" alt="crystal"/>`,
+    icon: `<img src="${BASE}/icons/crystal.png" alt="crystal"/>`,
     get description() {
       return t('Gives 1 crystal.');
     },
@@ -269,7 +269,7 @@ export const MATERIALS = {
     get name() {
       return t('Armor Upgrade Stone');
     },
-    icon: `<img src="${BASE}/icons/armor-upgrade-stone.svg" alt="armor"/>`,
+    icon: `<img src="${BASE}/icons/armor-upgrade-stone.png" alt="armor"/>`,
     get description() {
       return t(
         "Upgrade the level of an equipped armor item. Requires a quantity equal to the item's tier for each level.",
@@ -288,7 +288,7 @@ export const MATERIALS = {
     get name() {
       return t('Jewelry Upgrade Gem');
     },
-    icon: `<img src="${BASE}/icons/jewelry-upgrade-gem.svg" alt="ring"/>`,
+    icon: `<img src="${BASE}/icons/jewelry-upgrade-gem.png" alt="ring"/>`,
     get description() {
       return t(
         "Upgrade the level of an equipped jewelry item. Requires a quantity equal to the item's tier for each level.",
@@ -307,7 +307,7 @@ export const MATERIALS = {
     get name() {
       return t('Weapon Upgrade Core');
     },
-    icon: `<img src="${BASE}/icons/weapon-upgrade-core.svg" alt="weapon"/>`,
+    icon: `<img src="${BASE}/icons/weapon-upgrade-core.png" alt="weapon"/>`,
     get description() {
       return t("Upgrade the level of an equipped weapon. Requires a quantity equal to the item's tier for each level.");
     },
@@ -324,7 +324,7 @@ export const MATERIALS = {
     get name() {
       return t('Enchantment Scroll');
     },
-    icon: `<img src="${BASE}/icons/enchantment-scroll.svg" alt="scroll"/>`,
+    icon: `<img src="${BASE}/icons/enchantment-scroll.png" alt="scroll"/>`,
     get description() {
       return t('Increases the rarity of an equipped item. (cannot be used on mythic items)');
     },
@@ -340,7 +340,7 @@ export const MATERIALS = {
     get name() {
       return t('Alternation Orb');
     },
-    icon: `<img src="${BASE}/icons/alternation-orb.svg" alt="orb"/>`,
+    icon: `<img src="${BASE}/icons/alternation-orb.png" alt="orb"/>`,
     get description() {
       return t('Re-rolls the value of one chosen stat on an equipped item.');
     },
@@ -356,7 +356,7 @@ export const MATERIALS = {
     get name() {
       return t('item.transmutationOrb');
     },
-    icon: `<img src="${BASE}/icons/transmutation-orb.svg" alt="orb"/>`,
+    icon: `<img src="${BASE}/icons/transmutation-orb.png" alt="orb"/>`,
     get description() {
       return t('item.transmutationOrb.description');
     },

@@ -31,10 +31,10 @@ export function updateQuestsUI() {
   // Check if there are claimable quests
   const hasClaimable = quests.quests.some((q) => q.isComplete() && !q.claimed);
   if (hasClaimable) {
-    claimableBtn.innerHTML = `<img src="${BASE}/icons/check.svg" alt="${t('icon.check')}"/>`;
+    claimableBtn.innerHTML = `<img src="${BASE}/icons/check.png" alt="${t('icon.check')}"/>`;
     claimableBtn.style.backgroundColor = '';
   } else {
-    claimableBtn.innerHTML = `<img src="${BASE}/icons/close.svg" alt="${t('common.close')}"/>`;
+    claimableBtn.innerHTML = `<img src="${BASE}/icons/close.png" alt="${t('common.close')}"/>`;
     claimableBtn.style.backgroundColor = 'var(--danger)';
   }
   claimableBtn.style.marginRight = '12px';

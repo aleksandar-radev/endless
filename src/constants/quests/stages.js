@@ -41,22 +41,22 @@ const BASE_STAGE_QUESTS = [
   {
     target: 500,
     reward: { gold: 100000, crystals: 15 },
-    icon: `<img src="${BASE}/icons/moon.svg" alt="night"/>`,
+    icon: `<img src="${BASE}/icons/moon.png" alt="night"/>`,
   },
   {
     target: 1000,
     reward: { gold: 200000, crystals: 25 },
-    icon: `<img src="${BASE}/icons/moon.svg" alt="night"/>`,
+    icon: `<img src="${BASE}/icons/moon.png" alt="night"/>`,
   },
   {
     target: 2500,
     reward: { gold: 600000, crystals: 40 },
-    icon: `<img src="${BASE}/icons/moon.svg" alt="night"/>`,
+    icon: `<img src="${BASE}/icons/moon.png" alt="night"/>`,
   },
   {
     target: 5000,
     reward: { gold: 1600000, crystals: 75 },
-    icon: `<img src="${BASE}/icons/moon.svg" alt="night"/>`,
+    icon: `<img src="${BASE}/icons/moon.png" alt="night"/>`,
   },
 ];
 

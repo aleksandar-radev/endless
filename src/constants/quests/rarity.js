@@ -2,7 +2,7 @@ import { tp } from '../../i18n.js';
 const BASE = import.meta.env.VITE_BASE_PATH;
 const RARITY_ICONS = {
   rare: `<img src="${BASE}/icons/star.svg" alt="rare"/>`,
-  epic: `<img src="${BASE}/icons/moon.svg" alt="epic"/>`,
+  epic: `<img src="${BASE}/icons/moon.png" alt="epic"/>`,
   legendary: `<img src="${BASE}/icons/earth.png" alt="legendary"/>`,
   mythic: `<img src="${BASE}/icons/fire.png" alt="mythic"/>`,
 };
