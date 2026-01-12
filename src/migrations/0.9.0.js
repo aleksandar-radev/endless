@@ -91,5 +91,41 @@ export const run = (rawData) => {
     }
   }
 
+  // Runes System Rework Migration
+  // - Removes conversion runes (they are no longer supported)
+  // - Renames 'bonus' to 'stats' on existing runes
+  // - Adds default tier to runes without one
+  const migrateRune = (rune) => {
+    if (!rune) return rune;
+
+    // Conversion runes (have 'conversion' prop) are removed
+    if (rune.conversion) {
+      return null;
+    }
+
+    // Rename bonus → stats for existing unique runes
+    if (rune.bonus && !rune.stats) {
+      rune.stats = rune.bonus;
+      delete rune.bonus;
+    }
+
+    // Add tier if missing (default to 1)
+    if (rune.tier === undefined) {
+      rune.tier = 1;
+    }
+
+    return rune;
+  };
+
+  // Migrate equipped runes
+  if (data.runes?.equipped) {
+    data.runes.equipped = data.runes.equipped.map(migrateRune).filter(Boolean);
+  }
+
+  // Migrate inventory runes
+  if (data.runes?.inventory) {
+    data.runes.inventory = data.runes.inventory.map(migrateRune).filter(Boolean);
+  }
+
   return { data, result: true };
 };

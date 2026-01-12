@@ -78,7 +78,7 @@ export default {
   'options.here': 'AQUÍ',
   'options.stageControlsInline': 'Mostrar controles de etapa bajo el enemigo',
   'options.stageControlsInline.tooltip':
-    'Mostrar controles de etapa bajo el enemigo en Explorar y Campo Rocoso',
+    'Mostrar controles de etapa bajo el enemigo en modo Explorar',
   'options.startingStage': 'Etapa inicial',
   'options.startingStage.tooltip': 'Etapa desde la que comenzar después de reiniciar',
   'options.toast.startingStageApplied': '¡Opción de etapa inicial aplicada!',

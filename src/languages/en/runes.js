@@ -32,4 +32,6 @@ export default {
   'rune.bossSkip.desc': '+1 arena boss skip.',
   'rune.crystalGain.name': 'Crystal Hoarder Rune',
   'rune.crystalGain.desc': '+100% crystals gained.',
+  'rune.empoweringRune.name': 'Empowering Rune',
+  'rune.empoweringRune.desc': 'Grants a random flat stat bonus.',
 };

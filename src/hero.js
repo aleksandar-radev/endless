@@ -870,10 +870,7 @@ export default class Hero {
       }
     }
 
-    let pendingDamageAdditions = {};
-    if (runes && typeof runes.applyPreDamageConversions === 'function') {
-      pendingDamageAdditions = runes.applyPreDamageConversions(this.stats) || {};
-    }
+
 
     const computeResourceExtraDamage = (statsSnapshot, shareMap, physicalShare = 0.5, thornsShare = 0) => {
       if (!statsSnapshot) return {
@@ -1000,16 +997,7 @@ export default class Hero {
       preConversionDamage[`${id}Damage`] = this.stats[`${id}Damage`];
     });
 
-    Object.entries(pendingDamageAdditions).forEach(([stat, amount]) => {
-      if (!amount) return;
-      const baseValue = this.stats[stat] || 0;
-      const next = baseValue + amount;
-      this.stats[stat] = next > 0 ? next : 0;
-    });
 
-    if (runes && typeof runes.applyPostDamageConversions === 'function') {
-      runes.applyPostDamageConversions(this.stats);
-    }
 
     const finalResourceExtraDamage = computeResourceExtraDamage(
       this.stats,

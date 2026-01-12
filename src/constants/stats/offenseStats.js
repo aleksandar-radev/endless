@@ -1,4 +1,4 @@
-import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat, createHiddenStat } from './stats.js';
+import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat, createChanceStat, createHiddenStat } from './stats.js';
 import { ELEMENTS } from '../common.js';
 
 const ELEMENTAL_DAMAGE_MIN = 8;
@@ -116,7 +116,7 @@ export const OFFENSE_STATS = {
     itemTags: ['offense', 'gloves'],
     forceNotShow: true,
   }),
-  critChance: createPercentStat({
+  critChance: createChanceStat({
     base: 5,
     dec: 2,
     training: {
@@ -213,7 +213,7 @@ export const OFFENSE_STATS = {
     sub: 'attack',
   }),
   lifePerHitPercent: createPercentStat({ forceNotShow: true }),
-  doubleDamageChance: createPercentStat({
+  doubleDamageChance: createChanceStat({
     training: {
       cost: 550,
       costIncrease: 600,
@@ -304,32 +304,32 @@ export const OFFENSE_STATS = {
   arenaDamagePercent: createPercentStat({ sub: 'attack' }),
   animatedWeaponsDamagePercent: createPercentStat(),
   cloneDamagePercent: createPercentStat(),
-  avoidChance: createPercentStat({ forceNotShow: true }),
+  avoidChance: createChanceStat({ forceNotShow: true }),
   executeThresholdPercent: createPercentStat({ sub: 'attack' }),
   damageToHighRarityEnemiesPercent: createPercentStat(),
   healDamagesEnemiesPercent: createPercentStat(),
   batsHealPercent: createPercentStat(),
-  bleedChance: createPercentStat({ sub: 'attack' }),
+  bleedChance: createChanceStat({ sub: 'attack' }),
   bleedDamagePercent: createPercentStat({ dec: 0 }),
   overkillDamagePercent: createStat({ div: 100 }),
-  burnChance: createPercentStat({ sub: 'elemental' }),
+  burnChance: createChanceStat({ sub: 'elemental' }),
   burnDamagePercent: createPercentStat({ sub: 'elemental' }),
-  poisonChance: createPercentStat({ sub: 'elemental' }),
+  poisonChance: createChanceStat({ sub: 'elemental' }),
   poisonDamagePercent: createPercentStat({ sub: 'elemental' }),
-  explosionChance: createPercentStat({ sub: 'elemental' }),
+  explosionChance: createChanceStat({ sub: 'elemental' }),
   extraDamageAgainstBurningEnemies: createPercentStat({ sub: 'elemental' }),
-  arcDischargeChance: createPercentStat({ sub: 'elemental' }),
-  shockChance: createPercentStat({ sub: 'elemental' }),
+  arcDischargeChance: createChanceStat({ sub: 'elemental' }),
+  shockChance: createChanceStat({ sub: 'elemental' }),
   shockEffectivenessPercent: createPercentStat(),
-  freezeChance: createPercentStat({ sub: 'elemental' }),
-  stunChance: createPercentStat({ sub: 'attack' }),
+  freezeChance: createChanceStat({ sub: 'elemental' }),
+  stunChance: createChanceStat({ sub: 'attack' }),
   extraDamageAgainstFrozenEnemies: createPercentStat({ sub: 'elemental' }),
-  chanceToShatterEnemy: createPercentStat({ sub: 'elemental' }),
+  chanceToShatterEnemy: createChanceStat({ sub: 'elemental' }),
   summonDamageBuffPercent: createPercentStat(),
   summonAttackSpeedBuffPercent: createPercentStat(),
   summonerExtraSummonUnlocked: createHiddenStat(),
   naturalistInstantSkillsUnlocked: createHiddenStat(),
-  teleportDodgeChance: createPercentStat({ sub: 'defense' }),
+  teleportDodgeChance: createChanceStat({ sub: 'defense' }),
   manaToLifeTransferPercent: createPercentStat(),
   damageToBossesPercent: createPercentStat(),
   bloodSacrificeEffectivenessPercent: createPercentStat(),

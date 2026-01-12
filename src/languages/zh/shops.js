@@ -33,6 +33,9 @@ export default {
   'crystalShop.upgrade.resetArenaLevel.label': '重置竞技场等级',
   'crystalShop.upgrade.resetArenaLevel.bonus': '将竞技场等级重置为 1',
   'crystalShop.upgrade.resetArenaLevel.bonusLabel': '将竞技场等级重置为 1',
+  'crystalShop.upgrade.resetRockyFieldStage.label': '重置岩石地带阶段',
+  'crystalShop.upgrade.resetRockyFieldStage.bonus': '将岩石地带阶段重置为 1',
+  'crystalShop.upgrade.resetRockyFieldStage.bonusLabel': '将岩石地带阶段重置为 1',
   'crystalShop.upgrade.resetTraining.label': '重置训练',
   'crystalShop.upgrade.resetTraining.bonus': '返还训练升级花费的全部金币',
   'crystalShop.upgrade.resetTraining.bonusLabel': '返还训练升级花费的全部金币',
@@ -79,6 +82,9 @@ export default {
     '确定要重置所有已分配的属性点吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
   'crystalShop.confirm.resetBossLevel':
     '确定要将你的首领等级重置为1吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
+  'crystalShop.confirm.resetRockyFieldStage':
+    '确定要将你的岩石地带阶段重置为1吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
+  'crystalShop.resetRockyFieldStageSuccess': '岩石地带阶段已重置为1。',
   'crystalShop.confirm.resetTraining':
     '确定要重置所有训练升级并返还花费的金币吗？<br>这将花费<strong>{count}水晶</strong>且无法撤销。',
   'crystalShop.resetTrainingSuccess': '所有训练升级已重置，返还{amount}金币。',

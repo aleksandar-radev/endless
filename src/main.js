@@ -61,7 +61,7 @@ window.setLanguage = setLanguage;
   }
 
   if (!game.rockyFieldStage || game.rockyFieldStage == null) {
-    game.rockyFieldStage = game.getStartingStage() || 1;
+    game.rockyFieldStage = 1;
   }
 
   if (!game.rockyFieldHighestStage || game.rockyFieldHighestStage < game.rockyFieldStage) {

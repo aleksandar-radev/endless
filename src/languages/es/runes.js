@@ -32,4 +32,6 @@ export default {
   'rune.bossSkip.desc': '+1 salto de jefe de arena.',
   'rune.crystalGain.name': 'Runa del Acumulador de Cristales',
   'rune.crystalGain.desc': '+100% cristales obtenidos.',
+  'rune.empoweringRune.name': 'Runa de Poder',
+  'rune.empoweringRune.desc': 'Otorga un bono de estadística plana aleatorio.',
 };

@@ -75,7 +75,7 @@ export default {
   'options.desktopDownload': 'You can download the desktop app (Windows only) from',
   'options.here': 'HERE',
   'options.stageControlsInline': 'Show stage controls under enemy',
-  'options.stageControlsInline.tooltip': 'Show stage controls under enemy in Explore and Rocky Field',
+  'options.stageControlsInline.tooltip': 'Show stage controls under enemy in Explore mode',
   'options.startingStage': 'Starting Stage',
   'options.startingStage.tooltip': 'Stage to begin from after resetting',
   'options.toast.startingStageApplied': 'Starting stage option applied!',

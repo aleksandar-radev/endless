@@ -34,6 +34,9 @@ export default {
   'crystalShop.upgrade.resetArenaLevel.label': 'Reset Arena Level',
   'crystalShop.upgrade.resetArenaLevel.bonus': 'Reset Arena level to 1',
   'crystalShop.upgrade.resetArenaLevel.bonusLabel': 'Reset Arena level to 1',
+  'crystalShop.upgrade.resetRockyFieldStage.label': 'Reset Rocky Field Stage',
+  'crystalShop.upgrade.resetRockyFieldStage.bonus': 'Reset Rocky Field stage to 1',
+  'crystalShop.upgrade.resetRockyFieldStage.bonusLabel': 'Reset Rocky Field stage to 1',
   'crystalShop.upgrade.resetTraining.label': 'Reset Training',
   'crystalShop.upgrade.resetTraining.bonus': 'Refund all gold spent on training upgrades',
   'crystalShop.upgrade.resetTraining.bonusLabel': 'Refund all gold spent on training upgrades',
@@ -83,6 +86,9 @@ export default {
     'Are you sure you want to reset all allocated attribute points?<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
   'crystalShop.confirm.resetBossLevel':
     'Are you sure you want to reset your boss level to 1?<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
+  'crystalShop.confirm.resetRockyFieldStage':
+    'Are you sure you want to reset your Rocky Field stage to 1?<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
+  'crystalShop.resetRockyFieldStageSuccess': 'Rocky Field stage has been reset to 1.',
   'crystalShop.confirm.resetTraining':
     'Are you sure you want to reset all training upgrades and refund the gold spent?<br>This will cost <strong>{count} crystals</strong> and cannot be undone.',
   'crystalShop.resetTrainingSuccess': 'All training upgrades have been reset. Refunded {amount} Gold.',

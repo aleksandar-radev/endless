@@ -38,6 +38,9 @@ export default {
   'crystalShop.upgrade.resetArenaLevel.label': 'Reiniciar Nivel del Arena',
   'crystalShop.upgrade.resetArenaLevel.bonus': 'Reinicia el nivel del Arena a 1',
   'crystalShop.upgrade.resetArenaLevel.bonusLabel': 'Reinicia el nivel del Arena a 1',
+  'crystalShop.upgrade.resetRockyFieldStage.label': 'Reiniciar Etapa de Rocky Field',
+  'crystalShop.upgrade.resetRockyFieldStage.bonus': 'Reinicia la etapa de Rocky Field a 1',
+  'crystalShop.upgrade.resetRockyFieldStage.bonusLabel': 'Reinicia la etapa de Rocky Field a 1',
   'crystalShop.upgrade.resetTraining.label': 'Reiniciar Entrenamiento',
   'crystalShop.upgrade.resetTraining.bonus': 'Devuelve todo el oro gastado en mejoras de entrenamiento',
   'crystalShop.upgrade.resetTraining.bonusLabel': 'Devuelve todo el oro gastado en mejoras de entrenamiento',
@@ -85,6 +88,9 @@ export default {
     '¿Estás seguro de que quieres restablecer todos los puntos de atributos asignados?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
   'crystalShop.confirm.resetBossLevel':
     '¿Estás seguro de que quieres restablecer tu nivel de jefe a 1?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
+  'crystalShop.confirm.resetRockyFieldStage':
+    '¿Estás seguro de que quieres restablecer tu etapa de Rocky Field a 1?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
+  'crystalShop.resetRockyFieldStageSuccess': 'La etapa de Rocky Field se ha reiniciado a 1.',
   'crystalShop.confirm.resetTraining':
     '¿Estás seguro de que quieres restablecer todas las mejoras de entrenamiento y reembolsar el oro gastado?<br>Esto costará <strong>{count} cristales</strong> y no se puede deshacer.',
   'crystalShop.resetTrainingSuccess':

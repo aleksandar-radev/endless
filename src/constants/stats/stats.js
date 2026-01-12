@@ -30,6 +30,16 @@ export function createPercentStat(props = {}) {
   return createStat({
     div: 100,
     dec: 1,
+    isPercentStat: true,
+    ...props,
+  });
+}
+
+export function createChanceStat(props = {}) {
+  return createStat({
+    div: 100,
+    dec: 1,
+    isChanceStat: true,
     ...props,
   });
 }
@@ -55,6 +65,15 @@ export function getStatDecimalPlaces(statKey, fallback = 0) {
   return fallback;
 }
 
+export function isPercentStat(statKey) {
+  if (STATS?.[statKey]?.isPercentStat) return true;
+  return statKey.endsWith('Percent');
+}
+
+export function isChanceStat(statKey) {
+  if (STATS?.[statKey]?.isChanceStat) return true;
+  return statKey.endsWith('Chance');
+}
 
 /**
  * Generate a tier scaling map (1-12) by interpolating between start and end values.

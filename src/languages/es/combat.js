@@ -8,7 +8,8 @@ export default {
   'death.message': '¡Has muerto! Reviviendo en <span id="revive-countdown">10</span>',
   'region.explore': 'Explorar',
   'region.arena': 'Arena',
-  'region.rockyField': 'Campo Rocoso',
+  'region.rockyField': 'Campo Rocoso',
+
   'combatMode.subAreaFormat': '{name} [{type}]',
   'combatMode.subAreaType.region': 'Región',
   'enchanted_forest.description':
@@ -134,7 +135,8 @@ export default {
   'counters.xp': 'EXP',
   'counters.gold': 'Oro',
   'counters.items': 'Objetos',
-  'counters.materials': 'Materiales',
+  'counters.materials': 'Materiales',
+
   'enemy.stats.dmgShort': 'DAÑO',
   'enemy.stats.resShort': 'RES',
   'enemy.stats.toggle': 'Mostrar/ocultar estadísticas del enemigo',

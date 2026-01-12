@@ -1,5 +1,5 @@
 import { t } from '../../i18n.js';
-import { ROCKY_FIELD_COMMON_RUNES } from '../rocky_field_runes.js';
+import { ROCKY_FIELD_COMMON_RUNES } from '../runes.js';
 
 export const ROCKY_FIELD_BOULDERS_ENEMIES = [
   {

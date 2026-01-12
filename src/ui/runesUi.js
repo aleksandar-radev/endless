@@ -204,9 +204,9 @@ const runeFilterCache = new Map();
 
 function getRuneFilterKey(rune) {
   if (!rune) return '';
-  const percent = typeof rune.conversion?.percent === 'number' ? rune.conversion.percent : '';
+  const tier = rune.tier || 1;
   const mode = options?.shortElementalNames ? 'short' : 'long';
-  return `${rune.id}:${percent}:${mode}`;
+  return `${rune.id}:${tier}:${mode}`;
 }
 
 function getRuneFilterStrings(rune) {

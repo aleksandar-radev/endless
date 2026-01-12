@@ -1,6 +1,5 @@
-import { RUNES, MIN_CONVERSION_PERCENT, MAX_CONVERSION_PERCENT } from './constants/runes.js';
-const RUNES_BY_ID = new Map(RUNES.map((r) => [r.id, r]));
-const isDamageStat = (stat) => stat === 'damage' || /Damage$/.test(stat);
+import { RUNES, isChanceStat, getTierMultiplier, getPercentTierMultiplier } from './constants/runes.js';
+import { isPercentStat } from './constants/stats/stats.js';
 import { tp, t } from './i18n.js';
 import { formatStatName } from './format.js';
 import { hero, ascension } from './globals.js';
@@ -12,45 +11,92 @@ export const INVENTORY_TAB_SIZE = 80;
 export const BASE_UNLOCKED_RUNE_TABS = 2;
 const INVENTORY_SLOTS = FROZEN_RUNE_SLOTS + INVENTORY_TAB_COUNT * INVENTORY_TAB_SIZE;
 
-const getConversionMaxPercent = (base) => {
-  if (!base?.conversion) return MAX_CONVERSION_PERCENT;
-  const { maxPercent } = base.conversion;
-  return typeof maxPercent === 'number' ? maxPercent : MAX_CONVERSION_PERCENT;
-};
-
-const clampConversionPercent = (base, percent) => {
-  if (!base?.conversion) return undefined;
-  const max = getConversionMaxPercent(base);
-  const min = MIN_CONVERSION_PERCENT;
-  if (typeof percent !== 'number') {
-    const fallback = typeof base.conversion.percent === 'number' ? base.conversion.percent : min;
-    return Math.min(max, Math.max(min, fallback));
+/**
+ * Roll a value from a stat definition.
+ * If the stat is a range [min, max], roll a random value.
+ * If it's a fixed value, return it as-is.
+ * @param {number|[number, number]} statValue
+ * @returns {number}
+ */
+const rollStatValue = (statValue) => {
+  if (Array.isArray(statValue) && statValue.length === 2) {
+    const [min, max] = statValue;
+    return min + Math.random() * (max - min);
   }
-  if (percent > max) return max;
-  if (percent < min) return min;
-  return percent;
+  return statValue;
 };
 
-const resolveRunePercent = (rune, base) => {
-  if (!base?.conversion) return undefined;
-  return clampConversionPercent(base, rune?.conversion?.percent);
+/**
+ * Apply tier multiplier to a stat value.
+ * - Chance stats: NOT multiplied (capped by nature)
+ * - Percent stats: Use smaller 2x per tier multiplier
+ * - Flat stats: Use full 20x per tier multiplier
+ * @param {string} statKey
+ * @param {number} value
+ * @param {number} tier
+ * @returns {number}
+ */
+const applyTierMultiplier = (statKey, value, tier) => {
+  // Chance stats don't scale with tier
+  if (isChanceStat(statKey)) {
+    return value;
+  }
+  // Percent stats use smaller multiplier (2x per tier)
+  if (isPercentStat(statKey)) {
+    const multiplier = getPercentTierMultiplier(tier);
+    return value * multiplier;
+  }
+  // Flat stats use full multiplier (20x per tier)
+  const multiplier = getTierMultiplier(tier);
+  return value * multiplier;
+};
+
+/**
+ * Roll stats for a rune based on its definition.
+ * @param {object} base - The base rune definition from RUNES
+ * @param {number} tier - The tier to apply
+ * @returns {object} The rolled stats
+ */
+const rollRuneStats = (base, tier = 1) => {
+  if (!base?.stats) return {};
+
+  const statKeys = Object.keys(base.stats);
+  const attributeCount = base.attributes || 1;
+
+  // If attributes count equals or exceeds stat count, use all stats
+  if (attributeCount >= statKeys.length) {
+    const rolledStats = {};
+    for (const key of statKeys) {
+      const rawValue = rollStatValue(base.stats[key]);
+      rolledStats[key] = Math.floor(applyTierMultiplier(key, rawValue, tier));
+    }
+    return rolledStats;
+  }
+
+  // Otherwise, randomly select 'attributes' number of stats
+  const shuffled = [...statKeys].sort(() => Math.random() - 0.5);
+  const selected = shuffled.slice(0, attributeCount);
+
+  const rolledStats = {};
+  for (const key of selected) {
+    const rawValue = rollStatValue(base.stats[key]);
+    rolledStats[key] = Math.floor(applyTierMultiplier(key, rawValue, tier));
+  }
+  return rolledStats;
 };
 
 export default class Runes {
   constructor(savedData = {}) {
-    // Normalize saved data to minimal representation: only id and conversion.percent
+    // Normalize saved data
     const normalize = (arr = []) =>
       (arr || []).map((r) => {
         if (!r) return null;
-        const minimal = { id: r.id };
-        const base = RUNES_BY_ID.get(r.id);
-        if (base?.conversion) {
-          const percent = resolveRunePercent(r, base);
-          if (typeof percent === 'number') {
-            minimal.conversion = { percent };
-          }
-        }
-        return minimal;
+        // Only keep id, stats (rolled), and tier
+        return {
+          id: r.id,
+          stats: r.stats || {},
+          tier: r.tier || 1,
+        };
       });
 
     this.equipped = normalize(savedData.equipped || []);
@@ -89,25 +135,32 @@ export default class Runes {
     return tabIndex >= 0 && tabIndex < this.getUnlockedTabCount();
   }
 
-  addRune(id, percentOverride) {
-    const rune = RUNES_BY_ID.get(id);
-    if (!rune) return null;
+  /**
+   * Add a new rune to inventory.
+   * @param {string} id - The rune ID
+   * @param {number} tier - The tier of the rune (affects stat multipliers)
+   * @param {number} level - The level of the rune (affects stage scaling)
+   * @returns {object|null} The created rune instance, or null if inventory full
+   */
+  addRune(id, tier = 1, level = 1) {
+    const base = RUNES[id];
+    if (!base) return null;
+
     const limit = FROZEN_RUNE_SLOTS + this.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
     let idx = this.inventory.findIndex((r, slotIdx) => slotIdx >= FROZEN_RUNE_SLOTS && slotIdx < limit && r === null);
     if (idx === -1) {
       idx = this.inventory.findIndex((r) => r === null);
     }
     if (idx === -1) return null;
-    const inst = { id: rune.id };
-    if (rune.conversion) {
-      const percent = clampConversionPercent(
-        rune,
-        typeof percentOverride === 'number' ? percentOverride : rune.conversion.percent,
-      );
-      if (typeof percent === 'number') {
-        inst.conversion = { percent };
-      }
-    }
+
+    const rolledStats = rollRuneStats(base, tier);
+    const inst = {
+      id: base.id,
+      stats: rolledStats,
+      tier,
+      level,
+    };
+
     this.inventory[idx] = inst;
     return inst;
   }
@@ -135,17 +188,11 @@ export default class Runes {
     return this.isTabUnlocked(tab) ? tab : null;
   }
 
-  getInventoryIndexForTabSlot(tabIndex, slotIndex) {
-    const { start, end } = this.getTabBounds(tabIndex);
-    const offset = Math.min(Math.max(slotIndex, 0), end - start - 1);
-    return start + offset;
-  }
-
   equip(slotIndex, inventoryIndex) {
     const rune = this.inventory[inventoryIndex];
     if (!rune) return;
-    const base = RUNES_BY_ID.get(rune.id);
-    if (base) {
+    const base = RUNES[rune.id];
+    if (base?.unique) {
       const existingIndex = this.equipped.findIndex((r) => r?.id === rune.id);
       if (existingIndex !== -1 && existingIndex !== slotIndex) return;
     }
@@ -195,19 +242,15 @@ export default class Runes {
   salvage(index) {
     const rune = this.inventory[index];
     if (!rune) return 0;
-    const base = RUNES_BY_ID.get(rune.id);
+    const base = RUNES[rune.id];
 
-    let baseValue = 0;
+    let baseValue = 1;
     if (base?.unique) {
       baseValue = 200;
-    } else if (base?.conversion) {
-      const percent = resolveRunePercent(rune, base) ?? base.conversion.percent;
-      baseValue = Math.max(1, Math.floor(percent / 2));
-    } else if (base?.bonus) {
-      const maxBonus = Math.max(...Object.values(base.bonus));
-      baseValue = Math.max(1, Math.floor(maxBonus / 2));
-    } else {
-      baseValue = 1;
+    } else if (rune.stats) {
+      // Value based on sum of stat values and tier
+      const statSum = Object.values(rune.stats).reduce((sum, v) => sum + Math.abs(v), 0);
+      baseValue = Math.max(1, Math.floor(statSum / 2)) * (rune.tier || 1);
     }
 
     const crystals = Math.max(1, Math.floor(baseValue * 0.25));
@@ -228,18 +271,15 @@ export default class Runes {
     slice.sort((a, b) => {
       if (!a) return 1;
       if (!b) return -1;
-      const baseA = RUNES_BY_ID.get(a.id);
-      const baseB = RUNES_BY_ID.get(b.id);
+      const baseA = RUNES[a.id];
+      const baseB = RUNES[b.id];
       const isUniqueA = !!baseA?.unique;
       const isUniqueB = !!baseB?.unique;
       if (isUniqueA && !isUniqueB) return -1;
       if (!isUniqueA && isUniqueB) return 1;
-      if (!isUniqueA && !isUniqueB) {
-        const percentA = baseA?.conversion ? (resolveRunePercent(a, baseA) ?? 0) : 0;
-        const percentB = baseB?.conversion ? (resolveRunePercent(b, baseB) ?? 0) : 0;
-        if (percentA !== percentB) {
-          return percentB - percentA;
-        }
+      // Sort by tier (higher first)
+      if ((a.tier || 1) !== (b.tier || 1)) {
+        return (b.tier || 1) - (a.tier || 1);
       }
       return getRuneName(a, shortElementalNames).localeCompare(getRuneName(b, shortElementalNames));
     });
@@ -249,182 +289,81 @@ export default class Runes {
   }
 
   /**
-   * Apply equipped rune conversions to the provided flat stat values.
-   * @param {Record<string, number>} flatValues
+   * Get the combined bonus effects from all equipped runes.
+   * @returns {object} Combined stat bonuses
    */
-  applyBonuses(flatValues) {
-    if (!flatValues) return;
-  }
-
-  /**
-   * Apply conversions that draw from non-damage stats. Returns a map of
-   * damage stat names (e.g. damage, fireDamage) to amounts that should be
-   * added later once damage totals are available.
-   * @param {Record<string, number>} stats
-   * @returns {Record<string, number>}
-   */
-  applyPreDamageConversions(stats) {
-    if (!stats) return {};
-
-    const deltas = {};
-    const pendingDamageAdditions = {};
-    const consumedFromSource = {};
-    const baseValues = {};
-
-    const getBaseValue = (stat) => {
-      if (!Object.prototype.hasOwnProperty.call(baseValues, stat)) {
-        baseValues[stat] = stats[stat] ?? 0;
-      }
-      return baseValues[stat];
-    };
-
-    const getAvailableFromSource = (stat) => {
-      const base = getBaseValue(stat);
-      const consumed = consumedFromSource[stat] || 0;
-      return Math.max(0, base - consumed);
-    };
-
-    this.equipped.forEach((rune) => {
-      if (!rune) return;
-      const base = RUNES_BY_ID.get(rune.id);
-      if (!base?.conversion) return;
-      const { from, to } = base.conversion;
-      if (isDamageStat(from)) return;
-      const percent = resolveRunePercent(rune, base);
-      if (!percent) return;
-
-      const baseValue = getBaseValue(from);
-      if (!baseValue) return;
-      const targetAmount = Math.max(0, baseValue * (percent / 100));
-      if (!targetAmount) return;
-      const available = getAvailableFromSource(from);
-      if (!available) return;
-      const move = Math.min(available, targetAmount);
-      if (!move) return;
-
-      consumedFromSource[from] = (consumedFromSource[from] || 0) + move;
-      deltas[from] = (deltas[from] || 0) - move;
-      if (isDamageStat(to)) {
-        pendingDamageAdditions[to] = (pendingDamageAdditions[to] || 0) + move;
-      } else {
-        deltas[to] = (deltas[to] || 0) + move;
-      }
-    });
-
-    Object.entries(deltas).forEach(([stat, delta]) => {
-      if (!delta) return;
-      const baseValue = stats[stat] ?? 0;
-      const next = baseValue + delta;
-      stats[stat] = next > 0 ? next : 0;
-    });
-
-    return pendingDamageAdditions;
-  }
-
-  /**
-   * Apply conversions that draw from damage stats (damage and *Damage).
-   * Mutates the stats object directly and returns a map of damage stat deltas.
-   * @param {Record<string, number>} stats
-   * @returns {Record<string, number>}
-   */
-  applyPostDamageConversions(stats) {
-    if (!stats) return {};
-
-    const deltas = {};
-    const damageDeltas = {};
-    const consumedFromSource = {};
-    const baseValues = {};
-
-    const getBaseValue = (stat) => {
-      if (!Object.prototype.hasOwnProperty.call(baseValues, stat)) {
-        baseValues[stat] = stats[stat] ?? 0;
-      }
-      return baseValues[stat];
-    };
-
-    const getAvailableFromSource = (stat) => {
-      const base = getBaseValue(stat);
-      const consumed = consumedFromSource[stat] || 0;
-      return Math.max(0, base - consumed);
-    };
-
-    this.equipped.forEach((rune) => {
-      if (!rune) return;
-      const base = RUNES_BY_ID.get(rune.id);
-      if (!base?.conversion) return;
-      const { from, to } = base.conversion;
-      if (!isDamageStat(from)) return;
-      const percent = resolveRunePercent(rune, base);
-      if (!percent) return;
-
-      const baseValue = getBaseValue(from);
-      if (!baseValue) return;
-      const targetAmount = Math.max(0, baseValue * (percent / 100));
-      if (!targetAmount) return;
-      const available = getAvailableFromSource(from);
-      if (!available) return;
-      const move = Math.min(available, targetAmount);
-      if (!move) return;
-
-      consumedFromSource[from] = (consumedFromSource[from] || 0) + move;
-      deltas[from] = (deltas[from] || 0) - move;
-      damageDeltas[from] = (damageDeltas[from] || 0) - move;
-
-      if (isDamageStat(to)) {
-        deltas[to] = (deltas[to] || 0) + move;
-        damageDeltas[to] = (damageDeltas[to] || 0) + move;
-      } else {
-        const baseValue = stats[to] ?? 0;
-        stats[to] = Math.max(0, baseValue + move);
-      }
-    });
-
-    Object.entries(deltas).forEach(([stat, delta]) => {
-      if (!delta) return;
-      const baseValue = stats[stat] ?? 0;
-      const next = baseValue + delta;
-      stats[stat] = next > 0 ? next : 0;
-    });
-
-    return damageDeltas;
-  }
-
   getBonusEffects() {
     const bonuses = {};
     this.equipped.forEach((rune) => {
-      if (!rune) return;
-      const base = RUNES_BY_ID.get(rune.id);
-      if (!base?.bonus) return;
-      Object.entries(base.bonus).forEach(([stat, value]) => {
+      if (!rune?.stats) return;
+      Object.entries(rune.stats).forEach(([stat, value]) => {
         bonuses[stat] = (bonuses[stat] || 0) + value;
       });
     });
     return bonuses;
   }
+
+  /**
+   * Apply rune bonuses to flat values.
+   * @param {object} flatValues - The flat values object to modify
+   */
+  applyBonuses(flatValues) {
+    const bonuses = this.getBonusEffects();
+    Object.entries(bonuses).forEach(([stat, value]) => {
+      flatValues[stat] = (flatValues[stat] || 0) + value;
+    });
+  }
 }
 
+/**
+ * Get the display name of a rune.
+ * @param {object} rune - The rune instance
+ * @param {boolean} shortElementalNames - Whether to use short names
+ * @returns {string}
+ */
 export function getRuneName(rune, shortElementalNames = false) {
-  const base = RUNES_BY_ID.get(rune.id);
+  const base = RUNES[rune.id];
   if (base?.nameKey) return t(base.nameKey);
-  const from = formatStatName(base?.fromKey, shortElementalNames);
-  const to = formatStatName(base?.toKey, shortElementalNames);
-  return tp('rune.convertName', { from, to });
+  return rune.id || 'Unknown Rune';
 }
 
+/**
+ * Get the description of a rune, listing its stats.
+ * @param {object} rune - The rune instance
+ * @param {boolean} shortElementalNames - Whether to use short names
+ * @returns {string}
+ */
 export function getRuneDescription(rune, shortElementalNames = false) {
-  const base = RUNES_BY_ID.get(rune.id);
-  if (base?.descKey) return t(base.descKey);
-  const from = formatStatName(base?.fromKey, shortElementalNames);
-  const to = formatStatName(base?.toKey, shortElementalNames);
-  const percent = base?.conversion ? resolveRunePercent(rune, base) : undefined;
-  return tp('rune.convertDesc', {
-    percent: percent ?? base?.conversion?.percent,
-    from,
-    to,
+  const base = RUNES[rune.id];
+
+  // For unique runes with a description key, use it
+  // For non-unique runes or those with rolled stats, show the stats
+  if (base?.unique && base?.descKey) {
+    return t(base.descKey);
+  }
+
+  // Build description from actual rolled stats
+  if (!rune.stats || Object.keys(rune.stats).length === 0) {
+    // Fallback to descKey if no stats
+    if (base?.descKey) return t(base.descKey);
+    return '';
+  }
+
+  const lines = Object.entries(rune.stats).map(([stat, value]) => {
+    const statName = formatStatName(stat, shortElementalNames);
+    const displayValue = Number.isInteger(value) ? value : value.toFixed(2);
+    return `${statName}: +${displayValue}`;
   });
+
+  return lines.join('\n');
 }
 
+/**
+ * Get the icon URL for a rune.
+ * @param {object} rune - The rune instance
+ * @returns {string}
+ */
 export function getRuneIcon(rune) {
-  const base = RUNES_BY_ID.get(rune.id);
+  const base = RUNES[rune.id];
   return base?.icon || '';
 }

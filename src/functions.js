@@ -9,7 +9,7 @@ import { game,
   ascension,
   prestige } from './globals.js';
 import { MATERIALS } from './constants/materials.js';
-import { RUNES, MAX_CONVERSION_PERCENT, MIN_CONVERSION_PERCENT } from './constants/runes.js';
+import { RUNES, RUNE_TIERS } from './constants/runes.js';
 import SimpleCrypto from 'simple-crypto-js';
 import { initializeSkillTreeStructure,
   showToast,
@@ -19,7 +19,9 @@ import { initializeSkillTreeStructure,
   updateTabIndicators } from './ui/ui.js';
 import { createImageDropdownFromData } from './ui/imageDropdown.js';
 import { ITEM_ICONS, ITEM_RARITY, ALL_ITEM_TYPES } from './constants/items.js';
+import { REGIONS } from './constants/regions.js';
 import { updateRegionUI } from './region.js';
+import { ROCKY_FIELD_REGIONS } from './rockyField.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { createCombatText } from './combat.js';
 import { renderRunesUI } from './ui/runesUi.js';
@@ -542,9 +544,9 @@ export function createModifyUI(container = document.body) {
   setHighestStageBtn.addEventListener('click', () => {
     const val = parseInt(highestStageInput.value, 10);
     if (!isNaN(val) && val > 0) {
-      for (let i = 1; i <= 12; i++) {
-        statistics.set('highestStages', i, val);
-      }
+      REGIONS.forEach((region) => {
+        statistics.set('highestStages', region.tier, val);
+      });
       updateStageUI();
       dataManager.saveGame();
       showToast(`Set all 12 highest stages to ${val}!`);
@@ -574,8 +576,10 @@ export function createModifyUI(container = document.body) {
       if (game.rockyFieldStage < val) {
         game.rockyFieldStage = val;
       }
-      const currentHighest = statistics.get('rockyFieldHighestStages', game.rockyFieldRegion);
-      statistics.set('rockyFieldHighestStages', game.rockyFieldRegion, Math.max(val, currentHighest));
+      ROCKY_FIELD_REGIONS.forEach((region) => {
+        const currentHighest = statistics.get('rockyFieldHighestStages', region.id);
+        statistics.set('rockyFieldHighestStages', region.id, Math.max(val, currentHighest));
+      });
       updateStageUI();
       dataManager.saveGame();
       showToast(`Set highest runes stage to ${val}!`);
@@ -852,11 +856,32 @@ export function createModifyUI(container = document.body) {
     }
   };
 
-  // Add Rune by Dropdown
+  // Add Rune by Dropdown - Redesigned
   const addRuneDiv = document.createElement('div');
-  addRuneDiv.style.marginTop = '8px';
+  addRuneDiv.style.marginTop = '12px';
+  addRuneDiv.style.padding = '12px';
+  addRuneDiv.style.background = 'rgba(0, 0, 0, 0.3)';
+  addRuneDiv.style.borderRadius = '8px';
+  addRuneDiv.style.border = '1px solid rgba(255, 255, 255, 0.1)';
 
-  const runeItems = RUNES.map((r) => {
+  // Header
+  const runeHeader = document.createElement('div');
+  runeHeader.textContent = '🔮 Add Rune';
+  runeHeader.style.fontWeight = 'bold';
+  runeHeader.style.marginBottom = '10px';
+  runeHeader.style.fontSize = '14px';
+  runeHeader.style.color = '#a8d8ff';
+  addRuneDiv.appendChild(runeHeader);
+
+  // First row: Search and Dropdown
+  const runeRow1 = document.createElement('div');
+  runeRow1.style.display = 'flex';
+  runeRow1.style.alignItems = 'center';
+  runeRow1.style.gap = '8px';
+  runeRow1.style.marginBottom = '8px';
+  runeRow1.style.flexWrap = 'wrap';
+
+  const runeItems = Object.values(RUNES).map((r) => {
     let iconUrl = '';
     try {
       if (typeof r.icon === 'string') {
@@ -878,12 +903,13 @@ export function createModifyUI(container = document.body) {
   runeSearch.type = 'search';
   runeSearch.className = 'debug-rune-search';
   runeSearch.placeholder = t('runes.tabSearchPlaceholder');
-  runeSearch.style.marginRight = '8px';
-  runeSearch.style.padding = '4px 6px';
+  runeSearch.style.padding = '6px 10px';
   runeSearch.style.borderRadius = '4px';
   runeSearch.style.border = '1px solid #555';
   runeSearch.style.background = 'rgba(0, 0, 0, 0.4)';
   runeSearch.style.color = '#fff';
+  runeSearch.style.flex = '1';
+  runeSearch.style.minWidth = '120px';
   runeSearch.addEventListener('input', () => {
     const query = runeSearch.value.trim().toLowerCase();
     if (!query) {
@@ -897,27 +923,102 @@ export function createModifyUI(container = document.body) {
     });
   });
 
+  runeRow1.appendChild(runeSearch);
+  runeRow1.appendChild(runeDd.container);
+  addRuneDiv.appendChild(runeRow1);
+
+  // Second row: Tier, Level, and Add button
+  const runeRow2 = document.createElement('div');
+  runeRow2.style.display = 'flex';
+  runeRow2.style.alignItems = 'center';
+  runeRow2.style.gap = '12px';
+  runeRow2.style.flexWrap = 'wrap';
+
+  // Tier group
+  const tierGroup = document.createElement('div');
+  tierGroup.style.display = 'flex';
+  tierGroup.style.alignItems = 'center';
+  tierGroup.style.gap = '6px';
+
+  const tierLabel = document.createElement('label');
+  tierLabel.textContent = 'Tier:';
+  tierLabel.style.fontSize = '12px';
+  tierLabel.style.color = '#aaa';
+
+  const tierSelect = document.createElement('select');
+  tierSelect.style.padding = '6px 8px';
+  tierSelect.style.borderRadius = '4px';
+  tierSelect.style.border = '1px solid #555';
+  tierSelect.style.background = 'rgba(0, 0, 0, 0.4)';
+  tierSelect.style.color = '#fff';
+  Object.keys(RUNE_TIERS).forEach((tier) => {
+    const option = document.createElement('option');
+    option.value = tier;
+    option.textContent = `${tier} (${RUNE_TIERS[tier].multiplier}x)`;
+    tierSelect.appendChild(option);
+  });
+
+  tierGroup.appendChild(tierLabel);
+  tierGroup.appendChild(tierSelect);
+
+  // Level group
+  const levelGroup = document.createElement('div');
+  levelGroup.style.display = 'flex';
+  levelGroup.style.alignItems = 'center';
+  levelGroup.style.gap = '6px';
+
+  const levelLabel = document.createElement('label');
+  levelLabel.textContent = 'Level:';
+  levelLabel.style.fontSize = '12px';
+  levelLabel.style.color = '#aaa';
+
+  const levelInput = document.createElement('input');
+  levelInput.type = 'number';
+  levelInput.min = '1';
+  levelInput.max = '10000';
+  levelInput.value = '1';
+  levelInput.style.padding = '6px 8px';
+  levelInput.style.borderRadius = '4px';
+  levelInput.style.border = '1px solid #555';
+  levelInput.style.background = 'rgba(0, 0, 0, 0.4)';
+  levelInput.style.color = '#fff';
+  levelInput.style.width = '70px';
+
+  levelGroup.appendChild(levelLabel);
+  levelGroup.appendChild(levelInput);
+
+  // Add button
   const addRuneBtn = document.createElement('button');
-  addRuneBtn.textContent = 'Add Rune';
+  addRuneBtn.textContent = '+ Add Rune';
+  addRuneBtn.style.padding = '6px 14px';
+  addRuneBtn.style.borderRadius = '4px';
+  addRuneBtn.style.border = 'none';
+  addRuneBtn.style.background = 'linear-gradient(135deg, #4a7c59, #2d5a3d)';
+  addRuneBtn.style.color = '#fff';
+  addRuneBtn.style.cursor = 'pointer';
+  addRuneBtn.style.fontWeight = 'bold';
   addRuneBtn.addEventListener('click', () => {
     const id = runeDd.getValue();
     if (!id) {
       showToast(t('debug.selectRuneFirst'), 'error');
       return;
     }
-    const percent =
-      Math.floor(Math.random() * (MAX_CONVERSION_PERCENT - MIN_CONVERSION_PERCENT + 1)) + MIN_CONVERSION_PERCENT;
-    const rune = runes.addRune(id, percent);
+    const tier = parseInt(tierSelect.value, 10) || 1;
+    const level = parseInt(levelInput.value, 10) || 1;
+    const rune = runes.addRune(id, tier, level);
     if (rune) {
       renderRunesUI();
-      showToast(`Added ${getRuneName(rune)} rune to inventory`);
+      showToast(`Added ${getRuneName(rune)} (Tier ${tier}, Level ${level}) rune to inventory`);
     } else {
       showToast('Invalid rune ID', 'error');
     }
   });
-  addRuneDiv.appendChild(runeSearch);
-  addRuneDiv.appendChild(runeDd.container);
-  addRuneDiv.appendChild(addRuneBtn);
+
+  runeRow2.appendChild(tierGroup);
+  runeRow2.appendChild(levelGroup);
+  runeRow2.appendChild(addRuneBtn);
+  addRuneDiv.appendChild(runeRow2);
+
   inventorySection.appendChild(addRuneDiv);
 
   const extractIconSrc = (iconHtml) => {

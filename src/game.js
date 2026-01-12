@@ -79,30 +79,14 @@ class Game {
   }
 
   incrementRockyFieldStage() {
-    let stageSkip = options.stageSkip || 0;
-    const resetAt = options.resetStageSkip || 0;
-    if (stageSkip > 0 && resetAt > 0 && this.rockyFieldStage >= resetAt) {
-      stageSkip = 0;
+    // Rocky Field always increments by 1 - stage skip/lock options only apply to explore mode
+    this.rockyFieldStage += 1;
+
+    if (this.rockyFieldStage > statistics.get('rockyFieldHighestStages', this.rockyFieldRegion)) {
+      statistics.set('rockyFieldHighestStages', this.rockyFieldRegion, this.rockyFieldStage);
     }
-
-    let newStage = this.rockyFieldStage + 1 + stageSkip;
-
-    if (options.stageLockEnabled && options.stageLock > 0) {
-      if (this.rockyFieldStage >= options.stageLock) {
-        newStage = this.rockyFieldStage;
-      } else if (newStage > options.stageLock) {
-        newStage = options.stageLock;
-      }
-    }
-
-    if (newStage !== this.rockyFieldStage) {
-      this.rockyFieldStage = newStage;
-      if (this.rockyFieldStage > statistics.get('rockyFieldHighestStages', this.rockyFieldRegion)) {
-        statistics.set('rockyFieldHighestStages', this.rockyFieldRegion, this.rockyFieldStage);
-      }
-      if (this.rockyFieldStage > this.rockyFieldHighestStage) {
-        this.rockyFieldHighestStage = this.rockyFieldStage;
-      }
+    if (this.rockyFieldStage > this.rockyFieldHighestStage) {
+      this.rockyFieldHighestStage = this.rockyFieldStage;
     }
 
     updateStageUI();

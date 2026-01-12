@@ -20,6 +20,9 @@ export const MOB_REGION_SCALING_MULTIPLIER = 5;
 export const MOB_STAGE_SCALING_PERCENT = 0.2;
 export const MOB_REWARD_STAGE_SCALING_PERCENT = MOB_STAGE_SCALING_PERCENT * 0.85;
 
+// Rocky Field stage scaling (1.5x the explore scaling)
+export const ROCKY_FIELD_STAGE_SCALING_PERCENT = 0.3;
+
 // e.g., 3x means tier 2 items have 3x the flat stats of tier 1 items at the same level
 export const ITEM_FLAT_TIER_SCALING_MULTIPLIER = 3;
 

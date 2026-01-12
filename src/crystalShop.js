@@ -16,7 +16,8 @@ import { updateResources,
   showToast,
   updateStageUI,
   formatNumber,
-  updatePlayerLife } from './ui/ui.js';
+  updatePlayerLife,
+  updateEnemyStats } from './ui/ui.js';
 import { t, tp } from './i18n.js';
 import { updateAscensionUI } from './ui/ascensionUi.js';
 import { initializeInventoryUI } from './ui/inventoryUi.js';
@@ -28,6 +29,7 @@ import { CRYSTAL_SHOP_MAX_QTY } from './constants/limits.js';
 import { SOUL_UPGRADE_CONFIG } from './soulShop.js';
 import { runes } from './globals.js';
 import { BASE_RUNE_SLOTS } from './runes.js';
+import { RockyFieldEnemy } from './rockyField.js';
 import { calcLinearSum, solveLinear } from './utils/bulkMath.js';
 
 const html = String.raw;
@@ -157,6 +159,14 @@ const CRYSTAL_UPGRADE_CONFIG = {
     bonus: 'crystalShop.upgrade.resetArenaLevel.bonus',
     bonusLabel: 'crystalShop.upgrade.resetArenaLevel.bonusLabel',
     baseCost: 50,
+    multiple: true,
+    category: 'reset',
+  },
+  resetRockyFieldStage: {
+    label: 'crystalShop.upgrade.resetRockyFieldStage.label',
+    bonus: 'crystalShop.upgrade.resetRockyFieldStage.bonus',
+    bonusLabel: 'crystalShop.upgrade.resetRockyFieldStage.bonusLabel',
+    baseCost: 25,
     multiple: true,
     category: 'reset',
   },
@@ -418,6 +428,17 @@ export default class CrystalShop {
       }
       updateStageUI();
       showToast(t('crystalShop.resetBossLevelSuccess'), 'success');
+    } else if (stat === 'resetRockyFieldStage') {
+      confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetRockyFieldStage', { count: cost }));
+      if (!confirmed) return;
+      hero.crystals -= cost;
+      game.rockyFieldStage = 1;
+      if (game.fightMode === 'rockyField') {
+        game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);
+        updateEnemyStats();
+      }
+      updateStageUI();
+      showToast(t('crystalShop.resetRockyFieldStageSuccess'), 'success');
     } else if (stat === 'resetTraining') {
       confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetTraining', { count: cost }));
       if (!confirmed) return;
@@ -500,6 +521,7 @@ export default class CrystalShop {
         'resetSpecialization',
         'resetAttributes',
         'resetArenaLevel',
+        'resetRockyFieldStage',
         'resetTraining',
         'resetSoulShop',
         'resetAscension',

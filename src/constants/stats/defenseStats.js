@@ -1,4 +1,4 @@
-import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat, createHiddenStat } from './stats.js';
+import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat, createChanceStat, createHiddenStat } from './stats.js';
 import { ELEMENTS } from '../common.js';
 
 const resistanceTierScalingMaxPercent = createTierScaling(18, 250, 1.2);
@@ -63,7 +63,7 @@ export const DEFENSE_STATS = {
     itemTags: ['armor', 'shield'],
     sub: 'defense',
   }),
-  blockChance: createPercentStat({
+  blockChance: createChanceStat({
     training: {
       cost: 400,
       costIncrease: 600,
@@ -78,7 +78,7 @@ export const DEFENSE_STATS = {
     sub: 'defense',
     cap: 50,
   }),
-  blockChancePercent: createStat({ div: 100 }),
+  blockChancePercent: createPercentStat({}),
   lifeRegen: createStat({
     dec: 1,
     training: {
@@ -121,7 +121,7 @@ export const DEFENSE_STATS = {
     sub: 'defense',
   }),
   thornsOnMiss: createHiddenStat({ sub: 'defense' }),
-  resurrectionChance: createPercentStat({
+  resurrectionChance: createChanceStat({
     item: { tierScalingMaxPercent: createTierScaling(8, 40, 0.7) },
     itemTags: ['amulet'],
     sub: 'defense',

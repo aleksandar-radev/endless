@@ -21,7 +21,7 @@ import { hero,
   runes,
   achievements,
   ascension } from './globals.js';
-import { ITEM_RARITY, ITEM_TYPES, ALL_ITEM_TYPES } from './constants/items.js';
+import { ITEM_RARITY, ALL_ITEM_TYPES } from './constants/items.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { updateQuestsUI } from './ui/questUi.js';
 import { selectBoss, updateBossUI } from './ui/bossUi.js';
@@ -30,10 +30,10 @@ import { getCurrentBossRegion } from './bossRegion.js';
 import { audioManager } from './audio.js';
 import { battleLog } from './battleLog.js';
 import { t, tp } from './i18n.js';
-import { RockyFieldEnemy, getRockyFieldRunePercent } from './rockyField.js';
+import { RockyFieldEnemy } from './rockyField.js';
 import { renderRunesUI } from './ui/runesUi.js';
 import { getRuneName, getRuneIcon } from './runes.js';
-import { RUNES } from './constants/runes.js';
+import { RUNES, getTierForZone } from './constants/runes.js';
 import { rollSpecialItemDrop } from './item.js';
 import { AILMENTS } from './constants/ailments.js';
 
@@ -45,10 +45,38 @@ import { ELEMENTS,
   MAX_DEATH_TIMER } from './constants/common.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
-const UNIQUE_RUNE_SET = new Set(RUNES.filter((r) => r.unique).map((r) => r.id));
-const COMMON_RUNE_DROP_CHANCE = 1 / 175;
-const UNIQUE_RUNE_DROP_CHANCE = 1 / 50000;
-const RUNE_DROP_RATE_MULTIPLIER = 1.5;
+// Rune drop system - weight-based selection
+const RUNE_DROP_CHANCE = 1/133;
+
+/**
+ * Select a random rune from the pool using weighted random selection.
+ * @param {string[]} runeIds - Array of rune IDs to choose from
+ * @returns {string|null} The selected rune ID, or null if none available
+ */
+function selectWeightedRune(runeIds) {
+  if (!runeIds || runeIds.length === 0) return null;
+
+  // Calculate total weight
+  let totalWeight = 0;
+  const validRunes = runeIds.filter((id) => {
+    const base = RUNES[id];
+    if (!base) return false;
+    totalWeight += base.weight || 1;
+    return true;
+  });
+
+  if (validRunes.length === 0 || totalWeight === 0) return null;
+
+  // Roll a random value and find the matching rune
+  let roll = Math.random() * totalWeight;
+  for (const id of validRunes) {
+    const weight = RUNES[id]?.weight || 1;
+    roll -= weight;
+    if (roll <= 0) return id;
+  }
+
+  return validRunes[validRunes.length - 1];
+}
 const EXTRA_DROP_SIMULATION_THRESHOLD = 50;
 
 function gaussianRandom() {
@@ -573,13 +601,17 @@ export function playerDeath() {
   game.gameStarted = false;
 
   const timerReduction = (crystalShop.crystalUpgrades.deathTimerReduction || 0) * 0.5;
-  // Death timer only applies in explore mode. Arena (boss) deaths revive immediately.
-  let deathTimer = 0;
-  if (game.fightMode === 'explore') {
-    // Use the current stage for death timer calculations
-    const baseDeathTimer = 1 + 0.5 * Math.floor(game.stage / 100);
-    deathTimer = Math.max(MIN_DEATH_TIMER, Math.min(MAX_DEATH_TIMER, baseDeathTimer - timerReduction));
-  }
+
+  // Get current stage based on fight mode
+  const currentStage = game.fightMode === 'rockyField'
+    ? game.rockyFieldStage
+    : game.fightMode === 'arena'
+      ? (statistics.get('highestBossStage') || 1)
+      : game.stage;
+
+  // Death timer applies to all modes now
+  const baseDeathTimer = 1 + 0.5 * Math.floor(currentStage / 100);
+  const deathTimer = Math.max(MIN_DEATH_TIMER, Math.min(MAX_DEATH_TIMER, baseDeathTimer - timerReduction));
   battleLog.addBattle(t('battleLog.died'));
 
   // Disable the fight/stop button while the death screen is active
@@ -604,7 +636,6 @@ export function playerDeath() {
       game.resetAllLife();
     } else if (game.fightMode === 'rockyField') {
       // Reset rocky field stage and enemy, restore player resources
-      game.rockyFieldStage = game.getStartingStage();
       updateStageUI();
       game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);
       game.resetAllLife();
@@ -897,28 +928,21 @@ export async function defeatEnemy(source) {
     baseExpGained = enemy.xp;
     baseGoldGained = enemy.gold;
 
-    if (enemy.runeDrop) {
-      const uniquePool = enemy.runeDrop.filter((id) => UNIQUE_RUNE_SET.has(id));
-      const commonPool = enemy.runeDrop.filter((id) => !UNIQUE_RUNE_SET.has(id));
-      let runeId;
-      let percent;
-      const boostedCommonChance = Math.min(1, COMMON_RUNE_DROP_CHANCE * RUNE_DROP_RATE_MULTIPLIER);
-      const boostedUniqueChance = Math.min(1, UNIQUE_RUNE_DROP_CHANCE * RUNE_DROP_RATE_MULTIPLIER);
-      if (commonPool.length && Math.random() < boostedCommonChance) {
-        runeId = commonPool[Math.floor(Math.random() * commonPool.length)];
-        percent = getRockyFieldRunePercent(game.rockyFieldRegion, game.rockyFieldStage);
-      } else if (uniquePool.length && Math.random() < boostedUniqueChance) {
-        runeId = uniquePool[Math.floor(Math.random() * uniquePool.length)];
-        percent = getRockyFieldRunePercent(game.rockyFieldRegion, game.rockyFieldStage);
-      }
-      if (runeId) {
-        const rune = runes.addRune(runeId, percent);
-        if (rune) {
-          const name = getRuneName(rune, options.shortElementalNames);
-          battleLog.addDrop(tp('battleLog.droppedRune', { name }));
-          showRuneNotification(rune);
-          renderRunesUI();
-          dataManager.saveGame();
+    // Rune drop with weighted selection and tier
+    if (enemy.runeDrop && enemy.runeDrop.length > 0) {
+      const dropChance = Math.min(1, RUNE_DROP_CHANCE);
+      if (Math.random() < dropChance) {
+        const runeId = selectWeightedRune(enemy.runeDrop);
+        if (runeId) {
+          const tier = getTierForZone(game.rockyFieldRegion);
+          const rune = runes.addRune(runeId, tier);
+          if (rune) {
+            const name = getRuneName(rune, options.shortElementalNames);
+            battleLog.addDrop(tp('battleLog.droppedRune', { name }));
+            showRuneNotification(rune);
+            renderRunesUI();
+            dataManager.saveGame();
+          }
         }
       }
     }

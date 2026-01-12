@@ -10,7 +10,8 @@ export default {
   'counters.xp': '经验',
   'counters.gold': '金币',
   'counters.items': '物品',
-  'counters.materials': '材料',
+  'counters.materials': '材料',
+
   'enemy.stats.dmgShort': '伤害',
   'enemy.stats.resShort': '抗性',
   'enemy.stats.toggle': '显示/隐藏敌人属性',
@@ -26,7 +27,8 @@ export default {
   'death.message': '你死了！<span id="revive-countdown">10</span> 秒后复活',
   'region.explore': '探索',
   'region.arena': '竞技场',
-  'region.rockyField': '岩石场',
+  'region.rockyField': '岩石场',
+
   'combatMode.subAreaFormat': '{name} [{type}]',
   'combatMode.subAreaType.region': '区域',
   'enchanted_forest.description':

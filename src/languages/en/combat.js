@@ -19,7 +19,8 @@ export default {
   'counters.xp': 'EXP',
   'counters.gold': 'Gold',
   'counters.items': 'Items',
-  'counters.materials': 'Materials',
+  'counters.materials': 'Materials',
+
   'enemy.stats.dmgShort': 'DMG',
   'enemy.stats.resShort': 'RES',
   'enemy.stats.toggle': 'Toggle enemy stats',
@@ -28,7 +29,8 @@ export default {
   'counters.lastSaveTooltip': 'Game progress last saved {time}',
   'region.explore': 'Explore',
   'region.arena': 'Arena',
-  'region.rockyField': 'Rocky Field',
+  'region.rockyField': 'Rocky Field',
+
   'combatMode.subAreaFormat': '{name} [{type}]',
   'combatMode.subAreaType.region': 'Region',
   'enchanted_forest.description':

@@ -1,5 +1,5 @@
 import Enemy from '../enemy.js';
-import { ROCKY_FIELD_REGIONS, RockyFieldEnemy, getRockyFieldEnemies } from '../rockyField.js';
+import { ROCKY_FIELD_REGIONS, RockyFieldEnemy, getRockyFieldEnemies, isRegionUnlocked } from '../rockyField.js';
 import { formatNamedType, formatStatName as formatStatNameBase } from '../format.js';
 import { formatNumber as formatNumberInternal } from '../utils/numberFormatter.js';
 import { game,
@@ -944,10 +944,20 @@ function getRockyFieldRegionTooltip(region) {
   const html = String.raw;
   const displayName = formatNamedType(region.name, 'combatMode.subAreaType.region');
 
+  // Get the previous region name for unlock requirement
+  let unlockReqText = '';
+  if (region.previousRegion && region.unlockStage) {
+    const prevRegion = ROCKY_FIELD_REGIONS.find((r) => r.id === region.previousRegion);
+    if (prevRegion) {
+      const currentHighest = statistics?.get('rockyFieldHighestStages', region.previousRegion) || 0;
+      unlockReqText = `<div><strong>${prevRegion.name}:</strong> (${currentHighest}/${region.unlockStage})</div>`;
+    }
+  }
+
   return html`
     <div class="tooltip-header">${displayName}</div>
     ${region.description ? `<div class="tooltip-content">${region.description}</div>` : ''}
-    ${region.unlockStage ? `<div><strong>${t('rockyField.unlockStage')}:</strong> ${region.unlockStage}</div>` : ''}
+    ${unlockReqText}
   `;
 }
 
@@ -956,18 +966,28 @@ export function openRockyFieldRegionSelectionDialog() {
 
   const regionItems = ROCKY_FIELD_REGIONS.map((region) => {
     const hasEnemies = getRockyFieldEnemies(region.id).length > 0;
-    const unlocked = !region.unlockStage || game.rockyFieldHighestStage >= region.unlockStage;
+    const unlocked = isRegionUnlocked(region.id);
     const isUnlocked = hasEnemies && unlocked;
     const isCurrent = region.id === game.rockyFieldRegion;
     const disabledClass = !isUnlocked ? 'disabled' : '';
     const selectedClass = isCurrent ? 'selected' : '';
 
+    // Get the previous region progress for unlock requirement display
+    let unlockReqText = '';
+    if (region.previousRegion && region.unlockStage && !unlocked) {
+      const prevRegion = ROCKY_FIELD_REGIONS.find((r) => r.id === region.previousRegion);
+      if (prevRegion) {
+        const currentHighest = statistics?.get('rockyFieldHighestStages', region.previousRegion) || 0;
+        unlockReqText = `${prevRegion.name}: (${currentHighest}/${region.unlockStage})`;
+      }
+    }
+
     return html`
       <div class="region-dialog-item ${disabledClass} ${selectedClass}" data-region-id="${region.id}">
         <div class="region-dialog-item-header">
           <span class="region-dialog-item-name">${region.name}</span>
-          ${region.unlockStage
-    ? html`<span class="region-dialog-item-unlock">${t('rockyField.unlockStage')}: ${region.unlockStage}</span>`
+          ${unlockReqText
+    ? html`<span class="region-dialog-item-unlock">${unlockReqText}</span>`
     : ''}
           ${isCurrent ? html`<span class="region-dialog-item-current">${t('region.current')}</span>` : ''}
           ${!isUnlocked ? html`<span class="region-dialog-item-locked">🔒</span>` : ''}
@@ -1010,7 +1030,9 @@ export function openRockyFieldRegionSelectionDialog() {
             const confirmed = await showConfirmDialog(tp('combat.changeRegionConfirm', { region: region.name }));
             if (!confirmed) return;
             game.rockyFieldRegion = regionId;
-            game.rockyFieldStage = 1;
+            // Don't reset to stage 1 - keep current stage or start from stored highest
+            const storedHighest = statistics?.get('rockyFieldHighestStages', regionId) || 1;
+            game.rockyFieldStage = Math.min(game.rockyFieldStage, storedHighest) || 1;
             game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);
             updateEnemyStats();
             updateStageUI();
@@ -1037,7 +1059,7 @@ export function updateRockyFieldRegionSelector() {
 
   ROCKY_FIELD_REGIONS.forEach((region) => {
     const hasEnemies = getRockyFieldEnemies(region.id).length > 0;
-    const unlocked = !region.unlockStage || game.rockyFieldHighestStage >= region.unlockStage;
+    const unlocked = isRegionUnlocked(region.id);
     const btn = document.createElement('button');
     btn.className = 'region-btn' + (region.id === game.rockyFieldRegion ? ' selected' : '');
     btn.textContent = region.name;
@@ -1052,7 +1074,9 @@ export function updateRockyFieldRegionSelector() {
         const confirmed = await showConfirmDialog(tp('combat.changeRegionConfirm', { region: region.name }));
         if (!confirmed) return;
         game.rockyFieldRegion = region.id;
-        game.rockyFieldStage = 1;
+        // Don't reset to stage 1 - keep current stage or start from stored highest
+        const storedHighest = statistics?.get('rockyFieldHighestStages', region.id) || 1;
+        game.rockyFieldStage = Math.min(game.rockyFieldStage, storedHighest) || 1;
         game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);
         updateEnemyStats();
         updateStageUI();
@@ -1269,12 +1293,12 @@ function initializeEnemyStatsCaret(panel) {
 }
 
 /**
- * Show or hide stage controls inline below the enemy for supported regions
+ * Show or hide stage controls inline below the enemy for explore mode only
  */
 export function updateStageControlsInlineVisibility() {
-  const isSupportedMode = game.fightMode === 'explore' || game.fightMode === 'rockyField';
-  const panelId = game.fightMode === 'rockyField' ? 'rocky-field-panel' : 'explore-panel';
-  const panel = isSupportedMode ? document.getElementById(panelId) : null;
+  // Stage controls only apply to explore mode, not Rocky Field
+  const isSupportedMode = game.fightMode === 'explore';
+  const panel = isSupportedMode ? document.getElementById('explore-panel') : null;
   const existing = document.getElementById('inline-stage-controls');
   const shouldShow = !!options?.showStageControlsInline && isSupportedMode && !!panel;
   if (!shouldShow) {

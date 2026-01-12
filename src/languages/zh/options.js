@@ -73,7 +73,7 @@ export default {
   'options.desktopDownload': '你可以在此下载桌面应用程序（仅限 Windows！）',
   'options.here': '这里',
   'options.stageControlsInline': '在敌人下方显示阶段控制',
-  'options.stageControlsInline.tooltip': '在探索和岩石之地中在敌人下方显示阶段控制',
+  'options.stageControlsInline.tooltip': '在探索模式中在敌人下方显示阶段控制',
   'options.startingStage': '起始阶段',
   'options.startingStage.tooltip': '重置后从该阶段开始',
   'options.toast.startingStageApplied': '起始阶段选项已应用！',

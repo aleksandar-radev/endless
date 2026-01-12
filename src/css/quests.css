@@ -106,7 +106,7 @@
 }
 
 .quest-claimable-btn {
-  background: #22c55e;
+  background: #7fb794;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -173,7 +173,7 @@
 }
 
 /* Hide overflowed content except the claim button */
-#claimable-quests-list .quest-item > *:not(.quest-icon):not(.modal-btn) {
+#claimable-quests-list .quest-item>*:not(.quest-icon):not(.modal-btn) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
