@@ -13,7 +13,9 @@ import { formatNumber,
   updateResources } from './ui.js';
 import { t, tp } from '../i18n.js';
 import { createModal, closeModal } from './modal.js';
-import { IS_MOBILE_OR_TABLET } from '../constants/common.js';
+import { IS_MOBILE_OR_TABLET, SKILL_MANA_SCALING_MAX_MULTIPLIER, SKILL_DAMAGE_SCALING_MAX_INSTANT, SKILL_DAMAGE_SCALING_MAX_TOGGLE, SKILL_EFFECT_SCALING_MAX_BUFF } from '../constants/common.js';
+
+
 
 const html = String.raw;
 
@@ -397,13 +399,104 @@ function initializeSkillsTab() {
   setupSkillTreeFloatingHeader(skillsContent, skillPointsHeader);
 }
 
+function renderManaScalingOption() {
+  const container = document.getElementById('options-tab-content');
+  if (!container) return;
+
+  const sectionId = 'mana-scaling-section';
+  let section = document.getElementById(sectionId);
+  const scalingPercent = Number(skillTree.manaScaling) || 0;
+  const manaMult = 1 + (scalingPercent / 100) * (SKILL_MANA_SCALING_MAX_MULTIPLIER - 1);
+  const instantMult = 1 + (scalingPercent / 100) * (SKILL_DAMAGE_SCALING_MAX_INSTANT - 1);
+  const toggleMult = 1 + (scalingPercent / 100) * (SKILL_DAMAGE_SCALING_MAX_TOGGLE - 1);
+  const buffMult = 1 + (scalingPercent / 100) * (SKILL_EFFECT_SCALING_MAX_BUFF - 1);
+
+  if (!section) {
+    section = document.createElement('div');
+    section.id = sectionId;
+    section.className = 'skill-tree-options-section';
+    section.style.marginBottom = '20px';
+    section.style.padding = '15px';
+    section.style.background = 'rgba(0, 0, 0, 0.2)';
+    section.style.borderRadius = '8px';
+    container.prepend(section);
+
+    section.innerHTML = html`
+      <h3 style="margin-top: 0; color: var(--gold);">${t('skillTree.manaScaling.title')}</h3>
+      <p style="color: #ccc; font-size: 0.9em; margin-bottom: 15px; margin-top: 5px;">
+        ${t('skillTree.manaScaling.description')}
+      </p>
+      
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <label for="mana-scaling-slider" style="color: #eee;">${t('skillTree.manaScaling.label')}</label>
+          <span id="mana-scaling-percent-display" style="color: var(--accent); font-weight: bold;"></span>
+        </div>
+        
+        <input 
+          type="range" 
+          id="mana-scaling-slider" 
+          min="0" 
+          max="100" 
+          value="${scalingPercent}" 
+          style="width: 100%; cursor: pointer;"
+        />
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-top: 5px; font-size: 0.85em; color: #aaa;">
+          <div id="mana-scaling-cost-display" style="text-align: center; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 4px;"></div>
+          <div id="mana-scaling-instant-display" style="text-align: center; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 4px;"></div>
+          <div id="mana-scaling-toggle-display" style="text-align: center; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 4px;"></div>
+          <div id="mana-scaling-buff-display" style="text-align: center; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 4px;"></div>
+        </div>
+      </div>
+    `;
+
+    const slider = section.querySelector('#mana-scaling-slider');
+    slider.addEventListener('input', (e) => {
+      const val = parseInt(e.target.value, 10);
+      skillTree.manaScaling = val;
+      renderManaScalingOption();
+    });
+    slider.addEventListener('change', () => {
+      dataManager.saveGame();
+      hero.queueRecalculateFromAttributes();
+      updateSkillTreeValues();
+      updateActionBar();
+    });
+  }
+
+  // Update dynamic values
+  const percentDisplay = section.querySelector('#mana-scaling-percent-display');
+  if (percentDisplay) percentDisplay.textContent = `${scalingPercent}%`;
+
+  const costDisplay = section.querySelector('#mana-scaling-cost-display');
+  if (costDisplay) costDisplay.innerHTML = tp('skillTree.manaScaling.manaCost', { value: manaMult.toFixed(2) });
+
+  const instantDisplay = section.querySelector('#mana-scaling-instant-display');
+  if (instantDisplay) instantDisplay.innerHTML = tp('skillTree.manaScaling.instantBonus', { value: instantMult.toFixed(2) });
+
+  const toggleDisplay = section.querySelector('#mana-scaling-toggle-display');
+  if (toggleDisplay) toggleDisplay.innerHTML = tp('skillTree.manaScaling.toggleBonus', { value: toggleMult.toFixed(2) });
+
+  const buffDisplay = section.querySelector('#mana-scaling-buff-display');
+  if (buffDisplay) buffDisplay.innerHTML = tp('skillTree.manaScaling.buffBonus', { value: buffMult.toFixed(2) });
+
+  const slider = section.querySelector('#mana-scaling-slider');
+  if (slider && document.activeElement !== slider) {
+    slider.value = scalingPercent;
+  }
+}
+
+
 function initializeOptionsTab() {
   const optionsContent = document.getElementById('options-tab-content');
   if (!optionsContent) return;
   // Initialize content if empty or needed
+  renderManaScalingOption();
   renderAutoCastToggles();
   renderDisplayToggles();
 }
+
 
 function initializeSpecializationsTab() {
   const specializationsContent = document.getElementById('specializations-tab-content');

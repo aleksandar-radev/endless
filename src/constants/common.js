@@ -45,3 +45,10 @@ export const BREAKPOINTS = {
 };
 
 export const IS_MOBILE_OR_TABLET = () => window.matchMedia(`(max-width: ${BREAKPOINTS.MOBILE}px)`).matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+export const SKILL_MANA_SCALING_MAX_MULTIPLIER = 100;
+export const SKILL_DAMAGE_SCALING_MAX_INSTANT = 10;
+export const SKILL_DAMAGE_SCALING_MAX_TOGGLE = 4;
+export const SKILL_EFFECT_SCALING_MAX_BUFF = 2.5;
+
+

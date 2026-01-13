@@ -478,4 +478,12 @@ export default {
 
   // Missing translation key
   'skillTree.specializationSkillsRefunded': '¡Habilidades de especialización reembolsadas! {points} puntos devueltos.',
+  'skillTree.manaScaling.title': 'Sobrecarga de Maná',
+  'skillTree.manaScaling.description': 'Aumenta el costo de maná de las habilidades activas para infligir un daño masivo. (Los bonos porcentuales tienen un 25% de efectividad)',
+  'skillTree.manaScaling.label': 'Fuerza de Sobrecarga',
+  'skillTree.manaScaling.manaCost': 'Costo de Maná: {value}x',
+  'skillTree.manaScaling.instantBonus': 'Daño Instantáneo: {value}x',
+  'skillTree.manaScaling.toggleBonus': 'Daño de Activación: {value}x',
+  'skillTree.manaScaling.buffBonus': 'Efectos de Bufos: {value}x',
 };
+

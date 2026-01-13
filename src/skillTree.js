@@ -3,7 +3,7 @@ import { dataManager, game, hero, crystalShop, options, inventory } from './glob
 import { SKILLS_MAX_QTY } from './constants/limits.js';
 import { CLASS_PATHS, SKILL_TREES } from './constants/skills.js';
 import { getSpecialization } from './constants/specializations.js';
-import { ELEMENTS } from './constants/common.js';
+import { ELEMENTS, SKILL_MANA_SCALING_MAX_MULTIPLIER, SKILL_DAMAGE_SCALING_MAX_INSTANT, SKILL_DAMAGE_SCALING_MAX_TOGGLE, SKILL_EFFECT_SCALING_MAX_BUFF } from './constants/common.js';
 import { calculateHitChance, createDamageNumber } from './combat.js';
 import { battleLog } from './battleLog.js';
 import { t } from './i18n.js';
@@ -54,6 +54,7 @@ export default class SkillTree {
     this.autoCastSettings = {};
     this.displaySettings = {};
     this.unlockedPaths = [];
+    this.manaScaling = 0;
 
     handleSavedData(savedData, this);
     // add methods for all skills from SKILL_TREES
@@ -842,6 +843,43 @@ export default class SkillTree {
     if (!skill) return {};
     const baseEffects = skill.effect(level || skill.level || 0);
 
+    // Apply Mana Scaling
+    const scalingPercent = Number(this.manaScaling) || 0;
+    if (scalingPercent > 0) {
+      const type = skill.type();
+      let mult = 1;
+      let scaleAll = false;
+
+      if (type === 'instant') {
+        mult = 1 + (scalingPercent / 100) * (SKILL_DAMAGE_SCALING_MAX_INSTANT - 1);
+      } else if (type === 'toggle') {
+        mult = 1 + (scalingPercent / 100) * (SKILL_DAMAGE_SCALING_MAX_TOGGLE - 1);
+      } else if (type === 'buff') {
+        mult = 1 + (scalingPercent / 100) * (SKILL_EFFECT_SCALING_MAX_BUFF - 1);
+        scaleAll = true;
+      }
+
+      if (mult > 1) {
+        Object.keys(baseEffects).forEach((key) => {
+          if (typeof baseEffects[key] === 'number') {
+            if (
+              scaleAll ||
+              key === 'damage' ||
+              key.endsWith('Damage') ||
+              key.endsWith('DamagePercent')
+            ) {
+              let effectiveMult = mult;
+              if (key.endsWith('Percent')) {
+                // Percentage bonuses only get 25% of the multiplier effectiveness
+                effectiveMult = 1 + (mult - 1) * 0.25;
+              }
+              baseEffects[key] *= effectiveMult;
+            }
+          }
+        });
+      }
+    }
+
     // Apply synergies if any
     if (skill.synergies) {
       return this.applySkillSynergies(skill, baseEffects);
@@ -900,8 +938,15 @@ export default class SkillTree {
   getSkillManaCost(skill, level = 0) {
     let effectiveLevel = level || skill?.level || 0;
     if (!skill?.manaCost) return 0;
+
+    let scalingMult = 1;
+    const scalingPercent = Number(this.manaScaling) || 0;
+    if (scalingPercent > 0 && skill.type() !== 'passive') {
+      scalingMult = 1 + (scalingPercent / 100) * (SKILL_MANA_SCALING_MAX_MULTIPLIER - 1);
+    }
+
     return Math.floor(
-      skill.manaCost(effectiveLevel) - skill.manaCost(effectiveLevel) * (hero.stats.manaCostReductionPercent || 0),
+      (skill.manaCost(effectiveLevel) - skill.manaCost(effectiveLevel) * (hero.stats.manaCostReductionPercent || 0)) * scalingMult,
     );
   }
 

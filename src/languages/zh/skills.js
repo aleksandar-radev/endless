@@ -472,4 +472,12 @@ export default {
 
   // Missing translation key
   'skillTree.specializationSkillsRefunded': '专精技能已退还！返还 {points} 点数。',
+  'skillTree.manaScaling.title': '法力过载',
+  'skillTree.manaScaling.description': '增加主动技能的法力消耗以造成大量伤害。（百分比加成的效果为25%）',
+  'skillTree.manaScaling.label': '过载强度',
+  'skillTree.manaScaling.manaCost': '法力消耗: {value}x',
+  'skillTree.manaScaling.instantBonus': '瞬发伤害: {value}x',
+  'skillTree.manaScaling.toggleBonus': '开启伤害: {value}x',
+  'skillTree.manaScaling.buffBonus': '增益效果: {value}x',
 };
+

@@ -470,4 +470,13 @@ export default {
   'skillTree.selectSpec': 'Select',
   'skillTree.availableSpecializations': 'Available Specializations',
   'skillTree.specializationSkillsRefunded': 'Specialization skills refunded! {points} points returned.',
+  'skillTree.manaScaling.title': 'Mana Overcharge',
+  'skillTree.manaScaling.description': 'Increase mana cost of active skills to deal massive damage. (Percentage bonuses are 25% effective)',
+  'skillTree.manaScaling.label': 'Overcharge Strength',
+
+  'skillTree.manaScaling.manaCost': 'Mana Cost: {value}x',
+  'skillTree.manaScaling.instantBonus': 'Instant Damage: {value}x',
+  'skillTree.manaScaling.toggleBonus': 'Toggle Damage: {value}x',
+  'skillTree.manaScaling.buffBonus': 'Buff Effects: {value}x',
 };
+
