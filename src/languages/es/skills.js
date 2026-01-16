@@ -485,5 +485,6 @@ export default {
   'skillTree.manaScaling.instantBonus': 'Daño Instantáneo: {value}x',
   'skillTree.manaScaling.toggleBonus': 'Daño de Activación: {value}x',
   'skillTree.manaScaling.buffBonus': 'Efectos de Bufos: {value}x',
+  'skillTree.specializationUnlocksAtLevel': 'Especialización se desbloquea en Nivel {level}',
 };
 

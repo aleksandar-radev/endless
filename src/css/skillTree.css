@@ -248,6 +248,7 @@
   flex-direction: column;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   position: relative;
+  overflow-y: auto;
 }
 
 .class-preview-modal .class-preview-header {
@@ -271,7 +272,6 @@
 
 .class-preview-modal .class-preview-tree {
   flex: 1;
-  overflow-y: auto;
 }
 
 .class-preview-modal .select-class-btn {
@@ -987,7 +987,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 15px;
+  padding: 10px;
 }
+
 
 .specialization-preview-card {
   background: var(--bg-panel, #1a1d24);
@@ -995,6 +997,40 @@
   border-radius: 8px;
   padding: 15px;
   text-align: center;
+}
+
+/* Specialization Details */
+.specialization-details-placeholder {
+  margin-top: 10px;
+}
+
+.class-preview-spec-details {
+  margin: 0;
+  padding: 10px;
+  background: var(--bg-element, #23272f);
+  border-radius: 8px;
+  border: 1px solid var(--border, #5fb1fd);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.spec-unlock-text {
+  color: var(--gold);
+  font-size: 0.95em;
+  font-weight: bold;
+  opacity: 0.9;
+  margin-bottom: 5px;
+}
+
+.spec-details-stats {
+  text-align: center;
+  color: #eee;
+  font-size: 0.9em;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .spec-preview-avatar {

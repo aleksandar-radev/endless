@@ -479,5 +479,6 @@ export default {
   'skillTree.manaScaling.instantBonus': '瞬发伤害: {value}x',
   'skillTree.manaScaling.toggleBonus': '开启伤害: {value}x',
   'skillTree.manaScaling.buffBonus': '增益效果: {value}x',
+  'skillTree.specializationUnlocksAtLevel': '专精将在 {level} 级解锁',
 };
 

@@ -1383,8 +1383,10 @@ function openClassPreview(pathId) {
     specializationsContainer.innerHTML = `
       <h3>${t('skillTree.availableSpecializations')}</h3>
       <div class="specializations-preview-grid"></div>
+      <div class="specialization-details-placeholder"></div>
     `;
     const grid = specializationsContainer.querySelector('.specializations-preview-grid');
+    const detailsContainer = specializationsContainer.querySelector('.specialization-details-placeholder');
 
     specializationsList.forEach((spec) => {
       const card = document.createElement('div');
@@ -1416,15 +1418,18 @@ function openClassPreview(pathId) {
           });
           card.classList.add('active');
         }
-        buildClassPreviewTree(pathId, treeContainer, activeSpecId);
+        buildClassPreviewTree(pathId, treeContainer, detailsContainer, activeSpecId);
       });
 
       grid.appendChild(card);
     });
+    // Initial Tree Build
+    buildClassPreviewTree(pathId, treeContainer, detailsContainer, activeSpecId);
+  } else {
+    // If no specs, just build tree
+    buildClassPreviewTree(pathId, treeContainer, null, activeSpecId);
   }
 
-  // Initial Tree Build
-  buildClassPreviewTree(pathId, treeContainer, activeSpecId);
 
   modal.querySelectorAll('.select-class-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -1445,16 +1450,34 @@ function selectClassPath(pathId) {
   }
 }
 
-function buildClassPreviewTree(pathId, container, activeSpecId = null) {
+function buildClassPreviewTree(pathId, container, detailsContainer, activeSpecId = null) {
   container.innerHTML = '';
+  if (detailsContainer) detailsContainer.innerHTML = '';
 
   // --- Render Active Specialization Skills (if any) ---
-  if (activeSpecId) {
+  if (activeSpecId && detailsContainer) {
     const spec = getSpecialization(pathId, activeSpecId);
     if (spec) {
-      const specHeader = document.createElement('div');
-      specHeader.innerHTML = `<h3 style="color: var(--gold); margin: 20px 0 10px;">${spec.name()} Skills</h3>`;
-      container.appendChild(specHeader);
+      const wrapper = document.createElement('div');
+      // Reuse existing class for consistent base styling, but override/add specific grid/flex properties if needed
+      wrapper.className = 'class-preview-spec-details';
+
+      // 1. Unlock Text
+      const unlockText = document.createElement('div');
+      unlockText.className = 'spec-unlock-text';
+      unlockText.textContent = tp('skillTree.specializationUnlocksAtLevel', { level: SPECIALIZATION_UNLOCK_LEVEL });
+      wrapper.appendChild(unlockText);
+
+      // 2. Base Stats (No separate header/container needed beyond the list itself)
+      const baseStatsHtml = renderBaseStatsList(spec.baseStats());
+      const statsDiv = document.createElement('div');
+      statsDiv.className = 'base-stats-list spec-details-stats';
+      statsDiv.innerHTML = baseStatsHtml;
+      wrapper.appendChild(statsDiv);
+
+      // 3. Skills (No header)
+      const skillsContainer = document.createElement('div');
+      skillsContainer.style.width = '100%';
 
       const specSkills = spec.skills;
       const specLevelGroups = SKILL_LEVEL_TIERS.reduce((acc, level) => {
@@ -1464,19 +1487,17 @@ function buildClassPreviewTree(pathId, container, activeSpecId = null) {
 
       Object.values(specSkills).forEach((skill) => {
         const reqLevel = skill.requiredLevel ? skill.requiredLevel() : 0;
-        // Ensure the level group exists
         if (!specLevelGroups[reqLevel]) specLevelGroups[reqLevel] = [];
         specLevelGroups[reqLevel].push(skill);
       });
 
       Object.entries(specLevelGroups).forEach(([reqLevel, groupSkills]) => {
         if (groupSkills.length === 0) return;
-        renderSkillRow(container, reqLevel, groupSkills, true, pathId);
+        renderSkillRow(skillsContainer, reqLevel, groupSkills, true, pathId);
       });
 
-      const separator = document.createElement('hr');
-      separator.style.cssText = 'border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;';
-      container.appendChild(separator);
+      wrapper.appendChild(skillsContainer);
+      detailsContainer.appendChild(wrapper);
     }
   }
 

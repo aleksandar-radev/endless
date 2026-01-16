@@ -478,5 +478,6 @@ export default {
   'skillTree.manaScaling.instantBonus': 'Instant Damage: {value}x',
   'skillTree.manaScaling.toggleBonus': 'Toggle Damage: {value}x',
   'skillTree.manaScaling.buffBonus': 'Buff Effects: {value}x',
+  'skillTree.specializationUnlocksAtLevel': 'Specialization unlocks at Level {level}',
 };
 
