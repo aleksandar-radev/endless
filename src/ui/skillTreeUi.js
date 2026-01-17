@@ -1800,8 +1800,7 @@ export function updateSkillTreeValues() {
     img.alt = nameToUse + ' avatar';
   }
 
-  const characterName =
-    skillTree.selectedPath.name.charAt(0).toUpperCase() + skillTree.selectedPath.name.slice(1).toLowerCase();
+  const characterName = nameToUse;
   const sessionStatusGroup = characterNameEl.querySelector('.session-status-group');
   const heroAilments = characterNameEl.querySelector('.hero-ailments');
   characterNameEl.innerHTML = `<span class="character-name">${characterName}</span> (${t('skillTree.level')}: ${hero.level})`;
