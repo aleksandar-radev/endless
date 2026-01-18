@@ -1,6 +1,6 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { getScalingFlat, getScalingPercent } from '../../common.js';
+import { getScalingFlat, getScalingPercent, getSkillStatBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Elementalist skills extracted from skills.js
@@ -18,11 +18,11 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.fireball'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamage: getScalingFlat({
-        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      fireDamage: getSkillStatBonus({
+        level, statKey: 'fireDamage', skillType: 'instant', scale: { base: 1 },
       }),
-      fireDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      fireDamagePercent: getSkillStatBonus({
+        level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
   },
@@ -38,17 +38,17 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.frostArmor'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      armor: getSkillStatBonus({
+        level, statKey: 'armor', skillType: 'buff', scale: { base: 0.4, increment: 0.4 },
       }),
-      armorPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      armorPerLevel: getSkillStatBonus({
+        level, statKey: 'armor', skillType: 'buff', perLevel: true,
       }),
-      armorPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      armorPercent: getSkillStatBonus({
+        level, statKey: 'armorPercent', skillType: 'buff', scale: { base: 0.625 },
       }),
-      coldDamagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      coldDamagePercent: getSkillStatBonus({
+        level, statKey: 'coldDamagePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
     }),
   },
@@ -62,26 +62,26 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.warmth'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      manaPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      manaPercent: getSkillStatBonus({
+        level, statKey: 'manaPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      manaRegen: getScalingFlat({
-        level, base: 1, increment: 0.2, interval: 50, bonus: 0.1,
+      manaRegen: getSkillStatBonus({
+        level, statKey: 'manaRegen', skillType: 'passive', scale: { base: 1 },
       }),
-      manaRegenPerLevel: getScalingFlat({
-        level, base: 0.001, increment: 0.005, interval: 50, bonus: 0,
+      manaRegenPerLevel: getSkillStatBonus({
+        level, statKey: 'manaRegen', skillType: 'passive', perLevel: true, scale: { base: 0.5 },
       }),
-      manaRegenPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      manaRegenPercent: getSkillStatBonus({
+        level, statKey: 'manaRegenPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      wisdomPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      wisdomPercent: getSkillStatBonus({
+        level, statKey: 'wisdomPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      wisdom: getScalingFlat({
-        level, base: 4, increment: 1, interval: 50, bonus: 0.1,
+      wisdom: getSkillStatBonus({
+        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 1 },
       }),
-      wisdomPerLevel: getScalingFlat({
-        level, base: 0.004, increment: 0.005, interval: 50, bonus: 0,
+      wisdomPerLevel: getSkillStatBonus({
+        level, statKey: 'wisdom', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -99,17 +99,17 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.lightningStrike'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lightningDamage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      lightningDamage: getSkillStatBonus({
+        level, statKey: 'lightningDamage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
       }),
-      lightningDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      lightningDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'lightningDamage', skillType: 'instant', perLevel: true,
       }),
-      lightningDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      lightningDamagePercent: getSkillStatBonus({
+        level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
-      airDamagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      airDamagePercent: getSkillStatBonus({
+        level, statKey: 'airDamagePercent', skillType: 'instant', scale: { base: 0.5 },
       }),
     }),
   },
@@ -122,17 +122,17 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.elementalMastery'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      elementalDamagePercent: getSkillStatBonus({
+        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 1 },
       }),
-      elementalPenetration: getScalingFlat({
-        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      elementalPenetration: getSkillStatBonus({
+        level, statKey: 'elementalPenetration', skillType: 'passive', scale: { base: 0.5, increment: 0.2 },
       }),
-      elementalPenetrationPerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.01, interval: 50, bonus: 0,
+      elementalPenetrationPerLevel: getSkillStatBonus({
+        level, statKey: 'elementalPenetration', skillType: 'passive', perLevel: true, scale: { base: 0.5 },
       }),
-      elementalPenetrationPercent: Math.min(getScalingPercent({
-        level, base: 1, softcap: 2000, linear: 0.1, power: 0.5,
+      elementalPenetrationPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.2 },
       }), 20),
     }),
   },
@@ -150,32 +150,32 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.blizzard'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      coldDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      coldDamagePercent: getSkillStatBonus({
+        level, statKey: 'coldDamagePercent', skillType: 'buff', scale: { base: 1.25 },
       }),
-      airDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      airDamagePercent: getSkillStatBonus({
+        level, statKey: 'airDamagePercent', skillType: 'buff', scale: { base: 1.25 },
       }),
-      lightningDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      lightningDamagePercent: getSkillStatBonus({
+        level, statKey: 'lightningDamagePercent', skillType: 'buff', scale: { base: 1.25 },
       }),
-      coldDamage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      coldDamage: getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'buff', scale: { base: 3.75, increment: 3 },
       }),
-      coldDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      coldDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'buff', perLevel: true,
       }),
-      airDamage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      airDamage: getSkillStatBonus({
+        level, statKey: 'airDamage', skillType: 'buff', scale: { base: 3.75, increment: 3 },
       }),
-      airDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      airDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'airDamage', skillType: 'buff', perLevel: true,
       }),
-      lightningDamage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      lightningDamage: getSkillStatBonus({
+        level, statKey: 'lightningDamage', skillType: 'buff', scale: { base: 3.75, increment: 3 },
       }),
-      lightningDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      lightningDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'lightningDamage', skillType: 'buff', perLevel: true,
       }),
     }),
   },
@@ -191,14 +191,14 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.fireShield'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      reflectFireDamage: getScalingFlat({
-        level, base: 20, increment: 4, interval: 50, bonus: 0.15,
+      reflectFireDamage: getSkillStatBonus({
+        level, statKey: 'reflectFireDamage', skillType: 'buff', scale: { base: 1, increment: 1 },
       }),
-      reflectFireDamagePerLevel: getScalingFlat({
-        level, base: 0.02, increment: 0.01, interval: 50, bonus: 0,
+      reflectFireDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'reflectFireDamage', skillType: 'buff', perLevel: true, scale: { base: 2 },
       }),
-      fireDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      fireDamagePercent: getSkillStatBonus({
+        level, statKey: 'fireDamagePercent', skillType: 'buff', scale: { base: 1.25 },
       }),
     }),
   },
@@ -211,20 +211,20 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.arcaneWisdom'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      manaPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      manaPercent: getSkillStatBonus({
+        level, statKey: 'manaPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      manaRegen: getScalingFlat({
-        level, base: 2, increment: 0.5, interval: 50, bonus: 0.1,
+      manaRegen: getSkillStatBonus({
+        level, statKey: 'manaRegen', skillType: 'passive', scale: { base: 2, increment: 2.5 },
       }),
-      manaRegenPerLevel: getScalingFlat({
-        level, base: 0.002, increment: 0.005, interval: 50, bonus: 0,
+      manaRegenPerLevel: getSkillStatBonus({
+        level, statKey: 'manaRegen', skillType: 'passive', perLevel: true, scale: { base: 2 },
       }),
-      manaRegenPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      manaRegenPercent: getSkillStatBonus({
+        level, statKey: 'manaRegenPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      manaRegenOfTotalPercent: Math.min(getScalingPercent({
-        level, base: 0.1, softcap: 2000, linear: 0.01, power: 0.5,
+      manaRegenOfTotalPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'manaRegenOfTotalPercent', skillType: 'passive', scale: { base: 0.33 },
       }), 1),
     }),
   },
@@ -242,14 +242,14 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.elementalStorm'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamage: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      elementalDamage: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'instant', scale: { base: 2, increment: 1 },
       }),
-      elementalDamagePerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      elementalDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'instant', perLevel: true,
       }),
-      elementalDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      elementalDamagePercent: getSkillStatBonus({
+        level, statKey: 'elementalDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
   },
@@ -262,23 +262,23 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.elementalAffinity'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamage: getScalingFlat({
-        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      elementalDamage: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 1.66, increment: 1 },
       }),
-      elementalDamagePerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      elementalDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'passive', perLevel: true,
       }),
-      elementalDamagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      elementalDamagePercent: getSkillStatBonus({
+        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 1 },
       }),
-      intelligencePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      intelligencePercent: getSkillStatBonus({
+        level, statKey: 'intelligencePercent', skillType: 'passive', scale: { base: 1 },
       }),
-      allResistance: getScalingFlat({
-        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      allResistance: getSkillStatBonus({
+        level, statKey: 'allResistance', skillType: 'passive', scale: { base: 0.5, increment: 0.5 },
       }),
-      allResistancePerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      allResistancePerLevel: getSkillStatBonus({
+        level, statKey: 'allResistance', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -296,23 +296,23 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.arcanePulse'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackRatingPercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      attackRatingPercent: getSkillStatBonus({
+        level, statKey: 'attackRatingPercent', skillType: 'buff', scale: { base: 1.25 },
       }),
-      lifePerHit: getScalingFlat({
-        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      lifePerHit: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'buff', scale: { base: 1.25, increment: 1.25 },
       }),
-      lifePerHitPerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      lifePerHitPerLevel: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'buff', perLevel: true,
       }),
-      manaPerHit: getScalingFlat({
-        level, base: 1, increment: 0.2, interval: 50, bonus: 0.1,
+      manaPerHit: getSkillStatBonus({
+        level, statKey: 'manaPerHit', skillType: 'buff', scale: { base: 0.5, increment: 0.5 },
       }),
-      manaPerHitPerLevel: getScalingFlat({
-        level, base: 0.001, increment: 0.005, interval: 50, bonus: 0,
+      manaPerHitPerLevel: getSkillStatBonus({
+        level, statKey: 'manaPerHit', skillType: 'buff', perLevel: true,
       }),
-      attackSpeedPercent: Math.min(getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      attackSpeedPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66 },
       }), 50),
     }),
   },
@@ -328,23 +328,23 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.elementalOverload'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      fireDamagePercent: getSkillStatBonus({
+        level, statKey: 'fireDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
-      coldDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      coldDamagePercent: getSkillStatBonus({
+        level, statKey: 'coldDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
-      airDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      airDamagePercent: getSkillStatBonus({
+        level, statKey: 'airDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
-      lightningDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      lightningDamagePercent: getSkillStatBonus({
+        level, statKey: 'lightningDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
-      elementalDamage: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      elementalDamage: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'toggle', scale: { base: 2.5, increment: 2 },
       }),
-      elementalDamagePerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      elementalDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'toggle', perLevel: true,
       }),
     }),
   },
@@ -357,20 +357,20 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.primordialControl'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      earthDamagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      earthDamagePercent: getSkillStatBonus({
+        level, statKey: 'earthDamagePercent', skillType: 'passive', scale: { base: 1 },
       }),
-      vitality: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      vitality: getSkillStatBonus({
+        level, statKey: 'vitality', skillType: 'passive', scale: { base: 2.5, increment: 4 },
       }),
-      vitalityPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      vitalityPerLevel: getSkillStatBonus({
+        level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 2 },
       }),
-      vitalityPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      vitalityPercent: getSkillStatBonus({
+        level, statKey: 'vitalityPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      wisdomPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      wisdomPercent: getSkillStatBonus({
+        level, statKey: 'wisdomPercent', skillType: 'passive', scale: { base: 1 },
       }),
     }),
   },
@@ -385,29 +385,29 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.avatarOfTheElements'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      elementalDamagePercent: getSkillStatBonus({
+        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 1 },
       }),
-      elementalDamage: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      elementalDamage: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 3.33, increment: 2 },
       }),
-      elementalDamagePerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      elementalDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'passive', perLevel: true,
       }),
-      allResistance: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      allResistance: getSkillStatBonus({
+        level, statKey: 'allResistance', skillType: 'passive', scale: { base: 1, increment: 1 },
       }),
-      allResistancePerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      allResistancePerLevel: getSkillStatBonus({
+        level, statKey: 'allResistance', skillType: 'passive', perLevel: true,
       }),
-      perseverance: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      perseverance: getSkillStatBonus({
+        level, statKey: 'perseverance', skillType: 'passive', scale: { base: 5, increment: 8 },
       }),
-      perseverancePerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      perseverancePerLevel: getSkillStatBonus({
+        level, statKey: 'perseverance', skillType: 'passive', perLevel: true, scale: { base: 2 },
       }),
-      perseverancePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      perseverancePercent: getSkillStatBonus({
+        level, statKey: 'perseverancePercent', skillType: 'passive', scale: { base: 1 },
       }),
     }),
   },
@@ -422,20 +422,20 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.elementalCorrosion'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      elementalDamagePercent: getSkillStatBonus({
+        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 1 },
       }),
-      elementalPenetrationPercent: Math.min(getScalingPercent({
-        level, base: 2, softcap: 2000, linear: 0.1, power: 0.5,
+      elementalPenetrationPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.4 },
       }), 20),
-      manaRegenPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      manaRegenPercent: getSkillStatBonus({
+        level, statKey: 'manaRegenPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      elementalDamage: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      elementalDamage: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 3.33, increment: 2 },
       }),
-      elementalDamagePerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      elementalDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -451,20 +451,20 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.volcanicWrath'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      fireDamagePercent: getSkillStatBonus({
+        level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
-      earthDamage: getScalingFlat({
-        level, base: 30, increment: 6, interval: 50, bonus: 0.15,
+      earthDamage: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'instant', scale: { base: 6, increment: 3 },
       }),
-      earthDamagePerLevel: getScalingFlat({
-        level, base: 0.03, increment: 0.01, interval: 50, bonus: 0,
+      earthDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'instant', perLevel: true,
       }),
-      fireDamage: getScalingFlat({
-        level, base: 30, increment: 6, interval: 50, bonus: 0.15,
+      fireDamage: getSkillStatBonus({
+        level, statKey: 'fireDamage', skillType: 'instant', scale: { base: 6, increment: 3 },
       }),
-      fireDamagePerLevel: getScalingFlat({
-        level, base: 0.03, increment: 0.01, interval: 50, bonus: 0,
+      fireDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'fireDamage', skillType: 'instant', perLevel: true,
       }),
     }),
   },
@@ -482,23 +482,23 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.tempestNova'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lightningDamage: getScalingFlat({
-        level, base: 35, increment: 7, interval: 50, bonus: 0.15,
+      lightningDamage: getSkillStatBonus({
+        level, statKey: 'lightningDamage', skillType: 'instant', scale: { base: 7, increment: 3.5 },
       }),
-      lightningDamagePerLevel: getScalingFlat({
-        level, base: 0.035, increment: 0.01, interval: 50, bonus: 0,
+      lightningDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'lightningDamage', skillType: 'instant', perLevel: true,
       }),
-      lightningDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      lightningDamagePercent: getSkillStatBonus({
+        level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
-      coldDamage: getScalingFlat({
-        level, base: 35, increment: 7, interval: 50, bonus: 0.15,
+      coldDamage: getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'instant', scale: { base: 7, increment: 3.5 },
       }),
-      coldDamagePerLevel: getScalingFlat({
-        level, base: 0.035, increment: 0.01, interval: 50, bonus: 0,
+      coldDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'instant', perLevel: true,
       }),
-      coldDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      coldDamagePercent: getSkillStatBonus({
+        level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
   },
@@ -514,14 +514,14 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.earthShatter'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      earthDamagePercent: getScalingPercent({
-        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      earthDamagePercent: getSkillStatBonus({
+        level, statKey: 'earthDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
-      earthDamage: getScalingFlat({
-        level, base: 45, increment: 9, interval: 50, bonus: 0.15,
+      earthDamage: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'instant', scale: { base: 9, increment: 4.5 },
       }),
-      earthDamagePerLevel: getScalingFlat({
-        level, base: 0.045, increment: 0.01, interval: 50, bonus: 0,
+      earthDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'instant', perLevel: true,
       }),
     }),
   },
@@ -539,17 +539,17 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.tidalWave'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      waterDamage: getScalingFlat({
-        level, base: 40, increment: 8, interval: 50, bonus: 0.15,
+      waterDamage: getSkillStatBonus({
+        level, statKey: 'waterDamage', skillType: 'buff', scale: { base: 10, increment: 8 },
       }),
-      waterDamagePerLevel: getScalingFlat({
-        level, base: 0.04, increment: 0.01, interval: 50, bonus: 0,
+      waterDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'waterDamage', skillType: 'buff', perLevel: true,
       }),
-      waterDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      waterDamagePercent: getSkillStatBonus({
+        level, statKey: 'waterDamagePercent', skillType: 'buff', scale: { base: 1.25 },
       }),
-      reduceEnemyAttackSpeedPercent: Math.min(getScalingPercent({
-        level, base: 2, softcap: 2000, linear: 0.1, power: 0.5,
+      reduceEnemyAttackSpeedPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'reduceEnemyAttackSpeedPercent', skillType: 'buff', scale: { base: 40 },
       }), 15),
     }),
   },
@@ -562,17 +562,17 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.stormLord'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lightningDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      lightningDamagePercent: getSkillStatBonus({
+        level, statKey: 'lightningDamagePercent', skillType: 'passive', scale: { base: 2 },
       }),
-      elementalDamage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      elementalDamage: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 5, increment: 3 },
       }),
-      elementalDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      elementalDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'passive', perLevel: true,
       }),
-      manaPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      manaPercent: getSkillStatBonus({
+        level, statKey: 'manaPercent', skillType: 'passive', scale: { base: 1 },
       }),
     }),
   },
@@ -587,17 +587,17 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.elementalAscension'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      elementalDamagePercent: getSkillStatBonus({
+        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 2 },
       }),
-      elementalPenetrationPercent: Math.min(getScalingPercent({
-        level, base: 2, softcap: 2000, linear: 0.1, power: 0.5,
+      elementalPenetrationPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.4 },
       }), 15),
-      allResistance: getScalingFlat({
-        level, base: 40, increment: 8, interval: 50, bonus: 0.15,
+      allResistance: getSkillStatBonus({
+        level, statKey: 'allResistance', skillType: 'passive', scale: { base: 4, increment: 4 },
       }),
-      allResistancePerLevel: getScalingFlat({
-        level, base: 0.04, increment: 0.01, interval: 50, bonus: 0,
+      allResistancePerLevel: getSkillStatBonus({
+        level, statKey: 'allResistance', skillType: 'passive', perLevel: true, scale: { base: 4 },
       }),
     }),
   },
@@ -613,20 +613,20 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.natureCataclysm'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      fireDamagePercent: getSkillStatBonus({
+        level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
-      coldDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      coldDamagePercent: getSkillStatBonus({
+        level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
-      lightningDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      lightningDamagePercent: getSkillStatBonus({
+        level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
-      elementalDamage: getScalingFlat({
-        level, base: 40, increment: 8, interval: 50, bonus: 0.15,
+      elementalDamage: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'instant', scale: { base: 8, increment: 4 },
       }),
-      elementalDamagePerLevel: getScalingFlat({
-        level, base: 0.04, increment: 0.01, interval: 50, bonus: 0,
+      elementalDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'instant', perLevel: true,
       }),
     }),
   },
@@ -641,17 +641,17 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.glacialBulwark'),
     maxLevel: () => 150,
     effect: (level) => ({
-      damageTakenConvertedToColdPercent: Math.min(getScalingPercent({
-        level, base: 1, softcap: 2000, linear: 0.1, power: 0.5,
+      damageTakenConvertedToColdPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'damageTakenConvertedToColdPercent', skillType: 'passive', scale: { base: 1 },
       }), 75),
-      coldDamageTakenReductionPercent: Math.min(getScalingPercent({
-        level, base: 1, softcap: 2000, linear: 0.1, power: 0.5,
+      coldDamageTakenReductionPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'coldDamageTakenReductionPercent', skillType: 'passive', scale: { base: 1 },
       }), 50),
-      armor: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      armor: getSkillStatBonus({
+        level, statKey: 'armor', skillType: 'passive', scale: { base: 0.42, increment: 0.5 },
       }),
-      armorPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      armorPerLevel: getSkillStatBonus({
+        level, statKey: 'armor', skillType: 'passive', perLevel: true,
       }),
     }),
     isVisible: () => hero.stats.glacialBulwarkUnlocked > 0,

@@ -106,3 +106,75 @@ export function itemStatScaleFactor(level, tier = 1) {
 export function isFlatStat(stat) {
   return !stat.endsWith('Percent') && !stat.endsWith('Chance');
 }
+
+/**
+ * Create a skill bonus configuration for flat stats.
+ *
+ * @param {Object} params - Configuration object
+ * @param {string} params.type - The skill type (passive, toggle, instant, buff, summon)
+ * @param {number} params.base - The starting value at level 1
+ * @param {number} params.increment - The flat increase per level
+ * @param {number} params.interval - How often milestone bonuses occur (e.g., every 50 levels)
+ * @param {number} params.bonus - The additive bonus per milestone (e.g., 0.2 for +20% per milestone)
+ * @param {number} [params.max] - Optional maximum value cap
+ * @returns {Object} Skill bonus configuration object for flat stats
+ */
+export function getSkillBonusesFlat({
+  type, base, increment, interval, bonus, max,
+}) {
+  return {
+    statType: 'flat',
+    base,
+    increment,
+    interval,
+    bonus,
+    ...(max !== undefined && { max }),
+  };
+}
+
+/**
+ * Create a skill bonus configuration for percent stats.
+ *
+ * @param {Object} params - Configuration object
+ * @param {string} params.type - The skill type (passive, toggle, instant, buff, summon)
+ * @param {number} params.base - The starting percentage at level 1
+ * @param {number} [params.softcap=2000] - The level at which growth transitions from power to linear
+ * @param {number} [params.linear=0.5] - The linear growth rate after softcap
+ * @param {number} [params.power=0.6] - The power curve exponent before softcap
+ * @param {number} [params.max] - Optional maximum percentage cap
+ * @returns {Object} Skill bonus configuration object for percent stats
+ */
+export function getSkillBonusesPercent({
+  type, base, softcap = 2000, linear = 0.5, power = 0.6, max,
+}) {
+  return {
+    statType: 'percent',
+    base,
+    softcap,
+    linear,
+    power,
+    ...(max !== undefined && { max }),
+  };
+}
+
+/**
+ * Create a skill bonus configuration for chance stats.
+ *
+ * @param {Object} params - Configuration object
+ * @param {string} params.type - The skill type (passive, toggle, instant, buff, summon)
+ * @param {number} params.base - The starting chance percentage at level 1
+ * @param {number} [params.levelsPerPoint=10] - How many levels for each increment
+ * @param {number} [params.cap=75] - The maximum chance cap
+ * @returns {Object} Skill bonus configuration object for chance stats
+ */
+export function getSkillBonusesChance({
+  type, base, levelsPerPoint = 10, cap = 75,
+}) {
+  return {
+    statType: 'chance',
+    base,
+    levelsPerPoint,
+    cap,
+  };
+}
+

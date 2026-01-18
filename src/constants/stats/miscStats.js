@@ -1,4 +1,4 @@
-import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat, createHiddenStat } from './stats.js';
+import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat, createHiddenStat, getSkillBonusesFlat, getSkillBonusesPercent } from './stats.js';
 
 const rewardTierScalingMaxPercent = createTierScaling(20, 400, 1.2);
 const dropTierScalingMaxPercent = createTierScaling(13, 200, 1.2);
@@ -22,6 +22,23 @@ export const MISC_STATS = {
     itemTags: ['misc', 'jewelry', 'magic'],
     show: true,
     sub: 'resources',
+    skills: {
+      passive: getSkillBonusesFlat({
+        type: 'passive', base: 10, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      toggle: getSkillBonusesFlat({
+        type: 'toggle', base: 8, increment: 2, interval: 50, bonus: 0.1,
+      }),
+      instant: getSkillBonusesFlat({
+        type: 'instant', base: 15, increment: 3, interval: 50, bonus: 0.15,
+      }),
+      buff: getSkillBonusesFlat({
+        type: 'buff', base: 12, increment: 2, interval: 50, bonus: 0.12,
+      }),
+      summon: getSkillBonusesFlat({
+        type: 'summon', base: 5, increment: 1, interval: 50, bonus: 0.08,
+      }),
+    },
   }),
   manaPercent: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(8, 100, 1.2) },
@@ -38,10 +55,32 @@ export const MISC_STATS = {
     itemTags: ['misc', 'jewelry', 'magic'],
     show: true,
     sub: 'resources',
+    skills: {
+      passive: getSkillBonusesFlat({
+        type: 'passive', base: 1, increment: 0.2, interval: 100, bonus: 0.1,
+      }),
+      toggle: getSkillBonusesFlat({
+        type: 'toggle', base: 1.2, increment: 0.25, interval: 100, bonus: 0.12,
+      }),
+      instant: getSkillBonusesFlat({
+        type: 'instant', base: 2, increment: 0.5, interval: 100, bonus: 0.15,
+      }),
+      buff: getSkillBonusesFlat({
+        type: 'buff', base: 1.5, increment: 0.4, interval: 100, bonus: 0.13,
+      }),
+      summon: getSkillBonusesFlat({
+        type: 'summon', base: 0.5, increment: 0.1, interval: 100, bonus: 0.08,
+      }),
+    },
   }),
   manaRegenPercent: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(10, 100, 1.2) },
     itemTags: ['jewelry', 'magic'],
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 5, softcap: 2000, linear: 0.5, power: 0.6, max: 100,
+      }),
+    },
   }),
   manaPerHit: createStat({
     dec: 1,
@@ -54,6 +93,23 @@ export const MISC_STATS = {
     itemTags: ['misc', 'jewelry', 'magic'],
     show: true,
     sub: 'resources',
+    skills: {
+      passive: getSkillBonusesFlat({
+        type: 'passive', base: 1, increment: 0.2, interval: 100, bonus: 0.1,
+      }),
+      toggle: getSkillBonusesFlat({
+        type: 'toggle', base: 1.5, increment: 0.3, interval: 100, bonus: 0.12,
+      }),
+      instant: getSkillBonusesFlat({
+        type: 'instant', base: 3, increment: 0.5, interval: 100, bonus: 0.15,
+      }),
+      buff: getSkillBonusesFlat({
+        type: 'buff', base: 2, increment: 0.4, interval: 100, bonus: 0.13,
+      }),
+      summon: getSkillBonusesFlat({
+        type: 'summon', base: 0.5, increment: 0.1, interval: 100, bonus: 0.08,
+      }),
+    },
   }),
   manaPerHitPercent: createStat({ div: 100 }),
   manaSteal: createPercentStat({
@@ -68,6 +124,23 @@ export const MISC_STATS = {
       min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['misc', 'stat', 'axe', 'mace'],
+    skills: {
+      passive: getSkillBonusesFlat({
+        type: 'passive', base: 5, increment: 1, interval: 100, bonus: 0.1,
+      }),
+      toggle: getSkillBonusesFlat({
+        type: 'toggle', base: 6, increment: 1.2, interval: 100, bonus: 0.12,
+      }),
+      instant: getSkillBonusesFlat({
+        type: 'instant', base: 8, increment: 1.5, interval: 100, bonus: 0.15,
+      }),
+      buff: getSkillBonusesFlat({
+        type: 'buff', base: 7, increment: 1.4, interval: 100, bonus: 0.13,
+      }),
+      summon: getSkillBonusesFlat({
+        type: 'summon', base: 3, increment: 0.6, interval: 100, bonus: 0.08,
+      }),
+    },
   }),
   strengthPercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
@@ -78,6 +151,23 @@ export const MISC_STATS = {
       min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['misc', 'stat', 'axe', 'mace'],
+    skills: {
+      passive: getSkillBonusesFlat({
+        type: 'passive', base: 4, increment: 0.5, interval: 100, bonus: 0.1,
+      }),
+      toggle: getSkillBonusesFlat({
+        type: 'toggle', base: 5, increment: 0.7, interval: 100, bonus: 0.12,
+      }),
+      instant: getSkillBonusesFlat({
+        type: 'instant', base: 8, increment: 1, interval: 100, bonus: 0.15,
+      }),
+      buff: getSkillBonusesFlat({
+        type: 'buff', base: 6, increment: 0.8, interval: 100, bonus: 0.13,
+      }),
+      summon: getSkillBonusesFlat({
+        type: 'summon', base: 3, increment: 0.4, interval: 100, bonus: 0.08,
+      }),
+    },
   }),
   agilityPercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
@@ -88,6 +178,23 @@ export const MISC_STATS = {
       min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['misc', 'stat'],
+    skills: {
+      passive: getSkillBonusesFlat({
+        type: 'passive', base: 4, increment: 0.5, interval: 100, bonus: 0.1,
+      }),
+      toggle: getSkillBonusesFlat({
+        type: 'toggle', base: 5, increment: 0.7, interval: 100, bonus: 0.12,
+      }),
+      instant: getSkillBonusesFlat({
+        type: 'instant', base: 8, increment: 1, interval: 100, bonus: 0.15,
+      }),
+      buff: getSkillBonusesFlat({
+        type: 'buff', base: 6, increment: 0.8, interval: 100, bonus: 0.13,
+      }),
+      summon: getSkillBonusesFlat({
+        type: 'summon', base: 3, increment: 0.4, interval: 100, bonus: 0.08,
+      }),
+    },
   }),
   vitalityPercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
@@ -98,6 +205,23 @@ export const MISC_STATS = {
       min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['misc', 'jewelry', 'stat', 'magic'],
+    skills: {
+      passive: getSkillBonusesFlat({
+        type: 'passive', base: 4, increment: 1, interval: 100, bonus: 0.1,
+      }),
+      toggle: getSkillBonusesFlat({
+        type: 'toggle', base: 5, increment: 1.2, interval: 100, bonus: 0.12,
+      }),
+      instant: getSkillBonusesFlat({
+        type: 'instant', base: 8, increment: 1.5, interval: 100, bonus: 0.15,
+      }),
+      buff: getSkillBonusesFlat({
+        type: 'buff', base: 6, increment: 1.4, interval: 100, bonus: 0.13,
+      }),
+      summon: getSkillBonusesFlat({
+        type: 'summon', base: 3, increment: 0.6, interval: 100, bonus: 0.08,
+      }),
+    },
   }),
   wisdomPercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
@@ -118,6 +242,23 @@ export const MISC_STATS = {
       min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['misc', 'jewelry', 'stat'],
+    skills: {
+      passive: getSkillBonusesFlat({
+        type: 'passive', base: 4, increment: 0.5, interval: 100, bonus: 0.1,
+      }),
+      toggle: getSkillBonusesFlat({
+        type: 'toggle', base: 5, increment: 0.7, interval: 100, bonus: 0.12,
+      }),
+      instant: getSkillBonusesFlat({
+        type: 'instant', base: 8, increment: 1, interval: 100, bonus: 0.15,
+      }),
+      buff: getSkillBonusesFlat({
+        type: 'buff', base: 6, increment: 0.8, interval: 100, bonus: 0.13,
+      }),
+      summon: getSkillBonusesFlat({
+        type: 'summon', base: 3, increment: 0.4, interval: 100, bonus: 0.08,
+      }),
+    },
   }),
   dexterityPercent: createStat({
     div: 100,
@@ -129,16 +270,55 @@ export const MISC_STATS = {
       min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['misc', 'jewelry', 'stat', 'magic'],
+    skills: {
+      passive: getSkillBonusesFlat({
+        type: 'passive', base: 5, increment: 1, interval: 100, bonus: 0.1,
+      }),
+      toggle: getSkillBonusesFlat({
+        type: 'toggle', base: 6, increment: 1.2, interval: 100, bonus: 0.12,
+      }),
+      instant: getSkillBonusesFlat({
+        type: 'instant', base: 10, increment: 2, interval: 100, bonus: 0.15,
+      }),
+      buff: getSkillBonusesFlat({
+        type: 'buff', base: 8, increment: 1.5, interval: 100, bonus: 0.13,
+      }),
+      summon: getSkillBonusesFlat({
+        type: 'summon', base: 4, increment: 0.8, interval: 100, bonus: 0.08,
+      }),
+    },
   }),
   intelligencePercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'jewelry', 'magic'],
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+    },
   }),
   perseverance: createStat({
     item: {
       min: STATS_MIN, max: STATS_MAX, scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['misc', 'jewelry', 'stat'],
+    skills: {
+      passive: getSkillBonusesFlat({
+        type: 'passive', base: 2, increment: 0.25, interval: 100, bonus: 0.1,
+      }),
+      toggle: getSkillBonusesFlat({
+        type: 'toggle', base: 2.5, increment: 0.3, interval: 100, bonus: 0.12,
+      }),
+      instant: getSkillBonusesFlat({
+        type: 'instant', base: 4, increment: 0.5, interval: 100, bonus: 0.15,
+      }),
+      buff: getSkillBonusesFlat({
+        type: 'buff', base: 3, increment: 0.4, interval: 100, bonus: 0.13,
+      }),
+      summon: getSkillBonusesFlat({
+        type: 'summon', base: 1.5, increment: 0.2, interval: 100, bonus: 0.08,
+      }),
+    },
   }),
   perseverancePercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
@@ -147,6 +327,11 @@ export const MISC_STATS = {
   enduranceThornsDamagePerPoint: createStat({
     dec: 1,
     sub: 'defense',
+    skills: {
+      passive: getSkillBonusesFlat({
+        type: 'passive', base: 0.2, increment: 0, interval: 0, bonus: 0,
+      }),
+    },
   }),
   summonsCanCrit: createHiddenStat(),
   bonusGoldPercent: createPercentStat({
@@ -154,6 +339,11 @@ export const MISC_STATS = {
     itemTags: ['misc', 'jewelry'],
     show: true,
     sub: 'rewards',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 10, softcap: 2000, linear: 0.5, power: 0.6, max: 500,
+      }),
+    },
   }),
   bonusExperiencePercent: createPercentStat({
     item: { tierScalingMaxPercent: rewardTierScalingMaxPercent },
@@ -174,6 +364,11 @@ export const MISC_STATS = {
       },
     },
     itemTags: ['magic', 'jewelry'],
+    skills: {
+      buff: getSkillBonusesPercent({
+        type: 'buff', base: 2, softcap: 2000, linear: 0.1, power: 0.5, max: 50,
+      }),
+    },
   }),
   cooldownReductionCapPercent: createStat({
     base: 80,
@@ -252,6 +447,23 @@ export const MISC_STATS = {
       scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['defense', 'jewelry', 'gloves', 'misc'],
+    skills: {
+      passive: getSkillBonusesFlat({
+        type: 'passive', base: 2, increment: 0.5, interval: 100, bonus: 0.1,
+      }),
+      toggle: getSkillBonusesFlat({
+        type: 'toggle', base: 2.5, increment: 0.6, interval: 100, bonus: 0.12,
+      }),
+      instant: getSkillBonusesFlat({
+        type: 'instant', base: 4, increment: 1, interval: 100, bonus: 0.15,
+      }),
+      buff: getSkillBonusesFlat({
+        type: 'buff', base: 3, increment: 0.8, interval: 100, bonus: 0.13,
+      }),
+      summon: getSkillBonusesFlat({
+        type: 'summon', base: 1, increment: 0.3, interval: 100, bonus: 0.08,
+      }),
+    },
   }),
   allAttributesPercent: createPercentStat(),
   canDualWieldTwoHanded: createHiddenStat(),
@@ -282,3 +494,4 @@ export const MISC_STATS = {
   crimsonAegisSkillUnlocked: createHiddenStat(),
   bloodSiphonSkillUnlocked: createHiddenStat(),
 };
+

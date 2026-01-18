@@ -1,6 +1,6 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { getScalingFlat, getScalingPercent } from '../../common.js';
+import { getScalingFlat, getScalingPercent, getSkillStatBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Rogue skills extracted from skills.js
@@ -15,14 +15,14 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.shadowDance'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      agility: getScalingFlat({
-        level, base: 4, increment: 0.5, interval: 50, bonus: 0.1,
+      agility: getSkillStatBonus({
+        level, statKey: 'agility', skillType: 'passive', scale: { base: 1 },
       }),
-      agilityPerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      agilityPerLevel: getSkillStatBonus({
+        level, statKey: 'agility', skillType: 'passive', perLevel: true,
       }),
-      critChance: Math.min(getScalingPercent({
-        level, base: 2, softcap: 2000, linear: 0.1, power: 0.5,
+      critChance: Math.min(getSkillStatBonus({
+        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2 },
       }), 20),
     }),
   },
@@ -35,14 +35,14 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.evasion'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      dexterity: getScalingFlat({
-        level, base: 4, increment: 0.5, interval: 50, bonus: 0.1,
+      dexterity: getSkillStatBonus({
+        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 1 },
       }),
-      dexterityPerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      dexterityPerLevel: getSkillStatBonus({
+        level, statKey: 'dexterity', skillType: 'passive', perLevel: true,
       }),
-      extraDamageFromEvasionPercent: Math.min(getScalingPercent({
-        level, base: 0.5, linear: 0.1,
+      extraDamageFromEvasionPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'extraDamageFromEvasionPercent', skillType: 'passive', scale: { base: 1 },
       }) / 100, 2.5),
     }),
   },
@@ -57,11 +57,11 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.poisonAffinity'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      earthDamage: getScalingFlat({
-        level, base: 3, increment: 1, interval: 50, bonus: 0.1,
+      earthDamage: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'passive', scale: { base: 1 },
       }),
-      earthDamagePerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      earthDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -75,17 +75,17 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.poisonDagger'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: getScalingFlat({
-        level, base: 5, increment: 2, interval: 50, bonus: 0.1,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 1.66, increment: 2 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
       }),
-      earthDamage: getScalingFlat({
-        level, base: 5, increment: 2, interval: 50, bonus: 0.1,
+      earthDamage: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'toggle', scale: { base: 1.25, increment: 2 },
       }),
-      earthDamagePerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      earthDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'toggle', perLevel: true,
       }),
     }),
   },
@@ -101,14 +101,14 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.shadowForm'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      agility: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      agility: getSkillStatBonus({
+        level, statKey: 'agility', skillType: 'buff', scale: { base: 1.66, increment: 2.5 },
       }),
-      agilityPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.005, interval: 50, bonus: 0,
+      agilityPerLevel: getSkillStatBonus({
+        level, statKey: 'agility', skillType: 'buff', perLevel: true,
       }),
-      critChance: Math.min(getScalingPercent({
-        level, base: 2, softcap: 2000, linear: 0.1, power: 0.5,
+      critChance: Math.min(getSkillStatBonus({
+        level, statKey: 'critChance', skillType: 'buff', scale: { base: 0.8 },
       }), 20),
     }),
   },
@@ -119,11 +119,11 @@ export const ROGUE_SKILLS = {
     name: () => t('skill.flurry.name'),
     type: () => 'summon',
     summonStats: (level) => ({
-      percentOfPlayerDamage: Math.min(getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      percentOfPlayerDamage: Math.min(getSkillStatBonus({
+        level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5 },
       }), 30),
-      damage: getScalingFlat({
-        level, base: 8, increment: 1.5, interval: 50, bonus: 0.15,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'summon', scale: { base: 4, increment: 1.5 },
       }),
       attackSpeed: 4,
     }),
@@ -145,11 +145,11 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.precision'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackRating: getScalingFlat({
-        level, base: 25, increment: 5, interval: 50, bonus: 0.15,
+      attackRating: getSkillStatBonus({
+        level, statKey: 'attackRating', skillType: 'passive', scale: { base: 0.83, increment: 0.5 },
       }),
-      attackRatingPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      attackRatingPerLevel: getSkillStatBonus({
+        level, statKey: 'attackRating', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -166,11 +166,11 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.backstab'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: getScalingPercent({
-        level, base: 20, softcap: 2000, linear: 0.8, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 2 },
       }),
-      earthDamagePercent: getScalingPercent({
-        level, base: 20, softcap: 2000, linear: 0.8, power: 0.6,
+      earthDamagePercent: getSkillStatBonus({
+        level, statKey: 'earthDamagePercent', skillType: 'instant', scale: { base: 2 },
       }),
       ignoreEnemyArmor: 1,
       ignoreAllEnemyResistances: 1,
@@ -186,14 +186,14 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.evasiveManeuver'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      dexterity: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.15,
+      dexterity: getSkillStatBonus({
+        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 2.5, increment: 4 },
       }),
-      dexterityPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.005, interval: 50, bonus: 0,
+      dexterityPerLevel: getSkillStatBonus({
+        level, statKey: 'dexterity', skillType: 'passive', perLevel: true,
       }),
-      extraDamageFromEvasionPercent: Math.min(getScalingPercent({
-        level, base: 0.5, linear: 0.1,
+      extraDamageFromEvasionPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'extraDamageFromEvasionPercent', skillType: 'passive', scale: { base: 1 },
       }) / 100, 3),
     }),
   },
@@ -211,14 +211,14 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.darkPact'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      earthDamage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      earthDamage: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'buff', scale: { base: 3.75, increment: 3 },
       }),
-      earthDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.005, interval: 50, bonus: 0,
+      earthDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'buff', perLevel: true,
       }),
-      attackSpeedPercent: Math.min(getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      attackSpeedPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66 },
       }), 100),
     }),
   },
@@ -234,17 +234,17 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.assassination'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 5, increment: 3 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.005, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
       }),
-      earthDamage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      earthDamage: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'toggle', scale: { base: 3.75, increment: 3 },
       }),
-      earthDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.005, interval: 50, bonus: 0,
+      earthDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'toggle', perLevel: true,
       }),
     }),
   },
@@ -258,14 +258,14 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.deadlyPrecision'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackRating: getScalingFlat({
-        level, base: 50, increment: 10, interval: 50, bonus: 0.15,
+      attackRating: getSkillStatBonus({
+        level, statKey: 'attackRating', skillType: 'passive', scale: { base: 1.66, increment: 1 },
       }),
-      attackRatingPerLevel: getScalingFlat({
-        level, base: 0.02, increment: 0.01, interval: 50, bonus: 0,
+      attackRatingPerLevel: getSkillStatBonus({
+        level, statKey: 'attackRating', skillType: 'passive', perLevel: true,
       }),
-      critChance: Math.min(getScalingPercent({
-        level, base: 2.5, softcap: 2000, linear: 0.1, power: 0.5,
+      critChance: Math.min(getSkillStatBonus({
+        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2.5 },
       }), 20),
     }),
   },
@@ -280,17 +280,17 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.masterThief'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      dexterity: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.1,
+      dexterity: getSkillStatBonus({
+        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 3.75, increment: 6 },
       }),
-      dexterityPerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.005, interval: 50, bonus: 0,
+      dexterityPerLevel: getSkillStatBonus({
+        level, statKey: 'dexterity', skillType: 'passive', perLevel: true,
       }),
-      agility: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.1,
+      agility: getSkillStatBonus({
+        level, statKey: 'agility', skillType: 'passive', scale: { base: 3.75, increment: 6 },
       }),
-      agilityPerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.005, interval: 50, bonus: 0,
+      agilityPerLevel: getSkillStatBonus({
+        level, statKey: 'agility', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -305,14 +305,14 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.shadowMastery'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: getScalingFlat({
-        level, base: 30, increment: 5, interval: 50, bonus: 0.1,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'passive', scale: { base: 10, increment: 5 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.02, increment: 0.01, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'passive', perLevel: true,
       }),
-      critChance: Math.min(getScalingPercent({
-        level, base: 3, softcap: 2000, linear: 0.1, power: 0.5,
+      critChance: Math.min(getSkillStatBonus({
+        level, statKey: 'critChance', skillType: 'passive', scale: { base: 3 },
       }), 25),
     }),
   },
@@ -328,11 +328,11 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.venomousAssault'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      earthDamage: getScalingFlat({
-        level, base: 25, increment: 5, interval: 50, bonus: 0.15,
+      earthDamage: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'instant', scale: { base: 5, increment: 2.5 },
       }),
-      earthDamagePercent: getScalingPercent({
-        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      earthDamagePercent: getSkillStatBonus({
+        level, statKey: 'earthDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
     }),
   },
@@ -350,11 +350,11 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.phantomStrike'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: getScalingFlat({
-        level, base: 35, increment: 5, interval: 50, bonus: 0.15,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', scale: { base: 7, increment: 2.5 },
       }),
-      damagePercent: getScalingPercent({
-        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
       ignoreEnemyArmor: 1,
     }),
@@ -368,11 +368,11 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.silentExecution'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeedPercent: Math.min(getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      attackSpeedPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5 },
       }), 75),
-      critDamage: Math.min(getScalingPercent({
-        level, base: 0.5, softcap: 2000, linear: 0.1, power: 0.6,
+      critDamage: Math.min(getSkillStatBonus({
+        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 0.1 },
       }) / 100, 3),
     }),
   },
@@ -390,11 +390,11 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.eclipseForm'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackRating: getScalingFlat({
-        level, base: 50, increment: 10, interval: 50, bonus: 0.1,
+      attackRating: getSkillStatBonus({
+        level, statKey: 'attackRating', skillType: 'buff', scale: { base: 1.11, increment: 0.7 },
       }),
-      attackRatingPerLevel: getScalingFlat({
-        level, base: 0.05, increment: 0.01, interval: 50, bonus: 0,
+      attackRatingPerLevel: getSkillStatBonus({
+        level, statKey: 'attackRating', skillType: 'buff', perLevel: true,
       }),
     }),
   },
@@ -407,11 +407,11 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.perfectDodge'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      evasion: getScalingFlat({
-        level, base: 50, increment: 10, interval: 50, bonus: 0.1,
+      evasion: getSkillStatBonus({
+        level, statKey: 'evasion', skillType: 'passive', scale: { base: 1, increment: 1 },
       }),
-      evasionPerLevel: getScalingFlat({
-        level, base: 0.05, increment: 0.01, interval: 50, bonus: 0,
+      evasionPerLevel: getSkillStatBonus({
+        level, statKey: 'evasion', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -426,14 +426,14 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.kingOfThieves'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      bonusGold: getScalingFlat({
-        level, base: 10, increment: 5, interval: 50, bonus: 0.1,
+      bonusGoldPercent: getSkillStatBonus({
+        level, statKey: 'bonusGoldPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      dexterity: getScalingFlat({
-        level, base: 20, increment: 4, interval: 50, bonus: 0.1,
+      dexterity: getSkillStatBonus({
+        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 5, increment: 8 },
       }),
-      dexterityPerLevel: getScalingFlat({
-        level, base: 0.02, increment: 0.01, interval: 50, bonus: 0,
+      dexterityPerLevel: getSkillStatBonus({
+        level, statKey: 'dexterity', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -447,14 +447,14 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.nightfallAssassin'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: getScalingFlat({
-        level, base: 35, increment: 5, interval: 50, bonus: 0.15,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 11.66, increment: 5 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.025, increment: 0.01, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
       }),
-      critChance: Math.min(getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.1, power: 0.5,
+      critChance: Math.min(getSkillStatBonus({
+        level, statKey: 'critChance', skillType: 'toggle', scale: { base: 2.5 },
       }), 50),
     }),
   },
@@ -466,7 +466,9 @@ export const ROGUE_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: 5 + level * 5,
+        percentOfPlayerDamage: 5 + getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 0.5 },
+        }),
         attackSpeed: hero.stats.attackSpeed,
       };
     },

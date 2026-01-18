@@ -1,6 +1,6 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { getScalingFlat, getScalingPercent } from '../../common.js';
+import { getScalingFlat, getScalingPercent, getSkillStatBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Vampire skills extracted from skills.js
@@ -16,20 +16,20 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.bloodSiphon'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifePerHit: getScalingFlat({
-        level, base: 2, increment: 0.5, interval: 50, bonus: 0.1,
+      lifePerHit: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: 0.66, increment: 0.625 },
       }),
-      lifePerHitPerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      lifePerHitPerLevel: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'toggle', perLevel: true,
       }),
-      damage: getScalingFlat({
-        level, base: 2, increment: 0.5, interval: 50, bonus: 0.1,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 0.66, increment: 0.5 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
       }),
-      damagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 0.71 },
       }),
     }),
   },
@@ -44,14 +44,14 @@ export const VAMPIRE_SKILLS = {
     effect: (level) => {
       const buffEffectiveness = 1 + (hero.stats.nightStalkerBuffEffectivenessPercent || 0);
       return {
-        damagePercent: getScalingPercent({
-          level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+        damagePercent: getSkillStatBonus({
+          level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 2 },
         }) * buffEffectiveness,
-        agility: getScalingFlat({
-          level, base: 4, increment: 1, interval: 50, bonus: 0.1,
+        agility: getSkillStatBonus({
+          level, statKey: 'agility', skillType: 'passive', scale: { base: 1, increment: 2 },
         }) * buffEffectiveness,
-        agilityPerLevel: getScalingFlat({
-          level, base: 0.004, increment: 0.005, interval: 50, bonus: 0,
+        agilityPerLevel: getSkillStatBonus({
+          level, statKey: 'agility', skillType: 'passive', perLevel: true,
         }) * buffEffectiveness,
       };
     },
@@ -70,20 +70,20 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.crimsonBurst'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: getScalingFlat({
-        level, base: 20, increment: 4, interval: 50, bonus: 0.15,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', scale: { base: 4, increment: 2 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.02, increment: 0.01, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', perLevel: true,
       }),
-      damagePercent: getScalingPercent({
-        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
-      lifePerHit: getScalingFlat({
-        level, base: -30, increment: -5, interval: 50, bonus: 0.1,
+      lifePerHit: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'instant', scale: { base: -6, increment: -5 },
       }),
-      lifePerHitPerLevel: getScalingFlat({
-        level, base: -0.05, increment: -0.01, interval: 50, bonus: 0,
+      lifePerHitPerLevel: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'instant', perLevel: true, scale: { base: -10 },
       }),
     }),
   },
@@ -99,20 +99,20 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.darkAura'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeSteal: Math.min(getScalingPercent({
-        level, base: 0.2, softcap: 2000, linear: 0.05, power: 0.5,
+      lifeSteal: Math.min(getSkillStatBonus({
+        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.16 },
       }), 10),
-      attackRating: getScalingFlat({
-        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      attackRating: getSkillStatBonus({
+        level, statKey: 'attackRating', skillType: 'buff', scale: { base: 0.11, increment: 0.07 },
       }),
-      attackRatingPerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      attackRatingPerLevel: getSkillStatBonus({
+        level, statKey: 'attackRating', skillType: 'buff', perLevel: true,
       }),
-      attackRatingPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      attackRatingPercent: getSkillStatBonus({
+        level, statKey: 'attackRatingPercent', skillType: 'buff', scale: { base: 1.66 }, // Assuming default percent is 3? No, attackRatingPercent in stats is percent.
       }),
-      extraDamageFromLifePercent: Math.min(getScalingPercent({
-        level, base: 0.05, softcap: 2000, linear: 0.01, power: 0.5,
+      extraDamageFromLifePercent: Math.min(getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifePercent', skillType: 'buff', scale: { base: 0.04 },
       }), 0.4),
     }),
   },
@@ -130,17 +130,17 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.drainingTouch'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => {
-      const airDamage = getScalingFlat({
-        level, base: 4, increment: 1, interval: 50, bonus: 0.1,
+      const airDamage = getSkillStatBonus({
+        level, statKey: 'airDamage', skillType: 'instant', scale: { base: 0.8, increment: 0.5 },
       });
-      const airDamagePercent = getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      const airDamagePercent = getSkillStatBonus({
+        level, statKey: 'airDamagePercent', skillType: 'instant', scale: { base: 0.5 },
       });
       return {
         airDamage: airDamage * 4,
         airDamagePercent: airDamagePercent * 4,
-        manaPerHit: getScalingFlat({
-          level, base: 0.5, increment: 0.1, interval: 50, bonus: 0.1,
+        manaPerHit: getSkillStatBonus({
+          level, statKey: 'manaPerHit', skillType: 'instant', scale: { base: 0.16, increment: 0.2 },
         }),
       };
     },
@@ -154,23 +154,23 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.greaterBloodHunger'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strengthPercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      strengthPercent: getSkillStatBonus({
+        level, statKey: 'strengthPercent', skillType: 'passive', scale: { base: 2 },
       }),
-      strength: getScalingFlat({
-        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      strength: getSkillStatBonus({
+        level, statKey: 'strength', skillType: 'passive', scale: { base: 1, increment: 1 },
       }),
-      strengthPerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      strengthPerLevel: getSkillStatBonus({
+        level, statKey: 'strength', skillType: 'passive', perLevel: true,
       }),
-      vitalityPercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      vitalityPercent: getSkillStatBonus({
+        level, statKey: 'vitalityPercent', skillType: 'passive', scale: { base: 2 },
       }),
-      vitality: getScalingFlat({
-        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      vitality: getSkillStatBonus({
+        level, statKey: 'vitality', skillType: 'passive', scale: { base: 1.25, increment: 2 },
       }),
-      vitalityPerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      vitalityPerLevel: getSkillStatBonus({
+        level, statKey: 'vitality', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -188,20 +188,20 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.vampiricStrike'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: getScalingFlat({
-        level, base: 6, increment: 1.5, interval: 50, bonus: 0.1,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', scale: { base: 1.2, increment: 0.75 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.006, increment: 0.005, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', perLevel: true,
       }),
-      damagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1 },
       }),
-      lifePerHit: getScalingFlat({
-        level, base: 40, increment: 8, interval: 50, bonus: 0.15,
+      lifePerHit: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'instant', scale: { base: 8, increment: 8 },
       }),
-      lifePerHitPerLevel: getScalingFlat({
-        level, base: 0.04, increment: 0.01, interval: 50, bonus: 0,
+      lifePerHitPerLevel: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'instant', perLevel: true, scale: { base: 4 },
       }),
     }),
   },
@@ -211,20 +211,20 @@ export const VAMPIRE_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: 5 + Math.min(getScalingPercent({
-          level, base: 2, softcap: 2000, linear: 0.5, power: 0.6,
+        percentOfPlayerDamage: 5 + Math.min(getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 0.5 },
         }), 25),
-        damage: getScalingFlat({
-          level, base: 3, increment: 0.5, interval: 50, bonus: 0.1,
+        damage: getSkillStatBonus({
+          level, statKey: 'damage', skillType: 'summon', scale: { base: 1.5, increment: 0.5 },
         }),
-        damagePerLevel: getScalingFlat({
-          level, base: 0.003, increment: 0.005, interval: 50, bonus: 0,
+        damagePerLevel: getSkillStatBonus({
+          level, statKey: 'damage', skillType: 'summon', perLevel: true,
         }),
-        airDamage: getScalingFlat({
-          level, base: 2, increment: 0.5, interval: 50, bonus: 0.1,
+        airDamage: getSkillStatBonus({
+          level, statKey: 'airDamage', skillType: 'summon', scale: { base: 1, increment: 0.5 },
         }),
-        airDamagePerLevel: getScalingFlat({
-          level, base: 0.002, increment: 0.005, interval: 50, bonus: 0,
+        airDamagePerLevel: getSkillStatBonus({
+          level, statKey: 'airDamage', skillType: 'summon', perLevel: true,
         }),
         attackSpeed: 4,
         canCrit: true,
@@ -253,17 +253,17 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.bloodPact'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      life: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      life: getSkillStatBonus({
+        level, statKey: 'life', skillType: 'buff', scale: { base: 0.16, increment: 0.16 },
       }),
-      lifePerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.005, interval: 50, bonus: 0,
+      lifePerLevel: getSkillStatBonus({
+        level, statKey: 'life', skillType: 'buff', perLevel: true, scale: { base: 1 },
       }),
-      lifePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      lifePercent: getSkillStatBonus({
+        level, statKey: 'lifePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
-      extraDamageFromLifePercent: Math.min(getScalingPercent({
-        level, base: 0.05, softcap: 2000, linear: 0.01, power: 0.5,
+      extraDamageFromLifePercent: Math.min(getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifePercent', skillType: 'buff', scale: { base: 0.04 },
       }), 0.4),
     }),
   },
@@ -279,14 +279,14 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.eternalThirst'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
-      lifePerHit: getScalingFlat({
-        level, base: 2, increment: 0.5, interval: 50, bonus: 0.1,
+      lifePerHit: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: 0.66, increment: 0.625 },
       }),
-      lifePerHitPerLevel: getScalingFlat({
-        level, base: 0.002, increment: 0.005, interval: 50, bonus: 0,
+      lifePerHitPerLevel: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'toggle', perLevel: true,
       }),
     }),
   },
@@ -299,26 +299,26 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.deathlyPresence'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      lifePercent: getSkillStatBonus({
+        level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 1 },
       }),
-      strengthPercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      strengthPercent: getSkillStatBonus({
+        level, statKey: 'strengthPercent', skillType: 'passive', scale: { base: 2 },
       }),
-      vitalityPercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      vitalityPercent: getSkillStatBonus({
+        level, statKey: 'vitalityPercent', skillType: 'passive', scale: { base: 2 },
       }),
-      strength: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      strength: getSkillStatBonus({
+        level, statKey: 'strength', skillType: 'passive', scale: { base: 2, increment: 2 },
       }),
-      strengthPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      strengthPerLevel: getSkillStatBonus({
+        level, statKey: 'strength', skillType: 'passive', perLevel: true, scale: { base: 2 },
       }),
-      vitality: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      vitality: getSkillStatBonus({
+        level, statKey: 'vitality', skillType: 'passive', scale: { base: 2.5, increment: 4 },
       }),
-      vitalityPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      vitalityPerLevel: getSkillStatBonus({
+        level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 2 },
       }),
     }),
   },
@@ -333,26 +333,26 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.lordOfNight'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strengthPercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      strengthPercent: getSkillStatBonus({
+        level, statKey: 'strengthPercent', skillType: 'passive', scale: { base: 2 },
       }),
-      vitalityPercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      vitalityPercent: getSkillStatBonus({
+        level, statKey: 'vitalityPercent', skillType: 'passive', scale: { base: 2 },
       }),
-      extraDamageFromLifePercent: Math.min(getScalingPercent({
-        level, base: 0.05, softcap: 2000, linear: 0.01, power: 0.5,
+      extraDamageFromLifePercent: Math.min(getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base: 0.1 },
       }), 0.6),
-      resurrectionChance: Math.min(getScalingPercent({
-        level, base: 1, softcap: 2000, linear: 0.1, power: 0.5,
+      resurrectionChance: Math.min(getSkillStatBonus({
+        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 1 },
       }), 20),
-      perseverancePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      perseverancePercent: getSkillStatBonus({
+        level, statKey: 'perseverancePercent', skillType: 'passive', scale: { base: 1 },
       }),
-      perseverance: getScalingFlat({
-        level, base: 2, increment: 0.4, interval: 50, bonus: 0.1,
+      perseverance: getSkillStatBonus({
+        level, statKey: 'perseverance', skillType: 'passive', scale: { base: 1, increment: 1.6 },
       }),
-      perseverancePerLevel: getScalingFlat({
-        level, base: 0.002, increment: 0.005, interval: 50, bonus: 0,
+      perseverancePerLevel: getSkillStatBonus({
+        level, statKey: 'perseverance', skillType: 'passive', perLevel: true, scale: { base: 0.4 },
       }),
     }),
   },
@@ -370,20 +370,20 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.bloodMoon'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeSteal: Math.min(getScalingPercent({
-        level, base: 0.2, softcap: 2000, linear: 0.05, power: 0.5,
+      lifeSteal: Math.min(getSkillStatBonus({
+        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.16 },
       }), 3),
-      damagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'buff', scale: { base: 1.25 },
       }),
-      attackSpeedPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      attackSpeedPercent: getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66 },
       }),
-      damage: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'buff', scale: { base: 2.5, increment: 2 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'buff', perLevel: true,
       }),
     }),
   },
@@ -396,17 +396,17 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.sanguineFury'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      critChance: Math.min(getScalingPercent({
-        level, base: 2, softcap: 2000, linear: 0.1, power: 0.5,
+      critChance: Math.min(getSkillStatBonus({
+        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2 },
       }), 25),
-      lifePerHit: getScalingFlat({
-        level, base: 120, increment: 24, interval: 50, bonus: 0.15,
+      lifePerHit: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'passive', scale: { base: 60, increment: 48 },
       }),
-      lifePerHitPerLevel: getScalingFlat({
-        level, base: 0.12, increment: 0.01, interval: 50, bonus: 0,
+      lifePerHitPerLevel: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'passive', perLevel: true, scale: { base: 24 },
       }),
-      damagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 1 },
       }),
     }),
   },
@@ -424,17 +424,17 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.twilightVeil'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegen: getScalingFlat({
-        level, base: 150, increment: 30, interval: 50, bonus: 0.15,
+      lifeRegen: getSkillStatBonus({
+        level, statKey: 'lifeRegen', skillType: 'buff', scale: { base: 50, increment: 37.5 },
       }),
-      lifeRegenPerLevel: getScalingFlat({
-        level, base: 0.15, increment: 0.01, interval: 50, bonus: 0,
+      lifeRegenPerLevel: getSkillStatBonus({
+        level, statKey: 'lifeRegen', skillType: 'buff', perLevel: true, scale: { base: 15 },
       }),
-      evasionPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      evasionPercent: getSkillStatBonus({
+        level, statKey: 'evasionPercent', skillType: 'buff', scale: { base: 1 },
       }),
-      lifePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      lifePercent: getSkillStatBonus({
+        level, statKey: 'lifePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
     }),
   },
@@ -447,15 +447,15 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.shadowRebirth'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      resurrectionChance: Math.min(getScalingPercent({
-        level, base: 1, softcap: 2000, linear: 0.1, power: 0.5,
+      resurrectionChance: Math.min(getSkillStatBonus({
+        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 1 },
       }), 50),
-      lifePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      lifePercent: getSkillStatBonus({
+        level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 2 },
       }),
-      critDamage: getScalingPercent({
-        level, base: 0.1, softcap: 2000, linear: 0.01, power: 0.5,
-      }) / 100, // Normalized to 2? No, `scaleDownFlat(level, 0.01)` is small, usually means 1% scaled.
+      critDamage: getSkillStatBonus({
+        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 0.02 },
+      }) / 100,
     }),
   },
 
@@ -470,20 +470,20 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.eternalHunger'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: getScalingFlat({
-        level, base: 12, increment: 3, interval: 50, bonus: 0.15,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 4, increment: 3 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.012, increment: 0.01, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
       }),
-      damagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
-      manaPerHit: getScalingFlat({
-        level, base: 0.5, increment: 0.1, interval: 50, bonus: 0.1,
+      manaPerHit: getSkillStatBonus({
+        level, statKey: 'manaPerHit', skillType: 'toggle', scale: { base: 0.33, increment: 0.33 },
       }),
-      manaPerHitPerLevel: getScalingFlat({
-        level, base: 0.0005, increment: 0.005, interval: 50, bonus: 0,
+      manaPerHitPerLevel: getSkillStatBonus({
+        level, statKey: 'manaPerHit', skillType: 'toggle', perLevel: true, scale: { base: 0.5 },
       }),
     }),
   },
@@ -496,20 +496,20 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.nocturnalDominion'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 2 },
       }),
-      attackSpeedPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      attackSpeedPercent: getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5 },
       }),
-      lifePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      lifePercent: getSkillStatBonus({
+        level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 2 },
       }),
-      damage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 3 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -524,26 +524,26 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.vampireOverlord'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strengthPercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      strengthPercent: getSkillStatBonus({
+        level, statKey: 'strengthPercent', skillType: 'passive', scale: { base: 2 },
       }),
-      vitalityPercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      vitalityPercent: getSkillStatBonus({
+        level, statKey: 'vitalityPercent', skillType: 'passive', scale: { base: 2 },
       }),
-      elementalDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      elementalDamagePercent: getSkillStatBonus({
+        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 2 },
       }),
-      strength: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      strength: getSkillStatBonus({
+        level, statKey: 'strength', skillType: 'passive', scale: { base: 3, increment: 3 },
       }),
-      strengthPerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      strengthPerLevel: getSkillStatBonus({
+        level, statKey: 'strength', skillType: 'passive', perLevel: true, scale: { base: 3 },
       }),
-      vitality: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      vitality: getSkillStatBonus({
+        level, statKey: 'vitality', skillType: 'passive', scale: { base: 3.75, increment: 3 },
       }),
-      vitalityPerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      vitalityPerLevel: getSkillStatBonus({
+        level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 3 },
       }),
     }),
   },
@@ -557,17 +557,17 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.immortalSovereign'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      airDamage: getScalingFlat({
-        level, base: 26, increment: 6, interval: 50, bonus: 0.15,
+      airDamage: getSkillStatBonus({
+        level, statKey: 'airDamage', skillType: 'toggle', scale: { base: 6.5, increment: 6 },
       }),
-      airDamagePerLevel: getScalingFlat({
-        level, base: 0.026, increment: 0.01, interval: 50, bonus: 0,
+      airDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'airDamage', skillType: 'toggle', perLevel: true, scale: { base: 5.2 },
       }),
-      airDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      airDamagePercent: getSkillStatBonus({
+        level, statKey: 'airDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
-      damagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
     }),
   },

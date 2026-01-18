@@ -1,6 +1,6 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { getScalingFlat, getScalingPercent } from '../../common.js';
+import { getScalingFlat, getScalingPercent, getSkillStatBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Druid skills
@@ -12,17 +12,17 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(getScalingPercent({
-          level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+        percentOfPlayerDamage: Math.min(getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5 },
         }), 80),
-        damage: getScalingFlat({
-          level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+        damage: getSkillStatBonus({
+          level, statKey: 'damage', skillType: 'summon', scale: { base: 2.5, increment: 1 },
         }),
-        earthDamage: getScalingFlat({
-          level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+        earthDamage: getSkillStatBonus({
+          level, statKey: 'earthDamage', skillType: 'summon', scale: { base: 2.5, increment: 1 },
         }),
-        waterDamage: getScalingFlat({
-          level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+        waterDamage: getSkillStatBonus({
+          level, statKey: 'waterDamage', skillType: 'summon', scale: { base: 2.5, increment: 1 },
         }),
         attackSpeed: 1,
       };
@@ -46,23 +46,23 @@ export const DRUID_SKILLS = {
     description: () => t('skill.barkSkin'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      armor: getSkillStatBonus({
+        level, statKey: 'armor', skillType: 'passive', scale: { base: 0.42, increment: 0.5 },
       }),
-      armorPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.005, interval: 50, bonus: 0,
+      armorPerLevel: getSkillStatBonus({
+        level, statKey: 'armor', skillType: 'passive', perLevel: true,
       }),
-      armorPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      armorPercent: getSkillStatBonus({
+        level, statKey: 'armorPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      lifeRegen: getScalingFlat({
-        level, base: 2, increment: 0.5, interval: 50, bonus: 0.1,
+      lifeRegen: getSkillStatBonus({
+        level, statKey: 'lifeRegen', skillType: 'passive', scale: { base: 1 },
       }),
-      lifeRegenPerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      lifeRegenPerLevel: getSkillStatBonus({
+        level, statKey: 'lifeRegen', skillType: 'passive', perLevel: true,
       }),
-      extraDamageFromLifeRegenPercent: Math.min(getScalingPercent({
-        level, base: 0.5, linear: 0.1,
+      extraDamageFromLifeRegenPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'passive', scale: { base: 5 },
       }) / 10, 10),
     }),
   },
@@ -75,17 +75,17 @@ export const DRUID_SKILLS = {
     description: () => t('skill.naturalAffinity'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      vitality: getScalingFlat({
-        level, base: 4, increment: 1, interval: 50, bonus: 0.1,
+      vitality: getSkillStatBonus({
+        level, statKey: 'vitality', skillType: 'passive', scale: { base: 1, increment: 2 },
       }),
-      vitalityPerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      vitalityPerLevel: getSkillStatBonus({
+        level, statKey: 'vitality', skillType: 'passive', perLevel: true,
       }),
-      lifePercent: getScalingPercent({
-        level, base: 2, softcap: 2000, linear: 0.2, power: 0.6,
+      lifePercent: getSkillStatBonus({
+        level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 0.4 },
       }),
-      lifeRegenOfTotalPercent: Math.min(getScalingPercent({
-        level, base: 0.1, softcap: 2000, linear: 0.01, power: 0.5,
+      lifeRegenOfTotalPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'passive', scale: { base: 0.33 },
       }), 2),
     }),
   },
@@ -103,17 +103,17 @@ export const DRUID_SKILLS = {
     description: () => t('skill.rejuvenation'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegen: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      lifeRegen: getSkillStatBonus({
+        level, statKey: 'lifeRegen', skillType: 'buff', scale: { base: 3.33, increment: 2.5 },
       }),
-      lifeRegenPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      lifeRegenPerLevel: getSkillStatBonus({
+        level, statKey: 'lifeRegen', skillType: 'buff', perLevel: true,
       }),
-      lifeRegenPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      lifeRegenPercent: getSkillStatBonus({
+        level, statKey: 'lifeRegenPercent', skillType: 'buff', scale: { base: 0.625 },
       }),
-      extraDamageFromLifeRegenPercent: Math.min(getScalingPercent({
-        level, base: 0.5, linear: 0.1,
+      extraDamageFromLifeRegenPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'buff', scale: { base: 2.5 },
       }) / 5, 15),
     }),
   },
@@ -129,17 +129,17 @@ export const DRUID_SKILLS = {
     description: () => t('skill.entanglingRoots'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      earthDamage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      earthDamage: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
       }),
-      earthDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      earthDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'instant', perLevel: true,
       }),
-      earthDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      earthDamagePercent: getSkillStatBonus({
+        level, statKey: 'earthDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
-      reduceEnemyDamagePercent: Math.min(getScalingPercent({
-        level, base: 2, softcap: 2000, linear: 0.1, power: 0.5,
+      reduceEnemyDamagePercent: Math.min(getSkillStatBonus({
+        level, statKey: 'reduceEnemyDamagePercent', skillType: 'instant', scale: { base: 20 },
       }), 25),
     }),
   },
@@ -157,23 +157,23 @@ export const DRUID_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     isVisible: () => hero.stats.naturalistInstantSkillsUnlocked > 0,
     effect: (level) => ({
-      waterDamage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      waterDamage: getSkillStatBonus({
+        level, statKey: 'waterDamage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
       }),
-      waterDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      waterDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'waterDamage', skillType: 'instant', perLevel: true,
       }),
-      waterDamagePercent: getScalingPercent({
-        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      waterDamagePercent: getSkillStatBonus({
+        level, statKey: 'waterDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
-      coldDamage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      coldDamage: getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
       }),
-      coldDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      coldDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'instant', perLevel: true,
       }),
-      coldDamagePercent: getScalingPercent({
-        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      coldDamagePercent: getSkillStatBonus({
+        level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
     }),
   },
@@ -184,14 +184,14 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(getScalingPercent({
-          level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+        percentOfPlayerDamage: Math.min(getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 1.25 },
         }), 60),
-        damage: getScalingFlat({
-          level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+        damage: getSkillStatBonus({
+          level, statKey: 'damage', skillType: 'summon', scale: { base: 5, increment: 2 },
         }),
-        earthDamage: getScalingFlat({
-          level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+        earthDamage: getSkillStatBonus({
+          level, statKey: 'earthDamage', skillType: 'summon', scale: { base: 5, increment: 2 },
         }),
         attackSpeed: 2,
       };
@@ -213,15 +213,15 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(getScalingPercent({
-          level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+        percentOfPlayerDamage: Math.min(getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5 },
         }), 100),
-        damage: getScalingFlat({
-          level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+        damage: getSkillStatBonus({
+          level, statKey: 'damage', skillType: 'summon', scale: { base: 7.5, increment: 3 },
         }),
         attackSpeed: 0.9,
-        lifePerHit: getScalingFlat({
-          level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+        lifePerHit: getSkillStatBonus({
+          level, statKey: 'lifePerHit', skillType: 'summon', scale: { base: 5, increment: 5 },
         }),
       };
     },
@@ -242,14 +242,14 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(getScalingPercent({
-          level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+        percentOfPlayerDamage: Math.min(getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 3.75 },
         }), 400),
-        damage: getScalingFlat({
-          level, base: 30, increment: 5, interval: 50, bonus: 0.15,
+        damage: getSkillStatBonus({
+          level, statKey: 'damage', skillType: 'summon', scale: { base: 15, increment: 5 },
         }),
-        earthDamage: getScalingFlat({
-          level, base: 40, increment: 8, interval: 50, bonus: 0.15,
+        earthDamage: getSkillStatBonus({
+          level, statKey: 'earthDamage', skillType: 'summon', scale: { base: 20, increment: 8 },
         }),
         attackSpeed: 0.25,
       };
@@ -273,11 +273,11 @@ export const DRUID_SKILLS = {
     description: () => t('skill.naturalGrowth'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      lifePercent: getSkillStatBonus({
+        level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 1 },
       }),
-      extraDamageFromLifePercent: Math.min(getScalingPercent({
-        level, base: 0.2, linear: 0.05,
+      extraDamageFromLifePercent: Math.min(getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base: 0.4 },
       }) / 100, 1.11),
     }),
   },
@@ -295,23 +295,23 @@ export const DRUID_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     isVisible: () => hero.stats.naturalistInstantSkillsUnlocked > 0,
     effect: (level) => ({
-      earthDamage: getScalingFlat({
-        level, base: 25, increment: 5, interval: 50, bonus: 0.15,
+      earthDamage: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'instant', scale: { base: 5, increment: 2.5 },
       }),
-      earthDamagePerLevel: getScalingFlat({
-        level, base: 0.025, increment: 0.01, interval: 50, bonus: 0,
+      earthDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'instant', perLevel: true,
       }),
-      earthDamagePercent: getScalingPercent({
-        level, base: 20, softcap: 2000, linear: 0.5, power: 0.6,
+      earthDamagePercent: getSkillStatBonus({
+        level, statKey: 'earthDamagePercent', skillType: 'instant', scale: { base: 2 },
       }),
-      waterDamage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      waterDamage: getSkillStatBonus({
+        level, statKey: 'waterDamage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
       }),
-      waterDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      waterDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'waterDamage', skillType: 'instant', perLevel: true,
       }),
-      waterDamagePercent: getScalingPercent({
-        level, base: 20, softcap: 2000, linear: 0.5, power: 0.6,
+      waterDamagePercent: getSkillStatBonus({
+        level, statKey: 'waterDamagePercent', skillType: 'instant', scale: { base: 2 },
       }),
     }),
   },
@@ -329,23 +329,23 @@ export const DRUID_SKILLS = {
     description: () => t('skill.hurricane'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      waterDamage: getScalingFlat({
-        level, base: 20, increment: 4, interval: 50, bonus: 0.15,
+      waterDamage: getSkillStatBonus({
+        level, statKey: 'waterDamage', skillType: 'instant', scale: { base: 4, increment: 2 },
       }),
-      waterDamagePerLevel: getScalingFlat({
-        level, base: 0.02, increment: 0.01, interval: 50, bonus: 0,
+      waterDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'waterDamage', skillType: 'instant', perLevel: true,
       }),
-      waterDamagePercent: getScalingPercent({
-        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      waterDamagePercent: getSkillStatBonus({
+        level, statKey: 'waterDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
-      coldDamage: getScalingFlat({
-        level, base: 20, increment: 4, interval: 50, bonus: 0.15,
+      coldDamage: getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'instant', scale: { base: 4, increment: 2 },
       }),
-      coldDamagePerLevel: getScalingFlat({
-        level, base: 0.02, increment: 0.01, interval: 50, bonus: 0,
+      coldDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'instant', perLevel: true,
       }),
-      coldDamagePercent: getScalingPercent({
-        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      coldDamagePercent: getSkillStatBonus({
+        level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
     }),
   },
@@ -356,14 +356,14 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(getScalingPercent({
-          level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+        percentOfPlayerDamage: Math.min(getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 3.75 },
         }), 200),
-        damage: getScalingFlat({
-          level, base: 30, increment: 5, interval: 50, bonus: 0.15,
+        damage: getSkillStatBonus({
+          level, statKey: 'damage', skillType: 'summon', scale: { base: 15, increment: 5 },
         }),
-        earthDamage: getScalingFlat({
-          level, base: 25, increment: 4, interval: 50, bonus: 0.15,
+        earthDamage: getSkillStatBonus({
+          level, statKey: 'earthDamage', skillType: 'summon', scale: { base: 12.5, increment: 4 },
         }),
         attackSpeed: 0.6,
       };
@@ -389,23 +389,23 @@ export const DRUID_SKILLS = {
     description: () => t('skill.stoneform'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: getScalingFlat({
-        level, base: 20, increment: 4, interval: 50, bonus: 0.15,
+      armor: getSkillStatBonus({
+        level, statKey: 'armor', skillType: 'buff', scale: { base: 0.8, increment: 0.8 },
       }),
-      armorPerLevel: getScalingFlat({
-        level, base: 0.02, increment: 0.01, interval: 50, bonus: 0,
+      armorPerLevel: getSkillStatBonus({
+        level, statKey: 'armor', skillType: 'buff', perLevel: true, scale: { base: 2 },
       }),
-      armorPercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      armorPercent: getSkillStatBonus({
+        level, statKey: 'armorPercent', skillType: 'buff', scale: { base: 1.25 },
       }),
-      earthDamagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      earthDamagePercent: getSkillStatBonus({
+        level, statKey: 'earthDamagePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
-      allResistance: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      allResistance: getSkillStatBonus({
+        level, statKey: 'allResistance', skillType: 'buff', scale: { base: 0.66, increment: 0.66 },
       }),
-      allResistancePerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      allResistancePerLevel: getSkillStatBonus({
+        level, statKey: 'allResistance', skillType: 'buff', perLevel: true,
       }),
     }),
   },
@@ -426,17 +426,17 @@ export const DRUID_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     isVisible: () => hero.stats.shapeshiftUnlocked > 0,
     effect: (level) => ({
-      life: getScalingFlat({
-        level, base: 50, increment: 10, interval: 50, bonus: 0.15,
+      life: getSkillStatBonus({
+        level, statKey: 'life', skillType: 'buff', scale: { base: 0.83, increment: 0.83 },
       }),
-      lifePerLevel: getScalingFlat({
-        level, base: 0.05, increment: 0.01, interval: 50, bonus: 0,
+      lifePerLevel: getSkillStatBonus({
+        level, statKey: 'life', skillType: 'buff', perLevel: true, scale: { base: 5 },
       }),
-      damage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'buff', scale: { base: 3.75, increment: 3 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'buff', perLevel: true,
       }),
     }),
   },
@@ -455,14 +455,14 @@ export const DRUID_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     isVisible: () => hero.stats.shapeshiftUnlocked > 0,
     effect: (level) => ({
-      earthDamage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      earthDamage: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'buff', scale: { base: 3.75, increment: 3 },
       }),
-      earthDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      earthDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'buff', perLevel: true,
       }),
-      poisonDamagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      poisonDamagePercent: getSkillStatBonus({
+        level, statKey: 'poisonDamagePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
       poisonChance: 20,
     }),
@@ -481,14 +481,14 @@ export const DRUID_SKILLS = {
     description: () => t('skill.spiritLink'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeSteal: Math.min(getScalingPercent({
-        level, base: 0.5, softcap: 2000, linear: 0.1, power: 0.6,
-      }) / 100, 10),
-      manaPerHit: getScalingFlat({
-        level, base: 2, increment: 0.5, interval: 50, bonus: 0.1,
+      lifeSteal: Math.min(getSkillStatBonus({
+        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.4 },
+      }), 10),
+      manaPerHit: getSkillStatBonus({
+        level, statKey: 'manaPerHit', skillType: 'buff', scale: { base: 1, increment: 1.25 },
       }),
-      manaPerHitPerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      manaPerHitPerLevel: getSkillStatBonus({
+        level, statKey: 'manaPerHit', skillType: 'buff', perLevel: true,
       }),
     }),
   },
@@ -501,23 +501,23 @@ export const DRUID_SKILLS = {
     description: () => t('skill.moonfury'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      coldDamagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      coldDamagePercent: getSkillStatBonus({
+        level, statKey: 'coldDamagePercent', skillType: 'passive', scale: { base: 1 },
       }),
-      coldDamage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      coldDamage: getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'passive', scale: { base: 5, increment: 3 },
       }),
-      coldDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      coldDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'passive', perLevel: true,
       }),
-      waterDamagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      waterDamagePercent: getSkillStatBonus({
+        level, statKey: 'waterDamagePercent', skillType: 'passive', scale: { base: 1 },
       }),
-      waterDamage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      waterDamage: getSkillStatBonus({
+        level, statKey: 'waterDamage', skillType: 'passive', scale: { base: 5, increment: 3 },
       }),
-      waterDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      waterDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'waterDamage', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -535,20 +535,20 @@ export const DRUID_SKILLS = {
     description: () => t('skill.earthsEmbrace'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armorPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      armorPercent: getSkillStatBonus({
+        level, statKey: 'armorPercent', skillType: 'buff', scale: { base: 0.625 },
       }),
-      lifeRegenPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      lifeRegenPercent: getSkillStatBonus({
+        level, statKey: 'lifeRegenPercent', skillType: 'buff', scale: { base: 0.625 },
       }),
-      lifeRegen: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.15,
+      lifeRegen: getSkillStatBonus({
+        level, statKey: 'lifeRegen', skillType: 'buff', scale: { base: 3.33, increment: 2.5 },
       }),
-      lifeRegenPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      lifeRegenPerLevel: getSkillStatBonus({
+        level, statKey: 'lifeRegen', skillType: 'buff', perLevel: true,
       }),
-      lifeRegenOfTotalPercent: Math.min(getScalingPercent({
-        level, base: 0.1, softcap: 2000, linear: 0.01, power: 0.5,
+      lifeRegenOfTotalPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'buff', scale: { base: 0.14 },
       }), 2),
     }),
   },
@@ -561,20 +561,20 @@ export const DRUID_SKILLS = {
     description: () => t('skill.wrathOfNature'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'passive', scale: { base: 3.33, increment: 2 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'passive', perLevel: true,
       }),
-      vitality: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      vitality: getSkillStatBonus({
+        level, statKey: 'vitality', skillType: 'passive', scale: { base: 2.5, increment: 4 },
       }),
-      vitalityPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      vitalityPerLevel: getSkillStatBonus({
+        level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 2 },
       }),
-      elementalDamagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      elementalDamagePercent: getSkillStatBonus({
+        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 1 },
       }),
     }),
   },
@@ -589,23 +589,23 @@ export const DRUID_SKILLS = {
     description: () => t('skill.avatarOfNature'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      vitality: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      vitality: getSkillStatBonus({
+        level, statKey: 'vitality', skillType: 'passive', scale: { base: 3.75, increment: 6 },
       }),
-      vitalityPerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      vitalityPerLevel: getSkillStatBonus({
+        level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 3 },
       }),
-      vitalityPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      vitalityPercent: getSkillStatBonus({
+        level, statKey: 'vitalityPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      strength: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      strength: getSkillStatBonus({
+        level, statKey: 'strength', skillType: 'passive', scale: { base: 3, increment: 3 },
       }),
-      strengthPerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      strengthPerLevel: getSkillStatBonus({
+        level, statKey: 'strength', skillType: 'passive', perLevel: true, scale: { base: 3 },
       }),
-      damagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 1 },
       }),
     }),
   },
@@ -620,20 +620,20 @@ export const DRUID_SKILLS = {
     description: () => t('skill.spiritBond'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegen: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.15,
+      lifeRegen: getSkillStatBonus({
+        level, statKey: 'lifeRegen', skillType: 'passive', scale: { base: 5, increment: 4 },
       }),
-      lifeRegenPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      lifeRegenPerLevel: getSkillStatBonus({
+        level, statKey: 'lifeRegen', skillType: 'passive', perLevel: true, scale: { base: 2 },
       }),
-      lifeRegenPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      lifeRegenPercent: getSkillStatBonus({
+        level, statKey: 'lifeRegenPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      manaRegenPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      manaRegenPercent: getSkillStatBonus({
+        level, statKey: 'manaRegenPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      extraDamageFromLifeRegenPercent: Math.min(getScalingPercent({
-        level, base: 0.5, linear: 0.1,
+      extraDamageFromLifeRegenPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'passive', scale: { base: 5 },
       }) / 2, 10),
     }),
   },
@@ -649,20 +649,20 @@ export const DRUID_SKILLS = {
     description: () => t('skill.wildGrowth'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegen: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      lifeRegen: getSkillStatBonus({
+        level, statKey: 'lifeRegen', skillType: 'buff', scale: { base: 5, increment: 3.75 },
       }),
-      lifeRegenPerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      lifeRegenPerLevel: getSkillStatBonus({
+        level, statKey: 'lifeRegen', skillType: 'buff', perLevel: true, scale: { base: 1.5 },
       }),
-      lifeRegenPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      lifeRegenPercent: getSkillStatBonus({
+        level, statKey: 'lifeRegenPercent', skillType: 'buff', scale: { base: 0.625 },
       }),
-      lifePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      lifePercent: getSkillStatBonus({
+        level, statKey: 'lifePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
-      lifeRegenOfTotalPercent: Math.min(getScalingPercent({
-        level, base: 0.1, softcap: 2000, linear: 0.01, power: 0.5,
+      lifeRegenOfTotalPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'buff', scale: { base: 0.14 },
       }), 2),
     }),
   },
@@ -677,20 +677,20 @@ export const DRUID_SKILLS = {
     description: () => t('skill.ancientRoots'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: getScalingFlat({
-        level, base: 30, increment: 6, interval: 50, bonus: 0.1,
+      armor: getSkillStatBonus({
+        level, statKey: 'armor', skillType: 'passive', scale: { base: 1.25, increment: 1.5 },
       }),
-      armorPerLevel: getScalingFlat({
-        level, base: 0.03, increment: 0.01, interval: 50, bonus: 0,
+      armorPerLevel: getSkillStatBonus({
+        level, statKey: 'armor', skillType: 'passive', perLevel: true, scale: { base: 3 },
       }),
-      life: getScalingFlat({
-        level, base: 50, increment: 10, interval: 50, bonus: 0.1,
+      life: getSkillStatBonus({
+        level, statKey: 'life', skillType: 'passive', scale: { base: 1, increment: 1 },
       }),
-      lifePerLevel: getScalingFlat({
-        level, base: 0.05, increment: 0.01, interval: 50, bonus: 0,
+      lifePerLevel: getSkillStatBonus({
+        level, statKey: 'life', skillType: 'passive', perLevel: true, scale: { base: 5 },
       }),
-      earthDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      earthDamagePercent: getSkillStatBonus({
+        level, statKey: 'earthDamagePercent', skillType: 'passive', scale: { base: 2 },
       }),
     }),
   },
@@ -706,25 +706,19 @@ export const DRUID_SKILLS = {
     description: () => t('skill.furyOfTheWilds'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => {
-      const damage = getScalingFlat({
-        level, base: 35, increment: 5, interval: 50, bonus: 0.15,
+      const damage = getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', scale: { base: 7, increment: 2.5 },
       });
-      const coldDamagePercent = getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      const coldDamagePercent = getSkillStatBonus({
+        level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1 },
       });
-      const waterDamagePercent = getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      const waterDamagePercent = getSkillStatBonus({
+        level, statKey: 'waterDamagePercent', skillType: 'instant', scale: { base: 1 },
       });
       return {
-        damage: getScalingFlat({
-          level, base: 35, increment: 5, interval: 50, bonus: 0.15,
-        }),
-        coldDamagePercent: getScalingPercent({
-          level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
-        }),
-        waterDamagePercent: getScalingPercent({
-          level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
-        }),
+        damage,
+        coldDamagePercent,
+        waterDamagePercent,
       };
     },
   },
@@ -739,23 +733,23 @@ export const DRUID_SKILLS = {
     description: () => t('skill.natureEternal'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      vitality: getScalingFlat({
-        level, base: 30, increment: 6, interval: 50, bonus: 0.1,
+      vitality: getSkillStatBonus({
+        level, statKey: 'vitality', skillType: 'passive', scale: { base: 7.5, increment: 12 },
       }),
-      vitalityPerLevel: getScalingFlat({
-        level, base: 0.03, increment: 0.01, interval: 50, bonus: 0,
+      vitalityPerLevel: getSkillStatBonus({
+        level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 6 },
       }),
-      endurance: getScalingFlat({
-        level, base: 30, increment: 6, interval: 50, bonus: 0.1,
+      endurance: getSkillStatBonus({
+        level, statKey: 'endurance', skillType: 'passive', scale: { base: 15, increment: 12 }, // Assuming default misc stats are small, need big scaling? No, base is 4. 30/4 = 7.5
       }),
-      endurancePerLevel: getScalingFlat({
-        level, base: 0.03, increment: 0.01, interval: 50, bonus: 0,
+      endurancePerLevel: getSkillStatBonus({
+        level, statKey: 'endurance', skillType: 'passive', perLevel: true, // No skills on endurance? Assuming added
       }),
-      perseverance: getScalingFlat({
-        level, base: 30, increment: 6, interval: 50, bonus: 0.1,
+      perseverance: getSkillStatBonus({
+        level, statKey: 'perseverance', skillType: 'passive', scale: { base: 15, increment: 24 },
       }),
-      perseverancePerLevel: getScalingFlat({
-        level, base: 0.03, increment: 0.01, interval: 50, bonus: 0,
+      perseverancePerLevel: getSkillStatBonus({
+        level, statKey: 'perseverance', skillType: 'passive', perLevel: true, scale: { base: 6 },
       }),
     }),
   },
@@ -765,17 +759,17 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(getScalingPercent({
-          level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+        percentOfPlayerDamage: Math.min(getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 3.75 },
         }), 150),
-        damage: getScalingFlat({
-          level, base: 40, increment: 8, interval: 50, bonus: 0.15,
+        damage: getSkillStatBonus({
+          level, statKey: 'damage', skillType: 'summon', scale: { base: 20, increment: 8 },
         }),
-        earthDamage: getScalingFlat({
-          level, base: 40, increment: 8, interval: 50, bonus: 0.15,
+        earthDamage: getSkillStatBonus({
+          level, statKey: 'earthDamage', skillType: 'summon', scale: { base: 20, increment: 8 },
         }),
-        earthDamagePercent: getScalingPercent({
-          level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+        earthDamagePercent: getSkillStatBonus({
+          level, statKey: 'earthDamagePercent', skillType: 'summon', scale: { base: 2.5 },
         }),
         attackSpeed: 1.25,
       };
@@ -800,20 +794,20 @@ export const DRUID_SKILLS = {
     description: () => t('skill.earthsEmbrace'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: getScalingFlat({
-        level, base: 50, increment: 10, interval: 50, bonus: 0.15,
+      armor: getSkillStatBonus({
+        level, statKey: 'armor', skillType: 'passive', scale: { base: 2.08, increment: 2.5 },
       }),
-      armorPerLevel: getScalingFlat({
-        level, base: 0.05, increment: 0.01, interval: 50, bonus: 0,
+      armorPerLevel: getSkillStatBonus({
+        level, statKey: 'armor', skillType: 'passive', perLevel: true, scale: { base: 5 },
       }),
-      lifePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      lifePercent: getSkillStatBonus({
+        level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 2 },
       }),
-      allResistance: getScalingFlat({
-        level, base: 30, increment: 6, interval: 50, bonus: 0.15,
+      allResistance: getSkillStatBonus({
+        level, statKey: 'allResistance', skillType: 'passive', scale: { base: 3, increment: 3 },
       }),
-      allResistancePerLevel: getScalingFlat({
-        level, base: 0.03, increment: 0.01, interval: 50, bonus: 0,
+      allResistancePerLevel: getSkillStatBonus({
+        level, statKey: 'allResistance', skillType: 'passive', perLevel: true, scale: { base: 2 },
       }),
     }),
   },
@@ -827,11 +821,11 @@ export const DRUID_SKILLS = {
     description: () => t('skill.cosmicHarmony'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamage: getScalingFlat({
-        level, base: 50, increment: 10, interval: 50, bonus: 0.15,
+      elementalDamage: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'toggle', scale: { base: 12.5, increment: 10 },
       }),
-      elementalDamagePerLevel: getScalingFlat({
-        level, base: 0.05, increment: 0.01, interval: 50, bonus: 0,
+      elementalDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'toggle', perLevel: true,
       }),
     }),
   },

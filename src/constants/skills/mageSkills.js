@@ -1,6 +1,6 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { getScalingFlat, getScalingPercent } from '../../common.js';
+import { getScalingFlat, getScalingPercent, getSkillStatBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Mage skills
@@ -18,14 +18,14 @@ export const MAGE_SKILLS = {
     description: () => t('skill.magicMissile'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      waterDamage: getScalingFlat({
-        level, base: 5, increment: 2, interval: 50, bonus: 0.1,
+      waterDamage: getSkillStatBonus({
+        level, statKey: 'waterDamage', skillType: 'instant', scale: { base: 1 },
       }),
-      waterDamagePerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      waterDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'waterDamage', skillType: 'instant', perLevel: true,
       }),
-      waterDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      waterDamagePercent: getSkillStatBonus({
+        level, statKey: 'waterDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
   },
@@ -38,17 +38,17 @@ export const MAGE_SKILLS = {
     description: () => t('skill.arcaneIntellect'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      wisdom: getScalingFlat({
-        level, base: 4, increment: 1, interval: 50, bonus: 0.1,
+      wisdom: getSkillStatBonus({
+        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 1 },
       }),
-      wisdomPerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      wisdomPerLevel: getSkillStatBonus({
+        level, statKey: 'wisdom', skillType: 'passive', perLevel: true,
       }),
-      perseverance: getScalingFlat({
-        level, base: 2, increment: 0.5, interval: 50, bonus: 0.1,
+      perseverance: getSkillStatBonus({
+        level, statKey: 'perseverance', skillType: 'passive', scale: { base: 1 },
       }),
-      perseverancePerLevel: getScalingFlat({
-        level, base: 0.003, increment: 0.003, interval: 50, bonus: 0,
+      perseverancePerLevel: getSkillStatBonus({
+        level, statKey: 'perseverance', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -66,14 +66,14 @@ export const MAGE_SKILLS = {
     description: () => t('skill.frostBolt'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      coldDamage: getScalingFlat({
-        level, base: 10, increment: 3, interval: 50, bonus: 0.15,
+      coldDamage: getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'instant', scale: { base: 2, increment: 1.5 },
       }),
-      coldDamagePerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.005, interval: 50, bonus: 0,
+      coldDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'instant', perLevel: true,
       }),
-      coldDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      coldDamagePercent: getSkillStatBonus({
+        level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
   },
@@ -89,14 +89,14 @@ export const MAGE_SKILLS = {
     description: () => t('skill.fireBlast'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamage: getScalingFlat({
-        level, base: 15, increment: 4, interval: 50, bonus: 0.15,
+      fireDamage: getSkillStatBonus({
+        level, statKey: 'fireDamage', skillType: 'instant', scale: { base: 3, increment: 2 },
       }),
-      fireDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.005, interval: 50, bonus: 0,
+      fireDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'fireDamage', skillType: 'instant', perLevel: true,
       }),
-      fireDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      fireDamagePercent: getSkillStatBonus({
+        level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
   },
@@ -111,17 +111,17 @@ export const MAGE_SKILLS = {
     description: () => t('skill.mindControl'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      intelligence: getScalingFlat({
-        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      intelligence: getSkillStatBonus({
+        level, statKey: 'intelligence', skillType: 'passive', scale: { base: 1 },
       }),
-      intelligencePerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      intelligencePerLevel: getSkillStatBonus({
+        level, statKey: 'intelligence', skillType: 'passive', perLevel: true,
       }),
-      wisdom: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      wisdom: getSkillStatBonus({
+        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 2.5, increment: 2 },
       }),
-      wisdomPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.005, interval: 50, bonus: 0,
+      wisdomPerLevel: getSkillStatBonus({
+        level, statKey: 'wisdom', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -137,8 +137,8 @@ export const MAGE_SKILLS = {
     description: () => t('skill.manaShield'),
     maxLevel: () => 250,
     effect: (level) => ({
-      manaShieldPercent: Math.min(getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      manaShieldPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'manaShieldPercent', skillType: 'buff', scale: { base: 1 },
       }), 100),
     }),
   },
@@ -152,8 +152,8 @@ export const MAGE_SKILLS = {
     description: () => t('skill.crimsonAegis'),
     maxLevel: () => 200,
     effect: (level) => ({
-      damageTakenReductionPercent: Math.min(getScalingPercent({
-        level, base: 2, softcap: 200, linear: 0.15, power: 0.6,
+      damageTakenReductionPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'damageTakenReductionPercent', skillType: 'passive', scale: { base: 1 },
       }), 35),
     }),
   },
@@ -167,11 +167,11 @@ export const MAGE_SKILLS = {
     description: () => t('skill.crimsonDrain'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifePerHit: getScalingFlat({
-        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      lifePerHit: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'passive', scale: { base: 2.5, increment: 2 },
       }),
-      lifePerHitPerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      lifePerHitPerLevel: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -186,14 +186,14 @@ export const MAGE_SKILLS = {
     description: () => t('skill.resourceInfusion'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      mana: getScalingFlat({
-        level, base: 25, increment: 5, interval: 50, bonus: 0.15,
+      mana: getSkillStatBonus({
+        level, statKey: 'mana', skillType: 'passive', scale: { base: 2.5, increment: 2.5 },
       }),
-      manaPerLevel: getScalingFlat({
-        level, base: 0.025, increment: 0.01, interval: 50, bonus: 0,
+      manaPerLevel: getSkillStatBonus({
+        level, statKey: 'mana', skillType: 'passive', perLevel: true,
       }),
-      extraDamageFromManaPercent: Math.min(getScalingPercent({
-        level, base: 0.1, linear: 0.01,
+      extraDamageFromManaPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'extraDamageFromManaPercent', skillType: 'passive', scale: { base: 1 },
       }) / 100, 2),
     }),
   },
@@ -209,17 +209,17 @@ export const MAGE_SKILLS = {
     description: () => t('skill.iceStorm'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      coldDamage: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      coldDamage: getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'buff', scale: { base: 2.5, increment: 2 },
       }),
-      coldDamagePerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      coldDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'buff', perLevel: true,
       }),
-      waterDamagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      waterDamagePercent: getSkillStatBonus({
+        level, statKey: 'waterDamagePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
-      airDamagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      airDamagePercent: getSkillStatBonus({
+        level, statKey: 'airDamagePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
     }),
   },
@@ -232,17 +232,17 @@ export const MAGE_SKILLS = {
     description: () => t('skill.arcaneFocus'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamage: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      elementalDamage: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 3.33, increment: 2 },
       }),
-      elementalDamagePerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      elementalDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'passive', perLevel: true,
       }),
-      attackRating: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      attackRating: getSkillStatBonus({
+        level, statKey: 'attackRating', skillType: 'passive', scale: { base: 0.33, increment: 0.2 },
       }),
-      attackRatingPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      attackRatingPerLevel: getSkillStatBonus({
+        level, statKey: 'attackRating', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -260,14 +260,14 @@ export const MAGE_SKILLS = {
     description: () => t('skill.pyroclasm'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamage: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      fireDamage: getSkillStatBonus({
+        level, statKey: 'fireDamage', skillType: 'buff', scale: { base: 2.5, increment: 2 },
       }),
-      fireDamagePerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      fireDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'fireDamage', skillType: 'buff', perLevel: true,
       }),
-      fireDamagePercent: getScalingPercent({
-        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      fireDamagePercent: getSkillStatBonus({
+        level, statKey: 'fireDamagePercent', skillType: 'buff', scale: { base: 1.875 },
       }),
     }),
   },
@@ -283,8 +283,8 @@ export const MAGE_SKILLS = {
     description: () => t('skill.timeWarp'),
     maxLevel: () => 300,
     effect: (level) => ({
-      attackSpeedPercent: Math.min(getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      attackSpeedPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66 },
       }), 100),
     }),
   },
@@ -300,11 +300,11 @@ export const MAGE_SKILLS = {
     description: () => t('skill.arcanePower'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.1,
+      elementalDamage: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'toggle', scale: { base: 3.75, increment: 3 },
       }),
-      elementalDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      elementalDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'toggle', perLevel: true,
       }),
     }),
   },
@@ -314,21 +314,21 @@ export const MAGE_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(getScalingPercent({
-          level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+        percentOfPlayerDamage: Math.min(getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5 },
         }), 100),
-        damage: getScalingFlat({
-          level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+        damage: getSkillStatBonus({
+          level, statKey: 'damage', skillType: 'summon', scale: { base: 7.5, increment: 3 },
         }),
         attackSpeed: 1.3,
-        fireDamage: getScalingFlat({
-          level, base: 25, increment: 5, interval: 50, bonus: 0.15,
+        fireDamage: getSkillStatBonus({
+          level, statKey: 'fireDamage', skillType: 'summon', scale: { base: 12.5, increment: 5 },
         }),
-        airDamage: getScalingFlat({
-          level, base: 25, increment: 5, interval: 50, bonus: 0.15,
+        airDamage: getSkillStatBonus({
+          level, statKey: 'airDamage', skillType: 'summon', scale: { base: 12.5, increment: 5 },
         }),
-        coldDamage: getScalingFlat({
-          level, base: 25, increment: 5, interval: 50, bonus: 0.15,
+        coldDamage: getSkillStatBonus({
+          level, statKey: 'coldDamage', skillType: 'summon', scale: { base: 12.5, increment: 5 },
         }),
       };
     },
@@ -352,17 +352,17 @@ export const MAGE_SKILLS = {
     description: () => t('skill.archmage'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      wisdom: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      wisdom: getSkillStatBonus({
+        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 3.75, increment: 3 },
       }),
-      wisdomPerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      wisdomPerLevel: getSkillStatBonus({
+        level, statKey: 'wisdom', skillType: 'passive', perLevel: true,
       }),
-      mana: getScalingFlat({
-        level, base: 50, increment: 10, interval: 50, bonus: 0.15,
+      mana: getSkillStatBonus({
+        level, statKey: 'mana', skillType: 'passive', scale: { base: 5, increment: 5 },
       }),
-      manaPerLevel: getScalingFlat({
-        level, base: 0.05, increment: 0.01, interval: 50, bonus: 0,
+      manaPerLevel: getSkillStatBonus({
+        level, statKey: 'mana', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -377,17 +377,17 @@ export const MAGE_SKILLS = {
     description: () => t('skill.arcaneMight'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamage: getScalingFlat({
-        level, base: 30, increment: 5, interval: 50, bonus: 0.1,
+      elementalDamage: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 10, increment: 5 },
       }),
-      elementalDamagePerLevel: getScalingFlat({
-        level, base: 0.03, increment: 0.01, interval: 50, bonus: 0,
+      elementalDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'passive', perLevel: true,
       }),
-      manaRegen: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.1,
+      manaRegen: getSkillStatBonus({
+        level, statKey: 'manaRegen', skillType: 'passive', scale: { base: 10, increment: 10 },
       }),
-      manaRegenPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      manaRegenPerLevel: getSkillStatBonus({
+        level, statKey: 'manaRegen', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -403,14 +403,14 @@ export const MAGE_SKILLS = {
     description: () => t('skill.voidBlast'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      waterDamage: getScalingFlat({
-        level, base: 35, increment: 5, interval: 50, bonus: 0.15,
+      waterDamage: getSkillStatBonus({
+        level, statKey: 'waterDamage', skillType: 'instant', scale: { base: 7, increment: 2.5 },
       }),
-      waterDamagePerLevel: getScalingFlat({
-        level, base: 0.035, increment: 0.01, interval: 50, bonus: 0,
+      waterDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'waterDamage', skillType: 'instant', perLevel: true,
       }),
-      elementalPenetrationPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      elementalPenetrationPercent: getSkillStatBonus({
+        level, statKey: 'elementalPenetrationPercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
   },
@@ -428,11 +428,11 @@ export const MAGE_SKILLS = {
     description: () => t('skill.chronomancerSurge'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeedPercent: Math.min(getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      attackSpeedPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66 },
       }), 150),
-      cooldownReductionPercent: Math.min(getScalingPercent({
-        level, base: 2, softcap: 2000, linear: 0.1, power: 0.5,
+      cooldownReductionPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'cooldownReductionPercent', skillType: 'buff', scale: { base: 1 },
       }), 50),
     }),
   },
@@ -448,11 +448,11 @@ export const MAGE_SKILLS = {
     description: () => t('skill.starFire'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      fireDamagePercent: getSkillStatBonus({
+        level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
-      airDamagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      airDamagePercent: getSkillStatBonus({
+        level, statKey: 'airDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
   },
@@ -467,11 +467,11 @@ export const MAGE_SKILLS = {
     description: () => t('skill.manaOverflow'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      mana: getScalingFlat({
-        level, base: 50, increment: 10, interval: 50, bonus: 0.15,
+      mana: getSkillStatBonus({
+        level, statKey: 'mana', skillType: 'passive', scale: { base: 5, increment: 5 },
       }),
-      manaPerLevel: getScalingFlat({
-        level, base: 0.05, increment: 0.01, interval: 50, bonus: 0,
+      manaPerLevel: getSkillStatBonus({
+        level, statKey: 'mana', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -487,8 +487,8 @@ export const MAGE_SKILLS = {
     description: () => t('skill.dimensionalRift'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lightningDamagePercent: getScalingPercent({
-        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      lightningDamagePercent: getSkillStatBonus({
+        level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
       ignoreAllEnemyResistances: 1,
     }),
@@ -504,17 +504,17 @@ export const MAGE_SKILLS = {
     description: () => t('skill.supremeSorcery'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamage: getScalingFlat({
-        level, base: 50, increment: 10, interval: 50, bonus: 0.1,
+      elementalDamage: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 16.66, increment: 10 },
       }),
-      elementalDamagePerLevel: getScalingFlat({
-        level, base: 0.05, increment: 0.01, interval: 50, bonus: 0,
+      elementalDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'passive', perLevel: true,
       }),
-      wisdom: getScalingFlat({
-        level, base: 20, increment: 4, interval: 50, bonus: 0.1,
+      wisdom: getSkillStatBonus({
+        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 5, increment: 4 },
       }),
-      wisdomPerLevel: getScalingFlat({
-        level, base: 0.02, increment: 0.01, interval: 50, bonus: 0,
+      wisdomPerLevel: getSkillStatBonus({
+        level, statKey: 'wisdom', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -530,14 +530,14 @@ export const MAGE_SKILLS = {
     description: () => t('skill.apocalypse'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: getScalingPercent({
-        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      fireDamagePercent: getSkillStatBonus({
+        level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
-      coldDamagePercent: getScalingPercent({
-        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      coldDamagePercent: getSkillStatBonus({
+        level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
-      lightningDamagePercent: getScalingPercent({
-        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      lightningDamagePercent: getSkillStatBonus({
+        level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
     }),
   },
@@ -549,8 +549,8 @@ export const MAGE_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: 5 + getScalingPercent({
-          level, base: 2, softcap: 2000, linear: 0.5, power: 0.6,
+        percentOfPlayerDamage: 5 + getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 0.5 },
         }),
         attackSpeed: hero.stats.attackSpeed,
         canCrit: true,

@@ -1,6 +1,6 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { getScalingFlat, getScalingPercent } from '../../common.js';
+import { getScalingFlat, getScalingPercent, getSkillStatBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Berserker skills extracted from skills.js
@@ -16,20 +16,20 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.frenzy'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: getScalingFlat({
-        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 1.66 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
       }),
-      damagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 0.71 },
       }),
-      lifePerHit: getScalingFlat({
-        level, base: -1, increment: -0.2, interval: 50, bonus: 0.1,
+      lifePerHit: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: -0.33, increment: -0.25 },
       }),
-      lifePerHitPerLevel: getScalingFlat({
-        level, base: -0.001, increment: -0.001, interval: 50, bonus: 0,
+      lifePerHitPerLevel: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'toggle', perLevel: true, scale: { base: -1 },
       }),
     }),
   },
@@ -42,23 +42,23 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.toughSkin'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armor: getScalingFlat({
-        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      armor: getSkillStatBonus({
+        level, statKey: 'armor', skillType: 'passive', scale: { base: 0.2, increment: 0.25 },
       }),
-      armorPerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      armorPerLevel: getSkillStatBonus({
+        level, statKey: 'armor', skillType: 'passive', perLevel: true,
       }),
-      armorPercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      armorPercent: getSkillStatBonus({
+        level, statKey: 'armorPercent', skillType: 'passive', scale: { base: 2 },
       }),
-      allResistance: getScalingFlat({
-        level, base: 4, increment: 1, interval: 50, bonus: 0.1,
+      allResistance: getSkillStatBonus({
+        level, statKey: 'allResistance', skillType: 'passive', scale: { base: 0.4, increment: 0.5 },
       }),
-      allResistancePerLevel: getScalingFlat({
-        level, base: 0.004, increment: 0.005, interval: 50, bonus: 0,
+      allResistancePerLevel: getSkillStatBonus({
+        level, statKey: 'allResistance', skillType: 'passive', perLevel: true,
       }),
-      allResistancePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      allResistancePercent: getSkillStatBonus({
+        level, statKey: 'allResistancePercent', skillType: 'passive', scale: { base: 2.5 },
       }),
     }),
   },
@@ -76,20 +76,20 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.recklessSwing'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: getScalingFlat({
-        level, base: 14, increment: 3, interval: 50, bonus: 0.15,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', scale: { base: 2.8, increment: 1.5 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.014, increment: 0.005, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', perLevel: true,
       }),
-      damagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1 },
       }),
-      lifePerHit: getScalingFlat({
-        level, base: -8, increment: -1, interval: 50, bonus: 0.1,
+      lifePerHit: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'instant', scale: { base: -1.6, increment: -1 },
       }),
-      lifePerHitPerLevel: getScalingFlat({
-        level, base: -0.008, increment: -0.005, interval: 50, bonus: 0,
+      lifePerHitPerLevel: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'instant', perLevel: true, scale: { base: -1 },
       }),
     }),
   },
@@ -105,14 +105,14 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.battleCry'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
-      attackSpeedPercent: Math.min(getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      attackSpeedPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66 },
       }), 75),
-      lifeSteal: Math.min(getScalingPercent({
-        level, base: 0.1, softcap: 2000, linear: 0.05, power: 0.5,
+      lifeSteal: Math.min(getSkillStatBonus({
+        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.08 },
       }), 4),
     }),
   },
@@ -128,22 +128,22 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.berserkersRage'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => {
-      const coldDamage = getScalingFlat({
-        level, base: 6, increment: 1.5, interval: 50, bonus: 0.1,
+      const coldDamage = getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'toggle', scale: { base: 1.5, increment: 1.5 },
       });
-      const coldDamagePerLevel = getScalingFlat({
-        level, base: 0.006, increment: 0.005, interval: 50, bonus: 0,
+      const coldDamagePerLevel = getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'toggle', perLevel: true,
       });
-      const coldDamagePercent = getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      const coldDamagePercent = getSkillStatBonus({
+        level, statKey: 'coldDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
       });
 
       return {
         coldDamage,
         coldDamagePerLevel,
         coldDamagePercent,
-        doubleDamageChance: Math.min(getScalingPercent({
-          level, base: 1, softcap: 2000, linear: 0.1, power: 0.5,
+        doubleDamageChance: Math.min(getSkillStatBonus({
+          level, statKey: 'doubleDamageChance', skillType: 'toggle', scale: { base: 1 },
         }), 25),
       };
     },
@@ -157,14 +157,14 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.greaterFrenzy'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeedPercent: Math.min(getScalingPercent({
-        level, base: 2, softcap: 2000, linear: 0.2, power: 0.6,
+      attackSpeedPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 2 },
       }), 75),
-      lifePerHit: getScalingFlat({
-        level, base: 2, increment: 0.5, interval: 50, bonus: 0.1,
+      lifePerHit: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'passive', scale: { base: 1, increment: 1 },
       }),
-      lifePerHitPerLevel: getScalingFlat({
-        level, base: 0.002, increment: 0.005, interval: 50, bonus: 0,
+      lifePerHitPerLevel: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -182,23 +182,23 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.glacialTremor'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', perLevel: true,
       }),
-      damagePercent: getScalingPercent({
-        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
-      coldDamage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      coldDamage: getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
       }),
-      coldDamagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      coldDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'coldDamage', skillType: 'instant', perLevel: true,
       }),
-      coldDamagePercent: getScalingPercent({
-        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      coldDamagePercent: getSkillStatBonus({
+        level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
     }),
   },
@@ -211,17 +211,17 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.rageMastery'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      critChance: Math.min(getScalingPercent({
-        level, base: 2, softcap: 2000, linear: 0.2, power: 0.5,
+      critChance: Math.min(getSkillStatBonus({
+        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2 },
       }), 25),
-      critDamage: Math.min(getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.1, power: 0.6,
+      critDamage: Math.min(getSkillStatBonus({
+        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 1 },
       }) / 100, 2),
-      attackRatingPercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      attackRatingPercent: getSkillStatBonus({
+        level, statKey: 'attackRatingPercent', skillType: 'passive', scale: { base: 0.33 },
       }),
-      lifePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      lifePercent: getSkillStatBonus({
+        level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 1 },
       }),
     }),
   },
@@ -239,14 +239,14 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.bloodLust'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeedPercent: Math.min(getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      attackSpeedPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66 },
       }), 75),
-      lifeSteal: Math.min(getScalingPercent({
-        level, base: 0.2, softcap: 2000, linear: 0.05, power: 0.6,
+      lifeSteal: Math.min(getSkillStatBonus({
+        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.16 },
       }), 4),
-      lifePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      lifePercent: getSkillStatBonus({
+        level, statKey: 'lifePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
     }),
   },
@@ -262,20 +262,20 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.unbridledFury'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
-      manaPerHit: getScalingFlat({
-        level, base: 1, increment: 0.2, interval: 50, bonus: 0.1,
+      manaPerHit: getSkillStatBonus({
+        level, statKey: 'manaPerHit', skillType: 'toggle', scale: { base: 0.66, increment: 0.66 },
       }),
-      manaPerHitPerLevel: getScalingFlat({
-        level, base: 0.001, increment: 0.005, interval: 50, bonus: 0,
+      manaPerHitPerLevel: getSkillStatBonus({
+        level, statKey: 'manaPerHit', skillType: 'toggle', perLevel: true,
       }),
-      lifePerHit: getScalingFlat({
-        level, base: 5, increment: 1, interval: 50, bonus: 0.1,
+      lifePerHit: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: 1.66, increment: 1.25 },
       }),
-      lifePerHitPerLevel: getScalingFlat({
-        level, base: 0.005, increment: 0.005, interval: 50, bonus: 0,
+      lifePerHitPerLevel: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'toggle', perLevel: true,
       }),
     }),
   },
@@ -288,17 +288,17 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.undyingRage'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      resurrectionChance: Math.min(getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.2, power: 0.5,
+      resurrectionChance: Math.min(getSkillStatBonus({
+        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 5 },
       }), 50),
-      attackSpeedPercent: Math.min(getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      attackSpeedPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5 },
       }), 75),
-      armorPenetration: getScalingFlat({
-        level, base: 20, increment: 4, interval: 50, bonus: 0.15,
+      armorPenetration: getSkillStatBonus({
+        level, statKey: 'armorPenetration', skillType: 'passive', scale: { base: 1, increment: 0.4 },
       }),
-      armorPenetrationPerLevel: getScalingFlat({
-        level, base: 0.02, increment: 0.01, interval: 50, bonus: 0,
+      armorPenetrationPerLevel: getSkillStatBonus({
+        level, statKey: 'armorPenetration', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -315,29 +315,29 @@ export const BERSERKER_SKILLS = {
     effect: (level) => {
       const effectiveness = 1 + (hero.stats.warlordEffectivenessPercent || 0);
       return {
-        strength: getScalingFlat({
-          level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+        strength: getSkillStatBonus({
+          level, statKey: 'strength', skillType: 'passive', scale: { base: 3, increment: 3 },
         }) * effectiveness,
-        strengthPerLevel: getScalingFlat({
-          level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+        strengthPerLevel: getSkillStatBonus({
+          level, statKey: 'strength', skillType: 'passive', perLevel: true,
         }) * effectiveness,
-        strengthPercent: getScalingPercent({
-          level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+        strengthPercent: getSkillStatBonus({
+          level, statKey: 'strengthPercent', skillType: 'passive', scale: { base: 1 }, // Assuming strengthPercent has generic passive scale 5? No, standard is 5 maybe.
         }) * effectiveness,
-        damage: getScalingFlat({
-          level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+        damage: getSkillStatBonus({
+          level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 3 },
         }) * effectiveness,
-        damagePerLevel: getScalingFlat({
-          level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+        damagePerLevel: getSkillStatBonus({
+          level, statKey: 'damage', skillType: 'passive', perLevel: true,
         }) * effectiveness,
-        critChance: Math.min(getScalingPercent({
-          level, base: 2, softcap: 2000, linear: 0.2, power: 0.5,
+        critChance: Math.min(getSkillStatBonus({
+          level, statKey: 'critChance', skillType: 'passive', scale: { base: 2 },
         }), 20) * effectiveness,
-        attackSpeedPercent: Math.min(getScalingPercent({
-          level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+        attackSpeedPercent: Math.min(getSkillStatBonus({
+          level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5 },
         }), 75) * effectiveness,
-        damagePercent: getScalingPercent({
-          level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+        damagePercent: getSkillStatBonus({
+          level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 1 },
         }) * effectiveness,
       };
     },
@@ -354,11 +354,11 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.rageOverflow'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
-      lifeSteal: Math.min(getScalingPercent({
-        level, base: 0.5, softcap: 2000, linear: 0.05, power: 0.6,
+      lifeSteal: Math.min(getSkillStatBonus({
+        level, statKey: 'lifeSteal', skillType: 'toggle', scale: { base: 0.4 },
       }), 1),
     }),
   },
@@ -371,17 +371,17 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.crushingBlows'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      critDamage: Math.min(getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.2, power: 0.6,
+      critDamage: Math.min(getSkillStatBonus({
+        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 1 },
       }) / 100, 3),
-      armorPenetrationPercent: Math.min(getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      armorPenetrationPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'armorPenetrationPercent', skillType: 'passive', scale: { base: 1 }, // Assuming base 5 in stats
       }), 25),
-      damage: getScalingFlat({
-        level, base: 15, increment: 3, interval: 50, bonus: 0.15,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 3 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.015, increment: 0.01, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -399,17 +399,17 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.bloodFrenzy'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeedPercent: Math.min(getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      attackSpeedPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 3.33 },
       }), 150),
-      damagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'buff', scale: { base: 1.25 },
       }),
-      lifePerHit: getScalingFlat({
-        level, base: 10, increment: 2, interval: 50, bonus: 0.15,
+      lifePerHit: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'buff', scale: { base: 2.5, increment: 2 },
       }),
-      lifePerHitPerLevel: getScalingFlat({
-        level, base: 0.01, increment: 0.01, interval: 50, bonus: 0,
+      lifePerHitPerLevel: getSkillStatBonus({
+        level, statKey: 'lifePerHit', skillType: 'buff', perLevel: true,
       }),
     }),
   },
@@ -422,17 +422,17 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.unyieldingOnslaught'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: getScalingFlat({
-        level, base: 30, increment: 6, interval: 50, bonus: 0.15,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'passive', scale: { base: 10, increment: 6 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.03, increment: 0.01, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'passive', perLevel: true,
       }),
-      damagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 2 },
       }),
-      attackRatingPercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      attackRatingPercent: getSkillStatBonus({
+        level, statKey: 'attackRatingPercent', skillType: 'passive', scale: { base: 0.33 },
       }),
     }),
   },
@@ -451,8 +451,8 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       ignoreEnemyArmor: 1,
-      reduceEnemyDamagePercent: Math.min(getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.1, power: 0.5,
+      reduceEnemyDamagePercent: Math.min(getSkillStatBonus({
+        level, statKey: 'reduceEnemyDamagePercent', skillType: 'instant', scale: { base: 50 },
       }), 25),
     }),
   },
@@ -465,20 +465,20 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.berserkerSpirit'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strength: getScalingFlat({
-        level, base: 30, increment: 6, interval: 50, bonus: 0.15,
+      strength: getSkillStatBonus({
+        level, statKey: 'strength', skillType: 'passive', scale: { base: 6, increment: 6 },
       }),
-      strengthPerLevel: getScalingFlat({
-        level, base: 0.03, increment: 0.01, interval: 50, bonus: 0,
+      strengthPerLevel: getSkillStatBonus({
+        level, statKey: 'strength', skillType: 'passive', perLevel: true,
       }),
-      strengthPercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      strengthPercent: getSkillStatBonus({
+        level, statKey: 'strengthPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      lifePercent: getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      lifePercent: getSkillStatBonus({
+        level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 1 },
       }),
-      critChance: Math.min(getScalingPercent({
-        level, base: 2, softcap: 2000, linear: 0.2, power: 0.5,
+      critChance: Math.min(getSkillStatBonus({
+        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2 },
       }), 30),
     }),
   },
@@ -493,14 +493,14 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.apexPredator'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 2 },
       }),
-      attackSpeedPercent: Math.min(getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      attackSpeedPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 10 },
       }), 150),
-      lifeSteal: Math.min(getScalingPercent({
-        level, base: 0.5, softcap: 2000, linear: 0.1, power: 0.5,
+      lifeSteal: Math.min(getSkillStatBonus({
+        level, statKey: 'lifeSteal', skillType: 'passive', scale: { base: 0.4 },
       }), 3),
     }),
   },
@@ -514,20 +514,20 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.rageIncarnate'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damage: getScalingFlat({
-        level, base: 50, increment: 10, interval: 50, bonus: 0.15,
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 16.66, increment: 10 },
       }),
-      damagePerLevel: getScalingFlat({
-        level, base: 0.05, increment: 0.01, interval: 50, bonus: 0,
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
       }),
-      damagePercent: getScalingPercent({
-        level, base: 15, softcap: 2000, linear: 0.5, power: 0.6,
+      damagePercent: getSkillStatBonus({
+        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 2.14 },
       }),
-      armorPenetrationPercent: Math.min(getScalingPercent({
-        level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      armorPenetrationPercent: Math.min(getSkillStatBonus({
+        level, statKey: 'armorPenetrationPercent', skillType: 'toggle', scale: { base: 1 }, // Assuming base 5
       }), 35),
-      attackRatingPercent: getScalingPercent({
-        level, base: 10, softcap: 2000, linear: 0.5, power: 0.6,
+      attackRatingPercent: getSkillStatBonus({
+        level, statKey: 'attackRatingPercent', skillType: 'toggle', scale: { base: 0.33 },
       }),
     }),
   },
