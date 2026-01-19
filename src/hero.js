@@ -421,6 +421,9 @@ export default class Hero {
     addBonusesToUnified(unifiedBonuses, ascensionBonuses, true);
     addBonusesToUnified(unifiedBonuses, soulBonuses, true);
 
+    const runeBonuses = runes?.getBonusEffects?.() || {};
+    addBonusesToUnified(unifiedBonuses, runeBonuses, false);
+
     // Generate Stat Breakdown
     this.generateStatBreakdown(
       prestigeBonuses,
@@ -430,6 +433,7 @@ export default class Hero {
       skillTreeBonuses,
       trainingBonuses,
       soulBonuses,
+      runeBonuses,
     );
 
     // 1) Build primary stats using unified bonuses
@@ -459,9 +463,6 @@ export default class Hero {
     addBonusesToUnified(finalBonuses, attributeEffects, false);
 
     const flatValues = this.calculateFlatValues(finalBonuses);
-    if (runes) {
-      runes.applyBonuses(flatValues);
-    }
 
     const finalPercentBonuses = this.filterPercentBonuses(finalBonuses);
 
@@ -476,7 +477,7 @@ export default class Hero {
     dataManager.saveGame();
   }
 
-  generateStatBreakdown(prestigeBonuses, questsBonuses, achievementsBonuses, equipmentBonuses, skillTreeBonuses, trainingBonuses, soulBonuses) {
+  generateStatBreakdown(prestigeBonuses, questsBonuses, achievementsBonuses, equipmentBonuses, skillTreeBonuses, trainingBonuses, soulBonuses, runeBonuses) {
     const getNorm = (raw, statKey, isFractionSource = false) => {
       if (!raw || typeof raw !== 'number') return 0;
       if (isFractionSource) return raw;
@@ -503,6 +504,7 @@ export default class Hero {
       const skillsVals = getSourceValues(skillTreeBonuses, attr, false);
       const trainingVals = getSourceValues(trainingBonuses, attr, false);
       const soulVals = getSourceValues(soulBonuses, attr, true);
+      const runeVals = getSourceValues(runeBonuses, attr, false);
 
       this.statBreakdown[attr] = {
         base,
@@ -515,6 +517,7 @@ export default class Hero {
         skills: skillsVals.flat,
         training: trainingVals.flat,
         soul: soulVals.flat,
+        runes: runeVals.flat,
         percent: {
           perma: permaVals.percent,
           prestige: prestigeVals.percent,
@@ -524,6 +527,7 @@ export default class Hero {
           skills: skillsVals.percent,
           training: trainingVals.percent,
           soul: soulVals.percent,
+          runes: runeVals.percent,
         },
       };
     });

@@ -135,6 +135,7 @@ export const RUNES = {
     descKey: 'rune.empoweringRune.desc',
     stats: {
       damage: [5, 15],
+      damagePerLevel: [5, 15],
       life: [50, 150],
       armor: [20, 60],
       attackRating: [30, 90],

@@ -183,57 +183,92 @@
 }
 
 .rune-controls {
-  margin-top: 8px;
+  margin-top: 12px;
   display: flex;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
+  align-items: center;
+  background: rgba(17, 22, 33, 0.6);
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(60, 72, 102, 0.4);
 }
 
 .rune-filter {
   display: flex;
   align-items: center;
-  flex: 1;
-  min-width: 200px;
+  flex: 2;
+  min-width: 220px;
+  position: relative;
 }
 
 .rune-filter-input {
   width: 100%;
-  padding: 6px 10px;
+  padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid #4c556f;
-  background: rgba(8, 12, 22, 0.85);
+  background: rgba(8, 12, 22, 0.9);
   color: #e6ecff;
   font-size: 0.95rem;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: all 0.2s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .rune-filter-input::placeholder {
-  color: rgba(230, 236, 255, 0.55);
+  color: rgba(230, 236, 255, 0.4);
 }
 
 .rune-filter-input:focus {
   outline: none;
   border-color: #7aa2ff;
-  box-shadow: 0 0 0 2px rgba(122, 162, 255, 0.35);
+  background: rgba(12, 18, 30, 1);
+  box-shadow: 0 0 0 2px rgba(122, 162, 255, 0.25);
 }
 
-.rune-controls .inventory-btn {
+.rune-controls .rune-btn {
   cursor: pointer;
   white-space: nowrap;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #eef2ff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, #374151, #1f2937);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+}
+
+.rune-controls .rune-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  filter: brightness(1.1);
+}
+
+.rune-controls .rune-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .rune-controls .salvage-btn {
-  background: #b34d4d;
-  border: 1px solid #d06060;
-  color: #fff;
+  background: linear-gradient(180deg, #b91c1c, #991b1b);
+  border-color: #f87171;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.rune-controls .salvage-btn:hover {
+  border-color: #fca5a5;
+  box-shadow: 0 0 8px rgba(220, 38, 38, 0.4);
 }
 
 .rune-controls .equip-btn {
-  background: #4db34d;
-  border: 1px solid #60d060;
-  color: #fff;
+  background: linear-gradient(180deg, #15803d, #166534);
+  border-color: #4ade80;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 .rune-slot .rune-icon {
@@ -243,24 +278,15 @@
   pointer-events: none;
 }
 
-.rune-slot.filter-match {
-  border-color: #a6c4ff;
-  box-shadow: 0 0 0 2px rgba(134, 175, 255, 0.55);
-}
-
-.rune-slot.filter-dim {
-  opacity: 0.35;
-  filter: grayscale(0.4);
-}
-
-.rune-tab-button.filter-match {
-  border-color: #c6ddff;
-  box-shadow: 0 0 0 2px rgba(180, 208, 255, 0.45);
+.rune-controls .equip-btn:hover {
+  border-color: #86efac;
+  box-shadow: 0 0 8px rgba(22, 163, 74, 0.4);
 }
 
 .rune-controls .salvage-all-btn {
-  background: #9c3c3c;
-  border-color: #c65a5a;
+  background: linear-gradient(180deg, #7f1d1d, #450a0a);
+  border-color: #ef4444;
+  color: #fecaca;
 }
 
 .rune-move-row {

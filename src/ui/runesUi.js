@@ -117,7 +117,7 @@ export function renderRunesUI() {
   const invSection = createInventorySection();
 
   const sortBtn = document.createElement('button');
-  sortBtn.className = 'inventory-btn sort-btn';
+  sortBtn.className = 'rune-btn sort-btn';
   sortBtn.textContent = t('inventory.sort');
   sortBtn.onclick = () => {
     if (typeof runes.sortTab === 'function') {
@@ -162,7 +162,7 @@ export function renderRunesUI() {
   };
 
   const salvageTabBtn = document.createElement('button');
-  salvageTabBtn.className = 'inventory-btn salvage-btn';
+  salvageTabBtn.className = 'rune-btn salvage-btn';
   salvageTabBtn.textContent = t('runes.salvageTab');
   salvageTabBtn.onclick = () => {
     if (typeof runes.getTabBounds !== 'function') {
@@ -174,7 +174,7 @@ export function renderRunesUI() {
   };
 
   const salvageAllBtn = document.createElement('button');
-  salvageAllBtn.className = 'inventory-btn salvage-btn salvage-all-btn';
+  salvageAllBtn.className = 'rune-btn salvage-btn salvage-all-btn';
   salvageAllBtn.textContent = t('runes.salvageAllTabs');
   salvageAllBtn.onclick = () => {
     finalizeSalvage(salvageRunesInRange(0, runes.inventory.length));
@@ -182,7 +182,7 @@ export function renderRunesUI() {
   const topControls = document.createElement('div');
   topControls.className = 'rune-controls';
   equipBtn = document.createElement('button');
-  equipBtn.className = 'inventory-btn equip-btn';
+  equipBtn.className = 'rune-btn equip-btn';
   equipBtn.textContent = t('inventory.equip');
   equipBtn.style.display = selectedRune && selectedRune.source === 'inventory' ? 'inline-block' : 'none';
   equipBtn.onclick = () => {
@@ -191,7 +191,7 @@ export function renderRunesUI() {
   };
   topControls.append(filterWrapper, sortBtn, salvageTabBtn, salvageAllBtn, equipBtn);
 
-  container.append(equipSection, tabsBar, frozenSection, topControls, invSection);
+  container.append(equipSection, frozenSection, tabsBar, topControls, invSection);
   updateRuneFilterHighlights(container);
 }
 
@@ -460,8 +460,11 @@ function createInventorySlot(rune, index, isFrozen) {
 
 function equipSelectedRune() {
   const inventoryIndex = selectedRune.index;
-  const slot = runes.equipped.findIndex((r) => r === null);
-  if (slot === -1) return;
+  let slot = runes.equipped.findIndex((r) => r === null);
+  // If no empty slot, swap with the first slot
+  if (slot === -1) {
+    slot = 0;
+  }
   runes.equip(slot, inventoryIndex);
   hero.queueRecalculateFromAttributes();
   training.updateTrainingAffordability('gold-upgrades');
