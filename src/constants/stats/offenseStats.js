@@ -464,13 +464,13 @@ export const OFFENSE_STATS = {
   attackNeverMiss: createStat(),
   reduceEnemyDamagePercent: createPercentStat({
     dec: 2,
-    cap: 50,
+    cap: 80,
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 0.02, softcap: 2000, linear: 0.01, power: 0.6, max: 20,
+        type: 'passive', base: 0.02, softcap: 2000, linear: 0.01, power: 0.6, max: 50,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 0.05, softcap: 2000, linear: 0.02, power: 0.6, max: 25,
+        type: 'buff', base: 0.05, softcap: 2000, linear: 0.02, power: 0.6, max: 60,
       }),
     },
   }),
@@ -540,11 +540,11 @@ export const OFFENSE_STATS = {
   extraDamageFromAllResistancesPercent: createPercentStat({
     dec: 2,
     skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive', base: 0.005, increment: 0.001, interval: 50, bonus: 0,
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 0.05, linear: 0.0003, max: 2,
       }),
-      buff: getSkillBonusesFlat({
-        type: 'buff', base: 0.01, increment: 0.002, interval: 50, bonus: 0,
+      buff: getSkillBonusesPercent({
+        type: 'buff', base: 0.1, linear: 0.0005, max: 3,
       }),
     },
   }),
