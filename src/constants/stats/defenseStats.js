@@ -118,6 +118,14 @@ export const DEFENSE_STATS = {
     show: true,
     sub: 'defense',
     cap: 50,
+    skills: {
+      passive: getSkillBonusesChance({
+        type: 'passive', base: 1, levelsPerPoint: 20, cap: 50,
+      }),
+      buff: getSkillBonusesChance({
+        type: 'buff', base: 1, levelsPerPoint: 20, cap: 50,
+      }),
+    },
   }),
   blockChancePercent: createPercentStat({}),
   lifeRegen: createStat({
@@ -224,6 +232,9 @@ export const DEFENSE_STATS = {
     skills: {
       passive: getSkillBonusesChance({
         type: 'passive', base: 1, levelsPerPoint: 20, cap: 50,
+      }),
+      buff: getSkillBonusesChance({
+        type: 'buff', base: 1, levelsPerPoint: 20, cap: 50,
       }),
     },
   }),

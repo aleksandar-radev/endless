@@ -948,7 +948,15 @@ function formatDamageBreakdown(breakdown) {
 function calculateSummonDamage(skill, level) {
   if (!skill || typeof skill.summonStats !== 'function') return null;
 
-  const statsForCalc = skill.summonStats(level);
+  const rawStats = skill.summonStats(level);
+  const statsForCalc = { ...rawStats };
+  // Unwrap any stat objects
+  Object.keys(statsForCalc).forEach((key) => {
+    if (statsForCalc[key] && statsForCalc[key]._isStatBonus) {
+      statsForCalc[key] = statsForCalc[key].value;
+    }
+  });
+
   const canCrit = statsForCalc.canCrit || false || (hero.stats.summonsCanCrit || 0) > 0;
 
   // Base player damage to be scaled
@@ -1276,6 +1284,13 @@ function updateSpecializationTooltipContent(skillId) {
 
 function getDisplayedSummonStats(rawSummonStats) {
   const summonStats = { ...rawSummonStats };
+  // Unwrap any stat objects
+  Object.keys(summonStats).forEach((key) => {
+    if (summonStats[key] && summonStats[key]._isStatBonus) {
+      summonStats[key] = summonStats[key].value;
+    }
+  });
+
   const summonAttackSpeedBonus = hero.stats.summonAttackSpeedBuffPercent || 0;
   const summonDamageBonus = hero.stats.summonDamageBuffPercent || 0;
   const summonDamageMultiplier = 1 + summonDamageBonus;

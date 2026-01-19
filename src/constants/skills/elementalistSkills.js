@@ -131,9 +131,9 @@ export const ELEMENTALIST_SKILLS = {
       elementalPenetrationPerLevel: getSkillStatBonus({
         level, statKey: 'elementalPenetration', skillType: 'passive', perLevel: true, scale: { base: 0.5 },
       }),
-      elementalPenetrationPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.2 },
-      }), 20),
+      elementalPenetrationPercent: getSkillStatBonus({
+        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.2, limit: 20 },
+      }),
     }),
   },
 
@@ -223,9 +223,9 @@ export const ELEMENTALIST_SKILLS = {
       manaRegenPercent: getSkillStatBonus({
         level, statKey: 'manaRegenPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      manaRegenOfTotalPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'manaRegenOfTotalPercent', skillType: 'passive', scale: { base: 0.33 },
-      }), 1),
+      manaRegenOfTotalPercent: getSkillStatBonus({
+        level, statKey: 'manaRegenOfTotalPercent', skillType: 'passive', scale: { base: 0.33, limit: 1 },
+      }),
     }),
   },
 
@@ -311,9 +311,9 @@ export const ELEMENTALIST_SKILLS = {
       manaPerHitPerLevel: getSkillStatBonus({
         level, statKey: 'manaPerHit', skillType: 'buff', perLevel: true,
       }),
-      attackSpeedPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66 },
-      }), 50),
+      attackSpeedPercent: getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, limit: 50 },
+      }),
     }),
   },
 
@@ -425,9 +425,9 @@ export const ELEMENTALIST_SKILLS = {
       elementalDamagePercent: getSkillStatBonus({
         level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 1 },
       }),
-      elementalPenetrationPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.4 },
-      }), 20),
+      elementalPenetrationPercent: getSkillStatBonus({
+        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.4, limit: 20 },
+      }),
       manaRegenPercent: getSkillStatBonus({
         level, statKey: 'manaRegenPercent', skillType: 'passive', scale: { base: 1 },
       }),
@@ -548,9 +548,9 @@ export const ELEMENTALIST_SKILLS = {
       waterDamagePercent: getSkillStatBonus({
         level, statKey: 'waterDamagePercent', skillType: 'buff', scale: { base: 1.25 },
       }),
-      reduceEnemyAttackSpeedPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'reduceEnemyAttackSpeedPercent', skillType: 'buff', scale: { base: 40 },
-      }), 15),
+      reduceEnemyAttackSpeedPercent: getSkillStatBonus({
+        level, statKey: 'reduceEnemyAttackSpeedPercent', skillType: 'buff', scale: { base: 40, limit: 15 },
+      }),
     }),
   },
   stormLord: {
@@ -590,9 +590,9 @@ export const ELEMENTALIST_SKILLS = {
       elementalDamagePercent: getSkillStatBonus({
         level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 2 },
       }),
-      elementalPenetrationPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.4 },
-      }), 15),
+      elementalPenetrationPercent: getSkillStatBonus({
+        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.4, limit: 15 },
+      }),
       allResistance: getSkillStatBonus({
         level, statKey: 'allResistance', skillType: 'passive', scale: { base: 4, increment: 4 },
       }),
@@ -641,12 +641,12 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.glacialBulwark'),
     maxLevel: () => 150,
     effect: (level) => ({
-      damageTakenConvertedToColdPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'damageTakenConvertedToColdPercent', skillType: 'passive', scale: { base: 1 },
-      }), 75),
-      coldDamageTakenReductionPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'coldDamageTakenReductionPercent', skillType: 'passive', scale: { base: 1 },
-      }), 50),
+      damageTakenConvertedToColdPercent: getSkillStatBonus({
+        level, statKey: 'damageTakenConvertedToColdPercent', skillType: 'passive', scale: { base: 1, limit: 75 },
+      }),
+      coldDamageTakenReductionPercent: getSkillStatBonus({
+        level, statKey: 'coldDamageTakenReductionPercent', skillType: 'passive', scale: { base: 1, limit: 50 },
+      }),
       armor: getSkillStatBonus({
         level, statKey: 'armor', skillType: 'passive', scale: { base: 0.42, increment: 0.5 },
       }),

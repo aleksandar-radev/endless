@@ -99,9 +99,9 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.darkAura'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeSteal: Math.min(getSkillStatBonus({
-        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.16 },
-      }), 10),
+      lifeSteal: getSkillStatBonus({
+        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.16, max: 0.5 },
+      }),
       attackRating: getSkillStatBonus({
         level, statKey: 'attackRating', skillType: 'buff', scale: { base: 0.11, increment: 0.07 },
       }),
@@ -111,9 +111,9 @@ export const VAMPIRE_SKILLS = {
       attackRatingPercent: getSkillStatBonus({
         level, statKey: 'attackRatingPercent', skillType: 'buff', scale: { base: 1.66 }, // Assuming default percent is 3? No, attackRatingPercent in stats is percent.
       }),
-      extraDamageFromLifePercent: Math.min(getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifePercent', skillType: 'buff', scale: { base: 0.04 },
-      }), 0.4),
+      extraDamageFromLifePercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifePercent', skillType: 'buff', scale: { base: 0.04, max: 0.228 },
+      }),
     }),
   },
 
@@ -211,9 +211,9 @@ export const VAMPIRE_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: 5 + Math.min(getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 0.5 },
-        }), 25),
+        percentOfPlayerDamage: getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 1.5, max: 0.15 },
+        }),
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'summon', scale: { base: 1.5, increment: 0.5 },
         }),
@@ -262,9 +262,9 @@ export const VAMPIRE_SKILLS = {
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
-      extraDamageFromLifePercent: Math.min(getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifePercent', skillType: 'buff', scale: { base: 0.04 },
-      }), 0.4),
+      extraDamageFromLifePercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifePercent', skillType: 'buff', scale: { base: 0.04, max: 0.228 },
+      }),
     }),
   },
 
@@ -339,12 +339,12 @@ export const VAMPIRE_SKILLS = {
       vitalityPercent: getSkillStatBonus({
         level, statKey: 'vitalityPercent', skillType: 'passive', scale: { base: 2 },
       }),
-      extraDamageFromLifePercent: Math.min(getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base: 0.1 },
-      }), 0.6),
-      resurrectionChance: Math.min(getSkillStatBonus({
-        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 1 },
-      }), 20),
+      extraDamageFromLifePercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base: 0.1, max: 0.48 },
+      }),
+      resurrectionChance: getSkillStatBonus({
+        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 1, cap: 0.4 },
+      }),
       perseverancePercent: getSkillStatBonus({
         level, statKey: 'perseverancePercent', skillType: 'passive', scale: { base: 1 },
       }),
@@ -370,9 +370,9 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.bloodMoon'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeSteal: Math.min(getSkillStatBonus({
-        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.16 },
-      }), 3),
+      lifeSteal: getSkillStatBonus({
+        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.16, max: 0.5 },
+      }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'buff', scale: { base: 1.25 },
       }),
@@ -396,9 +396,9 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.sanguineFury'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      critChance: Math.min(getSkillStatBonus({
-        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2 },
-      }), 25),
+      critChance: getSkillStatBonus({
+        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2, cap: 0.833 },
+      }),
       lifePerHit: getSkillStatBonus({
         level, statKey: 'lifePerHit', skillType: 'passive', scale: { base: 60, increment: 48 },
       }),
@@ -447,15 +447,15 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.shadowRebirth'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      resurrectionChance: Math.min(getSkillStatBonus({
-        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 1 },
-      }), 50),
+      resurrectionChance: getSkillStatBonus({
+        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 1, cap: 1 },
+      }),
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 2 },
       }),
       critDamage: getSkillStatBonus({
         level, statKey: 'critDamage', skillType: 'passive', scale: { base: 0.02 },
-      }) / 100,
+      }),
     }),
   },
 

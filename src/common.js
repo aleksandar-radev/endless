@@ -400,12 +400,11 @@ export function getSkillStatBonus({
 
   const config = stat.skills[skillType];
   let value;
+  let uncappedValue;
+  let maxValue;
+  let perLevelConfig = { scale: 0.001, divisor: 1 };
 
-  // Handle different stat types with their specific scaling formulas
   if (config.statType === 'percent') {
-    // Percent stats use getScalingPercent with softcap, linear, and power
-    console.log(scale);
-
     const base = config.base * (scale.base || 1);
     const softcap = config.softcap * (scale.softcap || 1);
     const linear = config.linear * (scale.linear || 1);
@@ -414,37 +413,34 @@ export function getSkillStatBonus({
     value = getScalingPercent({
       level, base, softcap, linear, power,
     });
+    uncappedValue = value;
 
-    // Apply max cap if specified
-    if (config.max !== undefined) {
-      const maxValue = config.max * (scale.max || 1);
+    if (scale.limit !== undefined) {
+      maxValue = scale.limit;
+      value = Math.min(value, maxValue);
+    } else if (config.max !== undefined) {
+      maxValue = config.max * (scale.max || 1);
       value = Math.min(value, maxValue);
     }
-
-    // Convert to perLevel if requested (divide by 100 for percent stats)
-    if (perLevel) {
-      const defaultPerLevelScale = 0.01;
-      const perLevelMultiplier = typeof perLevel === 'number' ? perLevel : 1;
-      value = value * defaultPerLevelScale * perLevelMultiplier / 100;
-    }
+    perLevelConfig = { scale: 0.01, divisor: 100 };
   } else if (config.statType === 'chance') {
-    // Chance stats use getScalingChance with levelsPerPoint and cap
     const base = config.base * (scale.base || 1);
     const levelsPerPoint = config.levelsPerPoint * (scale.levelsPerPoint || 1);
-    const cap = config.cap * (scale.cap || 1);
+    let cap = config.cap * (scale.cap || 1);
+    if (scale.limit !== undefined) {
+      cap = Math.min(cap, scale.limit);
+    }
 
     value = getScalingChance({
       level, base, levelsPerPoint, cap,
     });
-
-    // Convert to perLevel if requested
-    if (perLevel) {
-      const defaultPerLevelScale = 0.001;
-      const perLevelMultiplier = typeof perLevel === 'number' ? perLevel : 1;
-      value = value * defaultPerLevelScale * perLevelMultiplier / 100;
-    }
+    uncappedValue = getScalingChance({
+      level, base, levelsPerPoint, cap: Infinity,
+    });
+    maxValue = cap;
+    perLevelConfig = { scale: 0.001, divisor: 100 };
   } else {
-    // Flat stats (default) use getScalingFlat
+    // Flat
     const base = config.base * (scale.base || 1);
     const increment = config.increment * (scale.increment || 1);
     const interval = config.interval * (scale.interval || 1);
@@ -453,21 +449,34 @@ export function getSkillStatBonus({
     value = getScalingFlat({
       level, base, increment, interval, bonus,
     });
+    uncappedValue = value;
 
-    // Apply max cap if specified
-    if (config.max !== undefined) {
-      const maxValue = config.max * (scale.max || 1);
+    if (scale.limit !== undefined) {
+      maxValue = scale.limit;
       value = Math.min(value, maxValue);
-    }
-
-    // Convert to perLevel if requested (much smaller values for flat stats)
-    if (perLevel) {
-      const defaultPerLevelScale = 0.001;
-      const perLevelMultiplier = typeof perLevel === 'number' ? perLevel : 1;
-      value = value * defaultPerLevelScale * perLevelMultiplier;
+    } else if (config.max !== undefined) {
+      maxValue = config.max * (scale.max || 1);
+      value = Math.min(value, maxValue);
     }
   }
 
-  return value;
+  if (!perLevel) {
+    const isCapped = maxValue !== undefined || config.statType === 'chance';
+    if (isCapped) {
+      return {
+        _isStatBonus: true,
+        value,
+        uncappedValue,
+        max: maxValue,
+        valueOf() { return this.value; },
+        toString() { return String(this.value); },
+      };
+    }
+    return value;
+  }
+
+  // Per Level Calculation
+  const perLevelMultiplier = typeof perLevel === 'number' ? perLevel : 1;
+  return value * perLevelConfig.scale * perLevelMultiplier / perLevelConfig.divisor;
 }
 

@@ -861,7 +861,9 @@ export default class SkillTree {
 
       if (mult > 1) {
         Object.keys(baseEffects).forEach((key) => {
-          if (typeof baseEffects[key] === 'number') {
+          const val = baseEffects[key];
+          const isStatBonus = val && val._isStatBonus;
+          if (typeof val === 'number' || isStatBonus) {
             if (
               scaleAll ||
               key === 'damage' ||
@@ -873,19 +875,37 @@ export default class SkillTree {
                 // Percentage bonuses only get 25% of the multiplier effectiveness
                 effectiveMult = 1 + (mult - 1) * 0.25;
               }
-              baseEffects[key] *= effectiveMult;
+
+              if (isStatBonus) {
+                val.uncappedValue *= effectiveMult;
+                val.value = Math.min(val.uncappedValue, val.max);
+              } else {
+                baseEffects[key] *= effectiveMult;
+              }
             }
           }
         });
       }
     }
 
+    let finalEffects;
     // Apply synergies if any
     if (skill.synergies) {
-      return this.applySkillSynergies(skill, baseEffects);
+      finalEffects = this.applySkillSynergies(skill, baseEffects);
+    } else {
+      finalEffects = baseEffects;
     }
 
-    return baseEffects;
+    // Unwrap any remaining wrapper objects
+    const unwrappedEffects = { ...finalEffects };
+    Object.keys(unwrappedEffects).forEach((stat) => {
+      const val = unwrappedEffects[stat];
+      if (val && val._isStatBonus) {
+        unwrappedEffects[stat] = val.value;
+      }
+    });
+
+    return unwrappedEffects;
   }
 
   applySkillSynergies(skill, baseEffects) {
@@ -921,9 +941,23 @@ export default class SkillTree {
     if (totalSynergyBonus > 0) {
       const multiplier = 1 + (totalSynergyBonus / 100);
       Object.keys(baseEffects).forEach((stat) => {
-        modifiedEffects[stat] = baseEffects[stat] * multiplier;
+        const val = baseEffects[stat];
+        if (val && val._isStatBonus) {
+          const potential = val.uncappedValue * multiplier;
+          modifiedEffects[stat] = Math.min(potential, val.max);
+        } else {
+          modifiedEffects[stat] = val * multiplier;
+        }
       });
     }
+
+    // Unwrap objects to return simple numbers
+    Object.keys(modifiedEffects).forEach((stat) => {
+      const val = modifiedEffects[stat];
+      if (val && val._isStatBonus) {
+        modifiedEffects[stat] = val.value;
+      }
+    });
 
     return modifiedEffects;
   }

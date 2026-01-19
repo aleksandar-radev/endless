@@ -137,9 +137,9 @@ export const MAGE_SKILLS = {
     description: () => t('skill.manaShield'),
     maxLevel: () => 250,
     effect: (level) => ({
-      manaShieldPercent: Math.min(getSkillStatBonus({
+      manaShieldPercent: getSkillStatBonus({
         level, statKey: 'manaShieldPercent', skillType: 'buff', scale: { base: 1 },
-      }), 100),
+      }),
     }),
   },
   crimsonAegis: {
@@ -152,9 +152,9 @@ export const MAGE_SKILLS = {
     description: () => t('skill.crimsonAegis'),
     maxLevel: () => 200,
     effect: (level) => ({
-      damageTakenReductionPercent: Math.min(getSkillStatBonus({
+      damageTakenReductionPercent: getSkillStatBonus({
         level, statKey: 'damageTakenReductionPercent', skillType: 'passive', scale: { base: 1 },
-      }), 35),
+      }),
     }),
   },
   crimsonDrain: {
@@ -192,9 +192,9 @@ export const MAGE_SKILLS = {
       manaPerLevel: getSkillStatBonus({
         level, statKey: 'mana', skillType: 'passive', perLevel: true,
       }),
-      extraDamageFromManaPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'extraDamageFromManaPercent', skillType: 'passive', scale: { base: 1 },
-      }) / 100, 2),
+      extraDamageFromManaPercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromManaPercent', skillType: 'passive', scale: { base: 1, max: 1.6 },
+      }),
     }),
   },
   iceStorm: {
@@ -283,9 +283,9 @@ export const MAGE_SKILLS = {
     description: () => t('skill.timeWarp'),
     maxLevel: () => 300,
     effect: (level) => ({
-      attackSpeedPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66 },
-      }), 100),
+      attackSpeedPercent: getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, max: 0.57 },
+      }),
     }),
   },
 
@@ -314,9 +314,9 @@ export const MAGE_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5 },
-        }), 100),
+        percentOfPlayerDamage: getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5, max: 0.5 },
+        }),
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'summon', scale: { base: 7.5, increment: 3 },
         }),
@@ -428,12 +428,12 @@ export const MAGE_SKILLS = {
     description: () => t('skill.chronomancerSurge'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeedPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66 },
-      }), 150),
-      cooldownReductionPercent: Math.min(getSkillStatBonus({
+      attackSpeedPercent: getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, max: 0.86 },
+      }),
+      cooldownReductionPercent: getSkillStatBonus({
         level, statKey: 'cooldownReductionPercent', skillType: 'buff', scale: { base: 1 },
-      }), 50),
+      }),
     }),
   },
   starFire: {
@@ -549,8 +549,8 @@ export const MAGE_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: 5 + getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 0.5 },
+        percentOfPlayerDamage: getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 1.5 },
         }),
         attackSpeed: hero.stats.attackSpeed,
         canCrit: true,

@@ -21,9 +21,9 @@ export const ROGUE_SKILLS = {
       agilityPerLevel: getSkillStatBonus({
         level, statKey: 'agility', skillType: 'passive', perLevel: true,
       }),
-      critChance: Math.min(getSkillStatBonus({
-        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2 },
-      }), 20),
+      critChance: getSkillStatBonus({
+        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2, max: 20 },
+      }),
     }),
   },
   evasion: {
@@ -41,9 +41,9 @@ export const ROGUE_SKILLS = {
       dexterityPerLevel: getSkillStatBonus({
         level, statKey: 'dexterity', skillType: 'passive', perLevel: true,
       }),
-      extraDamageFromEvasionPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'extraDamageFromEvasionPercent', skillType: 'passive', scale: { base: 1 },
-      }) / 100, 2.5),
+      extraDamageFromEvasionPercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromEvasionPercent', skillType: 'passive', scale: { base: 1, max: 2.5 },
+      }),
     }),
   },
 
@@ -107,9 +107,9 @@ export const ROGUE_SKILLS = {
       agilityPerLevel: getSkillStatBonus({
         level, statKey: 'agility', skillType: 'buff', perLevel: true,
       }),
-      critChance: Math.min(getSkillStatBonus({
-        level, statKey: 'critChance', skillType: 'buff', scale: { base: 0.8 },
-      }), 20),
+      critChance: getSkillStatBonus({
+        level, statKey: 'critChance', skillType: 'buff', scale: { base: 0.8, max: 20 },
+      }),
     }),
   },
 
@@ -119,9 +119,9 @@ export const ROGUE_SKILLS = {
     name: () => t('skill.flurry.name'),
     type: () => 'summon',
     summonStats: (level) => ({
-      percentOfPlayerDamage: Math.min(getSkillStatBonus({
-        level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5 },
-      }), 30),
+      percentOfPlayerDamage: getSkillStatBonus({
+        level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5, max: 0.15 },
+      }),
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'summon', scale: { base: 4, increment: 1.5 },
       }),
@@ -192,9 +192,9 @@ export const ROGUE_SKILLS = {
       dexterityPerLevel: getSkillStatBonus({
         level, statKey: 'dexterity', skillType: 'passive', perLevel: true,
       }),
-      extraDamageFromEvasionPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'extraDamageFromEvasionPercent', skillType: 'passive', scale: { base: 1 },
-      }) / 100, 3),
+      extraDamageFromEvasionPercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromEvasionPercent', skillType: 'passive', scale: { base: 1, max: 3 },
+      }),
     }),
   },
 
@@ -217,9 +217,9 @@ export const ROGUE_SKILLS = {
       earthDamagePerLevel: getSkillStatBonus({
         level, statKey: 'earthDamage', skillType: 'buff', perLevel: true,
       }),
-      attackSpeedPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66 },
-      }), 100),
+      attackSpeedPercent: getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, max: 100 },
+      }),
     }),
   },
 
@@ -264,9 +264,9 @@ export const ROGUE_SKILLS = {
       attackRatingPerLevel: getSkillStatBonus({
         level, statKey: 'attackRating', skillType: 'passive', perLevel: true,
       }),
-      critChance: Math.min(getSkillStatBonus({
-        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2.5 },
-      }), 20),
+      critChance: getSkillStatBonus({
+        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2.5, max: 20 },
+      }),
     }),
   },
 
@@ -311,9 +311,9 @@ export const ROGUE_SKILLS = {
       damagePerLevel: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'passive', perLevel: true,
       }),
-      critChance: Math.min(getSkillStatBonus({
-        level, statKey: 'critChance', skillType: 'passive', scale: { base: 3 },
-      }), 25),
+      critChance: getSkillStatBonus({
+        level, statKey: 'critChance', skillType: 'passive', scale: { base: 3, max: 25 },
+      }),
     }),
   },
   venomousAssault: {
@@ -368,12 +368,12 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.silentExecution'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeedPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5 },
-      }), 75),
-      critDamage: Math.min(getSkillStatBonus({
-        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 0.1 },
-      }) / 100, 3),
+      attackSpeedPercent: getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5, max: 75 },
+      }),
+      critDamage: getSkillStatBonus({
+        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 0.1, max: 3 },
+      }),
     }),
   },
 
@@ -453,9 +453,9 @@ export const ROGUE_SKILLS = {
       damagePerLevel: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'toggle', perLevel: true,
       }),
-      critChance: Math.min(getSkillStatBonus({
-        level, statKey: 'critChance', skillType: 'toggle', scale: { base: 2.5 },
-      }), 50),
+      critChance: getSkillStatBonus({
+        level, statKey: 'critChance', skillType: 'toggle', scale: { base: 2.5, max: 50 },
+      }),
     }),
   },
 
@@ -466,8 +466,8 @@ export const ROGUE_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: 5 + getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 0.5 },
+        percentOfPlayerDamage: getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 1.5, max: 0.15 },
         }),
         attackSpeed: hero.stats.attackSpeed,
       };

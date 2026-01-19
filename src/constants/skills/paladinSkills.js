@@ -21,9 +21,9 @@ export const PALADIN_SKILLS = {
       life: getSkillStatBonus({
         level, statKey: 'life', skillType: 'instant', scale: { base: 0.2, increment: 0.2 },
       }),
-      lifePercent: Math.min(getSkillStatBonus({
-        level, statKey: 'lifePercent', skillType: 'instant', scale: { base: 0.2 },
-      }), 5),
+      lifePercent: getSkillStatBonus({
+        level, statKey: 'lifePercent', skillType: 'instant', scale: { base: 0.2, max: 0.05 },
+      }),
     }),
   },
   smite: {
@@ -161,9 +161,9 @@ export const PALADIN_SKILLS = {
       lifePerLevel: getSkillStatBonus({
         level, statKey: 'life', skillType: 'instant', perLevel: true,
       }),
-      lifePercent: Math.min(getSkillStatBonus({
-        level, statKey: 'lifePercent', skillType: 'instant', scale: { base: 1 },
-      }), 20),
+      lifePercent: getSkillStatBonus({
+        level, statKey: 'lifePercent', skillType: 'instant', scale: { base: 1, max: 0.2 },
+      }),
     }),
   },
 
@@ -189,9 +189,9 @@ export const PALADIN_SKILLS = {
       armorPercent: getSkillStatBonus({
         level, statKey: 'armorPercent', skillType: 'buff', scale: { base: 1.25 },
       }),
-      blockChance: Math.min(getSkillStatBonus({
-        level, statKey: 'blockChance', skillType: 'buff', scale: { base: 0.8 },
-      }), 25),
+      blockChance: getSkillStatBonus({
+        level, statKey: 'blockChance', skillType: 'buff', scale: { base: 0.8, cap: 0.33 },
+      }),
     }),
   },
   auraOfLight: {
@@ -212,9 +212,14 @@ export const PALADIN_SKILLS = {
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 1 },
       }),
-      allResistance: Math.min(getSkillStatBonus({
-        level, statKey: 'allResistance', skillType: 'passive', scale: { base: 0.5, increment: 0.5 },
-      }), 30),
+      allResistance: getSkillStatBonus({
+        level,
+        statKey: 'allResistance',
+        skillType: 'passive',
+        scale: {
+          base: 0.5, increment: 0.5, max: 0.5,
+        },
+      }),
       allResistancePerLevel: getSkillStatBonus({
         level, statKey: 'allResistance', skillType: 'passive', perLevel: true,
       }),
@@ -280,12 +285,12 @@ export const PALADIN_SKILLS = {
       lifeRegenPercent: getSkillStatBonus({
         level, statKey: 'lifeRegenPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      lifeRegenOfTotalPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'passive', scale: { base: 0.33 },
-      }), 1),
-      extraDamageFromLifePercent: Math.min(getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base: 0.2 },
-      }) / 100, 0.75),
+      lifeRegenOfTotalPercent: getSkillStatBonus({
+        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'passive', scale: { base: 0.33, max: 0.004 },
+      }),
+      extraDamageFromLifePercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base: 0.2, max: 0.6 },
+      }),
     }),
   },
 
@@ -311,9 +316,9 @@ export const PALADIN_SKILLS = {
       vitalityPercent: getSkillStatBonus({
         level, statKey: 'vitalityPercent', skillType: 'buff', scale: { base: 1 },
       }),
-      resurrectionChance: Math.min(getSkillStatBonus({
-        level, statKey: 'resurrectionChance', skillType: 'buff', scale: { base: 2 },
-      }), 20),
+      resurrectionChance: getSkillStatBonus({
+        level, statKey: 'resurrectionChance', skillType: 'buff', scale: { base: 2, cap: 0.4 },
+      }),
     }),
   },
 
@@ -323,15 +328,15 @@ export const PALADIN_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5 },
-        }), 120),
+        percentOfPlayerDamage: getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5, max: 0.6 },
+        }),
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'summon', scale: { base: 7.5, increment: 3 },
         }),
-        attackSpeed: Math.min(Math.max(0.9, 0.7 + getSkillStatBonus({
-          level, statKey: 'attackSpeedPercent', skillType: 'summon', scale: { base: 2 }, // Assuming attackSpeedPercent is used for calculation
-        }) / 100), 2.2),
+        attackSpeed: Math.max(0.9, 0.7 + getSkillStatBonus({
+          level, statKey: 'attackSpeedPercent', skillType: 'summon', scale: { base: 2, limit: 150 },
+        }) / 100),
       };
     },
     manaCost: (level) => 20 + level * 0.875,
@@ -378,9 +383,9 @@ export const PALADIN_SKILLS = {
       attackSpeedPercent: getSkillStatBonus({
         level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5 },
       }),
-      resurrectionChance: Math.min(getSkillStatBonus({
-        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 2 },
-      }), 50),
+      resurrectionChance: getSkillStatBonus({
+        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 2, cap: 1 },
+      }),
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'passive', scale: { base: 2.5, increment: 2 },
       }),
@@ -455,9 +460,9 @@ export const PALADIN_SKILLS = {
       armorPercent: getSkillStatBonus({
         level, statKey: 'armorPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      blockChance: Math.min(getSkillStatBonus({
-        level, statKey: 'blockChance', skillType: 'passive', scale: { base: 2 },
-      }), 25),
+      blockChance: getSkillStatBonus({
+        level, statKey: 'blockChance', skillType: 'passive', scale: { base: 2, cap: 0.5 },
+      }),
       lifeRegenPercent: getSkillStatBonus({
         level, statKey: 'lifeRegenPercent', skillType: 'passive', scale: { base: 1 },
       }),
@@ -549,9 +554,9 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.angelicResurgence'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      resurrectionChance: Math.min(getSkillStatBonus({
-        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 5 },
-      }), 50),
+      resurrectionChance: getSkillStatBonus({
+        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 5, cap: 1 },
+      }),
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 1 },
       }),

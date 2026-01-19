@@ -12,9 +12,9 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5 },
-        }), 80),
+        percentOfPlayerDamage: getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5, limit: 80 },
+        }),
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'summon', scale: { base: 2.5, increment: 1 },
         }),
@@ -61,9 +61,9 @@ export const DRUID_SKILLS = {
       lifeRegenPerLevel: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'passive', perLevel: true,
       }),
-      extraDamageFromLifeRegenPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'passive', scale: { base: 5 },
-      }) / 10, 10),
+      extraDamageFromLifeRegenPercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'passive', scale: { base: 5, limit: 100 },
+      }) / 10,
     }),
   },
   naturalAffinity: {
@@ -84,9 +84,9 @@ export const DRUID_SKILLS = {
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 0.4 },
       }),
-      lifeRegenOfTotalPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'passive', scale: { base: 0.33 },
-      }), 2),
+      lifeRegenOfTotalPercent: getSkillStatBonus({
+        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'passive', scale: { base: 0.33, limit: 2 },
+      }),
     }),
   },
 
@@ -112,9 +112,9 @@ export const DRUID_SKILLS = {
       lifeRegenPercent: getSkillStatBonus({
         level, statKey: 'lifeRegenPercent', skillType: 'buff', scale: { base: 0.625 },
       }),
-      extraDamageFromLifeRegenPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'buff', scale: { base: 2.5 },
-      }) / 5, 15),
+      extraDamageFromLifeRegenPercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'buff', scale: { base: 2.5, limit: 75 },
+      }) / 5,
     }),
   },
   entanglingRoots: {
@@ -138,9 +138,9 @@ export const DRUID_SKILLS = {
       earthDamagePercent: getSkillStatBonus({
         level, statKey: 'earthDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
-      reduceEnemyDamagePercent: Math.min(getSkillStatBonus({
-        level, statKey: 'reduceEnemyDamagePercent', skillType: 'instant', scale: { base: 20 },
-      }), 25),
+      reduceEnemyDamagePercent: getSkillStatBonus({
+        level, statKey: 'reduceEnemyDamagePercent', skillType: 'instant', scale: { base: 20, limit: 25 },
+      }),
     }),
   },
 
@@ -184,9 +184,9 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 1.25 },
-        }), 60),
+        percentOfPlayerDamage: getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 1.25, limit: 60 },
+        }),
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'summon', scale: { base: 5, increment: 2 },
         }),
@@ -213,9 +213,9 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5 },
-        }), 100),
+        percentOfPlayerDamage: getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5, limit: 100 },
+        }),
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'summon', scale: { base: 7.5, increment: 3 },
         }),
@@ -242,9 +242,9 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 3.75 },
-        }), 400),
+        percentOfPlayerDamage: getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 3.75, limit: 400 },
+        }),
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'summon', scale: { base: 15, increment: 5 },
         }),
@@ -276,9 +276,9 @@ export const DRUID_SKILLS = {
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 1 },
       }),
-      extraDamageFromLifePercent: Math.min(getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base: 0.4 },
-      }) / 100, 1.11),
+      extraDamageFromLifePercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base: 0.4, limit: 1.11 },
+      }),
     }),
   },
 
@@ -356,9 +356,9 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 3.75 },
-        }), 200),
+        percentOfPlayerDamage: getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 3.75, limit: 200 },
+        }),
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'summon', scale: { base: 15, increment: 5 },
         }),
@@ -481,9 +481,9 @@ export const DRUID_SKILLS = {
     description: () => t('skill.spiritLink'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeSteal: Math.min(getSkillStatBonus({
-        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.4 },
-      }), 10),
+      lifeSteal: getSkillStatBonus({
+        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.4, limit: 10 },
+      }),
       manaPerHit: getSkillStatBonus({
         level, statKey: 'manaPerHit', skillType: 'buff', scale: { base: 1, increment: 1.25 },
       }),
@@ -547,9 +547,9 @@ export const DRUID_SKILLS = {
       lifeRegenPerLevel: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'buff', perLevel: true,
       }),
-      lifeRegenOfTotalPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'buff', scale: { base: 0.14 },
-      }), 2),
+      lifeRegenOfTotalPercent: getSkillStatBonus({
+        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'buff', scale: { base: 0.14, limit: 2 },
+      }),
     }),
   },
   wrathOfNature: {
@@ -632,9 +632,9 @@ export const DRUID_SKILLS = {
       manaRegenPercent: getSkillStatBonus({
         level, statKey: 'manaRegenPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      extraDamageFromLifeRegenPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'passive', scale: { base: 5 },
-      }) / 2, 10),
+      extraDamageFromLifeRegenPercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'passive', scale: { base: 5, limit: 20 },
+      }) / 2,
     }),
   },
   wildGrowth: {
@@ -661,9 +661,9 @@ export const DRUID_SKILLS = {
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
-      lifeRegenOfTotalPercent: Math.min(getSkillStatBonus({
-        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'buff', scale: { base: 0.14 },
-      }), 2),
+      lifeRegenOfTotalPercent: getSkillStatBonus({
+        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'buff', scale: { base: 0.14, limit: 2 },
+      }),
     }),
   },
 
@@ -759,9 +759,9 @@ export const DRUID_SKILLS = {
     type: () => 'summon',
     summonStats: (level) => {
       return {
-        percentOfPlayerDamage: Math.min(getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 3.75 },
-        }), 150),
+        percentOfPlayerDamage: getSkillStatBonus({
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 3.75, limit: 150 },
+        }),
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'summon', scale: { base: 20, increment: 8 },
         }),
