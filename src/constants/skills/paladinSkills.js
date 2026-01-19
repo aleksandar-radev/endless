@@ -21,6 +21,9 @@ export const PALADIN_SKILLS = {
       life: getSkillStatBonus({
         level, statKey: 'life', skillType: 'instant', scale: { base: 0.2, increment: 0.2 },
       }),
+      lifePerLevel: getSkillStatBonus({
+        level, statKey: 'life', skillType: 'instant', perLevel: true,
+      }),
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'instant', scale: { base: 0.2, max: 0.05 },
       }),
@@ -70,6 +73,9 @@ export const PALADIN_SKILLS = {
     effect: (level) => ({
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', scale: { base: 2, increment: 1 },
+      }),
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', perLevel: true,
       }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1 },
@@ -256,11 +262,17 @@ export const PALADIN_SKILLS = {
       lightningDamage: getSkillStatBonus({
         level, statKey: 'lightningDamage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
       }),
+      lightningDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'lightningDamage', skillType: 'instant', perLevel: true,
+      }),
       lightningDamagePercent: getSkillStatBonus({
         level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
       fireDamage: getSkillStatBonus({
         level, statKey: 'fireDamage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
+      }),
+      fireDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'fireDamage', skillType: 'instant', perLevel: true,
       }),
       fireDamagePercent: getSkillStatBonus({
         level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1 },
@@ -534,6 +546,9 @@ export const PALADIN_SKILLS = {
     effect: (level) => ({
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', scale: { base: 8, increment: 4 },
+      }),
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', perLevel: true,
       }),
       lightningDamagePercent: getSkillStatBonus({
         level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1 },

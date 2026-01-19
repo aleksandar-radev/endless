@@ -133,14 +133,21 @@ export const VAMPIRE_SKILLS = {
       const airDamage = getSkillStatBonus({
         level, statKey: 'airDamage', skillType: 'instant', scale: { base: 0.8, increment: 0.5 },
       });
+      const airDamagePerLevel = getSkillStatBonus({
+        level, statKey: 'airDamage', skillType: 'instant', perLevel: true,
+      });
       const airDamagePercent = getSkillStatBonus({
         level, statKey: 'airDamagePercent', skillType: 'instant', scale: { base: 0.5 },
       });
       return {
         airDamage: airDamage * 4,
+        airDamagePerLevel: airDamagePerLevel * 4,
         airDamagePercent: airDamagePercent * 4,
         manaPerHit: getSkillStatBonus({
           level, statKey: 'manaPerHit', skillType: 'instant', scale: { base: 0.16, increment: 0.2 },
+        }),
+        manaPerHitPerLevel: getSkillStatBonus({
+          level, statKey: 'manaPerHit', skillType: 'instant', perLevel: true,
         }),
       };
     },

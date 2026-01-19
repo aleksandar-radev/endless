@@ -709,6 +709,9 @@ export const DRUID_SKILLS = {
       const damage = getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', scale: { base: 7, increment: 2.5 },
       });
+      const damagePerLevel = getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', perLevel: true,
+      });
       const coldDamagePercent = getSkillStatBonus({
         level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1 },
       });
@@ -717,6 +720,7 @@ export const DRUID_SKILLS = {
       });
       return {
         damage,
+        damagePerLevel,
         coldDamagePercent,
         waterDamagePercent,
       };

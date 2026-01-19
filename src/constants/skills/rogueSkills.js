@@ -331,6 +331,9 @@ export const ROGUE_SKILLS = {
       earthDamage: getSkillStatBonus({
         level, statKey: 'earthDamage', skillType: 'instant', scale: { base: 5, increment: 2.5 },
       }),
+      earthDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'earthDamage', skillType: 'instant', perLevel: true,
+      }),
       earthDamagePercent: getSkillStatBonus({
         level, statKey: 'earthDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
@@ -352,6 +355,9 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', scale: { base: 7, increment: 2.5 },
+      }),
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', perLevel: true,
       }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1.5 },

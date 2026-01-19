@@ -21,6 +21,9 @@ export const ELEMENTALIST_SKILLS = {
       fireDamage: getSkillStatBonus({
         level, statKey: 'fireDamage', skillType: 'instant', scale: { base: 1 },
       }),
+      fireDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'fireDamage', skillType: 'instant', perLevel: true,
+      }),
       fireDamagePercent: getSkillStatBonus({
         level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),

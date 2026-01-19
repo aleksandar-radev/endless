@@ -905,6 +905,25 @@ export default class SkillTree {
       }
     });
 
+    // Apply per-level stats for instant skills
+    if (skill.type() === 'instant') {
+      Object.keys(unwrappedEffects).forEach((key) => {
+        if (key.endsWith('PerLevel')) {
+          const value = unwrappedEffects[key];
+          if (typeof value === 'number') {
+            if (key.endsWith('PercentPerLevel')) {
+              const stat = key.slice(0, -15);
+              const target = `${stat}Percent`;
+              unwrappedEffects[target] = (unwrappedEffects[target] || 0) + value * hero.level;
+            } else {
+              const stat = key.slice(0, -8);
+              unwrappedEffects[stat] = (unwrappedEffects[stat] || 0) + value * hero.level;
+            }
+          }
+        }
+      });
+    }
+
     return unwrappedEffects;
   }
 

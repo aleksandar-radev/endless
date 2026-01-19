@@ -65,6 +65,9 @@ export const WARRIOR_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', scale: { base: 2 },
       }),
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', perLevel: true,
+      }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1 },
       }),
@@ -95,6 +98,9 @@ export const WARRIOR_SKILLS = {
       }),
       perseverance: getSkillStatBonus({
         level, statKey: 'perseverance', skillType: 'passive',
+      }),
+      perseverancePerLevel: getSkillStatBonus({
+        level, statKey: 'perseverance', skillType: 'passive', perLevel: true,
       }),
       extraDamageFromLifePercent: getSkillStatBonus({
         level, statKey: 'extraDamageFromLifePercent', skillType: 'passive',
@@ -127,6 +133,9 @@ export const WARRIOR_SKILLS = {
     effect: (level) => ({
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'buff', scale: { base: 2 },
+      }),
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'buff', perLevel: true,
       }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'buff',
@@ -180,6 +189,9 @@ export const WARRIOR_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', scale: { base: 1.6, increment: 0.6 },
       }),
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', perLevel: true,
+      }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 2, linear: 1.1 },
       }),
@@ -204,6 +216,9 @@ export const WARRIOR_SKILLS = {
     effect: (level) => ({
       armorPenetration: getSkillStatBonus({
         level, statKey: 'armorPenetration', skillType: 'passive',
+      }),
+      armorPenetrationPerLevel: getSkillStatBonus({
+        level, statKey: 'armorPenetration', skillType: 'passive', perLevel: true,
       }),
     }),
     synergies: [
@@ -346,6 +361,9 @@ export const WARRIOR_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'passive', scale: { base: 1.66, increment: 2 },
       }),
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'passive', perLevel: true,
+      }),
       critDamage: getSkillStatBonus({
         level, statKey: 'critDamage', skillType: 'passive', scale: { base: 0.1, max: 1.5 },
       }),
@@ -410,11 +428,17 @@ export const WARRIOR_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', scale: { base: 6, increment: 1.5 },
       }),
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', perLevel: true,
+      }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
       armorPenetration: getSkillStatBonus({
         level, statKey: 'armorPenetration', skillType: 'instant', scale: { base: 0.66, increment: 1.33 },
+      }),
+      armorPenetrationPerLevel: getSkillStatBonus({
+        level, statKey: 'armorPenetration', skillType: 'instant', perLevel: true,
       }),
     }),
     synergies: [
