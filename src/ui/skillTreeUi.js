@@ -726,7 +726,7 @@ function createSpecializationSkillElement(baseSkill) {
   // Tooltip
   skillElement.addEventListener('mouseenter', (e) => {
     if (IS_MOBILE_OR_TABLET()) return;
-    showTooltip(updateSpecializationTooltipContent(skill.id), e);
+    showTooltip(updateSpecializationTooltipContent(skill.id), e, 'skill-tooltip-wrapper');
   });
   skillElement.addEventListener('mousemove', positionTooltip);
   skillElement.addEventListener('mouseleave', hideTooltip);
@@ -739,7 +739,7 @@ function createSpecializationSkillElement(baseSkill) {
 
       if (unlocked > 0) {
         // Refresh tooltip
-        showTooltip(updateSpecializationTooltipContent(skill.id), e);
+        showTooltip(updateSpecializationTooltipContent(skill.id), e, 'skill-tooltip-wrapper');
       }
     } else {
       openSpecializationSkillModal(skill.id);
@@ -1573,7 +1573,7 @@ function createPreviewSkillElement(skill, pathId = null) {
     <div class="skill-level">0${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}</div>
   `;
 
-  skillElement.addEventListener('mouseenter', (e) => showTooltip(createPreviewTooltip(skill, pathId), e));
+  skillElement.addEventListener('mouseenter', (e) => showTooltip(createPreviewTooltip(skill, pathId), e, 'skill-tooltip-wrapper'));
   skillElement.addEventListener('mousemove', positionTooltip);
   skillElement.addEventListener('mouseleave', hideTooltip);
 
@@ -2180,7 +2180,7 @@ function createSkillElement(baseSkill) {
 
   skillElement.addEventListener('mouseenter', (e) => {
     if (IS_MOBILE_OR_TABLET()) return;
-    showTooltip(updateTooltipContent(skill.id), e);
+    showTooltip(updateTooltipContent(skill.id), e, 'skill-tooltip-wrapper');
   });
   skillElement.addEventListener('mousemove', positionTooltip);
   skillElement.addEventListener('mouseleave', hideTooltip);
@@ -2203,7 +2203,7 @@ function createSkillElement(baseSkill) {
       updateActionBar();
       const tooltip = document.getElementById('tooltip');
       if (tooltip?.classList.contains('show')) {
-        showTooltip(updateTooltipContent(skill.id), e);
+        showTooltip(updateTooltipContent(skill.id), e, 'skill-tooltip-wrapper');
       }
     } else {
       openSkillModal(skill.id);

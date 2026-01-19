@@ -210,6 +210,7 @@ body.dev-active .game-container {
   word-wrap: break-word;
   white-space: normal;
   z-index: 1100;
+  padding: 8px 12px;
 }
 
 .tooltip.show {

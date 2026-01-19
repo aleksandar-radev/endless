@@ -902,7 +902,7 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
-.flex-tooltip {
+.tooltip.flex-tooltip {
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -911,6 +911,7 @@
   flex-wrap: nowrap;
   gap: 8px;
   max-width: none !important;
+  padding: 0;
 }
 
 .flex-tooltip .item-tooltip {
