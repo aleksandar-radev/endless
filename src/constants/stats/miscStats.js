@@ -121,7 +121,10 @@ export const MISC_STATS = {
     itemTags: ['jewelry', 'magic'],
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.5, power: 0.6, max: 100,
+        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6, max: 10000,
+      }),
+      buff: getSkillBonusesPercent({
+        type: 'buff', base: 8, softcap: 2000, linear: 0.08, power: 0.6, max: 10000,
       }),
     },
   }),
@@ -230,6 +233,11 @@ export const MISC_STATS = {
   strengthPercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'axe', 'mace'],
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
+      }),
+    },
   }),
   agility: createStat({
     item: {
@@ -278,6 +286,11 @@ export const MISC_STATS = {
   agilityPercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'axe', 'mace'],
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
+      }),
+    },
   }),
   vitality: createStat({
     item: {
@@ -326,6 +339,11 @@ export const MISC_STATS = {
   vitalityPercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc'],
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
+      }),
+    },
   }),
   wisdom: createStat({
     item: {
@@ -374,6 +392,11 @@ export const MISC_STATS = {
   wisdomPercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'jewelry', 'magic'],
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
+      }),
+    },
   }),
   endurance: createStat({
     item: {
@@ -381,10 +404,52 @@ export const MISC_STATS = {
       scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['misc', 'jewelry', 'stat'],
+    skills: {
+      passive: getSkillBonusesFlat({
+        type: 'passive',
+        base: getSkillFlatBase('endurance'),
+        increment: getSkillFlatIncrement('endurance'),
+        interval: SKILL_INTERVAL * 2,
+        bonus: getSkillFlatBonus('endurance'),
+      }),
+      toggle: getSkillBonusesFlat({
+        type: 'toggle',
+        base: getSkillFlatBase('endurance', 1.33),
+        increment: getSkillFlatIncrement('endurance', 1.33),
+        interval: SKILL_INTERVAL * 2,
+        bonus: getSkillFlatBonus('endurance', 1.2),
+      }),
+      instant: getSkillBonusesFlat({
+        type: 'instant',
+        base: getSkillFlatBase('endurance', 1.67),
+        increment: getSkillFlatIncrement('endurance', 1.67),
+        interval: SKILL_INTERVAL * 2,
+        bonus: getSkillFlatBonus('endurance', 1.5),
+      }),
+      buff: getSkillBonusesFlat({
+        type: 'buff',
+        base: getSkillFlatBase('endurance', 1.33),
+        increment: getSkillFlatIncrement('endurance', 1.33),
+        interval: SKILL_INTERVAL * 2,
+        bonus: getSkillFlatBonus('endurance', 1.3),
+      }),
+      summon: getSkillBonusesFlat({
+        type: 'summon',
+        base: getSkillFlatBase('endurance', 0.67),
+        increment: getSkillFlatIncrement('endurance', 0.67),
+        interval: SKILL_INTERVAL * 2,
+        bonus: getSkillFlatBonus('endurance', 0.8),
+      }),
+    },
   }),
   endurancePercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'jewelry'],
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
+      }),
+    },
   }),
   dexterity: createStat({
     item: {
@@ -434,6 +499,11 @@ export const MISC_STATS = {
     div: 100,
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'jewelry'],
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
+      }),
+    },
   }),
   intelligence: createStat({
     item: {
@@ -484,7 +554,7 @@ export const MISC_STATS = {
     itemTags: ['misc', 'jewelry', 'magic'],
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
       }),
     },
   }),

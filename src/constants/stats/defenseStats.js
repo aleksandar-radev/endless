@@ -94,6 +94,13 @@ export const DEFENSE_STATS = {
         interval: SKILL_INTERVAL,
         bonus: getSkillFlatBonus('life', 1.5),
       }),
+      instant: getSkillBonusesFlat({
+        type: 'instant',
+        base: getSkillFlatBase('life', 1.7),
+        increment: getSkillFlatIncrement('life', 1.7),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('life', 1.5),
+      }),
       buff: getSkillBonusesFlat({
         type: 'buff',
         base: getSkillFlatBase('life', 1.33),
@@ -109,6 +116,9 @@ export const DEFENSE_STATS = {
     skills: {
       passive: getSkillBonusesPercent({
         type: 'passive', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 2000,
+      }),
+      instant: getSkillBonusesPercent({
+        type: 'instant', base: 0.05, softcap: 2000, linear: 0.002, power: 0.6, max: 40,
       }),
       buff: getSkillBonusesPercent({
         type: 'buff', base: 8, softcap: 2000, linear: 0.2, power: 0.6, max: 4000,
@@ -258,10 +268,10 @@ export const DEFENSE_STATS = {
     itemTags: ['belt'],
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.5, power: 0.6, max: 100,
+        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6, max: 100,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 8, softcap: 2000, linear: 0.6, power: 0.6, max: 150,
+        type: 'buff', base: 8, softcap: 2000, linear: 0.06, power: 0.6, max: 150,
       }),
     },
   }),
@@ -325,7 +335,7 @@ export const DEFENSE_STATS = {
     sub: 'defense',
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
       }),
     },
   }),

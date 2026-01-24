@@ -27,7 +27,7 @@ export const PALADIN_SKILLS = {
         level, statKey: 'life', skillType: 'instant', perLevel: true,
       }),
       lifePercent: getSkillStatBonus({
-        level, statKey: 'lifePercent', skillType: 'instant', scale: { base: 0.2, max: 0.05 },
+        level, statKey: 'lifePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
   },
@@ -83,14 +83,6 @@ export const PALADIN_SKILLS = {
         level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
-    synergies: [
-      {
-        sourceSkillId: 'divineProtection',
-        calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
-        }),
-      },
-    ],
   },
   divineProtection: {
     id: 'divineProtection',
@@ -103,15 +95,6 @@ export const PALADIN_SKILLS = {
     effect: (level) => {
       const buffEffectiveness = 1 + (hero.stats.divineProtectionBuffEffectivenessPercent || 0);
       return {
-        armor: getSkillStatBonus({
-          level, statKey: 'armor', skillType: 'passive', scale: { base: 0.2, increment: 0.25 },
-        }) * buffEffectiveness,
-        armorPerLevel: getSkillStatBonus({
-          level, statKey: 'armor', skillType: 'passive', perLevel: true,
-        }) * buffEffectiveness,
-        armorPercent: getSkillStatBonus({
-          level, statKey: 'armorPercent', skillType: 'passive', scale: { base: 1 },
-        }) * buffEffectiveness,
         thornsDamage: getSkillStatBonus({
           level, statKey: 'thornsDamage', skillType: 'passive', scale: { base: 1 },
         }) * buffEffectiveness,
@@ -123,14 +106,6 @@ export const PALADIN_SKILLS = {
         }) * buffEffectiveness,
       };
     },
-    synergies: [
-      {
-        sourceSkillId: 'shieldBash',
-        calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
-        }),
-      },
-    ],
   },
 
   // ===========================================================================
@@ -161,14 +136,6 @@ export const PALADIN_SKILLS = {
         level, statKey: 'lightningDamage', skillType: 'buff', perLevel: true,
       }),
     }),
-    synergies: [
-      {
-        sourceSkillId: 'smite',
-        calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
-        }),
-      },
-    ],
   },
   greaterHealing: {
     id: 'greaterHealing',
@@ -254,8 +221,8 @@ export const PALADIN_SKILLS = {
       lifePerLevel: getSkillStatBonus({
         level, statKey: 'life', skillType: 'passive', perLevel: true,
       }),
-      lifePercent: getSkillStatBonus({
-        level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 1 },
+      lifeRegen: getSkillStatBonus({
+        level, statKey: 'lifeRegen', skillType: 'passive', scale: { base: 1, increment: 1 },
       }),
       allResistance: getSkillStatBonus({
         level,
@@ -359,24 +326,10 @@ export const PALADIN_SKILLS = {
       lifePerLevel: getSkillStatBonus({
         level, statKey: 'life', skillType: 'passive', perLevel: true, scale: { base: 3 },
       }),
-      lifeRegenPercent: getSkillStatBonus({
-        level, statKey: 'lifeRegenPercent', skillType: 'passive', scale: { base: 1 },
-      }),
-      lifeRegenOfTotalPercent: getSkillStatBonus({
-        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'passive', scale: { base: 0.33, max: 0.004 },
-      }),
       extraDamageFromLifePercent: getSkillStatBonus({
         level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base: 0.2, max: 0.6 },
       }),
     }),
-    synergies: [
-      {
-        sourceSkillId: 'auraOfLight',
-        calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
-        }),
-      },
-    ],
   },
 
   // ===========================================================================
@@ -442,14 +395,6 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.AidFromHeaven'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({}),
-    synergies: [
-      {
-        sourceSkillId: 'wrathOfTheHeavens',
-        calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
-        }),
-      },
-    ],
   },
 
   // ===========================================================================
@@ -493,36 +438,19 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.guardianAngel'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5 },
-      }),
-      resurrectionChance: getSkillStatBonus({
-        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 2, max: 1 },
-      }),
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'passive', scale: { base: 2.5, increment: 2 },
       }),
       lifeRegenPerLevel: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'passive', perLevel: true,
       }),
-      lifeRegenPercent: getSkillStatBonus({
-        level, statKey: 'lifeRegenPercent', skillType: 'passive', scale: { base: 1 },
+      resurrectionChance: getSkillStatBonus({
+        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 2, max: 1 },
       }),
-      allResistance: getSkillStatBonus({
-        level, statKey: 'allResistance', skillType: 'passive', scale: { base: 1, increment: 1 },
-      }),
-      allResistancePerLevel: getSkillStatBonus({
-        level, statKey: 'allResistance', skillType: 'passive', perLevel: true,
+      extraDamageFromLifeRegenPercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'passive', scale: { base: 1, increment: 0.5 },
       }),
     }),
-    synergies: [
-      {
-        sourceSkillId: 'beaconOfFaith',
-        calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
-        }),
-      },
-    ],
   },
 
   // Tier 200 Skills
@@ -535,29 +463,17 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.ascension'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: getSkillStatBonus({
-        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 1 },
-      }),
       endurance: getSkillStatBonus({
         level, statKey: 'endurance', skillType: 'passive', scale: { base: 5, increment: 4 },
       }),
       endurancePerLevel: getSkillStatBonus({
         level, statKey: 'endurance', skillType: 'passive', perLevel: true, scale: { base: 2 },
       }),
-      endurancePercent: getSkillStatBonus({
-        level, statKey: 'endurancePercent', skillType: 'passive', scale: { base: 1 },
-      }),
       vitality: getSkillStatBonus({
         level, statKey: 'vitality', skillType: 'passive', scale: { base: 2.5, increment: 4 },
       }),
       vitalityPerLevel: getSkillStatBonus({
         level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 2 },
-      }),
-      vitalityPercent: getSkillStatBonus({
-        level, statKey: 'vitalityPercent', skillType: 'passive', scale: { base: 1 },
-      }),
-      attackRatingPercent: getSkillStatBonus({
-        level, statKey: 'attackRatingPercent', skillType: 'passive', scale: { base: 0.33 },
       }),
     }),
   },
@@ -573,29 +489,18 @@ export const PALADIN_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: getSkillStatBonus({
-        level, statKey: 'armor', skillType: 'passive', scale: { base: 0.42, increment: 0.5 },
+        level, statKey: 'armor', skillType: 'passive', scale: { base: 2, increment: 2 },
       }),
       armorPerLevel: getSkillStatBonus({
-        level, statKey: 'armor', skillType: 'passive', perLevel: true, scale: { base: 2 },
-      }),
-      armorPercent: getSkillStatBonus({
-        level, statKey: 'armorPercent', skillType: 'passive', scale: { base: 1 },
+        level, statKey: 'armor', skillType: 'passive', perLevel: true, scale: { base: 4 },
       }),
       blockChance: getSkillStatBonus({
         level, statKey: 'blockChance', skillType: 'passive', scale: { base: 2, cap: 0.5 },
       }),
-      lifeRegenPercent: getSkillStatBonus({
-        level, statKey: 'lifeRegenPercent', skillType: 'passive', scale: { base: 1 },
+      extraDamageFromArmorPercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromArmorPercent', skillType: 'passive', scale: { base: 0.2 },
       }),
     }),
-    synergies: [
-      {
-        sourceSkillId: 'holyBarrier',
-        calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
-        }),
-      },
-    ],
   },
   holyCrusade: {
     id: 'holyCrusade',
@@ -713,11 +618,11 @@ export const PALADIN_SKILLS = {
       resurrectionChance: getSkillStatBonus({
         level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 5, cap: 1 },
       }),
-      lifePercent: getSkillStatBonus({
-        level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 1 },
+      life: getSkillStatBonus({
+        level, statKey: 'life', skillType: 'passive', scale: { base: 8, increment: 8 },
       }),
-      attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5 },
+      lifePerLevel: getSkillStatBonus({
+        level, statKey: 'life', skillType: 'passive', perLevel: true, scale: { base: 10 },
       }),
     }),
     synergies: [
@@ -751,17 +656,9 @@ export const PALADIN_SKILLS = {
         level, statKey: 'lifeRegenPercent', skillType: 'buff', scale: { base: 0.625 },
       }),
       manaRegenPercent: getSkillStatBonus({
-        level, statKey: 'manaRegenPercent', skillType: 'buff', scale: { base: 2.5 },
+        level, statKey: 'manaRegenPercent', skillType: 'buff', scale: { base: 1 },
       }),
     }),
-    synergies: [
-      {
-        sourceSkillId: 'consecration',
-        calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
-        }),
-      },
-    ],
   },
 
   // Tier 5000 Skills
@@ -774,27 +671,16 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.eternalLight'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: getSkillStatBonus({
-        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 2 },
-      }),
       allResistance: getSkillStatBonus({
         level, statKey: 'allResistance', skillType: 'passive', scale: { base: 4, increment: 4 },
       }),
       allResistancePerLevel: getSkillStatBonus({
         level, statKey: 'allResistance', skillType: 'passive', perLevel: true, scale: { base: 4 },
       }),
-      lifePercent: getSkillStatBonus({
-        level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 2 },
+      extraDamageFromAllResistancesPercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromAllResistancesPercent', skillType: 'passive', scale: { base: 1 },
       }),
     }),
-    synergies: [
-      {
-        sourceSkillId: 'beaconOfFaith',
-        calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
-        }),
-      },
-    ],
   },
   championOfFaith: {
     id: 'championOfFaith',
