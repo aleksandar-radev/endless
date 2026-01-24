@@ -3,7 +3,7 @@ import { dataManager, game, hero, crystalShop, options, inventory } from './glob
 import { SKILLS_MAX_QTY } from './constants/limits.js';
 import { CLASS_PATHS, SKILL_TREES } from './constants/skills.js';
 import { getSpecialization } from './constants/specializations.js';
-import { ELEMENTS, SKILL_MANA_SCALING_MAX_MULTIPLIER, SKILL_DAMAGE_SCALING_MAX_INSTANT, SKILL_DAMAGE_SCALING_MAX_TOGGLE, SKILL_EFFECT_SCALING_MAX_BUFF } from './constants/common.js';
+import { ELEMENTS } from './constants/common.js';
 import { calculateHitChance, createDamageNumber } from './combat.js';
 import { battleLog } from './battleLog.js';
 import { t } from './i18n.js';
@@ -18,6 +18,11 @@ import { showLifeWarning,
   updateSkillTreeValues,
   initializeSkillTreeUI,
   updateTabIndicators } from './ui/ui.js';
+
+export const SKILL_MANA_SCALING_MAX_MULTIPLIER = 100;
+export const SKILL_DAMAGE_SCALING_MAX_INSTANT = 10;
+export const SKILL_DAMAGE_SCALING_MAX_TOGGLE = 4;
+export const SKILL_EFFECT_SCALING_MAX_BUFF = 2.5;
 
 export const SKILL_LEVEL_TIERS = [1, 10, 25, 60, 150, 400, 750, 1200, 2000, 3000, 5000];
 export const DEFAULT_MAX_SKILL_LEVEL = Infinity;
@@ -904,25 +909,6 @@ export default class SkillTree {
         unwrappedEffects[stat] = val.value;
       }
     });
-
-    // Apply per-level stats for instant skills
-    if (skill.type() === 'instant') {
-      Object.keys(unwrappedEffects).forEach((key) => {
-        if (key.endsWith('PerLevel')) {
-          const value = unwrappedEffects[key];
-          if (typeof value === 'number') {
-            if (key.endsWith('PercentPerLevel')) {
-              const stat = key.slice(0, -15);
-              const target = `${stat}Percent`;
-              unwrappedEffects[target] = (unwrappedEffects[target] || 0) + value * hero.level;
-            } else {
-              const stat = key.slice(0, -8);
-              unwrappedEffects[stat] = (unwrappedEffects[stat] || 0) + value * hero.level;
-            }
-          }
-        }
-      });
-    }
 
     return unwrappedEffects;
   }

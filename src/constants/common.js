@@ -34,6 +34,9 @@ export const BASE_EXTRA_RESOURCE_DAMAGE_CAP_PER_LEVEL = 500;
 
 export const MIN_DEATH_TIMER = 2; // Minimum death timer in seconds
 export const MAX_DEATH_TIMER = 30; // Maximum death timer in seconds
+// Global multiplier to slow down XP/Gold growth from level scaling.
+// 0.6 means ~40% reduction in the per-level growth slope.
+export const XP_GOLD_GROWTH_MULTIPLIER = 0.6;
 
 // Bow/equipment: how many milliseconds to add to enemy attack interval when a bow is equipped
 export const BOW_ENEMY_ATTACK_DELAY_MS = 1500; // ms
@@ -46,9 +49,5 @@ export const BREAKPOINTS = {
 
 export const IS_MOBILE_OR_TABLET = () => window.matchMedia(`(max-width: ${BREAKPOINTS.MOBILE}px)`).matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-export const SKILL_MANA_SCALING_MAX_MULTIPLIER = 100;
-export const SKILL_DAMAGE_SCALING_MAX_INSTANT = 10;
-export const SKILL_DAMAGE_SCALING_MAX_TOGGLE = 4;
-export const SKILL_EFFECT_SCALING_MAX_BUFF = 2.5;
 
 

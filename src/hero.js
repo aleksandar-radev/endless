@@ -1127,12 +1127,39 @@ export default class Hero {
     game.restoreMana(manaPerTick, { log: false });
   }
 
+  // Helper to expand per-level stats for instant skills
+  expandSkillEffects(instantSkillBaseEffects = {}) {
+    if (!instantSkillBaseEffects || this.level <= 0) return { ...instantSkillBaseEffects };
+
+    // Clone to avoid mutating original which is used by UI
+    const effects = { ...instantSkillBaseEffects };
+
+    Object.keys(effects).forEach((key) => {
+      if (key.endsWith('PerLevel')) {
+        const value = effects[key];
+        if (typeof value === 'number') {
+          if (key.endsWith('PercentPerLevel')) {
+            const stat = key.slice(0, -15);
+            const target = `${stat}Percent`;
+            effects[target] = (effects[target] || 0) + value * this.level;
+          } else {
+            const stat = key.slice(0, -8);
+            effects[stat] = (effects[stat] || 0) + value * this.level;
+          }
+        }
+      }
+    });
+
+    return effects;
+  }
+
   // calculated when hit is successful
   calculateTotalDamage(instantSkillBaseEffects = {}, options = {}) {
+    const effects = this.expandSkillEffects(instantSkillBaseEffects);
     const { includeRandom = true, canCrit = true } = options;
     const elements = ELEMENT_IDS;
-    const allowedDamageTypes = Array.isArray(instantSkillBaseEffects.allowedDamageTypes)
-      ? instantSkillBaseEffects.allowedDamageTypes
+    const allowedDamageTypes = Array.isArray(effects.allowedDamageTypes)
+      ? effects.allowedDamageTypes
       : null;
     const allowAllDamage = !allowedDamageTypes || allowedDamageTypes.length === 0;
     const includePhysical = allowAllDamage || allowedDamageTypes?.includes('physical');
@@ -1144,13 +1171,13 @@ export default class Hero {
     const flatPools = {
       physical:
         (includePhysical ? this.baseDamages?.physical || 0 : 0) +
-        (includePhysical ? instantSkillBaseEffects.damage || 0 : 0),
+        (includePhysical ? effects.damage || 0 : 0),
     };
     elements.forEach((e) => {
       const effectivenessMultiplier = 1 + (this.stats[`${e}EffectivenessPercent`] || 0);
       const key = `${e}Damage`;
       const baseFlat = allowedElements.has(e) ? this.baseDamages?.[e] || 0 : 0;
-      const skillFlat = allowedElements.has(e) ? instantSkillBaseEffects[key] || 0 : 0;
+      const skillFlat = allowedElements.has(e) ? effects[key] || 0 : 0;
 
       // Aggregated stats already include the effectiveness multiplier (so UI matches).
       // Apply it here only to instant-skill bonus contributions.
@@ -1160,7 +1187,7 @@ export default class Hero {
 
     // flat elementalDamage applies to every elemental pool
     const baseElemental = this.baseDamages?.elemental || 0;
-    const flatElementalDamage = instantSkillBaseEffects.elementalDamage || 0;
+    const flatElementalDamage = effects.elementalDamage || 0;
     if (baseElemental || flatElementalDamage) {
       elements.forEach((e) => {
         if (allowedElements.has(e)) {
@@ -1171,7 +1198,7 @@ export default class Hero {
 
     // 2) Percent phase: apply percent bonuses (physical + per-elemental + global elemental)
     const finalPools = {};
-    const physicalPct = (instantSkillBaseEffects.damagePercent || 0) / getDivisor('damagePercent');
+    const physicalPct = (effects.damagePercent || 0) / getDivisor('damagePercent');
     let totalDamagePercent = (this.stats.totalDamagePercent || 0) + (this.stats.damagePercent || 0);
 
     if (game.fightMode === 'arena' && this.stats.arenaDamagePercent) {
@@ -1182,10 +1209,10 @@ export default class Hero {
 
     // elemental global percent from both sources
     const elementalGlobalPct =
-      (instantSkillBaseEffects.elementalDamagePercent || 0) / getDivisor('elementalDamagePercent');
+      (effects.elementalDamagePercent || 0) / getDivisor('elementalDamagePercent');
     elements.forEach((e) => {
       const effectivenessMultiplier = 1 + (this.stats[`${e}EffectivenessPercent`] || 0);
-      const specificBonusPercent = instantSkillBaseEffects[`${e}DamagePercent`] || 0;
+      const specificBonusPercent = effects[`${e}DamagePercent`] || 0;
       const baseSpecificPct = specificBonusPercent / getDivisor(`${e}DamagePercent`);
       const scaledSpecificPct = baseSpecificPct * effectivenessMultiplier;
       finalPools[e] = allowedElements.has(e)
@@ -1254,22 +1281,38 @@ export default class Hero {
 
   calculateDamageAgainst(enemy, instantSkillBaseEffects = {}) {
     console.debug(instantSkillBaseEffects, 'instantSkillBaseEffects');
+    const effects = this.expandSkillEffects(instantSkillBaseEffects);
+    // calculateTotalDamage will call expandSkillEffects again, which is redundant but safe.
+    // Optimization: pass expanded effects if calculateTotalDamage supports skipping it,
+    // or just let it happen (idempotent for keys like 'damagePerLevel' if values are numbers,
+    // BUT WAIT: `expandSkillEffects` adds `value * level` to `damage`.
+    // If I call it TWICE, I will add it TWICE.
+    // Solution: `calculateTotalDamage` calls `expandSkillEffects` internally.
+    // So I should pass original `instantSkillBaseEffects` to `calculateTotalDamage`,
+    // OR change `calculateTotalDamage` to accept `effects`.
+    // Let's rely on `calculateTotalDamage` doing the expansion internally.
+    
+    // HOWEVER, `calculateDamageAgainst` needs expanded `effects` for Penetration logic below.
+    // So `effects` (expanded) is used for local logic.
+    // And `calculateTotalDamage(instantSkillBaseEffects)` handles damage logic with its own expansion.
+    // This is SAFE and CORRECT because `instantSkillBaseEffects` is passed raw.
+    
     const result = this.calculateTotalDamage(instantSkillBaseEffects);
 
     if (!enemy) return result;
     // Calculate effective enemy armor after hero's armor penetration
     let effectiveArmor = enemy.armor;
     const flatPenMultiplier = 1 + (this.stats.flatPenetrationPercent || 0);
-    if (this.stats.ignoreEnemyArmor > 0 || instantSkillBaseEffects.ignoreEnemyArmor > 0) {
+    if (this.stats.ignoreEnemyArmor > 0 || effects.ignoreEnemyArmor > 0) {
       effectiveArmor = 0;
     } else {
       // Apply percent armor penetration first
       const armorPenFraction =
         (this.stats.armorPenetrationPercent || 0) +
-        (instantSkillBaseEffects.armorPenetrationPercent || 0) / getDivisor('armorPenetrationPercent');
+        (effects.armorPenetrationPercent || 0) / getDivisor('armorPenetrationPercent');
       effectiveArmor *= 1 - armorPenFraction;
       // Then apply flat armor penetration
-      const armorPenFromSkill = (instantSkillBaseEffects.armorPenetration || 0) * flatPenMultiplier;
+      const armorPenFromSkill = (effects.armorPenetration || 0) * flatPenMultiplier;
       effectiveArmor -= (this.stats.armorPenetration || 0) + armorPenFromSkill;
       // Armor cannot go below zero
       effectiveArmor = Math.max(0, effectiveArmor);
@@ -1287,7 +1330,7 @@ export default class Hero {
       let totalPercentPen =
         (percentPen || 0) +
         (this.stats.elementalPenetrationPercent || 0) +
-        (instantSkillBaseEffects.elementalPenetrationPercent || 0) / getDivisor('elementalPenetrationPercent');
+        (effects.elementalPenetrationPercent || 0) / getDivisor('elementalPenetrationPercent');
 
       // Add Arcane Dissolution reduction
       if (this.stats.reduceEnemyResistancesPercent) {
@@ -1296,7 +1339,7 @@ export default class Hero {
 
       effectiveRes *= 1 - totalPercentPen;
       // Then apply flat penetration (elementalPenetration + specific flat)
-      const skillFlatPen = (instantSkillBaseEffects.elementalPenetration || 0) * flatPenMultiplier;
+      const skillFlatPen = (effects.elementalPenetration || 0) * flatPenMultiplier;
       const totalFlatPen = (flatPen || 0) + (this.stats.elementalPenetration || 0) + skillFlatPen;
       effectiveRes -= totalFlatPen;
       // Resistance cannot go below zero

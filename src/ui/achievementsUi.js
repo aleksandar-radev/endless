@@ -22,10 +22,6 @@ export function updateAchievementsUI() {
 
   panel.innerHTML = '';
 
-  // Assuming these lines are intended to be added and correctly formatted.
-  const container = createElement('div', { class: 'achievements-container' });
-  const listContainer = createElement('div', { class: 'achievements-list' });
-
   const headerContainer = createElement('div', { class: 'achievements-header' });
   const headerTitle = createElement('div', {
     class: 'achievements-header-title',

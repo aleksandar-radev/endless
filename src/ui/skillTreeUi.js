@@ -1,7 +1,7 @@
 import { STATS, getStatDecimalPlaces, getDivisor } from '../constants/stats/stats.js';
 import { CLASS_PATHS, SKILL_TREES } from '../constants/skills.js';
 import { getClassSpecializations, getSpecialization } from '../constants/specializations.js';
-import { SKILL_LEVEL_TIERS, getSpellDamageTypes, SPECIALIZATION_UNLOCK_LEVEL } from '../skillTree.js';
+import { SKILL_LEVEL_TIERS, getSpellDamageTypes, SPECIALIZATION_UNLOCK_LEVEL, SKILL_MANA_SCALING_MAX_MULTIPLIER, SKILL_DAMAGE_SCALING_MAX_INSTANT, SKILL_DAMAGE_SCALING_MAX_TOGGLE, SKILL_EFFECT_SCALING_MAX_BUFF } from '../skillTree.js';
 import { SKILLS_MAX_QTY } from '../constants/limits.js';
 import { skillTree, hero, crystalShop, options, dataManager } from '../globals.js';
 import { formatNumber,
@@ -13,7 +13,7 @@ import { formatNumber,
   updateResources } from './ui.js';
 import { t, tp } from '../i18n.js';
 import { createModal, closeModal } from './modal.js';
-import { IS_MOBILE_OR_TABLET, SKILL_MANA_SCALING_MAX_MULTIPLIER, SKILL_DAMAGE_SCALING_MAX_INSTANT, SKILL_DAMAGE_SCALING_MAX_TOGGLE, SKILL_EFFECT_SCALING_MAX_BUFF } from '../constants/common.js';
+import { IS_MOBILE_OR_TABLET } from '../constants/common.js';
 
 
 

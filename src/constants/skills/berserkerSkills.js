@@ -1,6 +1,6 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { getScalingFlat, getScalingPercent, getSkillStatBonus } from '../../common.js';
+import { getSkillStatBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Berserker skills extracted from skills.js
@@ -109,10 +109,10 @@ export const BERSERKER_SKILLS = {
         level, statKey: 'damagePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
       attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, limit: 75 },
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, limit: 1 },
       }),
       lifeSteal: getSkillStatBonus({
-        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.08, limit: 4 },
+        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.08, limit: 1 },
       }),
     }),
   },
@@ -143,7 +143,7 @@ export const BERSERKER_SKILLS = {
         coldDamagePerLevel,
         coldDamagePercent,
         doubleDamageChance: getSkillStatBonus({
-          level, statKey: 'doubleDamageChance', skillType: 'toggle', scale: { base: 1, limit: 25 },
+          level, statKey: 'doubleDamageChance', skillType: 'toggle', scale: { base: 1, limit: 1 },
         }),
       };
     },
@@ -158,7 +158,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 2, limit: 75 },
+        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 2, limit: 1 },
       }),
       lifePerHit: getSkillStatBonus({
         level, statKey: 'lifePerHit', skillType: 'passive', scale: { base: 1, increment: 1 },
@@ -212,10 +212,10 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critChance: getSkillStatBonus({
-        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2, limit: 25 },
+        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2, limit: 1 },
       }),
       critDamage: getSkillStatBonus({
-        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 1, limit: 2 },
+        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 1, limit: 1 },
       }),
       attackRatingPercent: getSkillStatBonus({
         level, statKey: 'attackRatingPercent', skillType: 'passive', scale: { base: 0.33 },
@@ -240,10 +240,10 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, limit: 75 },
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, limit: 1 },
       }),
       lifeSteal: getSkillStatBonus({
-        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.16, limit: 4 },
+        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.16, limit: 1 },
       }),
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'buff', scale: { base: 0.625 },
@@ -289,10 +289,10 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       resurrectionChance: getSkillStatBonus({
-        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 5, limit: 50 },
+        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 5, limit: 1 },
       }),
       attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5, limit: 75 },
+        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5, limit: 1 },
       }),
       armorPenetration: getSkillStatBonus({
         level, statKey: 'armorPenetration', skillType: 'passive', scale: { base: 1, increment: 0.4 },
@@ -322,7 +322,7 @@ export const BERSERKER_SKILLS = {
           level, statKey: 'strength', skillType: 'passive', perLevel: true,
         }) * effectiveness,
         strengthPercent: getSkillStatBonus({
-          level, statKey: 'strengthPercent', skillType: 'passive', scale: { base: 1 }, // Assuming strengthPercent has generic passive scale 5? No, standard is 5 maybe.
+          level, statKey: 'strengthPercent', skillType: 'passive', scale: { base: 1 },
         }) * effectiveness,
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 3 },
@@ -331,10 +331,10 @@ export const BERSERKER_SKILLS = {
           level, statKey: 'damage', skillType: 'passive', perLevel: true,
         }) * effectiveness,
         critChance: getSkillStatBonus({
-          level, statKey: 'critChance', skillType: 'passive', scale: { base: 2, limit: 20 },
+          level, statKey: 'critChance', skillType: 'passive', scale: { base: 2, limit: 1 },
         }) * effectiveness,
         attackSpeedPercent: getSkillStatBonus({
-          level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5, limit: 75 },
+          level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5, limit: 1 },
         }) * effectiveness,
         damagePercent: getSkillStatBonus({
           level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 1 },
@@ -372,10 +372,10 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       critDamage: getSkillStatBonus({
-        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 1, limit: 3 },
+        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 1, limit: 1 },
       }),
       armorPenetrationPercent: getSkillStatBonus({
-        level, statKey: 'armorPenetrationPercent', skillType: 'passive', scale: { base: 1, limit: 25 }, // Assuming base 5 in stats
+        level, statKey: 'armorPenetrationPercent', skillType: 'passive', scale: { base: 1, limit: 1 },
       }),
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 3 },
@@ -400,7 +400,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 3.33, limit: 150 },
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 3.33, limit: 1 },
       }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'buff', scale: { base: 1.25 },
@@ -452,7 +452,7 @@ export const BERSERKER_SKILLS = {
     effect: (level) => ({
       ignoreEnemyArmor: 1,
       reduceEnemyDamagePercent: getSkillStatBonus({
-        level, statKey: 'reduceEnemyDamagePercent', skillType: 'instant', scale: { base: 50, limit: 25 },
+        level, statKey: 'reduceEnemyDamagePercent', skillType: 'instant', scale: { base: 50, limit: 1 },
       }),
     }),
   },
@@ -478,7 +478,7 @@ export const BERSERKER_SKILLS = {
         level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 1 },
       }),
       critChance: getSkillStatBonus({
-        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2, limit: 30 },
+        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2, limit: 1 },
       }),
     }),
   },
@@ -497,10 +497,10 @@ export const BERSERKER_SKILLS = {
         level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 2 },
       }),
       attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 10, limit: 150 },
+        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 10, limit: 1 },
       }),
       lifeSteal: getSkillStatBonus({
-        level, statKey: 'lifeSteal', skillType: 'passive', scale: { base: 0.4, limit: 3 },
+        level, statKey: 'lifeSteal', skillType: 'passive', scale: { base: 0.4, limit: 1 },
       }),
     }),
   },
@@ -524,7 +524,7 @@ export const BERSERKER_SKILLS = {
         level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 2.14 },
       }),
       armorPenetrationPercent: getSkillStatBonus({
-        level, statKey: 'armorPenetrationPercent', skillType: 'toggle', scale: { base: 1, limit: 35 }, // Assuming base 5
+        level, statKey: 'armorPenetrationPercent', skillType: 'toggle', scale: { base: 1, limit: 1 },
       }),
       attackRatingPercent: getSkillStatBonus({
         level, statKey: 'attackRatingPercent', skillType: 'toggle', scale: { base: 0.33 },

@@ -1,5 +1,6 @@
 import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat, createChanceStat, createHiddenStat, getSkillBonusesFlat, getSkillBonusesPercent, getSkillBonusesChance } from './stats.js';
 import { ELEMENTS } from '../common.js';
+import { getItemRange, getTrainingBonus, getSkillFlatBase, getSkillFlatIncrement, SKILL_INTERVAL, getSkillFlatBonus } from '../ratios.js';
 
 const resistanceTierScalingMaxPercent = createTierScaling(18, 250, 1.2);
 
@@ -10,10 +11,13 @@ const generateElementalDefenseStats = () => {
   Object.keys(ELEMENTS).forEach((element) => {
     stats[`${element}Resistance`] = createStat({
       training: {
-        cost: 100, bonus: 3, maxLevel: Infinity,
+        cost: 100,
+        bonus: getTrainingBonus('elementalResistance'),
+        maxLevel: Infinity,
       },
       item: {
-        min: 25, max: 60, scaling: (level, tier) => defenseScaling(level, tier),
+        ...getItemRange('elementalResistance'),
+        scaling: (level, tier) => defenseScaling(level, tier),
       },
       itemTags: ['defense', 'jewelry'],
       show: true,
@@ -34,20 +38,31 @@ export const DEFENSE_STATS = {
     base: 100,
     levelUpBonus: 1,
     training: {
-      cost: 160, bonus: 16, maxLevel: Infinity,
+      cost: 160,
+      bonus: getTrainingBonus('life'),
+      maxLevel: Infinity,
     },
     item: {
-      min: 30, max: 80, scaling: (level, tier) => defenseScaling(level, tier),
+      ...getItemRange('life'),
+      scaling: (level, tier) => defenseScaling(level, tier),
     },
     itemTags: ['defense'],
     show: true,
     sub: 'defense',
     skills: {
       passive: getSkillBonusesFlat({
-        type: 'passive', base: 50, increment: 10, interval: 50, bonus: 0.15,
+        type: 'passive',
+        base: getSkillFlatBase('life'),
+        increment: getSkillFlatIncrement('life'),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('life', 1.5),
       }),
       buff: getSkillBonusesFlat({
-        type: 'buff', base: 60, increment: 12, interval: 50, bonus: 0.15,
+        type: 'buff',
+        base: getSkillFlatBase('life', 1.33),
+        increment: getSkillFlatIncrement('life', 1.33),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('life', 1.5),
       }),
     },
   }),
@@ -65,29 +80,52 @@ export const DEFENSE_STATS = {
   }),
   armor: createStat({
     training: {
-      cost: 200, bonus: 14, maxLevel: Infinity,
+      cost: 200,
+      bonus: getTrainingBonus('armor'),
+      maxLevel: Infinity,
     },
     item: {
-      min: 25, max: 60, scaling: (level, tier) => defenseScaling(level, tier),
+      ...getItemRange('armor'),
+      scaling: (level, tier) => defenseScaling(level, tier),
     },
     itemTags: ['defense'],
     show: true,
     sub: 'defense',
     skills: {
       passive: getSkillBonusesFlat({
-        type: 'passive', base: 24, increment: 4, interval: 50, bonus: 0.18,
+        type: 'passive',
+        base: getSkillFlatBase('armor'),
+        increment: getSkillFlatIncrement('armor'),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('armor', 1.8),
       }),
       toggle: getSkillBonusesFlat({
-        type: 'toggle', base: 20, increment: 3, interval: 50, bonus: 0.15,
+        type: 'toggle',
+        base: getSkillFlatBase('armor'),
+        increment: getSkillFlatIncrement('armor'),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('armor', 1.5),
       }),
       instant: getSkillBonusesFlat({
-        type: 'instant', base: 30, increment: 6, interval: 50, bonus: 0.2,
+        type: 'instant',
+        base: getSkillFlatBase('armor', 1.67),
+        increment: getSkillFlatIncrement('armor', 1.67),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('armor', 2.0),
       }),
       buff: getSkillBonusesFlat({
-        type: 'buff', base: 25, increment: 5, interval: 50, bonus: 0.18,
+        type: 'buff',
+        base: getSkillFlatBase('armor', 1.33),
+        increment: getSkillFlatIncrement('armor', 1.33),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('armor', 1.8),
       }),
       summon: getSkillBonusesFlat({
-        type: 'summon', base: 15, increment: 3, interval: 50, bonus: 0.12,
+        type: 'summon',
+        base: getSkillFlatBase('armor', 0.67),
+        increment: getSkillFlatIncrement('armor', 0.67),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('armor', 1.2),
       }),
     },
   }),
@@ -134,26 +172,47 @@ export const DEFENSE_STATS = {
       cost: 100, bonus: 1, maxLevel: Infinity,
     },
     item: {
-      min: 3, max: 8, scaling: (level, tier) => defenseScaling(level, tier),
+      ...getItemRange('lifeRegen'),
+      scaling: (level, tier) => defenseScaling(level, tier),
     },
     itemTags: ['belt', 'pants'],
     show: true,
     sub: 'defense',
     skills: {
       passive: getSkillBonusesFlat({
-        type: 'passive', base: 2, increment: 0.5, interval: 50, bonus: 0.15,
+        type: 'passive',
+        base: getSkillFlatBase('lifeRegen'),
+        increment: getSkillFlatIncrement('lifeRegen'),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('lifeRegen', 1.5),
       }),
       toggle: getSkillBonusesFlat({
-        type: 'toggle', base: 2.5, increment: 0.6, interval: 50, bonus: 0.16,
+        type: 'toggle',
+        base: getSkillFlatBase('lifeRegen', 1.33),
+        increment: getSkillFlatIncrement('lifeRegen', 1.33),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('lifeRegen', 1.6),
       }),
       instant: getSkillBonusesFlat({
-        type: 'instant', base: 4, increment: 1, interval: 50, bonus: 0.2,
+        type: 'instant',
+        base: getSkillFlatBase('lifeRegen', 1.67),
+        increment: getSkillFlatIncrement('lifeRegen', 1.67),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('lifeRegen', 2.0),
       }),
       buff: getSkillBonusesFlat({
-        type: 'buff', base: 3, increment: 0.8, interval: 50, bonus: 0.18,
+        type: 'buff',
+        base: getSkillFlatBase('lifeRegen', 1.33),
+        increment: getSkillFlatIncrement('lifeRegen', 1.33),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('lifeRegen', 1.8),
       }),
       summon: getSkillBonusesFlat({
-        type: 'summon', base: 1.5, increment: 0.4, interval: 50, bonus: 0.12,
+        type: 'summon',
+        base: getSkillFlatBase('lifeRegen', 0.67),
+        increment: getSkillFlatIncrement('lifeRegen', 0.67),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('lifeRegen', 1.2),
       }),
     },
   }),
@@ -200,17 +259,26 @@ export const DEFENSE_STATS = {
       cost: 100, bonus: 2, maxLevel: Infinity,
     },
     item: {
-      min: 15, max: 40, scaling: (level, tier) => defenseScaling(level, tier),
+      ...getItemRange('thornsDamage'),
+      scaling: (level, tier) => defenseScaling(level, tier),
     },
     itemTags: ['shield', 'armor'],
     show: true,
     sub: 'defense',
     skills: {
       passive: getSkillBonusesFlat({
-        type: 'passive', base: 10, increment: 2, interval: 50, bonus: 0.1,
+        type: 'passive',
+        base: getSkillFlatBase('thornsDamage'),
+        increment: getSkillFlatIncrement('thornsDamage'),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('thornsDamage'),
       }),
       buff: getSkillBonusesFlat({
-        type: 'buff', base: 50, increment: 10, interval: 50, bonus: 0.15,
+        type: 'buff',
+        base: getSkillFlatBase('thornsDamage', 1.33),
+        increment: getSkillFlatIncrement('thornsDamage', 1.33),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('thornsDamage', 1.5),
       }),
     },
   }),
@@ -241,7 +309,11 @@ export const DEFENSE_STATS = {
   reflectFireDamage: createStat({
     skills: {
       buff: getSkillBonusesFlat({
-        type: 'buff', base: 20, increment: 4, interval: 50, bonus: 0.15,
+        type: 'buff',
+        base: getSkillFlatBase('reflectFireDamage', 2.5),
+        increment: getSkillFlatIncrement('reflectFireDamage', 2.5),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('reflectFireDamage', 1.5),
       }),
     },
   }),
@@ -251,26 +323,47 @@ export const DEFENSE_STATS = {
       cost: 200, bonus: 14, maxLevel: Infinity,
     },
     item: {
-      min: 30, max: 75, scaling: (level, tier) => defenseScaling(level, tier),
+      ...getItemRange('evasion'),
+      scaling: (level, tier) => defenseScaling(level, tier),
     },
     itemTags: ['defense'],
     show: true,
     sub: 'defense',
     skills: {
       passive: getSkillBonusesFlat({
-        type: 'passive', base: 50, increment: 10, interval: 50, bonus: 0.1,
+        type: 'passive',
+        base: getSkillFlatBase('evasion'),
+        increment: getSkillFlatIncrement('evasion'),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('evasion'),
       }),
       toggle: getSkillBonusesFlat({
-        type: 'toggle', base: 60, increment: 12, interval: 50, bonus: 0.12,
+        type: 'toggle',
+        base: getSkillFlatBase('evasion', 1.33),
+        increment: getSkillFlatIncrement('evasion', 1.33),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('evasion', 1.2),
       }),
       instant: getSkillBonusesFlat({
-        type: 'instant', base: 80, increment: 15, interval: 50, bonus: 0.15,
+        type: 'instant',
+        base: getSkillFlatBase('evasion', 1.67),
+        increment: getSkillFlatIncrement('evasion', 1.67),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('evasion', 1.5),
       }),
       buff: getSkillBonusesFlat({
-        type: 'buff', base: 70, increment: 14, interval: 50, bonus: 0.14,
+        type: 'buff',
+        base: getSkillFlatBase('evasion', 1.33),
+        increment: getSkillFlatIncrement('evasion', 1.33),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('evasion', 1.4),
       }),
       summon: getSkillBonusesFlat({
-        type: 'summon', base: 30, increment: 5, interval: 50, bonus: 0.08,
+        type: 'summon',
+        base: getSkillFlatBase('evasion', 0.67),
+        increment: getSkillFlatIncrement('evasion', 0.67),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('evasion', 0.8),
       }),
     },
   }),
@@ -282,25 +375,46 @@ export const DEFENSE_STATS = {
   ...generateElementalDefenseStats(),
   allResistance: createStat({
     item: {
-      min: 8, max: 20, scaling: (level, tier) => defenseScaling(level, tier),
+      ...getItemRange('allResistance'),
+      scaling: (level, tier) => defenseScaling(level, tier),
     },
     itemTags: ['defense', 'jewelry'],
     sub: 'elemental',
     skills: {
       passive: getSkillBonusesFlat({
-        type: 'passive', base: 10, increment: 2, interval: 50, bonus: 0.1,
+        type: 'passive',
+        base: getSkillFlatBase('allResistance'),
+        increment: getSkillFlatIncrement('allResistance'),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('allResistance'),
       }),
       toggle: getSkillBonusesFlat({
-        type: 'toggle', base: 12, increment: 2.5, interval: 50, bonus: 0.12,
+        type: 'toggle',
+        base: getSkillFlatBase('allResistance', 1.33),
+        increment: getSkillFlatIncrement('allResistance', 1.33),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('allResistance', 1.2),
       }),
       instant: getSkillBonusesFlat({
-        type: 'instant', base: 15, increment: 3, interval: 50, bonus: 0.15,
+        type: 'instant',
+        base: getSkillFlatBase('allResistance', 1.67),
+        increment: getSkillFlatIncrement('allResistance', 1.67),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('allResistance', 1.5),
       }),
       buff: getSkillBonusesFlat({
-        type: 'buff', base: 15, increment: 3, interval: 50, bonus: 0.15,
+        type: 'buff',
+        base: getSkillFlatBase('allResistance', 1.33),
+        increment: getSkillFlatIncrement('allResistance', 1.33),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('allResistance', 1.5),
       }),
       summon: getSkillBonusesFlat({
-        type: 'summon', base: 5, increment: 1, interval: 50, bonus: 0.08,
+        type: 'summon',
+        base: getSkillFlatBase('allResistance', 0.67),
+        increment: getSkillFlatIncrement('allResistance', 0.67),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('allResistance', 0.8),
       }),
     },
   }),
@@ -382,4 +496,3 @@ export const DEFENSE_STATS = {
     },
   }),
 };
-

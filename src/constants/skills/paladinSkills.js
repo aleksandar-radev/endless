@@ -430,7 +430,7 @@ export const PALADIN_SKILLS = {
         level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 1 },
       }),
       endurance: getSkillStatBonus({
-        level, statKey: 'endurance', skillType: 'passive', scale: { base: 5, increment: 4 }, // Assuming base 2 in misc
+        level, statKey: 'endurance', skillType: 'passive', scale: { base: 5, increment: 4 },
       }),
       endurancePerLevel: getSkillStatBonus({
         level, statKey: 'endurance', skillType: 'passive', perLevel: true, scale: { base: 2 },
@@ -525,10 +525,10 @@ export const PALADIN_SKILLS = {
         level, statKey: 'allResistance', skillType: 'buff', perLevel: true, scale: { base: 2.5 },
       }),
       thornsDamage: getSkillStatBonus({
-        level, statKey: 'thornsDamage', skillType: 'buff', scale: { base: 1 }, // Default buff base 50.
+        level, statKey: 'thornsDamage', skillType: 'buff', scale: { base: 1 },
       }),
       thornsDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'thornsDamage', skillType: 'buff', perLevel: true, scale: { base: 50 }, // 0.05 vs 0.001
+        level, statKey: 'thornsDamage', skillType: 'buff', perLevel: true, scale: { base: 50 },
       }),
     }),
   },

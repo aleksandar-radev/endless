@@ -109,7 +109,7 @@ export const VAMPIRE_SKILLS = {
         level, statKey: 'attackRating', skillType: 'buff', perLevel: true,
       }),
       attackRatingPercent: getSkillStatBonus({
-        level, statKey: 'attackRatingPercent', skillType: 'buff', scale: { base: 1.66 }, // Assuming default percent is 3? No, attackRatingPercent in stats is percent.
+        level, statKey: 'attackRatingPercent', skillType: 'buff', scale: { base: 1.66 },
       }),
       extraDamageFromLifePercent: getSkillStatBonus({
         level, statKey: 'extraDamageFromLifePercent', skillType: 'buff', scale: { base: 0.04, max: 0.228 },

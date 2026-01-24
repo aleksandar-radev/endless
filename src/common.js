@@ -1,4 +1,6 @@
 import { fetchTrustedUtcTime } from './api.js';
+import { XP_GOLD_GROWTH_MULTIPLIER } from './constants/common.js';
+import { PER_LEVEL_SCALE } from './constants/ratios.js';
 import { STATS } from './constants/stats/stats.js';
 
 let lastApiTime = 0;
@@ -111,11 +113,6 @@ export function setStepFunctionMetadata(fn, interval, offset = 0) {
 export function xpDiminishingFactor(level) {
   return percentReducedByLevel(1, level, 20, 0.01, 0.025);
 }
-setStepFunctionMetadata(xpDiminishingFactor, 20, 1);
-
-// Global multiplier to slow down XP/Gold growth from level scaling.
-// 0.6 means ~40% reduction in the per-level growth slope.
-export const XP_GOLD_GROWTH_MULTIPLIER = 0.6;
 
 export function computeScaledReward(baseAtLevel1, level, basePercent, levelBonus, diminishingFactor = 1) {
   if (!Number.isFinite(baseAtLevel1) || baseAtLevel1 <= 0) {
@@ -402,7 +399,7 @@ export function getSkillStatBonus({
   let value;
   let uncappedValue;
   let maxValue;
-  let perLevelConfig = { scale: 0.001, divisor: 1 };
+  let perLevelConfig = { scale: PER_LEVEL_SCALE, divisor: 1 };
 
   if (config.statType === 'percent') {
     const base = config.base * (scale.base || 1);
@@ -438,7 +435,7 @@ export function getSkillStatBonus({
       level, base, levelsPerPoint, cap: Infinity,
     });
     maxValue = cap;
-    perLevelConfig = { scale: 0.001, divisor: 100 };
+    perLevelConfig = { scale: PER_LEVEL_SCALE, divisor: 100 };
   } else {
     // Flat
     const base = config.base * (scale.base || 1);
@@ -472,6 +469,7 @@ export function getSkillStatBonus({
         toString() { return String(this.value); },
       };
     }
+
     return value;
   }
 

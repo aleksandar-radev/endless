@@ -1,8 +1,6 @@
 import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat, createChanceStat, createHiddenStat, getSkillBonusesFlat, getSkillBonusesPercent, getSkillBonusesChance } from './stats.js';
 import { ELEMENTS } from '../common.js';
-
-const ELEMENTAL_DAMAGE_MIN = 8;
-const ELEMENTAL_DAMAGE_MAX = 20;
+import { getItemRange, getSkillFlatBase, getSkillFlatIncrement, getTrainingBonus, SKILL_INTERVAL, getSkillFlatBonus } from '../ratios.js';
 
 const WAND_ELEMENTAL_FLAT_MULTIPLIER = 1.4;
 const STAFF_ELEMENTAL_FLAT_MULTIPLIER = 1.75;
@@ -14,18 +12,11 @@ const tierScalingMaxPercent = createTierScaling(100, 2000, 1.2);
 const offenseScaling = (level, tier) => itemStatScaleFactor(level, tier);
 
 const createElementalDamageConfig = () => ({
-  min: ELEMENTAL_DAMAGE_MIN,
-  max: ELEMENTAL_DAMAGE_MAX,
+  ...getItemRange('elementalDamage'),
   scaling: (level, tier) => offenseScaling(level, tier),
   overrides: {
-    WAND: {
-      min: Math.round(ELEMENTAL_DAMAGE_MIN * WAND_ELEMENTAL_FLAT_MULTIPLIER),
-      max: Math.round(ELEMENTAL_DAMAGE_MAX * WAND_ELEMENTAL_FLAT_MULTIPLIER),
-    },
-    STAFF: {
-      min: Math.round(ELEMENTAL_DAMAGE_MIN * STAFF_ELEMENTAL_FLAT_MULTIPLIER),
-      max: Math.round(ELEMENTAL_DAMAGE_MAX * STAFF_ELEMENTAL_FLAT_MULTIPLIER),
-    },
+    WAND: getItemRange('elementalDamage', WAND_ELEMENTAL_FLAT_MULTIPLIER),
+    STAFF: getItemRange('elementalDamage', STAFF_ELEMENTAL_FLAT_MULTIPLIER),
   },
 });
 
@@ -53,19 +44,39 @@ const generateElementalOffenseStats = () => {
       sub: 'elemental',
       skills: {
         passive: getSkillBonusesFlat({
-          type: 'passive', base: 3, increment: 1, interval: 50, bonus: 0.1,
+          type: 'passive',
+          base: getSkillFlatBase('elementalDamage'),
+          increment: getSkillFlatIncrement('elementalDamage'),
+          interval: SKILL_INTERVAL,
+          bonus: getSkillFlatBonus('elementalDamage'),
         }),
         toggle: getSkillBonusesFlat({
-          type: 'toggle', base: 4, increment: 1, interval: 50, bonus: 0.1,
+          type: 'toggle',
+          base: getSkillFlatBase('elementalDamage', 1.33),
+          increment: getSkillFlatIncrement('elementalDamage', 1.33),
+          interval: SKILL_INTERVAL,
+          bonus: getSkillFlatBonus('elementalDamage'),
         }),
         instant: getSkillBonusesFlat({
-          type: 'instant', base: 5, increment: 2, interval: 50, bonus: 0.15,
+          type: 'instant',
+          base: getSkillFlatBase('elementalDamage', 1.67),
+          increment: getSkillFlatIncrement('elementalDamage', 1.67),
+          interval: SKILL_INTERVAL,
+          bonus: getSkillFlatBonus('elementalDamage', 1.5),
         }),
         buff: getSkillBonusesFlat({
-          type: 'buff', base: 4, increment: 1, interval: 50, bonus: 0.12,
+          type: 'buff',
+          base: getSkillFlatBase('elementalDamage', 1.33),
+          increment: getSkillFlatIncrement('elementalDamage', 1.33),
+          interval: SKILL_INTERVAL,
+          bonus: getSkillFlatBonus('elementalDamage', 1.2),
         }),
         summon: getSkillBonusesFlat({
-          type: 'summon', base: 2, increment: 1, interval: 50, bonus: 0.08,
+          type: 'summon',
+          base: getSkillFlatBase('elementalDamage', 0.67),
+          increment: getSkillFlatIncrement('elementalDamage', 0.67),
+          interval: SKILL_INTERVAL,
+          bonus: getSkillFlatBonus('elementalDamage', 0.8),
         }),
       },
     });
@@ -102,14 +113,13 @@ export const OFFENSE_STATS = {
   damage: createStat({
     base: 10,
     training: {
-      cost: 200, bonus: 1, maxLevel: Infinity,
+      cost: 200, bonus: getTrainingBonus('damage'), maxLevel: Infinity,
     },
     item: {
-      min: 5,
-      max: 16,
+      ...getItemRange('damage'),
       scaling: (level, tier) => offenseScaling(level, tier),
       overrides: {
-        AXE: { min: 8, max: 20 },
+        AXE: getItemRange('damage', 1.35),
         // MACE: { min: 16, max: 38 },
       },
     },
@@ -118,19 +128,39 @@ export const OFFENSE_STATS = {
     sub: 'attack',
     skills: {
       passive: getSkillBonusesFlat({
-        type: 'passive', base: 3, increment: 1, interval: 50, bonus: 0.1,
+        type: 'passive',
+        base: getSkillFlatBase('damage'),
+        increment: getSkillFlatIncrement('damage'),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('damage'),
       }),
       toggle: getSkillBonusesFlat({
-        type: 'toggle', base: 3, increment: 1, interval: 50, bonus: 0.1,
+        type: 'toggle',
+        base: getSkillFlatBase('damage', 3),
+        increment: getSkillFlatIncrement('damage', 1),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('damage', 1),
       }),
       instant: getSkillBonusesFlat({
-        type: 'instant', base: 5, increment: 2, interval: 50, bonus: 0.15,
+        type: 'instant',
+        base: getSkillFlatBase('damage', 3),
+        increment: getSkillFlatIncrement('damage', 1),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('damage', 1),
       }),
       buff: getSkillBonusesFlat({
-        type: 'buff', base: 4, increment: 1, interval: 50, bonus: 0.12,
+        type: 'buff',
+        base: getSkillFlatBase('damage', 1.33),
+        increment: getSkillFlatIncrement('damage', 1.33),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('damage', 1.2),
       }),
       summon: getSkillBonusesFlat({
-        type: 'summon', base: 2, increment: 1, interval: 50, bonus: 0.08,
+        type: 'summon',
+        base: getSkillFlatBase('damage', 0.67),
+        increment: getSkillFlatIncrement('damage', 0.67),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('damage', 0.8),
       }),
     },
   }),
@@ -138,6 +168,7 @@ export const OFFENSE_STATS = {
     item: {
       tierScalingMaxPercent,
       overrides: {
+        DAGGER: { min: 1, tierScalingMaxPercent: createTierScaling(75, 1500, 1.2) },
         WAND: { min: 0, max: 0 },
         STAFF: { min: 0, max: 0 },
       },
@@ -146,19 +177,19 @@ export const OFFENSE_STATS = {
     sub: 'attack',
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.25, power: 0.6, max: 500,
+        type: 'passive', base: 5, softcap: 2000, linear: 0.25, power: 0.6, max: 5000,
       }),
       toggle: getSkillBonusesPercent({
-        type: 'toggle', base: 7, softcap: 2000, linear: 0.35, power: 0.6, max: 600,
+        type: 'toggle', base: 7, softcap: 2000, linear: 0.35, power: 0.6, max: 6000,
       }),
       instant: getSkillBonusesPercent({
-        type: 'instant', base: 10, softcap: 2000, linear: 0.5, power: 0.6, max: 800,
+        type: 'instant', base: 10, softcap: 2000, linear: 0.5, power: 0.6, max: 8000,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 8, softcap: 2000, linear: 0.4, power: 0.6, max: 700,
+        type: 'buff', base: 8, softcap: 2000, linear: 0.4, power: 0.6, max: 7000,
       }),
       summon: getSkillBonusesPercent({
-        type: 'summon', base: 4, softcap: 2000, linear: 0.2, power: 0.6, max: 400,
+        type: 'summon', base: 4, softcap: 2000, linear: 0.2, power: 0.6, max: 4000,
       }),
     },
   }),
@@ -213,11 +244,10 @@ export const OFFENSE_STATS = {
       maxLevel: 200,
     }, // max bonus: 10
     item: {
-      tierScalingMaxPercent: createTierScaling(5, 100, 1.2),
+      tierScalingMaxPercent: createTierScaling(5, 15, 1.2),
       overrides: {
-        DAGGER: { min: 1, max: 120 },
-        WAND: { min: 1, max: 110 },
-        STAFF: { min: 1, max: 105 },
+        DAGGER: { min: 1, max: 22 },
+        WAND: { min: 1, max: 20 },
       },
     },
     itemTags: ['offense', 'jewelry', 'gloves', 'wand', 'staff'],
@@ -285,29 +315,52 @@ export const OFFENSE_STATS = {
   attackRating: createStat({
     base: 100,
     training: {
-      cost: 320, bonus: 20, maxLevel: Infinity,
+      cost: 320,
+      bonus: getTrainingBonus('attackRating'),
+      maxLevel: Infinity,
     },
     item: {
-      min: 60, max: 140, scaling: (level, tier) => offenseScaling(level, tier),
+      ...getItemRange('attackRating'),
+      scaling: (level, tier) => offenseScaling(level, tier),
     },
     itemTags: ['offense', 'jewelry', 'gloves'],
     show: true,
     sub: 'attack',
     skills: {
       passive: getSkillBonusesFlat({
-        type: 'passive', base: 30, increment: 10, interval: 50, bonus: 0.1,
+        type: 'passive',
+        base: getSkillFlatBase('attackRating'),
+        increment: getSkillFlatIncrement('attackRating'),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('attackRating'),
       }),
       toggle: getSkillBonusesFlat({
-        type: 'toggle', base: 40, increment: 12, interval: 50, bonus: 0.12,
+        type: 'toggle',
+        base: getSkillFlatBase('attackRating', 1.33),
+        increment: getSkillFlatIncrement('attackRating', 1.33),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('attackRating', 1.2),
       }),
       instant: getSkillBonusesFlat({
-        type: 'instant', base: 50, increment: 15, interval: 50, bonus: 0.15,
+        type: 'instant',
+        base: getSkillFlatBase('attackRating', 1.67),
+        increment: getSkillFlatIncrement('attackRating', 1.67),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('attackRating', 1.5),
       }),
       buff: getSkillBonusesFlat({
-        type: 'buff', base: 45, increment: 14, interval: 50, bonus: 0.14,
+        type: 'buff',
+        base: getSkillFlatBase('attackRating', 1.5),
+        increment: getSkillFlatIncrement('attackRating', 1.5),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('attackRating', 1.4),
       }),
       summon: getSkillBonusesFlat({
-        type: 'summon', base: 20, increment: 5, interval: 50, bonus: 0.08,
+        type: 'summon',
+        base: getSkillFlatBase('attackRating', 0.67),
+        increment: getSkillFlatIncrement('attackRating', 0.67),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('attackRating', 0.8),
       }),
     },
   }),
@@ -344,29 +397,52 @@ export const OFFENSE_STATS = {
   lifePerHit: createStat({
     dec: 1,
     training: {
-      cost: 250, bonus: 1, maxLevel: Infinity,
+      cost: 250,
+      bonus: getTrainingBonus('lifePerHit'),
+      maxLevel: Infinity,
     },
     item: {
-      min: 1, max: 7, scaling: (level, tier) => offenseScaling(level, tier),
+      ...getItemRange('lifePerHit'),
+      scaling: (level, tier) => offenseScaling(level, tier),
     },
     itemTags: ['offense'],
     show: true,
     sub: 'attack',
     skills: {
       passive: getSkillBonusesFlat({
-        type: 'passive', base: 2, increment: 0.5, interval: 50, bonus: 0.1,
+        type: 'passive',
+        base: getSkillFlatBase('lifePerHit'),
+        increment: getSkillFlatIncrement('lifePerHit'),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('lifePerHit'),
       }),
       toggle: getSkillBonusesFlat({
-        type: 'toggle', base: 3, increment: 0.8, interval: 50, bonus: 0.1,
+        type: 'toggle',
+        base: getSkillFlatBase('lifePerHit', 1.5),
+        increment: getSkillFlatIncrement('lifePerHit', 1.5),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('lifePerHit'),
       }),
       instant: getSkillBonusesFlat({
-        type: 'instant', base: 5, increment: 1, interval: 50, bonus: 0.15,
+        type: 'instant',
+        base: getSkillFlatBase('lifePerHit', 2.5),
+        increment: getSkillFlatIncrement('lifePerHit', 2.5),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('lifePerHit', 1.5),
       }),
       buff: getSkillBonusesFlat({
-        type: 'buff', base: 4, increment: 1, interval: 50, bonus: 0.12,
+        type: 'buff',
+        base: getSkillFlatBase('lifePerHit', 2.0),
+        increment: getSkillFlatIncrement('lifePerHit', 2.0),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('lifePerHit', 1.2),
       }),
       summon: getSkillBonusesFlat({
-        type: 'summon', base: 1, increment: 0.2, interval: 50, bonus: 0.05,
+        type: 'summon',
+        base: getSkillFlatBase('lifePerHit', 0.5),
+        increment: getSkillFlatIncrement('lifePerHit', 0.5),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('lifePerHit', 0.5),
       }),
     },
   }),
@@ -394,10 +470,13 @@ export const OFFENSE_STATS = {
   elementalDamage: createStat({
     dec: 1,
     training: {
-      cost: 90, bonus: 1, maxLevel: Infinity,
+      cost: 90,
+      bonus: getTrainingBonus('elementalDamage'),
+      maxLevel: Infinity,
     },
     item: {
-      min: 1, max: 4, scaling: (level, tier) => offenseScaling(level, tier),
+      ...getItemRange('elementalDamage'),
+      scaling: (level, tier) => offenseScaling(level, tier),
     },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
     sub: 'elemental',
@@ -417,41 +496,63 @@ export const OFFENSE_STATS = {
   }),
   armorPenetration: createStat({
     training: {
-      cost: 50, bonus: 10, maxLevel: Infinity,
+      cost: 50,
+      bonus: getTrainingBonus('armorPenetration'),
+      maxLevel: Infinity,
     },
     item: {
-      min: 10,
-      max: 25,
+      ...getItemRange('armorPenetration'),
       scaling: (level, tier) => offenseScaling(level, tier),
     },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
     sub: 'attack',
     skills: {
       passive: getSkillBonusesFlat({
-        type: 'passive', base: 20, increment: 10, interval: 5, bonus: 0.1,
+        type: 'passive',
+        base: getSkillFlatBase('armorPenetration'),
+        increment: getSkillFlatIncrement('armorPenetration'),
+        interval: SKILL_INTERVAL / 10,
+        bonus: getSkillFlatBonus('armorPenetration'),
       }),
       toggle: getSkillBonusesFlat({
-        type: 'toggle', base: 25, increment: 12, interval: 5, bonus: 0.12,
+        type: 'toggle',
+        base: getSkillFlatBase('armorPenetration', 1.25),
+        increment: getSkillFlatIncrement('armorPenetration', 1.25),
+        interval: SKILL_INTERVAL / 10,
+        bonus: getSkillFlatBonus('armorPenetration', 1.2),
       }),
       instant: getSkillBonusesFlat({
-        type: 'instant', base: 30, increment: 15, interval: 5, bonus: 0.15,
+        type: 'instant',
+        base: getSkillFlatBase('armorPenetration', 1.5),
+        increment: getSkillFlatIncrement('armorPenetration', 1.5),
+        interval: SKILL_INTERVAL / 10,
+        bonus: getSkillFlatBonus('armorPenetration', 1.5),
       }),
       buff: getSkillBonusesFlat({
-        type: 'buff', base: 25, increment: 12, interval: 5, bonus: 0.12,
+        type: 'buff',
+        base: getSkillFlatBase('armorPenetration', 1.25),
+        increment: getSkillFlatIncrement('armorPenetration', 1.25),
+        interval: SKILL_INTERVAL / 10,
+        bonus: getSkillFlatBonus('armorPenetration', 1.2),
       }),
       summon: getSkillBonusesFlat({
-        type: 'summon', base: 10, increment: 5, interval: 5, bonus: 0.08,
+        type: 'summon',
+        base: getSkillFlatBase('armorPenetration', 0.5),
+        increment: getSkillFlatIncrement('armorPenetration', 0.5),
+        interval: SKILL_INTERVAL / 10,
+        bonus: getSkillFlatBonus('armorPenetration', 0.8),
       }),
     },
   }),
   armorPenetrationPercent: createPercentStat({ sub: 'attack' }),
   elementalPenetration: createStat({
     training: {
-      cost: 50, bonus: 10, maxLevel: Infinity,
+      cost: 50,
+      bonus: getTrainingBonus('elementalPenetration'),
+      maxLevel: Infinity,
     },
     item: {
-      min: 10,
-      max: 25,
+      ...getItemRange('elementalPenetration'),
       scaling: (level, tier) => offenseScaling(level, tier),
     },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic', 'elemental'],
@@ -586,9 +687,8 @@ export const OFFENSE_STATS = {
     sub: 'elemental',
     skills: {
       instant: getSkillBonusesPercent({
-        type: 'instant', base: 5, softcap: 2000, linear: 0.5, power: 0.6, max: 100,
+        type: 'instant', base: 5, softcap: 2000, linear: 0.5, power: 0.6, max: 60,
       }),
     },
   }),
 };
-
