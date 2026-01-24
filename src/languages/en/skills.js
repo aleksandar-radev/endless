@@ -479,5 +479,8 @@ export default {
   'skillTree.manaScaling.toggleBonus': 'Toggle Damage: {value}x',
   'skillTree.manaScaling.buffBonus': 'Buff Effects: {value}x',
   'skillTree.specializationUnlocksAtLevel': 'Specialization unlocks at Level {level}',
+  'skillTree.distributionBonus.title': 'Skill Distribution Bonus',
+  'skillTree.distributionBonus.description': 'Distributing points evenly across all base skills provides up to a 50% bonus to their effects. Focusing all points into a single skill results in a 10% penalty. (Active after 100 points)',
+  'skillTree.distributionBonus.status': 'Current Bonus: {value}%',
 };
 

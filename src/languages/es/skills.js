@@ -486,5 +486,8 @@ export default {
   'skillTree.manaScaling.toggleBonus': 'Daño de Activación: {value}x',
   'skillTree.manaScaling.buffBonus': 'Efectos de Bufos: {value}x',
   'skillTree.specializationUnlocksAtLevel': 'Especialización se desbloquea en Nivel {level}',
+  'skillTree.distributionBonus.title': 'Bono de Distribución de Habilidades',
+  'skillTree.distributionBonus.description': 'Distribuir puntos uniformemente entre todas las habilidades base otorga hasta un 50% de bono a sus efectos. Concentrar todos los puntos en una sola habilidad resulta en una penalización del 10%. (Activo tras 100 puntos)',
+  'skillTree.distributionBonus.status': 'Bono Actual: {value}%',
 };
 

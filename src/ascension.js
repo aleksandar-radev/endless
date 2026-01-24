@@ -326,8 +326,8 @@ export const ASCENSION_CATEGORIES = {
         label: 'ascension.upgrade.critChanceCap',
         bonus: 2,
         effect: 'critChanceCap',
-        cost: (lvl) => 20 + 5 * lvl,
-        maxLevel: 25,
+        cost: (lvl) => 10 + 4 * lvl,
+        maxLevel: 20,
       },
       blockChanceCap: {
         label: 'ascension.upgrade.blockChanceCap',

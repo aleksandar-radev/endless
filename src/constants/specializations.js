@@ -24,13 +24,13 @@ export const SPECIALIZATIONS = {
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             armorPercentPerLevel: getScalingPercent({
-              level, base: 0.02, softcap: 2000, linear: 0.005, power: 0.81,
+              level, base: 0.02, softcap: 20000, linear: 0.0005, power: 0.81,
             }),
             extraDamageFromArmorPercent: Math.min(getScalingPercent({
               level, base: 0.1, softcap: 2000, linear: 0.01, power: 0.7,
             }), 2.5),
             lifePercentPerLevel: getScalingPercent({
-              level, base: 0.02, softcap: 2000, linear: 0.005, power: 0.81,
+              level, base: 0.02, softcap: 20000, linear: 0.0005, power: 0.81,
             }),
             extraDamageFromLifePercent: Math.min(getScalingPercent({
               level, base: 0.1, softcap: 2000, linear: 0.01, power: 0.7,
@@ -125,7 +125,7 @@ export const SPECIALIZATIONS = {
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             armorPercentPerLevel: getScalingPercent({
-              level, base: 0.2, softcap: 2000, linear: 0.05, power: 0.81,
+              level, base: 0.5, softcap: 2000, linear: 0.08, power: 0.81,
             }),
             arenaDamageReductionPercent: Math.min(getScalingPercent({
               level, base: 5, softcap: 500, linear: 0.15, power: 0.6,
@@ -150,8 +150,11 @@ export const SPECIALIZATIONS = {
           requiredLevel: () => SKILL_LEVEL_TIERS[4],
           icon: () => 'vanish',
           description: () => t('skill.vanish'),
-          maxLevel: () => 400,
+          maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
+            evasionPercentPerLevel: getScalingPercent({
+              level, base: 0.03, softcap: 20000, linear: 0.0008, power: 0.81,
+            }),
             avoidChance: 5 + getScalingPercent({
               level, base: 0.466, softcap: 2000, linear: 0.1, power: 0.6,
             }),

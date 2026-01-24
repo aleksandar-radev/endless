@@ -256,16 +256,16 @@ export const OFFENSE_STATS = {
     cap: 50,
     skills: {
       passive: getSkillBonusesChance({
-        type: 'passive', base: 1, levelsPerPoint: 20, cap: 30,
+        type: 'passive', base: 1, levelsPerPoint: 20, cap: 15,
       }),
       toggle: getSkillBonusesChance({
-        type: 'toggle', base: 2, levelsPerPoint: 15, cap: 35,
+        type: 'toggle', base: 2, levelsPerPoint: 15, cap: 20,
       }),
       instant: getSkillBonusesChance({
-        type: 'instant', base: 3, levelsPerPoint: 10, cap: 45,
+        type: 'instant', base: 3, levelsPerPoint: 10, cap: 40,
       }),
       buff: getSkillBonusesChance({
-        type: 'buff', base: 2.5, levelsPerPoint: 12, cap: 40,
+        type: 'buff', base: 2.5, levelsPerPoint: 12, cap: 25,
       }),
       summon: getSkillBonusesChance({
         type: 'summon', base: 1.5, levelsPerPoint: 18, cap: 25,
@@ -273,7 +273,7 @@ export const OFFENSE_STATS = {
     },
   }),
   critChanceCap: createStat({
-    base: 50,
+    base: 60,
     div: 100,
     sub: 'attack',
   }),

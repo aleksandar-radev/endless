@@ -22,7 +22,7 @@ export const ROGUE_SKILLS = {
         level, statKey: 'agility', skillType: 'passive', perLevel: true,
       }),
       critChance: getSkillStatBonus({
-        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2, max: 20 },
+        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2, max: 1 },
       }),
     }),
   },

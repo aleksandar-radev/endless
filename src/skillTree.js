@@ -843,10 +843,60 @@ export default class SkillTree {
     };
   }
 
+  getDistributionMultiplier() {
+    if (!this.selectedPath) return 1;
+    const skillDefs = SKILL_TREES[this.selectedPath.name];
+    if (!skillDefs) return 1;
+
+    const allSkillIds = Object.keys(skillDefs);
+    const N = allSkillIds.length;
+    if (N === 0) return 1;
+
+    let totalPoints = 0;
+    let maxPoints = 0;
+
+    for (const id of allSkillIds) {
+      const lvl = this.skills[id]?.level || 0;
+      if (lvl > 0) {
+        totalPoints += lvl;
+        if (lvl > maxPoints) maxPoints = lvl;
+      }
+    }
+
+    if (totalPoints < 100) return 1;
+
+    const sMax = maxPoints / totalPoints;
+    const minShare = 1 / N;
+    const concentration = N > 1 ? Math.max(0, (sMax - minShare) / (1 - minShare)) : 1;
+    const bonusPercent = 50 - (concentration * 60);
+
+    return 1 + (bonusPercent / 100);
+  }
+
   getSkillEffect(skillId, level = 0) {
     const skill = this.getSkill(skillId);
     if (!skill) return {};
     const baseEffects = skill.effect(level || skill.level || 0);
+
+    const distMult = this.getDistributionMultiplier();
+    if (distMult !== 1) {
+      Object.keys(baseEffects).forEach((key) => {
+        const val = baseEffects[key];
+        if (typeof val !== 'number' && (!val || !val._isStatBonus)) return;
+
+        let effectiveMult = distMult;
+        if (key.endsWith('Percent')) {
+          effectiveMult = 1 + (distMult - 1) * 0.25;
+        }
+
+        if (val && val._isStatBonus) {
+          val.uncappedValue *= effectiveMult;
+          val.value = Math.min(val.uncappedValue, val.max);
+        } else {
+          baseEffects[key] *= effectiveMult;
+        }
+      });
+    }
 
     // Apply Mana Scaling
     const scalingPercent = Number(this.manaScaling) || 0;

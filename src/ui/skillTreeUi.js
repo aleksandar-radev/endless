@@ -399,6 +399,38 @@ function initializeSkillsTab() {
   setupSkillTreeFloatingHeader(skillsContent, skillPointsHeader);
 }
 
+function renderDistributionBonusInfo() {
+  const container = document.getElementById('options-tab-content');
+  if (!container) return;
+
+  const sectionId = 'distribution-bonus-section';
+  let section = document.getElementById(sectionId);
+  const distMult = skillTree.getDistributionMultiplier();
+  const bonusDisplay = ((distMult - 1) * 100).toFixed(0);
+  const color = distMult >= 1 ? 'var(--accent)' : 'var(--negative)';
+
+  if (!section) {
+    section = document.createElement('div');
+    section.id = sectionId;
+    section.className = 'skill-tree-options-section';
+    section.style.marginBottom = '20px';
+    section.style.padding = '15px';
+    section.style.background = 'rgba(0, 0, 0, 0.2)';
+    section.style.borderRadius = '8px';
+    container.prepend(section);
+  }
+
+  section.innerHTML = html`
+    <h3 style="margin-top: 0; color: var(--gold);">${t('skillTree.distributionBonus.title')}</h3>
+    <p style="color: #ccc; font-size: 0.9em; margin-bottom: 10px; margin-top: 5px;">
+      ${t('skillTree.distributionBonus.description')}
+    </p>
+    <div style="font-weight: bold; color: ${color};">
+      ${tp('skillTree.distributionBonus.status', { value: bonusDisplay })}
+    </div>
+  `;
+}
+
 function renderManaScalingOption() {
   const container = document.getElementById('options-tab-content');
   if (!container) return;
@@ -492,6 +524,7 @@ function initializeOptionsTab() {
   const optionsContent = document.getElementById('options-tab-content');
   if (!optionsContent) return;
   // Initialize content if empty or needed
+  renderDistributionBonusInfo();
   renderManaScalingOption();
   renderAutoCastToggles();
   renderDisplayToggles();
@@ -914,7 +947,7 @@ function updateSpecSkillModalDetails() {
   // const qty = ... (duplicate)
 
   // If max is selected, we show effects at max possible level. If numeric input is invalid/0, default to +1.
-  const additionalLevels = (isNaN(qty) || qty <= 0) ? 1 : qty;
+  const additionalLevels = (isNaN(displayQty) || displayQty <= 0) ? 1 : displayQty;
   const targetLevel = currentLevel + additionalLevels;
 
   const effectsTarget = skillTree.getSpecializationSkillEffect(currentSpecSkillId, targetLevel);
@@ -2037,6 +2070,8 @@ export function updateSkillTreeValues() {
   renderAutoCastToggles();
   // --- Slot display toggles ---
   renderDisplayToggles();
+  // --- Distribution bonus info ---
+  renderDistributionBonusInfo();
 }
 
 // Removed - using showSkillTreeWithTabs

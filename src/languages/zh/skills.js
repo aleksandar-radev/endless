@@ -480,5 +480,8 @@ export default {
   'skillTree.manaScaling.toggleBonus': '开启伤害: {value}x',
   'skillTree.manaScaling.buffBonus': '增益效果: {value}x',
   'skillTree.specializationUnlocksAtLevel': '专精将在 {level} 级解锁',
+  'skillTree.distributionBonus.title': '技能分配加成',
+  'skillTree.distributionBonus.description': '在所有基础技能中均匀分配点数可为其效果提供高达 50% 的加成。将所有点数集中到单个技能中会导致 10% 的惩罚。（分配 100 点后生效）',
+  'skillTree.distributionBonus.status': '当前加成: {value}%',
 };
 
