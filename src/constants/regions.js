@@ -51,7 +51,7 @@ export const REGIONS = [
   {
     tier: 2,
     id: 'crystal_cave',
-    unlockLevel: 25,
+    unlockLevel: 30,
     get name() {
       return t('Crystal Cave');
     },
@@ -97,7 +97,7 @@ export const REGIONS = [
   {
     tier: 3,
     id: 'frozen_tundra',
-    unlockLevel: 50,
+    unlockLevel: 100,
     get name() {
       return t('Frozen Tundra');
     },
@@ -152,7 +152,7 @@ export const REGIONS = [
   {
     tier: 4,
     id: 'scorching_desert',
-    unlockLevel: 150,
+    unlockLevel: 300,
     get name() {
       return t('Scorching Desert');
     },
@@ -192,7 +192,7 @@ export const REGIONS = [
   {
     tier: 5,
     id: 'murky_swamp',
-    unlockLevel: 350,
+    unlockLevel: 750,
     get name() {
       return t('Murky Swamp');
     },
@@ -250,7 +250,7 @@ export const REGIONS = [
   {
     tier: 6,
     id: 'skyrealm_peaks',
-    unlockLevel: 660,
+    unlockLevel: 1500,
     get name() {
       return t('Skyrealm Peaks');
     },
@@ -305,7 +305,7 @@ export const REGIONS = [
   {
     tier: 7,
     id: 'abyssal_depths',
-    unlockLevel: 1000,
+    unlockLevel: 2800,
     get name() {
       return t('Abyssal Depths');
     },
@@ -354,7 +354,7 @@ export const REGIONS = [
   {
     tier: 8,
     id: 'volcanic_rift',
-    unlockLevel: 1400,
+    unlockLevel: 5200,
     get name() {
       return t('Volcanic Rift');
     },
@@ -404,7 +404,7 @@ export const REGIONS = [
   {
     tier: 9,
     id: 'sunken_ruins',
-    unlockLevel: 1800,
+    unlockLevel: 10000,
     get name() {
       return t('Sunken Ruins');
     },
@@ -454,7 +454,7 @@ export const REGIONS = [
   {
     tier: 10,
     id: 'haunted_moor',
-    unlockLevel: 2200,
+    unlockLevel: 16000,
     get name() {
       return t('Haunted Moor');
     },
@@ -503,7 +503,7 @@ export const REGIONS = [
   {
     tier: 11,
     id: 'golden_steppe',
-    unlockLevel: 2600,
+    unlockLevel: 30000,
     get name() {
       return t('Golden Steppe');
     },
@@ -549,7 +549,7 @@ export const REGIONS = [
   {
     tier: 12,
     id: 'obsidian_spire',
-    unlockLevel: 3000,
+    unlockLevel: 50000,
     get name() {
       return t('Obsidian Spire');
     },

@@ -27,6 +27,7 @@ export default function run() {
       <li>Added "Achievements".</li>
       <li>Added "Ads". You can now watch ads for bonuses like 2x damage, 2x life, etc.</li>
       <li>Mana overcharge introduced as a new mechanic that increases mana cost for greater damage output.</li>
+      <li>Levels required for regions unlock are now greatly increased, to align better with the new enemy scaling.</li>
     </ul>
   
     <span style="color:#FF8A00;">Skill System</span>

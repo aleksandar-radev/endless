@@ -237,19 +237,19 @@ export const DEFENSE_STATS = {
     itemTags: ['belt'],
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 0.3, softcap: 2000, linear: 0.05, power: 0.6, max: 300,
+        type: 'passive', base: 0.3, softcap: 2000, linear: 0.0005, power: 0.6, max: 3,
       }),
       toggle: getSkillBonusesPercent({
-        type: 'toggle', base: 0.5, softcap: 2000, linear: 0.08, power: 0.6, max: 350,
+        type: 'toggle', base: 0.5, softcap: 2000, linear: 0.0008, power: 0.6, max: 3.5,
       }),
       instant: getSkillBonusesPercent({
-        type: 'instant', base: 1, softcap: 2000, linear: 0.15, power: 0.6, max: 500,
+        type: 'instant', base: 1, softcap: 2000, linear: 0.0015, power: 0.6, max: 5,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 0.7, softcap: 2000, linear: 0.1, power: 0.6, max: 400,
+        type: 'buff', base: 0.7, softcap: 2000, linear: 0.001, power: 0.6, max: 4,
       }),
       summon: getSkillBonusesPercent({
-        type: 'summon', base: 0.2, softcap: 2000, linear: 0.04, power: 0.6, max: 200,
+        type: 'summon', base: 0.2, softcap: 2000, linear: 0.0004, power: 0.6, max: 2,
       }),
     },
   }),

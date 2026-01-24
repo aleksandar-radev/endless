@@ -17,7 +17,7 @@ export const STAT_RATIOS = {
   life: damage * 5.25,
   armor: damage * 10,
   evasion: damage * 9,
-  allResistance: damage * 1.35,
+  allResistance: damage * 2.6,
   elementalResistance: damage * 4.0,
   mana: damage * 4.5,
   lifeRegen: damage * 0.5,
@@ -29,7 +29,7 @@ export const STAT_RATIOS = {
   elementalPenetration: damage * 1.67,
 
   attackRating: damage * 12,
-  armorPenetration: damage * 8,
+  armorPenetration: damage * 8.5,
   lifePerHit: damage * 0.4,
 
   allAttributes: damage * 0.5,

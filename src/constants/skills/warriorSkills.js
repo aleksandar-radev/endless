@@ -91,16 +91,10 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       vitality: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive',
+        level, statKey: 'vitality', skillType: 'passive', scale: { base: 2, increment: 1.6 },
       }),
       vitalityPerLevel: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', perLevel: true,
-      }),
-      perseverance: getSkillStatBonus({
-        level, statKey: 'perseverance', skillType: 'passive',
-      }),
-      perseverancePerLevel: getSkillStatBonus({
-        level, statKey: 'perseverance', skillType: 'passive', perLevel: true,
+        level, statKey: 'vitality', skillType: 'passive', perLevel: 1.15,
       }),
       extraDamageFromLifePercent: getSkillStatBonus({
         level, statKey: 'extraDamageFromLifePercent', skillType: 'passive',
@@ -160,13 +154,16 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeRegenOfTotalPercent: getSkillStatBonus({
-        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'passive', cap: 3.0,
+        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'passive',
       }),
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'passive',
       }),
       lifeRegenPerLevel: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'passive', perLevel: true,
+      }),
+      extraDamageFromLifeRegenPercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'passive',
       }),
     }),
   },
@@ -187,13 +184,18 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'instant', scale: { base: 1.6, increment: 0.6 },
+        level,
+        statKey: 'damage',
+        skillType: 'instant',
+        scale: {
+          base: 5, increment: 4, bonus: 2.5,
+        },
       }),
       damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'instant', perLevel: true,
+        level, statKey: 'damage', skillType: 'instant', perLevel: 1.2,
       }),
       damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 2, linear: 1.1 },
+        level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1.5, linear: 0.9 },
       }),
     }),
     synergies: [
@@ -258,7 +260,7 @@ export const WARRIOR_SKILLS = {
         level, statKey: 'armor', skillType: 'buff', perLevel: true, scale: { base: 1.5 },
       }),
       extraDamageFromArmorPercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromArmorPercent', skillType: 'buff', scale: { base: 0.42, max: 0.57 },
+        level, statKey: 'extraDamageFromArmorPercent', skillType: 'buff', scale: { base: 0.8, max: 1 },
       }),
     }),
     synergies: [
@@ -285,13 +287,13 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamage: getSkillStatBonus({
-        level, statKey: 'fireDamage', skillType: 'toggle', scale: { base: 6.25, increment: 5 },
+        level, statKey: 'fireDamage', skillType: 'toggle', scale: { base: 6.25, increment: 4 },
       }),
       fireDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'fireDamage', skillType: 'toggle', perLevel: 10,
+        level, statKey: 'fireDamage', skillType: 'toggle', perLevel: 3,
       }),
       fireDamagePercent: getSkillStatBonus({
-        level, statKey: 'fireDamagePercent', skillType: 'toggle', scale: { base: 1.15 },
+        level, statKey: 'fireDamagePercent', skillType: 'toggle', scale: { base: 1.1 },
       }),
     }),
     synergies: [
@@ -314,10 +316,10 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { max: 1.75 },
+        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { max: 1.25 },
       }),
       attackRating: getSkillStatBonus({
-        level, statKey: 'attackRating', skillType: 'passive', scale: { base: 1, increment: 1 },
+        level, statKey: 'attackRating', skillType: 'passive', scale: { base: 1.8, increment: 1.1 },
       }),
       attackRatingPerLevel: getSkillStatBonus({
         level, statKey: 'attackRating', skillType: 'passive', perLevel: true,
@@ -338,7 +340,7 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       allAttributes: getSkillStatBonus({
-        level, statKey: 'allAttributes', skillType: 'passive', scale: { base: 1.5, increment: 2 },
+        level, statKey: 'allAttributes', skillType: 'passive', scale: { base: 2, increment: 2 },
       }),
       allAttributesPerLevel: getSkillStatBonus({
         level, statKey: 'allAttributes', skillType: 'passive', perLevel: true,
@@ -362,10 +364,10 @@ export const WARRIOR_SKILLS = {
         level, statKey: 'damage', skillType: 'passive', scale: { base: 1.66, increment: 2 },
       }),
       damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'passive', perLevel: true,
+        level, statKey: 'damage', skillType: 'passive', perLevel: 1,
       }),
       critDamage: getSkillStatBonus({
-        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 0.1, max: 1.5 },
+        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 0.1, max: 1.4 },
       }),
     }),
   },
@@ -382,7 +384,7 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: getSkillStatBonus({
-        level, statKey: 'armor', skillType: 'buff', scale: { base: 0.8, increment: 0.8 },
+        level, statKey: 'armor', skillType: 'buff', scale: { base: 1, increment: 1 },
       }),
       armorPerLevel: getSkillStatBonus({
         level, statKey: 'armor', skillType: 'buff', perLevel: true,
@@ -426,13 +428,13 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'instant', scale: { base: 6, increment: 1.5 },
+        level, statKey: 'damage', skillType: 'instant', scale: { base: 6, increment: 1 },
       }),
       damagePerLevel: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', perLevel: true,
       }),
       damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1.5 },
+        level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1.2 },
       }),
       armorPenetration: getSkillStatBonus({
         level, statKey: 'armorPenetration', skillType: 'instant', scale: { base: 0.66, increment: 1.33 },
@@ -466,10 +468,10 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armorPerLevel: getSkillStatBonus({
-        level, statKey: 'armor', skillType: 'passive', perLevel: 0.5,
+        level, statKey: 'armor', skillType: 'passive', perLevel: 1.5,
       }),
       allResistancePerLevel: getSkillStatBonus({
-        level, statKey: 'allResistance', skillType: 'passive', perLevel: 0.5,
+        level, statKey: 'allResistance', skillType: 'passive', perLevel: 1.5,
       }),
     }),
     synergies: [
@@ -498,7 +500,7 @@ export const WARRIOR_SKILLS = {
         level, statKey: 'strength', skillType: 'passive', scale: { base: 2, increment: 2 },
       }),
       strengthPerLevel: getSkillStatBonus({
-        level, statKey: 'strength', skillType: 'passive', perLevel: true,
+        level, statKey: 'strength', skillType: 'passive', perLevel: 1.1,
       }),
     }),
     synergies: [
@@ -529,7 +531,7 @@ export const WARRIOR_SKILLS = {
         level, statKey: 'allResistance', skillType: 'buff', perLevel: true,
       }),
       extraDamageFromAllResistancesPercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromAllResistancesPercent', skillType: 'buff', scale: { base: 0.5, max: 1 },
+        level, statKey: 'extraDamageFromAllResistancesPercent', skillType: 'buff', scale: { base: 0.5, max: 1.8 },
       }),
     }),
   },
@@ -547,10 +549,15 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamage: getSkillStatBonus({
-        level, statKey: 'fireDamage', skillType: 'passive', scale: { base: 6, increment: 2 },
+        level,
+        statKey: 'fireDamage',
+        skillType: 'passive',
+        scale: {
+          base: 6, increment: 3, bonus: 1.5,
+        },
       }),
       fireDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'fireDamage', skillType: 'passive', perLevel: true,
+        level, statKey: 'fireDamage', skillType: 'passive', perLevel: 1.6,
       }),
     }),
     synergies: [
