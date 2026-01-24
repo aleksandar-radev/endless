@@ -28,6 +28,7 @@ export default function run() {
       <li>Added "Ads". You can now watch ads for bonuses like 2x damage, 2x life, etc.</li>
       <li>Mana overcharge introduced as a new mechanic that increases mana cost for greater damage output.</li>
       <li>Levels required for regions unlock are now greatly increased, to align better with the new enemy scaling.</li>
+      <li>Added % bonus for all skills based on how points are distributed between skills.</li>
     </ul>
   
     <span style="color:#FF8A00;">Skill System</span>
