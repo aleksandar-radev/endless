@@ -76,7 +76,7 @@ export const WARRIOR_SKILLS = {
       {
         sourceSkillId: 'groundSlam',
         calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 1, increment: 0.5, cap: 5000,
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 5000,
         }),
       },
     ],
@@ -478,7 +478,7 @@ export const WARRIOR_SKILLS = {
       {
         sourceSkillId: 'toughness',
         calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 1, increment: 0.5, cap: 1000,
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 1000,
         }),
       },
     ],
@@ -564,7 +564,7 @@ export const WARRIOR_SKILLS = {
       {
         sourceSkillId: 'berserk',
         calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 1, increment: 0.5, cap: 5000,
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 5000,
         }),
       },
     ],

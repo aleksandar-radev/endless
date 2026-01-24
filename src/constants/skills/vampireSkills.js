@@ -1,11 +1,13 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { getScalingFlat, getScalingPercent, getSkillStatBonus } from '../../common.js';
+import { getScalingFlat, getScalingPercent, getScalingSynergy, getSkillStatBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Vampire skills extracted from skills.js
 export const VAMPIRE_SKILLS = {
-  // Tier 1 Skills
+  // ===========================================================================
+  // TIER 0
+  // ===========================================================================
   bloodSiphon: {
     id: 'bloodSiphon',
     name: () => t('skill.bloodSiphon.name'),
@@ -26,10 +28,7 @@ export const VAMPIRE_SKILLS = {
         level, statKey: 'damage', skillType: 'toggle', scale: { base: 0.66, increment: 0.5 },
       }),
       damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
-      }),
-      damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 0.71 },
+        level, statKey: 'damage', skillType: 'toggle', perLevel: 0.7,
       }),
     }),
   },
@@ -45,26 +44,41 @@ export const VAMPIRE_SKILLS = {
       const buffEffectiveness = 1 + (hero.stats.nightStalkerBuffEffectivenessPercent || 0);
       return {
         damagePercent: getSkillStatBonus({
-          level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 2 },
+          level,
+          statKey: 'damagePercent',
+          skillType: 'passive',
+          scale: {
+            base: 1.4, linear: 0.8, max: 0.1,
+          },
         }) * buffEffectiveness,
         agility: getSkillStatBonus({
-          level, statKey: 'agility', skillType: 'passive', scale: { base: 1, increment: 2 },
+          level, statKey: 'agility', skillType: 'passive', scale: { base: 1, increment: 1.3 },
         }) * buffEffectiveness,
         agilityPerLevel: getSkillStatBonus({
           level, statKey: 'agility', skillType: 'passive', perLevel: true,
         }) * buffEffectiveness,
       };
     },
+    synergies: [
+      {
+        sourceSkillId: 'nocturnalDominion',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
 
-  // Tier 10 Skills
+  // ===========================================================================
+  // TIER 1
+  // ===========================================================================
   crimsonBurst: {
     id: 'crimsonBurst',
     name: () => t('skill.crimsonBurst.name'),
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: () => 0,
-    cooldown: () => 4000,
+    cooldown: () => 6000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'burst',
     description: () => t('skill.crimsonBurst'),
@@ -74,18 +88,33 @@ export const VAMPIRE_SKILLS = {
         level, statKey: 'damage', skillType: 'instant', scale: { base: 4, increment: 2 },
       }),
       damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'instant', perLevel: true,
+        level, statKey: 'damage', skillType: 'instant', perLevel: 1.5,
       }),
       damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1.5 },
+        level,
+        statKey: 'damagePercent',
+        skillType: 'instant',
+        scale: {
+          base: 5, linear: 1.5, max: 1,
+        },
       }),
       lifePerHit: getSkillStatBonus({
-        level, statKey: 'lifePerHit', skillType: 'instant', scale: { base: -6, increment: -5 },
-      }),
-      lifePerHitPerLevel: getSkillStatBonus({
-        level, statKey: 'lifePerHit', skillType: 'instant', perLevel: true, scale: { base: -10 },
+        level,
+        statKey: 'lifePerHit',
+        skillType: 'instant',
+        scale: {
+          base: -2, increment: -1, bonus: 2,
+        },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'bloodSiphon',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
   darkAura: {
     id: 'darkAura',
@@ -93,28 +122,30 @@ export const VAMPIRE_SKILLS = {
     type: () => 'buff',
     manaCost: (level) => 6 + level * 0.625,
     cooldown: () => 64000,
-    duration: () => 28000,
+    duration: () => 48000,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'blood-aura',
     description: () => t('skill.darkAura'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeSteal: getSkillStatBonus({
-        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.16, max: 0.5 },
+        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 1, max: 0.3 },
       }),
       attackRating: getSkillStatBonus({
-        level, statKey: 'attackRating', skillType: 'buff', scale: { base: 0.11, increment: 0.07 },
+        level, statKey: 'attackRating', skillType: 'buff', scale: { base: 3, increment: 1 },
       }),
       attackRatingPerLevel: getSkillStatBonus({
         level, statKey: 'attackRating', skillType: 'buff', perLevel: true,
       }),
-      attackRatingPercent: getSkillStatBonus({
-        level, statKey: 'attackRatingPercent', skillType: 'buff', scale: { base: 1.66 },
-      }),
-      extraDamageFromLifePercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifePercent', skillType: 'buff', scale: { base: 0.04, max: 0.228 },
-      }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'nightStalker',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
 
   // Tier 25 Skills
@@ -130,27 +161,29 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.drainingTouch'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => {
-      const airDamage = getSkillStatBonus({
-        level, statKey: 'airDamage', skillType: 'instant', scale: { base: 0.8, increment: 0.5 },
-      });
-      const airDamagePerLevel = getSkillStatBonus({
-        level, statKey: 'airDamage', skillType: 'instant', perLevel: true,
-      });
-      const airDamagePercent = getSkillStatBonus({
-        level, statKey: 'airDamagePercent', skillType: 'instant', scale: { base: 0.5 },
-      });
       return {
-        airDamage: airDamage * 4,
-        airDamagePerLevel: airDamagePerLevel * 4,
-        airDamagePercent: airDamagePercent * 4,
-        manaPerHit: getSkillStatBonus({
-          level, statKey: 'manaPerHit', skillType: 'instant', scale: { base: 0.16, increment: 0.2 },
+        airDamage: getSkillStatBonus({
+          level, statKey: 'airDamage', skillType: 'instant', scale: { base: 1.2, increment: 1 },
         }),
-        manaPerHitPerLevel: getSkillStatBonus({
-          level, statKey: 'manaPerHit', skillType: 'instant', perLevel: true,
+        airDamagePerLevel: getSkillStatBonus({
+          level, statKey: 'airDamage', skillType: 'instant', perLevel: true,
+        }),
+        airDamagePercent: getSkillStatBonus({
+          level, statKey: 'airDamagePercent', skillType: 'instant', scale: { base: 1, linear: 0.7 },
+        }),
+        manaPerHit: getSkillStatBonus({
+          level, statKey: 'manaPerHit', skillType: 'instant', scale: { base: 1, increment: 1 },
         }),
       };
     },
+    synergies: [
+      {
+        sourceSkillId: 'crimsonBurst',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   greaterBloodHunger: {
     id: 'greaterBloodHunger',
@@ -161,20 +194,14 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.greaterBloodHunger'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strengthPercent: getSkillStatBonus({
-        level, statKey: 'strengthPercent', skillType: 'passive', scale: { base: 2 },
-      }),
       strength: getSkillStatBonus({
         level, statKey: 'strength', skillType: 'passive', scale: { base: 1, increment: 1 },
       }),
       strengthPerLevel: getSkillStatBonus({
         level, statKey: 'strength', skillType: 'passive', perLevel: true,
       }),
-      vitalityPercent: getSkillStatBonus({
-        level, statKey: 'vitalityPercent', skillType: 'passive', scale: { base: 2 },
-      }),
       vitality: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', scale: { base: 1.25, increment: 2 },
+        level, statKey: 'vitality', skillType: 'passive', scale: { base: 1.25, increment: 1 },
       }),
       vitalityPerLevel: getSkillStatBonus({
         level, statKey: 'vitality', skillType: 'passive', perLevel: true,
@@ -182,7 +209,9 @@ export const VAMPIRE_SKILLS = {
     }),
   },
 
-  // Tier 50 Skills
+  // ===========================================================================
+  // TIER 3
+  // ===========================================================================
   vampiricStrike: {
     id: 'vampiricStrike',
     name: () => t('skill.vampiricStrike.name'),
@@ -211,6 +240,20 @@ export const VAMPIRE_SKILLS = {
         level, statKey: 'lifePerHit', skillType: 'instant', perLevel: true, scale: { base: 4 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'bloodSiphon',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+      {
+        sourceSkillId: 'drainingTouch',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   summonBats: {
     id: 'summonBats',
@@ -228,7 +271,7 @@ export const VAMPIRE_SKILLS = {
           level, statKey: 'damage', skillType: 'summon', perLevel: true,
         }),
         airDamage: getSkillStatBonus({
-          level, statKey: 'airDamage', skillType: 'summon', scale: { base: 1, increment: 0.5 },
+          level, statKey: 'airDamage', skillType: 'summon', scale: { base: 1, increment: 0.7 },
         }),
         airDamagePerLevel: getSkillStatBonus({
           level, statKey: 'airDamage', skillType: 'summon', perLevel: true,
@@ -245,9 +288,19 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.summonBats'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({}),
+    synergies: [
+      {
+        sourceSkillId: 'nightStalker',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 1000,
+        }),
+      },
+    ],
   },
 
-  // Tier 75 Skills
+  // ===========================================================================
+  // TIER 4
+  // ===========================================================================
   bloodPact: {
     id: 'bloodPact',
     name: () => t('skill.bloodPact.name'),
@@ -261,7 +314,7 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       life: getSkillStatBonus({
-        level, statKey: 'life', skillType: 'buff', scale: { base: 0.16, increment: 0.16 },
+        level, statKey: 'life', skillType: 'buff', scale: { base: 2, increment: 1 },
       }),
       lifePerLevel: getSkillStatBonus({
         level, statKey: 'life', skillType: 'buff', perLevel: true, scale: { base: 1 },
@@ -270,9 +323,17 @@ export const VAMPIRE_SKILLS = {
         level, statKey: 'lifePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
       extraDamageFromLifePercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifePercent', skillType: 'buff', scale: { base: 0.04, max: 0.228 },
+        level, statKey: 'extraDamageFromLifePercent', skillType: 'buff', scale: { base: 1, max: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'darkAura',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
   // Tier 100 Skills
@@ -286,16 +347,24 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.eternalThirst'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 1.42 },
+      damagePerLevel: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
       }),
       lifePerHit: getSkillStatBonus({
-        level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: 0.66, increment: 0.625 },
+        level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: 2, increment: 1.5 },
       }),
       lifePerHitPerLevel: getSkillStatBonus({
         level, statKey: 'lifePerHit', skillType: 'toggle', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'greaterBloodHunger',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 1500,
+        }),
+      },
+    ],
   },
   deathlyPresence: {
     id: 'deathlyPresence',
@@ -306,26 +375,17 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.deathlyPresence'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifePercent: getSkillStatBonus({
-        level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 1 },
-      }),
-      strengthPercent: getSkillStatBonus({
-        level, statKey: 'strengthPercent', skillType: 'passive', scale: { base: 2 },
-      }),
-      vitalityPercent: getSkillStatBonus({
-        level, statKey: 'vitalityPercent', skillType: 'passive', scale: { base: 2 },
-      }),
       strength: getSkillStatBonus({
         level, statKey: 'strength', skillType: 'passive', scale: { base: 2, increment: 2 },
       }),
       strengthPerLevel: getSkillStatBonus({
-        level, statKey: 'strength', skillType: 'passive', perLevel: true, scale: { base: 2 },
+        level, statKey: 'strength', skillType: 'passive', perLevel: true, scale: { base: 1.3 },
       }),
       vitality: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', scale: { base: 2.5, increment: 4 },
+        level, statKey: 'vitality', skillType: 'passive', scale: { base: 2.5, increment: 2 },
       }),
       vitalityPerLevel: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 2 },
+        level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 1.3 },
       }),
     }),
   },
@@ -340,20 +400,11 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.lordOfNight'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strengthPercent: getSkillStatBonus({
-        level, statKey: 'strengthPercent', skillType: 'passive', scale: { base: 2 },
-      }),
-      vitalityPercent: getSkillStatBonus({
-        level, statKey: 'vitalityPercent', skillType: 'passive', scale: { base: 2 },
-      }),
       extraDamageFromLifePercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base: 0.1, max: 0.48 },
+        level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base: 1, max: 2 },
       }),
       resurrectionChance: getSkillStatBonus({
         level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 1, cap: 0.4 },
-      }),
-      perseverancePercent: getSkillStatBonus({
-        level, statKey: 'perseverancePercent', skillType: 'passive', scale: { base: 1 },
       }),
       perseverance: getSkillStatBonus({
         level, statKey: 'perseverance', skillType: 'passive', scale: { base: 1, increment: 1.6 },
@@ -362,6 +413,14 @@ export const VAMPIRE_SKILLS = {
         level, statKey: 'perseverance', skillType: 'passive', perLevel: true, scale: { base: 0.4 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'nightStalker',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
 
   // Tier 1200 Skills
@@ -378,21 +437,23 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeSteal: getSkillStatBonus({
-        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.16, max: 0.5 },
+        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.5, max: 0.5 },
       }),
       damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'buff', scale: { base: 1.25 },
+        level, statKey: 'damagePercent', skillType: 'buff', scale: { base: 1.25, linear: 1.4 },
       }),
       attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66 },
-      }),
-      damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'buff', scale: { base: 2.5, increment: 2 },
-      }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'buff', perLevel: true,
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, linear: 1.1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'darkAura',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   sanguineFury: {
     id: 'sanguineFury',
@@ -416,6 +477,14 @@ export const VAMPIRE_SKILLS = {
         level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'crimsonBurst',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
 
   // Tier 2000 Skills
@@ -493,6 +562,14 @@ export const VAMPIRE_SKILLS = {
         level, statKey: 'manaPerHit', skillType: 'toggle', perLevel: true, scale: { base: 0.5 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'vampiricStrike',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
   nocturnalDominion: {
     id: 'nocturnalDominion',
@@ -503,17 +580,11 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.nocturnalDominion'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 2 },
-      }),
       attackSpeedPercent: getSkillStatBonus({
         level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5 },
       }),
-      lifePercent: getSkillStatBonus({
-        level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 2 },
-      }),
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 3 },
+        level, statKey: 'damage', skillType: 'passive', scale: { base: 4, increment: 1.6 },
       }),
       damagePerLevel: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'passive', perLevel: true,
@@ -531,28 +602,21 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.vampireOverlord'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strengthPercent: getSkillStatBonus({
-        level, statKey: 'strengthPercent', skillType: 'passive', scale: { base: 2 },
+      allAttributes: getSkillStatBonus({
+        level, statKey: 'allAttributes', skillType: 'passive', scale: { base: 3, increment: 4 },
       }),
-      vitalityPercent: getSkillStatBonus({
-        level, statKey: 'vitalityPercent', skillType: 'passive', scale: { base: 2 },
-      }),
-      elementalDamagePercent: getSkillStatBonus({
-        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 2 },
-      }),
-      strength: getSkillStatBonus({
-        level, statKey: 'strength', skillType: 'passive', scale: { base: 3, increment: 3 },
-      }),
-      strengthPerLevel: getSkillStatBonus({
-        level, statKey: 'strength', skillType: 'passive', perLevel: true, scale: { base: 3 },
-      }),
-      vitality: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', scale: { base: 3.75, increment: 3 },
-      }),
-      vitalityPerLevel: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 3 },
+      allAttributesPerLevel: getSkillStatBonus({
+        level, statKey: 'allAttributes', skillType: 'passive', perLevel: true, scale: { base: 3, increment: 2 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'lordOfNight',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 3, increment: 0.3, cap: 1000,
+        }),
+      },
+    ],
   },
   immortalSovereign: {
     id: 'immortalSovereign',
@@ -565,16 +629,13 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       airDamage: getSkillStatBonus({
-        level, statKey: 'airDamage', skillType: 'toggle', scale: { base: 6.5, increment: 6 },
+        level, statKey: 'airDamage', skillType: 'toggle', scale: { base: 6.5, increment: 4 },
       }),
       airDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'airDamage', skillType: 'toggle', perLevel: true, scale: { base: 5.2 },
+        level, statKey: 'airDamage', skillType: 'toggle', perLevel: 1.5,
       }),
       airDamagePercent: getSkillStatBonus({
         level, statKey: 'airDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
-      }),
-      damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
     }),
   },

@@ -22,6 +22,43 @@ const generateElementalDefenseStats = () => {
       itemTags: ['defense', 'jewelry'],
       show: true,
       sub: 'elemental',
+      skills: {
+        passive: getSkillBonusesFlat({
+          type: 'passive',
+          base: getSkillFlatBase('elementalResistance'),
+          increment: getSkillFlatIncrement('elementalResistance'),
+          interval: SKILL_INTERVAL,
+          bonus: getSkillFlatBonus('elementalResistance'),
+        }),
+        toggle: getSkillBonusesFlat({
+          type: 'toggle',
+          base: getSkillFlatBase('elementalResistance', 1.33),
+          increment: getSkillFlatIncrement('elementalResistance', 1.33),
+          interval: SKILL_INTERVAL,
+          bonus: getSkillFlatBonus('elementalResistance', 1.33),
+        }),
+        instant: getSkillBonusesFlat({
+          type: 'instant',
+          base: getSkillFlatBase('elementalResistance', 1.67),
+          increment: getSkillFlatIncrement('elementalResistance', 1.67),
+          interval: SKILL_INTERVAL,
+          bonus: getSkillFlatBonus('elementalResistance', 1.5),
+        }),
+        buff: getSkillBonusesFlat({
+          type: 'buff',
+          base: getSkillFlatBase('elementalResistance', 1.33),
+          increment: getSkillFlatIncrement('elementalResistance', 1.33),
+          interval: SKILL_INTERVAL,
+          bonus: getSkillFlatBonus('elementalResistance', 1.2),
+        }),
+        summon: getSkillBonusesFlat({
+          type: 'summon',
+          base: getSkillFlatBase('elementalResistance', 0.67),
+          increment: getSkillFlatIncrement('elementalResistance', 0.67),
+          interval: SKILL_INTERVAL,
+          bonus: getSkillFlatBonus('elementalResistance', 0.8),
+        }),
+      },
     });
 
     stats[`${element}ResistancePercent`] = createPercentStat({
@@ -71,10 +108,10 @@ export const DEFENSE_STATS = {
     itemTags: ['belt', 'pants'],
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.5, power: 0.6, max: 100,
+        type: 'passive', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 2000,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 8, softcap: 2000, linear: 0.6, power: 0.6, max: 150,
+        type: 'buff', base: 8, softcap: 2000, linear: 0.2, power: 0.6, max: 4000,
       }),
     },
   }),
@@ -294,15 +331,15 @@ export const DEFENSE_STATS = {
   }),
   thornsOnMiss: createHiddenStat({ sub: 'defense' }),
   resurrectionChance: createChanceStat({
-    item: { tierScalingMaxPercent: createTierScaling(8, 40, 0.7) },
+    item: { tierScalingMaxPercent: createTierScaling(4, 20, 0.7) },
     itemTags: ['amulet'],
     sub: 'defense',
     skills: {
       passive: getSkillBonusesChance({
-        type: 'passive', base: 1, levelsPerPoint: 20, cap: 50,
+        type: 'passive', base: 1, levelsPerPoint: 20, cap: 25,
       }),
       buff: getSkillBonusesChance({
-        type: 'buff', base: 1, levelsPerPoint: 20, cap: 50,
+        type: 'buff', base: 1, levelsPerPoint: 20, cap: 25,
       }),
     },
   }),
@@ -371,6 +408,29 @@ export const DEFENSE_STATS = {
     item: { tierScalingMaxPercent: resistanceTierScalingMaxPercent },
     itemTags: ['boots', 'helmet'],
     sub: 'defense',
+    skills: {
+      passive: getSkillBonusesFlat({
+        type: 'passive',
+        base: getSkillFlatBase('evasionPercent'),
+        increment: getSkillFlatIncrement('evasionPercent'),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('evasionPercent'),
+      }),
+      toggle: getSkillBonusesFlat({
+        type: 'toggle',
+        base: getSkillFlatBase('evasionPercent', 1.33),
+        increment: getSkillFlatIncrement('evasionPercent', 1.33),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('evasionPercent', 1.2),
+      }),
+      buff: getSkillBonusesFlat({
+        type: 'buff',
+        base: getSkillFlatBase('evasionPercent', 1.33),
+        increment: getSkillFlatIncrement('evasionPercent', 1.33),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('evasionPercent', 1.5),
+      }),
+    },
   }),
   ...generateElementalDefenseStats(),
   allResistance: createStat({

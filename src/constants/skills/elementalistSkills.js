@@ -1,11 +1,13 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { getScalingFlat, getScalingPercent, getSkillStatBonus } from '../../common.js';
+import { getScalingFlat, getScalingPercent, getScalingSynergy, getSkillStatBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Elementalist skills extracted from skills.js
 export const ELEMENTALIST_SKILLS = {
-  // Tier 1 Skills
+  // ===========================================================================
+  // TIER 0
+  // ===========================================================================
   fireball: {
     id: 'fireball',
     name: () => t('skill.fireball.name'),
@@ -19,7 +21,7 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamage: getSkillStatBonus({
-        level, statKey: 'fireDamage', skillType: 'instant', scale: { base: 1 },
+        level, statKey: 'fireDamage', skillType: 'instant', scale: { base: 1.5, increment: 1 },
       }),
       fireDamagePerLevel: getSkillStatBonus({
         level, statKey: 'fireDamage', skillType: 'instant', perLevel: true,
@@ -54,6 +56,14 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'coldDamagePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'warmth',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
 
   warmth: {
@@ -65,20 +75,11 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.warmth'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      manaPercent: getSkillStatBonus({
-        level, statKey: 'manaPercent', skillType: 'passive', scale: { base: 1 },
-      }),
       manaRegen: getSkillStatBonus({
         level, statKey: 'manaRegen', skillType: 'passive', scale: { base: 1 },
       }),
       manaRegenPerLevel: getSkillStatBonus({
         level, statKey: 'manaRegen', skillType: 'passive', perLevel: true, scale: { base: 0.5 },
-      }),
-      manaRegenPercent: getSkillStatBonus({
-        level, statKey: 'manaRegenPercent', skillType: 'passive', scale: { base: 1 },
-      }),
-      wisdomPercent: getSkillStatBonus({
-        level, statKey: 'wisdomPercent', skillType: 'passive', scale: { base: 1 },
       }),
       wisdom: getSkillStatBonus({
         level, statKey: 'wisdom', skillType: 'passive', scale: { base: 1 },
@@ -87,9 +88,19 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'wisdom', skillType: 'passive', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'fireball',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
 
-  // Tier 10 Skills
+  // ===========================================================================
+  // TIER 1
+  // ===========================================================================
   lightningStrike: {
     id: 'lightningStrike',
     name: () => t('skill.lightningStrike.name'),
@@ -115,6 +126,14 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'airDamagePercent', skillType: 'instant', scale: { base: 0.5 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'elementalMastery',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   elementalMastery: {
     id: 'elementalMastery',
@@ -135,12 +154,22 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'elementalPenetration', skillType: 'passive', perLevel: true, scale: { base: 0.5 },
       }),
       elementalPenetrationPercent: getSkillStatBonus({
-        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.2, limit: 20 },
+        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.2, max: 20 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'warmth',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
 
-  // Tier 25 Skills
+  // ===========================================================================
+  // TIER 2
+  // ===========================================================================
   blizzard: {
     id: 'blizzard',
     name: () => t('skill.blizzard.name'),
@@ -153,15 +182,6 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.blizzard'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      coldDamagePercent: getSkillStatBonus({
-        level, statKey: 'coldDamagePercent', skillType: 'buff', scale: { base: 1.25 },
-      }),
-      airDamagePercent: getSkillStatBonus({
-        level, statKey: 'airDamagePercent', skillType: 'buff', scale: { base: 1.25 },
-      }),
-      lightningDamagePercent: getSkillStatBonus({
-        level, statKey: 'lightningDamagePercent', skillType: 'buff', scale: { base: 1.25 },
-      }),
       coldDamage: getSkillStatBonus({
         level, statKey: 'coldDamage', skillType: 'buff', scale: { base: 3.75, increment: 3 },
       }),
@@ -181,6 +201,14 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'lightningDamage', skillType: 'buff', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'frostArmor',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   fireShield: {
     id: 'fireShield',
@@ -201,9 +229,17 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'reflectFireDamage', skillType: 'buff', perLevel: true, scale: { base: 2 },
       }),
       fireDamagePercent: getSkillStatBonus({
-        level, statKey: 'fireDamagePercent', skillType: 'buff', scale: { base: 1.25 },
+        level, statKey: 'fireDamagePercent', skillType: 'buff', scale: { base: 1.25, max: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'fireball',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   arcaneWisdom: {
     id: 'arcaneWisdom',
@@ -223,16 +259,20 @@ export const ELEMENTALIST_SKILLS = {
       manaRegenPerLevel: getSkillStatBonus({
         level, statKey: 'manaRegen', skillType: 'passive', perLevel: true, scale: { base: 2 },
       }),
-      manaRegenPercent: getSkillStatBonus({
-        level, statKey: 'manaRegenPercent', skillType: 'passive', scale: { base: 1 },
-      }),
-      manaRegenOfTotalPercent: getSkillStatBonus({
-        level, statKey: 'manaRegenOfTotalPercent', skillType: 'passive', scale: { base: 0.33, limit: 1 },
-      }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'warmth',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 50 Skills
+  // ===========================================================================
+  // TIER 3
+  // ===========================================================================
   elementalStorm: {
     id: 'elementalStorm',
     name: () => t('skill.elementalStorm.name'),
@@ -255,6 +295,14 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'elementalDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'elementalMastery',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   elementalAffinity: {
     id: 'elementalAffinity',
@@ -271,12 +319,6 @@ export const ELEMENTALIST_SKILLS = {
       elementalDamagePerLevel: getSkillStatBonus({
         level, statKey: 'elementalDamage', skillType: 'passive', perLevel: true,
       }),
-      elementalDamagePercent: getSkillStatBonus({
-        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 1 },
-      }),
-      intelligencePercent: getSkillStatBonus({
-        level, statKey: 'intelligencePercent', skillType: 'passive', scale: { base: 1 },
-      }),
       allResistance: getSkillStatBonus({
         level, statKey: 'allResistance', skillType: 'passive', scale: { base: 0.5, increment: 0.5 },
       }),
@@ -284,9 +326,19 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'allResistance', skillType: 'passive', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'elementalMastery',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 75 Skills
+  // ===========================================================================
+  // TIER 4
+  // ===========================================================================
   arcanePulse: {
     id: 'arcanePulse',
     name: () => t('skill.arcanePulse.name'),
@@ -300,7 +352,7 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackRatingPercent: getSkillStatBonus({
-        level, statKey: 'attackRatingPercent', skillType: 'buff', scale: { base: 1.25 },
+        level, statKey: 'attackRatingPercent', skillType: 'buff', scale: { base: 1.25, max: 1 },
       }),
       lifePerHit: getSkillStatBonus({
         level, statKey: 'lifePerHit', skillType: 'buff', scale: { base: 1.25, increment: 1.25 },
@@ -315,12 +367,22 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'manaPerHit', skillType: 'buff', perLevel: true,
       }),
       attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, limit: 50 },
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, max: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'arcaneWisdom',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 100 Skills
+  // ===========================================================================
+  // TIER 5
+  // ===========================================================================
   elementalOverload: {
     id: 'elementalOverload',
     name: () => t('skill.elementalOverload.name'),
@@ -331,6 +393,12 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.elementalOverload'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      elementalDamage: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'toggle', scale: { base: 2.5, increment: 2 },
+      }),
+      elementalDamagePerLevel: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'toggle', perLevel: true,
+      }),
       fireDamagePercent: getSkillStatBonus({
         level, statKey: 'fireDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
@@ -343,13 +411,15 @@ export const ELEMENTALIST_SKILLS = {
       lightningDamagePercent: getSkillStatBonus({
         level, statKey: 'lightningDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
-      elementalDamage: getSkillStatBonus({
-        level, statKey: 'elementalDamage', skillType: 'toggle', scale: { base: 2.5, increment: 2 },
-      }),
-      elementalDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'elementalDamage', skillType: 'toggle', perLevel: true,
-      }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'elementalAffinity',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   primordialControl: {
     id: 'primordialControl',
@@ -360,25 +430,29 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.primordialControl'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      earthDamagePercent: getSkillStatBonus({
-        level, statKey: 'earthDamagePercent', skillType: 'passive', scale: { base: 1 },
-      }),
       vitality: getSkillStatBonus({
         level, statKey: 'vitality', skillType: 'passive', scale: { base: 2.5, increment: 4 },
       }),
       vitalityPerLevel: getSkillStatBonus({
         level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 2 },
       }),
-      vitalityPercent: getSkillStatBonus({
-        level, statKey: 'vitalityPercent', skillType: 'passive', scale: { base: 1 },
-      }),
       wisdomPercent: getSkillStatBonus({
         level, statKey: 'wisdomPercent', skillType: 'passive', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'elementalAffinity',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 200 Skills
+  // ===========================================================================
+  // TIER 6
+  // ===========================================================================
   avatarOfTheElements: {
     id: 'avatarOfTheElements',
     name: () => t('skill.avatarOfTheElements.name'),
@@ -388,9 +462,6 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.avatarOfTheElements'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: getSkillStatBonus({
-        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 1 },
-      }),
       elementalDamage: getSkillStatBonus({
         level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 3.33, increment: 2 },
       }),
@@ -403,19 +474,20 @@ export const ELEMENTALIST_SKILLS = {
       allResistancePerLevel: getSkillStatBonus({
         level, statKey: 'allResistance', skillType: 'passive', perLevel: true,
       }),
-      perseverance: getSkillStatBonus({
-        level, statKey: 'perseverance', skillType: 'passive', scale: { base: 5, increment: 8 },
-      }),
-      perseverancePerLevel: getSkillStatBonus({
-        level, statKey: 'perseverance', skillType: 'passive', perLevel: true, scale: { base: 2 },
-      }),
-      perseverancePercent: getSkillStatBonus({
-        level, statKey: 'perseverancePercent', skillType: 'passive', scale: { base: 1 },
-      }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'elementalOverload',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 1200 Skills
+  // ===========================================================================
+  // TIER 1200
+  // ===========================================================================
   elementalCorrosion: {
     id: 'elementalCorrosion',
     name: () => t('skill.elementalCorrosion.name'),
@@ -425,14 +497,8 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.elementalCorrosion'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: getSkillStatBonus({
-        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 1 },
-      }),
       elementalPenetrationPercent: getSkillStatBonus({
-        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.4, limit: 20 },
-      }),
-      manaRegenPercent: getSkillStatBonus({
-        level, statKey: 'manaRegenPercent', skillType: 'passive', scale: { base: 1 },
+        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.4, max: 20 },
       }),
       elementalDamage: getSkillStatBonus({
         level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 3.33, increment: 2 },
@@ -441,6 +507,14 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'elementalDamage', skillType: 'passive', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'elementalStorm',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   volcanicWrath: {
     id: 'volcanicWrath',
@@ -454,9 +528,6 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.volcanicWrath'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamagePercent: getSkillStatBonus({
-        level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1 },
-      }),
       earthDamage: getSkillStatBonus({
         level, statKey: 'earthDamage', skillType: 'instant', scale: { base: 6, increment: 3 },
       }),
@@ -469,10 +540,22 @@ export const ELEMENTALIST_SKILLS = {
       fireDamagePerLevel: getSkillStatBonus({
         level, statKey: 'fireDamage', skillType: 'instant', perLevel: true,
       }),
+      fireDamagePercent: getSkillStatBonus({
+        level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1 },
+      }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'elementalStorm',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
-
-  // Tier 2000 Skills
+  // ===========================================================================
+  // TIER 2000
+  // ===========================================================================
   tempestNova: {
     id: 'tempestNova',
     name: () => t('skill.tempestNova.name'),
@@ -504,6 +587,14 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'blizzard',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   earthShatter: {
     id: 'earthShatter',
@@ -527,9 +618,19 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'earthDamage', skillType: 'instant', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'elementalStorm',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 3000 Skills
+  // ===========================================================================
+  // TIER 3000
+  // ===========================================================================
   tidalWave: {
     id: 'tidalWave',
     name: () => t('skill.tidalWave.name'),
@@ -548,13 +649,18 @@ export const ELEMENTALIST_SKILLS = {
       waterDamagePerLevel: getSkillStatBonus({
         level, statKey: 'waterDamage', skillType: 'buff', perLevel: true,
       }),
-      waterDamagePercent: getSkillStatBonus({
-        level, statKey: 'waterDamagePercent', skillType: 'buff', scale: { base: 1.25 },
-      }),
       reduceEnemyAttackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'reduceEnemyAttackSpeedPercent', skillType: 'buff', scale: { base: 40, limit: 15 },
+        level, statKey: 'reduceEnemyAttackSpeedPercent', skillType: 'buff', scale: { base: 40, max: 15 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'blizzard',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   stormLord: {
     id: 'stormLord',
@@ -578,9 +684,19 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'manaPercent', skillType: 'passive', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'tempestNova',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 5000 Skills
+  // ===========================================================================
+  // TIER 5000
+  // ===========================================================================
   elementalAscension: {
     id: 'elementalAscension',
     name: () => t('skill.elementalAscension.name'),
@@ -603,6 +719,14 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'allResistance', skillType: 'passive', perLevel: true, scale: { base: 4 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'avatarOfTheElements',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   natureCataclysm: {
     id: 'natureCataclysm',
@@ -632,6 +756,14 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'elementalDamage', skillType: 'instant', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'volcanicWrath',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
   // Specialization-unlocked skills

@@ -1,11 +1,13 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { getScalingFlat, getScalingPercent, getSkillStatBonus } from '../../common.js';
+import { getScalingFlat, getScalingPercent, getScalingSynergy, getSkillStatBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Mage skills
 export const MAGE_SKILLS = {
-  // Tier 1 Skills
+  // ===========================================================================
+  // TIER 0
+  // ===========================================================================
   magicMissile: {
     id: 'magicMissile',
     name: () => t('skill.magicMissile.name'),
@@ -19,7 +21,7 @@ export const MAGE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       waterDamage: getSkillStatBonus({
-        level, statKey: 'waterDamage', skillType: 'instant', scale: { base: 1 },
+        level, statKey: 'waterDamage', skillType: 'instant', scale: { base: 1.5, increment: 1 },
       }),
       waterDamagePerLevel: getSkillStatBonus({
         level, statKey: 'waterDamage', skillType: 'instant', perLevel: true,
@@ -39,7 +41,7 @@ export const MAGE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       wisdom: getSkillStatBonus({
-        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 1 },
+        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 1.5, increment: 1.5 },
       }),
       wisdomPerLevel: getSkillStatBonus({
         level, statKey: 'wisdom', skillType: 'passive', perLevel: true,
@@ -53,7 +55,9 @@ export const MAGE_SKILLS = {
     }),
   },
 
-  // Tier 10 Skills
+  // ===========================================================================
+  // TIER 1
+  // ===========================================================================
   frostBolt: {
     id: 'frostBolt',
     name: () => t('skill.frostBolt.name'),
@@ -76,6 +80,14 @@ export const MAGE_SKILLS = {
         level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'magicMissile',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   fireBlast: {
     id: 'fireBlast',
@@ -99,9 +111,19 @@ export const MAGE_SKILLS = {
         level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'magicMissile',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 25 Skills
+  // ===========================================================================
+  // TIER 2
+  // ===========================================================================
   mindControl: {
     id: 'mindControl',
     name: () => t('skill.mindControl.name'),
@@ -112,18 +134,26 @@ export const MAGE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       intelligence: getSkillStatBonus({
-        level, statKey: 'intelligence', skillType: 'passive', scale: { base: 1 },
+        level, statKey: 'intelligence', skillType: 'passive', scale: { base: 1.5, increment: 1.5 },
       }),
       intelligencePerLevel: getSkillStatBonus({
         level, statKey: 'intelligence', skillType: 'passive', perLevel: true,
       }),
       wisdom: getSkillStatBonus({
-        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 2.5, increment: 2 },
+        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 2, increment: 2 },
       }),
       wisdomPerLevel: getSkillStatBonus({
         level, statKey: 'wisdom', skillType: 'passive', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'arcaneIntellect',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 1000,
+        }),
+      },
+    ],
   },
   manaShield: {
     id: 'manaShield',
@@ -141,6 +171,14 @@ export const MAGE_SKILLS = {
         level, statKey: 'manaShieldPercent', skillType: 'buff', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'arcaneIntellect',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.1, increment: 0.1, cap: 50,
+        }),
+      },
+    ],
   },
   crimsonAegis: {
     id: 'crimsonAegis',
@@ -156,6 +194,14 @@ export const MAGE_SKILLS = {
         level, statKey: 'damageTakenReductionPercent', skillType: 'passive', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'manaShield',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.1, increment: 0.1, cap: 20,
+        }),
+      },
+    ],
   },
   crimsonDrain: {
     id: 'crimsonDrain',
@@ -174,9 +220,19 @@ export const MAGE_SKILLS = {
         level, statKey: 'lifePerHit', skillType: 'passive', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'crimsonAegis',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 1, increment: 1, cap: 500,
+        }),
+      },
+    ],
   },
 
-  // Tier 50 Skills
+  // ===========================================================================
+  // TIER 3
+  // ===========================================================================
   resourceInfusion: {
     id: 'resourceInfusion',
     name: () => t('skill.resourceInfusion.name'),
@@ -196,6 +252,14 @@ export const MAGE_SKILLS = {
         level, statKey: 'extraDamageFromManaPercent', skillType: 'passive', scale: { base: 1, max: 1.6 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'arcaneIntellect',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 1000,
+        }),
+      },
+    ],
   },
   iceStorm: {
     id: 'iceStorm',
@@ -222,6 +286,14 @@ export const MAGE_SKILLS = {
         level, statKey: 'airDamagePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'frostBolt',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 1000,
+        }),
+      },
+    ],
   },
   arcaneFocus: {
     id: 'arcaneFocus',
@@ -239,15 +311,25 @@ export const MAGE_SKILLS = {
         level, statKey: 'elementalDamage', skillType: 'passive', perLevel: true,
       }),
       attackRating: getSkillStatBonus({
-        level, statKey: 'attackRating', skillType: 'passive', scale: { base: 0.33, increment: 0.2 },
+        level, statKey: 'attackRating', skillType: 'passive', scale: { base: 1.5, increment: 1 },
       }),
       attackRatingPerLevel: getSkillStatBonus({
         level, statKey: 'attackRating', skillType: 'passive', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'resourceInfusion',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 1000,
+        }),
+      },
+    ],
   },
 
-  // Tier 75 Skills
+  // ===========================================================================
+  // TIER 4
+  // ===========================================================================
   pyroclasm: {
     id: 'pyroclasm',
     name: () => t('skill.pyroclasm.name'),
@@ -270,6 +352,14 @@ export const MAGE_SKILLS = {
         level, statKey: 'fireDamagePercent', skillType: 'buff', scale: { base: 1.875 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'fireBlast',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   timeWarp: {
     id: 'timeWarp',
@@ -287,9 +377,19 @@ export const MAGE_SKILLS = {
         level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, max: 0.57 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'mindControl',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.2, increment: 0.2, cap: 100,
+        }),
+      },
+    ],
   },
 
-  // Tier 100 Skills
+  // ===========================================================================
+  // TIER 5
+  // ===========================================================================
   arcanePower: {
     id: 'arcanePower',
     name: () => t('skill.arcanePower.name'),
@@ -301,12 +401,20 @@ export const MAGE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamage: getSkillStatBonus({
-        level, statKey: 'elementalDamage', skillType: 'toggle', scale: { base: 3.75, increment: 3 },
+        level, statKey: 'elementalDamage', skillType: 'toggle', scale: { base: 4, increment: 3 },
       }),
       elementalDamagePerLevel: getSkillStatBonus({
         level, statKey: 'elementalDamage', skillType: 'toggle', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'arcaneFocus',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   summonElemental: {
     id: 'summonElemental',
@@ -340,9 +448,19 @@ export const MAGE_SKILLS = {
     description: () => t('skill.summonElemental'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({}),
+    synergies: [
+      {
+        sourceSkillId: 'iceStorm',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 1, increment: 1, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 200 Skills
+  // ===========================================================================
+  // TIER 6
+  // ===========================================================================
   archmage: {
     id: 'archmage',
     name: () => t('skill.archmage.name'),
@@ -365,9 +483,19 @@ export const MAGE_SKILLS = {
         level, statKey: 'mana', skillType: 'passive', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'arcanePower',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 1200 Skills
+  // ===========================================================================
+  // TIER 1200
+  // ===========================================================================
   arcaneMight: {
     id: 'arcaneMight',
     name: () => t('skill.arcaneMight.name'),
@@ -390,6 +518,14 @@ export const MAGE_SKILLS = {
         level, statKey: 'manaRegen', skillType: 'passive', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'archmage',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 1, increment: 1, cap: 2500,
+        }),
+      },
+    ],
   },
   voidBlast: {
     id: 'voidBlast',
@@ -413,9 +549,19 @@ export const MAGE_SKILLS = {
         level, statKey: 'elementalPenetrationPercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'frostBolt',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 1, increment: 1, cap: 2500,
+        }),
+      },
+    ],
   },
 
-  // Tier 2000 Skills
+  // ===========================================================================
+  // TIER 2000
+  // ===========================================================================
   chronomancerSurge: {
     id: 'chronomancerSurge',
     name: () => t('skill.chronomancerSurge.name'),
@@ -435,6 +581,14 @@ export const MAGE_SKILLS = {
         level, statKey: 'cooldownReductionPercent', skillType: 'buff', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'timeWarp',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 2000,
+        }),
+      },
+    ],
   },
   starFire: {
     id: 'starFire',
@@ -455,9 +609,19 @@ export const MAGE_SKILLS = {
         level, statKey: 'airDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'pyroclasm',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 1, increment: 1, cap: 2500,
+        }),
+      },
+    ],
   },
 
-  // Tier 3000 Skills
+  // ===========================================================================
+  // TIER 3000
+  // ===========================================================================
   manaOverflow: {
     id: 'manaOverflow',
     name: () => t('skill.manaOverflow.name'),
@@ -474,6 +638,14 @@ export const MAGE_SKILLS = {
         level, statKey: 'mana', skillType: 'passive', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'resourceInfusion',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 1, increment: 1, cap: 2500,
+        }),
+      },
+    ],
   },
   dimensionalRift: {
     id: 'dimensionalRift',
@@ -492,9 +664,19 @@ export const MAGE_SKILLS = {
       }),
       ignoreAllEnemyResistances: 1,
     }),
+    synergies: [
+      {
+        sourceSkillId: 'iceStorm',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 1, increment: 1, cap: 2500,
+        }),
+      },
+    ],
   },
 
-  // Tier 5000 Skills
+  // ===========================================================================
+  // TIER 5000
+  // ===========================================================================
   supremeSorcery: {
     id: 'supremeSorcery',
     name: () => t('skill.supremeSorcery.name'),
@@ -517,6 +699,14 @@ export const MAGE_SKILLS = {
         level, statKey: 'wisdom', skillType: 'passive', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'arcaneMight',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 1, increment: 1, cap: 3000,
+        }),
+      },
+    ],
   },
   apocalypse: {
     id: 'apocalypse',
@@ -540,6 +730,14 @@ export const MAGE_SKILLS = {
         level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'starFire',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 1, increment: 1, cap: 3000,
+        }),
+      },
+    ],
   },
 
   // Specialization Skills

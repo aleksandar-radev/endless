@@ -1,5 +1,5 @@
 import { RUNES, isChanceStat, getTierMultiplier, getPercentTierMultiplier } from './constants/runes.js';
-import { isPercentStat } from './constants/stats/stats.js';
+import { isPercentStat, getStatDecimalPlaces } from './constants/stats/stats.js';
 import { tp, t } from './i18n.js';
 import { formatStatName } from './format.js';
 import { hero, ascension } from './globals.js';
@@ -68,7 +68,9 @@ const rollRuneStats = (base, tier = 1) => {
     const rolledStats = {};
     for (const key of statKeys) {
       const rawValue = rollStatValue(base.stats[key]);
-      rolledStats[key] = Math.floor(applyTierMultiplier(key, rawValue, tier));
+      const value = applyTierMultiplier(key, rawValue, tier);
+      const isPerLevel = key.endsWith('PerLevel');
+      rolledStats[key] = isPerLevel ? value : Math.floor(value);
     }
     return rolledStats;
   }
@@ -80,7 +82,9 @@ const rollRuneStats = (base, tier = 1) => {
   const rolledStats = {};
   for (const key of selected) {
     const rawValue = rollStatValue(base.stats[key]);
-    rolledStats[key] = Math.floor(applyTierMultiplier(key, rawValue, tier));
+    const value = applyTierMultiplier(key, rawValue, tier);
+    const isPerLevel = key.endsWith('PerLevel');
+    rolledStats[key] = isPerLevel ? value : Math.floor(value);
   }
   return rolledStats;
 };
@@ -351,7 +355,8 @@ export function getRuneDescription(rune, shortElementalNames = false) {
 
   const lines = Object.entries(rune.stats).map(([stat, value]) => {
     const statName = formatStatName(stat, shortElementalNames);
-    const displayValue = Number.isInteger(value) ? value : value.toFixed(2);
+    const decimals = getStatDecimalPlaces(stat);
+    const displayValue = decimals > 0 ? value.toFixed(decimals) : Math.floor(value);
     return `${statName}: +${displayValue}`;
   });
 

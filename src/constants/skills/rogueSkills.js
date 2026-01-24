@@ -1,11 +1,13 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { getScalingFlat, getScalingPercent, getSkillStatBonus } from '../../common.js';
+import { getScalingFlat, getScalingPercent, getScalingSynergy, getSkillStatBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Rogue skills extracted from skills.js
 export const ROGUE_SKILLS = {
-  // Tier 0 Skills
+  // ===========================================================================
+  // TIER 0
+  // ===========================================================================
   shadowDance: {
     id: 'shadowDance',
     name: () => t('skill.shadowDance.name'),
@@ -16,13 +18,13 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       agility: getSkillStatBonus({
-        level, statKey: 'agility', skillType: 'passive', scale: { base: 1 },
+        level, statKey: 'agility', skillType: 'passive',
       }),
       agilityPerLevel: getSkillStatBonus({
         level, statKey: 'agility', skillType: 'passive', perLevel: true,
       }),
       critChance: getSkillStatBonus({
-        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2, max: 1 },
+        level, statKey: 'critChance', skillType: 'passive', scale: { max: 0.2 },
       }),
     }),
   },
@@ -36,37 +38,37 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       dexterity: getSkillStatBonus({
-        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 1, increment: 1.2 },
+        level, statKey: 'dexterity', skillType: 'passive',
       }),
       dexterityPerLevel: getSkillStatBonus({
         level, statKey: 'dexterity', skillType: 'passive', perLevel: true,
       }),
       extraDamageFromEvasionPercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromEvasionPercent', skillType: 'passive', scale: { base: 1, max: 0.8 },
+        level, statKey: 'extraDamageFromEvasionPercent', skillType: 'passive', scale: { max: 2 },
       }),
     }),
   },
 
-  // Tier 1 Skills
+  // ===========================================================================
+  // TIER 1
+  // ===========================================================================
   poisonAffinity: {
     id: 'poisonAffinity',
     name: () => t('skill.poisonAffinity.name'),
     type: () => 'passive',
-    requiredLevel: () => SKILL_LEVEL_TIERS[0],
+    requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'poison-affinity',
     description: () => t('skill.poisonAffinity'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      earthResistance: getSkillStatBonus({
+        level, statKey: 'earthResistance', skillType: 'passive', scale: { base: 6, increment: 4 },
+      }),
       earthDamage: getSkillStatBonus({
-        level,
-        statKey: 'earthDamage',
-        skillType: 'passive',
-        scale: {
-          base: 3, increment: 2, bonus: 1.2,
-        },
+        level, statKey: 'earthDamage', skillType: 'passive', scale: { base: 2, increment: 1.5 },
       }),
       earthDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'passive', perLevel: 1.2,
+        level, statKey: 'earthDamage', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -81,18 +83,23 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', scale: { base: 1, increment: 1 },
+        level, statKey: 'damage', skillType: 'toggle',
       }),
       damagePerLevel: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'toggle', perLevel: true,
       }),
       earthDamage: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'toggle', scale: { base: 2, increment: 1.5 },
-      }),
-      earthDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'toggle', perLevel: true,
+        level, statKey: 'earthDamage', skillType: 'toggle', scale: { base: 1.5 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'poisonAffinity',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   shadowForm: {
     id: 'shadowForm',
@@ -107,28 +114,38 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       agility: getSkillStatBonus({
-        level, statKey: 'agility', skillType: 'buff', scale: { base: 1.66, increment: 2.5 },
+        level, statKey: 'agility', skillType: 'buff', scale: { base: 2 },
       }),
       agilityPerLevel: getSkillStatBonus({
         level, statKey: 'agility', skillType: 'buff', perLevel: true,
       }),
       critChance: getSkillStatBonus({
-        level, statKey: 'critChance', skillType: 'buff', scale: { base: 0.8, max: 20 },
+        level, statKey: 'critChance', skillType: 'buff', scale: { max: 0.5 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'shadowDance',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.2, increment: 0.2, cap: 500,
+        }),
+      },
+    ],
   },
 
-  // Tier 2 Skills
+  // ===========================================================================
+  // TIER 2
+  // ===========================================================================
   flurry: {
     id: 'flurry',
     name: () => t('skill.flurry.name'),
     type: () => 'summon',
     summonStats: (level) => ({
       percentOfPlayerDamage: getSkillStatBonus({
-        level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5, max: 0.15 },
+        level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2, max: 0.15 },
       }),
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'summon', scale: { base: 4, increment: 1.5 },
+        level, statKey: 'damage', skillType: 'summon', scale: { base: 6, increment: 2 },
       }),
       attackSpeed: 4,
     }),
@@ -151,17 +168,20 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackRating: getSkillStatBonus({
-        level, statKey: 'attackRating', skillType: 'passive', scale: { base: 1, increment: 1 },
+        level, statKey: 'attackRating', skillType: 'passive',
       }),
       attackRatingPerLevel: getSkillStatBonus({
         level, statKey: 'attackRating', skillType: 'passive', perLevel: true,
       }),
       extraDamageFromAttackRatingPercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromAttackRatingPercent', skillType: 'passive', scale: { base: 1, max: 1 },
+        level, statKey: 'extraDamageFromAttackRatingPercent', skillType: 'passive', scale: { max: 1 },
       }),
     }),
   },
 
+  // ===========================================================================
+  // TIER 3
+  // ===========================================================================
   backstab: {
     id: 'backstab',
     name: () => t('skill.backstab.name'),
@@ -175,16 +195,12 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 2 },
-      }),
-      earthDamagePercent: getSkillStatBonus({
-        level, statKey: 'earthDamagePercent', skillType: 'instant', scale: { base: 2 },
+        level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
       ignoreEnemyArmor: 1,
       ignoreAllEnemyResistances: 1,
     }),
   },
-
   evasiveManeuver: {
     id: 'evasiveManeuver',
     name: () => t('skill.evasiveManeuver.name'),
@@ -195,7 +211,7 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       dexterity: getSkillStatBonus({
-        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 2.5, increment: 4 },
+        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 2, increment: 3 },
       }),
       dexterityPerLevel: getSkillStatBonus({
         level, statKey: 'dexterity', skillType: 'passive', perLevel: 0.9,
@@ -205,13 +221,23 @@ export const ROGUE_SKILLS = {
         statKey: 'extraDamageFromEvasionPercent',
         skillType: 'passive',
         scale: {
-          base: 1, linear: 1.2, max: 0.8,
+          base: 0.3, linear: 0.3, max: 0.2,
         },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'evasion',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
 
-  // Tier 4 Skills
+  // ===========================================================================
+  // TIER 4
+  // ===========================================================================
   darkPact: {
     id: 'darkPact',
     name: () => t('skill.darkPact.name'),
@@ -225,18 +251,43 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       earthDamagePercent: getSkillStatBonus({
-        level, statKey: 'earthDamagePercent', skillType: 'buff', scale: { base: 2, linear: 2 },
+        level, statKey: 'earthDamagePercent', skillType: 'buff', scale: { base: 2, linear: 1.5 },
       }),
       critDamage: getSkillStatBonus({
-        level, statKey: 'critDamage', skillType: 'buff', scale: { base: 1, increment: 1 },
-      }),
-      attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, max: 1 },
+        level, statKey: 'critDamage', skillType: 'buff', scale: { base: 1, increment: 0.5 },
       }),
     }),
   },
 
-  // Tier 5 Skills
+  poisonAmplification: {
+    id: 'poisonAmplification',
+    name: () => t('skill.poisonAmplification.name'),
+    type: () => 'passive',
+    requiredLevel: () => SKILL_LEVEL_TIERS[4],
+    icon: () => 'poison-amplification',
+    description: () => t('skill.poisonAmplification'),
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    effect: (level) => ({
+      earthResistancePerLevel: getSkillStatBonus({
+        level, statKey: 'earthResistance', skillType: 'passive', perLevel: 1.6,
+      }),
+      extraDamageFromEarthResistancePercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromEarthResistancePercent', skillType: 'passive', scale: { max: 2 },
+      }),
+    }),
+    synergies: [
+      {
+        sourceSkillId: 'poisonAffinity',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
+  },
+
+  // ===========================================================================
+  // TIER 5
+  // ===========================================================================
   assassination: {
     id: 'assassination',
     name: () => t('skill.assassination.name'),
@@ -248,18 +299,26 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', scale: { base: 5, increment: 3 },
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 2, increment: 0.8 },
       }),
       damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
+        level, statKey: 'damage', skillType: 'toggle', perLevel: 0.8,
       }),
       earthDamage: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'toggle', scale: { base: 3.75, increment: 3 },
+        level, statKey: 'earthDamage', skillType: 'toggle', scale: { base: 2, increment: 0.8 },
       }),
       earthDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'toggle', perLevel: true,
+        level, statKey: 'earthDamage', skillType: 'toggle', perLevel: 0.8,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'poisonDagger',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 2000,
+        }),
+      },
+    ],
   },
 
   deadlyPrecision: {
@@ -272,18 +331,28 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackRating: getSkillStatBonus({
-        level, statKey: 'attackRating', skillType: 'passive', scale: { base: 1.66, increment: 1 },
+        level, statKey: 'attackRating', skillType: 'passive', scale: { base: 1.5, increment: 1 },
       }),
       attackRatingPerLevel: getSkillStatBonus({
         level, statKey: 'attackRating', skillType: 'passive', perLevel: true,
       }),
       critChance: getSkillStatBonus({
-        level, statKey: 'critChance', skillType: 'passive', scale: { base: 2.5, max: 20 },
+        level, statKey: 'critChance', skillType: 'passive', scale: { max: 0.5 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'precision',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.2, increment: 0.2, cap: 500,
+        }),
+      },
+    ],
   },
 
-  // Tier 6 Skills
+  // ===========================================================================
+  // TIER 6
+  // ===========================================================================
   masterThief: {
     id: 'masterThief',
     name: () => t('skill.masterThief.name'),
@@ -294,13 +363,13 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       dexterity: getSkillStatBonus({
-        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 3.75, increment: 6 },
+        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 3, increment: 5 },
       }),
       dexterityPerLevel: getSkillStatBonus({
         level, statKey: 'dexterity', skillType: 'passive', perLevel: true,
       }),
       agility: getSkillStatBonus({
-        level, statKey: 'agility', skillType: 'passive', scale: { base: 3.75, increment: 6 },
+        level, statKey: 'agility', skillType: 'passive', scale: { base: 3, increment: 5 },
       }),
       agilityPerLevel: getSkillStatBonus({
         level, statKey: 'agility', skillType: 'passive', perLevel: true,
@@ -308,7 +377,9 @@ export const ROGUE_SKILLS = {
     }),
   },
 
-  // Tier 1200 Skills
+  // ===========================================================================
+  // TIER 1200
+  // ===========================================================================
   shadowMastery: {
     id: 'shadowMastery',
     name: () => t('skill.shadowMastery.name'),
@@ -319,15 +390,23 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'passive', scale: { base: 10, increment: 5 },
+        level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 1 },
       }),
       damagePerLevel: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'passive', perLevel: true,
       }),
       critChance: getSkillStatBonus({
-        level, statKey: 'critChance', skillType: 'passive', scale: { base: 3, max: 25 },
+        level, statKey: 'critChance', skillType: 'passive', scale: { max: 0.6 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'shadowDance',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   venomousAssault: {
     id: 'venomousAssault',
@@ -342,7 +421,7 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       earthDamage: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'instant', scale: { base: 5, increment: 2.5 },
+        level, statKey: 'earthDamage', skillType: 'instant', scale: { base: 6, increment: 3 },
       }),
       earthDamagePerLevel: getSkillStatBonus({
         level, statKey: 'earthDamage', skillType: 'instant', perLevel: true,
@@ -351,9 +430,19 @@ export const ROGUE_SKILLS = {
         level, statKey: 'earthDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'poisonDagger',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.4, cap: 2500,
+        }),
+      },
+    ],
   },
 
-  // Tier 2000 Skills
+  // ===========================================================================
+  // TIER 2000
+  // ===========================================================================
   phantomStrike: {
     id: 'phantomStrike',
     name: () => t('skill.phantomStrike.name'),
@@ -367,7 +456,7 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'instant', scale: { base: 7, increment: 2.5 },
+        level, statKey: 'damage', skillType: 'instant', scale: { base: 8, increment: 3 },
       }),
       damagePerLevel: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', perLevel: true,
@@ -388,34 +477,55 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5, max: 75 },
+        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { max: 1.5 },
       }),
       critDamage: getSkillStatBonus({
-        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 0.1, max: 3 },
+        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 0.2, max: 2 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'deadlyPrecision',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
 
-  // Tier 3000 Skills
+  // ===========================================================================
+  // TIER 3000
+  // ===========================================================================
   eclipseForm: {
     id: 'eclipseForm',
     name: () => t('skill.eclipseForm.name'),
     type: () => 'buff',
     manaCost: (level) => 35 + level * 1.25,
-    cooldown: () => 140000,
-    duration: () => 35000,
+    cooldown: () => 120000,
+    duration: () => 95000,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'eclipse-form',
     description: () => t('skill.eclipseForm'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackRating: getSkillStatBonus({
-        level, statKey: 'attackRating', skillType: 'buff', scale: { base: 1.11, increment: 0.7 },
+        level, statKey: 'attackRating', skillType: 'buff', scale: { base: 1.5, increment: 1 },
       }),
       attackRatingPerLevel: getSkillStatBonus({
         level, statKey: 'attackRating', skillType: 'buff', perLevel: true,
       }),
+      extraDamageFromAttackRatingPercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromAttackRatingPercent', skillType: 'buff', scale: { max: 1.5 },
+      }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'shadowForm',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 1, increment: 1, cap: 2000,
+        }),
+      },
+    ],
   },
   perfectDodge: {
     id: 'perfectDodge',
@@ -427,15 +537,25 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       evasion: getSkillStatBonus({
-        level, statKey: 'evasion', skillType: 'passive', scale: { base: 1, increment: 1 },
+        level, statKey: 'evasion', skillType: 'passive', scale: { base: 2, increment: 2 },
       }),
       evasionPerLevel: getSkillStatBonus({
         level, statKey: 'evasion', skillType: 'passive', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'evasiveManeuver',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1500,
+        }),
+      },
+    ],
   },
 
-  // Tier 5000 Skills
+  // ===========================================================================
+  // TIER 5000
+  // ===========================================================================
   kingOfThieves: {
     id: 'kingOfThieves',
     name: () => t('skill.kingOfThieves.name'),
@@ -449,12 +569,20 @@ export const ROGUE_SKILLS = {
         level, statKey: 'bonusGoldPercent', skillType: 'passive', scale: { base: 1 },
       }),
       dexterity: getSkillStatBonus({
-        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 5, increment: 8 },
+        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 5, increment: 10 },
       }),
       dexterityPerLevel: getSkillStatBonus({
         level, statKey: 'dexterity', skillType: 'passive', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'masterThief',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.4, cap: 2500,
+        }),
+      },
+    ],
   },
   nightfallAssassin: {
     id: 'nightfallAssassin',
@@ -467,13 +595,13 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', scale: { base: 11.66, increment: 5 },
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 15, increment: 6 },
       }),
       damagePerLevel: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'toggle', perLevel: true,
       }),
       critChance: getSkillStatBonus({
-        level, statKey: 'critChance', skillType: 'toggle', scale: { base: 2.5, max: 50 },
+        level, statKey: 'critChance', skillType: 'toggle', scale: { base: 2.5, max: 1 },
       }),
     }),
   },

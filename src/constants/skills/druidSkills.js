@@ -1,11 +1,13 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { getScalingFlat, getScalingPercent, getSkillStatBonus } from '../../common.js';
+import { getScalingFlat, getScalingPercent, getScalingSynergy, getSkillStatBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Druid skills
 export const DRUID_SKILLS = {
-  // Tier 1 Skills
+  // ===========================================================================
+  // TIER 0
+  // ===========================================================================
   summonPest: {
     id: 'summonPest',
     name: () => t('skill.summonPest.name'),
@@ -13,7 +15,7 @@ export const DRUID_SKILLS = {
     summonStats: (level) => {
       return {
         percentOfPlayerDamage: getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5, limit: 0.8 },
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5, max: 0.8 },
         }),
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'summon', scale: { base: 2.5, increment: 1 },
@@ -52,19 +54,21 @@ export const DRUID_SKILLS = {
       armorPerLevel: getSkillStatBonus({
         level, statKey: 'armor', skillType: 'passive', perLevel: true,
       }),
-      armorPercent: getSkillStatBonus({
-        level, statKey: 'armorPercent', skillType: 'passive', scale: { base: 1 },
-      }),
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'passive', scale: { base: 1 },
       }),
       lifeRegenPerLevel: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'passive', perLevel: true,
       }),
-      extraDamageFromLifeRegenPercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'passive', scale: { base: 5, limit: 1 },
-      }) / 10,
     }),
+    synergies: [
+      {
+        sourceSkillId: 'naturalAffinity',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 1000,
+        }),
+      },
+    ],
   },
   naturalAffinity: {
     id: 'naturalAffinity',
@@ -82,15 +86,14 @@ export const DRUID_SKILLS = {
         level, statKey: 'vitality', skillType: 'passive', perLevel: true,
       }),
       lifePercent: getSkillStatBonus({
-        level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 0.4 },
-      }),
-      lifeRegenOfTotalPercent: getSkillStatBonus({
-        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'passive', scale: { base: 0.33, limit: 1 },
+        level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 0.4, max: 1 },
       }),
     }),
   },
 
-  // Tier 10 Skills
+  // ===========================================================================
+  // TIER 1
+  // ===========================================================================
   rejuvenation: {
     id: 'rejuvenation',
     name: () => t('skill.rejuvenation.name'),
@@ -113,9 +116,17 @@ export const DRUID_SKILLS = {
         level, statKey: 'lifeRegenPercent', skillType: 'buff', scale: { base: 0.625 },
       }),
       extraDamageFromLifeRegenPercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'buff', scale: { base: 2.5, limit: 1 },
+        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'buff', scale: { base: 2.5, max: 1 },
       }) / 5,
     }),
+    synergies: [
+      {
+        sourceSkillId: 'barkSkin',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 1000,
+        }),
+      },
+    ],
   },
   entanglingRoots: {
     id: 'entanglingRoots',
@@ -139,9 +150,17 @@ export const DRUID_SKILLS = {
         level, statKey: 'earthDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
       reduceEnemyDamagePercent: getSkillStatBonus({
-        level, statKey: 'reduceEnemyDamagePercent', skillType: 'instant', scale: { base: 20, limit: 1 },
+        level, statKey: 'reduceEnemyDamagePercent', skillType: 'instant', scale: { base: 20, max: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'naturalAffinity',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
   frostBloom: {
@@ -163,19 +182,21 @@ export const DRUID_SKILLS = {
       waterDamagePerLevel: getSkillStatBonus({
         level, statKey: 'waterDamage', skillType: 'instant', perLevel: true,
       }),
-      waterDamagePercent: getSkillStatBonus({
-        level, statKey: 'waterDamagePercent', skillType: 'instant', scale: { base: 1.5 },
-      }),
       coldDamage: getSkillStatBonus({
         level, statKey: 'coldDamage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
       }),
       coldDamagePerLevel: getSkillStatBonus({
         level, statKey: 'coldDamage', skillType: 'instant', perLevel: true,
       }),
-      coldDamagePercent: getSkillStatBonus({
-        level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1.5 },
-      }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'entanglingRoots',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
   sproutling: {
@@ -185,7 +206,7 @@ export const DRUID_SKILLS = {
     summonStats: (level) => {
       return {
         percentOfPlayerDamage: getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 1.25, limit: 0.6 },
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 1.25, max: 0.6 },
         }),
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'summon', scale: { base: 5, increment: 2 },
@@ -204,9 +225,19 @@ export const DRUID_SKILLS = {
     description: () => t('skill.sproutling'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({}),
+    synergies: [
+      {
+        sourceSkillId: 'summonPest',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 1000,
+        }),
+      },
+    ],
   },
 
-  // Tier 25 Skills
+  // ===========================================================================
+  // TIER 2
+  // ===========================================================================
   animalCompanion: {
     id: 'animalCompanion',
     name: () => t('skill.animalCompanion.name'),
@@ -214,7 +245,7 @@ export const DRUID_SKILLS = {
     summonStats: (level) => {
       return {
         percentOfPlayerDamage: getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5, limit: 1 },
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5, max: 1 },
         }),
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'summon', scale: { base: 7.5, increment: 3 },
@@ -233,6 +264,14 @@ export const DRUID_SKILLS = {
     description: () => t('skill.animalCompanion'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({}),
+    synergies: [
+      {
+        sourceSkillId: 'sproutling',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 1000,
+        }),
+      },
+    ],
   },
 
   // Summoner specialization bonus skill
@@ -243,7 +282,7 @@ export const DRUID_SKILLS = {
     summonStats: (level) => {
       return {
         percentOfPlayerDamage: getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 3.75, limit: 4 },
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 3.75, max: 4 },
         }),
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'summon', scale: { base: 15, increment: 5 },
@@ -277,9 +316,17 @@ export const DRUID_SKILLS = {
         level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 1 },
       }),
       extraDamageFromLifePercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base: 0.4, limit: 1.11 },
+        level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base: 0.4, max: 1.11 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'naturalAffinity',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 500,
+        }),
+      },
+    ],
   },
 
   stoneTorrent: {
@@ -314,9 +361,19 @@ export const DRUID_SKILLS = {
         level, statKey: 'waterDamagePercent', skillType: 'instant', scale: { base: 2 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'hurricane',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 50 Skills
+  // ===========================================================================
+  // TIER 3
+  // ===========================================================================
   hurricane: {
     id: 'hurricane',
     name: () => t('skill.hurricane.name'),
@@ -348,6 +405,14 @@ export const DRUID_SKILLS = {
         level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'entanglingRoots',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
   spiritBear: {
@@ -357,7 +422,7 @@ export const DRUID_SKILLS = {
     summonStats: (level) => {
       return {
         percentOfPlayerDamage: getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 3.75, limit: 2 },
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 3.75, max: 2 },
         }),
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'summon', scale: { base: 15, increment: 5 },
@@ -376,6 +441,14 @@ export const DRUID_SKILLS = {
     description: () => t('skill.spiritBear'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({}),
+    synergies: [
+      {
+        sourceSkillId: 'animalCompanion',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 1000,
+        }),
+      },
+    ],
   },
   stoneform: {
     id: 'stoneform',
@@ -408,6 +481,14 @@ export const DRUID_SKILLS = {
         level, statKey: 'allResistance', skillType: 'buff', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'barkSkin',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
 
   // Shapeshifting Skills (Unlocked via Shapeshifter specialization)
@@ -439,6 +520,14 @@ export const DRUID_SKILLS = {
         level, statKey: 'damage', skillType: 'buff', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'stoneform',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
   snakeForm: {
     id: 'snakeForm',
@@ -466,9 +555,19 @@ export const DRUID_SKILLS = {
       }),
       poisonChance: 20,
     }),
+    synergies: [
+      {
+        sourceSkillId: 'summonPest',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
 
-  // Tier 75 Skills
+  // ===========================================================================
+  // TIER 4
+  // ===========================================================================
   spiritLink: {
     id: 'spiritLink',
     name: () => t('skill.spiritLink.name'),
@@ -482,7 +581,7 @@ export const DRUID_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeSteal: getSkillStatBonus({
-        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.4, limit: 1 },
+        level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.4, max: 1 },
       }),
       manaPerHit: getSkillStatBonus({
         level, statKey: 'manaPerHit', skillType: 'buff', scale: { base: 1, increment: 1.25 },
@@ -491,6 +590,14 @@ export const DRUID_SKILLS = {
         level, statKey: 'manaPerHit', skillType: 'buff', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'rejuvenation',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
   moonfury: {
     id: 'moonfury',
@@ -520,9 +627,19 @@ export const DRUID_SKILLS = {
         level, statKey: 'waterDamage', skillType: 'passive', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'hurricane',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
 
-  // Tier 100 Skills
+  // ===========================================================================
+  // TIER 5
+  // ===========================================================================
   earthsEmbrace: {
     id: 'earthsEmbrace',
     name: () => t('skill.earthsEmbrace.name'),
@@ -538,19 +655,21 @@ export const DRUID_SKILLS = {
       armorPercent: getSkillStatBonus({
         level, statKey: 'armorPercent', skillType: 'buff', scale: { base: 0.625 },
       }),
-      lifeRegenPercent: getSkillStatBonus({
-        level, statKey: 'lifeRegenPercent', skillType: 'buff', scale: { base: 0.625 },
-      }),
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'buff', scale: { base: 3.33, increment: 2.5 },
       }),
       lifeRegenPerLevel: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'buff', perLevel: true,
       }),
-      lifeRegenOfTotalPercent: getSkillStatBonus({
-        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'buff', scale: { base: 0.14, limit: 1 },
-      }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'stoneform',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   wrathOfNature: {
     id: 'wrathOfNature',
@@ -573,13 +692,20 @@ export const DRUID_SKILLS = {
       vitalityPerLevel: getSkillStatBonus({
         level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 2 },
       }),
-      elementalDamagePercent: getSkillStatBonus({
-        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 1 },
-      }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'naturalGrowth',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 200 Skills
+  // ===========================================================================
+  // TIER 6
+  // ===========================================================================
   avatarOfNature: {
     id: 'avatarOfNature',
     name: () => t('skill.avatarOfNature.name'),
@@ -595,22 +721,26 @@ export const DRUID_SKILLS = {
       vitalityPerLevel: getSkillStatBonus({
         level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 3 },
       }),
-      vitalityPercent: getSkillStatBonus({
-        level, statKey: 'vitalityPercent', skillType: 'passive', scale: { base: 1 },
-      }),
       strength: getSkillStatBonus({
         level, statKey: 'strength', skillType: 'passive', scale: { base: 3, increment: 3 },
       }),
       strengthPerLevel: getSkillStatBonus({
         level, statKey: 'strength', skillType: 'passive', perLevel: true, scale: { base: 3 },
       }),
-      damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 1 },
-      }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'wrathOfNature',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 1200 Skills
+  // ===========================================================================
+  // TIER 1200
+  // ===========================================================================
   spiritBond: {
     id: 'spiritBond',
     name: () => t('skill.spiritBond.name'),
@@ -626,16 +756,18 @@ export const DRUID_SKILLS = {
       lifeRegenPerLevel: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'passive', perLevel: true, scale: { base: 2 },
       }),
-      lifeRegenPercent: getSkillStatBonus({
-        level, statKey: 'lifeRegenPercent', skillType: 'passive', scale: { base: 1 },
-      }),
       manaRegenPercent: getSkillStatBonus({
         level, statKey: 'manaRegenPercent', skillType: 'passive', scale: { base: 1 },
       }),
-      extraDamageFromLifeRegenPercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'passive', scale: { base: 5, limit: 1 },
-      }) / 2,
     }),
+    synergies: [
+      {
+        sourceSkillId: 'spiritLink',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   wildGrowth: {
     id: 'wildGrowth',
@@ -655,19 +787,23 @@ export const DRUID_SKILLS = {
       lifeRegenPerLevel: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'buff', perLevel: true, scale: { base: 1.5 },
       }),
-      lifeRegenPercent: getSkillStatBonus({
-        level, statKey: 'lifeRegenPercent', skillType: 'buff', scale: { base: 0.625 },
-      }),
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
-      lifeRegenOfTotalPercent: getSkillStatBonus({
-        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'buff', scale: { base: 0.14, limit: 1 },
-      }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'rejuvenation',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 2000 Skills
+  // ===========================================================================
+  // TIER 2000
+  // ===========================================================================
   ancientRoots: {
     id: 'ancientRoots',
     name: () => t('skill.ancientRoots.name'),
@@ -689,10 +825,15 @@ export const DRUID_SKILLS = {
       lifePerLevel: getSkillStatBonus({
         level, statKey: 'life', skillType: 'passive', perLevel: true, scale: { base: 5 },
       }),
-      earthDamagePercent: getSkillStatBonus({
-        level, statKey: 'earthDamagePercent', skillType: 'passive', scale: { base: 2 },
-      }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'entanglingRoots',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   furyOfTheWilds: {
     id: 'furyOfTheWilds',
@@ -725,9 +866,19 @@ export const DRUID_SKILLS = {
         waterDamagePercent,
       };
     },
+    synergies: [
+      {
+        sourceSkillId: 'frostBloom',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 3000 Skills
+  // ===========================================================================
+  // TIER 3000
+  // ===========================================================================
   natureEternal: {
     id: 'natureEternal',
     name: () => t('skill.natureEternal.name'),
@@ -749,13 +900,15 @@ export const DRUID_SKILLS = {
       endurancePerLevel: getSkillStatBonus({
         level, statKey: 'endurance', skillType: 'passive', perLevel: true,
       }),
-      perseverance: getSkillStatBonus({
-        level, statKey: 'perseverance', skillType: 'passive', scale: { base: 15, increment: 24 },
-      }),
-      perseverancePerLevel: getSkillStatBonus({
-        level, statKey: 'perseverance', skillType: 'passive', perLevel: true, scale: { base: 6 },
-      }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'naturalAffinity',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   primevalGuardian: {
     id: 'primevalGuardian',
@@ -764,7 +917,7 @@ export const DRUID_SKILLS = {
     summonStats: (level) => {
       return {
         percentOfPlayerDamage: getSkillStatBonus({
-          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 3.75, limit: 1.5 },
+          level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 3.75, max: 1.5 },
         }),
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'summon', scale: { base: 20, increment: 8 },
@@ -786,9 +939,19 @@ export const DRUID_SKILLS = {
     description: () => t('skill.primevalGuardian'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({}),
+    synergies: [
+      {
+        sourceSkillId: 'summonTreant',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 5000 Skills
+  // ===========================================================================
+  // TIER 5000
+  // ===========================================================================
   earthsEmbraceAscended: {
     id: 'earthsEmbraceAscended',
     name: () => t('skill.earthsEmbraceAscended.name'),
@@ -807,13 +970,15 @@ export const DRUID_SKILLS = {
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 2 },
       }),
-      allResistance: getSkillStatBonus({
-        level, statKey: 'allResistance', skillType: 'passive', scale: { base: 3, increment: 3 },
-      }),
-      allResistancePerLevel: getSkillStatBonus({
-        level, statKey: 'allResistance', skillType: 'passive', perLevel: true, scale: { base: 2 },
-      }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'earthsEmbrace',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   cosmicHarmony: {
     id: 'cosmicHarmony',
@@ -832,5 +997,13 @@ export const DRUID_SKILLS = {
         level, statKey: 'elementalDamage', skillType: 'toggle', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'avatarOfNature',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 };

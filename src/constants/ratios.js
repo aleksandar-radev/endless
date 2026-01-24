@@ -28,7 +28,7 @@ export const STAT_RATIOS = {
   elementalDamage: damage * 1.11,
   elementalPenetration: damage * 1.67,
 
-  attackRating: damage * 12,
+  attackRating: damage * 9.3,
   armorPenetration: damage * 8.5,
   lifePerHit: damage * 0.4,
 

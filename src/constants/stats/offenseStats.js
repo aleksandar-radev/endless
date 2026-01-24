@@ -73,10 +73,10 @@ const generateElementalOffenseStats = () => {
         }),
         summon: getSkillBonusesFlat({
           type: 'summon',
-          base: getSkillFlatBase('elementalDamage', 0.67),
-          increment: getSkillFlatIncrement('elementalDamage', 0.67),
+          base: getSkillFlatBase('elementalDamage', 1),
+          increment: getSkillFlatIncrement('elementalDamage', 1),
           interval: SKILL_INTERVAL,
-          bonus: getSkillFlatBonus('elementalDamage', 0.8),
+          bonus: getSkillFlatBonus('elementalDamage', 1),
         }),
       },
     });
@@ -105,6 +105,15 @@ const generateElementalOffenseStats = () => {
     stats[`${element}Penetration`] = createStat({ sub: 'elemental' });
     stats[`${element}PenetrationPercent`] = createPercentStat({ sub: 'elemental' });
     stats[`${element}EffectivenessPercent`] = createPercentStat({ sub: 'elemental' });
+    stats[`extraDamageFrom${element.charAt(0).toUpperCase() + element.slice(1)}ResistancePercent`] = createPercentStat({
+      dec: 2,
+      sub: 'elemental',
+      skills: {
+        passive: getSkillBonusesPercent({
+          type: 'passive', base: 0.05, linear: 0.0003, max: 2,
+        }),
+      },
+    });
   });
   return stats;
 };
@@ -256,19 +265,19 @@ export const OFFENSE_STATS = {
     cap: 50,
     skills: {
       passive: getSkillBonusesChance({
-        type: 'passive', base: 1, levelsPerPoint: 20, cap: 15,
+        type: 'passive', base: 1, levelsPerPoint: 60, cap: 15,
       }),
       toggle: getSkillBonusesChance({
-        type: 'toggle', base: 2, levelsPerPoint: 15, cap: 20,
+        type: 'toggle', base: 2, levelsPerPoint: 75, cap: 20,
       }),
       instant: getSkillBonusesChance({
-        type: 'instant', base: 3, levelsPerPoint: 10, cap: 40,
+        type: 'instant', base: 3, levelsPerPoint: 30, cap: 40,
       }),
       buff: getSkillBonusesChance({
-        type: 'buff', base: 2.5, levelsPerPoint: 12, cap: 25,
+        type: 'buff', base: 2.5, levelsPerPoint: 40, cap: 25,
       }),
       summon: getSkillBonusesChance({
-        type: 'summon', base: 1.5, levelsPerPoint: 18, cap: 25,
+        type: 'summon', base: 1.5, levelsPerPoint: 50, cap: 25,
       }),
     },
   }),
@@ -382,7 +391,7 @@ export const OFFENSE_STATS = {
     sub: 'attack',
     skills: {
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 0.5, softcap: 2000, linear: 0.05, power: 0.6, max: 6,
+        type: 'buff', base: 0.05, softcap: 2000, linear: 0.0005, power: 0.6, max: 3,
       }),
     },
   }),

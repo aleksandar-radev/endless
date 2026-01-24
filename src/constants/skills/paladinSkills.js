@@ -1,11 +1,13 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { getScalingFlat, getScalingPercent, getSkillStatBonus } from '../../common.js';
+import { getScalingFlat, getScalingPercent, getScalingSynergy, getSkillStatBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Paladin skills extracted from skills.js
 export const PALADIN_SKILLS = {
-  // Tier 1 Skills
+  // ===========================================================================
+  // TIER 0
+  // ===========================================================================
   holyLight: {
     id: 'holyLight',
     name: () => t('skill.holyLight.name'),
@@ -81,6 +83,14 @@ export const PALADIN_SKILLS = {
         level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'divineProtection',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   divineProtection: {
     id: 'divineProtection',
@@ -106,17 +116,26 @@ export const PALADIN_SKILLS = {
           level, statKey: 'thornsDamage', skillType: 'passive', scale: { base: 1 },
         }) * buffEffectiveness,
         thornsDamagePerLevel: getSkillStatBonus({
-          level, statKey: 'thornsDamage', skillType: 'passive', perLevel: true, scale: { base: 5 }, // Default perLevel is 0.001. thornsDamagePerLevel here was 0.01. So scale 10. Wait, previous value was 0.01. default is 0.001 * value. But getSkillStatBonus applies perLevel scaling.
-          // Let's assume standard perLevel.
+          level, statKey: 'thornsDamage', skillType: 'passive', perLevel: true, scale: { base: 5 },
         }) * buffEffectiveness,
         thornsDamagePercent: getSkillStatBonus({
           level, statKey: 'thornsDamagePercent', skillType: 'passive', scale: { base: 1 },
         }) * buffEffectiveness,
       };
     },
+    synergies: [
+      {
+        sourceSkillId: 'shieldBash',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 1000,
+        }),
+      },
+    ],
   },
 
-  // Tier 10 Skills
+  // ===========================================================================
+  // TIER 1
+  // ===========================================================================
   consecration: {
     id: 'consecration',
     name: () => t('skill.consecration.name'),
@@ -135,19 +154,21 @@ export const PALADIN_SKILLS = {
       fireDamagePerLevel: getSkillStatBonus({
         level, statKey: 'fireDamage', skillType: 'buff', perLevel: true,
       }),
-      fireDamagePercent: getSkillStatBonus({
-        level, statKey: 'fireDamagePercent', skillType: 'buff', scale: { base: 1.25 },
-      }),
       lightningDamage: getSkillStatBonus({
         level, statKey: 'lightningDamage', skillType: 'buff', scale: { base: 1.25, increment: 1 },
       }),
       lightningDamagePerLevel: getSkillStatBonus({
         level, statKey: 'lightningDamage', skillType: 'buff', perLevel: true,
       }),
-      lightningDamagePercent: getSkillStatBonus({
-        level, statKey: 'lightningDamagePercent', skillType: 'buff', scale: { base: 1.25 },
-      }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'smite',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   greaterHealing: {
     id: 'greaterHealing',
@@ -171,9 +192,19 @@ export const PALADIN_SKILLS = {
         level, statKey: 'lifePercent', skillType: 'instant', scale: { base: 1, max: 0.2 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'holyLight',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 25 Skills
+  // ===========================================================================
+  // TIER 2
+  // ===========================================================================
   divineShield: {
     id: 'divineShield',
     name: () => t('skill.divineShield.name'),
@@ -196,9 +227,17 @@ export const PALADIN_SKILLS = {
         level, statKey: 'armorPercent', skillType: 'buff', scale: { base: 1.25 },
       }),
       blockChance: getSkillStatBonus({
-        level, statKey: 'blockChance', skillType: 'buff', scale: { base: 0.8, cap: 0.33 },
+        level, statKey: 'blockChance', skillType: 'buff', scale: { base: 0.8, max: 0.33 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'divineProtection',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   auraOfLight: {
     id: 'auraOfLight',
@@ -230,6 +269,14 @@ export const PALADIN_SKILLS = {
         level, statKey: 'allResistance', skillType: 'passive', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'holyLight',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   thornedBulwark: {
     id: 'thornedBulwark',
@@ -244,9 +291,19 @@ export const PALADIN_SKILLS = {
         level, statKey: 'enduranceThornsDamagePerPoint', skillType: 'passive', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'divineProtection',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.1, increment: 0.1, cap: 50,
+        }),
+      },
+    ],
   },
 
-  // Tier 50 Skills
+  // ===========================================================================
+  // TIER 3
+  // ===========================================================================
   wrathOfTheHeavens: {
     id: 'wrathOfTheHeavens',
     name: () => t('skill.wrathOfTheHeavens.name'),
@@ -278,6 +335,14 @@ export const PALADIN_SKILLS = {
         level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'consecration',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   beaconOfFaith: {
     id: 'beaconOfFaith',
@@ -304,9 +369,19 @@ export const PALADIN_SKILLS = {
         level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base: 0.2, max: 0.6 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'auraOfLight',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 75 Skills
+  // ===========================================================================
+  // TIER 4
+  // ===========================================================================
   holyBarrier: {
     id: 'holyBarrier',
     name: () => t('skill.holyBarrier.name'),
@@ -329,9 +404,17 @@ export const PALADIN_SKILLS = {
         level, statKey: 'vitalityPercent', skillType: 'buff', scale: { base: 1 },
       }),
       resurrectionChance: getSkillStatBonus({
-        level, statKey: 'resurrectionChance', skillType: 'buff', scale: { base: 2, cap: 0.4 },
+        level, statKey: 'resurrectionChance', skillType: 'buff', scale: { base: 2, max: 0.4 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'divineShield',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
   AidFromHeaven: {
@@ -347,7 +430,7 @@ export const PALADIN_SKILLS = {
           level, statKey: 'damage', skillType: 'summon', scale: { base: 7.5, increment: 3 },
         }),
         attackSpeed: Math.max(0.9, 0.7 + getSkillStatBonus({
-          level, statKey: 'attackSpeedPercent', skillType: 'summon', scale: { base: 2, limit: 150 },
+          level, statKey: 'attackSpeedPercent', skillType: 'summon', scale: { base: 2, max: 150 },
         }) / 100),
       };
     },
@@ -359,9 +442,19 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.AidFromHeaven'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({}),
+    synergies: [
+      {
+        sourceSkillId: 'wrathOfTheHeavens',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
-  // Tier 100 Skills
+  // ===========================================================================
+  // TIER 5
+  // ===========================================================================
   divineWrath: {
     id: 'divineWrath',
     name: () => t('skill.divineWrath.name'),
@@ -382,6 +475,14 @@ export const PALADIN_SKILLS = {
         level, statKey: 'lifePerHit', skillType: 'toggle', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'smite',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   guardianAngel: {
     id: 'guardianAngel',
@@ -396,7 +497,7 @@ export const PALADIN_SKILLS = {
         level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5 },
       }),
       resurrectionChance: getSkillStatBonus({
-        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 2, cap: 1 },
+        level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 2, max: 1 },
       }),
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'passive', scale: { base: 2.5, increment: 2 },
@@ -414,6 +515,14 @@ export const PALADIN_SKILLS = {
         level, statKey: 'allResistance', skillType: 'passive', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'beaconOfFaith',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
   // Tier 200 Skills

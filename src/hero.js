@@ -902,6 +902,17 @@ export default class Hero {
       const allResistancesValue = RESISTANCE_KEYS.reduce((sum, key) => sum + (statsSnapshot[key] || 0), 0);
       const allResistances = capResource(allResistancesValue);
 
+      let resistanceExtras = 0;
+      RESISTANCE_KEYS.forEach((key) => {
+        const value = capResource(statsSnapshot[key]);
+        const element = key.replace('Resistance', '');
+        const statKey = `extraDamageFrom${element.charAt(0).toUpperCase() + element.slice(1)}ResistancePercent`;
+        const bonus = statsSnapshot[statKey] || 0;
+        if (bonus > 0) {
+          resistanceExtras += value * bonus;
+        }
+      });
+
       const totalExtra =
         (statsSnapshot.extraDamageFromLifePercent || 0) * life +
         (statsSnapshot.extraDamageFromArmorPercent || 0) * armor +
@@ -909,7 +920,8 @@ export default class Hero {
         (statsSnapshot.extraDamageFromLifeRegenPercent || 0) * lifeRegen +
         (statsSnapshot.extraDamageFromEvasionPercent || 0) * evasion +
         (statsSnapshot.extraDamageFromAttackRatingPercent || 0) * attackRating +
-        (statsSnapshot.extraDamageFromAllResistancesPercent || 0) * allResistances;
+        (statsSnapshot.extraDamageFromAllResistancesPercent || 0) * allResistances +
+        resistanceExtras;
 
       if (!totalExtra) return {
         physical: 0, elemental: 0, thorns: 0, perElement: {},
@@ -1439,7 +1451,7 @@ export default class Hero {
 
     // Check if resurrection chance is enabled
     if (!res && this.stats.resurrectionChance > 0) {
-      if (Math.random() < this.stats.resurrectionChance && game.resurrectCount < 2) {
+      if (Math.random() < this.stats.resurrectionChance) {
         game.resurrectCount++;
         res = true;
       }

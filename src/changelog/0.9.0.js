@@ -29,6 +29,7 @@ export default function run() {
       <li>Mana overcharge introduced as a new mechanic that increases mana cost for greater damage output.</li>
       <li>Levels required for regions unlock are now greatly increased, to align better with the new enemy scaling.</li>
       <li>Added % bonus for all skills based on how points are distributed between skills.</li>
+      <li>You can now get resurrected as many times as it happens when you have resurrection chance. (but you can't reach 100%)</li>
     </ul>
   
     <span style="color:#FF8A00;">Skill System</span>
@@ -172,6 +173,7 @@ export default function run() {
       <li style="color:#00AA00;">Continuous Play (auto-continue after death) is now the default behavior and the crystal shop upgrade has been removed; the Auto Spell Cast crystal upgrade has also been removed — spells now auto-cast by default.</li>
       <li>Allowed Alternation Orbs to be used on Unique and Set items.</li>
       <li>Added option to show/hide "0" stats in stats tab. So, you can now clearly see only the stats that have some value.</li>
+      <li>Added "Per Level" scaling variants to the Empowering Rune for all its flat stats (Life, Armor, etc.), similar to Damage per Level.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
