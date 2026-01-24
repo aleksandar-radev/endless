@@ -216,19 +216,19 @@ export const OFFENSE_STATS = {
     forceNotShow: true,
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 1, softcap: 2000, linear: 0.05, power: 0.6, max: 100,
+        type: 'passive', base: 1, softcap: 2000, linear: 0.005, power: 0.6, max: 100,
       }),
       toggle: getSkillBonusesPercent({
-        type: 'toggle', base: 2, softcap: 2000, linear: 0.1, power: 0.6, max: 150,
+        type: 'toggle', base: 2, softcap: 2000, linear: 0.01, power: 0.6, max: 150,
       }),
       instant: getSkillBonusesPercent({
-        type: 'instant', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 200,
+        type: 'instant', base: 5, softcap: 2000, linear: 0.02, power: 0.6, max: 200,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 3, softcap: 2000, linear: 0.15, power: 0.6, max: 175,
+        type: 'buff', base: 3, softcap: 2000, linear: 0.015, power: 0.6, max: 175,
       }),
       summon: getSkillBonusesPercent({
-        type: 'summon', base: 0.5, softcap: 2000, linear: 0.02, power: 0.6, max: 50,
+        type: 'summon', base: 0.5, softcap: 2000, linear: 0.002, power: 0.6, max: 50,
       }),
     },
   }),
@@ -295,19 +295,19 @@ export const OFFENSE_STATS = {
     sub: 'attack',
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 0.05, softcap: 2000, linear: 0.001, power: 0.6, max: 2,
+        type: 'passive', base: 0.05, softcap: 2000, linear: 0.0001, power: 0.6, max: 2,
       }),
       toggle: getSkillBonusesPercent({
-        type: 'toggle', base: 0.1, softcap: 2000, linear: 0.002, power: 0.6, max: 3,
+        type: 'toggle', base: 0.1, softcap: 2000, linear: 0.0002, power: 0.6, max: 3,
       }),
       instant: getSkillBonusesPercent({
-        type: 'instant', base: 0.15, softcap: 2000, linear: 0.003, power: 0.6, max: 4,
+        type: 'instant', base: 0.15, softcap: 2000, linear: 0.0003, power: 0.6, max: 4,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 0.12, softcap: 2000, linear: 0.0025, power: 0.6, max: 3.5,
+        type: 'buff', base: 0.12, softcap: 2000, linear: 0.00025, power: 0.6, max: 3.5,
       }),
       summon: getSkillBonusesPercent({
-        type: 'summon', base: 0.02, softcap: 2000, linear: 0.0005, power: 0.6, max: 1,
+        type: 'summon', base: 0.02, softcap: 2000, linear: 0.00005, power: 0.6, max: 1,
       }),
     },
   }),
@@ -490,7 +490,7 @@ export const OFFENSE_STATS = {
     forceNotShow: true,
     skills: {
       summon: getSkillBonusesPercent({
-        type: 'summon', base: 5, softcap: 2000, linear: 0.1, power: 0.6, max: 200,
+        type: 'summon', base: 5, softcap: 2000, linear: 0.01, power: 0.6, max: 200,
       }),
     },
   }),
@@ -635,10 +635,34 @@ export const OFFENSE_STATS = {
       }),
     },
   }),
-  extraDamageFromEvasionPercent: createPercentStat({ dec: 2 }),
+  extraDamageFromEvasionPercent: createPercentStat({
+    dec: 2,
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 0.05, softcap: 2000, linear: 0.00075, power: 0.6, max: 2.5,
+      }),
+      toggle: getSkillBonusesPercent({
+        type: 'toggle', base: 0.08, softcap: 2000, linear: 0.00095, power: 0.6, max: 3,
+      }),
+      buff: getSkillBonusesPercent({
+        type: 'buff', base: 0.1, softcap: 2000, linear: 0.001, power: 0.6, max: 3.5,
+      }),
+    },
+  }),
   extraDamageFromAttackRatingPercent: createPercentStat({
     dec: 2,
     item: { tierScalingMaxPercent: createTierScaling(0.3, 1.5, 1.0) },
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 0.05, softcap: 2000, linear: 0.00075, power: 0.6, max: 2.5,
+      }),
+      toggle: getSkillBonusesPercent({
+        type: 'toggle', base: 0.08, softcap: 2000, linear: 0.00095, power: 0.6, max: 3,
+      }),
+      buff: getSkillBonusesPercent({
+        type: 'buff', base: 0.1, softcap: 2000, linear: 0.001, power: 0.6, max: 3.5,
+      }),
+    },
   }),
   extraEvasionFromLifePercent: createPercentStat({ dec: 2 }),
   extraDamageFromAllResistancesPercent: createPercentStat({

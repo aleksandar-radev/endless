@@ -36,13 +36,13 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       dexterity: getSkillStatBonus({
-        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 1 },
+        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 1, increment: 1.2 },
       }),
       dexterityPerLevel: getSkillStatBonus({
         level, statKey: 'dexterity', skillType: 'passive', perLevel: true,
       }),
       extraDamageFromEvasionPercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromEvasionPercent', skillType: 'passive', scale: { base: 1, max: 2.5 },
+        level, statKey: 'extraDamageFromEvasionPercent', skillType: 'passive', scale: { base: 1, max: 0.8 },
       }),
     }),
   },
@@ -58,10 +58,15 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       earthDamage: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'passive', scale: { base: 1 },
+        level,
+        statKey: 'earthDamage',
+        skillType: 'passive',
+        scale: {
+          base: 3, increment: 2, bonus: 1.2,
+        },
       }),
       earthDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'passive', perLevel: true,
+        level, statKey: 'earthDamage', skillType: 'passive', perLevel: 1.2,
       }),
     }),
   },
@@ -69,20 +74,20 @@ export const ROGUE_SKILLS = {
     id: 'poisonDagger',
     name: () => t('skill.poisonDagger.name'),
     type: () => 'toggle',
-    manaCost: (level) => 1 + level * 0.125,
+    manaCost: (level) => 1 + level * 0.28,
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'poison-dagger',
     description: () => t('skill.poisonDagger'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', scale: { base: 1.66, increment: 2 },
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 1, increment: 1 },
       }),
       damagePerLevel: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'toggle', perLevel: true,
       }),
       earthDamage: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'toggle', scale: { base: 1.25, increment: 2 },
+        level, statKey: 'earthDamage', skillType: 'toggle', scale: { base: 2, increment: 1.5 },
       }),
       earthDamagePerLevel: getSkillStatBonus({
         level, statKey: 'earthDamage', skillType: 'toggle', perLevel: true,
@@ -146,10 +151,13 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackRating: getSkillStatBonus({
-        level, statKey: 'attackRating', skillType: 'passive', scale: { base: 0.83, increment: 0.5 },
+        level, statKey: 'attackRating', skillType: 'passive', scale: { base: 1, increment: 1 },
       }),
       attackRatingPerLevel: getSkillStatBonus({
         level, statKey: 'attackRating', skillType: 'passive', perLevel: true,
+      }),
+      extraDamageFromAttackRatingPercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromAttackRatingPercent', skillType: 'passive', scale: { base: 1, max: 1 },
       }),
     }),
   },
@@ -190,10 +198,15 @@ export const ROGUE_SKILLS = {
         level, statKey: 'dexterity', skillType: 'passive', scale: { base: 2.5, increment: 4 },
       }),
       dexterityPerLevel: getSkillStatBonus({
-        level, statKey: 'dexterity', skillType: 'passive', perLevel: true,
+        level, statKey: 'dexterity', skillType: 'passive', perLevel: 0.9,
       }),
       extraDamageFromEvasionPercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromEvasionPercent', skillType: 'passive', scale: { base: 1, max: 3 },
+        level,
+        statKey: 'extraDamageFromEvasionPercent',
+        skillType: 'passive',
+        scale: {
+          base: 1, linear: 1.2, max: 0.8,
+        },
       }),
     }),
   },
@@ -211,14 +224,14 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.darkPact'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      earthDamage: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'buff', scale: { base: 3.75, increment: 3 },
+      earthDamagePercent: getSkillStatBonus({
+        level, statKey: 'earthDamagePercent', skillType: 'buff', scale: { base: 2, linear: 2 },
       }),
-      earthDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'buff', perLevel: true,
+      critDamage: getSkillStatBonus({
+        level, statKey: 'critDamage', skillType: 'buff', scale: { base: 1, increment: 1 },
       }),
       attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, max: 100 },
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, max: 1 },
       }),
     }),
   },

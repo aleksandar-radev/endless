@@ -1120,7 +1120,8 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
   }
 
   // Target Level Effects
-  if ((!isMaxed || targetLevel > currentLevel) && effectsTarget && skill.type() !== 'summon') {
+  const hasEffectsTarget = effectsTarget && Object.keys(effectsTarget).length > 0;
+  if ((!isMaxed || targetLevel > currentLevel) && hasEffectsTarget) {
     const title = targetLevel === currentLevel + 1
       ? t('skillTree.nextLevelEffects')
       : tp('skillTree.levelEffects', { level: targetLevel });
@@ -1138,7 +1139,7 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
       const currVal = effectsCurrent?.[stat] || 0;
       const diff = value - currVal;
       let diffHtml = '';
-      if (typeof value === 'number' && typeof currVal === 'number') {
+      if (typeof value === 'number' && typeof currVal === 'number' && diff !== 0) {
         const sign = diff >= 0 ? '+' : '';
         // Format: NewValue (+Gain)
         // Ensure NewValue doesn't double-sign if formatSignedValue adds one.
@@ -1168,9 +1169,14 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
   // Summon Stats
   if (skill.type() === 'summon') {
     const summonStats = getDisplayedSummonStats(skill.summonStats(currentLevel));
+    const summonStatsTarget = (!isMaxed || targetLevel > currentLevel) ? getDisplayedSummonStats(skill.summonStats(targetLevel)) : null;
+
     html += `
         <div class="skill-tooltip-section">
-          <div class="skill-tooltip-section-title">${t('skillTree.summonStats')}</div>
+          <div class="skill-tooltip-section-title">
+            <span>${t('skillTree.summonStats')}</span>
+            <span>${t('skillTree.level')}: ${currentLevel}${skill.maxLevel() !== Infinity ? '/' + skill.maxLevel() : ''}</span>
+          </div>
           <div class="skill-stats-grid">
       `;
     Object.entries(summonStats).forEach(([stat, value]) => {
@@ -1188,13 +1194,56 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
     });
     html += '</div></div>';
 
+    if (summonStatsTarget) {
+      const title = targetLevel === currentLevel + 1
+        ? t('skillTree.nextLevelEffects')
+        : tp('skillTree.levelEffects', { level: targetLevel });
+
+      html += `
+        <div class="skill-tooltip-section">
+          <div class="skill-tooltip-section-title">
+            <span>${title}</span>
+            <span>${t('skillTree.level')}: ${targetLevel}</span>
+          </div>
+          <div class="skill-stats-grid">
+      `;
+      Object.entries(summonStatsTarget).forEach(([stat, value]) => {
+        const decimals = getStatDecimals(stat);
+        const currVal = summonStats[stat] || 0;
+        const diff = value - currVal;
+        let diffHtml = '';
+        if (typeof value === 'number' && typeof currVal === 'number' && diff !== 0) {
+          const sign = diff >= 0 ? '+' : '';
+          const gainStr = `${sign}${formatNumber(diff.toFixed(decimals))}`;
+          diffHtml = ` <span class="stat-diff-total">(${gainStr})</span>`;
+        }
+
+        if (!shouldShowStatValue(stat)) {
+          html += `<div class="skill-stat-row"><span class="stat-name">${formatStatName(stat)}</span></div>`;
+        } else {
+          html += `
+            <div class="skill-stat-row bonus">
+              <span class="stat-name">${formatStatName(stat)}</span>
+              <span class="stat-value">${typeof value === 'number' ? value.toFixed(decimals) : ''}${diffHtml}</span>
+            </div>
+          `;
+        }
+      });
+      html += '</div></div>';
+    }
+
     const summonDamage = calculateSummonDamage(skill, currentLevel);
-    if (summonDamage && summonDamage.damage > 0) {
+    const summonDamageTarget = summonStatsTarget ? calculateSummonDamage(skill, targetLevel) : null;
+
+    if (summonDamage && (summonDamage.damage > 0 || (summonDamageTarget && summonDamageTarget.damage > 0))) {
+      const diff = summonDamageTarget ? summonDamageTarget.damage - summonDamage.damage : 0;
+      const diffHtml = diff > 0 ? ` <span class="stat-diff-total">(+${formatNumber(diff)})</span>` : '';
+
       html += `
           <div class="skill-damage-preview">
              <div class="damage-total">
                <span>${t('skill.totalPotentialDamage')}</span>
-               <span>${formatNumber(summonDamage.damage)}</span>
+               <span>${formatNumber(summonDamage.damage)}${diffHtml}</span>
              </div>
              ${formatDamageBreakdownNew(summonDamage.breakdown)}
           </div>
