@@ -513,6 +513,14 @@ export const VAMPIRE_SKILLS = {
         level, statKey: 'lifePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'bloodPact',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   shadowRebirth: {
     id: 'shadowRebirth',
@@ -533,6 +541,14 @@ export const VAMPIRE_SKILLS = {
         level, statKey: 'critDamage', skillType: 'passive', scale: { base: 0.02 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'lordOfNight',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
   // Tier 3000 Skills
@@ -590,6 +606,14 @@ export const VAMPIRE_SKILLS = {
         level, statKey: 'damage', skillType: 'passive', perLevel: true,
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'nightStalker',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
   // Tier 5000 Skills
@@ -638,6 +662,14 @@ export const VAMPIRE_SKILLS = {
         level, statKey: 'airDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'eternalThirst',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 1, increment: 1, cap: 3000,
+        }),
+      },
+    ],
   },
 
   // Specialization Skills

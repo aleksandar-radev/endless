@@ -588,6 +588,14 @@ export const PALADIN_SKILLS = {
         level, statKey: 'lifeRegenPercent', skillType: 'passive', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'holyBarrier',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   holyCrusade: {
     id: 'holyCrusade',
@@ -606,6 +614,14 @@ export const PALADIN_SKILLS = {
         level, statKey: 'fireDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'divineWrath',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
   // Tier 2000 Skills
@@ -640,6 +656,14 @@ export const PALADIN_SKILLS = {
         level, statKey: 'thornsDamage', skillType: 'buff', perLevel: true, scale: { base: 50 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'divineShield',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   divineJudgment: {
     id: 'divineJudgment',
@@ -666,6 +690,14 @@ export const PALADIN_SKILLS = {
         level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'wrathOfTheHeavens',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
   // Tier 3000 Skills
@@ -688,6 +720,14 @@ export const PALADIN_SKILLS = {
         level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 5 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'guardianAngel',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   sacredGround: {
     id: 'sacredGround',
@@ -714,6 +754,14 @@ export const PALADIN_SKILLS = {
         level, statKey: 'manaRegenPercent', skillType: 'buff', scale: { base: 2.5 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'consecration',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
 
   // Tier 5000 Skills
@@ -739,6 +787,14 @@ export const PALADIN_SKILLS = {
         level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 2 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'beaconOfFaith',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+        }),
+      },
+    ],
   },
   championOfFaith: {
     id: 'championOfFaith',
@@ -766,5 +822,13 @@ export const PALADIN_SKILLS = {
         level, statKey: 'fireDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'holyCrusade',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 1, increment: 1, cap: 2500,
+        }),
+      },
+    ],
   },
 };
