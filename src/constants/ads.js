@@ -1,4 +1,4 @@
-export const AD_BONUS_DURATION = 10 * 60 * 1000; // 10 minutes
+export const AD_BONUS_DURATION = 30 * 60 * 1000; // 30 minutes
 
 export const AD_BONUSES = [
   {

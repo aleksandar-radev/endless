@@ -343,6 +343,9 @@ export const MISC_STATS = {
       passive: getSkillBonusesPercent({
         type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
       }),
+      buff: getSkillBonusesPercent({
+        type: 'buff', base: 8, softcap: 2000, linear: 0.08, power: 0.6,
+      }),
     },
   }),
   wisdom: createStat({
