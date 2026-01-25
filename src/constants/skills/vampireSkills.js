@@ -43,19 +43,17 @@ export const VAMPIRE_SKILLS = {
     effect: (level) => {
       const buffEffectiveness = 1 + (hero.stats.nightStalkerBuffEffectivenessPercent || 0);
       return {
-        damagePercent: getSkillStatBonus({
-          level,
-          statKey: 'damagePercent',
-          skillType: 'passive',
-          scale: {
-            base: 1.4, linear: 0.8, max: 0.1,
-          },
-        }) * buffEffectiveness,
         agility: getSkillStatBonus({
           level, statKey: 'agility', skillType: 'passive', scale: { base: 1, increment: 1.3 },
         }) * buffEffectiveness,
         agilityPerLevel: getSkillStatBonus({
           level, statKey: 'agility', skillType: 'passive', perLevel: true,
+        }) * buffEffectiveness,
+        dexterity: getSkillStatBonus({
+          level, statKey: 'dexterity', skillType: 'passive', scale: { base: 1, increment: 1.3 },
+        }) * buffEffectiveness,
+        dexterityPerLevel: getSkillStatBonus({
+          level, statKey: 'dexterity', skillType: 'passive', perLevel: true,
         }) * buffEffectiveness,
       };
     },
