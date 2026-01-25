@@ -1,6 +1,6 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { getScalingFlat, getScalingPercent, getScalingSynergy, getSkillStatBonus } from '../../common.js';
+import { getScalingSynergy, getSkillStatBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Vampire skills extracted from skills.js
@@ -38,10 +38,10 @@ export const VAMPIRE_SKILLS = {
       const buffEffectiveness = 1 + (hero.stats.nightStalkerBuffEffectivenessPercent || 0);
       return {
         agility: getSkillStatBonus({
-          level, statKey: 'agility', skillType: 'passive', scale: { base: 1, increment: 1.3 },
+          level, statKey: 'agility', skillType: 'passive', scale: { base: 1, increment: 1 },
         }) * buffEffectiveness,
         dexterity: getSkillStatBonus({
-          level, statKey: 'dexterity', skillType: 'passive', scale: { base: 1, increment: 1.3 },
+          level, statKey: 'dexterity', skillType: 'passive', scale: { base: 1, increment: 1 },
         }) * buffEffectiveness,
       };
     },
@@ -172,10 +172,10 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strength: getSkillStatBonus({
-        level, statKey: 'strength', skillType: 'passive', scale: { base: 1, increment: 1 },
+        level, statKey: 'strength', skillType: 'passive', scale: { base: 1, increment: 1.2 },
       }),
       vitality: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', scale: { base: 1.25, increment: 1 },
+        level, statKey: 'vitality', skillType: 'passive', scale: { base: 1.25, increment: 1.2 },
       }),
     }),
   },
@@ -304,7 +304,7 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifePerHit: getSkillStatBonus({
-        level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: 2, increment: 1.5 },
+        level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: 2, increment: 3 },
       }),
     }),
     synergies: [
@@ -325,11 +325,11 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.deathlyPresence'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      strength: getSkillStatBonus({
-        level, statKey: 'strength', skillType: 'passive', scale: { base: 2, increment: 2 },
+      armor: getSkillStatBonus({
+        level, statKey: 'armor', skillType: 'passive', scale: { base: 2, increment: 4 },
       }),
-      vitality: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', scale: { base: 2.5, increment: 2 },
+      allResistance: getSkillStatBonus({
+        level, statKey: 'allResistance', skillType: 'passive', scale: { base: 2.5, increment: 4 },
       }),
     }),
   },
@@ -383,8 +383,8 @@ export const VAMPIRE_SKILLS = {
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'buff', scale: { base: 1.25, linear: 1.4 },
       }),
-      attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, linear: 1.1 },
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'buff', scale: { base: 1.66, increment: 1.3 },
       }),
     }),
     synergies: [
@@ -412,7 +412,12 @@ export const VAMPIRE_SKILLS = {
         level, statKey: 'lifePerHit', skillType: 'passive', scale: { base: 60, increment: 48 },
       }),
       damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 1 },
+        level,
+        statKey: 'damagePercent',
+        skillType: 'passive',
+        scale: {
+          base: 0.5, linear: 0.3, max: 0.2,
+        },
       }),
     }),
     synergies: [
@@ -469,8 +474,21 @@ export const VAMPIRE_SKILLS = {
       resurrectionChance: getSkillStatBonus({
         level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 1, cap: 1 },
       }),
+      life: getSkillStatBonus({
+        level,
+        statKey: 'life',
+        skillType: 'passive',
+        scale: {
+          base: 0.5, increment: 1.4, bonus: 1.5,
+        },
+      }),
       lifePercent: getSkillStatBonus({
-        level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 2 },
+        level,
+        statKey: 'lifePercent',
+        skillType: 'passive',
+        scale: {
+          base: 1, linear: 0.3, max: 0.3,
+        },
       }),
       critDamage: getSkillStatBonus({
         level, statKey: 'critDamage', skillType: 'passive', scale: { base: 0.02 },
@@ -603,7 +621,7 @@ export const VAMPIRE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[1],
     icon: () => 'blood-sacrifice',
     description: () => t('skill.bloodSacrifice'),
-    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
+    maxLevel: () => 1,
     effect: (level) => ({}),
     isVisible: () => hero.stats.bloodSacrificeUnlocked > 0,
   },
