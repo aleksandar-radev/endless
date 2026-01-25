@@ -429,7 +429,14 @@ export default class Training {
       if (count > 0) {
         let segmentCost = 0;
         if (Math.abs(simMult - 1) < 1e-9) {
-          segmentCost = calcLinearSum(0, count, simCost, simInc);
+          const SCALE = 1e8;
+          segmentCost = calcLinearSum(
+            0,
+            count,
+            Math.round(simCost * SCALE),
+            Math.round(simInc * SCALE),
+            SCALE,
+          );
           simCost += simInc * count;
         } else {
           segmentCost = calcGeometricSum(0, count, simCost, simMult);
@@ -525,16 +532,51 @@ export default class Training {
 
       if (Math.abs(simMult - 1) < 1e-9) {
         // Linear
+        const SCALE = 1e8;
         // Check if we can afford the whole segment
-        const segmentCost = calcLinearSum(0, segmentMax, simCost, simInc);
+        const segmentCost = calcLinearSum(
+          0,
+          segmentMax,
+          Math.round(simCost * SCALE),
+          Math.round(simInc * SCALE),
+          SCALE,
+        );
         if (segmentCost <= remainingBudget) {
           count = segmentMax;
           cost = segmentCost;
         } else {
           // Solve for partial
-          count = solveLinear(0, remainingBudget, simCost, simInc);
+          count = solveLinear(
+            0,
+            remainingBudget,
+            Math.round(simCost * SCALE),
+            Math.round(simInc * SCALE),
+            SCALE,
+          );
           count = Math.min(count, segmentMax);
-          cost = calcLinearSum(0, count, simCost, simInc);
+          cost = calcLinearSum(
+            0,
+            count,
+            Math.round(simCost * SCALE),
+            Math.round(simInc * SCALE),
+            SCALE,
+          );
+          // Verify affordability and adjust if necessary (handle precision edge cases)
+          if (cost > remainingBudget) {
+            // Binary search or linear back-off could be used, but since solveLinear is close,
+            // a simple check is usually sufficient. However, if solveLinear significantly overestimated,
+            // we need to reduce count.
+            while (count > 0 && cost > remainingBudget) {
+              count--;
+              cost = calcLinearSum(
+                0,
+                count,
+                Math.round(simCost * SCALE),
+                Math.round(simInc * SCALE),
+                SCALE,
+              );
+            }
+          }
         }
         // Update state
         simCost += simInc * count;

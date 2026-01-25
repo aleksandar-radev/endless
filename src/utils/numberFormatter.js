@@ -2,6 +2,7 @@ export function formatNumber(value, useShortNumbers = false, separator = ',') {
   if (value === null || value === undefined) return value;
 
   const num = Number(value);
+  if (!Number.isFinite(num)) return num.toString();
   if (useShortNumbers && !Number.isNaN(num)) {
     const abs = Math.abs(num);
     if (abs >= 1000) {

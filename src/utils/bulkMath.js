@@ -102,11 +102,8 @@ export function calcLinearSum(startLevel, count, base, increment, scale = 1) {
   const totalScaled = term1 + term2;
 
   // Apply scale
-  const result = totalScaled / S;
-
-  // Check for overflow before converting to Number
-  if (result > BigInt(Number.MAX_SAFE_INTEGER)) return Infinity;
-  return Number(result);
+  // Return float to preserve fractional costs (e.g. 0.5 gold) when scaled
+  return Number(totalScaled) / Number(S);
 }
 
 /**
