@@ -5,7 +5,31 @@ export function formatNumber(value, useShortNumbers = false, separator = ',') {
   if (useShortNumbers && !Number.isNaN(num)) {
     const abs = Math.abs(num);
     if (abs >= 1000) {
-      const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc'];
+      const suffixes = [
+        '',
+        'K',
+        'M',
+        'B',
+        'T',
+        'Qa',
+        'Qi',
+        'Sx',
+        'Sp',
+        'Oc',
+        'No',
+        'Dc',
+        'Ud',
+        'Dd',
+        'Td',
+        'Qad',
+        'Qid',
+        'Sxd',
+        'Spd',
+        'Ocd',
+        'Nod',
+        'Vg',
+        'Uvg',
+      ];
       const tier = Math.floor(Math.log10(abs) / 3);
       const suffix = suffixes[tier] || `e${tier * 3}`;
       const scaled = num / Math.pow(10, tier * 3);

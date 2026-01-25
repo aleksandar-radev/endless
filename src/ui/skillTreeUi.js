@@ -24,7 +24,7 @@ const getStatDecimals = (stat) => getStatDecimalPlaces(stat);
 const formatSignedValue = (value, decimals, includeZero = true) => {
   if (typeof value !== 'number') return value;
   const shouldShowPlus = value > 0 || (includeZero && value === 0);
-  return `${shouldShowPlus ? '+' : ''}${value.toFixed(decimals)}`;
+  return `${shouldShowPlus ? '+' : ''}${formatNumber(value.toFixed(decimals))}`;
 };
 
 const formatBaseStatLabel = (stat) => {
@@ -406,7 +406,7 @@ function renderDistributionBonusInfo() {
   const sectionId = 'distribution-bonus-section';
   let section = document.getElementById(sectionId);
   const distMult = skillTree.getDistributionMultiplier();
-  const bonusDisplay = ((distMult - 1) * 100).toFixed(0);
+  const bonusDisplay = formatNumber(((distMult - 1) * 100).toFixed(0));
   const color = distMult >= 1 ? 'var(--accent)' : 'var(--negative)';
 
   if (!section) {
@@ -499,19 +499,19 @@ function renderManaScalingOption() {
 
   // Update dynamic values
   const percentDisplay = section.querySelector('#mana-scaling-percent-display');
-  if (percentDisplay) percentDisplay.textContent = `${scalingPercent}%`;
+  if (percentDisplay) percentDisplay.textContent = `${formatNumber(scalingPercent)}%`;
 
   const costDisplay = section.querySelector('#mana-scaling-cost-display');
-  if (costDisplay) costDisplay.innerHTML = tp('skillTree.manaScaling.manaCost', { value: manaMult.toFixed(2) });
+  if (costDisplay) costDisplay.innerHTML = tp('skillTree.manaScaling.manaCost', { value: formatNumber(manaMult.toFixed(2)) });
 
   const instantDisplay = section.querySelector('#mana-scaling-instant-display');
-  if (instantDisplay) instantDisplay.innerHTML = tp('skillTree.manaScaling.instantBonus', { value: instantMult.toFixed(2) });
+  if (instantDisplay) instantDisplay.innerHTML = tp('skillTree.manaScaling.instantBonus', { value: formatNumber(instantMult.toFixed(2)) });
 
   const toggleDisplay = section.querySelector('#mana-scaling-toggle-display');
-  if (toggleDisplay) toggleDisplay.innerHTML = tp('skillTree.manaScaling.toggleBonus', { value: toggleMult.toFixed(2) });
+  if (toggleDisplay) toggleDisplay.innerHTML = tp('skillTree.manaScaling.toggleBonus', { value: formatNumber(toggleMult.toFixed(2)) });
 
   const buffDisplay = section.querySelector('#mana-scaling-buff-display');
-  if (buffDisplay) buffDisplay.innerHTML = tp('skillTree.manaScaling.buffBonus', { value: buffMult.toFixed(2) });
+  if (buffDisplay) buffDisplay.innerHTML = tp('skillTree.manaScaling.buffBonus', { value: formatNumber(buffMult.toFixed(2)) });
 
   const slider = section.querySelector('#mana-scaling-slider');
   if (slider && document.activeElement !== slider) {
@@ -750,7 +750,9 @@ function createSpecializationSkillElement(baseSkill) {
   // Fallback if not initialized yet (should not happen if logic is correct)
   if (!skill) skill = { ...baseSkill, level: 0 };
 
-  const levelText = `${skill.level || 0}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}`;
+  const currentLevel = skill.level || 0;
+  const maxLevel = skill.maxLevel();
+  const levelText = `${formatNumber(currentLevel)}${maxLevel !== Infinity ? `/${formatNumber(maxLevel)}` : ''}`;
   const skillElement = buildSkillNodeElement(skill, {
     classes: 'skill-node specialization-node',
     levelText,
@@ -914,13 +916,13 @@ function updateSpecSkillModalDetails() {
   specSkillModal.querySelector('.modal-available-points').textContent = formatNumber(skillTree.specializationPoints);
 
   const displayCost = skillTree.calculateSkillPointCost(currentLevel, displayQty);
-  specSkillModal.querySelector('.modal-sp-cost').textContent = displayCost + ' SP';
+  specSkillModal.querySelector('.modal-sp-cost').textContent = formatNumber(displayCost) + ' SP';
 
   if (options.useNumericInputs) {
     const maxBtn = specSkillModal.querySelector('.max-btn');
     if (maxBtn) {
       const btnCost = skillTree.calculateSkillPointCost(currentLevel, maxQty);
-      maxBtn.textContent = t('common.max') + ' (' + btnCost + ' SP)';
+      maxBtn.textContent = t('common.max') + ' (' + formatNumber(btnCost) + ' SP)';
     }
     const input = specSkillModal.querySelector('.skill-qty-input');
     if (input && selectedSpecSkillQty === 'max') {
@@ -931,13 +933,13 @@ function updateSpecSkillModalDetails() {
       const v = btn.dataset.qty;
       const rawQty = v === 'max' ? maxQty : parseInt(v, 10);
       const btnCost = skillTree.calculateSkillPointCost(currentLevel, isNaN(rawQty) ? 0 : rawQty);
-      btn.textContent = (v === 'max' ? t('common.max') : '+' + v) + ' (' + btnCost + ' SP)';
+      btn.textContent = (v === 'max' ? t('common.max') : '+' + v) + ' (' + formatNumber(btnCost) + ' SP)';
     });
   }
 
   const buyBtn = specSkillModal.querySelector('.modal-buy');
   buyBtn.disabled = actualQty <= 0;
-  buyBtn.textContent = `Buy ${displayQty} for ${displayCost} SP`;
+  buyBtn.textContent = `Buy ${formatNumber(displayQty)} for ${formatNumber(displayCost)} SP`;
 
   // Render Tooltip Content
   const tooltipContainer = specSkillModal.querySelector('.skill-modal-tooltip-content');
@@ -1099,7 +1101,7 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
       <div class="skill-tooltip-section">
         <div class="skill-tooltip-section-title">
           <span>${t('skillTree.currentEffects')}</span>
-          <span>${t('skillTree.level')}: ${currentLevel}${skill.maxLevel() !== Infinity ? '/' + skill.maxLevel() : ''}</span>
+          <span>${t('skillTree.level')}: ${formatNumber(currentLevel)}${skill.maxLevel() !== Infinity ? '/' + formatNumber(skill.maxLevel()) : ''}</span>
         </div>
         <div class="skill-stats-grid">
     `;
@@ -1124,13 +1126,13 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
   if ((!isMaxed || targetLevel > currentLevel) && hasEffectsTarget) {
     const title = targetLevel === currentLevel + 1
       ? t('skillTree.nextLevelEffects')
-      : tp('skillTree.levelEffects', { level: targetLevel });
+      : tp('skillTree.levelEffects', { level: formatNumber(targetLevel) });
 
     html += `
       <div class="skill-tooltip-section">
         <div class="skill-tooltip-section-title">
           <span>${title}</span>
-          <span>${t('skillTree.level')}: ${targetLevel}</span>
+          <span>${t('skillTree.level')}: ${formatNumber(targetLevel)}</span>
         </div>
         <div class="skill-stats-grid">
     `;
@@ -1175,7 +1177,7 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
         <div class="skill-tooltip-section">
           <div class="skill-tooltip-section-title">
             <span>${t('skillTree.summonStats')}</span>
-            <span>${t('skillTree.level')}: ${currentLevel}${skill.maxLevel() !== Infinity ? '/' + skill.maxLevel() : ''}</span>
+            <span>${t('skillTree.level')}: ${formatNumber(currentLevel)}${skill.maxLevel() !== Infinity ? '/' + formatNumber(skill.maxLevel()) : ''}</span>
           </div>
           <div class="skill-stats-grid">
       `;
@@ -1187,7 +1189,7 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
         html += `
               <div class="skill-stat-row">
                 <span class="stat-name">${formatStatName(stat)}</span>
-                <span class="stat-value">${typeof value === 'number' ? value.toFixed(decimals) : ''}</span>
+                <span class="stat-value">${typeof value === 'number' ? formatNumber(value.toFixed(decimals)) : ''}</span>
               </div>
             `;
       }
@@ -1197,13 +1199,13 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
     if (summonStatsTarget) {
       const title = targetLevel === currentLevel + 1
         ? t('skillTree.nextLevelEffects')
-        : tp('skillTree.levelEffects', { level: targetLevel });
+        : tp('skillTree.levelEffects', { level: formatNumber(targetLevel) });
 
       html += `
         <div class="skill-tooltip-section">
           <div class="skill-tooltip-section-title">
             <span>${title}</span>
-            <span>${t('skillTree.level')}: ${targetLevel}</span>
+            <span>${t('skillTree.level')}: ${formatNumber(targetLevel)}</span>
           </div>
           <div class="skill-stats-grid">
       `;
@@ -1224,7 +1226,7 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
           html += `
             <div class="skill-stat-row bonus">
               <span class="stat-name">${formatStatName(stat)}</span>
-              <span class="stat-value">${typeof value === 'number' ? value.toFixed(decimals) : ''}${diffHtml}</span>
+              <span class="stat-value">${typeof value === 'number' ? formatNumber(value.toFixed(decimals)) : ''}${diffHtml}</span>
             </div>
           `;
         }
@@ -1322,24 +1324,24 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
     const cls = converted ? 'life' : 'mana';
     if (manaCost) {
       const diff = !isMaxed ? skillTree.getSkillManaCost(skill, targetLevel) - manaCost : 0;
-      const diffStr = diff ? ` (+${diff.toFixed(1)})` : '';
-      footerHtml += `<div class="skill-meta-item ${cls}"><span>${label}: <span class="val">${manaCost.toFixed(1)}${diffStr}</span></span></div>`;
+      const diffStr = diff ? ` (+${formatNumber(diff.toFixed(1))})` : '';
+      footerHtml += `<div class="skill-meta-item ${cls}"><span>${label}: <span class="val">${formatNumber(manaCost.toFixed(1))}${diffStr}</span></span></div>`;
     }
   }
   if (skill.cooldown) {
     const cd = skillTree.getSkillCooldown(skill, currentLevel);
     if (cd) {
       const diff = !isMaxed ? (skillTree.getSkillCooldown(skill, targetLevel) - cd) / 1000 : 0;
-      const diffStr = diff ? ` (${diff.toFixed(2)}s)` : '';
-      footerHtml += `<div class="skill-meta-item cooldown"><span>${t('skillTree.cooldown')}: <span class="val">${(cd / 1000).toFixed(2)}s${diffStr}</span></span></div>`;
+      const diffStr = diff ? ` (${formatNumber(diff.toFixed(2))}s)` : '';
+      footerHtml += `<div class="skill-meta-item cooldown"><span>${t('skillTree.cooldown')}: <span class="val">${formatNumber((cd / 1000).toFixed(2))}s${diffStr}</span></span></div>`;
     }
   }
   if (skill.duration) {
     const dur = skillTree.getSkillDuration(skill, currentLevel);
     if (dur) {
       const diff = !isMaxed ? (skillTree.getSkillDuration(skill, targetLevel) - dur) / 1000 : 0;
-      const diffStr = diff ? ` (+${diff.toFixed(2)}s)` : '';
-      footerHtml += `<div class="skill-meta-item"><span>${t('skillTree.duration')}: <span class="val">${(dur / 1000).toFixed(2)}s${diffStr}</span></span></div>`;
+      const diffStr = diff ? ` (+${formatNumber(diff.toFixed(2))}s)` : '';
+      footerHtml += `<div class="skill-meta-item"><span>${t('skillTree.duration')}: <span class="val">${formatNumber((dur / 1000).toFixed(2))}s${diffStr}</span></span></div>`;
     }
   }
 
@@ -1647,12 +1649,13 @@ function createPreviewSkillElement(skill, pathId = null) {
   skillElement.dataset.skillId = skill.id;
   skillElement.dataset.skillType = skill.type();
 
+  const maxLevel = skill.maxLevel();
   skillElement.innerHTML = html`
     <div
       class="skill-icon"
       style="background-image: url('${import.meta.env.VITE_BASE_PATH}/skills/${skill.icon()}.jpg')"
     ></div>
-    <div class="skill-level">0${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}</div>
+    <div class="skill-level">0${maxLevel !== Infinity ? `/${formatNumber(maxLevel)}` : ''}</div>
   `;
 
   skillElement.addEventListener('mouseenter', (e) => showTooltip(createPreviewTooltip(skill, pathId), e, 'skill-tooltip-wrapper'));
@@ -1952,7 +1955,7 @@ export function updateSkillTreeValues() {
     skillPointsHeader.innerHTML = `
     <div class="skill-header-left">
       <span class="skill-path-name">${characterName}</span>
-      <span class="skill-points">${pointsLabel}: ${pointsValue}</span>
+      <span class="skill-points">${pointsLabel}: ${formatNumber(pointsValue)}</span>
     </div>
     ${controlsMarkup}
   `;
@@ -2058,7 +2061,7 @@ export function updateSkillTreeValues() {
     const canUnlock = skillTree.canUnlockSpecializationSkill(skillId, false);
 
     const levelDisplay = node.querySelector('.skill-level');
-    levelDisplay.textContent = skill.maxLevel() == Infinity ? `${currentLevel}` : `${currentLevel}/${skill.maxLevel()}`;
+    levelDisplay.textContent = skill.maxLevel() == Infinity ? `${formatNumber(currentLevel)}` : `${formatNumber(currentLevel)}/${formatNumber(skill.maxLevel())}`;
 
     node.classList.toggle('available', canUnlock);
     node.classList.toggle('unlocked', currentLevel > 0);
@@ -2109,7 +2112,7 @@ export function updateSkillTreeValues() {
     const levelDisplay = node.querySelector('.skill-level');
     const skill = skillTree.getSkill(skillId);
 
-    levelDisplay.textContent = skill.maxLevel() == Infinity ? `${currentLevel}` : `${currentLevel}/${skill.maxLevel()}`;
+    levelDisplay.textContent = skill.maxLevel() == Infinity ? `${formatNumber(currentLevel)}` : `${formatNumber(currentLevel)}/${formatNumber(skill.maxLevel())}`;
 
     node.classList.toggle('available', canUnlock);
     node.classList.toggle('unlocked', !!skillTree.skills[skillId]);
@@ -2207,17 +2210,17 @@ function updateSkillModalDetails() {
   tooltipContainer.innerHTML = generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTarget, targetLevel);
 
   // Update modal fields
-  skillModal.querySelector('.modal-available-points').textContent = skillTree.skillPoints;
+  skillModal.querySelector('.modal-available-points').textContent = formatNumber(skillTree.skillPoints);
 
   // Update SP cost display and button labels
   const displayCost = skillTree.calculateSkillPointCost(currentLevel, displayQty);
-  skillModal.querySelector('.modal-sp-cost').textContent = displayCost + ' SP';
+  skillModal.querySelector('.modal-sp-cost').textContent = formatNumber(displayCost) + ' SP';
 
   if (options.useNumericInputs) {
     const maxBtn = skillModal.querySelector('.max-btn');
     if (maxBtn) {
       const btnCost = skillTree.calculateSkillPointCost(currentLevel, maxQty);
-      maxBtn.textContent = t('common.max') + ' (' + btnCost + ' SP)';
+      maxBtn.textContent = t('common.max') + ' (' + formatNumber(btnCost) + ' SP)';
     }
     const input = skillModal.querySelector('.skill-qty-input');
     if (input && selectedSkillQty === 'max') {
@@ -2228,14 +2231,14 @@ function updateSkillModalDetails() {
       const v = btn.dataset.qty;
       const rawQty = v === 'max' ? maxQty : parseInt(v, 10);
       const btnCost = skillTree.calculateSkillPointCost(currentLevel, isNaN(rawQty) ? 0 : rawQty);
-      btn.textContent = (v === 'max' ? t('common.max') : '+' + v) + ' (' + btnCost + ' SP)';
+      btn.textContent = (v === 'max' ? t('common.max') : '+' + v) + ' (' + formatNumber(btnCost) + ' SP)';
     });
   }
 
   // Update buy button
   const buyBtn = skillModal.querySelector('.modal-buy');
   buyBtn.disabled = actualQty <= 0;
-  buyBtn.textContent = `Buy ${displayQty} for ${displayCost} SP`;
+  buyBtn.textContent = `Buy ${formatNumber(displayQty)} for ${formatNumber(displayCost)} SP`;
 }
 
 function buySkillBulk() {
@@ -2259,7 +2262,9 @@ function buySkillBulk() {
 function createSkillElement(baseSkill) {
   let skill = skillTree.getSkill(baseSkill.id);
 
-  const levelText = `${skillTree.skills[skill.id]?.level || 0}${skill.maxLevel() !== Infinity ? `/${skill.maxLevel()}` : ''}`;
+  const currentLevel = skillTree.skills[skill.id]?.level || 0;
+  const maxLevel = skill.maxLevel();
+  const levelText = `${formatNumber(currentLevel)}${maxLevel !== Infinity ? `/${formatNumber(maxLevel)}` : ''}`;
   const skillElement = buildSkillNodeElement(skill, { levelText });
 
   skillElement.addEventListener('mouseenter', (e) => {
@@ -2402,11 +2407,15 @@ function createSkillTooltip(skillId) {
 
   const typeBadge = formatSkillTypeBadge(skill);
 
+  const manaCost = skillTree.getSkillManaCost(skill, level);
+  const nextManaCost = skillTree.getSkillManaCost(skill, level + 1);
+  const manaDiff = nextManaCost - manaCost;
+
   let tooltip = `
       <div class="tooltip-header">${skill.name()}</div>
       <div class="tooltip-type">${typeBadge}</div>
-      <div class="tooltip-level">${t('skillTree.level')}: ${level}</div>
-      <div class="tooltip-mana">${t(hero.stats.convertManaToLifePercent >= 1 ? 'skillTree.lifeCost' : 'skillTree.manaCost')}: ${skillTree.getSkillManaCost(skill, level).toFixed(2)} (+${(skillTree.getSkillManaCost(skill, level + 1) - skillTree.getSkillManaCost(skill, level)).toFixed(2)})</div>
+      <div class="tooltip-level">${t('skillTree.level')}: ${formatNumber(level)}</div>
+      <div class="tooltip-mana">${t(hero.stats.convertManaToLifePercent >= 1 ? 'skillTree.lifeCost' : 'skillTree.manaCost')}: ${formatNumber(manaCost.toFixed(2))} (+${formatNumber(manaDiff.toFixed(2))})</div>
   `;
 
   // Add effects
@@ -2425,11 +2434,11 @@ function createSkillTooltip(skillId) {
   // Add cooldown/duration for applicable skills
   const cooldownMs = skillTree.getSkillCooldown(skill, level);
   if (cooldownMs) {
-    tooltip += `<div class="tooltip-cooldown">${t('skillTree.cooldown')}: ${(cooldownMs / 1000).toFixed(2)}s</div>`;
+    tooltip += `<div class="tooltip-cooldown">${t('skillTree.cooldown')}: ${formatNumber((cooldownMs / 1000).toFixed(2))}s</div>`;
   }
   const durationMs = skillTree.getSkillDuration(skill, level);
   if (durationMs) {
-    tooltip += `<div class="tooltip-duration">${t('skillTree.duration')}: ${(durationMs / 1000).toFixed(2)}s</div>`;
+    tooltip += `<div class="tooltip-duration">${t('skillTree.duration')}: ${formatNumber((durationMs / 1000).toFixed(2))}s</div>`;
   }
 
   // Add summon stats for summon skills
@@ -2448,7 +2457,7 @@ function createSkillTooltip(skillId) {
       }
 
       const decimals = stat === 'attackSpeed' ? 2 : getStatDecimals(stat);
-      tooltip += `<div>${formatStatName(stat)}: ${value.toFixed(decimals)}</div>`;
+      tooltip += `<div>${formatStatName(stat)}: ${formatNumber(value.toFixed(decimals))}</div>`;
     });
     tooltip += '</div>';
 
