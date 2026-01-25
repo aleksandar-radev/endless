@@ -235,7 +235,7 @@ export default {
   'skill.crimsonFeast': '享用猩红精华。',
   'skill.nightStalkerMastery': '掌握夜行潜伏。',
   'skill.bloodRitual': '进行血之仪式。',
-  'skill.bloodSacrifice': '以力量为代价献祭。',
+  'skill.bloodSacrifice': '牺牲你当前生命的50%造成等同于牺牲量的伤害。',
   'skill.bloodPotency': '增强血液效能。',
   'skill.hemorrhage': '造成严重出血。',
   'skill.shieldMastery': '掌握盾牌使用。',

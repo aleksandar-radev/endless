@@ -1291,19 +1291,26 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
   }
 
   // Instant Damage Preview
-  if (skill?.type && skill.type() === 'instant' && skillTree.isDamageSkill?.(effectsCurrent)) {
+  const isDamageSkill = skillTree.isDamageSkill?.(effectsCurrent) || skill.id === 'bloodSacrifice';
+  if (skill?.type && skill.type() === 'instant' && isDamageSkill) {
     const skillTypeSource = skill?.skill_type ?? skill?.skillType;
     const resolvedSkillType = typeof skillTypeSource === 'function' ? skillTypeSource() : skillTypeSource;
     const skillType = (resolvedSkillType || 'attack').toLowerCase();
     const isSpell = skillType === 'spell';
-    let damageEffects = effectsCurrent;
+    let damageEffects = { ...effectsCurrent };
+
+    if (skill.id === 'bloodSacrifice') {
+      const effectiveness = 1 + (hero.stats.bloodSacrificeEffectivenessPercent || 0);
+      const lifeCost = hero.stats.currentLife * 0.5;
+      damageEffects.damage = (damageEffects.damage || 0) + lifeCost * effectiveness;
+    }
+
     if (isSpell) {
-      const allowedDamageTypes = getSpellDamageTypes(effectsCurrent);
-      damageEffects = { ...effectsCurrent, ...(allowedDamageTypes.length ? { allowedDamageTypes } : {}) };
+      const allowedDamageTypes = getSpellDamageTypes(damageEffects);
+      damageEffects = { ...damageEffects, ...(allowedDamageTypes.length ? { allowedDamageTypes } : {}) };
     }
     const damagePreview = hero.calculateTotalDamage(damageEffects, { includeRandom: false });
-    if (damagePreview?.damage > 0) {
-      html += `
+    if (damagePreview?.damage > 0) {      html += `
           <div class="skill-damage-preview">
              <div class="damage-total">
                <span>${t('skill.totalPotentialDamage')}</span>
@@ -2467,18 +2474,26 @@ function createSkillTooltip(skillId) {
     }
   }
 
-  if (skill?.type && skill.type() === 'instant' && skillTree.isDamageSkill?.(effects)) {
+  const isDamageSkill = skillTree.isDamageSkill?.(effects) || skill.id === 'bloodSacrifice';
+  if (skill?.type && skill.type() === 'instant' && isDamageSkill) {
     // Compute allowedDamageTypes for spells, same as useInstantSkill
     const skillTypeSource = skill?.skill_type ?? skill?.skillType;
     const resolvedSkillType = typeof skillTypeSource === 'function' ? skillTypeSource() : skillTypeSource;
     const skillType = (resolvedSkillType || 'attack').toLowerCase();
     const isSpell = skillType === 'spell';
 
-    let damageEffects = effects;
+    let damageEffects = { ...effects };
+
+    if (skill.id === 'bloodSacrifice') {
+      const effectiveness = 1 + (hero.stats.bloodSacrificeEffectivenessPercent || 0);
+      const lifeCost = hero.stats.currentLife * 0.5;
+      damageEffects.damage = (damageEffects.damage || 0) + lifeCost * effectiveness;
+    }
+
     if (isSpell) {
-      const allowedDamageTypes = getSpellDamageTypes(effects);
+      const allowedDamageTypes = getSpellDamageTypes(damageEffects);
       damageEffects = {
-        ...effects,
+        ...damageEffects,
         ...(allowedDamageTypes.length ? { allowedDamageTypes } : {}),
       };
     }

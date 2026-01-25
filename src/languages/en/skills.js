@@ -422,7 +422,7 @@ export default {
   'skill.crimsonFeast': 'Feast on crimson essence.',
   'skill.nightStalkerMastery': 'Master night stalking.',
   'skill.bloodRitual': 'Perform blood rituals.',
-  'skill.bloodSacrifice': 'Sacrifice for power.',
+  'skill.bloodSacrifice': 'Sacrifice 50% of your current life to deal damage equal to the sacrificed amount.',
   'skill.bloodPotency': 'Enhance blood potency.',
   'skill.hemorrhage': 'Cause severe bleeding.',
   'skill.hemorrhage.name': 'Hemorrhage',

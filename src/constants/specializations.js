@@ -23,14 +23,14 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.armoredOffense'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            armorPercentPerLevel: getScalingPercent({
-              level, base: 0.02, softcap: 20000, linear: 0.0005, power: 0.81,
+            armorPercent: getScalingPercent({
+              level, base: 20, softcap: 20000, linear: 0.5, power: 0.81,
             }),
             extraDamageFromArmorPercent: Math.min(getScalingPercent({
               level, base: 0.1, softcap: 2000, linear: 0.01, power: 0.7,
             }), 2.5),
-            lifePercentPerLevel: getScalingPercent({
-              level, base: 0.02, softcap: 20000, linear: 0.0005, power: 0.81,
+            lifePercent: getScalingPercent({
+              level, base: 20, softcap: 20000, linear: 0.5, power: 0.81,
             }),
             extraDamageFromLifePercent: Math.min(getScalingPercent({
               level, base: 0.1, softcap: 2000, linear: 0.01, power: 0.7,
@@ -152,8 +152,8 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.vanish'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            evasionPercentPerLevel: getScalingPercent({
-              level, base: 0.03, softcap: 20000, linear: 0.0008, power: 0.81,
+            evasionPercent: getScalingPercent({
+              level, base: 30, softcap: 20000, linear: 0.8, power: 0.81,
             }),
             avoidChance: 5 + getScalingPercent({
               level, base: 0.466, softcap: 2000, linear: 0.1, power: 0.6,
@@ -170,7 +170,7 @@ export const SPECIALIZATIONS = {
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             critDamage: getScalingPercent({
-              level, base: 2.5, softcap: 2000, linear: 0.5, power: 0.75,
+              level, base: 1, softcap: 2000, linear: 0.001, power: 0.75,
             }),
             executeThresholdPercent: Math.min(5 + getScalingPercent({
               level, base: 0.34, softcap: 2000, linear: 0.1, power: 0.6,

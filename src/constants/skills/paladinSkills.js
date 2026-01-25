@@ -41,14 +41,8 @@ export const PALADIN_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'toggle', scale: { base: 1.66, increment: 1 },
       }),
-      damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 0.71 },
-      }),
       fireDamage: getSkillStatBonus({
         level, statKey: 'fireDamage', skillType: 'toggle', scale: { base: 1.25, increment: 1 },
-      }),
-      fireDamagePercent: getSkillStatBonus({
-        level, statKey: 'fireDamagePercent', skillType: 'toggle', scale: { base: 0.71 },
       }),
     }),
   },
@@ -365,8 +359,8 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.divineWrath'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 1.42 },
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 1.42 },
       }),
       lifePerHit: getSkillStatBonus({
         level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: 1.66, increment: 1.25 },

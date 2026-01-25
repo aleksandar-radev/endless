@@ -982,14 +982,6 @@ export default class SkillTree {
         synergy.calculateBonus(sourceLevel) : 0;
 
       totalSynergyBonus += synergyBonus;
-
-      // Add any additional effects from the synergy
-      if (synergy.additionalEffects) {
-        const additionalEffects = synergy.additionalEffects(sourceLevel);
-        Object.entries(additionalEffects).forEach(([stat, value]) => {
-          modifiedEffects[stat] = (modifiedEffects[stat] || 0) + value;
-        });
-      }
     }
 
     // Apply total synergy bonus as a percentage multiplier to all base effects

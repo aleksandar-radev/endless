@@ -388,8 +388,8 @@ export const BERSERKER_SKILLS = {
       armorPenetrationPercent: getSkillStatBonus({
         level, statKey: 'armorPenetrationPercent', skillType: 'passive', scale: { base: 1, max: 1 },
       }),
-      damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 3 },
+      armorPenetration: getSkillStatBonus({
+        level, statKey: 'armorPenetration', skillType: 'passive', scale: { base: 5, increment: 1 },
       }),
     }),
     synergies: [
@@ -443,10 +443,10 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'passive', scale: { base: 10, increment: 6 },
+        level, statKey: 'damage', skillType: 'passive', scale: { base: 1, increment: 1.4 },
       }),
       damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 2 },
+        level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 2, max: 0.3 },
       }),
     }),
     synergies: [
@@ -468,15 +468,18 @@ export const BERSERKER_SKILLS = {
     type: () => 'instant',
     skill_type: 'attack',
     manaCost: (level) => 40 + level * 0.625,
-    cooldown: () => 80000,
+    cooldown: () => 8000,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'primal-roar',
     description: () => t('skill.primalRoar'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      damage: getSkillStatBonus({
+        level, statKey: 'damage', skillType: 'instant', scale: { base: 2, increment: 2 },
+      }),
       ignoreEnemyArmor: 1,
       reduceEnemyDamagePercent: getSkillStatBonus({
-        level, statKey: 'reduceEnemyDamagePercent', skillType: 'instant', scale: { base: 50, max: 1 },
+        level, statKey: 'reduceEnemyDamagePercent', skillType: 'instant', scale: { base: 1, max: 1 },
       }),
     }),
     synergies: [
@@ -498,7 +501,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       strength: getSkillStatBonus({
-        level, statKey: 'strength', skillType: 'passive', scale: { base: 6, increment: 6 },
+        level, statKey: 'strength', skillType: 'passive', scale: { base: 2, increment: 1.3 },
       }),
       critChance: getSkillStatBonus({
         level, statKey: 'critChance', skillType: 'passive', scale: { base: 2, max: 1 },
@@ -526,11 +529,11 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.apexPredator'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 2 },
+      armorPenetration: getSkillStatBonus({
+        level, statKey: 'armorPenetration', skillType: 'passive', scale: { base: 2, increment: 1 },
       }),
       attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 10, max: 1 },
+        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 1, max: 1 },
       }),
     }),
     synergies: [
@@ -553,7 +556,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', scale: { base: 16.66, increment: 10 },
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 1, increment: 2 },
       }),
       armorPenetrationPercent: getSkillStatBonus({
         level, statKey: 'armorPenetrationPercent', skillType: 'toggle', scale: { base: 1, max: 1 },
@@ -563,7 +566,7 @@ export const BERSERKER_SKILLS = {
       {
         sourceSkillId: 'rageOverflow',
         calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 1, increment: 1, cap: 3000,
+          level: sourceLevel, base: 1, increment: 0.2, cap: 3000,
         }),
       },
     ],

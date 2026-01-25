@@ -1563,7 +1563,7 @@ export default class Inventory {
       Object.entries(item.stats).forEach(([stat, value]) => {
         let effectiveValue = value;
 
-        if (multiplier !== 1) {
+        if (multiplier !== 1 && stat !== 'critDamage') {
           const isPercentStat = getDivisor(stat) !== 1;
 
           if (isPercentStat) {

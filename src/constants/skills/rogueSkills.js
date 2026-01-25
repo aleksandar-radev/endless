@@ -247,6 +247,9 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.poisonAmplification'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      earthResistance: getSkillStatBonus({
+        level, statKey: 'earthResistance', skillType: 'passive', scale: { base: 1, increment: 2 },
+      }),
       extraDamageFromEarthResistancePercent: getSkillStatBonus({
         level, statKey: 'extraDamageFromEarthResistancePercent', skillType: 'passive', scale: { max: 2 },
       }),

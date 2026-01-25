@@ -237,7 +237,7 @@ export default {
   'skill.crimsonFeast': 'Banquetea con esencia carmesí.',
   'skill.nightStalkerMastery': 'Domina el acecho nocturno.',
   'skill.bloodRitual': 'Realiza rituales de sangre.',
-  'skill.bloodSacrifice': 'Sacrifica por poder.',
+  'skill.bloodSacrifice': 'Sacrifica el 50% de tu vida actual para infligir daño igual a la cantidad sacrificada.',
   'skill.bloodPotency': 'Mejora potencia sanguínea.',
   'skill.hemorrhage': 'Causa sangrado severo.',
   'skill.shieldMastery': 'Domina el uso de escudos.',

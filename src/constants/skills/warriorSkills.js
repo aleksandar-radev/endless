@@ -205,11 +205,6 @@ export const WARRIOR_SKILLS = {
         calculateBonus: (sourceLevel) => getScalingSynergy({
           level: sourceLevel, base: 1.5, increment: 0.5, cap: 500,
         }),
-        additionalEffects: (sourceLevel) => ({
-          armorPenetration: getSkillStatBonus({
-            level: sourceLevel, statKey: 'armorPenetration', skillType: 'passive', scale: { base: 0.25, increment: 0.05 },
-          }),
-        }),
       },
     ],
   },
