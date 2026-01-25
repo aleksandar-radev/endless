@@ -20,9 +20,6 @@ export const ROGUE_SKILLS = {
       agility: getSkillStatBonus({
         level, statKey: 'agility', skillType: 'passive',
       }),
-      agilityPerLevel: getSkillStatBonus({
-        level, statKey: 'agility', skillType: 'passive', perLevel: true,
-      }),
       critChance: getSkillStatBonus({
         level, statKey: 'critChance', skillType: 'passive', scale: { max: 0.2 },
       }),
@@ -39,9 +36,6 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       dexterity: getSkillStatBonus({
         level, statKey: 'dexterity', skillType: 'passive',
-      }),
-      dexterityPerLevel: getSkillStatBonus({
-        level, statKey: 'dexterity', skillType: 'passive', perLevel: true,
       }),
       extraDamageFromEvasionPercent: getSkillStatBonus({
         level, statKey: 'extraDamageFromEvasionPercent', skillType: 'passive', scale: { max: 2 },
@@ -67,9 +61,6 @@ export const ROGUE_SKILLS = {
       earthDamage: getSkillStatBonus({
         level, statKey: 'earthDamage', skillType: 'passive', scale: { base: 2, increment: 1.5 },
       }),
-      earthDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'passive', perLevel: true,
-      }),
     }),
   },
   poisonDagger: {
@@ -84,9 +75,6 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'toggle',
-      }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
       }),
       earthDamage: getSkillStatBonus({
         level, statKey: 'earthDamage', skillType: 'toggle', scale: { base: 1.5 },
@@ -115,9 +103,6 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       agility: getSkillStatBonus({
         level, statKey: 'agility', skillType: 'buff', scale: { base: 2 },
-      }),
-      agilityPerLevel: getSkillStatBonus({
-        level, statKey: 'agility', skillType: 'buff', perLevel: true,
       }),
       critChance: getSkillStatBonus({
         level, statKey: 'critChance', skillType: 'buff', scale: { max: 0.5 },
@@ -170,9 +155,6 @@ export const ROGUE_SKILLS = {
       attackRating: getSkillStatBonus({
         level, statKey: 'attackRating', skillType: 'passive',
       }),
-      attackRatingPerLevel: getSkillStatBonus({
-        level, statKey: 'attackRating', skillType: 'passive', perLevel: true,
-      }),
       extraDamageFromAttackRatingPercent: getSkillStatBonus({
         level, statKey: 'extraDamageFromAttackRatingPercent', skillType: 'passive', scale: { max: 1 },
       }),
@@ -212,9 +194,6 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       dexterity: getSkillStatBonus({
         level, statKey: 'dexterity', skillType: 'passive', scale: { base: 2, increment: 3 },
-      }),
-      dexterityPerLevel: getSkillStatBonus({
-        level, statKey: 'dexterity', skillType: 'passive', perLevel: 0.9,
       }),
       extraDamageFromEvasionPercent: getSkillStatBonus({
         level,
@@ -268,9 +247,6 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.poisonAmplification'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      earthResistancePerLevel: getSkillStatBonus({
-        level, statKey: 'earthResistance', skillType: 'passive', perLevel: 1.6,
-      }),
       extraDamageFromEarthResistancePercent: getSkillStatBonus({
         level, statKey: 'extraDamageFromEarthResistancePercent', skillType: 'passive', scale: { max: 2 },
       }),
@@ -301,14 +277,8 @@ export const ROGUE_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'toggle', scale: { base: 2, increment: 0.8 },
       }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', perLevel: 0.8,
-      }),
       earthDamage: getSkillStatBonus({
         level, statKey: 'earthDamage', skillType: 'toggle', scale: { base: 2, increment: 0.8 },
-      }),
-      earthDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'toggle', perLevel: 0.8,
       }),
     }),
     synergies: [
@@ -332,9 +302,6 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       attackRating: getSkillStatBonus({
         level, statKey: 'attackRating', skillType: 'passive', scale: { base: 1.5, increment: 1 },
-      }),
-      attackRatingPerLevel: getSkillStatBonus({
-        level, statKey: 'attackRating', skillType: 'passive', perLevel: true,
       }),
       critChance: getSkillStatBonus({
         level, statKey: 'critChance', skillType: 'passive', scale: { max: 0.5 },
@@ -365,14 +332,8 @@ export const ROGUE_SKILLS = {
       dexterity: getSkillStatBonus({
         level, statKey: 'dexterity', skillType: 'passive', scale: { base: 3, increment: 5 },
       }),
-      dexterityPerLevel: getSkillStatBonus({
-        level, statKey: 'dexterity', skillType: 'passive', perLevel: true,
-      }),
       agility: getSkillStatBonus({
         level, statKey: 'agility', skillType: 'passive', scale: { base: 3, increment: 5 },
-      }),
-      agilityPerLevel: getSkillStatBonus({
-        level, statKey: 'agility', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -391,9 +352,6 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 1 },
-      }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'passive', perLevel: true,
       }),
       critChance: getSkillStatBonus({
         level, statKey: 'critChance', skillType: 'passive', scale: { max: 0.6 },
@@ -422,9 +380,6 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       earthDamage: getSkillStatBonus({
         level, statKey: 'earthDamage', skillType: 'instant', scale: { base: 6, increment: 3 },
-      }),
-      earthDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'instant', perLevel: true,
       }),
       earthDamagePercent: getSkillStatBonus({
         level, statKey: 'earthDamagePercent', skillType: 'instant', scale: { base: 1.5 },
@@ -457,9 +412,6 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', scale: { base: 8, increment: 3 },
-      }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'instant', perLevel: true,
       }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1.5 },
@@ -511,9 +463,6 @@ export const ROGUE_SKILLS = {
       attackRating: getSkillStatBonus({
         level, statKey: 'attackRating', skillType: 'buff', scale: { base: 1.5, increment: 1 },
       }),
-      attackRatingPerLevel: getSkillStatBonus({
-        level, statKey: 'attackRating', skillType: 'buff', perLevel: true,
-      }),
       extraDamageFromAttackRatingPercent: getSkillStatBonus({
         level, statKey: 'extraDamageFromAttackRatingPercent', skillType: 'buff', scale: { max: 1.5 },
       }),
@@ -538,9 +487,6 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       evasion: getSkillStatBonus({
         level, statKey: 'evasion', skillType: 'passive', scale: { base: 2, increment: 2 },
-      }),
-      evasionPerLevel: getSkillStatBonus({
-        level, statKey: 'evasion', skillType: 'passive', perLevel: true,
       }),
     }),
     synergies: [
@@ -571,9 +517,6 @@ export const ROGUE_SKILLS = {
       dexterity: getSkillStatBonus({
         level, statKey: 'dexterity', skillType: 'passive', scale: { base: 5, increment: 10 },
       }),
-      dexterityPerLevel: getSkillStatBonus({
-        level, statKey: 'dexterity', skillType: 'passive', perLevel: true,
-      }),
     }),
     synergies: [
       {
@@ -596,9 +539,6 @@ export const ROGUE_SKILLS = {
     effect: (level) => ({
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'toggle', scale: { base: 15, increment: 6 },
-      }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
       }),
       critChance: getSkillStatBonus({
         level, statKey: 'critChance', skillType: 'toggle', scale: { base: 2.5, max: 1 },

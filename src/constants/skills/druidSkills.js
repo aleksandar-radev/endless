@@ -51,14 +51,8 @@ export const DRUID_SKILLS = {
       armor: getSkillStatBonus({
         level, statKey: 'armor', skillType: 'passive', scale: { base: 0.42, increment: 0.5 },
       }),
-      armorPerLevel: getSkillStatBonus({
-        level, statKey: 'armor', skillType: 'passive', perLevel: true,
-      }),
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'passive', scale: { base: 1 },
-      }),
-      lifeRegenPerLevel: getSkillStatBonus({
-        level, statKey: 'lifeRegen', skillType: 'passive', perLevel: true,
       }),
     }),
     synergies: [
@@ -81,9 +75,6 @@ export const DRUID_SKILLS = {
     effect: (level) => ({
       vitality: getSkillStatBonus({
         level, statKey: 'vitality', skillType: 'passive', scale: { base: 1, increment: 2 },
-      }),
-      vitalityPerLevel: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', perLevel: true,
       }),
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 0.4, max: 1 },
@@ -108,9 +99,6 @@ export const DRUID_SKILLS = {
     effect: (level) => ({
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'buff', scale: { base: 3.33, increment: 2.5 },
-      }),
-      lifeRegenPerLevel: getSkillStatBonus({
-        level, statKey: 'lifeRegen', skillType: 'buff', perLevel: true,
       }),
       lifeRegenPercent: getSkillStatBonus({
         level, statKey: 'lifeRegenPercent', skillType: 'buff', scale: { base: 0.625 },
@@ -142,9 +130,6 @@ export const DRUID_SKILLS = {
     effect: (level) => ({
       earthDamage: getSkillStatBonus({
         level, statKey: 'earthDamage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
-      }),
-      earthDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'instant', perLevel: true,
       }),
       earthDamagePercent: getSkillStatBonus({
         level, statKey: 'earthDamagePercent', skillType: 'instant', scale: { base: 1 },
@@ -179,14 +164,8 @@ export const DRUID_SKILLS = {
       waterDamage: getSkillStatBonus({
         level, statKey: 'waterDamage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
       }),
-      waterDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'waterDamage', skillType: 'instant', perLevel: true,
-      }),
       coldDamage: getSkillStatBonus({
         level, statKey: 'coldDamage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
-      }),
-      coldDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'coldDamage', skillType: 'instant', perLevel: true,
       }),
     }),
     synergies: [
@@ -345,17 +324,11 @@ export const DRUID_SKILLS = {
       earthDamage: getSkillStatBonus({
         level, statKey: 'earthDamage', skillType: 'instant', scale: { base: 5, increment: 2.5 },
       }),
-      earthDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'instant', perLevel: true,
-      }),
       earthDamagePercent: getSkillStatBonus({
         level, statKey: 'earthDamagePercent', skillType: 'instant', scale: { base: 2 },
       }),
       waterDamage: getSkillStatBonus({
         level, statKey: 'waterDamage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
-      }),
-      waterDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'waterDamage', skillType: 'instant', perLevel: true,
       }),
       waterDamagePercent: getSkillStatBonus({
         level, statKey: 'waterDamagePercent', skillType: 'instant', scale: { base: 2 },
@@ -389,17 +362,11 @@ export const DRUID_SKILLS = {
       waterDamage: getSkillStatBonus({
         level, statKey: 'waterDamage', skillType: 'instant', scale: { base: 4, increment: 2 },
       }),
-      waterDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'waterDamage', skillType: 'instant', perLevel: true,
-      }),
       waterDamagePercent: getSkillStatBonus({
         level, statKey: 'waterDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
       coldDamage: getSkillStatBonus({
         level, statKey: 'coldDamage', skillType: 'instant', scale: { base: 4, increment: 2 },
-      }),
-      coldDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'coldDamage', skillType: 'instant', perLevel: true,
       }),
       coldDamagePercent: getSkillStatBonus({
         level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1.5 },
@@ -465,9 +432,6 @@ export const DRUID_SKILLS = {
       armor: getSkillStatBonus({
         level, statKey: 'armor', skillType: 'buff', scale: { base: 0.8, increment: 0.8 },
       }),
-      armorPerLevel: getSkillStatBonus({
-        level, statKey: 'armor', skillType: 'buff', perLevel: true, scale: { base: 2 },
-      }),
       armorPercent: getSkillStatBonus({
         level, statKey: 'armorPercent', skillType: 'buff', scale: { base: 1.25 },
       }),
@@ -476,9 +440,6 @@ export const DRUID_SKILLS = {
       }),
       allResistance: getSkillStatBonus({
         level, statKey: 'allResistance', skillType: 'buff', scale: { base: 0.66, increment: 0.66 },
-      }),
-      allResistancePerLevel: getSkillStatBonus({
-        level, statKey: 'allResistance', skillType: 'buff', perLevel: true,
       }),
     }),
     synergies: [
@@ -510,14 +471,8 @@ export const DRUID_SKILLS = {
       life: getSkillStatBonus({
         level, statKey: 'life', skillType: 'buff', scale: { base: 0.83, increment: 0.83 },
       }),
-      lifePerLevel: getSkillStatBonus({
-        level, statKey: 'life', skillType: 'buff', perLevel: true, scale: { base: 5 },
-      }),
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'buff', scale: { base: 3.75, increment: 3 },
-      }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'buff', perLevel: true,
       }),
     }),
     synergies: [
@@ -546,9 +501,6 @@ export const DRUID_SKILLS = {
     effect: (level) => ({
       earthDamage: getSkillStatBonus({
         level, statKey: 'earthDamage', skillType: 'buff', scale: { base: 3.75, increment: 3 },
-      }),
-      earthDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'buff', perLevel: true,
       }),
       poisonDamagePercent: getSkillStatBonus({
         level, statKey: 'poisonDamagePercent', skillType: 'buff', scale: { base: 0.625 },
@@ -586,9 +538,6 @@ export const DRUID_SKILLS = {
       manaPerHit: getSkillStatBonus({
         level, statKey: 'manaPerHit', skillType: 'buff', scale: { base: 1, increment: 1.25 },
       }),
-      manaPerHitPerLevel: getSkillStatBonus({
-        level, statKey: 'manaPerHit', skillType: 'buff', perLevel: true,
-      }),
     }),
     synergies: [
       {
@@ -614,17 +563,11 @@ export const DRUID_SKILLS = {
       coldDamage: getSkillStatBonus({
         level, statKey: 'coldDamage', skillType: 'passive', scale: { base: 5, increment: 3 },
       }),
-      coldDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'coldDamage', skillType: 'passive', perLevel: true,
-      }),
       waterDamagePercent: getSkillStatBonus({
         level, statKey: 'waterDamagePercent', skillType: 'passive', scale: { base: 1 },
       }),
       waterDamage: getSkillStatBonus({
         level, statKey: 'waterDamage', skillType: 'passive', scale: { base: 5, increment: 3 },
-      }),
-      waterDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'waterDamage', skillType: 'passive', perLevel: true,
       }),
     }),
     synergies: [
@@ -658,9 +601,6 @@ export const DRUID_SKILLS = {
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'buff', scale: { base: 3.33, increment: 2.5 },
       }),
-      lifeRegenPerLevel: getSkillStatBonus({
-        level, statKey: 'lifeRegen', skillType: 'buff', perLevel: true,
-      }),
     }),
     synergies: [
       {
@@ -683,14 +623,8 @@ export const DRUID_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'passive', scale: { base: 3.33, increment: 2 },
       }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'passive', perLevel: true,
-      }),
       vitality: getSkillStatBonus({
         level, statKey: 'vitality', skillType: 'passive', scale: { base: 2.5, increment: 4 },
-      }),
-      vitalityPerLevel: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 2 },
       }),
     }),
     synergies: [
@@ -718,14 +652,8 @@ export const DRUID_SKILLS = {
       vitality: getSkillStatBonus({
         level, statKey: 'vitality', skillType: 'passive', scale: { base: 3.75, increment: 6 },
       }),
-      vitalityPerLevel: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 3 },
-      }),
       strength: getSkillStatBonus({
         level, statKey: 'strength', skillType: 'passive', scale: { base: 3, increment: 3 },
-      }),
-      strengthPerLevel: getSkillStatBonus({
-        level, statKey: 'strength', skillType: 'passive', perLevel: true, scale: { base: 3 },
       }),
     }),
     synergies: [
@@ -752,9 +680,6 @@ export const DRUID_SKILLS = {
     effect: (level) => ({
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'passive', scale: { base: 5, increment: 4 },
-      }),
-      lifeRegenPerLevel: getSkillStatBonus({
-        level, statKey: 'lifeRegen', skillType: 'passive', perLevel: true, scale: { base: 2 },
       }),
       manaRegenPercent: getSkillStatBonus({
         level, statKey: 'manaRegenPercent', skillType: 'passive', scale: { base: 1 },
@@ -783,9 +708,6 @@ export const DRUID_SKILLS = {
     effect: (level) => ({
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'buff', scale: { base: 5, increment: 3.75 },
-      }),
-      lifeRegenPerLevel: getSkillStatBonus({
-        level, statKey: 'lifeRegen', skillType: 'buff', perLevel: true, scale: { base: 1.5 },
       }),
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'buff', scale: { base: 0.625 },
@@ -816,14 +738,8 @@ export const DRUID_SKILLS = {
       armor: getSkillStatBonus({
         level, statKey: 'armor', skillType: 'passive', scale: { base: 1.25, increment: 1.5 },
       }),
-      armorPerLevel: getSkillStatBonus({
-        level, statKey: 'armor', skillType: 'passive', perLevel: true, scale: { base: 3 },
-      }),
       life: getSkillStatBonus({
         level, statKey: 'life', skillType: 'passive', scale: { base: 1, increment: 1 },
-      }),
-      lifePerLevel: getSkillStatBonus({
-        level, statKey: 'life', skillType: 'passive', perLevel: true, scale: { base: 5 },
       }),
     }),
     synergies: [
@@ -850,9 +766,6 @@ export const DRUID_SKILLS = {
       const damage = getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', scale: { base: 7, increment: 2.5 },
       });
-      const damagePerLevel = getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'instant', perLevel: true,
-      });
       const coldDamagePercent = getSkillStatBonus({
         level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1 },
       });
@@ -861,7 +774,6 @@ export const DRUID_SKILLS = {
       });
       return {
         damage,
-        damagePerLevel,
         coldDamagePercent,
         waterDamagePercent,
       };
@@ -891,14 +803,8 @@ export const DRUID_SKILLS = {
       vitality: getSkillStatBonus({
         level, statKey: 'vitality', skillType: 'passive', scale: { base: 7.5, increment: 12 },
       }),
-      vitalityPerLevel: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 6 },
-      }),
       endurance: getSkillStatBonus({
         level, statKey: 'endurance', skillType: 'passive', scale: { base: 15, increment: 12 },
-      }),
-      endurancePerLevel: getSkillStatBonus({
-        level, statKey: 'endurance', skillType: 'passive', perLevel: true,
       }),
     }),
     synergies: [
@@ -964,9 +870,6 @@ export const DRUID_SKILLS = {
       armor: getSkillStatBonus({
         level, statKey: 'armor', skillType: 'passive', scale: { base: 2.08, increment: 2.5 },
       }),
-      armorPerLevel: getSkillStatBonus({
-        level, statKey: 'armor', skillType: 'passive', perLevel: true, scale: { base: 5 },
-      }),
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 2 },
       }),
@@ -992,9 +895,6 @@ export const DRUID_SKILLS = {
     effect: (level) => ({
       elementalDamage: getSkillStatBonus({
         level, statKey: 'elementalDamage', skillType: 'toggle', scale: { base: 12.5, increment: 10 },
-      }),
-      elementalDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'elementalDamage', skillType: 'toggle', perLevel: true,
       }),
     }),
     synergies: [

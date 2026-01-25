@@ -21,14 +21,8 @@ export const VAMPIRE_SKILLS = {
       lifePerHit: getSkillStatBonus({
         level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: 0.66, increment: 0.625 },
       }),
-      lifePerHitPerLevel: getSkillStatBonus({
-        level, statKey: 'lifePerHit', skillType: 'toggle', perLevel: true,
-      }),
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'toggle', scale: { base: 0.66, increment: 0.5 },
-      }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', perLevel: 0.7,
       }),
     }),
   },
@@ -46,14 +40,8 @@ export const VAMPIRE_SKILLS = {
         agility: getSkillStatBonus({
           level, statKey: 'agility', skillType: 'passive', scale: { base: 1, increment: 1.3 },
         }) * buffEffectiveness,
-        agilityPerLevel: getSkillStatBonus({
-          level, statKey: 'agility', skillType: 'passive', perLevel: true,
-        }) * buffEffectiveness,
         dexterity: getSkillStatBonus({
           level, statKey: 'dexterity', skillType: 'passive', scale: { base: 1, increment: 1.3 },
-        }) * buffEffectiveness,
-        dexterityPerLevel: getSkillStatBonus({
-          level, statKey: 'dexterity', skillType: 'passive', perLevel: true,
         }) * buffEffectiveness,
       };
     },
@@ -84,9 +72,6 @@ export const VAMPIRE_SKILLS = {
     effect: (level) => ({
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', scale: { base: 4, increment: 2 },
-      }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'instant', perLevel: 1.5,
       }),
       damagePercent: getSkillStatBonus({
         level,
@@ -132,9 +117,6 @@ export const VAMPIRE_SKILLS = {
       attackRating: getSkillStatBonus({
         level, statKey: 'attackRating', skillType: 'buff', scale: { base: 3, increment: 1 },
       }),
-      attackRatingPerLevel: getSkillStatBonus({
-        level, statKey: 'attackRating', skillType: 'buff', perLevel: true,
-      }),
     }),
     synergies: [
       {
@@ -162,9 +144,6 @@ export const VAMPIRE_SKILLS = {
       return {
         airDamage: getSkillStatBonus({
           level, statKey: 'airDamage', skillType: 'instant', scale: { base: 1.2, increment: 1 },
-        }),
-        airDamagePerLevel: getSkillStatBonus({
-          level, statKey: 'airDamage', skillType: 'instant', perLevel: true,
         }),
         airDamagePercent: getSkillStatBonus({
           level, statKey: 'airDamagePercent', skillType: 'instant', scale: { base: 1, linear: 0.7 },
@@ -195,14 +174,8 @@ export const VAMPIRE_SKILLS = {
       strength: getSkillStatBonus({
         level, statKey: 'strength', skillType: 'passive', scale: { base: 1, increment: 1 },
       }),
-      strengthPerLevel: getSkillStatBonus({
-        level, statKey: 'strength', skillType: 'passive', perLevel: true,
-      }),
       vitality: getSkillStatBonus({
         level, statKey: 'vitality', skillType: 'passive', scale: { base: 1.25, increment: 1 },
-      }),
-      vitalityPerLevel: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -225,17 +198,11 @@ export const VAMPIRE_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', scale: { base: 1.2, increment: 0.75 },
       }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'instant', perLevel: true,
-      }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1 },
       }),
       lifePerHit: getSkillStatBonus({
         level, statKey: 'lifePerHit', skillType: 'instant', scale: { base: 8, increment: 8 },
-      }),
-      lifePerHitPerLevel: getSkillStatBonus({
-        level, statKey: 'lifePerHit', skillType: 'instant', perLevel: true, scale: { base: 4 },
       }),
     }),
     synergies: [
@@ -265,14 +232,8 @@ export const VAMPIRE_SKILLS = {
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'summon', scale: { base: 1.5, increment: 0.5 },
         }),
-        damagePerLevel: getSkillStatBonus({
-          level, statKey: 'damage', skillType: 'summon', perLevel: true,
-        }),
         airDamage: getSkillStatBonus({
           level, statKey: 'airDamage', skillType: 'summon', scale: { base: 1, increment: 0.7 },
-        }),
-        airDamagePerLevel: getSkillStatBonus({
-          level, statKey: 'airDamage', skillType: 'summon', perLevel: true,
         }),
         attackSpeed: 4,
         canCrit: true,
@@ -314,9 +275,6 @@ export const VAMPIRE_SKILLS = {
       life: getSkillStatBonus({
         level, statKey: 'life', skillType: 'buff', scale: { base: 2, increment: 1 },
       }),
-      lifePerLevel: getSkillStatBonus({
-        level, statKey: 'life', skillType: 'buff', perLevel: true, scale: { base: 1 },
-      }),
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
@@ -345,14 +303,8 @@ export const VAMPIRE_SKILLS = {
     description: () => t('skill.eternalThirst'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
-      }),
       lifePerHit: getSkillStatBonus({
         level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: 2, increment: 1.5 },
-      }),
-      lifePerHitPerLevel: getSkillStatBonus({
-        level, statKey: 'lifePerHit', skillType: 'toggle', perLevel: true,
       }),
     }),
     synergies: [
@@ -376,14 +328,8 @@ export const VAMPIRE_SKILLS = {
       strength: getSkillStatBonus({
         level, statKey: 'strength', skillType: 'passive', scale: { base: 2, increment: 2 },
       }),
-      strengthPerLevel: getSkillStatBonus({
-        level, statKey: 'strength', skillType: 'passive', perLevel: true, scale: { base: 1.3 },
-      }),
       vitality: getSkillStatBonus({
         level, statKey: 'vitality', skillType: 'passive', scale: { base: 2.5, increment: 2 },
-      }),
-      vitalityPerLevel: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 1.3 },
       }),
     }),
   },
@@ -406,9 +352,6 @@ export const VAMPIRE_SKILLS = {
       }),
       perseverance: getSkillStatBonus({
         level, statKey: 'perseverance', skillType: 'passive', scale: { base: 1, increment: 1.6 },
-      }),
-      perseverancePerLevel: getSkillStatBonus({
-        level, statKey: 'perseverance', skillType: 'passive', perLevel: true, scale: { base: 0.4 },
       }),
     }),
     synergies: [
@@ -468,9 +411,6 @@ export const VAMPIRE_SKILLS = {
       lifePerHit: getSkillStatBonus({
         level, statKey: 'lifePerHit', skillType: 'passive', scale: { base: 60, increment: 48 },
       }),
-      lifePerHitPerLevel: getSkillStatBonus({
-        level, statKey: 'lifePerHit', skillType: 'passive', perLevel: true, scale: { base: 24 },
-      }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 1 },
       }),
@@ -500,9 +440,6 @@ export const VAMPIRE_SKILLS = {
     effect: (level) => ({
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'buff', scale: { base: 50, increment: 37.5 },
-      }),
-      lifeRegenPerLevel: getSkillStatBonus({
-        level, statKey: 'lifeRegen', skillType: 'buff', perLevel: true, scale: { base: 15 },
       }),
       evasionPercent: getSkillStatBonus({
         level, statKey: 'evasionPercent', skillType: 'buff', scale: { base: 1 },
@@ -563,17 +500,11 @@ export const VAMPIRE_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'toggle', scale: { base: 4, increment: 3 },
       }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
-      }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
       manaPerHit: getSkillStatBonus({
         level, statKey: 'manaPerHit', skillType: 'toggle', scale: { base: 0.33, increment: 0.33 },
-      }),
-      manaPerHitPerLevel: getSkillStatBonus({
-        level, statKey: 'manaPerHit', skillType: 'toggle', perLevel: true, scale: { base: 0.5 },
       }),
     }),
     synergies: [
@@ -600,9 +531,6 @@ export const VAMPIRE_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'passive', scale: { base: 4, increment: 1.6 },
       }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'passive', perLevel: true,
-      }),
     }),
     synergies: [
       {
@@ -627,9 +555,6 @@ export const VAMPIRE_SKILLS = {
       allAttributes: getSkillStatBonus({
         level, statKey: 'allAttributes', skillType: 'passive', scale: { base: 3, increment: 4 },
       }),
-      allAttributesPerLevel: getSkillStatBonus({
-        level, statKey: 'allAttributes', skillType: 'passive', perLevel: true, scale: { base: 3, increment: 2 },
-      }),
     }),
     synergies: [
       {
@@ -652,9 +577,6 @@ export const VAMPIRE_SKILLS = {
     effect: (level) => ({
       airDamage: getSkillStatBonus({
         level, statKey: 'airDamage', skillType: 'toggle', scale: { base: 6.5, increment: 4 },
-      }),
-      airDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'airDamage', skillType: 'toggle', perLevel: 1.5,
       }),
       airDamagePercent: getSkillStatBonus({
         level, statKey: 'airDamagePercent', skillType: 'toggle', scale: { base: 1.42 },

@@ -23,9 +23,6 @@ export const PALADIN_SKILLS = {
       life: getSkillStatBonus({
         level, statKey: 'life', skillType: 'instant', scale: { base: 0.2, increment: 0.2 },
       }),
-      lifePerLevel: getSkillStatBonus({
-        level, statKey: 'life', skillType: 'instant', perLevel: true,
-      }),
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'instant', scale: { base: 1 },
       }),
@@ -44,17 +41,11 @@ export const PALADIN_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'toggle', scale: { base: 1.66, increment: 1 },
       }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
-      }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 0.71 },
       }),
       fireDamage: getSkillStatBonus({
         level, statKey: 'fireDamage', skillType: 'toggle', scale: { base: 1.25, increment: 1 },
-      }),
-      fireDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'fireDamage', skillType: 'toggle', perLevel: true,
       }),
       fireDamagePercent: getSkillStatBonus({
         level, statKey: 'fireDamagePercent', skillType: 'toggle', scale: { base: 0.71 },
@@ -76,9 +67,6 @@ export const PALADIN_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', scale: { base: 2, increment: 1 },
       }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'instant', perLevel: true,
-      }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'instant', scale: { base: 1 },
       }),
@@ -97,9 +85,6 @@ export const PALADIN_SKILLS = {
       return {
         thornsDamage: getSkillStatBonus({
           level, statKey: 'thornsDamage', skillType: 'passive', scale: { base: 1 },
-        }) * buffEffectiveness,
-        thornsDamagePerLevel: getSkillStatBonus({
-          level, statKey: 'thornsDamage', skillType: 'passive', perLevel: true, scale: { base: 5 },
         }) * buffEffectiveness,
         thornsDamagePercent: getSkillStatBonus({
           level, statKey: 'thornsDamagePercent', skillType: 'passive', scale: { base: 1 },
@@ -126,14 +111,8 @@ export const PALADIN_SKILLS = {
       fireDamage: getSkillStatBonus({
         level, statKey: 'fireDamage', skillType: 'buff', scale: { base: 1.25, increment: 1 },
       }),
-      fireDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'fireDamage', skillType: 'buff', perLevel: true,
-      }),
       lightningDamage: getSkillStatBonus({
         level, statKey: 'lightningDamage', skillType: 'buff', scale: { base: 1.25, increment: 1 },
-      }),
-      lightningDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'lightningDamage', skillType: 'buff', perLevel: true,
       }),
     }),
   },
@@ -151,9 +130,6 @@ export const PALADIN_SKILLS = {
     effect: (level) => ({
       life: getSkillStatBonus({
         level, statKey: 'life', skillType: 'instant', scale: { base: 0.4, increment: 0.4 },
-      }),
-      lifePerLevel: getSkillStatBonus({
-        level, statKey: 'life', skillType: 'instant', perLevel: true,
       }),
       lifePercent: getSkillStatBonus({
         level, statKey: 'lifePercent', skillType: 'instant', scale: { base: 1, max: 0.2 },
@@ -187,9 +163,6 @@ export const PALADIN_SKILLS = {
       armor: getSkillStatBonus({
         level, statKey: 'armor', skillType: 'buff', scale: { base: 0.4, increment: 0.4 },
       }),
-      armorPerLevel: getSkillStatBonus({
-        level, statKey: 'armor', skillType: 'buff', perLevel: true,
-      }),
       armorPercent: getSkillStatBonus({
         level, statKey: 'armorPercent', skillType: 'buff', scale: { base: 1.25 },
       }),
@@ -218,9 +191,6 @@ export const PALADIN_SKILLS = {
       life: getSkillStatBonus({
         level, statKey: 'life', skillType: 'passive', scale: { base: 0.5, increment: 0.5 },
       }),
-      lifePerLevel: getSkillStatBonus({
-        level, statKey: 'life', skillType: 'passive', perLevel: true,
-      }),
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'passive', scale: { base: 1, increment: 1 },
       }),
@@ -231,9 +201,6 @@ export const PALADIN_SKILLS = {
         scale: {
           base: 0.5, increment: 0.5, max: 0.5,
         },
-      }),
-      allResistancePerLevel: getSkillStatBonus({
-        level, statKey: 'allResistance', skillType: 'passive', perLevel: true,
       }),
     }),
     synergies: [
@@ -286,17 +253,11 @@ export const PALADIN_SKILLS = {
       lightningDamage: getSkillStatBonus({
         level, statKey: 'lightningDamage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
       }),
-      lightningDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'lightningDamage', skillType: 'instant', perLevel: true,
-      }),
       lightningDamagePercent: getSkillStatBonus({
         level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
       fireDamage: getSkillStatBonus({
         level, statKey: 'fireDamage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
-      }),
-      fireDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'fireDamage', skillType: 'instant', perLevel: true,
       }),
       fireDamagePercent: getSkillStatBonus({
         level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1 },
@@ -323,9 +284,6 @@ export const PALADIN_SKILLS = {
       life: getSkillStatBonus({
         level, statKey: 'life', skillType: 'passive', scale: { base: 0.6, increment: 0.6 },
       }),
-      lifePerLevel: getSkillStatBonus({
-        level, statKey: 'life', skillType: 'passive', perLevel: true, scale: { base: 3 },
-      }),
       extraDamageFromLifePercent: getSkillStatBonus({
         level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base: 0.2, max: 0.6 },
       }),
@@ -349,9 +307,6 @@ export const PALADIN_SKILLS = {
     effect: (level) => ({
       vitality: getSkillStatBonus({
         level, statKey: 'vitality', skillType: 'buff', scale: { base: 1.66, increment: 2.5 },
-      }),
-      vitalityPerLevel: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'buff', perLevel: true, scale: { base: 2 },
       }),
       vitalityPercent: getSkillStatBonus({
         level, statKey: 'vitalityPercent', skillType: 'buff', scale: { base: 1 },
@@ -416,9 +371,6 @@ export const PALADIN_SKILLS = {
       lifePerHit: getSkillStatBonus({
         level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: 1.66, increment: 1.25 },
       }),
-      lifePerHitPerLevel: getSkillStatBonus({
-        level, statKey: 'lifePerHit', skillType: 'toggle', perLevel: true,
-      }),
     }),
     synergies: [
       {
@@ -440,9 +392,6 @@ export const PALADIN_SKILLS = {
     effect: (level) => ({
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'passive', scale: { base: 2.5, increment: 2 },
-      }),
-      lifeRegenPerLevel: getSkillStatBonus({
-        level, statKey: 'lifeRegen', skillType: 'passive', perLevel: true,
       }),
       resurrectionChance: getSkillStatBonus({
         level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 2, max: 1 },
@@ -466,14 +415,8 @@ export const PALADIN_SKILLS = {
       endurance: getSkillStatBonus({
         level, statKey: 'endurance', skillType: 'passive', scale: { base: 5, increment: 4 },
       }),
-      endurancePerLevel: getSkillStatBonus({
-        level, statKey: 'endurance', skillType: 'passive', perLevel: true, scale: { base: 2 },
-      }),
       vitality: getSkillStatBonus({
         level, statKey: 'vitality', skillType: 'passive', scale: { base: 2.5, increment: 4 },
-      }),
-      vitalityPerLevel: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', perLevel: true, scale: { base: 2 },
       }),
     }),
   },
@@ -490,9 +433,6 @@ export const PALADIN_SKILLS = {
     effect: (level) => ({
       armor: getSkillStatBonus({
         level, statKey: 'armor', skillType: 'passive', scale: { base: 2, increment: 2 },
-      }),
-      armorPerLevel: getSkillStatBonus({
-        level, statKey: 'armor', skillType: 'passive', perLevel: true, scale: { base: 4 },
       }),
       blockChance: getSkillStatBonus({
         level, statKey: 'blockChance', skillType: 'passive', scale: { base: 2, cap: 0.5 },
@@ -545,20 +485,11 @@ export const PALADIN_SKILLS = {
       armor: getSkillStatBonus({
         level, statKey: 'armor', skillType: 'buff', scale: { base: 1.4, increment: 1.4 },
       }),
-      armorPerLevel: getSkillStatBonus({
-        level, statKey: 'armor', skillType: 'buff', perLevel: true, scale: { base: 3.5 },
-      }),
       allResistance: getSkillStatBonus({
         level, statKey: 'allResistance', skillType: 'buff', scale: { base: 1.66, increment: 1.66 },
       }),
-      allResistancePerLevel: getSkillStatBonus({
-        level, statKey: 'allResistance', skillType: 'buff', perLevel: true, scale: { base: 2.5 },
-      }),
       thornsDamage: getSkillStatBonus({
         level, statKey: 'thornsDamage', skillType: 'buff', scale: { base: 1 },
-      }),
-      thornsDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'thornsDamage', skillType: 'buff', perLevel: true, scale: { base: 50 },
       }),
     }),
     synergies: [
@@ -584,9 +515,6 @@ export const PALADIN_SKILLS = {
     effect: (level) => ({
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', scale: { base: 8, increment: 4 },
-      }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'instant', perLevel: true,
       }),
       lightningDamagePercent: getSkillStatBonus({
         level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1 },
@@ -621,9 +549,6 @@ export const PALADIN_SKILLS = {
       life: getSkillStatBonus({
         level, statKey: 'life', skillType: 'passive', scale: { base: 8, increment: 8 },
       }),
-      lifePerLevel: getSkillStatBonus({
-        level, statKey: 'life', skillType: 'passive', perLevel: true, scale: { base: 10 },
-      }),
     }),
     synergies: [
       {
@@ -649,9 +574,6 @@ export const PALADIN_SKILLS = {
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'buff', scale: { base: 6.66, increment: 5 },
       }),
-      lifeRegenPerLevel: getSkillStatBonus({
-        level, statKey: 'lifeRegen', skillType: 'buff', perLevel: true, scale: { base: 2 },
-      }),
       lifeRegenPercent: getSkillStatBonus({
         level, statKey: 'lifeRegenPercent', skillType: 'buff', scale: { base: 0.625 },
       }),
@@ -674,9 +596,6 @@ export const PALADIN_SKILLS = {
       allResistance: getSkillStatBonus({
         level, statKey: 'allResistance', skillType: 'passive', scale: { base: 4, increment: 4 },
       }),
-      allResistancePerLevel: getSkillStatBonus({
-        level, statKey: 'allResistance', skillType: 'passive', perLevel: true, scale: { base: 4 },
-      }),
       extraDamageFromAllResistancesPercent: getSkillStatBonus({
         level, statKey: 'extraDamageFromAllResistancesPercent', skillType: 'passive', scale: { base: 1 },
       }),
@@ -694,9 +613,6 @@ export const PALADIN_SKILLS = {
     effect: (level) => ({
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'toggle', scale: { base: 16.66, increment: 10 },
-      }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
       }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 1.42 },

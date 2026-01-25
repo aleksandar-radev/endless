@@ -21,9 +21,6 @@ export const BERSERKER_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'toggle', scale: { base: 1.66, increment: 1 },
       }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
-      }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 0.71, max: 1 },
       }),
@@ -44,14 +41,8 @@ export const BERSERKER_SKILLS = {
       armor: getSkillStatBonus({
         level, statKey: 'armor', skillType: 'passive', scale: { base: 1, increment: 1 },
       }),
-      armorPerLevel: getSkillStatBonus({
-        level, statKey: 'armor', skillType: 'passive', perLevel: true,
-      }),
       allResistance: getSkillStatBonus({
         level, statKey: 'allResistance', skillType: 'passive', scale: { base: 1, increment: 0.5 },
-      }),
-      allResistancePerLevel: getSkillStatBonus({
-        level, statKey: 'allResistance', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -73,9 +64,6 @@ export const BERSERKER_SKILLS = {
     effect: (level) => ({
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
-      }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'instant', perLevel: true,
       }),
       lifePerHit: getSkillStatBonus({
         level, statKey: 'lifePerHit', skillType: 'instant', scale: { base: -1.6, increment: -1 },
@@ -138,9 +126,6 @@ export const BERSERKER_SKILLS = {
       coldDamage: getSkillStatBonus({
         level, statKey: 'coldDamage', skillType: 'toggle', scale: { base: 1.5, increment: 1.5 },
       }),
-      coldDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'coldDamage', skillType: 'toggle', perLevel: true,
-      }),
       coldDamagePercent: getSkillStatBonus({
         level, statKey: 'coldDamagePercent', skillType: 'toggle', scale: { base: 1.42, max: 1 },
       }),
@@ -172,9 +157,6 @@ export const BERSERKER_SKILLS = {
       lifePerHit: getSkillStatBonus({
         level, statKey: 'lifePerHit', skillType: 'passive', scale: { base: 1, increment: 1 },
       }),
-      lifePerHitPerLevel: getSkillStatBonus({
-        level, statKey: 'lifePerHit', skillType: 'passive', perLevel: true,
-      }),
     }),
     synergies: [
       {
@@ -204,14 +186,8 @@ export const BERSERKER_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
       }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'instant', perLevel: true,
-      }),
       coldDamage: getSkillStatBonus({
         level, statKey: 'coldDamage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
-      }),
-      coldDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'coldDamage', skillType: 'instant', perLevel: true,
       }),
     }),
     synergies: [
@@ -297,14 +273,8 @@ export const BERSERKER_SKILLS = {
       manaPerHit: getSkillStatBonus({
         level, statKey: 'manaPerHit', skillType: 'toggle', scale: { base: 0.66, increment: 0.66 },
       }),
-      manaPerHitPerLevel: getSkillStatBonus({
-        level, statKey: 'manaPerHit', skillType: 'toggle', perLevel: true,
-      }),
       lifePerHit: getSkillStatBonus({
         level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: 1.66, increment: 1.25 },
-      }),
-      lifePerHitPerLevel: getSkillStatBonus({
-        level, statKey: 'lifePerHit', skillType: 'toggle', perLevel: true,
       }),
     }),
     synergies: [
@@ -359,14 +329,8 @@ export const BERSERKER_SKILLS = {
         strength: getSkillStatBonus({
           level, statKey: 'strength', skillType: 'passive', scale: { base: 3, increment: 3 },
         }) * effectiveness,
-        strengthPerLevel: getSkillStatBonus({
-          level, statKey: 'strength', skillType: 'passive', perLevel: true,
-        }) * effectiveness,
         damage: getSkillStatBonus({
           level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 3 },
-        }) * effectiveness,
-        damagePerLevel: getSkillStatBonus({
-          level, statKey: 'damage', skillType: 'passive', perLevel: true,
         }) * effectiveness,
       };
     },
@@ -427,9 +391,6 @@ export const BERSERKER_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 3 },
       }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'passive', perLevel: true,
-      }),
     }),
     synergies: [
       {
@@ -483,9 +444,6 @@ export const BERSERKER_SKILLS = {
     effect: (level) => ({
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'passive', scale: { base: 10, increment: 6 },
-      }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'passive', perLevel: true,
       }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 2 },
@@ -542,9 +500,6 @@ export const BERSERKER_SKILLS = {
       strength: getSkillStatBonus({
         level, statKey: 'strength', skillType: 'passive', scale: { base: 6, increment: 6 },
       }),
-      strengthPerLevel: getSkillStatBonus({
-        level, statKey: 'strength', skillType: 'passive', perLevel: true,
-      }),
       critChance: getSkillStatBonus({
         level, statKey: 'critChance', skillType: 'passive', scale: { base: 2, max: 1 },
       }),
@@ -599,9 +554,6 @@ export const BERSERKER_SKILLS = {
     effect: (level) => ({
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'toggle', scale: { base: 16.66, increment: 10 },
-      }),
-      damagePerLevel: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', perLevel: true,
       }),
       armorPenetrationPercent: getSkillStatBonus({
         level, statKey: 'armorPenetrationPercent', skillType: 'toggle', scale: { base: 1, max: 1 },

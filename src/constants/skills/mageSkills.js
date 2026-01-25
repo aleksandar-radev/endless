@@ -23,9 +23,6 @@ export const MAGE_SKILLS = {
       waterDamage: getSkillStatBonus({
         level, statKey: 'waterDamage', skillType: 'instant', scale: { base: 1.5, increment: 1 },
       }),
-      waterDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'waterDamage', skillType: 'instant', perLevel: true,
-      }),
       waterDamagePercent: getSkillStatBonus({
         level, statKey: 'waterDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
@@ -43,14 +40,8 @@ export const MAGE_SKILLS = {
       wisdom: getSkillStatBonus({
         level, statKey: 'wisdom', skillType: 'passive', scale: { base: 1.5, increment: 1.5 },
       }),
-      wisdomPerLevel: getSkillStatBonus({
-        level, statKey: 'wisdom', skillType: 'passive', perLevel: true,
-      }),
       perseverance: getSkillStatBonus({
         level, statKey: 'perseverance', skillType: 'passive', scale: { base: 1 },
-      }),
-      perseverancePerLevel: getSkillStatBonus({
-        level, statKey: 'perseverance', skillType: 'passive', perLevel: true,
       }),
     }),
   },
@@ -72,9 +63,6 @@ export const MAGE_SKILLS = {
     effect: (level) => ({
       coldDamage: getSkillStatBonus({
         level, statKey: 'coldDamage', skillType: 'instant', scale: { base: 2, increment: 1.5 },
-      }),
-      coldDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'coldDamage', skillType: 'instant', perLevel: true,
       }),
       coldDamagePercent: getSkillStatBonus({
         level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1 },
@@ -103,9 +91,6 @@ export const MAGE_SKILLS = {
     effect: (level) => ({
       fireDamage: getSkillStatBonus({
         level, statKey: 'fireDamage', skillType: 'instant', scale: { base: 3, increment: 2 },
-      }),
-      fireDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'fireDamage', skillType: 'instant', perLevel: true,
       }),
       fireDamagePercent: getSkillStatBonus({
         level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1 },
@@ -136,14 +121,8 @@ export const MAGE_SKILLS = {
       intelligence: getSkillStatBonus({
         level, statKey: 'intelligence', skillType: 'passive', scale: { base: 1.5, increment: 1.5 },
       }),
-      intelligencePerLevel: getSkillStatBonus({
-        level, statKey: 'intelligence', skillType: 'passive', perLevel: true,
-      }),
       wisdom: getSkillStatBonus({
         level, statKey: 'wisdom', skillType: 'passive', scale: { base: 2, increment: 2 },
-      }),
-      wisdomPerLevel: getSkillStatBonus({
-        level, statKey: 'wisdom', skillType: 'passive', perLevel: true,
       }),
     }),
     synergies: [
@@ -216,9 +195,6 @@ export const MAGE_SKILLS = {
       lifePerHit: getSkillStatBonus({
         level, statKey: 'lifePerHit', skillType: 'passive', scale: { base: 2.5, increment: 2 },
       }),
-      lifePerHitPerLevel: getSkillStatBonus({
-        level, statKey: 'lifePerHit', skillType: 'passive', perLevel: true,
-      }),
     }),
     synergies: [
       {
@@ -244,9 +220,6 @@ export const MAGE_SKILLS = {
     effect: (level) => ({
       mana: getSkillStatBonus({
         level, statKey: 'mana', skillType: 'passive', scale: { base: 2.5, increment: 2.5 },
-      }),
-      manaPerLevel: getSkillStatBonus({
-        level, statKey: 'mana', skillType: 'passive', perLevel: true,
       }),
       extraDamageFromManaPercent: getSkillStatBonus({
         level, statKey: 'extraDamageFromManaPercent', skillType: 'passive', scale: { base: 1, max: 1.6 },
@@ -276,9 +249,6 @@ export const MAGE_SKILLS = {
       coldDamage: getSkillStatBonus({
         level, statKey: 'coldDamage', skillType: 'buff', scale: { base: 2.5, increment: 2 },
       }),
-      coldDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'coldDamage', skillType: 'buff', perLevel: true,
-      }),
       waterDamagePercent: getSkillStatBonus({
         level, statKey: 'waterDamagePercent', skillType: 'buff', scale: { base: 0.625 },
       }),
@@ -307,14 +277,8 @@ export const MAGE_SKILLS = {
       elementalDamage: getSkillStatBonus({
         level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 3.33, increment: 2 },
       }),
-      elementalDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'elementalDamage', skillType: 'passive', perLevel: true,
-      }),
       attackRating: getSkillStatBonus({
         level, statKey: 'attackRating', skillType: 'passive', scale: { base: 1.5, increment: 1 },
-      }),
-      attackRatingPerLevel: getSkillStatBonus({
-        level, statKey: 'attackRating', skillType: 'passive', perLevel: true,
       }),
     }),
     synergies: [
@@ -344,9 +308,6 @@ export const MAGE_SKILLS = {
     effect: (level) => ({
       fireDamage: getSkillStatBonus({
         level, statKey: 'fireDamage', skillType: 'buff', scale: { base: 2.5, increment: 2 },
-      }),
-      fireDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'fireDamage', skillType: 'buff', perLevel: true,
       }),
       fireDamagePercent: getSkillStatBonus({
         level, statKey: 'fireDamagePercent', skillType: 'buff', scale: { base: 1.875 },
@@ -402,9 +363,6 @@ export const MAGE_SKILLS = {
     effect: (level) => ({
       elementalDamage: getSkillStatBonus({
         level, statKey: 'elementalDamage', skillType: 'toggle', scale: { base: 4, increment: 3 },
-      }),
-      elementalDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'elementalDamage', skillType: 'toggle', perLevel: true,
       }),
     }),
     synergies: [
@@ -473,14 +431,8 @@ export const MAGE_SKILLS = {
       wisdom: getSkillStatBonus({
         level, statKey: 'wisdom', skillType: 'passive', scale: { base: 3.75, increment: 3 },
       }),
-      wisdomPerLevel: getSkillStatBonus({
-        level, statKey: 'wisdom', skillType: 'passive', perLevel: true,
-      }),
       mana: getSkillStatBonus({
         level, statKey: 'mana', skillType: 'passive', scale: { base: 5, increment: 5 },
-      }),
-      manaPerLevel: getSkillStatBonus({
-        level, statKey: 'mana', skillType: 'passive', perLevel: true,
       }),
     }),
     synergies: [
@@ -508,14 +460,8 @@ export const MAGE_SKILLS = {
       elementalDamage: getSkillStatBonus({
         level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 10, increment: 5 },
       }),
-      elementalDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'elementalDamage', skillType: 'passive', perLevel: true,
-      }),
       manaRegen: getSkillStatBonus({
         level, statKey: 'manaRegen', skillType: 'passive', scale: { base: 10, increment: 10 },
-      }),
-      manaRegenPerLevel: getSkillStatBonus({
-        level, statKey: 'manaRegen', skillType: 'passive', perLevel: true,
       }),
     }),
     synergies: [
@@ -541,9 +487,6 @@ export const MAGE_SKILLS = {
     effect: (level) => ({
       waterDamage: getSkillStatBonus({
         level, statKey: 'waterDamage', skillType: 'instant', scale: { base: 7, increment: 2.5 },
-      }),
-      waterDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'waterDamage', skillType: 'instant', perLevel: true,
       }),
       elementalPenetrationPercent: getSkillStatBonus({
         level, statKey: 'elementalPenetrationPercent', skillType: 'instant', scale: { base: 1 },
@@ -634,9 +577,6 @@ export const MAGE_SKILLS = {
       mana: getSkillStatBonus({
         level, statKey: 'mana', skillType: 'passive', scale: { base: 5, increment: 5 },
       }),
-      manaPerLevel: getSkillStatBonus({
-        level, statKey: 'mana', skillType: 'passive', perLevel: true,
-      }),
     }),
     synergies: [
       {
@@ -689,14 +629,8 @@ export const MAGE_SKILLS = {
       elementalDamage: getSkillStatBonus({
         level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 16.66, increment: 10 },
       }),
-      elementalDamagePerLevel: getSkillStatBonus({
-        level, statKey: 'elementalDamage', skillType: 'passive', perLevel: true,
-      }),
       wisdom: getSkillStatBonus({
         level, statKey: 'wisdom', skillType: 'passive', scale: { base: 5, increment: 4 },
-      }),
-      wisdomPerLevel: getSkillStatBonus({
-        level, statKey: 'wisdom', skillType: 'passive', perLevel: true,
       }),
     }),
     synergies: [
