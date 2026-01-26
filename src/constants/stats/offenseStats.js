@@ -129,7 +129,7 @@ export const OFFENSE_STATS = {
       scaling: (level, tier) => offenseScaling(level, tier),
       overrides: {
         AXE: getItemRange('damage', 1.35),
-        // MACE: { min: 16, max: 38 },
+        DAGGER: getItemRange('damage', 0.8),
       },
     },
     itemTags: ['offense', 'jewelry', 'gloves'],
@@ -220,7 +220,10 @@ export const OFFENSE_STATS = {
       bonus: 0.25,
       maxLevel: 100,
     }, // max bonus: 50% -> +0.5 attacks/s on the 1.0 base before other flats
-    item: { tierScalingMaxPercent: createTierScaling(50, 150, 1) },
+    item: {
+      tierScalingMaxPercent: createTierScaling(50, 150, 1),
+      overrides: { AXE: { min: 1, tierScalingMaxPercent: createTierScaling(40, 130, 1) } },
+    },
     itemTags: ['offense', 'gloves'],
     forceNotShow: true,
     skills: {
@@ -253,13 +256,13 @@ export const OFFENSE_STATS = {
       maxLevel: 200,
     }, // max bonus: 10
     item: {
-      tierScalingMaxPercent: createTierScaling(5, 15, 1.2),
+      tierScalingMaxPercent: createTierScaling(10, 15, 1.2),
       overrides: {
-        DAGGER: { min: 1, max: 22 },
-        WAND: { min: 1, max: 20 },
+        DAGGER: { min: 1, max: 20 },
+        RING: { min: 1, max: 5 },
       },
     },
-    itemTags: ['offense', 'jewelry', 'gloves', 'wand', 'staff'],
+    itemTags: ['offense', 'ring', 'wand', 'staff'],
     show: true,
     sub: 'attack',
     cap: 50,
