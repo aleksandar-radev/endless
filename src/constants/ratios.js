@@ -28,7 +28,14 @@ export const STAT_RATIOS = {
   manaRegen: damage * 0.3,
   manaPerHit: damage * 0.45,
   elementalDamage: damage * 0.4,
-  elementalPenetration: damage * 1.67,
+  elementalPenetration: damage * 8,
+
+  fireDamage: damage * 1.1,
+  coldDamage: damage * 1.1,
+  airDamage: damage * 1.1,
+  earthDamage: damage * 1.1,
+  lightningDamage: damage * 1.1,
+  waterDamage: damage * 1.1,
 
   attackRating: damage * 9.3,
   armorPenetration: damage * 8.5,

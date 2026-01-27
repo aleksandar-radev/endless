@@ -129,14 +129,14 @@ export const ELEMENTALIST_SKILLS = {
     description: () => t('skill.elementalMastery'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      elementalDamagePercent: getSkillStatBonus({
-        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 1 },
+      elementalDamage: getSkillStatBonus({
+        level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 1 },
       }),
       elementalPenetration: getSkillStatBonus({
-        level, statKey: 'elementalPenetration', skillType: 'passive', scale: { base: 0.5, increment: 0.2 },
+        level, statKey: 'elementalPenetration', skillType: 'passive', scale: { base: 1, increment: 1 },
       }),
       elementalPenetrationPercent: getSkillStatBonus({
-        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.2, max: 20 },
+        level, statKey: 'elementalPenetrationPercent', skillType: 'passive',
       }),
     }),
     synergies: [

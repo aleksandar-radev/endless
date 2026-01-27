@@ -1650,6 +1650,23 @@ function renderSkillRow(container, reqLevel, skills, isSpec = false, pathId = nu
   container.appendChild(rowContainer);
 }
 
+function showSkillPreviewModal(skill, pathId = null) {
+  const content = html`
+    <div class="skill-modal-content skill-preview-modal-content" style="width: min(90vw, 400px);">
+      <span class="modal-close">&times;</span>
+      <div class="skill-modal-tooltip-content">
+        ${createPreviewTooltip(skill, pathId)}
+      </div>
+    </div>
+  `;
+
+  createModal({
+    id: 'skill-preview-modal',
+    className: 'skill-modal',
+    content,
+  });
+}
+
 function createPreviewSkillElement(skill, pathId = null) {
   const skillElement = document.createElement('div');
   skillElement.className = 'skill-node';
@@ -1673,7 +1690,7 @@ function createPreviewSkillElement(skill, pathId = null) {
   skillElement.addEventListener('click', (e) => {
     if (IS_MOBILE_OR_TABLET()) {
       e.stopPropagation();
-      showTooltip(createPreviewTooltip(skill, pathId), e, 'skill-tooltip-wrapper', true);
+      showSkillPreviewModal(skill, pathId);
     }
   });
 

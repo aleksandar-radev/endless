@@ -47,7 +47,11 @@ export const BREAKPOINTS = {
   DESKTOP: 1024,
 };
 
-export const IS_MOBILE_OR_TABLET = () => window.matchMedia(`(max-width: ${BREAKPOINTS.MOBILE}px)`).matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+export const IS_MOBILE_OR_TABLET = () => {
+  const isMobileSize = window.matchMedia(`(max-width: ${BREAKPOINTS.MOBILE}px)`).matches;
+  const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  return (isMobileSize || hasTouch) && window.innerWidth < BREAKPOINTS.DESKTOP;
+};
 
 
 
