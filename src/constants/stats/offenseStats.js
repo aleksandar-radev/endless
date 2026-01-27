@@ -630,7 +630,23 @@ export const OFFENSE_STATS = {
       }),
     },
   }),
-  armorPenetrationPercent: createPercentStat({ sub: 'attack' }),
+  armorPenetrationPercent: createPercentStat({
+    sub: 'attack',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 2, softcap: 2000, linear: 0.05, power: 0.6, max: 20,
+      }),
+      toggle: getSkillBonusesPercent({
+        type: 'toggle', base: 3.5, softcap: 2000, linear: 0.15, power: 0.6, max: 25,
+      }),
+      instant: getSkillBonusesPercent({
+        type: 'instant', base: 5, softcap: 2000, linear: 0.35, power: 0.6, max: 60,
+      }),
+      buff: getSkillBonusesPercent({
+        type: 'buff', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 30,
+      }),
+    },
+  }),
   elementalPenetration: createStat({
     training: {
       cost: 50,

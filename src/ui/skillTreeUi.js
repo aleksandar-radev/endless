@@ -19,9 +19,17 @@ import { IS_MOBILE_OR_TABLET } from '../constants/common.js';
 
 const html = String.raw;
 
+const unwrapStatValue = (val) => {
+  if (val && typeof val === 'object' && val._isStatBonus) {
+    return val.value;
+  }
+  return val;
+};
+
 const shouldShowStatValue = (stat) => STATS[stat]?.showValue !== false;
 const getStatDecimals = (stat) => getStatDecimalPlaces(stat);
-const formatSignedValue = (value, decimals, includeZero = true) => {
+const formatSignedValue = (val, decimals, includeZero = true) => {
+  const value = unwrapStatValue(val);
   if (typeof value !== 'number') return value;
   const shouldShowPlus = value > 0 || (includeZero && value === 0);
   return `${shouldShowPlus ? '+' : ''}${formatNumber(value.toFixed(decimals))}`;
@@ -1139,9 +1147,11 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
     Object.entries(effectsTarget).forEach(([stat, value]) => {
       const decimals = getStatDecimals(stat);
       const currVal = effectsCurrent?.[stat] || 0;
-      const diff = value - currVal;
+      const valUnwrapped = unwrapStatValue(value);
+      const currValUnwrapped = unwrapStatValue(currVal);
+      const diff = valUnwrapped - currValUnwrapped;
       let diffHtml = '';
-      if (typeof value === 'number' && typeof currVal === 'number' && diff !== 0) {
+      if (typeof valUnwrapped === 'number' && typeof currValUnwrapped === 'number' && diff !== 0) {
         const sign = diff >= 0 ? '+' : '';
         // Format: NewValue (+Gain)
         // Ensure NewValue doesn't double-sign if formatSignedValue adds one.
@@ -1186,14 +1196,14 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
         html += `<div class="skill-stat-row"><span class="stat-name">${formatStatName(stat)}</span></div>`;
       } else {
         const decimals = getStatDecimals(stat);
+        const valUnwrapped = unwrapStatValue(value);
         html += `
-              <div class="skill-stat-row">
-                <span class="stat-name">${formatStatName(stat)}</span>
-                <span class="stat-value">${typeof value === 'number' ? formatNumber(value.toFixed(decimals)) : ''}</span>
-              </div>
-            `;
-      }
-    });
+                    <div class="skill-stat-row">
+                      <span class="stat-name">${formatStatName(stat)}</span>
+                      <span class="stat-value">${typeof valUnwrapped === 'number' ? formatNumber(valUnwrapped.toFixed(decimals)) : ''}</span>
+                    </div>
+                  `;
+      }    });
     html += '</div></div>';
 
     if (summonStatsTarget) {
@@ -1212,9 +1222,11 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
       Object.entries(summonStatsTarget).forEach(([stat, value]) => {
         const decimals = getStatDecimals(stat);
         const currVal = summonStats[stat] || 0;
-        const diff = value - currVal;
+        const valUnwrapped = unwrapStatValue(value);
+        const currValUnwrapped = unwrapStatValue(currVal);
+        const diff = valUnwrapped - currValUnwrapped;
         let diffHtml = '';
-        if (typeof value === 'number' && typeof currVal === 'number' && diff !== 0) {
+        if (typeof valUnwrapped === 'number' && typeof currValUnwrapped === 'number' && diff !== 0) {
           const sign = diff >= 0 ? '+' : '';
           const gainStr = `${sign}${formatNumber(diff.toFixed(decimals))}`;
           diffHtml = ` <span class="stat-diff-total">(${gainStr})</span>`;
@@ -1226,7 +1238,7 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
           html += `
             <div class="skill-stat-row bonus">
               <span class="stat-name">${formatStatName(stat)}</span>
-              <span class="stat-value">${typeof value === 'number' ? formatNumber(value.toFixed(decimals)) : ''}${diffHtml}</span>
+              <span class="stat-value">${typeof valUnwrapped === 'number' ? formatNumber(valUnwrapped.toFixed(decimals)) : ''}${diffHtml}</span>
             </div>
           `;
         }
@@ -2483,13 +2495,14 @@ function createSkillTooltip(skillId) {
         return;
       }
 
-      if (typeof value !== 'number') {
+      const valUnwrapped = unwrapStatValue(value);
+      if (typeof valUnwrapped !== 'number') {
         tooltip += `<div>${formatStatName(stat)}</div>`;
         return;
       }
 
       const decimals = stat === 'attackSpeed' ? 2 : getStatDecimals(stat);
-      tooltip += `<div>${formatStatName(stat)}: ${formatNumber(value.toFixed(decimals))}</div>`;
+      tooltip += `<div>${formatStatName(stat)}: ${formatNumber(valUnwrapped.toFixed(decimals))}</div>`;
     });
     tooltip += '</div>';
 
