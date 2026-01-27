@@ -2,6 +2,7 @@ import { OFFENSE_STATS } from './offenseStats.js';
 import { DEFENSE_STATS } from './defenseStats.js';
 import { MISC_STATS } from './miscStats.js';
 import { ITEM_FLAT_TIER_SCALING_MULTIPLIER, ITEM_FLAT_STAGE_SCALING_PERCENT } from '../enemies.js';
+import { INSTANT_SKILL_MULTIPLIER } from '../ratios.js';
 
 export const STATS = {
   ...OFFENSE_STATS,
@@ -122,6 +123,12 @@ export function isFlatStat(stat) {
 export function getSkillBonusesFlat({
   type, base, increment, interval, bonus, max,
 }) {
+  if (type === 'instant') {
+    base *= INSTANT_SKILL_MULTIPLIER;
+    increment *= INSTANT_SKILL_MULTIPLIER;
+    bonus *= INSTANT_SKILL_MULTIPLIER;
+  }
+
   return {
     statType: 'flat',
     base,

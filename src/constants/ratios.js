@@ -8,6 +8,8 @@ export const SKILL_INCREMENT_RATIO = 0.33; // Increment is approx 1/3 of base fo
 export const SKILL_INTERVAL = 50;
 export const SKILL_BONUS_VALUE = 0.1;
 
+export const INSTANT_SKILL_MULTIPLIER = 2;
+
 // Ratios relative to Damage (1.0).
 // If life is 5.25, it means 1 Damage is equivalent to 5.25 Life in terms of item budget.
 const damage = 1;
@@ -25,7 +27,7 @@ export const STAT_RATIOS = {
   reflectFireDamage: damage * 2.6,
   manaRegen: damage * 0.3,
   manaPerHit: damage * 0.45,
-  elementalDamage: damage * 1.11,
+  elementalDamage: damage * 0.4,
   elementalPenetration: damage * 1.67,
 
   attackRating: damage * 9.3,

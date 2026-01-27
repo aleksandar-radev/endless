@@ -492,6 +492,43 @@ export const OFFENSE_STATS = {
     },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
     sub: 'elemental',
+    skills: {
+      passive: getSkillBonusesFlat({
+        type: 'passive',
+        base: getSkillFlatBase('elementalDamage'),
+        increment: getSkillFlatIncrement('elementalDamage'),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('elementalDamage'),
+      }),
+      toggle: getSkillBonusesFlat({
+        type: 'toggle',
+        base: getSkillFlatBase('elementalDamage', 3),
+        increment: getSkillFlatIncrement('elementalDamage', 1.3),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('elementalDamage', 1.1),
+      }),
+      instant: getSkillBonusesFlat({
+        type: 'instant',
+        base: getSkillFlatBase('elementalDamage', 8),
+        increment: getSkillFlatIncrement('elementalDamage', 1.8),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('elementalDamage', 1.4),
+      }),
+      buff: getSkillBonusesFlat({
+        type: 'buff',
+        base: getSkillFlatBase('elementalDamage', 1.33),
+        increment: getSkillFlatIncrement('elementalDamage', 1.33),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('elementalDamage', 1.2),
+      }),
+      summon: getSkillBonusesFlat({
+        type: 'summon',
+        base: getSkillFlatBase('elementalDamage', 4),
+        increment: getSkillFlatIncrement('elementalDamage', 1.2),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus('elementalDamage', 1.3),
+      }),
+    },
   }),
   elementalDamagePercent: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(7, 100, 1.1) },

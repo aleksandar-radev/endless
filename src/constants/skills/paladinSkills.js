@@ -508,7 +508,7 @@ export const PALADIN_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'instant', scale: { base: 8, increment: 4 },
+        level, statKey: 'damage', skillType: 'instant', scale: { base: 8, increment: 2 },
       }),
       lightningDamagePercent: getSkillStatBonus({
         level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1 },
@@ -541,7 +541,7 @@ export const PALADIN_SKILLS = {
         level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 5, cap: 1 },
       }),
       life: getSkillStatBonus({
-        level, statKey: 'life', skillType: 'passive', scale: { base: 8, increment: 8 },
+        level, statKey: 'life', skillType: 'passive', scale: { base: 8, increment: 2 },
       }),
     }),
     synergies: [
@@ -566,7 +566,7 @@ export const PALADIN_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifeRegen: getSkillStatBonus({
-        level, statKey: 'lifeRegen', skillType: 'buff', scale: { base: 6.66, increment: 5 },
+        level, statKey: 'lifeRegen', skillType: 'buff', scale: { base: 6.66, increment: 3 },
       }),
       lifeRegenPercent: getSkillStatBonus({
         level, statKey: 'lifeRegenPercent', skillType: 'buff', scale: { base: 0.625 },
@@ -588,7 +588,7 @@ export const PALADIN_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       allResistance: getSkillStatBonus({
-        level, statKey: 'allResistance', skillType: 'passive', scale: { base: 4, increment: 4 },
+        level, statKey: 'allResistance', skillType: 'passive', scale: { base: 4, increment: 2 },
       }),
       extraDamageFromAllResistancesPercent: getSkillStatBonus({
         level, statKey: 'extraDamageFromAllResistancesPercent', skillType: 'passive', scale: { base: 1 },
@@ -606,16 +606,13 @@ export const PALADIN_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', scale: { base: 16.66, increment: 10 },
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 1, increment: 1 },
       }),
-      damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 1.42 },
+      lightningDamage: getSkillStatBonus({
+        level, statKey: 'lightningDamage', skillType: 'toggle', scale: { base: 1.42 },
       }),
-      lightningDamagePercent: getSkillStatBonus({
-        level, statKey: 'lightningDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
-      }),
-      fireDamagePercent: getSkillStatBonus({
-        level, statKey: 'fireDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
+      fireDamage: getSkillStatBonus({
+        level, statKey: 'fireDamage', skillType: 'toggle', scale: { base: 1.42 },
       }),
     }),
     synergies: [
