@@ -124,10 +124,15 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       coldDamage: getSkillStatBonus({
-        level, statKey: 'coldDamage', skillType: 'toggle', scale: { base: 1.5, increment: 1.5 },
+        level, statKey: 'coldDamage', skillType: 'toggle', scale: { base: 4, increment: 5 },
       }),
       coldDamagePercent: getSkillStatBonus({
-        level, statKey: 'coldDamagePercent', skillType: 'toggle', scale: { base: 1.42, max: 1 },
+        level,
+        statKey: 'coldDamagePercent',
+        skillType: 'toggle',
+        scale: {
+          base: 1.42, linear: 0.5, max: 0.5,
+        },
       }),
       doubleDamageChance: getSkillStatBonus({
         level, statKey: 'doubleDamageChance', skillType: 'toggle', scale: { base: 1, max: 1 },
@@ -208,6 +213,9 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.rageMastery'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      attackRating: getSkillStatBonus({
+        level, statKey: 'attackRating', skillType: 'passive', scale: { base: 2, max: 1 },
+      }),
       critChance: getSkillStatBonus({
         level, statKey: 'critChance', skillType: 'passive', scale: { base: 2, max: 1 },
       }),
@@ -327,10 +335,10 @@ export const BERSERKER_SKILLS = {
       const effectiveness = 1 + (hero.stats.warlordEffectivenessPercent || 0);
       return {
         strength: getSkillStatBonus({
-          level, statKey: 'strength', skillType: 'passive', scale: { base: 3, increment: 3 },
+          level, statKey: 'strength', skillType: 'passive', scale: { base: 3, increment: 1.5 },
         }) * effectiveness,
         damage: getSkillStatBonus({
-          level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 3 },
+          level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 1.5 },
         }) * effectiveness,
       };
     },

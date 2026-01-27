@@ -1669,6 +1669,14 @@ function createPreviewSkillElement(skill, pathId = null) {
   skillElement.addEventListener('mousemove', positionTooltip);
   skillElement.addEventListener('mouseleave', hideTooltip);
 
+  // Add click handler for mobile
+  skillElement.addEventListener('click', (e) => {
+    if (IS_MOBILE_OR_TABLET()) {
+      e.stopPropagation();
+      showTooltip(createPreviewTooltip(skill, pathId), e, 'skill-tooltip-wrapper', true);
+    }
+  });
+
   return skillElement;
 }
 

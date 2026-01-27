@@ -316,6 +316,18 @@ export function initializeUI() {
 }
 
 export function switchTab(tabName) {
+  // Close all open modals when switching tabs
+  document.querySelectorAll('.modal:not(.hidden)').forEach((modal) => {
+    closeModal(modal);
+  });
+
+  // Also close custom confirm dialog if open
+  const confirmDialog = document.getElementById('custom-confirm-dialog');
+  if (confirmDialog && confirmDialog.classList.contains('show')) {
+    const noBtn = confirmDialog.querySelector('.confirm-no');
+    if (noBtn) noBtn.click();
+  }
+
   const previousTab = game.activeTab;
 
   // Handle Legacy Tabs
@@ -775,14 +787,14 @@ export function hideDeathScreen() {
 }
 
 // Function to show the tooltip
-export function showTooltip(content, event, classes = '') {
+export function showTooltip(content, event, classes = '', force = false) {
   // Global check: Disable tooltips on mobile/touch devices
-  if (IS_MOBILE_OR_TABLET()) return;
+  if (!force && IS_MOBILE_OR_TABLET()) return;
 
   const tooltip = document.getElementById('tooltip');
   tooltip.innerHTML = content;
   tooltip.className = `tooltip show ${classes}`; // Add custom classes here
-  positionTooltip(event);
+  positionTooltip(event, force);
 }
 
 // Function to hide the tooltip
@@ -793,9 +805,9 @@ export function hideTooltip() {
 }
 
 // Function to position the tooltip
-export function positionTooltip(event) {
+export function positionTooltip(event, force = false) {
   // Global check: Disable tooltip positioning on mobile/touch devices
-  if (IS_MOBILE_OR_TABLET()) return;
+  if (!force && IS_MOBILE_OR_TABLET()) return;
 
   const tooltip = document.getElementById('tooltip');
   const tooltipRect = tooltip.getBoundingClientRect();
