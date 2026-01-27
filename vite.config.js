@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite';
 import vitePluginBundleObfuscator from 'vite-plugin-bundle-obfuscator';
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
@@ -46,13 +47,43 @@ export default defineConfig(({ mode }) => {
           identifierNamesGenerator: 'mangled',
           splitStrings: false,
           compact: true,
-          stringArray: true,
-          stringArrayEncoding: ['rc4'],
-          stringArrayThreshold: 1, // Only encrypt 100% of strings to save size
+          stringArray: false,
+          stringArrayEncoding: [],
+          stringArrayThreshold: 0,
           debugProtection: false,
           // debugProtectionInterval: 10000,
           renameGlobals: false,
           renameProperties: false,
+        },
+      }),
+      VitePWA({
+        registerType: 'autoUpdate',
+        devOptions: { enabled: true },
+        includeAssets: ['endless192x192.jpg', 'endless512x512.jpg'],
+        manifest: {
+          name: 'Endless',
+          short_name: 'Endless',
+          description: 'An epic idle RPG adventure with unique classes and deep progression.',
+          theme_color: '#000000',
+          background_color: '#000000',
+          display: 'standalone',
+          start_url: './',
+          icons: [
+            {
+              src: 'endless192x192.jpg',
+              sizes: '192x192',
+              type: 'image/jpeg',
+            },
+            {
+              src: 'endless512x512.jpg',
+              sizes: '512x512',
+              type: 'image/jpeg',
+            },
+          ],
+        },
+        workbox: {
+          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+          globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg,json}'],
         },
       }),
     ],
