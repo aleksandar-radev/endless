@@ -235,6 +235,9 @@ export const ROGUE_SKILLS = {
       critDamage: getSkillStatBonus({
         level, statKey: 'critDamage', skillType: 'buff', scale: { base: 1, increment: 0.5 },
       }),
+      critChanceCap: getSkillStatBonus({
+        level, statKey: 'critChanceCap', skillType: 'buff', scale: { max: 1.75 },
+      }),
     }),
   },
 
@@ -282,6 +285,9 @@ export const ROGUE_SKILLS = {
       }),
       earthDamage: getSkillStatBonus({
         level, statKey: 'earthDamage', skillType: 'toggle', scale: { base: 2, increment: 0.8 },
+      }),
+      attackSpeedPercent: getSkillStatBonus({
+        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { max: 1 },
       }),
     }),
     synergies: [
@@ -333,16 +339,19 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       dexterity: getSkillStatBonus({
-        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 3, increment: 5 },
+        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 3, increment: 2.5 },
       }),
       agility: getSkillStatBonus({
-        level, statKey: 'agility', skillType: 'passive', scale: { base: 3, increment: 5 },
+        level, statKey: 'agility', skillType: 'passive', scale: { base: 3, increment: 2.5 },
+      }),
+      bonusGoldPercent: getSkillStatBonus({
+        level, statKey: 'bonusGoldPercent', skillType: 'passive', scale: { base: 3, linear: 0.5 },
       }),
     }),
   },
 
   // ===========================================================================
-  // TIER 1200
+  // TIER 7
   // ===========================================================================
   shadowMastery: {
     id: 'shadowMastery',
@@ -354,10 +363,10 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 1 },
+        level, statKey: 'damage', skillType: 'passive', scale: { base: 2, increment: 1 },
       }),
-      critChance: getSkillStatBonus({
-        level, statKey: 'critChance', skillType: 'passive', scale: { max: 0.6 },
+      armorPenetration: getSkillStatBonus({
+        level, statKey: 'armorPenetration', skillType: 'passive', scale: { base: 2, increment: 3 },
       }),
     }),
     synergies: [
@@ -399,7 +408,7 @@ export const ROGUE_SKILLS = {
   },
 
   // ===========================================================================
-  // TIER 2000
+  // TIER 8
   // ===========================================================================
   phantomStrike: {
     id: 'phantomStrike',
@@ -431,6 +440,9 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.silentExecution'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      armorPenetration: getSkillStatBonus({
+        level, statKey: 'armorPenetration', skillType: 'passive', scale: { base: 2, increment: 3 },
+      }),
       attackSpeedPercent: getSkillStatBonus({
         level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { max: 1.5 },
       }),
@@ -449,7 +461,7 @@ export const ROGUE_SKILLS = {
   },
 
   // ===========================================================================
-  // TIER 3000
+  // TIER 9
   // ===========================================================================
   eclipseForm: {
     id: 'eclipseForm',
@@ -503,7 +515,7 @@ export const ROGUE_SKILLS = {
   },
 
   // ===========================================================================
-  // TIER 5000
+  // TIER 0
   // ===========================================================================
   kingOfThieves: {
     id: 'kingOfThieves',
@@ -518,7 +530,7 @@ export const ROGUE_SKILLS = {
         level, statKey: 'bonusGoldPercent', skillType: 'passive', scale: { base: 1 },
       }),
       dexterity: getSkillStatBonus({
-        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 5, increment: 10 },
+        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 2, increment: 2 },
       }),
     }),
     synergies: [
@@ -541,10 +553,15 @@ export const ROGUE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', scale: { base: 15, increment: 6 },
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 3, increment: 3.5 },
       }),
-      critChance: getSkillStatBonus({
-        level, statKey: 'critChance', skillType: 'toggle', scale: { base: 2.5, max: 1 },
+      attackSpeedPercent: getSkillStatBonus({
+        level,
+        statKey: 'attackSpeedPercent',
+        skillType: 'passive',
+        scale: {
+          base: 3, linear: 2, max: 1,
+        },
       }),
     }),
   },

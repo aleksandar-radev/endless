@@ -287,7 +287,13 @@ export const OFFENSE_STATS = {
   critChanceCap: createStat({
     base: 60,
     div: 100,
+    dec: 2,
     sub: 'attack',
+    skills: {
+      buff: getSkillBonusesPercent({
+        type: 'buff', base: 0.12, softcap: 2000, linear: 0.0025, power: 0.6, max: 20,
+      }),
+    },
   }),
   critChancePercent: createPercentStat({ forceNotShow: true }),
   critDamage: createStat({
