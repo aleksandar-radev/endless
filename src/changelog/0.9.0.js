@@ -6,6 +6,7 @@ export default function run() {
 
     <span style="color:#FF8A00;">Major Updates</span>
     <ul>
+      <li>Game now available for install on mobile devices. Once you open it, you should get a message prompting you to install it.</li>
       <li>Added weighted drop chances for unique items. Some unique items are now more common while others are rarer.</li>
       <li>Completely redesigned mob and item scaling for the Explore region to be simpler and more consistent.</li>
       <li>Mobs now scale 5x per region tier (multiplicative from previous tier).</li>
