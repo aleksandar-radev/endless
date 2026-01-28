@@ -335,7 +335,7 @@ export const MAGE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       airDamage: getSkillStatBonus({
-        level, statKey: 'airDamage', skillType: 'buff', scale: { base: 1.66, increment: 1.5 },
+        level, statKey: 'airDamage', skillType: 'buff', scale: { base: 1, increment: 1.5 },
       }),
       attackSpeedPercent: getSkillStatBonus({
         level,

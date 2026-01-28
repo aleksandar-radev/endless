@@ -278,7 +278,7 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamage: getSkillStatBonus({
-        level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 1.66, increment: 1 },
+        level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 1, increment: 1 },
       }),
       allResistance: getSkillStatBonus({
         level, statKey: 'allResistance', skillType: 'passive', scale: { base: 0.5, increment: 0.5 },

@@ -389,7 +389,7 @@ export const VAMPIRE_SKILLS = {
         level, statKey: 'damagePercent', skillType: 'buff', scale: { base: 1.25, linear: 0.75 },
       }),
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'buff', scale: { base: 1.66, increment: 1 },
+        level, statKey: 'damage', skillType: 'buff', scale: { base: 1, increment: 1 },
       }),
     }),
     synergies: [

@@ -19,7 +19,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', scale: { base: 1.66, increment: 1 },
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 1, increment: 1 },
       }),
       damagePercent: getSkillStatBonus({
         level,
@@ -290,7 +290,7 @@ export const BERSERKER_SKILLS = {
         level, statKey: 'manaPerHit', skillType: 'toggle', scale: { base: 0.66, increment: 1 },
       }),
       lifePerHit: getSkillStatBonus({
-        level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: 1.66, increment: 1.25 },
+        level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: 1, increment: 1.25 },
       }),
     }),
     synergies: [

@@ -320,7 +320,7 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'passive', scale: { base: 1.66, increment: 2 },
+        level, statKey: 'damage', skillType: 'passive', scale: { base: 1, increment: 2 },
       }),
       critDamage: getSkillStatBonus({
         level, statKey: 'critDamage', skillType: 'passive', scale: { base: 0.1, max: 1.4 },

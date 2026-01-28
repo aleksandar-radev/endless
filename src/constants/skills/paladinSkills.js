@@ -39,10 +39,13 @@ export const PALADIN_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', scale: { base: 1.66, increment: 1 },
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 1, increment: 0.84 },
       }),
       fireDamage: getSkillStatBonus({
         level, statKey: 'fireDamage', skillType: 'toggle', scale: { base: 1.25, increment: 1 },
+      }),
+      attackRating: getSkillStatBonus({
+        level, statKey: 'attackRating', skillType: 'toggle', scale: { base: 1, increment: 1.5 },
       }),
     }),
   },
@@ -300,7 +303,7 @@ export const PALADIN_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       vitality: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'buff', scale: { base: 1.66, increment: 2.5 },
+        level, statKey: 'vitality', skillType: 'buff', scale: { base: 1, increment: 2.5 },
       }),
       vitalityPercent: getSkillStatBonus({
         level, statKey: 'vitalityPercent', skillType: 'buff', scale: { base: 1 },
@@ -362,8 +365,11 @@ export const PALADIN_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'toggle', scale: { base: 1.42 },
       }),
+      attackRating: getSkillStatBonus({
+        level, statKey: 'attackRating', skillType: 'toggle', scale: { base: 1, increment: 1.5 },
+      }),
       lifePerHit: getSkillStatBonus({
-        level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: 1.66, increment: 1.25 },
+        level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: 1, increment: 1.25 },
       }),
     }),
     synergies: [
