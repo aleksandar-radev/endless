@@ -34,4 +34,6 @@ export default {
   'rune.crystalGain.desc': '+100% cristales obtenidos.',
   'rune.empoweringRune.name': 'Runa de Poder',
   'rune.empoweringRune.desc': 'Otorga un bono de estadística plana aleatorio.',
+  'rune.vampiricRune.name': 'Runa Vampírica',
+  'rune.vampiricRune.desc': 'Otorga robo de vida.',
 };

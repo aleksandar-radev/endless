@@ -34,4 +34,6 @@ export default {
   'rune.crystalGain.desc': '水晶获取+100%。',
   'rune.empoweringRune.name': '强化符文',
   'rune.empoweringRune.desc': '获得随机基础属性加成。',
+  'rune.vampiricRune.name': '吸血鬼符文',
+  'rune.vampiricRune.desc': '提供生命偷取。',
 };

@@ -276,10 +276,15 @@ export const VAMPIRE_SKILLS = {
         level, statKey: 'life', skillType: 'buff', scale: { base: 2, increment: 1 },
       }),
       lifePercent: getSkillStatBonus({
-        level, statKey: 'lifePercent', skillType: 'buff', scale: { base: 0.625 },
+        level, statKey: 'lifePercent', skillType: 'buff', scale: { base: 0.625, linear: 0.7 },
       }),
       extraDamageFromLifePercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifePercent', skillType: 'buff', scale: { base: 1, max: 1 },
+        level,
+        statKey: 'extraDamageFromLifePercent',
+        skillType: 'buff',
+        scale: {
+          base: 1, linear: 0.75, max: 1,
+        },
       }),
     }),
     synergies: [
@@ -381,17 +386,17 @@ export const VAMPIRE_SKILLS = {
         level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.5, max: 0.5 },
       }),
       damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'buff', scale: { base: 1.25, linear: 1.4 },
+        level, statKey: 'damagePercent', skillType: 'buff', scale: { base: 1.25, linear: 0.75 },
       }),
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'buff', scale: { base: 1.66, increment: 1.3 },
+        level, statKey: 'damage', skillType: 'buff', scale: { base: 1.66, increment: 1 },
       }),
     }),
     synergies: [
       {
         sourceSkillId: 'darkAura',
         calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+          level: sourceLevel, base: 0.5, increment: 0.2, cap: 2000,
         }),
       },
     ],
@@ -516,13 +521,13 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', scale: { base: 4, increment: 3 },
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 4, increment: 1.5 },
       }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 1.42 },
       }),
       manaPerHit: getSkillStatBonus({
-        level, statKey: 'manaPerHit', skillType: 'toggle', scale: { base: 0.33, increment: 0.33 },
+        level, statKey: 'manaPerHit', skillType: 'toggle', scale: { base: 1, increment: 0.83 },
       }),
     }),
     synergies: [
@@ -594,7 +599,7 @@ export const VAMPIRE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       airDamage: getSkillStatBonus({
-        level, statKey: 'airDamage', skillType: 'toggle', scale: { base: 6.5, increment: 4 },
+        level, statKey: 'airDamage', skillType: 'toggle', scale: { base: 1, increment: 2 },
       }),
       airDamagePercent: getSkillStatBonus({
         level, statKey: 'airDamagePercent', skillType: 'toggle', scale: { base: 1.42 },

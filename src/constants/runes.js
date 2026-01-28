@@ -162,6 +162,16 @@ export const RUNES = {
     icon: `${BASE}/icons/empowering-rune.png`,
     unique: false,
   },
+  vampiric_rune: {
+    id: 'vampiric_rune',
+    nameKey: 'rune.vampiricRune.name',
+    descKey: 'rune.vampiricRune.desc',
+    stats: { lifeSteal: [0.2, 1.5] },
+    attributes: 1,
+    weight: 500,
+    icon: `${BASE}/icons/bleed.png`,
+    unique: false,
+  },
 };
 
 // Derived arrays for Rocky Field rune drops
