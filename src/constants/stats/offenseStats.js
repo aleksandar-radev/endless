@@ -386,6 +386,23 @@ export const OFFENSE_STATS = {
     item: { tierScalingMaxPercent: createTierScaling(30, 600, 1.2) },
     itemTags: ['offense', 'gloves'],
     sub: 'attack',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 2, softcap: 2000, linear: 0.05, power: 0.6, max: 5000,
+      }),
+      toggle: getSkillBonusesPercent({
+        type: 'toggle', base: 3.5, softcap: 2000, linear: 0.15, power: 0.6, max: 6000,
+      }),
+      instant: getSkillBonusesPercent({
+        type: 'instant', base: 5, softcap: 2000, linear: 0.35, power: 0.6, max: 8000,
+      }),
+      buff: getSkillBonusesPercent({
+        type: 'buff', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 7000,
+      }),
+      summon: getSkillBonusesPercent({
+        type: 'summon', base: 5, softcap: 2000, linear: 0.3, power: 0.6, max: 4000,
+      }),
+    },
   }),
   chanceToHitPercent: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(10, 50, 1.1) },
@@ -553,40 +570,20 @@ export const OFFENSE_STATS = {
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
     sub: 'elemental',
     skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('elementalDamagePercent'),
-        increment: getSkillFlatIncrement('elementalDamagePercent'),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('elementalDamagePercent'),
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 2, softcap: 2000, linear: 0.05, power: 0.6, max: 5000,
       }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('elementalDamagePercent', 3),
-        increment: getSkillFlatIncrement('elementalDamagePercent', 1.3),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('elementalDamagePercent', 1.1),
+      toggle: getSkillBonusesPercent({
+        type: 'toggle', base: 3.5, softcap: 2000, linear: 0.15, power: 0.6, max: 6000,
       }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('elementalDamagePercent', 8),
-        increment: getSkillFlatIncrement('elementalDamagePercent', 1.8),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('elementalDamagePercent', 1.4),
+      instant: getSkillBonusesPercent({
+        type: 'instant', base: 5, softcap: 2000, linear: 0.35, power: 0.6, max: 8000,
       }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('elementalDamagePercent', 1.33),
-        increment: getSkillFlatIncrement('elementalDamagePercent', 1.33),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('elementalDamagePercent', 1.2),
+      buff: getSkillBonusesPercent({
+        type: 'buff', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 7000,
       }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('elementalDamagePercent', 4),
-        increment: getSkillFlatIncrement('elementalDamagePercent', 1.2),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('elementalDamagePercent', 1.3),
+      summon: getSkillBonusesPercent({
+        type: 'summon', base: 5, softcap: 2000, linear: 0.3, power: 0.6, max: 4000,
       }),
     },
   }),
@@ -720,16 +717,16 @@ export const OFFENSE_STATS = {
     sub: 'elemental',
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 2, softcap: 2000, linear: 0.05, power: 0.6, max: 20,
+        type: 'passive', base: 2, softcap: 2000, linear: 0.005, power: 0.6, max: 20,
       }),
       toggle: getSkillBonusesPercent({
-        type: 'toggle', base: 3.5, softcap: 2000, linear: 0.15, power: 0.6, max: 25,
+        type: 'toggle', base: 3.5, softcap: 2000, linear: 0.015, power: 0.6, max: 25,
       }),
       instant: getSkillBonusesPercent({
-        type: 'instant', base: 5, softcap: 2000, linear: 0.35, power: 0.6, max: 60,
+        type: 'instant', base: 5, softcap: 2000, linear: 0.035, power: 0.6, max: 60,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 30,
+        type: 'buff', base: 5, softcap: 2000, linear: 0.02, power: 0.6, max: 30,
       }),
     },
   }),
@@ -758,6 +755,17 @@ export const OFFENSE_STATS = {
   reduceEnemyAttackSpeedPercent: createPercentStat({
     dec: 2,
     cap: 50,
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 0.05, softcap: 2000, linear: 0.01, power: 0.6, max: 30,
+      }),
+      toggle: getSkillBonusesPercent({
+        type: 'toggle', base: 0.08, softcap: 2000, linear: 0.015, power: 0.6, max: 40,
+      }),
+      buff: getSkillBonusesPercent({
+        type: 'buff', base: 0.12, softcap: 2000, linear: 0.02, power: 0.6, max: 50,
+      }),
+    },
   }),
   // Flat milliseconds delay applied to enemy attack interval when bows are equipped.
   enemyAttackDelayMs: createHiddenStat(),

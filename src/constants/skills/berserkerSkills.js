@@ -346,10 +346,10 @@ export const BERSERKER_SKILLS = {
       const effectiveness = 1 + (hero.stats.warlordEffectivenessPercent || 0);
       return {
         strength: getSkillStatBonus({
-          level, statKey: 'strength', skillType: 'passive', scale: { base: 3, increment: 1.5 },
+          level, statKey: 'strength', skillType: 'passive', scale: { base: 3, increment: 1.3 },
         }) * effectiveness,
         damage: getSkillStatBonus({
-          level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 1.5 },
+          level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 1.3 },
         }) * effectiveness,
       };
     },
@@ -465,7 +465,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'passive', scale: { base: 1, increment: 1.4 },
+        level, statKey: 'damage', skillType: 'passive', scale: { base: 1, increment: 1.3 },
       }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 2, max: 0.3 },
@@ -578,7 +578,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle', scale: { base: 1, increment: 2 },
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 1, increment: 1.5 },
       }),
       armorPenetrationPercent: getSkillStatBonus({
         level, statKey: 'armorPenetrationPercent', skillType: 'toggle', scale: { base: 1, max: 1 },

@@ -1,6 +1,6 @@
 import { t } from '../../i18n.js';
 import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../../skillTree.js';
-import { getScalingFlat, getScalingPercent, getScalingSynergy, getSkillStatBonus } from '../../common.js';
+import { getScalingSynergy, getSkillStatBonus } from '../../common.js';
 import { hero } from '../../globals.js';
 
 // Elementalist skills extracted from skills.js
@@ -33,21 +33,21 @@ export const ELEMENTALIST_SKILLS = {
     name: () => t('skill.frostArmor.name'),
     type: () => 'buff',
     manaCost: (level) => 6 + level * 1.25,
-    cooldown: () => 34000,
-    duration: () => 10000,
+    cooldown: () => 30000,
+    duration: () => 24000,
     requiredLevel: () => SKILL_LEVEL_TIERS[0],
     icon: () => 'frost-armor',
     description: () => t('skill.frostArmor'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       armor: getSkillStatBonus({
-        level, statKey: 'armor', skillType: 'buff', scale: { base: 0.4, increment: 0.4 },
+        level, statKey: 'armor', skillType: 'buff', scale: { base: 1, increment: 1.75 },
       }),
       armorPercent: getSkillStatBonus({
-        level, statKey: 'armorPercent', skillType: 'buff', scale: { base: 0.625 },
+        level, statKey: 'armorPercent', skillType: 'buff', scale: { base: 0.625, linear: 1.25 },
       }),
       coldDamagePercent: getSkillStatBonus({
-        level, statKey: 'coldDamagePercent', skillType: 'buff', scale: { base: 0.625 },
+        level, statKey: 'coldDamagePercent', skillType: 'buff', scale: { base: 0.625, linear: 0.4 },
       }),
     }),
     synergies: [
@@ -165,20 +165,20 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       coldDamage: getSkillStatBonus({
-        level, statKey: 'coldDamage', skillType: 'buff', scale: { base: 3.75, increment: 3 },
+        level, statKey: 'coldDamage', skillType: 'buff', scale: { base: 3, increment: 2 },
       }),
       airDamage: getSkillStatBonus({
-        level, statKey: 'airDamage', skillType: 'buff', scale: { base: 3.75, increment: 3 },
+        level, statKey: 'airDamage', skillType: 'buff', scale: { base: 3, increment: 2 },
       }),
       lightningDamage: getSkillStatBonus({
-        level, statKey: 'lightningDamage', skillType: 'buff', scale: { base: 3.75, increment: 3 },
+        level, statKey: 'lightningDamage', skillType: 'buff', scale: { base: 3, increment: 2 },
       }),
     }),
     synergies: [
       {
         sourceSkillId: 'frostArmor',
         calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+          level: sourceLevel, base: 0.5, increment: 0.25, cap: 2000,
         }),
       },
     ],
@@ -348,24 +348,15 @@ export const ELEMENTALIST_SKILLS = {
       elementalDamage: getSkillStatBonus({
         level, statKey: 'elementalDamage', skillType: 'toggle', scale: { base: 2.5, increment: 2 },
       }),
-      fireDamagePercent: getSkillStatBonus({
-        level, statKey: 'fireDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
-      }),
-      coldDamagePercent: getSkillStatBonus({
-        level, statKey: 'coldDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
-      }),
-      airDamagePercent: getSkillStatBonus({
-        level, statKey: 'airDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
-      }),
-      lightningDamagePercent: getSkillStatBonus({
-        level, statKey: 'lightningDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
+      allResistance: getSkillStatBonus({
+        level, statKey: 'allResistance', skillType: 'toggle', scale: { base: 1, increment: 2 },
       }),
     }),
     synergies: [
       {
         sourceSkillId: 'elementalAffinity',
         calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.5, increment: 0.3, cap: 2000,
+          level: sourceLevel, base: 0.5, increment: 0.25, cap: 2000,
         }),
       },
     ],
@@ -382,8 +373,8 @@ export const ELEMENTALIST_SKILLS = {
       vitality: getSkillStatBonus({
         level, statKey: 'vitality', skillType: 'passive', scale: { base: 2.5, increment: 4 },
       }),
-      wisdomPercent: getSkillStatBonus({
-        level, statKey: 'wisdomPercent', skillType: 'passive', scale: { base: 1 },
+      vitalityPercent: getSkillStatBonus({
+        level, statKey: 'vitalityPercent', skillType: 'passive', scale: { base: 1, linear: 0.8 },
       }),
     }),
     synergies: [
@@ -441,7 +432,10 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.4, max: 1 },
       }),
       elementalDamage: getSkillStatBonus({
-        level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 3.33, increment: 2 },
+        level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 3.33, increment: 1.5 },
+      }),
+      elementalPenetration: getSkillStatBonus({
+        level, statKey: 'elementalPenetration', skillType: 'passive', scale: { base: 1 },
       }),
     }),
     synergies: [
@@ -459,17 +453,17 @@ export const ELEMENTALIST_SKILLS = {
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 25 + level * 1.25,
-    cooldown: () => 100000,
+    cooldown: () => 18000,
     requiredLevel: () => SKILL_LEVEL_TIERS[7],
     icon: () => 'volcanic-wrath',
     description: () => t('skill.volcanicWrath'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       earthDamage: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'instant', scale: { base: 6, increment: 3 },
+        level, statKey: 'earthDamage', skillType: 'instant', scale: { base: 4, increment: 2 },
       }),
       fireDamage: getSkillStatBonus({
-        level, statKey: 'fireDamage', skillType: 'instant', scale: { base: 6, increment: 3 },
+        level, statKey: 'fireDamage', skillType: 'instant', scale: { base: 4, increment: 2 },
       }),
       fireDamagePercent: getSkillStatBonus({
         level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1 },
@@ -500,13 +494,13 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lightningDamage: getSkillStatBonus({
-        level, statKey: 'lightningDamage', skillType: 'instant', scale: { base: 7, increment: 2.5 },
+        level, statKey: 'lightningDamage', skillType: 'instant', scale: { base: 5, increment: 2 },
       }),
       lightningDamagePercent: getSkillStatBonus({
         level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
       coldDamage: getSkillStatBonus({
-        level, statKey: 'coldDamage', skillType: 'instant', scale: { base: 7, increment: 2.5 },
+        level, statKey: 'coldDamage', skillType: 'instant', scale: { base: 5, increment: 2 },
       }),
       coldDamagePercent: getSkillStatBonus({
         level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1 },
@@ -623,13 +617,13 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamagePercent: getSkillStatBonus({
-        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 2, linear: 0.3 },
-      }),
-      elementalPenetrationPercent: getSkillStatBonus({
-        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.4, limit: 1 },
+        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 2, linear: 0.5 },
       }),
       allResistance: getSkillStatBonus({
         level, statKey: 'allResistance', skillType: 'passive', scale: { base: 4, increment: 3 },
+      }),
+      extraDamageFromResistancesPercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromResistancesPercent', skillType: 'passive', scale: { base: 1, max: 2 },
       }),
     }),
     synergies: [

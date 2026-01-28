@@ -65,6 +65,23 @@ export const MISC_STATS = {
   manaPercent: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(8, 100, 1.2) },
     itemTags: ['misc', 'jewelry', 'magic'],
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 2, softcap: 2000, linear: 0.05, power: 0.6, max: 5000,
+      }),
+      toggle: getSkillBonusesPercent({
+        type: 'toggle', base: 3.5, softcap: 2000, linear: 0.15, power: 0.6, max: 6000,
+      }),
+      instant: getSkillBonusesPercent({
+        type: 'instant', base: 5, softcap: 2000, linear: 0.35, power: 0.6, max: 8000,
+      }),
+      buff: getSkillBonusesPercent({
+        type: 'buff', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 7000,
+      }),
+      summon: getSkillBonusesPercent({
+        type: 'summon', base: 5, softcap: 2000, linear: 0.3, power: 0.6, max: 4000,
+      }),
+    },
   }),
   manaRegen: createStat({
     dec: 1,
