@@ -18,16 +18,27 @@ export default {
   water: 'Agua',
 
   // Logros
-  // Reach Level 50
-  'achievements.data.reach_level_50.title': 'Héroe Experimentado',
+  // Reach Level
+  'achievements.data.reach_level.title': 'Subir de Nivel',
+  'achievements.data.reach_level.desc': 'Alcanza el nivel {target}',
   // One Shot Kill
   'achievements.data.one_shot_kill.title': 'Un Solo Golpe',
-  // Zero to Hero
-  'achievements.data.zero_to_hero.title': 'Crecimiento Instantáneo',
+  'achievements.data.one_shot_kill.desc': 'Mata a {target} enemigos de un solo golpe',
   // Summon One Shot
   'achievements.data.summon_one_shot.title': 'Maestro de Esbirros',
-  // Earn 1B Gold
-  'achievements.data.earn_1b_gold.title': 'Multimillonario',
+  'achievements.data.summon_one_shot.desc': 'Haz que una invocación mate a {target} enemigos de un solo golpe',
+  // Earn Gold
+  'achievements.data.earn_gold.title': 'Acumulador',
+  'achievements.data.earn_gold.desc': 'Gana {target} de oro',
+  'statistics.highestDamageTakenSurvived': 'Mayor daño recibido (sobrevivido): {value}',
+  'achievements.data.deal_damage.title': 'Golpeador Pesado',
+  'achievements.data.deal_damage.desc': 'Inflige {target} de daño en un solo golpe',
+  'achievements.data.survive_damage.title': 'Superviviente',
+  'achievements.data.survive_damage.desc': 'Sobrevive a un golpe de {target} de daño',
+  'achievements.toast.completed': '¡Logro Completado: "{title}"!',
+  'achievements.toast.upgraded': '¡Logro Mejorado! Ahora Nivel {level}',
+  'achievements.toast.maxed': '¡Logro Maximizado: "{title}"!',
+  'achievements.toast.unlocked': '¡Logro Desbloqueado: "{title}"!',
   'Enchanted Forest': 'Bosque Encantado',
   'Crystal Cave': 'Cueva de Cristal',
   'Frozen Tundra': 'Tundra Helada',

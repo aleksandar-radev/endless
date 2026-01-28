@@ -22,7 +22,12 @@ export const BERSERKER_SKILLS = {
         level, statKey: 'damage', skillType: 'toggle', scale: { base: 1.66, increment: 1 },
       }),
       damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 0.71, max: 1 },
+        level,
+        statKey: 'damagePercent',
+        skillType: 'toggle',
+        scale: {
+          base: 0.71, linear: 0.25, max: 1,
+        },
       }),
       lifePerHit: getSkillStatBonus({
         level, statKey: 'lifePerHit', skillType: 'toggle', scale: { base: -0.33, increment: -0.25 },
@@ -251,6 +256,9 @@ export const BERSERKER_SKILLS = {
       attackSpeedPercent: getSkillStatBonus({
         level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, max: 1 },
       }),
+      lifePercent: getSkillStatBonus({
+        level, statKey: 'lifePercent', skillType: 'buff', scale: { base: 1.66 },
+      }),
       lifeSteal: getSkillStatBonus({
         level, statKey: 'lifeSteal', skillType: 'buff', scale: { base: 0.16, max: 1 },
       }),
@@ -303,6 +311,9 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.undyingRage'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      life: getSkillStatBonus({
+        level, statKey: 'life', skillType: 'passive', scale: { base: 2, increment: 2 },
+      }),
       resurrectionChance: getSkillStatBonus({
         level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 2, max: 1 },
       }),
@@ -430,6 +441,9 @@ export const BERSERKER_SKILLS = {
       }),
       damagePercent: getSkillStatBonus({
         level, statKey: 'damagePercent', skillType: 'buff', scale: { base: 1.25 },
+      }),
+      life: getSkillStatBonus({
+        level, statKey: 'life', skillType: 'passive', scale: { base: 2, increment: 1.3 },
       }),
     }),
     synergies: [

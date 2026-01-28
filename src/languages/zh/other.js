@@ -20,16 +20,18 @@ export default {
   // Counters bar / offline eligibility
   'counters.offline': '离线',
   // 成就
-  // Reach Level 50
-  'achievements.data.reach_level_50.title': '身经百战',
+  // Reach Level
+  'achievements.data.reach_level.title': '升级',
+  'achievements.data.reach_level.desc': '达到等级 {target}',
   // One Shot Kill
   'achievements.data.one_shot_kill.title': '一拳超人',
-  // Zero to Hero
-  'achievements.data.zero_to_hero.title': '一步登天',
+  'achievements.data.one_shot_kill.desc': '单次攻击击杀 {target} 个敌人',
   // Summon One Shot
   'achievements.data.summon_one_shot.title': '掌控者',
-  // Earn 1B Gold
-  'achievements.data.earn_1b_gold.title': '亿万富翁',
+  'achievements.data.summon_one_shot.desc': '让召唤物单次攻击击杀 {target} 个敌人',
+  // Earn Gold
+  'achievements.data.earn_gold.title': '累积者',
+  'achievements.data.earn_gold.desc': '赚取 {target} 金币',
   'Enchanted Forest': '魔法森林',
   'Crystal Cave': '水晶洞穴',
   'Frozen Tundra': '冰封苔原',
@@ -246,4 +248,13 @@ export default {
   'Enchanted Armor': '附魔护甲',
   // Stats
   'stats.cooldownReductionCapPercent': '冷却缩减上限 %',
+  'statistics.highestDamageTakenSurvived': '最高承受伤害（存活）：{value}',
+  'achievements.data.deal_damage.title': '重击者',
+  'achievements.data.deal_damage.desc': '单次攻击造成 {target} 伤害',
+  'achievements.data.survive_damage.title': '幸存者',
+  'achievements.data.survive_damage.desc': '承受单次 {target} 伤害并存活',
+  'achievements.toast.completed': '成就完成："{title}"！',
+  'achievements.toast.upgraded': '成就升级！当前等级 {level}',
+  'achievements.toast.maxed': '成就已满级："{title}"！',
+  'achievements.toast.unlocked': '成就解锁："{title}"！',
 };

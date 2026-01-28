@@ -193,6 +193,11 @@ export function buildStatisticsDisplayEntries(source = {}) {
       type: 'text',
       text: tp('statistics.highestDamageDealt', { value: formatNumber(Math.floor(stats.highestDamageDealt || 0)) }),
     },
+    {
+      id: 'stat-highest-damage-taken-survived',
+      type: 'text',
+      text: tp('statistics.highestDamageTakenSurvived', { value: formatNumber(Math.floor(stats.highestDamageTakenSurvived || 0)) }),
+    },
   ];
 }
 
@@ -238,6 +243,7 @@ export default class Statistics {
     for (let i = 1; i <= 12; i++) this.enemiesKilledByZone[i] = 0;
     this.totalTimeInFights = 0;
     this.deaths = 0;
+    this.highestDamageTakenSurvived = 0;
     this.heroLevel = 1;
     this.rockyFieldHighestStages = createRockyFieldRegionMap();
     this.rockyFieldEnemiesKilledByRegion = createRockyFieldRegionMap();
@@ -330,6 +336,7 @@ export default class Statistics {
     for (let i = 1; i <= 12; i++) this.enemiesKilledByZone[i] = 0;
     this.totalTimeInFights = 0;
     this.deaths = 0;
+    this.highestDamageTakenSurvived = 0;
     this.heroLevel = 1;
     this.rockyFieldHighestStages = createRockyFieldRegionMap();
     this.rockyFieldEnemiesKilledByRegion = createRockyFieldRegionMap();
@@ -376,6 +383,7 @@ export default class Statistics {
             <div class="stat-entry" id="stat-bosses-killed"></div>
             <div class="stat-entry" id="stat-deaths"></div>
             <div class="stat-entry" id="stat-highest-damage"></div>
+            <div class="stat-entry" id="stat-highest-damage-taken-survived"></div>
           </div>
         </div>
     `;
@@ -420,6 +428,16 @@ export default class Statistics {
       this[category] = value;
     }
     this._queueUiUpdate();
+  }
+
+  trackMax(category, value) {
+      if (this[category] === undefined) {
+          this[category] = 0;
+      }
+      if (value > this[category]) {
+          this[category] = value;
+          this._queueUiUpdate();
+      }
   }
 
   // getter function

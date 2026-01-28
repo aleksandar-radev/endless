@@ -347,6 +347,10 @@ export function enemyAttack(currentTime) {
 
         game.damagePlayer(totalDamage, breakdown);
 
+        if (hero.stats.currentLife > 0) {
+            statistics.trackMax('highestDamageTakenSurvived', totalDamage);
+        }
+
         if (hero.stats.retaliateWhenHit) {
           const { damage, isCritical } = hero.calculateDamageAgainst(enemy, {});
           game.damageEnemy(damage, isCritical, null, 'retaliation', null, {
