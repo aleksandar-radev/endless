@@ -1303,12 +1303,12 @@ export default class Hero {
     // So I should pass original `instantSkillBaseEffects` to `calculateTotalDamage`,
     // OR change `calculateTotalDamage` to accept `effects`.
     // Let's rely on `calculateTotalDamage` doing the expansion internally.
-    
+
     // HOWEVER, `calculateDamageAgainst` needs expanded `effects` for Penetration logic below.
     // So `effects` (expanded) is used for local logic.
     // And `calculateTotalDamage(instantSkillBaseEffects)` handles damage logic with its own expansion.
     // This is SAFE and CORRECT because `instantSkillBaseEffects` is passed raw.
-    
+
     const result = this.calculateTotalDamage(instantSkillBaseEffects);
 
     if (!enemy) return result;
