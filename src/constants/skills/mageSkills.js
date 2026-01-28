@@ -328,24 +328,19 @@ export const MAGE_SKILLS = {
     type: () => 'buff',
     manaCost: (level) => 25 + level * 0.875,
     cooldown: () => 96000,
-    duration: () => 15000,
+    duration: () => 20000,
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'time-warp',
     description: () => t('skill.timeWarp'),
     maxLevel: () => 300,
     effect: (level) => ({
       attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, max: 0.57 },
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, max: 2 },
+      }),
+      cooldownReductionPercent: getSkillStatBonus({
+        level, statKey: 'cooldownReductionPercent', skillType: 'buff', scale: { base: 1.66, max: 1.5 },
       }),
     }),
-    synergies: [
-      {
-        sourceSkillId: 'mindControl',
-        calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.2, increment: 0.2, cap: 100,
-        }),
-      },
-    ],
   },
 
   // ===========================================================================
@@ -362,7 +357,7 @@ export const MAGE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamage: getSkillStatBonus({
-        level, statKey: 'elementalDamage', skillType: 'toggle', scale: { base: 4, increment: 3 },
+        level, statKey: 'elementalDamage', skillType: 'toggle', scale: { base: 4, increment: 2.5 },
       }),
     }),
     synergies: [
@@ -384,17 +379,17 @@ export const MAGE_SKILLS = {
           level, statKey: 'percentOfPlayerDamage', skillType: 'summon', scale: { base: 2.5, max: 0.5 },
         }),
         damage: getSkillStatBonus({
-          level, statKey: 'damage', skillType: 'summon', scale: { base: 7.5, increment: 3 },
+          level, statKey: 'damage', skillType: 'summon', scale: { base: 7.5, increment: 2 },
         }),
         attackSpeed: 1.3,
         fireDamage: getSkillStatBonus({
-          level, statKey: 'fireDamage', skillType: 'summon', scale: { base: 12.5, increment: 5 },
+          level, statKey: 'fireDamage', skillType: 'summon', scale: { base: 12.5, increment: 3 },
         }),
         airDamage: getSkillStatBonus({
-          level, statKey: 'airDamage', skillType: 'summon', scale: { base: 12.5, increment: 5 },
+          level, statKey: 'airDamage', skillType: 'summon', scale: { base: 12.5, increment: 3 },
         }),
         coldDamage: getSkillStatBonus({
-          level, statKey: 'coldDamage', skillType: 'summon', scale: { base: 12.5, increment: 5 },
+          level, statKey: 'coldDamage', skillType: 'summon', scale: { base: 12.5, increment: 3 },
         }),
       };
     },
@@ -429,10 +424,10 @@ export const MAGE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       wisdom: getSkillStatBonus({
-        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 3.75, increment: 3 },
+        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 3.75, increment: 2 },
       }),
       mana: getSkillStatBonus({
-        level, statKey: 'mana', skillType: 'passive', scale: { base: 5, increment: 5 },
+        level, statKey: 'mana', skillType: 'passive', scale: { base: 5, increment: 3 },
       }),
     }),
     synergies: [
@@ -458,10 +453,10 @@ export const MAGE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamage: getSkillStatBonus({
-        level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 10, increment: 5 },
+        level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 10, increment: 1.5 },
       }),
       manaRegen: getSkillStatBonus({
-        level, statKey: 'manaRegen', skillType: 'passive', scale: { base: 10, increment: 10 },
+        level, statKey: 'manaRegen', skillType: 'passive', scale: { base: 10, increment: 2 },
       }),
     }),
     synergies: [
@@ -518,20 +513,12 @@ export const MAGE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, max: 0.86 },
+        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, max: 1 },
       }),
       cooldownReductionPercent: getSkillStatBonus({
-        level, statKey: 'cooldownReductionPercent', skillType: 'buff', scale: { base: 1 },
+        level, statKey: 'cooldownReductionPercent', skillType: 'buff', scale: { base: 1, max: 1.5 },
       }),
     }),
-    synergies: [
-      {
-        sourceSkillId: 'timeWarp',
-        calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.5, increment: 0.2, cap: 2000,
-        }),
-      },
-    ],
   },
   starFire: {
     id: 'starFire',
@@ -575,7 +562,7 @@ export const MAGE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       mana: getSkillStatBonus({
-        level, statKey: 'mana', skillType: 'passive', scale: { base: 5, increment: 5 },
+        level, statKey: 'mana', skillType: 'passive', scale: { base: 5, increment: 4 },
       }),
     }),
     synergies: [
@@ -627,10 +614,10 @@ export const MAGE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamage: getSkillStatBonus({
-        level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 16.66, increment: 10 },
+        level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 2, increment: 2.5 },
       }),
       wisdom: getSkillStatBonus({
-        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 5, increment: 4 },
+        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 2, increment: 2 },
       }),
     }),
     synergies: [

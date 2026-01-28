@@ -438,7 +438,7 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalPenetrationPercent: getSkillStatBonus({
-        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.4, max: 20 },
+        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.4, max: 1 },
       }),
       elementalDamage: getSkillStatBonus({
         level, statKey: 'elementalDamage', skillType: 'passive', scale: { base: 3.33, increment: 2 },
@@ -500,13 +500,13 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lightningDamage: getSkillStatBonus({
-        level, statKey: 'lightningDamage', skillType: 'instant', scale: { base: 7, increment: 3.5 },
+        level, statKey: 'lightningDamage', skillType: 'instant', scale: { base: 7, increment: 2.5 },
       }),
       lightningDamagePercent: getSkillStatBonus({
         level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
       coldDamage: getSkillStatBonus({
-        level, statKey: 'coldDamage', skillType: 'instant', scale: { base: 7, increment: 3.5 },
+        level, statKey: 'coldDamage', skillType: 'instant', scale: { base: 7, increment: 2.5 },
       }),
       coldDamagePercent: getSkillStatBonus({
         level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1 },
@@ -537,7 +537,7 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'earthDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
       earthDamage: getSkillStatBonus({
-        level, statKey: 'earthDamage', skillType: 'instant', scale: { base: 9, increment: 4.5 },
+        level, statKey: 'earthDamage', skillType: 'instant', scale: { base: 2, increment: 2.5 },
       }),
     }),
     synergies: [
@@ -566,10 +566,10 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       waterDamage: getSkillStatBonus({
-        level, statKey: 'waterDamage', skillType: 'buff', scale: { base: 10, increment: 8 },
+        level, statKey: 'waterDamage', skillType: 'buff', scale: { base: 3, increment: 3 },
       }),
       reduceEnemyAttackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'reduceEnemyAttackSpeedPercent', skillType: 'buff', scale: { base: 40, max: 15 },
+        level, statKey: 'reduceEnemyAttackSpeedPercent', skillType: 'buff', scale: { base: 1, max: 1 },
       }),
     }),
     synergies: [
@@ -623,13 +623,13 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       elementalDamagePercent: getSkillStatBonus({
-        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 2 },
+        level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 2, linear: 0.3 },
       }),
       elementalPenetrationPercent: getSkillStatBonus({
-        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.4, limit: 15 },
+        level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 0.4, limit: 1 },
       }),
       allResistance: getSkillStatBonus({
-        level, statKey: 'allResistance', skillType: 'passive', scale: { base: 4, increment: 4 },
+        level, statKey: 'allResistance', skillType: 'passive', scale: { base: 4, increment: 3 },
       }),
     }),
     synergies: [
@@ -663,7 +663,7 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1 },
       }),
       elementalDamage: getSkillStatBonus({
-        level, statKey: 'elementalDamage', skillType: 'instant', scale: { base: 8, increment: 4 },
+        level, statKey: 'elementalDamage', skillType: 'instant', scale: { base: 8, increment: 3 },
       }),
     }),
     synergies: [
@@ -693,7 +693,7 @@ export const ELEMENTALIST_SKILLS = {
         level, statKey: 'coldDamageTakenReductionPercent', skillType: 'passive', scale: { base: 1, limit: 50 },
       }),
       armor: getSkillStatBonus({
-        level, statKey: 'armor', skillType: 'passive', scale: { base: 0.42, increment: 0.5 },
+        level, statKey: 'armor', skillType: 'passive', scale: { base: 3, increment: 3 },
       }),
     }),
     isVisible: () => hero.stats.glacialBulwarkUnlocked > 0,
