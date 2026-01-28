@@ -778,7 +778,7 @@ export const OFFENSE_STATS = {
     dec: 2,
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 0.1, linear: 0.01, max: 2,
+        type: 'passive', base: 0.05, linear: 0.001, max: 2,
       }),
     },
   }),

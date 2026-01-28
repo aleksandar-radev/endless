@@ -651,7 +651,7 @@ export const MISC_STATS = {
     itemTags: ['magic', 'jewelry'],
     skills: {
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 2, softcap: 2000, linear: 0.1, power: 0.5, max: 20,
+        type: 'buff', base: 2, softcap: 2000, linear: 0.01, power: 0.5, max: 20,
       }),
     },
   }),

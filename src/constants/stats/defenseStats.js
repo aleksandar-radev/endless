@@ -513,7 +513,7 @@ export const DEFENSE_STATS = {
   manaShieldPercent: createPercentStat({
     skills: {
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 5, softcap: 2000, linear: 0.5, power: 0.6, max: 100,
+        type: 'buff', base: 5, softcap: 2000, linear: 0.103, power: 0.6, max: 100,
       }),
     },
   }),

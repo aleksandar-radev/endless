@@ -332,10 +332,18 @@ export const MAGE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'time-warp',
     description: () => t('skill.timeWarp'),
-    maxLevel: () => 300,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      airDamage: getSkillStatBonus({
+        level, statKey: 'airDamage', skillType: 'buff', scale: { base: 1.66, increment: 1.5 },
+      }),
       attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, max: 2 },
+        level,
+        statKey: 'attackSpeedPercent',
+        skillType: 'buff',
+        scale: {
+          base: 1.66, linear: 1.5, max: 2,
+        },
       }),
       cooldownReductionPercent: getSkillStatBonus({
         level, statKey: 'cooldownReductionPercent', skillType: 'buff', scale: { base: 1.66, max: 1.5 },
