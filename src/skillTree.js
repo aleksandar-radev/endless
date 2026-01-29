@@ -922,6 +922,14 @@ export default class SkillTree {
             if (
               scaleAll ||
               key === 'damage' ||
+              key === 'life' ||
+              key === 'lifePercent' ||
+              key === 'mana' ||
+              key === 'manaPercent' ||
+              key === 'lifePerHit' ||
+              key === 'manaPerHit' ||
+              key === 'armorPenetration' ||
+              key === 'elementalPenetration' ||
               key.endsWith('Damage') ||
               key.endsWith('DamagePercent')
             ) {
