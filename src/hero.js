@@ -1271,16 +1271,6 @@ export default class Hero {
       if (isCritical && canCrit) {
         scalePools(this.stats.critDamage || 1);
       }
-    } else {
-      const doubleChance = Math.max(0, Math.min(1, this.stats.doubleDamageChance || 0));
-      let critChance = Math.max(0, Math.min(1, this.stats.critChance || 0));
-      let critDamage = Math.max(0, this.stats.critDamage || 1);
-      if (!canCrit) {
-        critChance = 0;
-        critDamage = 1;
-      }
-      const expectedMultiplier = (1 + doubleChance) * (1 + (critDamage - 1) * critChance);
-      scalePools(expectedMultiplier);
     }
 
     const totalDamage = Object.values(finalPools).reduce((sum, v) => sum + v, 0);
@@ -1360,19 +1350,20 @@ export default class Hero {
 
     const reducedBreakdown = { physical: breakdown.physical * (1 - armorReduction) };
     ELEMENT_IDS.forEach((id) => {
+      const effectiveRes = getEffectiveResistance.call(
+        this,
+        enemy[`${id}Resistance`],
+        this.stats[`${id}Penetration`],
+        this.stats[`${id}PenetrationPercent`],
+      );
+      const resReduction = calculateResistanceReduction(
+        effectiveRes,
+        breakdown[id],
+      ) / 100;
+
       reducedBreakdown[id] =
         breakdown[id] *
-        (1 -
-          calculateResistanceReduction(
-            getEffectiveResistance.call(
-              this,
-              enemy[`${id}Resistance`],
-              this.stats[`${id}Penetration`],
-              this.stats[`${id}PenetrationPercent`],
-            ),
-            breakdown[id],
-          ) /
-            100);
+        (1 - resReduction);
     });
 
     let finalDamage = Object.values(reducedBreakdown).reduce((sum, val) => sum + val, 0);
