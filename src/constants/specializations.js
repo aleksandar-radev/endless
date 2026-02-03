@@ -420,7 +420,9 @@ export const SPECIALIZATIONS = {
       name: () => t('specialization.paladin.crusader.name'),
       description: () => t('specialization.paladin.crusader.description'),
       avatar: () => 'paladin-crusader-avatar.jpg',
-      baseStats: () => ({ canUseTwoShields: 1, thornsOnMiss: 1 }),
+      baseStats: () => ({
+        canUseTwoShields: 1, thornsOnMiss: 1, blockChanceCap: 10,
+      }),
       skills: {
         shieldMastery: {
           id: 'shieldMastery',

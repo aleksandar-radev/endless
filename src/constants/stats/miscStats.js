@@ -5,9 +5,6 @@ const rewardTierScalingMaxPercent = createTierScaling(20, 400, 1.2);
 const dropTierScalingMaxPercent = createTierScaling(13, 200, 1.2);
 const attributeTierScalingMaxPercent = createTierScaling(12, 200, 1.2);
 
-const STATS_MIN = 8;
-const STATS_MAX = 15;
-
 const miscScaling = (level, tier) => itemStatScaleFactor(level, tier);
 
 export const MISC_STATS = {

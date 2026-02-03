@@ -2,7 +2,7 @@ import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat, 
 import { ELEMENTS } from '../common.js';
 import { getItemRange, getTrainingBonus, getSkillFlatBase, getSkillFlatIncrement, SKILL_INTERVAL, getSkillFlatBonus } from '../ratios.js';
 
-const resistanceTierScalingMaxPercent = createTierScaling(18, 250, 1.2);
+const resistanceTierScalingMaxPercent = createTierScaling(100, 2000, 1.2);
 
 const defenseScaling = (level, tier) => itemStatScaleFactor(level, tier);
 
