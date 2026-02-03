@@ -825,7 +825,7 @@ export default class Hero {
           this.stats[stat] = 0;
           continue;
         }
-        cap = (cap || 50) + ((ascensionBonuses.blockChanceCap || 0) | 0);
+        cap = (flatValues.blockChanceCap || cap || 50) + ((ascensionBonuses.blockChanceCap || 0) | 0);
       }
       if (stat === 'critChance') {
         cap = (flatValues.critChanceCap || cap || 50) + (ascensionBonuses.critChanceCap || 0);

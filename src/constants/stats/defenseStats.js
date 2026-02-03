@@ -221,6 +221,11 @@ export const DEFENSE_STATS = {
     },
   }),
   blockChancePercent: createPercentStat({}),
+  blockChanceCap: createStat({
+    base: 50,
+    showValue: false,
+    displayed: false,
+  }),
   lifeRegen: createStat({
     dec: 1,
     training: {
