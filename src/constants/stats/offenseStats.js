@@ -73,7 +73,7 @@ const generateElementalOffenseStats = () => {
         }),
         summon: getSkillBonusesFlat({
           type: 'summon',
-          base: getSkillFlatBase(`${element}Damage`, 1),
+          base: getSkillFlatBase(`${element}Damage`, 2),
           increment: getSkillFlatIncrement(`${element}Damage`, 1),
           interval: SKILL_INTERVAL,
           bonus: getSkillFlatBonus(`${element}Damage`, 1),
@@ -145,14 +145,14 @@ export const OFFENSE_STATS = {
       }),
       toggle: getSkillBonusesFlat({
         type: 'toggle',
-        base: getSkillFlatBase('damage', 3),
+        base: getSkillFlatBase('damage', 1.77),
         increment: getSkillFlatIncrement('damage', 1.3),
         interval: SKILL_INTERVAL,
         bonus: getSkillFlatBonus('damage', 1.1),
       }),
       instant: getSkillBonusesFlat({
         type: 'instant',
-        base: getSkillFlatBase('damage', 8),
+        base: getSkillFlatBase('damage', 2),
         increment: getSkillFlatIncrement('damage', 1.8),
         interval: SKILL_INTERVAL,
         bonus: getSkillFlatBonus('damage', 1.4),
@@ -166,7 +166,7 @@ export const OFFENSE_STATS = {
       }),
       summon: getSkillBonusesFlat({
         type: 'summon',
-        base: getSkillFlatBase('damage', 4),
+        base: getSkillFlatBase('damage', 2),
         increment: getSkillFlatIncrement('damage', 1.2),
         interval: SKILL_INTERVAL,
         bonus: getSkillFlatBonus('damage', 1.3),
