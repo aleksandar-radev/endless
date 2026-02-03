@@ -129,28 +129,24 @@ export const WARRIOR_SKILLS = {
       },
     ],
   },
-  berserk: {
-    id: 'berserk',
-    name: () => t('skill.berserk.name'),
-    type: () => 'toggle',
-    manaCost: (level) => 3 + level * 0.188,
+  armorBreaker: {
+    id: 'armorBreaker',
+    name: () => t('skill.armorBreaker.name'),
+    type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
-    icon: () => 'berserk',
-    description: () => t('skill.berserk'),
+    icon: () => 'armor-break',
+    description: () => t('skill.armorBreaker'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamage: getSkillStatBonus({
-        level, statKey: 'fireDamage', skillType: 'toggle', scale: { base: 6.25, increment: 4 },
-      }),
-      fireDamagePercent: getSkillStatBonus({
-        level, statKey: 'fireDamagePercent', skillType: 'toggle', scale: { base: 1.1 },
+      armorPenetration: getSkillStatBonus({
+        level, statKey: 'armorPenetration', skillType: 'passive',
       }),
     }),
     synergies: [
       {
-        sourceSkillId: 'legendaryWarlord',
+        sourceSkillId: 'powerStrike',
         calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.1, increment: 0.1, cap: 200,
+          level: sourceLevel, base: 1.5, increment: 0.5, cap: 500,
         }),
       },
     ],
@@ -192,24 +188,28 @@ export const WARRIOR_SKILLS = {
       },
     ],
   },
-  armorBreaker: {
-    id: 'armorBreaker',
-    name: () => t('skill.armorBreaker.name'),
-    type: () => 'passive',
+  berserk: {
+    id: 'berserk',
+    name: () => t('skill.berserk.name'),
+    type: () => 'toggle',
+    manaCost: (level) => 3 + level * 0.188,
     requiredLevel: () => SKILL_LEVEL_TIERS[3],
-    icon: () => 'armor-break',
-    description: () => t('skill.armorBreaker'),
+    icon: () => 'berserk',
+    description: () => t('skill.berserk'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      armorPenetration: getSkillStatBonus({
-        level, statKey: 'armorPenetration', skillType: 'passive',
+      fireDamage: getSkillStatBonus({
+        level, statKey: 'fireDamage', skillType: 'toggle', scale: { base: 6.25, increment: 4 },
+      }),
+      fireDamagePercent: getSkillStatBonus({
+        level, statKey: 'fireDamagePercent', skillType: 'toggle', scale: { base: 1.1 },
       }),
     }),
     synergies: [
       {
-        sourceSkillId: 'powerStrike',
+        sourceSkillId: 'legendaryWarlord',
         calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 1.5, increment: 0.5, cap: 500,
+          level: sourceLevel, base: 0.1, increment: 0.1, cap: 200,
         }),
       },
     ],
