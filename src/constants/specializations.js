@@ -271,16 +271,16 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.rangedPrecision'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            attackRating: 20000 + getSkillStatBonus({
+            attackRating: getSkillStatBonus({
               level,
               statKey: 'attackRating',
               skillType: 'passive',
               scale: {
-                base: 2.87, increment: 0, interval: 0.2, bonus: 10,
+                base: 15, increment: 10, interval: 0.1, bonus: 5,
               },
             }),
-            extraDamageFromAttackRatingPercent: 0.5 + getSkillStatBonus({
-              level, statKey: 'extraDamageFromAttackRatingPercent', skillType: 'passive', scale: { base: 1 },
+            extraDamageFromAttackRatingPercent: getSkillStatBonus({
+              level, statKey: 'extraDamageFromAttackRatingPercent', skillType: 'passive', scale: { base: 10 },
             }),
           }),
         },
@@ -321,9 +321,14 @@ export const SPECIALIZATIONS = {
             lifeSteal: getSkillStatBonus({
               level, statKey: 'lifeSteal', skillType: 'passive', scale: { base: 4 },
             }),
-            lifePerHit: level ? 1000 + getSkillStatBonus({
-              level, statKey: 'lifePerHit', skillType: 'passive', scale: { base: 41 },
-            }) : 0,
+            lifePerHit: getSkillStatBonus({
+              level,
+              statKey: 'lifePerHit',
+              skillType: 'passive',
+              scale: {
+                base: 30, increment: 20, interval: 0.2, bonus: 10,
+              },
+            }),
           }),
         },
       },

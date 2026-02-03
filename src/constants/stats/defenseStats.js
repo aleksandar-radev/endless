@@ -428,16 +428,10 @@ export const DEFENSE_STATS = {
     sub: 'defense',
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 30, softcap: 20000, linear: 0.8, power: 0.81, max: 5000,
-      }),
-      toggle: getSkillBonusesPercent({
-        type: 'toggle', base: 45, softcap: 20000, linear: 1.2, power: 0.81, max: 7000,
-      }),
-      instant: getSkillBonusesPercent({
-        type: 'instant', base: 75, softcap: 20000, linear: 2, power: 0.81, max: 10000,
+        type: 'passive', base: 5, softcap: 2000, linear: 0.5, power: 0.6, max: 5000,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 60, softcap: 20000, linear: 1.6, power: 0.81, max: 8000,
+        type: 'buff', base: 8, softcap: 2000, linear: 0.6, power: 0.6, max: 7000,
       }),
     },
   }),
