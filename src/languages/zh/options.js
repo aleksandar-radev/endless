@@ -129,4 +129,5 @@ export default {
   'options.toast.backupRestoreFailed': '备份恢复失败。',
   'options.toast.backupUnavailable': '未找到所选备份。',
   'options.toast.backupWrongSlot': '请在恢复该备份前切换到存档槽 {slot}。',
+  'options.aiDisclaimer': '免责声明：所有游戏资产均完全由人工智能生成。',
 };

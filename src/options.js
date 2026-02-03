@@ -735,6 +735,13 @@ export class Options {
         href="https://github.com/aleksandar-radev/endless/releases"
         >${t('options.here')}</a
       >.
+      <br />
+      <br />
+      <span style="font-style: italic; color: #1dac00; font-size: 1.1em;">
+        ${t('options.aiDisclaimer')}
+      </span>
+      <br />
+      <br />
     `;
     generalContent.appendChild(suggestionsRow);
     generalContent.appendChild(this._createResetButton());

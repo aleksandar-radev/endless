@@ -136,4 +136,5 @@ export default {
   'options.toast.backupRestoreFailed': 'No se pudo restaurar la copia de seguridad.',
   'options.toast.backupUnavailable': 'No se encontró la copia de seguridad.',
   'options.toast.backupWrongSlot': 'Cambia a la ranura {slot} antes de restaurar esa copia de seguridad.',
+  'options.aiDisclaimer': 'Aviso: Todos los activos del juego fueron generados enteramente por Inteligencia Artificial.',
 };

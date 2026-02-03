@@ -15,7 +15,7 @@ export const CLASS_PATHS = {
     avatar: () => 'warrior-avatar.jpg',
     baseStats: () => ({
       strength: 30,
-      armorPercent: 20,
+      armorPercent: 30,
       lifePercent: 30,
     }),
     description: () => t('class.warriorDesc'),
@@ -68,9 +68,9 @@ export const CLASS_PATHS = {
     enabled: () => true,
     avatar: () => 'berserker-avatar.jpg',
     baseStats: () => ({
-      damage: 20,
-      attackSpeed: 0.2,
-      damagePercent: 30,
+      damage: 10,
+      attackSpeed: 0.15,
+      damagePercent: 20,
       lifePercent: -20,
     }),
     description: () => t('class.berserkerDesc'),

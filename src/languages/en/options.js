@@ -133,4 +133,5 @@ export default {
   'options.toast.backupRestoreFailed': 'Failed to restore backup.',
   'options.toast.backupUnavailable': 'Backup not found.',
   'options.toast.backupWrongSlot': 'Switch to slot {slot} before restoring that backup.',
+  'options.aiDisclaimer': 'Disclaimer: All game assets were generated entirely by Artificial Intelligence.',
 };
