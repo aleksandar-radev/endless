@@ -129,25 +129,31 @@ export const WARRIOR_SKILLS = {
       },
     ],
   },
-  fortitude: {
-    id: 'fortitude',
-    name: () => t('skill.fortitude.name'),
-    type: () => 'passive',
+  berserk: {
+    id: 'berserk',
+    name: () => t('skill.berserk.name'),
+    type: () => 'toggle',
+    manaCost: (level) => 3 + level * 0.188,
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
-    icon: () => 'armor',
-    description: () => t('skill.fortitude'),
+    icon: () => 'berserk',
+    description: () => t('skill.berserk'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      lifeRegenOfTotalPercent: getSkillStatBonus({
-        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'passive',
+      fireDamage: getSkillStatBonus({
+        level, statKey: 'fireDamage', skillType: 'toggle', scale: { base: 6.25, increment: 4 },
       }),
-      lifeRegen: getSkillStatBonus({
-        level, statKey: 'lifeRegen', skillType: 'passive',
-      }),
-      extraDamageFromLifeRegenPercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'passive',
+      fireDamagePercent: getSkillStatBonus({
+        level, statKey: 'fireDamagePercent', skillType: 'toggle', scale: { base: 1.1 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'legendaryWarlord',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.1, increment: 0.1, cap: 200,
+        }),
+      },
+    ],
   },
 
   // ===========================================================================
@@ -244,31 +250,25 @@ export const WARRIOR_SKILLS = {
   // ===========================================================================
   // TIER 5
   // ===========================================================================
-  berserk: {
-    id: 'berserk',
-    name: () => t('skill.berserk.name'),
-    type: () => 'toggle',
-    manaCost: (level) => 3 + level * 0.188,
+  fortitude: {
+    id: 'fortitude',
+    name: () => t('skill.fortitude.name'),
+    type: () => 'passive',
     requiredLevel: () => SKILL_LEVEL_TIERS[5],
-    icon: () => 'berserk',
-    description: () => t('skill.berserk'),
+    icon: () => 'armor',
+    description: () => t('skill.fortitude'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      fireDamage: getSkillStatBonus({
-        level, statKey: 'fireDamage', skillType: 'toggle', scale: { base: 6.25, increment: 4 },
+      lifeRegenOfTotalPercent: getSkillStatBonus({
+        level, statKey: 'lifeRegenOfTotalPercent', skillType: 'passive',
       }),
-      fireDamagePercent: getSkillStatBonus({
-        level, statKey: 'fireDamagePercent', skillType: 'toggle', scale: { base: 1.1 },
+      lifeRegen: getSkillStatBonus({
+        level, statKey: 'lifeRegen', skillType: 'passive',
+      }),
+      extraDamageFromLifeRegenPercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromLifeRegenPercent', skillType: 'passive',
       }),
     }),
-    synergies: [
-      {
-        sourceSkillId: 'legendaryWarlord',
-        calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.1, increment: 0.1, cap: 200,
-        }),
-      },
-    ],
   },
 
   lastStand: {
