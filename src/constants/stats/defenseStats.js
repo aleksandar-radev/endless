@@ -182,10 +182,10 @@ export const DEFENSE_STATS = {
     sub: 'defense',
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.5, power: 0.6, max: 100,
+        type: 'passive', base: 5, softcap: 2000, linear: 0.5, power: 0.6, max: 5000,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 8, softcap: 2000, linear: 0.6, power: 0.6, max: 150,
+        type: 'buff', base: 8, softcap: 2000, linear: 0.6, power: 0.6, max: 7000,
       }),
     },
   }),
@@ -213,10 +213,10 @@ export const DEFENSE_STATS = {
     cap: 50,
     skills: {
       passive: getSkillBonusesChance({
-        type: 'passive', base: 1, levelsPerPoint: 20, cap: 50,
+        type: 'passive', base: 1, levelsPerPoint: 20, cap: 20,
       }),
       buff: getSkillBonusesChance({
-        type: 'buff', base: 1, levelsPerPoint: 20, cap: 50,
+        type: 'buff', base: 1, levelsPerPoint: 20, cap: 30,
       }),
     },
   }),
@@ -276,10 +276,10 @@ export const DEFENSE_STATS = {
     itemTags: ['belt'],
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6, max: 100,
+        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6, max: 5000,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 8, softcap: 2000, linear: 0.06, power: 0.6, max: 150,
+        type: 'buff', base: 8, softcap: 2000, linear: 0.06, power: 0.6, max: 7000,
       }),
     },
   }),
@@ -343,7 +343,7 @@ export const DEFENSE_STATS = {
     sub: 'defense',
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
+        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6, max: 5000,
       }),
     },
   }),
@@ -428,19 +428,16 @@ export const DEFENSE_STATS = {
     sub: 'defense',
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 30, softcap: 20000, linear: 0.8, power: 0.81,
+        type: 'passive', base: 30, softcap: 20000, linear: 0.8, power: 0.81, max: 5000,
       }),
       toggle: getSkillBonusesPercent({
-        type: 'toggle', base: 45, softcap: 20000, linear: 1.2, power: 0.81,
+        type: 'toggle', base: 45, softcap: 20000, linear: 1.2, power: 0.81, max: 7000,
       }),
       instant: getSkillBonusesPercent({
-        type: 'instant', base: 75, softcap: 20000, linear: 2, power: 0.81,
+        type: 'instant', base: 75, softcap: 20000, linear: 2, power: 0.81, max: 10000,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 60, softcap: 20000, linear: 1.6, power: 0.81,
-      }),
-      summon: getSkillBonusesPercent({
-        type: 'summon', base: 15, softcap: 20000, linear: 0.4, power: 0.81,
+        type: 'buff', base: 60, softcap: 20000, linear: 1.6, power: 0.81, max: 8000,
       }),
     },
   }),
@@ -504,19 +501,13 @@ export const DEFENSE_STATS = {
     sub: 'elemental',
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 2, softcap: 2000, linear: 0.1, power: 0.6, max: 100,
+        type: 'passive', base: 2, softcap: 2000, linear: 0.1, power: 0.6, max: 5000,
       }),
       toggle: getSkillBonusesPercent({
-        type: 'toggle', base: 3, softcap: 2000, linear: 0.15, power: 0.6, max: 150,
-      }),
-      instant: getSkillBonusesPercent({
-        type: 'instant', base: 5, softcap: 2000, linear: 0.25, power: 0.6, max: 200,
+        type: 'toggle', base: 3, softcap: 2000, linear: 0.15, power: 0.6, max: 7000,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 4, softcap: 2000, linear: 0.2, power: 0.6, max: 175,
-      }),
-      summon: getSkillBonusesPercent({
-        type: 'summon', base: 1, softcap: 2000, linear: 0.05, power: 0.6, max: 50,
+        type: 'buff', base: 4, softcap: 2000, linear: 0.2, power: 0.6, max: 8000,
       }),
     },
   }),

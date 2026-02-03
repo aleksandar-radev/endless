@@ -152,7 +152,7 @@ export function getSkillBonusesFlat({
  * @returns {Object} Skill bonus configuration object for percent stats
  */
 export function getSkillBonusesPercent({
-  type, base, softcap = 2000, linear = 0.5, power = 0.6, max,
+  type, base, softcap = 2000, linear = 0.5, power = 0.6, max = 5000,
 }) {
   return {
     statType: 'percent',
