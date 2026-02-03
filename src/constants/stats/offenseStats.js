@@ -409,6 +409,11 @@ export const OFFENSE_STATS = {
     itemTags: ['offense', 'magic', 'gloves'],
     show: true,
     sub: 'attack',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 0.2, power: 0.6, max: 40,
+      }),
+    },
   }),
   lifeSteal: createPercentStat({
     dec: 2,
@@ -861,37 +866,176 @@ export const OFFENSE_STATS = {
     },
   }),
   retaliateWhenHit: createHiddenStat(),
-  arenaDamagePercent: createPercentStat({ sub: 'attack' }),
-  animatedWeaponsDamagePercent: createPercentStat(),
-  cloneDamagePercent: createPercentStat(),
+  arenaDamagePercent: createPercentStat({
+    sub: 'attack',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
+      }),
+    },
+  }),
+  animatedWeaponsDamagePercent: createPercentStat({
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
+      }),
+    },
+  }),
+  cloneDamagePercent: createPercentStat({
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
+      }),
+    },
+  }),
   avoidChance: createChanceStat({ forceNotShow: true }),
-  executeThresholdPercent: createPercentStat({ sub: 'attack' }),
-  damageToHighRarityEnemiesPercent: createPercentStat(),
+  executeThresholdPercent: createPercentStat({
+    sub: 'attack',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 5, softcap: 2000, linear: 0.1, power: 0.6, max: 50,
+      }),
+    },
+  }),
+  damageToHighRarityEnemiesPercent: createPercentStat({
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
+      }),
+    },
+  }),
   healDamagesEnemiesPercent: createPercentStat(),
-  batsHealPercent: createPercentStat(),
-  bleedChance: createChanceStat({ sub: 'attack' }),
-  bleedDamagePercent: createPercentStat({ dec: 0 }),
+  batsHealPercent: createPercentStat({
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
+      }),
+    },
+  }),
+  bleedChance: createChanceStat({
+    sub: 'attack',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 5, softcap: 2000, linear: 0.6, power: 0.6, max: 100,
+      }),
+    },
+  }),
+  bleedDamagePercent: createPercentStat({
+    dec: 0,
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
+      }),
+    },
+  }),
   overkillDamagePercent: createStat({ div: 100 }),
-  burnChance: createChanceStat({ sub: 'elemental' }),
-  burnDamagePercent: createPercentStat({ sub: 'elemental' }),
+  burnChance: createChanceStat({
+    sub: 'elemental',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 2, softcap: 2000, linear: 0.5, power: 0.6, max: 60,
+      }),
+    },
+  }),
+  burnDamagePercent: createPercentStat({
+    sub: 'elemental',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
+      }),
+    },
+  }),
   poisonChance: createChanceStat({ sub: 'elemental' }),
   poisonDamagePercent: createPercentStat({ sub: 'elemental' }),
-  explosionChance: createChanceStat({ sub: 'elemental' }),
-  extraDamageAgainstBurningEnemies: createPercentStat({ sub: 'elemental' }),
-  arcDischargeChance: createChanceStat({ sub: 'elemental' }),
-  shockChance: createChanceStat({ sub: 'elemental' }),
-  shockEffectivenessPercent: createPercentStat(),
+  explosionChance: createChanceStat({
+    sub: 'elemental',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 1, softcap: 2000, linear: 0.1, power: 0.6,
+      }),
+    },
+  }),
+  extraDamageAgainstBurningEnemies: createPercentStat({
+    sub: 'elemental',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
+      }),
+    },
+  }),
+  arcDischargeChance: createChanceStat({
+    sub: 'elemental',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 2, max: 10,
+      }),
+    },
+  }),
+  shockChance: createChanceStat({
+    sub: 'elemental',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 1, softcap: 2000, linear: 0.1, power: 0.6, max: 20,
+      }),
+    },
+  }),
+  shockEffectivenessPercent: createPercentStat({
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 2, softcap: 2000, linear: 0.5, power: 0.7,
+      }),
+    },
+  }),
   freezeChance: createChanceStat({ sub: 'elemental' }),
   stunChance: createChanceStat({ sub: 'attack' }),
-  extraDamageAgainstFrozenEnemies: createPercentStat({ sub: 'elemental' }),
-  chanceToShatterEnemy: createChanceStat({ sub: 'elemental' }),
-  summonDamageBuffPercent: createPercentStat(),
-  summonAttackSpeedBuffPercent: createPercentStat(),
+  extraDamageAgainstFrozenEnemies: createPercentStat({
+    sub: 'elemental',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
+      }),
+    },
+  }),
+  chanceToShatterEnemy: createChanceStat({
+    sub: 'elemental',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 1, softcap: 2000, linear: 0.1, power: 0.6, max: 15,
+      }),
+    },
+  }),
+  summonDamageBuffPercent: createPercentStat({
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
+      }),
+    },
+  }),
+  summonAttackSpeedBuffPercent: createPercentStat({
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 2, softcap: 2000, linear: 0.5, power: 0.6, max: 30,
+      }),
+    },
+  }),
   summonerExtraSummonUnlocked: createHiddenStat(),
   naturalistInstantSkillsUnlocked: createHiddenStat(),
   teleportDodgeChance: createChanceStat({ sub: 'defense' }),
   manaToLifeTransferPercent: createPercentStat(),
   damageToBossesPercent: createPercentStat(),
-  bloodSacrificeEffectivenessPercent: createPercentStat(),
-  instaKillPercent: createPercentStat({ dec: 2 }),
+  bloodSacrificeEffectivenessPercent: createPercentStat({
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
+      }),
+    },
+  }),
+  instaKillPercent: createPercentStat({
+    dec: 2,
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 0.2, softcap: 100, linear: 0.1, power: 0.5, max: 5,
+      }),
+    },
+  }),
 };

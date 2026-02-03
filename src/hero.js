@@ -366,6 +366,20 @@ export default class Hero {
 
     const itemLifeEffectivenessPercent = skillTreeBonuses.itemLifeEffectivenessPercent || 0;
     const itemArmorEffectivenessPercent = skillTreeBonuses.itemArmorEffectivenessPercent || 0;
+
+    const helmetEffectivenessPercent = skillTreeBonuses.helmetEffectivenessPercent || 0;
+    const helmetFlatEffectivenessPercent = skillTreeBonuses.helmetFlatEffectivenessPercent || 0;
+    const chestEffectivenessPercent = skillTreeBonuses.chestEffectivenessPercent || 0;
+    const chestFlatEffectivenessPercent = skillTreeBonuses.chestFlatEffectivenessPercent || 0;
+    const beltEffectivenessPercent = skillTreeBonuses.beltEffectivenessPercent || 0;
+    const beltFlatEffectivenessPercent = skillTreeBonuses.beltFlatEffectivenessPercent || 0;
+    const pantsEffectivenessPercent = skillTreeBonuses.pantsEffectivenessPercent || 0;
+    const pantsFlatEffectivenessPercent = skillTreeBonuses.pantsFlatEffectivenessPercent || 0;
+    const bootsEffectivenessPercent = skillTreeBonuses.bootsEffectivenessPercent || 0;
+    const bootsFlatEffectivenessPercent = skillTreeBonuses.bootsFlatEffectivenessPercent || 0;
+    const glovesEffectivenessPercent = skillTreeBonuses.glovesEffectivenessPercent || 0;
+    const glovesFlatEffectivenessPercent = skillTreeBonuses.glovesFlatEffectivenessPercent || 0;
+
     const equipmentBonuses = inventory.getEquipmentBonuses(
       weaponEffectivenessPercent,
       weaponFlatEffectivenessPercent,
@@ -379,6 +393,18 @@ export default class Hero {
       amuletFlatEffectivenessPercent,
       ringEffectivenessPercent,
       ringFlatEffectivenessPercent,
+      helmetEffectivenessPercent,
+      helmetFlatEffectivenessPercent,
+      chestEffectivenessPercent,
+      chestFlatEffectivenessPercent,
+      beltEffectivenessPercent,
+      beltFlatEffectivenessPercent,
+      pantsEffectivenessPercent,
+      pantsFlatEffectivenessPercent,
+      bootsEffectivenessPercent,
+      bootsFlatEffectivenessPercent,
+      glovesEffectivenessPercent,
+      glovesFlatEffectivenessPercent,
     );
     const trainingBonuses = training.getTrainingBonuses();
     const soulBonuses = this.getSoulShopBonuses();

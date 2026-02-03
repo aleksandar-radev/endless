@@ -7,7 +7,6 @@ import { ELEMENTS } from './constants/common.js';
 import { calculateHitChance, createDamageNumber } from './combat.js';
 import { battleLog } from './battleLog.js';
 import { t } from './i18n.js';
-import { floorSumBigInt } from './utils/bulkMath.js';
 import { AILMENTS } from './constants/ailments.js';
 import { getDivisor } from './constants/stats/stats.js';
 import { showLifeWarning,
@@ -25,6 +24,7 @@ export const SKILL_DAMAGE_SCALING_MAX_TOGGLE = 4;
 export const SKILL_EFFECT_SCALING_MAX_BUFF = 2.5;
 
 export const SKILL_LEVEL_TIERS = [1, 10, 25, 60, 150, 400, 750, 1200, 2000, 3000, 5000];
+export const SPECIALIZATION_SKILL_LEVEL_TIERS = [100, 750];
 export const DEFAULT_MAX_SKILL_LEVEL = Infinity;
 export const SPECIALIZATION_POINT_INTERVAL = 50;
 export const SPECIALIZATION_UNLOCK_LEVEL = 100;

@@ -697,7 +697,14 @@ export const MISC_STATS = {
     },
     itemTags: ['jewelry'],
   }),
-  buffEffectivenessPercent: createPercentStat({ sub: 'misc' }),
+  buffEffectivenessPercent: createPercentStat({
+    sub: 'misc',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
+      }),
+    },
+  }),
   itemBonusesPercent: createPercentStat(),
   itemQuantityPercent: createStat({
     div: 100,
@@ -717,6 +724,11 @@ export const MISC_STATS = {
     div: 100,
     show: true,
     sub: 'rewards',
+    skills: {
+      passive: getSkillBonusesFlat({
+        type: 'passive', base: 20, increment: 0, interval: 20, bonus: 0.5,
+      }),
+    },
   }),
   materialQuantityPercent: createStat({
     div: 100,
@@ -789,22 +801,55 @@ export const MISC_STATS = {
   allAttributesPercent: createPercentStat(),
   canDualWieldTwoHanded: createHiddenStat(),
   weaponEffectivenessPercent: createStat({ dec: 1 }),
-  weaponFlatEffectivenessPercent: createStat({ dec: 1 }),
+  weaponFlatEffectivenessPercent: createStat({
+    dec: 1,
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 15, softcap: 2000, linear: 2, power: 0.725,
+      }),
+    },
+  }),
   jewelryEffectivenessPercent: createStat({ dec: 1 }),
-  jewelryFlatEffectivenessPercent: createStat({ dec: 1 }),
+  jewelryFlatEffectivenessPercent: createStat({
+    dec: 1,
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 15, softcap: 2000, linear: 2, power: 0.725,
+      }),
+    },
+  }),
   allowBossLoot: createHiddenStat({ itemTags: [] }),
   animatedWeaponsUnlocked: createHiddenStat(),
   cloneUnlocked: createHiddenStat(),
-  nightStalkerBuffEffectivenessPercent: createPercentStat(),
+  nightStalkerBuffEffectivenessPercent: createPercentStat({
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
+      }),
+    },
+  }),
   canUseTwoShields: createHiddenStat(),
   amuletEffectivenessPercent: createPercentStat(),
   amuletFlatEffectivenessPercent: createStat({ dec: 1 }),
   ringEffectivenessPercent: createPercentStat(),
   ringFlatEffectivenessPercent: createStat({ dec: 1 }),
   uncappedAttackSpeed: createHiddenStat(),
-  warlordEffectivenessPercent: createPercentStat(),
+  warlordEffectivenessPercent: createPercentStat({
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 15, softcap: 2000, linear: 2, power: 0.725,
+      }),
+    },
+  }),
   overhealToLife: createHiddenStat(),
-  overhealPercent: createStat({ div: 100 }),
+  overhealPercent: createStat({
+    div: 100,
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+      }),
+    },
+  }),
   bloodSacrificeUnlocked: createHiddenStat(),
   shapeshiftUnlocked: createHiddenStat(),
   reduceEnemyResistancesPercent: createPercentStat(),

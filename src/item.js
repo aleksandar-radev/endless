@@ -1,12 +1,12 @@
-import { ITEM_ICONS, ITEM_RARITY, ITEM_STAT_POOLS, RARITY_KEYS, SLOT_REQUIREMENTS, TWO_HANDED_TYPES } from './constants/items.js';
-import { getDivisor, getStatDecimalPlaces, STATS } from './constants/stats/stats.js';
+import { ITEM_ICONS, ITEM_RARITY, ITEM_STAT_POOLS, RARITY_KEYS, SLOT_REQUIREMENTS, TWO_HANDED_TYPES, WEAPON_TYPES, JEWELRY_TYPES, ITEM_IDS } from './constants/items.js';
+import { getDivisor, getStatDecimalPlaces, STATS, isFlatStat, isPercentStat } from './constants/stats/stats.js';
 import { OFFENSE_STATS } from './constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from './constants/stats/defenseStats.js';
 import { MISC_STATS } from './constants/stats/miscStats.js';
 import { ATTRIBUTES } from './constants/stats/attributes.js';
 import { SET_ITEMS } from './constants/setItems.js';
 import { UNIQUE_ITEMS } from './constants/uniqueItems.js';
-import { options, ascension } from './globals.js';
+import { options, ascension, hero } from './globals.js';
 import { formatStatName, formatNumber } from './ui/ui.js';
 import { t } from './i18n.js';
 import { getSubtypeConfig } from './constants/itemSubtypes.js';
@@ -374,7 +374,163 @@ export default class Item {
     if (stats.length === 0) return null;
     const groupHtml = stats
       .map((stat) => {
-        const value = this.stats[stat];
+        let value = this.stats[stat];
+
+        // --- EFFECTIVENESS CALCULATION START ---
+        // Retrieve hero stats (or default to 0)
+        const weaponEffectivenessPercent = hero?.stats?.weaponEffectivenessPercent || 0;
+        const weaponFlatEffectivenessPercent = hero?.stats?.weaponFlatEffectivenessPercent || 0;
+        const shieldEffectivenessPercent = hero?.stats?.shieldEffectivenessPercent || 0;
+        const shieldFlatEffectivenessPercent = hero?.stats?.shieldFlatEffectivenessPercent || 0;
+        const jewelryEffectivenessPercent = hero?.stats?.jewelryEffectivenessPercent || 0;
+        const jewelryFlatEffectivenessPercent = hero?.stats?.jewelryFlatEffectivenessPercent || 0;
+        const amuletEffectivenessPercent = hero?.stats?.amuletEffectivenessPercent || 0;
+        const amuletFlatEffectivenessPercent = hero?.stats?.amuletFlatEffectivenessPercent || 0;
+        const ringEffectivenessPercent = hero?.stats?.ringEffectivenessPercent || 0;
+        const ringFlatEffectivenessPercent = hero?.stats?.ringFlatEffectivenessPercent || 0;
+        const itemLifeEffectivenessPercent = hero?.stats?.itemLifeEffectivenessPercent || 0;
+        const itemArmorEffectivenessPercent = hero?.stats?.itemArmorEffectivenessPercent || 0;
+
+        const helmetEffectivenessPercent = hero?.stats?.helmetEffectivenessPercent || 0;
+        const helmetFlatEffectivenessPercent = hero?.stats?.helmetFlatEffectivenessPercent || 0;
+        const chestEffectivenessPercent = hero?.stats?.chestEffectivenessPercent || 0;
+        const chestFlatEffectivenessPercent = hero?.stats?.chestFlatEffectivenessPercent || 0;
+        const beltEffectivenessPercent = hero?.stats?.beltEffectivenessPercent || 0;
+        const beltFlatEffectivenessPercent = hero?.stats?.beltFlatEffectivenessPercent || 0;
+        const pantsEffectivenessPercent = hero?.stats?.pantsEffectivenessPercent || 0;
+        const pantsFlatEffectivenessPercent = hero?.stats?.pantsFlatEffectivenessPercent || 0;
+        const bootsEffectivenessPercent = hero?.stats?.bootsEffectivenessPercent || 0;
+        const bootsFlatEffectivenessPercent = hero?.stats?.bootsFlatEffectivenessPercent || 0;
+        const glovesEffectivenessPercent = hero?.stats?.glovesEffectivenessPercent || 0;
+        const glovesFlatEffectivenessPercent = hero?.stats?.glovesFlatEffectivenessPercent || 0;
+
+        let multiplier = 1;
+        if (weaponEffectivenessPercent > 0 && WEAPON_TYPES.includes(this.type)) {
+          multiplier += weaponEffectivenessPercent / 100;
+        }
+        if (shieldEffectivenessPercent > 0 && this.type === ITEM_IDS.SHIELD) {
+          multiplier += shieldEffectivenessPercent / 100;
+        }
+        if (jewelryEffectivenessPercent > 0 && JEWELRY_TYPES.includes(this.type)) {
+          multiplier += jewelryEffectivenessPercent / 100;
+        }
+        if (amuletEffectivenessPercent > 0 && this.type === ITEM_IDS.AMULET) {
+          multiplier += amuletEffectivenessPercent / 100;
+        }
+        if (ringEffectivenessPercent > 0 && this.type === ITEM_IDS.RING) {
+          multiplier += ringEffectivenessPercent / 100;
+        }
+
+        if (helmetEffectivenessPercent > 0 && this.type === ITEM_IDS.HELMET) {
+          multiplier += helmetEffectivenessPercent / 100;
+        }
+        if (chestEffectivenessPercent > 0 && this.type === ITEM_IDS.ARMOR) {
+          multiplier += chestEffectivenessPercent / 100;
+        }
+        if (beltEffectivenessPercent > 0 && this.type === ITEM_IDS.BELT) {
+          multiplier += beltEffectivenessPercent / 100;
+        }
+        if (pantsEffectivenessPercent > 0 && this.type === ITEM_IDS.PANTS) {
+          multiplier += pantsEffectivenessPercent / 100;
+        }
+        if (bootsEffectivenessPercent > 0 && this.type === ITEM_IDS.BOOTS) {
+          multiplier += bootsEffectivenessPercent / 100;
+        }
+        if (glovesEffectivenessPercent > 0 && this.type === ITEM_IDS.GLOVES) {
+          multiplier += glovesEffectivenessPercent / 100;
+        }
+
+        let lifeMultiplier = 1;
+        if (itemLifeEffectivenessPercent > 0) {
+          lifeMultiplier += itemLifeEffectivenessPercent / 100;
+        }
+
+        let armorMultiplier = 1;
+        if (itemArmorEffectivenessPercent > 0) {
+          armorMultiplier += itemArmorEffectivenessPercent / 100;
+        }
+
+        if (multiplier !== 1 && stat !== 'critDamage' && isFlatStat(stat)) {
+          value = Math.floor(value * multiplier);
+        }
+
+        if (weaponFlatEffectivenessPercent > 0 && WEAPON_TYPES.includes(this.type)) {
+          if (isFlatStat(stat)) {
+            value += Math.floor(this.stats[stat] * (weaponFlatEffectivenessPercent / 100));
+          }
+        }
+
+        if (shieldFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.SHIELD) {
+          if (isFlatStat(stat)) {
+            value += Math.floor(this.stats[stat] * (shieldFlatEffectivenessPercent / 100));
+          }
+        }
+
+        if (helmetFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.HELMET) {
+          if (isFlatStat(stat)) {
+            value += Math.floor(this.stats[stat] * (helmetFlatEffectivenessPercent / 100));
+          }
+        }
+        if (chestFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.ARMOR) {
+          if (isFlatStat(stat)) {
+            value += Math.floor(this.stats[stat] * (chestFlatEffectivenessPercent / 100));
+          }
+        }
+        if (beltFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.BELT) {
+          if (isFlatStat(stat)) {
+            value += Math.floor(this.stats[stat] * (beltFlatEffectivenessPercent / 100));
+          }
+        }
+        if (pantsFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.PANTS) {
+          if (isFlatStat(stat)) {
+            value += Math.floor(this.stats[stat] * (pantsFlatEffectivenessPercent / 100));
+          }
+        }
+        if (bootsFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.BOOTS) {
+          if (isFlatStat(stat)) {
+            value += Math.floor(this.stats[stat] * (bootsFlatEffectivenessPercent / 100));
+          }
+        }
+        if (glovesFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.GLOVES) {
+          if (isFlatStat(stat)) {
+            value += Math.floor(this.stats[stat] * (glovesFlatEffectivenessPercent / 100));
+          }
+        }
+
+        if (isFlatStat(stat)) {
+          let jewelryMultiplier = 0;
+          if (jewelryFlatEffectivenessPercent > 0 && JEWELRY_TYPES.includes(this.type)) {
+            jewelryMultiplier += jewelryFlatEffectivenessPercent / 100;
+          }
+          if (amuletFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.AMULET) {
+            jewelryMultiplier += amuletFlatEffectivenessPercent / 100;
+          }
+          if (ringFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.RING) {
+            jewelryMultiplier += ringFlatEffectivenessPercent / 100;
+          }
+
+          if (jewelryMultiplier > 0) {
+            value += Math.floor(this.stats[stat] * jewelryMultiplier);
+          }
+        }
+
+        if (lifeMultiplier !== 1 && (stat === 'life' || stat === 'lifePercent')) {
+          if (stat === 'life') {
+            value = Math.floor(value * lifeMultiplier);
+          } else {
+            value = value * lifeMultiplier;
+          }
+        }
+
+        if (armorMultiplier !== 1 && (stat === 'armor' || stat === 'armorPercent')) {
+          if (stat === 'armor') {
+            value = Math.floor(value * armorMultiplier);
+          } else {
+            value = value * armorMultiplier;
+          }
+        }
+        // --- EFFECTIVENESS CALCULATION END ---
+
         const statDef = STATS[stat] || {};
         if (statDef.showValue === false) {
           return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
@@ -385,8 +541,101 @@ export default class Item {
         const formattedValue = formatNumber(value.toFixed(decimals));
         let adv = '';
         if (showAdvanced && statMinMax[stat]) {
-          const minRaw = statMinMax[stat].min;
-          const maxRaw = statMinMax[stat].max;
+          let minRaw = statMinMax[stat].min;
+          let maxRaw = statMinMax[stat].max;
+
+          // --- APPLY EFFECTIVENESS TO MIN/MAX RANGES ---
+          if (multiplier !== 1 && stat !== 'critDamage' && isFlatStat(stat)) {
+            minRaw = Math.floor(minRaw * multiplier);
+            maxRaw = Math.floor(maxRaw * multiplier);
+          }
+
+          if (weaponFlatEffectivenessPercent > 0 && WEAPON_TYPES.includes(this.type)) {
+            if (isFlatStat(stat)) {
+              minRaw += Math.floor(statMinMax[stat].min * (weaponFlatEffectivenessPercent / 100));
+              maxRaw += Math.floor(statMinMax[stat].max * (weaponFlatEffectivenessPercent / 100));
+            }
+          }
+          if (shieldFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.SHIELD) {
+            if (isFlatStat(stat)) {
+              minRaw += Math.floor(statMinMax[stat].min * (shieldFlatEffectivenessPercent / 100));
+              maxRaw += Math.floor(statMinMax[stat].max * (shieldFlatEffectivenessPercent / 100));
+            }
+          }
+
+          if (helmetFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.HELMET) {
+            if (isFlatStat(stat)) {
+              minRaw += Math.floor(statMinMax[stat].min * (helmetFlatEffectivenessPercent / 100));
+              maxRaw += Math.floor(statMinMax[stat].max * (helmetFlatEffectivenessPercent / 100));
+            }
+          }
+          if (chestFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.ARMOR) {
+            if (isFlatStat(stat)) {
+              minRaw += Math.floor(statMinMax[stat].min * (chestFlatEffectivenessPercent / 100));
+              maxRaw += Math.floor(statMinMax[stat].max * (chestFlatEffectivenessPercent / 100));
+            }
+          }
+          if (beltFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.BELT) {
+            if (isFlatStat(stat)) {
+              minRaw += Math.floor(statMinMax[stat].min * (beltFlatEffectivenessPercent / 100));
+              maxRaw += Math.floor(statMinMax[stat].max * (beltFlatEffectivenessPercent / 100));
+            }
+          }
+          if (pantsFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.PANTS) {
+            if (isFlatStat(stat)) {
+              minRaw += Math.floor(statMinMax[stat].min * (pantsFlatEffectivenessPercent / 100));
+              maxRaw += Math.floor(statMinMax[stat].max * (pantsFlatEffectivenessPercent / 100));
+            }
+          }
+          if (bootsFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.BOOTS) {
+            if (isFlatStat(stat)) {
+              minRaw += Math.floor(statMinMax[stat].min * (bootsFlatEffectivenessPercent / 100));
+              maxRaw += Math.floor(statMinMax[stat].max * (bootsFlatEffectivenessPercent / 100));
+            }
+          }
+          if (glovesFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.GLOVES) {
+            if (isFlatStat(stat)) {
+              minRaw += Math.floor(statMinMax[stat].min * (glovesFlatEffectivenessPercent / 100));
+              maxRaw += Math.floor(statMinMax[stat].max * (glovesFlatEffectivenessPercent / 100));
+            }
+          }
+
+          if (isFlatStat(stat)) {
+            let jewelryMultiplier = 0;
+            if (jewelryFlatEffectivenessPercent > 0 && JEWELRY_TYPES.includes(this.type)) {
+              jewelryMultiplier += jewelryFlatEffectivenessPercent / 100;
+            }
+            if (amuletFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.AMULET) {
+              jewelryMultiplier += amuletFlatEffectivenessPercent / 100;
+            }
+            if (ringFlatEffectivenessPercent > 0 && this.type === ITEM_IDS.RING) {
+              jewelryMultiplier += ringFlatEffectivenessPercent / 100;
+            }
+            if (jewelryMultiplier > 0) {
+              minRaw += Math.floor(statMinMax[stat].min * jewelryMultiplier);
+              maxRaw += Math.floor(statMinMax[stat].max * jewelryMultiplier);
+            }
+          }
+          if (lifeMultiplier !== 1 && (stat === 'life' || stat === 'lifePercent')) {
+            if (stat === 'life') {
+              minRaw = Math.floor(minRaw * lifeMultiplier);
+              maxRaw = Math.floor(maxRaw * lifeMultiplier);
+            } else {
+              minRaw = minRaw * lifeMultiplier;
+              maxRaw = maxRaw * lifeMultiplier;
+            }
+          }
+          if (armorMultiplier !== 1 && (stat === 'armor' || stat === 'armorPercent')) {
+            if (stat === 'armor') {
+              minRaw = Math.floor(minRaw * armorMultiplier);
+              maxRaw = Math.floor(maxRaw * armorMultiplier);
+            } else {
+              minRaw = minRaw * armorMultiplier;
+              maxRaw = maxRaw * armorMultiplier;
+            }
+          }
+          // --- END RANGE SCALING ---
+
           if (options?.showRollPercentiles) {
             let pct = 100;
             if (maxRaw > minRaw) {

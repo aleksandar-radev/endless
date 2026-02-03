@@ -1,6 +1,6 @@
 import { t } from '../i18n.js';
-import { getScalingPercent, getScalingFlat } from '../common.js';
-import { DEFAULT_MAX_SKILL_LEVEL, SKILL_LEVEL_TIERS } from '../skillTree.js';
+import { getSkillStatBonus } from '../common.js';
+import { DEFAULT_MAX_SKILL_LEVEL, SPECIALIZATION_SKILL_LEVEL_TIERS } from '../skillTree.js';
 
 // Each class has 3 specializations
 // Once a player chooses the first upgrade in one specialization, the other two become locked
@@ -18,39 +18,49 @@ export const SPECIALIZATIONS = {
           id: 'armoredOffense',
           name: () => t('Armored Offense'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'armored-offense',
           description: () => t('skill.armoredOffense'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            armorPercent: getScalingPercent({
-              level, base: 20, softcap: 20000, linear: 0.5, power: 0.81,
+            armorPercent: getSkillStatBonus({
+              level, statKey: 'armorPercent', skillType: 'passive', scale: { base: 4 },
             }),
-            extraDamageFromArmorPercent: Math.min(getScalingPercent({
-              level, base: 0.1, softcap: 2000, linear: 0.01, power: 0.7,
-            }), 2.5),
-            lifePercent: getScalingPercent({
-              level, base: 20, softcap: 20000, linear: 0.5, power: 0.81,
+            extraDamageFromArmorPercent: getSkillStatBonus({
+              level,
+              statKey: 'extraDamageFromArmorPercent',
+              skillType: 'passive',
+              scale: {
+                base: 2, linear: 13.33, power: 1.17, max: 1,
+              },
             }),
-            extraDamageFromLifePercent: Math.min(getScalingPercent({
-              level, base: 0.1, softcap: 2000, linear: 0.01, power: 0.7,
-            }), 2.5),
+            lifePercent: getSkillStatBonus({
+              level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 4 },
+            }),
+            extraDamageFromLifePercent: getSkillStatBonus({
+              level,
+              statKey: 'extraDamageFromLifePercent',
+              skillType: 'passive',
+              scale: {
+                base: 2, linear: 13.33, power: 1.17, max: 1,
+              },
+            }),
           }),
         },
         reinforcedEquipment: {
           id: 'reinforcedEquipment',
           name: () => t('Reinforced Equipment'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'reinforced-equipment',
           description: () => t('skill.reinforcedEquipment'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            itemLifeEffectivenessPercent: getScalingPercent({
-              level, base: 15, softcap: 2000, linear: 2, power: 0.725,
+            itemLifeEffectivenessPercent: getSkillStatBonus({
+              level, statKey: 'itemLifeEffectivenessPercent', skillType: 'passive',
             }),
-            itemArmorEffectivenessPercent: getScalingPercent({
-              level, base: 15, softcap: 2000, linear: 2, power: 0.725,
+            itemArmorEffectivenessPercent: getSkillStatBonus({
+              level, statKey: 'itemArmorEffectivenessPercent', skillType: 'passive',
             }),
           }),
         },
@@ -67,14 +77,14 @@ export const SPECIALIZATIONS = {
           id: 'spiritualWeapons',
           name: () => t('Spiritual Weapons'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'spiritual-weapons',
           description: () => t('skill.spiritualWeapons'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             animatedWeaponsUnlocked: 1,
-            animatedWeaponsDamagePercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            animatedWeaponsDamagePercent: getSkillStatBonus({
+              level, statKey: 'animatedWeaponsDamagePercent', skillType: 'passive',
             }),
           }),
         },
@@ -82,13 +92,13 @@ export const SPECIALIZATIONS = {
           id: 'weaponMastery',
           name: () => t('Weapon Mastery'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'weapon-mastery',
           description: () => t('skill.weaponMastery'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            weaponFlatEffectivenessPercent: getScalingPercent({
-              level, base: 15, softcap: 2000, linear: 2, power: 0.725,
+            weaponFlatEffectivenessPercent: getSkillStatBonus({
+              level, statKey: 'weaponFlatEffectivenessPercent', skillType: 'passive',
             }),
           }),
         },
@@ -105,13 +115,13 @@ export const SPECIALIZATIONS = {
           id: 'arenaDominance',
           name: () => t('Arena Dominance'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'arena-dominance',
           description: () => t('skill.arenaDominance'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            arenaDamagePercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            arenaDamagePercent: getSkillStatBonus({
+              level, statKey: 'arenaDamagePercent', skillType: 'passive',
             }),
           }),
         },
@@ -119,17 +129,17 @@ export const SPECIALIZATIONS = {
           id: 'arenaResilience',
           name: () => t('Arena Resilience'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'arena-resilience',
           description: () => t('skill.arenaResilience'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            armorPercentPerLevel: getScalingPercent({
-              level, base: 0.5, softcap: 2000, linear: 0.08, power: 0.81,
+            armorPercentPerLevel: getSkillStatBonus({
+              level, statKey: 'armorPercentPerLevel', skillType: 'passive',
             }),
-            arenaDamageReductionPercent: Math.min(getScalingPercent({
-              level, base: 5, softcap: 500, linear: 0.15, power: 0.6,
-            }), 75),
+            arenaDamageReductionPercent: getSkillStatBonus({
+              level, statKey: 'arenaDamageReductionPercent', skillType: 'passive',
+            }),
           }),
         },
       },
@@ -147,16 +157,16 @@ export const SPECIALIZATIONS = {
           id: 'vanish',
           name: () => t('skill.vanish.name'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'vanish',
           description: () => t('skill.vanish'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            evasionPercent: getScalingPercent({
-              level, base: 30, softcap: 20000, linear: 0.8, power: 0.81,
+            evasionPercent: getSkillStatBonus({
+              level, statKey: 'evasionPercent', skillType: 'passive',
             }),
-            avoidChance: 5 + getScalingPercent({
-              level, base: 0.466, softcap: 2000, linear: 0.1, power: 0.6,
+            avoidChance: 5 + getSkillStatBonus({
+              level, statKey: 'avoidChance', skillType: 'passive',
             }),
           }),
         },
@@ -164,17 +174,22 @@ export const SPECIALIZATIONS = {
           id: 'assassinate',
           name: () => t('skill.assassinate.name'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'assassinate',
           description: () => t('skill.assassinate'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            critDamage: getScalingPercent({
-              level, base: 1, softcap: 2000, linear: 0.001, power: 0.75,
+            critDamage: getSkillStatBonus({
+              level,
+              statKey: 'critDamage',
+              skillType: 'passive',
+              scale: {
+                base: 20, linear: 10, power: 1.25,
+              },
             }),
-            executeThresholdPercent: Math.min(5 + getScalingPercent({
-              level, base: 0.34, softcap: 2000, linear: 0.1, power: 0.6,
-            }), 50),
+            executeThresholdPercent: getSkillStatBonus({
+              level, statKey: 'executeThresholdPercent', skillType: 'passive',
+            }),
           }),
         },
       },
@@ -190,14 +205,14 @@ export const SPECIALIZATIONS = {
           id: 'shadowClone',
           name: () => t('Shadow Clone'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'shadow-clone',
           description: () => t('skill.shadowClone'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             cloneUnlocked: 1,
-            cloneDamagePercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            cloneDamagePercent: getSkillStatBonus({
+              level, statKey: 'cloneDamagePercent', skillType: 'passive',
             }),
           }),
         },
@@ -205,17 +220,17 @@ export const SPECIALIZATIONS = {
           id: 'shadowMagic',
           name: () => t('Shadow Magic'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'shadow-magic',
           description: () => t('skill.shadowMagic'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            earthDamage: level ? 20000 - 50 + getScalingFlat({
-              level, base: 50, interval: 3, bonus: 1, increment: 0,
-            }) : 0,
-            earthDamagePercent: level ? 100 + getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
-            }) : 0,
+            earthDamage: getSkillStatBonus({
+              level, statKey: 'earthDamage', skillType: 'passive', scale: { base: 50, increment: 33 },
+            }),
+            earthDamagePercent: getSkillStatBonus({
+              level, statKey: 'earthDamagePercent', skillType: 'passive', scale: { base: 0.4 },
+            }),
           }),
         },
       },
@@ -234,16 +249,16 @@ export const SPECIALIZATIONS = {
           id: 'animalTracking',
           name: () => t('Animal Tracking'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'animal-tracking',
           description: () => t('skill.animalTracking'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            damageToHighRarityEnemiesPercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            damageToHighRarityEnemiesPercent: getSkillStatBonus({
+              level, statKey: 'damageToHighRarityEnemiesPercent', skillType: 'passive',
             }),
-            enemyRarityPercent: getScalingFlat({
-              level, base: 20, interval: 20, bonus: 0.5, increment: 0,
+            enemyRarityPercent: getSkillStatBonus({
+              level, statKey: 'enemyRarityPercent', skillType: 'passive',
             }),
           }),
         },
@@ -251,16 +266,21 @@ export const SPECIALIZATIONS = {
           id: 'rangedPrecision',
           name: () => t('Ranged Precision'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'ranged-precision',
           description: () => t('skill.rangedPrecision'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            attackRating: 20000 + getScalingFlat({
-              level, base: 80, interval: 10, bonus: 1, increment: 0,
+            attackRating: 20000 + getSkillStatBonus({
+              level,
+              statKey: 'attackRating',
+              skillType: 'passive',
+              scale: {
+                base: 2.87, increment: 0, interval: 0.2, bonus: 10,
+              },
             }),
-            extraDamageFromAttackRatingPercent: 0.5 + getScalingPercent({
-              level, base: 0.05, softcap: 2000, linear: 0.01, power: 0.7,
+            extraDamageFromAttackRatingPercent: 0.5 + getSkillStatBonus({
+              level, statKey: 'extraDamageFromAttackRatingPercent', skillType: 'passive', scale: { base: 1 },
             }),
           }),
         },
@@ -279,13 +299,13 @@ export const SPECIALIZATIONS = {
           id: 'vampiricBats',
           name: () => t('Vampiric Bats'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'vampiric-bats',
           description: () => t('skill.vampiricBats'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            batsHealPercent: level ? 50 + getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            batsHealPercent: level ? 50 + getSkillStatBonus({
+              level, statKey: 'batsHealPercent', skillType: 'passive',
             }) : 0,
           }),
         },
@@ -293,16 +313,16 @@ export const SPECIALIZATIONS = {
           id: 'crimsonFeast',
           name: () => t('Crimson Feast'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'crimson-feast',
           description: () => t('skill.crimsonFeast'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            lifeSteal: getScalingPercent({
-              level, base: 0.2, softcap: 100, linear: 0.01, power: 0.5,
+            lifeSteal: getSkillStatBonus({
+              level, statKey: 'lifeSteal', skillType: 'passive', scale: { base: 4 },
             }),
-            lifePerHit: level ? 1000 + getScalingFlat({
-              level, base: 50, interval: 10, bonus: 1, increment: 0,
+            lifePerHit: level ? 1000 + getSkillStatBonus({
+              level, statKey: 'lifePerHit', skillType: 'passive', scale: { base: 41 },
             }) : 0,
           }),
         },
@@ -319,13 +339,13 @@ export const SPECIALIZATIONS = {
           id: 'nightStalkerMastery',
           name: () => t('Night Stalker Mastery'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'night-stalker-mastery',
           description: () => t('skill.nightStalkerMastery'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            nightStalkerBuffEffectivenessPercent: level ? 50 + getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            nightStalkerBuffEffectivenessPercent: level ? 50 + getSkillStatBonus({
+              level, statKey: 'nightStalkerBuffEffectivenessPercent', skillType: 'passive',
             }) : 0,
           }),
         },
@@ -333,14 +353,14 @@ export const SPECIALIZATIONS = {
           id: 'bloodRitual',
           name: () => t('Blood Ritual'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'blood-ritual',
           description: () => t('skill.bloodRitual'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             bloodSacrificeUnlocked: 1,
-            bloodSacrificeEffectivenessPercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            bloodSacrificeEffectivenessPercent: getSkillStatBonus({
+              level, statKey: 'bloodSacrificeEffectivenessPercent', skillType: 'passive',
             }),
           }),
         },
@@ -357,34 +377,36 @@ export const SPECIALIZATIONS = {
           id: 'bloodPotency',
           name: () => t('Blood Potency'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'blood-potency',
           description: () => t('skill.bloodPotency'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            damagePercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            damagePercent: getSkillStatBonus({
+              level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 5 },
             }),
-            attackSpeedPercent: getScalingPercent({
-              level, base: 4, softcap: 2000, linear: 1, power: 0.685,
+            attackSpeedPercent: getSkillStatBonus({
+              level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 4 },
             }),
-            chanceToHitPercent: Math.min(getScalingPercent({
-              level, base: 0.2, power: 0.6,
-            }), 40),
+            chanceToHitPercent: getSkillStatBonus({
+              level, statKey: 'chanceToHitPercent', skillType: 'passive',
+            }),
           }),
         },
         hemorrhage: {
           id: 'hemorrhage',
           name: () => t('skill.hemorrhage.name'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'hemorrhage',
           description: () => t('skill.hemorrhage'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            bleedChance: Math.min(5 + getScalingPercent({ level, base: 0.6 }), 80),
-            bleedDamagePercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            bleedChance: getSkillStatBonus({
+              level, statKey: 'bleedChance', skillType: 'passive',
+            }),
+            bleedDamagePercent: getSkillStatBonus({
+              level, statKey: 'bleedDamagePercent', skillType: 'passive',
             }),
           }),
         },
@@ -404,16 +426,16 @@ export const SPECIALIZATIONS = {
           id: 'shieldMastery',
           name: () => t('Shield Mastery'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'shield-mastery',
           description: () => t('skill.shieldMastery'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            shieldEffectivenessPercent: getScalingPercent({
-              level, base: 15, softcap: 2000, linear: 2, power: 0.725,
+            shieldEffectivenessPercent: getSkillStatBonus({
+              level, statKey: 'shieldEffectivenessPercent', skillType: 'passive',
             }),
-            endurancePercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.7,
+            endurancePercent: getSkillStatBonus({
+              level, statKey: 'endurancePercent', skillType: 'passive', scale: { base: 0.4 },
             }),
           }),
         },
@@ -421,16 +443,16 @@ export const SPECIALIZATIONS = {
           id: 'zeal',
           name: () => t('skill.zeal.name'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'zeal',
           description: () => t('skill.zeal'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            divineProtectionBuffEffectivenessPercent: level ? 50 + getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            divineProtectionBuffEffectivenessPercent: level ? 50 + getSkillStatBonus({
+              level, statKey: 'divineProtectionBuffEffectivenessPercent', skillType: 'passive',
             }) : 0,
-            perseverancePercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.7,
+            perseverancePercent: getSkillStatBonus({
+              level, statKey: 'perseverancePercent', skillType: 'passive', scale: { base: 0.4 },
             }),
           }),
         },
@@ -447,13 +469,13 @@ export const SPECIALIZATIONS = {
           id: 'divineAmulet',
           name: () => t('Divine Amulet'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'divine-amulet',
           description: () => t('skill.divineAmulet'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            jewelryFlatEffectivenessPercent: level ? 50 + getScalingPercent({
-              level, base: 15, softcap: 2000, linear: 2, power: 0.725,
+            jewelryFlatEffectivenessPercent: level ? 50 + getSkillStatBonus({
+              level, statKey: 'jewelryFlatEffectivenessPercent', skillType: 'passive',
             }) : 0,
           }),
         },
@@ -461,19 +483,19 @@ export const SPECIALIZATIONS = {
           id: 'sacredRelic',
           name: () => t('Sacred Relic'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'sacred-relic',
           description: () => t('skill.sacredRelic'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            attackSpeedPercent: getScalingPercent({
-              level, base: 4, softcap: 2000, linear: 1, power: 0.685,
+            attackSpeedPercent: getSkillStatBonus({
+              level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 4 },
             }),
-            attackRatingPercent: level ? 50 + getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            attackRatingPercent: level ? 50 + getSkillStatBonus({
+              level, statKey: 'attackRatingPercent', skillType: 'passive', scale: { base: 5 },
             }) : 0,
-            elementalDamagePercent: level ? 40 + getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            elementalDamagePercent: level ? 40 + getSkillStatBonus({
+              level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 5 },
             }) : 0,
           }),
         },
@@ -494,16 +516,16 @@ export const SPECIALIZATIONS = {
           id: 'unyieldingSpirit',
           name: () => t('Unyielding Spirit'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'unyielding-spirit',
           description: () => t('skill.unyieldingSpirit'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            endurancePercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.7,
+            endurancePercent: getSkillStatBonus({
+              level, statKey: 'endurancePercent', skillType: 'passive', scale: { base: 0.4 },
             }),
-            perseverancePercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.7,
+            perseverancePercent: getSkillStatBonus({
+              level, statKey: 'perseverancePercent', skillType: 'passive', scale: { base: 0.4 },
             }),
           }),
         },
@@ -511,16 +533,16 @@ export const SPECIALIZATIONS = {
           id: 'immortalPresence',
           name: () => t('Immortal Presence'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'immortal-presence',
           description: () => t('skill.immortalPresence'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            life: getScalingFlat({
-              level, base: 50, interval: 10, bonus: 1, increment: 0,
+            life: getSkillStatBonus({
+              level, statKey: 'life', skillType: 'passive', scale: { base: 3.17 },
             }),
-            lifePercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.8,
+            lifePercent: getSkillStatBonus({
+              level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 0.4 },
             }),
           }),
         },
@@ -539,16 +561,16 @@ export const SPECIALIZATIONS = {
           id: 'lacerate',
           name: () => t('skill.lacerate.name'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'lacerate',
           description: () => t('skill.lacerate'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            bleedChance: Math.min(getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.7,
-            }), 50),
-            bleedDamagePercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            bleedChance: getSkillStatBonus({
+              level, statKey: 'bleedChance', skillType: 'passive',
+            }),
+            bleedDamagePercent: getSkillStatBonus({
+              level, statKey: 'bleedDamagePercent', skillType: 'passive',
             }),
           }),
         },
@@ -556,17 +578,17 @@ export const SPECIALIZATIONS = {
           id: 'fatalBlow',
           name: () => t('Fatal Blow'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'fatal-blow',
           description: () => t('skill.fatalBlow'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            damagePercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            damagePercent: getSkillStatBonus({
+              level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 5 },
             }),
-            instaKillPercent: Math.min(getScalingPercent({
-              level, base: 0.2, softcap: 100, linear: 0.1, power: 0.5,
-            }), 5),
+            instaKillPercent: getSkillStatBonus({
+              level, statKey: 'instaKillPercent', skillType: 'passive',
+            }),
           }),
         },
       },
@@ -585,13 +607,13 @@ export const SPECIALIZATIONS = {
           id: 'battleCommand',
           name: () => t('Battle Command'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'battle-command',
           description: () => t('skill.battleCommand'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            buffEffectivenessPercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            buffEffectivenessPercent: getSkillStatBonus({
+              level, statKey: 'buffEffectivenessPercent', skillType: 'passive',
             }),
           }),
         },
@@ -599,13 +621,13 @@ export const SPECIALIZATIONS = {
           id: 'warlordsAuthority',
           name: () => t("Warlord's Authority"),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'warlords-authority',
           description: () => t('skill.warlordsAuthority'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            warlordEffectivenessPercent: getScalingPercent({
-              level, base: 15, softcap: 2000, linear: 2, power: 0.725,
+            warlordEffectivenessPercent: getSkillStatBonus({
+              level, statKey: 'warlordEffectivenessPercent', skillType: 'passive',
             }),
           }),
         },
@@ -626,16 +648,16 @@ export const SPECIALIZATIONS = {
           id: 'bloodBank',
           name: () => t('Blood Bank'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'blood-bank',
           description: () => t('skill.bloodBank'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            overhealPercent: 20 + getScalingPercent({
-              level, base: 5, softcap: 2000, linear: 0.5, power: 0.6,
+            overhealPercent: 20 + getSkillStatBonus({
+              level, statKey: 'overhealPercent', skillType: 'passive',
             }),
-            lifePercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.8,
+            lifePercent: getSkillStatBonus({
+              level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 0.4 },
             }),
           }),
         },
@@ -643,17 +665,20 @@ export const SPECIALIZATIONS = {
           id: 'giantSlayer',
           name: () => t('Giant Slayer'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'giant-slayer',
           description: () => t('skill.giantSlayer'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            damageToHighRarityEnemiesPercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            damageToHighRarityEnemiesPercent: getSkillStatBonus({
+              level, statKey: 'damageToHighRarityEnemiesPercent', skillType: 'passive',
             }),
-            executeThresholdPercent: Math.min(getScalingPercent({
-              level, base: 0.1, softcap: 100, power: 0.5,
-            }), 15),
+            executeThresholdPercent: getSkillStatBonus({
+              level,
+              statKey: 'executeThresholdPercent',
+              skillType: 'passive',
+              scale: { max: 0.3 }, // 15/50 = 0.3
+            }),
           }),
         },
       },
@@ -674,16 +699,16 @@ export const SPECIALIZATIONS = {
           id: 'searingHeat',
           name: () => t('Searing Heat'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'searing-heat',
           description: () => t('skill.searingHeat'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            burnChance: Math.min(getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.6,
-            }), 60),
-            burnDamagePercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            burnChance: getSkillStatBonus({
+              level, statKey: 'burnChance', skillType: 'passive',
+            }),
+            burnDamagePercent: getSkillStatBonus({
+              level, statKey: 'burnDamagePercent', skillType: 'passive',
             }),
           }),
         },
@@ -691,16 +716,16 @@ export const SPECIALIZATIONS = {
           id: 'combustion',
           name: () => t('skill.combustion.name'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'combustion',
           description: () => t('skill.combustion'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            explosionChance: getScalingPercent({
-              level, base: 1, softcap: 2000, linear: 0.1, power: 0.6,
+            explosionChance: getSkillStatBonus({
+              level, statKey: 'explosionChance', skillType: 'passive',
             }),
-            extraDamageAgainstBurningEnemies: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            extraDamageAgainstBurningEnemies: getSkillStatBonus({
+              level, statKey: 'extraDamageAgainstBurningEnemies', skillType: 'passive',
             }),
           }),
         },
@@ -720,14 +745,16 @@ export const SPECIALIZATIONS = {
           id: 'arcDischarge',
           name: () => t('Arc Discharge'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'arc-discharge',
           description: () => t('skill.arcDischarge'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            arcDischargeChance: Math.min(getScalingPercent({ level, base: 2 }), 10),
-            lightningDamage: getScalingFlat({
-              level, base: 4, increment: 0,
+            arcDischargeChance: getSkillStatBonus({
+              level, statKey: 'arcDischargeChance', skillType: 'passive',
+            }),
+            lightningDamage: getSkillStatBonus({
+              level, statKey: 'lightningDamage', skillType: 'passive', scale: { base: 3.33 },
             }),
           }),
         },
@@ -735,16 +762,16 @@ export const SPECIALIZATIONS = {
           id: 'staticShock',
           name: () => t('Static Shock'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'static-shock',
           description: () => t('skill.staticShock'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            shockChance: Math.min(getScalingPercent({
-              level, base: 1, softcap: 2000, linear: 0.1, power: 0.6,
-            }), 20),
-            shockEffectivenessPercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.7,
+            shockChance: getSkillStatBonus({
+              level, statKey: 'shockChance', skillType: 'passive',
+            }),
+            shockEffectivenessPercent: getSkillStatBonus({
+              level, statKey: 'shockEffectivenessPercent', skillType: 'passive',
             }),
           }),
         },
@@ -764,30 +791,30 @@ export const SPECIALIZATIONS = {
           id: 'permafrost',
           name: () => t('skill.permafrost.name'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'permafrost',
           description: () => t('skill.permafrost'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            extraDamageAgainstFrozenEnemies: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            extraDamageAgainstFrozenEnemies: getSkillStatBonus({
+              level, statKey: 'extraDamageAgainstFrozenEnemies', skillType: 'passive',
             }),
-            chanceToShatterEnemy: Math.min(getScalingPercent({
-              level, base: 1, softcap: 2000, linear: 0.1, power: 0.6,
-            }), 15),
+            chanceToShatterEnemy: getSkillStatBonus({
+              level, statKey: 'chanceToShatterEnemy', skillType: 'passive',
+            }),
           }),
         },
         iceBarrier: {
           id: 'iceBarrier',
           name: () => t('Ice Barrier'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'ice-barrier',
           description: () => t('skill.iceBarrier'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            coldDamagePercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            coldDamagePercent: getSkillStatBonus({
+              level, statKey: 'coldDamagePercent', skillType: 'passive', scale: { base: 2 },
             }),
             glacialBulwarkUnlocked: 1,
           }),
@@ -807,16 +834,16 @@ export const SPECIALIZATIONS = {
           id: 'shapeshiftingMastery',
           name: () => t('Shapeshifting Mastery'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'shapeshifting-mastery',
           description: () => t('skill.shapeshiftingMastery'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            allAttributes: getScalingFlat({
-              level, base: 4, increment: 0,
+            allAttributes: getSkillStatBonus({
+              level, statKey: 'allAttributes', skillType: 'passive', scale: { base: 2.66 },
             }),
-            allAttributesPercent: getScalingPercent({
-              level, base: 1, softcap: 2000, linear: 0.2, power: 0.7,
+            allAttributesPercent: getSkillStatBonus({
+              level, statKey: 'allAttributesPercent', skillType: 'passive', scale: { base: 0.2 },
             }),
           }),
         },
@@ -824,28 +851,28 @@ export const SPECIALIZATIONS = {
           id: 'primalAdaptation',
           name: () => t('Primal Adaptation'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'primal-adaptation',
           description: () => t('skill.primalAdaptation'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            damagePercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.6,
+            damagePercent: getSkillStatBonus({
+              level, statKey: 'damagePercent', skillType: 'passive', scale: { base: 1 },
             }),
-            elementalDamagePercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.6,
+            elementalDamagePercent: getSkillStatBonus({
+              level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 1 },
             }),
-            armorPercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.6,
+            armorPercent: getSkillStatBonus({
+              level, statKey: 'armorPercent', skillType: 'passive', scale: { base: 0.4 },
             }),
-            lifePercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.6,
+            lifePercent: getSkillStatBonus({
+              level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 0.4 },
             }),
-            lifeRegenPercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.6,
+            lifeRegenPercent: getSkillStatBonus({
+              level, statKey: 'lifeRegenPercent', skillType: 'passive', scale: { base: 0.4 },
             }),
-            allResistancePercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.6,
+            allResistancePercent: getSkillStatBonus({
+              level, statKey: 'allResistancePercent', skillType: 'passive', scale: { base: 1 },
             }),
           }),
         },
@@ -865,19 +892,19 @@ export const SPECIALIZATIONS = {
           id: 'elementalHarmony',
           name: () => t('Elemental Harmony'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'elemental-harmony',
           description: () => t('skill.elementalHarmony'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            waterDamagePercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            waterDamagePercent: getSkillStatBonus({
+              level, statKey: 'waterDamagePercent', skillType: 'passive', scale: { base: 2 },
             }),
-            coldDamagePercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            coldDamagePercent: getSkillStatBonus({
+              level, statKey: 'coldDamagePercent', skillType: 'passive', scale: { base: 2 },
             }),
-            earthDamagePercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            earthDamagePercent: getSkillStatBonus({
+              level, statKey: 'earthDamagePercent', skillType: 'passive', scale: { base: 2 },
             }),
           }),
         },
@@ -885,17 +912,17 @@ export const SPECIALIZATIONS = {
           id: 'primalResilience',
           name: () => t('Primal Resilience'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'primal-resilience',
           description: () => t('skill.primalResilience'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            elementalPenetrationPercent: Math.min(getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.2, power: 0.6,
-            }), 20),
-            damageTakenReductionPercent: Math.min(getScalingPercent({
-              level, base: 3, softcap: 2000, linear: 0.3, power: 0.6,
-            }), 30),
+            elementalPenetrationPercent: getSkillStatBonus({
+              level, statKey: 'elementalPenetrationPercent', skillType: 'passive', scale: { base: 1 },
+            }),
+            damageTakenReductionPercent: getSkillStatBonus({
+              level, statKey: 'damageTakenReductionPercent', skillType: 'passive', scale: { base: 1.5 },
+            }),
           }),
         },
       },
@@ -914,16 +941,16 @@ export const SPECIALIZATIONS = {
           id: 'beastFrenzy',
           name: () => t('Beast Frenzy'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'beast-frenzy',
           description: () => t('skill.beastFrenzy'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            summonAttackSpeedBuffPercent: Math.min(getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.6,
-            }), 30),
-            summonDamageBuffPercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            summonAttackSpeedBuffPercent: getSkillStatBonus({
+              level, statKey: 'summonAttackSpeedBuffPercent', skillType: 'passive',
+            }),
+            summonDamageBuffPercent: getSkillStatBonus({
+              level, statKey: 'summonDamageBuffPercent', skillType: 'passive',
             }),
           }),
         },
@@ -931,22 +958,22 @@ export const SPECIALIZATIONS = {
           id: 'wildCommunion',
           name: () => t('Wild Communion'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'wild-communion',
           description: () => t('skill.wildCommunion'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            lifePercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.7,
+            lifePercent: getSkillStatBonus({
+              level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 0.4 },
             }),
-            lifeRegenPercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.7,
+            lifeRegenPercent: getSkillStatBonus({
+              level, statKey: 'lifeRegenPercent', skillType: 'passive', scale: { base: 0.4 },
             }),
-            armorPercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.7,
+            armorPercent: getSkillStatBonus({
+              level, statKey: 'armorPercent', skillType: 'passive', scale: { base: 0.4 },
             }),
-            allResistancePercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.7,
+            allResistancePercent: getSkillStatBonus({
+              level, statKey: 'allResistancePercent', skillType: 'passive', scale: { base: 1 },
             }),
           }),
         },
@@ -965,16 +992,16 @@ export const SPECIALIZATIONS = {
           id: 'manaWard',
           name: () => t('Mana Ward'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'mana-ward',
           description: () => t('skill.manaWard'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            manaShieldDamageTakenReductionPercent: Math.min(getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.2, power: 0.6,
-            }), 50),
-            manaPercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.8,
+            manaShieldDamageTakenReductionPercent: getSkillStatBonus({
+              level, statKey: 'manaShieldDamageTakenReductionPercent', skillType: 'passive',
+            }),
+            manaPercent: getSkillStatBonus({
+              level, statKey: 'manaPercent', skillType: 'passive', scale: { base: 1 },
             }),
           }),
         },
@@ -982,19 +1009,19 @@ export const SPECIALIZATIONS = {
           id: 'arcaneOverload',
           name: () => t('Arcane Overload'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'arcane-overload',
           description: () => t('skill.arcaneOverload'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            extraDamageFromManaPercent: Math.min(getScalingPercent({
-              level, base: 0.05, softcap: 2000, linear: 0.01, power: 0.7,
-            }), 2.5),
-            manaRegen: getScalingFlat({
-              level, base: 0.2, increment: 0,
+            extraDamageFromManaPercent: getSkillStatBonus({
+              level, statKey: 'extraDamageFromManaPercent', skillType: 'passive', scale: { base: 1 },
             }),
-            manaRegenPercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.7,
+            manaRegen: getSkillStatBonus({
+              level, statKey: 'manaRegen', skillType: 'passive', scale: { base: 0.66 },
+            }),
+            manaRegenPercent: getSkillStatBonus({
+              level, statKey: 'manaRegenPercent', skillType: 'passive', scale: { base: 0.4 },
             }),
           }),
         },
@@ -1011,13 +1038,13 @@ export const SPECIALIZATIONS = {
           id: 'crimsonFortitude',
           name: () => t('Crimson Fortitude'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'crimson-fortitude',
           description: () => t('skill.crimsonFortitude'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            lifePercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.8,
+            lifePercent: getSkillStatBonus({
+              level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 0.4 },
             }),
             crimsonAegisSkillUnlocked: 1,
           }),
@@ -1026,16 +1053,16 @@ export const SPECIALIZATIONS = {
           id: 'sanguineLeech',
           name: () => t('Sanguine Leech'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'sanguine-leech',
           description: () => t('skill.sanguineLeech'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            lifeSteal: Math.min(getScalingPercent({
-              level, base: 0.2, softcap: 100, linear: 0.01, power: 0.5,
-            }), 1),
-            lifePerHitPercent: getScalingPercent({
-              level, base: 10, softcap: 2000, linear: 1, power: 0.685,
+            lifeSteal: getSkillStatBonus({
+              level, statKey: 'lifeSteal', skillType: 'passive', scale: { base: 4 },
+            }),
+            lifePerHitPercent: getSkillStatBonus({
+              level, statKey: 'lifePerHitPercent', skillType: 'passive',
             }),
             bloodSiphonSkillUnlocked: 1,
           }),
@@ -1056,36 +1083,39 @@ export const SPECIALIZATIONS = {
           id: 'dancingBlades',
           name: () => t('Dancing Blades'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[4],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
           icon: () => 'dancing-blades',
           description: () => t('skill.dancingBlades'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            allResistancePercent: getScalingPercent({
-              level, base: 2, softcap: 2000, linear: 0.5, power: 0.7,
+            allResistancePercent: getSkillStatBonus({
+              level, statKey: 'allResistancePercent', skillType: 'passive', scale: { base: 1 },
             }),
-            extraDamageFromAllResistancesPercent: 0.5 + getScalingPercent({
-              level, base: 0.1, softcap: 2000, linear: 0.01, power: 0.7,
+            extraDamageFromAllResistancesPercent: 0.5 + getSkillStatBonus({
+              level,
+              statKey: 'extraDamageFromAllResistancesPercent',
+              skillType: 'passive',
+              scale: { base: 2 },
             }),
-            elementalDamageTakenReductionPercent: Math.min(getScalingPercent({
-              level, base: 1, softcap: 2000, linear: 0.1, power: 0.6,
-            }), 25),
+            elementalDamageTakenReductionPercent: getSkillStatBonus({
+              level, statKey: 'elementalDamageTakenReductionPercent', skillType: 'passive',
+            }),
           }),
         },
         enchantedArmor: {
           id: 'enchantedArmor',
           name: () => t('Enchanted Armor'),
           type: () => 'passive',
-          requiredLevel: () => SKILL_LEVEL_TIERS[6],
+          requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[1],
           icon: () => 'enchanted-armor',
           description: () => t('skill.enchantedArmor'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            weaponFlatEffectivenessPercent: getScalingPercent({
-              level, base: 15, softcap: 2000, linear: 2, power: 0.725,
+            weaponFlatEffectivenessPercent: getSkillStatBonus({
+              level, statKey: 'weaponFlatEffectivenessPercent', skillType: 'passive',
             }),
-            jewelryFlatEffectivenessPercent: getScalingPercent({
-              level, base: 15, softcap: 2000, linear: 2, power: 0.725,
+            jewelryFlatEffectivenessPercent: getSkillStatBonus({
+              level, statKey: 'jewelryFlatEffectivenessPercent', skillType: 'passive',
             }),
           }),
         },

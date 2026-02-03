@@ -1523,6 +1523,18 @@ export default class Inventory {
     amuletFlatEffectivenessPercent = 0,
     ringEffectivenessPercent = 0,
     ringFlatEffectivenessPercent = 0,
+    helmetEffectivenessPercent = 0,
+    helmetFlatEffectivenessPercent = 0,
+    chestEffectivenessPercent = 0,
+    chestFlatEffectivenessPercent = 0,
+    beltEffectivenessPercent = 0,
+    beltFlatEffectivenessPercent = 0,
+    pantsEffectivenessPercent = 0,
+    pantsFlatEffectivenessPercent = 0,
+    bootsEffectivenessPercent = 0,
+    bootsFlatEffectivenessPercent = 0,
+    glovesEffectivenessPercent = 0,
+    glovesFlatEffectivenessPercent = 0,
   } = {}) {
     // Reset equipment bonuses
     Object.keys(this.equipmentBonuses).forEach((stat) => {
@@ -1550,6 +1562,25 @@ export default class Inventory {
         multiplier += ringEffectivenessPercent / 100;
       }
 
+      if (helmetEffectivenessPercent > 0 && item.type === ITEM_IDS.HELMET) {
+        multiplier += helmetEffectivenessPercent / 100;
+      }
+      if (chestEffectivenessPercent > 0 && item.type === ITEM_IDS.ARMOR) {
+        multiplier += chestEffectivenessPercent / 100;
+      }
+      if (beltEffectivenessPercent > 0 && item.type === ITEM_IDS.BELT) {
+        multiplier += beltEffectivenessPercent / 100;
+      }
+      if (pantsEffectivenessPercent > 0 && item.type === ITEM_IDS.PANTS) {
+        multiplier += pantsEffectivenessPercent / 100;
+      }
+      if (bootsEffectivenessPercent > 0 && item.type === ITEM_IDS.BOOTS) {
+        multiplier += bootsEffectivenessPercent / 100;
+      }
+      if (glovesEffectivenessPercent > 0 && item.type === ITEM_IDS.GLOVES) {
+        multiplier += glovesEffectivenessPercent / 100;
+      }
+
       let lifeMultiplier = 1;
       if (itemLifeEffectivenessPercent > 0) {
         lifeMultiplier += itemLifeEffectivenessPercent / 100;
@@ -1563,14 +1594,8 @@ export default class Inventory {
       Object.entries(item.stats).forEach(([stat, value]) => {
         let effectiveValue = value;
 
-        if (multiplier !== 1 && stat !== 'critDamage') {
-          const isPercentStat = getDivisor(stat) !== 1;
-
-          if (isPercentStat) {
-            effectiveValue = value * multiplier;
-          } else {
-            effectiveValue = Math.floor(value * multiplier);
-          }
+        if (multiplier !== 1 && stat !== 'critDamage' && isFlatStat(stat)) {
+          effectiveValue = Math.floor(value * multiplier);
         }
 
         if (weaponFlatEffectivenessPercent > 0 && WEAPON_TYPES.includes(item.type)) {
@@ -1582,6 +1607,37 @@ export default class Inventory {
         if (shieldFlatEffectivenessPercent > 0 && item.type === ITEM_IDS.SHIELD) {
           if (isFlatStat(stat)) {
             effectiveValue += Math.floor(value * (shieldFlatEffectivenessPercent / 100));
+          }
+        }
+
+        if (helmetFlatEffectivenessPercent > 0 && item.type === ITEM_IDS.HELMET) {
+          if (isFlatStat(stat)) {
+            effectiveValue += Math.floor(value * (helmetFlatEffectivenessPercent / 100));
+          }
+        }
+        if (chestFlatEffectivenessPercent > 0 && item.type === ITEM_IDS.ARMOR) {
+          if (isFlatStat(stat)) {
+            effectiveValue += Math.floor(value * (chestFlatEffectivenessPercent / 100));
+          }
+        }
+        if (beltFlatEffectivenessPercent > 0 && item.type === ITEM_IDS.BELT) {
+          if (isFlatStat(stat)) {
+            effectiveValue += Math.floor(value * (beltFlatEffectivenessPercent / 100));
+          }
+        }
+        if (pantsFlatEffectivenessPercent > 0 && item.type === ITEM_IDS.PANTS) {
+          if (isFlatStat(stat)) {
+            effectiveValue += Math.floor(value * (pantsFlatEffectivenessPercent / 100));
+          }
+        }
+        if (bootsFlatEffectivenessPercent > 0 && item.type === ITEM_IDS.BOOTS) {
+          if (isFlatStat(stat)) {
+            effectiveValue += Math.floor(value * (bootsFlatEffectivenessPercent / 100));
+          }
+        }
+        if (glovesFlatEffectivenessPercent > 0 && item.type === ITEM_IDS.GLOVES) {
+          if (isFlatStat(stat)) {
+            effectiveValue += Math.floor(value * (glovesFlatEffectivenessPercent / 100));
           }
         }
 
@@ -1663,6 +1719,18 @@ export default class Inventory {
     amuletFlatEffectivenessPercent = 0,
     ringEffectivenessPercent = 0,
     ringFlatEffectivenessPercent = 0,
+    helmetEffectivenessPercent = 0,
+    helmetFlatEffectivenessPercent = 0,
+    chestEffectivenessPercent = 0,
+    chestFlatEffectivenessPercent = 0,
+    beltEffectivenessPercent = 0,
+    beltFlatEffectivenessPercent = 0,
+    pantsEffectivenessPercent = 0,
+    pantsFlatEffectivenessPercent = 0,
+    bootsEffectivenessPercent = 0,
+    bootsFlatEffectivenessPercent = 0,
+    glovesEffectivenessPercent = 0,
+    glovesFlatEffectivenessPercent = 0,
   ) {
     // Ensure bonuses are up-to-date
     this.updateItemBonuses({
@@ -1678,6 +1746,18 @@ export default class Inventory {
       amuletFlatEffectivenessPercent,
       ringEffectivenessPercent,
       ringFlatEffectivenessPercent,
+      helmetEffectivenessPercent,
+      helmetFlatEffectivenessPercent,
+      chestEffectivenessPercent,
+      chestFlatEffectivenessPercent,
+      beltEffectivenessPercent,
+      beltFlatEffectivenessPercent,
+      pantsEffectivenessPercent,
+      pantsFlatEffectivenessPercent,
+      bootsEffectivenessPercent,
+      bootsFlatEffectivenessPercent,
+      glovesEffectivenessPercent,
+      glovesFlatEffectivenessPercent,
     });
     return { ...this.equipmentBonuses };
   }

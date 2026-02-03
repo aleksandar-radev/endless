@@ -189,6 +189,14 @@ export const DEFENSE_STATS = {
       }),
     },
   }),
+  armorPercentPerLevel: createPercentStat({
+    sub: 'defense',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 0.5, softcap: 2000, linear: 0.08, power: 0.81,
+      }),
+    },
+  }),
   blockChance: createChanceStat({
     training: {
       cost: 400,
@@ -419,26 +427,28 @@ export const DEFENSE_STATS = {
     itemTags: ['boots', 'helmet'],
     sub: 'defense',
     skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('evasionPercent'),
-        increment: getSkillFlatIncrement('evasionPercent'),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('evasionPercent'),
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 30, softcap: 20000, linear: 0.8, power: 0.81,
       }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('evasionPercent', 1.33),
-        increment: getSkillFlatIncrement('evasionPercent', 1.33),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('evasionPercent', 1.2),
+      toggle: getSkillBonusesPercent({
+        type: 'toggle', base: 45, softcap: 20000, linear: 1.2, power: 0.81,
       }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('evasionPercent', 1.33),
-        increment: getSkillFlatIncrement('evasionPercent', 1.33),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('evasionPercent', 1.5),
+      instant: getSkillBonusesPercent({
+        type: 'instant', base: 75, softcap: 20000, linear: 2, power: 0.81,
+      }),
+      buff: getSkillBonusesPercent({
+        type: 'buff', base: 60, softcap: 20000, linear: 1.6, power: 0.81,
+      }),
+      summon: getSkillBonusesPercent({
+        type: 'summon', base: 15, softcap: 20000, linear: 0.4, power: 0.81,
+      }),
+    },
+  }),
+  avoidChance: createChanceStat({
+    forceNotShow: true,
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 0.466, softcap: 2000, linear: 0.1, power: 0.6,
       }),
     },
   }),
@@ -517,22 +527,60 @@ export const DEFENSE_STATS = {
       }),
     },
   }),
-  manaShieldDamageTakenReductionPercent: createPercentStat({ sub: 'defense' }),
+  manaShieldDamageTakenReductionPercent: createPercentStat({
+    sub: 'defense',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 2, softcap: 2000, linear: 0.2, power: 0.6, max: 50,
+      }),
+    },
+  }),
   arenaDamageReductionPercent: createPercentStat({
     sub: 'defense',
     cap: 80,
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 5, softcap: 500, linear: 0.15, power: 0.6, max: 75,
+      }),
+    },
   }),
-  itemLifeEffectivenessPercent: createPercentStat({ sub: 'defense' }),
-  itemArmorEffectivenessPercent: createPercentStat({ sub: 'defense' }),
+  itemLifeEffectivenessPercent: createPercentStat({
+    sub: 'defense',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 15, softcap: 2000, linear: 2, power: 0.725,
+      }),
+    },
+  }),
+  itemArmorEffectivenessPercent: createPercentStat({
+    sub: 'defense',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 15, softcap: 2000, linear: 2, power: 0.725,
+      }),
+    },
+  }),
   shieldEffectivenessPercent: createStat({
     dec: 1,
     sub: 'defense',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 15, softcap: 2000, linear: 2, power: 0.725,
+      }),
+    },
   }),
   shieldFlatEffectivenessPercent: createStat({
     dec: 1,
     sub: 'defense',
   }),
-  divineProtectionBuffEffectivenessPercent: createPercentStat({ sub: 'defense' }),
+  divineProtectionBuffEffectivenessPercent: createPercentStat({
+    sub: 'defense',
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
+      }),
+    },
+  }),
   damageTakenConvertedToColdPercent: createPercentStat({
     sub: 'elemental',
     cap: 75,
@@ -554,6 +602,11 @@ export const DEFENSE_STATS = {
   elementalDamageTakenReductionPercent: createPercentStat({
     sub: 'elemental',
     cap: 80,
+    skills: {
+      passive: getSkillBonusesPercent({
+        type: 'passive', base: 1, softcap: 2000, linear: 0.1, power: 0.6, max: 25,
+      }),
+    },
   }),
   damageTakenReductionPercent: createPercentStat({
     show: true,

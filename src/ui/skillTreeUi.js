@@ -1,7 +1,7 @@
 import { STATS, getStatDecimalPlaces, getDivisor } from '../constants/stats/stats.js';
 import { CLASS_PATHS, SKILL_TREES } from '../constants/skills.js';
 import { getClassSpecializations, getSpecialization } from '../constants/specializations.js';
-import { SKILL_LEVEL_TIERS, getSpellDamageTypes, SPECIALIZATION_UNLOCK_LEVEL, SKILL_MANA_SCALING_MAX_MULTIPLIER, SKILL_DAMAGE_SCALING_MAX_INSTANT, SKILL_DAMAGE_SCALING_MAX_TOGGLE, SKILL_EFFECT_SCALING_MAX_BUFF } from '../skillTree.js';
+import { SKILL_LEVEL_TIERS, SPECIALIZATION_SKILL_LEVEL_TIERS, getSpellDamageTypes, SPECIALIZATION_UNLOCK_LEVEL, SKILL_MANA_SCALING_MAX_MULTIPLIER, SKILL_DAMAGE_SCALING_MAX_INSTANT, SKILL_DAMAGE_SCALING_MAX_TOGGLE, SKILL_EFFECT_SCALING_MAX_BUFF } from '../skillTree.js';
 import { SKILLS_MAX_QTY } from '../constants/limits.js';
 import { skillTree, hero, crystalShop, options, dataManager } from '../globals.js';
 import { formatNumber,
@@ -665,8 +665,10 @@ function initializeSpecializationsTab() {
     specializationsContent.appendChild(skillsContainer);
 
     const skills = spec.skills;
-    const levelGroups = SKILL_LEVEL_TIERS.reduce((acc, level) => {
-      acc[level] = [];
+    const levelGroups = SPECIALIZATION_SKILL_LEVEL_TIERS.reduce((acc, level) => {
+      if (level <= hero.level) {
+        acc[level] = [];
+      }
       return acc;
     }, {});
 
@@ -676,7 +678,7 @@ function initializeSpecializationsTab() {
       if (!isVisible) return;
 
       const reqLevel = skillData.requiredLevel();
-      // Only show if level tier exists (it should)
+      // Only show if level tier exists (meaning hero level is sufficient)
       if (Array.isArray(levelGroups[reqLevel])) {
         levelGroups[reqLevel].push({ id: skillId, ...skillData });
       }
@@ -1598,7 +1600,7 @@ function buildClassPreviewTree(pathId, container, detailsContainer, activeSpecId
       skillsContainer.style.width = '100%';
 
       const specSkills = spec.skills;
-      const specLevelGroups = SKILL_LEVEL_TIERS.reduce((acc, level) => {
+      const specLevelGroups = SPECIALIZATION_SKILL_LEVEL_TIERS.reduce((acc, level) => {
         acc[level] = [];
         return acc;
       }, {});
