@@ -416,7 +416,7 @@ export function updateResources() {
   }
 
   // Update ghost icon (total souls)
-  document.getElementById('souls').textContent = formatNumber(hero.souls || 0);
+  document.getElementById('souls').textContent = formatNumber(Math.floor(hero.souls || 0));
   document.getElementById('crystals').textContent = formatNumber(hero.crystals || 0);
 
   // Update other stats

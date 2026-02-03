@@ -170,7 +170,7 @@ export default {
   'tooltip.manaRegenPercent': 'Aumenta tu Regeneración de Maná en un porcentaje.',
   'tooltip.armor': 'Reduce el daño físico que recibes de los enemigos.',
   'tooltip.armorPercent': 'Aumenta tu Armadura en un porcentaje.',
-  'tooltip.blockChance': 'El porcentaje de probabilidad de bloquear un ataque, reduciendo su daño.',
+  'tooltip.blockChance': 'El porcentaje de probabilidad de bloquear un ataque, reduciendo su daño.<br />Nota: La probabilidad de bloqueo requiere un escudo para ser más de 0.',
   'tooltip.blockChanceCap': 'El límite máximo para tu Probabilidad de Bloqueo (predeterminado {cap}%).',
   'tooltip.evasion': 'Una puntuación que otorga la probabilidad de evitar completamente los ataques entrantes.',
   'tooltip.manaPerHit': 'Restaura una cantidad fija de Maná cada vez que golpeas a un enemigo.',

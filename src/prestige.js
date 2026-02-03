@@ -393,7 +393,7 @@ export default class Prestige {
     const ascBonuses = ascension.getBonuses();
     hero.gold += ascBonuses.startingGold || 0;
     hero.crystals += ascBonuses.startingCrystals || 0;
-    hero.souls += ascBonuses.startingSouls || 0;
+    hero.souls += Math.floor(ascBonuses.startingSouls || 0);
 
     // Recalculate attributes to reflect ascension bonuses applied
     try {

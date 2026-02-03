@@ -169,7 +169,7 @@ export default {
   'tooltip.manaRegen': '你每秒恢复的法力值。',
   'tooltip.armor': '减少你从敌人受到的物理伤害。',
   'tooltip.armorPercent': '按百分比提升你的护甲。',
-  'tooltip.blockChance': '格挡攻击并减少其伤害的百分比几率。',
+  'tooltip.blockChance': '格挡攻击并减少其伤害的百分比几率。<br />注意：格挡几率需要装备盾牌才能超过0。',
   'tooltip.blockChanceCap': '你的格挡几率上限（默认{cap}%）。',
   'tooltip.evasion': '完全躲避攻击的几率评分。',
   'tooltip.fireResistance': '减少受到的火焰伤害。',

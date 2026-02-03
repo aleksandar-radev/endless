@@ -211,6 +211,9 @@ export default class Hero {
     this.updateAdBonuses(0);
 
     handleSavedData(savedData, this);
+    if (this.souls) {
+      this.souls = Math.floor(this.souls);
+    }
   }
 
   /**
@@ -284,8 +287,9 @@ export default class Hero {
   }
 
   gainSouls(amount) {
-    statistics.increment('totalSoulsEarned', null, amount);
-    this.souls += amount;
+    const finalAmount = Math.floor(amount);
+    statistics.increment('totalSoulsEarned', null, finalAmount);
+    this.souls += finalAmount;
     if (game.activeTab === 'soulShop') {
       soulShop.updateSoulShopAffordability();
     }

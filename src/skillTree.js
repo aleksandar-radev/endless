@@ -1406,7 +1406,8 @@ export default class SkillTree {
     const cooldownEndTime = Date.now() + this.getSkillCooldown(skill);
 
     if (skill.type() === 'summon') {
-      const summonStats = skill.summonStats(skill.level);
+      const baseSummonStats = skill.summonStats(skill.level);
+      const summonStats = this.applySkillSynergies(skill, baseSummonStats);
       const now = Date.now();
 
       // Keep the base attack speed so we can apply dynamic buffs/caps later.

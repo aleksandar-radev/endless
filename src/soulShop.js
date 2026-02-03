@@ -5,7 +5,7 @@ import { closeModal, createModal } from './ui/modal.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { t } from './i18n.js';
 import { SOUL_SHOP_MAX_QTY } from './constants/limits.js';
-import { calcLinearSum, solveLinear } from './utils/bulkMath.js';
+
 
 const html = String.raw;
 
@@ -156,7 +156,7 @@ export default class SoulShop {
   getSoulUpgradeCost(config, level = 0) {
     const multiplier = this.getCostMultiplier();
     const base = config.baseCost + (config.costIncrement || 0) * level;
-    return Math.round(base * multiplier);
+    return Math.floor(base * multiplier);
   }
 
   getCostMultiplier() {
@@ -302,7 +302,7 @@ export default class SoulShop {
       const maxLevel = isMultiLevel ? this.getUpgradeMaxLevel(config) : Infinity;
       const levelsLeft = Math.max(0, maxLevel - baseLevel);
       let qty = 1;
-      let cost = isOneTime || isMultiple ? Math.round(config.baseCost) : this.getSoulUpgradeCost(config, baseLevel);
+      let cost = isOneTime || isMultiple ? Math.floor(config.baseCost) : this.getSoulUpgradeCost(config, baseLevel);
       let disabled = alreadyPurchased;
       let unaffordable = false;
       if (options?.quickBuy && !alreadyPurchased) {
@@ -314,7 +314,7 @@ export default class SoulShop {
               affordableQty > 0
                 ? totalCost
                 : isMultiple
-                  ? Math.round(config.baseCost) * qty
+                  ? Math.floor(config.baseCost) * qty
                   : this.calculateTotalCost(stat, qty, baseLevel);
             if (affordableQty <= 0 || hero.souls < cost) {
               disabled = true;
@@ -322,7 +322,7 @@ export default class SoulShop {
             }
           } else {
             qty = Math.min(this.quickQty, isMultiLevel ? levelsLeft : SOUL_SHOP_MAX_QTY, SOUL_SHOP_MAX_QTY);
-            cost = isMultiple ? Math.round(config.baseCost) * qty : this.calculateTotalCost(stat, qty, baseLevel);
+            cost = isMultiple ? Math.floor(config.baseCost) * qty : this.calculateTotalCost(stat, qty, baseLevel);
             if (qty <= 0 || hero.souls < cost) {
               disabled = true;
               unaffordable = true;
@@ -400,7 +400,7 @@ export default class SoulShop {
     }
     let cost =
       isOneTime || isMultiple
-        ? Math.round(config.baseCost)
+        ? Math.floor(config.baseCost)
         : this.getSoulUpgradeCost(config, this.soulUpgrades[stat] || 0);
     let bonusClass = '';
     let disabled = alreadyPurchased;
@@ -448,7 +448,7 @@ export default class SoulShop {
       return this.getMaxPurchasable(stat, desiredQty, baseLevel, availableSouls);
     }
     if (config.multiple) {
-      const unitCost = Math.round(config.baseCost);
+      const unitCost = Math.floor(config.baseCost);
       if (unitCost <= 0) {
         const qty = desiredQty === 'max' ? SOUL_SHOP_MAX_QTY : Math.min(desiredQty, SOUL_SHOP_MAX_QTY);
         return { qty, totalCost: 0 };
@@ -461,7 +461,7 @@ export default class SoulShop {
           : Math.min(Number.isFinite(parsedDesired) ? parsedDesired : 0, maxQty, SOUL_SHOP_MAX_QTY);
       return { qty, totalCost: qty * unitCost };
     }
-    return { qty: 1, totalCost: Math.round(config.baseCost) };
+    return { qty: 1, totalCost: Math.floor(config.baseCost) };
   }
 
   calculateBulkCostAndPurchases(qtySetting) {
@@ -572,7 +572,11 @@ export default class SoulShop {
     const maxLevel = this.getUpgradeMaxLevel(config);
     const levelsLeft = this.getLevelsLeft(config, baseLevel);
     if (levelsLeft <= 0) return { qty: 0, totalCost: 0 };
-    const maxQty = Math.min(levelsLeft, SOUL_SHOP_MAX_QTY);
+
+    // Standard behavior is check up to SOUL_SHOP_MAX_QTY or levelsLeft
+    const limit = SOUL_SHOP_MAX_QTY;
+    const maxQty = Math.min(levelsLeft, limit);
+
     const targetQty =
       desiredQty === 'max'
         ? maxQty
@@ -580,36 +584,33 @@ export default class SoulShop {
 
     if (targetQty <= 0) return { qty: 0, totalCost: 0 };
 
-    const increment = config.costIncrement || 0;
-    const multiplier = this.getCostMultiplier();
-    const SCALE = 10000; // Precision scale for float math
-    const baseScaled = Math.round(config.baseCost * multiplier * SCALE);
-    const incScaled = Math.round(increment * multiplier * SCALE);
+    let currentQty = 0;
+    let currentCost = 0;
 
-    const bestQty = solveLinear(baseLevel, availableSouls, baseScaled, incScaled, SCALE);
-    const finalQty = Math.min(bestQty, targetQty);
-    const totalCost = this.calculateTotalCost(stat, finalQty, baseLevel);
+    for (let i = 0; i < targetQty; i++) {
+      const cost = this.getSoulUpgradeCost(config, baseLevel + i);
+      if (currentCost + cost > availableSouls) {
+        break;
+      }
+      currentCost += cost;
+      currentQty++;
+    }
 
-    return { qty: finalQty, totalCost };
+    return { qty: currentQty, totalCost: currentCost };
   }
 
   calculateTotalCost(stat, qty, baseLevel = this.soulUpgrades[stat] || 0) {
     const config = SOUL_UPGRADE_CONFIG[stat];
     if (!config || qty <= 0) return 0;
     if (config.oneTime || config.multiple) {
-      return Math.round(config.baseCost) * qty;
+      return Math.floor(config.baseCost) * qty;
     }
 
-    const increment = config.costIncrement || 0;
-    const multiplier = this.getCostMultiplier();
-    if (multiplier <= 0) return 0;
-
-    // Use scaled integer math for precision
-    const SCALE = 10000;
-    const baseScaled = Math.round(config.baseCost * multiplier * SCALE);
-    const incScaled = Math.round(increment * multiplier * SCALE);
-
-    return calcLinearSum(baseLevel, qty, baseScaled, incScaled, SCALE);
+    let total = 0;
+    for (let i = 0; i < qty; i++) {
+      total += this.getSoulUpgradeCost(config, baseLevel + i);
+    }
+    return total;
   }
 
   setupSoulUpgradeHandlers() {

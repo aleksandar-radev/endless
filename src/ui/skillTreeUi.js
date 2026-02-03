@@ -993,7 +993,7 @@ function formatDamageBreakdown(breakdown) {
 function calculateSummonDamage(skill, level) {
   if (!skill || typeof skill.summonStats !== 'function') return null;
 
-  const rawStats = skill.summonStats(level);
+  const rawStats = skillTree.applySkillSynergies(skill, skill.summonStats(level));
   const statsForCalc = { ...rawStats };
   // Unwrap any stat objects
   Object.keys(statsForCalc).forEach((key) => {
@@ -1182,9 +1182,8 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
 
   // Summon Stats
   if (skill.type() === 'summon') {
-    const summonStats = getDisplayedSummonStats(skill.summonStats(currentLevel));
-    const summonStatsTarget = (!isMaxed || targetLevel > currentLevel) ? getDisplayedSummonStats(skill.summonStats(targetLevel)) : null;
-
+    const summonStats = getDisplayedSummonStats(skillTree.applySkillSynergies(skill, skill.summonStats(currentLevel)));
+    const summonStatsTarget = (!isMaxed || targetLevel > currentLevel) ? getDisplayedSummonStats(skillTree.applySkillSynergies(skill, skill.summonStats(targetLevel))) : null;
     html += `
         <div class="skill-tooltip-section">
           <div class="skill-tooltip-section-title">
@@ -2489,7 +2488,7 @@ function createSkillTooltip(skillId) {
 
   // Add summon stats for summon skills
   if (skill?.type && skill.type() === 'summon' && typeof skill.summonStats === 'function') {
-    const summonStats = getDisplayedSummonStats(skill.summonStats(level));
+    const summonStats = getDisplayedSummonStats(skillTree.applySkillSynergies(skill, skill.summonStats(level)));
     tooltip += `<div class="tooltip-effects"><u>${t('skillTree.summonStats')}:</u>`;
     Object.entries(summonStats).forEach(([stat, value]) => {
       if (!shouldShowStatValue(stat)) {

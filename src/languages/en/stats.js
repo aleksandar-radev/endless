@@ -170,7 +170,7 @@ export default {
   'tooltip.manaRegenPercent': 'Increases your Mana Regen by a percentage.',
   'tooltip.armor': 'Reduces the physical damage you take from enemies.',
   'tooltip.armorPercent': 'Increases your Armor by a percentage.',
-  'tooltip.blockChance': 'The percentage chance to block an attack, reducing its damage.',
+  'tooltip.blockChance': 'The percentage chance to block an attack, reducing its damage.<br />Note: Block chance requires a shield to become more than 0.',
   'tooltip.blockChanceCap': 'The maximum limit for your Block Chance (default {cap}%).',
   'tooltip.evasion': 'A rating that grants a chance to completely avoid incoming attacks.',
   'tooltip.fireResistance': 'Reduces Fire damage taken.',
