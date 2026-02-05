@@ -2,7 +2,7 @@ import { OFFENSE_STATS } from './offenseStats.js';
 import { DEFENSE_STATS } from './defenseStats.js';
 import { MISC_STATS } from './miscStats.js';
 import { ITEM_FLAT_TIER_SCALING_MULTIPLIER, ITEM_FLAT_STAGE_SCALING_PERCENT } from '../enemies.js';
-import { INSTANT_SKILL_MULTIPLIER } from '../ratios.js';
+import { INSTANT_SKILL_MULTIPLIER, getSkillFlatBase, getSkillFlatIncrement, getSkillFlatBonus, SKILL_INTERVAL } from '../ratios.js';
 
 export const STATS = {
   ...OFFENSE_STATS,
@@ -162,6 +162,108 @@ export function getSkillBonusesPercent({
     power,
     ...(max !== undefined && { max }),
   };
+}
+
+/**
+ * Create default skill bonuses for flat stats with the ability to override specific values.
+ *
+ * @param {string} statName - The stat name (e.g., 'damage', 'fireDamage')
+ * @param {Object} [overrides={}] - Configuration overrides for specific skill types
+ * @param {Object} [overrides.passive] - Override values for passive skills
+ * @param {Object} [overrides.toggle] - Override values for toggle skills
+ * @param {Object} [overrides.instant] - Override values for instant skills
+ * @param {Object} [overrides.buff] - Override values for buff skills
+ * @param {Object} [overrides.summon] - Override values for summon skills
+ * @returns {Object} Object with skill bonuses for all skill types
+ */
+export function createDefaultSkillBonusesFlat(statName, overrides = {}) {
+  const defaults = {
+    passive: {
+      type: 'passive',
+      base: 1,
+      increment: 1,
+      bonus: 1,
+    },
+    toggle: {
+      type: 'toggle',
+      base: 1.5,
+      increment: 1.5,
+      bonus: 1,
+    },
+    instant: {
+      type: 'instant',
+      base: 2,
+      increment: 2,
+      bonus: 1.4,
+    },
+    buff: {
+      type: 'buff',
+      base: 3,
+      increment: 3,
+      bonus: 1.5,
+    },
+    summon: {
+      type: 'summon',
+      base: 2,
+      increment: 2,
+      bonus: 1.2,
+    },
+  };
+
+  return Object.keys(defaults).reduce((acc, skillType) => {
+    if (defaults[skillType]) {
+      const config = { ...defaults[skillType], ...(overrides[skillType] || {}) };
+      acc[skillType] = getSkillBonusesFlat({
+        type: config.type,
+        base: getSkillFlatBase(statName, config.base),
+        increment: getSkillFlatIncrement(statName, config.increment),
+        interval: SKILL_INTERVAL,
+        bonus: getSkillFlatBonus(statName, config.bonus),
+      });
+    }
+    return acc;
+  }, {});
+}
+
+/**
+ * Create default skill bonuses for percent stats with the ability to override specific values.
+ *
+ * @param {Object} [overrides={}] - Configuration overrides for specific skill types
+ * @param {Object} [overrides.passive] - Override values for passive skills
+ * @param {Object} [overrides.toggle] - Override values for toggle skills
+ * @param {Object} [overrides.instant] - Override values for instant skills
+ * @param {Object} [overrides.buff] - Override values for buff skills
+ * @param {Object} [overrides.summon] - Override values for summon skills
+ * @returns {Object} Object with skill bonuses for all skill types
+ */
+export function createDefaultSkillBonusesPercent(overrides = {}) {
+  const defaults = {
+    passive: {
+      type: 'passive', base: 2, softcap: 2000, linear: 0.05, power: 0.6, max: 5000,
+    },
+    toggle: {
+      type: 'toggle', base: 3.5, softcap: 2000, linear: 0.15, power: 0.6, max: 6000,
+    },
+    instant: {
+      type: 'instant', base: 5, softcap: 2000, linear: 0.35, power: 0.6, max: 8000,
+    },
+    buff: {
+      type: 'buff', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 7000,
+    },
+    summon: {
+      type: 'summon', base: 5, softcap: 2000, linear: 0.3, power: 0.6, max: 4000,
+    },
+  };
+
+  return Object.keys(defaults).reduce((acc, skillType) => {
+    if (defaults[skillType]) {
+      acc[skillType] = getSkillBonusesPercent({
+        ...defaults[skillType],
+        ...(overrides[skillType] || {}),
+      });
+    }
+    return acc;
+  }, {});
 }
 
 /**

@@ -115,13 +115,13 @@ export const DEFENSE_STATS = {
     itemTags: ['belt', 'pants'],
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 2000,
+        type: 'passive', base: 2, softcap: 2000, linear: 0.05, power: 0.6, max: 5000,
       }),
       instant: getSkillBonusesPercent({
-        type: 'instant', base: 0.05, softcap: 2000, linear: 0.002, power: 0.6, max: 40,
+        type: 'instant', base: 5, softcap: 2000, linear: 0.35, power: 0.6, max: 8000,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 8, softcap: 2000, linear: 0.2, power: 0.6, max: 4000,
+        type: 'buff', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 7000,
       }),
     },
   }),
@@ -182,10 +182,10 @@ export const DEFENSE_STATS = {
     sub: 'defense',
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.5, power: 0.6, max: 5000,
+        type: 'passive', base: 2, softcap: 2000, linear: 0.05, power: 0.6, max: 5000,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 8, softcap: 2000, linear: 0.6, power: 0.6, max: 7000,
+        type: 'buff', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 7000,
       }),
     },
   }),
@@ -433,10 +433,10 @@ export const DEFENSE_STATS = {
     sub: 'defense',
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.5, power: 0.6, max: 5000,
+        type: 'passive', base: 2, softcap: 2000, linear: 0.05, power: 0.6, max: 5000,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 8, softcap: 2000, linear: 0.6, power: 0.6, max: 7000,
+        type: 'buff', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 7000,
       }),
     },
   }),
@@ -444,7 +444,7 @@ export const DEFENSE_STATS = {
     forceNotShow: true,
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 0.466, softcap: 2000, linear: 0.1, power: 0.6,
+        type: 'passive', base: 0.466, softcap: 2000, linear: 0.1, power: 0.6, max: 80,
       }),
     },
   }),

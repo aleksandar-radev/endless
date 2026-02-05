@@ -168,7 +168,12 @@ export const SPECIALIZATIONS = {
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             evasionPercent: getSkillStatBonus({
-              level, statKey: 'evasionPercent', skillType: 'passive',
+              level,
+              statKey: 'evasionPercent',
+              skillType: 'passive',
+              scale: {
+                base: 5, linear: 4, max: 2,
+              },
             }),
             avoidChance: 5 + getSkillStatBonus({
               level, statKey: 'avoidChance', skillType: 'passive',
@@ -184,9 +189,9 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.assassinate'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            DamagePercent: getSkillStatBonus({
+            damagePercent: getSkillStatBonus({
               level,
-              statKey: 'DamagePercent',
+              statKey: 'damagePercent',
               skillType: 'passive',
               scale: {
                 base: 5, linear: 4, max: 2,
@@ -197,7 +202,7 @@ export const SPECIALIZATIONS = {
               statKey: 'critDamagePercent',
               skillType: 'passive',
               scale: {
-                base: 5, linear: 4, max: 2,
+                base: 2, linear: 1.5, max: 4,
               },
             }),
             executeThresholdPercent: getSkillStatBonus({
