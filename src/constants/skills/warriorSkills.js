@@ -322,8 +322,8 @@ export const WARRIOR_SKILLS = {
       damage: getSkillStatBonus({
         level, statKey: 'damage', skillType: 'passive', scale: { base: 1, increment: 2 },
       }),
-      critDamage: getSkillStatBonus({
-        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 1, max: 1.4 },
+      critDamagePercent: getSkillStatBonus({
+        level, statKey: 'critDamagePercent', skillType: 'passive', scale: { base: 1, max: 1.4 },
       }),
     }),
   },

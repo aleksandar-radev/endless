@@ -224,7 +224,7 @@ export const PROGRESSION_QUESTS = [
     type: 'damage',
     target: 100000,
     reward: {
-      crystals: 3, bonuses: { critDamagePercent: 5 }, materials: [{ id: 'enchantment_scroll', qty: 3 }],
+      crystals: 3, bonuses: { critDamagePercent: 20 }, materials: [{ id: 'enchantment_scroll', qty: 3 }],
     },
   },
   {
@@ -238,7 +238,7 @@ export const PROGRESSION_QUESTS = [
     },
     type: 'damage',
     target: 1000000,
-    reward: { crystals: 5, bonuses: { damagePercent: 3 } },
+    reward: { crystals: 5, bonuses: { totalDamagePercent: 30 } },
   },
   {
     id: 'damage_5000000',

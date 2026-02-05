@@ -299,37 +299,40 @@ export const OFFENSE_STATS = {
   critDamage: createStat({
     base: 1.33,
     dec: 2,
-    training: {
-      cost: 750,
-      costIncrease: 800,
-      costIncreaseMultiplier: 1.01,
-      costThresholds: [{ level: 50, costIncreaseMultiplier: 1.018 }],
-      bonus: 0.005,
-      maxLevel: 250,
-    }, // max bonus: 1.25
-    item: { tierScalingMaxPercent: createTierScaling(1, 12, 1) },
-    itemTags: ['offense', 'jewelry', 'gloves', 'wand', 'staff'],
     show: true,
     sub: 'attack',
+  }),
+  critDamagePercent: createPercentStat({
+    dec: 2,
+    training: {
+      cost: 400,
+      costIncrease: 600,
+      costIncreaseMultiplier: 1.08,
+      costThresholds: [{ level: 50, costIncreaseMultiplier: 1.05 }],
+      bonus: 0.25,
+      maxLevel: 100,
+    }, // max bonus: 50% -> +0.5 attacks/s on the 1.0 base before other flats
+    item: { tierScalingMaxPercent: createTierScaling(50, 150, 1) },
+    itemTags: ['offense', 'gloves'],
+    forceNotShow: true,
     skills: {
       passive: getSkillBonusesPercent({
-        type: 'passive', base: 0.05, softcap: 2000, linear: 0.0001, power: 0.6, max: 2,
+        type: 'passive', base: 1, softcap: 2000, linear: 0.005, power: 0.6, max: 100,
       }),
       toggle: getSkillBonusesPercent({
-        type: 'toggle', base: 0.1, softcap: 2000, linear: 0.0002, power: 0.6, max: 3,
+        type: 'toggle', base: 2, softcap: 2000, linear: 0.01, power: 0.6, max: 150,
       }),
       instant: getSkillBonusesPercent({
-        type: 'instant', base: 0.15, softcap: 2000, linear: 0.0003, power: 0.6, max: 4,
+        type: 'instant', base: 5, softcap: 2000, linear: 0.02, power: 0.6, max: 200,
       }),
       buff: getSkillBonusesPercent({
-        type: 'buff', base: 0.12, softcap: 2000, linear: 0.00025, power: 0.6, max: 3.5,
+        type: 'buff', base: 3, softcap: 2000, linear: 0.015, power: 0.6, max: 175,
       }),
       summon: getSkillBonusesPercent({
-        type: 'summon', base: 0.02, softcap: 2000, linear: 0.00005, power: 0.6, max: 1,
+        type: 'summon', base: 0.5, softcap: 2000, linear: 0.002, power: 0.6, max: 50,
       }),
     },
   }),
-  critDamagePercent: createPercentStat({ forceNotShow: true }),
   attackRating: createStat({
     base: 100,
     training: {

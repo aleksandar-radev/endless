@@ -224,8 +224,8 @@ export const BERSERKER_SKILLS = {
       critChance: getSkillStatBonus({
         level, statKey: 'critChance', skillType: 'passive', scale: { base: 2, max: 1 },
       }),
-      critDamage: getSkillStatBonus({
-        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 1, max: 1 },
+      critDamagePercent: getSkillStatBonus({
+        level, statKey: 'critDamagePercent', skillType: 'passive', scale: { base: 1, max: 1 },
       }),
     }),
     synergies: [
@@ -401,8 +401,8 @@ export const BERSERKER_SKILLS = {
     description: () => t('skill.crushingBlows'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      critDamage: getSkillStatBonus({
-        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 1, max: 1 },
+      critDamagePercent: getSkillStatBonus({
+        level, statKey: 'critDamagePercent', skillType: 'passive', scale: { base: 1, max: 1 },
       }),
       armorPenetrationPercent: getSkillStatBonus({
         level, statKey: 'armorPenetrationPercent', skillType: 'passive', scale: { base: 1, max: 1 },

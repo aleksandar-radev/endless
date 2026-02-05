@@ -1594,7 +1594,7 @@ export default class Inventory {
       Object.entries(item.stats).forEach(([stat, value]) => {
         let effectiveValue = value;
 
-        if (multiplier !== 1 && stat !== 'critDamage' && isFlatStat(stat)) {
+        if (multiplier !== 1 && isFlatStat(stat)) {
           effectiveValue = Math.floor(value * multiplier);
         }
 

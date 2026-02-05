@@ -1,9 +1,9 @@
-import { isChanceStat } from './stats/stats.js';
+import { isChanceStat, isFlatStat } from './stats/stats.js';
 
 const BASE = import.meta.env.VITE_BASE_PATH;
 
-// Re-export isChanceStat for convenience
-export { isChanceStat };
+// Re-export for convenience
+export { isChanceStat, isFlatStat };
 
 // Rune stage scaling (2x item flat scaling = 0.01 * 2 = 0.02 = 2% per stage)
 export const RUNE_FLAT_STAGE_SCALING_PERCENT = 0.02;
@@ -68,8 +68,7 @@ export const calculateRuneStatValue = (baseValue, statKey, tier, stage = 1) => {
   }
 
   const tierMultiplier = getTierMultiplier(tier);
-  const isFlatStat = !statKey.endsWith('Percent') && !statKey.endsWith('Chance');
-  const stageScaling = isFlatStat
+  const stageScaling = isFlatStat(statKey)
     ? RUNE_FLAT_STAGE_SCALING_PERCENT
     : RUNE_PERCENT_STAGE_SCALING_PERCENT;
   const stageMultiplier = 1 + (stage - 1) * stageScaling;

@@ -156,7 +156,7 @@ export const SPECIALIZATIONS = {
       name: () => t('specialization.rogue.assassin.name'),
       description: () => t('specialization.rogue.assassin.description'),
       avatar: () => 'rogue-assassin-avatar.jpg',
-      baseStats: () => ({ critDamage: 2 }),
+      baseStats: () => ({ critDamagePercent: 80 }),
       skills: {
         vanish: {
           id: 'vanish',
@@ -184,12 +184,20 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.assassinate'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            critDamage: getSkillStatBonus({
+            DamagePercent: getSkillStatBonus({
               level,
-              statKey: 'critDamage',
+              statKey: 'DamagePercent',
               skillType: 'passive',
               scale: {
-                base: 20, linear: 10, power: 1.25,
+                base: 5, linear: 4, max: 2,
+              },
+            }),
+            critDamagePercent: getSkillStatBonus({
+              level,
+              statKey: 'critDamagePercent',
+              skillType: 'passive',
+              scale: {
+                base: 5, linear: 4, max: 2,
               },
             }),
             executeThresholdPercent: getSkillStatBonus({
@@ -652,7 +660,7 @@ export const SPECIALIZATIONS = {
       avatar: () => 'berserker-slayer-avatar.jpg',
       baseStats: () => ({
         lifeSteal: 2,
-        critDamage: 3,
+        critDamagePercent: 20,
         critChanceCap: 25,
       }),
       skills: {

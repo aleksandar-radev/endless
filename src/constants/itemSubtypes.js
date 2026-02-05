@@ -46,9 +46,9 @@ export const ITEM_SUBTYPES = {
         damage: { min: 0.85, max: 0.85 },
         damagePercent: { min: 0.95, max: 0.95 },
         critChance: { min: 1.25, max: 1.25 },
-        critDamage: { min: 1.1, max: 1.1 },
+        critDamagePercent: { min: 1.1, max: 1.1 },
       },
-      additionalStats: ['critChance', 'critDamage'],
+      additionalStats: ['critChance', 'critDamagePercent'],
     },
     GREATSWORD: {
       id: 'GREATSWORD',
@@ -60,7 +60,7 @@ export const ITEM_SUBTYPES = {
         damage: { min: 1.5, max: 1.5 },
         damagePercent: { min: 1.2, max: 1.2 },
         attackSpeedPercent: { min: 0.7, max: 0.7 },
-        critDamage: { min: 1.15, max: 1.15 },
+        critDamagePercent: { min: 1.15, max: 1.15 },
       },
     },
   },
@@ -127,7 +127,7 @@ export const ITEM_SUBTYPES = {
       statMultipliers: {
         damage: { min: 0.75, max: 0.75 },
         critChance: { min: 1.3, max: 1.3 },
-        critDamage: { min: 1.15, max: 1.15 },
+        critDamagePercent: { min: 1.15, max: 1.15 },
       },
       additionalStats: ['critChance'],
     },
@@ -144,9 +144,10 @@ export const ITEM_SUBTYPES = {
       id: 'CLUB',
       nameKey: 'items.subtypes.club',
       weight: 30,
+      twoHanded: false,
       statMultipliers: {
         damage: { min: 0.9, max: 0.9 },
-        attackSpeedPercent: { min: 1.1, max: 1.1 },
+        attackSpeedPercent: { min: 1.5, max: 1.5 },
       },
     },
     WAR_HAMMER: {
@@ -158,8 +159,8 @@ export const ITEM_SUBTYPES = {
       statMultipliers: {
         damage: { min: 1.4, max: 1.4 },
         damagePercent: { min: 1.1, max: 1.1 },
-        attackSpeedPercent: { min: 0.7, max: 0.7 },
-        critDamage: { min: 1.2, max: 1.2 },
+        attackSpeedPercent: { min: 0.6, max: 0.6 },
+        critDamagePercent: { min: 1.2, max: 1.2 },
       },
     },
   },
@@ -192,7 +193,7 @@ export const ITEM_SUBTYPES = {
         damage: { min: 1.3, max: 1.3 },
         damagePercent: { min: 1.1, max: 1.1 },
         attackSpeedPercent: { min: 0.8, max: 0.8 },
-        critDamage: { min: 1.1, max: 1.1 },
+        critDamagePercent: { min: 1.1, max: 1.1 },
       },
     },
     CROSSBOW: {

@@ -232,8 +232,8 @@ export const ROGUE_SKILLS = {
       earthDamagePercent: getSkillStatBonus({
         level, statKey: 'earthDamagePercent', skillType: 'buff', scale: { base: 2, linear: 1.5 },
       }),
-      critDamage: getSkillStatBonus({
-        level, statKey: 'critDamage', skillType: 'buff', scale: { base: 1, increment: 0.5 },
+      critDamagePercent: getSkillStatBonus({
+        level, statKey: 'critDamagePercent', skillType: 'buff', scale: { base: 1, increment: 0.5 },
       }),
       critChanceCap: getSkillStatBonus({
         level, statKey: 'critChanceCap', skillType: 'buff', scale: { max: 1.75 },
@@ -446,8 +446,8 @@ export const ROGUE_SKILLS = {
       attackSpeedPercent: getSkillStatBonus({
         level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { max: 1.5 },
       }),
-      critDamage: getSkillStatBonus({
-        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 0.2, max: 2 },
+      critDamagePercent: getSkillStatBonus({
+        level, statKey: 'critDamagePercent', skillType: 'passive', scale: { base: 0.2, max: 2 },
       }),
     }),
     synergies: [

@@ -450,7 +450,7 @@ export default class Item {
           armorMultiplier += itemArmorEffectivenessPercent / 100;
         }
 
-        if (multiplier !== 1 && stat !== 'critDamage' && isFlatStat(stat)) {
+        if (multiplier !== 1 && isFlatStat(stat)) {
           value = Math.floor(value * multiplier);
         }
 
@@ -544,8 +544,13 @@ export default class Item {
           let minRaw = statMinMax[stat].min;
           let maxRaw = statMinMax[stat].max;
 
+          const statConfig = AVAILABLE_STATS[stat];
+          if (statConfig?.tierScalingMaxPercent) {
+            maxRaw *= this.getRarityMultiplier();
+          }
+
           // --- APPLY EFFECTIVENESS TO MIN/MAX RANGES ---
-          if (multiplier !== 1 && stat !== 'critDamage' && isFlatStat(stat)) {
+          if (multiplier !== 1 && isFlatStat(stat)) {
             minRaw = Math.floor(minRaw * multiplier);
             maxRaw = Math.floor(maxRaw * multiplier);
           }

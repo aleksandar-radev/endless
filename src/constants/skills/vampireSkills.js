@@ -495,8 +495,8 @@ export const VAMPIRE_SKILLS = {
           base: 1, linear: 0.3, max: 0.3,
         },
       }),
-      critDamage: getSkillStatBonus({
-        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 0.02 },
+      critDamagePercent: getSkillStatBonus({
+        level, statKey: 'critDamagePercent', skillType: 'passive', scale: { base: 0.02 },
       }),
     }),
     synergies: [

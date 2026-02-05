@@ -59,7 +59,7 @@ export const UNIQUE_ITEMS = {
     stats: {
       attackSpeedPercent: { minMultiplier: 1.0, maxMultiplier: 1.3 },
       elementalDamage: { minMultiplier: 1.0, maxMultiplier: 1.3 },
-      critDamage: { minMultiplier: 1.0, maxMultiplier: 1.2 },
+      critDamagePercent: { minMultiplier: 1.0, maxMultiplier: 1.2 },
       chanceToHitPercent: { minMultiplier: 0.9, maxMultiplier: 1.1 },
     },
   },
