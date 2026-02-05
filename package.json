@@ -25,6 +25,7 @@
     "dotenv": "^17.2.2",
     "electron-log": "5.4.3",
     "electron-updater": "6.6.2",
+    "lz-string": "^1.5.0",
     "simple-crypto-js": "^3.0.1"
   },
   "devDependencies": {

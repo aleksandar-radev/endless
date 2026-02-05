@@ -205,11 +205,6 @@ class PerformanceMonitor {
       this.metrics.frameTimes.shift();
     }
 
-    // Warn on dropped frames (>16.67ms = below 60fps)
-    if (frameTime > 33) {
-      console.warn(`🎮 Frame drop: ${frameTime.toFixed(2)}ms (${(1000/frameTime).toFixed(1)} FPS)`);
-    }
-
     this.frameCount++;
     requestAnimationFrame(() => this.trackFrames());
   }
@@ -245,7 +240,7 @@ class PerformanceMonitor {
   }
 
   // Measure and log the duration of a marked section
-  measure(name, warnThreshold = 10) {
+  measure(name, warnThreshold = 100) {
     if (!this.enabled) return 0;
 
     const startTime = this.marks.get(name);
@@ -284,7 +279,7 @@ class PerformanceMonitor {
     return (...args) => {
       this.mark(name);
       const result = fn(...args);
-      this.measure(name);
+      this.measure(name, 100);
       return result;
     };
   }

@@ -9,8 +9,8 @@ import { crystalShop,
   runes,
   skillTree } from './globals.js';
 import { CLASS_PATHS } from './constants/skills.js';
+import { loadSaveData } from './saveCompression.js';
 import { initializeBuildingsUI } from './ui/buildingUi.js';
-import { crypt } from './functions.js';
 import { showConfirmDialog,
   showToast,
   updateStageUI,
@@ -1139,8 +1139,7 @@ export class Options {
         }
 
         try {
-          let data = crypt.decrypt(text);
-          if (typeof data === 'string') data = JSON.parse(data);
+          let data = loadSaveData(text);
           if (!data || typeof data !== 'object') throw new Error('Invalid save');
         } catch {
           showToast(t('options.toast.saveTextInvalid'), 'error');

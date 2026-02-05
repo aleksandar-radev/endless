@@ -1,6 +1,6 @@
 import { loadGameData, saveGameData, apiFetch } from './api.js';
 import { CHANGELOG } from './changelog/changelog.js';
-import { crypt } from './functions.js';
+import { compressSave, loadSaveData } from './saveCompression.js';
 import { getGlobals } from './globals.js';
 import { createModal } from './ui/modal.js';
 import { showToast } from './ui/ui.js';
@@ -222,6 +222,11 @@ export class DataManager {
 
     const saveOperation = (async () => {
       if (window.perfMon?.enabled) window.perfMon.mark('saveGame');
+
+      // Performance measurement: Total save time
+      const perfStart = performance.now();
+      const timings = {};
+
       const saveData = getGlobals();
       if (this.enableLastFightTime) {
         const serverNow = await getTimeNow();
@@ -232,23 +237,58 @@ export class DataManager {
         saveData.statistics.lastFightActiveLocal = Date.now();
       }
 
+      // Performance measurement: JSON serialization
+      const t1 = performance.now();
       const serialized = JSON.stringify(saveData);
-      let encrypted;
-      if (serialized === this._lastSerializedSnapshot && this._lastEncryptedSnapshot) {
-        encrypted = this._lastEncryptedSnapshot;
-      } else {
-        encrypted = crypt.encrypt(serialized);
-        this._lastSerializedSnapshot = serialized;
-        this._lastEncryptedSnapshot = encrypted;
-      }
+      const t2 = performance.now();
+      timings.stringify = t2 - t1;
+      timings.saveSize = serialized.length;
 
+      let compressed;
+      if (serialized === this._lastSerializedSnapshot && this._lastEncryptedSnapshot) {
+        compressed = this._lastEncryptedSnapshot;
+        timings.compress = 0;
+        timings.cached = true;
+      } else {
+        // Performance measurement: Compression
+        const t3 = performance.now();
+        compressed = compressSave(serialized);
+        const t4 = performance.now();
+        timings.compress = t4 - t3;
+        timings.cached = false;
+        this._lastSerializedSnapshot = serialized;
+        this._lastEncryptedSnapshot = compressed;
+      }
+      timings.compressedSize = compressed.length;
+
+      // Performance measurement: localStorage writes
+      const t5 = performance.now();
       const slotKey = `gameProgress_${this.currentSlot}`;
-      this._writeLocalSave(slotKey, encrypted, { optional: false });
+      this._writeLocalSave(slotKey, compressed, { optional: false });
       // Maintain legacy key for debug tools when possible without exceeding quota
-      this._writeLocalSave('gameProgress', encrypted, { optional: true });
+      this._writeLocalSave('gameProgress', compressed, { optional: true });
+      const t6 = performance.now();
+      timings.storage = t6 - t5;
 
       this.lastLocalSaveAt = Date.now();
       this._dispatchSavedEvent(this.lastLocalSaveAt);
+
+      // Performance measurement: Log results
+      const perfEnd = performance.now();
+      timings.total = perfEnd - perfStart;
+
+      if (window.perfMon?.enabled) {
+        const cacheStatus = timings.cached ? '(cached)' : '';
+        const reduction = timings.saveSize > 0 ?
+          ((1 - timings.compressedSize / timings.saveSize) * 100).toFixed(1) : '0';
+        console.log(
+          `💾 Save Performance ${cacheStatus}:\n` +
+          `  JSON.stringify: ${timings.stringify.toFixed(2)}ms (${(timings.saveSize / 1024).toFixed(1)}KB)\n` +
+          `  Compression: ${timings.compress.toFixed(2)}ms (${reduction}% reduction)\n` +
+          `  localStorage: ${timings.storage.toFixed(2)}ms (${(timings.compressedSize / 1024).toFixed(1)}KB)\n` +
+          `  Total: ${timings.total.toFixed(2)}ms`,
+        );
+      }
 
       if (cloud) {
         try {
@@ -260,7 +300,7 @@ export class DataManager {
               const other = localStorage.getItem(`gameProgress_${i}`);
               if (other) {
                 try {
-                  const decryptedData = crypt.decrypt(other);
+                  const decryptedData = loadSaveData(other);
                   slots[i] = decryptedData;
                 } catch {
                   slots[i] = null;
@@ -435,18 +475,16 @@ export class DataManager {
   _decodeSaveData(raw) {
     if (!raw) return null;
     try {
-      let data = crypt.decrypt(raw);
+      let data = loadSaveData(raw);
+      if (!data) {
+        // Fallback to raw JSON parse
+        data = JSON.parse(raw);
+      }
       if (typeof data === 'string') data = JSON.parse(data);
       if (!data || typeof data !== 'object') return null;
       return data;
     } catch (err) {
-      try {
-        const data = JSON.parse(raw);
-        if (!data || typeof data !== 'object') return null;
-        return data;
-      } catch {
-        return null;
-      }
+      return null;
     }
   }
 
@@ -495,7 +533,7 @@ export class DataManager {
                 for (let i = 0; i < MAX_SLOTS; i++) {
                   const slotData = result.data.slots[i];
                   if (slotData) {
-                    localStorage.setItem(`gameProgress_${i}`, crypt.encrypt(JSON.stringify(slotData)));
+                    localStorage.setItem(`gameProgress_${i}`, compressSave(JSON.stringify(slotData)));
                   }
                 }
               }
@@ -529,16 +567,14 @@ export class DataManager {
       }
 
       try {
-        data = crypt.decrypt(dataStr);
-      } catch (e) {
-        console.warn('Failed to decrypt game data:', e);
-
-        try {
+        data = loadSaveData(dataStr);
+        if (!data) {
+          // Fallback to raw JSON parse
           data = JSON.parse(dataStr);
-        } catch (e) {
-          console.warn('Failed to parse game data:', dataStr);
-          return null;
         }
+      } catch (e) {
+        console.warn('Failed to load game data:', e);
+        return null;
       }
     }
 

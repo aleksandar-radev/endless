@@ -11,6 +11,7 @@ import { game,
 import { MATERIALS } from './constants/materials.js';
 import { RUNES, RUNE_TIERS } from './constants/runes.js';
 import SimpleCrypto from 'simple-crypto-js';
+import { compressSave, loadSaveData } from './saveCompression.js';
 import { initializeSkillTreeStructure,
   showToast,
   updatePlayerLife,
@@ -222,9 +223,13 @@ function updateDebugUI() {
 
   let decrypted;
   try {
-    decrypted = crypt.decrypt(encrypted);
+    decrypted = loadSaveData(encrypted);
+    if (!decrypted && encrypted) {
+      // Fallback to raw JSON parse
+      decrypted = JSON.parse(encrypted);
+    }
   } catch {
-    console.error('Failed to decrypt game progress');
+    console.error('Failed to load game progress');
     return;
   }
 
@@ -1274,7 +1279,8 @@ export function createModifyUI(container = document.body) {
         const raw = localStorage.getItem(`gameProgress_${i}`);
         if (raw) {
           try {
-            let dec = crypt.decrypt(raw);
+            let dec = loadSaveData(raw);
+            if (!dec) dec = JSON.parse(raw);
             if (typeof dec === 'string') dec = JSON.parse(dec);
             slots[i] = dec;
           } catch {
@@ -1320,18 +1326,18 @@ export function createModifyUI(container = document.body) {
         const currentSlot = parsed.currentSlot ?? 0;
         for (const [slot, data] of Object.entries(parsed.slots)) {
           if (!data) continue;
-          const enc = crypt.encrypt(JSON.stringify(data));
-          localStorage.setItem(`gameProgress_${slot}`, enc);
+          const compressed = compressSave(JSON.stringify(data));
+          localStorage.setItem(`gameProgress_${slot}`, compressed);
           if (parseInt(slot, 10) === currentSlot) {
-            localStorage.setItem('gameProgress', enc);
+            localStorage.setItem('gameProgress', compressed);
           }
         }
         localStorage.setItem('gameCurrentSlot', currentSlot);
       } else {
-        const encrypted = crypt.encrypt(JSON.stringify(parsed));
+        const compressed = compressSave(JSON.stringify(parsed));
         const slot = dataManager.getCurrentSlot();
-        localStorage.setItem('gameProgress', encrypted);
-        localStorage.setItem(`gameProgress_${slot}`, encrypted);
+        localStorage.setItem('gameProgress', compressed);
+        localStorage.setItem(`gameProgress_${slot}`, compressed);
       }
       window.location.reload();
       showToast('Decrypted save encrypted and saved to localStorage!');
