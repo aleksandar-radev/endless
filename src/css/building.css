@@ -198,7 +198,7 @@
   max-width: calc((100% - 36px) / 3);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
 
   /* At medium widths use 2 per row */
   .choose-building-list>* {
@@ -443,17 +443,9 @@
   box-shadow: 0 2px 8px rgba(78, 84, 200, 0.15);
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
   .building-modal-content {
-    width: 800px;
-    height: 600px;
-    padding: 40px 15px;
-  }
-}
-
-@media (max-width: 900px) {
-  .building-modal-content {
-    width: 500px;
+    width: 95vw;
     height: 600px;
     padding: 40px 15px;
   }
@@ -461,13 +453,13 @@
 
 @media (max-width: 600px) {
   .building-modal-content {
-    width: 500px;
+    width: 95vw;
     height: 400px;
     padding: 40px 15px;
   }
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1200px) {
   .building-modal-content {
     width: 1101px;
     height: 800px;

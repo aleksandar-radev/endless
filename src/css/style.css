@@ -278,7 +278,7 @@
   padding: 0;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
   .enemy-stats {
     grid-template-columns: 1fr;
   }
@@ -466,7 +466,7 @@
   }
 }
 
-@media (max-width: 1300px) {
+@media (max-width: 1200px) {
   .main-content {
     grid-template-columns: 1fr;
   }
@@ -500,7 +500,7 @@
   transition: background 0.2s;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 1200px) {
   .sidebar-toggle {
     display: none;
   }
@@ -522,7 +522,7 @@
   display: none;
 }
 
-@media (max-width: 1300px) {
+@media (max-width: 1200px) {
   .sidebar-backdrop.sidebar-backdrop-visible {
     display: block;
     position: fixed;
@@ -715,7 +715,7 @@
   border-radius: 4px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
 
   /* Mobile Layout Changes */
   .combat-panel {

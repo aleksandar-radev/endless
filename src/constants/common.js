@@ -42,9 +42,8 @@ export const XP_GOLD_GROWTH_MULTIPLIER = 0.6;
 export const BOW_ENEMY_ATTACK_DELAY_MS = 1500; // ms
 
 export const BREAKPOINTS = {
-  MOBILE: 768,
-  TABLET: 900,
-  DESKTOP: 1024,
+  MOBILE: 1200,
+  DESKTOP: 1200,
 };
 
 export const IS_MOBILE_OR_TABLET = () => {

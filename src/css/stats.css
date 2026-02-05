@@ -329,7 +329,7 @@
   font-size: 1.4em;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
 
   #split-view-btn,
   .split-view-btn {

@@ -342,7 +342,7 @@ export function switchTab(tabName) {
   const combatPanel = document.querySelector('.combat-panel');
   const gamePanel = document.querySelector('.game-panel');
 
-  if (window.innerWidth <= BREAKPOINTS.TABLET) {
+  if (window.innerWidth <= BREAKPOINTS.MOBILE) {
     if (actualTab === 'battle') {
       if (combatPanel) combatPanel.classList.add('active');
       if (gamePanel) gamePanel.classList.add('hidden');

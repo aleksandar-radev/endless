@@ -223,7 +223,7 @@ export const DEFENSE_STATS = {
   blockChancePercent: createPercentStat({}),
   blockChanceCap: createStat({
     base: 50,
-    showValue: false,
+    showValue: true,
     displayed: false,
   }),
   lifeRegen: createStat({

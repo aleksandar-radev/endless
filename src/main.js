@@ -224,7 +224,7 @@ window.setLanguage = setLanguage;
 
   updateRegionUI();
 
-  if (game.activeTab === 'battle' && window.innerWidth > 900) {
+  if (game.activeTab === 'battle' && window.innerWidth > 1200) {
     game.activeTab = 'stats';
   }
   switchTab(game.activeTab);
@@ -269,16 +269,16 @@ window.setLanguage = setLanguage;
     // Close sidebar when a tab is clicked (mobile/dialog mode)
     document.querySelectorAll('.tab-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
-        if (window.innerWidth <= 1300) {
+        if (window.innerWidth <= 1200) {
           // Match the media query breakpoint for sidebar visibility
           closeSidebar();
         }
       });
     });
 
-    // Optional: close sidebar on resize if > 1100px
+    // Optional: close sidebar on resize if > 1200px
     window.addEventListener('resize', () => {
-      if (window.innerWidth > 1100) {
+      if (window.innerWidth > 1200) {
         closeSidebar();
       }
     });

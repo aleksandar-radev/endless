@@ -77,7 +77,7 @@ export function initDebugging() {
     if (dev) {
       document.body.classList.add('dev-active');
 
-      if (window.innerWidth <= 900) {
+      if (window.innerWidth <= 1200) {
         const content = document.createElement('div');
         content.className = 'modal-content devtools-modal-content';
         content.style.display = 'flex';
