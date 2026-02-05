@@ -58,7 +58,7 @@ export const ASCENSION_CATEGORIES = {
       },
       critDamagePercent: {
         label: 'ascension.upgrade.critDamagePercent',
-        bonus: 1,
+        bonus: 0.01,
         stat: 'critDamagePercent',
         cost: (lvl) => Math.floor(1 + lvl * 0.1),
       },

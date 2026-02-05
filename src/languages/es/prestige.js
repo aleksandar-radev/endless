@@ -59,7 +59,7 @@ export default {
   'ascension.upgrade.itemPercentCapPercent': 'Límite de bonos % en objetos ',
   'ascension.upgrade.crystalGainPercent': 'Ganancia de cristales %',
   'ascension.upgrade.critChance': 'Probabilidad de crítico',
-  'ascension.upgrade.critDamage': 'Daño crítico',
+  'ascension.upgrade.critDamagePercent': 'Daño crítico',
   'ascension.upgrade.attackRating': 'Puntuación de ataque',
   'ascension.upgrade.chanceToHitPercent': 'Probabilidad de acierto %',
   'ascension.upgrade.armorPenetration': 'Penetración de armadura',
@@ -116,7 +116,6 @@ export default {
   'ascension.tooltip.blockChanceCap': 'Aumenta el límite de bloqueo en 2% por nivel.',
   'ascension.tooltip.itemPercentCapPercent':
     'Aumenta los límites de bonos porcentuales en objetos en 1% por nivel. Siempre cuesta 1 punto.',
-  'ascension.tooltip.resurrectionChanceCap': 'Aumenta el límite de resurrección en 5% por nivel.',
   'ascension.tooltip.crystalGainPercent': 'Gana más cristales de todas las fuentes.',
   'ascension.tooltip.critChance': 'Añade probabilidad de crítico.',
   'ascension.tooltip.critDamage': 'Añade multiplicador de daño crítico.',

@@ -1,6 +1,6 @@
-import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat, createChanceStat, createHiddenStat, getSkillBonusesFlat, getSkillBonusesPercent, getSkillBonusesChance } from './stats.js';
+import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat, createChanceStat, createHiddenStat, getSkillBonusesPercent, getSkillBonusesChance, createDefaultSkillBonusesPercent, createDefaultSkillBonusesFlat } from './stats.js';
 import { ELEMENTS } from '../common.js';
-import { getItemRange, getTrainingBonus, getSkillFlatBase, getSkillFlatIncrement, SKILL_INTERVAL, getSkillFlatBonus } from '../ratios.js';
+import { getItemRange, getTrainingBonus } from '../ratios.js';
 
 const resistanceTierScalingMaxPercent = createTierScaling(100, 2000, 1.2);
 
@@ -22,43 +22,15 @@ const generateElementalDefenseStats = () => {
       itemTags: ['defense', 'jewelry'],
       show: true,
       sub: 'elemental',
-      skills: {
-        passive: getSkillBonusesFlat({
-          type: 'passive',
-          base: getSkillFlatBase('elementalResistance'),
-          increment: getSkillFlatIncrement('elementalResistance'),
-          interval: SKILL_INTERVAL,
-          bonus: getSkillFlatBonus('elementalResistance'),
-        }),
-        toggle: getSkillBonusesFlat({
-          type: 'toggle',
-          base: getSkillFlatBase('elementalResistance', 1.33),
-          increment: getSkillFlatIncrement('elementalResistance', 1.33),
-          interval: SKILL_INTERVAL,
-          bonus: getSkillFlatBonus('elementalResistance', 1.33),
-        }),
-        instant: getSkillBonusesFlat({
-          type: 'instant',
-          base: getSkillFlatBase('elementalResistance', 1.67),
-          increment: getSkillFlatIncrement('elementalResistance', 1.67),
-          interval: SKILL_INTERVAL,
-          bonus: getSkillFlatBonus('elementalResistance', 1.5),
-        }),
-        buff: getSkillBonusesFlat({
-          type: 'buff',
-          base: getSkillFlatBase('elementalResistance', 1.33),
-          increment: getSkillFlatIncrement('elementalResistance', 1.33),
-          interval: SKILL_INTERVAL,
-          bonus: getSkillFlatBonus('elementalResistance', 1.2),
-        }),
-        summon: getSkillBonusesFlat({
-          type: 'summon',
-          base: getSkillFlatBase('elementalResistance', 0.67),
-          increment: getSkillFlatIncrement('elementalResistance', 0.67),
-          interval: SKILL_INTERVAL,
-          bonus: getSkillFlatBonus('elementalResistance', 0.8),
-        }),
-      },
+      skills: createDefaultSkillBonusesFlat('elementalResistance', {
+        toggle: {
+          base: 1.33, increment: 1.33, bonus: 1.33,
+        },
+        buff: { bonus: 1.2 },
+        summon: {
+          base: 0.67, increment: 0.67, bonus: 0.8,
+        },
+      }),
     });
 
     stats[`${element}ResistancePercent`] = createPercentStat({
@@ -86,44 +58,20 @@ export const DEFENSE_STATS = {
     itemTags: ['defense'],
     show: true,
     sub: 'defense',
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('life'),
-        increment: getSkillFlatIncrement('life'),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('life', 1.5),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('life', 1.7),
-        increment: getSkillFlatIncrement('life', 1.7),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('life', 1.5),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('life', 1.33),
-        increment: getSkillFlatIncrement('life', 1.33),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('life', 1.5),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('life', {
+      passive: { bonus: 1.5 },
+      instant: {
+        base: 1.7, increment: 1.7, bonus: 1.5,
+      },
+      buff: {
+        base: 1.33, increment: 1.33, bonus: 1.5,
+      },
+    }),
   }),
   lifePercent: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(15, 250, 1.1) },
     itemTags: ['belt', 'pants'],
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 2, softcap: 2000, linear: 0.05, power: 0.6, max: 5000,
-      }),
-      instant: getSkillBonusesPercent({
-        type: 'instant', base: 5, softcap: 2000, linear: 0.35, power: 0.6, max: 8000,
-      }),
-      buff: getSkillBonusesPercent({
-        type: 'buff', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 7000,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent(),
   }),
   armor: createStat({
     training: {
@@ -138,56 +86,23 @@ export const DEFENSE_STATS = {
     itemTags: ['defense'],
     show: true,
     sub: 'defense',
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('armor'),
-        increment: getSkillFlatIncrement('armor'),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('armor', 1.8),
-      }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('armor'),
-        increment: getSkillFlatIncrement('armor'),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('armor', 1.5),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('armor', 1.67),
-        increment: getSkillFlatIncrement('armor', 1.67),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('armor', 2.0),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('armor', 1.33),
-        increment: getSkillFlatIncrement('armor', 1.33),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('armor', 1.8),
-      }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('armor', 0.67),
-        increment: getSkillFlatIncrement('armor', 0.67),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('armor', 1.2),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('armor', {
+      passive: { bonus: 1.8 },
+      toggle: { bonus: 1.5 },
+      instant: {
+        base: 1.67, increment: 1.67, bonus: 2.0,
+      },
+      buff: {
+        base: 1.33, increment: 1.33, bonus: 1.8,
+      },
+      summon: { base: 0.67, increment: 0.67 },
+    }),
   }),
   armorPercent: createPercentStat({
     item: { tierScalingMaxPercent: resistanceTierScalingMaxPercent },
     itemTags: ['armor', 'shield'],
     sub: 'defense',
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 2, softcap: 2000, linear: 0.05, power: 0.6, max: 5000,
-      }),
-      buff: getSkillBonusesPercent({
-        type: 'buff', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 7000,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent(),
   }),
   armorPercentPerLevel: createPercentStat({
     sub: 'defense',
@@ -238,55 +153,27 @@ export const DEFENSE_STATS = {
     itemTags: ['belt', 'pants'],
     show: true,
     sub: 'defense',
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('lifeRegen'),
-        increment: getSkillFlatIncrement('lifeRegen'),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('lifeRegen', 1.5),
-      }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('lifeRegen', 1.33),
-        increment: getSkillFlatIncrement('lifeRegen', 1.33),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('lifeRegen', 1.6),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('lifeRegen', 1.67),
-        increment: getSkillFlatIncrement('lifeRegen', 1.67),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('lifeRegen', 2.0),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('lifeRegen', 1.33),
-        increment: getSkillFlatIncrement('lifeRegen', 1.33),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('lifeRegen', 1.8),
-      }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('lifeRegen', 0.67),
-        increment: getSkillFlatIncrement('lifeRegen', 0.67),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('lifeRegen', 1.2),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('lifeRegen', {
+      passive: { bonus: 1.5 },
+      toggle: {
+        base: 1.33, increment: 1.33, bonus: 1.6,
+      },
+      instant: {
+        base: 1.67, increment: 1.67, bonus: 2.0,
+      },
+      buff: {
+        base: 1.33, increment: 1.33, bonus: 1.8,
+      },
+      summon: { base: 0.67, increment: 0.67 },
+    }),
   }),
   lifeRegenPercent: createPercentStat({
     item: { tierScalingMaxPercent: resistanceTierScalingMaxPercent },
     itemTags: ['belt'],
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6, max: 5000,
-      }),
-      buff: getSkillBonusesPercent({
-        type: 'buff', base: 8, softcap: 2000, linear: 0.06, power: 0.6, max: 7000,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: { base: 5 },
+      buff: { base: 8, linear: 0.06 },
+    }),
   }),
   lifeRegenOfTotalPercent: createPercentStat({
     dec: 2,
@@ -295,23 +182,23 @@ export const DEFENSE_STATS = {
     },
     item: { tierScalingMaxPercent: createTierScaling(0.05, 1, 0.9) },
     itemTags: ['belt'],
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 0.3, softcap: 2000, linear: 0.0005, power: 0.6, max: 3,
-      }),
-      toggle: getSkillBonusesPercent({
-        type: 'toggle', base: 0.5, softcap: 2000, linear: 0.0008, power: 0.6, max: 3.5,
-      }),
-      instant: getSkillBonusesPercent({
-        type: 'instant', base: 1, softcap: 2000, linear: 0.0015, power: 0.6, max: 5,
-      }),
-      buff: getSkillBonusesPercent({
-        type: 'buff', base: 0.7, softcap: 2000, linear: 0.001, power: 0.6, max: 4,
-      }),
-      summon: getSkillBonusesPercent({
-        type: 'summon', base: 0.2, softcap: 2000, linear: 0.0004, power: 0.6, max: 2,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        base: 0.3, linear: 0.0005, max: 3,
+      },
+      toggle: {
+        base: 0.5, linear: 0.0008, max: 3.5,
+      },
+      instant: {
+        base: 1, linear: 0.0015, max: 5,
+      },
+      buff: {
+        base: 0.7, linear: 0.001, max: 4,
+      },
+      summon: {
+        base: 0.2, linear: 0.0004, max: 2,
+      },
+    }),
   }),
   thornsDamage: createStat({
     dec: 1,
@@ -325,58 +212,29 @@ export const DEFENSE_STATS = {
     itemTags: ['shield', 'armor'],
     show: true,
     sub: 'defense',
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('thornsDamage'),
-        increment: getSkillFlatIncrement('thornsDamage'),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('thornsDamage'),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('thornsDamage', 1.33),
-        increment: getSkillFlatIncrement('thornsDamage', 1.33),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('thornsDamage', 1.5),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('thornsDamage', { buff: { base: 1.33, increment: 1.33 } }),
   }),
   thornsDamagePercent: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(18, 250, 1.2) },
     itemTags: ['shield', 'armor'],
     sub: 'defense',
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6, max: 5000,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({ passive: { base: 5 } }),
   }),
   thornsOnMiss: createHiddenStat({ sub: 'defense' }),
   resurrectionChance: createChanceStat({
     item: { tierScalingMaxPercent: createTierScaling(4, 20, 0.7) },
-    itemTags: ['amulet'],
+    itemTags: ['amulet', 'helmet'],
     sub: 'defense',
     skills: {
       passive: getSkillBonusesChance({
-        type: 'passive', base: 1, levelsPerPoint: 20, cap: 25,
+        type: 'passive', base: 1, levelsPerPoint: 20, cap: 15,
       }),
       buff: getSkillBonusesChance({
-        type: 'buff', base: 1, levelsPerPoint: 20, cap: 25,
+        type: 'buff', base: 1, levelsPerPoint: 20, cap: 20,
       }),
     },
   }),
-  reflectFireDamage: createStat({
-    skills: {
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('reflectFireDamage', 2.5),
-        increment: getSkillFlatIncrement('reflectFireDamage', 2.5),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('reflectFireDamage', 1.5),
-      }),
-    },
-  }),
+  reflectFireDamage: createStat({ skills: createDefaultSkillBonusesFlat('reflectFireDamage', { buff: { base: 2.5, increment: 2.5 } }) }),
   evasion: createStat({
     dec: 1,
     training: {
@@ -389,64 +247,29 @@ export const DEFENSE_STATS = {
     itemTags: ['defense'],
     show: true,
     sub: 'defense',
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('evasion'),
-        increment: getSkillFlatIncrement('evasion'),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('evasion'),
-      }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('evasion', 1.33),
-        increment: getSkillFlatIncrement('evasion', 1.33),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('evasion', 1.2),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('evasion', 1.67),
-        increment: getSkillFlatIncrement('evasion', 1.67),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('evasion', 1.5),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('evasion', 1.33),
-        increment: getSkillFlatIncrement('evasion', 1.33),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('evasion', 1.4),
-      }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('evasion', 0.67),
-        increment: getSkillFlatIncrement('evasion', 0.67),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('evasion', 0.8),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('evasion', {
+      toggle: {
+        base: 1.33, increment: 1.33, bonus: 1.2,
+      },
+      buff: { base: 1.33, increment: 1.33 },
+      summon: {
+        base: 0.67, increment: 0.67, bonus: 0.8,
+      },
+    }),
   }),
   evasionPercent: createPercentStat({
     item: { tierScalingMaxPercent: resistanceTierScalingMaxPercent },
     itemTags: ['boots', 'helmet'],
     sub: 'defense',
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 2, softcap: 2000, linear: 0.05, power: 0.6, max: 5000,
-      }),
-      buff: getSkillBonusesPercent({
-        type: 'buff', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 7000,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent(),
   }),
   avoidChance: createChanceStat({
     forceNotShow: true,
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 0.466, softcap: 2000, linear: 0.1, power: 0.6, max: 80,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        base: 0.466, linear: 0.1, max: 80,
+      },
+    }),
   }),
   ...generateElementalDefenseStats(),
   allResistance: createStat({
@@ -456,108 +279,63 @@ export const DEFENSE_STATS = {
     },
     itemTags: ['defense', 'jewelry'],
     sub: 'elemental',
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('allResistance'),
-        increment: getSkillFlatIncrement('allResistance'),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('allResistance'),
-      }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('allResistance', 1.33),
-        increment: getSkillFlatIncrement('allResistance', 1.33),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('allResistance', 1.2),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('allResistance', 1.67),
-        increment: getSkillFlatIncrement('allResistance', 1.67),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('allResistance', 1.5),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('allResistance', 1.33),
-        increment: getSkillFlatIncrement('allResistance', 1.33),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('allResistance', 1.5),
-      }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('allResistance', 0.67),
-        increment: getSkillFlatIncrement('allResistance', 0.67),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('allResistance', 0.8),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('allResistance', {
+      toggle: {
+        base: 1.33, increment: 1.33, bonus: 1.2,
+      },
+      summon: {
+        base: 0.67, increment: 0.67, bonus: 0.8,
+      },
+    }),
   }),
   allResistancePercent: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(7, 100, 1.2) },
     itemTags: ['defense', 'jewelry'],
     sub: 'elemental',
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 2, softcap: 2000, linear: 0.1, power: 0.6, max: 5000,
-      }),
-      toggle: getSkillBonusesPercent({
-        type: 'toggle', base: 3, softcap: 2000, linear: 0.15, power: 0.6, max: 7000,
-      }),
-      buff: getSkillBonusesPercent({
-        type: 'buff', base: 4, softcap: 2000, linear: 0.2, power: 0.6, max: 8000,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: { linear: 0.1 },
+      toggle: { base: 3, max: 7000 },
+      buff: { base: 4, max: 8000 },
+    }),
   }),
-  manaShieldPercent: createPercentStat({
-    skills: {
-      buff: getSkillBonusesPercent({
-        type: 'buff', base: 5, softcap: 2000, linear: 0.103, power: 0.6, max: 100,
-      }),
-    },
-  }),
+  manaShieldPercent: createPercentStat({ skills: createDefaultSkillBonusesPercent({ buff: { linear: 0.103, max: 100 } }) }),
   manaShieldDamageTakenReductionPercent: createPercentStat({
     sub: 'defense',
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 2, softcap: 2000, linear: 0.2, power: 0.6, max: 50,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({ passive: { linear: 0.2, max: 50 } }),
   }),
   arenaDamageReductionPercent: createPercentStat({
     sub: 'defense',
     cap: 80,
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 500, linear: 0.15, power: 0.6, max: 75,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        base: 5, softcap: 500, linear: 0.15, max: 75,
+      },
+    }),
   }),
   itemLifeEffectivenessPercent: createPercentStat({
     sub: 'defense',
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 15, softcap: 2000, linear: 2, power: 0.725,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        base: 15, linear: 2, power: 0.725,
+      },
+    }),
   }),
   itemArmorEffectivenessPercent: createPercentStat({
     sub: 'defense',
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 15, softcap: 2000, linear: 2, power: 0.725,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        base: 15, linear: 2, power: 0.725,
+      },
+    }),
   }),
   shieldEffectivenessPercent: createStat({
     dec: 1,
     sub: 'defense',
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 15, softcap: 2000, linear: 2, power: 0.725,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        base: 15, linear: 2, power: 0.725,
+      },
+    }),
   }),
   shieldFlatEffectivenessPercent: createStat({
     dec: 1,
@@ -565,47 +343,47 @@ export const DEFENSE_STATS = {
   }),
   divineProtectionBuffEffectivenessPercent: createPercentStat({
     sub: 'defense',
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        base: 10, linear: 1, power: 0.685,
+      },
+    }),
   }),
   damageTakenConvertedToColdPercent: createPercentStat({
     sub: 'elemental',
     cap: 75,
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 1, softcap: 2000, linear: 0.1, power: 0.5, max: 75,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        base: 1, linear: 0.1, power: 0.5, max: 75,
+      },
+    }),
   }),
   coldDamageTakenReductionPercent: createPercentStat({
     sub: 'elemental',
     cap: 50,
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 1, softcap: 2000, linear: 0.1, power: 0.5, max: 50,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        base: 1, linear: 0.1, power: 0.5, max: 50,
+      },
+    }),
   }),
   elementalDamageTakenReductionPercent: createPercentStat({
     sub: 'elemental',
     cap: 80,
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 1, softcap: 2000, linear: 0.1, power: 0.6, max: 25,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        base: 1, linear: 0.1, max: 25,
+      },
+    }),
   }),
   damageTakenReductionPercent: createPercentStat({
     show: true,
     sub: 'defense',
     cap: 80,
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 2, softcap: 200, linear: 0.15, power: 0.6, max: 35,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        softcap: 200, linear: 0.15, max: 35,
+      },
+    }),
   }),
 };

@@ -779,10 +779,12 @@ export default class Hero {
       if (!stat.endsWith('Percent')) {
         // Use Math.floor for integer stats, Number.toFixed for decimals
         if (stat === 'attackSpeed') {
-          // Attack speed percent bonuses scale the pre-percent total (base 1.0 plus flat additions).
-          const flatBase = flatValues.attackSpeed + (ascensionBonuses.attackSpeed || 0);
+          // Attack speed bonuses only affect the base attack speed (usually 1.0).
+          // Flat bonuses are added after the base is scaled by percentage bonuses.
+          const base = (STATS.attackSpeed.base || 1);
+          const flatAdditions = (flatValues.attackSpeed - base) + (ascensionBonuses.attackSpeed || 0);
           const attackSpeedPercent = percentBonuses.attackSpeedPercent || 0;
-          value = flatBase * (1 + attackSpeedPercent);
+          value = base * (1 + attackSpeedPercent) + flatAdditions;
         } else {
           let percent = percentBonuses[stat + 'Percent'] || 0;
           if (RESISTANCE_SET.has(stat)) {

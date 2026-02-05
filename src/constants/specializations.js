@@ -322,9 +322,9 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.vampiricBats'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            batsHealPercent: level ? 50 + getSkillStatBonus({
+            batsHealPercent: getSkillStatBonus({
               level, statKey: 'batsHealPercent', skillType: 'passive',
-            }) : 0,
+            }),
           }),
         },
         crimsonFeast: {
@@ -367,9 +367,9 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.nightStalkerMastery'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            nightStalkerBuffEffectivenessPercent: level ? 50 + getSkillStatBonus({
+            nightStalkerBuffEffectivenessPercent: getSkillStatBonus({
               level, statKey: 'nightStalkerBuffEffectivenessPercent', skillType: 'passive',
-            }) : 0,
+            }),
           }),
         },
         bloodRitual: {
@@ -460,7 +460,12 @@ export const SPECIALIZATIONS = {
               level, statKey: 'shieldEffectivenessPercent', skillType: 'passive',
             }),
             endurancePercent: getSkillStatBonus({
-              level, statKey: 'endurancePercent', skillType: 'passive', scale: { base: 0.4 },
+              level,
+              statKey: 'endurancePercent',
+              skillType: 'passive',
+              scale: {
+                base: 6, linear: 4, max: 2,
+              },
             }),
           }),
         },
@@ -473,11 +478,16 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.zeal'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            divineProtectionBuffEffectivenessPercent: level ? 50 + getSkillStatBonus({
+            divineProtectionBuffEffectivenessPercent: getSkillStatBonus({
               level, statKey: 'divineProtectionBuffEffectivenessPercent', skillType: 'passive',
-            }) : 0,
+            }),
             perseverancePercent: getSkillStatBonus({
-              level, statKey: 'perseverancePercent', skillType: 'passive', scale: { base: 0.4 },
+              level,
+              statKey: 'perseverancePercent',
+              skillType: 'passive',
+              scale: {
+                base: 6, linear: 4, max: 2,
+              },
             }),
           }),
         },
@@ -499,9 +509,9 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.divineAmulet'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            jewelryFlatEffectivenessPercent: level ? 50 + getSkillStatBonus({
+            jewelryFlatEffectivenessPercent: getSkillStatBonus({
               level, statKey: 'jewelryFlatEffectivenessPercent', skillType: 'passive',
-            }) : 0,
+            }),
           }),
         },
         sacredRelic: {
@@ -514,14 +524,29 @@ export const SPECIALIZATIONS = {
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             attackSpeedPercent: getSkillStatBonus({
-              level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 4 },
+              level,
+              statKey: 'attackSpeedPercent',
+              skillType: 'passive',
+              scale: {
+                base: 4, linear: 3, max: 2,
+              },
             }),
-            attackRatingPercent: level ? 50 + getSkillStatBonus({
-              level, statKey: 'attackRatingPercent', skillType: 'passive', scale: { base: 5 },
-            }) : 0,
-            elementalDamagePercent: level ? 40 + getSkillStatBonus({
-              level, statKey: 'elementalDamagePercent', skillType: 'passive', scale: { base: 5 },
-            }) : 0,
+            attackRatingPercent: getSkillStatBonus({
+              level,
+              statKey: 'attackRatingPercent',
+              skillType: 'passive',
+              scale: {
+                base: 10, linear: 5, max: 2,
+              },
+            }),
+            elementalDamagePercent: getSkillStatBonus({
+              level,
+              statKey: 'elementalDamagePercent',
+              skillType: 'passive',
+              scale: {
+                base: 5, linear: 3, max: 2,
+              },
+            }),
           }),
         },
       },
@@ -547,10 +572,20 @@ export const SPECIALIZATIONS = {
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             endurancePercent: getSkillStatBonus({
-              level, statKey: 'endurancePercent', skillType: 'passive', scale: { base: 0.4 },
+              level,
+              statKey: 'endurancePercent',
+              skillType: 'passive',
+              scale: {
+                base: 6, linear: 4, max: 2,
+              },
             }),
             perseverancePercent: getSkillStatBonus({
-              level, statKey: 'perseverancePercent', skillType: 'passive', scale: { base: 0.4 },
+              level,
+              statKey: 'perseverancePercent',
+              skillType: 'passive',
+              scale: {
+                base: 6, linear: 4, max: 2,
+              },
             }),
           }),
         },
@@ -564,10 +599,20 @@ export const SPECIALIZATIONS = {
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             life: getSkillStatBonus({
-              level, statKey: 'life', skillType: 'passive', scale: { base: 3.17 },
+              level,
+              statKey: 'life',
+              skillType: 'passive',
+              scale: {
+                base: 10, increment: 7, bonus: 2,
+              },
             }),
             lifePercent: getSkillStatBonus({
-              level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 0.4 },
+              level,
+              statKey: 'lifePercent',
+              skillType: 'passive',
+              scale: {
+                base: 5, increment: 3, bonus: 2,
+              },
             }),
           }),
         },
@@ -637,8 +682,11 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.battleCommand'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            buffEffectivenessPercent: getSkillStatBonus({
-              level, statKey: 'buffEffectivenessPercent', skillType: 'passive',
+            itemArmorEffectivenessPercent: getSkillStatBonus({
+              level, statKey: 'itemArmorEffectivenessPercent', skillType: 'passive', scale: { base: 0.8, linear: 0.8 },
+            }),
+            resurrectionChance: getSkillStatBonus({
+              level, statKey: 'resurrectionChance', skillType: 'passive', scale: { cap: 2.67 },
             }),
           }),
         },

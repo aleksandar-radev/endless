@@ -1,5 +1,5 @@
-import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat, createHiddenStat, getSkillBonusesFlat, getSkillBonusesPercent } from './stats.js';
-import { getItemRange, getSkillFlatBase, getSkillFlatIncrement, SKILL_INTERVAL, getSkillFlatBonus } from '../ratios.js';
+import { itemStatScaleFactor, createTierScaling, createStat, createPercentStat, createHiddenStat, getSkillBonusesFlat, createDefaultSkillBonusesPercent, createDefaultSkillBonusesFlat } from './stats.js';
+import { getItemRange } from '../ratios.js';
 
 const rewardTierScalingMaxPercent = createTierScaling(20, 400, 1.2);
 const dropTierScalingMaxPercent = createTierScaling(13, 200, 1.2);
@@ -21,64 +21,20 @@ export const MISC_STATS = {
     itemTags: ['misc', 'jewelry', 'magic'],
     show: true,
     sub: 'resources',
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('mana'),
-        increment: getSkillFlatIncrement('mana'),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('mana'),
-      }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('mana', 1.33),
-        increment: getSkillFlatIncrement('mana', 1.33),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('mana'),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('mana', 1.67),
-        increment: getSkillFlatIncrement('mana', 1.67),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('mana', 1.5),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('mana', 1.33),
-        increment: getSkillFlatIncrement('mana', 1.33),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('mana', 1.2),
-      }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('mana', 0.67),
-        increment: getSkillFlatIncrement('mana', 0.67),
-        interval: SKILL_INTERVAL,
-        bonus: getSkillFlatBonus('mana', 0.8),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('mana', {
+      toggle: { base: 1.33, increment: 1.33 },
+      buff: {
+        base: 1.33, increment: 1.33, bonus: 1.2,
+      },
+      summon: {
+        base: 0.67, increment: 0.67, bonus: 0.8,
+      },
+    }),
   }),
   manaPercent: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(8, 100, 1.2) },
     itemTags: ['misc', 'jewelry', 'magic'],
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 2, softcap: 2000, linear: 0.05, power: 0.6, max: 5000,
-      }),
-      toggle: getSkillBonusesPercent({
-        type: 'toggle', base: 3.5, softcap: 2000, linear: 0.15, power: 0.6, max: 6000,
-      }),
-      instant: getSkillBonusesPercent({
-        type: 'instant', base: 5, softcap: 2000, linear: 0.35, power: 0.6, max: 8000,
-      }),
-      buff: getSkillBonusesPercent({
-        type: 'buff', base: 5, softcap: 2000, linear: 0.2, power: 0.6, max: 7000,
-      }),
-      summon: getSkillBonusesPercent({
-        type: 'summon', base: 5, softcap: 2000, linear: 0.3, power: 0.6, max: 4000,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent(),
   }),
   manaRegen: createStat({
     dec: 1,
@@ -92,55 +48,12 @@ export const MISC_STATS = {
     itemTags: ['misc', 'jewelry', 'magic'],
     show: true,
     sub: 'resources',
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('manaRegen'),
-        increment: getSkillFlatIncrement('manaRegen'),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('manaRegen'),
-      }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('manaRegen', 1.33),
-        increment: getSkillFlatIncrement('manaRegen', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('manaRegen', 1.2),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('manaRegen', 1.67),
-        increment: getSkillFlatIncrement('manaRegen', 1.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('manaRegen', 1.5),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('manaRegen', 1.33),
-        increment: getSkillFlatIncrement('manaRegen', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('manaRegen', 1.3),
-      }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('manaRegen', 0.67),
-        increment: getSkillFlatIncrement('manaRegen', 0.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('manaRegen', 0.8),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('manaRegen'),
   }),
   manaRegenPercent: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(10, 100, 1.2) },
     itemTags: ['jewelry', 'magic'],
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6, max: 10000,
-      }),
-      buff: getSkillBonusesPercent({
-        type: 'buff', base: 8, softcap: 2000, linear: 0.08, power: 0.6, max: 10000,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent(),
   }),
   manaPerHit: createStat({
     dec: 1,
@@ -154,43 +67,7 @@ export const MISC_STATS = {
     itemTags: ['misc', 'jewelry', 'magic'],
     show: true,
     sub: 'resources',
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('manaPerHit'),
-        increment: getSkillFlatIncrement('manaPerHit'),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('manaPerHit'),
-      }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('manaPerHit', 1.33),
-        increment: getSkillFlatIncrement('manaPerHit', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('manaPerHit', 1.2),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('manaPerHit', 1.67),
-        increment: getSkillFlatIncrement('manaPerHit', 1.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('manaPerHit', 1.5),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('manaPerHit', 1.33),
-        increment: getSkillFlatIncrement('manaPerHit', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('manaPerHit', 1.3),
-      }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('manaPerHit', 0.67),
-        increment: getSkillFlatIncrement('manaPerHit', 0.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('manaPerHit', 0.8),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('manaPerHit'),
   }),
   manaPerHitPercent: createStat({ div: 100 }),
   manaSteal: createPercentStat({
@@ -206,52 +83,12 @@ export const MISC_STATS = {
       scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['misc', 'stat', 'axe', 'mace'],
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('strength'),
-        increment: getSkillFlatIncrement('strength'),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('strength'),
-      }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('strength', 1.33),
-        increment: getSkillFlatIncrement('strength', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('strength', 1.2),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('strength', 1.67),
-        increment: getSkillFlatIncrement('strength', 1.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('strength', 1.5),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('strength', 1.33),
-        increment: getSkillFlatIncrement('strength', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('strength', 1.3),
-      }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('strength', 0.67),
-        increment: getSkillFlatIncrement('strength', 0.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('strength', 0.8),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('strength'),
   }),
   strengthPercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'axe', 'mace'],
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent(),
   }),
   agility: createStat({
     item: {
@@ -259,52 +96,12 @@ export const MISC_STATS = {
       scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['misc', 'stat', 'axe', 'mace'],
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('agility'),
-        increment: getSkillFlatIncrement('agility'),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('agility'),
-      }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('agility', 1.33),
-        increment: getSkillFlatIncrement('agility', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('agility', 1.2),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('agility', 1.67),
-        increment: getSkillFlatIncrement('agility', 1.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('agility', 1.5),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('agility', 1.33),
-        increment: getSkillFlatIncrement('agility', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('agility', 1.3),
-      }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('agility', 0.67),
-        increment: getSkillFlatIncrement('agility', 0.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('agility', 0.8),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('agility'),
   }),
   agilityPercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'axe', 'mace'],
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent(),
   }),
   vitality: createStat({
     item: {
@@ -312,55 +109,15 @@ export const MISC_STATS = {
       scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['misc', 'stat'],
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('vitality'),
-        increment: getSkillFlatIncrement('vitality'),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('vitality'),
-      }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('vitality', 1.33),
-        increment: getSkillFlatIncrement('vitality', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('vitality', 1.2),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('vitality', 1.67),
-        increment: getSkillFlatIncrement('vitality', 1.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('vitality', 1.5),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('vitality', 1.33),
-        increment: getSkillFlatIncrement('vitality', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('vitality', 1.3),
-      }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('vitality', 0.67),
-        increment: getSkillFlatIncrement('vitality', 0.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('vitality', 0.8),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('vitality'),
   }),
   vitalityPercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc'],
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
-      }),
-      buff: getSkillBonusesPercent({
-        type: 'buff', base: 8, softcap: 2000, linear: 0.08, power: 0.6,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: { base: 5 },
+      buff: { base: 8, linear: 0.08 },
+    }),
   }),
   wisdom: createStat({
     item: {
@@ -368,52 +125,12 @@ export const MISC_STATS = {
       scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['misc', 'jewelry', 'stat', 'magic'],
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('wisdom'),
-        increment: getSkillFlatIncrement('wisdom'),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('wisdom'),
-      }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('wisdom', 1.33),
-        increment: getSkillFlatIncrement('wisdom', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('wisdom', 1.2),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('wisdom', 1.67),
-        increment: getSkillFlatIncrement('wisdom', 1.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('wisdom', 1.5),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('wisdom', 1.33),
-        increment: getSkillFlatIncrement('wisdom', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('wisdom', 1.3),
-      }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('wisdom', 0.67),
-        increment: getSkillFlatIncrement('wisdom', 0.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('wisdom', 0.8),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('wisdom'),
   }),
   wisdomPercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'jewelry', 'magic'],
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent(),
   }),
   endurance: createStat({
     item: {
@@ -421,52 +138,12 @@ export const MISC_STATS = {
       scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['misc', 'jewelry', 'stat'],
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('endurance'),
-        increment: getSkillFlatIncrement('endurance'),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('endurance'),
-      }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('endurance', 1.33),
-        increment: getSkillFlatIncrement('endurance', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('endurance', 1.2),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('endurance', 1.67),
-        increment: getSkillFlatIncrement('endurance', 1.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('endurance', 1.5),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('endurance', 1.33),
-        increment: getSkillFlatIncrement('endurance', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('endurance', 1.3),
-      }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('endurance', 0.67),
-        increment: getSkillFlatIncrement('endurance', 0.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('endurance', 0.8),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('endurance'),
   }),
   endurancePercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'jewelry'],
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent(),
   }),
   dexterity: createStat({
     item: {
@@ -474,53 +151,13 @@ export const MISC_STATS = {
       scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['misc', 'jewelry', 'stat'],
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('dexterity'),
-        increment: getSkillFlatIncrement('dexterity'),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('dexterity'),
-      }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('dexterity', 1.33),
-        increment: getSkillFlatIncrement('dexterity', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('dexterity', 1.2),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('dexterity', 1.67),
-        increment: getSkillFlatIncrement('dexterity', 1.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('dexterity', 1.5),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('dexterity', 1.33),
-        increment: getSkillFlatIncrement('dexterity', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('dexterity', 1.3),
-      }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('dexterity', 0.67),
-        increment: getSkillFlatIncrement('dexterity', 0.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('dexterity', 0.8),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('dexterity'),
   }),
   dexterityPercent: createStat({
     div: 100,
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'jewelry'],
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent(),
   }),
   intelligence: createStat({
     item: {
@@ -528,52 +165,12 @@ export const MISC_STATS = {
       scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['misc', 'jewelry', 'stat', 'magic'],
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('intelligence'),
-        increment: getSkillFlatIncrement('intelligence'),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('intelligence'),
-      }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('intelligence', 1.33),
-        increment: getSkillFlatIncrement('intelligence', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('intelligence', 1.2),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('intelligence', 1.67),
-        increment: getSkillFlatIncrement('intelligence', 1.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('intelligence', 1.5),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('intelligence', 1.33),
-        increment: getSkillFlatIncrement('intelligence', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('intelligence', 1.3),
-      }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('intelligence', 0.67),
-        increment: getSkillFlatIncrement('intelligence', 0.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('intelligence', 0.8),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('intelligence'),
   }),
   intelligencePercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'jewelry', 'magic'],
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.05, power: 0.6,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent(),
   }),
   perseverance: createStat({
     item: {
@@ -581,56 +178,21 @@ export const MISC_STATS = {
       scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['misc', 'jewelry', 'stat'],
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('perseverance'),
-        increment: getSkillFlatIncrement('perseverance'),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('perseverance'),
-      }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('perseverance', 1.33),
-        increment: getSkillFlatIncrement('perseverance', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('perseverance', 1.2),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('perseverance', 1.67),
-        increment: getSkillFlatIncrement('perseverance', 1.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('perseverance', 1.5),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('perseverance', 1.33),
-        increment: getSkillFlatIncrement('perseverance', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('perseverance', 1.3),
-      }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('perseverance', 0.67),
-        increment: getSkillFlatIncrement('perseverance', 0.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('perseverance', 0.8),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('perseverance'),
   }),
   perseverancePercent: createPercentStat({
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'jewelry'],
+    skills: createDefaultSkillBonusesPercent(),
   }),
   enduranceThornsDamagePerPoint: createStat({
     dec: 1,
     sub: 'defense',
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive', base: 0.2, increment: 0, interval: 0, bonus: getSkillFlatBonus('enduranceThornsDamagePerPoint', 0),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat({
+      passive: {
+        base: 0.2, increment: 0, interval: 0, bonus: 0,
+      },
+    }),
   }),
   summonsCanCrit: createHiddenStat(),
   bonusGoldPercent: createPercentStat({
@@ -638,11 +200,11 @@ export const MISC_STATS = {
     itemTags: ['misc', 'jewelry'],
     show: true,
     sub: 'rewards',
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 10, softcap: 2000, linear: 0.5, power: 0.6, max: 500,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        base: 10, linear: 0.5, max: 500,
+      },
+    }),
   }),
   bonusExperiencePercent: createPercentStat({
     item: { tierScalingMaxPercent: rewardTierScalingMaxPercent },
@@ -663,11 +225,11 @@ export const MISC_STATS = {
       },
     },
     itemTags: ['magic', 'jewelry'],
-    skills: {
-      buff: getSkillBonusesPercent({
-        type: 'buff', base: 2, softcap: 2000, linear: 0.01, power: 0.5, max: 20,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      buff: {
+        linear: 0.01, power: 0.5, max: 20,
+      },
+    }),
   }),
   cooldownReductionCapPercent: createStat({
     base: 80,
@@ -696,11 +258,11 @@ export const MISC_STATS = {
   }),
   buffEffectivenessPercent: createPercentStat({
     sub: 'misc',
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        base: 10, linear: 1, power: 0.685,
+      },
+    }),
   }),
   itemBonusesPercent: createPercentStat(),
   itemQuantityPercent: createStat({
@@ -757,73 +319,37 @@ export const MISC_STATS = {
       scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['defense', 'jewelry', 'gloves', 'misc'],
-    skills: {
-      passive: getSkillBonusesFlat({
-        type: 'passive',
-        base: getSkillFlatBase('allAttributes'),
-        increment: getSkillFlatIncrement('allAttributes'),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('allAttributes'),
-      }),
-      toggle: getSkillBonusesFlat({
-        type: 'toggle',
-        base: getSkillFlatBase('allAttributes', 1.33),
-        increment: getSkillFlatIncrement('allAttributes', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('allAttributes', 1.2),
-      }),
-      instant: getSkillBonusesFlat({
-        type: 'instant',
-        base: getSkillFlatBase('allAttributes', 1.67),
-        increment: getSkillFlatIncrement('allAttributes', 1.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('allAttributes', 1.5),
-      }),
-      buff: getSkillBonusesFlat({
-        type: 'buff',
-        base: getSkillFlatBase('allAttributes', 1.33),
-        increment: getSkillFlatIncrement('allAttributes', 1.33),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('allAttributes', 1.3),
-      }),
-      summon: getSkillBonusesFlat({
-        type: 'summon',
-        base: getSkillFlatBase('allAttributes', 0.67),
-        increment: getSkillFlatIncrement('allAttributes', 0.67),
-        interval: SKILL_INTERVAL * 2,
-        bonus: getSkillFlatBonus('allAttributes', 0.8),
-      }),
-    },
+    skills: createDefaultSkillBonusesFlat('allAttributes'),
   }),
   allAttributesPercent: createPercentStat(),
   canDualWieldTwoHanded: createHiddenStat(),
   weaponEffectivenessPercent: createStat({ dec: 1 }),
   weaponFlatEffectivenessPercent: createStat({
     dec: 1,
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 15, softcap: 2000, linear: 2, power: 0.725,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        base: 15, linear: 2, power: 0.725,
+      },
+    }),
   }),
   jewelryEffectivenessPercent: createStat({ dec: 1 }),
   jewelryFlatEffectivenessPercent: createStat({
     dec: 1,
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 15, softcap: 2000, linear: 2, power: 0.725,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        base: 15, linear: 2, power: 0.725,
+      },
+    }),
   }),
   allowBossLoot: createHiddenStat({ itemTags: [] }),
   animatedWeaponsUnlocked: createHiddenStat(),
   cloneUnlocked: createHiddenStat(),
   nightStalkerBuffEffectivenessPercent: createPercentStat({
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 10, softcap: 2000, linear: 1, power: 0.685,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        base: 10, linear: 1, power: 0.685,
+      },
+    }),
   }),
   canUseTwoShields: createHiddenStat(),
   amuletEffectivenessPercent: createPercentStat(),
@@ -832,20 +358,16 @@ export const MISC_STATS = {
   ringFlatEffectivenessPercent: createStat({ dec: 1 }),
   uncappedAttackSpeed: createHiddenStat(),
   warlordEffectivenessPercent: createPercentStat({
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 15, softcap: 2000, linear: 2, power: 0.725,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({
+      passive: {
+        base: 10, linear: 1, power: 0.725,
+      },
+    }),
   }),
   overhealToLife: createHiddenStat(),
   overhealPercent: createStat({
     div: 100,
-    skills: {
-      passive: getSkillBonusesPercent({
-        type: 'passive', base: 5, softcap: 2000, linear: 0.5, power: 0.6,
-      }),
-    },
+    skills: createDefaultSkillBonusesPercent({ passive: { base: 5, linear: 0.5 } }),
   }),
   bloodSacrificeUnlocked: createHiddenStat(),
   shapeshiftUnlocked: createHiddenStat(),
