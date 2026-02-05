@@ -346,10 +346,10 @@ export const BERSERKER_SKILLS = {
       const effectiveness = 1 + (hero.stats.warlordEffectivenessPercent || 0);
       return {
         strength: getSkillStatBonus({
-          level, statKey: 'strength', skillType: 'passive', scale: { base: 3, increment: 1.3 },
+          level, statKey: 'strength', skillType: 'passive', scale: { base: 2, increment: 1.5 },
         }) * effectiveness,
         damage: getSkillStatBonus({
-          level, statKey: 'damage', skillType: 'passive', scale: { base: 5, increment: 1.3 },
+          level, statKey: 'damage', skillType: 'passive', scale: { base: 1, increment: 1.3 },
         }) * effectiveness,
       };
     },

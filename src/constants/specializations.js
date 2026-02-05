@@ -134,8 +134,13 @@ export const SPECIALIZATIONS = {
           description: () => t('skill.arenaResilience'),
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
-            armorPercentPerLevel: getSkillStatBonus({
-              level, statKey: 'armorPercentPerLevel', skillType: 'passive',
+            armorPercent: getSkillStatBonus({
+              level,
+              statKey: 'armorPercent',
+              skillType: 'passive',
+              scale: {
+                base: 10, linear: 3, max: 5,
+              },
             }),
             arenaDamageReductionPercent: getSkillStatBonus({
               level, statKey: 'arenaDamageReductionPercent', skillType: 'passive',

@@ -19,7 +19,7 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'toggle',
+        level, statKey: 'damage', skillType: 'toggle', scale: { base: 1.2, increment: 1.2 },
       }),
     }),
   },
@@ -281,7 +281,7 @@ export const WARRIOR_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       attackSpeedPercent: getSkillStatBonus({
-        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { max: 1.25 },
+        level, statKey: 'attackSpeedPercent', skillType: 'passive', scale: { base: 4, max: 1.25 },
       }),
       attackRating: getSkillStatBonus({
         level, statKey: 'attackRating', skillType: 'passive', scale: { base: 1.8, increment: 1.1 },
@@ -323,7 +323,7 @@ export const WARRIOR_SKILLS = {
         level, statKey: 'damage', skillType: 'passive', scale: { base: 1, increment: 2 },
       }),
       critDamage: getSkillStatBonus({
-        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 0.1, max: 1.4 },
+        level, statKey: 'critDamage', skillType: 'passive', scale: { base: 1, max: 1.4 },
       }),
     }),
   },
@@ -410,7 +410,30 @@ export const WARRIOR_SKILLS = {
     icon: () => 'iron-fortress',
     description: () => t('skill.ironFortress'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
-    effect: (level) => ({}),
+    effect: (level) => ({
+      armor: getSkillStatBonus({
+        level, statKey: 'armor', skillType: 'passive', scale: { base: 2, increment: 1 },
+      }),
+      armorPercent: getSkillStatBonus({
+        level,
+        statKey: 'armorPercent',
+        skillType: 'passive',
+        scale: {
+          base: 0.5, linear: 0.3, max: 0.5,
+        },
+      }),
+      life: getSkillStatBonus({
+        level, statKey: 'life', skillType: 'passive', scale: { base: 2, increment: 1 },
+      }),
+      lifePercent: getSkillStatBonus({
+        level,
+        statKey: 'lifePercent',
+        skillType: 'passive',
+        scale: {
+          base: 0.5, linear: 0.3, max: 0.5,
+        },
+      }),
+    }),
     synergies: [
       {
         sourceSkillId: 'toughness',
