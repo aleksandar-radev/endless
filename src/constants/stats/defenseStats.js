@@ -225,6 +225,7 @@ export const DEFENSE_STATS = {
     item: { tierScalingMaxPercent: createTierScaling(4, 20, 0.7) },
     itemTags: ['amulet', 'helmet'],
     sub: 'defense',
+    cap: 95,
     skills: {
       passive: getSkillBonusesChance({
         type: 'passive', base: 1, levelsPerPoint: 20, cap: 15,

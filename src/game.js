@@ -154,7 +154,10 @@ class Game {
 
     // handle special case for BERSERKER class, where lifePerHit can be negative
     if (hero.stats.currentLife <= 0) {
-      playerDeath();
+      if (!hero.willRessurect()) {
+        hero.stats.currentLife = 0;
+        playerDeath();
+      }
     }
 
     if (heal > 0 && hero.stats.healDamagesEnemiesPercent > 0) {

@@ -217,7 +217,7 @@ export default {
   'tooltip.elementalPenetration': 'Ignora una cantidad fija de todas las resistencias elementales enemigas.',
   'tooltip.elementalPenetrationPercent': 'Ignora un porcentaje de todas las resistencias elementales enemigas.',
   'tooltip.doubleDamageChance': 'Probabilidad de que un ataque inflija daño doble.',
-  'tooltip.resurrectionChance': 'Probabilidad de revivir después de la muerte.',
+  'tooltip.resurrectionChance': 'Probabilidad de revivir después de la muerte (máx 95%).',
   'tooltip.bonusGoldPercent': 'Aumenta la cantidad de Oro que sueltan los enemigos.',
   'tooltip.bonusExperiencePercent': 'Aumenta la cantidad de Experiencia obtenida de los enemigos.',
   'tooltip.itemQuantityPercent': 'Aumenta la probabilidad de que los enemigos suelten objetos.',

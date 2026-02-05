@@ -1488,6 +1488,7 @@ export default class Hero {
       createDamageNumber({
         text: 'Ressurected!', isPlayer: true, isCritical: false, color: '#00FF00',
       });
+      this.stats.currentLife = 0;
       game.healPlayer(this.stats.life);
       game.restoreMana(this.stats.mana);
       return true;

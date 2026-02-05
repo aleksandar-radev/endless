@@ -321,7 +321,10 @@ export const MISC_STATS = {
     itemTags: ['defense', 'jewelry', 'gloves', 'misc'],
     skills: createDefaultSkillBonusesFlat('allAttributes'),
   }),
-  allAttributesPercent: createPercentStat(),
+  allAttributesPercent: createPercentStat({
+    dec: 1,
+    skills: createDefaultSkillBonusesPercent(),
+  }),
   canDualWieldTwoHanded: createHiddenStat(),
   weaponEffectivenessPercent: createStat({ dec: 1 }),
   weaponFlatEffectivenessPercent: createStat({

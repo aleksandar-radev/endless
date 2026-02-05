@@ -827,7 +827,12 @@ export const SPECIALIZATIONS = {
               level, statKey: 'arcDischargeChance', skillType: 'passive',
             }),
             lightningDamage: getSkillStatBonus({
-              level, statKey: 'lightningDamage', skillType: 'passive', scale: { base: 3.33 },
+              level,
+              statKey: 'lightningDamage',
+              skillType: 'passive',
+              scale: {
+                base: 50, increment: 33, bonus: 10,
+              },
             }),
           }),
         },
@@ -913,10 +918,18 @@ export const SPECIALIZATIONS = {
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             allAttributes: getSkillStatBonus({
-              level, statKey: 'allAttributes', skillType: 'passive', scale: { base: 2.66 },
+              level,
+              statKey: 'allAttributes',
+              skillType: 'passive',
+              scale: { base: 15, increment: 8 },
             }),
             allAttributesPercent: getSkillStatBonus({
-              level, statKey: 'allAttributesPercent', skillType: 'passive', scale: { base: 0.2 },
+              level,
+              statKey: 'allAttributesPercent',
+              skillType: 'passive',
+              scale: {
+                base: 1.5, linear: 1.3, max: 2,
+              },
             }),
           }),
         },

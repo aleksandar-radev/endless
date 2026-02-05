@@ -216,7 +216,7 @@ export default {
   'tooltip.elementalPenetration': '无视固定数量的敌人所有元素抗性。',
   'tooltip.elementalPenetrationPercent': '按百分比无视敌人所有元素抗性。',
   'tooltip.doubleDamageChance': '攻击造成双倍伤害的几率。',
-  'tooltip.resurrectionChance': '死亡后复活的几率。',
+  'tooltip.resurrectionChance': '死亡后复活的几率 (最高 95%)。',
   'tooltip.bonusGoldPercent': '提升敌人掉落的金币数量。',
   'tooltip.bonusExperiencePercent': '提升从敌人获得的经验数量。',
   'tooltip.itemQuantityPercent': '提升敌人掉落物品的几率。',
