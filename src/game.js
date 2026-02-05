@@ -336,6 +336,10 @@ class Game {
     // Auto-cast logic: run every game loop
     skillTree.autoCastEligibleSkills();
 
+    // Ensure ailment UI is updated regularly
+    updatePlayerLife();
+    updateEnemyStats();
+
     if (window.perfMon?.enabled) window.perfMon.measure('gameLoop', 5);
   }
 

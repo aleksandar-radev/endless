@@ -1914,8 +1914,12 @@ export function updateSkillTreeValues() {
     characterAvatarEl.appendChild(img);
     img.src = `${import.meta.env.VITE_BASE_PATH}/avatars/peasant-avatar.jpg`;
 
-    // reset name
-    characterNameEl.textContent = '';
+    // reset name but preserve ailments
+    const heroAilments = characterNameEl.querySelector('.hero-ailments');
+    const sessionStatusGroup = characterNameEl.querySelector('.session-status-group');
+    characterNameEl.innerHTML = '';
+    if (heroAilments) characterNameEl.appendChild(heroAilments);
+    if (sessionStatusGroup) characterNameEl.appendChild(sessionStatusGroup);
     return;
   }
 
@@ -1949,7 +1953,18 @@ export function updateSkillTreeValues() {
   const characterName = nameToUse;
   const sessionStatusGroup = characterNameEl.querySelector('.session-status-group');
   const heroAilments = characterNameEl.querySelector('.hero-ailments');
-  characterNameEl.innerHTML = `<span class="character-name">${characterName}</span> (${t('skillTree.level')}: ${hero.level})`;
+
+  // Clear but preserve special elements
+  characterNameEl.innerHTML = '';
+
+  const nameSpan = document.createElement('span');
+  nameSpan.className = 'character-name';
+  nameSpan.textContent = characterName;
+  characterNameEl.appendChild(nameSpan);
+
+  const levelText = document.createTextNode(` (${t('skillTree.level')}: ${hero.level})`);
+  characterNameEl.appendChild(levelText);
+
   if (heroAilments) {
     characterNameEl.appendChild(heroAilments);
   }

@@ -92,6 +92,9 @@ const ELEMENT_IDS = Object.keys(ELEMENTS);
 let tabIndicatorManager = null;
 let autoClaiming = false;
 
+// Track currently hovered ailment for dynamic tooltip updates
+let hoveredAilmentData = null;
+
 const html = String.raw;
 const BASE = import.meta.env.VITE_BASE_PATH;
 
@@ -665,10 +668,12 @@ function updateAilmentIcons() {
   if (window.perfMon?.enabled) window.perfMon.mark('updateAilmentIcons');
   const ailmentsContainer = document.querySelector('.enemy-ailments');
   if (!ailmentsContainer) return;
-  ailmentsContainer.innerHTML = '';
 
   const enemy = game.currentEnemy;
-  if (!enemy) return;
+  if (!enemy) {
+    ailmentsContainer.innerHTML = '';
+    return;
+  }
 
   const basePath = import.meta.env.VITE_BASE_PATH || '';
 
@@ -732,17 +737,40 @@ function updateAilmentIcons() {
     },
   ];
 
-  ailments.forEach((ailment) => {
-    if (ailment.isActive) {
-      const el = document.createElement('div');
+  // Get current active ailment IDs
+  const activeAilments = ailments.filter((a) => a.isActive);
+  const activeIds = new Set(activeAilments.map((a) => a.id));
+
+  // Remove icons that are no longer active
+  Array.from(ailmentsContainer.children).forEach((el) => {
+    const id = Array.from(el.classList).find((c) => c !== 'ailment-icon');
+    if (!activeIds.has(id)) {
+      el.remove();
+    }
+  });
+
+  // Add or update icons
+  activeAilments.forEach((ailment) => {
+    let el = ailmentsContainer.querySelector(`.ailment-icon.${ailment.id}`);
+    if (!el) {
+      el = document.createElement('div');
       el.className = `ailment-icon ${ailment.id}`;
       el.style.backgroundImage = `url('${basePath}/icons/${ailment.id}.png')`;
-      el.addEventListener('mouseenter', (e) => showTooltip(ailment.getTooltip(), e));
+      el.addEventListener('mouseenter', (e) => showTooltip(ailment.getTooltip(), e, '', false, ailment));
       el.addEventListener('mouseleave', hideTooltip);
       el.addEventListener('mousemove', positionTooltip);
       ailmentsContainer.appendChild(el);
     }
+
+    // Update tooltip if currently hovered
+    if (hoveredAilmentData && hoveredAilmentData.id === ailment.id) {
+      const tooltip = document.getElementById('tooltip');
+      if (tooltip && tooltip.classList.contains('show')) {
+        tooltip.innerHTML = ailment.getTooltip();
+      }
+    }
   });
+
   if (window.perfMon?.enabled) window.perfMon.measure('updateAilmentIcons', 5);
 }
 
@@ -750,7 +778,6 @@ function updateHeroAilmentIcons() {
   if (window.perfMon?.enabled) window.perfMon.mark('updateHeroAilmentIcons');
   const ailmentsContainer = document.querySelector('.hero-ailments');
   if (!ailmentsContainer) return;
-  ailmentsContainer.innerHTML = '';
 
   const basePath = import.meta.env.VITE_BASE_PATH || '';
 
@@ -763,17 +790,40 @@ function updateHeroAilmentIcons() {
     },
   ];
 
-  ailments.forEach((ailment) => {
-    if (ailment.isActive) {
-      const el = document.createElement('div');
+  // Get current active ailment IDs
+  const activeAilments = ailments.filter((a) => a.isActive);
+  const activeIds = new Set(activeAilments.map((a) => a.id));
+
+  // Remove icons that are no longer active
+  Array.from(ailmentsContainer.children).forEach((el) => {
+    const id = Array.from(el.classList).find((c) => c !== 'ailment-icon');
+    if (!activeIds.has(id)) {
+      el.remove();
+    }
+  });
+
+  // Add or update icons
+  activeAilments.forEach((ailment) => {
+    let el = ailmentsContainer.querySelector(`.ailment-icon.${ailment.id}`);
+    if (!el) {
+      el = document.createElement('div');
       el.className = `ailment-icon ${ailment.id}`;
       el.style.backgroundImage = `url('${basePath}/icons/${ailment.id}.png')`;
-      el.addEventListener('mouseenter', (e) => showTooltip(ailment.getTooltip(), e));
+      el.addEventListener('mouseenter', (e) => showTooltip(ailment.getTooltip(), e, '', false, ailment));
       el.addEventListener('mouseleave', hideTooltip);
       el.addEventListener('mousemove', positionTooltip);
       ailmentsContainer.appendChild(el);
     }
+
+    // Update tooltip if currently hovered
+    if (hoveredAilmentData && hoveredAilmentData.id === ailment.id) {
+      const tooltip = document.getElementById('tooltip');
+      if (tooltip && tooltip.classList.contains('show')) {
+        tooltip.innerHTML = ailment.getTooltip();
+      }
+    }
   });
+
   if (window.perfMon?.enabled) window.perfMon.measure('updateHeroAilmentIcons', 5);
 }
 
@@ -919,9 +969,11 @@ export function hideDeathScreen() {
 }
 
 // Function to show the tooltip
-export function showTooltip(content, event, classes = '', force = false) {
+export function showTooltip(content, event, classes = '', force = false, ailmentData = null) {
   // Global check: Disable tooltips on mobile/touch devices
   if (!force && IS_MOBILE_OR_TABLET()) return;
+
+  hoveredAilmentData = ailmentData;
 
   const tooltip = document.getElementById('tooltip');
   tooltip.innerHTML = content;
@@ -931,6 +983,7 @@ export function showTooltip(content, event, classes = '', force = false) {
 
 // Function to hide the tooltip
 export function hideTooltip() {
+  hoveredAilmentData = null;
   const tooltip = document.getElementById('tooltip');
   tooltip.classList.remove('show');
   tooltip.classList.add('hidden');
