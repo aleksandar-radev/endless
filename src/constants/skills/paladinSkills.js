@@ -81,10 +81,10 @@ export const PALADIN_SKILLS = {
       const buffEffectiveness = 1 + (hero.stats.divineProtectionBuffEffectivenessPercent || 0);
       return {
         thornsDamage: getSkillStatBonus({
-          level, statKey: 'thornsDamage', skillType: 'passive', scale: { base: 1 },
+          level, statKey: 'thornsDamage', skillType: 'passive', scale: { base: 2, increment: 1.5 },
         }) * buffEffectiveness,
         thornsDamagePercent: getSkillStatBonus({
-          level, statKey: 'thornsDamagePercent', skillType: 'passive', scale: { base: 1 },
+          level, statKey: 'thornsDamagePercent', skillType: 'passive', scale: { base: 2, linear: 1.5 },
         }) * buffEffectiveness,
       };
     },
@@ -226,7 +226,7 @@ export const PALADIN_SKILLS = {
       {
         sourceSkillId: 'divineProtection',
         calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.1, increment: 0.1, cap: 50,
+          level: sourceLevel, base: 0.1, increment: 0.1, cap: 250,
         }),
       },
     ],

@@ -23,7 +23,7 @@ export const STAT_RATIOS = {
   elementalResistance: damage * 5,
   mana: damage * 4,
   lifeRegen: damage * 0.5,
-  thornsDamage: damage * 3,
+  thornsDamage: damage * 4,
   reflectFireDamage: damage * 4,
   manaRegen: damage * 0.3,
   manaPerHit: damage * 0.45,
