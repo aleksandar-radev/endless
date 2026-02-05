@@ -19,6 +19,11 @@ let adBlockDetected = false;
 
 // Robust AdBlock detection: try to fetch known ad-serving domains
 async function checkAdBlocker() {
+  if (import.meta.env.VITE_ENV === 'local') {
+    adBlockDetected = false;
+    return;
+  }
+
   // If we are on localhost, we might still want to check, OR we can default to false.
   // The user requested that we detect if blocked.
   // A common ad blocker test URL:
@@ -175,8 +180,10 @@ window.showAd = showAd;
 
 export function showAd(type = 'bonus') {
   // Local testing bypass
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    console.log('Localhost detected: Simulating Ad View for testing.');
+  if (
+    import.meta.env.VITE_ENV === 'local'
+  ) {
+    console.log('Local/Dev environment detected: Simulating Ad View for testing.');
     if (type === 'bonus') showBonusSelectionModal();
     return;
   }

@@ -240,7 +240,7 @@ class PerformanceMonitor {
   }
 
   // Measure and log the duration of a marked section
-  measure(name, warnThreshold = 100) {
+  measure(name, warnThreshold = 10) {
     if (!this.enabled) return 0;
 
     const startTime = this.marks.get(name);
@@ -263,7 +263,7 @@ class PerformanceMonitor {
     existing.maxTime = Math.max(existing.maxTime, duration);
     this.metrics.functionCalls.set(name, existing);
 
-    if (duration > warnThreshold) {
+    if (duration > warnThreshold * 10) {
       console.warn(
         `⏱️ Slow operation: ${name} took ${duration.toFixed(2)}ms`,
       );
@@ -279,7 +279,7 @@ class PerformanceMonitor {
     return (...args) => {
       this.mark(name);
       const result = fn(...args);
-      this.measure(name, 100);
+      this.measure(name, 10);
       return result;
     };
   }

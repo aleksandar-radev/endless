@@ -83,6 +83,12 @@ export default class SkillTree {
         ...sanitizedSkillData,
         affordable: true,
       };
+
+      // Reset active state for non-toggle skills on load because activeBuffs (which manages
+      // buff/summon durations) is not persisted. Toggles persist their active state.
+      if (typeof this.skills[skillId].type === 'function' && this.skills[skillId].type() !== 'toggle') {
+        this.skills[skillId].active = false;
+      }
     });
 
     // Ensure specialization skills are properly merged with definitions
@@ -98,6 +104,13 @@ export default class SkillTree {
             ...skillDef,
             ...sanitizedSavedSkill,
           };
+
+          // Reset active state for non-toggle specialization skills on load because activeBuffs
+          // (which manages buff/summon durations) is not persisted.
+          if (typeof this.specializationSkills[skillId].type === 'function' &&
+              this.specializationSkills[skillId].type() !== 'toggle') {
+            this.specializationSkills[skillId].active = false;
+          }
         });
       }
     }
@@ -249,7 +262,8 @@ export default class SkillTree {
 
   isSkillActive(skillId) {
     const skill = this.getSkill(skillId);
-    return skill && (skill.type() === 'toggle' || skill.type() === 'buff') && this.skills[skillId]?.active;
+    const skillData = this.skills[skillId] || this.specializationSkills[skillId];
+    return skill && (skill.type() === 'toggle' || skill.type() === 'buff') && skillData?.active;
   }
 
   addSkillPoints(points) {
@@ -817,14 +831,29 @@ export default class SkillTree {
 
   getSkill(skillId) {
     if (!this.selectedPath) return null;
-    const skillDef = SKILL_TREES[this.selectedPath.name]?.[skillId];
-    if (!skillDef) return null;
 
-    const skillObj = {
-      ...skillDef,
-      ...this.skills[skillId],
-    };
-    return skillObj;
+    // Check main path skills
+    const skillDef = SKILL_TREES[this.selectedPath.name]?.[skillId];
+    if (skillDef) {
+      return {
+        ...skillDef,
+        ...this.skills[skillId],
+      };
+    }
+
+    // Check specialization skills
+    if (this.selectedSpecialization) {
+      const spec = getSpecialization(this.selectedPath.name, this.selectedSpecialization.id);
+      const specSkillDef = spec?.skills[skillId];
+      if (specSkillDef) {
+        return {
+          ...specSkillDef,
+          ...this.specializationSkills[skillId],
+        };
+      }
+    }
+
+    return null;
   }
 
   getSpecializationSkill(skillId) {
@@ -1325,7 +1354,10 @@ export default class SkillTree {
     }
 
     // Set cooldown
-    this.skills[skill.id].cooldownEndTime = Date.now() + this.getSkillCooldown(skill);
+    const storage = this.skills[skill.id] ? this.skills : this.specializationSkills;
+    if (storage[skill.id]) {
+      storage[skill.id].cooldownEndTime = Date.now() + this.getSkillCooldown(skill);
+    }
 
     // Update UI
     updatePlayerLife();
@@ -1448,8 +1480,11 @@ export default class SkillTree {
     }
 
     // Set cooldown and active state
-    this.skills[skillId].cooldownEndTime = cooldownEndTime;
-    this.skills[skillId].active = true;
+    const storage = this.skills[skillId] ? this.skills : this.specializationSkills;
+    if (storage[skillId]) {
+      storage[skillId].cooldownEndTime = cooldownEndTime;
+      storage[skillId].active = true;
+    }
 
     // update enemy right away
     if (skill.effect(skill.level).reduceEnemyAttackSpeedPercent) {
@@ -1478,8 +1513,9 @@ export default class SkillTree {
     if (this.activeBuffs.has(skillId)) {
       this.activeBuffs.delete(skillId);
       // Reset the active state when buff expires
-      if (this.skills[skillId]) {
-        this.skills[skillId].active = false;
+      const storage = this.skills[skillId] ? this.skills : this.specializationSkills;
+      if (storage[skillId]) {
+        storage[skillId].active = false;
       }
       hero.queueRecalculateFromAttributes();
       updateActionBar(); // Update UI to reflect deactivated state
@@ -1526,7 +1562,8 @@ export default class SkillTree {
 
   stopAllBuffs() {
     this.activeBuffs.clear();
-    Object.values(this.skills).forEach((skill) => {
+    const allSkills = [...Object.values(this.skills), ...Object.values(this.specializationSkills)];
+    allSkills.forEach((skill) => {
       // Fix an abuse where player can start/stop game fast while casting skills.
       // if (skill.cooldownEndTime) {
       //   skill.cooldownEndTime = 0;
@@ -1804,14 +1841,23 @@ export default class SkillTree {
   autoCastEligibleSkills() {
     if (!game.gameStarted) return;
     if (window.perfMon?.enabled) window.perfMon.mark('autoCastEligibleSkills');
-    Object.entries(this.skills).forEach(([skillId, skillData]) => {
-      const skill = SKILL_TREES[this.selectedPath?.name]?.[skillId];
+
+    // Combine main skills and specialization skills for auto-cast check
+    const skillIds = new Set([
+      ...Object.keys(this.skills),
+      ...Object.keys(this.specializationSkills),
+    ]);
+
+    skillIds.forEach((skillId) => {
+      const skill = this.getSkill(skillId);
       if (!skill || !this.isAutoCastEnabled(skillId)) return;
       // Do not auto-cast skills hidden from display
       if (!this.isDisplayEnabled(skillId)) return;
-      if (skill.type() === 'instant') {
+
+      const skillType = skill.type();
+      if (skillType === 'instant') {
         // Only cast if not on cooldown and enough mana
-        if (!skillData.cooldownEndTime || skillData.cooldownEndTime <= Date.now()) {
+        if (!skill.cooldownEndTime || skill.cooldownEndTime <= Date.now()) {
           const cost = this.getSkillManaCost(skill);
           const affordable =
             hero.stats.convertManaToLifePercent > 0
@@ -1821,10 +1867,11 @@ export default class SkillTree {
             this.useInstantSkill(skillId, true);
           }
         }
-      } else if (skill.type() === 'buff' || skill.type() === 'summon') {
+      } else if (skillType === 'buff' || skillType === 'summon') {
         // Only cast if not active (unless it's a summon), not on cooldown, and enough mana
-        const shouldCast = (!skillData.active || skill.type() === 'summon') &&
-          (!skillData.cooldownEndTime || skillData.cooldownEndTime <= Date.now());
+        const shouldCast =
+          (!skill.active || skillType === 'summon') &&
+          (!skill.cooldownEndTime || skill.cooldownEndTime <= Date.now());
 
         if (shouldCast) {
           const cost = this.getSkillManaCost(skill);
