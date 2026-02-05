@@ -425,8 +425,71 @@ export function updateResources() {
   updateBuildingAffordability();
 }
 
+// State for UI optimizations
+let lastPlayerLifeState = {
+  currentLife: -1,
+  life: -1,
+  currentMana: -1,
+  mana: -1,
+  exp: -1,
+  expToNextLevel: -1,
+  ailmentsHash: '',
+};
+
+let lastEnemyStatsState = {
+  enemy: null,
+  currentLife: -1,
+  life: -1,
+  damage: -1,
+  armor: -1,
+  evasion: -1,
+  attackRating: -1,
+  attackSpeed: -1,
+  xp: -1,
+  gold: -1,
+  ailmentsHash: '',
+  elementalDamagesHash: '',
+  elementalResistancesHash: '',
+  heroDamage: -1,
+  heroAttackRating: -1,
+  heroChanceToHitPercent: -1,
+  heroEvasion: -1,
+  heroElementalDamagesHash: '',
+};
+
 export function updatePlayerLife() {
+  if (window.perfMon?.enabled) window.perfMon.mark('updatePlayerLife');
   const stats = hero.stats;
+
+  let curLife = Math.floor(stats.currentLife);
+  let maxLife = Math.floor(stats.life);
+  let curMana = Math.floor(stats.currentMana);
+  let maxMana = Math.floor(stats.mana);
+  let curExp = Math.floor(hero.exp);
+  let expToNextLevel = Math.floor(hero.getExpToNextLevel());
+  let ailmentsHash = Object.keys(hero.ailments).join(',');
+
+  if (
+    curLife === lastPlayerLifeState.currentLife &&
+    maxLife === lastPlayerLifeState.life &&
+    curMana === lastPlayerLifeState.currentMana &&
+    maxMana === lastPlayerLifeState.mana &&
+    curExp === lastPlayerLifeState.exp &&
+    expToNextLevel === lastPlayerLifeState.expToNextLevel &&
+    ailmentsHash === lastPlayerLifeState.ailmentsHash
+  ) {
+    if (window.perfMon?.enabled) window.perfMon.measure('updatePlayerLife', 5);
+    return;
+  }
+
+  lastPlayerLifeState.currentLife = curLife;
+  lastPlayerLifeState.life = maxLife;
+  lastPlayerLifeState.currentMana = curMana;
+  lastPlayerLifeState.mana = maxMana;
+  lastPlayerLifeState.exp = curExp;
+  lastPlayerLifeState.expToNextLevel = expToNextLevel;
+  lastPlayerLifeState.ailmentsHash = ailmentsHash;
+
   const lifePercentage = (stats.currentLife / stats.life) * 100;
   document.getElementById('life-fill').style.width = `${lifePercentage}%`;
   document.getElementById('life-text').textContent = `${formatNumber(
@@ -446,6 +509,7 @@ export function updatePlayerLife() {
   )} / ${formatNumber(Math.floor(hero.getExpToNextLevel()))} XP`;
 
   updateHeroAilmentIcons();
+  if (window.perfMon?.enabled) window.perfMon.measure('updatePlayerLife', 5);
 }
 
 export function updateEnemyStats() {
@@ -453,6 +517,69 @@ export function updateEnemyStats() {
   if (!enemy) {
     return;
   }
+
+  let curLife = Math.floor(enemy.currentLife);
+  let maxLife = Math.floor(enemy.life);
+  let curDamage = enemy.damage;
+  let curArmor = enemy.armor;
+  let curEvasion = enemy.evasion;
+  let curAttackRating = enemy.attackRating;
+  let curAttackSpeed = enemy.attackSpeed;
+  let curXp = enemy.xp;
+  let curGold = enemy.gold;
+  let ailmentsHash = Object.keys(enemy.ailments || {}).join(',');
+  let elementalDamagesHash = ELEMENT_IDS.map((id) => enemy[`${id}Damage`] || 0).join(',');
+  let elementalResistancesHash = ELEMENT_IDS.map((id) => enemy[`${id}Resistance`] || 0).join(',');
+
+  // Hero stats that affect calculations shown in enemy UI
+  let heroDamage = hero.stats.damage;
+  let heroAttackRating = hero.stats.attackRating;
+  let heroChanceToHitPercent = hero.stats.chanceToHitPercent || 0;
+  let heroEvasion = hero.stats.evasion;
+  let heroElementalDamagesHash = ELEMENT_IDS.map((id) => hero.stats[`${id}Damage`] || 0).join(',');
+
+  if (
+    enemy === lastEnemyStatsState.enemy &&
+    curLife === lastEnemyStatsState.currentLife &&
+    maxLife === lastEnemyStatsState.life &&
+    curDamage === lastEnemyStatsState.damage &&
+    curArmor === lastEnemyStatsState.armor &&
+    curEvasion === lastEnemyStatsState.evasion &&
+    curAttackRating === lastEnemyStatsState.attackRating &&
+    curAttackSpeed === lastEnemyStatsState.attackSpeed &&
+    curXp === lastEnemyStatsState.xp &&
+    curGold === lastEnemyStatsState.gold &&
+    ailmentsHash === lastEnemyStatsState.ailmentsHash &&
+    elementalDamagesHash === lastEnemyStatsState.elementalDamagesHash &&
+    elementalResistancesHash === lastEnemyStatsState.elementalResistancesHash &&
+    heroDamage === lastEnemyStatsState.heroDamage &&
+    heroAttackRating === lastEnemyStatsState.heroAttackRating &&
+    heroChanceToHitPercent === lastEnemyStatsState.heroChanceToHitPercent &&
+    heroEvasion === lastEnemyStatsState.heroEvasion &&
+    heroElementalDamagesHash === lastEnemyStatsState.heroElementalDamagesHash
+  ) {
+    return;
+  }
+
+  lastEnemyStatsState.enemy = enemy;
+  lastEnemyStatsState.currentLife = curLife;
+  lastEnemyStatsState.life = maxLife;
+  lastEnemyStatsState.damage = curDamage;
+  lastEnemyStatsState.armor = curArmor;
+  lastEnemyStatsState.evasion = curEvasion;
+  lastEnemyStatsState.attackRating = curAttackRating;
+  lastEnemyStatsState.attackSpeed = curAttackSpeed;
+  lastEnemyStatsState.xp = curXp;
+  lastEnemyStatsState.gold = curGold;
+  lastEnemyStatsState.ailmentsHash = ailmentsHash;
+  lastEnemyStatsState.elementalDamagesHash = elementalDamagesHash;
+  lastEnemyStatsState.elementalResistancesHash = elementalResistancesHash;
+  lastEnemyStatsState.heroDamage = heroDamage;
+  lastEnemyStatsState.heroAttackRating = heroAttackRating;
+  lastEnemyStatsState.heroChanceToHitPercent = heroChanceToHitPercent;
+  lastEnemyStatsState.heroEvasion = heroEvasion;
+  lastEnemyStatsState.heroElementalDamagesHash = heroElementalDamagesHash;
+
   const lifePercentage = Math.max(0, (enemy.currentLife / enemy.life) * 100);
   document.getElementById('enemy-life-fill').style.width = `${lifePercentage}%`;
   document.getElementById('enemy-life-text').textContent = `${formatNumber(
