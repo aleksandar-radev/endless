@@ -1,7 +1,7 @@
 export default {
   'ascension.ascendNow': 'Ascender ahora',
   'ascension.points': 'Puntos',
-  'ascension.needPrestiges': 'Necesitas al menos 20 prestigios para ascender.',
+  'ascension.needPrestiges': 'Necesitas al menos {required} cristales iniciales de las bonificaciones de prestigio para ascender.',
   'ascension.upgrade.lvl': 'Nvl',
   'ascension.upgrade.cost': 'Costo',
   'ascension.upgrade.buy': 'Obtener',
@@ -135,11 +135,11 @@ export default {
   'ascension.modal.confirm': 'Ascender',
   'ascension.modal.cancel': 'Cancelar',
   'ascension.info.title': 'Información de Ascensión',
-  'ascension.info.requirement': 'Requiere al menos 20 prestigios para ascender.',
+  'ascension.info.requirement': 'Requiere al menos {required} cristales iniciales de las bonificaciones de prestigio para ascender.',
   'ascension.info.points':
-    'Obtén un punto de ascensión por cada 100 cristales iniciales de las bonificaciones de prestigio. Así, 20 prestigios con un total de 3000 cristales iniciales te darán 30 puntos en total.',
+    'Obtén un punto de ascensión por cada 100 cristales iniciales de las bonificaciones de prestigio. Así, un total de {required} cristales iniciales te darán {points} puntos en total.',
   'ascension.info.current':
-    'Actualmente tienes {prestiges} prestigios y {crystals} cristales iniciales, por lo que obtendrías {points} puntos.',
+    'Actualmente tienes {crystals} cristales iniciales, por lo que obtendrías {points} puntos.',
   'prestige.levelInfo': 'Nivel {level} / {required}',
   'prestige.prestigeNow': 'Prestigiar ahora',
   'prestige.history': 'Historial',

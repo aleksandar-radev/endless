@@ -1,7 +1,7 @@
 export default {
   'ascension.ascendNow': '立即飞升',
   'ascension.points': '点数',
-  'ascension.needPrestiges': '需要至少 20 次转生才能飞升。',
+  'ascension.needPrestiges': '需要至少 {required} 个来自转生奖励的初始水晶才能飞升。',
   'ascension.upgrade.lvl': '等级',
   'ascension.upgrade.cost': '成本',
   'ascension.upgrade.buy': '获取',
@@ -133,10 +133,10 @@ export default {
   'ascension.modal.confirm': '飞升',
   'ascension.modal.cancel': '取消',
   'ascension.info.title': '飞升信息',
-  'ascension.info.requirement': '需要至少 20 次转生才能飞升。',
+  'ascension.info.requirement': '需要至少 {required} 个来自转生奖励的初始水晶才能飞升。',
   'ascension.info.points':
-    '每 100 个来自转生奖励的初始水晶获得 1 个飞升点。因此，20 次转生并拥有总共 3000 个初始水晶将获得 30 个飞升点。',
-  'ascension.info.current': '你目前有 {prestiges} 次转生和 {crystals} 个初始水晶，因此将获得 {points} 点。',
+    '每 100 个来自转生奖励的初始水晶获得 1 个飞升点。因此，总共 {required} 个初始水晶将获得 {points} 个飞升点。',
+  'ascension.info.current': '你目前有 {crystals} 个初始水晶，因此将获得 {points} 点。',
   'prestige.levelInfo': '等级 {level} / {required}',
   'prestige.prestigeNow': '立即声望',
   'prestige.history': '历史',

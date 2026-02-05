@@ -32,6 +32,7 @@ export default function run() {
       <li>Levels required for regions unlock are now greatly increased, to align better with the new enemy scaling.</li>
       <li>Added % bonus for all skills based on how points are distributed between skills.</li>
       <li>You can now get resurrected as many times as it happens when you have resurrection chance. (but you can't reach 100%)</li>
+      <li>Changed ascension requirement from 20 prestiges to 3000 starting crystals (effectively 30 ascension points).</li>
     </ul>
   
     <span style="color:#FF8A00;">Skill System</span>

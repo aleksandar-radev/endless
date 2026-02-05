@@ -1,4 +1,5 @@
 export default {
+  'class.peasant': 'Peasant',
   'class.warrior': 'Warrior',
   'class.warriorDesc': 'A mighty warrior specializing in heavy armor and raw strength',
   'class.rogue': 'Rogue',

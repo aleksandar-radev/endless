@@ -9,6 +9,7 @@
   margin-bottom: 1rem;
   gap: 1rem;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .prestige-level-info {
@@ -18,6 +19,16 @@
   border-radius: 0.5rem;
   font-size: 1.05rem;
   font-weight: 600;
+}
+
+.prestige-starting-crystals-info {
+  background: rgba(255, 138, 0, 0.15);
+  color: #ffd166;
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 138, 0, 0.3);
 }
 
 .prestige-header button#prestige-now-btn {
@@ -548,6 +559,10 @@
 }
 
 @media (max-width: 700px) {
+  .prestige-header {
+    justify-content: center;
+  }
+
   .prestige-modal-content,
   .prestige-history-modal-content {
     max-width: 98vw;

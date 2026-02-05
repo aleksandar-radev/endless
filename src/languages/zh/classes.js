@@ -1,4 +1,5 @@
 export default {
+  'class.peasant': '农民',
   'class.warrior': '战士',
   'class.warriorDesc': '强大的战士，擅长重甲和纯粹力量',
   'class.rogue': '盗贼',

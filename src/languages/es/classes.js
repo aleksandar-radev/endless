@@ -1,4 +1,5 @@
 export default {
+  'class.peasant': 'Campesino',
   'class.warrior': 'Guerrero',
   'class.warriorDesc': 'Un guerrero poderoso especializado en armadura pesada y fuerza bruta',
   'class.rogue': 'Pícaro',

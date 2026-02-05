@@ -12,13 +12,15 @@ import { hero,
   soulShop } from './globals.js';
 import { handleSavedData } from './functions.js';
 import { showToast } from './ui/ui.js';
-import { t } from './i18n.js';
+import { t, tp } from './i18n.js';
 import { ELEMENTS } from './constants/common.js';
 import { BASE_RUNE_SLOTS } from './runes.js';
 import { renderRunesUI } from './ui/runesUi.js';
 
 const ELEMENT_DAMAGE_STATS = Object.keys(ELEMENTS).map((id) => `${id}Damage`);
 const ELEMENT_RESISTANCE_STATS = Object.keys(ELEMENTS).map((id) => `${id}Resistance`);
+
+export const REQUIRED_CRYSTALS_FOR_ASCENSION = 3000;
 
 export const ASCENSION_CATEGORIES = {
   offense: {
@@ -374,6 +376,24 @@ export default class Ascension {
     return ASCENSION_CATEGORIES;
   }
 
+  getSpentPoints() {
+    let spent = 0;
+    for (const [key, lvl] of Object.entries(this.upgrades)) {
+      if (!lvl) continue;
+      const cfg = this.config[key];
+      if (!cfg) continue;
+      for (let i = 0; i < lvl; i++) {
+        const cost = typeof cfg.cost === 'function' ? cfg.cost(i) : cfg.cost || 1;
+        spent += cost;
+      }
+    }
+    return spent;
+  }
+
+  getTotalPoints() {
+    return this.points + this.getSpentPoints();
+  }
+
   getBonuses() {
     const bonuses = {};
     for (const [key, lvl] of Object.entries(this.upgrades)) {
@@ -395,7 +415,7 @@ export default class Ascension {
   }
 
   canAscend() {
-    return prestige.prestigeCount >= 20;
+    return (prestige.bonuses?.startingCrystals || 0) >= REQUIRED_CRYSTALS_FOR_ASCENSION;
   }
 
   getEarnedPoints() {
@@ -460,7 +480,7 @@ export default class Ascension {
 
   async ascend() {
     if (!this.canAscend()) {
-      showToast(t('ascension.needPrestiges'));
+      showToast(tp('ascension.needPrestiges', { required: REQUIRED_CRYSTALS_FOR_ASCENSION }));
       return;
     }
     const earned = this.getEarnedPoints();

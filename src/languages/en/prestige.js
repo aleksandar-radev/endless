@@ -1,7 +1,7 @@
 export default {
   'ascension.ascendNow': 'Ascend Now',
   'ascension.points': 'Points',
-  'ascension.needPrestiges': 'Need at least 20 prestiges to ascend.',
+  'ascension.needPrestiges': 'Need at least {required} starting crystals from prestige bonuses to ascend.',
   'ascension.upgrade.lvl': 'Lvl',
   'ascension.upgrade.cost': 'Cost',
   'ascension.upgrade.buy': 'Get',
@@ -133,11 +133,11 @@ export default {
   'ascension.modal.confirm': 'Ascend',
   'ascension.modal.cancel': 'Cancel',
   'ascension.info.title': 'Ascension Info',
-  'ascension.info.requirement': 'Requires at least 20 prestiges to ascend.',
+  'ascension.info.requirement': 'Requires at least {required} starting crystals from prestige bonuses to ascend.',
   'ascension.info.points':
-    'Gain one ascension point for every 100 starting crystals from prestige bonuses. So 20 prestiges with total of 3000 starting crystals will get you 30 points total.',
+    'Gain one ascension point for every 100 starting crystals from prestige bonuses. So a total of {required} starting crystals will get you {points} points total.',
   'ascension.info.current':
-    'You currently have {prestiges} prestiges and {crystals} starting crystals, so you would earn {points} points.',
+    'You currently have {crystals} starting crystals, so you would earn {points} points.',
   'prestige.levelInfo': 'Level {level} / {required}',
   'prestige.prestigeNow': 'Prestige Now',
   'prestige.history': 'History',

@@ -24,10 +24,18 @@ function updateLevelInfo() {
   const tab = document.getElementById('prestige');
   if (!tab) return;
   const levelInfo = tab.querySelector('.prestige-level-info');
-  if (!levelInfo) return;
-  const level = hero.level || 0;
-  const required = prestige.getCurrentLevelRequirement();
-  levelInfo.textContent = tp('prestige.levelInfo', { level, required });
+  const crystalsInfo = tab.querySelector('.prestige-starting-crystals-info');
+
+  if (levelInfo) {
+    const level = hero.level || 0;
+    const required = prestige.getCurrentLevelRequirement();
+    levelInfo.textContent = tp('prestige.levelInfo', { level, required });
+  }
+
+  if (crystalsInfo) {
+    const totalCrystals = prestige.bonuses?.startingCrystals || 0;
+    crystalsInfo.innerHTML = `${t('ascension.upgrade.startingCrystals')}: ${formatNumber(totalCrystals)} <img src="${BASE}/icons/crystal.png" style="width:20px; height:20px; vertical-align:middle; margin-left: 4px;" alt="crystal"/>`;
+  }
 }
 
 export function initializePrestigeUI() {
@@ -47,6 +55,7 @@ export function initializePrestigeUI() {
       <button id="prestige-now-btn" data-i18n="prestige.prestigeNow">${t('prestige.prestigeNow')}</button>
       <button id="prestige-history-btn" data-i18n="prestige.history">${t('prestige.history')}</button>
       <div class="prestige-level-info"></div>
+      <div class="prestige-starting-crystals-info"></div>
     </div>
     <ul class="prestige-bonuses-list"></ul>
   `;

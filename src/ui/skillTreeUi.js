@@ -1908,16 +1908,29 @@ export function updateSkillTreeValues() {
 
   if (!skillTree.selectedPath) {
     let img = characterAvatarEl.querySelector('img');
-    img = document.createElement('img');
-    img.alt = 'Peasant Avatar';
-    characterAvatarEl.innerHTML = '';
-    characterAvatarEl.appendChild(img);
+    if (!img) {
+      img = document.createElement('img');
+      characterAvatarEl.innerHTML = '';
+      characterAvatarEl.appendChild(img);
+    }
+    const nameToUse = t('class.peasant');
     img.src = `${import.meta.env.VITE_BASE_PATH}/avatars/peasant-avatar.jpg`;
+    img.alt = nameToUse + ' Avatar';
 
-    // reset name but preserve ailments
-    const heroAilments = characterNameEl.querySelector('.hero-ailments');
     const sessionStatusGroup = characterNameEl.querySelector('.session-status-group');
+    const heroAilments = characterNameEl.querySelector('.hero-ailments');
+
+    // Clear but preserve special elements
     characterNameEl.innerHTML = '';
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'character-name';
+    nameSpan.textContent = nameToUse;
+    characterNameEl.appendChild(nameSpan);
+
+    const levelText = document.createTextNode(` (${t('skillTree.level')}: ${hero.level})`);
+    characterNameEl.appendChild(levelText);
+
     if (heroAilments) characterNameEl.appendChild(heroAilments);
     if (sessionStatusGroup) characterNameEl.appendChild(sessionStatusGroup);
     return;

@@ -34,6 +34,7 @@ import { createSetItemsById, createUniqueItemById } from './item.js';
 import { isDevAccessWindowActive } from './migrations/0.8.15.js';
 import { UNIQUE_ITEMS } from './constants/uniqueItems.js';
 import { SET_ITEMS } from './constants/setItems.js';
+import { REQUIRED_CRYSTALS_FOR_ASCENSION } from './ascension.js';
 
 export const crypt = new SimpleCrypto(import.meta.env.VITE_ENCRYPT_KEY);
 
@@ -1220,21 +1221,22 @@ export function createModifyUI(container = document.body) {
   });
   ascensionSection.appendChild(addAscensionPointBtn);
 
-  // Enable Ascension by setting prestiges to 20
+  // Enable Ascension by setting starting crystals to required amount
   const enableAscensionBtn = document.createElement('button');
-  enableAscensionBtn.textContent = 'Enable Ascension (20 Prestiges)';
-  enableAscensionBtn.title = 'Sets prestige count to 20 so Ascend can be used immediately.';
+  enableAscensionBtn.textContent = `Enable Ascension (${REQUIRED_CRYSTALS_FOR_ASCENSION} Starting Crystals)`;
+  enableAscensionBtn.title = `Sets starting crystals to ${REQUIRED_CRYSTALS_FOR_ASCENSION} so Ascend can be used immediately.`;
   enableAscensionBtn.addEventListener('click', () => {
-    const before = prestige.prestigeCount || 0;
-    if (before < 20) {
-      prestige.prestigeCount = 20;
+    if (!prestige.bonuses) prestige.bonuses = {};
+    const before = prestige.bonuses.startingCrystals || 0;
+    if (before < REQUIRED_CRYSTALS_FOR_ASCENSION) {
+      prestige.bonuses.startingCrystals = REQUIRED_CRYSTALS_FOR_ASCENSION;
       dataManager.saveGame();
       updateAscensionUI();
       updateTabIndicators();
-      showToast('Prestige count set to 20 for Ascension.');
+      showToast(`Starting crystals set to ${REQUIRED_CRYSTALS_FOR_ASCENSION} for Ascension.`);
     } else {
       updateAscensionUI();
-      showToast('Already eligible to Ascend (>= 20 prestiges).');
+      showToast(`Already eligible to Ascend (>= ${REQUIRED_CRYSTALS_FOR_ASCENSION} starting crystals).`);
     }
   });
   ascensionSection.appendChild(enableAscensionBtn);

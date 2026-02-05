@@ -4,6 +4,7 @@ import { createModal, closeModal } from './modal.js';
 import { t, tp } from '../i18n.js';
 import { renderRunesUI } from './runesUi.js';
 import { getStatDecimalPlaces } from '../constants/stats/stats.js';
+import { REQUIRED_CRYSTALS_FOR_ASCENSION } from '../ascension.js';
 
 let activeCategory = null;
 
@@ -36,11 +37,17 @@ function renderAscension() {
   if (!activeCategory) {
     activeCategory = Object.keys(ascension.categories)[0];
   }
+  const totalCrystals = prestige.bonuses?.startingCrystals || 0;
+  const unspent = ascension.points;
+  const total = ascension.getTotalPoints();
+  const BASE = import.meta.env.VITE_BASE_PATH;
+
   container.innerHTML = `
     <div class="ascension-header">
       <button id="ascend-now-btn" ${disabled}>${t('ascension.ascendNow')}</button>
       <button id="ascension-info-btn" class="ascension-info-btn">?</button>
-      <div class="ascension-points">${t('ascension.points')}: ${ascension.points}</div>
+      <div class="ascension-points">${t('ascension.points')}: ${formatNumber(unspent)} / ${formatNumber(total)}</div>
+      <div class="prestige-starting-crystals-info">${t('ascension.upgrade.startingCrystals')}: ${formatNumber(totalCrystals)} <img src="${BASE}/icons/crystal.png" style="width:20px; height:20px; vertical-align:middle; margin-left: 4px;" alt="crystal"/></div>
     </div>
     <div class="ascension-tabs"></div>
     <ul class="ascension-upgrades-list"></ul>
@@ -48,7 +55,7 @@ function renderAscension() {
   const btn = container.querySelector('#ascend-now-btn');
   btn.onclick = () => {
     if (!ascension.canAscend()) {
-      showToast(t('ascension.needPrestiges'));
+      showToast(tp('ascension.needPrestiges', { required: REQUIRED_CRYSTALS_FOR_ASCENSION }));
       return;
     }
     openAscensionModal();
@@ -140,11 +147,12 @@ function openAscensionInfoModal() {
     <div class="ascension-modal-content">
       <button class="modal-close" aria-label="${t('common.close')}">&times;</button>
       <h2>${t('ascension.info.title')}</h2>
-      <p>${t('ascension.info.requirement')}</p>
-      <p>${t('ascension.info.points')}</p>
-      <p>${tp('ascension.info.current', {
-    prestiges: prestige.prestigeCount, crystals: totalCrystals, points: earned,
+      <p>${tp('ascension.info.requirement', { required: REQUIRED_CRYSTALS_FOR_ASCENSION })}</p>
+      <p>${tp('ascension.info.points', {
+    required: REQUIRED_CRYSTALS_FOR_ASCENSION,
+    points: Math.floor(REQUIRED_CRYSTALS_FOR_ASCENSION / 100),
   })}</p>
+      <p>${tp('ascension.info.current', { crystals: totalCrystals, points: earned })}</p>
     </div>
   `;
   const modal = createModal({
