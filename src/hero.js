@@ -352,6 +352,7 @@ export default class Hero {
   }
 
   recalculateFromAttributes() {
+    if (window.perfMon?.enabled) window.perfMon.mark('recalculateFromAttributes');
     const skillTreeBonuses = skillTree.getAllSkillTreeBonuses();
     const weaponEffectivenessPercent = skillTreeBonuses.weaponEffectivenessPercent || 0;
     const weaponFlatEffectivenessPercent = skillTreeBonuses.weaponFlatEffectivenessPercent || 0;
@@ -1154,6 +1155,8 @@ export default class Hero {
     });
 
     this.damageConversionDeltas = conversionDeltas;
+
+    if (window.perfMon?.enabled) window.perfMon.measure('recalculateFromAttributes', 10);
   }
 
   regenerate(ticksPerSecond = 10) {

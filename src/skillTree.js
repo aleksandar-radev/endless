@@ -995,7 +995,14 @@ export default class SkillTree {
     // Apply total synergy bonus as a percentage multiplier to all base effects
     if (totalSynergyBonus > 0) {
       const multiplier = 1 + (totalSynergyBonus / 100);
+      const isSummon = typeof skill.type === 'function' && skill.type() === 'summon';
+
       Object.keys(baseEffects).forEach((stat) => {
+        // Synergy bonuses for summon skills should not affect attack speed or percent of player damage
+        if (isSummon && (stat === 'attackSpeed' || stat === 'percentOfPlayerDamage')) {
+          return;
+        }
+
         const val = baseEffects[stat];
         if (val && val._isStatBonus) {
           const potential = val.uncappedValue * multiplier;
@@ -1480,6 +1487,7 @@ export default class SkillTree {
   }
 
   getActiveBuffEffects() {
+    if (window.perfMon?.enabled) window.perfMon.mark('getActiveBuffEffects');
     const effects = {};
     const buffMultiplier = 1 + (hero.stats.buffEffectivenessPercent || 0);
     const now = Date.now();
@@ -1512,6 +1520,7 @@ export default class SkillTree {
       });
     });
 
+    if (window.perfMon?.enabled) window.perfMon.measure('getActiveBuffEffects', 5);
     return effects;
   }
 
@@ -1538,6 +1547,7 @@ export default class SkillTree {
   }
 
   processSummons() {
+    if (window.perfMon?.enabled) window.perfMon.mark('processSummons');
     const now = Date.now();
     this.activeBuffs.forEach((instances, skillId) => {
       const list = Array.isArray(instances) ? instances : [instances];
@@ -1601,6 +1611,7 @@ export default class SkillTree {
         }
       });
     });
+    if (window.perfMon?.enabled) window.perfMon.measure('processSummons', 5);
   }
 
   // --- Add this method for resetting the skill tree ---
@@ -1792,6 +1803,7 @@ export default class SkillTree {
 
   autoCastEligibleSkills() {
     if (!game.gameStarted) return;
+    if (window.perfMon?.enabled) window.perfMon.mark('autoCastEligibleSkills');
     Object.entries(this.skills).forEach(([skillId, skillData]) => {
       const skill = SKILL_TREES[this.selectedPath?.name]?.[skillId];
       if (!skill || !this.isAutoCastEnabled(skillId)) return;
@@ -1826,5 +1838,6 @@ export default class SkillTree {
         }
       }
     });
+    if (window.perfMon?.enabled) window.perfMon.measure('autoCastEligibleSkills', 5);
   }
 }

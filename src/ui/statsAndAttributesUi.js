@@ -287,6 +287,7 @@ document.addEventListener('toggleRateCounters', (e) => setRateCountersVisibility
 document.addEventListener('resetRateCounters', () => resetRateCounters());
 
 export function updateStatsAndAttributesUI(forceRebuild = false) {
+  if (window.perfMon?.enabled) window.perfMon.mark('updateStatsAndAttributesUI');
   // Create .stats-grid if it doesn't exist
   let statsGrid = document.querySelector('.stats-grid');
   if (forceRebuild && statsGrid) {
@@ -805,6 +806,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
   if (game.currentEnemy) {
     updateEnemyStats();
   }
+  if (window.perfMon?.enabled) window.perfMon.measure('updateStatsAndAttributesUI', 10);
 }
 
 function openSplitView() {

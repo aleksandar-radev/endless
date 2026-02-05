@@ -54,6 +54,9 @@ export const DRUID_SKILLS = {
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'passive', scale: { base: 1 },
       }),
+      extraDamageFromArmorPercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromArmorPercent', skillType: 'passive', scale: { base: 1 },
+      }),
     }),
     synergies: [
       {

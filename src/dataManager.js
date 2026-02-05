@@ -221,6 +221,7 @@ export class DataManager {
     this._pendingSaveReject = null;
 
     const saveOperation = (async () => {
+      if (window.perfMon?.enabled) window.perfMon.mark('saveGame');
       const saveData = getGlobals();
       if (this.enableLastFightTime) {
         const serverNow = await getTimeNow();
@@ -282,6 +283,7 @@ export class DataManager {
           console.error('Cloud save failed:', e);
         }
       }
+      if (window.perfMon?.enabled) window.perfMon.measure('saveGame', 50);
     })();
 
     this._saveInFlight = saveOperation;

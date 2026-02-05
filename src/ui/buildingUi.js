@@ -76,11 +76,18 @@ async function ensureTimeOffsetInitialized() {
 }
 
 function updateBuildingCountdowns() {
+  if (window.perfMon?.enabled) window.perfMon.mark('updateBuildingCountdowns');
   // If the offline bonuses modal is open, do not auto-collect; let that flow handle it
   const offlineModal = document.getElementById('offline-bonuses-modal');
-  if (offlineModal && !offlineModal.classList.contains('hidden')) return;
+  if (offlineModal && !offlineModal.classList.contains('hidden')) {
+    if (window.perfMon?.enabled) window.perfMon.measure('updateBuildingCountdowns', 5);
+    return;
+  }
   const nodes = document.querySelectorAll('.building-next-bonus');
-  if (!nodes.length) return;
+  if (!nodes.length) {
+    if (window.perfMon?.enabled) window.perfMon.measure('updateBuildingCountdowns', 5);
+    return;
+  }
 
   // Use current time with server offset, fallback to local time if offset failed
   const now = Date.now() + serverTimeOffsetMs;
@@ -124,6 +131,7 @@ function updateBuildingCountdowns() {
         console.warn('Failed to collect building bonuses:', error);
       });
   }
+  if (window.perfMon?.enabled) window.perfMon.measure('updateBuildingCountdowns', 5);
 }
 
 function startBuildingCountdowns() {
@@ -488,8 +496,12 @@ function showBuildingInfoModal(building, onUpgrade) {
 }
 
 export function renderPurchasedBuildings() {
+  if (window.perfMon?.enabled) window.perfMon.mark('renderPurchasedBuildings');
   const purchased = document.getElementById('purchased-buildings');
-  if (!purchased) return;
+  if (!purchased) {
+    if (window.perfMon?.enabled) window.perfMon.measure('renderPurchasedBuildings', 10);
+    return;
+  }
   purchased.innerHTML = '';
   Object.values(buildings.buildings)
     .forEach((building) => {
@@ -533,6 +545,7 @@ export function renderPurchasedBuildings() {
   // Update countdowns after (re)render
   updateBuildingCountdowns();
   updateBuildingAffordability();
+  if (window.perfMon?.enabled) window.perfMon.measure('renderPurchasedBuildings', 10);
 }
 
 export function initializeBuildingsUI() {

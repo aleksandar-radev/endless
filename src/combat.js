@@ -162,6 +162,7 @@ function sampleMaterialDrops(extraDrops, pool) {
 
 export function enemyAttack(currentTime) {
   if (!game || !hero) return;
+  if (window.perfMon?.enabled) window.perfMon.mark('enemyAttack');
 
   while (game.currentEnemy) {
     const enemy = game.currentEnemy;
@@ -392,10 +393,12 @@ export function enemyAttack(currentTime) {
       break;
     }
   }
+  if (window.perfMon?.enabled) window.perfMon.measure('enemyAttack', 5);
 }
 
 export function playerAttack(currentTime) {
   if (!game || !game.currentEnemy) return;
+  if (window.perfMon?.enabled) window.perfMon.mark('playerAttack');
 
   const attackSpeed = hero.stats.attackSpeed;
   if (!Number.isFinite(attackSpeed) || attackSpeed <= 0) {
@@ -597,6 +600,7 @@ export function playerAttack(currentTime) {
       break;
     }
   }
+  if (window.perfMon?.enabled) window.perfMon.measure('playerAttack', 5);
 }
 
 // Remove any duplicate definitions and keep this single version

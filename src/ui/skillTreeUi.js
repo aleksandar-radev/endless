@@ -1902,6 +1902,7 @@ function setupSkillTreeFloatingHeader(container, header) {
 }
 
 export function updateSkillTreeValues() {
+  if (window.perfMon?.enabled) window.perfMon.mark('updateSkillTreeValues');
   const characterAvatarEl = document.getElementById('character-avatar');
   const characterNameEl = document.getElementById('character-name');
 
@@ -2169,6 +2170,7 @@ export function updateSkillTreeValues() {
   renderDisplayToggles();
   // --- Distribution bonus info ---
   renderDistributionBonusInfo();
+  if (window.perfMon?.enabled) window.perfMon.measure('updateSkillTreeValues', 15);
 }
 
 // Removed - using showSkillTreeWithTabs
@@ -2363,6 +2365,7 @@ const updateTooltipContent = (skillId) => {
 };
 
 export function updateActionBar() {
+  if (window.perfMon?.enabled) window.perfMon.mark('updateActionBar');
   const skillSlotsContainer = document.querySelector('.skill-slots');
   if (!skillSlotsContainer) return;
 
@@ -2443,6 +2446,7 @@ export function updateActionBar() {
   updateBuffIndicators();
   // Add keyboard listeners
   setupKeyboardShortcuts();
+  if (window.perfMon?.enabled) window.perfMon.measure('updateActionBar', 5);
 }
 
 function createSkillTooltip(skillId) {

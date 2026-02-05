@@ -513,8 +513,10 @@ export function updatePlayerLife() {
 }
 
 export function updateEnemyStats() {
+  if (window.perfMon?.enabled) window.perfMon.mark('updateEnemyStats');
   const enemy = game.currentEnemy;
   if (!enemy) {
+    if (window.perfMon?.enabled) window.perfMon.measure('updateEnemyStats', 5);
     return;
   }
 
@@ -552,12 +554,10 @@ export function updateEnemyStats() {
     ailmentsHash === lastEnemyStatsState.ailmentsHash &&
     elementalDamagesHash === lastEnemyStatsState.elementalDamagesHash &&
     elementalResistancesHash === lastEnemyStatsState.elementalResistancesHash &&
-    heroDamage === lastEnemyStatsState.heroDamage &&
-    heroAttackRating === lastEnemyStatsState.heroAttackRating &&
-    heroChanceToHitPercent === lastEnemyStatsState.heroChanceToHitPercent &&
     heroEvasion === lastEnemyStatsState.heroEvasion &&
     heroElementalDamagesHash === lastEnemyStatsState.heroElementalDamagesHash
   ) {
+    if (window.perfMon?.enabled) window.perfMon.measure('updateEnemyStats', 5);
     return;
   }
 
@@ -658,9 +658,11 @@ export function updateEnemyStats() {
     }
   }
   updateAilmentIcons();
+  if (window.perfMon?.enabled) window.perfMon.measure('updateEnemyStats', 5);
 }
 
 function updateAilmentIcons() {
+  if (window.perfMon?.enabled) window.perfMon.mark('updateAilmentIcons');
   const ailmentsContainer = document.querySelector('.enemy-ailments');
   if (!ailmentsContainer) return;
   ailmentsContainer.innerHTML = '';
@@ -741,9 +743,11 @@ function updateAilmentIcons() {
       ailmentsContainer.appendChild(el);
     }
   });
+  if (window.perfMon?.enabled) window.perfMon.measure('updateAilmentIcons', 5);
 }
 
 function updateHeroAilmentIcons() {
+  if (window.perfMon?.enabled) window.perfMon.mark('updateHeroAilmentIcons');
   const ailmentsContainer = document.querySelector('.hero-ailments');
   if (!ailmentsContainer) return;
   ailmentsContainer.innerHTML = '';
@@ -770,6 +774,7 @@ function updateHeroAilmentIcons() {
       ailmentsContainer.appendChild(el);
     }
   });
+  if (window.perfMon?.enabled) window.perfMon.measure('updateHeroAilmentIcons', 5);
 }
 
 /**

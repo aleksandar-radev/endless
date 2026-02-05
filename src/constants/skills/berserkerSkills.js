@@ -68,7 +68,7 @@ export const BERSERKER_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damage: getSkillStatBonus({
-        level, statKey: 'damage', skillType: 'instant', scale: { base: 3, increment: 1.5 },
+        level, statKey: 'damage', skillType: 'instant', scale: { base: 5, increment: 2.5 },
       }),
       lifePerHit: getSkillStatBonus({
         level, statKey: 'lifePerHit', skillType: 'instant', scale: { base: -1.6, increment: -1 },
