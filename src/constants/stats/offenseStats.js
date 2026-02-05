@@ -310,7 +310,7 @@ export const OFFENSE_STATS = {
       costIncreaseMultiplier: 1.08,
       costThresholds: [{ level: 50, costIncreaseMultiplier: 1.05 }],
       bonus: 0.25,
-      maxLevel: 100,
+      maxLevel: 200,
     }, // max bonus: 50% -> +0.5 attacks/s on the 1.0 base before other flats
     item: { tierScalingMaxPercent: createTierScaling(50, 150, 1) },
     itemTags: ['offense', 'gloves'],
