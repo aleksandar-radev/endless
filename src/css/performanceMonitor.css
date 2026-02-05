@@ -20,7 +20,7 @@
 @media (min-width: 769px) {
   .perf-monitor-overlay {
     top: auto;
-    bottom: 10px;
+    bottom: 25px;
     right: auto;
     left: 10px;
   }
