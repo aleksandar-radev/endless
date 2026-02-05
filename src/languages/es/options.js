@@ -112,6 +112,8 @@ export default {
   'options.showNotifications.tooltip': 'Habilitar notificaciones del navegador para eventos del juego',
   'options.showCombatText': 'Mostrar textos de combate',
   'options.showCombatText.tooltip': 'Mostrar números de daño y otro texto de combate',
+  'options.showPerformanceMonitor': 'Mostrar Monitor de Rendimiento',
+  'options.showPerformanceMonitor.tooltip': 'Mostrar superposición de FPS, tiempo de fotograma y uso de memoria',
   'options.saveText.copy': 'Copiar guardado como texto',
   'options.saveText.paste': 'Pegar guardado como texto',
   'options.saveText.confirm': '¿Pegar guardado desde el portapapeles? Esto sobrescribirá tu guardado actual.',

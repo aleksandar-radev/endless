@@ -284,6 +284,8 @@ class Game {
 
   // Add auto-save functionality to gameLoop
   gameLoop() {
+    if (window.perfMon?.enabled) window.perfMon.mark('gameLoop');
+
     const currentTime = Date.now();
 
     // Regenerate life and mana every 200 ms, even outside combat
@@ -296,7 +298,10 @@ class Game {
     hero.processAilments(100, this.gameStarted);
     hero.updateAdBonuses(100);
 
-    if (!this.gameStarted) return;
+    if (!this.gameStarted) {
+      if (window.perfMon?.enabled) window.perfMon.measure('gameLoop');
+      return;
+    }
 
     // Update buff timers and effects
     skillTree.getActiveBuffEffects();
@@ -327,6 +332,8 @@ class Game {
 
     // Auto-cast logic: run every game loop
     skillTree.autoCastEligibleSkills();
+
+    if (window.perfMon?.enabled) window.perfMon.measure('gameLoop', 5);
   }
 
   toggle() {

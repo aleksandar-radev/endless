@@ -125,6 +125,7 @@ export class Options {
     this.showCombatText = data.showCombatText ?? true;
     this.showStageControlsInline = data.showStageControlsInline ?? false;
     this.showRollPercentiles = data.showRollPercentiles ?? false;
+    this.showPerformanceMonitor = data.showPerformanceMonitor ?? false;
     this.devAccessDeadline = data.devAccessDeadline || null;
     this.devAccessModalDismissed = data.devAccessModalDismissed ?? false;
   }
@@ -684,6 +685,23 @@ export class Options {
         i18nKey: 'options.showCombatText',
         labelText: 'Show Combat Texts:',
         stateKey: 'showCombatText',
+      }),
+    );
+    gameContent.appendChild(
+      this._createToggleOption({
+        id: 'show-performance-monitor-toggle',
+        i18nKey: 'options.showPerformanceMonitor',
+        labelText: 'Show Performance Monitor:',
+        stateKey: 'showPerformanceMonitor',
+        onChange: () => {
+          if (window.perfMon) {
+            if (this.showPerformanceMonitor) {
+              window.perfMon.enableVisual();
+            } else {
+              window.perfMon.disableVisual();
+            }
+          }
+        },
       }),
     );
     gameContent.appendChild(

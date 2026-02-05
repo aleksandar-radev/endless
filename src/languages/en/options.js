@@ -109,6 +109,8 @@ export default {
   'options.showNotifications.tooltip': 'Enable browser notifications for game events',
   'options.showCombatText': 'Show Combat Text',
   'options.showCombatText.tooltip': 'Show damage numbers and other combat text',
+  'options.showPerformanceMonitor': 'Show Performance Monitor',
+  'options.showPerformanceMonitor.tooltip': 'Display FPS, frame time, and memory usage overlay',
   'options.saveText.copy': 'Copy save as text',
   'options.saveText.paste': 'Paste save as text',
   'options.saveText.confirm': 'Paste save from clipboard? This will overwrite your current save.',

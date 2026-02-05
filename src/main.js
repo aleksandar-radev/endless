@@ -34,6 +34,8 @@ import { createModal } from './ui/modal.js';
 import { collectOfflineFightRewards } from './offlineFight.js';
 import { ensureDevAccessRuntimeState } from './migrations/0.8.15.js';
 import { initializeInventoryUI } from './ui/inventoryUi.js';
+import { performanceMonitor } from './performanceMonitor.js';
+import './css/performanceMonitor.css';
 
 window.qwe = console.log;
 window.qw = console.log;
@@ -46,6 +48,16 @@ window.setLanguage = setLanguage;
 (async () => {
   await setGlobals();
   setLanguage(options.language);
+
+  // Enable performance monitoring (after options are loaded)
+  performanceMonitor.enable();
+  window.perfMon = performanceMonitor;
+  console.log('💡 Performance monitoring enabled! Use window.perfMon in console for controls.');
+
+  // Enable visual overlay if option is set
+  if (options.showPerformanceMonitor) {
+    performanceMonitor.enableVisual();
+  }
 
   const { active: devAccessActive, changed: devAccessChanged } = ensureDevAccessRuntimeState(options);
 

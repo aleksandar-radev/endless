@@ -106,6 +106,8 @@ export default {
   'options.showNotifications.tooltip': '为游戏事件启用浏览器通知',
   'options.showCombatText': '显示战斗文本',
   'options.showCombatText.tooltip': '显示伤害数字和其他战斗文本',
+  'options.showPerformanceMonitor': '显示性能监视器',
+  'options.showPerformanceMonitor.tooltip': '显示FPS、帧时间和内存使用覆盖层',
   'options.saveText.copy': '复制存档文本',
   'options.saveText.paste': '粘贴存档文本',
   'options.saveText.confirm': '从剪贴板粘贴存档？这将覆盖当前存档。',
