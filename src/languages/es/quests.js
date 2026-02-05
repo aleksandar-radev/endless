@@ -1,12 +1,7 @@
 export default {
-  'achievements.title': 'Logros',
+  'achievements.title': 'Logros',
   'achievements.showClaimed': 'Mostrar Reclamados',
   'achievements.hideClaimed': 'Ocultar Reclamados',
-  'achievements.data.reach_level_50.desc': 'Alcanza el nivel de héroe 50',
-  'achievements.data.one_shot_kill.desc': 'Mata a un enemigo con salud máxima de un solo golpe',
-  'achievements.data.zero_to_hero.desc': 'Sube de nivel desde 0% de XP en una sola muerte',
-  'achievements.data.summon_one_shot.desc': 'Haz que una invocación mate a un enemigo con salud máxima de un solo golpe',
-  'achievements.data.earn_1b_gold.desc': 'Gana 1,000,000,000 de oro',
   'quests.tab.kills': 'Asesinatos',
   'quests.tab.rarity': 'Rareza',
   'quests.tab.resources': 'Recursos',

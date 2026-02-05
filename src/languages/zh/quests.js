@@ -1,12 +1,7 @@
 export default {
-  'achievements.title': '成就',
+  'achievements.title': '成就',
   'achievements.showClaimed': '显示已领取',
   'achievements.hideClaimed': '隐藏已领取',
-  'achievements.data.reach_level_50.desc': '英雄等级达到 50 级',
-  'achievements.data.one_shot_kill.desc': '一击秒杀满血敌人',
-  'achievements.data.zero_to_hero.desc': '在一次击杀中从 0% 经验升至下一级',
-  'achievements.data.summon_one_shot.desc': '让召唤物一击秒杀满血敌人',
-  'achievements.data.earn_1b_gold.desc': '获得 1,000,000,000 金币',
   'quests.tab.kills': '击杀',
   'quests.tab.rarity': '稀有度',
   'quests.tab.resources': '资源',

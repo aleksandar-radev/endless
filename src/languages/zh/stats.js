@@ -346,7 +346,6 @@ export default {
   'tooltip.armorPenetrationPerLevel': '基于当前等级无视固定数量的敌人护甲。',
   'tooltip.elementalPenetrationPerLevel': '基于当前等级无视固定数量的敌人所有元素抗性。',
   'tooltip.lifePerHitPerLevel': '基于当前等级每次命中恢复固定生命。',
-  'tooltip.manaPerLevel': '基于当前等级增加固定法力值。',
   'tooltip.manaRegenPerLevel': '基于当前等级增加固定法力回复。',
   'tooltip.lifeRegenPerLevel': '基于当前等级增加固定生命回复。',
   'tooltip.armorPenetration': '无视敌人的固定护甲值。',
