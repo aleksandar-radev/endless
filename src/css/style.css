@@ -68,10 +68,6 @@
   border-radius: 0.5rem;
 }
 
-.combat-panel {
-  position: relative;
-}
-
 .character-info {
   display: flex;
 }
