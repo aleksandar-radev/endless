@@ -2,6 +2,7 @@ import { updateQuestsUI } from './questUi.js';
 import * as achievementsUi from './achievementsUi.js';
 import { statistics, quests, achievements } from '../globals.js';
 import { t } from '../i18n.js';
+import { navigationManager } from '../utils/navigationManager.js';
 
 let activeSubTab = 'quests';
 
@@ -11,29 +12,35 @@ export function initializeJournalUI() {
 
   container.innerHTML = `
     <div class="journal-tabs">
-      <button class="journal-tab-btn active" data-subtab="quests" data-i18n="journal.tabs.quests">${t('journal.tabs.quests')}</button>
-      <button class="journal-tab-btn" data-subtab="achievements" data-i18n="journal.tabs.achievements">${t('journal.tabs.achievements')}</button>
-      <button class="journal-tab-btn" data-subtab="statistics" data-i18n="journal.tabs.statistics">${t('journal.tabs.statistics')}</button>
+      <button class="journal-tab-btn ${activeSubTab === 'quests' ? 'active' : ''}" data-subtab="quests" data-i18n="journal.tabs.quests">${t('journal.tabs.quests')}</button>
+      <button class="journal-tab-btn ${activeSubTab === 'achievements' ? 'active' : ''}" data-subtab="achievements" data-i18n="journal.tabs.achievements">${t('journal.tabs.achievements')}</button>
+      <button class="journal-tab-btn ${activeSubTab === 'statistics' ? 'active' : ''}" data-subtab="statistics" data-i18n="journal.tabs.statistics">${t('journal.tabs.statistics')}</button>
     </div>
     <div class="journal-content">
-      <div id="journal-quests" class="journal-panel active"></div>
-      <div id="journal-achievements" class="journal-panel"></div>
-      <div id="journal-statistics" class="journal-panel"></div>
+      <div id="journal-quests" class="journal-panel ${activeSubTab === 'quests' ? 'active' : ''}"></div>
+      <div id="journal-achievements" class="journal-panel ${activeSubTab === 'achievements' ? 'active' : ''}"></div>
+      <div id="journal-statistics" class="journal-panel ${activeSubTab === 'statistics' ? 'active' : ''}"></div>
     </div>
   `;
 
   const tabs = container.querySelectorAll('.journal-tab-btn');
   tabs.forEach((btn) => {
     btn.addEventListener('click', () => {
-      tabs.forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
-      activeSubTab = btn.dataset.subtab;
-      updateJournalUI();
+      switchJournalSubTab(btn.dataset.subtab);
     });
   });
 
   // Initial update
   updateJournalUI();
+}
+
+export function switchJournalSubTab(subTabName, { skipUrlUpdate = false } = {}) {
+  activeSubTab = subTabName;
+  updateJournalUI();
+
+  if (!skipUrlUpdate) {
+    navigationManager.updateUrl({ subtab: subTabName });
+  }
 }
 
 export function updateJournalUI() {

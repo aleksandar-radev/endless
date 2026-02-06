@@ -92,7 +92,7 @@ export default {
   'options.quickBuy': 'Enable Quick Buy',
   'options.quickBuy.tooltip': 'Purchase items with a single click (skips confirmation)',
   'options.bulkBuy': 'Enable Bulk Buy',
-  'options.bulkBuy.tooltip': 'Purchase multiple items at once (SHIFT+Click for max)',
+  'options.bulkBuy.tooltip': 'Purchase multiple items at once',
   'options.numericPurchaseInputs': 'Enable Numeric Inputs',
   'options.numericPurchaseInputs.tooltip': 'Type exact quantities for purchases',
   'options.autoSortInventory': 'Auto Sort Inventory',

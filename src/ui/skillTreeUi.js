@@ -14,6 +14,7 @@ import { formatNumber,
 import { t, tp } from '../i18n.js';
 import { createModal, closeModal } from './modal.js';
 import { IS_MOBILE_OR_TABLET } from '../constants/common.js';
+import { navigationManager } from '../utils/navigationManager.js';
 
 
 
@@ -320,7 +321,7 @@ function openSpecializationSelectionModal(spec) {
   });
 }
 
-function switchSkillTreeTab(tabName) {
+export function switchSkillTreeTab(tabName, { skipUrlUpdate = false } = {}) {
   const container = document.getElementById('skill-tree-container');
 
   // Update tab buttons
@@ -345,6 +346,10 @@ function switchSkillTreeTab(tabName) {
     optionsContent.classList.add('active');
   }
   updateSkillTreeValues();
+
+  if (!skipUrlUpdate) {
+    navigationManager.updateUrl({ skillTreeTab: tabName });
+  }
 }
 
 function initializeSkillsTab() {

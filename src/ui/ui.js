@@ -31,6 +31,7 @@ import { calculateArmorReduction,
   calculateResistanceReduction } from '../combat.js';
 import { renderRunesUI } from './runesUi.js';
 import { createModal, closeModal } from './modal.js';
+import { navigationManager } from '../utils/navigationManager.js';
 
 export function initializeShopUI() {
   document.querySelectorAll('.shop-tab-btn').forEach((btn) => {
@@ -38,7 +39,7 @@ export function initializeShopUI() {
   });
 }
 
-export function switchShopSubTab(subTabName) {
+export function switchShopSubTab(subTabName, { skipUrlUpdate = false } = {}) {
   document.querySelectorAll('.shop-tab-panel').forEach((panel) => panel.classList.remove('active'));
   document.querySelectorAll('.shop-tab-btn').forEach((btn) => btn.classList.remove('active'));
 
@@ -74,6 +75,10 @@ export function switchShopSubTab(subTabName) {
       console.warn('Failed to update building affordability:', e);
     }
   }
+
+  if (!skipUrlUpdate) {
+    navigationManager.updateUrl({ subtab: subTabName });
+  }
 }
 
 export {
@@ -85,6 +90,17 @@ export {
   showLifeWarning,
   showManaWarning,
 } from './skillTreeUi.js';
+
+export {
+  initializeJournalUI,
+  updateJournalUI,
+  switchJournalSubTab,
+} from './journalUi.js';
+
+export {
+  updateStatsAndAttributesUI,
+  switchStatsSubTab,
+} from './statsAndAttributesUi.js';
 
 const ELEMENT_IDS = Object.keys(ELEMENTS);
 
@@ -318,7 +334,7 @@ export function initializeUI() {
   });
 }
 
-export function switchTab(tabName) {
+export function switchTab(tabName, { skipUrlUpdate = false } = {}) {
   // Close all open modals when switching tabs
   document.querySelectorAll('.modal:not(.hidden)').forEach((modal) => {
     closeModal(modal);
@@ -398,7 +414,34 @@ export function switchTab(tabName) {
       const activeSubTab = document.querySelector('.shop-tab-panel.active');
       targetSubTab = activeSubTab ? activeSubTab.id : 'training';
     }
-    switchShopSubTab(targetSubTab);
+    switchShopSubTab(targetSubTab, { skipUrlUpdate: true });
+  }
+
+  // If switching to journal, handle sub-tab
+  if (actualTab === 'journal') {
+    const journalTabs = document.querySelector('.journal-tabs');
+    if (journalTabs) {
+      const activeTabBtn = journalTabs.querySelector('.journal-tab-btn.active');
+      targetSubTab = activeTabBtn ? activeTabBtn.dataset.subtab : 'quests';
+    }
+  }
+
+  // If switching to options, handle sub-tab
+  if (actualTab === 'options') {
+    const optionsTabs = document.querySelector('.options-tabs');
+    if (optionsTabs) {
+      const activeTabBtn = optionsTabs.querySelector('.options-tab.active');
+      targetSubTab = activeTabBtn ? activeTabBtn.dataset.subtab : 'game';
+    }
+  }
+
+  // If switching to stats, handle sub-tab
+  if (actualTab === 'stats') {
+    const statsTabs = document.querySelector('.stats-tabs');
+    if (statsTabs) {
+      const activeTabBtn = statsTabs.querySelector('.subtab-btn.active');
+      targetSubTab = activeTabBtn ? activeTabBtn.dataset.subtab : 'offense';
+    }
   }
 
   game.activeTab = actualTab;
@@ -410,6 +453,14 @@ export function switchTab(tabName) {
   // Update indicators after tab switch
   updateTabIndicators(previousTab);
   dataManager.saveGame();
+
+  if (!skipUrlUpdate) {
+    const urlParams = { tab: actualTab, subtab: targetSubTab, modal: null };
+    if (actualTab !== 'skilltree') {
+      urlParams.skillTreeTab = null;
+    }
+    navigationManager.updateUrl(urlParams);
+  }
 }
 
 export function updateResources() {

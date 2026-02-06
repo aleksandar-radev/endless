@@ -1,11 +1,15 @@
 import { initializeSkillTreeUI,
   initializeUI,
   switchTab,
+  switchShopSubTab,
   updateEnemyStats,
   updatePlayerLife,
   updateResources,
   updateStageUI,
+  switchJournalSubTab,
   updateTabIndicators } from './ui/ui.js';
+import { switchSkillTreeTab } from './ui/skillTreeUi.js';
+import { switchStatsSubTab } from './ui/statsAndAttributesUi.js';
 import { initDebugging } from './functions.js';
 import { game,
   hero,
@@ -30,11 +34,12 @@ import Boss from './boss.js';
 import { RockyFieldEnemy } from './rockyField.js';
 import { applyTranslations, setLanguage, t } from './i18n.js';
 import { getGameInfo } from './api.js';
-import { createModal } from './ui/modal.js';
+import { createModal, closeModal } from './ui/modal.js';
 import { collectOfflineFightRewards } from './offlineFight.js';
 import { ensureDevAccessRuntimeState } from './migrations/0.8.15.js';
 import { initializeInventoryUI } from './ui/inventoryUi.js';
 import { performanceMonitor } from './performanceMonitor.js';
+import { navigationManager } from './utils/navigationManager.js';
 import './css/performanceMonitor.css';
 
 window.qwe = console.log;
@@ -224,10 +229,26 @@ window.setLanguage = setLanguage;
 
   updateRegionUI();
 
+  // Initialize navigation manager
+  navigationManager.init({
+    switchTab,
+    switchShopSubTab,
+    switchSkillTreeTab,
+    switchJournalSubTab,
+    switchStatsSubTab,
+    switchOptionsSubTab: (subTab, opts) => options.switchOptionsSubTab(subTab, opts),
+    closeModal,
+  });
+
   if (game.activeTab === 'battle' && window.innerWidth > 1200) {
     game.activeTab = 'stats';
   }
-  switchTab(game.activeTab);
+  
+  // Try to sync from URL, otherwise fallback to saved activeTab
+  navigationManager.syncFromUrl();
+  if (!navigationManager.currentTab) {
+    switchTab(game.activeTab);
+  }
 
   let isRunning = false;
   setInterval(() => {

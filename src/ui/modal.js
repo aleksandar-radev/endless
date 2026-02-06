@@ -1,5 +1,6 @@
 // modal.js
 // Generic modal helper for creating and closing overlay dialogs
+import { navigationManager } from '../utils/navigationManager.js';
 
 // Create a modal overlay
 // options:
@@ -51,6 +52,8 @@ export function createModal({
     overlay._onClose = onClose;
   }
 
+  navigationManager.updateUrl({ modal: id });
+
   return overlay;
 }
 
@@ -62,5 +65,7 @@ export function closeModal(identifier) {
     // hide overlay instead of removing to allow reopen
     overlay.classList.add('hidden');
     if (cb) cb();
+
+    navigationManager.updateUrl({ modal: null });
   }
 }

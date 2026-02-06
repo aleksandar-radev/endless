@@ -90,7 +90,7 @@ export default {
   'options.quickBuy': '启用快速购买',
   'options.quickBuy.tooltip': '单击一次购买物品（跳过确认）',
   'options.bulkBuy': '启用批量模式（训练、技能、灵魂商店）',
-  'options.bulkBuy.tooltip': '一次购买多个物品（SHIFT+点击最大）',
+  'options.bulkBuy.tooltip': '一次购买多个物品',
   'options.numericPurchaseInputs': '启用数字购买输入',
   'options.numericPurchaseInputs.tooltip': '输入确切数量进行购买',
   'options.autoSortInventory': '启用自动整理库存',

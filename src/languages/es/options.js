@@ -95,7 +95,7 @@ export default {
   'options.quickBuy': 'Habilitar compra rápida',
   'options.quickBuy.tooltip': 'Comprar objetos con un solo clic (omite confirmación)',
   'options.bulkBuy': 'Habilitar modo masivo (Entrenamiento, Habilidades, Tienda de almas)',
-  'options.bulkBuy.tooltip': 'Comprar varios objetos a la vez (SHIFT+Clic para máximo)',
+  'options.bulkBuy.tooltip': 'Comprar varios objetos a la vez',
   'options.numericPurchaseInputs': 'Habilitar entradas numéricas de compra',
   'options.numericPurchaseInputs.tooltip': 'Escribir cantidades exactas para las compras',
   'options.autoSortInventory': 'Habilitar auto ordenar inventario',

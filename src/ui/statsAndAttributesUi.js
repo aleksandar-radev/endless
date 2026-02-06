@@ -6,6 +6,7 @@ import { DEFENSE_STATS } from '../constants/stats/defenseStats.js';
 import { MISC_STATS } from '../constants/stats/miscStats.js';
 import { formatStatName } from '../ui/ui.js';
 import { getAttributeTooltip, ATTRIBUTES } from '../constants/stats/attributes.js';
+import { navigationManager } from '../utils/navigationManager.js';
 import { calculateArmorReduction,
   calculateEvasionChance,
   calculateHitChance,
@@ -33,6 +34,7 @@ let sessionXp = 0;
 let sessionDamage = 0;
 let listenersAttached = false;
 let bottomBar = null;
+let activeSubTab = 'offense';
 
 // Ordered subcategories for each stat group. Stats define their own
 // `subcategory` property which determines the panel they appear in.
@@ -286,6 +288,24 @@ document.addEventListener('toggleRateCounters', (e) => setRateCountersVisibility
 // Allow other systems (e.g., offline reward collection) to request a counters reset
 document.addEventListener('resetRateCounters', () => resetRateCounters());
 
+export function switchStatsSubTab(subTabName, { skipUrlUpdate = false } = {}) {
+  activeSubTab = subTabName;
+  const statsContainer = document.querySelector('.stats-container');
+  if (!statsContainer) return;
+
+  statsContainer.querySelectorAll('.subtab-btn').forEach((b) => {
+    b.classList.toggle('active', b.dataset.subtab === subTabName);
+  });
+
+  statsContainer.querySelectorAll('.stats-panel').forEach((p) => {
+    p.classList.toggle('active', p.id === `${subTabName}-panel`);
+  });
+
+  if (!skipUrlUpdate) {
+    navigationManager.updateUrl({ subtab: subTabName });
+  }
+}
+
 export function updateStatsAndAttributesUI(forceRebuild = false) {
   if (window.perfMon?.enabled) window.perfMon.mark('updateStatsAndAttributesUI');
   // Create .stats-grid if it doesn't exist
@@ -350,9 +370,9 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
 
     const tabsHtml = html`
       <div class="stats-tabs">
-        <button class="subtab-btn active" data-subtab="offense">${t('stats.offense')}</button>
-        <button class="subtab-btn" data-subtab="defense">${t('stats.defense')}</button>
-        <button class="subtab-btn" data-subtab="misc">${t('stats.misc')}</button>
+        <button class="subtab-btn ${activeSubTab === 'offense' ? 'active' : ''}" data-subtab="offense">${t('stats.offense')}</button>
+        <button class="subtab-btn ${activeSubTab === 'defense' ? 'active' : ''}" data-subtab="defense">${t('stats.defense')}</button>
+        <button class="subtab-btn ${activeSubTab === 'misc' ? 'active' : ''}" data-subtab="misc">${t('stats.misc')}</button>
         <button class="elemental-allocation-btn stats-elemental-btn" data-i18n="training.elementalDistributionButton">
           ${t('training.elementalDistributionButton')}
         </button>
@@ -378,7 +398,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
       } else {
         panel.classList.remove('default');
       }
-      if (name === 'offense') panel.classList.add('active');
+      if (name === activeSubTab) panel.classList.add('active');
       panel.id = `${name}-panel`;
       return panel;
     };
@@ -550,12 +570,10 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     // Tab switching logic
     statsContainer.querySelectorAll('.subtab-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
-        statsContainer.querySelectorAll('.subtab-btn').forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
         const sub = btn.dataset.subtab;
-        statsContainer.querySelectorAll('.stats-panel').forEach((p) => p.classList.remove('active'));
-        const target = statsContainer.querySelector(`#${sub}-panel`);
-        if (target) target.classList.add('active');
+        if (sub) {
+          switchStatsSubTab(sub);
+        }
       });
     });
     statsGrid.appendChild(statsContainer);

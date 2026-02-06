@@ -30,6 +30,7 @@ import { CHANGELOG } from './changelog/changelog.js';
 import { audioManager } from './audio.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { setLanguage, t, tp } from './i18n.js';
+import { navigationManager } from './utils/navigationManager.js';
 import { SOUL_SHOP_MAX_QTY,
   CRYSTAL_SHOP_MAX_QTY,
   TRAINING_MAX_QTY,
@@ -128,12 +129,42 @@ export class Options {
     this.showPerformanceMonitor = data.showPerformanceMonitor ?? false;
     this.devAccessDeadline = data.devAccessDeadline || null;
     this.devAccessModalDismissed = data.devAccessModalDismissed ?? false;
+    this.activeSubTab = 'game';
   }
 
   initializeOptionsUI() {
     this._renderOptionsUI();
     this._initCloudSaveButtons();
     audioManager.setVolume(this.soundVolume);
+  }
+
+  switchOptionsSubTab(subTabName, { skipUrlUpdate = false } = {}) {
+    this.activeSubTab = subTabName;
+    const optionsTab = document.getElementById('options');
+    if (!optionsTab) return;
+
+    const gameTabBtn = optionsTab.querySelector('.options-tab[data-subtab="game"]');
+    const generalTabBtn = optionsTab.querySelector('.options-tab[data-subtab="general"]');
+    const gameContent = optionsTab.querySelector('.options-content-game');
+    const generalContent = optionsTab.querySelector('.options-content-general');
+
+    if (!gameTabBtn || !generalTabBtn || !gameContent || !generalContent) return;
+
+    if (subTabName === 'game') {
+      gameTabBtn.classList.add('active');
+      generalTabBtn.classList.remove('active');
+      gameContent.classList.add('active');
+      generalContent.classList.remove('active');
+    } else {
+      generalTabBtn.classList.add('active');
+      gameTabBtn.classList.remove('active');
+      generalContent.classList.add('active');
+      gameContent.classList.remove('active');
+    }
+
+    if (!skipUrlUpdate) {
+      navigationManager.updateUrl({ subtab: subTabName });
+    }
   }
 
   _createLanguageOption() {
@@ -280,19 +311,21 @@ export class Options {
     const tabs = document.createElement('div');
     tabs.className = 'options-tabs';
     const gameTabBtn = document.createElement('button');
-    gameTabBtn.className = 'options-tab active';
+    gameTabBtn.className = `options-tab ${this.activeSubTab === 'game' ? 'active' : ''}`;
     gameTabBtn.setAttribute('data-i18n', 'options.tab.game');
+    gameTabBtn.setAttribute('data-subtab', 'game');
     gameTabBtn.textContent = t('options.tab.game');
     const generalTabBtn = document.createElement('button');
-    generalTabBtn.className = 'options-tab';
+    generalTabBtn.className = `options-tab ${this.activeSubTab === 'general' ? 'active' : ''}`;
     generalTabBtn.setAttribute('data-i18n', 'options.tab.general');
+    generalTabBtn.setAttribute('data-subtab', 'general');
     generalTabBtn.textContent = t('options.tab.general');
     tabs.appendChild(gameTabBtn);
     tabs.appendChild(generalTabBtn);
     container.appendChild(tabs);
 
     const gameContent = document.createElement('div');
-    gameContent.className = 'options-content active';
+    gameContent.className = `options-content options-content-game ${this.activeSubTab === 'game' ? 'active' : ''}`;
     gameContent.appendChild(
       this._createToggleOption({
         id: 'advanced-tooltips-toggle',
@@ -723,7 +756,7 @@ export class Options {
     );
 
     const generalContent = document.createElement('div');
-    generalContent.className = 'options-content';
+    generalContent.className = `options-content options-content-general ${this.activeSubTab === 'general' ? 'active' : ''}`;
     generalContent.appendChild(this._createCloudSaveBar());
     generalContent.appendChild(this._createSaveSlotOption());
     generalContent.appendChild(this._createBackupRestoreOption());
@@ -768,17 +801,11 @@ export class Options {
     container.appendChild(generalContent);
 
     gameTabBtn.addEventListener('click', () => {
-      gameTabBtn.classList.add('active');
-      generalTabBtn.classList.remove('active');
-      gameContent.classList.add('active');
-      generalContent.classList.remove('active');
+      this.switchOptionsSubTab('game');
     });
 
     generalTabBtn.addEventListener('click', () => {
-      generalTabBtn.classList.add('active');
-      gameTabBtn.classList.remove('active');
-      generalContent.classList.add('active');
-      gameContent.classList.remove('active');
+      this.switchOptionsSubTab('general');
     });
 
     optionsTab.appendChild(container);
