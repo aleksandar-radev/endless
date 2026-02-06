@@ -1,6 +1,6 @@
 import { game, hero, statistics, options, training, soulShop, ascension } from '../globals.js';
 import { getDivisor, getStatDecimalPlaces } from '../constants/stats/stats.js';
-import { hideTooltip, positionTooltip, showTooltip, updateEnemyStats, formatNumber, switchTab } from '../ui/ui.js';
+import { hideTooltip, positionTooltip, showTooltip, updateEnemyStats, formatNumber } from '../ui/ui.js';
 import { OFFENSE_STATS } from '../constants/stats/offenseStats.js';
 import { DEFENSE_STATS } from '../constants/stats/defenseStats.js';
 import { MISC_STATS } from '../constants/stats/miscStats.js';
@@ -11,13 +11,7 @@ import { calculateArmorReduction,
   calculateEvasionChance,
   calculateHitChance,
   calculateResistanceReduction } from '../combat.js';
-import { createModal } from './modal.js';
 import { t, tp } from '../i18n.js';
-import { updateInventoryGrid } from './inventoryUi.js';
-import { renderRunesUI } from './runesUi.js';
-import { updateAscensionUI } from './ascensionUi.js';
-import { updateSkillTreeValues } from './skillTreeUi.js';
-import { updateBuildingAffordability } from './buildingUi.js';
 import { ELEMENTS } from '../constants/common.js';
 
 const html = String.raw;
@@ -376,15 +370,10 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
         <button class="elemental-allocation-btn stats-elemental-btn" data-i18n="training.elementalDistributionButton">
           ${t('training.elementalDistributionButton')}
         </button>
-        <button class="split-view-btn" id="split-view-btn">${t('stats.splitView')}</button>
       </div>
     `;
     statsContainer.innerHTML += tabsHtml;
 
-    const splitBtn = statsContainer.querySelector('#split-view-btn');
-    if (splitBtn) {
-      splitBtn.addEventListener('click', openSplitView);
-    }
     const allocationBtn = statsContainer.querySelector('.stats-elemental-btn');
     if (allocationBtn) {
       allocationBtn.addEventListener('click', () => training?.openElementalDistributionModal?.());
@@ -825,102 +814,4 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     updateEnemyStats();
   }
   if (window.perfMon?.enabled) window.perfMon.measure('updateStatsAndAttributesUI', 10);
-}
-
-function openSplitView() {
-  const html = String.raw;
-  const splitState = { placeholders: {}, currentRight: null };
-
-  function movePanel(id, target) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const placeholder = document.createElement('div');
-    splitState.placeholders[id] = placeholder;
-    el.parentElement.insertBefore(placeholder, el);
-    target.appendChild(el);
-    el.classList.add('active');
-  }
-
-  function restorePanel(id) {
-    const el = document.getElementById(id);
-    const placeholder = splitState.placeholders[id];
-    if (el && placeholder) {
-      placeholder.parentElement.insertBefore(el, placeholder);
-      el.classList.remove('active');
-      placeholder.remove();
-      delete splitState.placeholders[id];
-    }
-  }
-
-  const modal = createModal({
-    id: 'split-view-modal',
-    className: 'split-view-modal',
-    content: html`
-      <div class="modal-content">
-        <button class="modal-close">&times;</button>
-        <div class="split-left"></div>
-        <div class="split-right">
-          <div class="split-right-tabs"></div>
-          <div class="split-right-panel"></div>
-        </div>
-      </div>
-    `,
-    onClose: () => {
-      restorePanel('stats');
-      if (splitState.currentRight) restorePanel(splitState.currentRight);
-      switchTab('stats');
-      updateInventoryGrid();
-    },
-  });
-
-  const left = modal.querySelector('.split-left');
-  const rightTabs = modal.querySelector('.split-right-tabs');
-  const rightPanel = modal.querySelector('.split-right-panel');
-
-  movePanel('stats', left);
-  const statsEl = document.getElementById('stats');
-
-  function showRight(tab) {
-    if (splitState.currentRight) {
-      restorePanel(splitState.currentRight);
-    }
-    switchTab(tab);
-    statsEl.classList.add('active');
-    movePanel(tab, rightPanel);
-
-    // Update inventory grid for all tabs to ensure equipped items are displayed correctly
-    updateInventoryGrid();
-
-    // Call specific UI update functions for each tab
-    if (tab === 'runes') {
-      renderRunesUI();
-    } else if (tab === 'ascension') {
-      updateAscensionUI();
-    } else if (tab === 'skilltree') {
-      updateSkillTreeValues();
-    } else if (tab === 'soulShop') {
-      soulShop?.updateSoulShopAffordability();
-    } else if (tab === 'buildings') {
-      updateBuildingAffordability();
-    }
-
-    splitState.currentRight = tab;
-    rightTabs.querySelectorAll('button').forEach((b) => {
-      b.classList.toggle('active', b.dataset.tab === tab);
-    });
-  }
-
-  document.querySelectorAll('.tab-buttons .tab-btn').forEach((btn) => {
-    const tab = btn.dataset.tab;
-    // Allow inventory, runes, skill tree, ascension, soul shop and buildings in split view
-    if (!['inventory', 'runes', 'skilltree', 'ascension', 'soulShop', 'buildings'].includes(tab)) return;
-    const clone = document.createElement('button');
-    clone.className = 'subtab-btn';
-    clone.dataset.tab = tab;
-    clone.textContent = btn.textContent;
-    clone.addEventListener('click', () => showRight(tab));
-    rightTabs.appendChild(clone);
-  });
-
-  showRight('inventory');
 }

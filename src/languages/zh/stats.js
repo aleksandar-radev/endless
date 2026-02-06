@@ -14,7 +14,6 @@ export default {
   'stats.misc.resources': '资源',
   'stats.misc.rewards': '奖励',
   'stats.misc.misc': '杂项',
-  'stats.splitView': '分屏',
   critChance: '暴击率',
   critChanceCap: '暴击率上限',
   critDamage: '暴击伤害',

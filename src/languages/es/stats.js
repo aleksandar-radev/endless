@@ -14,7 +14,6 @@ export default {
   'stats.misc.resources': 'Recursos',
   'stats.misc.rewards': 'Recompensas',
   'stats.misc.misc': 'Varios',
-  'stats.splitView': 'Vista dividida',
   critChance: 'Probabilidad de Crítico',
   critChanceCap: 'Límite de Prob. de Crítico',
   critDamage: 'Daño Crítico',
