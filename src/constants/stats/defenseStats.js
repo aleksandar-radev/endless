@@ -71,6 +71,7 @@ export const DEFENSE_STATS = {
   lifePercent: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(15, 250, 1.1) },
     itemTags: ['belt', 'pants'],
+    sub: 'defense',
     skills: createDefaultSkillBonusesPercent(),
   }),
   armor: createStat({
@@ -135,7 +136,10 @@ export const DEFENSE_STATS = {
       }),
     },
   }),
-  blockChancePercent: createPercentStat({}),
+  blockChancePercent: createPercentStat({
+    sub: 'defense',
+    forceNotShow: true,
+  }),
   blockChanceCap: createStat({
     base: 50,
     showValue: true,
@@ -170,6 +174,7 @@ export const DEFENSE_STATS = {
   lifeRegenPercent: createPercentStat({
     item: { tierScalingMaxPercent: resistanceTierScalingMaxPercent },
     itemTags: ['belt'],
+    sub: 'defense',
     skills: createDefaultSkillBonusesPercent({
       passive: { base: 5 },
       buff: { base: 8, linear: 0.06 },
@@ -177,6 +182,7 @@ export const DEFENSE_STATS = {
   }),
   lifeRegenOfTotalPercent: createPercentStat({
     dec: 2,
+    sub: 'defense',
     training: {
       cost: 1000, bonus: 0.01, maxLevel: 100,
     },
@@ -235,7 +241,7 @@ export const DEFENSE_STATS = {
       }),
     },
   }),
-  reflectFireDamage: createStat({ skills: createDefaultSkillBonusesFlat('reflectFireDamage', { buff: { base: 2.5, increment: 2.5 } }) }),
+  reflectFireDamage: createStat({ sub: 'defense', skills: createDefaultSkillBonusesFlat('reflectFireDamage', { buff: { base: 2.5, increment: 2.5 } }) }),
   evasion: createStat({
     dec: 1,
     training: {
@@ -265,6 +271,7 @@ export const DEFENSE_STATS = {
     skills: createDefaultSkillBonusesPercent(),
   }),
   avoidChance: createChanceStat({
+    sub: 'defense',
     forceNotShow: true,
     skills: createDefaultSkillBonusesPercent({
       passive: {
@@ -299,7 +306,7 @@ export const DEFENSE_STATS = {
       buff: { base: 4, max: 8000 },
     }),
   }),
-  manaShieldPercent: createPercentStat({ skills: createDefaultSkillBonusesPercent({ buff: { linear: 0.103, max: 100 } }) }),
+  manaShieldPercent: createPercentStat({ sub: 'misc', skills: createDefaultSkillBonusesPercent({ buff: { linear: 0.103, max: 100 } }) }),
   manaShieldDamageTakenReductionPercent: createPercentStat({
     sub: 'defense',
     skills: createDefaultSkillBonusesPercent({ passive: { linear: 0.2, max: 50 } }),
@@ -314,7 +321,7 @@ export const DEFENSE_STATS = {
     }),
   }),
   itemLifeEffectivenessPercent: createPercentStat({
-    sub: 'defense',
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 15, linear: 2, power: 0.725,
@@ -322,7 +329,7 @@ export const DEFENSE_STATS = {
     }),
   }),
   itemArmorEffectivenessPercent: createPercentStat({
-    sub: 'defense',
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 15, linear: 2, power: 0.725,
@@ -331,7 +338,7 @@ export const DEFENSE_STATS = {
   }),
   shieldEffectivenessPercent: createStat({
     dec: 1,
-    sub: 'defense',
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 15, linear: 2, power: 0.725,
@@ -340,10 +347,10 @@ export const DEFENSE_STATS = {
   }),
   shieldFlatEffectivenessPercent: createStat({
     dec: 1,
-    sub: 'defense',
+    sub: 'misc',
   }),
   divineProtectionBuffEffectivenessPercent: createPercentStat({
-    sub: 'defense',
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,

@@ -108,6 +108,7 @@ export const OFFENSE_STATS = {
   }),
   attackSpeedPercent: createPercentStat({
     dec: 2,
+    sub: 'attack',
     training: {
       cost: 400,
       costIncrease: 600,
@@ -198,6 +199,7 @@ export const OFFENSE_STATS = {
   }),
   critDamagePercent: createPercentStat({
     dec: 2,
+    sub: 'attack',
     training: {
       cost: 400,
       costIncrease: 600,
@@ -279,14 +281,14 @@ export const OFFENSE_STATS = {
       },
     }),
   }),
-  lifeStealPercent: createPercentStat({ forceNotShow: true }),
+  lifeStealPercent: createPercentStat({ sub: 'attack', forceNotShow: true }),
   omniSteal: createPercentStat({
     dec: 2,
     item: { tierScalingMaxPercent: createTierScaling(0.7, 5.0, 1.1) },
     show: true,
     sub: 'attack',
   }),
-  omniStealPercent: createPercentStat({ forceNotShow: true }),
+  omniStealPercent: createPercentStat({ sub: 'attack', forceNotShow: true }),
   lifePerHit: createStat({
     dec: 1,
     training: {
@@ -303,7 +305,7 @@ export const OFFENSE_STATS = {
     sub: 'attack',
     skills: createDefaultSkillBonusesFlat('lifePerHit'),
   }),
-  lifePerHitPercent: createPercentStat({ forceNotShow: true }),
+  lifePerHitPercent: createPercentStat({ sub: 'attack', forceNotShow: true }),
   doubleDamageChance: createChanceStat({
     training: {
       cost: 550,
@@ -346,6 +348,7 @@ export const OFFENSE_STATS = {
     skills: createDefaultSkillBonusesPercent(),
   }),
   percentOfPlayerDamage: createPercentStat({
+    sub: 'misc',
     forceNotShow: true,
     skills: createDefaultSkillBonusesPercent({ summon: { linear: 0.01, max: 200 } }),
   }),
@@ -413,6 +416,7 @@ export const OFFENSE_STATS = {
   attackNeverMiss: createStat(),
   reduceEnemyDamagePercent: createPercentStat({
     dec: 2,
+    sub: 'attack',
     cap: 80,
     skills: createDefaultSkillBonusesPercent({
       instant: {
@@ -428,10 +432,12 @@ export const OFFENSE_STATS = {
   }),
   reduceEnemyHpPercent: createPercentStat({
     dec: 2,
+    sub: 'attack',
     cap: 50,
   }),
   reduceEnemyAttackSpeedPercent: createPercentStat({
     dec: 2,
+    sub: 'attack',
     cap: 50,
     skills: createDefaultSkillBonusesPercent({
       passive: {
@@ -449,6 +455,7 @@ export const OFFENSE_STATS = {
   enemyAttackDelayMs: createHiddenStat(),
   extraDamageFromLifePercent: createPercentStat({
     dec: 2,
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 0.05, linear: 0.0008, max: 2.25,
@@ -463,6 +470,7 @@ export const OFFENSE_STATS = {
   }),
   extraDamageFromArmorPercent: createPercentStat({
     dec: 2,
+    sub: 'misc',
     skills: {
       passive: getSkillBonusesPercent({
         type: 'passive', base: 0.05, softcap: 2000, linear: 0.00075, power: 0.6, max: 2.5,
@@ -477,6 +485,7 @@ export const OFFENSE_STATS = {
   }),
   extraDamageFromManaPercent: createPercentStat({
     dec: 2,
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 0.05, linear: 0.001, max: 2,
@@ -485,6 +494,7 @@ export const OFFENSE_STATS = {
   }),
   extraDamageFromLifeRegenPercent: createPercentStat({
     dec: 2,
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 0.05, linear: 0.001, max: 3.5,
@@ -499,6 +509,7 @@ export const OFFENSE_STATS = {
   }),
   extraDamageFromEvasionPercent: createPercentStat({
     dec: 2,
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 0.05, linear: 0.00075, max: 2.5,
@@ -513,6 +524,7 @@ export const OFFENSE_STATS = {
   }),
   extraDamageFromAttackRatingPercent: createPercentStat({
     dec: 2,
+    sub: 'misc',
     item: { tierScalingMaxPercent: createTierScaling(0.3, 1.5, 1.0) },
     skills: createDefaultSkillBonusesPercent({
       passive: {
@@ -526,9 +538,10 @@ export const OFFENSE_STATS = {
       },
     }),
   }),
-  extraEvasionFromLifePercent: createPercentStat({ dec: 2 }),
+  extraEvasionFromLifePercent: createPercentStat({ dec: 2, sub: 'misc' }),
   extraDamageFromAllResistancesPercent: createPercentStat({
     dec: 2,
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 0.05, linear: 0.0003, max: 2,
@@ -548,6 +561,7 @@ export const OFFENSE_STATS = {
     }),
   }),
   animatedWeaponsDamagePercent: createPercentStat({
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
@@ -555,6 +569,7 @@ export const OFFENSE_STATS = {
     }),
   }),
   cloneDamagePercent: createPercentStat({
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
@@ -571,14 +586,16 @@ export const OFFENSE_STATS = {
     }),
   }),
   damageToHighRarityEnemiesPercent: createPercentStat({
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
       },
     }),
   }),
-  healDamagesEnemiesPercent: createPercentStat(),
+  healDamagesEnemiesPercent: createPercentStat({ sub: 'misc' }),
   batsHealPercent: createPercentStat({
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
@@ -595,13 +612,14 @@ export const OFFENSE_STATS = {
   }),
   bleedDamagePercent: createPercentStat({
     dec: 0,
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
       },
     }),
   }),
-  overkillDamagePercent: createStat({ div: 100 }),
+  overkillDamagePercent: createStat({ div: 100, sub: 'misc' }),
   burnChance: createChanceStat({
     sub: 'elemental',
     skills: createDefaultSkillBonusesPercent({ passive: { linear: 0.5, max: 60 } }),
@@ -640,7 +658,7 @@ export const OFFENSE_STATS = {
       },
     }),
   }),
-  shockEffectivenessPercent: createPercentStat({ skills: createDefaultSkillBonusesPercent({ passive: { linear: 0.5, power: 0.7 } }) }),
+  shockEffectivenessPercent: createPercentStat({ sub: 'elemental', skills: createDefaultSkillBonusesPercent({ passive: { linear: 0.5, power: 0.7 } }) }),
   freezeChance: createChanceStat({ sub: 'elemental' }),
   stunChance: createChanceStat({ sub: 'attack' }),
   extraDamageAgainstFrozenEnemies: createPercentStat({
@@ -660,19 +678,21 @@ export const OFFENSE_STATS = {
     }),
   }),
   summonDamageBuffPercent: createPercentStat({
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
       },
     }),
   }),
-  summonAttackSpeedBuffPercent: createPercentStat({ skills: createDefaultSkillBonusesPercent({ passive: { linear: 0.5, max: 30 } }) }),
+  summonAttackSpeedBuffPercent: createPercentStat({ sub: 'misc', skills: createDefaultSkillBonusesPercent({ passive: { linear: 0.5, max: 30 } }) }),
   summonerExtraSummonUnlocked: createHiddenStat(),
   naturalistInstantSkillsUnlocked: createHiddenStat(),
   teleportDodgeChance: createChanceStat({ sub: 'defense' }),
-  manaToLifeTransferPercent: createPercentStat(),
-  damageToBossesPercent: createPercentStat(),
+  manaToLifeTransferPercent: createPercentStat({ sub: 'misc' }),
+  damageToBossesPercent: createPercentStat({ sub: 'misc' }),
   bloodSacrificeEffectivenessPercent: createPercentStat({
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
@@ -681,6 +701,7 @@ export const OFFENSE_STATS = {
   }),
   instaKillPercent: createPercentStat({
     dec: 2,
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 0.2, softcap: 100, linear: 0.1, power: 0.5, max: 5,
@@ -688,3 +709,4 @@ export const OFFENSE_STATS = {
     }),
   }),
 };
+

@@ -52,9 +52,9 @@ export class Options {
   constructor(data = {}) {
     this.version = data.version || '0.9.0';
     this.startingStage = data.startingStage || null;
-    this.showEnemyStats = data.showEnemyStats ?? false;
+    this.showEnemyStats = data.showEnemyStats ?? true;
     this.showAllStats = data.showAllStats ?? false;
-    this.hideZeroStats = data.hideZeroStats ?? false;
+    this.hideZeroStats = data.hideZeroStats ?? true;
     this.resetRequired = data.resetRequired ?? null;
     this.stageSkip = data.stageSkip || 0;
     this.arenaBossSkip = data.arenaBossSkip || 0;
@@ -65,7 +65,7 @@ export class Options {
     this.salvageMaterialsEnabled = data.salvageMaterialsEnabled ?? false;
     this.autoSortInventory = data.autoSortInventory ?? false;
     this.showAdvancedTooltips = data.showAdvancedTooltips ?? true;
-    this.showAdvancedAttributeTooltips = data.showAdvancedAttributeTooltips ?? false;
+    this.showAdvancedAttributeTooltips = data.showAdvancedAttributeTooltips ?? true;
     this.showRateCounters = data.showRateCounters ?? false;
     this.rateCountersPeriod = data.rateCountersPeriod || 1;
     const quickFlags = [data.quickBuy, data.quickTraining, data.quickSoulShop, data.quickSkills];

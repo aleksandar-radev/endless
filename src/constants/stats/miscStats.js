@@ -34,6 +34,7 @@ export const MISC_STATS = {
   manaPercent: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(8, 100, 1.2) },
     itemTags: ['misc', 'jewelry', 'magic'],
+    sub: 'resources',
     skills: createDefaultSkillBonusesPercent(),
   }),
   manaRegen: createStat({
@@ -53,6 +54,7 @@ export const MISC_STATS = {
   manaRegenPercent: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(10, 100, 1.2) },
     itemTags: ['jewelry', 'magic'],
+    sub: 'resources',
     skills: createDefaultSkillBonusesPercent(),
   }),
   manaPerHit: createStat({
@@ -69,12 +71,12 @@ export const MISC_STATS = {
     sub: 'resources',
     skills: createDefaultSkillBonusesFlat('manaPerHit'),
   }),
-  manaPerHitPercent: createStat({ div: 100 }),
+  manaPerHitPercent: createStat({ div: 100, sub: 'resources' }),
   manaSteal: createPercentStat({
     dec: 2,
     item: { tierScalingMaxPercent: createTierScaling(1.25, 10, 1.2) },
     show: true,
-    sub: 'attack',
+    sub: 'resources',
   }),
   manaStealPercent: createPercentStat({ forceNotShow: true }),
   strength: createStat({
@@ -89,6 +91,7 @@ export const MISC_STATS = {
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'axe', 'mace'],
     skills: createDefaultSkillBonusesPercent(),
+    forceNotShow: true,
   }),
   agility: createStat({
     item: {
@@ -102,6 +105,7 @@ export const MISC_STATS = {
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'axe', 'mace'],
     skills: createDefaultSkillBonusesPercent(),
+    forceNotShow: true,
   }),
   vitality: createStat({
     item: {
@@ -117,6 +121,7 @@ export const MISC_STATS = {
     skills: createDefaultSkillBonusesPercent({
       passive: { base: 5 },
       buff: { base: 8, linear: 0.08 },
+      forceNotShow: true,
     }),
   }),
   wisdom: createStat({
@@ -131,6 +136,7 @@ export const MISC_STATS = {
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'jewelry', 'magic'],
     skills: createDefaultSkillBonusesPercent(),
+    forceNotShow: true,
   }),
   endurance: createStat({
     item: {
@@ -144,6 +150,7 @@ export const MISC_STATS = {
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'jewelry'],
     skills: createDefaultSkillBonusesPercent(),
+    forceNotShow: true,
   }),
   dexterity: createStat({
     item: {
@@ -158,6 +165,7 @@ export const MISC_STATS = {
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'jewelry'],
     skills: createDefaultSkillBonusesPercent(),
+    forceNotShow: true,
   }),
   intelligence: createStat({
     item: {
@@ -171,6 +179,7 @@ export const MISC_STATS = {
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'jewelry', 'magic'],
     skills: createDefaultSkillBonusesPercent(),
+    forceNotShow: true,
   }),
   perseverance: createStat({
     item: {
@@ -184,6 +193,7 @@ export const MISC_STATS = {
     item: { tierScalingMaxPercent: attributeTierScalingMaxPercent },
     itemTags: ['misc', 'jewelry'],
     skills: createDefaultSkillBonusesPercent(),
+    forceNotShow: true,
   }),
   enduranceThornsDamagePerPoint: createStat({
     dec: 1,
@@ -243,7 +253,7 @@ export const MISC_STATS = {
   adAllResistancePercent: createPercentStat({ sub: 'rewards', show: true }),
   adXpBonusPercent: createPercentStat({ sub: 'rewards', show: true }),
   adGoldGainPercent: createPercentStat({ sub: 'rewards', show: true }),
-  manaCostReductionPercent: createPercentStat(),
+  manaCostReductionPercent: createPercentStat({ sub: 'resources' }),
   buffDurationPercent: createPercentStat({
     show: true,
     sub: 'misc',
@@ -264,7 +274,7 @@ export const MISC_STATS = {
       },
     }),
   }),
-  itemBonusesPercent: createPercentStat(),
+  itemBonusesPercent: createPercentStat({ sub: 'misc' }),
   itemQuantityPercent: createStat({
     div: 100,
     item: { tierScalingMaxPercent: dropTierScalingMaxPercent },
@@ -300,13 +310,14 @@ export const MISC_STATS = {
     show: true,
     sub: 'rewards',
   }),
-  skillPointsPerLevel: createStat({ dec: 0 }),
-  attributesPerLevel: createStat({ dec: 0 }),
-  extraResourceDamageCapPerLevel: createStat({ dec: 0 }),
-  extraMaterialDropPercent: createStat({ div: 100 }),
-  extraMaterialDropMax: createStat({ base: 1 }),
+  skillPointsPerLevel: createStat({ dec: 0, sub: 'rewards' }),
+  attributesPerLevel: createStat({ dec: 0, sub: 'rewards' }),
+  extraResourceDamageCapPerLevel: createStat({ dec: 0, sub: 'rewards' }),
+  extraMaterialDropPercent: createStat({ div: 100, sub: 'rewards' }),
+  extraMaterialDropMax: createStat({ base: 1, sub: 'rewards' }),
   manaRegenOfTotalPercent: createPercentStat({
     dec: 2,
+    sub: 'resources',
     training: {
       cost: 1000, bonus: 0.01, maxLevel: 100,
     },
@@ -319,25 +330,29 @@ export const MISC_STATS = {
       scaling: (level, tier) => miscScaling(level, tier),
     },
     itemTags: ['defense', 'jewelry', 'gloves', 'misc'],
+    sub: 'misc',
     skills: createDefaultSkillBonusesFlat('allAttributes'),
   }),
   allAttributesPercent: createPercentStat({
     dec: 1,
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent(),
   }),
   canDualWieldTwoHanded: createHiddenStat(),
-  weaponEffectivenessPercent: createStat({ dec: 1 }),
+  weaponEffectivenessPercent: createStat({ dec: 1, sub: 'misc' }),
   weaponFlatEffectivenessPercent: createStat({
     dec: 1,
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 15, linear: 2, power: 0.725,
       },
     }),
   }),
-  jewelryEffectivenessPercent: createStat({ dec: 1 }),
+  jewelryEffectivenessPercent: createStat({ dec: 1, sub: 'misc' }),
   jewelryFlatEffectivenessPercent: createStat({
     dec: 1,
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 15, linear: 2, power: 0.725,
@@ -348,6 +363,7 @@ export const MISC_STATS = {
   animatedWeaponsUnlocked: createHiddenStat(),
   cloneUnlocked: createHiddenStat(),
   nightStalkerBuffEffectivenessPercent: createPercentStat({
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
@@ -355,12 +371,13 @@ export const MISC_STATS = {
     }),
   }),
   canUseTwoShields: createHiddenStat(),
-  amuletEffectivenessPercent: createPercentStat(),
-  amuletFlatEffectivenessPercent: createStat({ dec: 1 }),
-  ringEffectivenessPercent: createPercentStat(),
-  ringFlatEffectivenessPercent: createStat({ dec: 1 }),
+  amuletEffectivenessPercent: createPercentStat({ sub: 'misc' }),
+  amuletFlatEffectivenessPercent: createStat({ dec: 1, sub: 'misc' }),
+  ringEffectivenessPercent: createPercentStat({ sub: 'misc' }),
+  ringFlatEffectivenessPercent: createStat({ dec: 1, sub: 'misc' }),
   uncappedAttackSpeed: createHiddenStat(),
   warlordEffectivenessPercent: createPercentStat({
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.725,
@@ -370,15 +387,16 @@ export const MISC_STATS = {
   overhealToLife: createHiddenStat(),
   overhealPercent: createStat({
     div: 100,
+    sub: 'misc',
     skills: createDefaultSkillBonusesPercent({ passive: { base: 5, linear: 0.5 } }),
   }),
   bloodSacrificeUnlocked: createHiddenStat(),
   shapeshiftUnlocked: createHiddenStat(),
-  reduceEnemyResistancesPercent: createPercentStat(),
-  convertManaToLifePercent: createPercentStat(),
+  reduceEnemyResistancesPercent: createPercentStat({ sub: 'misc' }),
+  convertManaToLifePercent: createPercentStat({ sub: 'resources' }),
   weaponIllusionUnlocked: createHiddenStat(),
   glacialBulwarkUnlocked: createHiddenStat(),
-  weaponBuffEffectivenessPercent: createPercentStat(),
+  weaponBuffEffectivenessPercent: createPercentStat({ sub: 'misc' }),
   crimsonAegisSkillUnlocked: createHiddenStat(),
   bloodSiphonSkillUnlocked: createHiddenStat(),
 };
