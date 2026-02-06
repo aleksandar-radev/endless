@@ -426,7 +426,36 @@ export function playerAttack(currentTime) {
     const roll = Math.random() * 100;
     const neverMiss = hero.stats.attackNeverMiss > 0 && !alwaysEvade;
 
-    const manaPerHit = (hero.stats.manaPerHit || 0) * (1 + (hero.stats.manaPerHitPercent || 0));
+    const rawManaPerHit = hero.stats.manaPerHit || 0;
+    const manaPerHit = rawManaPerHit > 0
+      ? rawManaPerHit * (1 + (hero.stats.manaPerHitPercent || 0))
+      : rawManaPerHit;
+
+    const rawLifePerHit = hero.stats.lifePerHit || 0;
+    const lifePerHit = rawLifePerHit > 0
+      ? rawLifePerHit * (1 + (hero.stats.lifePerHitPercent || 0))
+      : rawLifePerHit;
+
+    // Apply negative costs (mana and life) even on miss.
+    if (manaPerHit < 0) {
+      const manaCostDisplay = Math.floor(Math.abs(manaPerHit));
+      if (manaCostDisplay >= 1) {
+        createDamageNumber({
+          text: `-${manaCostDisplay}`, isPlayer: true, color: '#1E90FF',
+        });
+      }
+      game.restoreMana(manaPerHit);
+    }
+
+    if (lifePerHit < 0) {
+      const lifeCostDisplay = Math.floor(Math.abs(lifePerHit));
+      if (lifeCostDisplay >= 1) {
+        createDamageNumber({
+          text: `-${lifeCostDisplay}`, isPlayer: true, color: '#FF5252',
+        });
+      }
+      game.healPlayer(lifePerHit);
+    }
 
     if (!neverMiss && (alwaysEvade || roll > hitChance)) {
       createDamageNumber({ text: 'MISS', color: '#888888' });
@@ -495,13 +524,13 @@ export function playerAttack(currentTime) {
       const enemySpecials = enemy.special || [];
       const enemySpecialData = enemy.specialData || {};
 
-      const lifePerHit = (hero.stats.lifePerHit || 0) * (1 + (hero.stats.lifePerHitPercent || 0));
       const lifeStealAmount = damage * (hero.stats.lifeSteal || 0);
       const manaStealAmount = damage * (hero.stats.manaSteal || 0);
       const omniStealAmount = damage * (hero.stats.omniSteal || 0);
 
       const disallowLeech = enemySpecials.includes('noLeech');
-      const adjustedLifePerHit = disallowLeech ? Math.min(lifePerHit, 0) : lifePerHit;
+      const positiveLifePerHit = Math.max(0, lifePerHit);
+      const adjustedLifePerHit = disallowLeech ? 0 : positiveLifePerHit;
       const adjustedLifeStealAmount = disallowLeech ? Math.min(lifeStealAmount, 0) : lifeStealAmount;
       const adjustedOmniStealAmount = disallowLeech ? Math.min(omniStealAmount, 0) : omniStealAmount;
 
@@ -548,8 +577,8 @@ export function playerAttack(currentTime) {
       const arcDischargeChance = Math.max(0, Math.min(1, hero.stats.arcDischargeChance || 0));
       const didArcDischarge = arcDischargeChance > 0 && Math.random() < arcDischargeChance;
 
-      // negative manaPerHit handles elsewhere
-      const manaRestore = (manaPerHit > 0 ? manaPerHit : 0) + manaStealAmount + omniStealAmount;
+      // positive manaPerHit only applies on hit
+      const manaRestore = Math.max(0, manaPerHit) + manaStealAmount + omniStealAmount;
       const manaDisplayAmount = Math.floor(Math.abs(manaRestore));
       if (manaRestore > 0 && manaDisplayAmount >= 1) {
         createDamageNumber({
@@ -582,15 +611,6 @@ export function playerAttack(currentTime) {
           game.damagePlayer(thornsDamage, { thornsDamage });
         }
       }
-    }
-    if (manaPerHit < 0) {
-      const manaCostDisplay = Math.floor(Math.abs(manaPerHit));
-      if (manaCostDisplay >= 1) {
-        createDamageNumber({
-          text: `-${manaCostDisplay}`, isPlayer: true, color: '#1E90FF',
-        });
-      }
-      game.restoreMana(manaPerHit);
     }
     if (game.fightMode === 'arena') {
       updateBossUI();

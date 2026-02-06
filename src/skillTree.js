@@ -1149,7 +1149,10 @@ export default class SkillTree {
 
     const skill = this.getSkill(skillId);
     const baseEffects = { ...this.getSkillEffect(skillId) };
-    const scaledLifePerHitFromStats = (hero.stats.lifePerHit || 0) * (1 + (hero.stats.lifePerHitPercent || 0));
+    const rawLifePerHit = hero.stats.lifePerHit || 0;
+    const scaledLifePerHitFromStats = rawLifePerHit > 0
+      ? rawLifePerHit * (1 + (hero.stats.lifePerHitPercent || 0))
+      : rawLifePerHit;
 
     let manaCost = this.getSkillManaCost(skill);
     if (hero.stats.convertManaToLifePercent > 0 && manaCost > hero.stats.currentMana) {
@@ -1190,7 +1193,10 @@ export default class SkillTree {
 
     if (skill.cooldownEndTime && skill.cooldownEndTime > Date.now()) return false;
 
-    const manaPerHit = (hero.stats.manaPerHit || 0) * (1 + (hero.stats.manaPerHitPercent || 0));
+    const rawManaPerHit = hero.stats.manaPerHit || 0;
+    const manaPerHit = rawManaPerHit > 0
+      ? rawManaPerHit * (1 + (hero.stats.manaPerHitPercent || 0))
+      : rawManaPerHit;
     const skillTypeSource = skill?.skill_type ?? skill?.skillType;
     const resolvedSkillType = typeof skillTypeSource === 'function' ? skillTypeSource() : skillTypeSource;
     const skillType = (resolvedSkillType || 'attack').toLowerCase();
