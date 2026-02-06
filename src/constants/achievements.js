@@ -8,10 +8,10 @@ export const ACHIEVEMENT_DEFINITIONS = [
     target: 50,
     baseTarget: 50,
     targetMultiplier: 5,
-    maxLevel: 7,
+    maxLevel: 20,
     reward: { bonuses: { bonusExperiencePercent: 0.05 } },
-    baseReward: { bonuses: { bonusExperiencePercent: 0.05 } },
-    rewardScaleType: 'recursive_tier', // Reward(N) = Reward(N-1) * N
+    baseReward: { bonuses: { bonusExperiencePercent: 0.15 } },
+    rewardMultiplier: 1.65,
     icon: 'text:LVL',
   },
 
@@ -62,7 +62,7 @@ export const ACHIEVEMENT_DEFINITIONS = [
     maxLevel: 30,
     reward: { bonuses: { bonusGoldPercent: 0.10 } },
     baseReward: { bonuses: { bonusGoldPercent: 0.10 } },
-    rewardMultiplier: 1.5,
+    rewardMultiplier: 1.4,
     icon: 'text:GOLD',
   },
 
