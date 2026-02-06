@@ -861,6 +861,7 @@ export default class Training {
       }
       costLine = `<span class="upgrade-cost ${bonusClass}">${t('training.cost')}: ${formatNumber(totalCost)} ${t('resource.gold.name')} (${formatNumber(desiredQty)})</span>`;
     } else if ((hero?.gold || 0) < this.calculateTotalCost(config.training, 1, level)) {
+      disabled = true;
       bonusClass = 'unaffordable';
     }
 
