@@ -586,7 +586,6 @@ export default class CrystalShop {
         });
       }
       buyBtn.style.display = '';
-      this.updateModalDetails();
     } else if (config.oneTime) {
       controls.style.display = 'none';
       const purchased = !!this.crystalUpgrades[stat];
@@ -633,7 +632,7 @@ export default class CrystalShop {
     }
 
     m.classList.remove('hidden');
-    if (stat === 'startingStage') this.updateModalDetails();
+    this.updateModalDetails();
   }
 
   updateModalDetails() {
@@ -642,6 +641,7 @@ export default class CrystalShop {
     const config = CRYSTAL_UPGRADE_CONFIG[stat];
     const m = this.modal;
     const q = (sel) => m.querySelector(sel);
+    const buyBtn = q('.modal-buy');
 
     if (config.bulkModal) {
       const baseLevel = this.crystalUpgrades[stat] || 0;
@@ -684,7 +684,6 @@ export default class CrystalShop {
         if (input && this.selectedQty !== 'max') input.value = this.selectedQty;
       }
 
-      const buyBtn = q('.modal-buy');
       if (buyBtn) buyBtn.disabled = isMaxed || qty <= 0 || totalCost > crystalsAvailable;
     } else if (stat === 'autoSalvage') {
       const level = this.crystalUpgrades[stat] || 0;
@@ -693,12 +692,10 @@ export default class CrystalShop {
       const nextCostVal = Math.round(
         Math.floor(config.baseCost + (config.costIncrement || 0) * level) * (1 - ascRedLocal),
       );
-      if (q('.modal-total-cost')) q('.modal-total-cost').textContent = nextCostVal;
       const isMaxed = level >= cap;
       if (q('.modal-level')) q('.modal-level').textContent = level;
       if (q('.modal-max-level')) q('.modal-max-level').textContent = cap;
       if (q('.modal-total-cost')) q('.modal-total-cost').textContent = nextCostVal;
-      const buyBtn = q('.modal-buy');
       if (buyBtn) {
         buyBtn.disabled = isMaxed || hero.crystals < nextCostVal;
         buyBtn.style.display = isMaxed ? 'none' : '';
@@ -706,6 +703,14 @@ export default class CrystalShop {
       // Hide cost if maxed
       const costP = q('.modal-total-cost')?.closest('p');
       if (costP) costP.style.display = isMaxed ? 'none' : '';
+    } else if (config.oneTime) {
+      const purchased = !!this.crystalUpgrades[stat];
+      const ascRed = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
+      const reduced = Math.round(config.baseCost * (1 - ascRed));
+      if (buyBtn) {
+        buyBtn.disabled = purchased || hero.crystals < reduced;
+        buyBtn.style.display = purchased ? 'none' : '';
+      }
     } else if (config.multiple) {
       // For other multiples, show floored cost
       const ascRedLocal = ascension?.getBonuses?.()?.crystalShopCostReduction || 0;
@@ -714,6 +719,9 @@ export default class CrystalShop {
           (1 - ascRedLocal),
       );
       if (q('.modal-total-cost')) q('.modal-total-cost').textContent = costVal;
+      if (buyBtn) {
+        buyBtn.disabled = hero.crystals < costVal;
+      }
     }
   }
 

@@ -720,7 +720,6 @@ export default class SoulShop {
         slider.style.display = '';
       }
       buyBtn.style.display = '';
-      this.updateModalDetails();
     } else if (config.oneTime) {
       controls.style.display = 'none';
       const purchased = !!this.soulUpgrades[stat];
@@ -747,7 +746,7 @@ export default class SoulShop {
       if (slider) slider.style.display = 'none';
     }
     m.classList.remove('hidden');
-    if (isMultiLevel) this.updateModalDetails();
+    this.updateModalDetails();
   }
 
   updateModalDetails() {
@@ -756,6 +755,7 @@ export default class SoulShop {
     const config = SOUL_UPGRADE_CONFIG[stat];
     const m = this.modal;
     const q = (sel) => m.querySelector(sel);
+    const buyBtn = q('.modal-buy');
     const isMultiLevel = typeof config.bonus === 'number' && !config.oneTime;
     if (isMultiLevel) {
       const baseLevel = this.soulUpgrades[stat] || 0;
@@ -794,7 +794,6 @@ export default class SoulShop {
         q('.modal-level').textContent = baseLevel + (maxLevel !== Infinity ? ` / ${maxLevel}` : '');
       if (q('.modal-bonus')) q('.modal-bonus').textContent = this.getBonusText(stat, config, baseLevel);
       if (q('.modal-next-bonus')) q('.modal-next-bonus').textContent = this.getBonusText(stat, config, baseLevel + 1);
-      const buyBtn = q('.modal-buy');
       if (buyBtn) {
         buyBtn.textContent = t('crystalShop.modal.buy');
         buyBtn.disabled = !affordable || baseLevel >= maxLevel;
@@ -816,6 +815,20 @@ export default class SoulShop {
       }
       const input = q('.modal-qty-input');
       if (input && this.selectedQty !== 'max') input.value = this.selectedQty;
+    } else if (config.oneTime) {
+      const purchased = !!this.soulUpgrades[stat];
+      const ascRed = ascension?.getBonuses?.()?.soulShopCostReduction || 0;
+      const reduced = Math.round(config.baseCost * (1 - ascRed));
+      if (buyBtn) {
+        buyBtn.disabled = purchased || hero.souls < reduced;
+        buyBtn.style.display = purchased ? 'none' : '';
+      }
+    } else if (config.multiple) {
+      const ascRed = ascension?.getBonuses?.()?.soulShopCostReduction || 0;
+      const cost = Math.round(config.baseCost * (1 - ascRed));
+      if (buyBtn) {
+        buyBtn.disabled = hero.souls < cost;
+      }
     }
   }
 
