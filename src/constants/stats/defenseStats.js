@@ -209,22 +209,22 @@ export const DEFENSE_STATS = {
   thornsDamage: createStat({
     dec: 1,
     training: {
-      cost: 100, bonus: 2, maxLevel: Infinity,
+      cost: 100, bonus: 3, maxLevel: Infinity,
     },
     item: {
       ...getItemRange('thornsDamage'),
       scaling: (level, tier) => defenseScaling(level, tier),
     },
-    itemTags: ['shield', 'armor'],
+    itemTags: ['shield', 'armor', 'helmet', 'boots'],
     show: true,
     sub: 'defense',
-    skills: createDefaultSkillBonusesFlat('thornsDamage', { buff: { base: 1.33, increment: 1.33 } }),
+    skills: createDefaultSkillBonusesFlat('thornsDamage'),
   }),
   thornsDamagePercent: createPercentStat({
-    item: { tierScalingMaxPercent: createTierScaling(18, 250, 1.2) },
+    item: { tierScalingMaxPercent: createTierScaling(150, 3000, 1.2) },
     itemTags: ['shield', 'armor'],
     sub: 'defense',
-    skills: createDefaultSkillBonusesPercent({ passive: { base: 5 } }),
+    skills: createDefaultSkillBonusesPercent(),
   }),
   thornsOnMiss: createHiddenStat({ sub: 'defense' }),
   resurrectionChance: createChanceStat({
