@@ -338,16 +338,21 @@ export const ROGUE_SKILLS = {
     description: () => t('skill.masterThief'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      dexterity: getSkillStatBonus({
-        level, statKey: 'dexterity', skillType: 'passive', scale: { base: 3, increment: 2.5 },
-      }),
-      agility: getSkillStatBonus({
-        level, statKey: 'agility', skillType: 'passive', scale: { base: 3, increment: 2.5 },
+      allAttributes: getSkillStatBonus({
+        level, statKey: 'allAttributes', skillType: 'passive', scale: { base: 3, increment: 1.5 },
       }),
       bonusGoldPercent: getSkillStatBonus({
         level, statKey: 'bonusGoldPercent', skillType: 'passive', scale: { base: 3, linear: 0.5 },
       }),
     }),
+    synergies: [
+      {
+        sourceSkillId: 'kingOfThieves',
+        calculateBonus: (sourceLevel) => getScalingSynergy({
+          level: sourceLevel, base: 0.5, increment: 0.4, cap: 2500,
+        }),
+      },
+    ],
   },
 
   // ===========================================================================
