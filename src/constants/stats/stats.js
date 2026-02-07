@@ -105,7 +105,16 @@ export function itemStatScaleFactor(level, tier = 1) {
 }
 
 export function isFlatStat(stat) {
-  return !stat.endsWith('Percent') && !stat.endsWith('Chance');
+  // Check explicit configuration if available
+  if (STATS?.[stat]?.isPercentStat || STATS?.[stat]?.isChanceStat) return false;
+
+  const isNonFlat = stat.includes('Percent') ||
+                    stat.includes('Chance') ||
+                    stat.endsWith('Steal') ||
+                    stat.endsWith('Effectiveness') ||
+                    stat.startsWith('ignore') ||
+                    stat === 'attackNeverMiss';
+  return !isNonFlat;
 }
 
 /**

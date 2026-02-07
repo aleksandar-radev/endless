@@ -9,6 +9,7 @@ export default {
   'skillTree.level': 'Level',
   'skillTree.levelEffects': 'Level {level} Effects',
   'skillTree.synergies': 'Synergies',
+  'skillTree.flatOnly': 'Flat Only',
   'skillTree.autoCastSettings': 'Auto-Cast Settings',
   'skillTree.slotDisplaySettings': 'Slot Display Settings',
   'skillTree.perLevel': 'Per Level',

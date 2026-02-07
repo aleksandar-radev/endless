@@ -38,10 +38,13 @@ export const MAGE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       wisdom: getSkillStatBonus({
-        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 1.5, increment: 1.5 },
+        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 1.5, increment: 1.3 },
       }),
       perseverance: getSkillStatBonus({
         level, statKey: 'perseverance', skillType: 'passive', scale: { base: 1 },
+      }),
+      cooldownReductionPercent: getSkillStatBonus({
+        level, statKey: 'cooldownReductionPercent', skillType: 'passive', scale: { base: 1, max: 0.5 },
       }),
     }),
   },
@@ -119,10 +122,13 @@ export const MAGE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       intelligence: getSkillStatBonus({
-        level, statKey: 'intelligence', skillType: 'passive', scale: { base: 1.5, increment: 1.5 },
+        level, statKey: 'intelligence', skillType: 'passive', scale: { base: 1.5, increment: 1.25 },
       }),
       wisdom: getSkillStatBonus({
-        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 2, increment: 2 },
+        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 2, increment: 1.5 },
+      }),
+      cooldownReductionPercent: getSkillStatBonus({
+        level, statKey: 'cooldownReductionPercent', skillType: 'passive', scale: { base: 1, max: 0.5 },
       }),
     }),
     synergies: [
@@ -144,20 +150,12 @@ export const MAGE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'mana-shield',
     description: () => t('skill.manaShield'),
-    maxLevel: () => 250,
+    maxLevel: () => 261,
     effect: (level) => ({
       manaShieldPercent: getSkillStatBonus({
         level, statKey: 'manaShieldPercent', skillType: 'buff', scale: { base: 1 },
       }),
     }),
-    synergies: [
-      {
-        sourceSkillId: 'arcaneIntellect',
-        calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.1, increment: 0.1, cap: 50,
-        }),
-      },
-    ],
   },
   crimsonAegis: {
     id: 'crimsonAegis',
@@ -167,20 +165,12 @@ export const MAGE_SKILLS = {
     isVisible: () => hero.stats.crimsonAegisSkillUnlocked > 0,
     icon: () => 'crimson-aegis',
     description: () => t('skill.crimsonAegis'),
-    maxLevel: () => 200,
+    maxLevel: () => 300,
     effect: (level) => ({
       damageTakenReductionPercent: getSkillStatBonus({
-        level, statKey: 'damageTakenReductionPercent', skillType: 'passive', scale: { base: 1 },
+        level, statKey: 'damageTakenReductionPercent', skillType: 'passive', scale: { base: 1, max: 1.8 },
       }),
     }),
-    synergies: [
-      {
-        sourceSkillId: 'manaShield',
-        calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.1, increment: 0.1, cap: 20,
-        }),
-      },
-    ],
   },
   crimsonDrain: {
     id: 'crimsonDrain',
@@ -193,7 +183,7 @@ export const MAGE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       lifePerHit: getSkillStatBonus({
-        level, statKey: 'lifePerHit', skillType: 'passive', scale: { base: 2.5, increment: 2 },
+        level, statKey: 'lifePerHit', skillType: 'passive', scale: { base: 2.5, increment: 3 },
       }),
     }),
     synergies: [
@@ -250,10 +240,10 @@ export const MAGE_SKILLS = {
         level, statKey: 'coldDamage', skillType: 'buff', scale: { base: 2.5, increment: 2 },
       }),
       waterDamagePercent: getSkillStatBonus({
-        level, statKey: 'waterDamagePercent', skillType: 'buff', scale: { base: 0.625 },
+        level, statKey: 'waterDamagePercent', skillType: 'buff',
       }),
       airDamagePercent: getSkillStatBonus({
-        level, statKey: 'airDamagePercent', skillType: 'buff', scale: { base: 0.625 },
+        level, statKey: 'airDamagePercent', skillType: 'buff',
       }),
     }),
     synergies: [
@@ -432,10 +422,13 @@ export const MAGE_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       wisdom: getSkillStatBonus({
-        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 3.75, increment: 2 },
+        level, statKey: 'wisdom', skillType: 'passive', scale: { base: 3.75, increment: 1.5 },
       }),
       mana: getSkillStatBonus({
-        level, statKey: 'mana', skillType: 'passive', scale: { base: 5, increment: 3 },
+        level, statKey: 'mana', skillType: 'passive', scale: { base: 5, increment: 2.5 },
+      }),
+      cooldownReductionPercent: getSkillStatBonus({
+        level, statKey: 'cooldownReductionPercent', skillType: 'passive', scale: { base: 1 },
       }),
     }),
     synergies: [
@@ -520,6 +513,9 @@ export const MAGE_SKILLS = {
     description: () => t('skill.chronomancerSurge'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      allAttributes: getSkillStatBonus({
+        level, statKey: 'allAttributes', skillType: 'instant', scale: { base: 3, increment: 2 },
+      }),
       attackSpeedPercent: getSkillStatBonus({
         level, statKey: 'attackSpeedPercent', skillType: 'buff', scale: { base: 1.66, max: 1 },
       }),
@@ -540,8 +536,14 @@ export const MAGE_SKILLS = {
     description: () => t('skill.starFire'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      fireDamage: getSkillStatBonus({
+        level, statKey: 'fireDamage', skillType: 'instant', scale: { base: 1 },
+      }),
       fireDamagePercent: getSkillStatBonus({
         level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1 },
+      }),
+      airDamage: getSkillStatBonus({
+        level, statKey: 'airDamage', skillType: 'instant', scale: { base: 1 },
       }),
       airDamagePercent: getSkillStatBonus({
         level, statKey: 'airDamagePercent', skillType: 'instant', scale: { base: 1 },
@@ -551,7 +553,7 @@ export const MAGE_SKILLS = {
       {
         sourceSkillId: 'pyroclasm',
         calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 1, increment: 1, cap: 2500,
+          level: sourceLevel, base: 1, increment: 1, cap: 3500,
         }),
       },
     ],
@@ -588,12 +590,15 @@ export const MAGE_SKILLS = {
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 45 + level * 1.25,
-    cooldown: () => 20000,
+    cooldown: () => 10000,
     requiredLevel: () => SKILL_LEVEL_TIERS[9],
     icon: () => 'dimensional-rift',
     description: () => t('skill.dimensionalRift'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
+      lightningDamage: getSkillStatBonus({
+        level, statKey: 'lightningDamage', skillType: 'instant', scale: { base: 1.5 },
+      }),
       lightningDamagePercent: getSkillStatBonus({
         level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1.5 },
       }),
@@ -643,20 +648,23 @@ export const MAGE_SKILLS = {
     type: () => 'instant',
     skill_type: 'spell',
     manaCost: (level) => 60 + level * 1.25,
-    cooldown: () => 27000,
+    cooldown: () => 17000,
     requiredLevel: () => SKILL_LEVEL_TIERS[10],
     icon: () => 'apocalypse',
     description: () => t('skill.apocalypse'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       fireDamagePercent: getSkillStatBonus({
-        level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 1.5 },
+        level, statKey: 'fireDamagePercent', skillType: 'instant', scale: { base: 2 },
       }),
       coldDamagePercent: getSkillStatBonus({
-        level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 1.5 },
+        level, statKey: 'coldDamagePercent', skillType: 'instant', scale: { base: 2 },
+      }),
+      lightningDamage: getSkillStatBonus({
+        level, statKey: 'lightningDamage', skillType: 'instant', scale: { base: 1.5, increment: 1.5 },
       }),
       lightningDamagePercent: getSkillStatBonus({
-        level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1.5 },
+        level, statKey: 'lightningDamagePercent', skillType: 'instant', scale: { base: 1.2, max: 0.75 },
       }),
     }),
     synergies: [

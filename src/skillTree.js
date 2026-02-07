@@ -8,7 +8,7 @@ import { calculateHitChance, createDamageNumber } from './combat.js';
 import { battleLog } from './battleLog.js';
 import { t } from './i18n.js';
 import { AILMENTS } from './constants/ailments.js';
-import { getDivisor } from './constants/stats/stats.js';
+import { getDivisor, isFlatStat } from './constants/stats/stats.js';
 import { showLifeWarning,
   showManaWarning,
   showToast,
@@ -1021,12 +1021,17 @@ export default class SkillTree {
       totalSynergyBonus += synergyBonus;
     }
 
-    // Apply total synergy bonus as a percentage multiplier to all base effects
+    // Apply total synergy bonus as a percentage multiplier to base effects (FLAT ONLY)
     if (totalSynergyBonus > 0) {
       const multiplier = 1 + (totalSynergyBonus / 100);
       const isSummon = typeof skill.type === 'function' && skill.type() === 'summon';
 
       Object.keys(baseEffects).forEach((stat) => {
+        // Synergy bonuses apply to flat bonuses only, and are excluded from percentage-based bonuses
+        if (!isFlatStat(stat)) {
+          return;
+        }
+
         // Synergy bonuses for summon skills should not affect attack speed or percent of player damage
         if (isSummon && (stat === 'attackSpeed' || stat === 'percentOfPlayerDamage')) {
           return;

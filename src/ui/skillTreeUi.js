@@ -1273,7 +1273,7 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
 
   // Synergies
   if (skill.synergies && Array.isArray(skill.synergies) && skill.synergies.length > 0) {
-    html += `<div class="skill-tooltip-section"><div class="skill-tooltip-section-title">${t('skillTree.synergies')}</div>`;
+    html += `<div class="skill-tooltip-section"><div class="skill-tooltip-section-title">${t('skillTree.synergies')} <span style="font-size: 0.8em; font-weight: normal; opacity: 0.8;">(${t('skillTree.flatOnly')})</span></div>`;
     skill.synergies.forEach((synergy) => {
       let sourceSkill = skillTree.getSkill(synergy.sourceSkillId);
       if (!sourceSkill && pathId && SKILL_TREES[pathId]) {

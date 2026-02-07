@@ -175,10 +175,7 @@ export const DEFENSE_STATS = {
     item: { tierScalingMaxPercent: resistanceTierScalingMaxPercent },
     itemTags: ['belt'],
     sub: 'defense',
-    skills: createDefaultSkillBonusesPercent({
-      passive: { base: 5 },
-      buff: { base: 8, linear: 0.06 },
-    }),
+    skills: createDefaultSkillBonusesPercent(),
   }),
   lifeRegenOfTotalPercent: createPercentStat({
     dec: 2,

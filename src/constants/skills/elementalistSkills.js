@@ -371,7 +371,7 @@ export const ELEMENTALIST_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       vitality: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', scale: { base: 2.5, increment: 4 },
+        level, statKey: 'vitality', skillType: 'passive', scale: { base: 2.5, increment: 2 },
       }),
       vitalityPercent: getSkillStatBonus({
         level, statKey: 'vitalityPercent', skillType: 'passive', scale: { base: 1, linear: 0.8 },

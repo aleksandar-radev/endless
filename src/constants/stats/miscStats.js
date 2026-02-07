@@ -236,6 +236,9 @@ export const MISC_STATS = {
     },
     itemTags: ['magic', 'jewelry'],
     skills: createDefaultSkillBonusesPercent({
+      passive: {
+        linear: 0.01, power: 0.2, max: 10,
+      },
       buff: {
         linear: 0.01, power: 0.5, max: 20,
       },

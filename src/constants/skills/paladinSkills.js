@@ -24,7 +24,7 @@ export const PALADIN_SKILLS = {
         level, statKey: 'life', skillType: 'instant', scale: { base: 0.2, increment: 0.2 },
       }),
       lifePercent: getSkillStatBonus({
-        level, statKey: 'lifePercent', skillType: 'instant', scale: { base: 1 },
+        level, statKey: 'lifePercent', skillType: 'instant', scale: { base: 0.2, max: 0.008 },
       }),
     }),
   },
@@ -126,10 +126,10 @@ export const PALADIN_SKILLS = {
     maxLevel: () => Infinity,
     effect: (level) => ({
       life: getSkillStatBonus({
-        level, statKey: 'life', skillType: 'instant', scale: { base: 0.4, increment: 0.4 },
+        level, statKey: 'life', skillType: 'instant', scale: { base: 1, increment: 0.4 },
       }),
       lifePercent: getSkillStatBonus({
-        level, statKey: 'lifePercent', skillType: 'instant', scale: { base: 1, max: 0.2 },
+        level, statKey: 'lifePercent', skillType: 'instant', scale: { base: 0.2, max: 0.01 },
       }),
     }),
     synergies: [
@@ -158,7 +158,7 @@ export const PALADIN_SKILLS = {
     maxLevel: () => Infinity,
     effect: (level) => ({
       armor: getSkillStatBonus({
-        level, statKey: 'armor', skillType: 'buff', scale: { base: 0.4, increment: 0.4 },
+        level, statKey: 'armor', skillType: 'buff', scale: { base: 1, increment: 1 },
       }),
       armorPercent: getSkillStatBonus({
         level, statKey: 'armorPercent', skillType: 'buff', scale: { base: 1.25 },
@@ -186,7 +186,7 @@ export const PALADIN_SKILLS = {
     maxLevel: () => Infinity,
     effect: (level) => ({
       life: getSkillStatBonus({
-        level, statKey: 'life', skillType: 'passive', scale: { base: 0.5, increment: 0.5 },
+        level, statKey: 'life', skillType: 'passive', scale: { base: 1, increment: 1 },
       }),
       lifeRegen: getSkillStatBonus({
         level, statKey: 'lifeRegen', skillType: 'passive', scale: { base: 1, increment: 1 },
@@ -196,7 +196,7 @@ export const PALADIN_SKILLS = {
         statKey: 'allResistance',
         skillType: 'passive',
         scale: {
-          base: 0.5, increment: 0.5, max: 0.5,
+          base: 1, increment: 1, max: 1,
         },
       }),
     }),
@@ -226,7 +226,7 @@ export const PALADIN_SKILLS = {
       {
         sourceSkillId: 'divineProtection',
         calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.1, increment: 0.1, cap: 250,
+          level: sourceLevel, base: 0.1, increment: 0.1, cap: 200,
         }),
       },
     ],
@@ -279,10 +279,10 @@ export const PALADIN_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       life: getSkillStatBonus({
-        level, statKey: 'life', skillType: 'passive', scale: { base: 0.6, increment: 0.6 },
+        level, statKey: 'life', skillType: 'passive', scale: { base: 1, increment: 1 },
       }),
       extraDamageFromLifePercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base: 0.2, max: 0.6 },
+        level, statKey: 'extraDamageFromLifePercent', skillType: 'passive', scale: { base:1, max: 1 },
       }),
     }),
   },
@@ -296,14 +296,14 @@ export const PALADIN_SKILLS = {
     type: () => 'buff',
     manaCost: (level) => 30 + level * 0.875,
     cooldown: () => 44000,
-    duration: () => 20000,
+    duration: () => 36000,
     requiredLevel: () => SKILL_LEVEL_TIERS[4],
     icon: () => 'barrier',
     description: () => t('skill.holyBarrier'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       vitality: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'buff', scale: { base: 1, increment: 2.5 },
+        level, statKey: 'vitality', skillType: 'buff', scale: { base: 1, increment: 2 },
       }),
       vitalityPercent: getSkillStatBonus({
         level, statKey: 'vitalityPercent', skillType: 'buff', scale: { base: 1 },
@@ -412,11 +412,8 @@ export const PALADIN_SKILLS = {
     description: () => t('skill.ascension'),
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
-      endurance: getSkillStatBonus({
-        level, statKey: 'endurance', skillType: 'passive', scale: { base: 5, increment: 4 },
-      }),
-      vitality: getSkillStatBonus({
-        level, statKey: 'vitality', skillType: 'passive', scale: { base: 2.5, increment: 4 },
+      allAttributes: getSkillStatBonus({
+        level, statKey: 'allAttributes', skillType: 'passive', scale: { base: 3, increment: 2 },
       }),
     }),
   },
@@ -453,10 +450,10 @@ export const PALADIN_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damagePercent: getSkillStatBonus({
-        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 0.71 },
+        level, statKey: 'damagePercent', skillType: 'toggle', scale: { base: 1, linear: 0.8 },
       }),
-      fireDamagePercent: getSkillStatBonus({
-        level, statKey: 'fireDamagePercent', skillType: 'toggle', scale: { base: 1.42 },
+      fireDamage: getSkillStatBonus({
+        level, statKey: 'fireDamage', skillType: 'toggle', scale: { base: 1.42, increment: 2 },
       }),
     }),
     synergies: [
@@ -475,7 +472,7 @@ export const PALADIN_SKILLS = {
     name: () => t('skill.radiantAegis.name'),
     type: () => 'buff',
     manaCost: (level) => 40 + level * 1.25,
-    cooldown: () => 1000,
+    cooldown: () => 60000,
     duration: () => 40000,
     requiredLevel: () => SKILL_LEVEL_TIERS[8],
     icon: () => 'radiant-aegis',
@@ -547,7 +544,7 @@ export const PALADIN_SKILLS = {
         level, statKey: 'resurrectionChance', skillType: 'passive', scale: { base: 5, cap: 1 },
       }),
       life: getSkillStatBonus({
-        level, statKey: 'life', skillType: 'passive', scale: { base: 8, increment: 2 },
+        level, statKey: 'life', skillType: 'passive', scale: { base: 3, increment: 2 },
       }),
     }),
     synergies: [
