@@ -524,6 +524,7 @@ export const MAGE_SKILLS = {
       }),
     }),
   },
+
   starFire: {
     id: 'starFire',
     name: () => t('skill.starFire.name'),
