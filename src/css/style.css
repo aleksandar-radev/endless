@@ -66,6 +66,7 @@
   background-color: var(--bg-panel);
   padding: 0.5rem;
   border-radius: 0.5rem;
+  position: relative;
 }
 
 .character-info {
