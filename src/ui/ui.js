@@ -511,7 +511,7 @@ let lastEnemyStatsState = {
   heroElementalDamagesHash: '',
 };
 
-export function updatePlayerLife() {
+export function updatePlayerLife(force = false) {
   if (window.perfMon?.enabled) window.perfMon.mark('updatePlayerLife');
   const stats = hero.stats;
 
@@ -524,6 +524,7 @@ export function updatePlayerLife() {
   let ailmentsHash = Object.keys(hero.ailments).join(',');
 
   if (
+    !force &&
     curLife === lastPlayerLifeState.currentLife &&
     maxLife === lastPlayerLifeState.life &&
     curMana === lastPlayerLifeState.currentMana &&
@@ -566,7 +567,7 @@ export function updatePlayerLife() {
   if (window.perfMon?.enabled) window.perfMon.measure('updatePlayerLife', 5);
 }
 
-export function updateEnemyStats() {
+export function updateEnemyStats(force = false) {
   if (window.perfMon?.enabled) window.perfMon.mark('updateEnemyStats');
   const enemy = game.currentEnemy;
   if (!enemy) {
@@ -595,6 +596,7 @@ export function updateEnemyStats() {
   let heroElementalDamagesHash = ELEMENT_IDS.map((id) => hero.stats[`${id}Damage`] || 0).join(',');
 
   if (
+    !force &&
     enemy === lastEnemyStatsState.enemy &&
     curLife === lastEnemyStatsState.currentLife &&
     maxLife === lastEnemyStatsState.life &&
@@ -1343,6 +1345,9 @@ export function updateRockyFieldRegionSelector() {
 function renderRegionPanel(region) {
   const container = document.getElementById('region-panel-container');
   if (!container) return;
+
+  // Reset memoization state because we are replacing DOM elements
+  lastEnemyStatsState.enemy = null;
 
   const baseHtml = html`<div class="enemy-section">
     <div class="enemy-main-row">

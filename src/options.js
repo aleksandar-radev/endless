@@ -409,7 +409,8 @@ export class Options {
           updateResources();
           updateStatsAndAttributesUI(true);
           updateStageUI();
-          updatePlayerLife();
+          updatePlayerLife(true);
+          updateEnemyStats(true);
           training.updateTrainingUI('gold-upgrades');
           crystalShop.updateCrystalShopUI();
           soulShop.updateSoulShopUI();
