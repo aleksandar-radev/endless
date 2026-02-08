@@ -101,7 +101,7 @@ export async function collectOfflineFightRewards() {
 
       const included = new Set(inventory.autoSalvageRarities);
       const rarityEntries = Object.entries(ITEM_RARITY)
-        .filter(([key]) => included.has(ITEM_RARITY[key].name))
+        .filter(([key]) => included.has(key))
         .map(([key, config]) => {
           const rarityIndex = RARITY_ORDER.indexOf(key);
           const weight = config.chance * (1 + boostFactor * rarityIndex) * (1 + rarityBonus * rarityIndex);
