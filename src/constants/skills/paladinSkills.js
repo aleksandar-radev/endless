@@ -226,7 +226,7 @@ export const PALADIN_SKILLS = {
       {
         sourceSkillId: 'divineProtection',
         calculateBonus: (sourceLevel) => getScalingSynergy({
-          level: sourceLevel, base: 0.1, increment: 0.1, cap: 200,
+          level: sourceLevel, base: 1, increment: 0.1, cap: 200,
         }),
       },
     ],
