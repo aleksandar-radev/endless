@@ -455,7 +455,9 @@ export function switchTab(tabName, { skipUrlUpdate = false } = {}) {
   dataManager.saveGame();
 
   if (!skipUrlUpdate) {
-    const urlParams = { tab: actualTab, subtab: targetSubTab, modal: null };
+    const urlParams = {
+      tab: actualTab, subtab: targetSubTab, modal: null,
+    };
     if (actualTab !== 'skilltree') {
       urlParams.skillTreeTab = null;
     }
