@@ -68,6 +68,11 @@ let lastEncryptedSave = null; // Cache the last encrypted save to avoid redundan
 let expandedState;
 
 export function initDebugging() {
+  const devBtn = document.getElementById('edev-btn');
+  if (devBtn) {
+    devBtn.style.display = 'block';
+  }
+
   expandedState = new Map(JSON.parse(localStorage.getItem('debugUIState') || '[]'));
   let dev = false; // Track if dev mode is active
   let keySequence = [];

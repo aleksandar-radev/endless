@@ -786,6 +786,7 @@
 
 .dev-btn {
   background-color: #23886f;
+  display: none;
 }
 
 /* Shop Sub-tabs */
