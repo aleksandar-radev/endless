@@ -113,7 +113,7 @@ export default {
   'ascension.tooltip.attackSpeedCap': '每级将攻速上限提高0.1。',
   'ascension.tooltip.critChanceCap': '每级将暴击率上限提高2%。',
   'ascension.tooltip.blockChanceCap': '每级将格挡率上限提高2%。',
-  'ascension.tooltip.itemPercentCapPercent': '每级使物品上的百分比加成上限提高1%。每级消耗1点。',
+  'ascension.tooltip.itemPercentCapPercent': '每级使物品上的百分比加成上限提高1%。不影响带有游戏上限的属性（攻速%、暴击率、格挡率、冷却缩减%等）或减伤属性。每级消耗1点。',
   'ascension.tooltip.crystalGainPercent': '从所有来源获得更多水晶。',
   'ascension.tooltip.critChance': '增加暴击率。',
   'ascension.tooltip.critDamage': '增加暴击伤害倍率。',

@@ -113,7 +113,7 @@ export default {
   'ascension.tooltip.attackSpeedCap': 'Increases attack speed cap by 0.1 per level.',
   'ascension.tooltip.critChanceCap': 'Increases crit chance cap by 2% per level.',
   'ascension.tooltip.blockChanceCap': 'Increases block chance cap by 2% per level.',
-  'ascension.tooltip.itemPercentCapPercent': 'Increases max % bonuses on items by 1% per level. Always costs 1 point.',
+  'ascension.tooltip.itemPercentCapPercent': 'Increases max % bonuses on items by 1% per level. Does not affect stats with gameplay caps (attack speed%, crit chance, block chance, cooldown reduction%, etc.) or reduction stats. Always costs 1 point.',
   'ascension.tooltip.crystalGainPercent': 'Gain more crystals from all sources.',
   'ascension.tooltip.critChance': 'Adds flat critical chance.',
   'ascension.tooltip.critDamage': 'Adds flat critical damage multiplier.',

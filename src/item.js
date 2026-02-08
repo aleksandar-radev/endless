@@ -75,6 +75,21 @@ export default class Item {
     if (this.metaData.statRolls) {
       delete this.metaData.statRolls;
     }
+    // Remove invalid stats that no longer exist in AVAILABLE_STATS
+    this.removeInvalidStats();
+  }
+
+  removeInvalidStats() {
+    const invalidStats = Object.keys(this.stats).filter((stat) => !AVAILABLE_STATS[stat]);
+    if (invalidStats.length > 0) {
+      console.warn(`Removing invalid stats from item '${this.name}': ${invalidStats.join(', ')}`);
+      invalidStats.forEach((stat) => {
+        delete this.stats[stat];
+        if (this.metaData.baseStats[stat] !== undefined) {
+          delete this.metaData.baseStats[stat];
+        }
+      });
+    }
   }
 
   get subtypeData() {
@@ -116,8 +131,12 @@ export default class Item {
 
   scaleStat({ stat, level = this.level }) {
     const statConfig = AVAILABLE_STATS[stat];
+    if (!statConfig) {
+      console.warn(`Stat '${stat}' not found in AVAILABLE_STATS for item type '${this.type}'`);
+      return 0;
+    }
 
-    const { min, max } = this.getStatRange(stat);
+    const { min, max } = this.getStatRange(stat) || { min: 0, max: 0 };
 
     if (statConfig.tierScalingMaxPercent) {
       const percentStatScaled = (Math.random() * (max * this.getRarityMultiplier() - 1) + 1);
@@ -206,9 +225,39 @@ export default class Item {
     max *= this.subtypeData?.allStatMultiplier || 1;
 
     // handle percentage increase from ascension
-    const ascBonuses = ascension?.getBonuses?.() || {};
-    const percentCapMultiplier = 1 + (ascBonuses.itemPercentCapPercent || 0);
-    max *= percentCapMultiplier;
+    // Exclude stats with gameplay caps or special mechanics from the item percent cap multiplier
+    const excludedStats = [
+      // Stats with gameplay caps
+      'attackSpeedPercent',
+      'blockChance',
+      'blockChancePercent',
+      'critChance',
+      'critChancePercent',
+      'resurrectionChance',
+      'cooldownReductionPercent',
+      // Enemy reduction stats
+      'reduceEnemyDamagePercent',
+      'reduceEnemyHpPercent',
+      'reduceEnemyAttackSpeedPercent',
+      // Damage reduction stats
+      'arenaDamageReductionPercent',
+      'damageTakenConvertedToColdPercent',
+      'coldDamageTakenReductionPercent',
+      'elementalDamageTakenReductionPercent',
+      'damageTakenReductionPercent',
+      // Cap-extending stats (these ARE caps themselves)
+      'attackSpeedCap',
+      'critChanceCap',
+      'blockChanceCap',
+      'cooldownReductionCapPercent',
+      'doubleDamageChance',
+    ];
+
+    if (!excludedStats.includes(stat)) {
+      const ascBonuses = ascension?.getBonuses?.() || {};
+      const percentCapMultiplier = 1 + (ascBonuses.itemPercentCapPercent || 0);
+      max *= percentCapMultiplier;
+    }
 
     return { min, max };
   }
@@ -680,6 +729,10 @@ export default class Item {
   applyLevelToStats(newLevel) {
     Object.keys(this.stats).forEach((stat) => {
       const statConfig = AVAILABLE_STATS[stat];
+      if (!statConfig) {
+        console.warn(`Stat '${stat}' not found in AVAILABLE_STATS when applying level`);
+        return;
+      }
       if (statConfig.tierScalingMaxPercent) return; // skip percentage based stats
       this.stats[stat] = this.metaData.baseStats[stat] * statConfig.scaling(newLevel, this.tier);
     });

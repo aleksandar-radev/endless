@@ -805,7 +805,9 @@ export async function defeatEnemy(source) {
           }
           // Apply material quantity multiplier
           const materialQuantityMultiplier = 1 + (hero.stats.materialQuantityPercent || 0);
-          qty = Math.max(1, Math.round(qty * materialQuantityMultiplier));
+          const rawQty = qty * materialQuantityMultiplier;
+          qty = Math.floor(rawQty) + (Math.random() < (rawQty % 1) ? 1 : 0);
+          qty = Math.max(1, qty);
 
           inventory.addMaterial({ id: mat.id, qty });
           statistics.increment('totalMaterialsDropped', null, qty);
@@ -872,7 +874,9 @@ export async function defeatEnemy(source) {
         const enemyLvl = enemy.level || game.stage;
         qty = inventory.getScrapPackSize(enemyLvl);
       }
-      qty = Math.max(1, Math.round(qty * materialQuantityMultiplier));
+      const rawQty = qty * materialQuantityMultiplier;
+      qty = Math.floor(rawQty) + (Math.random() < (rawQty % 1) ? 1 : 0);
+      qty = Math.max(1, qty);
       inventory.addMaterial({ id: mat.id, qty });
       statistics.increment('totalMaterialsDropped', null, qty);
       battleLog.addDrop(tp('battleLog.droppedMaterial', { name: mat.name, qty: formatNumber(qty) }));
@@ -935,7 +939,8 @@ export async function defeatEnemy(source) {
 
         for (const { mat: aMat, qty: totalQty } of aggregate.values()) {
           if (!totalQty) continue;
-          const adjustedQty = Math.max(1, Math.round(totalQty * materialQuantityMultiplier));
+          const rawAdjustedQty = totalQty * materialQuantityMultiplier;
+          const adjustedQty = Math.max(1, Math.floor(rawAdjustedQty) + (Math.random() < (rawAdjustedQty % 1) ? 1 : 0));
           inventory.addMaterial({ id: aMat.id, qty: adjustedQty });
           statistics.increment('totalMaterialsDropped', null, adjustedQty);
           battleLog.addDrop(tp('battleLog.droppedMaterial', { name: aMat.name, qty: formatNumber(adjustedQty) }));

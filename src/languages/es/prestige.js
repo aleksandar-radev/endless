@@ -115,7 +115,7 @@ export default {
   'ascension.tooltip.critChanceCap': 'Aumenta el límite de crítico en 2% por nivel.',
   'ascension.tooltip.blockChanceCap': 'Aumenta el límite de bloqueo en 2% por nivel.',
   'ascension.tooltip.itemPercentCapPercent':
-    'Aumenta los límites de bonos porcentuales en objetos en 1% por nivel. Siempre cuesta 1 punto.',
+    'Aumenta los límites de bonos porcentuales en objetos en 1% por nivel. No afecta estadísticas con límites de juego (velocidad de ataque%, probabilidad de crítico, probabilidad de bloqueo, reducción de enfriamiento%, etc.) o estadísticas de reducción. Siempre cuesta 1 punto.',
   'ascension.tooltip.crystalGainPercent': 'Gana más cristales de todas las fuentes.',
   'ascension.tooltip.critChance': 'Añade probabilidad de crítico.',
   'ascension.tooltip.critDamage': 'Añade multiplicador de daño crítico.',

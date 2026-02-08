@@ -103,10 +103,10 @@ export async function collectOfflineFightRewards() {
       const rarityEntries = Object.entries(ITEM_RARITY)
         .filter(([key]) => included.has(ITEM_RARITY[key].name))
         .map(([key, config]) => {
-          const rarityIndex = RARITY_ORDER.indexOf(config.name);
+          const rarityIndex = RARITY_ORDER.indexOf(key);
           const weight = config.chance * (1 + boostFactor * rarityIndex) * (1 + rarityBonus * rarityIndex);
           return {
-            name: config.name, index: rarityIndex, weight,
+            key, name: config.name, index: rarityIndex, weight,
           };
         });
       const weightSum = rarityEntries.reduce((s, e) => s + e.weight, 0);
@@ -119,7 +119,7 @@ export async function collectOfflineFightRewards() {
           const exact = (e.weight / weightSum) * overflow;
           const base = Math.floor(exact);
           if (base > 0) {
-            rarityCounts.set(e.name, base);
+            rarityCounts.set(e.key, base);
             allocated += base;
           }
           const fraction = exact - base;
@@ -135,7 +135,7 @@ export async function collectOfflineFightRewards() {
           const assignCount = Math.min(rem, fractional.length);
           for (let i = 0; i < assignCount; i++) {
             const { entry } = fractional[i];
-            rarityCounts.set(entry.name, (rarityCounts.get(entry.name) || 0) + 1);
+            rarityCounts.set(entry.key, (rarityCounts.get(entry.key) || 0) + 1);
           }
           rem -= assignCount;
         }
@@ -145,7 +145,7 @@ export async function collectOfflineFightRewards() {
           for (let i = 0; i < fallback; i++) {
             const pick = rarityEntries[Math.floor(Math.random() * rarityEntries.length)];
             if (!pick) break;
-            rarityCounts.set(pick.name, (rarityCounts.get(pick.name) || 0) + 1);
+            rarityCounts.set(pick.key, (rarityCounts.get(pick.key) || 0) + 1);
           }
         }
 
@@ -162,13 +162,13 @@ export async function collectOfflineFightRewards() {
         const jewelryTypes = ITEM_TYPES.jewelry.items.length;
         const totalTypes = armorTypes + weaponTypes + jewelryTypes;
 
-        for (const [rarityName, count] of rarityCounts.entries()) {
-          if (rarityName === ITEM_RARITY.MYTHIC.name) crystals += count;
+        for (const [rarityKey, count] of rarityCounts.entries()) {
+          if (rarityKey === 'MYTHIC') crystals += count;
           if (count <= 0) continue;
 
           if (!inventory.salvageUpgradeMaterials) {
             // Gold salvage per item for this rarity
-            const rarityIndex = Math.max(0, RARITY_ORDER.indexOf(rarityName));
+            const rarityIndex = Math.max(0, RARITY_ORDER.indexOf(rarityKey));
             const goldPer = Math.floor(25 * level * Math.max(rarityIndex / 2 + 1, 1) * Math.max(region.tier * 3, 1));
             totalGold += goldPer * count;
           } else {
@@ -177,7 +177,7 @@ export async function collectOfflineFightRewards() {
               NORMAL: 1, MAGIC: 1.5, RARE: 2, EPIC: 2.5, LEGENDARY: 3, MYTHIC: 3.5,
             };
             const qtyPer = Math.floor(
-              (rarityAmounts[rarityName] || 1) * Math.max(level / 200, 1) * Math.max(region.tier, 1),
+              (rarityAmounts[rarityKey] || 1) * Math.max(level / 200, 1) * Math.max(region.tier, 1),
             );
             if (qtyPer > 0) {
               const armorCount = Math.floor((armorTypes / totalTypes) * count);
