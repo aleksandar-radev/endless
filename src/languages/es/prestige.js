@@ -4,7 +4,6 @@ export default {
   'ascension.needPrestiges': 'Necesitas al menos {required} cristales iniciales de las bonificaciones de prestigio para ascender.',
   'ascension.upgrade.lvl': 'Nvl',
   'ascension.upgrade.cost': 'Costo',
-  'ascension.upgrade.buy': 'Obtener',
   'ascension.upgrade.totalCost': 'Costo total',
   'ascension.upgrade.none': 'Aún no hay mejoras.',
   'ascension.upgrade.currentLevel': 'Nivel actual',

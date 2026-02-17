@@ -4,7 +4,6 @@ export default {
   'ascension.needPrestiges': 'Need at least {required} starting crystals from prestige bonuses to ascend.',
   'ascension.upgrade.lvl': 'Lvl',
   'ascension.upgrade.cost': 'Cost',
-  'ascension.upgrade.buy': 'Get',
   'ascension.upgrade.totalCost': 'Total Cost',
   'ascension.upgrade.none': 'No upgrades yet.',
   'ascension.upgrade.currentLevel': 'Current Level',

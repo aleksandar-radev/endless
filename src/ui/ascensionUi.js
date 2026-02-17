@@ -90,7 +90,15 @@ function renderAscension() {
       // Show the value directly in the title like damage
       const translatedLabel = t(cfg.label);
       const nameWithBonus = perLevel ? `${perLevel} ${translatedLabel}` : translatedLabel;
-      return `<li data-key="${key}"><span class="ascension-upgrade-label">${nameWithBonus} — ${t('ascension.upgrade.lvl')} ${levelText}</span> <button class="ascension-upgrade-btn" ${disabledBtn}>${t('ascension.upgrade.buy')} (<span class="ascension-cost">${t('ascension.upgrade.cost')}: ${cost}</span>)</button></li>`;
+      return `<li data-key="${key}">
+        <div class="ascension-upgrade-info">
+          <span class="ascension-level-tag">${t('ascension.upgrade.lvl')} ${levelText}</span>
+          <span class="ascension-upgrade-label">${nameWithBonus}</span>
+        </div>
+        <button class="ascension-upgrade-btn" ${disabledBtn}>
+          <span class="ascension-cost">${t('ascension.upgrade.cost')}: ${cost}</span>
+        </button>
+      </li>`;
     })
     .join('');
   list.innerHTML = upgrades || `<li>${t('ascension.upgrade.none')}</li>`;
@@ -196,7 +204,7 @@ function openUpgradeInfoModal(key) {
       <p>${t('ascension.upgrade.totalCost')}: <span class="modal-total-cost"></span> ${t('ascension.points')} (<span class="modal-qty">1</span>)</p>
       ${controlsMarkup}
       <div class="modal-controls">
-        <button class="modal-buy ascension-upgrade-buy">${t('ascension.upgrade.buy')}</button>
+        <button class="modal-buy ascension-upgrade-buy">${t('common.upgrade')}</button>
       </div>
     </div>
   `;

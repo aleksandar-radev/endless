@@ -4,7 +4,6 @@ export default {
   'ascension.needPrestiges': '需要至少 {required} 个来自转生奖励的初始水晶才能飞升。',
   'ascension.upgrade.lvl': '等级',
   'ascension.upgrade.cost': '成本',
-  'ascension.upgrade.buy': '获取',
   'ascension.upgrade.totalCost': '总成本',
   'ascension.upgrade.none': '暂时没有升级。',
   'ascension.upgrade.currentLevel': '当前等级',

@@ -104,35 +104,90 @@
 }
 
 .ascension-upgrades-list li {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.75rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-height: 4.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ascension-upgrades-list li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.ascension-upgrade-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  margin-right: 1rem;
+  /* Ensure text is centered vertically if it's short, via flex parent */
+}
+
+.ascension-level-tag {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.ascension-upgrade-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #e2e8f0;
+  line-height: 1.4;
 }
 
 .ascension-upgrade-btn {
-  background: var(--accent, #4e8cff);
+  background: linear-gradient(to bottom, #3b82f6, #2563eb);
   color: #fff;
   border: none;
-  padding: 0.25rem 0.75rem;
   border-radius: 0.5rem;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, transform 0.1s;
+
+  /* Static size */
+  min-width: 100px;
+  width: 100px;
+  height: 48px;
+  padding: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .ascension-upgrade-btn:hover:not(:disabled) {
-  background: var(--accent-hover, #2c6ad4);
+  background: linear-gradient(to bottom, #60a5fa, #3b82f6);
+  transform: translateY(-1px);
+}
+
+.ascension-upgrade-btn:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 .ascension-upgrade-btn:disabled {
-  opacity: 0.5;
+  background: #334155;
+  color: #64748b;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .ascension-upgrade-btn .ascension-cost {
-  color: #ffd47f;
+  color: inherit;
+  font-size: 0.95rem;
 }
 
 /* Ascension confirmation modal */
