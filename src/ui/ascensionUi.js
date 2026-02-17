@@ -90,7 +90,7 @@ function renderAscension() {
       // Show the value directly in the title like damage
       const translatedLabel = t(cfg.label);
       const nameWithBonus = perLevel ? `${perLevel} ${translatedLabel}` : translatedLabel;
-      return `<li data-key="${key}"><span class="ascension-upgrade-label">${nameWithBonus} — ${t('ascension.upgrade.lvl')} ${levelText}</span> <button class="ascension-upgrade-btn" ${disabledBtn}>${t('ascension.upgrade.buy')} (<span class="ascension-cost">${t('ascension.upgrade.cost')}: ${cost}</span>)</button></li>`;
+      return `<li data-key="${key}"><span class="ascension-upgrade-label"><span class="ascension-level">${t('ascension.upgrade.lvl')} ${levelText}</span> ${nameWithBonus}</span> <button class="ascension-upgrade-btn" ${disabledBtn}><span class="ascension-cost">${t('ascension.upgrade.cost')}: ${cost}</span></button></li>`;
     })
     .join('');
   list.innerHTML = upgrades || `<li>${t('ascension.upgrade.none')}</li>`;
