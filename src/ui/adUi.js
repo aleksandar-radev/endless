@@ -202,9 +202,12 @@ export function showAd(type = 'bonus') {
   }
 
   if (typeof window.sdk !== 'undefined' && typeof window.sdk.showBanner !== 'undefined') {
-    // Hide resource bar
+    // Hide resource bar and sidebar toggle
     const rateBar = document.querySelector('.rate-counters-bar');
     if (rateBar) rateBar.style.display = 'none';
+
+    const toggleBtn = document.getElementById('sidebar-toggle');
+    if (toggleBtn) toggleBtn.style.display = 'none';
 
     // Hook SDK_GAME_START to know when ad finished
     // We need to be careful not to override existing hook if any,
@@ -239,6 +242,9 @@ window.handleAdFinished = function() {
   // Restore UI
   const rateBar = document.querySelector('.rate-counters-bar');
   if (rateBar) rateBar.style.display = '';
+
+  const toggleBtn = document.getElementById('sidebar-toggle');
+  if (toggleBtn) toggleBtn.style.display = '';
 
   if (window.pendingAdType) {
     if (window.pendingAdType === 'bonus') {

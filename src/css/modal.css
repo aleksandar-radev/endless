@@ -7,7 +7,7 @@
   background: rgba(10, 12, 16, 0.6);
   backdrop-filter: blur(6px) saturate(1.1);
   -webkit-backdrop-filter: blur(6px) saturate(1.1);
-  z-index: 1000;
+  z-index: 2000;
 }
 
 .modal.hidden {
@@ -30,7 +30,7 @@
 }
 
 /* Ensure any modal content container respects viewport height */
-.modal > * {
+.modal>* {
   max-height: 90vh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;

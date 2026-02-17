@@ -482,7 +482,7 @@
   position: fixed;
   top: 1.5rem;
   left: 1.5rem;
-  z-index: 1000;
+  z-index: 900;
   background: #232b3a;
   color: #fff;
   border: none;
@@ -765,8 +765,8 @@
   /* Improve sidebar toggle button design */
   .sidebar-toggle {
     position: fixed;
-    z-index: 1200;
-    /* Ensure it's above everything */
+    z-index: 900;
+    /* Ensure it's above most UI but behind modals/ads */
     top: auto;
     bottom: 1.5rem;
     right: 1.5rem;
