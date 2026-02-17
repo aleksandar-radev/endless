@@ -431,13 +431,13 @@ export default class Statistics {
   }
 
   trackMax(category, value) {
-      if (this[category] === undefined) {
-          this[category] = 0;
-      }
-      if (value > this[category]) {
-          this[category] = value;
-          this._queueUiUpdate();
-      }
+    if (this[category] === undefined) {
+      this[category] = 0;
+    }
+    if (value > this[category]) {
+      this[category] = value;
+      this._queueUiUpdate();
+    }
   }
 
   // getter function

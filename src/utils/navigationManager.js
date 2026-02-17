@@ -13,7 +13,7 @@ class NavigationManager {
   init(callbacks) {
     if (this.initialized) return;
     this.callbacks = callbacks; // { switchTab, switchShopSubTab, switchSkillTreeTab, switchJournalSubTab, switchOptionsSubTab, switchStatsSubTab, closeModal }
-    
+
     window.addEventListener('popstate', () => this.handlePopState());
     this.initialized = true;
   }
@@ -24,7 +24,6 @@ class NavigationManager {
   syncFromUrl() {
     this.isSyncing = true;
     const params = new URLSearchParams(window.location.search);
-    
     const tab = params.get('tab');
     const subtab = params.get('subtab');
     const skillTreeTab = params.get('skilltree-tab');
@@ -65,7 +64,9 @@ class NavigationManager {
   /**
    * Update the URL to match the current UI state.
    */
-  updateUrl({ tab, subtab, skillTreeTab, modal }, { push = true } = {}) {
+  updateUrl({
+    tab, subtab, skillTreeTab, modal,
+  }, { push = true } = {}) {
     if (this.isSyncing) return;
 
     const params = new URLSearchParams(window.location.search);
@@ -126,12 +127,12 @@ class NavigationManager {
     if (changed) {
       const queryString = params.toString();
       const newUrl = `${window.location.pathname}${queryString ? '?' + queryString : ''}${window.location.hash}`;
-      
-      const state = { 
-        tab: this.currentTab, 
-        subtab: this.currentSubTab, 
+
+      const state = {
+        tab: this.currentTab,
+        subtab: this.currentSubTab,
         skillTreeTab: this.currentSkillTreeTab,
-        modal: this.currentModal 
+        modal: this.currentModal,
       };
 
       if (push) {
@@ -145,7 +146,7 @@ class NavigationManager {
   handlePopState() {
     this.isSyncing = true;
     const params = new URLSearchParams(window.location.search);
-    
+
     const tab = params.get('tab');
     const subtab = params.get('subtab');
     const skillTreeTab = params.get('skilltree-tab');

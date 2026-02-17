@@ -19,7 +19,7 @@ let adBlockDetected = false;
 
 // Robust AdBlock detection: try to fetch known ad-serving domains
 async function checkAdBlocker() {
-  if (import.meta.env.VITE_ENV === 'local') {
+  if (['local'].includes(import.meta.env.VITE_ENV)) {
     adBlockDetected = false;
     return;
   }
@@ -30,7 +30,15 @@ async function checkAdBlocker() {
   const adTestUrl = 'https://imasdk.googleapis.com/js/sdkloader/ima3.js';
 
   try {
-    const response = await fetch(adTestUrl, { method: 'HEAD', mode: 'no-cors' });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
+
+    const response = await fetch(adTestUrl, {
+      method: 'HEAD',
+      mode: 'no-cors',
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
     // If we get here, it wasn't blocked by the network layer (or at least DNS/TCP succeeded enough)
     // Note: 'no-cors' opaque response doesn't give status, but if blocked by extension, it usually throws.
     adBlockDetected = false;
@@ -181,7 +189,7 @@ window.showAd = showAd;
 export function showAd(type = 'bonus') {
   // Local testing bypass
   if (
-    import.meta.env.VITE_ENV === 'local'
+    ['local', 'development'].includes(import.meta.env.VITE_ENV)
   ) {
     console.log('Local/Dev environment detected: Simulating Ad View for testing.');
     if (type === 'bonus') showBonusSelectionModal();

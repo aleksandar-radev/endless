@@ -82,7 +82,7 @@
 <body>
   <!-- GameMonetize SDK -->
   <script type="text/javascript">
-    if ("%VITE_ENV%" !== "local") {
+    if ("<%= VITE_ENV %>" !== "local") {
       window.SDK_OPTIONS = {
         gameId: "v3boyqdzmweepdezxg00txajj74moq58",
         onEvent: function (a) {

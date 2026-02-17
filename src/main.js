@@ -243,7 +243,7 @@ window.setLanguage = setLanguage;
   if (game.activeTab === 'battle' && window.innerWidth > 1200) {
     game.activeTab = 'stats';
   }
-  
+
   // Try to sync from URL, otherwise fallback to saved activeTab
   navigationManager.syncFromUrl();
   if (!navigationManager.currentTab) {

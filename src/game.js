@@ -26,7 +26,7 @@ function formatDamageBreakdown(breakdown) {
 
 class Game {
   constructor(savedData = {}) {
-    this.activeTab = savedData.activeTab || 'stats';
+    this.activeTab = savedData.activeTab || 'battle';
     this.fightMode = savedData.fightMode || 'explore'; // Default fight mode
     this.gameStarted = false;
     this.currentEnemy = null;
