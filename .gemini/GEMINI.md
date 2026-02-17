@@ -1,6 +1,7 @@
-# Package Management
-
-- This project uses `pnpm` for package management.
+# CRITICAL OPERATIONAL CONSTRAINTS
+1. PACKAGE MANAGER: strictly use `pnpm`.
+2. PROHIBITED: Do NOT use `npm` or `yarn` commands.
+3. ERROR RECOVERY: If a command fails, do not default back to `npm`. Ask for clarification.
 
 # Code structure
 
