@@ -18,6 +18,9 @@
     "electron": "electron electron-main.js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:linux": "electron-builder --linux",
+    "dist:mac": "electron-builder --mac",
     "check-translations": "node scripts/check-translations.js",
     "check-unused-translations": "node scripts/check-unused-translations.js"
   },
@@ -57,6 +60,10 @@
     },
     "win": {
       "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.games"
     }
   },
   "publish": [

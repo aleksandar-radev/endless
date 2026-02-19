@@ -83,6 +83,7 @@
   <!-- GameMonetize SDK -->
   <script type="text/javascript">
     if ("<%= VITE_ENV %>" !== "local") {
+      window.showAdOnStart = "<%= typeof SHOW_AD_ON_START !== 'undefined' ? SHOW_AD_ON_START : '' %>" === "1";
       window.SDK_OPTIONS = {
         gameId: "v3boyqdzmweepdezxg00txajj74moq58",
         onEvent: function (a) {
@@ -107,6 +108,8 @@
               break;
             case "SDK_READY":
               // SDK is ready
+              window.gmSdkReady = true;
+              document.dispatchEvent(new CustomEvent('gmSdkReady'));
               break;
           }
         }

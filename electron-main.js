@@ -1,7 +1,5 @@
 // Load environment variables
 import dotenv from 'dotenv';
-// First load variables from `.env` if present for local development
-dotenv.config();
 // Then load `.env.electron` to ensure required defaults for production
 dotenv.config({ path: '.env.electron', override: false });
 console.log('VITE_ENV:', process.env.VITE_ENV);

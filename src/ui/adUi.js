@@ -16,6 +16,32 @@ function formatTime(seconds) {
 
 let updateInterval;
 let adBlockDetected = false;
+let startupAdShown = false;
+
+function isStartupAdEnabled() {
+  const viteFlag = String(import.meta.env.VITE_SHOW_AD_ON_START || '').trim().toLowerCase();
+  if (viteFlag === '1' || viteFlag === 'true') return true;
+
+  const runtimeFlag = globalThis.showAdOnStart;
+  if (runtimeFlag === true || runtimeFlag === 1) return true;
+  if (typeof runtimeFlag === 'string') {
+    const normalized = runtimeFlag.trim().toLowerCase();
+    return normalized === '1' || normalized === 'true';
+  }
+
+  return false;
+}
+
+function tryShowStartupAd() {
+  if (startupAdShown) return;
+  if (!isStartupAdEnabled()) return;
+  if (['local', 'development'].includes(import.meta.env.VITE_ENV)) return;
+  if (adBlockDetected) return;
+  if (typeof window.sdk === 'undefined' || typeof window.sdk.showBanner === 'undefined') return;
+
+  startupAdShown = true;
+  window.sdk.showBanner();
+}
 
 // Robust AdBlock detection: try to fetch known ad-serving domains
 async function checkAdBlocker() {
@@ -61,6 +87,10 @@ export function initializeAdUI() {
   updateInterval = setInterval(updateAdTimers, 1000); // 1s update for timers
 
   document.addEventListener('adBonusesUpdated', renderAdsTab);
+  document.addEventListener('gmSdkReady', tryShowStartupAd);
+
+  // Covers the case where SDK became ready before UI initialization.
+  tryShowStartupAd();
 }
 
 function renderAdsTab() {
