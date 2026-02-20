@@ -19,17 +19,8 @@ let adBlockDetected = false;
 let startupAdShown = false;
 
 function isStartupAdEnabled() {
-  const viteFlag = String(import.meta.env.VITE_SHOW_AD_ON_START || '').trim().toLowerCase();
-  if (viteFlag === '1' || viteFlag === 'true') return true;
-
-  const runtimeFlag = globalThis.showAdOnStart;
-  if (runtimeFlag === true || runtimeFlag === 1) return true;
-  if (typeof runtimeFlag === 'string') {
-    const normalized = runtimeFlag.trim().toLowerCase();
-    return normalized === '1' || normalized === 'true';
-  }
-
-  return false;
+  const viteFlag = parseInt(import.meta.env.VITE_SHOW_ADS || '0', 10);
+  return viteFlag >= 1;
 }
 
 function tryShowStartupAd() {
@@ -96,6 +87,19 @@ export function initializeAdUI() {
 function renderAdsTab() {
   const adsTab = document.getElementById('ads');
   if (!adsTab) return;
+
+  const showAds = parseInt(import.meta.env.VITE_SHOW_ADS || '0', 10);
+  if (showAds < 1) {
+    adsTab.innerHTML = `
+        <div class="ads-container">
+            <div class="ad-blocker-warning">
+                <h2>${t('ads.disabled.title') || 'Ads Disabled'}</h2>
+                <p>${t('ads.disabled.message') || 'Ads are currently disabled in this version of the game.'}</p>
+            </div>
+        </div>
+      `;
+    return;
+  }
 
   // If ad blocked, show warning
   if (adBlockDetected) {
@@ -217,6 +221,12 @@ function updateAdTimers() {
 window.showAd = showAd;
 
 export function showAd(type = 'bonus') {
+  const showAds = parseInt(import.meta.env.VITE_SHOW_ADS || '0', 10);
+  if (showAds < 1) {
+    console.warn('Ads are disabled.');
+    return;
+  }
+
   // Local testing bypass
   if (
     ['local', 'development'].includes(import.meta.env.VITE_ENV)

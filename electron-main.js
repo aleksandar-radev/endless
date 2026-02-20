@@ -22,30 +22,13 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       backgroundThrottling: false,
-      devTools: !isProduction,
+      devTools: true,
       webSecurity: isProduction,
       allowRunningInsecureContent: !isProduction,
       experimentalFeatures: !isProduction,
       sandbox: isProduction,
       enableRemoteModule: false,
     },
-  });
-
-  // Disable right-click context menu and F12
-  win.webContents.on('before-input-event', (event, input) => {
-    if (
-      input.key === 'F12' ||
-      (input.control && input.shift && input.key === 'I') ||
-      (input.control && input.shift && input.key === 'C') ||
-      (input.control && input.shift && input.key === 'J')
-    ) {
-      event.preventDefault();
-    }
-  });
-
-  // Disable right-click context menu
-  win.webContents.on('context-menu', (event) => {
-    event.preventDefault();
   });
 
   win.loadFile(path.join(__dirname, 'dist', 'index.html'));

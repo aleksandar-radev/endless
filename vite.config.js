@@ -1,5 +1,4 @@
 import { defineConfig, loadEnv } from 'vite';
-import vitePluginBundleObfuscator from 'vite-plugin-bundle-obfuscator';
 import { VitePWA } from 'vite-plugin-pwa';
 import { createHtmlPlugin } from 'vite-plugin-html';
 
@@ -8,7 +7,6 @@ export default defineConfig(({ mode }) => {
   const isProduction = mode === 'production';
   const isDebugBuild = mode === 'debug' || env.VITE_DEBUG_BUILD === 'true';
 
-  const shouldObfuscate = isProduction && !isDebugBuild;
   const shouldMinify = isProduction && !isDebugBuild;
 
   return {
@@ -17,7 +15,7 @@ export default defineConfig(({ mode }) => {
     build: {
       minify: shouldMinify ? 'terser' : 'esbuild',
       terserOptions: shouldMinify ? {
-        compress: { drop_console: true, drop_debugger: true },
+        compress: { drop_console: false, drop_debugger: false },
         format: { comments: false },
       } : undefined,
 
@@ -36,26 +34,12 @@ export default defineConfig(({ mode }) => {
     },
 
     plugins: [
-      createHtmlPlugin({ inject: { data: { VITE_ENV: env.VITE_ENV || 'production' } } }),
-      shouldObfuscate && vitePluginBundleObfuscator({
-        enable: true,
-        log: true,
-        autoExcludeNodeModules: true, // CRITICAL: Keeps libraries safe
-
-        options: {
-          controlFlowFlattening: false,
-          deadCodeInjection: false,
-          selfDefending: false,
-          identifierNamesGenerator: 'mangled',
-          splitStrings: false,
-          compact: true,
-          stringArray: false,
-          stringArrayEncoding: [],
-          stringArrayThreshold: 0,
-          debugProtection: false,
-          // debugProtectionInterval: 10000,
-          renameGlobals: false,
-          renameProperties: false,
+      createHtmlPlugin({
+        inject: {
+          data: {
+            VITE_ENV: env.VITE_ENV || 'production',
+            VITE_SHOW_ADS: env.VITE_SHOW_ADS || '0',
+          },
         },
       }),
       VitePWA({

@@ -201,6 +201,15 @@ export function initializeUI() {
   // Initialize tab indicator manager
   tabIndicatorManager = new TabIndicatorManager();
 
+  // Hide Ads tab if disabled
+  const showAds = parseInt(import.meta.env.VITE_SHOW_ADS || '0', 10);
+  if (showAds < 1) {
+    const adsTabBtn = document.querySelector('.tab-btn[data-tab="ads"]');
+    if (adsTabBtn) {
+      adsTabBtn.style.display = 'none';
+    }
+  }
+
   document.querySelectorAll('.tab-btn').forEach((btn) => {
     if (btn.dataset.tab) {
       btn.addEventListener('click', () => switchTab(btn.dataset.tab));

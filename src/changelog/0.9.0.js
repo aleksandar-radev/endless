@@ -26,7 +26,6 @@ export default function run() {
       <li>Cooldown reduction and buff duration removed from prestige bonuses. They can now appear on items. (ring, amulet, wand/staff)</li>
       <li>Summons can now stack, so the more cd/duration you have, the more summons you can have at the same time.</li>
       <li>Added "Achievements".</li>
-      <li>Added "Ads". You can now watch ads for bonuses like 2x damage, 2x life, etc.</li>
       <li>Added "Performance Monitor" option (development mode only) showing FPS, frame time, and memory usage.</li>
       <li>Mana overcharge introduced as a new mechanic that increases mana cost for greater damage output.</li>
       <li>Levels required for regions unlock are now greatly increased, to align better with the new enemy scaling.</li>
