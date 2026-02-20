@@ -115,6 +115,7 @@ export default function run() {
       <li>Throns damage no longer benefits from damage % bonuses. Only total damage %.</li>
       <li>Block chance stays at 0 when no shield is equipped.</li>
       <li>Improved overall design and especially mobile experience.</li>
+      <li>Added a menu button position option with 8 placements: top-left, top-right, bottom-left, bottom-right, and centered on each side.</li>
       <li>Added total potential damage to summon skill tooltips and details.</li>
       <li>Most if not all texts are not translated for all existing languagese correctly.</li>
       <li>Slight performance improvements.</li>

@@ -493,8 +493,73 @@
   justify-content: center;
   font-size: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  opacity: 0.8;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.sidebar-toggle.menu-btn-pos-top-left {
+  top: 1.5rem;
+  left: 1.5rem;
+  right: auto;
+  bottom: auto;
+  transform: none;
+}
+
+.sidebar-toggle.menu-btn-pos-top-right {
+  top: 1.5rem;
+  right: 1.5rem;
+  left: auto;
+  bottom: auto;
+  transform: none;
+}
+
+.sidebar-toggle.menu-btn-pos-bottom-left {
+  bottom: 1.5rem;
+  left: 1.5rem;
+  top: auto;
+  right: auto;
+  transform: none;
+}
+
+.sidebar-toggle.menu-btn-pos-bottom-right {
+  bottom: 1.5rem;
+  right: 1.5rem;
+  top: auto;
+  left: auto;
+  transform: none;
+}
+
+.sidebar-toggle.menu-btn-pos-top {
+  top: 1.5rem;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translateX(-50%);
+}
+
+.sidebar-toggle.menu-btn-pos-right {
+  top: 50%;
+  right: 1.5rem;
+  left: auto;
+  bottom: auto;
+  transform: translateY(-50%);
+}
+
+.sidebar-toggle.menu-btn-pos-bottom {
+  bottom: 1.5rem;
+  left: 50%;
+  top: auto;
+  right: auto;
+  transform: translateX(-50%);
+}
+
+.sidebar-toggle.menu-btn-pos-left {
+  top: 50%;
+  left: 1.5rem;
+  right: auto;
+  bottom: auto;
+  transform: translateY(-50%);
 }
 
 @media (min-width: 1200px) {
@@ -714,13 +779,36 @@
 
 @media (max-width: 1200px) {
 
+  body {
+    overflow: hidden;
+  }
+
+  .game-container {
+    height: calc(100dvh - 1rem);
+  }
+
+  .main-content {
+    height: 100%;
+  }
+
   /* Mobile Layout Changes */
   .combat-panel {
     display: none;
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
 
   .combat-panel.active {
     display: block;
+  }
+
+  .game-panel {
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
 
   .game-panel.hidden {
@@ -767,11 +855,6 @@
     position: fixed;
     z-index: 900;
     /* Ensure it's above most UI but behind modals/ads */
-    top: auto;
-    bottom: 1.5rem;
-    right: 1.5rem;
-    left: auto;
-    transform: none;
     width: 56px;
     height: 56px;
     background: var(--accent);
@@ -780,7 +863,7 @@
   }
 
   .sidebar-toggle:active {
-    transform: scale(0.95);
+    opacity: 0.75;
   }
 }
 

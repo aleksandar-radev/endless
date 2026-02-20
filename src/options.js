@@ -39,6 +39,21 @@ import { SOUL_SHOP_MAX_QTY,
 
 const html = String.raw;
 
+const MENU_BUTTON_POSITIONS = new Set([
+  'topLeft',
+  'topRight',
+  'bottomLeft',
+  'bottomRight',
+  'top',
+  'right',
+  'bottom',
+  'left',
+]);
+
+function normalizeMenuButtonPosition(value) {
+  return MENU_BUTTON_POSITIONS.has(value) ? value : 'bottomRight';
+}
+
 function attachTooltip(el, generator) {
   el.addEventListener('mouseenter', (e) => {
     const content = typeof generator === 'function' ? generator() : generator;
@@ -125,6 +140,7 @@ export class Options {
     this.showNotifications = data.showNotifications ?? true;
     this.showCombatText = data.showCombatText ?? true;
     this.showStageControlsInline = data.showStageControlsInline ?? false;
+    this.menuButtonPosition = normalizeMenuButtonPosition(data.menuButtonPosition);
     this.showRollPercentiles = data.showRollPercentiles ?? false;
     this.showPerformanceMonitor = data.showPerformanceMonitor ?? false;
     this.devAccessDeadline = data.devAccessDeadline || null;
@@ -134,6 +150,7 @@ export class Options {
 
   initializeOptionsUI() {
     this._renderOptionsUI();
+    this.applyMenuButtonPosition();
     this._initCloudSaveButtons();
     audioManager.setVolume(this.soundVolume);
   }
@@ -506,6 +523,7 @@ export class Options {
         },
       }),
     );
+    gameContent.appendChild(this._createMenuButtonPositionOption());
     gameContent.appendChild(
       this._createNumberInputOption({
         id: 'starting-stage-input',
@@ -976,6 +994,71 @@ export class Options {
     });
     if (onCreated) onCreated(wrapper, checkbox, label);
     return wrapper;
+  }
+
+  _createMenuButtonPositionOption() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'option-row';
+    wrapper.innerHTML = html`
+      <label for="menu-button-position-select" data-i18n="options.menuButtonPosition">
+        ${t('options.menuButtonPosition')}
+      </label>
+      <select id="menu-button-position-select" class="common-select">
+        <option value="topLeft">${t('options.menuButtonPosition.topLeft')}</option>
+        <option value="topRight">${t('options.menuButtonPosition.topRight')}</option>
+        <option value="bottomLeft">${t('options.menuButtonPosition.bottomLeft')}</option>
+        <option value="bottomRight">${t('options.menuButtonPosition.bottomRight')}</option>
+        <option value="top">${t('options.menuButtonPosition.top')}</option>
+        <option value="right">${t('options.menuButtonPosition.right')}</option>
+        <option value="bottom">${t('options.menuButtonPosition.bottom')}</option>
+        <option value="left">${t('options.menuButtonPosition.left')}</option>
+      </select>
+    `;
+
+    const label = wrapper.querySelector('label');
+    const select = wrapper.querySelector('select');
+    attachTooltip(label, () => html`${t('options.menuButtonPosition.tooltip')}`);
+    attachTooltip(select, () => html`${t('options.menuButtonPosition.tooltip')}`);
+
+    select.value = normalizeMenuButtonPosition(this.menuButtonPosition);
+    select.addEventListener('change', () => {
+      this.menuButtonPosition = normalizeMenuButtonPosition(select.value);
+      this.applyMenuButtonPosition();
+      dataManager.saveGame();
+    });
+
+    return wrapper;
+  }
+
+  applyMenuButtonPosition() {
+    const toggleBtn = document.getElementById('sidebar-toggle');
+    if (!toggleBtn) return;
+
+    const classes = [
+      'menu-btn-pos-top-left',
+      'menu-btn-pos-top-right',
+      'menu-btn-pos-bottom-left',
+      'menu-btn-pos-bottom-right',
+      'menu-btn-pos-top',
+      'menu-btn-pos-right',
+      'menu-btn-pos-bottom',
+      'menu-btn-pos-left',
+    ];
+    toggleBtn.classList.remove(...classes);
+
+    const classByPosition = {
+      topLeft: 'menu-btn-pos-top-left',
+      topRight: 'menu-btn-pos-top-right',
+      bottomLeft: 'menu-btn-pos-bottom-left',
+      bottomRight: 'menu-btn-pos-bottom-right',
+      top: 'menu-btn-pos-top',
+      right: 'menu-btn-pos-right',
+      bottom: 'menu-btn-pos-bottom',
+      left: 'menu-btn-pos-left',
+    };
+
+    const normalized = normalizeMenuButtonPosition(this.menuButtonPosition);
+    toggleBtn.classList.add(classByPosition[normalized]);
   }
 
   updateStageSkipOption() {
