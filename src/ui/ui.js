@@ -114,6 +114,81 @@ let hoveredAilmentData = null;
 const html = String.raw;
 const BASE = import.meta.env.VITE_BASE_PATH;
 
+const COMBAT_MODES = ['explore', 'arena', 'rockyField'];
+
+function getCombatModeLabel(mode) {
+  if (mode === 'arena') return t('region.arena');
+  if (mode === 'rockyField') return t('region.rockyField');
+  return t('region.explore');
+}
+
+function updateCombatModeButton() {
+  const combatModeBtn = document.getElementById('combat-mode-select-btn');
+  if (!combatModeBtn) return;
+  combatModeBtn.textContent = getCombatModeLabel(game.fightMode);
+}
+
+function switchCombatMode(mode) {
+  if (!COMBAT_MODES.includes(mode)) return;
+  if (game.fightMode === mode) return;
+
+  if (game.gameStarted) {
+    toggleGame();
+  }
+
+  game.fightMode = mode;
+  if (game.fightMode === 'explore') {
+    game.currentEnemy = new Enemy(game.stage);
+  } else if (game.fightMode === 'arena') {
+    selectBoss();
+  } else if (game.fightMode === 'rockyField') {
+    game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);
+  }
+
+  renderRegionPanel(mode);
+  updateStatsAndAttributesUI();
+  updateStageUI();
+  updateCombatRegionDropdownVisibility();
+  updateCombatModeButton();
+}
+
+export function openCombatModeSelectionDialog() {
+  const modeItems = COMBAT_MODES.map((mode) => {
+    const selectedClass = mode === game.fightMode ? 'selected' : '';
+    return html`
+      <div class="region-dialog-item combat-mode-dialog-item ${selectedClass}" data-mode="${mode}">
+        <div class="region-dialog-item-header">
+          <span class="region-dialog-item-name">${getCombatModeLabel(mode)}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const content = html`
+    <div class="modal-content region-selection-modal">
+      <button class="modal-close">×</button>
+      <h2 class="modal-title">${t('combat.mode')}</h2>
+      <div class="combat-mode-dialog-list">${modeItems}</div>
+    </div>
+  `;
+
+  createModal({
+    id: 'combat-mode-selection-dialog',
+    className: 'combat-mode-selection-dialog',
+    content,
+    closeOnOutsideClick: true,
+  });
+
+  document.querySelectorAll('.combat-mode-dialog-item').forEach((item) => {
+    const mode = item.dataset.mode;
+    item.addEventListener('click', () => {
+      if (!mode) return;
+      switchCombatMode(mode);
+      closeModal('combat-mode-selection-dialog');
+    });
+  });
+}
+
 // Format numbers with thousands separators or shorthand notation.
 // When options.shortNumbers is enabled, large numbers are abbreviated
 // using suffixes (e.g., 1.2M for 1,200,000). Otherwise, a thousands
@@ -184,34 +259,17 @@ export function initializeUI() {
   updateQuestsUI();
   initializeJournalUI();
 
-  // Setup combat mode dropdown
-  const combatModeSelect = document.getElementById('combat-mode-select');
-  if (combatModeSelect) {
-    combatModeSelect.value = game.fightMode;
-    combatModeSelect.addEventListener('change', () => {
-      const region = combatModeSelect.value;
-      if (game.fightMode === region) return;
-      if (game.gameStarted) {
-        toggleGame();
-      }
-      game.fightMode = region;
-      if (game.fightMode === 'explore') {
-        game.currentEnemy = new Enemy(game.stage);
-      } else if (game.fightMode === 'arena') {
-        selectBoss();
-      } else if (game.fightMode === 'rockyField') {
-        game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);
-      }
-      renderRegionPanel(region);
-      updateStatsAndAttributesUI();
-      updateStageUI();
-      updateCombatRegionDropdownVisibility();
-    });
+  // Setup combat mode dialog trigger
+  const combatModeBtn = document.getElementById('combat-mode-select-btn');
+  if (combatModeBtn) {
+    updateCombatModeButton();
+    combatModeBtn.addEventListener('click', () => openCombatModeSelectionDialog());
   }
 
   // Render initial region panel
   renderRegionPanel(game.fightMode);
   updateCombatRegionDropdownVisibility();
+  updateCombatModeButton();
 
   // Add offline eligibility indicator and save status
   try {
