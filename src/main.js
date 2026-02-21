@@ -40,6 +40,7 @@ import { ensureDevAccessRuntimeState } from './migrations/0.8.15.js';
 import { initializeInventoryUI } from './ui/inventoryUi.js';
 import { performanceMonitor } from './performanceMonitor.js';
 import { navigationManager } from './utils/navigationManager.js';
+import { registerSW } from 'virtual:pwa-register';
 import './css/performanceMonitor.css';
 
 window.qwe = console.log;
@@ -48,6 +49,13 @@ window.qq = console.log;
 window.q = console.log;
 window.log = console.log;
 window.setLanguage = setLanguage;
+
+const updatePwaServiceWorker = registerSW({
+  immediate: true,
+  onNeedRefresh() {
+    updatePwaServiceWorker(true);
+  },
+});
 
 // Wrap initialization in an async IIFE to avoid top-level await error
 (async () => {

@@ -23,6 +23,9 @@ importers:
       simple-crypto-js:
         specifier: ^3.0.1
         version: 3.0.1
+      workbox-window:
+        specifier: ^7.4.0
+        version: 7.4.0
     devDependencies:
       electron:
         specifier: ^38.1.2

@@ -43,7 +43,7 @@ export default defineConfig(({ mode }) => {
         },
       }),
       VitePWA({
-        registerType: 'autoUpdate',
+        registerType: 'prompt',
         devOptions: { enabled: true },
         includeAssets: ['endless192x192.jpg', 'endless512x512.jpg'],
         manifest: {
