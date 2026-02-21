@@ -70,8 +70,10 @@ export default defineConfig(({ mode }) => {
         workbox: {
           skipWaiting: true,
           clientsClaim: true,
+          cleanupOutdatedCaches: true,
           maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
-          globPatterns: ['**/*.{js,css,html}'],
+          globPatterns: ['**/*.{js,css}'],
+          navigateFallbackDenylist: [/./],
           runtimeCaching: [
             {
               urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
