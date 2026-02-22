@@ -36,6 +36,9 @@ function tryShowStartupAd() {
 
 // Robust AdBlock detection: try to fetch known ad-serving domains
 async function checkAdBlocker() {
+  const showAds = parseInt(import.meta.env.VITE_SHOW_ADS || '0', 10);
+  if (showAds < 1) return;
+
   if (['local'].includes(import.meta.env.VITE_ENV)) {
     adBlockDetected = false;
     return;
