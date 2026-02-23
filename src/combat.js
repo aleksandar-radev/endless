@@ -768,8 +768,18 @@ export async function defeatEnemy(source) {
     if (hero.stats.allowBossLoot) {
       // Random Item Drop from Boss
       // Uses standard drop chance calculation (same as explore)
-      // Tier based on boss level: <50 = Tier 1, 50-99 = Tier 2, etc.
-      const dropTier = Math.floor(hero.bossLevel / 50) + 1;
+      // Tier based on boss level with exponential growth: Tier 2 starts at lvl 10, Tier 12 at lvl 500,000
+      const BOSS_TIER_MAX = 12;
+      const BOSS_TIER_2_THRESHOLD = 10;
+      const BOSS_TIER_MAX_THRESHOLD = 500000;
+      const bossLevelTierRatio = Math.pow(BOSS_TIER_MAX_THRESHOLD / BOSS_TIER_2_THRESHOLD, 1 / (BOSS_TIER_MAX - 2));
+      let dropTier = 1;
+      for (let tier = BOSS_TIER_MAX; tier >= 2; tier--) {
+        if (hero.bossLevel >= BOSS_TIER_2_THRESHOLD * Math.pow(bossLevelTierRatio, tier - 2)) {
+          dropTier = tier;
+          break;
+        }
+      }
       const itemLevel = hero.bossLevel;
       // Use explore drop chance logic
       const itemDropChance = BASE_ITEM_DROP_CHANCE * (1 + hero.stats.itemQuantityPercent);
