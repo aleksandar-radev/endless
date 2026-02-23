@@ -219,8 +219,8 @@ export const SPECIALIZATIONS = {
       avatar: () => 'rogue-shadowdancer-avatar.jpg',
       baseStats: () => ({ attackSpeed: 0.5 }),
       skills: {
-        shadowClone: {
-          id: 'shadowClone',
+        shadowClonePassive: {
+          id: 'shadowClonePassive',
           name: () => t('Shadow Clone'),
           type: () => 'passive',
           requiredLevel: () => SPECIALIZATION_SKILL_LEVEL_TIERS[0],
