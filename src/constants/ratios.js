@@ -16,10 +16,10 @@ const damage = 1;
 
 export const STAT_RATIOS = {
   damage: damage,
-  life: damage * 5.25,
+  life: damage * 7,
   armor: damage * 4.5,
   evasion: damage * 4,
-  allResistance: damage * 1.7,
+  allResistance: damage * 2.3,
   elementalResistance: damage * 5,
   mana: damage * 4,
   lifeRegen: damage * 0.5,

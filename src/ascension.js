@@ -50,7 +50,7 @@ export const ASCENSION_CATEGORIES = {
       // New offensive upgrades
       flatThornsDamage: {
         label: 'ascension.upgrade.flatThornsDamage',
-        bonus: 300,
+        bonus: 600,
         stat: 'thornsDamage',
       },
       critChance: {
