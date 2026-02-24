@@ -13,7 +13,8 @@ export default defineConfig(({ mode }) => {
     base: env.VITE_BASE_PATH || './',
 
     build: {
-      minify: shouldMinify ? 'terser' : 'esbuild',
+      minify: shouldMinify ? 'terser' : false,
+      sourcemap: !shouldMinify,
       terserOptions: shouldMinify ? {
         compress: { drop_console: false, drop_debugger: false },
         format: { comments: false },
@@ -35,6 +36,7 @@ export default defineConfig(({ mode }) => {
 
     plugins: [
       createHtmlPlugin({
+        minify: shouldMinify,
         inject: {
           data: {
             VITE_ENV: env.VITE_ENV || 'production',
