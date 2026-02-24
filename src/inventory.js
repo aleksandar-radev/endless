@@ -14,7 +14,6 @@ import { ITEM_IDS, ITEM_RARITY,
   RARITY_KEYS,
   RARITY_ORDER,
   SLOT_REQUIREMENTS,
-  TWO_HANDED_TYPES,
   WEAPON_TYPES,
   getSlotsByCategory,
   getTypesByCategory } from './constants/items.js';
@@ -1262,10 +1261,6 @@ export default class Inventory {
     tooltips.forEach((tooltip) => tooltip.remove());
   }
 
-  isTwoHanded(item) {
-    return !!item && TWO_HANDED_TYPES.includes(item.type);
-  }
-
   canEquipInSlot(item, slotName) {
     if (!item || !SLOT_REQUIREMENTS[slotName]?.includes(item.type)) {
       return false;
@@ -1284,13 +1279,13 @@ export default class Inventory {
         if (item.type !== 'ARROWS') return false;
       }
 
-      if (this.isTwoHanded(item)) {
+      if (item.isTwoHanded()) {
         // Cannot equip Bow in offhand (game design assumption based on "Bows can only have off-hand arrows")
         if (item.type === 'BOW') return false;
         if (!canDualWield) return false;
       }
 
-      if (weapon && this.isTwoHanded(weapon)) {
+      if (weapon && weapon.isTwoHanded()) {
         // If main hand is 2H (and not Bow, checked above), need dual wield skill
         if (weapon.type !== 'BOW' && !canDualWield) {
           return false;
@@ -1359,7 +1354,7 @@ export default class Inventory {
     const canDualWield = hero.stats.canDualWieldTwoHanded;
 
     if (weapon && offhand) {
-      if (this.isTwoHanded(weapon) && this.isTwoHanded(offhand)) {
+      if (weapon.isTwoHanded() && offhand.isTwoHanded()) {
         if (!canDualWield) {
           this.unequipItem('offhand');
           showToast(t('inventory.offhandUnequippedTwoHanded'), 'info');
@@ -1404,7 +1399,7 @@ export default class Inventory {
     }
 
     if (!this.canEquipInSlot(item, slot)) {
-      if (slot === 'offhand' && this.isTwoHanded(this.equippedItems.weapon)) {
+      if (slot === 'offhand' && this.equippedItems.weapon?.isTwoHanded()) {
         // Allow custom message for Arrows?
         if (item.type === 'ARROWS' && this.equippedItems.weapon?.type !== 'BOW') {
           showToast(t('inventory.arrowsRequireBow'), 'error');
@@ -1429,7 +1424,7 @@ export default class Inventory {
       ([slotName, equipped]) => equipped && equipped.id === item.id,
     )?.[0];
     const movingBetweenSlots = sourceSlot && sourceSlot !== slot;
-    const isTwoHandedWeapon = slot === 'weapon' && this.isTwoHanded(item);
+    const isTwoHandedWeapon = slot === 'weapon' && item.isTwoHanded();
 
     const itemsToReturn = [];
     if (isTwoHandedWeapon && this.equippedItems.offhand) {
