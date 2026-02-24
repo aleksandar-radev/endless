@@ -3,9 +3,9 @@ import { ELEMENTS } from '../common.js';
 import { getItemRange, getTrainingBonus } from '../ratios.js';
 
 const WAND_ELEMENTAL_FLAT_MULTIPLIER = 1.4;
-const STAFF_ELEMENTAL_FLAT_MULTIPLIER = 1.75;
+const STAFF_ELEMENTAL_FLAT_MULTIPLIER = 1.4;
 const WAND_ELEMENTAL_PERCENT_MULTIPLIER = 1.25;
-const STAFF_ELEMENTAL_PERCENT_MULTIPLIER = 1.45;
+const STAFF_ELEMENTAL_PERCENT_MULTIPLIER = 1.25;
 
 const tierScalingMaxPercent = createTierScaling(100, 2000, 1.2);
 
