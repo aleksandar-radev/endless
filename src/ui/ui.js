@@ -17,7 +17,7 @@ import { game,
 import { AILMENTS } from '../constants/ailments.js';
 import { t, tp } from '../i18n.js';
 import { updateQuestsUI } from './questUi.js';
-import { initializeJournalUI, updateJournalUI } from './journalUi.js';
+import { initializeJournalUI, updateJournalUI, startJournalRefreshInterval, stopJournalRefreshInterval } from './journalUi.js';
 import { updateStatsAndAttributesUI } from './statsAndAttributesUi.js';
 import { updateBuildingAffordability } from './buildingUi.js';
 import { TabIndicatorManager } from './tabIndicatorManager.js';
@@ -462,6 +462,9 @@ export function switchTab(tabName, { skipUrlUpdate = false } = {}) {
   }
   if (actualTab === 'journal') {
     updateJournalUI();
+    startJournalRefreshInterval();
+  } else if (previousTab === 'journal') {
+    stopJournalRefreshInterval();
   }
   if (actualTab === 'inventory') {
     // Clear new items flag when visiting inventory.

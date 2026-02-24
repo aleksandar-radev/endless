@@ -1,10 +1,11 @@
-import { updateQuestsUI } from './questUi.js';
+import { updateQuestsUI, refreshQuestsInPlace } from './questUi.js';
 import * as achievementsUi from './achievementsUi.js';
 import { statistics, quests, achievements } from '../globals.js';
 import { t } from '../i18n.js';
 import { navigationManager } from '../utils/navigationManager.js';
 
 let activeSubTab = 'quests';
+let journalRefreshInterval = null;
 
 export function initializeJournalUI() {
   const container = document.getElementById('journal');
@@ -79,6 +80,25 @@ export function updateJournalUI() {
     statistics.updateStatisticsUI();
   }
   updateJournalIndicators();
+}
+
+export function startJournalRefreshInterval() {
+  if (journalRefreshInterval) return;
+  journalRefreshInterval = setInterval(() => {
+    if (activeSubTab === 'quests') {
+      refreshQuestsInPlace();
+    } else if (activeSubTab === 'achievements') {
+      achievementsUi.refreshAchievementsInPlace();
+    }
+    updateJournalIndicators();
+  }, 1000);
+}
+
+export function stopJournalRefreshInterval() {
+  if (journalRefreshInterval) {
+    clearInterval(journalRefreshInterval);
+    journalRefreshInterval = null;
+  }
 }
 
 export function updateJournalIndicators() {

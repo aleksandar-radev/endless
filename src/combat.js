@@ -23,7 +23,7 @@ import { hero,
   ascension } from './globals.js';
 import { ITEM_RARITY, ALL_ITEM_TYPES } from './constants/items.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
-import { updateQuestsUI } from './ui/questUi.js';
+import { updateJournalIndicators } from './ui/journalUi.js';
 import { selectBoss, updateBossUI } from './ui/bossUi.js';
 import { getCurrentBossRegion } from './bossRegion.js';
 
@@ -1047,7 +1047,7 @@ export async function defeatEnemy(source) {
   statistics.increment('totalGoldFromCombat', null, goldGained);
   statistics.increment('totalExpFromCombat', null, expGained);
 
-  updateQuestsUI();
+  updateJournalIndicators();
 
   // Update tab indicators for new items/materials dropped
   updateTabIndicators();

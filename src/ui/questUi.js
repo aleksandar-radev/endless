@@ -61,6 +61,7 @@ export function updateQuestsUI() {
       const progress = q.getProgress();
       const item = document.createElement('div');
       item.className = 'quest-item';
+      item.dataset.questId = q.id;
       if (q.isComplete() && !q.claimed) item.classList.add('ready');
       if (q.claimed) item.classList.add('claimed');
       item.innerHTML = `
@@ -276,4 +277,39 @@ function openClaimableQuestsModal() {
     if (e.target === modal) modal.classList.add('hidden');
   });
   modal.classList.remove('hidden');
+}
+
+/**
+ * Updates only the dynamic values (progress, colors, state) of already-rendered quest items
+ * without rebuilding the DOM. Call this on a timer when the journal is open.
+ */
+export function refreshQuestsInPlace() {
+  const panel = document.getElementById('journal-quests');
+  if (!panel) return;
+
+  // Update the claimable button icon/color
+  const claimableBtn = panel.querySelector('.quest-claimable-btn');
+  if (claimableBtn) {
+    const hasClaimable = quests.quests.some((q) => q.isComplete() && !q.claimed);
+    if (hasClaimable) {
+      claimableBtn.innerHTML = `<img src="${BASE}/icons/check.png" alt="${t('icon.check')}"/>`;
+      claimableBtn.style.backgroundColor = '';
+    } else {
+      claimableBtn.innerHTML = `<img src="${BASE}/icons/close.png" alt="${t('common.close')}"/>`;
+      claimableBtn.style.backgroundColor = 'var(--danger)';
+    }
+  }
+
+  // Update each quest item in-place
+  const items = panel.querySelectorAll('.quest-item[data-quest-id]');
+  items.forEach((item) => {
+    const q = quests.quests.find((quest) => String(quest.id) === item.dataset.questId);
+    if (!q) return;
+
+    const progressEl = item.querySelector('.quest-progress');
+    if (progressEl) progressEl.textContent = `${q.getProgress()}/${q.target}`;
+
+    item.classList.toggle('ready', q.isComplete() && !q.claimed);
+    item.classList.toggle('claimed', !!q.claimed);
+  });
 }

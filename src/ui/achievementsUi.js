@@ -59,6 +59,7 @@ export function updateAchievementsUI() {
 
     const item = document.createElement('div');
     item.className = 'achievement-item';
+    item.dataset.achId = ach.id;
     if (ach.claimed) item.classList.add('claimed');
     else if (ach.isComplete()) item.classList.add('ready');
 
@@ -142,4 +143,46 @@ export function updateAchievementsUI() {
   });
 
   panel.appendChild(list);
+}
+
+/**
+ * Updates only the dynamic values (progress bar, text, button state, classes) of
+ * already-rendered achievement items without rebuilding the DOM.
+ */
+export function refreshAchievementsInPlace() {
+  const panel = document.getElementById('journal-achievements');
+  if (!panel) return;
+
+  // Update score header
+  const headerScore = panel.querySelector('.achievements-header-score');
+  if (headerScore) {
+    headerScore.textContent = `: ${achievements.getScore()} / ${achievements.achievements.length}`;
+  }
+
+  const items = panel.querySelectorAll('.achievement-item[data-ach-id]');
+  items.forEach((item) => {
+    const ach = achievements.achievements.find((a) => String(a.id) === item.dataset.achId);
+    if (!ach) return;
+
+    const progress = ach.getProgress();
+    const target = ach.target;
+    const current = Math.min(progress, target);
+    const percent = Math.min(100, (current / target) * 100);
+
+    const bar = item.querySelector('.achievement-progress-bar');
+    if (bar) bar.style.width = `${percent}%`;
+
+    const progressText = item.querySelector('.achievement-progress-text');
+    if (progressText) progressText.textContent = `${formatNumber(current)} / ${formatNumber(target)}`;
+
+    const isMaxed = ach.maxLevel && ach.level >= ach.maxLevel && ach.claimed;
+    const isSingleClaimed = ach.claimed && !ach.targetMultiplier;
+
+    item.classList.toggle('ready', !ach.claimed && ach.isComplete());
+
+    const claimBtn = item.querySelector('.claim-btn');
+    if (claimBtn && !isMaxed && !isSingleClaimed) {
+      claimBtn.disabled = !ach.isComplete();
+    }
+  });
 }
