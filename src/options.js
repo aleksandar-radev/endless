@@ -66,7 +66,7 @@ function attachTooltip(el, generator) {
 // Options class to store options and version (future-proof for migrations)
 export class Options {
   constructor(data = {}) {
-    this.version = data.version || '0.9.0';
+    this.version = data.version || '0.9.1';
     this.startingStage = data.startingStage || null;
     this.showEnemyStats = data.showEnemyStats ?? true;
     this.showAllStats = data.showAllStats ?? false;
