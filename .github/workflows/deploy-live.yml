@@ -32,4 +32,4 @@ jobs:
     steps:
       - name: Trigger Coolify Webhook
         run: |
-          curl -X GET "${{ secrets.COOLIFY_WEBHOOK }}"
+          curl -i -X POST "${{ secrets.COOLIFY_WEBHOOK }}"
