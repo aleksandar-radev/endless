@@ -1,4 +1,4 @@
-import { STATS, getStatDecimalPlaces, getDivisor } from '../constants/stats/stats.js';
+import { STATS, getStatDecimalPlaces, getDivisor, isPercentStat } from '../constants/stats/stats.js';
 import { CLASS_PATHS, SKILL_TREES } from '../constants/skills.js';
 import { getClassSpecializations, getSpecialization } from '../constants/specializations.js';
 import { SKILL_LEVEL_TIERS, SPECIALIZATION_SKILL_LEVEL_TIERS, getSpellDamageTypes, SPECIALIZATION_UNLOCK_LEVEL, SKILL_MANA_SCALING_MAX_MULTIPLIER, SKILL_DAMAGE_SCALING_MAX_INSTANT, SKILL_DAMAGE_SCALING_MAX_TOGGLE, SKILL_EFFECT_SCALING_MAX_BUFF } from '../skillTree.js';
@@ -39,7 +39,7 @@ const formatSignedValue = (val, decimals, includeZero = true) => {
 const formatBaseStatLabel = (stat) => {
   let label = formatStatName(stat);
   // Keep prior UX: percent sign belongs to the value (e.g. "+5%"), not necessarily the label.
-  if (stat.endsWith('Percent')) {
+  if (isPercentStat(stat)) {
     label = label.replace(/\s*%$/, '');
   }
   return label;
@@ -50,7 +50,7 @@ function renderBaseStatsList(stats) {
     .map(([stat, value]) => {
       const label = formatBaseStatLabel(stat);
       let displayValue = value;
-      if (stat.endsWith('Percent')) {
+      if (isPercentStat(stat)) {
         displayValue = `${value}%`;
       }
       if (!shouldShowStatValue(stat)) return `<div>${label}</div>`;
@@ -1125,11 +1125,16 @@ function generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsTa
         html += `<div class="skill-stat-row"><span class="stat-name">${formatStatName(stat)}</span></div>`;
         return;
       }
+      const label = formatBaseStatLabel(stat);
       const decimals = getStatDecimals(stat);
+      let formattedValue = formatSignedValue(value, decimals, false);
+      if (isPercentStat(stat)) {
+        formattedValue += '%';
+      }
       html += `
         <div class="skill-stat-row">
-          <span class="stat-name">${formatStatName(stat)}</span>
-          <span class="stat-value">${formatSignedValue(value, decimals, false)}</span>
+          <span class="stat-name">${label}</span>
+          <span class="stat-value">${formattedValue}</span>
         </div>
       `;
     });
@@ -2507,9 +2512,13 @@ function createSkillTooltip(skillId) {
       tooltip += `<div>${formatStatName(stat)}</div>`;
       return;
     }
+    const label = formatBaseStatLabel(stat);
     const decimals = getStatDecimals(stat);
-    const formattedValue = formatSignedValue(value, decimals, false);
-    tooltip += `<div>${formatStatName(stat)}: ${formattedValue}</div>`;
+    let formattedValue = formatSignedValue(value, decimals, false);
+    if (stat.endsWith('Percent')) {
+      formattedValue += '%';
+    }
+    tooltip += `<div>${label}: ${formattedValue}</div>`;
   });
   tooltip += '</div>';
 

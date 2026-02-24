@@ -388,8 +388,7 @@ export const MISC_STATS = {
     }),
   }),
   overhealToLife: createHiddenStat(),
-  overhealPercent: createStat({
-    div: 100,
+  overhealPercent: createPercentStat({
     sub: 'misc',
     skills: createDefaultSkillBonusesPercent({ passive: { base: 5, linear: 0.5 } }),
   }),
