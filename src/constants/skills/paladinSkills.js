@@ -217,7 +217,7 @@ export const PALADIN_SKILLS = {
     maxLevel: () => 1,
     effect: (level) => ({
       enduranceThornsDamagePerPoint: getSkillStatBonus({
-        level, statKey: 'enduranceThornsDamagePerPoint', skillType: 'passive', scale: { base: 1 },
+        level, statKey: 'enduranceThornsDamagePerPoint', skillType: 'passive', scale: { base: 0.7 },
       }),
     }),
     synergies: [

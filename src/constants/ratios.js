@@ -16,11 +16,10 @@ const damage = 1;
 
 export const STAT_RATIOS = {
   damage: damage,
-  life: damage * 7,
-  armor: damage * 4.5,
-  evasion: damage * 4,
-  allResistance: damage * 2.3,
-  elementalResistance: damage * 5,
+  life: damage * 8,
+  armor: damage * 5.5,
+  evasion: damage * 5,
+  allResistance: damage * 2.8,
   mana: damage * 4,
   lifeRegen: damage * 0.5,
   thornsDamage: damage * 4,
@@ -36,6 +35,13 @@ export const STAT_RATIOS = {
   earthDamage: damage * 1.1,
   lightningDamage: damage * 1.1,
   waterDamage: damage * 1.1,
+
+  fireResistance: damage * 5,
+  coldResistance: damage * 5,
+  airResistance: damage * 5,
+  earthResistance: damage * 5,
+  lightningResistance: damage * 5,
+  waterResistance: damage * 5,
 
   attackRating: damage * 4.5,
   armorPenetration: damage * 8.5,

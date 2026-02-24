@@ -786,9 +786,15 @@ export default class Hero {
           const attackSpeedPercent = percentBonuses.attackSpeedPercent || 0;
           value = base * (1 + attackSpeedPercent) + flatAdditions;
         } else {
-          let percent = percentBonuses[stat + 'Percent'] || 0;
+          // allResistance itself should NOT be scaled by allResistancePercent — it is a flat pool
+          // that is spread into individual resistances (in calculateFlatValues); the percent is
+          // applied to the individual resistances below via the RESISTANCE_SET check.
+          // NOTE: use percentBonuses.allResistancePercent (pre-computed) rather than
+          // this.stats.allResistancePercent, which would be stale because individual resistances
+          // are ordered before allResistancePercent in STAT_KEYS.
+          let percent = (stat === 'allResistance') ? 0 : (percentBonuses[stat + 'Percent'] || 0);
           if (RESISTANCE_SET.has(stat)) {
-            percent += this.stats.allResistancePercent || 0;
+            percent += percentBonuses.allResistancePercent || 0;
           }
 
           if ((stat === 'armorPenetration' || stat === 'elementalPenetration') && this.stats.flatPenetrationPercent) {
@@ -878,20 +884,9 @@ export default class Hero {
       this.stats.evasion += this.stats.life * this.stats.extraEvasionFromLifePercent;
     }
 
-    const baseElementResistances = {};
-    ELEMENT_IDS.forEach((id) => {
-      const key = `${id}Resistance`;
-      baseElementResistances[key] = this.stats[key] || 0;
-    });
-
-    const initialAllRes = this.stats.allResistance || 0;
-    const initialAllResPercent = this.stats.allResistancePercent || 0;
-    const initialAllResBonus = initialAllRes * (1 + initialAllResPercent);
-
-    ELEMENT_IDS.forEach((id) => {
-      const key = `${id}Resistance`;
-      this.stats[key] = Math.max((this.stats[key] || 0) + initialAllResBonus, 0);
-    });
+    // allResistance flat is already spread into each individual resistance inside
+    // calculateFlatValues, and allResistancePercent is applied during the main stat
+    // loop — no additional spreading is needed here.
 
     const manaForRegenOfTotal = this.stats.mana + convertedManaForBloodmage;
     this.stats.manaRegen += this.stats.manaRegenOfTotalPercent * manaForRegenOfTotal;
@@ -1101,27 +1096,11 @@ export default class Hero {
       preConversionDamage[statKey] = (preConversionDamage[statKey] || 0) + deltaFinal;
     });
 
-    const updatedAllRes = this.stats.allResistance || 0;
-    const updatedAllResPercent = this.stats.allResistancePercent || 0;
-    const updatedAllResBonus = updatedAllRes * (1 + updatedAllResPercent);
-
-    if (Math.abs(updatedAllResBonus - initialAllResBonus) > 1e-9) {
-      ELEMENT_IDS.forEach((id) => {
-        const key = `${id}Resistance`;
-        const originalFinal = (baseElementResistances[key] || 0) + initialAllResBonus;
-        const currentFinal = this.stats[key] || 0;
-        const delta = currentFinal - originalFinal;
-        const adjustedBase = Math.max(0, (baseElementResistances[key] || 0) + delta);
-        this.stats[key] = Math.max(0, adjustedBase + updatedAllResBonus);
-      });
-    }
-    if (initialAllResBonus === 0 && updatedAllResBonus === 0) {
-      // No shared resistance bonus applied; ensure any conversions on individual elements are clamped.
-      ELEMENT_IDS.forEach((id) => {
-        const key = `${id}Resistance`;
-        this.stats[key] = Math.max(0, this.stats[key] || 0);
-      });
-    }
+    // Clamp individual resistances to >= 0.
+    ELEMENT_IDS.forEach((id) => {
+      const key = `${id}Resistance`;
+      this.stats[key] = Math.max(0, this.stats[key] || 0);
+    });
 
     this.stats.damage = Math.floor(Math.max(0, this.stats.damage || 0));
     ELEMENT_IDS.forEach((id) => {
