@@ -1,11 +1,12 @@
 const html = String.raw;
 export default function run() {
   return html`
-    <span style="color:#4F8A10;">2026-02-24</span>
+    <span style="color:#4F8A10;">2026-02-25</span>
     <hr />
 
     <span style="color:#4F8A10;">Improvements</span>
     <ul>
+      <li>Improved offline progress reliability with a heartbeat system and multi-source time validation.</li>
       <li>Increased experience gained from Rocky Field enemies.</li>
       <li>Increased damage on bosses by 25%.</li>
       <li>Reduced elemental damage in training cost from 90 to 50.</li>
@@ -18,6 +19,7 @@ export default function run() {
 
     <span style="color:#FF8A00;">Bug Fixes</span>
     <ul>
+      <li>Fixed a bug where offline rates could be reset to zero before rewards were processed.</li>
       <li>Fixed skills that reduce enemy damage not working on Rocky Field enemies (and breaks the whole game).</li>
       <li>Fixed crystals gained from runes.</li>
       <li>Fixed a bug where prestige bonuses are applied twice, once for 100% of their value and once for 1% of their value, making it total of 101%.</li>
@@ -33,6 +35,7 @@ export default function run() {
 
     <span style="color:#4F8A10;">New Content</span>
     <ul>
+      <li>Added 'Offline Progress' tab to the journal, showing a history of the last 10 offline sessions (including start/end times and mobile-friendly detail views).</li>
       <li>Added Swiftcast Rune: reduces skill cooldowns (2–10%).</li>
       <li>Added Persistence Rune: increases buff duration (5–25%).</li>
       <li>Added Pathfinder Rune: skips extra Rocky Field stages per kill (tier 1 = +1 skip, tier 6 = +6 skips).</li>

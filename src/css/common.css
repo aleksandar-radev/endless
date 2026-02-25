@@ -76,6 +76,12 @@ body.dev-active .game-container {
   margin-bottom: 4px;
 }
 
+.tooltip-rune-meta {
+  font-size: 0.85em;
+  color: #aaa;
+  margin-bottom: 6px;
+}
+
 #custom-confirm-dialog {
   position: fixed;
   left: 0;

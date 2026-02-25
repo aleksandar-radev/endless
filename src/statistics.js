@@ -250,11 +250,15 @@ export default class Statistics {
     this.offlineRates = {
       xp: 0, gold: 0, items: 0, materials: 0,
     };
+    this.offlineHistory = [];
     const now = Date.now();
     this.lastFightActive = now;
     this.lastFightActiveLocal = now;
+    this.lastHeartbeat = now;
 
     handleSavedData(savedData, this);
+    if (!Array.isArray(this.offlineHistory)) this.offlineHistory = [];
+    if (this.offlineHistory.length > 10) this.offlineHistory = this.offlineHistory.slice(-10);
     if (typeof this.rockyFieldHighestStage === 'number') {
       this.rockyFieldHighestStages.outskirts = Math.max(
         this.rockyFieldHighestStages.outskirts || 0,
@@ -343,9 +347,11 @@ export default class Statistics {
     this.offlineRates = {
       xp: 0, gold: 0, items: 0, materials: 0,
     };
+    this.offlineHistory = [];
     const now = Date.now();
     this.lastFightActive = now;
     this.lastFightActiveLocal = now;
+    this.lastHeartbeat = now;
     this._queueUiUpdate(true);
   }
 

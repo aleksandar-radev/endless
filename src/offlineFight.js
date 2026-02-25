@@ -14,20 +14,35 @@ export async function collectOfflineFightRewards() {
   const nowServer = await getTimeNow();
   const lastServer = statistics.lastFightActive || nowServer;
   const lastLocal = statistics.lastFightActiveLocal || nowLocal;
+  const lastHeartbeat = statistics.lastHeartbeat || lastLocal;
+
   let elapsed = Math.floor((nowServer - lastServer) / 1000);
   const fallbackElapsed = Math.floor((nowLocal - lastLocal) / 1000);
+  const heartbeatElapsed = Math.floor((nowLocal - lastHeartbeat) / 1000);
+
   // Allow future saves to update last combat timestamp
   dataManager.enableLastFightTime = true;
+
   if (!Number.isFinite(elapsed)) elapsed = 0;
-  if (!Number.isFinite(fallbackElapsed) || fallbackElapsed < 0) {
-    // Ignore invalid fallback calculations
-  } else if (elapsed < fallbackElapsed) {
+
+  // Pick the most plausible elapsed time
+  if (heartbeatElapsed > elapsed) {
+    elapsed = heartbeatElapsed;
+  }
+  if (fallbackElapsed > elapsed) {
     elapsed = fallbackElapsed;
   }
+
   if (elapsed < 0) elapsed = 0;
+
+  // Cap offline progress to 24 hours if not already capped elsewhere
+  const MAX_OFFLINE_SEC = 24 * 3600;
+  if (elapsed > MAX_OFFLINE_SEC) elapsed = MAX_OFFLINE_SEC;
+
   if (elapsed < 1) {
     statistics.lastFightActive = nowServer;
     statistics.lastFightActiveLocal = nowLocal;
+    statistics.lastHeartbeat = nowLocal;
     dataManager.saveGame();
     return null;
   }
@@ -36,11 +51,29 @@ export async function collectOfflineFightRewards() {
   const gold = Math.floor((rates.gold || 0) * elapsed);
   const items = Math.floor((rates.items || 0) * elapsed);
   const matsQty = Math.floor((rates.materials || 0) * elapsed);
+
   if (xp <= 0 && gold <= 0 && items <= 0 && matsQty <= 0) {
     statistics.lastFightActive = nowServer;
     statistics.lastFightActiveLocal = nowLocal;
+    statistics.lastHeartbeat = nowLocal;
     dataManager.saveGame();
     return null;
+  }
+
+  // Record history
+  if (!statistics.offlineHistory) statistics.offlineHistory = [];
+  statistics.offlineHistory.push({
+    timestamp: nowLocal,
+    startTime: lastLocal, // Use lastLocal as the start of the offline period
+    elapsed,
+    xp,
+    gold,
+    items,
+    materials: matsQty,
+    rates: { ...rates },
+  });
+  if (statistics.offlineHistory.length > 10) {
+    statistics.offlineHistory.shift();
   }
 
   let times = elapsed;
@@ -209,6 +242,7 @@ export async function collectOfflineFightRewards() {
     const refreshedServer = await getTimeNow();
     statistics.lastFightActive = refreshedServer;
     statistics.lastFightActiveLocal = refreshedLocal;
+    statistics.lastHeartbeat = refreshedLocal;
   };
 
   return {

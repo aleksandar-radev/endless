@@ -318,7 +318,7 @@ const updatePwaServiceWorker = registerSW({
   setTimeout(() => {
     (async () => {
       const fightRewards = await collectOfflineFightRewards();
-      await buildings.collectBonuses({
+      const showedModal = await buildings.collectBonuses({
         showOfflineModal: true,
         extraBonuses: fightRewards?.bonuses || [],
         offlineTime: fightRewards?.timeInfo,
@@ -329,19 +329,22 @@ const updatePwaServiceWorker = registerSW({
           statistics.preserveOfflineRates = false;
         },
       });
+      // If no modal was shown, it means no offline rewards were found
+      if (!showedModal) {
+        statistics.preserveOfflineRates = false;
+      }
     })().catch((e) => {
       console.warn('Offline bonus collection failed:', e);
+      statistics.preserveOfflineRates = false;
     });
   }, 1000);
-
-  // Safety: ensure preserve flag is cleared even if collection didn't happen
-  statistics.preserveOfflineRates = false;
 
   // Keep combat activity timestamp up to date while the game is open
   setInterval(() => {
     const nowLocal = Date.now();
     statistics.lastFightActive = nowLocal;
     statistics.lastFightActiveLocal = nowLocal;
+    statistics.lastHeartbeat = nowLocal;
   }, 1000);
 
   // Periodically collect building bonuses (every 30 seconds, no modal)

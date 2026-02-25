@@ -1076,10 +1076,10 @@ function calculateSummonDamage(skill, level) {
   }
 
   if (skill.id === 'animatedWeapons') {
-    multiplier *= hero.stats.animatedWeaponsDamagePercent || 1;
+    multiplier *= 1 + (hero.stats.animatedWeaponsDamagePercent || 0);
   }
   if (skill.id === 'shadowClone') {
-    multiplier *= hero.stats.cloneDamagePercent || 1;
+    multiplier *= 1 + (hero.stats.cloneDamagePercent || 0);
   }
   const summonDamageMultiplier = 1 + (hero.stats.summonDamageBuffPercent || 0);
   multiplier *= summonDamageMultiplier;

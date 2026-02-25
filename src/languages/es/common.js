@@ -21,6 +21,7 @@ export default {
   'journal.tabs.quests': 'Misiones',
   'journal.tabs.achievements': 'Logros',
   'journal.tabs.statistics': 'Estadísticas',
+  'journal.tabs.offline': 'Progreso Offline',
   'common.current': 'Actual',
   'common.reward': 'Recompensa',
   'common.claim': 'Reclamar',

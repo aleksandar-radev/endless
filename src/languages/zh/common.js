@@ -21,6 +21,7 @@ export default {
   'journal.tabs.quests': '任务',
   'journal.tabs.achievements': '成就',
   'journal.tabs.statistics': '统计',
+  'journal.tabs.offline': '离线进度',
   'common.current': '当前',
   'time.pending': '保存中…',
   'time.justNow': '刚刚',

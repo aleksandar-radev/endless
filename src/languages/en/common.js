@@ -21,6 +21,7 @@ export default {
   'journal.tabs.quests': 'Quests',
   'journal.tabs.achievements': 'Achievements',
   'journal.tabs.statistics': 'Statistics',
+  'journal.tabs.offline': 'Offline Progress',
   'common.current': 'Current',
   'time.pending': 'Saving…',
   'time.justNow': 'just now',

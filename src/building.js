@@ -582,6 +582,7 @@ export class BuildingManager {
         },
       );
       changed = true; // Modal will result in a change
+      return true;
     } else if (!isFirstCollect && changed) {
       this.lastActive = now;
       this.lastActiveLocal = nowLocal;
@@ -590,6 +591,7 @@ export class BuildingManager {
     if (changed) {
       dataManager.saveGame(); // Save only if there was a change
     }
+    return false;
   }
 
   // Serialize state for saving
