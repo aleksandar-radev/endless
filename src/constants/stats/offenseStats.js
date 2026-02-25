@@ -329,7 +329,7 @@ export const OFFENSE_STATS = {
   elementalDamage: createStat({
     dec: 1,
     training: {
-      cost: 90,
+      cost: 50,
       bonus: getTrainingBonus('elementalDamage'),
       maxLevel: Infinity,
     },

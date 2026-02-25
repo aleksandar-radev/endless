@@ -12,17 +12,17 @@ const generateElementalDefenseStats = () => {
     stats[`${element}Resistance`] = createStat({
       training: {
         cost: 100,
-        bonus: getTrainingBonus('elementalResistance'),
+        bonus: getTrainingBonus(`${element}Resistance`),
         maxLevel: Infinity,
       },
       item: {
-        ...getItemRange('elementalResistance'),
+        ...getItemRange(`${element}Resistance`),
         scaling: (level, tier) => defenseScaling(level, tier),
       },
       itemTags: ['defense', 'jewelry'],
       show: true,
       sub: 'elemental',
-      skills: createDefaultSkillBonusesFlat('elementalResistance', {
+      skills: createDefaultSkillBonusesFlat(`${element}Resistance`, {
         toggle: {
           base: 1.33, increment: 1.33, bonus: 1.33,
         },
