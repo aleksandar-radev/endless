@@ -68,9 +68,9 @@ const rollRuneStats = (base, tier = 1) => {
     const rolledStats = {};
     for (const key of statKeys) {
       const rawValue = rollStatValue(base.stats[key]);
-      const value = applyTierMultiplier(key, rawValue, tier);
-      const isPerLevel = key.endsWith('PerLevel');
-      rolledStats[key] = isPerLevel ? value : Math.floor(value);
+      const value = base.noTierScale ? rawValue : applyTierMultiplier(key, rawValue, tier);
+      const preserveDecimals = key.endsWith('PerLevel') || getStatDecimalPlaces(key) > 0;
+      rolledStats[key] = preserveDecimals ? value : Math.floor(value);
     }
     return rolledStats;
   }
@@ -82,9 +82,9 @@ const rollRuneStats = (base, tier = 1) => {
   const rolledStats = {};
   for (const key of selected) {
     const rawValue = rollStatValue(base.stats[key]);
-    const value = applyTierMultiplier(key, rawValue, tier);
-    const isPerLevel = key.endsWith('PerLevel');
-    rolledStats[key] = isPerLevel ? value : Math.floor(value);
+    const value = base.noTierScale ? rawValue : applyTierMultiplier(key, rawValue, tier);
+    const preserveDecimals = key.endsWith('PerLevel') || getStatDecimalPlaces(key) > 0;
+    rolledStats[key] = preserveDecimals ? value : Math.floor(value);
   }
   return rolledStats;
 };

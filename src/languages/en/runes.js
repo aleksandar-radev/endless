@@ -36,4 +36,8 @@ export default {
   'rune.empoweringRune.desc': 'Grants a random flat stat bonus.',
   'rune.vampiricRune.name': 'Vampiric Rune',
   'rune.vampiricRune.desc': 'Grants life steal.',
+  'rune.cooldownRune.name': 'Swiftcast Rune',
+  'rune.cooldownRune.desc': 'Reduces skill cooldowns.',
+  'rune.buffDurationRune.name': 'Persistence Rune',
+  'rune.buffDurationRune.desc': 'Increases buff duration.',
 };

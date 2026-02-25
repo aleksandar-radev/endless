@@ -24,6 +24,13 @@ export default function run() {
       <li>Fixed tooltips of ascension bonuses.</li>
       <li>Fixed specialization bulk cost getting hidden after update (e.g. level up).</li>
       <li>Fixed Shadowdancer's Shadow Clone passive and Weaponmaster's Animated Weapons skills reducing summon damage when it is low level (e.g. below 100% bonus).</li>
+      <li>Fixed Vampiric rune sometimes providing no bonus at all. Also, reducing the max bonus it can give to 1%. (also, it doesn't scale with tier anymore)</li>
+    </ul>
+
+    <span style="color:#4F8A10;">New Content</span>
+    <ul>
+      <li>Added Swiftcast Rune: reduces skill cooldowns (2–10%).</li>
+      <li>Added Persistence Rune: increases buff duration (5–25%).</li>
     </ul>
   `;
 }

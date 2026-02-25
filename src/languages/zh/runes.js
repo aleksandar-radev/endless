@@ -36,4 +36,8 @@ export default {
   'rune.empoweringRune.desc': '获得随机基础属性加成。',
   'rune.vampiricRune.name': '吸血鬼符文',
   'rune.vampiricRune.desc': '提供生命偷取。',
+  'rune.cooldownRune.name': '急速施法符文',
+  'rune.cooldownRune.desc': '减少技能冷却时间。',
+  'rune.buffDurationRune.name': '持久符文',
+  'rune.buffDurationRune.desc': '延长增益效果持续时间。',
 };

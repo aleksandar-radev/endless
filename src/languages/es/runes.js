@@ -36,4 +36,8 @@ export default {
   'rune.empoweringRune.desc': 'Otorga un bono de estadística plana aleatorio.',
   'rune.vampiricRune.name': 'Runa Vampírica',
   'rune.vampiricRune.desc': 'Otorga robo de vida.',
+  'rune.cooldownRune.name': 'Runa de Lanzamiento Veloz',
+  'rune.cooldownRune.desc': 'Reduce los tiempos de recarga de habilidades.',
+  'rune.buffDurationRune.name': 'Runa de Persistencia',
+  'rune.buffDurationRune.desc': 'Aumenta la duración de los efectos positivos.',
 };
