@@ -22,6 +22,7 @@ export default function run() {
       <li>Fixed resistances from training would give  very low amounts of resistance.</li>
       <li>Fixed scaling of holy light and greater healing skills of paladin. (higher flat, lower scaling of percent healing)</li>
       <li>Fixed tooltips of ascension bonuses.</li>
+      <li>Fixed specialization bulk cost getting hidden after update (e.g. level up).</li>
     </ul>
   `;
 }

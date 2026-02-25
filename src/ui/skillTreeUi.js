@@ -356,12 +356,19 @@ function initializeSkillsTab() {
   const skillsContent = document.getElementById('skills-tab-content');
   if (!skillsContent) return;
 
-  // Move existing skill tree structure here
-  skillsContent.innerHTML = '';
+  let skillPointsHeader = skillsContent.querySelector('.skill-points-header');
+  if (!skillPointsHeader) {
+    skillPointsHeader = document.createElement('div');
+    skillPointsHeader.className = 'skill-points-header';
+    skillsContent.prepend(skillPointsHeader);
+  }
 
-  const skillPointsHeader = document.createElement('div');
-  skillPointsHeader.className = 'skill-points-header';
-  skillsContent.appendChild(skillPointsHeader);
+  // Clear existing content except the header
+  Array.from(skillsContent.childNodes).forEach((node) => {
+    if (node !== skillPointsHeader) {
+      node.remove();
+    }
+  });
 
   // Add mobile tooltip notice if quick buy is enabled
   renderMobileTooltipNotice(skillsContent);
@@ -553,121 +560,130 @@ function initializeSpecializationsTab() {
     return;
   }
 
-  specializationsContent.innerHTML = '';
-
   // --- If Specialization Selected: Show Details & Skills ---
   if (skillTree.selectedSpecialization) {
     const spec = getSpecialization(skillTree.selectedPath.name, skillTree.selectedSpecialization.id);
 
     const baseStatsHtml = renderBaseStatsList(spec.baseStats());
 
-    const showQtyControls = options?.quickBuy || options?.bulkBuy;
-    let quickControls = '';
-    if (showQtyControls) {
-      if (options.useNumericInputs) {
-        const val = skillTree.quickQty === 'max' ? options.skillQuickQty || 1 : skillTree.quickQty;
-        quickControls = `
-        <div class="skill-qty-controls">
-          <input type="number" class="skill-qty-input input-number" min="1" value="${val}" />
-          <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
+    let header = specializationsContent.querySelector('.selected-specialization-header');
+    if (!header) {
+      const showQtyControls = options?.quickBuy || options?.bulkBuy;
+      let quickControls = '';
+      if (showQtyControls) {
+        if (options.useNumericInputs) {
+          const val = skillTree.quickQty === 'max' ? options.skillQuickQty || 1 : skillTree.quickQty;
+          quickControls = `
+          <div class="skill-qty-controls">
+            <input type="number" class="skill-qty-input input-number" min="1" value="${val}" />
+            <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
+          </div>`;
+        } else {
+          quickControls = `
+          <div class="skill-qty-controls">
+            <button data-qty="1" class="${skillTree.quickQty === 1 ? 'active' : ''}">1</button>
+            <button data-qty="5" class="${skillTree.quickQty === 5 ? 'active' : ''}">5</button>
+            <button data-qty="25" class="${skillTree.quickQty === 25 ? 'active' : ''}">25</button>
+            <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
+          </div>`;
+        }
+      }
+
+      let bulkControls = '';
+      if (options?.bulkBuy) {
+        bulkControls = `
+        <div class="skill-bulk-controls">
+          <button class="bulk-buy">${t('skillTree.bulkAllocate')}</button>
+          <span class="skill-bulk-cost"></span>
         </div>`;
-      } else {
-        quickControls = `
-        <div class="skill-qty-controls">
-          <button data-qty="1" class="${skillTree.quickQty === 1 ? 'active' : ''}">1</button>
-          <button data-qty="5" class="${skillTree.quickQty === 5 ? 'active' : ''}">5</button>
-          <button data-qty="25" class="${skillTree.quickQty === 25 ? 'active' : ''}">25</button>
-          <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
-        </div>`;
+      }
+
+      const controlsMarkup =
+        quickControls || bulkControls
+          ? `<div class="skill-header-controls" style="display: flex; gap: 10px;">${quickControls}${bulkControls}</div>`
+          : '';
+
+      header = document.createElement('div');
+      header.className = 'selected-specialization-header';
+      header.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+             <div class="spec-points-display" style="font-size: 1.2em; color: var(--gold);">${t('skillTree.specializationPoints')}: ${formatNumber(skillTree.specializationPoints)}</div>
+             ${controlsMarkup}
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 20px;">
+            <img src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}" alt="${spec.name()} Avatar" class="character-avatar specialization-avatar" style="width: 72px; height: 128px; border-radius: 8px; object-fit: cover;" />
+            <div style="flex: 1;">
+                <h3 style="margin: 0; font-size: 1.5em; color: var(--gold);">${spec.name()}</h3>
+                <p style="margin: 5px 0; opacity: 0.8;">${spec.description()}</p>
+                <div class="base-stats" style="margin-top: 10px; font-size: 0.9em; color: #aaa;">
+                  ${baseStatsHtml}
+                </div>
+            </div>
+          </div>
+        </div>
+      `;
+      specializationsContent.prepend(header);
+
+      // Attach event listeners for controls
+      const qtyControls = header.querySelector('.skill-qty-controls');
+      if (qtyControls) {
+        if (options.useNumericInputs) {
+          const input = qtyControls.querySelector('.skill-qty-input');
+          const maxBtn = qtyControls.querySelector('button[data-qty="max"]');
+          input.oninput = () => {
+            let v = parseInt(input.value, 10);
+            if (isNaN(v) || v < 1) v = 1;
+            if (v > SKILLS_MAX_QTY) v = SKILLS_MAX_QTY;
+            input.value = v;
+            skillTree.quickQty = v;
+            options.skillQuickQty = v;
+            maxBtn.classList.remove('active');
+            updateSkillTreeValues(); // Update UI to reflect cost changes
+            dataManager.saveGame();
+          };
+          maxBtn.onclick = () => {
+            skillTree.quickQty = 'max';
+            maxBtn.classList.add('active');
+            if (input) input.value = SKILLS_MAX_QTY;
+            updateSkillTreeValues();
+            dataManager.saveGame();
+          };
+        } else {
+          qtyControls.querySelectorAll('button').forEach((btn) => {
+            btn.onclick = () => {
+              skillTree.quickQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+              qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+              btn.classList.add('active');
+              updateSkillTreeValues();
+              dataManager.saveGame();
+            };
+          });
+        }
+      }
+
+      const bulkBtn = header.querySelector('.skill-bulk-controls .bulk-buy');
+      if (bulkBtn) {
+        bulkBtn.onclick = () => {
+          skillTree.bulkAllocateSpecializationSkills(skillTree.quickQty);
+        };
       }
     }
 
-    let bulkControls = '';
-    if (options?.bulkBuy) {
-      bulkControls = `
-      <div class="skill-bulk-controls">
-        <button class="bulk-buy">${t('skillTree.bulkAllocate')}</button>
-        <span class="skill-bulk-cost"></span>
-      </div>`;
-    }
-
-    const controlsMarkup =
-      quickControls || bulkControls
-        ? `<div class="skill-header-controls" style="display: flex; gap: 10px;">${quickControls}${bulkControls}</div>`
-        : '';
-
-    const header = document.createElement('div');
-    header.className = 'selected-specialization-header';
-    header.innerHTML = `
-      <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-           <div class="spec-points-display" style="font-size: 1.2em; color: var(--gold);">${t('skillTree.specializationPoints')}: ${formatNumber(skillTree.specializationPoints)}</div>
-           ${controlsMarkup}
-        </div>
-        <div style="display: flex; align-items: flex-start; gap: 20px;">
-          <img src="${import.meta.env.VITE_BASE_PATH}/avatars/${spec.avatar()}" alt="${spec.name()} Avatar" class="character-avatar specialization-avatar" style="width: 72px; height: 128px; border-radius: 8px; object-fit: cover;" />
-          <div style="flex: 1;">
-              <h3 style="margin: 0; font-size: 1.5em; color: var(--gold);">${spec.name()}</h3>
-              <p style="margin: 5px 0; opacity: 0.8;">${spec.description()}</p>
-              <div class="base-stats" style="margin-top: 10px; font-size: 0.9em; color: #aaa;">
-                ${baseStatsHtml}
-              </div>
-          </div>
-        </div>
-      </div>
-    `;
-    specializationsContent.appendChild(header);
+    // Clear content except header
+    Array.from(specializationsContent.childNodes).forEach((node) => {
+      if (node !== header) {
+        node.remove();
+      }
+    });
 
     // Add mobile tooltip notice if quick buy is enabled
     renderMobileTooltipNotice(specializationsContent);
 
-    // Attach event listeners for controls
-    const qtyControls = header.querySelector('.skill-qty-controls');
-    if (qtyControls) {
-      if (options.useNumericInputs) {
-        const input = qtyControls.querySelector('.skill-qty-input');
-        const maxBtn = qtyControls.querySelector('button[data-qty="max"]');
-        input.oninput = () => {
-          let v = parseInt(input.value, 10);
-          if (isNaN(v) || v < 1) v = 1;
-          if (v > SKILLS_MAX_QTY) v = SKILLS_MAX_QTY;
-          input.value = v;
-          skillTree.quickQty = v;
-          options.skillQuickQty = v;
-          maxBtn.classList.remove('active');
-          updateSkillTreeValues(); // Update UI to reflect cost changes
-          dataManager.saveGame();
-        };
-        maxBtn.onclick = () => {
-          skillTree.quickQty = 'max';
-          maxBtn.classList.add('active');
-          if (input) input.value = SKILLS_MAX_QTY;
-          updateSkillTreeValues();
-          dataManager.saveGame();
-        };
-      } else {
-        qtyControls.querySelectorAll('button').forEach((btn) => {
-          btn.onclick = () => {
-            skillTree.quickQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
-            qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
-            btn.classList.add('active');
-            updateSkillTreeValues();
-            dataManager.saveGame();
-          };
-        });
-      }
-    }
-
-    const bulkBtn = header.querySelector('.skill-bulk-controls .bulk-buy');
-    if (bulkBtn) {
-      bulkBtn.onclick = () => {
-        skillTree.bulkAllocateSpecializationSkills(skillTree.quickQty);
-      };
-    }
-
     const skillsContainer = document.createElement('div');
     skillsContainer.className = 'specialization-skills-container';
     specializationsContent.appendChild(skillsContainer);
+
 
     const skills = spec.skills;
     const levelGroups = SPECIALIZATION_SKILL_LEVEL_TIERS.reduce((acc, level) => {
@@ -711,6 +727,7 @@ function initializeSpecializationsTab() {
       }
     });
 
+    updateSkillTreeValues();
     return;
   }
 
@@ -757,6 +774,7 @@ function initializeSpecializationsTab() {
   });
 
   specializationsContent.appendChild(specializationsGrid);
+  updateSkillTreeValues();
 }
 
 function createSpecializationSkillElement(baseSkill) {
@@ -1996,99 +2014,177 @@ export function updateSkillTreeValues() {
   }
 
   const container = document.getElementById('skill-tree-container');
+  if (!container) return;
+
+  // --- Check if we need to re-render tabs due to visibility changes ---
+  // We do this first so we are always working with the latest DOM elements
+
+  // Specialization re-render check
+  if (skillTree.selectedSpecialization) {
+    const renderedSpecSkills = new Set(
+      Array.from(container.querySelectorAll('.skill-node.specialization-node')).map((n) => n.dataset.skillId),
+    );
+    const spec = getSpecialization(skillTree.selectedPath.name, skillTree.selectedSpecialization.id);
+    const allSpecSkills = spec?.skills || {};
+    const needsSpecRender = Object.entries(allSpecSkills).some(([skillId, skillData]) => {
+      const isVisible =
+        typeof skillData.isVisible === 'function' ? skillData.isVisible() : skillData.isVisible !== false;
+      return isVisible && !renderedSpecSkills.has(skillId);
+    });
+
+    if (needsSpecRender) {
+      initializeSpecializationsTab();
+      return; // initializeSpecializationsTab will call updateSkillTreeValues again
+    }
+  }
+
+  // Normal skills re-render check
+  if (skillTree.selectedPath) {
+    const renderedSkills = new Set(
+      Array.from(container.querySelectorAll('.skill-node:not(.specialization-node)')).map((n) => n.dataset.skillId),
+    );
+    const allSkills = SKILL_TREES[skillTree.selectedPath.name] || {};
+    const needsRender = Object.entries(allSkills).some(([skillId, skillData]) => {
+      const isVisible =
+        typeof skillData.isVisible === 'function' ? skillData.isVisible() : skillData.isVisible !== false;
+      const levelMet = skillData.requiredLevel() <= hero.level;
+      return isVisible && levelMet && !renderedSkills.has(skillId);
+    });
+
+    if (needsRender) {
+      initializeSkillsTab();
+      return; // initializeSkillsTab will call updateSkillTreeValues again
+    }
+  }
 
   const skillPointsHeader = container.querySelector('.skill-points-header');
   if (skillPointsHeader) {
-    const showQtyControls = options?.quickBuy || options?.bulkBuy;
-    let quickControls = '';
-    if (showQtyControls) {
-      if (options.useNumericInputs) {
-        const val = skillTree.quickQty === 'max' ? options.skillQuickQty || 1 : skillTree.quickQty;
-        quickControls = `
-        <div class="skill-qty-controls">
-          <input type="number" class="skill-qty-input input-number" min="1" value="${val}" />
-          <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
-        </div>`;
-      } else {
-        quickControls = `
-        <div class="skill-qty-controls">
-          <button data-qty="1" class="${skillTree.quickQty === 1 ? 'active' : ''}">1</button>
-          <button data-qty="5" class="${skillTree.quickQty === 5 ? 'active' : ''}">5</button>
-          <button data-qty="25" class="${skillTree.quickQty === 25 ? 'active' : ''}">25</button>
-          <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
-        </div>`;
-      }
-    }
-
-    let bulkControls = '';
-    if (options?.bulkBuy) {
-      bulkControls = `
-      <div class="skill-bulk-controls">
-        <button class="bulk-buy">${t('skillTree.bulkAllocate')}</button>
-        <span class="skill-bulk-cost"></span>
-      </div>`;
-    }
-
-    const controlsMarkup =
-      quickControls || bulkControls ? `<div class="skill-header-controls">${quickControls}${bulkControls}</div>` : '';
-
+    const optionsHash = `${options?.quickBuy}-${options?.bulkBuy}-${options?.useNumericInputs}`;
     const specTabActive = document.getElementById('specializations-tab-content')?.classList.contains('active');
     const pointsLabel = specTabActive ? t('skillTree.specializationPoints') : t('skillTree.availablePoints');
     const pointsValue = specTabActive ? skillTree.specializationPoints : skillTree.skillPoints;
 
-    skillPointsHeader.innerHTML = `
-    <div class="skill-header-left">
-      <span class="skill-path-name">${characterName}</span>
-      <span class="skill-points">${pointsLabel}: ${formatNumber(pointsValue)}</span>
-    </div>
-    ${controlsMarkup}
-  `;
+    // Only rebuild structure if options changed or it's empty
+    if (skillPointsHeader.dataset.optionsHash !== optionsHash || !skillPointsHeader.querySelector('.skill-header-left')) {
+      const showQtyControls = options?.quickBuy || options?.bulkBuy;
+      let quickControls = '';
+      if (showQtyControls) {
+        if (options.useNumericInputs) {
+          const val = skillTree.quickQty === 'max' ? options.skillQuickQty || 1 : skillTree.quickQty;
+          quickControls = `
+          <div class="skill-qty-controls">
+            <input type="number" class="skill-qty-input input-number" min="1" value="${val}" />
+            <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
+          </div>`;
+        } else {
+          quickControls = `
+          <div class="skill-qty-controls">
+            <button data-qty="1" class="${skillTree.quickQty === 1 ? 'active' : ''}">1</button>
+            <button data-qty="5" class="${skillTree.quickQty === 5 ? 'active' : ''}">5</button>
+            <button data-qty="25" class="${skillTree.quickQty === 25 ? 'active' : ''}">25</button>
+            <button data-qty="max" class="${skillTree.quickQty === 'max' ? 'active' : ''}">${t('common.max')}</button>
+          </div>`;
+        }
+      }
 
+      let bulkControls = '';
+      if (options?.bulkBuy) {
+        bulkControls = `
+        <div class="skill-bulk-controls">
+          <button class="bulk-buy">${t('skillTree.bulkAllocate')}</button>
+          <span class="skill-bulk-cost"></span>
+        </div>`;
+      }
+
+      const controlsMarkup =
+        quickControls || bulkControls ? `<div class="skill-header-controls">${quickControls}${bulkControls}</div>` : '';
+
+      skillPointsHeader.innerHTML = `
+        <div class="skill-header-left">
+          <span class="skill-path-name"></span>
+          <span class="skill-points"></span>
+        </div>
+        ${controlsMarkup}
+      `;
+      skillPointsHeader.dataset.optionsHash = optionsHash;
+
+      // Attach listeners (only once per structure rebuild)
+      const qtyControls = skillPointsHeader.querySelector('.skill-qty-controls');
+      if (qtyControls) {
+        if (options.useNumericInputs) {
+          const input = qtyControls.querySelector('.skill-qty-input');
+          const maxBtn = qtyControls.querySelector('button[data-qty="max"]');
+          input.oninput = () => {
+            let v = parseInt(input.value, 10);
+            if (isNaN(v) || v < 1) v = 1;
+            if (v > SKILLS_MAX_QTY) v = SKILLS_MAX_QTY;
+            input.value = v;
+            skillTree.quickQty = v;
+            options.skillQuickQty = v;
+            maxBtn.classList.remove('active');
+            updateSkillBulkCostDisplay();
+            dataManager.saveGame();
+          };
+          maxBtn.onclick = () => {
+            skillTree.quickQty = 'max';
+            maxBtn.classList.add('active');
+            if (input) input.value = SKILLS_MAX_QTY;
+            updateSkillBulkCostDisplay();
+            dataManager.saveGame();
+          };
+        } else {
+          qtyControls.querySelectorAll('button').forEach((btn) => {
+            btn.onclick = () => {
+              skillTree.quickQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+              qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+              btn.classList.add('active');
+              updateSkillBulkCostDisplay();
+              dataManager.saveGame();
+            };
+          });
+        }
+      }
+
+      skillBulkButton = skillPointsHeader.querySelector('.skill-bulk-controls .bulk-buy');
+      skillBulkCostEl = skillPointsHeader.querySelector('.skill-bulk-cost');
+      if (skillBulkButton) {
+        skillBulkButton.onclick = () => {
+          skillTree.bulkAllocateSkills(skillTree.quickQty);
+        };
+      }
+    }
+
+    // Surgical updates for skillPointsHeader
+    const nameEl = skillPointsHeader.querySelector('.skill-path-name');
+    const pointsEl = skillPointsHeader.querySelector('.skill-points');
+    if (nameEl) nameEl.textContent = characterName;
+    if (pointsEl) pointsEl.textContent = `${pointsLabel}: ${formatNumber(pointsValue)}`;
+
+    // Update active states for quick controls in skillPointsHeader
     const qtyControls = skillPointsHeader.querySelector('.skill-qty-controls');
     if (qtyControls) {
       if (options.useNumericInputs) {
         const input = qtyControls.querySelector('.skill-qty-input');
         const maxBtn = qtyControls.querySelector('button[data-qty="max"]');
-        input.oninput = () => {
-          let v = parseInt(input.value, 10);
-          if (isNaN(v) || v < 1) v = 1;
-          if (v > SKILLS_MAX_QTY) v = SKILLS_MAX_QTY;
-          input.value = v;
-          skillTree.quickQty = v;
-          options.skillQuickQty = v;
-          maxBtn.classList.remove('active');
-          updateSkillBulkCostDisplay();
-          dataManager.saveGame();
-          // Don't call updateSkillTreeValues() here as it rebuilds the input and loses focus
-        };
-        maxBtn.onclick = () => {
-          skillTree.quickQty = 'max';
-          maxBtn.classList.add('active');
-          // Update the input field to show the max value without rebuilding the entire UI
-          if (input) input.value = SKILLS_MAX_QTY;
-          updateSkillBulkCostDisplay();
-          dataManager.saveGame();
-        };
+        if (input && document.activeElement !== input) {
+          const val = skillTree.quickQty === 'max' ? options.skillQuickQty || 1 : skillTree.quickQty;
+          input.value = val;
+        }
+        if (maxBtn) maxBtn.classList.toggle('active', skillTree.quickQty === 'max');
       } else {
         qtyControls.querySelectorAll('button').forEach((btn) => {
-          btn.onclick = () => {
-            skillTree.quickQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
-            qtyControls.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
-            btn.classList.add('active');
-            updateSkillBulkCostDisplay();
-            dataManager.saveGame();
-          };
+          const btnQty = btn.dataset.qty === 'max' ? 'max' : parseInt(btn.dataset.qty, 10);
+          btn.classList.toggle('active', skillTree.quickQty === btnQty);
         });
       }
     }
 
+    // Ensure bulk cost element references are correct (they might be lost if structure was rebuilt elsewhere)
     skillBulkButton = skillPointsHeader.querySelector('.skill-bulk-controls .bulk-buy');
     skillBulkCostEl = skillPointsHeader.querySelector('.skill-bulk-cost');
-    if (skillBulkButton) {
-      skillBulkButton.onclick = () => {
-        skillTree.bulkAllocateSkills(skillTree.quickQty);
-      };
-    }
+  } else {
+    skillBulkButton = null;
+    skillBulkCostEl = null;
   }
 
   // Update Specialization Header if present
@@ -2150,42 +2246,6 @@ export function updateSkillTreeValues() {
     node.classList.toggle('available', canUnlock);
     node.classList.toggle('unlocked', currentLevel > 0);
   });
-
-  // Check if we need to re-render specialization skills due to visibility changes
-  if (skillTree.selectedSpecialization) {
-    const renderedSpecSkills = new Set(
-      Array.from(container.querySelectorAll('.skill-node.specialization-node')).map((n) => n.dataset.skillId),
-    );
-    const spec = getSpecialization(skillTree.selectedPath.name, skillTree.selectedSpecialization.id);
-    const allSpecSkills = spec?.skills || {};
-    const needsSpecRender = Object.entries(allSpecSkills).some(([skillId, skillData]) => {
-      const isVisible =
-        typeof skillData.isVisible === 'function' ? skillData.isVisible() : skillData.isVisible !== false;
-      return isVisible && !renderedSpecSkills.has(skillId);
-    });
-
-    if (needsSpecRender) {
-      initializeSpecializationsTab();
-    }
-  }
-
-  // Check if we need to re-render normal skills due to visibility changes
-  if (skillTree.selectedPath) {
-    const renderedSkills = new Set(
-      Array.from(container.querySelectorAll('.skill-node:not(.specialization-node)')).map((n) => n.dataset.skillId),
-    );
-    const allSkills = SKILL_TREES[skillTree.selectedPath.name] || {};
-    const needsRender = Object.entries(allSkills).some(([skillId, skillData]) => {
-      const isVisible =
-        typeof skillData.isVisible === 'function' ? skillData.isVisible() : skillData.isVisible !== false;
-      const levelMet = skillData.requiredLevel() <= hero.level;
-      return isVisible && levelMet && !renderedSkills.has(skillId);
-    });
-
-    if (needsRender) {
-      initializeSkillsTab();
-    }
-  }
 
   // Update Normal Skills
   container.querySelectorAll('.skill-node:not(.specialization-node)').forEach((node) => {
