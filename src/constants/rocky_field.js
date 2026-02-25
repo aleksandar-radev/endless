@@ -12,7 +12,7 @@ export const ROCKY_FIELD_BASE_STATS = {
   attackSpeed: 1,
   attackRating: 38,
   evasion: 37,
-  xp: 42,
+  xp: 62,
   gold: 122,
 
   fireResistance: 50,

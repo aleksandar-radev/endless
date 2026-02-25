@@ -396,7 +396,7 @@ export default class CrystalShop {
     if (stat === 'resetSkillTree') {
       confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetClass', { count: cost }));
       if (!confirmed) return;
-      hero.crystals -= cost;
+      hero.gainCrystals(-cost);
       skillTree.resetSkillTree();
       updateSkillTreeValues();
       updateActionBar();
@@ -405,7 +405,7 @@ export default class CrystalShop {
     } else if (stat === 'resetSpecialization') {
       confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetSpecialization', { count: cost }));
       if (!confirmed) return;
-      hero.crystals -= cost;
+      hero.gainCrystals(-cost);
       skillTree.resetSpecialization();
       // resetSpecialization in skillTree already updates values/actionbar/saves
       // but we might want to refresh UI structure if needed
@@ -414,14 +414,14 @@ export default class CrystalShop {
     } else if (stat === 'resetAttributes') {
       confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetAttributes', { count: cost }));
       if (!confirmed) return;
-      hero.crystals -= cost;
+      hero.gainCrystals(-cost);
       hero.resetAttributes();
       updateStatsAndAttributesUI();
       showToast(t('crystalShop.resetAttributesSuccess'), 'success');
     } else if (stat === 'resetArenaLevel') {
       confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetBossLevel', { count: cost }));
       if (!confirmed) return;
-      hero.crystals -= cost;
+      hero.gainCrystals(-cost);
       hero.bossLevel = 1;
       if (game.fightMode === 'arena') {
         selectBoss();
@@ -431,7 +431,7 @@ export default class CrystalShop {
     } else if (stat === 'resetRockyFieldStage') {
       confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetRockyFieldStage', { count: cost }));
       if (!confirmed) return;
-      hero.crystals -= cost;
+      hero.gainCrystals(-cost);
       game.rockyFieldStage = 1;
       if (game.fightMode === 'rockyField') {
         game.currentEnemy = new RockyFieldEnemy(game.rockyFieldRegion, game.rockyFieldStage);
@@ -442,7 +442,7 @@ export default class CrystalShop {
     } else if (stat === 'resetTraining') {
       confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetTraining', { count: cost }));
       if (!confirmed) return;
-      hero.crystals -= cost;
+      hero.gainCrystals(-cost);
       const refund = training.goldSpent || 0;
       const prevQty = training.quickQty;
       training.reset();
@@ -455,7 +455,7 @@ export default class CrystalShop {
     } else if (stat === 'resetSoulShop') {
       confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetSoulShop', { count: cost }));
       if (!confirmed) return;
-      hero.crystals -= cost;
+      hero.gainCrystals(-cost);
       const refund = Object.entries(soulShop.soulUpgrades || {}).reduce((total, [key, value]) => {
         const config = SOUL_UPGRADE_CONFIG[key];
         if (!config) return total;
@@ -481,7 +481,7 @@ export default class CrystalShop {
     } else if (stat === 'resetAscension') {
       confirmed = await showConfirmDialog(tp('crystalShop.confirm.resetAscension', { count: cost }));
       if (!confirmed) return;
-      hero.crystals -= cost;
+      hero.gainCrystals(-cost);
       // Calculate total points spent so far and refund them
       const refundPts = Object.entries(ascension.upgrades || {}).reduce((total, [key, lvl]) => {
         const cfg = ascension.config[key];
@@ -759,7 +759,7 @@ export default class CrystalShop {
     const { qty: count, totalCost } = this._getAffordablePurchase(config, baseLevel, hero.crystals, desiredQty);
 
     if (count > 0) {
-      hero.crystals -= totalCost;
+      hero.gainCrystals(-totalCost);
       this.crystalUpgrades[stat] = baseLevel + count;
     }
     const level = this.crystalUpgrades[stat] || 0;
@@ -810,7 +810,7 @@ export default class CrystalShop {
       return;
     }
 
-    hero.crystals -= cost;
+    hero.gainCrystals(-cost);
     this.crystalUpgrades[stat] = true;
     this._commitChanges();
     showToast(tp('crystalShop.purchased', { label }), 'success');
@@ -852,7 +852,7 @@ export default class CrystalShop {
       return;
     }
 
-    hero.crystals -= cost;
+    hero.gainCrystals(-cost);
     this.crystalUpgrades[stat] = (this.crystalUpgrades[stat] || 0) + 1;
     this._commitChanges();
     showToast(tp('crystalShop.purchased', { label }), 'success');

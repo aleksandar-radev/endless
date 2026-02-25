@@ -296,7 +296,7 @@ export default class SkillTree {
         showToast(tp(key, { count: cost }), 'warning');
         return false;
       }
-      hero.crystals -= cost;
+      hero.gainCrystals(-cost);
       this.unlockedPaths.push(pathName);
     }
     this.selectedPath = { name: pathName };

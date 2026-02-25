@@ -209,7 +209,7 @@ function openPrestigeModal() {
             showToast(t('prestige.notEnoughCrystalsLock'));
             return;
           }
-          hero.crystals -= 20;
+          hero.gainCrystals(-20);
           updateResources();
           updateModalCrystals();
           card.locked = true;
@@ -229,7 +229,7 @@ function openPrestigeModal() {
           showToast(t('prestige.notEnoughCrystalsValueReroll'));
           return;
         }
-        hero.crystals -= cost;
+        hero.gainCrystals(-cost);
         updateResources();
         updateModalCrystals();
         cards = prestige.rerollCardValues(idx) || cards;
@@ -247,7 +247,7 @@ function openPrestigeModal() {
       showToast(t('prestige.notEnoughCrystalsReroll'));
       return;
     }
-    hero.crystals -= 60;
+    hero.gainCrystals(-60);
     updateResources();
     updateModalCrystals();
     cards = prestige.rerollCards(3);

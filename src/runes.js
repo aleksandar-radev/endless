@@ -248,16 +248,13 @@ export default class Runes {
     if (!rune) return 0;
     const base = RUNES[rune.id];
 
-    let baseValue = 1;
+    let crystals = 1;
     if (base?.unique) {
-      baseValue = 200;
+      crystals = 50;
     } else if (rune.stats) {
-      // Value based on sum of stat values and tier
-      const statSum = Object.values(rune.stats).reduce((sum, v) => sum + Math.abs(v), 0);
-      baseValue = Math.max(1, Math.floor(statSum / 2)) * (rune.tier || 1);
+      crystals = (rune.tier ** 3);
     }
 
-    const crystals = Math.max(1, Math.floor(baseValue * 0.25));
 
     this.inventory[index] = null;
     hero.gainCrystals(crystals);
