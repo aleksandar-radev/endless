@@ -8,6 +8,7 @@ export default function run() {
     <ul>
       <li>Increased experience gained from Rocky Field enemies.</li>
       <li>Fix crystals gained from runes.</li>
+      <li>Fix a bug where prestige bonuses are applied twice, once for 100% of their value and once for 1% of their value, making it total of 101%.</li>
     </ul>
   `;
 }

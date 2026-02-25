@@ -259,7 +259,6 @@ export default class Prestige {
   addBonuses(b) {
     Object.entries(b).forEach(([stat, val]) => {
       this.bonuses[stat] = (this.bonuses[stat] || 0) + val;
-      hero.permaStats[stat] = (hero.permaStats[stat] || 0) + val;
     });
   }
 
@@ -384,9 +383,6 @@ export default class Prestige {
     prestigeState.bonuses = combined;
     prestigeState.prestigeCount = newCount;
     prestigeState.history = this.history;
-    Object.entries(combined).forEach(([stat, val]) => {
-      hero.permaStats[stat] = (hero.permaStats[stat] || 0) + val;
-    });
     if (combined.startingCrystals) {
       hero.crystals = combined.startingCrystals;
     }
