@@ -14,6 +14,7 @@ export default function run() {
 
     <span style="color:#FF8A00;">Bug Fixes</span>
     <ul>
+      <li>Fixed skills that reduce enemy damage not working on Rocky Field enemies (and breaks the whole game).</li>
       <li>Fixed crystals gained from runes.</li>
       <li>Fixed a bug where prestige bonuses are applied twice, once for 100% of their value and once for 1% of their value, making it total of 101%.</li>
       <li>Fixed all attributes bonuses were not applied correctly (from prestige).</li>

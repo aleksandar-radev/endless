@@ -141,100 +141,127 @@ export class RockyFieldEnemy extends EnemyBase {
 
     const region = ROCKY_FIELD_REGIONS.find((r) => r.id === regionId);
     const tier = region?.tier || 1;
-    const regionMult = region?.multiplier || {};
 
-    // Calculate region and stage scaling like explore enemies
     this.tier = tier;
+    this.regionMultiplier = region?.multiplier || {};
     this.regionScale = Math.pow(ROCKY_FIELD_REGION_MULTIPLIER, tier - 1);
     this.stageScale = 1 + (stage - 1) * ROCKY_FIELD_STAGE_SCALING;
 
-    // Apply damage reduction from hero stats
-    const damageRed = hero?.stats?.reduceEnemyDamagePercent || 0;
-    const hpRed = hero?.stats?.reduceEnemyHpPercent || 0;
-    const speedRed = hero?.stats?.reduceEnemyAttackSpeedPercent || 0;
+    // Stats that don't change with hero bonuses
+    this.armor = this.calculateArmor();
+    this.evasion = this.calculateEvasion();
+    this.attackRating = this.calculateAttackRating();
 
-    // Template multipliers for per-enemy variation
-    const templateMult = template.multiplier || {};
-
-    // Life
-    const baseLife = ROCKY_FIELD_BASE_STATS.life || 5000;
-    this.life = Math.floor(
-      baseLife * (templateMult.life || 1) * (regionMult.life || 1)
-        * this.regionScale * this.stageScale * (1 - hpRed),
-    );
-    this.maxLife = this.life;
-
-    // Damage
-    const baseDamage = ROCKY_FIELD_BASE_STATS.damage || 375;
-    this.damage = Math.floor(
-      baseDamage * (templateMult.damage || 1) * (regionMult.damage || 1)
-        * this.regionScale * this.stageScale * (1 - damageRed),
-    );
-
-    // Armor
-    const baseArmor = ROCKY_FIELD_BASE_STATS.armor;
-    this.armor = Math.floor(
-      baseArmor * (templateMult.armor || 1) * (regionMult.armor || 1)
-        * this.regionScale * this.stageScale,
-    );
-
-    // Evasion
-    const baseEvasion = ROCKY_FIELD_BASE_STATS.evasion;
-    this.evasion = Math.floor(
-      baseEvasion * (templateMult.evasion || 1) * this.regionScale * this.stageScale,
-    );
-
-    // Attack Rating
-    const baseAttackRating = ROCKY_FIELD_BASE_STATS.attackRating;
-    this.attackRating = Math.floor(
-      baseAttackRating * (templateMult.attackRating || 1) * this.regionScale * this.stageScale,
-    );
-
-    // Attack Speed (doesn't scale with tier/stage)
-    this.attackSpeed = (templateMult.attackSpeed || 1) * (regionMult.attackSpeed || 1) * (1 - speedRed);
-
-    // Elemental Resistances
     ELEMENT_IDS.forEach((elId) => {
-      const resistKey = `${elId}Resistance`;
-      const baseRes = ROCKY_FIELD_BASE_STATS[resistKey];
-      this[resistKey] = Math.floor(
-        baseRes * (templateMult[resistKey] || 1) * this.regionScale * this.stageScale,
-      );
+      this[`${elId}Resistance`] = this.calculateElementalResistance(elId);
     });
 
-    // Elemental Damages
-    ELEMENT_IDS.forEach((elId) => {
-      const dmgKey = `${elId}Damage`;
-      const templateDmgMult = templateMult[dmgKey] || 0;
-      if (templateDmgMult > 0) {
-        this[dmgKey] = Math.floor(
-          baseDamage * templateDmgMult * this.regionScale * this.stageScale * (1 - damageRed),
-        );
-      } else {
-        this[dmgKey] = 0;
-      }
-    });
+    // Stats that can be affected by hero skills (damage reduction, etc.)
+    this.recalculateStats();
 
     // XP and Gold with diminishing returns
+    const templateMult = template.multiplier || {};
     const baseXp = ROCKY_FIELD_BASE_STATS.xp || 120;
     const baseGold = ROCKY_FIELD_BASE_STATS.gold || 140;
 
     const diminishing = xpDiminishingFactor(stage);
     const xpScaled = computeScaledReward(
-      baseXp * (templateMult.xp || 1) * (regionMult.xp || 1) * this.regionScale,
+      baseXp * (templateMult.xp || 1) * (this.regionMultiplier.xp || 1) * this.regionScale,
       stage, 0.1, 1, diminishing,
     );
     const goldScaled = computeScaledReward(
-      baseGold * (templateMult.gold || 1) * (regionMult.gold || 1) * this.regionScale,
+      baseGold * (templateMult.gold || 1) * (this.regionMultiplier.gold || 1) * this.regionScale,
       stage, 0.1, 1, diminishing,
     );
 
     this.xp = Math.floor(xpScaled);
     this.gold = Math.floor(goldScaled);
 
-    // Initialize currentLife
     this.currentLife = this.life;
     this.lastAttack = Date.now();
+  }
+
+  getRegionMultiplier(stat) {
+    return this.regionMultiplier?.[stat] || 1;
+  }
+
+  calculateAttackSpeed() {
+    const templateMult = this.baseData.multiplier || {};
+    const baseSpeed = (templateMult.attackSpeed || 1) * this.getRegionMultiplier('attackSpeed');
+    const speedRed = hero?.stats?.reduceEnemyAttackSpeedPercent || 0;
+    return baseSpeed * (1 - speedRed);
+  }
+
+  calculateLife() {
+    const templateMult = this.baseData.multiplier || {};
+    const baseLife = ROCKY_FIELD_BASE_STATS.life || 5000;
+    const scaled = baseLife * (templateMult.life || 1) * this.getRegionMultiplier('life')
+      * this.regionScale * this.stageScale;
+    const hpRed = hero?.stats?.reduceEnemyHpPercent || 0;
+    return Math.floor(scaled * (1 - hpRed));
+  }
+
+  calculateDamage() {
+    const templateMult = this.baseData.multiplier || {};
+    const baseDamage = ROCKY_FIELD_BASE_STATS.damage || 375;
+    const scaled = baseDamage * (templateMult.damage || 1) * this.getRegionMultiplier('damage')
+      * this.regionScale * this.stageScale;
+    const damageRed = hero?.stats?.reduceEnemyDamagePercent || 0;
+    return Math.floor(scaled * (1 - damageRed));
+  }
+
+  calculateArmor() {
+    const templateMult = this.baseData.multiplier || {};
+    const baseArmor = ROCKY_FIELD_BASE_STATS.armor;
+    return Math.floor(
+      baseArmor * (templateMult.armor || 1) * this.getRegionMultiplier('armor')
+        * this.regionScale * this.stageScale,
+    );
+  }
+
+  calculateEvasion() {
+    const templateMult = this.baseData.multiplier || {};
+    const baseEvasion = ROCKY_FIELD_BASE_STATS.evasion;
+    return Math.floor(
+      baseEvasion * (templateMult.evasion || 1) * this.regionScale * this.stageScale,
+    );
+  }
+
+  calculateAttackRating() {
+    const templateMult = this.baseData.multiplier || {};
+    const baseAttackRating = ROCKY_FIELD_BASE_STATS.attackRating;
+    return Math.floor(
+      baseAttackRating * (templateMult.attackRating || 1) * this.regionScale * this.stageScale,
+    );
+  }
+
+  calculateElementalDamage(type) {
+    const templateMult = this.baseData.multiplier || {};
+    const baseDamage = ROCKY_FIELD_BASE_STATS.damage || 375;
+    const templateDmgMult = templateMult[`${type}Damage`] || 0;
+    if (templateDmgMult === 0) return 0;
+    const scaled = baseDamage * templateDmgMult * this.regionScale * this.stageScale;
+    const damageRed = hero?.stats?.reduceEnemyDamagePercent || 0;
+    return Math.floor(scaled * (1 - damageRed));
+  }
+
+  calculateElementalResistance(type) {
+    const templateMult = this.baseData.multiplier || {};
+    const baseRes = ROCKY_FIELD_BASE_STATS[`${type}Resistance`];
+    if (!baseRes) return 0;
+    return Math.floor(
+      baseRes * (templateMult[`${type}Resistance`] || 1) * this.regionScale * this.stageScale,
+    );
+  }
+
+  recalculateStats() {
+    this.attackSpeed = this.calculateAttackSpeed();
+    this.life = this.calculateLife();
+    this.maxLife = this.life;
+    this.damage = this.calculateDamage();
+    ELEMENT_IDS.forEach((elId) => {
+      this[`${elId}Damage`] = this.calculateElementalDamage(elId);
+    });
   }
 }
 
