@@ -17,6 +17,7 @@ export default function run() {
       <li>Fix a bug where prestige bonuses are applied twice, once for 100% of their value and once for 1% of their value, making it total of 101%.</li>
       <li>Fix a bug where all attributes bonuses were not applied correctly (from prestige).</li>
       <li>Fix a bug where resistances from training would give  very low amounts of resistance.</li>
+      <li>Fixed scaling of holy light and greater healing skills of paladin. (higher flat, lower scaling of percent healing)</li>
     </ul>
   `;
 }

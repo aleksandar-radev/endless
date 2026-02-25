@@ -21,10 +21,15 @@ export const PALADIN_SKILLS = {
     maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       life: getSkillStatBonus({
-        level, statKey: 'life', skillType: 'instant', scale: { base: 0.2, increment: 0.2 },
+        level, statKey: 'life', skillType: 'instant', scale: { base: 0.6, increment: 0.6 },
       }),
       lifePercent: getSkillStatBonus({
-        level, statKey: 'lifePercent', skillType: 'instant', scale: { base: 0.2, max: 0.008 },
+        level,
+        statKey: 'lifePercent',
+        skillType: 'instant',
+        scale: {
+          base: 0.2, linear: 0.05, max: 0.008,
+        },
       }),
     }),
   },
@@ -126,10 +131,15 @@ export const PALADIN_SKILLS = {
     maxLevel: () => Infinity,
     effect: (level) => ({
       life: getSkillStatBonus({
-        level, statKey: 'life', skillType: 'instant', scale: { base: 1, increment: 0.4 },
+        level, statKey: 'life', skillType: 'instant', scale: { base: 1, increment: 0.8 },
       }),
       lifePercent: getSkillStatBonus({
-        level, statKey: 'lifePercent', skillType: 'instant', scale: { base: 0.2, max: 0.01 },
+        level,
+        statKey: 'lifePercent',
+        skillType: 'instant',
+        scale: {
+          base: 0.25, linear: 0.075, max: 0.01,
+        },
       }),
     }),
     synergies: [
