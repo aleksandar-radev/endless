@@ -1,6 +1,7 @@
 import { runes, dataManager, hero, options, training, soulShop } from '../globals.js';
 import { t, tp } from '../i18n.js';
 import { getRuneName, getRuneDescription, getRuneIcon, FROZEN_RUNE_SLOTS, INVENTORY_TAB_COUNT } from '../runes.js';
+import { RUNES, RUNE_TIERS } from '../constants/runes.js';
 import { showTooltip, positionTooltip, hideTooltip, showToast } from './ui.js';
 import { createModal, closeModal } from './modal.js';
 
@@ -507,7 +508,17 @@ function handleDrop(e) {
 }
 
 function getRuneTooltip(rune) {
-  return `<div class="tooltip-header">${getRuneName(rune, options.shortElementalNames)}</div><div class="tooltip-content">${getRuneDescription(rune, options.shortElementalNames)}</div>`;
+  const base = RUNES[rune.id];
+  const tier = rune.tier || 1;
+  const tierData = RUNE_TIERS[tier];
+  const zoneId = tierData?.zones?.[0];
+  const zoneName = zoneId ? t(`rockyField.region.${zoneId}.name`) : null;
+  const tierLabel = zoneName
+    ? `${t('item.tier')} ${tier} (${zoneName})`
+    : `${t('item.tier')} ${tier}`;
+  const levelPart = base?.showLevel && rune.level ? ` · ${t('item.level')} ${rune.level}` : '';
+  const meta = `<div class="tooltip-rune-meta">${tierLabel}${levelPart}</div>`;
+  return `<div class="tooltip-header">${getRuneName(rune, options.shortElementalNames)}</div>${meta}<div class="tooltip-content">${getRuneDescription(rune, options.shortElementalNames)}</div>`;
 }
 
 function openRuneContextMenu(source, index, rune, x, y) {

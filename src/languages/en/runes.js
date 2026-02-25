@@ -36,6 +36,8 @@ export default {
   'rune.empoweringRune.desc': 'Grants a random flat stat bonus.',
   'rune.vampiricRune.name': 'Vampiric Rune',
   'rune.vampiricRune.desc': 'Grants life steal.',
+  'rune.rockyFieldStageSkip.name': 'Pathfinder Rune',
+  'rune.rockyFieldStageSkip.desc': 'Skips extra Rocky Field stages per kill.',
   'rune.cooldownRune.name': 'Swiftcast Rune',
   'rune.cooldownRune.desc': 'Reduces skill cooldowns.',
   'rune.buffDurationRune.name': 'Persistence Rune',

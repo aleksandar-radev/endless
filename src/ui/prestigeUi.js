@@ -155,7 +155,7 @@ function openPrestigeModal() {
     cardsContainer.innerHTML = cards
       .map((c, i) => {
         const lockLabel = c.locked
-          ? `<img src="${BASE}/icons/lock.svg" alt="${t('prestige.lock')}"/>`
+          ? `<img src="${BASE}/icons/lock.png" alt="${t('prestige.lock')}"/>`
           : `${t('prestige.lock')} (20<img src="${BASE}/icons/crystal.png" alt="${t('resource.crystal.name')}"/>)`;
         const rerollCost = formatNumber(prestige.getCardValueRerollCost(c));
         const rerollLabel = `${t('prestige.rerollValues')} (${rerollCost}<img src="${BASE}/icons/crystal.png" alt="${t('resource.crystal.name')}"/>)`;

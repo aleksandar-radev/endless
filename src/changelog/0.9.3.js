@@ -11,6 +11,9 @@ export default function run() {
       <li>Reduced elemental damage in training cost from 90 to 50.</li>
       <li>Added a Sell Mode toggle to the buildings header when Quick Buy is enabled. Toggling it on makes clicking a building sell it (using the selected quantity) instead of upgrading.</li>
       <li>Ascension bonus for All damages now gives elemental damage only, and is added to "Damage Allocation" dialog, to allocate the element you want.</li>
+      <li>Arena skip rune now provides 1-6 skips based on rune tier.</li>
+      <li>Rune tier and level are now shown in the rune tooltip.</li>
+      <li>Greatly increased armor and ele penetration on empowering runes.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
@@ -25,12 +28,14 @@ export default function run() {
       <li>Fixed specialization bulk cost getting hidden after update (e.g. level up).</li>
       <li>Fixed Shadowdancer's Shadow Clone passive and Weaponmaster's Animated Weapons skills reducing summon damage when it is low level (e.g. below 100% bonus).</li>
       <li>Fixed Vampiric rune sometimes providing no bonus at all. Also, reducing the max bonus it can give to 1%. (also, it doesn't scale with tier anymore)</li>
+      <li>Fixed lock icon in prestige not showing after reopening the dialog.</li>
     </ul>
 
     <span style="color:#4F8A10;">New Content</span>
     <ul>
       <li>Added Swiftcast Rune: reduces skill cooldowns (2–10%).</li>
       <li>Added Persistence Rune: increases buff duration (5–25%).</li>
+      <li>Added Pathfinder Rune: skips extra Rocky Field stages per kill (tier 1 = +1 skip, tier 6 = +6 skips).</li>
     </ul>
   `;
 }

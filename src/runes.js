@@ -1,4 +1,4 @@
-import { RUNES, isChanceStat, getTierMultiplier, getPercentTierMultiplier } from './constants/runes.js';
+import { RUNES, isChanceStat, isFlatStat, getTierMultiplier, getPercentTierMultiplier, RUNE_FLAT_STAGE_SCALING_PERCENT, RUNE_PERCENT_STAGE_SCALING_PERCENT } from './constants/runes.js';
 import { isPercentStat, getStatDecimalPlaces } from './constants/stats/stats.js';
 import { tp, t } from './i18n.js';
 import { formatStatName } from './format.js';
@@ -55,20 +55,35 @@ const applyTierMultiplier = (statKey, value, tier) => {
  * Roll stats for a rune based on its definition.
  * @param {object} base - The base rune definition from RUNES
  * @param {number} tier - The tier to apply
+ * @param {number} stage - The rocky field stage (affects stat scaling)
  * @returns {object} The rolled stats
  */
-const rollRuneStats = (base, tier = 1) => {
+const rollRuneStats = (base, tier = 1, stage = 1) => {
   if (!base?.stats) return {};
 
   const statKeys = Object.keys(base.stats);
   const attributeCount = base.attributes || 1;
+
+  const resolveValue = (key, rawValue) => {
+    if (base.tierValues?.[key] !== undefined) {
+      return base.tierValues[key][tier - 1] ?? base.tierValues[key][0];
+    }
+    if (base.noTierScale) return rawValue;
+    const tieredValue = applyTierMultiplier(key, rawValue, tier);
+    if (!isChanceStat(key) && !key.endsWith('PerLevel')) {
+      const stageScaling = isFlatStat(key) ? RUNE_FLAT_STAGE_SCALING_PERCENT : RUNE_PERCENT_STAGE_SCALING_PERCENT;
+      const stageMultiplier = 1 + (stage - 1) * stageScaling;
+      return tieredValue * stageMultiplier;
+    }
+    return tieredValue;
+  };
 
   // If attributes count equals or exceeds stat count, use all stats
   if (attributeCount >= statKeys.length) {
     const rolledStats = {};
     for (const key of statKeys) {
       const rawValue = rollStatValue(base.stats[key]);
-      const value = base.noTierScale ? rawValue : applyTierMultiplier(key, rawValue, tier);
+      const value = resolveValue(key, rawValue);
       const preserveDecimals = key.endsWith('PerLevel') || getStatDecimalPlaces(key) > 0;
       rolledStats[key] = preserveDecimals ? value : Math.floor(value);
     }
@@ -82,7 +97,7 @@ const rollRuneStats = (base, tier = 1) => {
   const rolledStats = {};
   for (const key of selected) {
     const rawValue = rollStatValue(base.stats[key]);
-    const value = base.noTierScale ? rawValue : applyTierMultiplier(key, rawValue, tier);
+    const value = resolveValue(key, rawValue);
     const preserveDecimals = key.endsWith('PerLevel') || getStatDecimalPlaces(key) > 0;
     rolledStats[key] = preserveDecimals ? value : Math.floor(value);
   }
@@ -95,11 +110,12 @@ export default class Runes {
     const normalize = (arr = []) =>
       (arr || []).map((r) => {
         if (!r) return null;
-        // Only keep id, stats (rolled), and tier
+        // Only keep id, stats (rolled), tier, and level
         return {
           id: r.id,
           stats: r.stats || {},
           tier: r.tier || 1,
+          level: r.level || 1,
         };
       });
 
@@ -157,7 +173,7 @@ export default class Runes {
     }
     if (idx === -1) return null;
 
-    const rolledStats = rollRuneStats(base, tier);
+    const rolledStats = rollRuneStats(base, tier, level);
     const inst = {
       id: base.id,
       stats: rolledStats,

@@ -5,7 +5,7 @@ import { updatePlayerLife,
   updateBuffIndicators,
   formatNumber } from './ui/ui.js';
 import { playerAttack, enemyAttack, playerDeath, defeatEnemy, createDamageNumber, createCombatText } from './combat.js';
-import { game, hero, crystalShop, skillTree, statistics, dataManager, setGlobals, options, achievements } from './globals.js';
+import { game, hero, crystalShop, skillTree, statistics, dataManager, setGlobals, options, achievements, runes } from './globals.js';
 import { AILMENTS } from './constants/ailments.js';
 import Enemy from './enemy.js';
 import { RockyFieldEnemy } from './rockyField.js';
@@ -79,8 +79,8 @@ class Game {
   }
 
   incrementRockyFieldStage() {
-    // Rocky Field always increments by 1 - stage skip/lock options only apply to explore mode
-    this.rockyFieldStage += 1;
+    const runeSkip = runes?.getBonusEffects?.()?.rockyFieldStageSkip || 0;
+    this.rockyFieldStage += 1 + runeSkip;
 
     if (this.rockyFieldStage > statistics.get('rockyFieldHighestStages', this.rockyFieldRegion)) {
       statistics.set('rockyFieldHighestStages', this.rockyFieldRegion, this.rockyFieldStage);

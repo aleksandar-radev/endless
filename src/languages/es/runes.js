@@ -36,6 +36,8 @@ export default {
   'rune.empoweringRune.desc': 'Otorga un bono de estadística plana aleatorio.',
   'rune.vampiricRune.name': 'Runa Vampírica',
   'rune.vampiricRune.desc': 'Otorga robo de vida.',
+  'rune.rockyFieldStageSkip.name': 'Runa del Explorador',
+  'rune.rockyFieldStageSkip.desc': 'Salta etapas adicionales del Campo Rocoso por muerte.',
   'rune.cooldownRune.name': 'Runa de Lanzamiento Veloz',
   'rune.cooldownRune.desc': 'Reduce los tiempos de recarga de habilidades.',
   'rune.buffDurationRune.name': 'Runa de Persistencia',
