@@ -23,6 +23,7 @@ export default function run() {
       <li>Fixed scaling of holy light and greater healing skills of paladin. (higher flat, lower scaling of percent healing)</li>
       <li>Fixed tooltips of ascension bonuses.</li>
       <li>Fixed specialization bulk cost getting hidden after update (e.g. level up).</li>
+      <li>Fixed Shadowdancer's Shadow Clone passive and Weaponmaster's Animated Weapons skills reducing summon damage when it is low level (e.g. below 100% bonus).</li>
     </ul>
   `;
 }

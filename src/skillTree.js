@@ -1625,10 +1625,10 @@ export default class SkillTree {
           damage += playerDamage.damage * ((buffData.summonStats.percentOfPlayerDamage || 0) / d);
 
           if (skillId === 'animatedWeapons') {
-            damage *= hero.stats.animatedWeaponsDamagePercent || 1;
+            damage *= 1 + (hero.stats.animatedWeaponsDamagePercent || 0);
           }
           if (skillId === 'shadowClone') {
-            damage *= hero.stats.cloneDamagePercent || 1;
+            damage *= 1 + (hero.stats.cloneDamagePercent || 0);
           }
 
           if (skillId === 'summonBats' && hero.stats.batsHealPercent) {
