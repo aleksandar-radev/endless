@@ -131,6 +131,7 @@ export class Options {
         : typeof data.buildingQty === 'number'
           ? Math.min(data.buildingQty, BUILDING_MAX_QTY)
           : 1;
+    this.buildingSellMode = data.buildingSellMode ?? false;
     this.language = data.language || 'en';
     this.shortElementalNames = data.shortElementalNames ?? false;
     this.shortNumbers = data.shortNumbers ?? false;

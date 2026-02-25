@@ -14,10 +14,17 @@ export default {
   'buildings.upgraded': '¡Mejorado {name} en {count} niveles!',
   'buildings.maxLevelReached': 'El edificio ya está al nivel máximo.',
   'buildings.bulkUpgradeSuccess': '¡Todos los edificios colocados se mejoraron con éxito!',
-  'buildings.removeConfirm': '¿Estás seguro de que quieres eliminar <b>{name}</b> del mapa?',
+  'buildings.removeConfirm': '¿Estás seguro de que quieres eliminar <b>{name}</b> del mapa?',
+
   'buildings.offlineRewardsTitle': 'Recompensas de edificios offline',
   'buildings.offlineTime': 'Tiempo desconectado',
   'buildings.offlineRewardsInfo': '¡Se obtuvieron bonificaciones mientras estabas fuera!',
-  'buildings.collect': 'Recoger',
+  'buildings.collect': 'Recoger',
+
   'buildings.experienceWorkshop.description': 'Otorga niveles cada 2 horas.',
+
+  'buildings.sellMode': 'Modo Venta',
+  'buildings.sellRefundLabel': 'Reembolso',
+  'buildings.sold': 'Vendido {name} x{count}',
+  'buildings.nothingToSell': 'Nada que vender.',
 };

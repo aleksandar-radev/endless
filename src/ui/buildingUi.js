@@ -211,6 +211,23 @@ export function updateBuildingAffordability() {
     const building = buildings?.buildings?.[id];
     if (!building) return;
 
+    // In sell mode show refund info instead of upgrade cost
+    if (options?.quickBuy && options?.buildingSellMode) {
+      const rawQty = options.buildingQty || 1;
+      const qty = rawQty === 'max' ? building.level : parseInt(rawQty, 10) || 1;
+      const sellAmt = Math.min(qty, building.level);
+      if (sellAmt > 0) {
+        const refund = building.getRefundForAmount(sellAmt);
+        const refundStr = Building.formatCost(refund);
+        el.innerHTML = `${t('buildings.sellRefundLabel')}: <b>${refundStr}</b> (${formatNumber(sellAmt)})`;
+        el.classList.remove('unaffordable');
+        el.style.display = '';
+      } else {
+        el.style.display = 'none';
+      }
+      return;
+    }
+
     let amt = 1;
     if (options?.quickBuy) {
       const rawQty = options.buildingQty || 1;
@@ -509,32 +526,46 @@ export function renderPurchasedBuildings() {
       card.style.cursor = 'pointer';
       card.onclick = () => {
         if (options?.quickBuy) {
-          const rawQty = options.buildingQty || 1;
-          const maxLevelGain = Math.min(Math.max(building.maxLevel - building.level, 0), BUILDING_MAX_QTY);
-          const maxAffordable = building.getMaxUpgradeAmount(hero);
-          const qty = rawQty === 'max' ? Math.min(maxLevelGain, maxAffordable) : parseInt(rawQty, 10) || 1;
-          const amt = Math.min(qty, maxLevelGain, maxAffordable);
-
-          if (amt > 0) {
-            const totalCost = building.getUpgradeCost(amt);
-            // Deduct resources
-            for (const [type, value] of Object.entries(totalCost)) {
-              if (hero[type + 's'] !== undefined) hero[type + 's'] -= value;
-              else if (hero[type] !== undefined) hero[type] -= value;
+          if (options?.buildingSellMode) {
+            // Sell mode: sell the selected quantity of this building
+            const rawQty = options.buildingQty || 1;
+            const qty = rawQty === 'max' ? building.level : parseInt(rawQty, 10) || 1;
+            const sellAmt = Math.min(qty, building.level);
+            if (sellAmt > 0) {
+              building.refundToHero(sellAmt);
+              renderPurchasedBuildings();
+              showToast(tp('buildings.sold', { name: building.name, count: formatNumber(sellAmt) }));
+            } else {
+              showToast(t('buildings.nothingToSell'), 'info');
             }
-            for (let i = 0; i < amt; ++i) {
-              if (building.level < building.maxLevel) {
-                if (buildings.upgradeBuilding) buildings.upgradeBuilding(building.id);
-              }
-            }
-            updateResources();
-            renderPurchasedBuildings();
-            if (dataManager) dataManager.saveGame();
-            showToast(tp('buildings.upgraded', { name: building.name, count: formatNumber(amt) }));
-          } else if (building.level >= building.maxLevel) {
-            showToast(t('buildings.maxLevelReached'), 'info');
           } else {
-            showToast(t('buildings.notEnoughResources'), 'error');
+            const rawQty = options.buildingQty || 1;
+            const maxLevelGain = Math.min(Math.max(building.maxLevel - building.level, 0), BUILDING_MAX_QTY);
+            const maxAffordable = building.getMaxUpgradeAmount(hero);
+            const qty = rawQty === 'max' ? Math.min(maxLevelGain, maxAffordable) : parseInt(rawQty, 10) || 1;
+            const amt = Math.min(qty, maxLevelGain, maxAffordable);
+
+            if (amt > 0) {
+              const totalCost = building.getUpgradeCost(amt);
+              // Deduct resources
+              for (const [type, value] of Object.entries(totalCost)) {
+                if (hero[type + 's'] !== undefined) hero[type + 's'] -= value;
+                else if (hero[type] !== undefined) hero[type] -= value;
+              }
+              for (let i = 0; i < amt; ++i) {
+                if (building.level < building.maxLevel) {
+                  if (buildings.upgradeBuilding) buildings.upgradeBuilding(building.id);
+                }
+              }
+              updateResources();
+              renderPurchasedBuildings();
+              if (dataManager) dataManager.saveGame();
+              showToast(tp('buildings.upgraded', { name: building.name, count: formatNumber(amt) }));
+            } else if (building.level >= building.maxLevel) {
+              showToast(t('buildings.maxLevelReached'), 'info');
+            } else {
+              showToast(t('buildings.notEnoughResources'), 'error');
+            }
           }
         } else {
           showBuildingInfoModal(building, renderPurchasedBuildings);
@@ -625,6 +656,31 @@ export function initializeBuildingsUI() {
         showToast(t('buildings.bulkUpgradeSuccess') || 'All buildings upgraded!', 'success');
       }
     };
+  }
+
+  // Sell mode toggle — only visible when quick buy is active
+  if (options?.quickBuy || options?.bulkBuy) {
+    const header = tab.querySelector('.buildings-header');
+    const sellToggleWrapper = document.createElement('div');
+    sellToggleWrapper.className = 'building-sell-mode-wrapper';
+    sellToggleWrapper.innerHTML = html`
+      <label for="building-sell-mode-checkbox" class="building-sell-mode-label" data-i18n="buildings.sellMode">${t('buildings.sellMode')}</label>
+      <input type="checkbox" id="building-sell-mode-checkbox" class="building-sell-mode-checkbox" ${options.buildingSellMode ? 'checked' : ''} />
+      <span class="toggle-btn${options.buildingSellMode ? ' checked' : ''}"></span>
+    `;
+    header.appendChild(sellToggleWrapper);
+    const checkbox = sellToggleWrapper.querySelector('.building-sell-mode-checkbox');
+    const toggleBtn = sellToggleWrapper.querySelector('.toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    });
+    checkbox.addEventListener('change', () => {
+      options.buildingSellMode = checkbox.checked;
+      toggleBtn.classList.toggle('checked', checkbox.checked);
+      if (dataManager) dataManager.saveGame();
+      updateBuildingAffordability();
+    });
   }
 
   renderPurchasedBuildings();

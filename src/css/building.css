@@ -360,6 +360,19 @@
   font-weight: bold;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(200, 78, 78, 0.15);
+  transition: background 0.2s, transform 0.1s;
+}
+
+.building-sell-btn:hover:not(:disabled) {
+  background: #e05a5a;
+  transform: translateY(-1px);
+}
+
+.building-sell-btn:disabled {
+  background: #555;
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
 }
 
 /* Offline bonuses modal */
@@ -568,4 +581,32 @@
 
 .building-bulk-cost.unaffordable {
   color: #a0a7b4;
+}
+
+/* Sell mode toggle */
+.building-sell-mode-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.building-sell-mode-label {
+  color: #e57373;
+  font-size: 0.9rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.building-sell-mode-checkbox {
+  display: none;
+}
+
+.building-sell-mode-checkbox:checked+.toggle-btn {
+  background: #e53935;
+  border-color: #e53935;
+}
+
+.building-sell-mode-checkbox:checked+.toggle-btn::before {
+  left: 25px;
 }

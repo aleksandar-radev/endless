@@ -14,10 +14,17 @@ export default {
   'buildings.upgraded': '{name} 已升级 {count} 级！',
   'buildings.maxLevelReached': '建筑已达到最高等级。',
   'buildings.bulkUpgradeSuccess': '所有已放置的建筑均已成功升级！',
-  'buildings.removeConfirm': '您确定要从地图中移除 <b>{name}</b> 吗？',
+  'buildings.removeConfirm': '您确定要从地图中移除 <b>{name}</b> 吗？',
+
   'buildings.offlineRewardsTitle': '离线建筑奖励',
   'buildings.offlineTime': '离线时间',
   'buildings.offlineRewardsInfo': '你离线期间获得了奖励！',
-  'buildings.collect': '领取',
+  'buildings.collect': '领取',
+
   'buildings.experienceWorkshop.description': '每2小时获得等级。',
+
+  'buildings.sellMode': '出售模式',
+  'buildings.sellRefundLabel': '退款',
+  'buildings.sold': '已出售 {name} x{count}',
+  'buildings.nothingToSell': '没有可出售的内容。',
 };

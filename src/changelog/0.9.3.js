@@ -9,6 +9,7 @@ export default function run() {
       <li>Increased experience gained from Rocky Field enemies.</li>
       <li>Increased damage on bosses by 25%.</li>
       <li>Reduced elemental damage in training cost from 90 to 50.</li>
+      <li>Added a Sell Mode toggle to the buildings header when Quick Buy is enabled. Toggling it on makes clicking a building sell it (using the selected quantity) instead of upgrading.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
