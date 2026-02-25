@@ -10,6 +10,7 @@ export default {
   'training.elementalDistributionReset': '重置为平均',
   'training.elementalDistributionTrainingTotal': '训练总元素伤害：{amount}',
   'training.elementalDistributionIntelligenceTotal': '智力总元素伤害：{amount}',
+  'training.elementalDistributionAscensionTotal': '飞升总元素伤害：{amount}',
   'training.elementalDistributionResourceElementalTotal': '资源额外伤害（元素）：{amount}',
   'training.elementalDistributionResourcePhysicalTotal': '资源额外伤害（物理）：{amount}',
   'training.elementalDistributionResourcePhysicalLabel': '物理伤害',

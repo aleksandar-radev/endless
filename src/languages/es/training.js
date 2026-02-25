@@ -10,6 +10,7 @@ export default {
   'training.elementalDistributionReset': 'Restablecer reparto uniforme',
   'training.elementalDistributionTrainingTotal': 'Daño total de entrenamiento: {amount}',
   'training.elementalDistributionIntelligenceTotal': 'Daño total de inteligencia: {amount}',
+  'training.elementalDistributionAscensionTotal': 'Daño total de ascensión: {amount}',
   'training.elementalDistributionResourceElementalTotal': 'Daño extra por recursos (elemental): {amount}',
   'training.elementalDistributionResourcePhysicalTotal': 'Daño extra por recursos (físico): {amount}',
   'training.elementalDistributionResourcePhysicalLabel': 'Daño físico',
