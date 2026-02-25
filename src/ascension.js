@@ -33,8 +33,8 @@ export const ASCENSION_CATEGORIES = {
       },
       flatAllDamage: {
         label: 'ascension.upgrade.flatAllDamage',
-        bonus: 30,
-        stats: ['damage', ...ELEMENT_DAMAGE_STATS],
+        bonus: 35,
+        stat: 'ascensionElementalDamage',
       },
       totalDamagePercent: {
         label: 'ascension.upgrade.totalDamagePercent',

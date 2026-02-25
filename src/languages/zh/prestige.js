@@ -13,7 +13,7 @@ export default {
   'ascension.category.defense': '防御',
   'ascension.category.misc': '杂项',
   'ascension.upgrade.flatDamage': '伤害',
-  'ascension.upgrade.flatAllDamage': '所有伤害',
+  'ascension.upgrade.flatAllDamage': '元素伤害',
   'ascension.upgrade.totalDamagePercent': '总伤害 %',
 
   'ascension.upgrade.flatThornsDamage': '反伤',
@@ -68,7 +68,7 @@ export default {
   'ascension.upgrade.lifeRegenPercent': '生命回复 %',
   'ascension.upgrade.allResistancePercent': '全抗性 %',
   'ascension.tooltip.flatDamage': '每级增加 {bonus} 伤害。',
-  'ascension.tooltip.flatAllDamage': '每级为所有伤害类型增加 {bonus} 伤害。',
+  'ascension.tooltip.flatAllDamage': '每级为每个元素在元素伤害分配池中增加 {bonus} 伤害。',
   'ascension.tooltip.totalDamagePercent': '每级提高总伤害 {bonus}。',
   'ascension.tooltip.elementalDamagePercent': '每级提高元素伤害 {bonus}。',
   'ascension.tooltip.flatThornsDamage': '每级增加 {bonus} 点反伤。',

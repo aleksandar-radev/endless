@@ -13,7 +13,7 @@ export default {
   'ascension.category.defense': 'Defensa',
   'ascension.category.misc': 'Varios',
   'ascension.upgrade.flatDamage': 'Daño',
-  'ascension.upgrade.flatAllDamage': 'Daño de todos los tipos',
+  'ascension.upgrade.flatAllDamage': 'Daños elementales',
   'ascension.upgrade.totalDamagePercent': 'Daño total %',
 
   'ascension.upgrade.flatThornsDamage': 'Daño de espinas',
@@ -68,7 +68,7 @@ export default {
   'ascension.upgrade.lifeRegenPercent': 'Regeneración de vida %',
   'ascension.upgrade.allResistancePercent': 'Todas las resistencias %',
   'ascension.tooltip.flatDamage': 'Añade {bonus} daño por nivel.',
-  'ascension.tooltip.flatAllDamage': 'Añade {bonus} a todos los tipos por nivel.',
+  'ascension.tooltip.flatAllDamage': 'Añade {bonus} por elemento al fondo de distribución de daño elemental por nivel.',
   'ascension.tooltip.totalDamagePercent': 'Incrementa el daño total un {bonus} por nivel.',
   'ascension.tooltip.elementalDamagePercent': 'Incrementa el daño elemental un {bonus} por nivel.',
   'ascension.tooltip.flatThornsDamage': 'Añade {bonus} daño de espinas por nivel.',

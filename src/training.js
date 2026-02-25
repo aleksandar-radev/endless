@@ -966,6 +966,12 @@ export default class Training {
     return Number.isFinite(value) ? value : 0;
   }
 
+  _getAscensionElementalTotal() {
+    const bonuses = ascension?.getBonuses?.() || {};
+    const bonusPerElement = bonuses.ascensionElementalDamage || 0;
+    return bonusPerElement * (ELEMENTAL_TRAINING_STATS?.length || 0);
+  }
+
   _getElementalResourceExtraTotal() {
     if (hero?.elementalDamageFromResources === undefined) return 0;
     const value = Number(hero.elementalDamageFromResources);
@@ -1052,6 +1058,9 @@ export default class Training {
             <p class="elemental-intelligence-total" data-i18n="training.elementalDistributionIntelligenceTotal">
               ${tp('training.elementalDistributionIntelligenceTotal', { amount: formatNumber(0) })}
             </p>
+            <p class="elemental-ascension-total" data-i18n="training.elementalDistributionAscensionTotal">
+              ${tp('training.elementalDistributionAscensionTotal', { amount: formatNumber(0) })}
+            </p>
             <p class="elemental-extra-total" data-i18n="training.elementalDistributionResourceElementalTotal">
               ${tp('training.elementalDistributionResourceElementalTotal', { amount: formatNumber(0) })}
             </p>
@@ -1136,6 +1145,7 @@ export default class Training {
     if (!modal || typeof modal.querySelector !== 'function') return;
     const trainingTotal = this._getElementalTrainingTotal();
     const intelligenceTotal = this._getElementalIntelligenceTotal();
+    const ascensionTotal = this._getAscensionElementalTotal();
     const totalResourceExtra = this._getTotalResourceExtraDamage();
     const resourcePhysicalShare = this.getResourceExtraDamagePhysicalShare();
     const resourceThornsShare = this.getResourceExtraDamageThornsShare();
@@ -1144,7 +1154,7 @@ export default class Training {
     let resourceElementalTotal = totalResourceExtra - resourcePhysicalTotal - resourceThornsTotal;
     resourceElementalTotal = Math.max(0, resourceElementalTotal);
 
-    const combinedTotal = trainingTotal + intelligenceTotal + resourceElementalTotal;
+    const combinedTotal = trainingTotal + intelligenceTotal + ascensionTotal + resourceElementalTotal;
     const shares = this._getElementalDistributionShares();
     const totalEl = modal.querySelector('.elemental-total');
     if (totalEl) {
@@ -1153,6 +1163,10 @@ export default class Training {
     const intelligenceEl = modal.querySelector('.elemental-intelligence-total');
     if (intelligenceEl) {
       intelligenceEl.textContent = tp('training.elementalDistributionIntelligenceTotal', { amount: formatNumber(Number(intelligenceTotal.toFixed(2))) });
+    }
+    const ascensionEl = modal.querySelector('.elemental-ascension-total');
+    if (ascensionEl) {
+      ascensionEl.textContent = tp('training.elementalDistributionAscensionTotal', { amount: formatNumber(Number(ascensionTotal.toFixed(2))) });
     }
     const resourceEl = modal.querySelector('.elemental-extra-total');
     if (resourceEl) {

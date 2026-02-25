@@ -13,7 +13,7 @@ export default {
   'ascension.category.defense': 'Defense',
   'ascension.category.misc': 'Misc',
   'ascension.upgrade.flatDamage': 'Damage',
-  'ascension.upgrade.flatAllDamage': 'All Damage',
+  'ascension.upgrade.flatAllDamage': 'Elemental Damages',
   'ascension.upgrade.totalDamagePercent': 'Total Damage %',
 
   'ascension.upgrade.resourceDamageCapPerLevel': 'Resource Damage Cap per Level',
@@ -66,7 +66,7 @@ export default {
   'ascension.upgrade.lifeRegenPercent': 'Life Regen %',
   'ascension.upgrade.allResistancePercent': 'All Resistances %',
   'ascension.tooltip.flatDamage': 'Adds {bonus} damage per level.',
-  'ascension.tooltip.flatAllDamage': 'Adds {bonus} to all damage types per level.',
+  'ascension.tooltip.flatAllDamage': 'Adds {bonus} per element to the elemental damage distribution pool per level.',
   'ascension.tooltip.totalDamagePercent': 'Increases total damage by {bonus} per level.',
   'ascension.tooltip.elementalDamagePercent': 'Increases all elemental damage by {bonus} per level.',
   'ascension.upgrade.flatThornsDamage': 'Thorns Damage',

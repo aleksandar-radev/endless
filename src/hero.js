@@ -723,6 +723,16 @@ export default class Hero {
   applyFinalCalculations(flatValues, percentBonuses, unifiedBonuses = {}) {
     const ascensionBonuses = ascension?.getBonuses() || {};
 
+    // Distribute ascensionElementalDamage
+    if (ascensionBonuses.ascensionElementalDamage > 0) {
+      const totalAscElemental = ascensionBonuses.ascensionElementalDamage * ELEMENT_IDS.length;
+      const shareMap = getElementalShareMap();
+      const distribution = distributeElementalAmount(totalAscElemental, shareMap);
+      Object.entries(distribution).forEach(([statKey, amount]) => {
+        flatValues[statKey] = (flatValues[statKey] || 0) + amount;
+      });
+    }
+
     // --- Generic Per-Level Percent Bonus ---
     for (const key of Object.keys(unifiedBonuses)) {
       if (key.endsWith('PercentPerLevel')) {
