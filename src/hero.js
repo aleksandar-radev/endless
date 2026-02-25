@@ -476,7 +476,7 @@ export default class Hero {
 
     // 3) "Lock in" attributes
     ATTRIBUTE_KEYS.forEach((attr) => {
-      const pct = basePercent[`${attr}Percent`] || 0;
+      const pct = (basePercent[`${attr}Percent`] || 0 + basePercent.allAttributesPercent * 100) || 0;
       let v = baseFlat[attr] * (1 + pct);
       const decimals = getStatDecimalPlaces(attr);
       this.stats[attr] = decimals > 0 ? Number(v.toFixed(decimals)) : Math.floor(v);
@@ -792,13 +792,22 @@ export default class Hero {
           // NOTE: use percentBonuses.allResistancePercent (pre-computed) rather than
           // this.stats.allResistancePercent, which would be stale because individual resistances
           // are ordered before allResistancePercent in STAT_KEYS.
-          let percent = (stat === 'allResistance') ? 0 : (percentBonuses[stat + 'Percent'] || 0);
+          let percent = ((stat === 'allResistance') || (stat === 'allAttributes')) ? 0 : (percentBonuses[stat + 'Percent'] || 0);
+
           if (RESISTANCE_SET.has(stat)) {
             percent += percentBonuses.allResistancePercent || 0;
           }
 
+          if (ATTRIBUTE_SET.has(stat)) {
+            percent += percentBonuses.allAttributesPercent || 0;
+          }
+
           if ((stat === 'armorPenetration' || stat === 'elementalPenetration') && this.stats.flatPenetrationPercent) {
             percent += this.stats.flatPenetrationPercent;
+          }
+
+          if ((stat === 'allAttributes')) {
+            percent += this.stats.allAttributesPercent || 0;
           }
 
           value = flatValues[stat] + (ascensionBonuses[stat] || 0);

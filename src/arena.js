@@ -17,6 +17,7 @@ import { formatNumber as formatNumberValue } from './utils/numberFormatter.js';
 import EnemyBase from './enemyBase.js';
 
 const INCREASE_PER_LEVEL = 0.01;
+const GLOBAL_DAMAGE_MULTIPLIER = 1.25;
 // Base scaling increases slowly at first, but after higher levels bosses scale faster.
 // Above level 500, apply an extra percentage that ramps up every 1,000 levels, capped
 // so that bosses grow stronger at high tiers without becoming impossible.
@@ -252,7 +253,7 @@ class Boss extends EnemyBase {
     const val = scaleStat(base, this.level, 0, 0, 0, this.baseScale);
     const dmgRed = hero.stats.reduceEnemyDamagePercent || 0;
     const regionMultiplier = Number.isFinite(this.regionMultiplier?.damage) ? this.regionMultiplier.damage : 1;
-    return Math.floor(val * (this.baseData.multiplier?.damage || 1) * regionMultiplier * (1 - dmgRed));
+    return Math.floor(val * (this.baseData.multiplier?.damage || 1) * regionMultiplier * (1 - dmgRed) * GLOBAL_DAMAGE_MULTIPLIER);
   }
 
   calculateArmor() {
@@ -306,7 +307,8 @@ class Boss extends EnemyBase {
       val *
         (this.baseData.multiplier?.[`${type}Damage`] || 1) *
         (Number.isFinite(this.regionMultiplier?.[`${type}Damage`]) ? this.regionMultiplier[`${type}Damage`] : 1) *
-        (1 - dmgRed),
+        (1 - dmgRed) *
+        GLOBAL_DAMAGE_MULTIPLIER,
     );
   }
 
