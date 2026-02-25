@@ -104,8 +104,10 @@ function renderAscension() {
   list.innerHTML = upgrades || `<li>${t('ascension.upgrade.none')}</li>`;
   list.querySelectorAll('li').forEach((li) => {
     const key = li.dataset.key;
+    const cfg = cat.upgrades[key];
     const lbl = li.querySelector('.ascension-upgrade-label');
-    const tip = t(`ascension.tooltip.${key}`);
+    const perLevel = getAscensionPerLevelBonusText(key, cfg);
+    const tip = tp(`ascension.tooltip.${key}`, { bonus: perLevel });
     if (lbl) {
       lbl.addEventListener('mouseenter', (e) => showTooltip(tip, e));
       lbl.addEventListener('mousemove', positionTooltip);
@@ -172,7 +174,8 @@ function openAscensionInfoModal() {
 function openUpgradeInfoModal(key) {
   const cfg = ascension.config[key];
   if (!cfg) return;
-  const tip = t(`ascension.tooltip.${key}`);
+  const perLevelText = getAscensionPerLevelBonusText(key, cfg);
+  const tip = tp(`ascension.tooltip.${key}`, { bonus: perLevelText });
   const level = ascension.upgrades[key] || 0;
   const max = cfg.maxLevel || Infinity;
   const perLevel = getAscensionPerLevelBonusText(key, cfg);
