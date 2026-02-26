@@ -2029,7 +2029,8 @@ export function updateSkillTreeValues() {
     const needsSpecRender = Object.entries(allSpecSkills).some(([skillId, skillData]) => {
       const isVisible =
         typeof skillData.isVisible === 'function' ? skillData.isVisible() : skillData.isVisible !== false;
-      return isVisible && !renderedSpecSkills.has(skillId);
+      const reqLevel = typeof skillData.requiredLevel === 'function' ? skillData.requiredLevel() : 0;
+      return isVisible && reqLevel <= hero.level && !renderedSpecSkills.has(skillId);
     });
 
     if (needsSpecRender) {
