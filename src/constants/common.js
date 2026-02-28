@@ -52,5 +52,8 @@ export const IS_MOBILE_OR_TABLET = () => {
   return (isMobileSize || hasTouch) && window.innerWidth < BREAKPOINTS.DESKTOP;
 };
 
+// Controls whether skills gain bonus multipliers at specific level milestones (e.g. every 50 levels)
+export const ENABLE_SKILL_MILESTONES = false;
+
 
 

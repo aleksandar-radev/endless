@@ -219,6 +219,10 @@ body.dev-active .game-container {
   padding: 8px 12px;
 }
 
+.tooltip.combat-wide-tooltip {
+  max-width: min(620px, 92vw);
+}
+
 .tooltip.show {
   opacity: 1;
 }

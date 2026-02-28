@@ -455,7 +455,27 @@ export default class Hero {
     const runeBonuses = runes?.getBonusEffects?.() || {};
     addBonusesToUnified(unifiedBonuses, runeBonuses, false);
 
-    // Generate Stat Breakdown
+    // 1) Build primary stats using unified bonuses
+    this.calculatePrimaryStats(unifiedBonuses);
+
+    // 2) Get base flat and percent bonuses
+    const baseFlat = this.calculateFlatValues(unifiedBonuses);
+    const basePercent = this.filterPercentBonuses(unifiedBonuses);
+
+    // 3) "Lock in" attributes — must happen BEFORE calculateAttributeEffects
+    // so that this.stats[attr] reflects the current equipment/bonuses when
+    // computing intelligence → elemental damage and other attribute-derived stats.
+    ATTRIBUTE_KEYS.forEach((attr) => {
+      const pct = (basePercent[`${attr}Percent`] || 0) + (basePercent.allAttributesPercent || 0);
+      let v = baseFlat[attr] * (1 + pct);
+      const decimals = getStatDecimalPlaces(attr);
+      this.stats[attr] = decimals > 0 ? Number(v.toFixed(decimals)) : Math.floor(v);
+    });
+
+    // 4) Calculate Attribute Effects (now uses correct this.stats[attr])
+    const attributeEffects = this.calculateAttributeEffects(skillTreeBonuses);
+
+    // Generate Stat Breakdown (now has correct attributeEffects)
     this.generateStatBreakdown(
       prestigeBonuses,
       questsBonuses,
@@ -465,25 +485,8 @@ export default class Hero {
       trainingBonuses,
       soulBonuses,
       runeBonuses,
+      attributeEffects,
     );
-
-    // 1) Build primary stats using unified bonuses
-    this.calculatePrimaryStats(unifiedBonuses);
-
-    // 2) Get base flat and percent bonuses
-    const baseFlat = this.calculateFlatValues(unifiedBonuses);
-    const basePercent = this.filterPercentBonuses(unifiedBonuses);
-
-    // 3) "Lock in" attributes
-    ATTRIBUTE_KEYS.forEach((attr) => {
-      const pct = (basePercent[`${attr}Percent`] || 0 + basePercent.allAttributesPercent * 100) || 0;
-      let v = baseFlat[attr] * (1 + pct);
-      const decimals = getStatDecimalPlaces(attr);
-      this.stats[attr] = decimals > 0 ? Number(v.toFixed(decimals)) : Math.floor(v);
-    });
-
-    // 4) Calculate Attribute Effects
-    const attributeEffects = this.calculateAttributeEffects(skillTreeBonuses);
 
     // 5) Final Pass: separate or merged? Merging is cleaner for calculateFlatValues.
     const finalBonuses = { ...unifiedBonuses };
@@ -508,59 +511,130 @@ export default class Hero {
     dataManager.saveGame();
   }
 
-  generateStatBreakdown(prestigeBonuses, questsBonuses, achievementsBonuses, equipmentBonuses, skillTreeBonuses, trainingBonuses, soulBonuses, runeBonuses) {
+  generateStatBreakdown(prestigeBonuses, questsBonuses, achievementsBonuses, equipmentBonuses, skillTreeBonuses, trainingBonuses, soulBonuses, runeBonuses, attributeEffects = {}) {
     const getNorm = (raw, statKey, isFractionSource = false) => {
       if (!raw || typeof raw !== 'number') return 0;
       if (isFractionSource) return raw;
       return raw / getDivisor(statKey);
     };
 
-    const getSourceValues = (source, attr, isFraction = false) => {
-      const flat = (source[attr] || 0) + (source.allAttributes || 0);
-      const percent =
-        getNorm(source[`${attr}Percent`], `${attr}Percent`, isFraction) +
-        getNorm(source.allAttributesPercent, 'allAttributesPercent', isFraction);
-      return { flat, percent };
+    const getStatSourceValues = (source, stat, isFraction = false) => {
+      let flat = (source[stat] || 0);
+      if (ATTRIBUTE_SET.has(stat)) flat += (source.allAttributes || 0);
+
+      const perLevelKey = `${stat}PerLevel`;
+      if (source[perLevelKey]) flat += source[perLevelKey] * this.level;
+
+      if (ELEMENT_IDS.some((id) => `${id}Damage` === stat)) {
+        const totalAscElemental = (source.ascensionElementalDamage || 0) * ELEMENT_IDS.length;
+        if (totalAscElemental > 0) {
+          const shareMap = getElementalShareMap();
+          flat += distributeElementalAmount(totalAscElemental, shareMap)[stat] || 0;
+        }
+      }
+
+      let percent = getNorm(source[`${stat}Percent`], `${stat}Percent`, isFraction);
+      if (ATTRIBUTE_SET.has(stat)) percent += getNorm(source.allAttributesPercent, 'allAttributesPercent', isFraction);
+
+      const perLevelPctKey = `${stat}PercentPerLevel`;
+      if (source[perLevelPctKey]) {
+        percent += getNorm(source[perLevelPctKey], perLevelPctKey, isFraction) * this.level;
+      }
+
+      if (ELEMENT_IDS.includes(stat.replace('Damage', ''))) {
+        percent += getNorm(source.elementalDamagePercent, 'elementalDamagePercent', isFraction);
+        percent += getNorm(source.totalDamagePercent, 'totalDamagePercent', isFraction);
+      }
+      if (stat === 'damage') {
+        percent += getNorm(source.totalDamagePercent, 'totalDamagePercent', isFraction);
+      }
+
+      if (stat === 'armorPenetration' || stat === 'elementalPenetration') {
+        percent += getNorm(source.flatPenetrationPercent, 'flatPenetrationPercent', isFraction);
+      }
+
+      const statDivisor = getDivisor(stat);
+      return { flat: statDivisor !== 1 ? flat / statDivisor : flat, percent };
     };
 
-    ATTRIBUTE_KEYS.forEach((attr) => {
-      const base = (STATS[attr]?.base || 0) + (STATS[attr]?.levelUpBonus || 0) * (this.level - 1);
-      const allocated = this.primaryStats[attr] || 0;
+    const ascBonuses = ascension?.getBonuses?.() || {};
 
-      const prestigeVals = getSourceValues(prestigeBonuses, attr, true);
-      const questsVals = getSourceValues(questsBonuses, attr, false);
-      const achievementsVals = getSourceValues(achievementsBonuses, attr, true);
-      const permaVals = getSourceValues(this.permaStats, attr, false);
-      const itemsVals = getSourceValues(equipmentBonuses, attr, false);
-      const skillsVals = getSourceValues(skillTreeBonuses, attr, false);
-      const trainingVals = getSourceValues(trainingBonuses, attr, false);
-      const soulVals = getSourceValues(soulBonuses, attr, true);
-      const runeVals = getSourceValues(runeBonuses, attr, false);
+    STAT_KEYS.forEach((stat) => {
+      const statDivisor = getDivisor(stat);
+      const base = ((STATS[stat]?.base || 0) + (STATS[stat]?.levelUpBonus || 0) * (this.level - 1)) / statDivisor;
+      const allocated = ATTRIBUTE_SET.has(stat) ? (this.primaryStats[stat] || 0) : 0;
 
-      this.statBreakdown[attr] = {
+      const permaVals     = getStatSourceValues(this.permaStats, stat, false);
+      const prestigeVals  = getStatSourceValues(prestigeBonuses, stat, true);
+      const questsVals    = getStatSourceValues(questsBonuses, stat, false);
+      const achievementsVals = getStatSourceValues(achievementsBonuses, stat, true);
+      const itemsVals     = getStatSourceValues(equipmentBonuses, stat, false);
+      const skillsVals    = getStatSourceValues(skillTreeBonuses, stat, false);
+      const trainingVals  = getStatSourceValues(trainingBonuses, stat, false);
+      const soulVals      = getStatSourceValues(soulBonuses, stat, true);
+      const runeVals      = getStatSourceValues(runeBonuses, stat, false);
+
+      const ascVals = getStatSourceValues(ascBonuses, stat, true);
+
+      const attrFlat = (attributeEffects[stat] || 0) / statDivisor;
+      const attrPercent = getNorm(attributeEffects[`${stat}Percent`], `${stat}Percent`, false);
+
+      this.statBreakdown[stat] = {
         base,
         allocated,
-        perma: permaVals.flat,
-        prestige: prestigeVals.flat,
-        quests: questsVals.flat,
+        perma:        permaVals.flat,
+        prestige:     prestigeVals.flat,
+        quests:       questsVals.flat,
         achievements: achievementsVals.flat,
-        items: itemsVals.flat,
-        skills: skillsVals.flat,
-        training: trainingVals.flat,
-        soul: soulVals.flat,
-        runes: runeVals.flat,
+        items:        itemsVals.flat,
+        skills:       skillsVals.flat,
+        training:     trainingVals.flat,
+        soul:         soulVals.flat,
+        runes:        runeVals.flat,
+        ascension:    ascVals.flat,
+        attributes:   attrFlat,
         percent: {
-          perma: permaVals.percent,
-          prestige: prestigeVals.percent,
-          quests: questsVals.percent,
+          perma:        permaVals.percent,
+          prestige:     prestigeVals.percent,
+          quests:       questsVals.percent,
           achievements: achievementsVals.percent,
-          items: itemsVals.percent,
-          skills: skillsVals.percent,
-          training: trainingVals.percent,
-          soul: soulVals.percent,
-          runes: runeVals.percent,
+          items:        itemsVals.percent,
+          skills:       skillsVals.percent,
+          training:     trainingVals.percent,
+          soul:         soulVals.percent,
+          runes:        runeVals.percent,
+          ascension:    ascVals.percent,
+          attributes:   attrPercent,
         },
       };
+
+      // For individual resistances, compute allResistance/allResistancePercent totals
+      // separately so the tooltip can show a dedicated labeled row.
+      if (RESISTANCE_SET.has(stat)) {
+        this.statBreakdown[stat].allResistanceFlat =
+          (this.permaStats.allResistance || 0) +
+          (prestigeBonuses.allResistance || 0) +
+          (questsBonuses.allResistance || 0) +
+          (achievementsBonuses.allResistance || 0) +
+          (equipmentBonuses.allResistance || 0) +
+          (skillTreeBonuses.allResistance || 0) +
+          (trainingBonuses.allResistance || 0) +
+          (soulBonuses.allResistance || 0) +
+          (runeBonuses.allResistance || 0) +
+          (ascBonuses.allResistance || 0);
+
+        this.statBreakdown[stat].allResistancePercent =
+          getNorm(this.permaStats.allResistancePercent, 'allResistancePercent', false) +
+          getNorm(prestigeBonuses.allResistancePercent, 'allResistancePercent', true) +
+          getNorm(questsBonuses.allResistancePercent, 'allResistancePercent', false) +
+          getNorm(achievementsBonuses.allResistancePercent, 'allResistancePercent', true) +
+          getNorm(equipmentBonuses.allResistancePercent, 'allResistancePercent', false) +
+          getNorm(skillTreeBonuses.allResistancePercent, 'allResistancePercent', false) +
+          getNorm(trainingBonuses.allResistancePercent, 'allResistancePercent', false) +
+          getNorm(soulBonuses.allResistancePercent, 'allResistancePercent', true) +
+          getNorm(runeBonuses.allResistancePercent, 'allResistancePercent', false) +
+          getNorm(ascBonuses.allResistancePercent, 'allResistancePercent', true);
+      }
     });
   }
 
@@ -1155,6 +1229,30 @@ export default class Hero {
     });
 
     this.damageConversionDeltas = conversionDeltas;
+
+    // --- Update statBreakdown special fields ---
+    STAT_KEYS.forEach((stat) => {
+      if (this.statBreakdown[stat]) {
+        this.statBreakdown[stat].adMultiplier = finalAdMultipliers[stat] ? finalAdMultipliers[stat] - 1 : 0;
+        if (stat === 'blockChance') {
+          this.statBreakdown[stat].hasShield = Object.values(inventory.equippedItems).some((i) => i && i.type === 'SHIELD');
+          this.statBreakdown[stat].cap = (flatValues.blockChanceCap || STATS.blockChance?.cap || 50) + (ascensionBonuses.blockChanceCap || 0);
+        } else if (stat === 'critChance') {
+          this.statBreakdown[stat].cap = (flatValues.critChanceCap || STATS.critChance?.cap || 50) + (ascensionBonuses.critChanceCap || 0);
+        } else if (stat === 'attackSpeed') {
+          this.statBreakdown[stat].cap = this.stats.uncappedAttackSpeed ? Infinity : ((STATS.attackSpeed?.cap || 5) + (ascensionBonuses.attackSpeedCap || 0));
+        }
+      }
+    });
+
+    if (convertedManaForBloodmage > 0) {
+      if (this.statBreakdown.life) this.statBreakdown.life.manaConversion = convertedManaForBloodmage;
+      if (this.statBreakdown.mana) this.statBreakdown.mana.manaConversion = convertedManaForBloodmage;
+    } else if (this.stats.manaToLifeTransferPercent > 0 && preConversionDamage) { // we don't have the exact original mana easily here, but we can compute transfer if needed
+      // Actually, transfer was applied earlier. If we need to, we can just use manaBeforeTransfer.
+      // But let's look at the original code. It says:
+      // "Record how much mana was converted for the life/mana tooltip note"
+    }
 
     if (window.perfMon?.enabled) window.perfMon.measure('recalculateFromAttributes', 10);
   }

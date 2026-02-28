@@ -37,6 +37,7 @@ const generateElementalDefenseStats = () => {
       item: { tierScalingMaxPercent: resistanceTierScalingMaxPercent },
       itemTags: ['defense', 'jewelry'],
       sub: 'elemental',
+      forceNotShow: true,
     });
   });
   return stats;
@@ -72,6 +73,7 @@ export const DEFENSE_STATS = {
     item: { tierScalingMaxPercent: createTierScaling(15, 250, 1.1) },
     itemTags: ['belt', 'pants'],
     sub: 'defense',
+    forceNotShow: true,
     skills: createDefaultSkillBonusesPercent(),
   }),
   armor: createStat({
@@ -103,6 +105,7 @@ export const DEFENSE_STATS = {
     item: { tierScalingMaxPercent: resistanceTierScalingMaxPercent },
     itemTags: ['armor', 'shield'],
     sub: 'defense',
+    forceNotShow: true,
     skills: createDefaultSkillBonusesPercent(),
   }),
   armorPercentPerLevel: createPercentStat({
@@ -175,6 +178,7 @@ export const DEFENSE_STATS = {
     item: { tierScalingMaxPercent: resistanceTierScalingMaxPercent },
     itemTags: ['belt'],
     sub: 'defense',
+    forceNotShow: true,
     skills: createDefaultSkillBonusesPercent(),
   }),
   lifeRegenOfTotalPercent: createPercentStat({
@@ -265,6 +269,7 @@ export const DEFENSE_STATS = {
     item: { tierScalingMaxPercent: resistanceTierScalingMaxPercent },
     itemTags: ['boots', 'helmet'],
     sub: 'defense',
+    forceNotShow: true,
     skills: createDefaultSkillBonusesPercent(),
   }),
   avoidChance: createChanceStat({
@@ -278,6 +283,7 @@ export const DEFENSE_STATS = {
   }),
   ...generateElementalDefenseStats(),
   allResistance: createStat({
+    forceNotShow: true,
     item: {
       ...getItemRange('allResistance'),
       scaling: (level, tier) => defenseScaling(level, tier),
@@ -294,6 +300,7 @@ export const DEFENSE_STATS = {
     }),
   }),
   allResistancePercent: createPercentStat({
+    forceNotShow: true,
     item: { tierScalingMaxPercent: createTierScaling(7, 100, 1.2) },
     itemTags: ['defense', 'jewelry'],
     sub: 'elemental',

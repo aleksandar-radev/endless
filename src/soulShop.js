@@ -32,7 +32,7 @@ export const SOUL_UPGRADE_CONFIG = {
     baseCost: 4,
     costIncrement: 0.2,
     stat: 'bonusExperiencePercent',
-    maxLevel: 2000,
+    maxLevel: 500,
   },
   damageBoost: {
     label: 'soulShop.upgrade.damageBoost.label',

@@ -1,5 +1,5 @@
 import { fetchTrustedUtcTime } from './api.js';
-import { XP_GOLD_GROWTH_MULTIPLIER } from './constants/common.js';
+import { XP_GOLD_GROWTH_MULTIPLIER, ENABLE_SKILL_MILESTONES } from './constants/common.js';
 import { PER_LEVEL_SCALE } from './constants/ratios.js';
 import { STATS } from './constants/stats/stats.js';
 
@@ -313,7 +313,7 @@ export function getScalingFlat({
   let value = base + (level - 1) * increment;
 
   // 2. Calculate Milestone Modifier linearly
-  if (interval > 0 && level >= interval) {
+  if (ENABLE_SKILL_MILESTONES && interval > 0 && level >= interval) {
     const milestonesPassed = Math.floor(level / interval);
 
     // Instead of Math.pow, we simply add the bonuses together

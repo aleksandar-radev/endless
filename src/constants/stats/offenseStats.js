@@ -48,6 +48,7 @@ const generateElementalOffenseStats = () => {
       item: createElementalDamagePercentConfig(),
       itemTags: ['sword', 'dagger', 'jewelry', 'bow', 'arrows', 'gloves', 'magic'],
       sub: 'elemental',
+      forceNotShow: true,
       skills: createDefaultSkillBonusesPercent(),
     });
     stats[`${element}Penetration`] = createStat({ sub: 'elemental' });
@@ -96,9 +97,10 @@ export const OFFENSE_STATS = {
     },
     itemTags: ['offense', 'gloves', 'jewelry'],
     sub: 'attack',
+    forceNotShow: true,
     skills: createDefaultSkillBonusesPercent(),
   }),
-  totalDamagePercent: createPercentStat({ sub: 'attack' }),
+  totalDamagePercent: createPercentStat({ sub: 'attack', forceNotShow: true }),
   attackSpeed: createStat({
     base: 1,
     dec: 2,
@@ -249,6 +251,7 @@ export const OFFENSE_STATS = {
     item: { tierScalingMaxPercent: createTierScaling(30, 600, 1.2) },
     itemTags: ['offense', 'gloves'],
     sub: 'attack',
+    forceNotShow: true,
     skills: createDefaultSkillBonusesPercent(),
   }),
   chanceToHitPercent: createPercentStat({
@@ -339,12 +342,14 @@ export const OFFENSE_STATS = {
     },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
     sub: 'elemental',
+    forceNotShow: true,
     skills: createDefaultSkillBonusesFlat('elementalDamage'),
   }),
   elementalDamagePercent: createPercentStat({
     item: { tierScalingMaxPercent: createTierScaling(7, 100, 1.1) },
     itemTags: ['offense', 'jewelry', 'gloves', 'magic'],
     sub: 'elemental',
+    forceNotShow: true,
     skills: createDefaultSkillBonusesPercent(),
   }),
   percentOfPlayerDamage: createPercentStat({

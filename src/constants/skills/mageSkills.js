@@ -150,10 +150,13 @@ export const MAGE_SKILLS = {
     requiredLevel: () => SKILL_LEVEL_TIERS[2],
     icon: () => 'mana-shield',
     description: () => t('skill.manaShield'),
-    maxLevel: () => 261,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       manaShieldPercent: getSkillStatBonus({
         level, statKey: 'manaShieldPercent', skillType: 'buff', scale: { base: 1 },
+      }),
+      mana: getSkillStatBonus({
+        level, statKey: 'mana', skillType: 'buff', scale: { base: 5, increment: 2 },
       }),
     }),
   },
@@ -165,10 +168,13 @@ export const MAGE_SKILLS = {
     isVisible: () => hero.stats.crimsonAegisSkillUnlocked > 0,
     icon: () => 'crimson-aegis',
     description: () => t('skill.crimsonAegis'),
-    maxLevel: () => 300,
+    maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
     effect: (level) => ({
       damageTakenReductionPercent: getSkillStatBonus({
         level, statKey: 'damageTakenReductionPercent', skillType: 'passive', scale: { base: 1, max: 1.8 },
+      }),
+      life: getSkillStatBonus({
+        level, statKey: 'life', skillType: 'passive', scale: { base: 5, increment: 2 },
       }),
     }),
   },

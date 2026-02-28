@@ -62,8 +62,8 @@ export const getPercentTierMultiplier = (tier) => {
  * @returns {number} Scaled stat value
  */
 export const calculateRuneStatValue = (baseValue, statKey, tier, stage = 1) => {
-  // Chance stats don't scale with tier
-  if (isChanceStat(statKey)) {
+  // Chance stats and PerLevel stats don't scale with tier or stage
+  if (isChanceStat(statKey) || statKey.endsWith('PerLevel')) {
     return baseValue;
   }
 
@@ -111,7 +111,6 @@ export const RUNES = {
   arena_boss_skip: {
     id: 'arena_boss_skip',
     nameKey: 'rune.bossSkip.name',
-    descKey: 'rune.bossSkip.desc',
     stats: { arenaBossSkip: 1 },
     tierValues: { arenaBossSkip: [1, 2, 3, 4, 5, 6] },
     attributes: 1,
@@ -177,13 +176,12 @@ export const RUNES = {
   rocky_field_stage_skip: {
     id: 'rocky_field_stage_skip',
     nameKey: 'rune.rockyFieldStageSkip.name',
-    descKey: 'rune.rockyFieldStageSkip.desc',
     stats: { rockyFieldStageSkip: 1 },
     tierValues: { rockyFieldStageSkip: [1, 2, 3, 4, 5, 6] },
     attributes: 1,
     weight: 80,
     icon: `${BASE}/icons/pathfinder.png`,
-    unique: false,
+    unique: true,
   },
   cooldown_rune: {
     id: 'cooldown_rune',

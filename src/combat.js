@@ -978,7 +978,7 @@ export async function defeatEnemy(source) {
         const runeId = selectWeightedRune(enemy.runeDrop);
         if (runeId) {
           const tier = getTierForZone(game.rockyFieldRegion);
-          const rune = runes.addRune(runeId, tier);
+          const rune = runes.addRune(runeId, tier, enemy.level);
           if (rune) {
             const name = getRuneName(rune, options.shortElementalNames);
             battleLog.addDrop(tp('battleLog.droppedRune', { name }));
@@ -1167,6 +1167,88 @@ export function calculateResistanceReduction(resistance, damage, cap = 0.9) {
   if (damage <= 0) return 0;
   const reduction = resistance / (resistance + 5 * damage);
   return Math.max(0, Math.min(reduction, cap)) * 100;
+}
+
+/**
+ * Deterministically compute expected average damage per hit and DPS vs an enemy,
+ * accounting for armor / resistance mitigation (with penetration) and the expected
+ * values of crit and double-damage procs.
+ *
+ * Uses the already-aggregated hero.stats values (damage, fireDamage, …) so the
+ * result is always consistent with what the Stats UI displays.
+ *
+ * @param {object} heroObj  – the hero instance (hero.stats + hero.stats.*)
+ * @param {object} enemy    – the current enemy instance
+ * @returns {object}        – detailed breakdown used by the UI and tooltip
+ */
+export function calculateExpectedDamageVsEnemy(heroObj, enemy) {
+  const stats = heroObj.stats;
+
+  // --- Physical: apply armor with hero penetration ---
+  let effectiveArmor = enemy.armor || 0;
+  if (stats.ignoreEnemyArmor > 0) {
+    effectiveArmor = 0;
+  } else {
+    const armorPenFraction = stats.armorPenetrationPercent || 0;
+    effectiveArmor *= Math.max(0, 1 - armorPenFraction);
+    effectiveArmor -= stats.armorPenetration || 0;
+    effectiveArmor = Math.max(0, effectiveArmor);
+  }
+  const physicalRaw = stats.damage || 0;
+  const armorReductionPct = calculateArmorReduction(effectiveArmor, physicalRaw) / 100;
+  const physicalMitigated = physicalRaw * (1 - armorReductionPct);
+
+  // --- Elemental: apply resistance with hero penetration per element ---
+  const elementalDetails = ELEMENT_IDS.map((id) => {
+    const raw = stats[`${id}Damage`] || 0;
+    let effectiveRes = enemy[`${id}Resistance`] || 0;
+    if (stats.ignoreAllEnemyResistances > 0) {
+      effectiveRes = 0;
+    } else {
+      const totalPercentPen =
+        (stats[`${id}PenetrationPercent`] || 0) +
+        (stats.elementalPenetrationPercent || 0) +
+        (stats.reduceEnemyResistancesPercent || 0);
+      effectiveRes *= Math.max(0, 1 - totalPercentPen);
+      effectiveRes -= (stats[`${id}Penetration`] || 0) + (stats.elementalPenetration || 0);
+      effectiveRes = Math.max(0, effectiveRes);
+    }
+    const resReductionPct = calculateResistanceReduction(effectiveRes, raw) / 100;
+    const mitigated = raw * (1 - resReductionPct);
+    return {
+      id, raw, effectiveRes, resReductionPct, mitigated,
+    };
+  });
+
+  const totalMitigated = physicalMitigated + elementalDetails.reduce((sum, d) => sum + d.mitigated, 0);
+
+  // --- Expected multipliers (expected value, not random) ---
+  const critChance = Math.min(stats.critChance || 0, stats.critChanceCap || 1);
+  const critDamage = stats.critDamage || 1;
+  const doubleDamageChance = Math.min(stats.doubleDamageChance || 0, 1);
+  const expectedCritMultiplier = 1 + critChance * (critDamage - 1);
+  const expectedDoubleMultiplier = 1 + doubleDamageChance;
+
+  const expectedHit = totalMitigated * expectedCritMultiplier * expectedDoubleMultiplier;
+  const attackSpeed = stats.attackSpeed || 1;
+  const dps = expectedHit * attackSpeed;
+
+  return {
+    physicalRaw,
+    effectiveArmor,
+    armorReductionPct,
+    physicalMitigated,
+    elementalDetails,
+    totalMitigated,
+    critChance,
+    critDamage,
+    expectedCritMultiplier,
+    doubleDamageChance,
+    expectedDoubleMultiplier,
+    expectedHit,
+    attackSpeed,
+    dps,
+  };
 }
 
 /**

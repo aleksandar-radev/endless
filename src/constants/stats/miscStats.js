@@ -35,6 +35,7 @@ export const MISC_STATS = {
     item: { tierScalingMaxPercent: createTierScaling(8, 100, 1.2) },
     itemTags: ['misc', 'jewelry', 'magic'],
     sub: 'resources',
+    forceNotShow: true,
     skills: createDefaultSkillBonusesPercent(),
   }),
   manaRegen: createStat({
@@ -334,11 +335,13 @@ export const MISC_STATS = {
     },
     itemTags: ['defense', 'jewelry', 'gloves', 'misc'],
     sub: 'misc',
+    forceNotShow: true,
     skills: createDefaultSkillBonusesFlat('allAttributes'),
   }),
   allAttributesPercent: createPercentStat({
     dec: 1,
     sub: 'misc',
+    forceNotShow: true,
     skills: createDefaultSkillBonusesPercent(),
   }),
   canDualWieldTwoHanded: createHiddenStat(),

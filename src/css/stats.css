@@ -268,6 +268,18 @@
   text-overflow: ellipsis;
 }
 
+/* Combat panel enemy note – spans full row width */
+.combat-enemy-note {
+  grid-column: span 2;
+  padding: 4px 8px;
+  font-style: italic;
+  color: var(--text-muted);
+  border-bottom: 1px solid #696969;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+}
+
 #character-name {
   display: flex;
   align-items: center;
@@ -279,8 +291,7 @@
 }
 
 #character-name>span.character-name {
-    font-weight: bold;
-    color: rgb(219, 219, 219);
-    font-size: 1.4em;
-  }
-  
+  font-weight: bold;
+  color: rgb(219, 219, 219);
+  font-size: 1.4em;
+}

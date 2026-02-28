@@ -37,8 +37,8 @@ const rollStatValue = (statValue) => {
  * @returns {number}
  */
 const applyTierMultiplier = (statKey, value, tier) => {
-  // Chance stats don't scale with tier
-  if (isChanceStat(statKey)) {
+  // Chance stats and PerLevel stats don't scale with tier
+  if (isChanceStat(statKey) || statKey.endsWith('PerLevel')) {
     return value;
   }
   // Percent stats use smaller multiplier (2x per tier)
@@ -135,7 +135,8 @@ export default class Runes {
       for (let i = count; i < this.equipped.length; i++) {
         const rune = this.equipped[i];
         if (rune) {
-          const idx = this.inventory.findIndex((r) => r === null);
+          const limit = FROZEN_RUNE_SLOTS + this.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
+          const idx = this.inventory.findIndex((r, slotIdx) => slotIdx >= FROZEN_RUNE_SLOTS && slotIdx < limit && r === null);
           if (idx !== -1) this.inventory[idx] = rune;
         }
       }
@@ -168,9 +169,7 @@ export default class Runes {
 
     const limit = FROZEN_RUNE_SLOTS + this.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
     let idx = this.inventory.findIndex((r, slotIdx) => slotIdx >= FROZEN_RUNE_SLOTS && slotIdx < limit && r === null);
-    if (idx === -1) {
-      idx = this.inventory.findIndex((r) => r === null);
-    }
+
     if (idx === -1) return null;
 
     const rolledStats = rollRuneStats(base, tier, level);
@@ -224,7 +223,18 @@ export default class Runes {
   unequip(slotIndex, inventoryIndex) {
     const rune = this.equipped[slotIndex];
     if (!rune) return;
-    const dest = inventoryIndex !== undefined ? inventoryIndex : this.inventory.findIndex((r) => r === null);
+    const limit = FROZEN_RUNE_SLOTS + this.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
+
+    let dest = -1;
+    if (inventoryIndex !== undefined) {
+      if (!this.isValidInventoryIndex(inventoryIndex)) return;
+      const targetTab = this.getTabIndexForSlot(inventoryIndex);
+      if (targetTab === null && !this.isFrozenIndex(inventoryIndex)) return;
+      dest = inventoryIndex;
+    } else {
+      dest = this.inventory.findIndex((r, slotIdx) => slotIdx >= FROZEN_RUNE_SLOTS && slotIdx < limit && r === null);
+    }
+
     if (dest === -1) return;
     const previous = this.inventory[dest];
     this.inventory[dest] = rune;

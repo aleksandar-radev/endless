@@ -10,7 +10,8 @@ import { navigationManager } from '../utils/navigationManager.js';
 import { calculateArmorReduction,
   calculateEvasionChance,
   calculateHitChance,
-  calculateResistanceReduction } from '../combat.js';
+  calculateResistanceReduction,
+  calculateExpectedDamageVsEnemy } from '../combat.js';
 import { t, tp } from '../i18n.js';
 import { ELEMENTS } from '../constants/common.js';
 
@@ -43,6 +44,9 @@ const ELEMENT_IDS = Object.keys(ELEMENTS);
 const DAMAGE_PERCENT_SOURCES = {
   damage: ['totalDamagePercent', 'damagePercent'],
   elementalDamage: ['totalDamagePercent', 'elementalDamagePercent'],
+  life: ['lifePercent'],
+  lifeRegen: ['lifeRegenPercent'],
+  mana: ['manaPercent'],
   thornsDamage: {
     additive: ['totalDamagePercent', 'damagePercent'],
     percent: 'thornsDamagePercent',
@@ -51,6 +55,14 @@ const DAMAGE_PERCENT_SOURCES = {
 
 ELEMENT_IDS.forEach((id) => {
   DAMAGE_PERCENT_SOURCES[`${id}Damage`] = { additive: ['totalDamagePercent', 'elementalDamagePercent', `${id}DamagePercent`] };
+});
+
+// Defense / combat stats: show their percent bonus in parentheses on the main stat rows
+DAMAGE_PERCENT_SOURCES.armor = ['armorPercent'];
+DAMAGE_PERCENT_SOURCES.evasion = ['evasionPercent'];
+DAMAGE_PERCENT_SOURCES.attackRating = ['attackRatingPercent'];
+ELEMENT_IDS.forEach((id) => {
+  DAMAGE_PERCENT_SOURCES[`${id}Resistance`] = [`${id}ResistancePercent`, 'allResistancePercent'];
 });
 
 function appendDamagePercentBonus(el, key) {
@@ -76,6 +88,226 @@ function appendDamagePercentBonus(el, key) {
   const decimals = decimalKeys.reduce((max, statKey) => Math.max(max, getStatDecimalPlaces(statKey)), 0);
   const formattedPercent = (normalized * 100).toFixed(decimals);
   el.textContent = `${el.textContent} (${formattedPercent}%)`;
+}
+
+function buildAvgHitTooltip(enemy) {
+  if (!enemy) {
+    return html`<strong>${t('stats.combat.avgHit')}</strong><br />${t('stats.combat.noEnemy')}`;
+  }
+  const d = calculateExpectedDamageVsEnemy(hero, enemy);
+  const fmt = (n) => formatNumber(Math.round(n));
+  const pct = (n) => (n * 100).toFixed(2) + '%';
+
+  // Physical row
+  let rows = `<tr><td><strong>${t('stats.combat.tooltip.physical')}</strong></td>` +
+    `<td style="text-align:right">${fmt(d.physicalRaw)}</td>` +
+    `<td>− ${pct(d.armorReductionPct)} ${t('stats.combat.tooltip.armor')}</td>` +
+    `<td style="text-align:right">= ${fmt(d.physicalMitigated)}</td></tr>`;
+
+  // Elemental rows (only non-zero damage)
+  d.elementalDetails.forEach(({
+    id, raw, resReductionPct, mitigated,
+  }) => {
+    if (raw <= 0) return;
+    rows += `<tr><td>${ELEMENTS[id].icon} ${id.charAt(0).toUpperCase() + id.slice(1)}</td>` +
+      `<td style="text-align:right">${fmt(raw)}</td>` +
+      `<td>− ${pct(resReductionPct)} ${t('stats.combat.tooltip.res')}</td>` +
+      `<td style="text-align:right">= ${fmt(mitigated)}</td></tr>`;
+  });
+
+  // Multiplier rows
+  const critLine = d.critChance > 0
+    ? `<tr><td colspan="4" style="padding-top:4px">${t('stats.combat.tooltip.crit')}: ` +
+      `${(d.critChance * 100).toFixed(1)}% × ${d.critDamage.toFixed(2)}x ` +
+      `= <strong>×${d.expectedCritMultiplier.toFixed(3)}</strong></td></tr>` : '';
+
+  const doubleLine = d.doubleDamageChance > 0
+    ? `<tr><td colspan="4">${t('stats.combat.tooltip.double')}: ` +
+      `${(d.doubleDamageChance * 100).toFixed(1)}% ` +
+      `= <strong>×${d.expectedDoubleMultiplier.toFixed(3)}</strong></td></tr>` : '';
+
+  return html`
+    <strong>${t('stats.combat.avgHit')}</strong> <em style="color:var(--text-muted)">${tp('stats.combat.vsEnemy', { name: enemy.name || '' })}</em>
+    <table style="border-collapse:collapse;margin-top:6px;min-width:280px">
+      <tr style="font-size:0.8em;color:var(--text-muted)">
+        <th style="text-align:left">${t('stats.combat.tooltip.type')}</th>
+        <th style="text-align:right">${t('stats.combat.tooltip.base')}</th>
+        <th></th>
+        <th style="text-align:right">${t('stats.combat.tooltip.after')}</th>
+      </tr>
+      ${rows}
+    </table>
+    <hr style="border:none;border-top:1px solid var(--border);margin:4px 0" />
+    <div>${t('stats.combat.tooltip.totalBefore')}: <strong>${fmt(d.totalMitigated)}</strong></div>
+    <table style="border-collapse:collapse;margin-top:4px">
+      ${critLine}${doubleLine}
+    </table>
+    <hr style="border:none;border-top:1px solid var(--border);margin:4px 0" />
+    <div><strong>${t('stats.combat.avgHit')}: ~ ${fmt(d.expectedHit)}</strong></div>
+  `;
+}
+
+function buildAvgDpsTooltip(enemy) {
+  if (!enemy) {
+    return html`<strong>${t('stats.combat.avgDps')}</strong><br />${t('stats.combat.noEnemy')}`;
+  }
+  const d = calculateExpectedDamageVsEnemy(hero, enemy);
+  const fmt = (n) => formatNumber(Math.round(n));
+  return html`
+    <strong>${t('stats.combat.avgDps')}</strong> <em style="color:var(--text-muted)">${tp('stats.combat.vsEnemy', { name: enemy.name || '' })}</em>
+    <hr style="border:none;border-top:1px solid var(--border);margin:4px 0" />
+    <div>${t('stats.combat.avgHit')}: ${fmt(d.expectedHit)}</div>
+    <div>${t('stats.combat.tooltip.attackSpeed')}: ${d.attackSpeed.toFixed(2)}/s</div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:4px 0" />
+    <div><strong>${t('stats.combat.avgDps')}: ~ ${fmt(d.dps)}</strong></div>
+  `;
+}
+
+function calculatePhysicalPenetrationImpact(enemy) {
+  if (!enemy) return null;
+  const raw = hero.stats.damage || 0;
+  const baseArmor = Math.max(0, enemy.armor || 0);
+  const noPenReduction = calculateArmorReduction(baseArmor, raw) / 100;
+  const noPenDamage = raw * (1 - noPenReduction);
+
+  const armorPenFlat = hero.stats.armorPenetration || 0;
+  const armorPenPercent = hero.stats.armorPenetrationPercent || 0;
+  const ignoreArmor = hero.stats.ignoreEnemyArmor > 0;
+  const effectiveArmor = ignoreArmor
+    ? 0
+    : Math.max(0, baseArmor * Math.max(0, 1 - armorPenPercent) - armorPenFlat);
+  const withPenReduction = calculateArmorReduction(effectiveArmor, raw) / 100;
+  const withPenDamage = raw * (1 - withPenReduction);
+
+  const bonus = withPenDamage - noPenDamage;
+  const bonusPct = noPenDamage > 0 ? bonus / noPenDamage : 0;
+
+  return {
+    raw,
+    baseArmor,
+    armorPenFlat,
+    armorPenPercent,
+    ignoreArmor,
+    effectiveArmor,
+    noPenDamage,
+    withPenDamage,
+    bonus,
+    bonusPct,
+  };
+}
+
+function calculateElementalPenetrationImpact(enemy) {
+  if (!enemy) return null;
+  const ignoreAllRes = hero.stats.ignoreAllEnemyResistances > 0;
+  const details = ELEMENT_IDS.map((id) => {
+    const raw = hero.stats[`${id}Damage`] || 0;
+    const baseRes = Math.max(0, enemy[`${id}Resistance`] || 0);
+    const noPenReduction = calculateResistanceReduction(baseRes, raw) / 100;
+    const noPenDamage = raw * (1 - noPenReduction);
+
+    const specificFlat = hero.stats[`${id}Penetration`] || 0;
+    const globalFlat = hero.stats.elementalPenetration || 0;
+    const specificPercent = hero.stats[`${id}PenetrationPercent`] || 0;
+    const globalPercent = hero.stats.elementalPenetrationPercent || 0;
+    const resistReductionPercent = hero.stats.reduceEnemyResistancesPercent || 0;
+    const percentTotal = specificPercent + globalPercent + resistReductionPercent;
+    const flatTotal = specificFlat + globalFlat;
+
+    const effectiveRes = ignoreAllRes
+      ? 0
+      : Math.max(0, baseRes * Math.max(0, 1 - percentTotal) - flatTotal);
+    const withPenReduction = calculateResistanceReduction(effectiveRes, raw) / 100;
+    const withPenDamage = raw * (1 - withPenReduction);
+
+    return {
+      id,
+      raw,
+      baseRes,
+      specificFlat,
+      globalFlat,
+      specificPercent,
+      globalPercent,
+      resistReductionPercent,
+      percentTotal,
+      flatTotal,
+      effectiveRes,
+      noPenDamage,
+      withPenDamage,
+      bonus: withPenDamage - noPenDamage,
+    };
+  });
+
+  const noPenDamage = details.reduce((sum, d) => sum + d.noPenDamage, 0);
+  const withPenDamage = details.reduce((sum, d) => sum + d.withPenDamage, 0);
+  const bonus = withPenDamage - noPenDamage;
+  const bonusPct = noPenDamage > 0 ? bonus / noPenDamage : 0;
+
+  return {
+    ignoreAllRes,
+    details,
+    noPenDamage,
+    withPenDamage,
+    bonus,
+    bonusPct,
+  };
+}
+
+function buildPhysicalPenetrationTooltip(enemy) {
+  if (!enemy) {
+    return html`<strong>${t('stats.combat.physicalPenBonus')}</strong><br />${t('stats.combat.noEnemy')}`;
+  }
+  const data = calculatePhysicalPenetrationImpact(enemy);
+  const fmt = (n) => formatNumber(Math.round(n));
+
+  return html`
+    <strong>${t('stats.combat.physicalPenBonus')}</strong> <em style="color:var(--text-muted)">${tp('stats.combat.vsEnemy', { name: enemy.name || '' })}</em>
+    <hr style="border:none;border-top:1px solid var(--border);margin:4px 0" />
+    <div>${t('stats.combat.tooltip.base')}: ${fmt(data.raw)}</div>
+    <div>${t('stats.combat.tooltip.penFlat')}: ${formatNumber(Math.round(data.armorPenFlat))}</div>
+    <div>${t('stats.combat.tooltip.penPercent')}: ${(data.armorPenPercent * 100).toFixed(1)}%</div>
+    <div>${t('stats.combat.tooltip.base')} ${t('stats.combat.tooltip.armor')}: ${fmt(data.baseArmor)}</div>
+    <div>${t('stats.combat.tooltip.after')} ${t('stats.combat.tooltip.armor')}: ${fmt(data.effectiveArmor)}</div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:4px 0" />
+    <div>${t('stats.combat.tooltip.noPenDamage')}: ${fmt(data.noPenDamage)}</div>
+    <div>${t('stats.combat.tooltip.withPenDamage')}: ${fmt(data.withPenDamage)}</div>
+    <div><strong>${t('stats.combat.tooltip.bonus')}: +${fmt(data.bonus)} (${(data.bonusPct * 100).toFixed(2)}%)</strong></div>
+  `;
+}
+
+function buildElementalPenetrationTooltip(enemy) {
+  if (!enemy) {
+    return html`<strong>${t('stats.combat.elementalPenBonus')}</strong><br />${t('stats.combat.noEnemy')}`;
+  }
+  const data = calculateElementalPenetrationImpact(enemy);
+  const fmt = (n) => formatNumber(Math.round(n));
+
+  let rows = '';
+  data.details.forEach((d) => {
+    if (d.raw <= 0) return;
+    rows += `<tr><td>${ELEMENTS[d.id].icon} ${d.id.charAt(0).toUpperCase() + d.id.slice(1)}</td>` +
+      `<td style="text-align:right">${fmt(d.raw)}</td>` +
+      `<td style="text-align:right">${formatNumber(Math.round(d.flatTotal))}</td>` +
+      `<td style="text-align:right">${(d.percentTotal * 100).toFixed(1)}%</td>` +
+      `<td style="text-align:right">+${fmt(d.bonus)}</td></tr>`;
+  });
+
+  return html`
+    <strong>${t('stats.combat.elementalPenBonus')}</strong> <em style="color:var(--text-muted)">${tp('stats.combat.vsEnemy', { name: enemy.name || '' })}</em>
+    <table style="border-collapse:collapse;margin-top:6px;min-width:360px">
+      <tr style="font-size:0.8em;color:var(--text-muted)">
+        <th style="text-align:left">${t('stats.combat.tooltip.type')}</th>
+        <th style="text-align:right">${t('stats.combat.tooltip.base')}</th>
+        <th style="text-align:right">${t('stats.combat.tooltip.penFlat')}</th>
+        <th style="text-align:right">${t('stats.combat.tooltip.penPercent')}</th>
+        <th style="text-align:right">${t('stats.combat.tooltip.bonus')}</th>
+      </tr>
+      ${rows}
+    </table>
+    <hr style="border:none;border-top:1px solid var(--border);margin:4px 0" />
+    <div>${t('stats.combat.tooltip.noPenDamage')}: ${fmt(data.noPenDamage)}</div>
+    <div>${t('stats.combat.tooltip.withPenDamage')}: ${fmt(data.withPenDamage)}</div>
+    <div><strong>${t('stats.combat.tooltip.totalBonus')}: +${fmt(data.bonus)} (${(data.bonusPct * 100).toFixed(2)}%)</strong></div>
+  `;
 }
 
 function formatPeriod(seconds) {
@@ -203,7 +435,19 @@ function getAdvancedAttributeTooltip(attr) {
       name: t('attributes.breakdown.training'), flat: Math.floor(breakdown.training), percent: breakdown.percent.training,
     },
     {
+      name: t('attributes.breakdown.quests'), flat: Math.floor(breakdown.quests), percent: breakdown.percent.quests,
+    },
+    {
+      name: t('attributes.breakdown.achievements'), flat: Math.floor(breakdown.achievements), percent: breakdown.percent.achievements,
+    },
+    {
+      name: t('attributes.breakdown.ascension'), flat: Math.floor(breakdown.ascension), percent: breakdown.percent.ascension,
+    },
+    {
       name: t('attributes.breakdown.soulShop'), flat: Math.floor(breakdown.soul), percent: breakdown.percent.soul,
+    },
+    {
+      name: t('attributes.breakdown.runes'), flat: Math.floor(breakdown.runes), percent: breakdown.percent.runes,
     },
   ].filter((s) => s.flat || s.percent);
 
@@ -247,6 +491,159 @@ function getAdvancedAttributeTooltip(attr) {
     <em>${t('attributes.breakdown.totalFlat')}:</em> ${formatNumber(totalFlat)}<br />
     <em>${t('attributes.breakdown.totalPercent')}:</em> ${(totalPercent * 100).toFixed(1)}%<br />
     <strong>${t('attributes.breakdown.total')}:</strong> ${formatNumber(finalValue)}
+  `;
+}
+
+function getAdvancedStatTooltip(key) {
+  const breakdown = hero.statBreakdown?.[key];
+  if (!breakdown) return html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`;
+
+  const isPercent  = key.endsWith('Percent');
+  const divisor    = getDivisor(key);
+  const decimals   = getStatDecimalPlaces(key);
+  const finalValue = hero.stats[key];
+
+  // Build the ordered list of flat sources (skip for pure percent stats)
+  const flatSources = isPercent ? [] : [
+    {
+      label: t('stats.breakdown.base'),         flat: breakdown.base,         percent: 0,
+    },
+    // For individual resistance stats: show allResistance/allResistancePercent as a dedicated row
+    ...(breakdown.allResistanceFlat !== undefined ? [{
+      label: t('stats.breakdown.allResistance'),
+      flat:    breakdown.allResistanceFlat    || 0,
+      percent: breakdown.allResistancePercent || 0,
+    }] : []),
+    {
+      label: t('stats.breakdown.attributes'),   flat: breakdown.attributes,   percent: breakdown.percent.attributes,
+    },
+    {
+      label: t('stats.breakdown.items'),        flat: breakdown.items,        percent: breakdown.percent.items,
+    },
+    {
+      label: t('stats.breakdown.skills'),       flat: breakdown.skills,       percent: breakdown.percent.skills,
+    },
+    {
+      label: t('stats.breakdown.training'),     flat: breakdown.training,     percent: breakdown.percent.training,
+    },
+    {
+      label: t('stats.breakdown.potions'),      flat: breakdown.perma,        percent: breakdown.percent.perma,
+    },
+    {
+      label: t('stats.breakdown.quests'),       flat: breakdown.quests,       percent: breakdown.percent.quests,
+    },
+    {
+      label: t('stats.breakdown.achievements'), flat: breakdown.achievements, percent: breakdown.percent.achievements,
+    },
+    {
+      label: t('stats.breakdown.prestige'),     flat: breakdown.prestige,     percent: breakdown.percent.prestige,
+    },
+    {
+      label: t('stats.breakdown.ascension'),    flat: breakdown.ascension,    percent: breakdown.percent.ascension,
+    },
+    {
+      label: t('stats.breakdown.soulShop'),     flat: breakdown.soul,         percent: breakdown.percent.soul,
+    },
+    {
+      label: t('stats.breakdown.runes'),        flat: breakdown.runes,        percent: breakdown.percent.runes,
+    },
+  ].filter((s) => s.flat || s.percent);
+
+  // For percent stats, build percent sources instead
+  const percentSources = isPercent ? [
+    { label: t('stats.breakdown.items'),        percent: breakdown.percent.items },
+    { label: t('stats.breakdown.skills'),       percent: breakdown.percent.skills },
+    { label: t('stats.breakdown.training'),     percent: breakdown.percent.training },
+    { label: t('stats.breakdown.potions'),      percent: breakdown.percent.perma },
+    { label: t('stats.breakdown.quests'),       percent: breakdown.percent.quests },
+    { label: t('stats.breakdown.achievements'), percent: breakdown.percent.achievements },
+    { label: t('stats.breakdown.prestige'),     percent: breakdown.percent.prestige },
+    { label: t('stats.breakdown.ascension'),    percent: breakdown.percent.ascension },
+    { label: t('stats.breakdown.soulShop'),     percent: breakdown.percent.soul },
+    { label: t('stats.breakdown.runes'),        percent: breakdown.percent.runes },
+  ].filter((s) => s.percent) : [];
+
+  // Sort by contribution descending so most impactful source appears first
+  flatSources.sort((a, b) => Math.abs(b.flat) - Math.abs(a.flat));
+  percentSources.sort((a, b) => Math.abs(b.percent) - Math.abs(a.percent));
+
+  // Format value based on whether it's a percent stat
+  const fmt = (val) => {
+    if (divisor !== 1) return (val * divisor).toFixed(decimals) + '%';
+    return formatNumber(val.toFixed(decimals));
+  };
+
+  const fmtPct = (pct) => (pct * 100).toFixed(1) + '%';
+
+  const lines = flatSources
+    .map((s) =>
+      `${s.label}: +${fmt(s.flat)}${s.percent ? ` <em>(+${fmtPct(s.percent)})</em>` : ''}`,
+    ).join('<br />');
+
+  const pctLines = percentSources
+    .map((s) => `${s.label}: +${fmtPct(s.percent)}`).join('<br />');
+
+  const descBlock = html`
+    <div style="margin-bottom:8px; font-size:0.9em; color:var(--text-muted);
+                border-bottom: 1px solid var(--border); padding-bottom: 4px;">
+      ${getAttributeTooltip(key)}
+    </div>`;
+
+  // Ad bonus row (if any)
+  const adMultiplier = breakdown.adMultiplier || 0;
+  const adBlock = adMultiplier > 0
+    ? `<div style="color:var(--ad-bonus, #f9a825); margin-top:4px;">
+         ${t('stats.breakdown.ads')}: ×${(1 + adMultiplier).toFixed(2)}
+       </div>`
+    : '';
+
+  // Special notes
+  const noteBlock = (() => {
+    if (key === 'blockChance' && breakdown.hasShield === false) {
+      return `<div style="color:var(--warning)">${t('stats.breakdown.noShield')}</div>`;
+    }
+    if (key === 'life' && breakdown.manaConversion) {
+      return `<div style="font-size:0.85em; color:var(--text-muted);">
+        + ${formatNumber(breakdown.manaConversion.toFixed(decimals))} ${t('stats.breakdown.fromMana')}
+      </div>`;
+    }
+    if (key === 'mana' && breakdown.manaConversion) {
+      return `<div style="font-size:0.85em; color:var(--text-muted);">
+        − ${formatNumber(breakdown.manaConversion.toFixed(decimals))} ${t('stats.breakdown.toLife')}
+      </div>`;
+    }
+    if (key === 'attackSpeed') {
+      return `<div style="font-size:0.8em; color:var(--text-muted); margin-top:2px;">
+        ${t('stats.breakdown.attackSpeedNote')}
+      </div>`;
+    }
+    if ((key === 'critChance' || key === 'blockChance' || key === 'attackSpeed') && breakdown.cap !== undefined) {
+      return `<div style="font-size:0.85em; color:var(--text-muted);">
+        ${t('common.cap')}: ${fmt(breakdown.cap / divisor)}
+      </div>`;
+    }
+    return '';
+  })();
+
+  // Totals row
+  const totalFlat    = flatSources.reduce((s, r) => s + r.flat, 0);
+  const totalPercent = flatSources.reduce((s, r) => s + (r.percent || 0), 0);
+
+  const totalRow = !isPercent
+    ? html`<hr style="border:none; border-top:1px solid var(--border); margin:4px 0" />
+       <em>${t('attributes.breakdown.totalFlat')}:</em> ${fmt(totalFlat)}<br />
+       ${totalPercent ? `<em>${t('attributes.breakdown.totalPercent')}:</em> +${fmtPct(totalPercent)}<br />` : ''}
+       <strong>${t('attributes.breakdown.total')}:</strong> ${fmt(finalValue)}`
+    : html`<hr style="border:none; border-top:1px solid var(--border); margin:4px 0" />
+       <strong>${t('attributes.breakdown.total')}:</strong> ${fmtPct(finalValue)}`;
+
+  return html`
+    <strong>${formatStatName(key)}</strong><br />
+    ${descBlock}
+    ${isPercent ? pctLines : lines}
+    ${adBlock}
+    ${noteBlock}
+    ${totalRow}
   `;
 }
 
@@ -367,6 +764,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
         <button class="subtab-btn ${activeSubTab === 'offense' ? 'active' : ''}" data-subtab="offense">${t('stats.offense')}</button>
         <button class="subtab-btn ${activeSubTab === 'defense' ? 'active' : ''}" data-subtab="defense">${t('stats.defense')}</button>
         <button class="subtab-btn ${activeSubTab === 'misc' ? 'active' : ''}" data-subtab="misc">${t('stats.misc')}</button>
+        <button class="subtab-btn ${activeSubTab === 'combat' ? 'active' : ''}" data-subtab="combat">${t('stats.combat')}</button>
         <button class="elemental-allocation-btn stats-elemental-btn" data-i18n="training.elementalDistributionButton">
           ${t('training.elementalDistributionButton')}
         </button>
@@ -493,7 +891,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           row.appendChild(span);
           targetPanel.appendChild(row);
           lbl.addEventListener('mouseenter', (e) =>
-            showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e),
+            showTooltip(getAdvancedStatTooltip(key), e),
           );
           lbl.addEventListener('mousemove', positionTooltip);
           lbl.addEventListener('mouseleave', hideTooltip);
@@ -539,7 +937,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           panel.appendChild(row);
 
           lbl.addEventListener('mouseenter', (e) =>
-            showTooltip(html`<strong>${formatStatName(key)}</strong><br />${getAttributeTooltip(key)}`, e),
+            showTooltip(getAdvancedStatTooltip(key), e),
           );
           lbl.addEventListener('mousemove', positionTooltip);
           lbl.addEventListener('mouseleave', hideTooltip);
@@ -555,6 +953,60 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
     statsContainer.appendChild(offensePanel);
     statsContainer.appendChild(defensePanel);
     statsContainer.appendChild(miscPanel);
+
+    // Combat panel – derived calculations vs current enemy (always uses 2-col grid layout)
+    const combatPanel = createPanel('combat');
+    combatPanel.classList.add('default'); // always use the 2-column grid regardless of showAllStats
+    const combatRows = [
+      { id: 'combat-hit-chance', labelKey: 'stats.combat.hitChance' },
+      {
+        id: 'combat-avg-hit', labelKey: 'stats.combat.avgHit', getTooltip: () => buildAvgHitTooltip(game.currentEnemy),
+      },
+      {
+        id: 'combat-avg-dps', labelKey: 'stats.combat.avgDps', getTooltip: () => buildAvgDpsTooltip(game.currentEnemy),
+      },
+      {
+        id: 'combat-physical-pen-bonus', labelKey: 'stats.combat.physicalPenBonus', getTooltip: () => buildPhysicalPenetrationTooltip(game.currentEnemy),
+      },
+      {
+        id: 'combat-elemental-pen-bonus', labelKey: 'stats.combat.elementalPenBonus', getTooltip: () => buildElementalPenetrationTooltip(game.currentEnemy),
+      },
+      { id: 'combat-armor-reduction', labelKey: 'stats.combat.armorReduction' },
+      { id: 'combat-evade-chance', labelKey: 'stats.combat.evadeChance' },
+      ...ELEMENT_IDS.map((el) => ({
+        id: `combat-${el}-resistance-reduction`,
+        labelKey: `stats.combat.${el}ResistanceReduction`,
+      })),
+    ];
+    const combatNoteEl = document.createElement('div');
+    combatNoteEl.id = 'combat-enemy-note';
+    combatNoteEl.className = 'combat-enemy-note';
+    combatPanel.appendChild(combatNoteEl);
+    combatRows.forEach(({
+      id, labelKey, getTooltip,
+    }) => {
+      const row = document.createElement('div');
+      row.className = 'stat-row';
+      const lbl = document.createElement('span');
+      lbl.className = 'stat-label';
+      const lblText = t(labelKey);
+      if (lblText.includes('<')) lbl.innerHTML = lblText;
+      else lbl.textContent = lblText;
+      if (getTooltip) {
+        lbl.style.cursor = 'help';
+        const tooltipClass = id === 'combat-avg-hit' || id === 'combat-avg-dps' || id === 'combat-physical-pen-bonus' || id === 'combat-elemental-pen-bonus' ? 'combat-wide-tooltip' : '';
+        lbl.addEventListener('mouseenter', (e) => showTooltip(getTooltip(), e, tooltipClass));
+        lbl.addEventListener('mousemove', positionTooltip);
+        lbl.addEventListener('mouseleave', hideTooltip);
+      }
+      const val = document.createElement('span');
+      val.id = `${id}-value`;
+      val.textContent = '—';
+      row.appendChild(lbl);
+      row.appendChild(val);
+      combatPanel.appendChild(row);
+    });
+    statsContainer.appendChild(combatPanel);
 
     // Tab switching logic
     statsContainer.querySelectorAll('.subtab-btn').forEach((btn) => {
@@ -632,64 +1084,87 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
       ((hero.exp / hero.getExpToNextLevel()) * 100).toFixed(1) + '%';
     document.getElementById('exp-to-next-level-value').textContent = formatNumber(hero.getExpToNextLevel() || 100);
 
-    // Add enemy-based calculations only if an enemy exists
+    // Update combat panel derived calculations
     const enemy = game.currentEnemy;
-
-    // Add hit chance percentage to attackRating
-    const attackRatingEl = document.getElementById('attackRating-value');
-    if (attackRatingEl) {
-      attackRatingEl.textContent = formatNumber(hero.stats.attackRating);
-      if (enemy) {
-        const hitPct =
-          calculateHitChance(
-            hero.stats.attackRating,
-            enemy.evasion,
-            undefined,
-            hero.stats.chanceToHitPercent || 0,
-          ).toFixed(2) + '%';
-        attackRatingEl.appendChild(document.createTextNode(` (${hitPct})`));
-      }
+    const combatNoteUpdate = document.getElementById('combat-enemy-note');
+    if (combatNoteUpdate) {
+      combatNoteUpdate.textContent = enemy
+        ? tp('stats.combat.vsEnemy', { name: enemy.name || '' })
+        : t('stats.combat.noEnemy');
     }
 
-    // Add armor reduction percentage to armor
-    const armorEl = document.getElementById('armor-value');
-    if (armorEl) {
-      armorEl.textContent = formatNumber(hero.stats.armor || 0);
-      if (enemy) {
-        // Use PoE2 formula: reduction = armor / (armor + 10 * enemy damage)
-        const reduction = calculateArmorReduction(hero.stats.armor, enemy.damage);
-        armorEl.appendChild(document.createTextNode(` (${reduction.toFixed(2)}%)`));
-      }
+    const combatArmorEl = document.getElementById('combat-armor-reduction-value');
+    if (combatArmorEl) {
+      combatArmorEl.textContent = enemy
+        ? calculateArmorReduction(hero.stats.armor, enemy.damage).toFixed(2) + '%'
+        : '—';
     }
 
-    // Add elemental resistance reduction percentages
+    const combatEvadeEl = document.getElementById('combat-evade-chance-value');
+    if (combatEvadeEl) {
+      combatEvadeEl.textContent = enemy
+        ? calculateEvasionChance(hero.stats.evasion, enemy.attackRating).toFixed(2) + '%'
+        : '—';
+    }
+
+    const combatHitEl = document.getElementById('combat-hit-chance-value');
+    if (combatHitEl) {
+      combatHitEl.textContent = enemy
+        ? calculateHitChance(
+          hero.stats.attackRating,
+          enemy.evasion,
+          undefined,
+          hero.stats.chanceToHitPercent || 0,
+        ).toFixed(2) + '%'
+        : '—';
+    }
+
     const resistanceMap = [
-      ['fireResistance', 'fireDamage'],
-      ['coldResistance', 'coldDamage'],
-      ['airResistance', 'airDamage'],
-      ['earthResistance', 'earthDamage'],
-      ['lightningResistance', 'lightningDamage'],
-      ['waterResistance', 'waterDamage'],
+      ['fire', 'fireDamage'],
+      ['cold', 'coldDamage'],
+      ['air', 'airDamage'],
+      ['earth', 'earthDamage'],
+      ['lightning', 'lightningDamage'],
+      ['water', 'waterDamage'],
     ];
-    resistanceMap.forEach(([resKey, dmgKey]) => {
-      const el = document.getElementById(`${resKey}-value`);
+    resistanceMap.forEach(([element, dmgKey]) => {
+      const el = document.getElementById(`combat-${element}-resistance-reduction-value`);
       if (el) {
-        const value = formatNumber(hero.stats[resKey].toFixed(getStatDecimalPlaces(resKey)));
-        el.textContent = value;
-        if (enemy) {
-          const reduction = calculateResistanceReduction(hero.stats[resKey], enemy[dmgKey]);
-          el.appendChild(document.createTextNode(` (${reduction.toFixed(2)}%)`));
-        }
+        el.textContent = enemy
+          ? calculateResistanceReduction(hero.stats[`${element}Resistance`], enemy[dmgKey]).toFixed(2) + '%'
+          : '—';
       }
     });
 
-    // add evasion reduction percentage to evasion
-    const evasionEl = document.getElementById('evasion-value');
-    if (evasionEl) {
-      evasionEl.textContent = formatNumber(hero.stats.evasion || 0);
+    // Avg hit and avg DPS
+    const avgHitEl = document.getElementById('combat-avg-hit-value');
+    const avgDpsEl = document.getElementById('combat-avg-dps-value');
+    if (avgHitEl || avgDpsEl) {
       if (enemy) {
-        const er = calculateEvasionChance(hero.stats.evasion, enemy.attackRating).toFixed(2) + '%';
-        evasionEl.appendChild(document.createTextNode(` (${er})`));
+        const d = calculateExpectedDamageVsEnemy(hero, enemy);
+        if (avgHitEl) avgHitEl.textContent = '~' + formatNumber(Math.round(d.expectedHit));
+        if (avgDpsEl) avgDpsEl.textContent = '~' + formatNumber(Math.round(d.dps));
+      } else {
+        if (avgHitEl) avgHitEl.textContent = '—';
+        if (avgDpsEl) avgDpsEl.textContent = '—';
+      }
+    }
+
+    const physicalPenEl = document.getElementById('combat-physical-pen-bonus-value');
+    const elementalPenEl = document.getElementById('combat-elemental-pen-bonus-value');
+    if (physicalPenEl || elementalPenEl) {
+      if (enemy) {
+        const p = calculatePhysicalPenetrationImpact(enemy);
+        const e = calculateElementalPenetrationImpact(enemy);
+        if (physicalPenEl) {
+          physicalPenEl.textContent = `+${formatNumber(Math.round(p.bonus))} (${(p.bonusPct * 100).toFixed(2)}%)`;
+        }
+        if (elementalPenEl) {
+          elementalPenEl.textContent = `+${formatNumber(Math.round(e.bonus))} (${(e.bonusPct * 100).toFixed(2)}%)`;
+        }
+      } else {
+        if (physicalPenEl) physicalPenEl.textContent = '—';
+        if (elementalPenEl) elementalPenEl.textContent = '—';
       }
     }
   }
