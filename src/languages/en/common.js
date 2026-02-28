@@ -42,6 +42,7 @@ export default {
   'common.max': 'Max',
   'common.bulkBuy': 'Bulk Buy',
   'common.min': 'Min',
+  'common.locked': 'Locked',
   'common.alreadyPurchased': 'Already purchased!',
   'common.notEnoughSouls': 'Not enough souls!',
   'common.purchased': 'Purchased',

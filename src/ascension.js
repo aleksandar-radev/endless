@@ -16,6 +16,7 @@ import { t, tp } from './i18n.js';
 import { ELEMENTS } from './constants/common.js';
 import { BASE_RUNE_SLOTS } from './runes.js';
 import { renderRunesUI } from './ui/runesUi.js';
+import { updateInventoryGrid } from './ui/inventoryUi.js';
 
 const ELEMENT_DAMAGE_STATS = Object.keys(ELEMENTS).map((id) => `${id}Damage`);
 const ELEMENT_RESISTANCE_STATS = Object.keys(ELEMENTS).map((id) => `${id}Resistance`);
@@ -246,6 +247,13 @@ export const ASCENSION_CATEGORIES = {
         cost: (lvl) => 2 + lvl,
         maxLevel: 8,
       },
+      inventoryTabs: {
+        label: 'ascension.upgrade.inventoryTabs',
+        bonus: 1,
+        effect: 'inventoryTabUnlocks',
+        cost: (lvl) => 4 + lvl,
+        maxLevel: 3,
+      },
       runeRetention: {
         label: 'ascension.upgrade.runeRetention',
         bonus: 1,
@@ -462,6 +470,12 @@ export default class Ascension {
     if (key === 'runeTabs') {
       try {
         renderRunesUI();
+      } catch {}
+    }
+
+    if (key === 'inventoryTabs') {
+      try {
+        updateInventoryGrid();
       } catch {}
     }
 

@@ -1,4 +1,8 @@
 export default {
+  'inventory.moveToTab': '移动到分页',
+  'inventory.tabTooltip': '第{tab}页 · 已用{used}/{capacity}个槽位',
+  'inventory.tabLockedTooltip': '通过飞升升级解锁更多物品分页。',
+  'inventory.lockedTabOption': '第{tab}页（未解锁）',
   'inventory.items': '物品',
   'inventory.materials': '材料',
   'inventory.options': '分解选项',

@@ -271,6 +271,9 @@ function openUpgradeInfoModal(key) {
     }
     updateAscensionUI();
     if (key === 'runeSlots' || key === 'runeTabs') renderRunesUI();
+    if (key === 'inventoryTabs') {
+      import('./inventoryUi.js').then((m) => m.updateInventoryGrid()).catch(() => {});
+    }
     update();
   };
   modal.querySelector('.ascension-upgrade-buy').onclick = doBuy;

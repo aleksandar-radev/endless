@@ -1,4 +1,8 @@
 export default {
+  'inventory.moveToTab': 'Mover a pestaña',
+  'inventory.tabTooltip': 'Pestaña {tab} · {used}/{capacity} espacios usados',
+  'inventory.tabLockedTooltip': 'Desbloquea más pestañas de inventario mediante mejoras de Ascensión.',
+  'inventory.lockedTabOption': 'Pestaña {tab} (bloqueada)',
   'inventory.items': 'Objetos',
   'inventory.materials': 'Materiales',
   'inventory.options': 'Opciones de Desguace',

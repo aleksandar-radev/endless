@@ -1,5 +1,5 @@
 import Item, { AVAILABLE_STATS } from './item.js';
-import { game, hero, statistics, dataManager, crystalShop, options } from './globals.js';
+import { game, hero, statistics, dataManager, crystalShop, options, ascension } from './globals.js';
 import { showToast, updateResources, formatStatName } from './ui/ui.js';
 import { t, tp } from './i18n.js';
 import { createModal, closeModal } from './ui/modal.js';
@@ -38,8 +38,11 @@ export function requestMaterialsUiRefresh({ immediate = false } = {}) {
   }
 }
 
-export const ITEM_SLOTS = 210;
+export const INVENTORY_TAB_COUNT = 4;
+export const INVENTORY_TAB_SIZE = 180;
+export const BASE_UNLOCKED_INVENTORY_TABS = 1;
 export const PERSISTENT_SLOTS = 30;
+export const ITEM_SLOTS = PERSISTENT_SLOTS + INVENTORY_TAB_COUNT * INVENTORY_TAB_SIZE;
 export const MATERIALS_SLOTS = 120;
 
 export default class Inventory {
@@ -79,7 +82,7 @@ export default class Inventory {
       });
 
       // Restore inventory items
-      this.inventoryItems = savedData.inventoryItems.map((item) => {
+      const restoredItems = savedData.inventoryItems.map((item) => {
         if (item) {
           // Pass existing stats when creating item
           const restoredItem = new Item({
@@ -96,6 +99,12 @@ export default class Inventory {
         }
         return null;
       });
+      // Pad to ensure we have exactly ITEM_SLOTS items, to support expanding inventory size (e.g. adding tabs)
+      this.inventoryItems = [
+        ...restoredItems,
+        ...new Array(Math.max(0, ITEM_SLOTS - restoredItems.length)).fill(null)
+      ].slice(0, ITEM_SLOTS);
+      
       this.materials = savedData.materials
         ? savedData.materials.map((mat) => (mat ? { id: mat.id, qty: mat.qty } : null))
         : new Array(MATERIALS_SLOTS).fill(null);
@@ -959,9 +968,11 @@ export default class Inventory {
     let crystalsGained = 0;
     const matsGained = {};
 
-    // Skip first PERSISTENT_SLOTS slots when salvaging
+    const limit = PERSISTENT_SLOTS + this.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
+
+    // Skip first PERSISTENT_SLOTS slots when salvaging and locked tabs
     this.inventoryItems = this.inventoryItems.map((item, index) => {
-      if (index < PERSISTENT_SLOTS) return item; // Preserve persistent slots
+      if (index < PERSISTENT_SLOTS || index >= limit) return item; // Preserve persistent slots and locked tabs
       if (item && rarity == item.rarity) {
         console.debug('Salvaging item:', item);
         console.debug(rarity, '==', item.rarity);
@@ -1027,8 +1038,10 @@ export default class Inventory {
     let crystalsGained = 0;
     const matsGained = {};
 
+    const limit = PERSISTENT_SLOTS + this.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
+
     this.inventoryItems = this.inventoryItems.map((item, index) => {
-      if (index < PERSISTENT_SLOTS) return item;
+      if (index < PERSISTENT_SLOTS || index >= limit) return item;
       if (item) {
         salvagedItems++;
         if (this.salvageUpgradeMaterials) {
@@ -1208,6 +1221,51 @@ export default class Inventory {
     // fallback
     return ITEM_RARITY.NORMAL.name;
   }
+  getUnlockedTabCount() {
+    const bonus = ascension?.getBonuses?.()?.inventoryTabUnlocks || 0;
+    const unlocked = BASE_UNLOCKED_INVENTORY_TABS + bonus;
+    return Math.min(INVENTORY_TAB_COUNT, Math.max(BASE_UNLOCKED_INVENTORY_TABS, unlocked));
+  }
+
+  isTabUnlocked(tabIndex) {
+    return tabIndex < this.getUnlockedTabCount();
+  }
+
+  getTabBounds(tabIndex) {
+    const safeIndex = Math.min(Math.max(tabIndex, 0), INVENTORY_TAB_COUNT - 1);
+    const start = PERSISTENT_SLOTS + safeIndex * INVENTORY_TAB_SIZE;
+    const end = Math.min(start + INVENTORY_TAB_SIZE, this.inventoryItems.length);
+    return { start, end };
+  }
+
+  getTabIndexForSlot(index) {
+    if (index < PERSISTENT_SLOTS) return null;
+    const normalized = index - PERSISTENT_SLOTS;
+    if (normalized < 0 || normalized >= INVENTORY_TAB_COUNT * INVENTORY_TAB_SIZE) return null;
+    const tab = Math.floor(normalized / INVENTORY_TAB_SIZE);
+    return tab < this.getUnlockedTabCount() ? tab : null;
+  }
+
+  moveItemToTab(itemIndex, tabIndex) {
+    if (itemIndex < 0 || itemIndex >= this.inventoryItems.length) return false;
+    if (tabIndex < 0 || tabIndex >= this.getUnlockedTabCount()) return false;
+
+    const { start, end } = this.getTabBounds(tabIndex);
+    
+    // Check if the item is already in the target tab
+    if (itemIndex >= start && itemIndex < end) return false;
+
+    // Find first empty slot in target tab
+    const emptySlot = this.inventoryItems.findIndex((item, idx) => idx >= start && idx < end && item === null);
+    if (emptySlot !== -1) {
+      this.inventoryItems[emptySlot] = this.inventoryItems[itemIndex];
+      this.inventoryItems[itemIndex] = null;
+      dataManager.saveGame();
+      return true;
+    }
+    return false;
+  }
+
   addItemToInventory(item, specificPosition = null) {
     if (!item) {
       console.error('Attempted to add null item to inventory');
@@ -1219,8 +1277,9 @@ export default class Inventory {
     if (specificPosition !== null && specificPosition < ITEM_SLOTS && !this.inventoryItems[specificPosition]) {
       this.inventoryItems[specificPosition] = item;
     } else {
-      // Find first empty slot after persistent slots (40)
-      const emptySlot = this.inventoryItems.findIndex((slot, index) => slot === null && index >= PERSISTENT_SLOTS);
+      // Find first empty slot after persistent slots, bounded by unlocked tabs
+      const limit = PERSISTENT_SLOTS + this.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
+      const emptySlot = this.inventoryItems.findIndex((slot, index) => slot === null && index >= PERSISTENT_SLOTS && index < limit);
       if (emptySlot !== -1) {
         this.inventoryItems[emptySlot] = item;
       }
@@ -1322,7 +1381,8 @@ export default class Inventory {
     const item = this.equippedItems[slot];
     if (!item) return false;
 
-    const emptySlot = this.inventoryItems.findIndex((s) => s === null);
+    const limit = PERSISTENT_SLOTS + this.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
+    const emptySlot = this.inventoryItems.findIndex((s, idx) => s === null && idx < limit);
     if (emptySlot === -1) {
       showToast(t('inventory.notEnoughInventorySpace'), 'error');
       return false;
@@ -1334,7 +1394,7 @@ export default class Inventory {
     // Handle Arrows if Bow is unequipped
     if (slot === 'weapon' && item.type === 'BOW' && this.equippedItems.offhand?.type === 'ARROWS') {
       const arrows = this.equippedItems.offhand;
-      const secondEmpty = this.inventoryItems.findIndex((s, idx) => s === null && idx !== emptySlot);
+      const secondEmpty = this.inventoryItems.findIndex((s, idx) => s === null && idx < limit && idx !== emptySlot);
       if (secondEmpty !== -1) {
         this.inventoryItems[secondEmpty] = arrows;
         delete this.equippedItems.offhand;
@@ -1366,10 +1426,11 @@ export default class Inventory {
   equipItem(item, slot) {
     if (!item) return false;
     const currentPosition = this.inventoryItems.findIndex((i) => i && i.id === item.id);
+    const limit = PERSISTENT_SLOTS + this.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
 
     // If equipping to the slot it's already in, treat as unequip
     if (this.equippedItems[slot] && this.equippedItems[slot].id === item.id) {
-      const emptySlot = this.inventoryItems.findIndex((s) => s === null);
+      const emptySlot = this.inventoryItems.findIndex((s, idx) => s === null && idx < limit);
       if (emptySlot !== -1) {
         this.inventoryItems[emptySlot] = item;
         // If unequipping BOW, must unequip ARROWS too
@@ -1378,7 +1439,7 @@ export default class Inventory {
           // But `equipItem` handles "equip to slot". "Unequip" logic is inside this block.
           // We need to handle returning the offhand too if it's ARROWS.
           const offhandArrows = this.equippedItems.offhand;
-          const secondEmpty = this.inventoryItems.findIndex((s, idx) => s === null && idx !== emptySlot);
+          const secondEmpty = this.inventoryItems.findIndex((s, idx) => s === null && idx < limit && idx !== emptySlot);
           if (secondEmpty !== -1) {
             this.inventoryItems[secondEmpty] = offhandArrows;
             delete this.equippedItems.offhand;
@@ -1462,7 +1523,7 @@ export default class Inventory {
     if (currentPosition !== -1) {
       availableSlotsQueue.push(currentPosition);
     }
-    for (let i = 0; i < this.inventoryItems.length; i++) {
+    for (let i = 0; i < limit; i++) {
       if (i === currentPosition) continue;
       if (this.inventoryItems[i] === null) {
         availableSlotsQueue.push(i);

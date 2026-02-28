@@ -1,5 +1,5 @@
 import { hero, inventory, dataManager, crystalShop } from '../globals.js';
-import { ITEM_SLOTS, MATERIALS_SLOTS, PERSISTENT_SLOTS, requestMaterialsUiRefresh } from '../inventory.js';
+import { ITEM_SLOTS, MATERIALS_SLOTS, PERSISTENT_SLOTS, INVENTORY_TAB_COUNT, INVENTORY_TAB_SIZE, requestMaterialsUiRefresh } from '../inventory.js';
 import { MATERIALS } from '../constants/materials.js';
 import { hideTooltip, positionTooltip, showToast, showTooltip } from '../ui/ui.js';
 import { ITEM_RARITY, RARITY_ORDER, SLOT_REQUIREMENTS, ITEM_IDS, ITEM_ICONS, WEAPON_TYPES } from '../constants/items.js';
@@ -11,6 +11,7 @@ let selectedItemEl = null;
 let awaitingSlot = false;
 let currentFilter = '';
 let showingInventoryTargets = false;
+let activeInventoryTab = 0;
 
 const html = String.raw;
 const BASE = import.meta.env.VITE_BASE_PATH;
@@ -137,6 +138,7 @@ export function initializeInventoryUI(inv) {
         />
         <span class="search-icon"><img src="${BASE}/icons/search.svg" alt="${t('icon.search')}" /></span>
       </div>
+      <div class="inventory-tabs-container desktop-only"></div>
     </div>
     <div class="inventory-options-panel desktop-only">
       <h3 class="options-title">${t('inventory.options')}</h3>
@@ -226,9 +228,10 @@ export function initializeInventoryUI(inv) {
   `;
   inventoryTab.appendChild(inventoryGrid);
 
-  // Create ITEM_SLOTS empty cells
+  // Create visible empty cells
   const gridContainer = inventoryTab.querySelector('.grid-container');
-  for (let i = 0; i < ITEM_SLOTS; i++) {
+  const VISIBLE_SLOTS = PERSISTENT_SLOTS + INVENTORY_TAB_SIZE;
+  for (let i = 0; i < VISIBLE_SLOTS; i++) {
     const cell = document.createElement('div');
     cell.classList.add('grid-cell');
     if (i < PERSISTENT_SLOTS) {
@@ -623,6 +626,7 @@ export function showSalvageModal(inv) {
             <option value="level-tier-rarity">${t('inventory.levelTierRarity')}</option>
           </select>
         </div>
+        <div class="inventory-tabs-container mobile-only"></div>
       </div>
 
       <div class="inventory-modal-full-content"></div>
@@ -845,12 +849,142 @@ export function showSalvageModal(inv) {
   trash.addEventListener('mouseleave', hideTooltip);
 }
 
+function renderInventoryTabs(inv) {
+  const containers = document.querySelectorAll('.inventory-tabs-container');
+  if (!containers.length) return;
+
+  const unlockedTabs = inv.getUnlockedTabCount();
+
+  containers.forEach((container) => {
+    container.innerHTML = '';
+    const tabsWrapper = document.createElement('div');
+    tabsWrapper.className = 'inventory-tabs-wrapper';
+
+    for (let i = 0; i < INVENTORY_TAB_COUNT; i++) {
+      const isUnlocked = inv.isTabUnlocked(i);
+      const btn = document.createElement('button');
+      btn.className = `inventory-tab-button ${i === activeInventoryTab ? 'active' : ''} ${!isUnlocked ? 'locked' : ''}`;
+
+      const number = document.createElement('div');
+      number.className = 'inventory-tab-number';
+      number.textContent = isUnlocked ? `${i + 1}` : `🔒 ${i + 1}`;
+
+      const count = document.createElement('div');
+      count.className = 'inventory-tab-count';
+
+      const { start, end } = inv.getTabBounds(i);
+      let used = 0;
+      for (let j = start; j < end; j++) {
+        if (inv.inventoryItems[j] !== null) used++;
+      }
+      const capacity = INVENTORY_TAB_SIZE;
+      count.textContent = isUnlocked ? `${used}/${capacity}` : t('common.locked');
+
+      btn.appendChild(number);
+      btn.appendChild(count);
+
+      if (isUnlocked) {
+        btn.title = tp('inventory.tabTooltip', { tab: i + 1, used, capacity });
+      } else {
+        btn.title = t('inventory.tabLockedTooltip');
+      }
+
+      btn.onclick = () => {
+        if (!isUnlocked) return;
+
+        if (selectedItemEl && !awaitingSlot) {
+          const itemData = inventory.getItemById(selectedItemEl.dataset.itemId);
+          if (itemData) {
+            const currentPosition = inventory.inventoryItems.findIndex(item => item && item.id === itemData.id);
+            if (currentPosition !== -1) {
+              if (inventory.moveItemToTab(currentPosition, i)) {
+                clearMobileSelection();
+                updateInventoryGrid();
+                return;
+              }
+            } else {
+              // It's equipped. Find first slot in tab.
+              const emptySlot = inventory.inventoryItems.findIndex((item, idx) => idx >= start && idx < end && item === null);
+              if (emptySlot !== -1) {
+                // Get slot name
+                const sourceSlot = Object.entries(inventory.equippedItems).find(
+                  ([slotName, equipped]) => equipped && equipped.id === itemData.id,
+                )?.[0];
+                if (sourceSlot) {
+                  inventory.inventoryItems[emptySlot] = itemData;
+                  delete inventory.equippedItems[sourceSlot];
+                  inventory.updateItemBonuses();
+                  dataManager.saveGame();
+                  clearMobileSelection();
+                  updateInventoryGrid();
+                  return;
+                }
+              }
+            }
+          }
+        }
+
+        activeInventoryTab = i;
+        updateInventoryGrid();
+      };
+
+      if (isUnlocked) {
+        btn.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          if (i !== activeInventoryTab) {
+            btn.classList.add('drag-over');
+          }
+        });
+        btn.addEventListener('dragleave', () => {
+          btn.classList.remove('drag-over');
+        });
+        btn.addEventListener('drop', (e) => {
+          e.preventDefault();
+          btn.classList.remove('drag-over');
+          if (i === activeInventoryTab) return;
+
+          const itemId = e.dataTransfer.getData('text/plain');
+          const itemData = inventory.getItemById(itemId);
+          if (itemData) {
+            const currentPosition = inventory.inventoryItems.findIndex(item => item && item.id === itemData.id);
+            if (currentPosition !== -1) {
+              if (inventory.moveItemToTab(currentPosition, i)) {
+                updateInventoryGrid();
+              }
+            } else {
+              // Equipped item dragged to tab
+              const emptySlot = inventory.inventoryItems.findIndex((item, idx) => idx >= start && idx < end && item === null);
+              if (emptySlot !== -1) {
+                const sourceSlot = Object.entries(inventory.equippedItems).find(
+                  ([slotName, equipped]) => equipped && equipped.id === itemData.id,
+                )?.[0];
+                if (sourceSlot) {
+                  inventory.inventoryItems[emptySlot] = itemData;
+                  delete inventory.equippedItems[sourceSlot];
+                  inventory.updateItemBonuses();
+                  dataManager.saveGame();
+                  updateInventoryGrid();
+                }
+              }
+            }
+          }
+        });
+      }
+
+      tabsWrapper.appendChild(btn);
+    }
+    container.appendChild(tabsWrapper);
+  });
+}
+
 export function updateInventoryGrid(inv) {
   if (!inv) {
     inv = inventory;
   }
   const inventoryTab = getInventoryTab();
   if (!inventoryTab) return;
+
+  renderInventoryTabs(inv);
 
   const gridContainer = inventoryTab.querySelector('.grid-container');
   if (!gridContainer) return;
@@ -871,10 +1005,14 @@ export function updateInventoryGrid(inv) {
     if (ghost) ghost.remove();
   });
 
-  inv.inventoryItems.forEach((item, index) => {
+  const { start, end } = inv.getTabBounds(activeInventoryTab);
+
+  cells.forEach((cell, i) => {
+    const dataIndex = i < PERSISTENT_SLOTS ? i : start + (i - PERSISTENT_SLOTS);
+    cell.dataset.slotIndex = dataIndex;
+    const item = inv.inventoryItems[dataIndex];
     if (!item) return;
-    const cell = cells[index];
-    if (!cell) return;
+
     const wrapper = document.createElement('button');
     wrapper.type = 'button';
     wrapper.className = `inventory-item rarity-${item.rarity.toLowerCase()}`;
@@ -1179,8 +1317,10 @@ export function handleDrop(e) {
       inventory.equipItem(item, slot.dataset.slot);
     }
   } else if (cell) {
-    const cellIndex = Array.from(cell.parentNode.children).indexOf(cell);
-    inventory.moveItemToPosition(item, cellIndex);
+    const targetIndex = parseInt(cell.dataset.slotIndex, 10);
+    if (!isNaN(targetIndex)) {
+      inventory.moveItemToPosition(item, targetIndex);
+    }
   }
 
   hero.queueRecalculateFromAttributes();
@@ -1464,9 +1604,11 @@ export function updateMaterialsGrid(inv, root = getInventoryTab()) {
 }
 
 export function sortInventory(mode = 'type-rarity-level') {
-  // Separate persistent and non-persistent items
+  const limit = PERSISTENT_SLOTS + inventory.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
+  // Separate persistent, non-persistent, and locked items
   const persistentItems = inventory.inventoryItems.slice(0, PERSISTENT_SLOTS);
-  const nonPersistentItems = inventory.inventoryItems.slice(PERSISTENT_SLOTS).filter((item) => item !== null);
+  const nonPersistentItems = inventory.inventoryItems.slice(PERSISTENT_SLOTS, limit).filter((item) => item !== null);
+  const lockedItems = inventory.inventoryItems.slice(limit);
 
   // Helper for type order
   const typeOrder = (a, b) => {
@@ -1509,11 +1651,12 @@ export function sortInventory(mode = 'type-rarity-level') {
     }
   });
 
-  // Combine persistent items with sorted non-persistent items and remaining nulls
+  // Combine persistent items with sorted non-persistent items, empty slots, and locked items
   inventory.inventoryItems = [
     ...persistentItems,
     ...nonPersistentItems,
-    ...new Array(ITEM_SLOTS - PERSISTENT_SLOTS - nonPersistentItems.length).fill(null),
+    ...new Array(limit - PERSISTENT_SLOTS - nonPersistentItems.length).fill(null),
+    ...lockedItems,
   ];
 
   // Update the UI
@@ -1600,8 +1743,8 @@ function handleCellTap(cellEl) {
     return;
   }
 
-  const targetIndex = getCellIndex(cellEl);
-  if (targetIndex === -1) return;
+  const targetIndex = parseInt(cellEl.dataset.slotIndex, 10);
+  if (isNaN(targetIndex)) return;
 
   const currentIndex = inventory.inventoryItems.findIndex((i) => i && i.id === itemData.id);
   if (currentIndex === targetIndex) {
@@ -1690,12 +1833,45 @@ function openItemContextMenu(itemEl, x, y) {
     equipButtons = `<button data-action="equip">${t('inventory.equip')}</button>`;
   }
 
+  let moveRowHtml = '';
+  if (!equippedSlot) {
+    const unlockedTabs = inventory.getUnlockedTabCount();
+    let optionsHtml = `<option value="" disabled selected>${t('inventory.moveToTab')}</option>`;
+    for (let tab = 0; tab < INVENTORY_TAB_COUNT; tab++) {
+      const isUnlocked = inventory.isTabUnlocked(tab);
+      const text = isUnlocked ? `${tab + 1}` : tp('inventory.lockedTabOption', { tab: tab + 1 });
+      optionsHtml += `<option value="${tab}" ${!isUnlocked ? 'disabled' : ''}>${text}</option>`;
+    }
+    moveRowHtml = `
+      <div class="inventory-move-row" style="margin: 4px 0;">
+        <select class="inventory-move-select" style="width: 100%; padding: 4px;">
+          ${optionsHtml}
+        </select>
+      </div>
+    `;
+  }
+
   menu.innerHTML = `
     ${equipButtons}
     <button data-action="inspect">${t('inventory.inspect')}</button>
     <button data-action="salvage">${t('inventory.salvage')}</button>
+    ${moveRowHtml}
   `;
   document.body.appendChild(menu);
+
+  const moveSelect = menu.querySelector('.inventory-move-select');
+  if (moveSelect) {
+    moveSelect.onchange = (e) => {
+      const tabIndex = Number(e.target.value);
+      if (Number.isNaN(tabIndex)) return;
+      const currentPosition = inventory.inventoryItems.findIndex(i => i && i.id === itemData.id);
+      if (currentPosition !== -1 && inventory.moveItemToTab(currentPosition, tabIndex)) {
+        updateInventoryGrid();
+        clearMobileSelection();
+      }
+      closeItemContextMenu();
+    };
+  }
 
   const handleEquip = (slot) => {
     if (slot) {

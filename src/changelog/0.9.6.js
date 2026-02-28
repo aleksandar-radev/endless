@@ -15,6 +15,7 @@ export default function run() {
       <li>Several intermediate/aggregator stats are now hidden from the main stats panels to keep the UI focused on player-facing values.</li>
       <li>Added new localized labels for combat and stat-breakdown UI content in English, Spanish, and Chinese.</li>
       <li>Disabled milestone multipliers for skills to provide more consistent growth.</li>
+      <li>Added inventory tabs.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

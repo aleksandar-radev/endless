@@ -1,4 +1,8 @@
 export default {
+  'inventory.moveToTab': 'Move to Tab',
+  'inventory.tabTooltip': 'Tab {tab} · {used}/{capacity} slots used',
+  'inventory.tabLockedTooltip': 'Unlock additional inventory tabs through Ascension upgrades.',
+  'inventory.lockedTabOption': 'Tab {tab} (Locked)',
   'inventory.items': 'Items',
   'inventory.materials': 'Materials',
   'inventory.options': 'Salvage Options',
