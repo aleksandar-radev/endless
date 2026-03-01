@@ -562,6 +562,54 @@ let lastPlayerLifeState = {
   ailmentsHash: '',
 };
 
+let cachedPlayerUIElements = null;
+let cachedEnemyUIElements = null;
+
+function getPlayerUIElements() {
+  if (!cachedPlayerUIElements) {
+    cachedPlayerUIElements = {
+      lifeFill: document.getElementById('life-fill'),
+      lifeText: document.getElementById('life-text'),
+      manaFill: document.getElementById('mana-fill'),
+      manaText: document.getElementById('mana-text'),
+      xpFill: document.getElementById('xp-fill'),
+      xpText: document.getElementById('xp-text'),
+    };
+  }
+  return cachedPlayerUIElements;
+}
+
+function getEnemyUIElements() {
+  if (!cachedEnemyUIElements) {
+    const el = (id) => document.getElementById(id);
+    cachedEnemyUIElements = {
+      lifeFill: el('enemy-life-fill'),
+      lifeText: el('enemy-life-text'),
+      damage: el('enemy-damage-value'),
+      armor: el('enemy-armor-value'),
+      evasion: el('enemy-evasion-value'),
+      attackRating: el('enemy-attack-rating-value'),
+      attackSpeed: el('enemy-attack-speed-value'),
+      xp: el('enemy-xp-value'),
+      gold: el('enemy-gold-value'),
+      elementalDamages: {},
+      elementalResistances: {},
+      name: document.querySelector('.enemy-name'),
+      avatar: document.querySelector('.enemy-avatar'),
+      ailmentsContainer: document.querySelector('.enemy-ailments'),
+    };
+    ELEMENT_IDS.forEach((id) => {
+      cachedEnemyUIElements.elementalDamages[id] = el(`enemy-${id}-damage-value`);
+      cachedEnemyUIElements.elementalResistances[id] = el(`enemy-${id}-resistance-value`);
+    });
+  }
+  return cachedEnemyUIElements;
+}
+
+function clearEnemyUICache() {
+  cachedEnemyUIElements = null;
+}
+
 let lastEnemyStatsState = {
   enemy: null,
   currentLife: -1,
@@ -617,21 +665,23 @@ export function updatePlayerLife(force = false) {
   lastPlayerLifeState.expToNextLevel = expToNextLevel;
   lastPlayerLifeState.ailmentsHash = ailmentsHash;
 
+  const ui = getPlayerUIElements();
+
   const lifePercentage = (stats.currentLife / stats.life) * 100;
-  document.getElementById('life-fill').style.width = `${lifePercentage}%`;
-  document.getElementById('life-text').textContent = `${formatNumber(
+  if (ui.lifeFill) ui.lifeFill.style.width = `${lifePercentage}%`;
+  if (ui.lifeText) ui.lifeText.textContent = `${formatNumber(
     Math.max(0, Math.floor(stats.currentLife)),
   )} / ${formatNumber(Math.floor(stats.life))}`;
 
   const manaPercentage = (stats.currentMana / stats.mana) * 100;
-  document.getElementById('mana-fill').style.width = `${manaPercentage}%`;
-  document.getElementById('mana-text').textContent = `${formatNumber(
+  if (ui.manaFill) ui.manaFill.style.width = `${manaPercentage}%`;
+  if (ui.manaText) ui.manaText.textContent = `${formatNumber(
     Math.max(0, Math.floor(stats.currentMana)),
   )} / ${formatNumber(Math.floor(stats.mana))}`;
 
   const xpPercentage = (hero.exp / hero.getExpToNextLevel()) * 100;
-  document.getElementById('xp-fill').style.width = `${xpPercentage}%`;
-  document.getElementById('xp-text').textContent = `${formatNumber(
+  if (ui.xpFill) ui.xpFill.style.width = `${xpPercentage}%`;
+  if (ui.xpText) ui.xpText.textContent = `${formatNumber(
     Math.max(0, Math.floor(hero.exp)),
   )} / ${formatNumber(Math.floor(hero.getExpToNextLevel()))} XP`;
 
@@ -708,56 +758,51 @@ export function updateEnemyStats(force = false) {
   lastEnemyStatsState.heroEvasion = heroEvasion;
   lastEnemyStatsState.heroElementalDamagesHash = heroElementalDamagesHash;
 
+  const ui = getEnemyUIElements();
+
   const lifePercentage = Math.max(0, (enemy.currentLife / enemy.life) * 100);
-  document.getElementById('enemy-life-fill').style.width = `${lifePercentage}%`;
-  document.getElementById('enemy-life-text').textContent = `${formatNumber(
+  if (ui.lifeFill) ui.lifeFill.style.width = `${lifePercentage}%`;
+  if (ui.lifeText) ui.lifeText.textContent = `${formatNumber(
     Math.max(0, Math.floor(enemy.currentLife)),
   )} / ${formatNumber(Math.floor(enemy.life))}`;
 
   // Main stats
-  const dmg = document.getElementById('enemy-damage-value');
-  if (dmg) dmg.textContent = formatNumber(enemy.damage);
+  if (ui.damage) ui.damage.textContent = formatNumber(enemy.damage);
   ELEMENT_IDS.forEach((id) => {
-    const dmgEl = document.getElementById(`enemy-${id}-damage-value`);
+    const dmgEl = ui.elementalDamages[id];
     if (dmgEl) dmgEl.textContent = formatNumber(enemy[`${id}Damage`] || 0);
   });
 
-  const armor = document.getElementById('enemy-armor-value');
-  if (armor) {
+  if (ui.armor) {
     // Use PoE2 formula: reduction = armor / (armor + 10 * damage)
     const reduction = calculateArmorReduction(enemy.armor, hero.stats.damage);
-    armor.textContent = `${formatNumber(Math.floor(enemy.armor || 0))} (${Math.floor(reduction)}%)`;
+    ui.armor.textContent = `${formatNumber(Math.floor(enemy.armor || 0))} (${Math.floor(reduction)}%)`;
   }
-  const evasion = document.getElementById('enemy-evasion-value');
-  if (evasion) {
+  if (ui.evasion) {
     const alwaysEvade = enemy.special?.includes('alwaysEvade');
     const reduction = alwaysEvade
       ? 100
       : calculateEvasionChance(enemy.evasion, hero.stats.attackRating, undefined, hero.stats.chanceToHitPercent || 0);
-    evasion.textContent = `${formatNumber(Math.floor(enemy.evasion || 0))} (${Math.floor(reduction)}%)`;
+    ui.evasion.textContent = `${formatNumber(Math.floor(enemy.evasion || 0))} (${Math.floor(reduction)}%)`;
   }
-  const atkRating = document.getElementById('enemy-attack-rating-value');
-  if (atkRating) {
+  if (ui.attackRating) {
     // Show enemy attack rating and their hit chance against the player
     const alwaysHit = enemy.special?.includes('alwaysHit');
     const hitChance = alwaysHit ? 100 : calculateHitChance(enemy.attackRating, hero.stats.evasion);
-    atkRating.textContent = `${formatNumber(Math.floor(enemy.attackRating || 0))} (${Math.floor(hitChance)}%)`;
+    ui.attackRating.textContent = `${formatNumber(Math.floor(enemy.attackRating || 0))} (${Math.floor(hitChance)}%)`;
   }
-  const atkSpeed = document.getElementById('enemy-attack-speed-value');
-  if (atkSpeed) atkSpeed.textContent = formatNumber((enemy.attackSpeed || 0).toFixed(2));
+  if (ui.attackSpeed) ui.attackSpeed.textContent = formatNumber((enemy.attackSpeed || 0).toFixed(2));
   ELEMENT_IDS.forEach((id) => {
-    const resEl = document.getElementById(`enemy-${id}-resistance-value`);
+    const resEl = ui.elementalResistances[id];
     if (resEl) {
       const reduction = calculateResistanceReduction(enemy[`${id}Resistance`], hero.stats[`${id}Damage`]);
       resEl.textContent = `${formatNumber(Math.floor(enemy[`${id}Resistance`] || 0))} (${Math.floor(reduction)}%)`;
     }
   });
 
-  const xp = document.getElementById('enemy-xp-value');
-  if (xp) xp.textContent = formatNumber(Math.floor(enemy.xp || 0));
+  if (ui.xp) ui.xp.textContent = formatNumber(Math.floor(enemy.xp || 0));
 
-  const gold = document.getElementById('enemy-gold-value');
-  if (gold) gold.textContent = formatNumber(Math.floor(enemy.gold || 0));
+  if (ui.gold) ui.gold.textContent = formatNumber(Math.floor(enemy.gold || 0));
 
   setEnemyName();
   if (game.fightMode === 'explore') {
@@ -765,17 +810,15 @@ export function updateEnemyStats(force = false) {
   }
 
   function setEnemyName() {
-    const enemyNameElement = document.querySelector('.enemy-name');
-    enemyNameElement.textContent = game.currentEnemy.name;
+    if (ui.name) ui.name.textContent = game.currentEnemy.name;
     // Set the enemy image in .enemy-avatar (like hero)
-    const enemyAvatar = document.querySelector('.enemy-avatar');
-    if (enemyAvatar) {
-      let img = enemyAvatar.querySelector('img');
+    if (ui.avatar) {
+      let img = ui.avatar.querySelector('img');
       if (!img) {
         img = document.createElement('img');
         img.alt = game.currentEnemy.name + ' avatar';
-        enemyAvatar.innerHTML = '';
-        enemyAvatar.appendChild(img);
+        ui.avatar.innerHTML = '';
+        ui.avatar.appendChild(img);
       }
       // Use Vite's base path if available, else fallback
       let baseUrl = '';
@@ -791,7 +834,8 @@ export function updateEnemyStats(force = false) {
 
 function updateAilmentIcons() {
   if (window.perfMon?.enabled) window.perfMon.mark('updateAilmentIcons');
-  const ailmentsContainer = document.querySelector('.enemy-ailments');
+  const ui = getEnemyUIElements();
+  const ailmentsContainer = ui.ailmentsContainer;
   if (!ailmentsContainer) return;
 
   const enemy = game.currentEnemy;
@@ -1420,6 +1464,7 @@ function renderRegionPanel(region) {
 
   // Reset memoization state because we are replacing DOM elements
   lastEnemyStatsState.enemy = null;
+  clearEnemyUICache();
 
   const baseHtml = html`<div class="enemy-section">
     <div class="enemy-main-row">
