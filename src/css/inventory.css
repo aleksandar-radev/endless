@@ -88,6 +88,10 @@
   display: none;
 }
 
+.mobile-only {
+  display: none;
+}
+
 @media (max-width: 1200px) {
   .inventory-top-section {
     flex-direction: column;
@@ -104,6 +108,10 @@
     margin: 0.5rem auto;
     width: 100%;
     max-width: 400px;
+  }
+
+  .mobile-only {
+    display: flex;
   }
 
   .mobile-equip-btn {
@@ -1579,6 +1587,15 @@
   margin: 10px 0;
   width: 100%;
 }
+.inventory-tabs-container.mobile-only {
+  display: none;
+}
+@media (max-width: 1200px) {
+  .inventory-tabs-container.mobile-only {
+    display: flex;
+  }
+}
+
 .inventory-tabs-wrapper {
   display: flex;
   gap: 6px;
@@ -1586,13 +1603,16 @@
   padding: 4px;
   max-width: 100%;
 }
+
 .inventory-tabs-wrapper::-webkit-scrollbar {
   height: 4px;
 }
+
 .inventory-tabs-wrapper::-webkit-scrollbar-thumb {
   background: #666;
   border-radius: 4px;
 }
+
 .inventory-tab-button {
   background: #2a2a2a;
   border: 1px solid #444;
@@ -1607,36 +1627,44 @@
   user-select: none;
   color: #fff;
 }
+
 .inventory-tab-button:hover:not(.locked) {
   background: #3a3a3a;
   border-color: #666;
 }
+
 .inventory-tab-button.active {
   background: #4a3a2a;
   border-color: #e0c060;
   box-shadow: 0 0 5px rgba(224, 192, 96, 0.3);
 }
+
 .inventory-tab-button.locked {
   background: #1a1a1a;
   border-color: #333;
   color: #666;
   cursor: not-allowed;
 }
+
 .inventory-tab-number {
   font-weight: bold;
   font-size: 1.1em;
   margin-bottom: 2px;
 }
+
 .inventory-tab-count {
   font-size: 0.8em;
   color: #aaa;
 }
+
 .inventory-tab-button.active .inventory-tab-count {
   color: #ddd;
 }
+
 .inventory-tab-button.locked .inventory-tab-count {
   color: #555;
 }
+
 .inventory-tab-button.drag-over {
   background: rgba(224, 192, 96, 0.2);
   border-color: #e0c060;

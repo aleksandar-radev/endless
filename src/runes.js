@@ -1,10 +1,12 @@
-import { RUNES, isChanceStat, isFlatStat, getTierMultiplier, getPercentTierMultiplier, RUNE_FLAT_STAGE_SCALING_PERCENT, RUNE_PERCENT_STAGE_SCALING_PERCENT } from './constants/runes.js';
+import { RUNES, isChanceStat, isFlatStat, getTierMultiplier, getPercentTierMultiplier, RUNE_FLAT_STAGE_SCALING_PERCENT, RUNE_PERCENT_STAGE_SCALING_PERCENT, RUNE_TIERS } from './constants/runes.js';
 import { isPercentStat, getStatDecimalPlaces } from './constants/stats/stats.js';
 import { tp, t } from './i18n.js';
 import { formatStatName } from './format.js';
-import { hero, ascension } from './globals.js';
+import { hero, ascension, game, statistics, options } from './globals.js';
+import { isRegionUnlocked, ROCKY_FIELD_REGIONS } from './rockyField.js';
+import { formatNumber } from './utils/numberFormatter.js';
 
-export const BASE_RUNE_SLOTS = 1;
+export const BASE_RUNE_SLOTS = 3;
 export const FROZEN_RUNE_SLOTS = 20;
 export const INVENTORY_TAB_COUNT = 10;
 export const INVENTORY_TAB_SIZE = 80;
@@ -210,6 +212,7 @@ export default class Runes {
   equip(slotIndex, inventoryIndex) {
     const rune = this.inventory[inventoryIndex];
     if (!rune) return;
+    if (!this.canEquipRune(rune)) return;
     const base = RUNES[rune.id];
     if (base?.unique) {
       const existingIndex = this.equipped.findIndex((r) => r?.id === rune.id);
@@ -316,6 +319,84 @@ export default class Runes {
   }
 
   /**
+   * Check if a rune can be equipped based on the player's current progression.
+   * The player must have unlocked (reached) the rune's tier region and level.
+   * @param {object} rune - The rune instance
+   * @returns {boolean}
+   */
+  canEquipRune(rune) {
+    if (!rune) return false;
+    const tier = rune.tier || 1;
+    const level = rune.level || 1;
+
+    // Tier 1 runes are always equippable
+    if (tier <= 1 && level <= 1) return true;
+
+    // Find the region for this rune's tier
+    const tierData = RUNE_TIERS[tier];
+    if (!tierData) return false;
+
+    const zoneId = tierData.zones?.[0];
+    if (!zoneId) return false;
+
+    // Check if the region is unlocked
+    if (!isRegionUnlocked(zoneId)) return false;
+
+    // Check if the player has reached this level in the region
+    const highestStage = statistics?.get('rockyFieldHighestStages', zoneId) || 0;
+    if (level > Math.max(highestStage, 1)) return false;
+
+    return true;
+  }
+
+  /**
+   * Enforce rune requirements on all equipped runes.
+   * Unequips runes the player no longer meets the requirements for.
+   * Moves them to frozen inventory slots if possible, otherwise keeps them
+   * equipped but excludes them from bonus calculations.
+   * @returns {boolean} Whether any runes were affected
+   */
+  enforceRuneRequirements() {
+    let changed = false;
+    for (let i = 0; i < this.equipped.length; i++) {
+      const rune = this.equipped[i];
+      if (!rune) continue;
+      if (this.canEquipRune(rune)) {
+        // Clear disabled flag if requirements are now met
+        if (rune._disabled) {
+          delete rune._disabled;
+          changed = true;
+        }
+        continue;
+      }
+
+      // Try to move to frozen slots first
+      const frozenIdx = this.inventory.findIndex((r, idx) => idx < FROZEN_RUNE_SLOTS && r === null);
+      if (frozenIdx !== -1) {
+        this.inventory[frozenIdx] = rune;
+        this.equipped[i] = null;
+        changed = true;
+        continue;
+      }
+
+      // Try any available inventory slot
+      const limit = FROZEN_RUNE_SLOTS + this.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
+      const invIdx = this.inventory.findIndex((r, idx) => idx >= FROZEN_RUNE_SLOTS && idx < limit && r === null);
+      if (invIdx !== -1) {
+        this.inventory[invIdx] = rune;
+        this.equipped[i] = null;
+        changed = true;
+        continue;
+      }
+
+      // No space available - mark rune as disabled (keep equipped but no bonus)
+      rune._disabled = true;
+      changed = true;
+    }
+    return changed;
+  }
+
+  /**
    * Get the combined bonus effects from all equipped runes.
    * @returns {object} Combined stat bonuses
    */
@@ -323,6 +404,7 @@ export default class Runes {
     const bonuses = {};
     this.equipped.forEach((rune) => {
       if (!rune?.stats) return;
+      if (rune._disabled) return;
       Object.entries(rune.stats).forEach(([stat, value]) => {
         bonuses[stat] = (bonuses[stat] || 0) + value;
       });
@@ -379,7 +461,13 @@ export function getRuneDescription(rune, shortElementalNames = false) {
   const lines = Object.entries(rune.stats).map(([stat, value]) => {
     const statName = formatStatName(stat, shortElementalNames);
     const decimals = getStatDecimalPlaces(stat);
-    const displayValue = decimals > 0 ? value.toFixed(decimals) : Math.floor(value);
+    const useShort = options?.shortNumbers;
+    let displayValue;
+    if (decimals > 0) {
+      displayValue = useShort ? formatNumber(parseFloat(value.toFixed(decimals)), true) : value.toFixed(decimals);
+    } else {
+      displayValue = formatNumber(Math.floor(value), useShort);
+    }
     return `${statName}: +${displayValue}`;
   });
 

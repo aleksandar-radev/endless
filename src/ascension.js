@@ -231,7 +231,7 @@ export const ASCENSION_CATEGORIES = {
         label: 'ascension.upgrade.attributesPerLevel',
         bonus: 1,
         effect: 'attributesPerLevel',
-        cost: (lvl) => 50 + 5 * lvl,
+        cost: (lvl) => 10 + 2 * lvl,
       },
       runeSlots: {
         label: 'ascension.upgrade.runeSlots',
@@ -547,6 +547,10 @@ export default class Ascension {
     // Ensure rune slot bonuses from ascension are applied after restore
     try {
       runes.ensureEquipSlots(BASE_RUNE_SLOTS + (ascensionState.getBonuses().runeSlots || 0));
+    } catch {}
+    // Enforce rune requirements after ascension (progression is reset)
+    try {
+      runes.enforceRuneRequirements();
     } catch {}
     const ascBonuses = ascensionState.getBonuses();
     hero.gold += ascBonuses.startingGold || 0;

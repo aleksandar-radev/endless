@@ -774,13 +774,17 @@ export async function defeatEnemy(source) {
       const BOSS_TIER_MAX_THRESHOLD = 500000;
       const bossLevelTierRatio = Math.pow(BOSS_TIER_MAX_THRESHOLD / BOSS_TIER_2_THRESHOLD, 1 / (BOSS_TIER_MAX - 2));
       let dropTier = 1;
+      let tierStartLevel = 1;
       for (let tier = BOSS_TIER_MAX; tier >= 2; tier--) {
-        if (hero.bossLevel >= BOSS_TIER_2_THRESHOLD * Math.pow(bossLevelTierRatio, tier - 2)) {
+        const threshold = Math.floor(BOSS_TIER_2_THRESHOLD * Math.pow(bossLevelTierRatio, tier - 2));
+        if (hero.bossLevel >= threshold) {
           dropTier = tier;
+          tierStartLevel = threshold;
           break;
         }
       }
-      const itemLevel = hero.bossLevel;
+      // Item level resets at each tier boundary, relative to the tier start
+      const itemLevel = hero.bossLevel - tierStartLevel + 1;
       // Use explore drop chance logic
       const itemDropChance = BASE_ITEM_DROP_CHANCE * (1 + hero.stats.itemQuantityPercent);
 

@@ -216,6 +216,11 @@ export function initializeInventoryUI(inv) {
   `;
   inventoryTab.appendChild(topSection);
 
+  // Mobile inventory tabs (outside topSection so they remain visible when modal hides topSection)
+  const mobileTabsContainer = document.createElement('div');
+  mobileTabsContainer.className = 'inventory-tabs-container mobile-only';
+  inventoryTab.appendChild(mobileTabsContainer);
+
   // Inventory grid
   const inventoryGrid = document.createElement('div');
   inventoryGrid.className = 'inventory-grid';
@@ -416,7 +421,7 @@ function setupInlineOptionsPanel(inv, root) {
   root.querySelectorAll('.salvage-btn-inline[data-rarity]').forEach((btn) => {
     btn.onclick = () => {
       const rarity = btn.dataset.rarity;
-      inventory.salvageItemsByRarity(rarity);
+      inventory.salvageItemsByRarity(rarity, { tabIndex: activeInventoryTab });
     };
   });
 
@@ -424,7 +429,7 @@ function setupInlineOptionsPanel(inv, root) {
   const salvageAllInlineBtn = root.querySelector('#salvage-all-inline-btn');
   if (salvageAllInlineBtn) {
     salvageAllInlineBtn.onclick = () => {
-      inventory.salvageAllItems();
+      inventory.salvageAllItems({ tabIndex: activeInventoryTab });
     };
   }
 
@@ -626,7 +631,6 @@ export function showSalvageModal(inv) {
             <option value="level-tier-rarity">${t('inventory.levelTierRarity')}</option>
           </select>
         </div>
-        <div class="inventory-tabs-container mobile-only"></div>
       </div>
 
       <div class="inventory-modal-full-content"></div>
@@ -672,7 +676,7 @@ export function showSalvageModal(inv) {
   overlay.querySelectorAll('.salvage-btn-modal[data-rarity]').forEach((btn) => {
     btn.onclick = () => {
       const rarity = btn.dataset.rarity;
-      inventory.salvageItemsByRarity(rarity);
+      inventory.salvageItemsByRarity(rarity, { tabIndex: activeInventoryTab });
       closeModal(overlay);
       showSalvageModal(inv);
     };
@@ -682,7 +686,7 @@ export function showSalvageModal(inv) {
   const salvageAllBtn = overlay.querySelector('#salvage-all-btn');
   if (salvageAllBtn) {
     salvageAllBtn.onclick = () => {
-      inventory.salvageAllItems();
+      inventory.salvageAllItems({ tabIndex: activeInventoryTab });
       closeModal(overlay);
       showSalvageModal(inv);
     };
@@ -1603,12 +1607,12 @@ export function updateMaterialsGrid(inv, root = getInventoryTab()) {
   }
 }
 
-export function sortInventory(mode = 'type-rarity-level') {
-  const limit = PERSISTENT_SLOTS + inventory.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
-  // Separate persistent, non-persistent, and locked items
-  const persistentItems = inventory.inventoryItems.slice(0, PERSISTENT_SLOTS);
-  const nonPersistentItems = inventory.inventoryItems.slice(PERSISTENT_SLOTS, limit).filter((item) => item !== null);
-  const lockedItems = inventory.inventoryItems.slice(limit);
+export function sortInventory(mode = 'type-rarity-level', { tabIndex = null } = {}) {
+  const tab = tabIndex !== null ? tabIndex : activeInventoryTab;
+  const { start, end } = inventory.getTabBounds(tab);
+
+  // Extract items from the active tab only
+  const tabItems = inventory.inventoryItems.slice(start, end).filter((item) => item !== null);
 
   // Helper for type order
   const typeOrder = (a, b) => {
@@ -1624,7 +1628,7 @@ export function sortInventory(mode = 'type-rarity-level') {
   const tierOrder = (a, b) => b.tier - a.tier;
 
   // Sort logic based on mode
-  nonPersistentItems.sort((a, b) => {
+  tabItems.sort((a, b) => {
     switch (mode) {
     case 'type-rarity-level':
       return typeOrder(a, b) || rarityOrder(a, b) || levelOrder(a, b);
@@ -1651,13 +1655,12 @@ export function sortInventory(mode = 'type-rarity-level') {
     }
   });
 
-  // Combine persistent items with sorted non-persistent items, empty slots, and locked items
-  inventory.inventoryItems = [
-    ...persistentItems,
-    ...nonPersistentItems,
-    ...new Array(limit - PERSISTENT_SLOTS - nonPersistentItems.length).fill(null),
-    ...lockedItems,
-  ];
+  // Place sorted items back into the tab's slot range
+  const emptySlots = end - start - tabItems.length;
+  const sortedTab = [...tabItems, ...new Array(emptySlots).fill(null)];
+  for (let i = start; i < end; i++) {
+    inventory.inventoryItems[i] = sortedTab[i - start];
+  }
 
   // Update the UI
   updateInventoryGrid();

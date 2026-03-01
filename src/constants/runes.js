@@ -83,6 +83,7 @@ export const RUNES = {
     nameKey: 'rune.skillPoints.name',
     descKey: 'rune.skillPoints.desc',
     stats: { skillPointsPerLevel: 1 },
+    tierValues: { skillPointsPerLevel: [1, 1, 2, 2, 3, 3] },
     attributes: 1,
     weight: 100,
     icon: `${BASE}/icons/star.svg`,
@@ -204,6 +205,17 @@ export const RUNES = {
     icon: `${BASE}/icons/star.svg`,
     unique: false,
     noTierScale: true,
+  },
+  attributes_per_level: {
+    id: 'attributes_per_level',
+    nameKey: 'rune.attributesPerLevel.name',
+    descKey: 'rune.attributesPerLevel.desc',
+    stats: { attributesPerLevel: 1 },
+    tierValues: { attributesPerLevel: [1, 2, 3, 4, 5, 6] },
+    attributes: 1,
+    weight: 100,
+    icon: `${BASE}/icons/star.svg`,
+    unique: true,
   },
 };
 

@@ -302,10 +302,10 @@ export default class Hero {
     statistics.heroLevel = this.level;
 
     const ascBonuses = ascension?.getBonuses() || {};
-    const attributesPerLevel = STATS_ON_LEVEL_UP + (ascBonuses.attributesPerLevel || 0);
+    const runeBonuses = runes?.getBonusEffects?.() || {};
+    const attributesPerLevel = STATS_ON_LEVEL_UP + (ascBonuses.attributesPerLevel || 0) + (runeBonuses.attributesPerLevel || 0);
     this.statPoints += attributesPerLevel * levels;
 
-    const runeBonuses = runes?.getBonusEffects?.() || {};
     const skillPointsPerLevel = 1 + (ascBonuses.skillPointsPerLevel || 0) + (runeBonuses.skillPointsPerLevel || 0);
     skillTree.addSkillPoints(levels * skillPointsPerLevel);
 

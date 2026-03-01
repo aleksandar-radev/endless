@@ -962,17 +962,25 @@ export default class Inventory {
     updateMaterialsGrid();
   }
 
-  salvageItemsByRarity(rarity, { skipInventoryUpdates = false } = {}) {
+  salvageItemsByRarity(rarity, { skipInventoryUpdates = false, tabIndex = null } = {}) {
     let salvagedItems = 0;
     let goldGained = 0;
     let crystalsGained = 0;
     const matsGained = {};
 
-    const limit = PERSISTENT_SLOTS + this.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
+    let rangeStart, rangeEnd;
+    if (tabIndex !== null) {
+      const bounds = this.getTabBounds(tabIndex);
+      rangeStart = bounds.start;
+      rangeEnd = bounds.end;
+    } else {
+      rangeStart = PERSISTENT_SLOTS;
+      rangeEnd = PERSISTENT_SLOTS + this.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
+    }
 
-    // Skip first PERSISTENT_SLOTS slots when salvaging and locked tabs
+    // Skip slots outside the target range
     this.inventoryItems = this.inventoryItems.map((item, index) => {
-      if (index < PERSISTENT_SLOTS || index >= limit) return item; // Preserve persistent slots and locked tabs
+      if (index < rangeStart || index >= rangeEnd) return item; // Preserve out-of-range slots
       if (item && rarity == item.rarity) {
         console.debug('Salvaging item:', item);
         console.debug(rarity, '==', item.rarity);
@@ -1032,16 +1040,24 @@ export default class Inventory {
     }
   }
 
-  salvageAllItems() {
+  salvageAllItems({ tabIndex = null } = {}) {
     let salvagedItems = 0;
     let goldGained = 0;
     let crystalsGained = 0;
     const matsGained = {};
 
-    const limit = PERSISTENT_SLOTS + this.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
+    let rangeStart, rangeEnd;
+    if (tabIndex !== null) {
+      const bounds = this.getTabBounds(tabIndex);
+      rangeStart = bounds.start;
+      rangeEnd = bounds.end;
+    } else {
+      rangeStart = PERSISTENT_SLOTS;
+      rangeEnd = PERSISTENT_SLOTS + this.getUnlockedTabCount() * INVENTORY_TAB_SIZE;
+    }
 
     this.inventoryItems = this.inventoryItems.map((item, index) => {
-      if (index < PERSISTENT_SLOTS || index >= limit) return item;
+      if (index < rangeStart || index >= rangeEnd) return item;
       if (item) {
         salvagedItems++;
         if (this.salvageUpgradeMaterials) {

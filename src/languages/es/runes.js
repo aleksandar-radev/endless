@@ -41,5 +41,7 @@ export default {
   'rune.cooldownRune.name': 'Runa de Lanzamiento Veloz',
   'rune.cooldownRune.desc': 'Reduce los tiempos de recarga de habilidades.',
   'rune.buffDurationRune.name': 'Runa de Persistencia',
-  'rune.buffDurationRune.desc': 'Aumenta la duración de los efectos positivos.',
+  'rune.buffDurationRune.desc': 'Aumenta la duración de los efectos positivos.',  'rune.attributesPerLevel.name': 'Runa del Erudito de Atributos',
+  'rune.attributesPerLevel.desc': 'Otorga puntos de atributo por nivel.',  'runes.requirementNotMet': 'Debes alcanzar el nivel y la región de esta runa para equiparla.',
+  'runes.disabled': 'Desactivada — ya no cumples los requisitos.',
 };

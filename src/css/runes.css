@@ -302,3 +302,20 @@
   color: #fff;
   padding: 4px;
 }
+
+.rune-slot.rune-disabled {
+  opacity: 0.45;
+  border-color: #a33;
+}
+
+.rune-slot.rune-disabled .rune-icon {
+  filter: grayscale(0.7);
+}
+
+.tooltip-rune-requirement,
+.tooltip-rune-disabled {
+  color: #f44;
+  font-size: 0.85em;
+  margin-top: 6px;
+  font-style: italic;
+}

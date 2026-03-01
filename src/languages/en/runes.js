@@ -41,5 +41,7 @@ export default {
   'rune.cooldownRune.name': 'Swiftcast Rune',
   'rune.cooldownRune.desc': 'Reduces skill cooldowns.',
   'rune.buffDurationRune.name': 'Persistence Rune',
-  'rune.buffDurationRune.desc': 'Increases buff duration.',
+  'rune.buffDurationRune.desc': 'Increases buff duration.',  'rune.attributesPerLevel.name': 'Attribute Scholar Rune',
+  'rune.attributesPerLevel.desc': 'Grants attribute points per level.',  'runes.requirementNotMet': 'You must reach this rune\'s tier and level to equip it.',
+  'runes.disabled': 'Disabled — requirements no longer met.',
 };

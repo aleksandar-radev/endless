@@ -2660,6 +2660,9 @@ function setupKeyboardShortcuts() {
 }
 
 function handleKeyPress(e) {
+  const tag = e.target.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) return;
+
   if (e.key >= '1' && e.key <= '9') {
     const slot = document.querySelector(`.skill-slot[data-key="${e.key}"]`);
     if (slot) {

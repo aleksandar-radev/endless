@@ -65,6 +65,9 @@ export function renderRunesUI() {
     }
     if (rune) {
       slot.appendChild(createRuneIcon(getRuneIcon(rune)));
+      if (rune._disabled) {
+        slot.classList.add('rune-disabled');
+      }
       slot.draggable = true;
       slot.addEventListener('dragstart', (e) => {
         e.dataTransfer.setData('text/plain', `equipped-${i}`);
@@ -461,6 +464,11 @@ function createInventorySlot(rune, index, isFrozen) {
 
 function equipSelectedRune() {
   const inventoryIndex = selectedRune.index;
+  const runeToEquip = runes.inventory[inventoryIndex];
+  if (runeToEquip && !runes.canEquipRune(runeToEquip)) {
+    showToast(t('runes.requirementNotMet'), 'error');
+    return;
+  }
   let slot = runes.equipped.findIndex((r) => r === null);
   // If no empty slot, swap with the first slot
   if (slot === -1) {
@@ -490,6 +498,11 @@ function handleDrop(e) {
   if (source === 'inventory' && targetSource === 'inventory') {
     runes.moveInventory(fromIndex, targetIndex);
   } else if (source === 'inventory' && targetSource === 'equipped') {
+    const runeToEquip = runes.inventory[fromIndex];
+    if (runeToEquip && !runes.canEquipRune(runeToEquip)) {
+      showToast(t('runes.requirementNotMet'), 'error');
+      return;
+    }
     runes.equip(targetIndex, fromIndex);
   } else if (source === 'equipped' && targetSource === 'inventory') {
     runes.unequip(fromIndex, targetIndex);
@@ -518,7 +531,10 @@ function getRuneTooltip(rune) {
     : `${t('item.tier')} ${tier}`;
   const levelPart = base?.showLevel && rune.level ? ` · ${t('item.level')} ${rune.level}` : '';
   const meta = `<div class="tooltip-rune-meta">${tierLabel}${levelPart}</div>`;
-  return `<div class="tooltip-header">${getRuneName(rune, options.shortElementalNames)}</div>${meta}<div class="tooltip-content">${getRuneDescription(rune, options.shortElementalNames)}</div>`;
+  const canEquip = runes.canEquipRune(rune);
+  const disabledPart = rune._disabled ? `<div class="tooltip-rune-disabled">${t('runes.disabled')}</div>` : '';
+  const requirementPart = !canEquip ? `<div class="tooltip-rune-requirement">${t('runes.requirementNotMet')}</div>` : '';
+  return `<div class="tooltip-header">${getRuneName(rune, options.shortElementalNames)}</div>${meta}<div class="tooltip-content">${getRuneDescription(rune, options.shortElementalNames)}</div>${disabledPart}${requirementPart}`;
 }
 
 function openRuneContextMenu(source, index, rune, x, y) {
