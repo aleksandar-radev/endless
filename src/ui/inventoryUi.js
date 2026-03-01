@@ -888,7 +888,9 @@ function renderInventoryTabs(inv) {
       btn.appendChild(count);
 
       if (isUnlocked) {
-        btn.title = tp('inventory.tabTooltip', { tab: i + 1, used, capacity });
+        btn.title = tp('inventory.tabTooltip', {
+          tab: i + 1, used, capacity,
+        });
       } else {
         btn.title = t('inventory.tabLockedTooltip');
       }
@@ -899,7 +901,7 @@ function renderInventoryTabs(inv) {
         if (selectedItemEl && !awaitingSlot) {
           const itemData = inventory.getItemById(selectedItemEl.dataset.itemId);
           if (itemData) {
-            const currentPosition = inventory.inventoryItems.findIndex(item => item && item.id === itemData.id);
+            const currentPosition = inventory.inventoryItems.findIndex((item) => item && item.id === itemData.id);
             if (currentPosition !== -1) {
               if (inventory.moveItemToTab(currentPosition, i)) {
                 clearMobileSelection();
@@ -950,7 +952,7 @@ function renderInventoryTabs(inv) {
           const itemId = e.dataTransfer.getData('text/plain');
           const itemData = inventory.getItemById(itemId);
           if (itemData) {
-            const currentPosition = inventory.inventoryItems.findIndex(item => item && item.id === itemData.id);
+            const currentPosition = inventory.inventoryItems.findIndex((item) => item && item.id === itemData.id);
             if (currentPosition !== -1) {
               if (inventory.moveItemToTab(currentPosition, i)) {
                 updateInventoryGrid();
@@ -1867,7 +1869,7 @@ function openItemContextMenu(itemEl, x, y) {
     moveSelect.onchange = (e) => {
       const tabIndex = Number(e.target.value);
       if (Number.isNaN(tabIndex)) return;
-      const currentPosition = inventory.inventoryItems.findIndex(i => i && i.id === itemData.id);
+      const currentPosition = inventory.inventoryItems.findIndex((i) => i && i.id === itemData.id);
       if (currentPosition !== -1 && inventory.moveItemToTab(currentPosition, tabIndex)) {
         updateInventoryGrid();
         clearMobileSelection();

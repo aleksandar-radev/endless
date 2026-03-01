@@ -102,9 +102,9 @@ export default class Inventory {
       // Pad to ensure we have exactly ITEM_SLOTS items, to support expanding inventory size (e.g. adding tabs)
       this.inventoryItems = [
         ...restoredItems,
-        ...new Array(Math.max(0, ITEM_SLOTS - restoredItems.length)).fill(null)
+        ...new Array(Math.max(0, ITEM_SLOTS - restoredItems.length)).fill(null),
       ].slice(0, ITEM_SLOTS);
-      
+
       this.materials = savedData.materials
         ? savedData.materials.map((mat) => (mat ? { id: mat.id, qty: mat.qty } : null))
         : new Array(MATERIALS_SLOTS).fill(null);
@@ -1267,7 +1267,7 @@ export default class Inventory {
     if (tabIndex < 0 || tabIndex >= this.getUnlockedTabCount()) return false;
 
     const { start, end } = this.getTabBounds(tabIndex);
-    
+
     // Check if the item is already in the target tab
     if (itemIndex >= start && itemIndex < end) return false;
 
