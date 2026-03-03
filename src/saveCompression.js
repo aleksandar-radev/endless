@@ -5,24 +5,34 @@
 import LZString from 'lz-string';
 import SimpleCrypto from 'simple-crypto-js';
 
-// SimpleCrypto instance for legacy save migration
-const legacyCrypt = new SimpleCrypto(import.meta.env.VITE_ENCRYPT_KEY);
+// Crypto instance for save encryption/decryption
+const crypt = new SimpleCrypto(import.meta.env.VITE_ENCRYPT_KEY);
 
 /**
- * Compress game data using LZ-String
+ * Compress game data using LZ-String and encrypt
  * @param {string} jsonString - Stringified game state
- * @returns {string} Compressed string (base64 encoded)
+ * @returns {string} Encrypted compressed string (base64 encoded)
  */
 export function compressSave(jsonString) {
-  return LZString.compressToBase64(jsonString);
+  const compressed = LZString.compressToBase64(jsonString);
+  return crypt.encrypt(compressed);
 }
 
 /**
  * Decompress game data
- * @param {string} compressed - Compressed string
+ * @param {string} encrypted - Encrypted compressed string
  * @returns {string} Decompressed JSON string
  */
-export function decompressSave(compressed) {
+export function decompressSave(encrypted) {
+  let compressed = encrypted;
+  try {
+    const decrypted = crypt.decrypt(encrypted);
+    if (typeof decrypted === 'string' && decrypted) {
+      compressed = decrypted;
+    }
+  } catch (e) {
+    // Fall back to treating it as an unencrypted compressed string (from the period it was broken)
+  }
   return LZString.decompressFromBase64(compressed);
 }
 
@@ -47,7 +57,7 @@ export function loadSaveData(saveString) {
 
   try {
     // Try legacy SimpleCrypto format
-    const decrypted = legacyCrypt.decrypt(saveString);
+    const decrypted = crypt.decrypt(saveString);
     if (decrypted && typeof decrypted === 'object') {
       console.log('📦 Migrated legacy encrypted save to compressed format');
       return decrypted;

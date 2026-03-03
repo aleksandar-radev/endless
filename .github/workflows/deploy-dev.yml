@@ -1,14 +1,36 @@
-name: Deploy to Development
+name: Deploy to Dev
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - develop
 
 jobs:
-  deploy:
-    runs-on: self-hosted
+  lint:
+    runs-on: ubuntu-latest
     steps:
-      - name: Deploy to Development Server
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run lint
+        run: pnpm lint
+
+  deploy:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Coolify Webhook
         run: |
-          cd ~/workspace/env
-          git pull
-          ./app2-fe/update.sh dev
+          curl -i -X POST "${{ secrets.COOLIFY_WEBHOOK }}" \
+            -H "Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}"
