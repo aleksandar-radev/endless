@@ -270,12 +270,18 @@ export default class Hero {
   }
 
   gainCrystals(amount) {
-    const bonuses = runes?.getBonusEffects?.() || {};
-    const ascBonuses = ascension?.getBonuses?.() || {};
-    const runeBonus = bonuses.crystalGainPercent || 0;
-    const ascensionBonus = ascBonuses.crystalGainPercent || 0;
-    const finalAmount = Math.floor(amount * (1 + runeBonus + ascensionBonus));
-    statistics.increment('totalCrystalsEarned', null, finalAmount);
+    let finalAmount = amount;
+    if (amount > 0) {
+      const bonuses = runes?.getBonusEffects?.() || {};
+      const ascBonuses = ascension?.getBonuses?.() || {};
+      const runeBonus = bonuses.crystalGainPercent || 0;
+      const ascensionBonus = ascBonuses.crystalGainPercent || 0;
+      finalAmount = Math.floor(amount * (1 + runeBonus + ascensionBonus));
+      statistics.increment('totalCrystalsEarned', null, finalAmount);
+    } else {
+      finalAmount = Math.round(amount);
+    }
+
     this.crystals += finalAmount;
     if (game.activeTab === 'crystalShop') {
       crystalShop.updateCrystalShopAffordability();
@@ -287,8 +293,13 @@ export default class Hero {
   }
 
   gainSouls(amount) {
-    const finalAmount = Math.floor(amount);
-    statistics.increment('totalSoulsEarned', null, finalAmount);
+    let finalAmount = amount;
+    if (amount > 0) {
+      finalAmount = Math.floor(amount);
+      statistics.increment('totalSoulsEarned', null, finalAmount);
+    } else {
+      finalAmount = Math.round(amount);
+    }
     this.souls += finalAmount;
     if (game.activeTab === 'soulShop') {
       soulShop.updateSoulShopAffordability();

@@ -221,7 +221,7 @@ export default class CrystalShop {
     const baseScaled = Math.round(config.baseCost * multiplier * SCALE);
     const incScaled = Math.round((config.costIncrement || 0) * multiplier * SCALE);
 
-    return calcLinearSum(baseLevel, qty, baseScaled, incScaled, SCALE);
+    return Math.floor(calcLinearSum(baseLevel, qty, baseScaled, incScaled, SCALE));
   }
 
   _getAffordablePurchase(config, baseLevel, crystals, desiredQty) {
