@@ -48,6 +48,7 @@ export function updateRegionSelectorButton(fightMode, regionName, clickHandler) 
 export function setCurrentRegion(regionId) {
   if (regionId === game.currentRegionId) return;
   game.currentRegionId = regionId;
+  game.overkillDamage = 0;
 
   game.stage = game.getStartingStage();
   game.currentEnemy = new Enemy(game.stage);

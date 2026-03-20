@@ -42,6 +42,7 @@ export function setCurrentBossRegion(regionId) {
     return false;
   }
   game.currentBossRegionId = regionId;
+  game.overkillDamage = 0;
   dataManager?.saveGame?.();
   return true;
 }

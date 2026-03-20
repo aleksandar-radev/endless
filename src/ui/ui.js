@@ -137,6 +137,7 @@ function switchCombatMode(mode) {
   }
 
   game.fightMode = mode;
+  game.overkillDamage = 0;
   if (game.fightMode === 'explore') {
     game.currentEnemy = new Enemy(game.stage);
   } else if (game.fightMode === 'arena') {
@@ -1396,6 +1397,7 @@ export function openRockyFieldRegionSelectionDialog() {
             const confirmed = await showConfirmDialog(tp('combat.changeRegionConfirm', { region: region.name }));
             if (!confirmed) return;
             game.rockyFieldRegion = regionId;
+            game.overkillDamage = 0;
             // Don't reset to stage 1 - keep current stage or start from stored highest
             const storedHighest = statistics?.get('rockyFieldHighestStages', regionId) || 1;
             game.rockyFieldStage = Math.min(game.rockyFieldStage, storedHighest) || 1;
@@ -1440,6 +1442,7 @@ export function updateRockyFieldRegionSelector() {
         const confirmed = await showConfirmDialog(tp('combat.changeRegionConfirm', { region: region.name }));
         if (!confirmed) return;
         game.rockyFieldRegion = region.id;
+        game.overkillDamage = 0;
         // Don't reset to stage 1 - keep current stage or start from stored highest
         const storedHighest = statistics?.get('rockyFieldHighestStages', region.id) || 1;
         game.rockyFieldStage = Math.min(game.rockyFieldStage, storedHighest) || 1;

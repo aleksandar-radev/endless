@@ -9,6 +9,8 @@ export default function run() {
       <li>Fixed rune search functionality in the inventory to correctly find and highlight matching runes by filtering unique stats.</li>
       <li>Improved rune search to allow multiple search terms to match independently.</li>
       <li>Fixed missing CSS styles for the dimming and highlighting of matched runes and their tabs.</li>
+      <li>Fixed crystal costs in crystal shop to always be full numbers (no decimals anymore).</li>
+      <li>Fixed overkill damage on Arena.</li>
     </ul>
   `;
 }
