@@ -11,6 +11,7 @@ export default function run() {
       <li>Fixed missing CSS styles for the dimming and highlighting of matched runes and their tabs.</li>
       <li>Fixed crystal costs in crystal shop to always be full numbers (no decimals anymore).</li>
       <li>Fixed overkill damage on Arena.</li>
+      <li>Reduced rune stage scaling by a factor of 2.</li>
     </ul>
   `;
 }

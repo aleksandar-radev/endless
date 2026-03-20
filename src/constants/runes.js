@@ -5,8 +5,8 @@ const BASE = import.meta.env.VITE_BASE_PATH;
 // Re-export for convenience
 export { isChanceStat, isFlatStat };
 
-// Rune stage scaling (2x item flat scaling = 0.01 * 2 = 0.02 = 2% per stage)
-export const RUNE_FLAT_STAGE_SCALING_PERCENT = 0.02;
+// Rune stage scaling (2x item flat scaling = 0.01 * 1 = 0.01 = 1% per stage)
+export const RUNE_FLAT_STAGE_SCALING_PERCENT = 0.01;
 export const RUNE_PERCENT_STAGE_SCALING_PERCENT = 0.008; // 0.8% per stage for percent stats
 
 // Tier multipliers for flat stats based on zone
