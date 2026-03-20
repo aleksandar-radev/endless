@@ -319,3 +319,19 @@
   margin-top: 6px;
   font-style: italic;
 }
+
+.rune-slot.filter-dim {
+  opacity: 0.3;
+  filter: grayscale(0.8);
+}
+
+.rune-slot.filter-match {
+  border-color: #ffd700;
+  box-shadow: inset 0 0 8px rgba(255, 215, 0, 0.6), 0 0 8px rgba(255, 215, 0, 0.6);
+  z-index: 2;
+}
+
+.rune-tabs .rune-tab-button.filter-match {
+  border-color: #ffd700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}

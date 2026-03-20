@@ -209,8 +209,10 @@ const runeFilterCache = new Map();
 function getRuneFilterKey(rune) {
   if (!rune) return '';
   const tier = rune.tier || 1;
+  const level = rune.level || 1;
   const mode = options?.shortElementalNames ? 'short' : 'long';
-  return `${rune.id}:${tier}:${mode}`;
+  const stats = rune.stats ? JSON.stringify(rune.stats) : '';
+  return `${rune.id}:${tier}:${level}:${mode}:${stats}`;
 }
 
 function getRuneFilterStrings(rune) {
@@ -228,7 +230,9 @@ function runeMatchesFilter(rune, filter) {
   if (!rune || !filter) return false;
   const strings = getRuneFilterStrings(rune);
   if (!strings) return false;
-  return strings.name.includes(filter) || strings.desc.includes(filter);
+
+  const terms = filter.split(/\s+/).filter((t) => t.length > 0);
+  return terms.every((term) => strings.name.includes(term) || strings.desc.includes(term));
 }
 
 function updateRuneFilterHighlights(root = document) {
