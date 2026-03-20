@@ -1,4 +1,5 @@
 # CRITICAL OPERATIONAL CONSTRAINTS
+
 1. PACKAGE MANAGER: strictly use `pnpm`.
 2. PROHIBITED: Do NOT use `npm` or `yarn` commands.
 3. ERROR RECOVERY: If a command fails, do not default back to `npm`. Ask for clarification.
@@ -35,7 +36,7 @@
 
 # Code
 
+- NEVER RUN destructive git commands like git add, git commit, git push.
 - never use (await import('./globals.js')), instead use import { ... } from './globals.js'
 - prefer import over require
 - do not add dynamic imports, always import on top of file
-- never use git add, git commit, git push.
