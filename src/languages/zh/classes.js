@@ -55,7 +55,7 @@ export default {
   'specialization.druid.shapeshifter.name': '变形者',
   'specialization.druid.shapeshifter.description': '变形为强大的野兽，主宰混战。',
   'specialization.druid.naturalist.name': '自然使者',
-  'specialization.druid.naturalist.description': '驾驭大自然的治愈之力，以此维系生命。',
+  'specialization.druid.naturalist.description': '驾驭大自然的治愈之力，以此维系生命。眩晕几率仅对瞬发技能生效。',
   'specialization.druid.summoner.name': '召唤师',
   'specialization.druid.summoner.description': '召唤荒野的生物并肩作战。',
   'specialization.mage.arcanist.name': '奥术师',

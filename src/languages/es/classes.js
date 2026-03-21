@@ -55,7 +55,7 @@ export default {
   'specialization.druid.shapeshifter.name': 'Cambiaformas',
   'specialization.druid.shapeshifter.description': 'Se transforma en bestias poderosas para dominar la contienda.',
   'specialization.druid.naturalist.name': 'Naturalista',
-  'specialization.druid.naturalist.description': 'Aprovecha el poder curativo de la naturaleza para mantener la vida.',
+  'specialization.druid.naturalist.description': 'Aprovecha el poder curativo de la naturaleza para mantener la vida. La probabilidad de aturdimiento solo se aplica a habilidades instantáneas.',
   'specialization.druid.summoner.name': 'Invocador',
   'specialization.druid.summoner.description': 'Invoca a las criaturas de la naturaleza para luchar a su lado.',
   'specialization.mage.arcanist.name': 'Arcanista',

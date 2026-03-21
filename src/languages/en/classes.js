@@ -55,7 +55,7 @@ export default {
   'specialization.druid.shapeshifter.name': 'Shapeshifter',
   'specialization.druid.shapeshifter.description': 'Transforms into powerful beasts to dominate the fray.',
   'specialization.druid.naturalist.name': 'Naturalist',
-  'specialization.druid.naturalist.description': 'Harnesses the healing power of nature to sustain life.',
+  'specialization.druid.naturalist.description': 'Harnesses the healing power of nature to sustain life. Stun chance applies only to instant skills.',
   'specialization.druid.summoner.name': 'Summoner',
   'specialization.druid.summoner.description': 'Calls forth the creatures of the wild to fight by their side.',
   'specialization.mage.arcanist.name': 'Arcanist',
