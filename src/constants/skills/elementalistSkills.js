@@ -622,8 +622,8 @@ export const ELEMENTALIST_SKILLS = {
       allResistance: getSkillStatBonus({
         level, statKey: 'allResistance', skillType: 'passive', scale: { base: 4, increment: 3 },
       }),
-      extraDamageFromResistancesPercent: getSkillStatBonus({
-        level, statKey: 'extraDamageFromResistancesPercent', skillType: 'passive', scale: { base: 1, max: 2 },
+      extraDamageFromAllResistancesPercent: getSkillStatBonus({
+        level, statKey: 'extraDamageFromAllResistancesPercent', skillType: 'passive', scale: { base: 1, max: 2 },
       }),
     }),
     synergies: [
