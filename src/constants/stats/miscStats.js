@@ -235,7 +235,6 @@ export const MISC_STATS = {
         RING: { tierScalingMaxPercent: createTierScaling(5, 10, 1) },
       },
     },
-    itemTags: ['magic', 'jewelry'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         linear: 0.01, power: 0.2, max: 10,
@@ -260,7 +259,6 @@ export const MISC_STATS = {
   manaCostReductionPercent: createPercentStat({
     sub: 'resources',
     item: { tierScalingMaxPercent: createTierScaling(2, 25, 1.1) },
-    itemTags: ['jewelry', 'magic'],
   }),
   buffDurationPercent: createPercentStat({
     show: true,
@@ -277,7 +275,6 @@ export const MISC_STATS = {
   buffEffectivenessPercent: createPercentStat({
     sub: 'misc',
     item: { tierScalingMaxPercent: createTierScaling(5, 40, 1.1) },
-    itemTags: ['jewelry', 'magic'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
@@ -357,7 +354,6 @@ export const MISC_STATS = {
     dec: 1,
     sub: 'misc',
     item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.1) },
-    itemTags: ['gloves', 'jewelry'],
   }),
   weaponFlatEffectivenessPercent: createStat({
     dec: 1,
@@ -407,7 +403,6 @@ export const MISC_STATS = {
   overhealPercent: createPercentStat({
     sub: 'misc',
     item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.1) },
-    itemTags: ['jewelry', 'magic', 'belt'],
     skills: createDefaultSkillBonusesPercent({ passive: { base: 5, linear: 0.5 } }),
   }),
   bloodSacrificeUnlocked: createHiddenStat(),

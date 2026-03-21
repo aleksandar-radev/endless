@@ -410,7 +410,6 @@ export const OFFENSE_STATS = {
   elementalPenetrationPercent: createPercentStat({
     sub: 'elemental',
     item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.1) },
-    itemTags: ['magic', 'jewelry', 'gloves'],
     skills: createDefaultSkillBonusesPercent({
       passive: { linear: 0.005, max: 20 },
       toggle: { linear: 0.015, max: 25 },
@@ -520,7 +519,6 @@ export const OFFENSE_STATS = {
     dec: 2,
     sub: 'misc',
     item: { tierScalingMaxPercent: createTierScaling(0.3, 2.0, 1.1) },
-    itemTags: ['jewelry', 'boots'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 0.05, linear: 0.00075, max: 2.5,
@@ -598,7 +596,6 @@ export const OFFENSE_STATS = {
   damageToHighRarityEnemiesPercent: createPercentStat({
     sub: 'misc',
     item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.1) },
-    itemTags: ['weapon', 'jewelry'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
@@ -608,12 +605,10 @@ export const OFFENSE_STATS = {
   healDamagesEnemiesPercent: createPercentStat({
     sub: 'misc',
     item: { tierScalingMaxPercent: createTierScaling(10, 100, 1.1) },
-    itemTags: ['magic', 'jewelry', 'mace'],
   }),
   batsHealPercent: createPercentStat({
     sub: 'misc',
     item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.1) },
-    itemTags: ['jewelry', 'magic'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
@@ -623,7 +618,6 @@ export const OFFENSE_STATS = {
   bleedChance: createChanceStat({
     sub: 'attack',
     item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.1) },
-    itemTags: ['sword', 'axe', 'dagger', 'jewelry'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 5, linear: 0.6, max: 100,
@@ -634,7 +628,6 @@ export const OFFENSE_STATS = {
     dec: 0,
     sub: 'misc',
     item: { tierScalingMaxPercent: createTierScaling(10, 100, 1.1) },
-    itemTags: ['sword', 'axe', 'dagger', 'jewelry'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
@@ -645,13 +638,11 @@ export const OFFENSE_STATS = {
   burnChance: createChanceStat({
     sub: 'elemental',
     item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.1) },
-    itemTags: ['magic', 'jewelry', 'sword'],
     skills: createDefaultSkillBonusesPercent({ passive: { linear: 0.5, max: 60 } }),
   }),
   burnDamagePercent: createPercentStat({
     sub: 'elemental',
     item: { tierScalingMaxPercent: createTierScaling(10, 100, 1.1) },
-    itemTags: ['magic', 'jewelry', 'sword'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
@@ -662,25 +653,21 @@ export const OFFENSE_STATS = {
     sub: 'elemental',
     cap: 100,
     item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.1) },
-    itemTags: ['dagger', 'bow', 'jewelry'],
     skills: createDefaultSkillBonusesPercent(),
   }),
   poisonDamagePercent: createPercentStat({
     sub: 'elemental',
     item: { tierScalingMaxPercent: createTierScaling(10, 100, 1.1) },
-    itemTags: ['dagger', 'bow', 'jewelry'],
     skills: createDefaultSkillBonusesPercent(),
   }),
   explosionChance: createChanceStat({
     sub: 'elemental',
     item: { tierScalingMaxPercent: createTierScaling(2, 20, 1.1) },
-    itemTags: ['magic', 'jewelry', 'mace'],
     skills: createDefaultSkillBonusesPercent({ passive: { base: 1, linear: 0.1 } }),
   }),
   extraDamageAgainstBurningEnemies: createPercentStat({
     sub: 'elemental',
     item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.1) },
-    itemTags: ['weapon', 'jewelry'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
@@ -690,13 +677,11 @@ export const OFFENSE_STATS = {
   arcDischargeChance: createChanceStat({
     sub: 'elemental',
     item: { tierScalingMaxPercent: createTierScaling(2, 20, 1.1) },
-    itemTags: ['magic', 'jewelry'],
     skills: createDefaultSkillBonusesPercent({ passive: { max: 10 } }),
   }),
   shockChance: createChanceStat({
     sub: 'elemental',
     item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.1) },
-    itemTags: ['magic', 'jewelry', 'sword'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 1, linear: 0.1, max: 20,
@@ -706,23 +691,19 @@ export const OFFENSE_STATS = {
   shockEffectivenessPercent: createPercentStat({
     sub: 'elemental',
     item: { tierScalingMaxPercent: createTierScaling(10, 100, 1.1) },
-    itemTags: ['magic', 'jewelry'],
     skills: createDefaultSkillBonusesPercent({ passive: { linear: 0.5, power: 0.7 } }),
   }),
   freezeChance: createChanceStat({
     sub: 'elemental',
     item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.1) },
-    itemTags: ['magic', 'jewelry'],
   }),
   stunChance: createChanceStat({
     sub: 'attack',
     item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.1) },
-    itemTags: ['mace', 'hammer', 'shield'],
   }),
   extraDamageAgainstFrozenEnemies: createPercentStat({
     sub: 'elemental',
     item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.1) },
-    itemTags: ['weapon', 'jewelry'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
@@ -732,7 +713,6 @@ export const OFFENSE_STATS = {
   chanceToShatterEnemy: createChanceStat({
     sub: 'elemental',
     item: { tierScalingMaxPercent: createTierScaling(2, 20, 1.1) },
-    itemTags: ['magic', 'jewelry', 'mace'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 1, linear: 0.1, max: 15,
@@ -742,7 +722,6 @@ export const OFFENSE_STATS = {
   summonDamageBuffPercent: createPercentStat({
     sub: 'misc',
     item: { tierScalingMaxPercent: createTierScaling(10, 100, 1.1) },
-    itemTags: ['magic', 'jewelry'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
@@ -752,7 +731,6 @@ export const OFFENSE_STATS = {
   summonAttackSpeedBuffPercent: createPercentStat({
     sub: 'misc',
     item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.1) },
-    itemTags: ['magic', 'jewelry'],
     skills: createDefaultSkillBonusesPercent({ passive: { linear: 0.5, max: 30 } }),
   }),
   summonerExtraSummonUnlocked: createHiddenStat(),
@@ -760,7 +738,6 @@ export const OFFENSE_STATS = {
   teleportDodgeChance: createChanceStat({
     sub: 'defense',
     item: { tierScalingMaxPercent: createTierScaling(2, 20, 1.1) },
-    itemTags: ['boots', 'jewelry', 'magic'],
   }),
   manaToLifeTransferPercent: createPercentStat({ sub: 'misc' }),
   damageToBossesPercent: createPercentStat({ sub: 'misc' }),
@@ -776,7 +753,6 @@ export const OFFENSE_STATS = {
     dec: 2,
     sub: 'misc',
     item: { tierScalingMaxPercent: createTierScaling(0.5, 5, 1.1) },
-    itemTags: ['dagger', 'bow', 'jewelry'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 0.2, softcap: 100, linear: 0.1, power: 0.5, max: 5,
