@@ -1071,28 +1071,26 @@ export class Options {
     let val = parseInt(this._stageSkipInput.value, 10);
     if (isNaN(val) || val < 0) val = 0;
     if (val > max) val = max;
+
+    let newVal;
     if ((val === 0 || isNaN(val)) && this.stageSkip > 0) {
-      this._stageSkipInput.value = this.stageSkip;
-    } else if (oldMax > 0 && val === oldMax) {
-      this._stageSkipInput.value = max;
+      newVal = this.stageSkip;
+    } else if ((oldMax > 0 && val === oldMax) || (oldMax === 0 && max > 0 && this.stageSkip === 0)) {
+      newVal = max;
     } else {
-      this._stageSkipInput.value = val;
+      newVal = val;
+    }
+
+    this._stageSkipInput.value = newVal;
+    if (this.stageSkip !== newVal) {
+      this.stageSkip = newVal;
+      if (typeof dataManager !== 'undefined') dataManager.saveGame();
     }
 
     const inlineInput = document.querySelector('#inline-stage-controls .stage-skip-input');
     if (inlineInput) {
-      const oldInlineMax = parseInt(inlineInput.max, 10) || 0;
       inlineInput.max = max;
-      let v = parseInt(inlineInput.value, 10);
-      if (isNaN(v) || v < 0) v = 0;
-      if (v > max) v = max;
-      if ((v === 0 || isNaN(v)) && this.stageSkip > 0) {
-        inlineInput.value = this.stageSkip;
-      } else if (oldInlineMax > 0 && v === oldInlineMax) {
-        inlineInput.value = max;
-      } else {
-        inlineInput.value = v;
-      }
+      inlineInput.value = newVal;
     }
   }
 
@@ -1148,12 +1146,20 @@ export class Options {
     let val = parseInt(this._bossSkipInput.value, 10);
     if (isNaN(val) || val < 0) val = 0;
     if (val > max) val = max;
+
+    let newVal;
     if ((val === 0 || isNaN(val)) && this.arenaBossSkip > 0) {
-      this._bossSkipInput.value = this.arenaBossSkip;
-    } else if (oldMax > 0 && val === oldMax) {
-      this._bossSkipInput.value = max;
+      newVal = this.arenaBossSkip;
+    } else if ((oldMax > 0 && val === oldMax) || (oldMax === 0 && max > 0 && this.arenaBossSkip === 0)) {
+      newVal = max;
     } else {
-      this._bossSkipInput.value = val;
+      newVal = val;
+    }
+
+    this._bossSkipInput.value = newVal;
+    if (this.arenaBossSkip !== newVal) {
+      this.arenaBossSkip = newVal;
+      if (typeof dataManager !== 'undefined') dataManager.saveGame();
     }
   }
 
@@ -1597,31 +1603,26 @@ export class Options {
     let val = parseInt(this._startingStageInput.value, 10);
     if (isNaN(val) || val < 0) val = 0;
     if (val > max) val = max;
-    // If input was at default/0, reflect the current option value (possibly updated after purchase)
-    // Also, if value matched previous max, follow to new max.
+
+    let newVal;
     if ((val === 0 || isNaN(val)) && this.startingStage > 0) {
-      this._startingStageInput.value = this.startingStage;
-    } else if (oldMax > 0 && val === oldMax) {
-      this._startingStageInput.value = max;
+      newVal = this.startingStage;
+    } else if ((oldMax > 0 && val === oldMax) || (oldMax === 1 && max > 1 && (this.startingStage === 1 || !this.startingStage))) {
+      newVal = max;
     } else {
-      this._startingStageInput.value = val;
+      newVal = val;
     }
 
-    // Update inline input if present
+    this._startingStageInput.value = newVal;
+    if (this.startingStage !== newVal) {
+      this.startingStage = newVal;
+      if (typeof dataManager !== 'undefined') dataManager.saveGame();
+    }
+
     const inlineInput = document.querySelector('#inline-stage-controls .starting-stage-input');
     if (inlineInput) {
-      const oldInlineMax = parseInt(inlineInput.max, 10) || 0;
       inlineInput.max = max;
-      let v = parseInt(inlineInput.value, 10);
-      if (isNaN(v) || v < 0) v = 0;
-      if (v > max) v = max;
-      if ((v === 0 || isNaN(v)) && this.startingStage > 0) {
-        inlineInput.value = this.startingStage;
-      } else if (oldInlineMax > 0 && v === oldInlineMax) {
-        inlineInput.value = max;
-      } else {
-        inlineInput.value = v;
-      }
+      inlineInput.value = newVal;
     }
   }
 

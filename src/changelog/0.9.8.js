@@ -27,6 +27,7 @@ export default function run() {
       <li>Fixed overkill damage on Arena.</li>
       <li>Fixed arena boss skip and stage skip options not applying correctly when initially unlocked.</li>
       <li>Reduced rune stage scaling by a factor of 2.</li>
+      <li>Fixed arena skip rune effect not applying sometimes.</li>
     </ul>
   `;
 }
