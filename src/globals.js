@@ -14,6 +14,7 @@ import Prestige from './prestige.js';
 import Ascension from './ascension.js';
 import AchievementTracker from './achievements.js';
 import Runes, { BASE_RUNE_SLOTS } from './runes.js';
+import GambleState from './gambleState.js';
 
 // Global singletons for the game
 export let game = null;
@@ -32,6 +33,7 @@ export let prestige = null;
 export let ascension = null;
 export let achievements = null;
 export let runes = null;
+export let gambleState = null;
 
 // Runtime state that persists during resets
 export const runtime = { prestigeInProgress: false };
@@ -70,6 +72,7 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
   const _ascension = new Ascension(savedData?.ascension);
   const _achievements = new AchievementTracker(savedData?.achievements);
   const _runes = new Runes(savedData?.runes);
+  const _gambleState = new GambleState(savedData?.gambleState);
   const ascRuneSlots = _ascension.getBonuses()?.runeSlots || 0;
   _runes.ensureEquipSlots(BASE_RUNE_SLOTS + ascRuneSlots);
 
@@ -85,6 +88,7 @@ export async function setGlobals({ cloud = false, reset = false } = {}) {
   ascension = _ascension;
   achievements = _achievements;
   runes = _runes;
+  gambleState = _gambleState;
   dataManager = _dataManager;
 
   // useful when loading from cloud
@@ -109,6 +113,7 @@ export function getGlobals() {
     ascension,
     achievements,
     runes,
+    gambleState,
     dataManager,
   };
 }

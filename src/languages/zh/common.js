@@ -15,6 +15,7 @@ export default {
 
   'tab.mainOptions': '选项',
   'tab.buildings': '建筑',
+  'tab.gamble': '赌博',
   'tab.prestige': '声望',
   'tab.ascension': '飞升',
   'tab.journal': '日志',

@@ -32,6 +32,7 @@ import { calculateArmorReduction,
 import { renderRunesUI } from './runesUi.js';
 import { createModal, closeModal } from './modal.js';
 import { navigationManager } from '../utils/navigationManager.js';
+import { updateGambleAffordability } from '../gamble.js';
 
 export function initializeShopUI() {
   document.querySelectorAll('.shop-tab-btn').forEach((btn) => {
@@ -74,6 +75,10 @@ export function switchShopSubTab(subTabName, { skipUrlUpdate = false } = {}) {
     } catch (e) {
       console.warn('Failed to update building affordability:', e);
     }
+  }
+
+  if (subTabName === 'gamble') {
+    updateGambleAffordability();
   }
 
   if (!skipUrlUpdate) {
@@ -420,7 +425,7 @@ export function switchTab(tabName, { skipUrlUpdate = false } = {}) {
   // Handle Legacy Tabs
   let actualTab = tabName;
   let targetSubTab = null;
-  if (['training', 'crystalShop', 'soulShop', 'buildings'].includes(tabName)) {
+  if (['training', 'crystalShop', 'soulShop', 'buildings', 'gamble'].includes(tabName)) {
     actualTab = 'shop';
     targetSubTab = tabName;
   }

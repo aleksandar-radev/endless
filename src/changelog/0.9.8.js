@@ -4,6 +4,13 @@ export default function run() {
     <span style="color:#4F8A10;">2026-03-20</span>
     <hr />
 
+    <span style="color:#00529B;">Features</span>
+    <ul>
+      <li>Added a new <strong>Gamble Shop</strong> where you can spend gold to obtain random items of a selected tier.</li>
+      <li>Gambled items scale with the highest stage reached in the selected tier and can roll any rarity, including Unique and Set items.</li>
+      <li>Items won from gambling go to a temporary stash where you can inspect, sell, or move them to your inventory.</li>
+    </ul>
+
     <span style="color:#FF8A00;">Bug Fixes</span>
     <ul>
       <li>Fixed rune search functionality in the inventory to correctly find and highlight matching runes by filtering unique stats.</li>

@@ -15,6 +15,7 @@ export default {
 
   'tab.mainOptions': 'Options',
   'tab.buildings': 'Buildings',
+  'tab.gamble': 'Gamble',
   'tab.prestige': 'Prestige',
   'tab.ascension': 'Ascension',
   'tab.journal': 'Journal',

@@ -21,7 +21,8 @@ import { game,
   dataManager,
   buildings,
   training,
-  inventory } from './globals.js';
+  inventory,
+  runes } from './globals.js';
 import { updateRegionUI } from './region.js';
 import { updateStatsAndAttributesUI } from './ui/statsAndAttributesUi.js';
 import { initializeBuildingsUI, renderPurchasedBuildings } from './ui/buildingUi.js';
@@ -29,6 +30,7 @@ import { initializePrestigeUI } from './ui/prestigeUi.js';
 import { initializeBattleLogUI } from './ui/battleLogUi.js';
 import { initializeAscensionUI } from './ui/ascensionUi.js';
 import { initializeRunesUI } from './ui/runesUi.js';
+import { initializeGambleUI } from './gamble.js';
 import Enemy from './enemy.js';
 import Boss from './boss.js';
 import { RockyFieldEnemy } from './rockyField.js';
@@ -113,6 +115,7 @@ const updatePwaServiceWorker = registerSW({
   soulShop.initializeSoulShopUI();
   options.initializeOptionsUI();
   training.initializeTrainingUI();
+  initializeGambleUI();
   initializeSkillTreeUI();
   initializeBuildingsUI();
   initializePrestigeUI();
@@ -120,6 +123,13 @@ const updatePwaServiceWorker = registerSW({
   initializeBattleLogUI();
   initializeRunesUI();
   initializeInventoryUI(inventory);
+
+  // Enforce rune equip requirements on load (e.g. after ascension reset progression)
+  try {
+    if (runes.enforceRuneRequirements()) {
+      hero.queueRecalculateFromAttributes();
+    }
+  } catch {}
 
   // Apply translations after UI components are initialized
   applyTranslations();
