@@ -80,7 +80,7 @@ export const UNIQUE_ITEMS = {
     id: 'ribbonweave_vestments',
     nameKey: 'items.unique.ribbonweaveVestments',
     type: ITEM_IDS.ARMOR,
-    dropWeight: 4,
+    dropWeight: 8,
     stats: {
       allAttributes: { minMultiplier: 0.8, maxMultiplier: 1.2 },
       allResistance: { minMultiplier: 0.5, maxMultiplier: 0.7 },
@@ -99,14 +99,14 @@ export const UNIQUE_ITEMS = {
     id: 'the_monolith',
     nameKey: 'items.unique.theMonolith',
     type: ITEM_IDS.SHIELD,
-    dropWeight: 8,
+    dropWeight: 20,
     stats: { armor: { minMultiplier: 4.0, maxMultiplier: 8.0 } },
   },
   midas_touch: {
     id: 'midas_touch',
     nameKey: 'items.unique.midasTouch',
     type: ITEM_IDS.DAGGER,
-    dropWeight: 8,
+    dropWeight: 2,
     stats: {
       bonusGoldPercent: { minMultiplier: 3.0, maxMultiplier: 5.0 },
       instaKillPercent: { minMultiplier: 0.2, maxMultiplier: 0.5 },
@@ -116,7 +116,7 @@ export const UNIQUE_ITEMS = {
     id: 'absolute_zero',
     nameKey: 'items.unique.absoluteZero',
     type: ITEM_IDS.WAND,
-    dropWeight: 8,
+    dropWeight: 6,
     stats: {
       coldDamage: { minMultiplier: 0.6, maxMultiplier: 0.9 },
       coldDamagePercent: { minMultiplier: 0.6, maxMultiplier: 0.9 },
@@ -132,7 +132,7 @@ export const UNIQUE_ITEMS = {
     id: 'glass_cannon',
     nameKey: 'items.unique.glassCannon',
     type: ITEM_IDS.AMULET,
-    dropWeight: 8,
+    dropWeight: 3,
     stats: {
       damagePercent: { minMultiplier: 1.5, maxMultiplier: 2.5 },
       allResistancePercent: { minMultiplier: -0.8, maxMultiplier: -0.5 },
@@ -159,7 +159,7 @@ export const UNIQUE_ITEMS = {
     id: 'the_untouchable',
     nameKey: 'items.unique.theUntouchable',
     type: ITEM_IDS.BOOTS,
-    dropWeight: 8,
+    dropWeight: 4,
     stats: {
       teleportDodgeChance: { minMultiplier: 1.2, maxMultiplier: 2.0 },
       avoidChance: { minMultiplier: 1.0, maxMultiplier: 1.5 },
@@ -175,7 +175,7 @@ export const UNIQUE_ITEMS = {
     stats: {
       summonDamageBuffPercent: { minMultiplier: 1.5, maxMultiplier: 2.5 },
       summonAttackSpeedBuffPercent: { minMultiplier: 1.5, maxMultiplier: 2.5 },
-      damagePercent: { minMultiplier: -0.5, maxMultiplier: -0 },
+      damagePercent: { minMultiplier: -1, maxMultiplier: -0.2 },
     },
   },
   infernos_heart: {
@@ -224,7 +224,7 @@ export const UNIQUE_ITEMS = {
     id: 'infinity_loop',
     nameKey: 'items.unique.infinityLoop',
     type: ITEM_IDS.RING,
-    dropWeight: 8,
+    dropWeight: 1,
     stats: {
       cooldownReductionPercent: { minMultiplier: 0.5, maxMultiplier: 2.5 },
       buffDurationPercent: { minMultiplier: 0.5, maxMultiplier: 2.5 },
@@ -236,7 +236,7 @@ export const UNIQUE_ITEMS = {
     id: 'sunbreakers_resolve',
     nameKey: 'items.unique.sunbreakersResolve',
     type: ITEM_IDS.MACE,
-    dropWeight: 8,
+    dropWeight: 4,
     stats: {
       healDamagesEnemiesPercent: { minMultiplier: 1, maxMultiplier: 1.5 },
       lifeRegenOfTotalPercent: { minMultiplier: 0.8, maxMultiplier: 1.2 },

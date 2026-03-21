@@ -257,7 +257,11 @@ export const MISC_STATS = {
   adAllResistancePercent: createPercentStat({ sub: 'rewards', show: true }),
   adXpBonusPercent: createPercentStat({ sub: 'rewards', show: true }),
   adGoldGainPercent: createPercentStat({ sub: 'rewards', show: true }),
-  manaCostReductionPercent: createPercentStat({ sub: 'resources' }),
+  manaCostReductionPercent: createPercentStat({
+    sub: 'resources',
+    item: { tierScalingMaxPercent: createTierScaling(2, 25, 1.1) },
+    itemTags: ['jewelry', 'magic'],
+  }),
   buffDurationPercent: createPercentStat({
     show: true,
     sub: 'misc',
@@ -272,6 +276,8 @@ export const MISC_STATS = {
   }),
   buffEffectivenessPercent: createPercentStat({
     sub: 'misc',
+    item: { tierScalingMaxPercent: createTierScaling(5, 40, 1.1) },
+    itemTags: ['jewelry', 'magic'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 10, linear: 1, power: 0.685,
@@ -297,6 +303,8 @@ export const MISC_STATS = {
     div: 100,
     show: true,
     sub: 'rewards',
+    item: { tierScalingMaxPercent: dropTierScalingMaxPercent },
+    itemTags: ['jewelry', 'helmet'],
     skills: {
       passive: getSkillBonusesFlat({
         type: 'passive', base: 20, increment: 0, interval: 20, bonus: 0.5,
@@ -345,7 +353,12 @@ export const MISC_STATS = {
     skills: createDefaultSkillBonusesPercent(),
   }),
   canDualWieldTwoHanded: createHiddenStat(),
-  weaponEffectivenessPercent: createStat({ dec: 1, sub: 'misc' }),
+  weaponEffectivenessPercent: createStat({
+    dec: 1,
+    sub: 'misc',
+    item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.1) },
+    itemTags: ['gloves', 'jewelry'],
+  }),
   weaponFlatEffectivenessPercent: createStat({
     dec: 1,
     sub: 'misc',
@@ -393,6 +406,8 @@ export const MISC_STATS = {
   overhealToLife: createHiddenStat(),
   overhealPercent: createPercentStat({
     sub: 'misc',
+    item: { tierScalingMaxPercent: createTierScaling(5, 50, 1.1) },
+    itemTags: ['jewelry', 'magic', 'belt'],
     skills: createDefaultSkillBonusesPercent({ passive: { base: 5, linear: 0.5 } }),
   }),
   bloodSacrificeUnlocked: createHiddenStat(),

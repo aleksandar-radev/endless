@@ -275,6 +275,8 @@ export const DEFENSE_STATS = {
   avoidChance: createChanceStat({
     sub: 'defense',
     forceNotShow: true,
+    item: { tierScalingMaxPercent: createTierScaling(2, 15, 1.1) },
+    itemTags: ['boots', 'jewelry'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 0.466, linear: 0.1, max: 80,
@@ -318,6 +320,8 @@ export const DEFENSE_STATS = {
   arenaDamageReductionPercent: createPercentStat({
     sub: 'defense',
     cap: 80,
+    item: { tierScalingMaxPercent: createTierScaling(2, 20, 1.1) },
+    itemTags: ['armor', 'shield', 'helmet', 'jewelry'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 5, softcap: 500, linear: 0.15, max: 75,
@@ -364,6 +368,8 @@ export const DEFENSE_STATS = {
   damageTakenConvertedToColdPercent: createPercentStat({
     sub: 'elemental',
     cap: 75,
+    item: { tierScalingMaxPercent: createTierScaling(2, 20, 1.1) },
+    itemTags: ['armor', 'shield', 'ring'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 1, linear: 0.1, power: 0.5, max: 75,
@@ -373,6 +379,8 @@ export const DEFENSE_STATS = {
   coldDamageTakenReductionPercent: createPercentStat({
     sub: 'elemental',
     cap: 50,
+    item: { tierScalingMaxPercent: createTierScaling(2, 20, 1.1) },
+    itemTags: ['armor', 'shield', 'ring'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 1, linear: 0.1, power: 0.5, max: 50,
@@ -382,6 +390,8 @@ export const DEFENSE_STATS = {
   elementalDamageTakenReductionPercent: createPercentStat({
     sub: 'elemental',
     cap: 80,
+    item: { tierScalingMaxPercent: createTierScaling(1, 15, 1.1) },
+    itemTags: ['armor', 'shield', 'amulet'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 1, linear: 0.1, max: 25,
@@ -392,6 +402,8 @@ export const DEFENSE_STATS = {
     show: true,
     sub: 'defense',
     cap: 80,
+    item: { tierScalingMaxPercent: createTierScaling(1, 15, 1.1) },
+    itemTags: ['armor', 'shield', 'amulet'],
     skills: createDefaultSkillBonusesPercent({
       passive: {
         softcap: 200, linear: 0.15, max: 35,
