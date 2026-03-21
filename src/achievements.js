@@ -47,7 +47,7 @@ export class Achievement {
             for(let i = 1; i <= this.level; i++) factorial *= i;
             newVal = baseVal * factorial;
           } else if (this.rewardMultiplier) {
-            newVal = baseVal * Math.pow(this.rewardMultiplier, this.level - 1);
+            newVal = baseVal * (1 + (this.rewardMultiplier - 1) * (this.level - 1));
           }
 
           newReward.bonuses[key] = newVal;

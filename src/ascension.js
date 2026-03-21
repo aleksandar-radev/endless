@@ -531,6 +531,10 @@ export default class Ascension {
         if (ach) {
           ach.claimed = data.claimed;
           ach.reached = data.reached;
+          ach.level = data.level;
+          ach.activeReward = data.activeReward;
+          ach.currentValue = data.currentValue;
+          ach.updateScaling();
         }
       });
     }

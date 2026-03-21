@@ -350,12 +350,16 @@ export default class Prestige {
 
     // Restore achievements
     if (achievements && preservedAchievements) {
-      // Restore both claimed and reached status
+      // Restore both claimed and reached status, as well as level and progress
       Object.entries(preservedAchievements).forEach(([id, data]) => {
         const ach = achievements.achievements.find((a) => a.id === id);
         if (ach) {
           ach.claimed = data.claimed;
           ach.reached = data.reached;
+          ach.level = data.level;
+          ach.activeReward = data.activeReward;
+          ach.currentValue = data.currentValue;
+          ach.updateScaling();
         }
       });
     }

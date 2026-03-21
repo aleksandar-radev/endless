@@ -11,6 +11,13 @@ export default function run() {
       <li>Items won from gambling go to a temporary stash where you can inspect, sell, or move them to your inventory.</li>
     </ul>
 
+
+    <span style="color:#9F6000;">Improvements</span>
+    <ul>
+      <li>Achievements now persist through prestige/ascend. They have around 4x greater highest level, but much reduced rewards.</li>
+      <li>Reduced achievement target scaling by about 2x across the board.</li>
+    </ul>
+
     <span style="color:#FF8A00;">Bug Fixes</span>
     <ul>
       <li>Fixed rune search functionality in the inventory to correctly find and highlight matching runes by filtering unique stats.</li>
@@ -18,6 +25,7 @@ export default function run() {
       <li>Fixed missing CSS styles for the dimming and highlighting of matched runes and their tabs.</li>
       <li>Fixed crystal costs in crystal shop to always be full numbers (no decimals anymore).</li>
       <li>Fixed overkill damage on Arena.</li>
+      <li>Fixed arena boss skip and stage skip options not applying correctly when initially unlocked.</li>
       <li>Reduced rune stage scaling by a factor of 2.</li>
     </ul>
   `;
