@@ -43,6 +43,15 @@ const STAT_KEYS = Object.keys(STATS);
 
 export const STATS_ON_LEVEL_UP = 3;
 
+// --- XP Scaling Constants ---
+// Adjust these to tweak how fast the hero levels up.
+// Increase XP_CUBIC_DIVISOR to make late-game leveling less steep, decrease to make it steeper.
+export const XP_BASE = 10;
+export const XP_LINEAR = 30;
+export const XP_QUADRATIC = 1.5;
+export const XP_CUBIC_DIVISOR = 850;
+// ----------------------------
+
 function getResourceExtraDamagePhysicalShare() {
   if (typeof training?.getResourceExtraDamagePhysicalShare === 'function') {
     const share = Number(training.getResourceExtraDamagePhysicalShare());
@@ -104,8 +113,9 @@ function xpRequiredForLevels(startLevel, levels) {
 
   const linearSum = n * baseLevel + (nMinus1 * n) / 2;
   const squaresSum = n * baseLevel * baseLevel + baseLevel * n * nMinus1 + (nMinus1 * n * (2 * n - 1)) / 6;
+  const cubesSum = n * baseLevel ** 3 + 1.5 * (baseLevel ** 2) * n * nMinus1 + 0.5 * baseLevel * n * nMinus1 * (2 * n - 1) + (nMinus1 * n / 2) ** 2;
 
-  const total = 10 * n + 30 * linearSum + 2 * squaresSum;
+  const total = XP_BASE * n + XP_LINEAR * linearSum + XP_QUADRATIC * squaresSum + (cubesSum / XP_CUBIC_DIVISOR);
   if (!Number.isFinite(total)) return Number.POSITIVE_INFINITY;
   return Math.round(total);
 }
@@ -221,9 +231,10 @@ export default class Hero {
    * @returns {number} EXP required for next level
    */
   getExpToNextLevel() {
-    let xp = 10;
-    xp += 30 * this.level;
-    xp += 2 * this.level ** 2;
+    let xp = XP_BASE;
+    xp += XP_LINEAR * this.level;
+    xp += XP_QUADRATIC * this.level ** 2;
+    xp += (this.level ** 3) / XP_CUBIC_DIVISOR;
     return xp;
   }
 
