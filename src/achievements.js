@@ -23,14 +23,18 @@ export class Achievement {
 
   updateScaling() {
     // If no scaling config, standard behavior
-    if (!this.baseTarget && !this.targetMultiplier) {
+    if (!this.baseTarget && !this.targetMultiplier && !this.targetAddition) {
       return;
     }
 
     // Scaling Targets
     if (this.baseTarget) {
-      const mult = this.targetMultiplier || 1;
-      this.target = Math.floor(this.baseTarget * Math.pow(mult, this.level - 1));
+      if (this.targetAddition) {
+        this.target = this.baseTarget + this.targetAddition * (this.level - 1);
+      } else {
+        const mult = this.targetMultiplier || 1;
+        this.target = Math.floor(this.baseTarget * Math.pow(mult, this.level - 1));
+      }
     }
 
     // Scaling Rewards
@@ -60,6 +64,9 @@ export class Achievement {
   getProgress() {
     if (this.type === 'event') {
       return this.currentValue;
+    }
+    if (this.type === 'unique_collection') {
+      return Math.min(statistics.discoveredUniques?.length || 0, this.target);
     }
 
     if (this.type === 'kill') {
@@ -96,7 +103,7 @@ export class Achievement {
   }
 
   isComplete() {
-    if (this.claimed && (!this.targetMultiplier || (this.maxLevel && this.level >= this.maxLevel))) return true;
+    if (this.claimed && (!this.targetMultiplier && !this.targetAddition || (this.maxLevel && this.level >= this.maxLevel))) return true;
 
     if (this.reached) return true;
 
@@ -120,7 +127,7 @@ export class Achievement {
 
     // Check if already maxed
     if (this.maxLevel && this.level >= this.maxLevel && this.claimed) return null;
-    if (this.claimed && !this.targetMultiplier) return null;
+    if (this.claimed && !this.targetMultiplier && !this.targetAddition) return null;
 
     // Apply Reward
     this.activeReward = this.reward;

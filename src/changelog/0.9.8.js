@@ -19,6 +19,7 @@ export default function run() {
       <li>Increased XP needed on higher levels.</li>
       <li>Buff druid's Wild Communion specialization skill.</li>
       <li>Added several more unique items.</li>
+      <li>Added new achievement: Discover all unique items.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

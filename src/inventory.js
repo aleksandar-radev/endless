@@ -1,5 +1,5 @@
 import Item, { AVAILABLE_STATS } from './item.js';
-import { game, hero, statistics, dataManager, crystalShop, options, ascension } from './globals.js';
+import { game, hero, statistics, dataManager, crystalShop, options, ascension, achievements } from './globals.js';
 import { showToast, updateResources, formatStatName } from './ui/ui.js';
 import { t, tp } from './i18n.js';
 import { createModal, closeModal } from './ui/modal.js';
@@ -1290,6 +1290,11 @@ export default class Inventory {
 
     statistics.increment('totalItemsFound', null, 1);
     statistics.increment('itemsFound', item.rarity.toLowerCase());
+    if (item.rarity === RARITY_KEYS.UNIQUE && item.uniqueId) {
+      if (statistics.trackUniqueItemDiscovered(item.uniqueId)) {
+        achievements.checkForCompletion();
+      }
+    }
     if (specificPosition !== null && specificPosition < ITEM_SLOTS && !this.inventoryItems[specificPosition]) {
       this.inventoryItems[specificPosition] = item;
     } else {

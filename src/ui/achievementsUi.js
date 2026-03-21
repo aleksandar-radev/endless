@@ -117,19 +117,19 @@ export function updateAchievementsUI() {
       <div class="achievement-action">
         ${(() => {
     const isMaxed = ach.maxLevel && ach.level >= ach.maxLevel && ach.claimed;
-    const isSingleClaimed = ach.claimed && !ach.targetMultiplier;
+    const isSingleClaimed = ach.claimed && !ach.targetMultiplier && !ach.targetAddition;
 
     if (isMaxed) return `<span class="claimed-text">${t('common.max') || 'Maxed'}</span>`;
     if (isSingleClaimed) return `<span class="claimed-text">${t('common.claimed')}</span>`;
 
-    return `<button class="claim-btn" ${!ach.isComplete() ? 'disabled' : ''}>${ach.targetMultiplier ? (t('common.upgrade') || 'Upgrade') : (t('common.claim') || 'Claim')}</button>`;
+    return `<button class="claim-btn" ${!ach.isComplete() ? 'disabled' : ''}>${(ach.targetMultiplier || ach.targetAddition) ? (t('common.upgrade') || 'Upgrade') : (t('common.claim') || 'Claim')}</button>`;
   })()}
       </div>
     `;
 
     // Add listener only if not maxed and not single-claimed
     const isMaxed = ach.maxLevel && ach.level >= ach.maxLevel && ach.claimed;
-    const isSingleClaimed = ach.claimed && !ach.targetMultiplier;
+    const isSingleClaimed = ach.claimed && !ach.targetMultiplier && !ach.targetAddition;
 
     if (!isMaxed && !isSingleClaimed && ach.isComplete()) {
       const btn = item.querySelector('.claim-btn');
@@ -176,7 +176,7 @@ export function refreshAchievementsInPlace() {
     if (progressText) progressText.textContent = `${formatNumber(current)} / ${formatNumber(target)}`;
 
     const isMaxed = ach.maxLevel && ach.level >= ach.maxLevel && ach.claimed;
-    const isSingleClaimed = ach.claimed && !ach.targetMultiplier;
+    const isSingleClaimed = ach.claimed && !ach.targetMultiplier && !ach.targetAddition;
 
     item.classList.toggle('ready', !ach.claimed && ach.isComplete());
 

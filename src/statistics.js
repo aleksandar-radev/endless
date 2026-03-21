@@ -5,9 +5,11 @@ import { ROCKY_FIELD_REGIONS } from './rockyField.js';
 import { createDeferredRunner } from './utils/debounce.js';
 import { RARITY_KEYS } from './constants/items.js';
 import { ENEMY_RARITY_TYPES } from './constants/enemies.js';
+import { UNIQUE_ITEMS } from './constants/uniqueItems.js';
 
 const ROCKY_FIELD_REGION_IDS = ROCKY_FIELD_REGIONS.map((region) => region.id);
 const STATISTICS_UPDATE_DEBOUNCE_MS = 1000;
+const TOTAL_UNIQUE_COUNT = Object.keys(UNIQUE_ITEMS).length;
 
 function createRockyFieldRegionMap(source = {}) {
   const result = {};
@@ -126,6 +128,14 @@ export function buildStatisticsDisplayEntries(source = {}) {
       id: 'stat-total-items-found',
       type: 'text',
       text: tp('statistics.totalItemsFound', { value: formatNumber(stats.totalItemsFound || 0) }),
+    },
+    {
+      id: 'stat-unique-items-discovered',
+      type: 'text',
+      text: tp('statistics.uniqueUniquesFound', {
+        value: stats.discoveredUniques?.length || 0,
+        total: TOTAL_UNIQUE_COUNT,
+      }),
     },
     {
       id: 'stat-items-found-by-rarity',
@@ -251,6 +261,7 @@ export default class Statistics {
       xp: 0, gold: 0, items: 0, materials: 0,
     };
     this.offlineHistory = [];
+    this.discoveredUniques = [];
     const now = Date.now();
     this.lastFightActive = now;
     this.lastFightActiveLocal = now;
@@ -258,6 +269,7 @@ export default class Statistics {
 
     handleSavedData(savedData, this);
     if (!Array.isArray(this.offlineHistory)) this.offlineHistory = [];
+    if (!Array.isArray(this.discoveredUniques)) this.discoveredUniques = [];
     if (this.offlineHistory.length > 10) this.offlineHistory = this.offlineHistory.slice(-10);
     if (typeof this.rockyFieldHighestStage === 'number') {
       this.rockyFieldHighestStages.outskirts = Math.max(
@@ -375,6 +387,7 @@ export default class Statistics {
             <div class="stat-entry" id="stat-total-crystals"></div>
             <div class="stat-entry" id="stat-total-souls"></div>
             <div class="stat-entry" id="stat-total-items-found"></div>
+            <div class="stat-entry" id="stat-unique-items-discovered"></div>
             <div class="stat-entry" id="stat-items-found-by-rarity"></div>
             <div class="stat-entry" id="stat-total-materials-found"></div>
           </div>
@@ -444,6 +457,16 @@ export default class Statistics {
       this[category] = value;
       this._queueUiUpdate();
     }
+  }
+
+  trackUniqueItemDiscovered(uniqueId) {
+    if (!this.discoveredUniques) this.discoveredUniques = [];
+    if (!this.discoveredUniques.includes(uniqueId)) {
+      this.discoveredUniques.push(uniqueId);
+      this._queueUiUpdate();
+      return true;
+    }
+    return false;
   }
 
   // getter function

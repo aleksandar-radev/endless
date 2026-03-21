@@ -49,6 +49,22 @@ export const ACHIEVEMENT_DEFINITIONS = [
     icon: 'text:SUM',
   },
 
+  // Unique Items
+  {
+    id: 'find_unique_items',
+    title: 'achievements.data.find_unique_items.title',
+    description: 'achievements.data.find_unique_items.desc',
+    type: 'unique_collection',
+    target: 1,
+    baseTarget: 1,
+    targetAddition: 1,
+    maxLevel: 250,
+    reward: { bonuses: { itemQuantityPercent: 0.02, itemRarityPercent: 0.02 } },
+    baseReward: { bonuses: { itemQuantityPercent: 0.02, itemRarityPercent: 0.02 } },
+    rewardMultiplier: 4, // linear scaling: 1x, 2x, 3x
+    icon: 'text:UNIQ',
+  },
+
   // Gold Achievements
   {
     id: 'earn_gold',

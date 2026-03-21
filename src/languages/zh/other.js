@@ -29,6 +29,9 @@ export default {
   // Summon One Shot
   'achievements.data.summon_one_shot.title': '掌控者',
   'achievements.data.summon_one_shot.desc': '让召唤物单次攻击击杀 {target} 个敌人',
+  // Unique Items
+  'achievements.data.find_unique_items.title': '收藏家',
+  'achievements.data.find_unique_items.desc': '找到 {target} 件不同的唯一物品',
   // Earn Gold
   'achievements.data.earn_gold.title': '累积者',
   'achievements.data.earn_gold.desc': '赚取 {target} 金币',
@@ -146,6 +149,7 @@ export default {
   'statistics.totalCrystalsEarned': '获得水晶总计：{value}',
   'statistics.totalSoulsEarned': '获得灵魂总计：{value}',
   'statistics.totalItemsFound': '获得物品总计：{value}',
+  'statistics.uniqueUniquesFound': '已发现的唯一物品：{value} / {total}',
   'statistics.itemsFoundByRarity': '按稀有度获得的物品：',
   'statistics.totalMaterialsFound': '获得材料总计：{value}',
   'statistics.highestStages': '最高阶段：',

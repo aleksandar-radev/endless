@@ -27,6 +27,9 @@ export default {
   // Summon One Shot
   'achievements.data.summon_one_shot.title': 'Maestro de Esbirros',
   'achievements.data.summon_one_shot.desc': 'Haz que una invocación mate a {target} enemigos de un solo golpe',
+  // Unique Items
+  'achievements.data.find_unique_items.title': 'Coleccionista',
+  'achievements.data.find_unique_items.desc': 'Encuentra {target} objetos únicos distintos',
   // Earn Gold
   'achievements.data.earn_gold.title': 'Acumulador',
   'achievements.data.earn_gold.desc': 'Gana {target} de oro',
@@ -154,6 +157,7 @@ export default {
   'statistics.totalCrystalsEarned': 'Cristales totales obtenidos: {value}',
   'statistics.totalSoulsEarned': 'Almas totales obtenidas: {value}',
   'statistics.totalItemsFound': 'Objetos totales encontrados: {value}',
+  'statistics.uniqueUniquesFound': 'Objetos Únicos Descubiertos: {value} / {total}',
   'statistics.itemsFoundByRarity': 'Objetos encontrados por rareza:',
   'statistics.totalMaterialsFound': 'Materiales totales encontrados: {value}',
   'statistics.highestStages': 'Etapas más altas:',
