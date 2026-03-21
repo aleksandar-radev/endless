@@ -546,16 +546,17 @@ export function playerAttack(currentTime) {
       game.healPlayer(totalLifeChange);
 
       // On-hit Effects
-      if (hero.stats.bleedChance > 0 && Math.random() < hero.stats.bleedChance) {
-        const physicalDealt = breakdown ? breakdown.physical || 0 : damage;
-        const bleedDmg = physicalDealt * (hero.stats.bleedDamagePercent || 0);
+      const physicalDealt = breakdown ? breakdown.physical || 0 : damage;
+      if (physicalDealt > 0 && hero.stats.bleedChance > 0 && Math.random() < hero.stats.bleedChance) {
+        const bleedShare = AILMENTS.bleed.baseDamageMultiplier + (hero.stats.bleedDamagePercent || 0);
+        const bleedDmg = physicalDealt * bleedShare;
         if (bleedDmg > 0) {
           game.currentEnemy.applyBleed(bleedDmg);
         }
       }
 
-      if (hero.stats.burnChance > 0 && Math.random() < hero.stats.burnChance) {
-        const fireDealt = breakdown ? breakdown.fire || 0 : 0;
+      const fireDealt = breakdown ? breakdown.fire || 0 : 0;
+      if (fireDealt > 0 && hero.stats.burnChance > 0 && Math.random() < hero.stats.burnChance) {
         const burnShare = AILMENTS.burn.baseDamageMultiplier + (hero.stats.burnDamagePercent || 0);
         const burnDmg = fireDealt * burnShare;
         if (burnDmg > 0) {
@@ -565,7 +566,8 @@ export function playerAttack(currentTime) {
 
       const earthDealt = breakdown?.earth || 0;
       if (earthDealt > 0 && hero.stats.poisonChance > 0 && Math.random() < hero.stats.poisonChance) {
-        const poisonDmg = earthDealt * (hero.stats.poisonDamagePercent || 0);
+        const poisonShare = AILMENTS.poison.baseDamageMultiplier + (hero.stats.poisonDamagePercent || 0);
+        const poisonDmg = earthDealt * poisonShare;
         if (poisonDmg > 0) {
           game.currentEnemy.applyPoison(poisonDmg);
         }

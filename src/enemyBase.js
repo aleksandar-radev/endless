@@ -110,15 +110,23 @@ class EnemyBase {
 
     Object.entries(this.ailments).forEach(([id, ailment]) => {
       if (ailment.duration > 0) {
-        // Handle DoTs (Bleed, Burn)
+        // Handle DoTs (Bleed, Burn, Poison)
         if (ailment.damagePool !== undefined) {
-          const tickMs = Math.min(deltaMs, ailment.duration);
-          // ensure at least 1 damage per tick if there's any damage left in pool
-          const damage = Math.max((ailment.damagePool / ailment.duration) * tickMs, 1);
+          const tickRate = AILMENTS[id].tickRate || 100;
+          ailment.accumulator = (ailment.accumulator || 0) + deltaMs;
 
-          if (damage > 0) {
-            game.damageEnemy(damage, false, null, id);
-            ailment.damagePool -= damage;
+          if (ailment.accumulator >= tickRate) {
+            const ticks = Math.floor(ailment.accumulator / tickRate);
+            const tickMs = Math.min(ticks * tickRate, ailment.duration);
+            ailment.accumulator -= ticks * tickRate;
+
+            // ensure at least 1 damage per tick if there's any damage left in pool
+            const damage = Math.max((ailment.damagePool / ailment.duration) * tickMs, 1);
+
+            if (damage > 0) {
+              game.damageEnemy(damage, false, null, id);
+              ailment.damagePool -= damage;
+            }
           }
         }
 

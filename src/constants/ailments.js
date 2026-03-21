@@ -5,6 +5,7 @@ export const AILMENTS = {
     id: 'bleed',
     duration: 2000,
     tickRate: 100, // Process DoT every 100ms
+    baseDamageMultiplier: 0.8, // Base multiplier for bleed damage calculation
   },
   burn: {
     id: 'burn',
@@ -29,6 +30,7 @@ export const AILMENTS = {
     id: 'poison',
     duration: 10000,
     tickRate: 500,
+    baseDamageMultiplier: 3.0, // Base multiplier for poison damage calculation
   },
   shatter: {
     id: 'shatter',

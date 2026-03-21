@@ -509,9 +509,11 @@ export const DRUID_SKILLS = {
         level, statKey: 'earthDamage', skillType: 'buff', scale: { base: 3.75, increment: 3 },
       }),
       poisonDamagePercent: getSkillStatBonus({
-        level, statKey: 'poisonDamagePercent', skillType: 'buff', scale: { base: 0.625 },
+        level, statKey: 'poisonDamagePercent', skillType: 'buff', scale: { base: 2.0 },
       }),
-      poisonChance: 20,
+      poisonChance: getSkillStatBonus({
+        level, statKey: 'poisonChance', skillType: 'buff', scale: { base: 4, limit: 25 },
+      }),
     }),
     synergies: [
       {

@@ -637,8 +637,15 @@ export const OFFENSE_STATS = {
       },
     }),
   }),
-  poisonChance: createChanceStat({ sub: 'elemental' }),
-  poisonDamagePercent: createPercentStat({ sub: 'elemental' }),
+  poisonChance: createChanceStat({
+    sub: 'elemental',
+    cap: 100,
+    skills: createDefaultSkillBonusesPercent(),
+  }),
+  poisonDamagePercent: createPercentStat({
+    sub: 'elemental',
+    skills: createDefaultSkillBonusesPercent(),
+  }),
   explosionChance: createChanceStat({
     sub: 'elemental',
     skills: createDefaultSkillBonusesPercent({ passive: { base: 1, linear: 0.1 } }),

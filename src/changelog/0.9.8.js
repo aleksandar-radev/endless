@@ -21,6 +21,7 @@ export default function run() {
 
     <span style="color:#FF8A00;">Bug Fixes</span>
     <ul>
+      <li>Fixed Shapeshifter druid snake form (and overall poison damages).</li>
       <li>Fixed rune search functionality in the inventory to correctly find and highlight matching runes by filtering unique stats.</li>
       <li>Improved rune search to allow multiple search terms to match independently.</li>
       <li>Fixed missing CSS styles for the dimming and highlighting of matched runes and their tabs.</li>
