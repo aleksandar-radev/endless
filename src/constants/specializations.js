@@ -1050,16 +1050,16 @@ export const SPECIALIZATIONS = {
           maxLevel: () => DEFAULT_MAX_SKILL_LEVEL,
           effect: (level) => ({
             lifePercent: getSkillStatBonus({
-              level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 0.4 },
+              level, statKey: 'lifePercent', skillType: 'passive', scale: { base: 1.5, linear: 1.5 },
             }),
             lifeRegenPercent: getSkillStatBonus({
-              level, statKey: 'lifeRegenPercent', skillType: 'passive', scale: { base: 0.4 },
+              level, statKey: 'lifeRegenPercent', skillType: 'passive', scale: { base: 1.5, linear: 1.5 },
             }),
             armorPercent: getSkillStatBonus({
-              level, statKey: 'armorPercent', skillType: 'passive', scale: { base: 0.4 },
+              level, statKey: 'armorPercent', skillType: 'passive', scale: { base: 1.5, linear: 1.5 },
             }),
             allResistancePercent: getSkillStatBonus({
-              level, statKey: 'allResistancePercent', skillType: 'passive', scale: { base: 1 },
+              level, statKey: 'allResistancePercent', skillType: 'passive', scale: { base: 1.5, linear: 1.5 },
             }),
           }),
         },

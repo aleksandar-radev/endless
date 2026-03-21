@@ -17,6 +17,7 @@ export default function run() {
       <li>Achievements now persist through prestige/ascend. They have around 4x greater highest level, but much reduced rewards.</li>
       <li>Reduced achievement target scaling by about 2x across the board.</li>
       <li>Increased XP needed on higher levels.</li>
+      <li>Buff druid's Wild Communion specialization skill.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

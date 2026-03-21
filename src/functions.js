@@ -1114,11 +1114,28 @@ export function createModifyUI(container = document.body) {
     showToast(tp('debug.addedUniqueItem', { name: t(uniqueDef.nameKey), tier }));
   });
 
+  const addAllUniqueBtn = document.createElement('button');
+  addAllUniqueBtn.textContent = 'Add All Unique Items';
+  addAllUniqueBtn.addEventListener('click', () => {
+    const tier = Math.min(12, Math.max(1, Math.round(parseInt(uniqueTierInput.value, 10) || 1)));
+    const level = Math.max(0, Math.round(parseInt(uniqueLevelInput.value, 10) || 1));
+    let count = 0;
+    Object.keys(UNIQUE_ITEMS).forEach((uid) => {
+      const item = createUniqueItemById(uid, tier, level);
+      if (item) {
+        inventory.addItemToInventory(item);
+        count++;
+      }
+    });
+    showToast(`Added ${count} unique items (Tier ${tier}, Level ${level})`);
+  });
+
   uniqueDiv.appendChild(uniqueSearch);
   uniqueDiv.appendChild(uniqueDd.container);
   uniqueDiv.appendChild(uniqueTierControl);
   uniqueDiv.appendChild(uniqueLevelControl);
   uniqueDiv.appendChild(addUniqueBtn);
+  uniqueDiv.appendChild(addAllUniqueBtn);
   inventorySection.appendChild(uniqueDiv);
 
   const setDiv = document.createElement('div');
@@ -1193,11 +1210,28 @@ export function createModifyUI(container = document.body) {
     }));
   });
 
+  const addAllSetBtn = document.createElement('button');
+  addAllSetBtn.textContent = 'Add All Set Items';
+  addAllSetBtn.addEventListener('click', () => {
+    const tier = Math.min(12, Math.max(1, Math.round(parseInt(setTierInput.value, 10) || 1)));
+    const level = Math.max(0, Math.round(parseInt(setLevelInput.value, 10) || 1));
+    let count = 0;
+    Object.keys(SET_ITEMS).forEach((sid) => {
+      const items = createSetItemsById(sid, tier, level);
+      if (items && items.length) {
+        items.forEach((item) => inventory.addItemToInventory(item));
+        count += items.length;
+      }
+    });
+    showToast(`Added ${count} set items (Tier ${tier}, Level ${level})`);
+  });
+
   setDiv.appendChild(setSearch);
   setDiv.appendChild(setDd.container);
   setDiv.appendChild(setTierControl);
   setDiv.appendChild(setLevelControl);
   setDiv.appendChild(addSetBtn);
+  setDiv.appendChild(addAllSetBtn);
   inventorySection.appendChild(setDiv);
 
   // Example: Add buttons to modify skill tree
