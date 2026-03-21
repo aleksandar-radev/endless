@@ -18,6 +18,7 @@ export default function run() {
       <li>Reduced achievement target scaling by about 2x across the board.</li>
       <li>Increased XP needed on higher levels.</li>
       <li>Buff druid's Wild Communion specialization skill.</li>
+      <li>Added several more unique items.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
