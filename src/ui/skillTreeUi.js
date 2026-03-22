@@ -2463,13 +2463,12 @@ const updateTooltipContent = (skillId) => {
   return generateSkillTooltipHtml(skill, currentLevel, effectsCurrent, effectsNext);
 };
 
+let lastActionBarState = '';
+
 export function updateActionBar() {
   if (window.perfMon?.enabled) window.perfMon.mark('updateActionBar');
   const skillSlotsContainer = document.querySelector('.skill-slots');
   if (!skillSlotsContainer) return;
-
-  skillSlotsContainer.innerHTML = '';
-  let slotNumber = 1;
 
   // Render skills in a deterministic order based on the class skill constants
   const orderedIds = Object.keys(SKILL_TREES[skillTree.selectedPath?.name] || {});
@@ -2492,12 +2491,42 @@ export function updateActionBar() {
     return a.localeCompare(b);
   });
 
-  sortedIds.forEach((skillId) => {
+  const visibleSkills = [];
+  for (let i = 0; i < sortedIds.length; i++) {
+    const skillId = sortedIds[i];
     const unlocked = !!skillTree.skills[skillId];
-    if (!unlocked) return;
+    if (!unlocked) continue;
 
     const skill = skillTree.getSkill(skillId);
-    if (skill.type() === 'passive' || !skillTree.isDisplayEnabled(skillId)) return;
+    if (skill.type() === 'passive' || !skillTree.isDisplayEnabled(skillId)) continue;
+    visibleSkills.push(skillId);
+  }
+
+  const currentStateHash = visibleSkills.join(',') + '|' + options.showSkillCooldowns;
+
+  if (currentStateHash === lastActionBarState) {
+    // State hasn't changed, just update dynamic active classes
+    const slots = skillSlotsContainer.querySelectorAll('.skill-slot');
+    slots.forEach((slot) => {
+      const skillId = slot.dataset.skillId;
+      if (skillTree.activeBuffs.has(skillId)) {
+        slot.classList.add('active');
+      } else {
+        slot.classList.remove('active');
+      }
+    });
+    updateBuffIndicators();
+    if (window.perfMon?.enabled) window.perfMon.measure('updateActionBar', 5);
+    return;
+  }
+
+  lastActionBarState = currentStateHash;
+  skillSlotsContainer.innerHTML = '';
+  let slotNumber = 1;
+
+  for (let i = 0; i < visibleSkills.length; i++) {
+    const skillId = visibleSkills[i];
+    const skill = skillTree.getSkill(skillId);
 
     const skillSlot = document.createElement('div');
     skillSlot.className = 'skill-slot';
@@ -2539,7 +2568,7 @@ export function updateActionBar() {
     skillSlot.addEventListener('click', () => skillTree.toggleSkill(skillId));
     skillSlotsContainer.appendChild(skillSlot);
     slotNumber++;
-  });
+  }
 
   // Update buff/cooldown indicators
   updateBuffIndicators();

@@ -1597,6 +1597,8 @@ export default class SkillTree {
   processSummons() {
     if (window.perfMon?.enabled) window.perfMon.mark('processSummons');
     const now = Date.now();
+    let cachedPlayerBaseDamage = null;
+
     this.activeBuffs.forEach((instances, skillId) => {
       const list = Array.isArray(instances) ? instances : [instances];
 
@@ -1606,7 +1608,22 @@ export default class SkillTree {
         if (buffData.nextAttackTime <= now) {
           // Calculate summon damage as % of player's damage
           const canCrit = buffData?.summonStats?.canCrit || false || (hero.stats.summonsCanCrit || 0) > 0;
-          const playerDamage = hero.calculateTotalDamage({}, { canCrit });
+
+          if (!cachedPlayerBaseDamage) {
+            cachedPlayerBaseDamage = hero.calculateTotalDamage({}, { includeRandom: false });
+          }
+
+          let playerDamageValue = cachedPlayerBaseDamage.damage;
+          let isCritical = false;
+
+          if (hero.stats.doubleDamageChance && Math.random() < hero.stats.doubleDamageChance) {
+            playerDamageValue *= 2;
+          }
+          if (canCrit && Math.random() < (hero.stats.critChance || 0)) {
+            isCritical = true;
+            playerDamageValue *= (hero.stats.critDamage || 1);
+          }
+
           let damage = 0;
           damage += buffData.summonStats.damage || 0;
           damage += buffData.summonStats.fireDamage || 0;
@@ -1616,13 +1633,13 @@ export default class SkillTree {
           damage += buffData.summonStats.lightningDamage || 0;
           damage += buffData.summonStats.waterDamage || 0;
 
-          if (playerDamage.isCritical) {
+          if (isCritical) {
             damage *= hero.stats.critDamage;
           }
 
           // in the % damage, the crit damage is already factored in
           const d = getDivisor('percentOfPlayerDamage');
-          damage += playerDamage.damage * ((buffData.summonStats.percentOfPlayerDamage || 0) / d);
+          damage += playerDamageValue * ((buffData.summonStats.percentOfPlayerDamage || 0) / d);
 
           if (skillId === 'animatedWeapons') {
             damage *= 1 + (hero.stats.animatedWeaponsDamagePercent || 0);
@@ -1649,7 +1666,7 @@ export default class SkillTree {
           const summonDamageMultiplier = 1 + (hero.stats.summonDamageBuffPercent || 0);
           damage *= summonDamageMultiplier;
 
-          game.damageEnemy(damage, canCrit ? playerDamage.isCritical : false, null, null, summonName);
+          game.damageEnemy(damage, canCrit ? isCritical : false, null, null, summonName);
 
           // Schedule next attack
           const baseAttackSpeed = buffData?.summonStats?.baseAttackSpeed || buffData?.summonStats?.attackSpeed || 1;
@@ -1853,13 +1870,7 @@ export default class SkillTree {
     if (!game.gameStarted) return;
     if (window.perfMon?.enabled) window.perfMon.mark('autoCastEligibleSkills');
 
-    // Combine main skills and specialization skills for auto-cast check
-    const skillIds = new Set([
-      ...Object.keys(this.skills),
-      ...Object.keys(this.specializationSkills),
-    ]);
-
-    skillIds.forEach((skillId) => {
+    const processSkill = (skillId) => {
       const skill = this.getSkill(skillId);
       if (!skill || !this.isAutoCastEnabled(skillId)) return;
       // Do not auto-cast skills hidden from display
@@ -1895,7 +1906,20 @@ export default class SkillTree {
           }
         }
       }
-    });
+    };
+
+    for (const skillId in this.skills) {
+      if (Object.prototype.hasOwnProperty.call(this.skills, skillId)) {
+        processSkill(skillId);
+      }
+    }
+    for (const skillId in this.specializationSkills) {
+      if (Object.prototype.hasOwnProperty.call(this.specializationSkills, skillId)) {
+        if (!Object.prototype.hasOwnProperty.call(this.skills, skillId)) {
+          processSkill(skillId);
+        }
+      }
+    }
     if (window.perfMon?.enabled) window.perfMon.measure('autoCastEligibleSkills', 5);
   }
 }

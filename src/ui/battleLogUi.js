@@ -37,9 +37,15 @@ export function initializeBattleLogUI() {
     return `<div class="log-entry"><span class="timestamp">[${time}]</span>${entry.message}</div>`;
   }
 
+  let renderQueued = false;
   function render() {
-    battleList.innerHTML = battleLog.battle.slice().reverse().map(format).join('');
-    dropList.innerHTML = battleLog.drops.slice().reverse().map(format).join('');
+    if (renderQueued) return;
+    renderQueued = true;
+    requestAnimationFrame(() => {
+      renderQueued = false;
+      battleList.innerHTML = battleLog.battle.slice().reverse().map(format).join('');
+      dropList.innerHTML = battleLog.drops.slice().reverse().map(format).join('');
+    });
   }
 
   function updateButtons() {

@@ -230,20 +230,24 @@ export function enemyAttack(currentTime) {
       let physicalDamage = Math.floor(physicalDamageRaw * (1 - armorReduction));
 
       const elementalDamage = {};
-      ELEMENT_IDS.forEach((id) => {
+      for (let i = 0; i < ELEMENT_IDS.length; i++) {
+        const id = ELEMENT_IDS[i];
         const reduction = calculateResistanceReduction(hero.stats[`${id}Resistance`], enemy[`${id}Damage`]) / 100;
         elementalDamage[id] = enemy[`${id}Damage`] * (1 - reduction);
-      });
+      }
 
       // Convert a portion of non-cold damage taken into cold, then reduce cold damage taken.
       const conversionPercent = Math.max(0, hero.stats.damageTakenConvertedToColdPercent || 0);
       const coldReductionPercent = Math.max(0, hero.stats.coldDamageTakenReductionPercent || 0);
 
       if (conversionPercent > 0) {
-        const nonColdTotal = Math.max(
-          0,
-          physicalDamage + ELEMENT_IDS.reduce((sum, id) => (id === 'cold' ? sum : sum + (elementalDamage[id] || 0)), 0),
-        );
+        let nonColdTotal = physicalDamage;
+        for (let i = 0; i < ELEMENT_IDS.length; i++) {
+          const id = ELEMENT_IDS[i];
+          if (id !== 'cold') nonColdTotal += (elementalDamage[id] || 0);
+        }
+        nonColdTotal = Math.max(0, nonColdTotal);
+
         if (nonColdTotal > 0) {
           const convertAmount = nonColdTotal * conversionPercent;
 
@@ -252,13 +256,14 @@ export function enemyAttack(currentTime) {
             physicalDamage = Math.max(0, physicalDamage - convertAmount * physicalShare);
           }
 
-          ELEMENT_IDS.forEach((id) => {
-            if (id === 'cold') return;
+          for (let i = 0; i < ELEMENT_IDS.length; i++) {
+            const id = ELEMENT_IDS[i];
+            if (id === 'cold') continue;
             const v = elementalDamage[id] || 0;
-            if (v <= 0) return;
+            if (v <= 0) continue;
             const share = v / nonColdTotal;
             elementalDamage[id] = Math.max(0, v - convertAmount * share);
-          });
+          }
 
           elementalDamage.cold = (elementalDamage.cold || 0) + convertAmount;
         }
@@ -270,14 +275,18 @@ export function enemyAttack(currentTime) {
 
       if (hero.stats.elementalDamageTakenReductionPercent > 0) {
         const reduction = hero.stats.elementalDamageTakenReductionPercent;
-        ELEMENT_IDS.forEach((id) => {
+        for (let i = 0; i < ELEMENT_IDS.length; i++) {
+          const id = ELEMENT_IDS[i];
           if (elementalDamage[id] > 0) {
             elementalDamage[id] *= 1 - reduction;
           }
-        });
+        }
       }
 
-      let totalDamage = physicalDamage + ELEMENT_IDS.reduce((sum, id) => sum + elementalDamage[id], 0);
+      let totalDamage = physicalDamage;
+      for (let i = 0; i < ELEMENT_IDS.length; i++) {
+        totalDamage += elementalDamage[ELEMENT_IDS[i]];
+      }
 
       if (game.fightMode === 'arena' && hero.stats.arenaDamageReductionPercent) {
         // min 5% damage taken
@@ -285,9 +294,10 @@ export function enemyAttack(currentTime) {
         totalDamage *= multiplier;
         // Scale breakdown components for consistency (though mainly visual/logging)
         physicalDamage = Math.floor(physicalDamage * multiplier);
-        ELEMENT_IDS.forEach((id) => {
+        for (let i = 0; i < ELEMENT_IDS.length; i++) {
+          const id = ELEMENT_IDS[i];
           elementalDamage[id] = Math.floor(elementalDamage[id] * multiplier);
-        });
+        }
       }
 
       if (hero.stats.damageTakenReductionPercent) {
@@ -295,9 +305,10 @@ export function enemyAttack(currentTime) {
         const multiplier = 1 - reduction;
         totalDamage *= multiplier;
         physicalDamage = Math.floor(physicalDamage * multiplier);
-        ELEMENT_IDS.forEach((id) => {
+        for (let i = 0; i < ELEMENT_IDS.length; i++) {
+          const id = ELEMENT_IDS[i];
           elementalDamage[id] = Math.floor(elementalDamage[id] * multiplier);
-        });
+        }
       }
 
       const breakdown = { physical: physicalDamage, ...elementalDamage };
@@ -1281,122 +1292,166 @@ export function getDamageTypeClass(breakdown) {
   return dominantType;
 }
 
-export function createDamageNumber({
-  text = '',
-  isPlayer = false,
-  isCritical = false,
-  color = '',
-  breakdown = null,
-  source = null,
-  icon = null,
-} = {}) {
-  if (!options?.showCombatText) return;
-  const target = isPlayer ? '#character-avatar' : '.enemy-avatar';
-  const avatar = document.querySelector(target);
-  // Use parent container for positioning
-  const parent = avatar.parentElement;
-  // Make sure parent is positioned
-  if (getComputedStyle(parent).position === 'static') {
-    parent.style.position = 'relative';
+let pendingDamageNumbers = [];
+
+function flushDamageNumbers() {
+  if (pendingDamageNumbers.length === 0) return;
+  const toProcess = pendingDamageNumbers;
+  pendingDamageNumbers = [];
+
+  // Group by target
+  const byTarget = {
+    '#character-avatar': [],
+    '.enemy-avatar': [],
+  };
+
+  for (let i = 0; i < toProcess.length; i++) {
+    const item = toProcess[i];
+    const target = item.isPlayer ? '#character-avatar' : '.enemy-avatar';
+    byTarget[target].push(item);
   }
 
-  const damageEl = document.createElement('div');
+  for (const target of ['#character-avatar', '.enemy-avatar']) {
+    const items = byTarget[target];
+    if (items.length === 0) continue;
 
-  // Build CSS classes
-  let className = 'damage-number';
-  if (isCritical) {
-    className += ' critical';
-  }
-
-  // Add damage type class if no explicit color provided and breakdown exists
-  if (!color && breakdown) {
-    const damageTypeClass = getDamageTypeClass(breakdown);
-    className += ` ${damageTypeClass}`;
-  }
-
-  if (source) {
-    className += ` source-${source}`;
-  }
-
-  damageEl.className = className;
-
-  let displayText = text;
-  if (options?.shortNumbers) {
-    const num = Number(text);
-    if (!Number.isNaN(num)) {
-      const str = String(text).trim();
-      const sign = str.startsWith('-') ? '-' : str.startsWith('+') ? '+' : '';
-      displayText = `${sign}${formatNumber(Math.abs(num))}`;
+    const avatar = document.querySelector(target);
+    if (!avatar) continue;
+    const parent = avatar.parentElement;
+    if (getComputedStyle(parent).position === 'static') {
+      parent.style.position = 'relative';
     }
+
+    const avatarRect = avatar.getBoundingClientRect();
+    const parentRect = parent.getBoundingClientRect();
+    const offsetX = avatarRect.left - parentRect.left;
+    const offsetY = avatarRect.top - parentRect.top;
+    const avatarWidth = avatar.offsetWidth;
+    const avatarHeight = avatar.offsetHeight;
+
+    const fragment = document.createDocumentFragment();
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const damageEl = document.createElement('div');
+
+      let className = 'damage-number';
+      if (item.isCritical) className += ' critical';
+      if (!item.color && item.breakdown) className += ` ${getDamageTypeClass(item.breakdown)}`;
+      if (item.source) className += ` source-${item.source}`;
+      damageEl.className = className;
+
+      let displayText = item.text;
+      if (options?.shortNumbers) {
+        const num = Number(item.text);
+        if (!Number.isNaN(num)) {
+          const str = String(item.text).trim();
+          const sign = str.startsWith('-') ? '-' : str.startsWith('+') ? '+' : '';
+          displayText = `${sign}${formatNumber(Math.abs(num))}`;
+        }
+      }
+
+      let resolvedIcon = item.icon;
+      if (!resolvedIcon && item.source === 'thornsDamage') resolvedIcon = 'thorns';
+
+      const iconMarkup = resolvedIcon ? `<span class="damage-icon damage-icon-${resolvedIcon}" aria-hidden="true"></span>` : '';
+      const criticalMarkup = item.isCritical ? `<img src="${BASE}/icons/critical.svg" alt="${t('icon.critical')}"/>` : '';
+
+      const contentParts = [];
+      if (iconMarkup) contentParts.push(iconMarkup);
+      if (criticalMarkup) contentParts.push(criticalMarkup);
+      contentParts.push(displayText);
+      damageEl.innerHTML = contentParts.join(' ');
+
+      if (item.color) damageEl.style.color = item.color;
+
+      const randomX = Math.random() * 40 - 20;
+      const randomY = Math.random() * 40 - 20;
+
+      damageEl.style.position = 'absolute';
+      damageEl.style.left = `${offsetX + avatarWidth / 2 + randomX}px`;
+      damageEl.style.top = `${offsetY + avatarHeight / 2 + randomY}px`;
+
+      fragment.appendChild(damageEl);
+      setTimeout(() => { if (damageEl.parentElement) damageEl.remove(); }, 1000);
+    }
+
+    parent.appendChild(fragment);
   }
-  let resolvedIcon = icon;
-  if (!resolvedIcon && source === 'thornsDamage') {
-    resolvedIcon = 'thorns';
+}
+
+export function createDamageNumber(item = {}) {
+  if (!options?.showCombatText) return;
+  pendingDamageNumbers.push(item);
+  if (pendingDamageNumbers.length === 1) {
+    requestAnimationFrame(flushDamageNumbers);
+  }
+}
+
+let pendingCombatTexts = [];
+
+function flushCombatTexts() {
+  if (pendingCombatTexts.length === 0) return;
+  const toProcess = pendingCombatTexts;
+  pendingCombatTexts = [];
+
+  const byTarget = {
+    '#character-avatar': [],
+    '.enemy-avatar': [],
+  };
+
+  for (let i = 0; i < toProcess.length; i++) {
+    const item = toProcess[i];
+    const target = item.isPlayer ? '#character-avatar' : '.enemy-avatar';
+    byTarget[target].push(item);
   }
 
-  const iconMarkup = resolvedIcon
-    ? `<span class="damage-icon damage-icon-${resolvedIcon}" aria-hidden="true"></span>`
-    : '';
+  for (const target of ['#character-avatar', '.enemy-avatar']) {
+    const items = byTarget[target];
+    if (items.length === 0) continue;
 
-  const criticalMarkup = isCritical
-    ? `<img src="${BASE}/icons/critical.svg" alt="${t('icon.critical')}"/>`
-    : '';
+    const avatar = document.querySelector(target);
+    if (!avatar) continue;
+    const parent = avatar.parentElement;
+    if (getComputedStyle(parent).position === 'static') {
+      parent.style.position = 'relative';
+    }
 
-  const contentParts = [];
-  if (iconMarkup) contentParts.push(iconMarkup);
-  if (criticalMarkup) contentParts.push(criticalMarkup);
-  contentParts.push(displayText);
-  damageEl.innerHTML = contentParts.join(' ');
+    const avatarRect = avatar.getBoundingClientRect();
+    const parentRect = parent.getBoundingClientRect();
+    const offsetX = avatarRect.left - parentRect.left;
+    const offsetY = avatarRect.top - parentRect.top;
+    const avatarWidth = avatar.offsetWidth;
+    const avatarHeight = avatar.offsetHeight;
 
-  // Apply explicit color if provided (for special cases like MISS, EVADED, etc.)
-  if (color) {
-    damageEl.style.color = color;
+    const fragment = document.createDocumentFragment();
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const textEl = document.createElement('div');
+      textEl.className = 'damage-number level-up';
+      textEl.textContent = item.text;
+      textEl.style.color = 'var(--gold)';
+
+      const randomX = Math.random() * 40 - 20;
+      const randomY = Math.random() * 40 - 20;
+
+      textEl.style.position = 'absolute';
+      textEl.style.left = `${offsetX + avatarWidth / 2 + randomX}px`;
+      textEl.style.top = `${offsetY + avatarHeight / 2 + randomY}px`;
+
+      fragment.appendChild(textEl);
+      setTimeout(() => { if (textEl.parentElement) textEl.remove(); }, 1000);
+    }
+
+    parent.appendChild(fragment);
   }
-
-  // Get avatar's position relative to parent
-  const avatarRect = avatar.getBoundingClientRect();
-  const parentRect = parent.getBoundingClientRect();
-  const offsetX = avatarRect.left - parentRect.left;
-  const offsetY = avatarRect.top - parentRect.top;
-
-  const randomX = Math.random() * 40 - 20;
-  const randomY = Math.random() * 40 - 20;
-
-  damageEl.style.position = 'absolute';
-  damageEl.style.left = `${offsetX + avatar.offsetWidth / 2 + randomX}px`;
-  damageEl.style.top = `${offsetY + avatar.offsetHeight / 2 + randomY}px`;
-
-  parent.appendChild(damageEl);
-  setTimeout(() => damageEl.remove(), 1000);
 }
 
 export function createCombatText(text, isPlayer = true) {
   if (!options?.showCombatText) return;
-  // Allow targeting enemy or player
-  const target = isPlayer ? '#character-avatar' : '.enemy-avatar';
-  const avatar = document.querySelector(target);
-  const parent = avatar.parentElement;
-  if (getComputedStyle(parent).position === 'static') {
-    parent.style.position = 'relative';
+  pendingCombatTexts.push({ text, isPlayer });
+  if (pendingCombatTexts.length === 1) {
+    requestAnimationFrame(flushCombatTexts);
   }
-
-  const textEl = document.createElement('div');
-  textEl.className = 'damage-number level-up';
-  textEl.textContent = text;
-  textEl.style.color = 'var(--gold)';
-
-  const avatarRect = avatar.getBoundingClientRect();
-  const parentRect = parent.getBoundingClientRect();
-  const offsetX = avatarRect.left - parentRect.left;
-  const offsetY = avatarRect.top - parentRect.top;
-
-  const randomX = Math.random() * 40 - 20;
-  const randomY = Math.random() * 40 - 20;
-
-  textEl.style.position = 'absolute';
-  textEl.style.left = `${offsetX + avatar.offsetWidth / 2 + randomX}px`;
-  textEl.style.top = `${offsetY + avatar.offsetHeight / 2 + randomY}px`;
-
-  parent.appendChild(textEl);
-  setTimeout(() => textEl.remove(), 1000);
 }

@@ -647,7 +647,20 @@ export function updatePlayerLife(force = false) {
   let maxMana = Math.floor(stats.mana);
   let curExp = Math.floor(hero.exp);
   let expToNextLevel = Math.floor(hero.getExpToNextLevel());
-  let ailmentsHash = Object.keys(hero.ailments).join(',');
+
+  let ailmentsMatch = true;
+  let ailmentCount = 0;
+  for (const key in hero.ailments) {
+    if (Object.prototype.hasOwnProperty.call(hero.ailments, key)) {
+      ailmentCount++;
+      if (!lastPlayerLifeState.ailments || !Object.prototype.hasOwnProperty.call(lastPlayerLifeState.ailments, key)) {
+        ailmentsMatch = false;
+      }
+    }
+  }
+  if (ailmentsMatch && ailmentCount !== (lastPlayerLifeState.ailmentCount || 0)) {
+    ailmentsMatch = false;
+  }
 
   if (
     !force &&
@@ -657,7 +670,7 @@ export function updatePlayerLife(force = false) {
     maxMana === lastPlayerLifeState.mana &&
     curExp === lastPlayerLifeState.exp &&
     expToNextLevel === lastPlayerLifeState.expToNextLevel &&
-    ailmentsHash === lastPlayerLifeState.ailmentsHash
+    ailmentsMatch
   ) {
     if (window.perfMon?.enabled) window.perfMon.measure('updatePlayerLife', 5);
     return;
@@ -669,7 +682,15 @@ export function updatePlayerLife(force = false) {
   lastPlayerLifeState.mana = maxMana;
   lastPlayerLifeState.exp = curExp;
   lastPlayerLifeState.expToNextLevel = expToNextLevel;
-  lastPlayerLifeState.ailmentsHash = ailmentsHash;
+
+  lastPlayerLifeState.ailmentCount = ailmentCount;
+  if (!lastPlayerLifeState.ailments) lastPlayerLifeState.ailments = {};
+  else {
+    for (const key in lastPlayerLifeState.ailments) delete lastPlayerLifeState.ailments[key];
+  }
+  for (const key in hero.ailments) {
+    if (Object.prototype.hasOwnProperty.call(hero.ailments, key)) lastPlayerLifeState.ailments[key] = true;
+  }
 
   const ui = getPlayerUIElements();
 
@@ -712,41 +733,95 @@ export function updateEnemyStats(force = false) {
   let curAttackSpeed = enemy.attackSpeed;
   let curXp = enemy.xp;
   let curGold = enemy.gold;
-  let ailmentsHash = Object.keys(enemy.ailments || {}).join(',');
-  let elementalDamagesHash = ELEMENT_IDS.map((id) => enemy[`${id}Damage`] || 0).join(',');
-  let elementalResistancesHash = ELEMENT_IDS.map((id) => enemy[`${id}Resistance`] || 0).join(',');
+
+  let ailmentsMatch = true;
+  let ailmentCount = 0;
+  if (enemy.ailments) {
+    for (const key in enemy.ailments) {
+      if (Object.prototype.hasOwnProperty.call(enemy.ailments, key)) {
+        ailmentCount++;
+        if (!lastEnemyStatsState.ailments || !Object.prototype.hasOwnProperty.call(lastEnemyStatsState.ailments, key)) {
+          ailmentsMatch = false;
+        }
+      }
+    }
+  }
+  if (ailmentsMatch && ailmentCount !== (lastEnemyStatsState.ailmentCount || 0)) {
+    ailmentsMatch = false;
+  }
+
+  let elementalDamagesMatch = true;
+  let elementalResistancesMatch = true;
+  let heroElementalDamagesMatch = true;
+
+  if (!lastEnemyStatsState.elementalDamages) {
+    elementalDamagesMatch = false;
+    elementalResistancesMatch = false;
+    heroElementalDamagesMatch = false;
+  } else {
+    for (let i = 0; i < ELEMENT_IDS.length; i++) {
+      const id = ELEMENT_IDS[i];
+      if ((enemy[`${id}Damage`] || 0) !== lastEnemyStatsState.elementalDamages[id]) {
+        elementalDamagesMatch = false;
+      }
+      if ((enemy[`${id}Resistance`] || 0) !== lastEnemyStatsState.elementalResistances[id]) {
+        elementalResistancesMatch = false;
+      }
+      if ((hero.stats[`${id}Damage`] || 0) !== lastEnemyStatsState.heroElementalDamages[id]) {
+        heroElementalDamagesMatch = false;
+      }
+    }
+  }
 
   // Hero stats that affect calculations shown in enemy UI
   let heroDamage = hero.stats.damage;
   let heroAttackRating = hero.stats.attackRating;
   let heroChanceToHitPercent = hero.stats.chanceToHitPercent || 0;
   let heroEvasion = hero.stats.evasion;
-  let heroElementalDamagesHash = ELEMENT_IDS.map((id) => hero.stats[`${id}Damage`] || 0).join(',');
 
-  if (
-    !force &&
-    enemy === lastEnemyStatsState.enemy &&
-    curLife === lastEnemyStatsState.currentLife &&
-    maxLife === lastEnemyStatsState.life &&
-    curDamage === lastEnemyStatsState.damage &&
-    curArmor === lastEnemyStatsState.armor &&
-    curEvasion === lastEnemyStatsState.evasion &&
-    curAttackRating === lastEnemyStatsState.attackRating &&
-    curAttackSpeed === lastEnemyStatsState.attackSpeed &&
-    curXp === lastEnemyStatsState.xp &&
-    curGold === lastEnemyStatsState.gold &&
-    ailmentsHash === lastEnemyStatsState.ailmentsHash &&
-    elementalDamagesHash === lastEnemyStatsState.elementalDamagesHash &&
-    elementalResistancesHash === lastEnemyStatsState.elementalResistancesHash &&
-    heroEvasion === lastEnemyStatsState.heroEvasion &&
-    heroElementalDamagesHash === lastEnemyStatsState.heroElementalDamagesHash
-  ) {
+  let statsChanged = force ||
+    enemy !== lastEnemyStatsState.enemy ||
+    maxLife !== lastEnemyStatsState.life ||
+    curDamage !== lastEnemyStatsState.damage ||
+    curArmor !== lastEnemyStatsState.armor ||
+    curEvasion !== lastEnemyStatsState.evasion ||
+    curAttackRating !== lastEnemyStatsState.attackRating ||
+    curAttackSpeed !== lastEnemyStatsState.attackSpeed ||
+    curXp !== lastEnemyStatsState.xp ||
+    curGold !== lastEnemyStatsState.gold ||
+    !ailmentsMatch ||
+    !elementalDamagesMatch ||
+    !elementalResistancesMatch ||
+    heroEvasion !== lastEnemyStatsState.heroEvasion ||
+    !heroElementalDamagesMatch;
+
+  let lifeChanged = force || curLife !== lastEnemyStatsState.currentLife;
+
+  if (!statsChanged && !lifeChanged) {
+    if (window.perfMon?.enabled) window.perfMon.measure('updateEnemyStats', 5);
+    return;
+  }
+
+  const ui = getEnemyUIElements();
+
+  if (lifeChanged || statsChanged) {
+    lastEnemyStatsState.currentLife = curLife;
+    const lifePercentage = Math.max(0, (enemy.currentLife / enemy.life) * 100);
+    if (ui.lifeFill) ui.lifeFill.style.width = `${lifePercentage}%`;
+    if (ui.lifeText) ui.lifeText.textContent = `${formatNumber(
+      Math.max(0, Math.floor(enemy.currentLife)),
+    )} / ${formatNumber(Math.floor(enemy.life))}`;
+  }
+
+  // Always run updateAilmentIcons because tooltips need to update their duration text while hovered
+  updateAilmentIcons();
+
+  if (!statsChanged) {
     if (window.perfMon?.enabled) window.perfMon.measure('updateEnemyStats', 5);
     return;
   }
 
   lastEnemyStatsState.enemy = enemy;
-  lastEnemyStatsState.currentLife = curLife;
   lastEnemyStatsState.life = maxLife;
   lastEnemyStatsState.damage = curDamage;
   lastEnemyStatsState.armor = curArmor;
@@ -755,22 +830,34 @@ export function updateEnemyStats(force = false) {
   lastEnemyStatsState.attackSpeed = curAttackSpeed;
   lastEnemyStatsState.xp = curXp;
   lastEnemyStatsState.gold = curGold;
-  lastEnemyStatsState.ailmentsHash = ailmentsHash;
-  lastEnemyStatsState.elementalDamagesHash = elementalDamagesHash;
-  lastEnemyStatsState.elementalResistancesHash = elementalResistancesHash;
+
+  lastEnemyStatsState.ailmentCount = ailmentCount;
+  if (!lastEnemyStatsState.ailments) lastEnemyStatsState.ailments = {};
+  else {
+    for (const key in lastEnemyStatsState.ailments) delete lastEnemyStatsState.ailments[key];
+  }
+  if (enemy.ailments) {
+    for (const key in enemy.ailments) {
+      if (Object.prototype.hasOwnProperty.call(enemy.ailments, key)) lastEnemyStatsState.ailments[key] = true;
+    }
+  }
+
+  if (!lastEnemyStatsState.elementalDamages) {
+    lastEnemyStatsState.elementalDamages = {};
+    lastEnemyStatsState.elementalResistances = {};
+    lastEnemyStatsState.heroElementalDamages = {};
+  }
+  for (let i = 0; i < ELEMENT_IDS.length; i++) {
+    const id = ELEMENT_IDS[i];
+    lastEnemyStatsState.elementalDamages[id] = enemy[`${id}Damage`] || 0;
+    lastEnemyStatsState.elementalResistances[id] = enemy[`${id}Resistance`] || 0;
+    lastEnemyStatsState.heroElementalDamages[id] = hero.stats[`${id}Damage`] || 0;
+  }
+
   lastEnemyStatsState.heroDamage = heroDamage;
   lastEnemyStatsState.heroAttackRating = heroAttackRating;
   lastEnemyStatsState.heroChanceToHitPercent = heroChanceToHitPercent;
   lastEnemyStatsState.heroEvasion = heroEvasion;
-  lastEnemyStatsState.heroElementalDamagesHash = heroElementalDamagesHash;
-
-  const ui = getEnemyUIElements();
-
-  const lifePercentage = Math.max(0, (enemy.currentLife / enemy.life) * 100);
-  if (ui.lifeFill) ui.lifeFill.style.width = `${lifePercentage}%`;
-  if (ui.lifeText) ui.lifeText.textContent = `${formatNumber(
-    Math.max(0, Math.floor(enemy.currentLife)),
-  )} / ${formatNumber(Math.floor(enemy.life))}`;
 
   // Main stats
   if (ui.damage) ui.damage.textContent = formatNumber(enemy.damage);
@@ -823,6 +910,7 @@ export function updateEnemyStats(force = false) {
       if (!img) {
         img = document.createElement('img');
         img.alt = game.currentEnemy.name + ' avatar';
+        img.fetchPriority = 'high';
         ui.avatar.innerHTML = '';
         ui.avatar.appendChild(img);
       }
@@ -834,7 +922,7 @@ export function updateEnemyStats(force = false) {
       img.src = baseUrl + game.currentEnemy.image;
     }
   }
-  updateAilmentIcons();
+  
   if (window.perfMon?.enabled) window.perfMon.measure('updateEnemyStats', 5);
 }
 
