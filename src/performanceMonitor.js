@@ -54,6 +54,12 @@ class PerformanceMonitor {
   createOverlay() {
     if (this.overlayElement) return;
 
+    const memoryHtml = performance.memory ? `
+      <div class="perf-stat">
+        <span class="perf-label">Memory:</span>
+        <span class="perf-value" id="perf-memory">--</span>
+      </div>` : '';
+
     this.overlayElement = document.createElement('div');
     this.overlayElement.className = 'perf-monitor-overlay';
     this.overlayElement.innerHTML = `
@@ -65,11 +71,7 @@ class PerformanceMonitor {
       <div class="perf-stat">
         <span class="perf-label">Frame Time:</span>
         <span class="perf-value" id="perf-frame-time">--</span>
-      </div>
-      <div class="perf-stat">
-        <span class="perf-label">Memory:</span>
-        <span class="perf-value" id="perf-memory">--</span>
-      </div>
+      </div>${memoryHtml}
       <div class="perf-stat">
         <span class="perf-label">Game Loop:</span>
         <span class="perf-value" id="perf-gameloop">--</span>
