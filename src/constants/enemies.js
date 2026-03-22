@@ -28,7 +28,7 @@ export const ITEM_FLAT_TIER_SCALING_MULTIPLIER = 3;
 
 // Percentage increase per level based on the base value at level 1
 // e.g., 0.008 means each level increases flat stats by 0.8% of the base value
-export const ITEM_FLAT_STAGE_SCALING_PERCENT = 0.01;
+export const ITEM_FLAT_STAGE_SCALING_PERCENT = 0.006;
 
 const ELEMENTAL_DAMAGE_STATS = Object.keys(ELEMENTS).map((el) => `${el}Damage`);
 

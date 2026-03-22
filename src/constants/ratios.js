@@ -47,15 +47,15 @@ export const STAT_RATIOS = {
   armorPenetration: damage * 8.5,
   lifePerHit: damage * 1,
 
-  allAttributes: damage * 0.5,
-  strength: damage * 1.5,
-  agility: damage * 1.5,
-  vitality: damage * 1.5,
-  wisdom: damage * 1.5,
-  endurance: damage * 1.5,
-  dexterity: damage * 1.5,
-  intelligence: damage * 1.5,
-  perseverance: damage * 1.5,
+  allAttributes: damage * 0.4,
+  strength: damage * 1.2,
+  agility: damage * 1.2,
+  vitality: damage * 1.2,
+  wisdom: damage * 1.2,
+  endurance: damage * 1.2,
+  dexterity: damage * 1.2,
+  intelligence: damage * 1.2,
+  perseverance: damage * 1.2,
 };
 
 // Variance factors for items.

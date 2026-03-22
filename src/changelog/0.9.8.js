@@ -20,6 +20,7 @@ export default function run() {
       <li>Buff druid's Wild Communion specialization skill.</li>
       <li>Added several more unique items.</li>
       <li>Added new achievement: Discover all unique items.</li>
+      <li>Reduced item stage scaling (around 40%) and reduced overall attribute bonuses (by around 20%).</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>
