@@ -21,6 +21,7 @@ export default function run() {
       <li>Added several more unique items.</li>
       <li>Added new achievement: Discover all unique items.</li>
       <li>Reduced item stage scaling (around 40%) and reduced overall attribute bonuses (by around 20%).</li>
+      <li>Increased xp and gold gained from Arena.</li>
     </ul>
 
     <span style="color:#FF8A00;">Bug Fixes</span>

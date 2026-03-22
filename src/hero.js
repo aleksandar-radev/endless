@@ -48,8 +48,8 @@ export const STATS_ON_LEVEL_UP = 3;
 // Increase XP_CUBIC_DIVISOR to make late-game leveling less steep, decrease to make it steeper.
 export const XP_BASE = 10;
 export const XP_LINEAR = 30;
-export const XP_QUADRATIC = 1.5;
-export const XP_CUBIC_DIVISOR = 850;
+export const XP_QUADRATIC = 1.25;
+export const XP_CUBIC_DIVISOR = 1750;
 // ----------------------------
 
 function getResourceExtraDamagePhysicalShare() {
@@ -352,10 +352,10 @@ export default class Hero {
     this.statPoints -= pointsToAllocate;
 
     // Only recalculate once at the end
-    this.recalculateFromAttributes();
+    this.queueRecalculateFromAttributes();
 
     if (stat === 'vitality' && !game.gameStarted) {
-      this.stats.currentLife = this.stats.life;
+      this._healOnNextRecalc = true;
     }
 
     dataManager.saveGame();
@@ -527,6 +527,11 @@ export default class Hero {
 
     // Assign calculated percentage bonuses to stats so they are available for UI and logic
     Object.assign(this.stats, finalPercentBonuses);
+
+    if (this._healOnNextRecalc) {
+      this.stats.currentLife = this.stats.life;
+      this._healOnNextRecalc = false;
+    }
 
     updatePlayerLife();
     updateStatsAndAttributesUI();

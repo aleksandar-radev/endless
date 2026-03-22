@@ -209,8 +209,12 @@ class Boss extends EnemyBase {
 
   calculateXP() {
     const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
-    const basePercent = stat_increase(this.level);
-    const diminishing = xpDiminishingFactor(this.level);
+    // Scale XP faster to match the stat growth and compensate for the low base XP/Life ratio.
+    // We mirror the damageScale multiplier (2.5) to keep rewards relevant.
+    const basePercent = stat_increase(this.level) * 2.5;
+    // Remove the global diminishing factor for Arena because boss levels grow much faster
+    // than explore stages to reach equivalent stats, which double-penalizes their rewards.
+    const diminishing = 1;
     const val = computeScaledReward(this.baseData.xp || 0, this.level, basePercent, levelBonus, diminishing);
     const regionMultiplier = Number.isFinite(this.regionMultiplier?.xp) ? this.regionMultiplier.xp : 1;
     return val * (this.baseData.multiplier?.xp || 1) * regionMultiplier;
@@ -218,8 +222,10 @@ class Boss extends EnemyBase {
 
   calculateGold() {
     const levelBonus = 1 + Math.floor(this.level / 20) * INCREASE_PER_LEVEL;
-    const basePercent = stat_increase(this.level);
-    const diminishing = xpDiminishingFactor(this.level);
+    // Scale Gold faster to match the stat growth.
+    const basePercent = stat_increase(this.level) * 2.5;
+    // Remove the global diminishing factor for Arena.
+    const diminishing = 1;
     const val = computeScaledReward(this.baseData.gold || 0, this.level, basePercent, levelBonus, diminishing);
     const regionMultiplier = Number.isFinite(this.regionMultiplier?.gold) ? this.regionMultiplier.gold : 1;
     return val * (this.baseData.multiplier?.gold || 1) * regionMultiplier;
