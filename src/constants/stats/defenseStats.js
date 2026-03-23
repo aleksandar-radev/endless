@@ -303,7 +303,7 @@ export const DEFENSE_STATS = {
   }),
   allResistancePercent: createPercentStat({
     forceNotShow: true,
-    item: { tierScalingMaxPercent: createTierScaling(7, 100, 1.2) },
+    item: { tierScalingMaxPercent: createTierScaling(100, 1500, 1.2) },
     itemTags: ['defense', 'jewelry'],
     sub: 'elemental',
     skills: createDefaultSkillBonusesPercent({
