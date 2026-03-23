@@ -31,6 +31,14 @@ let listenersAttached = false;
 let bottomBar = null;
 let activeSubTab = 'offense';
 
+// Performance caches
+const statElements = new Map();
+const statRows = new Map();
+const attributeElements = new Map();
+let headerElements = {};
+let combatElements = {};
+let activeStatKeys = [];
+
 // Ordered subcategories for each stat group. Stats define their own
 // `subcategory` property which determines the panel they appear in.
 const SUBCATEGORIES = {
@@ -65,9 +73,9 @@ ELEMENT_IDS.forEach((id) => {
   DAMAGE_PERCENT_SOURCES[`${id}Resistance`] = [`${id}ResistancePercent`, 'allResistancePercent'];
 });
 
-function appendDamagePercentBonus(el, key) {
+function getDamagePercentBonusSuffix(key) {
   const config = DAMAGE_PERCENT_SOURCES[key];
-  if (!config || !el) return;
+  if (!config) return '';
 
   const additiveKeys = Array.isArray(config) ? config : config.additive || [];
   const additiveTotal = additiveKeys.reduce((sum, statKey) => sum + (hero.stats?.[statKey] || 0), 0);
@@ -82,12 +90,12 @@ function appendDamagePercentBonus(el, key) {
     decimalKeys.push(config.percent);
   }
 
-  if (!Number.isFinite(totalPercent)) return;
+  if (!Number.isFinite(totalPercent) || totalPercent === 0) return '';
 
   const normalized = Math.abs(totalPercent) < 1e-6 ? 0 : totalPercent;
   const decimals = decimalKeys.reduce((max, statKey) => Math.max(max, getStatDecimalPlaces(statKey)), 0);
   const formattedPercent = (normalized * 100).toFixed(decimals);
-  el.textContent = `${el.textContent} (${formattedPercent}%)`;
+  return ` (${formattedPercent}%)`;
 }
 
 function buildAvgHitTooltip(enemy) {
@@ -882,6 +890,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           const showValue = statsDef[key].showValue !== false;
           const span = document.createElement('span');
           span.id = `${key}-value`;
+          span.textContent = formatDisplayValue(key, hero.stats[key]) + getDamagePercentBonusSuffix(key);
 
           if (hero.stats[key] === 0 && options.hideZeroStats) {
             row.classList.add('hidden');
@@ -925,8 +934,7 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
           else lbl.textContent = lblText;
           const span = document.createElement('span');
           span.id = `${key}-value`;
-          span.textContent = formatDisplayValue(key, hero.stats[key]);
-          appendDamagePercentBonus(span, key);
+          span.textContent = formatDisplayValue(key, hero.stats[key]) + getDamagePercentBonusSuffix(key);
 
           if (hero.stats[key] === 0 && options.hideZeroStats) {
             row.classList.add('hidden');
@@ -1018,98 +1026,108 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
       });
     });
     statsGrid.appendChild(statsContainer);
+
+    // Cache elements for performance
+    statElements.clear();
+    statRows.clear();
+    activeStatKeys = [];
+    statsContainer.querySelectorAll('[id$="-value"]').forEach((el) => {
+      const id = el.id;
+      if (id === 'level-value' || id === 'exp-value' || id === 'exp-to-next-level-value' || id.startsWith('combat-')) return;
+
+      const key = id.replace('-value', '');
+      if (ATTRIBUTES[key]) return;
+
+      statElements.set(key, el);
+      statRows.set(key, el.parentElement);
+      activeStatKeys.push(key);
+    });
+
+    headerElements = {
+      level: statsContainer.querySelector('#level-value'),
+      exp: statsContainer.querySelector('#exp-value'),
+      expProgress: statsContainer.querySelector('#exp-progress'),
+      expNext: statsContainer.querySelector('#exp-to-next-level-value'),
+    };
+
+    combatElements = {
+      enemyNote: statsContainer.querySelector('#combat-enemy-note'),
+      armor: statsContainer.querySelector('#combat-armor-reduction-value'),
+      evasion: statsContainer.querySelector('#combat-evade-chance-value'),
+      hitChance: statsContainer.querySelector('#combat-hit-chance-value'),
+      avgHit: statsContainer.querySelector('#combat-avg-hit-value'),
+      avgDps: statsContainer.querySelector('#combat-avg-dps-value'),
+      physicalPen: statsContainer.querySelector('#combat-physical-pen-bonus-value'),
+      elementalPen: statsContainer.querySelector('#combat-elemental-pen-bonus-value'),
+    };
+    ELEMENT_IDS.forEach((el) => {
+      combatElements[el] = statsContainer.querySelector(`#combat-${el}-resistance-reduction-value`);
+    });
   } else {
     // Update all dynamic stats values
-    Object.keys(hero.stats).forEach((key) => {
-      const el = document.getElementById(`${key}-value`);
+    activeStatKeys.forEach((key) => {
+      const el = statElements.get(key);
       if (el) {
         const val = hero.stats[key];
-        const row = el.closest('.stat-row');
-        if (row) {
-          row.classList.toggle('hidden', val === 0 && options.hideZeroStats);
+        const row = statRows.get(key);
+        if (row && options.hideZeroStats) {
+          row.classList.toggle('hidden', val === 0);
         }
-        // Special formatting for certain stats
-        if (key === 'attackSpeed') {
-          el.textContent = formatNumber(hero.stats.attackSpeed.toFixed(getStatDecimalPlaces('attackSpeed')));
-        } else if (key === 'critChance') {
-          const d = getDivisor('critChance');
-          el.textContent = (hero.stats.critChance * d).toFixed(getStatDecimalPlaces('critChance')) + '%';
-        } else if (key === 'critDamage') {
-          el.textContent = hero.stats.critDamage.toFixed(getStatDecimalPlaces('critDamage')) + 'x';
-        } else if (key === 'lifeSteal') {
-          const d = getDivisor('lifeSteal');
-          el.textContent = (hero.stats.lifeSteal * d).toFixed(getStatDecimalPlaces('lifeSteal')) + '%';
-        } else if (key === 'manaSteal') {
-          const d = getDivisor('manaSteal');
-          el.textContent = (hero.stats.manaSteal * d).toFixed(getStatDecimalPlaces('manaSteal')) + '%';
-        } else if (key === 'omniSteal') {
-          const d = getDivisor('omniSteal');
-          el.textContent = (hero.stats.omniSteal * d).toFixed(getStatDecimalPlaces('omniSteal')) + '%';
-        } else if (key === 'lifeRegen') {
-          el.textContent = formatNumber(hero.stats.lifeRegen.toFixed(getStatDecimalPlaces('lifeRegen')));
-        } else if (key === 'manaRegen') {
-          el.textContent = formatNumber(hero.stats.manaRegen.toFixed(getStatDecimalPlaces('manaRegen')));
-        } else if (key === 'blockChance') {
-          const d = getDivisor('blockChance');
-          el.textContent = (hero.stats.blockChance * d).toFixed(getStatDecimalPlaces('blockChance')) + '%';
-        } else if (key === 'cooldownReductionPercent') {
-          const val = hero.stats[key];
+
+        let text;
+        const decimals = getStatDecimalPlaces(key);
+        const divisor = getDivisor(key);
+
+        if (key === 'cooldownReductionPercent') {
           const cap = hero.stats.cooldownReductionCapPercent || 0.8;
           const effective = Math.min(val, cap);
-          const decimals = getStatDecimalPlaces(key);
-          let text = (effective * 100).toFixed(decimals) + '%';
+          text = (effective * 100).toFixed(decimals) + '%';
           if (val > cap) {
             text += ` (${(val * 100).toFixed(decimals)}%)`;
           }
-          el.textContent = text;
+        } else if (key === 'critDamage') {
+          text = val.toFixed(decimals) + 'x';
+        } else if (divisor !== 1) {
+          text = (val * divisor).toFixed(decimals) + '%';
         } else {
-          const decimalPlaces = getStatDecimalPlaces(key);
-          const divisor = getDivisor(key);
-          let value = Number(hero.stats[key]);
-          if (divisor !== 1) {
-            value *= divisor;
-            el.textContent = formatNumber(value.toFixed(decimalPlaces)) + '%';
-          } else {
-            el.textContent = formatNumber(value.toFixed(decimalPlaces));
-          }
+          text = formatNumber(val.toFixed(decimals));
         }
-        appendDamagePercentBonus(el, key);
+
+        const suffix = getDamagePercentBonusSuffix(key);
+        el.textContent = text + suffix;
       }
     });
 
     // Update header values
-    document.getElementById('level-value').textContent = formatNumber(hero.level || 1);
-    document.getElementById('exp-value').textContent = formatNumber(Math.floor(hero.exp || 0));
-    document.getElementById('exp-progress').textContent =
-      ((hero.exp / hero.getExpToNextLevel()) * 100).toFixed(1) + '%';
-    document.getElementById('exp-to-next-level-value').textContent = formatNumber(hero.getExpToNextLevel() || 100);
+    if (headerElements.level) headerElements.level.textContent = formatNumber(hero.level || 1);
+    if (headerElements.exp) headerElements.exp.textContent = formatNumber(Math.floor(hero.exp || 0));
+    if (headerElements.expProgress) {
+      headerElements.expProgress.textContent = ((hero.exp / hero.getExpToNextLevel()) * 100).toFixed(1) + '%';
+    }
+    if (headerElements.expNext) headerElements.expNext.textContent = formatNumber(hero.getExpToNextLevel() || 100);
 
     // Update combat panel derived calculations
     const enemy = game.currentEnemy;
-    const combatNoteUpdate = document.getElementById('combat-enemy-note');
-    if (combatNoteUpdate) {
-      combatNoteUpdate.textContent = enemy
+    if (combatElements.enemyNote) {
+      combatElements.enemyNote.textContent = enemy
         ? tp('stats.combat.vsEnemy', { name: enemy.name || '' })
         : t('stats.combat.noEnemy');
     }
 
-    const combatArmorEl = document.getElementById('combat-armor-reduction-value');
-    if (combatArmorEl) {
-      combatArmorEl.textContent = enemy
+    if (combatElements.armor) {
+      combatElements.armor.textContent = enemy
         ? calculateArmorReduction(hero.stats.armor, enemy.damage).toFixed(2) + '%'
         : '—';
     }
 
-    const combatEvadeEl = document.getElementById('combat-evade-chance-value');
-    if (combatEvadeEl) {
-      combatEvadeEl.textContent = enemy
+    if (combatElements.evasion) {
+      combatElements.evasion.textContent = enemy
         ? calculateEvasionChance(hero.stats.evasion, enemy.attackRating).toFixed(2) + '%'
         : '—';
     }
 
-    const combatHitEl = document.getElementById('combat-hit-chance-value');
-    if (combatHitEl) {
-      combatHitEl.textContent = enemy
+    if (combatElements.hitChance) {
+      combatElements.hitChance.textContent = enemy
         ? calculateHitChance(
           hero.stats.attackRating,
           enemy.evasion,
@@ -1119,52 +1137,40 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
         : '—';
     }
 
-    const resistanceMap = [
-      ['fire', 'fireDamage'],
-      ['cold', 'coldDamage'],
-      ['air', 'airDamage'],
-      ['earth', 'earthDamage'],
-      ['lightning', 'lightningDamage'],
-      ['water', 'waterDamage'],
-    ];
-    resistanceMap.forEach(([element, dmgKey]) => {
-      const el = document.getElementById(`combat-${element}-resistance-reduction-value`);
+    ELEMENT_IDS.forEach((element) => {
+      const el = combatElements[element];
       if (el) {
+        const dmgKey = `${element}Damage`;
         el.textContent = enemy
           ? calculateResistanceReduction(hero.stats[`${element}Resistance`], enemy[dmgKey]).toFixed(2) + '%'
           : '—';
       }
     });
 
-    // Avg hit and avg DPS
-    const avgHitEl = document.getElementById('combat-avg-hit-value');
-    const avgDpsEl = document.getElementById('combat-avg-dps-value');
-    if (avgHitEl || avgDpsEl) {
+    if (combatElements.avgHit || combatElements.avgDps) {
       if (enemy) {
         const d = calculateExpectedDamageVsEnemy(hero, enemy);
-        if (avgHitEl) avgHitEl.textContent = '~' + formatNumber(Math.round(d.expectedHit));
-        if (avgDpsEl) avgDpsEl.textContent = '~' + formatNumber(Math.round(d.dps));
+        if (combatElements.avgHit) combatElements.avgHit.textContent = '~' + formatNumber(Math.round(d.expectedHit));
+        if (combatElements.avgDps) combatElements.avgDps.textContent = '~' + formatNumber(Math.round(d.dps));
       } else {
-        if (avgHitEl) avgHitEl.textContent = '—';
-        if (avgDpsEl) avgDpsEl.textContent = '—';
+        if (combatElements.avgHit) combatElements.avgHit.textContent = '—';
+        if (combatElements.avgDps) combatElements.avgDps.textContent = '—';
       }
     }
 
-    const physicalPenEl = document.getElementById('combat-physical-pen-bonus-value');
-    const elementalPenEl = document.getElementById('combat-elemental-pen-bonus-value');
-    if (physicalPenEl || elementalPenEl) {
+    if (combatElements.physicalPen || combatElements.elementalPen) {
       if (enemy) {
         const p = calculatePhysicalPenetrationImpact(enemy);
         const e = calculateElementalPenetrationImpact(enemy);
-        if (physicalPenEl) {
-          physicalPenEl.textContent = `+${formatNumber(Math.round(p.bonus))} (${(p.bonusPct * 100).toFixed(2)}%)`;
+        if (combatElements.physicalPen) {
+          combatElements.physicalPen.textContent = `+${formatNumber(Math.round(p.bonus))} (${(p.bonusPct * 100).toFixed(2)}%)`;
         }
-        if (elementalPenEl) {
-          elementalPenEl.textContent = `+${formatNumber(Math.round(e.bonus))} (${(e.bonusPct * 100).toFixed(2)}%)`;
+        if (combatElements.elementalPen) {
+          combatElements.elementalPen.textContent = `+${formatNumber(Math.round(e.bonus))} (${(e.bonusPct * 100).toFixed(2)}%)`;
         }
       } else {
-        if (physicalPenEl) physicalPenEl.textContent = '—';
-        if (elementalPenEl) elementalPenEl.textContent = '—';
+        if (combatElements.physicalPen) combatElements.physicalPen.textContent = '—';
+        if (combatElements.elementalPen) combatElements.elementalPen.textContent = '—';
       }
     }
   }
@@ -1267,15 +1273,22 @@ export function updateStatsAndAttributesUI(forceRebuild = false) {
 
     // Add attributes container to the grid
     statsGrid.appendChild(attributesContainer);
-  } else {
-    document.getElementById('attributes').textContent = `${t('attributes')} (+${formatNumber(hero.statPoints)})`;
-    // Update all attribute values dynamically (works with showAllStats)
-    Object.keys(hero.stats).forEach((stat) => {
-      if (!ATTRIBUTES[stat]) return;
-      const el = document.getElementById(`${stat}-value`);
-      if (el) {
-        el.textContent = formatNumber(hero.stats[stat]);
+
+    attributeElements.clear();
+    attributesContainer.querySelectorAll('.attribute-row [id$="-value"]').forEach((el) => {
+      const stat = el.id.replace('-value', '');
+      if (ATTRIBUTES[stat]) {
+        attributeElements.set(stat, el);
       }
+    });
+  } else {
+    const attrHeader = document.getElementById('attributes');
+    if (attrHeader) {
+      attrHeader.textContent = `${t('attributes')} (+${formatNumber(hero.statPoints)})`;
+    }
+    // Update all attribute values dynamically (works with showAllStats)
+    attributeElements.forEach((el, stat) => {
+      el.textContent = formatNumber(hero.stats[stat]);
     });
   }
 
