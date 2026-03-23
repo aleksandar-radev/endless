@@ -449,7 +449,7 @@ export default class CrystalShop {
       training.quickQty = prevQty;
       hero.gold += refund;
       training.updateTrainingUI('gold-upgrades');
-      hero.queueRecalculateFromAttributes();
+      hero.invalidateTrainingCache();
       updateStatsAndAttributesUI();
       showToast(tp('crystalShop.resetTrainingSuccess', { amount: formatNumber(refund) }), 'success');
     } else if (stat === 'resetSoulShop') {
@@ -474,7 +474,7 @@ export default class CrystalShop {
       soulShop.quickQty = prevQuickQty;
       hero.souls += refund;
       soulShop.updateSoulShopUI();
-      hero.queueRecalculateFromAttributes();
+      hero.invalidateGenericCache('soulShop');
       updateStatsAndAttributesUI();
       updatePlayerLife();
       showToast(tp('crystalShop.resetSoulShopSuccess', { amount: formatNumber(refund) }), 'success');
@@ -500,7 +500,7 @@ export default class CrystalShop {
         const ascRuneSlots = ascension.getBonuses()?.runeSlots || 0;
         runes?.ensureEquipSlots?.(BASE_RUNE_SLOTS + ascRuneSlots);
       } catch {}
-      hero.queueRecalculateFromAttributes();
+      hero.invalidateGenericCache('ascension');
       updateStatsAndAttributesUI();
       updatePlayerLife();
       updateAscensionUI?.();

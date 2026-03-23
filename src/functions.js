@@ -1291,7 +1291,7 @@ export function createModifyUI(container = document.body) {
     training.reset();
     training.updateTrainingUI('gold-upgrades');
     training.updateTrainingUI('crystal-upgrades');
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateTrainingCache();
     updatePlayerLife();
   });
   trainingSection.appendChild(resetTrainingBtn);

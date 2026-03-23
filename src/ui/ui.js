@@ -922,7 +922,7 @@ export function updateEnemyStats(force = false) {
       img.src = baseUrl + game.currentEnemy.image;
     }
   }
-  
+
   if (window.perfMon?.enabled) window.perfMon.measure('updateEnemyStats', 5);
 }
 

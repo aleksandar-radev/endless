@@ -480,6 +480,7 @@ export default class Ascension {
     }
 
     // Recalculate immediately so effects apply right away
+    hero.invalidateGenericCache('ascension');
     hero.recalculateFromAttributes();
 
     // Update shop/training UIs to reflect new cost reductions immediately
@@ -560,7 +561,7 @@ export default class Ascension {
     hero.gold += ascBonuses.startingGold || 0;
     hero.crystals = (hero.crystals || 0) + 100 + (ascBonuses.startingCrystals || 0);
     hero.souls += ascBonuses.startingSouls || 0;
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateGenericCache('ascension');
     await dataManager.saveGame({ force: true });
     window.location.reload();
   }

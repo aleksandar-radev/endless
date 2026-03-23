@@ -823,7 +823,7 @@ export default class Training {
     });
     showToast(t('training.bulkPurchaseSuccess'));
     this.updateTrainingUI('gold-upgrades');
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateTrainingCache();
     updateStatsAndAttributesUI();
     updateResources();
     dataManager.saveGame();
@@ -888,7 +888,7 @@ export default class Training {
   getTrainingBonuses() {
     // Ensure training bonuses are up-to-date
     this.updateTrainingBonuses();
-    return this.trainingBonuses;
+    return { ...this.trainingBonuses };
   }
 
   updateTrainingBonuses() {
@@ -1128,7 +1128,7 @@ export default class Training {
             this.elementalDistribution[stat] = Number(input.value);
           }
           this.updateTrainingBonuses();
-          hero?.queueRecalculateFromAttributes?.();
+          hero?.invalidateTrainingCache?.();
           dataManager.saveGame();
           this.updateElementalDistributionUI();
         });
@@ -1237,7 +1237,7 @@ export default class Training {
       this.elementalDistribution[stat] = 0;
     });
     this.updateTrainingBonuses();
-    hero?.queueRecalculateFromAttributes?.();
+    hero?.invalidateTrainingCache?.();
     dataManager.saveGame();
     this.updateElementalDistributionUI();
   }
@@ -1277,7 +1277,7 @@ export default class Training {
       showToast(tp('training.notEnoughGold', { stat: formatStatName(stat) }), 'error');
     }
     this.updateTrainingUI('gold-upgrades');
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateTrainingCache();
     updateStatsAndAttributesUI();
     updateResources();
     dataManager.saveGame();

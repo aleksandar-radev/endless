@@ -103,7 +103,7 @@ export class Quest {
         }
       });
     }
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateGenericCache('quests');
     showToast(`Quest "${this.title}" claimed!`, 'normal');
     updateResources();
 

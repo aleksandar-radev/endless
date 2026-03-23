@@ -256,7 +256,8 @@ export default class SkillTree {
       }
     });
     if (changed) {
-      hero.queueRecalculateFromAttributes();
+      hero.invalidateSkillTreeCache();
+      hero.recalculateFromAttributes();
     }
   }
 
@@ -300,7 +301,8 @@ export default class SkillTree {
       this.unlockedPaths.push(pathName);
     }
     this.selectedPath = { name: pathName };
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateSkillTreeCache();
+    hero.recalculateFromAttributes();
     dataManager.saveGame();
 
     // Google Analytics event: class path chosen
@@ -528,7 +530,8 @@ export default class SkillTree {
 
     this.skillPoints -= totalCost;
     if (!skipUpdates) {
-      hero.queueRecalculateFromAttributes();
+      hero.invalidateSkillTreeCache();
+      hero.recalculateFromAttributes();
       if (skill.type() !== 'passive') {
         updateActionBar();
       }
@@ -663,7 +666,8 @@ export default class SkillTree {
       this.unlockSkillBulk(skillId, qty, { skipUpdates: true });
     });
 
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateSkillTreeCache();
+    hero.recalculateFromAttributes();
     if (requiresActionBarUpdate) {
       updateActionBar();
     }
@@ -794,7 +798,8 @@ export default class SkillTree {
       this.unlockSpecializationSkill(skillId, qty);
     });
 
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateSkillTreeCache();
+    hero.recalculateFromAttributes();
     updateSkillTreeValues();
     updateTabIndicators();
     dataManager.saveGame();
@@ -819,7 +824,8 @@ export default class SkillTree {
       this.skills[skillId].affordable = this.skills[skillId].active
         ? hero.stats.currentMana >= this.getSkillManaCost(skill)
         : false;
-      hero.queueRecalculateFromAttributes();
+      hero.invalidateSkillTreeCache();
+      hero.recalculateFromAttributes();
       break;
     case 'instant':
       this.useInstantSkill(skillId);
@@ -1514,7 +1520,8 @@ export default class SkillTree {
     }
 
     // Apply buff effects
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateSkillTreeCache();
+    hero.recalculateFromAttributes();
     updateActionBar();
 
     return true;
@@ -1528,7 +1535,8 @@ export default class SkillTree {
       if (storage[skillId]) {
         storage[skillId].active = false;
       }
-      hero.queueRecalculateFromAttributes();
+      hero.invalidateSkillTreeCache();
+      hero.recalculateFromAttributes();
       updateActionBar(); // Update UI to reflect deactivated state
     }
   }
@@ -1581,7 +1589,8 @@ export default class SkillTree {
       // }
       if (skill.type() !== 'toggle') skill.active = false; // Reset active state except for toggles
     });
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateSkillTreeCache();
+    hero.recalculateFromAttributes();
     updateActionBar(); // Update UI to reset all visual states
   }
 
@@ -1694,7 +1703,8 @@ export default class SkillTree {
     this.displaySettings = {};
     this.activeBuffs.clear();
     this.ensureTotalEarnedSkillPointsConsistency();
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateSkillTreeCache();
+    hero.recalculateFromAttributes();
     initializeSkillTreeUI();
     dataManager.saveGame();
 
@@ -1711,6 +1721,7 @@ export default class SkillTree {
     this.selectedSpecialization = null;
     this.specializationSkills = {};
     this.updateSpecializationPoints();
+    hero.invalidateSkillTreeCache();
     hero.recalculateFromAttributes();
 
     // Check for main skills that are no longer visible (e.g. specialized skills)
@@ -1769,7 +1780,8 @@ export default class SkillTree {
       });
     }
 
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateSkillTreeCache();
+    hero.recalculateFromAttributes();
     dataManager.saveGame();
 
     // Google Analytics event: specialization chosen
@@ -1838,7 +1850,8 @@ export default class SkillTree {
 
     this.updateSpecializationPoints();
 
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateSkillTreeCache();
+    hero.recalculateFromAttributes();
     updateSkillTreeValues();
     dataManager.saveGame();
     updateTabIndicators();

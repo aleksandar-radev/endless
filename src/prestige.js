@@ -397,7 +397,7 @@ export default class Prestige {
 
     // Recalculate attributes to reflect ascension bonuses applied
     try {
-      hero.queueRecalculateFromAttributes();
+      hero.invalidateAllCaches();
     } catch {}
 
     await dataManager.saveGame({ force: true });

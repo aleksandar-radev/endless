@@ -127,7 +127,7 @@ const updatePwaServiceWorker = registerSW({
   // Enforce rune equip requirements on load (e.g. after ascension reset progression)
   try {
     if (runes.enforceRuneRequirements()) {
-      hero.queueRecalculateFromAttributes();
+      hero.invalidateAllCaches();
     }
   } catch {}
 
@@ -233,7 +233,7 @@ const updatePwaServiceWorker = registerSW({
 
   updateResources();
   hero._recalcScheduled = false;
-  hero.queueRecalculateFromAttributes();
+  hero.invalidateAllCaches();
   game.healPlayer(hero.stats.life);
   game.restoreMana(hero.stats.mana);
 

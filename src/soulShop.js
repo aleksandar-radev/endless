@@ -556,7 +556,7 @@ export default class SoulShop {
     showToast(t('soulShop.bulkPurchaseSuccess'), 'success');
     dataManager.saveGame();
     updateResources();
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateGenericCache('soulShop');
     this.updateModalDetails();
     updateStatsAndAttributesUI();
     updatePlayerLife();
@@ -888,7 +888,7 @@ export default class SoulShop {
 
     dataManager.saveGame();
     updateResources();
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateGenericCache('soulShop');
     this.updateModalDetails();
     updateStatsAndAttributesUI();
     updatePlayerLife();

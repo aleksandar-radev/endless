@@ -156,7 +156,7 @@ export class Achievement {
       showToast(tp('achievements.toast.unlocked', { title: t(this.title) }), 'success');
     }
 
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateGenericCache('achievements');
     return this.activeReward;
   }
 

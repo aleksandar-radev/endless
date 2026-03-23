@@ -327,7 +327,6 @@ export function initializeInventoryUI(inv) {
 
       if (equippedSlot) {
         inventory.equipItem(itemData, equippedSlot);
-        hero.queueRecalculateFromAttributes();
         updateInventoryGrid();
         clearMobileSelection();
         return;
@@ -337,14 +336,12 @@ export function initializeInventoryUI(inv) {
         const emptyRingSlots = ['ring1', 'ring2'].filter((s) => !inventory.equippedItems[s]);
         const slot = emptyRingSlots[0] || 'ring1';
         inventory.equipItem(itemData, slot);
-        hero.queueRecalculateFromAttributes();
         updateInventoryGrid();
         clearMobileSelection();
       } else {
         const slot = getPreferredSlotForItem(itemData);
         if (slot) {
           inventory.equipItem(itemData, slot);
-          hero.queueRecalculateFromAttributes();
           updateInventoryGrid();
         }
         clearMobileSelection();
@@ -376,7 +373,6 @@ export function initializeInventoryUI(inv) {
     if (equippedSlot) {
       // Unequip when pressing equip on an equipped item
       inventory.equipItem(itemData, equippedSlot);
-      hero.queueRecalculateFromAttributes();
       updateInventoryGrid();
       clearMobileSelection();
       return;
@@ -386,14 +382,12 @@ export function initializeInventoryUI(inv) {
       const emptyRingSlots = ['ring1', 'ring2'].filter((s) => !inventory.equippedItems[s]);
       const slot = emptyRingSlots[0] || 'ring1';
       inventory.equipItem(itemData, slot);
-      hero.queueRecalculateFromAttributes();
       updateInventoryGrid();
       clearMobileSelection();
     } else {
       const slot = getPreferredSlotForItem(itemData);
       if (slot) {
         inventory.equipItem(itemData, slot);
-        hero.queueRecalculateFromAttributes();
         updateInventoryGrid();
       }
       clearMobileSelection();
@@ -1329,9 +1323,6 @@ export function handleDrop(e) {
     }
   }
 
-  hero.queueRecalculateFromAttributes();
-  dataManager.saveGame();
-
   updateInventoryGrid();
 }
 
@@ -1364,7 +1355,6 @@ export function setupItemDragAndTooltip(root = getInventoryTab()) {
 
       if (equippedSlot) {
         inventory.equipItem(itemData, equippedSlot);
-        hero.queueRecalculateFromAttributes();
         updateInventoryGrid();
         return;
       }
@@ -1373,7 +1363,6 @@ export function setupItemDragAndTooltip(root = getInventoryTab()) {
         const emptyRingSlots = ['ring1', 'ring2'].filter((s) => !inventory.equippedItems[s]);
         const slot = emptyRingSlots[0] || 'ring1';
         inventory.equipItem(itemData, slot);
-        hero.queueRecalculateFromAttributes();
         updateInventoryGrid();
         return;
       }
@@ -1381,7 +1370,6 @@ export function setupItemDragAndTooltip(root = getInventoryTab()) {
       const slot = getPreferredSlotForItem(itemData);
       if (slot) {
         inventory.equipItem(itemData, slot);
-        hero.queueRecalculateFromAttributes();
         updateInventoryGrid();
       }
     });
@@ -1718,7 +1706,6 @@ export function handleSlotTap(slotEl) {
     const itemData = inventory.getItemById(selectedItemEl.dataset.itemId);
     if (inventory.canEquipInSlot(itemData, slotEl.dataset.slot)) {
       inventory.equipItem(itemData, slotEl.dataset.slot);
-      hero.queueRecalculateFromAttributes();
       updateInventoryGrid();
     }
     clearMobileSelection();
@@ -1881,7 +1868,6 @@ function openItemContextMenu(itemEl, x, y) {
   const handleEquip = (slot) => {
     if (slot) {
       inventory.equipItem(itemData, slot);
-      hero.queueRecalculateFromAttributes();
       updateInventoryGrid();
       clearMobileSelection();
     }

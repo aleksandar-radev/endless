@@ -89,7 +89,7 @@ export function renderRunesUI() {
       });
       slot.addEventListener('dblclick', () => {
         runes.unequip(i);
-        hero.queueRecalculateFromAttributes();
+        hero.invalidateGenericCache('runes');
         training.updateTrainingAffordability('gold-upgrades');
         soulShop.updateSoulShopAffordability();
         // Update Arena Boss Skip option max when unique rune effects change
@@ -479,7 +479,7 @@ function equipSelectedRune() {
     slot = 0;
   }
   runes.equip(slot, inventoryIndex);
-  hero.queueRecalculateFromAttributes();
+  hero.invalidateGenericCache('runes');
   training.updateTrainingAffordability('gold-upgrades');
   soulShop.updateSoulShopAffordability();
   try {
@@ -513,7 +513,7 @@ function handleDrop(e) {
   } else if (source === 'equipped' && targetSource === 'equipped') {
     runes.moveEquipped(fromIndex, targetIndex);
   }
-  hero.queueRecalculateFromAttributes();
+  hero.invalidateGenericCache('runes');
   training.updateTrainingAffordability('gold-upgrades');
   soulShop.updateSoulShopAffordability();
   try {
@@ -616,7 +616,7 @@ function openRuneContextMenu(source, index, rune, x, y) {
       crystals = runes.salvage(index);
     } else {
       runes.equipped[index] = null;
-      hero.queueRecalculateFromAttributes();
+      hero.invalidateGenericCache('runes');
       training.updateTrainingAffordability('gold-upgrades');
       soulShop.updateSoulShopAffordability();
     }

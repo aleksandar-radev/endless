@@ -265,7 +265,7 @@ export default class Inventory {
       const idx = inventory.materials.findIndex((m) => m && m.id === mat.id);
       if (idx !== -1) inventory.materials[idx] = null;
     }
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateEquipmentCache();
     updateMaterialsGrid();
     updateInventoryGrid();
     dataManager.saveGame();
@@ -1153,7 +1153,7 @@ export default class Inventory {
       }
     }
 
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateEquipmentCache();
     dataManager.saveGame();
   }
 
@@ -1183,7 +1183,7 @@ export default class Inventory {
       }
     }
     updateInventoryGrid();
-    hero.queueRecalculateFromAttributes();
+    hero.invalidateEquipmentCache();
     dataManager.saveGame();
   }
 
@@ -1425,6 +1425,7 @@ export default class Inventory {
     }
 
     this.updateItemBonuses();
+    hero.invalidateEquipmentCache();
     dataManager.saveGame();
     return true;
   }
@@ -1474,6 +1475,7 @@ export default class Inventory {
         }
         delete this.equippedItems[slot];
         this.updateItemBonuses();
+        hero.invalidateEquipmentCache();
         dataManager.saveGame();
         return true;
       }
@@ -1583,6 +1585,7 @@ export default class Inventory {
     // Equip the new item
     this.equippedItems[slot] = item;
     this.updateItemBonuses();
+    hero.invalidateEquipmentCache();
     dataManager.saveGame();
     return true;
   }

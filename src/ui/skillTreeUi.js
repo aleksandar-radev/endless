@@ -511,7 +511,7 @@ function renderManaScalingOption() {
     });
     slider.addEventListener('change', () => {
       dataManager.saveGame();
-      hero.queueRecalculateFromAttributes();
+      hero.invalidateSkillTreeCache();
       updateSkillTreeValues();
       updateActionBar();
     });

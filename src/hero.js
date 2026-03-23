@@ -157,7 +157,45 @@ export default class Hero {
   constructor(savedData = null) {
     this._recalcScheduled = false;
     this.ailments = {}; // Track hero ailments
+    this._caches = {
+      skillTree: null,
+      equipment: null,
+      training: null,
+      soulShop: null,
+      runes: null,
+      achievements: null,
+      quests: null,
+      ascension: null,
+    };
     this.setBaseStats(savedData);
+  }
+
+  invalidateSkillTreeCache() {
+    this._caches.skillTree = null;
+    this._caches.equipment = null; // Equipment depends on Skill Tree effectiveness
+    this.queueRecalculateFromAttributes();
+  }
+
+  invalidateEquipmentCache() {
+    this._caches.equipment = null;
+    this.queueRecalculateFromAttributes();
+  }
+
+  invalidateTrainingCache() {
+    this._caches.training = null;
+    this.queueRecalculateFromAttributes();
+  }
+
+  invalidateGenericCache(cacheKey) {
+    this._caches[cacheKey] = null;
+    this.queueRecalculateFromAttributes();
+  }
+
+  invalidateAllCaches() {
+    for (let key in this._caches) {
+      this._caches[key] = null;
+    }
+    this.queueRecalculateFromAttributes();
   }
 
   setBaseStats(savedData = null) {
@@ -283,8 +321,8 @@ export default class Hero {
   gainCrystals(amount) {
     let finalAmount = amount;
     if (amount > 0) {
-      const bonuses = runes?.getBonusEffects?.() || {};
-      const ascBonuses = ascension?.getBonuses?.() || {};
+      const bonuses = this._caches.runes || runes?.getBonusEffects?.() || {};
+      const ascBonuses = this._caches.ascension || ascension?.getBonuses?.() || {};
       const runeBonus = bonuses.crystalGainPercent || 0;
       const ascensionBonus = ascBonuses.crystalGainPercent || 0;
       finalAmount = Math.floor(amount * (1 + runeBonus + ascensionBonus));
@@ -323,8 +361,8 @@ export default class Hero {
     this.level += levels;
     statistics.heroLevel = this.level;
 
-    const ascBonuses = ascension?.getBonuses() || {};
-    const runeBonuses = runes?.getBonusEffects?.() || {};
+    const ascBonuses = this._caches.ascension || ascension?.getBonuses() || {};
+    const runeBonuses = this._caches.runes || runes?.getBonusEffects?.() || {};
     const attributesPerLevel = STATS_ON_LEVEL_UP + (ascBonuses.attributesPerLevel || 0) + (runeBonuses.attributesPerLevel || 0);
     this.statPoints += attributesPerLevel * levels;
 
@@ -375,7 +413,12 @@ export default class Hero {
 
   recalculateFromAttributes() {
     if (window.perfMon?.enabled) window.perfMon.mark('recalculateFromAttributes');
-    const skillTreeBonuses = skillTree.getAllSkillTreeBonuses();
+
+    if (!this._caches.skillTree) {
+      this._caches.skillTree = skillTree.getAllSkillTreeBonuses();
+    }
+    const skillTreeBonuses = this._caches.skillTree;
+
     const weaponEffectivenessPercent = skillTreeBonuses.weaponEffectivenessPercent || 0;
     const weaponFlatEffectivenessPercent = skillTreeBonuses.weaponFlatEffectivenessPercent || 0;
 
@@ -407,38 +450,62 @@ export default class Hero {
     const glovesEffectivenessPercent = skillTreeBonuses.glovesEffectivenessPercent || 0;
     const glovesFlatEffectivenessPercent = skillTreeBonuses.glovesFlatEffectivenessPercent || 0;
 
-    const equipmentBonuses = inventory.getEquipmentBonuses(
-      weaponEffectivenessPercent,
-      weaponFlatEffectivenessPercent,
-      itemLifeEffectivenessPercent,
-      itemArmorEffectivenessPercent,
-      shieldEffectivenessPercent,
-      shieldFlatEffectivenessPercent,
-      jewelryEffectivenessPercent,
-      jewelryFlatEffectivenessPercent,
-      amuletEffectivenessPercent,
-      amuletFlatEffectivenessPercent,
-      ringEffectivenessPercent,
-      ringFlatEffectivenessPercent,
-      helmetEffectivenessPercent,
-      helmetFlatEffectivenessPercent,
-      chestEffectivenessPercent,
-      chestFlatEffectivenessPercent,
-      beltEffectivenessPercent,
-      beltFlatEffectivenessPercent,
-      pantsEffectivenessPercent,
-      pantsFlatEffectivenessPercent,
-      bootsEffectivenessPercent,
-      bootsFlatEffectivenessPercent,
-      glovesEffectivenessPercent,
-      glovesFlatEffectivenessPercent,
-    );
-    const trainingBonuses = training.getTrainingBonuses();
-    const soulBonuses = this.getSoulShopBonuses();
+    if (!this._caches.equipment) {
+      this._caches.equipment = inventory.getEquipmentBonuses(
+        weaponEffectivenessPercent,
+        weaponFlatEffectivenessPercent,
+        itemLifeEffectivenessPercent,
+        itemArmorEffectivenessPercent,
+        shieldEffectivenessPercent,
+        shieldFlatEffectivenessPercent,
+        jewelryEffectivenessPercent,
+        jewelryFlatEffectivenessPercent,
+        amuletEffectivenessPercent,
+        amuletFlatEffectivenessPercent,
+        ringEffectivenessPercent,
+        ringFlatEffectivenessPercent,
+        helmetEffectivenessPercent,
+        helmetFlatEffectivenessPercent,
+        chestEffectivenessPercent,
+        chestFlatEffectivenessPercent,
+        beltEffectivenessPercent,
+        beltFlatEffectivenessPercent,
+        pantsEffectivenessPercent,
+        pantsFlatEffectivenessPercent,
+        bootsEffectivenessPercent,
+        bootsFlatEffectivenessPercent,
+        glovesEffectivenessPercent,
+        glovesFlatEffectivenessPercent,
+      );
+    }
+    const equipmentBonuses = this._caches.equipment;
+
+    if (!this._caches.training) {
+      this._caches.training = training.getTrainingBonuses();
+    }
+    const trainingBonuses = this._caches.training;
+
+    if (!this._caches.soulShop) {
+      this._caches.soulShop = this.getSoulShopBonuses();
+    }
+    const soulBonuses = this._caches.soulShop;
+
     const prestigeBonuses = prestige?.bonuses || {};
-    const questsBonuses = quests?.getQuestsBonuses?.() || {};
-    const achievementsBonuses = achievements?.getBonuses?.() || {};
-    const ascensionBonuses = ascension?.getBonuses?.() || {};
+
+    if (!this._caches.quests) {
+      this._caches.quests = quests?.getQuestsBonuses?.() || {};
+    }
+    const questsBonuses = this._caches.quests;
+
+    if (!this._caches.achievements) {
+      this._caches.achievements = achievements?.getBonuses?.() || {};
+    }
+    const achievementsBonuses = this._caches.achievements;
+
+    if (!this._caches.ascension) {
+      this._caches.ascension = ascension?.getBonuses?.() || {};
+    }
+    const ascensionBonuses = this._caches.ascension;
 
     // --- Unified Bonus Aggregation ---
     const unifiedBonuses = {};
@@ -474,7 +541,10 @@ export default class Hero {
     addBonusesToUnified(unifiedBonuses, ascensionBonuses, true);
     addBonusesToUnified(unifiedBonuses, soulBonuses, true);
 
-    const runeBonuses = runes?.getBonusEffects?.() || {};
+    if (!this._caches.runes) {
+      this._caches.runes = runes?.getBonusEffects?.() || {};
+    }
+    const runeBonuses = this._caches.runes;
     addBonusesToUnified(unifiedBonuses, runeBonuses, false);
 
     // 1) Build primary stats using unified bonuses
@@ -495,7 +565,7 @@ export default class Hero {
     });
 
     // 4) Calculate Attribute Effects (now uses correct this.stats[attr])
-    const attributeEffects = this.calculateAttributeEffects(skillTreeBonuses);
+    const attributeEffects = this.calculateAttributeEffects(skillTreeBonuses, ascensionBonuses);
 
     // Generate Stat Breakdown (now has correct attributeEffects)
     this.generateStatBreakdown(
@@ -508,6 +578,7 @@ export default class Hero {
       soulBonuses,
       runeBonuses,
       attributeEffects,
+      ascensionBonuses,
     );
 
     // 5) Final Pass: separate or merged? Merging is cleaner for calculateFlatValues.
@@ -523,7 +594,7 @@ export default class Hero {
     const finalPercentBonuses = this.filterPercentBonuses(finalBonuses);
 
     // applyFinalCalculations now only needs the aggregated values
-    this.applyFinalCalculations(flatValues, finalPercentBonuses, finalBonuses);
+    this.applyFinalCalculations(flatValues, finalPercentBonuses, finalBonuses, ascensionBonuses);
 
     // Assign calculated percentage bonuses to stats so they are available for UI and logic
     Object.assign(this.stats, finalPercentBonuses);
@@ -538,7 +609,7 @@ export default class Hero {
     dataManager.saveGame();
   }
 
-  generateStatBreakdown(prestigeBonuses, questsBonuses, achievementsBonuses, equipmentBonuses, skillTreeBonuses, trainingBonuses, soulBonuses, runeBonuses, attributeEffects = {}) {
+  generateStatBreakdown(prestigeBonuses, questsBonuses, achievementsBonuses, equipmentBonuses, skillTreeBonuses, trainingBonuses, soulBonuses, runeBonuses, attributeEffects = {}, ascBonuses = {}) {
     const getNorm = (raw, statKey, isFractionSource = false) => {
       if (!raw || typeof raw !== 'number') return 0;
       if (isFractionSource) return raw;
@@ -583,8 +654,6 @@ export default class Hero {
       const statDivisor = getDivisor(stat);
       return { flat: statDivisor !== 1 ? flat / statDivisor : flat, percent };
     };
-
-    const ascBonuses = ascension?.getBonuses?.() || {};
 
     STAT_KEYS.forEach((stat) => {
       const statDivisor = getDivisor(stat);
@@ -686,9 +755,8 @@ export default class Hero {
     });
   }
 
-  calculateAttributeEffects(skillTreeBonuses = {}) {
+  calculateAttributeEffects(skillTreeBonuses = {}, ascensionBonuses = {}) {
     const effects = {};
-    const ascensionBonuses = ascension?.getBonuses() || {};
 
     let intelligenceElementalDamage = 0;
 
@@ -821,9 +889,7 @@ export default class Hero {
     return bonuses;
   }
 
-  applyFinalCalculations(flatValues, percentBonuses, unifiedBonuses = {}) {
-    const ascensionBonuses = ascension?.getBonuses() || {};
-
+  applyFinalCalculations(flatValues, percentBonuses, unifiedBonuses = {}, ascensionBonuses = {}) {
     // Distribute ascensionElementalDamage
     if (ascensionBonuses.ascensionElementalDamage > 0) {
       const totalAscElemental = ascensionBonuses.ascensionElementalDamage * ELEMENT_IDS.length;
