@@ -58,7 +58,7 @@ export const ACHIEVEMENT_DEFINITIONS = [
     target: 1,
     baseTarget: 1,
     targetAddition: 1,
-    maxLevel: 250,
+    maxLevel: 21,
     reward: { bonuses: { itemQuantityPercent: 0.04, itemRarityPercent: 0.04 } },
     baseReward: { bonuses: { itemQuantityPercent: 0.04, itemRarityPercent: 0.04 } },
     rewardMultiplier: 2, // linear scaling: 1x, 2x, 3x
