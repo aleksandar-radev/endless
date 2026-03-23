@@ -273,10 +273,11 @@ export default class Hero {
     xp += XP_LINEAR * this.level;
     xp += XP_QUADRATIC * this.level ** 2;
     xp += (this.level ** 3) / XP_CUBIC_DIVISOR;
-    return xp;
+    return Math.floor(xp);
   }
 
   gainExp(amount) {
+    amount = Math.floor(amount);
     const mult = this.getAdResourceMultiplier('xp');
     amount = Math.floor(amount * mult);
     this.exp += amount;
