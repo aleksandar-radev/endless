@@ -737,7 +737,8 @@ export const OFFENSE_STATS = {
   naturalistInstantSkillsUnlocked: createHiddenStat(),
   teleportDodgeChance: createChanceStat({
     sub: 'defense',
-    item: { tierScalingMaxPercent: createTierScaling(2, 20, 1.1) },
+    cap: 80,
+    item: { tierScalingMaxPercent: createTierScaling(15, 15) },
   }),
   manaToLifeTransferPercent: createPercentStat({ sub: 'misc' }),
   damageToBossesPercent: createPercentStat({ sub: 'misc' }),

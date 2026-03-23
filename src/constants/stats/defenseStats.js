@@ -275,7 +275,8 @@ export const DEFENSE_STATS = {
   avoidChance: createChanceStat({
     sub: 'defense',
     forceNotShow: true,
-    item: { tierScalingMaxPercent: createTierScaling(2, 15, 1.1) },
+    cap: 80,
+    item: { tierScalingMaxPercent: createTierScaling(15, 15) },
     skills: createDefaultSkillBonusesPercent({
       passive: {
         base: 0.466, linear: 0.1, max: 80,

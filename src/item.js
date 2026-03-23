@@ -227,7 +227,6 @@ export default class Item {
     // handle percentage increase from ascension
     // Exclude stats with gameplay caps or special mechanics from the item percent cap multiplier
     const excludedStats = [
-      // Stats with gameplay caps
       'attackSpeedPercent',
       'blockChance',
       'blockChancePercent',
@@ -235,22 +234,21 @@ export default class Item {
       'critChancePercent',
       'resurrectionChance',
       'cooldownReductionPercent',
-      // Enemy reduction stats
       'reduceEnemyDamagePercent',
       'reduceEnemyHpPercent',
       'reduceEnemyAttackSpeedPercent',
-      // Damage reduction stats
       'arenaDamageReductionPercent',
       'damageTakenConvertedToColdPercent',
       'coldDamageTakenReductionPercent',
       'elementalDamageTakenReductionPercent',
       'damageTakenReductionPercent',
-      // Cap-extending stats (these ARE caps themselves)
       'attackSpeedCap',
       'critChanceCap',
       'blockChanceCap',
       'cooldownReductionCapPercent',
       'doubleDamageChance',
+      'avoidChance',
+      'teleportDodgeChance',
     ];
 
     if (!excludedStats.includes(stat)) {
