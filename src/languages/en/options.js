@@ -72,7 +72,7 @@ export default {
   'options.discord': 'Join our Discord',
   'options.currentVersion': 'Current version:',
   'options.suggestionsPrompt': 'Please add your suggestions for changes in the Discord channel :)',
-  'options.desktopDownload': 'You can download the desktop app (Windows only) from',
+  'options.desktopDownload': 'You can download the desktop app from',
   'options.here': 'HERE',
   'options.stageControlsInline': 'Show stage controls under enemy',
   'options.stageControlsInline.tooltip': 'Show stage controls under enemy in Explore mode',
