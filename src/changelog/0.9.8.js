@@ -1,7 +1,7 @@
 const html = String.raw;
 export default function run() {
   return html`
-    <span style="color:#4F8A10;">2026-03-20</span>
+    <span style="color:#4F8A10;">2026-04-24</span>
     <hr />
 
     <span style="color:#00529B;">Features</span>
