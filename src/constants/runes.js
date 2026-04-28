@@ -161,7 +161,6 @@ export const RUNES = {
     weight: 50000,
     icon: `${BASE}/icons/empowering-rune.png`,
     unique: false,
-    showLevel: true,
   },
   vampiric_rune: {
     id: 'vampiric_rune',

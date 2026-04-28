@@ -1,9 +1,9 @@
 import { RUNES, isChanceStat, isFlatStat, getTierMultiplier, getPercentTierMultiplier, RUNE_FLAT_STAGE_SCALING_PERCENT, RUNE_PERCENT_STAGE_SCALING_PERCENT, RUNE_TIERS } from './constants/runes.js';
 import { isPercentStat, getStatDecimalPlaces } from './constants/stats/stats.js';
-import { tp, t } from './i18n.js';
+import { t } from './i18n.js';
 import { formatStatName } from './format.js';
-import { hero, ascension, game, statistics, options } from './globals.js';
-import { isRegionUnlocked, ROCKY_FIELD_REGIONS } from './rockyField.js';
+import { hero, ascension, statistics, options } from './globals.js';
+import { isRegionUnlocked } from './rockyField.js';
 import { formatNumber } from './utils/numberFormatter.js';
 
 export const BASE_RUNE_SLOTS = 3;
@@ -320,7 +320,8 @@ export default class Runes {
 
   /**
    * Check if a rune can be equipped based on the player's current progression.
-   * The player must have unlocked (reached) the rune's tier region and level.
+   * Some runes only require unlocking their tier region, while others also
+   * require reaching the rune's level in that region.
    * @param {object} rune - The rune instance
    * @returns {boolean}
    */
@@ -328,9 +329,10 @@ export default class Runes {
     if (!rune) return false;
     const tier = rune.tier || 1;
     const level = rune.level || 1;
+    const requiresLevel = runeRequiresLevel(rune);
 
-    // Tier 1 runes are always equippable
-    if (tier <= 1 && level <= 1) return true;
+    // Tier 1 runes are equippable immediately unless they still use level gating.
+    if (tier <= 1 && (!requiresLevel || level <= 1)) return true;
 
     // Find the region for this rune's tier
     const tierData = RUNE_TIERS[tier];
@@ -342,7 +344,9 @@ export default class Runes {
     // Check if the region is unlocked
     if (!isRegionUnlocked(zoneId)) return false;
 
-    // Check if the player has reached this level in the region
+    if (!requiresLevel) return true;
+
+    // Level-gated runes still require reaching the rune's level in the region.
     const highestStage = statistics?.get('rockyFieldHighestStages', zoneId) || 0;
     if (level > Math.max(highestStage, 1)) return false;
 
@@ -472,6 +476,16 @@ export function getRuneDescription(rune, shortElementalNames = false) {
   });
 
   return lines.join('\n');
+}
+
+export function runeRequiresLevel(rune) {
+  const base = rune ? RUNES[rune.id] : null;
+  if (!base?.stats) return false;
+  return Object.keys(base.stats).some((statKey) => statKey.endsWith('PerLevel'));
+}
+
+export function getRuneRequirementText(rune) {
+  return t(runeRequiresLevel(rune) ? 'runes.requirementNotMet.tierAndLevel' : 'runes.requirementNotMet.tierOnly');
 }
 
 /**

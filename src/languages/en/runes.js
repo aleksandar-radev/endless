@@ -44,6 +44,7 @@ export default {
   'rune.buffDurationRune.desc': 'Increases buff duration.',
   'rune.attributesPerLevel.name': 'Attribute Scholar Rune',
   'rune.attributesPerLevel.desc': 'Grants attribute points per level.',
-  'runes.requirementNotMet': 'You must reach this rune\'s tier and level to equip it.',
+  'runes.requirementNotMet.tierOnly': 'You must unlock this rune\'s tier to equip it.',
+  'runes.requirementNotMet.tierAndLevel': 'You must reach this rune\'s tier and level to equip it.',
   'runes.disabled': 'Disabled — requirements no longer met.',
 };

@@ -1,7 +1,7 @@
 import { runes, dataManager, hero, options, training, soulShop } from '../globals.js';
 import { t, tp } from '../i18n.js';
-import { getRuneName, getRuneDescription, getRuneIcon, FROZEN_RUNE_SLOTS, INVENTORY_TAB_COUNT } from '../runes.js';
-import { RUNES, RUNE_TIERS } from '../constants/runes.js';
+import { getRuneName, getRuneDescription, getRuneIcon, getRuneRequirementText, runeRequiresLevel, FROZEN_RUNE_SLOTS, INVENTORY_TAB_COUNT } from '../runes.js';
+import { RUNE_TIERS } from '../constants/runes.js';
 import { showTooltip, positionTooltip, hideTooltip, showToast } from './ui.js';
 import { createModal, closeModal } from './modal.js';
 
@@ -470,7 +470,7 @@ function equipSelectedRune() {
   const inventoryIndex = selectedRune.index;
   const runeToEquip = runes.inventory[inventoryIndex];
   if (runeToEquip && !runes.canEquipRune(runeToEquip)) {
-    showToast(t('runes.requirementNotMet'), 'error');
+    showToast(getRuneRequirementText(runeToEquip), 'error');
     return;
   }
   let slot = runes.equipped.findIndex((r) => r === null);
@@ -504,7 +504,7 @@ function handleDrop(e) {
   } else if (source === 'inventory' && targetSource === 'equipped') {
     const runeToEquip = runes.inventory[fromIndex];
     if (runeToEquip && !runes.canEquipRune(runeToEquip)) {
-      showToast(t('runes.requirementNotMet'), 'error');
+      showToast(getRuneRequirementText(runeToEquip), 'error');
       return;
     }
     runes.equip(targetIndex, fromIndex);
@@ -525,7 +525,6 @@ function handleDrop(e) {
 }
 
 function getRuneTooltip(rune) {
-  const base = RUNES[rune.id];
   const tier = rune.tier || 1;
   const tierData = RUNE_TIERS[tier];
   const zoneId = tierData?.zones?.[0];
@@ -533,11 +532,11 @@ function getRuneTooltip(rune) {
   const tierLabel = zoneName
     ? `${t('item.tier')} ${tier} (${zoneName})`
     : `${t('item.tier')} ${tier}`;
-  const levelPart = base?.showLevel && rune.level ? ` · ${t('item.level')} ${rune.level}` : '';
+  const levelPart = runeRequiresLevel(rune) && rune.level ? ` · ${t('item.level')} ${rune.level}` : '';
   const meta = `<div class="tooltip-rune-meta">${tierLabel}${levelPart}</div>`;
   const canEquip = runes.canEquipRune(rune);
   const disabledPart = rune._disabled ? `<div class="tooltip-rune-disabled">${t('runes.disabled')}</div>` : '';
-  const requirementPart = !canEquip ? `<div class="tooltip-rune-requirement">${t('runes.requirementNotMet')}</div>` : '';
+  const requirementPart = canEquip ? '' : `<div class="tooltip-rune-requirement">${getRuneRequirementText(rune)}</div>`;
   return `<div class="tooltip-header">${getRuneName(rune, options.shortElementalNames)}</div>${meta}<div class="tooltip-content">${getRuneDescription(rune, options.shortElementalNames)}</div>${disabledPart}${requirementPart}`;
 }
 

@@ -44,6 +44,7 @@ export default {
   'rune.buffDurationRune.desc': '延长增益效果持续时间。',
   'rune.attributesPerLevel.name': '属性学者符文',
   'rune.attributesPerLevel.desc': '每级获得属性点。',
-  'runes.requirementNotMet': '你必须达到此符文的区域和等级才能装备。',
+  'runes.requirementNotMet.tierOnly': '你必须解锁此符文的阶级后才能装备。',
+  'runes.requirementNotMet.tierAndLevel': '你必须达到此符文的区域和等级才能装备。',
   'runes.disabled': '已禁用 — 不再满足要求。',
 };
