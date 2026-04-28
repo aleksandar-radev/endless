@@ -269,11 +269,7 @@ export default class Hero {
    * @returns {number} EXP required for next level
    */
   getExpToNextLevel() {
-    let xp = XP_BASE;
-    xp += XP_LINEAR * this.level;
-    xp += XP_QUADRATIC * this.level ** 2;
-    xp += (this.level ** 2) / XP_CUBIC_DIVISOR;
-    return Math.floor(xp);
+    return xpRequiredForLevels(this.level, 1);
   }
 
   gainExp(amount) {
