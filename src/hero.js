@@ -48,7 +48,7 @@ export const STATS_ON_LEVEL_UP = 3;
 // Increase XP_CUBIC_DIVISOR to make late-game leveling less steep, decrease to make it steeper.
 export const XP_BASE = 10;
 export const XP_LINEAR = 30;
-export const XP_QUADRATIC = 1.25;
+export const XP_QUADRATIC = 0.75;
 export const XP_CUBIC_DIVISOR = 1750;
 // ----------------------------
 
@@ -272,7 +272,7 @@ export default class Hero {
     let xp = XP_BASE;
     xp += XP_LINEAR * this.level;
     xp += XP_QUADRATIC * this.level ** 2;
-    xp += (this.level ** 3) / XP_CUBIC_DIVISOR;
+    xp += (this.level ** 2) / XP_CUBIC_DIVISOR;
     return Math.floor(xp);
   }
 
